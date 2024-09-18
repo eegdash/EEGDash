@@ -1,2 +1,19 @@
 # EEG-Dash-Data
-A repo documenting EEG-Dash data and its usage
+## Data source
+NEMAR
+Other labs and contributors
+
+## Data formatting
+BIDS
+
+## Data content
+- Tasks
+- Modality
+- Metadata
+
+## Data accessing
+### AWS S3
+
+### EEG-Dash API
+
+

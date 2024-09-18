@@ -1,4 +1,5 @@
 # EEG-Dash-Data
+This should be a placeholder for eegdash.org
 ## Data source
 NEMAR
 Other labs and contributors

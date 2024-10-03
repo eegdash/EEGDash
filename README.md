@@ -24,7 +24,7 @@ Coming soon...
 
 ## Education
 
-We organize workshops and educational events to foster cross-cultural education and student training, offering both online and in-person opportunities in collaboration with US and Israeli partners. There is no event planned for 2024. Events for 2025 will be advertised on the EEGLABNEWS list so make sure to [subscribe](https://sccn.ucsd.edu/mailman/listinfo/eeglabnews).
+We organize workshops and educational events to foster cross-cultural education and student training, offering both online and in-person opportunities in collaboration with US and Israeli partners. There is no event planned for 2024. Events for 2025 will be advertised on the EEGLABNEWS mailing list so make sure to [subscribe](https://sccn.ucsd.edu/mailman/listinfo/eeglabnews).
 
 ## About EEG-DaSh
 

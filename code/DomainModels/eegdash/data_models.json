@@ -1,0 +1,195 @@
+[
+{
+    "schema_name": "eeg_signal",
+    "schema_title": "EEG Signal",
+    "schema_description": "A data model for EEG signal data.",
+    "schema_type": "data_model",
+    "metamodel_ref": "xarray_dataarray_metamodel",
+    "json_schema": {
+        "type": "object",
+        "properties": {
+            "schema_ref": {
+                "type": "string",
+                "enum": [
+                    "eeg_signal"
+                ]
+            },
+            "data_name": {
+                "type": "string"
+            },
+            "version_timestamp": {},
+            "has_file": {
+                "const": true
+            },
+            "sampling_frequency": {
+                "type": "integer"
+            },
+            "task": {
+                "type": "string",
+                "required": false
+            }, 
+            "session": {
+                "type": "string",
+                "required": false
+            },
+            "run": {
+                "type": "string",
+                "required": false
+            },
+            "modality": {
+                "type": "string",
+                "const": "EEG"
+            }
+        }
+    }
+},
+{
+    "schema_name": "stimuli_record",
+    "schema_title": "Stimuli Record",
+    "schema_description": "A data model for Recording of the Stimuli.",
+    "schema_type": "data_model",
+    "metamodel_ref": "xarray_dataarray_metamodel",
+    "json_schema": {
+        "type": "object",
+        "properties": {
+            "schema_ref": {
+                "type": "string",
+                "description": "Reference to the schema"
+            },
+            "data_name": {},
+            "version_timestamp": {},
+            "has_file": {
+                "type": "boolean",
+                "enum": [false]
+            }
+        }
+    }
+},
+{
+  "schema_name": "wordvec",
+  "schema_title": "Word Vector",
+  "schema_description": "Schema for word vector references in stimuli records",
+  "schema_type": "property_model",
+  "json_schema": {
+    "type": "object",
+    "properties": {
+      "schema_ref": {
+        "type": "string",
+        "description": "Reference to the word vector schema"
+      },
+        "data_name": {},
+        "version_timestamp": {},
+        "has_file": {
+            "type": "boolean",
+            "enum": [false]
+        }
+    },
+    "required": ["schema_ref", "data_name"]
+  }
+},
+{
+  "schema_name": "offset_times",
+  "schema_title": "Offset Times",
+  "schema_description": "Schema for offset times references in stimuli records",
+  "schema_type": "property_model",
+  "json_schema": {
+    "type": "object",
+    "properties": {
+      "schema_ref": {
+        "type": "string",
+        "description": "Reference to the offset times schema"
+      },
+      "data_name": {
+        "type": "string",
+        "description": "Name of the offset times data"
+      },
+        "version_timestamp": {},
+        "has_file": {
+            "type": "boolean",
+            "enum": [false]
+        }
+    },
+    "required": ["schema_ref", "data_name"]
+  }
+},
+{
+  "schema_name": "onset_times",
+  "schema_title": "Onset Times",
+  "schema_description": "Schema for onset times references in stimuli records",
+  "schema_type": "property_model",
+  "json_schema": {
+    "type": "object",
+    "properties": {
+      "schema_ref": {
+        "type": "string",
+        "description": "Reference to the onset times schema"
+      },
+      "data_name": {
+        "type": "string",
+        "description": "Name of the onset times data"
+      },
+        "version_timestamp": {},
+        "has_file": {
+            "type": "boolean",
+            "enum": [false]
+        }
+  },
+    "required": ["schema_ref", "data_name"]
+  }
+},
+{
+  "schema_name": "sentence_boundaries",
+  "schema_title": "Sentence Boundaries",
+  "schema_description": "Schema for sentence boundaries references in stimuli records",
+  "schema_type": "property_model",
+  "json_schema": {
+    "type": "object",
+    "properties": {
+      "schema_ref": {
+        "type": "string",
+        "description": "Reference to the sentence boundaries schema"
+      },
+      "data_name": {
+        "type": "string",
+        "description": "Name of the sentence boundaries data"
+      },
+        "version_timestamp": {},
+        "has_file": {
+            "type": "boolean",
+            "enum": [false]
+        }
+    },
+    "required": ["schema_ref", "data_name"]
+   }
+},
+{
+  "schema_name": "envelope",
+  "schema_title": "Envelope",
+  "schema_description": "Schema for envelope references in stimuli records",
+  "schema_type": "property_model",
+  "json_schema": {
+      "type": "object",
+      "properties": {
+        "schema_ref": {
+            "type": "string",
+            "description": "Reference to the envelope schema"
+          },
+        "data_name": {
+            "type": "string",
+            "description": "Name of the envelope data"
+          },
+        "version_timestamp": {},
+        "has_file": {
+          "type": "boolean",
+          "enum": [false]
+        }
+      },
+      "required": [
+          "schema_ref",
+          "data_name"
+      ]
+  }
+}
+
+
+]

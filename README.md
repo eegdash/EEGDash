@@ -14,13 +14,31 @@ The data in EEG-DaSh is formatted to facilitate machine learning (ML) and deep l
 
 The data in EEG-DaSh is accessed through Python and MATLAB libraries specifically designed for this platform. These libraries will use objects compatible with deep learning data storage formats in each language, such as <i>Torchvision.dataset</i> in Python and <i>DataStore</i> in MATLAB. Users can dynamically fetch data from the EEG-DaSh server which is then cached locally. 
 
-### AWS S3
+### Python data access
 
-Coming soon...
+To create a local object for accessing the database, use the following code:
 
-### EEG-Dash API
+```python
+EEGDashInstance = EEGDash()
+```
 
-Coming soon...
+Once the object is instantiated, it can be utilized to search datasets. Providing an empty parameter will search the entire database and return all available datasets.
+
+```python
+EEGDashInstance.find()
+```
+
+Additionally, users can search for a specific dataset by specifying criteria.
+
+```python
+EEGDashInstance.find({'task': 'Simon'})
+```
+
+After locating the desired dataset, users can download it locally by executing the following command:
+
+```python
+EEGDashInstance.get({'task': 'Simon'})
+```
 
 ## Education
 

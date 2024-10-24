@@ -24,6 +24,14 @@
             "sampling_frequency": {
                 "type": "integer"
             },
+            "dataset": {
+                "type": "string",
+                "required": false
+            }, 
+            "subject": {
+                "type": "string",
+                "required": false
+            }, 
             "task": {
                 "type": "string",
                 "required": false

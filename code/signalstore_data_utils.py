@@ -64,7 +64,10 @@ class SignalstoreBIDS():
             )
             return tmp_dir_fs
         else:
-            s3 = s3fs.S3FileSystem(client_kwargs={'region_name': 'us-east-2'})
+            if self.is_public:
+                s3 = s3fs.S3FileSystem(anon=True, client_kwargs={'region_name': 'us-east-2'})
+            else:
+                s3 = s3fs.S3FileSystem(client_kwargs={'region_name': 'us-east-2'})
             return s3
 
     def load_domain_models(self):

@@ -586,6 +586,14 @@
       "type": "string"
     }
   },
+  {"schema_name": "dataset",
+  "schema_title": "Dataset",
+  "schema_description": "The dataset ID.",
+  "schema_type": "property_model",
+  "json_schema": {
+    "type": "string"
+    }
+  },
   {"schema_name": "task",
   "schema_title": "Task",
   "schema_description": "The task subject performs.",

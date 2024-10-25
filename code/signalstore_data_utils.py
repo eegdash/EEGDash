@@ -1,18 +1,14 @@
 from pathlib import Path
 import re
-import scipy.io as sio
 import numpy as np
 import xarray as xr
 import os
-from os import scandir, walk
 from signalstore.store import UnitOfWorkProvider
 # from mongomock import MongoClient
 from pymongo.mongo_client import MongoClient
+from pymongo.server_api import ServerApi
 from fsspec.implementations.local import LocalFileSystem
-from fsspec import get_mapper
 from fsspec.implementations.dirfs import DirFileSystem
-import fsspec
-import mne
 import pandas as pd
 import json
 import s3fs
@@ -25,15 +21,21 @@ class SignalstoreBIDS():
     def __init__(self, 
                  project_name=AWS_BUCKET,
                  dbconnectionstring="mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.3.1",
+                 is_public=False,
                  local_filesystem=True,
                  ):
-        # tmp_dir = TemporaryDirectory()
-        # print(tmp_dir.name)
-        # Create data storage location
+        self.is_public = is_public
 
         # uri = "mongodb+srv://dtyoung112:XbiUEbzmCacjafGu@cluster0.6jtigmc.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0" # mongodb free atlas server
         # Create a new client and connect to the server
-        client = MongoClient(dbconnectionstring)
+        client = MongoClient(dbconnectionstring, server_api=ServerApi('1'))
+        # Send a ping to confirm a successful connection
+        try:
+            client.admin.command('ping')
+            print("Pinged your deployment. You successfully connected to MongoDB!")
+        except Exception as e:
+            print(e)
+
         memory_store = {}
         filesystem = self.set_up_filesystem(is_local=local_filesystem)
         self.uow_provider = UnitOfWorkProvider(
@@ -49,7 +51,7 @@ class SignalstoreBIDS():
 
     def set_up_filesystem(self, is_local=True):
         if is_local:
-            cache_path='/mnt/nemar/dtyoung/eeg-ssl-data/signalstore/hbn'                  # path where signalstore netCDF files are stored
+            cache_path='/mnt/nemar/dtyoung/eeg-ssl-data'                  # path where signalstore netCDF files are stored
             # Create a directory for the dataset
             store_path = Path(cache_path)
             if not os.path.exists(store_path):
@@ -99,31 +101,40 @@ class SignalstoreBIDS():
         match = re.search(pattern, filename)
         return match.group(1) if match else None
 
-    def load_eeg_data_from_bids_file(self, bids_dataset: BIDSDataset, bids_file):
+    def load_eeg_attrs_from_bids_file(self, bids_dataset: BIDSDataset, bids_file):
+        '''
+        bids_file must be a file of the bids_dataset
+        '''
+        if bids_file not in bids_dataset.files:
+            raise ValueError(f'{bids_file} not in {bids_dataset.dataset}')
+        f = os.path.basename(bids_file)
+        attrs = {
+            'schema_ref': 'eeg_signal',
+            'data_name': f'{bids_dataset.dataset}_{f}',
+            'dataset': bids_dataset.dataset,
+            'subject': bids_dataset.subject(bids_file),
+            'task': bids_dataset.task(bids_file),
+            'session': bids_dataset.session(bids_file),
+            'run': bids_dataset.run(bids_file),
+            'sampling_frequency': bids_dataset.sfreq(bids_file), 
+            'modality': 'EEG',
+        }
+
+        return attrs
+
+    def load_eeg_data_from_bids_file(self, bids_dataset: BIDSDataset, bids_file, eeg_attrs=None):
         '''
         bids_file must be a file of the bids_dataset
         '''
         if bids_file not in bids_dataset.files:
             raise ValueError(f'{bids_file} not in {bids_dataset.dataset}')
 
-        f = os.path.basename(bids_file)
-
-        attrs = {
-            'schema_ref': 'eeg_signal',
-            'data_name': f'{bids_dataset.dataset}_{f}',
-            # 'dataset': bids_dataset.dataset,
-            'subject': bids_dataset.subject(bids_file),
-            'task': bids_dataset.task(bids_file),
-            'session': bids_dataset.session(bids_file),
-            'run': bids_dataset.run(bids_file),
-            'modality': 'EEG',
-        }
+        attrs = self.load_eeg_attrs_from_bids_file(bids_dataset, bids_file) if eeg_attrs is None else eeg_attrs
 
         eeg_data = bids_dataset.load_and_preprocess_raw(bids_file)
         print('data shape:', eeg_data.shape)
     
-        fs = bids_dataset.sfreq(bids_file)
-        attrs['sampling_frequency'] = fs
+        fs = attrs['sampling_frequency']
         max_time = eeg_data.shape[1] / fs
         time_steps = np.linspace(0, max_time, eeg_data.shape[1]).squeeze() # in seconds
         # print('time steps', len(time_steps))
@@ -160,7 +171,10 @@ class SignalstoreBIDS():
             else:
                 return False
 
-    def add_bids_dataset(self, dataset, data_dir, raw_format='eeglab'):
+    def add_bids_dataset(self, dataset, data_dir, raw_format='eeglab', overwrite=False, record_only=False):
+        if self.is_public:
+            raise ValueError('This operation is not allowed for public users')
+
         bids_dataset = BIDSDataset(
             data_dir=data_dir,
             dataset=dataset,
@@ -170,17 +184,42 @@ class SignalstoreBIDS():
             print('bids raw file', bids_file)
 
             signalstore_data_id = f"{dataset}_{os.path.basename(bids_file)}"
+            if overwrite:
+                self.remove(signalstore_data_id)
+
             if self.exist(data_name=signalstore_data_id):
                 print('data already exist. skipped')
                 continue
             else:
-                eeg_xarray = self.load_eeg_data_from_bids_file(bids_dataset, bids_file)
+                eeg_attrs = self.load_eeg_attrs_from_bids_file(bids_dataset, bids_file)
                 with self.uow as uow:
-                    print('adding data', eeg_xarray.attrs['data_name'])
-                    uow.data.add(eeg_xarray)
+                    # Assume raw data already exists, recreating record only
+                    eeg_attrs['has_file'] = True
+                    print('adding record', eeg_attrs['data_name'])
+                    uow.data.add(eeg_attrs)
+                    uow.commit()
+                if  not record_only:
+                    eeg_xarray = self.load_eeg_data_from_bids_file(bids_dataset, bids_file, eeg_attrs)
+                    with self.uow as uow:
+                        print('adding data', eeg_xarray.attrs['data_name'])
+                        uow.data.add(eeg_xarray)
+                        uow.commit()
+
+    def remove(self, schema_ref='eeg_signal', data_name=''):
+        if self.is_public:
+            raise ValueError('This operation is not allowed for public users')
+
+        with self.uow as uow:
+            sessions = uow.data.find({'schema_ref': schema_ref, 'data_name': data_name})
+            if len(session) > 0:
+                for session in range(len(sessions)):
+                    uow.data.remove(session['schema_ref'], session['data_name'])
                     uow.commit()
 
     def remove_all(self):
+        if self.is_public:
+            raise ValueError('This operation is not allowed for public users')
+
         with self.uow as uow:
             sessions = uow.data.find({})
             print(len(sessions))

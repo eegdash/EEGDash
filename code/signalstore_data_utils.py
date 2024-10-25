@@ -1,4 +1,5 @@
 from pathlib import Path
+from dotenv import load_dotenv
 import re
 import numpy as np
 import xarray as xr
@@ -13,7 +14,6 @@ import pandas as pd
 import json
 import s3fs
 from data_utils import BIDSDataset
-# from dask.distributed import LocalCluster
 
 
 class SignalstoreBIDS():
@@ -25,8 +25,12 @@ class SignalstoreBIDS():
                  local_filesystem=True,
                  ):
         self.is_public = is_public
+        if is_public:
+            dbconnectionstring='mongodb+srv://eegdash-user:mdzoMjQcHWTVnKDq@cluster0.vz35p.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0',
+        else:
+            load_dotenv()
+            dbconnectionstring = os.getenv('DB_CONNECTION_STRING')
 
-        # uri = "mongodb+srv://dtyoung112:XbiUEbzmCacjafGu@cluster0.6jtigmc.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0" # mongodb free atlas server
         # Create a new client and connect to the server
         client = MongoClient(dbconnectionstring, server_api=ServerApi('1'))
         # Send a ping to confirm a successful connection

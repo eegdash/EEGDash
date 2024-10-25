@@ -1,4 +1,5 @@
 code/data/
 code/__pycache__/
+code/signalstore
 .venv
-.secret
+.env

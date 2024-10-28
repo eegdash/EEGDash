@@ -19,7 +19,7 @@ The data in EEG-DaSh is accessed through Python and MATLAB libraries specificall
 * Create a new environment Python 3.11.5 -> "conda create --name eegdash python=3.11.5"
 * Switch to the right environment -> "conda activate eegdash"
 * Download requirements.txt and type -> "pip install -r requirements.txt"
-* Download and install the Wheel file in the dist folder -> "pip install eegdash-0.0.1-py3-none-any.whl"
+* Download and install the Wheel file (in the dist folder of this repo) -> "pip install eegdash-0.0.1-py3-none-any.whl"
 * Check installation. Start a Python session and type "from eegdash import EEGDash"
 
 ### Python data access

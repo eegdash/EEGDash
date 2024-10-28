@@ -14,11 +14,41 @@ The data in EEG-DaSh is formatted to facilitate machine learning (ML) and deep l
 
 The data in EEG-DaSh is accessed through Python and MATLAB libraries specifically designed for this platform. These libraries will use objects compatible with deep learning data storage formats in each language, such as <i>Torchvision.dataset</i> in Python and <i>DataStore</i> in MATLAB. Users can dynamically fetch data from the EEG-DaSh server which is then cached locally. 
 
-### AWS S3
+### Python data access
 
-Coming soon...
+To create a local object for accessing the database, use the following code:
 
-### EEG-Dash API
+```python
+EEGDashInstance = EEGDash()
+```
+
+Once the object is instantiated, it can be utilized to search datasets. Providing an empty parameter will search the entire database and return all available datasets.
+
+```python
+EEGDashInstance.find()
+```
+
+Additionally, users can search for a specific dataset by specifying criteria.
+
+```python
+EEGDashInstance.find({'task': 'Simon'})
+```
+
+After locating the desired dataset, users can download it locally by executing the following command:
+
+```python
+EEGDashInstance.get({'task': 'Simon'})
+```
+
+## Education
+
+We organize workshops and educational events to foster cross-cultural education and student training, offering both online and in-person opportunities in collaboration with US and Israeli partners. There is no event planned for 2024. Events for 2025 will be advertised on the EEGLABNEWS mailing list so make sure to [subscribe](https://sccn.ucsd.edu/mailman/listinfo/eeglabnews).
+
+## About EEG-DaSh
+
+EEG-DaSh is a collaborative initiative between the United States and Israel, supported by the National Science Foundation (NSF). The partnership brings together experts from the Swartz Center for Computational Neuroscience (SCCN) at the University of California San Diego (UCSD) and Ben-Gurion University (BGU) in Israel. 
+
+![Screenshot 2024-10-03 at 09 14 06](https://github.com/user-attachments/assets/327639d3-c3b4-46b1-9335-37803209b0d3)
 
 Coming soon...
 

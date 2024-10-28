@@ -1,7 +1,7 @@
 import sys 
 sys.path.append('..')
 import argparse
-from signalstore_data_utils import SignalstoreBIDS
+from eegdash.signalstore_data_utils import SignalstoreBIDS
 
 def add_bids_dataset(args):
     signalstore_aws = SignalstoreBIDS(

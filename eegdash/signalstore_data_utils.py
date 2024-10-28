@@ -252,6 +252,20 @@ class SignalstoreBIDS():
             else:
                 return []
 
+    def get(self, query:dict, validate=False):
+        '''
+        query: {
+            'dataset': 'dsxxxx',
+
+        }'''
+        with self.uow as uow:
+            sessions = uow.data.find(query, validate=validate, get_data=True)
+            if sessions:
+                print(f'Found {len(sessions)} records')
+                return sessions
+            else:
+                return []
+
 if __name__ == "__main__":
     # sstore_hbn = SignalstoreHBN()
     # sstore_hbn.add_data()

@@ -1,5 +1,9 @@
-code/data/
-code/__pycache__/
-code/signalstore
+*.npy
+*/*.npy
+*/*/*.npy
+eegdash/data/
+*/__pycache__/
 .venv
-.env
+.secret
+tests/.testeegdash/
+

@@ -1,0 +1,9 @@
+*.npy
+*/*.npy
+*/*/*.npy
+eegdash/data/
+*/__pycache__/
+.venv
+.secret
+tests/.testeegdash/
+

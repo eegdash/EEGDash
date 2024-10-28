@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "eegdash"
+version = "0.0.1"
+authors = [
+  { name="Young Truong", email="dt.young112@gmail.com" },
+  { name="Arnaud Delorme", email="adelorme@gmail.com" },
+]
+description = "EEG data for machine learning"
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: GNU General Public License",
+    "Operating System :: OS Independent",
+]
+
+[project.urls]
+Homepage = "https://github.com/sccn/EEG-Dash-Data"
+Issues = "https://github.com/sccn/EEG-Dash-Data/issues"

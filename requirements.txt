@@ -19,7 +19,6 @@ cycler==0.12.1
 debugpy==1.8.7
 decorator==5.1.1
 dnspython==2.7.0
--e git+https://github.com/sccn/EEG-Dash-Data.git@72b27cd3075178db8e5ce3f364984a0d915f2589#egg=eegdash
 exceptiongroup==1.2.2
 executing==2.1.0
 fasteners==0.19

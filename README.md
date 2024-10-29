@@ -18,8 +18,8 @@ The data in EEG-DaSh is accessed through Python and MATLAB libraries specificall
 Use your preferred Python environment manager with Python > 3.9 to install the package. Here we show example using Conda environment with Python 3.11.5:
 * Create a new environment Python 3.11.5 -> `conda create --name eegdash python=3.11.5`
 * Switch to the right environment -> `conda activate eegdash`
-* Install dependencies -> `pip install -r https://raw.githubusercontent.com/sccn/EEG-Dash-Data/refs/heads/develop/requirements.txt`
-* Install _eegdash_ package -> `pip install -i https://test.pypi.org/simple/ eegdash`
+* Install dependencies (this is a temporary link that will be updated soon) -> `pip install -r https://raw.githubusercontent.com/sccn/EEG-Dash-Data/refs/heads/develop/requirements.txt`
+* Install _eegdash_ package (this is a temporary link that will be updated soon) -> `pip install -i https://test.pypi.org/simple/ eegdash`
 * Check installation. Start a Python session and type `from eegdash import EEGDash`
 
 ### Python data access

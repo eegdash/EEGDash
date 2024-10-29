@@ -4,7 +4,14 @@ To leverage recent and ongoing advancements in large-scale computational methods
 ## Data source
 The data in EEG-DaSh originates from a collaboration involving 25 laboratories, encompassing 27,053 participants. This extensive collection includes MEEG data, which is a combination of EEG and MEG signals. The data is sourced from various studies conducted by these labs, involving both healthy subjects and clinical populations with conditions such as ADHD, depression, schizophrenia, dementia, autism, and psychosis. Additionally, data spans different mental states like sleep, meditation, and cognitive tasks. In addition, EEG-DaSh will also incorporate data converted from NEMAR, which includes a subset of the 330 MEEG BIDS-formatted datasets available on OpenNeuro, further expanding the archive with well-curated, standardized neuroelectromagnetic data.
 
-## Dataset available
+## Datasets available
+
+There are currently only two datasets made available for testing purposes. 
+
+| Dataset ID | Description                                                                                 | Participants | Channels        | Task            | NEMAR Link                                                                                      |
+|------------|---------------------------------------------------------------------------------------------|--------------|-----------------|-----------------|------------------------------------------------------------------------------------------------|
+| ds002718   | EEG dataset focused on face processing with MRI for source localization                     | 18           | 70 EEG, 2 EOG   | FaceRecognition | [NEMAR ds002718](https://nemar.org/dataexplorer/detail?dataset_id=ds002718)                    |
+| ds004745   | 8-Channel SSVEP EEG dataset with trials including voluntary movements to introduce artifacts | 6            | 8 EEG           | SSVEP tasks     | [NEMAR ds004745](https://nemar.org/dataexplorer/detail?dataset_id=ds004745)                    |
 
 
 

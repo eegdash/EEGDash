@@ -82,7 +82,7 @@ EEGDashInstance.get({'task': 'FaceRecognition', 'subject': '019'})
 
 Optionally, this is how you may access the raw data for the first record.
 
-```
+```python
 EEGDashInstance.get({'task': 'FaceRecognition', 'subject': '019'})[0].values
 ```
 

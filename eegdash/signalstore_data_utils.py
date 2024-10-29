@@ -4,7 +4,7 @@ import re
 import numpy as np
 import xarray as xr
 import os
-from signalstore.store import UnitOfWorkProvider
+from eegdash.SignalStore.signalstore.store import UnitOfWorkProvider
 # from mongomock import MongoClient
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
@@ -13,7 +13,7 @@ from fsspec.implementations.dirfs import DirFileSystem
 import pandas as pd
 import json
 import s3fs
-from data_utils import BIDSDataset
+from eegdash.data_utils import BIDSDataset
 
 
 class SignalstoreBIDS():

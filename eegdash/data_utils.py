@@ -1,6 +1,5 @@
 import os
 import sys 
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from joblib import Parallel, delayed
 import mne
 import numpy as np
@@ -9,6 +8,7 @@ import re
 import json
 
 verbose = False
+
 
 class BIDSDataset():
     ALLOWED_FILE_FORMAT = ['eeglab', 'brainvision', 'biosemi', 'european']

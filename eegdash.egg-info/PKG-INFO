@@ -27,7 +27,7 @@ License: GNU General Public License
 Project-URL: Homepage, https://github.com/sccn/EEG-Dash-Data
 Project-URL: Issues, https://github.com/sccn/EEG-Dash-Data/issues
 Classifier: Programming Language :: Python :: 3
-Classifier: License :: GNU General Public License
+Classifier: License :: OSI Approved :: MIT License
 Classifier: Operating System :: OS Independent
 Requires-Python: >=3.8
 Description-Content-Type: text/markdown

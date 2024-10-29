@@ -4,6 +4,10 @@ To leverage recent and ongoing advancements in large-scale computational methods
 ## Data source
 The data in EEG-DaSh originates from a collaboration involving 25 laboratories, encompassing 27,053 participants. This extensive collection includes MEEG data, which is a combination of EEG and MEG signals. The data is sourced from various studies conducted by these labs, involving both healthy subjects and clinical populations with conditions such as ADHD, depression, schizophrenia, dementia, autism, and psychosis. Additionally, data spans different mental states like sleep, meditation, and cognitive tasks. In addition, EEG-DaSh will also incorporate data converted from NEMAR, which includes a subset of the 330 MEEG BIDS-formatted datasets available on OpenNeuro, further expanding the archive with well-curated, standardized neuroelectromagnetic data.
 
+## Dataset available
+
+
+
 ## Data formatting
 The data in EEG-DaSh is formatted to facilitate machine learning (ML) and deep learning (DL) applications by using a simplified structure commonly adopted by these communities. This will involve converting raw MEEG data into a matrix format, where samples (e.g., individual EEG or MEG recordings) are represented by rows, and values (such as time or channel data) are represented by columns. The data is also divided into training and testing sets, with 80% of the data allocated for training and 20% for testing, ensuring a balanced representation of relevant labels across sets. Hierarchical Event Descriptor (HED) tags will be used to annotate labels, which will be stored in a text table, and detailed metadata, including dataset origins and methods. This formatting process will ensure that data is ready for ML/DL models, allowing for efficient training and testing of algorithms while preserving data integrity and reusability.
 
@@ -35,7 +39,24 @@ Once the object is instantiated, it can be utilized to search datasets. Providin
 
 ```python
 EEGDashInstance.find({})
+
+[{'schema_ref': 'eeg_signal',
+  'data_name': 'ds004745_sub-001_task-unnamed_eeg.set',
+  'dataset': 'ds004745',
+  'subject': '001',
+  'task': 'unnamed',
+  'session': '',
+  'run': '',
+  'modality': 'EEG',
+  'sampling_frequency': 1000,
+  'version_timestamp': 0,
+  'has_file': True,
+  'time_of_save': datetime.datetime(2024, 10, 25, 14, 11, 48, 843593, tzinfo=datetime.timezone.utc),
+  'time_of_removal': None}, ...
+
 ```
+
+
 
 Additionally, users can search for a specific dataset by specifying criteria.
 

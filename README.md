@@ -14,17 +14,52 @@ The data in EEG-DaSh is formatted to facilitate machine learning (ML) and deep l
 
 The data in EEG-DaSh is accessed through Python and MATLAB libraries specifically designed for this platform. These libraries will use objects compatible with deep learning data storage formats in each language, such as <i>Torchvision.dataset</i> in Python and <i>DataStore</i> in MATLAB. Users can dynamically fetch data from the EEG-DaSh server which is then cached locally. 
 
-### AWS S3
+### Install (temp)
+Use your preferred Python environment manager with Python > 3.9 to install the package. Here we show example using Conda environment with Python 3.11.5:
+* Create a new environment Python 3.11.5 -> `conda create --name eegdash python=3.11.5`
+* Switch to the right environment -> `conda activate eegdash`
+* Install dependencies -> `pip install -r https://raw.githubusercontent.com/sccn/EEG-Dash-Data/refs/heads/develop/requirements.txt`
+* Install _eegdash_ package -> `pip install -i https://test.pypi.org/simple/ eegdash`
+* Check installation. Start a Python session and type `from eegdash import EEGDash`
+
+### Python data access
+
+To create a local object for accessing the database, use the following code:
+
+```python
+from eegdash import EEGDash
+EEGDashInstance = EEGDash()
+```
+
+Once the object is instantiated, it can be utilized to search datasets. Providing an empty parameter will search the entire database and return all available datasets.
+
+```python
+EEGDashInstance.find()
+```
+
+Additionally, users can search for a specific dataset by specifying criteria.
+
+```python
+EEGDashInstance.find({'task': 'FaceRecognition'})
+```
+
+After locating the desired dataset or data record, users can download it locally by executing the following command:
+
+```python
+EEGDashInstance.get({'task': 'FaceRecognition', 'subject': '019'})
+```
+
+## Education
+
+We organize workshops and educational events to foster cross-cultural education and student training, offering both online and in-person opportunities in collaboration with US and Israeli partners. There is no event planned for 2024. Events for 2025 will be advertised on the EEGLABNEWS mailing list so make sure to [subscribe](https://sccn.ucsd.edu/mailman/listinfo/eeglabnews).
+
+## About EEG-DaSh
+
+EEG-DaSh is a collaborative initiative between the United States and Israel, supported by the National Science Foundation (NSF). The partnership brings together experts from the Swartz Center for Computational Neuroscience (SCCN) at the University of California San Diego (UCSD) and Ben-Gurion University (BGU) in Israel. 
+
+![Screenshot 2024-10-03 at 09 14 06](https://github.com/user-attachments/assets/327639d3-c3b4-46b1-9335-37803209b0d3)
 
 Coming soon...
-
-### EEG-Dash API
-
-```bash
-pip install -r https://raw.githubusercontent.com/sccn/EEG-Dash-Data/refs/heads/develop/requirements.txt?token=GHSAT0AAAAAACUTMMI77VMTDWYWY6SOKLOKZZAN7SQ
-
-python3 -m pip install --index-url https://test.pypi.org/simple/ --no-deps eegdash
-```
 
 ## Education
 

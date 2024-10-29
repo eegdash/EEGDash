@@ -1,0 +1,3 @@
+[submodule "eegdash/SignalStore"]
+	path = eegdash/SignalStore
+	url = https://github.com/dungscout96/SignalStore.git

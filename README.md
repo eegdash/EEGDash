@@ -90,9 +90,7 @@ EEG-DaSh is a collaborative initiative between the United States and Israel, sup
 
 ![Screenshot 2024-10-03 at 09 14 06](https://github.com/user-attachments/assets/327639d3-c3b4-46b1-9335-37803209b0d3)
 
-Coming soon...
-
-## Education
+## Education - Coming soon...
 
 We organize workshops and educational events to foster cross-cultural education and student training, offering both online and in-person opportunities in collaboration with US and Israeli partners. There is no event planned for 2024. Events for 2025 will be advertised on the EEGLABNEWS mailing list so make sure to [subscribe](https://sccn.ucsd.edu/mailman/listinfo/eeglabnews).
 

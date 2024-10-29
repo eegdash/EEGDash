@@ -14,7 +14,7 @@ The data in EEG-DaSh is formatted to facilitate machine learning (ML) and deep l
 
 The data in EEG-DaSh is accessed through Python and MATLAB libraries specifically designed for this platform. These libraries will use objects compatible with deep learning data storage formats in each language, such as <i>Torchvision.dataset</i> in Python and <i>DataStore</i> in MATLAB. Users can dynamically fetch data from the EEG-DaSh server which is then cached locally. 
 
-### Install (temp)
+### Install
 Use your preferred Python environment manager with Python > 3.9 to install the package. Here we show example using Conda environment with Python 3.11.5:
 * Create a new environment Python 3.11.5 -> `conda create --name eegdash python=3.11.5`
 * Switch to the right environment -> `conda activate eegdash`
@@ -34,7 +34,7 @@ EEGDashInstance = EEGDash()
 Once the object is instantiated, it can be utilized to search datasets. Providing an empty parameter will search the entire database and return all available datasets.
 
 ```python
-EEGDashInstance.find()
+EEGDashInstance.find({})
 ```
 
 Additionally, users can search for a specific dataset by specifying criteria.
@@ -48,6 +48,13 @@ After locating the desired dataset or data record, users can download it locally
 ```python
 EEGDashInstance.get({'task': 'FaceRecognition', 'subject': '019'})
 ```
+
+Optionally, this is how you may access the raw data for the first record.
+
+```
+EEGDashInstance.get({'task': 'FaceRecognition', 'subject': '019'})[0].values
+```
+
 
 ## Education
 

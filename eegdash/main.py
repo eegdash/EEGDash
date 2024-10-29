@@ -1,4 +1,4 @@
-from signalstore_data_utils import SignalstoreBIDS
+from eegdash.signalstore_data_utils import SignalstoreBIDS
 
 class EEGDash:
     def __init__(self):

@@ -66,8 +66,6 @@ A list of dataset is returned.
 
 ```
 
-
-
 Additionally, users can search for a specific dataset by specifying criteria.
 
 ```python

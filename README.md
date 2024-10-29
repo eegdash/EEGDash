@@ -20,7 +20,11 @@ Coming soon...
 
 ### EEG-Dash API
 
-Coming soon...
+```bash
+pip install -r https://raw.githubusercontent.com/sccn/EEG-Dash-Data/refs/heads/develop/requirements.txt?token=GHSAT0AAAAAACUTMMI77VMTDWYWY6SOKLOKZZAN7SQ
+
+python3 -m pip install --index-url https://test.pypi.org/simple/ --no-deps eegdash
+```
 
 ## Education
 

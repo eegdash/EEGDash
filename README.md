@@ -39,7 +39,10 @@ Once the object is instantiated, it can be utilized to search datasets. Providin
 
 ```python
 EEGDashInstance.find({})
+```
+A list of dataset is returned.
 
+```python
 [{'schema_ref': 'eeg_signal',
   'data_name': 'ds004745_sub-001_task-unnamed_eeg.set',
   'dataset': 'ds004745',

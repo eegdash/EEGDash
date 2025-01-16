@@ -586,6 +586,14 @@
       "type": "string"
     }
   },
+  {"schema_name": "bidspath",
+  "schema_title": "BIDS Path",
+  "schema_description": "The relative path to the data file from BIDS directory",
+  "schema_type": "property_model",
+  "json_schema": {
+    "type": "string"
+    }
+  },
   {"schema_name": "dataset",
   "schema_title": "Dataset",
   "schema_description": "The dataset ID.",

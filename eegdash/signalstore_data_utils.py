@@ -15,6 +15,9 @@ import json
 import s3fs
 from signalstore.store.data_access_objects import FileSystemDAO
 from .data_utils import BIDSDataset
+import tempfile
+import mne
+from joblib import Parallel, delayed
 
 class SignalstoreOpenneuro():
     AWS_BUCKET = 'openneuro.org'
@@ -135,31 +138,27 @@ class SignalstoreOpenneuro():
 
         return attrs
 
-    def load_eeg_data_from_bids_file(self, bids_dataset: BIDSDataset, bids_file, eeg_attrs=None):
+    def load_eeg_data_from_s3(self, s3path):
+        with tempfile.NamedTemporaryFile(delete=False, suffix='.set') as tmp:
+            with self.filesystem.open(s3path) as s3_file:
+                tmp.write(s3_file.read())
+            tmp_path = tmp.name
+            eeg_data = self.load_eeg_data_from_bids_file(tmp_path)
+            os.unlink(tmp_path)
+            return eeg_data
+
+    def load_eeg_data_from_bids_file(self,  bids_file, eeg_attrs=None):
         '''
         bids_file must be a file of the bids_dataset
         '''
-        if bids_file not in bids_dataset.files:
-            raise ValueError(f'{bids_file} not in {bids_dataset.dataset}')
-
-        attrs = self.load_eeg_attrs_from_bids_file(bids_dataset, bids_file) if eeg_attrs is None else eeg_attrs
-
-        eeg_data = bids_dataset.load_and_preprocess_raw(bids_file)
-        print('data shape:', eeg_data.shape)
+        EEG = mne.io.read_raw_eeglab(bids_file)
+        eeg_data = EEG.get_data()
     
-        fs = attrs['sampling_frequency']
+        fs = EEG.info['sfreq']
         max_time = eeg_data.shape[1] / fs
         time_steps = np.linspace(0, max_time, eeg_data.shape[1]).squeeze() # in seconds
-        # print('time steps', len(time_steps))
 
-        # replace eeg.set with channels.tsv
-        # todo this is still a hacky way
-        channels_tsv = bids_dataset.get_bids_metadata_files(bids_file, 'channels.tsv')
-        channels_tsv = Path(channels_tsv[0]) 
-        if channels_tsv.exists():
-            channels = pd.read_csv(channels_tsv, sep='\t') 
-            # get channel names from channel_coords
-            channel_names = channels['name'].values
+        channel_names = EEG.ch_names
 
         eeg_xarray = xr.DataArray(
             data=eeg_data,
@@ -168,7 +167,7 @@ class SignalstoreOpenneuro():
                 'time': time_steps,
                 'channel': channel_names
             },
-            attrs=attrs
+            # attrs=attrs
         )
         return eeg_xarray
 
@@ -299,10 +298,9 @@ class SignalstoreOpenneuro():
             results = []
             if sessions:
                 print(f'Found {len(sessions)} records')
-                for session in sessions:
-                    openneuro_path = Path(self.AWS_BUCKET) / session['bidspath']
-                    print('openneuro path', openneuro_path)
-                    results.append(self.filesystem.open(openneuro_path))
+                results = Parallel(n_jobs=-1, prefer="threads", verbose=1)(
+                    delayed(self.load_eeg_data_from_s3)(Path(self.AWS_BUCKET) / session['bidspath']) for session in sessions
+                )
             return results
 
 class SignalstoreBIDS():

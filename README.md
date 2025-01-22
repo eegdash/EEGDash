@@ -75,13 +75,13 @@ EEGDashInstance.find({'task': 'FaceRecognition'})
 After locating the desired dataset or data record, users can download it locally by executing the following command. This will return an xArray Python object.
 
 ```python
-EEGDashInstance.get({'task': 'FaceRecognition', 'subject': '019'})
+XArrayData = EEGDashInstance.get({'task': 'FaceRecognition', 'subject': '019'})
 ```
 
 Optionally, this is how you may access the raw data for the first record. This will return an numpy array.
 
 ```python
-EEGDashInstance.get({'task': 'FaceRecognition', 'subject': '019'})[0].values
+npData = EEGDashInstance.get({'task': 'FaceRecognition', 'subject': '019'})[0].values
 ```
 
 ## Example use

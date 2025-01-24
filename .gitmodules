@@ -1,3 +1,0 @@
-[submodule "eegdash/signalstore"]
-	path = eegdash/signalstore
-	url = https://github.com/dungscout96/SignalStore.git

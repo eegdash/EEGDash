@@ -17,6 +17,10 @@
             "data_name": {
                 "type": "string"
             },
+            "bidspath": {
+                "type": "string",
+                "required": false
+            }, 
             "version_timestamp": {},
             "has_file": {
                 "const": true

@@ -1,15 +1,5 @@
-import sys 
-sys.path.append('..')
 import argparse
-from src.signalstore_data_utils import SignalstoreBIDS
-
-def add_bids_dataset(args):
-    signalstore_aws = SignalstoreBIDS(
-        dbconnectionstring='mongodb://23.21.113.214:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.2.1',
-        local_filesystem=False,
-        project_name='eegdash',
-    )
-    signalstore_aws.add_bids_dataset(dataset=args.dataset, data_dir=args.data, raw_format='eeglab')
+from eegdash.signalstore_data_utils import SignalstoreOpenneuro
 
 def main():
     # Create the parser
@@ -23,7 +13,13 @@ def main():
     args = parser.parse_args()
     print('Arguments:', args)
 
-    add_bids_dataset(args)
+    signalstore = SignalstoreOpenneuro(
+        is_public=False,
+        local_filesystem=False,
+    )
+    hbn_datasets = ['ds005514','ds005511','ds005509','ds005508','ds005507','ds005506', 'ds005510', 'ds005512','ds005505']
+    for ds in hbn_datasets:
+        signalstore.add_bids_dataset(dataset=ds, data_dir=f'/mnt/nemar/openneuro/{ds}', raw_format='eeglab')
 
 if __name__ == "__main__":
     main()

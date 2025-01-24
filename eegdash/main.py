@@ -14,4 +14,13 @@ class EEGDash:
         return self.sstore.find(*args)
     
     def get(self, *args):
+        
+        # repackage to BrainDecodeDataset
+        
+        # sessions = self.sstore.get(*args) # return xarray.Dataset
+        
+        # Download from S3
+        
+        # return BrainDecodeDataset(sessions)
+        
         return self.sstore.get(*args)

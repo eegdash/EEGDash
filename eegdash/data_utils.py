@@ -6,8 +6,94 @@ import numpy as np
 from pathlib import Path
 import re
 import json
+from mne.io import BaseRaw
+from mne._fiff.utils import _find_channels, _read_segments_file
+import s3fs
+import tempfile
+from mne._fiff.utils import _read_segments_file
 
-verbose = False
+class RawEEGDash(BaseRaw):
+    r"""Raw object from EEG-Dash connection with Openneuro S3 file.
+
+    Parameters
+    ----------
+    input_fname : path-like
+        Path to the S3 file
+    eog : list | tuple | 'auto'
+        Names or indices of channels that should be designated EOG channels.
+        If 'auto', the channel names containing ``EOG`` or ``EYE`` are used.
+        Defaults to empty tuple.
+    %(preload)s
+        Note that preload=False will be effective only if the data is stored
+        in a separate binary file.
+    %(uint16_codec)s
+    %(montage_units)s
+    %(verbose)s
+
+    See Also
+    --------
+    mne.io.Raw : Documentation of attributes and methods.
+
+    Notes
+    -----
+    .. versionadded:: 0.11.0
+    """
+
+    def __init__(
+        self,
+        input_fname,
+        metadata,
+        eog=(),
+        preload=False,
+        *,
+        cache_dir='.',
+        uint16_codec=None,
+        montage_units="auto",
+        verbose=None,
+    ):
+        '''
+        Get to work with S3 endpoint first, no caching
+        '''
+        # Create a simple RawArray
+        sfreq = metadata['sfreq']  # Sampling frequency
+        n_chans = metadata['nchans']
+        n_times = metadata['n_times']
+        print('n_times', n_times)
+        ch_names = [f'EEG{d}' for d in range(1,n_chans+1)]
+        ch_types = ["eeg"] * n_chans
+        info = mne.create_info(ch_names=ch_names, sfreq=sfreq, ch_types=ch_types)
+        self.s3file = input_fname
+        self.filecache = os.path.join(cache_dir, os.path.basename(self.s3file))
+
+        if preload and not os.path.exists(self.filecache):
+            self._download_s3()
+            preload = self.filecache
+
+        super().__init__(
+            info,
+            preload,
+            last_samps=[n_times-1],
+            orig_format="double",
+            verbose=verbose,
+        )
+
+    def _download_s3(self):
+        filesystem = s3fs.S3FileSystem(anon=True, client_kwargs={'region_name': 'us-east-2'})
+        filesystem.download(self.s3file, self.filecache)
+        self.filenames = [self.filecache]
+
+    def _read_segment(
+        self, start=0, stop=None, sel=None, data_buffer=None, *, verbose=None
+    ):
+        if not os.path.exists(self.filecache): # not preload
+            self._download_s3()
+        else: # not preload and file is not cached
+            self.filenames = [self.filecache]
+        return super()._read_segment(start, stop, sel, data_buffer, verbose=verbose)
+    
+    def _read_segment_file(self, data, idx, fi, start, stop, cals, mult):
+        """Read a chunk of data from the file."""
+        _read_segments_file(self, data, idx, fi, start, stop, cals, mult, dtype="<f4")
 
 
 class BIDSDataset():

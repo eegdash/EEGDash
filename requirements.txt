@@ -8,3 +8,4 @@ h5py
 pymongo
 joblib
 -e git+https://github.com/dungscout96/SignalStore.git@cedf682bf589e57c8ba8253a8ff2d7c33eeae97f#egg=signalstore
+pynwb

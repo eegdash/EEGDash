@@ -31,11 +31,19 @@
             "dataset": {
                 "type": "string",
                 "required": false
-            }, 
+            },
+            "nchans": {
+                "type": "integer",
+                "required": false
+            },
+            "ntimes": {
+                "type": "integer",
+                "required": false
+            },
             "subject": {
                 "type": "string",
                 "required": false
-            }, 
+            },
             "task": {
                 "type": "string",
                 "required": false

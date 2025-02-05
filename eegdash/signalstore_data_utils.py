@@ -129,6 +129,8 @@ class SignalstoreOpenneuro():
             'dataset': bids_dataset.dataset,
             'bidspath': openneuro_path,
             'subject': bids_dataset.subject(bids_file),
+            'nchans': bids_dataset.num_channels(bids_file),
+            'ntimes': bids_dataset.num_times(bids_file),
             'task': bids_dataset.task(bids_file),
             'session': bids_dataset.session(bids_file),
             'run': bids_dataset.run(bids_file),
@@ -407,13 +409,15 @@ class SignalstoreBIDS():
             'data_name': f'{bids_dataset.dataset}_{f}',
             'dataset': bids_dataset.dataset,
             'subject': bids_dataset.subject(bids_file),
+            'nchans': bids_dataset.num_channels(bids_file),
+            'ntimes': bids_dataset.num_times(bids_file),
             'task': bids_dataset.task(bids_file),
             'session': bids_dataset.session(bids_file),
             'run': bids_dataset.run(bids_file),
             'sampling_frequency': bids_dataset.sfreq(bids_file), 
             'modality': 'EEG',
-        }
-
+        }       
+ 
         return attrs
 
     def load_eeg_data_from_bids_file(self, bids_dataset: BIDSDataset, bids_file, eeg_attrs=None):

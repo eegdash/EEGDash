@@ -301,3 +301,19 @@ class BIDSDataset():
 
     def subject(self, data_filepath):
         return self.get_property_from_filename('sub', data_filepath)
+
+    def num_channels(self, data_filepath):
+        EEG = mne.io.read_raw_eeglab(data_filepath, preload=False, verbose='error')
+        return len(EEG.info['ch_names'])
+
+    def channel_labels(self, data_filepath):
+        EEG = mne.io.read_raw_eeglab(data_filepath, preload=False, verbose='error')
+        return EEG.info['ch_names']
+    
+    def channel_types(self, data_filepath):
+        EEG = mne.io.read_raw_eeglab(data_filepath, preload=False, verbose='error')
+        return EEG.info['ch_types']
+            
+    def num_times(self, data_filepath):
+        EEG = mne.io.read_raw_eeglab(data_filepath, preload=False, verbose='error')
+        return EEG.n_times

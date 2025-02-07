@@ -18,8 +18,8 @@ def main():
         local_filesystem=False,
     )
     hbn_datasets = ['ds005514','ds005511','ds005509','ds005508','ds005507','ds005506', 'ds005510', 'ds005512','ds005505']
-    for ds in hbn_datasets:
-        signalstore.add_bids_dataset(dataset=ds, data_dir=f'/mnt/nemar/openneuro/{ds}', raw_format='eeglab')
+    # for ds in hbn_datasets:
+    signalstore.add_bids_dataset(dataset='ds004186', data_dir=f'/Users/arno/Downloads/old_mar2024/ds004186subset', raw_format='eeglab')
 
 if __name__ == "__main__":
     main()

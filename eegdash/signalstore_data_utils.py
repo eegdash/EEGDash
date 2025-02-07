@@ -185,7 +185,7 @@ class SignalstoreOpenneuro():
             else:
                 return False
 
-    def add_bids_dataset(self, dataset, data_dir, raw_format='eeglab', overwrite=False):
+    def add_bids_dataset(self, dataset, data_dir, raw_format='eeglab', overwrite=True):
         '''
         Create new records for the dataset in the MongoDB database if not found
         '''
@@ -201,12 +201,18 @@ class SignalstoreOpenneuro():
             print('bids raw file', bids_file)
 
             signalstore_data_id = f"{dataset}_{os.path.basename(bids_file)}"
-            if overwrite:
-                self.remove(signalstore_data_id)
 
             if self.exist(data_name=signalstore_data_id):
-                print('data already exist. skipped')
-                continue
+                if overwrite:
+                    eeg_attrs = self.load_eeg_attrs_from_bids_file(bids_dataset, bids_file)
+                    with self.uow as uow:
+                        # Assume raw data already exists on Openneuro, recreating record only
+                        print('updating record', eeg_attrs['data_name'])
+                        uow.data.update_record(eeg_attrs)
+                        uow.commit()
+                else:
+                    print('data already exist and not overwriting. skipped')
+                    continue
             else:
                 eeg_attrs = self.load_eeg_attrs_from_bids_file(bids_dataset, bids_file)
                 with self.uow as uow:
@@ -409,15 +415,13 @@ class SignalstoreBIDS():
             'data_name': f'{bids_dataset.dataset}_{f}',
             'dataset': bids_dataset.dataset,
             'subject': bids_dataset.subject(bids_file),
-            'nchans': bids_dataset.num_channels(bids_file),
-            'ntimes': bids_dataset.num_times(bids_file),
             'task': bids_dataset.task(bids_file),
             'session': bids_dataset.session(bids_file),
             'run': bids_dataset.run(bids_file),
             'sampling_frequency': bids_dataset.sfreq(bids_file), 
             'modality': 'EEG',
-        }       
- 
+        }
+
         return attrs
 
     def load_eeg_data_from_bids_file(self, bids_dataset: BIDSDataset, bids_file, eeg_attrs=None):

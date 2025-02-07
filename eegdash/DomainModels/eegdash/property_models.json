@@ -625,6 +625,23 @@
   "json_schema": {
     "type": "string"
     }
+  },
+  {"schema_name": "nchans",
+  "schema_title": "nchans",
+  "schema_description": "Number of channels in the recording",
+  "schema_type": "property_model",
+  "json_schema": {
+    "type": "integer"
+    }
+  },
+  {"schema_name": "ntimes",
+  "schema_title": "ntimes",
+  "schema_description": "Number of samples in the recording",
+  "schema_type": "property_model",
+  "json_schema": {
+    "type": "integer"
+    }
   }
+
 ]
 

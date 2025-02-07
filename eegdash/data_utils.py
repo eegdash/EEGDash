@@ -304,7 +304,7 @@ class BIDSDataset():
 
     def num_channels(self, data_filepath):
         EEG = mne.io.read_raw_eeglab(data_filepath, preload=False, verbose='error')
-        return len(EEG.info['ch_names'])
+        return EEG.info["nchan"]
 
     def channel_labels(self, data_filepath):
         EEG = mne.io.read_raw_eeglab(data_filepath, preload=False, verbose='error')
@@ -312,8 +312,8 @@ class BIDSDataset():
     
     def channel_types(self, data_filepath):
         EEG = mne.io.read_raw_eeglab(data_filepath, preload=False, verbose='error')
-        return EEG.info['ch_types']
+        return [mne.channel_type(EEG.info, idx) for idx in mne.pick_channels(EEG.info["ch_names"], [])]
             
     def num_times(self, data_filepath):
         EEG = mne.io.read_raw_eeglab(data_filepath, preload=False, verbose='error')
-        return EEG.n_times
+        return int(EEG.n_times)

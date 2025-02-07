@@ -3,6 +3,7 @@ import sys
 from joblib import Parallel, delayed
 import mne
 import numpy as np
+import pandas as pd
 from pathlib import Path
 import re
 import json
@@ -106,7 +107,7 @@ class BIDSDataset():
     }
     METADATA_FILE_EXTENSIONS = ['eeg.json', 'channels.tsv', 'electrodes.tsv', 'events.tsv', 'events.json']
     def __init__(self,
-            data_dir=None,                            # location of asr cleaned data 
+            data_dir=None,                            # location of bids dataset 
             dataset='',                               # dataset name
             raw_format='eeglab',                      # format of raw data
         ):                            
@@ -303,17 +304,21 @@ class BIDSDataset():
         return self.get_property_from_filename('sub', data_filepath)
 
     def num_channels(self, data_filepath):
-        EEG = mne.io.read_raw_eeglab(data_filepath, preload=False, verbose='error')
-        return EEG.info["nchan"]
+        channels_tsv = pd.read_csv(self.get_bids_metadata_files(data_filepath, 'channels.tsv')[0], sep='\t')
+        return len(channels_tsv)
 
     def channel_labels(self, data_filepath):
-        EEG = mne.io.read_raw_eeglab(data_filepath, preload=False, verbose='error')
-        return EEG.info['ch_names']
+        channels_tsv = pd.read_csv(self.get_bids_metadata_files(data_filepath, 'channels.tsv')[0], sep='\t')
+        return channels_tsv['name'].tolist()
     
     def channel_types(self, data_filepath):
-        EEG = mne.io.read_raw_eeglab(data_filepath, preload=False, verbose='error')
-        return [mne.channel_type(EEG.info, idx) for idx in mne.pick_channels(EEG.info["ch_names"], [])]
+        channels_tsv = pd.read_csv(self.get_bids_metadata_files(data_filepath, 'channels.tsv')[0], sep='\t')
+        return channels_tsv['type'].tolist()
             
     def num_times(self, data_filepath):
-        EEG = mne.io.read_raw_eeglab(data_filepath, preload=False, verbose='error')
-        return int(EEG.n_times)
+        eeg_jsons = self.get_bids_metadata_files(data_filepath, 'eeg.json')
+        eeg_jsons.reverse()
+        eeg_json_dict = {}
+        for eeg_json in eeg_jsons:
+            eeg_json_dict.update(json.load(open(eeg_json)))
+        return int(eeg_json_dict['SamplingFrequency'] * eeg_json_dict['RecordingDuration'])

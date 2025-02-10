@@ -634,6 +634,22 @@
     "type": "integer"
     }
   },
+  {"schema_name": "channel_types",
+  "schema_title": "chtypes",
+  "schema_description": "List of channel types",
+  "schema_type": "property_model",
+  "json_schema": {
+    "type": "array"
+    }
+  },
+  {"schema_name": "channel_names",
+  "schema_title": "chnames",
+  "schema_description": "List of channel names",
+  "schema_type": "property_model",
+  "json_schema": {
+    "type": "array"
+    }
+  },
   {"schema_name": "ntimes",
   "schema_title": "ntimes",
   "schema_description": "Number of samples in the recording",

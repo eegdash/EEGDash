@@ -47,7 +47,7 @@ class RawEEGDash(BaseRaw):
         eog=(),
         preload=False,
         *,
-        cache_dir='.',
+        cache_dir='./.eegdash_cache',
         uint16_codec=None,
         montage_units="auto",
         verbose=None,
@@ -57,13 +57,17 @@ class RawEEGDash(BaseRaw):
         '''
         # Create a simple RawArray
         sfreq = metadata['sfreq']  # Sampling frequency
-        n_chans = metadata['nchans']
         n_times = metadata['n_times']
-        print('n_times', n_times)
-        ch_names = [f'EEG{d}' for d in range(1,n_chans+1)]
-        ch_types = ["eeg"] * n_chans
+        ch_names = metadata['ch_names']
+        ch_types = []
+        for ch in metadata['ch_types']:
+            chtype = ch.lower()
+            if chtype == 'heog' or chtype == 'veog':
+                chtype = 'eog'
+            ch_types.append(chtype)
         info = mne.create_info(ch_names=ch_names, sfreq=sfreq, ch_types=ch_types)
         self.s3file = input_fname
+        os.makedirs(cache_dir, exist_ok=True)
         self.filecache = os.path.join(cache_dir, os.path.basename(self.s3file))
 
         if preload and not os.path.exists(self.filecache):
@@ -74,12 +78,14 @@ class RawEEGDash(BaseRaw):
             info,
             preload,
             last_samps=[n_times-1],
-            orig_format="double",
+            orig_format="single",
             verbose=verbose,
         )
 
     def _download_s3(self):
         filesystem = s3fs.S3FileSystem(anon=True, client_kwargs={'region_name': 'us-east-2'})
+        print('s3file', self.s3file)
+        print('filecache', self.filecache)
         filesystem.download(self.s3file, self.filecache)
         self.filenames = [self.filecache]
 
@@ -138,6 +144,18 @@ class BIDSDataset():
             lookup = re.search(rf'{property}-(.*?)[_\/]', filename)
         return lookup.group(1) if lookup else ''
 
+    def merge_json_inheritance(self, json_files):
+        '''
+        Merge list of json files found by get_bids_file_inheritance,
+        expecting the order (from left to right) is from lowest level to highest level,
+        and return a merged dictionary
+        '''
+        json_files.reverse()
+        json_dict = {}
+        for f in json_files:
+            json_dict.update(json.load(open(f)))
+        return json_dict
+
     def get_bids_file_inheritance(self, path, basename, extension):
         '''
         Get all files with given extension that applies to the basename file 
@@ -159,7 +177,7 @@ class BIDSDataset():
         for file in os.listdir(path):
             # target_file = path / f"{cur_file_basename}_{extension}"
             if os.path.isfile(path/file):
-                cur_file_basename = file[:file.rfind('_')]
+                cur_file_basename = file[:file.rfind('_')] # TODO: change to just search for any file with extension
                 if file.endswith(extension) and cur_file_basename in basename:
                     filepath = path / file
                     bids_files.append(filepath)
@@ -317,8 +335,5 @@ class BIDSDataset():
             
     def num_times(self, data_filepath):
         eeg_jsons = self.get_bids_metadata_files(data_filepath, 'eeg.json')
-        eeg_jsons.reverse()
-        eeg_json_dict = {}
-        for eeg_json in eeg_jsons:
-            eeg_json_dict.update(json.load(open(eeg_json)))
+        eeg_json_dict = self.merge_json_inheritance(eeg_jsons)
         return int(eeg_json_dict['SamplingFrequency'] * eeg_json_dict['RecordingDuration'])

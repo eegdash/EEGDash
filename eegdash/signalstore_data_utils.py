@@ -20,7 +20,7 @@ import mne
 from joblib import Parallel, delayed
 
 class SignalstoreOpenneuro():
-    AWS_BUCKET = 'openneuro.org'
+    AWS_BUCKET = 's3://openneuro.org'
     PROJECT_NAME = 'eegdash'
     def __init__(self, 
                  dbconnectionstring="mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.3.1",
@@ -131,6 +131,8 @@ class SignalstoreOpenneuro():
             'subject': bids_dataset.subject(bids_file),
             'nchans': bids_dataset.num_channels(bids_file),
             'ntimes': bids_dataset.num_times(bids_file),
+            'channel_types': bids_dataset.channel_types(bids_file),
+            'channel_names': bids_dataset.channel_labels(bids_file),
             'task': bids_dataset.task(bids_file),
             'session': bids_dataset.session(bids_file),
             'run': bids_dataset.run(bids_file),
@@ -295,6 +297,9 @@ class SignalstoreOpenneuro():
             else:
                 return []
 
+    def get_s3path(self, record):
+        return f"{self.AWS_BUCKET}/{record['bidspath']}"
+
     def get(self, query:dict, validate=False):
         '''
         query: {
@@ -307,7 +312,7 @@ class SignalstoreOpenneuro():
             if sessions:
                 print(f'Found {len(sessions)} records')
                 results = Parallel(n_jobs=-1, prefer="threads", verbose=1)(
-                    delayed(self.load_eeg_data_from_s3)(Path(self.AWS_BUCKET) / session['bidspath']) for session in sessions
+                    delayed(self.load_eeg_data_from_s3)(self.get_s3path(session)) for session in sessions
                 )
             return results
 

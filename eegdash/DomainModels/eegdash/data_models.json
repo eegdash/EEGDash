@@ -36,6 +36,14 @@
                 "type": "integer",
                 "required": false
             },
+            "channel_types": {
+                "type": "array",
+                "required": false
+            },
+            "channel_names": {
+                "type": "array",
+                "required": false
+            },
             "ntimes": {
                 "type": "integer",
                 "required": false

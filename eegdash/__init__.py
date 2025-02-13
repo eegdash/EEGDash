@@ -1,1 +1,0 @@
-from eegdash.main import EEGDash

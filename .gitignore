@@ -7,4 +7,6 @@ eegdash/data/
 .secret
 note
 tests/.testeegdash/
+dist/
+**/.eegdash_cache/
 

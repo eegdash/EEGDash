@@ -1,3 +1,4 @@
+src/EEGDash.egg-info
 *.npy
 */*.npy
 */*/*.npy

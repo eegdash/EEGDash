@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "eegdash"
-version = "0.0.1"
+version = "0.0.7"
 authors = [
   { name="Young Truong", email="dt.young112@gmail.com" },
   { name="Arnaud Delorme", email="adelorme@gmail.com" },
@@ -19,7 +19,14 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 dependencies = [
-    "signalstore"
+  "xarray",
+  "python-dotenv",
+  "s3fs",
+  "mne",
+  "pynwb",
+  "h5py",
+  "pymongo",
+  "joblib",
 ]
 [project.urls]
 Homepage = "https://github.com/sccn/EEG-Dash-Data"

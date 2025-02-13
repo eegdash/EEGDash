@@ -18,7 +18,10 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
-
+dependencies = [
+    "signalstore"
+]
 [project.urls]
 Homepage = "https://github.com/sccn/EEG-Dash-Data"
 Issues = "https://github.com/sccn/EEG-Dash-Data/issues"
+

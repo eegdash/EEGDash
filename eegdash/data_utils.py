@@ -3,11 +3,104 @@ import sys
 from joblib import Parallel, delayed
 import mne
 import numpy as np
+import pandas as pd
 from pathlib import Path
 import re
 import json
+from mne.io import BaseRaw
+from mne._fiff.utils import _find_channels, _read_segments_file
+import s3fs
+import tempfile
+from mne._fiff.utils import _read_segments_file
 
-verbose = False
+class RawEEGDash(BaseRaw):
+    r"""Raw object from EEG-Dash connection with Openneuro S3 file.
+
+    Parameters
+    ----------
+    input_fname : path-like
+        Path to the S3 file
+    eog : list | tuple | 'auto'
+        Names or indices of channels that should be designated EOG channels.
+        If 'auto', the channel names containing ``EOG`` or ``EYE`` are used.
+        Defaults to empty tuple.
+    %(preload)s
+        Note that preload=False will be effective only if the data is stored
+        in a separate binary file.
+    %(uint16_codec)s
+    %(montage_units)s
+    %(verbose)s
+
+    See Also
+    --------
+    mne.io.Raw : Documentation of attributes and methods.
+
+    Notes
+    -----
+    .. versionadded:: 0.11.0
+    """
+
+    def __init__(
+        self,
+        input_fname,
+        metadata,
+        eog=(),
+        preload=False,
+        *,
+        cache_dir='./.eegdash_cache',
+        uint16_codec=None,
+        montage_units="auto",
+        verbose=None,
+    ):
+        '''
+        Get to work with S3 endpoint first, no caching
+        '''
+        # Create a simple RawArray
+        sfreq = metadata['sfreq']  # Sampling frequency
+        n_times = metadata['n_times']
+        ch_names = metadata['ch_names']
+        ch_types = []
+        for ch in metadata['ch_types']:
+            chtype = ch.lower()
+            if chtype == 'heog' or chtype == 'veog':
+                chtype = 'eog'
+            ch_types.append(chtype)
+        info = mne.create_info(ch_names=ch_names, sfreq=sfreq, ch_types=ch_types)
+        self.s3file = input_fname
+        os.makedirs(cache_dir, exist_ok=True)
+        self.filecache = os.path.join(cache_dir, os.path.basename(self.s3file))
+
+        if preload and not os.path.exists(self.filecache):
+            self._download_s3()
+            preload = self.filecache
+
+        super().__init__(
+            info,
+            preload,
+            last_samps=[n_times-1],
+            orig_format="single",
+            verbose=verbose,
+        )
+
+    def _download_s3(self):
+        filesystem = s3fs.S3FileSystem(anon=True, client_kwargs={'region_name': 'us-east-2'})
+        print('s3file', self.s3file)
+        print('filecache', self.filecache)
+        filesystem.download(self.s3file, self.filecache)
+        self.filenames = [self.filecache]
+
+    def _read_segment(
+        self, start=0, stop=None, sel=None, data_buffer=None, *, verbose=None
+    ):
+        if not os.path.exists(self.filecache): # not preload
+            self._download_s3()
+        else: # not preload and file is not cached
+            self.filenames = [self.filecache]
+        return super()._read_segment(start, stop, sel, data_buffer, verbose=verbose)
+    
+    def _read_segment_file(self, data, idx, fi, start, stop, cals, mult):
+        """Read a chunk of data from the file."""
+        _read_segments_file(self, data, idx, fi, start, stop, cals, mult, dtype="<f4")
 
 
 class BIDSDataset():
@@ -20,7 +113,7 @@ class BIDSDataset():
     }
     METADATA_FILE_EXTENSIONS = ['eeg.json', 'channels.tsv', 'electrodes.tsv', 'events.tsv', 'events.json']
     def __init__(self,
-            data_dir=None,                            # location of asr cleaned data 
+            data_dir=None,                            # location of bids dataset 
             dataset='',                               # dataset name
             raw_format='eeglab',                      # format of raw data
         ):                            
@@ -44,8 +137,24 @@ class BIDSDataset():
             self.files = np.load(temp_dir / f'{dataset}_files.npy', allow_pickle=True)
 
     def get_property_from_filename(self, property, filename):
-        lookup = re.search(rf'{property}-(.*?)[_\/]', filename)
+        import platform
+        if platform.system() == "Windows":
+            lookup = re.search(rf'{property}-(.*?)[_\\]', filename)
+        else:
+            lookup = re.search(rf'{property}-(.*?)[_\/]', filename)
         return lookup.group(1) if lookup else ''
+
+    def merge_json_inheritance(self, json_files):
+        '''
+        Merge list of json files found by get_bids_file_inheritance,
+        expecting the order (from left to right) is from lowest level to highest level,
+        and return a merged dictionary
+        '''
+        json_files.reverse()
+        json_dict = {}
+        for f in json_files:
+            json_dict.update(json.load(open(f)))
+        return json_dict
 
     def get_bids_file_inheritance(self, path, basename, extension):
         '''
@@ -68,7 +177,7 @@ class BIDSDataset():
         for file in os.listdir(path):
             # target_file = path / f"{cur_file_basename}_{extension}"
             if os.path.isfile(path/file):
-                cur_file_basename = file[:file.rfind('_')]
+                cur_file_basename = file[:file.rfind('_')] # TODO: change to just search for any file with extension
                 if file.endswith(extension) and cur_file_basename in basename:
                     filepath = path / file
                     bids_files.append(filepath)
@@ -211,3 +320,20 @@ class BIDSDataset():
 
     def subject(self, data_filepath):
         return self.get_property_from_filename('sub', data_filepath)
+
+    def num_channels(self, data_filepath):
+        channels_tsv = pd.read_csv(self.get_bids_metadata_files(data_filepath, 'channels.tsv')[0], sep='\t')
+        return len(channels_tsv)
+
+    def channel_labels(self, data_filepath):
+        channels_tsv = pd.read_csv(self.get_bids_metadata_files(data_filepath, 'channels.tsv')[0], sep='\t')
+        return channels_tsv['name'].tolist()
+    
+    def channel_types(self, data_filepath):
+        channels_tsv = pd.read_csv(self.get_bids_metadata_files(data_filepath, 'channels.tsv')[0], sep='\t')
+        return channels_tsv['type'].tolist()
+            
+    def num_times(self, data_filepath):
+        eeg_jsons = self.get_bids_metadata_files(data_filepath, 'eeg.json')
+        eeg_json_dict = self.merge_json_inheritance(eeg_jsons)
+        return int(eeg_json_dict['SamplingFrequency'] * eeg_json_dict['RecordingDuration'])

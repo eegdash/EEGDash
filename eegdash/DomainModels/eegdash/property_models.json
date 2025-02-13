@@ -586,6 +586,14 @@
       "type": "string"
     }
   },
+  {"schema_name": "bidspath",
+  "schema_title": "BIDS Path",
+  "schema_description": "The relative path to the data file from BIDS directory",
+  "schema_type": "property_model",
+  "json_schema": {
+    "type": "string"
+    }
+  },
   {"schema_name": "dataset",
   "schema_title": "Dataset",
   "schema_description": "The dataset ID.",
@@ -617,6 +625,39 @@
   "json_schema": {
     "type": "string"
     }
+  },
+  {"schema_name": "nchans",
+  "schema_title": "nchans",
+  "schema_description": "Number of channels in the recording",
+  "schema_type": "property_model",
+  "json_schema": {
+    "type": "integer"
+    }
+  },
+  {"schema_name": "channel_types",
+  "schema_title": "chtypes",
+  "schema_description": "List of channel types",
+  "schema_type": "property_model",
+  "json_schema": {
+    "type": "array"
+    }
+  },
+  {"schema_name": "channel_names",
+  "schema_title": "chnames",
+  "schema_description": "List of channel names",
+  "schema_type": "property_model",
+  "json_schema": {
+    "type": "array"
+    }
+  },
+  {"schema_name": "ntimes",
+  "schema_title": "ntimes",
+  "schema_description": "Number of samples in the recording",
+  "schema_type": "property_model",
+  "json_schema": {
+    "type": "integer"
+    }
   }
+
 ]
 

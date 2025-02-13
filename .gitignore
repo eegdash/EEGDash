@@ -9,4 +9,5 @@ note
 tests/.testeegdash/
 dist/
 **/.eegdash_cache/
+.env
 

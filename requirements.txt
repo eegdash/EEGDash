@@ -1,4 +1,3 @@
-zarr==2.18.3
 xarray
 python-dotenv
 s3fs

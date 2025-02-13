@@ -17,6 +17,10 @@
             "data_name": {
                 "type": "string"
             },
+            "bidspath": {
+                "type": "string",
+                "required": false
+            }, 
             "version_timestamp": {},
             "has_file": {
                 "const": true
@@ -27,11 +31,27 @@
             "dataset": {
                 "type": "string",
                 "required": false
-            }, 
+            },
+            "nchans": {
+                "type": "integer",
+                "required": false
+            },
+            "channel_types": {
+                "type": "array",
+                "required": false
+            },
+            "channel_names": {
+                "type": "array",
+                "required": false
+            },
+            "ntimes": {
+                "type": "integer",
+                "required": false
+            },
             "subject": {
                 "type": "string",
                 "required": false
-            }, 
+            },
             "task": {
                 "type": "string",
                 "required": false

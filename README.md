@@ -2,7 +2,7 @@
 To leverage recent and ongoing advancements in large-scale computational methods and to ensure the preservation of scientific data generated from publicly funded research, the EEG-DaSh data archive will create a data-sharing resource for MEEG (EEG, MEG) data contributed by collaborators for machine learning (ML) and deep learning (DL) applications. 
 
 ## Data source
-The data in EEG-DaSh originates from a collaboration involving 25 laboratories, encompassing 27,053 participants. This extensive collection includes MEEG data, which is a combination of EEG and MEG signals. The data is sourced from various studies conducted by these labs, involving both healthy subjects and clinical populations with conditions such as ADHD, depression, schizophrenia, dementia, autism, and psychosis. Additionally, data spans different mental states like sleep, meditation, and cognitive tasks. In addition, EEG-DaSh will also incorporate data converted from NEMAR, which includes a subset of the 330 MEEG BIDS-formatted datasets available on OpenNeuro, further expanding the archive with well-curated, standardized neuroelectromagnetic data.
+The data in EEG-DaSh originates from a collaboration involving 25 laboratories, encompassing 27,053 participants. This extensive collection includes MEEG data, which is a combination of EEG and MEG signals. The data is sourced from various studies conducted by these labs, involving both healthy subjects and clinical populations with conditions such as ADHD, depression, schizophrenia, dementia, autism, and psychosis. Additionally, data spans different mental states like sleep, meditation, and cognitive tasks. In addition, EEG-DaSh will also incorporate a subset of the data converted from NEMAR, which includes 330 MEEG BIDS-formatted datasets, further expanding the archive with well-curated, standardized neuroelectromagnetic data.
 
 ## Datasets available
 
@@ -72,17 +72,21 @@ Additionally, users can search for a specific dataset by specifying criteria.
 EEGDashInstance.find({'task': 'FaceRecognition'})
 ```
 
-After locating the desired dataset or data record, users can download it locally by executing the following command:
+After locating the desired dataset or data record, users can download it locally by executing the following command. This will return an xArray Python object.
 
 ```python
-EEGDashInstance.get({'task': 'FaceRecognition', 'subject': '019'})
+XArrayData = EEGDashInstance.get({'task': 'FaceRecognition', 'subject': '019'})
 ```
 
-Optionally, this is how you may access the raw data for the first record.
+Optionally, this is how you may access the raw data for the first record. This will return an numpy array.
 
 ```python
-EEGDashInstance.get({'task': 'FaceRecognition', 'subject': '019'})[0].values
+npData = EEGDashInstance.get({'task': 'FaceRecognition', 'subject': '019'})[0].values
 ```
+
+## Example use
+
+This [example](tests/eegdash.ipynb) demonstrates the full workflow from data retrieval with `EEGDash` to model definition, data handling, and training in PyTorch.
 
 ## Education - Coming soon...
 

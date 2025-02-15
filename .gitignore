@@ -1,4 +1,5 @@
 old
+src/EEGDash.egg-info
 *.npy
 */*.npy
 */*/*.npy
@@ -8,4 +9,8 @@ eegdash/data/
 .secret
 note
 tests/.testeegdash/
+dist/
+**/.eegdash_cache/
+**/*/eegdash.egg-info/
+.env
 

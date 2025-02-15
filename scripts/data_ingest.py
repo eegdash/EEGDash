@@ -1,5 +1,5 @@
 import argparse
-from eegdash.signalstore_data_utils import SignalstoreOpenneuro
+from eegdash import EEGDash
 
 def main():
     # Create the parser
@@ -13,13 +13,12 @@ def main():
     args = parser.parse_args()
     print('Arguments:', args)
 
-    signalstore = SignalstoreOpenneuro(
+    obj = EEGDash(
         is_public=False,
-        local_filesystem=False,
     )
-    hbn_datasets = ['ds005514','ds005511','ds005509','ds005508','ds005507','ds005506', 'ds005510', 'ds005512','ds005505']
+    hbn_datasets = ['ds005507','ds005506', 'ds005510', 'ds005512','ds005505','ds005508','ds005509','ds005514','ds005511']
     for ds in hbn_datasets:
-        signalstore.add_bids_dataset(dataset=ds, data_dir=f'/mnt/nemar/openneuro/{ds}', raw_format='eeglab', overwrite=True)
+        obj.add_bids_dataset(dataset=ds, data_dir=f'/mnt/nemar/openneuro/{ds}', raw_format='eeglab', overwrite=False)
 
 if __name__ == "__main__":
     main()

@@ -13,8 +13,8 @@ import s3fs
 import tempfile
 from mne._fiff.utils import _read_segments_file
 
-class RawEEGDash(BaseRaw):
-    r"""Raw object from EEG-Dash connection with Openneuro S3 file.
+class EEGDashBaseRaw(BaseRaw):
+    r"""MNE Raw object from EEG-Dash connection with Openneuro S3 file.
 
     Parameters
     ----------

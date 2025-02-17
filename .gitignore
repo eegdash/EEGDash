@@ -4,7 +4,7 @@ src/EEGDash.egg-info
 */*.npy
 */*/*.npy
 eegdash/data/
-*/__pycache__/
+**/__pycache__/
 .venv
 .secret
 note

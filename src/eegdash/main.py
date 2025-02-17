@@ -139,21 +139,26 @@ class EEGDash:
         # extract openneuro path by finding the first occurrence of the dataset name in the filename and remove the path before that
         openneuro_path = dsnumber + bids_file.split(dsnumber)[1]
 
+        participants_tsv = bids_dataset.subject_participants_tsv(bids_file)
+        eeg_json = bids_dataset.eeg_json(bids_file)
+        channel_tsv = bids_dataset.channel_tsv(bids_file)
         attrs = {
-            'schema_ref': 'eeg_signal',
             'data_name': f'{bids_dataset.dataset}_{f}',
             'dataset': bids_dataset.dataset,
             'bidspath': openneuro_path,
             'subject': bids_dataset.subject(bids_file),
-            'nchans': bids_dataset.num_channels(bids_file),
-            'ntimes': bids_dataset.num_times(bids_file),
-            'channel_types': bids_dataset.channel_types(bids_file),
-            'channel_names': bids_dataset.channel_labels(bids_file),
             'task': bids_dataset.task(bids_file),
             'session': bids_dataset.session(bids_file),
             'run': bids_dataset.run(bids_file),
             'sampling_frequency': bids_dataset.sfreq(bids_file), 
             'modality': 'EEG',
+            'participant_tsv': participants_tsv,
+            'eeg_json': eeg_json,
+            'channel_tsv': channel_tsv,
+            'nchans': bids_dataset.num_channels(bids_file),
+            'ntimes': bids_dataset.num_times(bids_file),
+            'channel_types': bids_dataset.channel_types(bids_file),
+            'channel_names': bids_dataset.channel_labels(bids_file),
         }
 
         return attrs

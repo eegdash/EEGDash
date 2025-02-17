@@ -1,3 +1,4 @@
+from typing import List
 import pymongo
 from dotenv import load_dotenv
 import os
@@ -7,7 +8,9 @@ import tempfile
 import mne
 import numpy as np
 import xarray as xr
-from .data_utils import BIDSDataset
+from .data_utils import BIDSDataset, EEGDashBaseRaw
+from braindecode.datasets import BaseDataset, BaseConcatDataset
+
 class EEGDash:
     AWS_BUCKET = 's3://openneuro.org'
     def __init__(self, 
@@ -25,12 +28,31 @@ class EEGDash:
         self.is_public = is_public
         self.filesystem = s3fs.S3FileSystem(anon=True, client_kwargs={'region_name': 'us-east-2'})
     
-    def find(self, *args):
+    def findrecord(self, *args):
         results = self.__collection.find(*args)
         
         # convert to list using get_item on each element
         return [result for result in results]
 
+    def find(self, query:dict, description_fields:List[str]=['sampling_frequency', 'nchans', 'ntimes']):
+        datasets = []
+        for record in self.findrecord(query):
+            sfreq = record['sampling_frequency']
+            nchans = record['nchans']
+            ntimes = record['ntimes']
+            ch_names = record['channel_names']
+            ch_types = record['channel_types']
+            s3_path = self.get_s3path(record)
+            description = {}
+            for field in description_fields:
+                description[field] = record[field]
+            datasets.append(BaseDataset(EEGDashBaseRaw(s3_path, {'sfreq': sfreq, 'nchans': nchans, 'n_times': ntimes, 'ch_types': ch_types, 'ch_names': ch_names}, preload=False),
+                                        description=description)) 
+        # convert to list using get_item on each element
+        if len(datasets) == 0:
+            return []
+        else:
+            return BaseConcatDataset(datasets)
     def exist(self, schema_ref='eeg_signal', data_name=''):
         query = {
             "schema_ref": schema_ref,

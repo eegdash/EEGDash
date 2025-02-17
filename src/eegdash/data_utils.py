@@ -177,10 +177,16 @@ class BIDSDataset():
         for file in os.listdir(path):
             # target_file = path / f"{cur_file_basename}_{extension}"
             if os.path.isfile(path/file):
-                cur_file_basename = file[:file.rfind('_')] # TODO: change to just search for any file with extension
-                if file.endswith(extension) and cur_file_basename in basename:
+                # check if file has extension extension
+                # check if file basename has extension
+                if file.endswith(extension):
                     filepath = path / file
                     bids_files.append(filepath)
+
+                # cur_file_basename = file[:file.rfind('_')] # TODO: change to just search for any file with extension
+                # if file.endswith(extension) and cur_file_basename in basename:
+                #     filepath = path / file
+                #     bids_files.append(filepath)
 
         # check if file is in top level directory
         if any(file in os.listdir(path) for file in top_level_files):
@@ -337,3 +343,20 @@ class BIDSDataset():
         eeg_jsons = self.get_bids_metadata_files(data_filepath, 'eeg.json')
         eeg_json_dict = self.merge_json_inheritance(eeg_jsons)
         return int(eeg_json_dict['SamplingFrequency'] * eeg_json_dict['RecordingDuration'])
+    
+    def subject_participant_tsv(self, data_filepath):
+        '''Get participants_tsv info of a subject based on filepath'''
+        participants_tsv = pd.read_csv(self.get_bids_metadata_files(data_filepath, 'participants.tsv')[0], sep='\t')
+        # set 'participant_id' as index
+        participants_tsv.set_index('participant_id', inplace=True)
+        subject = f'sub-{self.subject(data_filepath)}'
+        return participants_tsv.loc[subject].to_dict()
+    
+    def eeg_json(self, data_filepath):
+        eeg_jsons = self.get_bids_metadata_files(data_filepath, 'eeg.json')
+        eeg_json_dict = self.merge_json_inheritance(eeg_jsons)
+        return eeg_json_dict
+    
+    def channel_tsv(self, data_filepath):
+        channels_tsv = pd.read_csv(self.get_bids_metadata_files(data_filepath, 'channels.tsv')[0], sep='\t')
+        return channels_tsv.to_dict()

@@ -359,4 +359,8 @@ class BIDSDataset():
     
     def channel_tsv(self, data_filepath):
         channels_tsv = pd.read_csv(self.get_bids_metadata_files(data_filepath, 'channels.tsv')[0], sep='\t')
-        return channels_tsv.to_dict()
+        channel_tsv = channels_tsv.to_dict()
+        # 'name' and 'type' now have a dictionary of index-value. Convert them to list
+        for list_field in ['name', 'type', 'units']:
+            channel_tsv[list_field] = list(channel_tsv[list_field].values())
+        return channel_tsv

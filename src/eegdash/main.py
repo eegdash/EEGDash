@@ -53,22 +53,26 @@ class EEGDash:
             return []
         else:
             return BaseConcatDataset(datasets)
-    def exist(self, schema_ref='eeg_signal', data_name=''):
+    def exist(self, data_name=''):
         query = {
-            "schema_ref": schema_ref,
             "data_name": data_name
         }
         sessions = self.find(query)
         return len(sessions) > 0
 
     def add(self, record:dict):
-        input_record = self._validate_input(record)
-        print(input_record)
-        self.__collection.insert_one(input_record)
+        try:
+            input_record = self._validate_input(record)
+            self.__collection.insert_one(input_record)
+        # silent failing
+        except ValueError as e:
+            print(f"Failed to validate record: {record['data_name']}")
+            print(e)
+        except: 
+            print(f"Error adding record: {record['data_name']}")
 
     def _validate_input(self, record:dict):
         input_types = {
-            'schema_ref': str,
             'data_name': str,
             'dataset': str,
             'bidspath': str,
@@ -83,7 +87,6 @@ class EEGDash:
             'channel_types': list,
             'channel_names': list,
         }
-        record['schema_ref'] = 'eeg_signal'
         if 'data_name' not in record:
             raise ValueError("Missing key: data_name")
         # check if args are in the keys and has correct type
@@ -139,7 +142,7 @@ class EEGDash:
         # extract openneuro path by finding the first occurrence of the dataset name in the filename and remove the path before that
         openneuro_path = dsnumber + bids_file.split(dsnumber)[1]
 
-        participants_tsv = bids_dataset.subject_participants_tsv(bids_file)
+        participants_tsv = bids_dataset.subject_participant_tsv(bids_file)
         eeg_json = bids_dataset.eeg_json(bids_file)
         channel_tsv = bids_dataset.channel_tsv(bids_file)
         attrs = {
@@ -150,15 +153,17 @@ class EEGDash:
             'task': bids_dataset.task(bids_file),
             'session': bids_dataset.session(bids_file),
             'run': bids_dataset.run(bids_file),
-            'sampling_frequency': bids_dataset.sfreq(bids_file), 
             'modality': 'EEG',
             'participant_tsv': participants_tsv,
             'eeg_json': eeg_json,
             'channel_tsv': channel_tsv,
-            'nchans': bids_dataset.num_channels(bids_file),
-            'ntimes': bids_dataset.num_times(bids_file),
-            'channel_types': bids_dataset.channel_types(bids_file),
-            'channel_names': bids_dataset.channel_labels(bids_file),
+            'rawdatainfo': {
+                'sampling_frequency': bids_dataset.sfreq(bids_file), 
+                'nchans': bids_dataset.num_channels(bids_file),
+                'ntimes': bids_dataset.num_times(bids_file),
+                'channel_types': bids_dataset.channel_types(bids_file),
+                'channel_names': bids_dataset.channel_labels(bids_file),
+            },
         }
 
         return attrs
@@ -213,10 +218,11 @@ class EEGDash:
         return results
 
     def update(self, record:dict):
-        record['schema_ref'] = 'eeg_signal'
-        self.__collection.update_one({'schema_ref': record['schema_ref'], 'data_name': record['data_name']}, 
-                    {'$set': record}
-                )
+        try:
+            self.__collection.update_one({'schema_ref': 'eeg_signal', 'data_name': record['data_name']}, {'$set': record})
+        except: # silent failure
+            print(f'Error updating record {record["data_name"]}')
+
 def main():
     eegdash = EEGDash()
     record = eegdash.find({'dataset': 'ds005511', 'subject': 'NDARUF236HM7'})

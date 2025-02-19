@@ -219,9 +219,15 @@ class EEGDash:
 
     def update(self, record:dict):
         try:
-            self.__collection.update_one({'schema_ref': 'eeg_signal', 'data_name': record['data_name']}, {'$set': record})
+            self.__collection.update_one({'data_name': record['data_name']}, {'$set': record})
         except: # silent failure
             print(f'Error updating record {record["data_name"]}')
+
+    def remove_field(self, record, field):
+        self.__collection.update_one({'data_name': record['data_name']}, {'$unset': {field: 1}})
+    
+    def remove_field_from_db(self, field):
+        self.__collection.update_many({}, {'$unset': {field: 1}})
 
 def main():
     eegdash = EEGDash()

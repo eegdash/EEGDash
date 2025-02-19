@@ -16,9 +16,10 @@ def main():
     obj = EEGDash(
         is_public=False,
     )
-    hbn_datasets = ['ds005507','ds005506', 'ds005510', 'ds005512','ds005505','ds005508','ds005509','ds005514','ds005511']
-    for ds in hbn_datasets:
-        obj.add_bids_dataset(dataset=ds, data_dir=f'/mnt/nemar/openneuro/{ds}', raw_format='eeglab', overwrite=False)
+    # hbn_datasets = ['ds005507','ds005506', 'ds005510', 'ds005512','ds005505','ds005508','ds005509','ds005514','ds005511']
+    datasets = ['ds002718']
+    for ds in datasets:
+        obj.add_bids_dataset(dataset=ds, data_dir=f'/mnt/nemar/openneuro/{ds}', raw_format='eeglab', overwrite=True)
 
 if __name__ == "__main__":
     main()

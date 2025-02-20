@@ -10,6 +10,7 @@ import numpy as np
 import xarray as xr
 from .data_utils import BIDSDataset, EEGDashBaseRaw
 from braindecode.datasets import BaseDataset, BaseConcatDataset
+from collections import defaultdict
 
 class EEGDash:
     AWS_BUCKET = 's3://openneuro.org'
@@ -44,8 +45,12 @@ class EEGDash:
             ch_types = record['channel_types']
             s3_path = self.get_s3path(record)
             description = {}
+            participant_fields = ['age', 'gender', 'sex']
             for field in description_fields:
-                description[field] = record[field]
+                if field in participant_fields:
+                    description[field] = record['participant_tsv'][field]
+                else:
+                    description[field] = record[field]
             datasets.append(BaseDataset(EEGDashBaseRaw(s3_path, {'sfreq': sfreq, 'nchans': nchans, 'n_times': ntimes, 'ch_types': ch_types, 'ch_names': ch_names}, preload=False),
                                         description=description)) 
         # convert to list using get_item on each element

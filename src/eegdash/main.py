@@ -234,6 +234,86 @@ class EEGDash:
     def remove_field_from_db(self, field):
         self.__collection.update_many({}, {'$unset': {field: 1}})
 
+class EEGDashDataset(BaseConcatDataset):
+    def __init__(
+        self,
+        query:dict=None,
+        data_dir:str=None,
+        dataset:str=None,
+        description_fields: list[str]=None,
+    ):
+        if query:
+            datasets = self.find_datasets(query, description_fields)
+        elif data_dir:
+            datasets = self.load_bids_dataset(dataset, data_dir, description_fields)
+        # convert to list using get_item on each element
+        super().__init__(datasets)
+    
+    def find_key_in_nested_dict(self, data, target_key):
+        if isinstance(data, dict):
+            if target_key in data:
+                return data[target_key]
+            for value in data.values():
+                result = self.find_key_in_nested_dict(value, target_key)
+                if result is not None:
+                    return result
+        return None
+
+    def find_datasets(self, query:dict, description_fields: list[str]):
+        eegdashObj = EEGDash()
+        datasets = []
+        for record in eegdashObj.findrecord(query):
+            sfreq = record['sampling_frequency']
+            nchans = record['nchans']
+            ntimes = record['ntimes']
+            ch_names = record['channel_names']
+            ch_types = record['channel_types']
+            s3_path = eegdashObj.get_s3path(record)
+            description = {}
+            participant_fields = ['age', 'gender', 'sex']
+            for field in description_fields:
+                if field in participant_fields:
+                    description[field] = record['participant_tsv'][field]
+                else:
+                    description[field] = record[field]
+            datasets.append(BaseDataset(EEGDashBaseRaw(s3_path, {'sfreq': sfreq, 'nchans': nchans, 'n_times': ntimes, 'ch_types': ch_types, 'ch_names': ch_names}, preload=False),
+                                        description=description)) 
+        return datasets
+
+    def load_bids_dataset(self, dataset, data_dir, description_fields: list[str],raw_format='eeglab',  overwrite=True):
+        '''
+        '''
+        bids_dataset = BIDSDataset(
+            data_dir=data_dir,
+            dataset=dataset,
+            raw_format=raw_format,
+        )
+        eegdashObj = EEGDash()
+        datasets = []
+        for bids_file in bids_dataset.get_files():
+            eeg_attrs = eegdashObj.load_eeg_attrs_from_bids_file(bids_dataset, bids_file)
+            sfreq = eeg_attrs['rawdatainfo']['sampling_frequency']
+            nchans = eeg_attrs['rawdatainfo']['nchans']
+            ntimes = eeg_attrs['rawdatainfo']['ntimes']
+            ch_names = eeg_attrs['rawdatainfo']['channel_names']
+            ch_types = eeg_attrs['rawdatainfo']['channel_types']
+            s3_path = eegdashObj.get_s3path(eeg_attrs)
+            description = {}
+            # participant_fields = ['age', 'gender', 'sex']
+            # for field in description_fields:
+            #     if field in participant_fields:
+            #         description[field] = record['participant_tsv'][field]
+            #     else:
+            #         description[field] = record[field]
+            # for each field in description_fields scan all keys in eeg_attrs nestedly and add to description
+            for field in description_fields:
+                description[field] = self.find_key_in_nested_dict(eeg_attrs, field)
+
+            datasets.append(BaseDataset(EEGDashBaseRaw(s3_path, {'sfreq': sfreq, 'nchans': nchans, 'n_times': ntimes, 'ch_types': ch_types, 'ch_names': ch_names}, preload=False),
+                            description=description)) 
+            print('bids raw file', bids_file)
+        return datasets
+
 def main():
     eegdash = EEGDash()
     record = eegdash.find({'dataset': 'ds005511', 'subject': 'NDARUF236HM7'})

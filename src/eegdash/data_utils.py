@@ -65,6 +65,7 @@ class EEGDashBaseRaw(BaseRaw):
             if chtype == 'heog' or chtype == 'veog':
                 chtype = 'eog'
             ch_types.append(chtype)
+        print(ch_types)
         info = mne.create_info(ch_names=ch_names, sfreq=sfreq, ch_types=ch_types)
         self.s3file = input_fname
         os.makedirs(cache_dir, exist_ok=True)
@@ -217,7 +218,7 @@ class BIDSDataset():
         # metadata files
         meta_files = self.get_bids_file_inheritance(path, basename, metadata_file_extension)
         if not meta_files:
-            raise ValueError('No metadata files found for filepath {filepath} and extension {metadata_file_extension}')
+            raise ValueError(f'No metadata files found for filepath {filepath} and extension {metadata_file_extension}')
         else:
             return meta_files
         

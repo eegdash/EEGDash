@@ -2,6 +2,7 @@ from typing import List
 import pymongo
 from dotenv import load_dotenv
 import os
+from pathlib import Path
 import s3fs
 from joblib import Parallel, delayed
 import tempfile
@@ -10,6 +11,7 @@ import numpy as np
 import xarray as xr
 from .data_utils import BIDSDataset, EEGDashBaseRaw
 from braindecode.datasets import BaseDataset, BaseConcatDataset
+from collections import defaultdict
 
 class EEGDash:
     AWS_BUCKET = 's3://openneuro.org'
@@ -28,31 +30,12 @@ class EEGDash:
         self.is_public = is_public
         self.filesystem = s3fs.S3FileSystem(anon=True, client_kwargs={'region_name': 'us-east-2'})
     
-    def findrecord(self, *args):
+    def find(self, *args):
         results = self.__collection.find(*args)
         
         # convert to list using get_item on each element
         return [result for result in results]
 
-    def find(self, query:dict, description_fields:List[str]=['sampling_frequency', 'nchans', 'ntimes']):
-        datasets = []
-        for record in self.findrecord(query):
-            sfreq = record['sampling_frequency']
-            nchans = record['nchans']
-            ntimes = record['ntimes']
-            ch_names = record['channel_names']
-            ch_types = record['channel_types']
-            s3_path = self.get_s3path(record)
-            description = {}
-            for field in description_fields:
-                description[field] = record[field]
-            datasets.append(BaseDataset(EEGDashBaseRaw(s3_path, {'sfreq': sfreq, 'nchans': nchans, 'n_times': ntimes, 'ch_types': ch_types, 'ch_names': ch_names}, preload=False),
-                                        description=description)) 
-        # convert to list using get_item on each element
-        if len(datasets) == 0:
-            return []
-        else:
-            return BaseConcatDataset(datasets)
     def exist(self, data_name=''):
         query = {
             "data_name": data_name
@@ -142,6 +125,14 @@ class EEGDash:
         # extract openneuro path by finding the first occurrence of the dataset name in the filename and remove the path before that
         openneuro_path = dsnumber + bids_file.split(dsnumber)[1]
 
+        bids_dependencies_files = ['dataset_description.json', 'participants.tsv', 'test', 'events.tsv', 'events.json', 'eeg.json', 'electrodes.tsv', 'channels.tsv', 'coordsystem.json']
+        bidsdependencies = []
+        for extension in bids_dependencies_files:
+            dep_path = bids_dataset.get_bids_metadata_files(bids_file, extension)
+            dep_path = [str(bids_dataset.get_relative_bidspath(dep)) for dep in dep_path]
+
+            bidsdependencies.extend(dep_path)
+
         participants_tsv = bids_dataset.subject_participant_tsv(bids_file)
         eeg_json = bids_dataset.eeg_json(bids_file)
         channel_tsv = bids_dataset.channel_tsv(bids_file)
@@ -164,6 +155,7 @@ class EEGDash:
                 'channel_types': bids_dataset.channel_types(bids_file),
                 'channel_names': bids_dataset.channel_labels(bids_file),
             },
+            'bidsdependencies': bidsdependencies,
         }
 
         return attrs
@@ -199,9 +191,6 @@ class EEGDash:
                 print('adding record', eeg_attrs['data_name'])
                 self.add(eeg_attrs)
 
-    def get_s3path(self, record):
-        return f"{self.AWS_BUCKET}/{record['bidspath']}"
-
     def get(self, query:dict):
         '''
         query: {
@@ -228,6 +217,90 @@ class EEGDash:
     
     def remove_field_from_db(self, field):
         self.__collection.update_many({}, {'$unset': {field: 1}})
+    
+
+class EEGDashDataset(BaseConcatDataset):
+    def __init__(
+        self,
+        query:dict=None,
+        data_dir:str=None,
+        dataset:str=None,
+        description_fields: list[str]=None,
+    ):
+        if query:
+            datasets = self.find_datasets(query, description_fields)
+        elif data_dir:
+            datasets = self.load_bids_dataset(dataset, data_dir, description_fields)
+        # convert to list using get_item on each element
+        super().__init__(datasets)
+    
+    def find_key_in_nested_dict(self, data, target_key):
+        if isinstance(data, dict):
+            if target_key in data:
+                return data[target_key]
+            for value in data.values():
+                result = self.find_key_in_nested_dict(value, target_key)
+                if result is not None:
+                    return result
+        return None
+
+    def find_datasets(self, query:dict, description_fields: list[str]):
+        eegdashObj = EEGDash()
+        datasets = []
+        for record in eegdashObj.find(query):
+            sfreq = record['sampling_frequency']
+            nchans = record['nchans']
+            ntimes = record['ntimes']
+            ch_names = record['channel_names']
+            ch_types = record['channel_types']
+            filepath = record['bidspath']
+            description = {}
+            participant_fields = ['age', 'gender', 'sex']
+            for field in description_fields:
+                if field in participant_fields:
+                    description[field] = record['participant_tsv'][field]
+                else:
+                    description[field] = record[field]
+            datasets.append(BaseDataset(EEGDashBaseRaw(filepath, 
+                                                       cache_dir=Path('.eegdash_cache'),
+                                                       metadata={'sfreq': sfreq, 'nchans': nchans, 'n_times': ntimes, 'ch_types': ch_types, 'ch_names': ch_names}, 
+                                                       preload=False),
+                                        description=description)) 
+        return datasets
+
+    def load_bids_dataset(self, dataset, data_dir, description_fields: list[str],raw_format='eeglab',  overwrite=True):
+        '''
+        '''
+        bids_dataset = BIDSDataset(
+            data_dir=data_dir,
+            dataset=dataset,
+            raw_format=raw_format,
+        )
+        eegdashObj = EEGDash()
+        datasets = []
+        for bids_file in bids_dataset.get_files():
+            eeg_attrs = eegdashObj.load_eeg_attrs_from_bids_file(bids_dataset, bids_file)
+            sfreq = eeg_attrs['rawdatainfo']['sampling_frequency']
+            nchans = eeg_attrs['rawdatainfo']['nchans']
+            ntimes = eeg_attrs['rawdatainfo']['ntimes']
+            ch_names = eeg_attrs['rawdatainfo']['channel_names']
+            ch_types = eeg_attrs['rawdatainfo']['channel_types']
+            s3_path = eegdashObj.get_s3path(eeg_attrs)
+            description = {}
+            # participant_fields = ['age', 'gender', 'sex']
+            # for field in description_fields:
+            #     if field in participant_fields:
+            #         description[field] = record['participant_tsv'][field]
+            #     else:
+            #         description[field] = record[field]
+            # for each field in description_fields scan all keys in eeg_attrs nestedly and add to description
+            for field in description_fields:
+                description[field] = self.find_key_in_nested_dict(eeg_attrs, field)
+
+            datasets.append(BaseDataset(EEGDashBaseRaw(s3_path, {'sfreq': sfreq, 'nchans': nchans, 'n_times': ntimes, 'ch_types': ch_types, 'ch_names': ch_names}, preload=False),
+                            description=description)) 
+            print('bids raw file', bids_file)
+        return datasets
 
 def main():
     eegdash = EEGDash()

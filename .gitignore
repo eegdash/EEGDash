@@ -13,4 +13,4 @@ dist/
 **/.eegdash_cache/
 **/*/eegdash.egg-info/
 .env
-
+tests/data/

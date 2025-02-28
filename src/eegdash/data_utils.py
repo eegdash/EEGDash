@@ -67,6 +67,7 @@ class EEGDashBaseRaw(BaseRaw):
             if chtype == 'heog' or chtype == 'veog':
                 chtype = 'eog'
             ch_types.append(chtype)
+        print(ch_types)
         info = mne.create_info(ch_names=ch_names, sfreq=sfreq, ch_types=ch_types)
         self.s3file = self.get_s3path(input_fname)
         self.cache_dir = Path(cache_dir)

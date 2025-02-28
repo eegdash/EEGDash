@@ -1,1 +1,1 @@
-from .main import EEGDash
+from .main import EEGDash, EEGDashDataset

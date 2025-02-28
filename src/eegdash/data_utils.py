@@ -40,6 +40,7 @@ class EEGDashBaseRaw(BaseRaw):
     .. versionadded:: 0.11.0
     """
 
+    AWS_BUCKET = 's3://openneuro.org'
     def __init__(
         self,
         input_fname,
@@ -48,6 +49,7 @@ class EEGDashBaseRaw(BaseRaw):
         preload=False,
         *,
         cache_dir='./.eegdash_cache',
+        bids_dependencies:list = [],
         uint16_codec=None,
         montage_units="auto",
         verbose=None,
@@ -65,10 +67,12 @@ class EEGDashBaseRaw(BaseRaw):
             if chtype == 'heog' or chtype == 'veog':
                 chtype = 'eog'
             ch_types.append(chtype)
+        print(ch_types)
         info = mne.create_info(ch_names=ch_names, sfreq=sfreq, ch_types=ch_types)
-        self.s3file = input_fname
-        os.makedirs(cache_dir, exist_ok=True)
-        self.filecache = os.path.join(cache_dir, os.path.basename(self.s3file))
+        self.s3file = self.get_s3path(input_fname)
+        self.cache_dir = Path(cache_dir)
+        self.filecache = self.cache_dir / input_fname
+        self.bids_dependencies = bids_dependencies
 
         if preload and not os.path.exists(self.filecache):
             self._download_s3()
@@ -82,17 +86,30 @@ class EEGDashBaseRaw(BaseRaw):
             verbose=verbose,
         )
 
+    def get_s3path(self, filepath):
+        return f"{self.AWS_BUCKET}/{filepath}"
+
     def _download_s3(self):
+        self.filecache.parent.mkdir(parents=True, exist_ok=True)
         filesystem = s3fs.S3FileSystem(anon=True, client_kwargs={'region_name': 'us-east-2'})
-        print('s3file', self.s3file)
-        print('filecache', self.filecache)
         filesystem.download(self.s3file, self.filecache)
         self.filenames = [self.filecache]
+
+    def _download_dependencies(self):
+        filesystem = s3fs.S3FileSystem(anon=True, client_kwargs={'region_name': 'us-east-2'})
+        for dep in self.bids_dependencies:
+            s3path = self.get_s3path(dep)
+            filepath = self.cache_dir / dep
+            if not filepath.exists():
+                filepath.parent.mkdir(parents=True, exist_ok=True)
+                filesystem.download(s3path, filepath)
 
     def _read_segment(
         self, start=0, stop=None, sel=None, data_buffer=None, *, verbose=None
     ):
         if not os.path.exists(self.filecache): # not preload
+            if self.bids_dependencies:
+                self._download_dependencies()
             self._download_s3()
         else: # not preload and file is not cached
             self.filenames = [self.filecache]
@@ -121,6 +138,7 @@ class BIDSDataset():
             raise ValueError('data_dir must be specified and must exist')
         self.bidsdir = Path(data_dir)
         self.dataset = dataset
+        assert str(self.bidsdir).endswith(self.dataset)
 
         if raw_format.lower() not in self.ALLOWED_FILE_FORMAT:
             raise ValueError('raw_format must be one of {}'.format(self.ALLOWED_FILE_FORMAT))
@@ -135,6 +153,10 @@ class BIDSDataset():
             np.save(temp_dir / f'{dataset}_files.npy', self.files)
         else:
             self.files = np.load(temp_dir / f'{dataset}_files.npy', allow_pickle=True)
+
+    def get_relative_bidspath(self, filename):
+        bids_parent_dir = self.bidsdir.parent
+        return str(Path(filename).relative_to(bids_parent_dir))
 
     def get_property_from_filename(self, property, filename):
         import platform
@@ -216,10 +238,7 @@ class BIDSDataset():
         basename = filename[:filename.rfind('_')]
         # metadata files
         meta_files = self.get_bids_file_inheritance(path, basename, metadata_file_extension)
-        if not meta_files:
-            raise ValueError('No metadata files found for filepath {filepath} and extension {metadata_file_extension}')
-        else:
-            return meta_files
+        return meta_files
         
     def scan_directory(self, directory, extension):
         result_files = []

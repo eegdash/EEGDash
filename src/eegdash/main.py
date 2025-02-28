@@ -2,6 +2,7 @@ from typing import List
 import pymongo
 from dotenv import load_dotenv
 import os
+from pathlib import Path
 import s3fs
 from joblib import Parallel, delayed
 import tempfile
@@ -29,35 +30,12 @@ class EEGDash:
         self.is_public = is_public
         self.filesystem = s3fs.S3FileSystem(anon=True, client_kwargs={'region_name': 'us-east-2'})
     
-    def findrecord(self, *args):
+    def find(self, *args):
         results = self.__collection.find(*args)
         
         # convert to list using get_item on each element
         return [result for result in results]
 
-    def find(self, query:dict, description_fields:List[str]=['sampling_frequency', 'nchans', 'ntimes']):
-        datasets = []
-        for record in self.findrecord(query):
-            sfreq = record['sampling_frequency']
-            nchans = record['nchans']
-            ntimes = record['ntimes']
-            ch_names = record['channel_names']
-            ch_types = record['channel_types']
-            s3_path = self.get_s3path(record)
-            description = {}
-            participant_fields = ['age', 'gender', 'sex']
-            for field in description_fields:
-                if field in participant_fields:
-                    description[field] = record['participant_tsv'][field]
-                else:
-                    description[field] = record[field]
-            datasets.append(BaseDataset(EEGDashBaseRaw(s3_path, {'sfreq': sfreq, 'nchans': nchans, 'n_times': ntimes, 'ch_types': ch_types, 'ch_names': ch_names}, preload=False),
-                                        description=description)) 
-        # convert to list using get_item on each element
-        if len(datasets) == 0:
-            return []
-        else:
-            return BaseConcatDataset(datasets)
     def exist(self, data_name=''):
         query = {
             "data_name": data_name
@@ -147,6 +125,14 @@ class EEGDash:
         # extract openneuro path by finding the first occurrence of the dataset name in the filename and remove the path before that
         openneuro_path = dsnumber + bids_file.split(dsnumber)[1]
 
+        bids_dependencies_files = ['dataset_description.json', 'participants.tsv', 'test', 'events.tsv', 'events.json', 'eeg.json', 'electrodes.tsv', 'channels.tsv', 'coordsystem.json']
+        bidsdependencies = []
+        for extension in bids_dependencies_files:
+            dep_path = bids_dataset.get_bids_metadata_files(bids_file, extension)
+            dep_path = [str(bids_dataset.get_relative_bidspath(dep)) for dep in dep_path]
+
+            bidsdependencies.extend(dep_path)
+
         participants_tsv = bids_dataset.subject_participant_tsv(bids_file)
         eeg_json = bids_dataset.eeg_json(bids_file)
         channel_tsv = bids_dataset.channel_tsv(bids_file)
@@ -169,6 +155,7 @@ class EEGDash:
                 'channel_types': bids_dataset.channel_types(bids_file),
                 'channel_names': bids_dataset.channel_labels(bids_file),
             },
+            'bidsdependencies': bidsdependencies,
         }
 
         return attrs
@@ -204,9 +191,6 @@ class EEGDash:
                 print('adding record', eeg_attrs['data_name'])
                 self.add(eeg_attrs)
 
-    def get_s3path(self, record):
-        return f"{self.AWS_BUCKET}/{record['bidspath']}"
-
     def get(self, query:dict):
         '''
         query: {
@@ -233,6 +217,7 @@ class EEGDash:
     
     def remove_field_from_db(self, field):
         self.__collection.update_many({}, {'$unset': {field: 1}})
+    
 
 class EEGDashDataset(BaseConcatDataset):
     def __init__(
@@ -262,13 +247,13 @@ class EEGDashDataset(BaseConcatDataset):
     def find_datasets(self, query:dict, description_fields: list[str]):
         eegdashObj = EEGDash()
         datasets = []
-        for record in eegdashObj.findrecord(query):
+        for record in eegdashObj.find(query):
             sfreq = record['sampling_frequency']
             nchans = record['nchans']
             ntimes = record['ntimes']
             ch_names = record['channel_names']
             ch_types = record['channel_types']
-            s3_path = eegdashObj.get_s3path(record)
+            filepath = record['bidspath']
             description = {}
             participant_fields = ['age', 'gender', 'sex']
             for field in description_fields:
@@ -276,7 +261,10 @@ class EEGDashDataset(BaseConcatDataset):
                     description[field] = record['participant_tsv'][field]
                 else:
                     description[field] = record[field]
-            datasets.append(BaseDataset(EEGDashBaseRaw(s3_path, {'sfreq': sfreq, 'nchans': nchans, 'n_times': ntimes, 'ch_types': ch_types, 'ch_names': ch_names}, preload=False),
+            datasets.append(BaseDataset(EEGDashBaseRaw(filepath, 
+                                                       cache_dir=Path('.eegdash_cache'),
+                                                       metadata={'sfreq': sfreq, 'nchans': nchans, 'n_times': ntimes, 'ch_types': ch_types, 'ch_names': ch_names}, 
+                                                       preload=False),
                                         description=description)) 
         return datasets
 

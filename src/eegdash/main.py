@@ -9,7 +9,7 @@ import tempfile
 import mne
 import numpy as np
 import xarray as xr
-from .data_utils import BIDSDataset, EEGDashBaseRaw
+from .data_utils import BIDSDataset, EEGDashBaseRaw, EEGDashBaseDataset
 from braindecode.datasets import BaseDataset, BaseConcatDataset
 from collections import defaultdict
 
@@ -125,7 +125,7 @@ class EEGDash:
         # extract openneuro path by finding the first occurrence of the dataset name in the filename and remove the path before that
         openneuro_path = dsnumber + bids_file.split(dsnumber)[1]
 
-        bids_dependencies_files = ['dataset_description.json', 'participants.tsv', 'test', 'events.tsv', 'events.json', 'eeg.json', 'electrodes.tsv', 'channels.tsv', 'coordsystem.json']
+        bids_dependencies_files = ['dataset_description.json', 'participants.tsv', 'events.tsv', 'events.json', 'eeg.json', 'electrodes.tsv', 'channels.tsv', 'coordsystem.json']
         bidsdependencies = []
         for extension in bids_dependencies_files:
             dep_path = bids_dataset.get_bids_metadata_files(bids_file, extension)
@@ -220,17 +220,25 @@ class EEGDash:
     
 
 class EEGDashDataset(BaseConcatDataset):
+    CACHE_DIR = '.eegdash_cache'
     def __init__(
         self,
         query:dict=None,
-        data_dir:str=None,
-        dataset:str=None,
-        description_fields: list[str]=None,
+        data_dir:str | list =None,
+        dataset:str | list =None,
+        description_fields: list[str]=['subject', 'session', 'run', 'task', 'age', 'gender', 'sex'],
+        **kwargs
     ):
         if query:
-            datasets = self.find_datasets(query, description_fields)
+            datasets = self.find_datasets(query, description_fields, **kwargs)
         elif data_dir:
-            datasets = self.load_bids_dataset(dataset, data_dir, description_fields)
+            if type(data_dir) == str:
+                datasets = self.load_bids_dataset(dataset, data_dir, description_fields)
+            else:
+                assert len(data_dir) == len(dataset), 'Number of datasets and their directories must match' 
+                datasets = []
+                for i in range(len(data_dir)):
+                    datasets.extend(self.load_bids_dataset(dataset[i], data_dir[i], description_fields))
         # convert to list using get_item on each element
         super().__init__(datasets)
     
@@ -244,31 +252,19 @@ class EEGDashDataset(BaseConcatDataset):
                     return result
         return None
 
-    def find_datasets(self, query:dict, description_fields: list[str]):
+    def find_datasets(self, query:dict, description_fields:list[str], **kwargs):
         eegdashObj = EEGDash()
         datasets = []
         for record in eegdashObj.find(query):
-            sfreq = record['sampling_frequency']
-            nchans = record['nchans']
-            ntimes = record['ntimes']
-            ch_names = record['channel_names']
-            ch_types = record['channel_types']
-            filepath = record['bidspath']
             description = {}
-            participant_fields = ['age', 'gender', 'sex']
             for field in description_fields:
-                if field in participant_fields:
-                    description[field] = record['participant_tsv'][field]
-                else:
-                    description[field] = record[field]
-            datasets.append(BaseDataset(EEGDashBaseRaw(filepath, 
-                                                       cache_dir=Path('.eegdash_cache'),
-                                                       metadata={'sfreq': sfreq, 'nchans': nchans, 'n_times': ntimes, 'ch_types': ch_types, 'ch_names': ch_names}, 
-                                                       preload=False),
-                                        description=description)) 
+                value = self.find_key_in_nested_dict(record, field)
+                if value:
+                    description[field] = value
+            datasets.append(EEGDashBaseDataset(record, self.CACHE_DIR, description=description, **kwargs))
         return datasets
 
-    def load_bids_dataset(self, dataset, data_dir, description_fields: list[str],raw_format='eeglab',  overwrite=True):
+    def load_bids_dataset(self, dataset, data_dir, description_fields: list[str],raw_format='eeglab', **kwargs):
         '''
         '''
         bids_dataset = BIDSDataset(
@@ -279,27 +275,13 @@ class EEGDashDataset(BaseConcatDataset):
         eegdashObj = EEGDash()
         datasets = []
         for bids_file in bids_dataset.get_files():
-            eeg_attrs = eegdashObj.load_eeg_attrs_from_bids_file(bids_dataset, bids_file)
-            sfreq = eeg_attrs['rawdatainfo']['sampling_frequency']
-            nchans = eeg_attrs['rawdatainfo']['nchans']
-            ntimes = eeg_attrs['rawdatainfo']['ntimes']
-            ch_names = eeg_attrs['rawdatainfo']['channel_names']
-            ch_types = eeg_attrs['rawdatainfo']['channel_types']
-            s3_path = eegdashObj.get_s3path(eeg_attrs)
+            record = eegdashObj.load_eeg_attrs_from_bids_file(bids_dataset, bids_file)
             description = {}
-            # participant_fields = ['age', 'gender', 'sex']
-            # for field in description_fields:
-            #     if field in participant_fields:
-            #         description[field] = record['participant_tsv'][field]
-            #     else:
-            #         description[field] = record[field]
-            # for each field in description_fields scan all keys in eeg_attrs nestedly and add to description
             for field in description_fields:
-                description[field] = self.find_key_in_nested_dict(eeg_attrs, field)
-
-            datasets.append(BaseDataset(EEGDashBaseRaw(s3_path, {'sfreq': sfreq, 'nchans': nchans, 'n_times': ntimes, 'ch_types': ch_types, 'ch_names': ch_names}, preload=False),
-                            description=description)) 
-            print('bids raw file', bids_file)
+                value = self.find_key_in_nested_dict(record, field)
+                if value:
+                    description[field] = value
+            datasets.append(EEGDashBaseDataset(record, self.CACHE_DIR, description=description, **kwargs))
         return datasets
 
 def main():

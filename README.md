@@ -67,63 +67,28 @@ EEGDash datasets are processed using the popular [BrainDecode](https://braindeco
 
 ### Install
 Use your preferred Python environment manager with Python > 3.9 to install the package.
-* Install _eegdash_ package (this is a temporary link that will be updated soon to allow direct pip install eegdash) -> `pip install -i https://test.pypi.org/simple/eegdash`
+* Install _eegdash_ package (this is a temporary link that will be updated soon to allow direct `pip install eegdash`) -> `pip install -i https://test.pypi.org/simple/eegdash`
 * Check installation. Start a Python session and type `from eegdash import EEGDash`
 
-### Python data access
+### Data access
 
-To create a local object for accessing the database, use the following code:
+To use the data from a single subject, type in:
 
 ```python
 from eegdash import EEGDashDataset
-EEGDashInstance = EEGDash()
+ds_NDARDB033FW5 = EEGDashDataset({'dataset': 'ds005514', 'task': 'RestingState', 'subject': 'NDARDB033FW5'}, description_fields=['sex'])
 ```
 
-Once the object is instantiated, it can be utilized to search datasets. Providing an empty parameter will search the entire database and return all available datasets.
+This will search and download the metadata for the task 'RestingState' for subject 'NDARDB033FW5' in BIDS dataset 'ds005514'. The actual data will not be downloaded at this stage. Following standard practice, data is only downloaded once it is processed. The **ds_NDARDB033FW5** object is a fully functional BrainDecode dataset, which is itself Pytorch dataset. This [tutorial](https://github.com/sccn/EEGDash/blob/develop/notebooks/tutorial_eoec.ipynb) shows how to preprocess the EEG data, extracting portions of the data containing eyes-open and eyes-closed segments, then perform eyes-open vs. eyes-closed classification using a (shallow) deep-learning model. 
+
+To use the data from multiple subjects, type in:
 
 ```python
-EEGDashInstance.find({})
-```
-A list of dataset is returned.
-
-```python
-[{'schema_ref': 'eeg_signal',
-  'data_name': 'ds004745_sub-001_task-unnamed_eeg.set',
-  'dataset': 'ds004745',
-  'subject': '001',
-  'task': 'unnamed',
-  'session': '',
-  'run': '',
-  'modality': 'EEG',
-  'sampling_frequency': 1000,
-  'version_timestamp': 0,
-  'has_file': True,
-  'time_of_save': datetime.datetime(2024, 10, 25, 14, 11, 48, 843593, tzinfo=datetime.timezone.utc),
-  'time_of_removal': None}, ...
-
+from eegdash import EEGDashDataset
+ds_ds005505rest = EEGDashDataset({'dataset': 'ds005505', 'task': 'RestingState'}, target_name='sex')
 ```
 
-Additionally, users can search for a specific dataset by specifying criteria.
-
-```python
-EEGDashInstance.find({'task': 'FaceRecognition'})
-```
-
-After locating the desired dataset or data record, users can download it locally by executing the following command. This will return an xArray Python object.
-
-```python
-XArrayData = EEGDashInstance.get({'task': 'FaceRecognition', 'subject': '019'})
-```
-
-Optionally, this is how you may access the raw data for the first record. This will return an numpy array.
-
-```python
-npData = EEGDashInstance.get({'task': 'FaceRecognition', 'subject': '019'})[0].values
-```
-
-## Example use
-
-This [example](tests/eegdash.ipynb) demonstrates the full workflow from data retrieval with `EEGDash` to model definition, data handling, and training in PyTorch.
+This will search and download the metadata for the task 'RestingState' for all subjects in BIDS dataset 'ds005505' (a total of 136). As above, the actual data will not be downloaded at this stage so this command is quick to execute. Also, the target class for each subject is assigned using the target_name parameter. This means that this object is ready to be directly fed to a deep learning model, although the [tutorial script](https://github.com/sccn/EEGDash/blob/develop/notebooks/tutorial_sex_classification.ipynb) performs minimal processing on it, prior to training a deep-learning model. 
 
 ## Education - Coming soon...
 

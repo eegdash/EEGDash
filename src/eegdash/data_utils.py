@@ -47,6 +47,7 @@ class EEGDashBaseDataset(BaseDataset):
         self.s3file = self.get_s3path(record['bidspath'])
         self.filecache = self.cache_dir / record['bidspath']
         self.bids_dependencies = record['bidsdependencies']
+        self._raw = None
         # if os.path.exists(self.filecache):
         #     self.raw = mne_bids.read_raw_bids(self.bidspath, verbose=False)
 
@@ -77,11 +78,11 @@ class EEGDashBaseDataset(BaseDataset):
             if self.bids_dependencies:
                 self._download_dependencies()
             self._download_s3()
-        if self.raw is None:
-            self.raw = mne_bids.read_raw_bids(self.bidspath, verbose=False)
+        if self._raw is None:
+            self._raw = mne_bids.read_raw_bids(self.bidspath, verbose=False)
 
     def __getitem__(self, index):
-        self.check_and_get_raw()
+        # self.check_and_get_raw()
 
         X = self.raw[:, index][0]
         y = None
@@ -94,10 +95,20 @@ class EEGDashBaseDataset(BaseDataset):
         return X, y
     
     def __len__(self):
-        if not self.raw:
+        if self._raw is None:
             return self.record['rawdatainfo']['ntimes']
         else:
-            return len(self.raw)
+            return len(self._raw)
+
+    @property
+    def raw(self):
+        if self._raw is None:
+            self.check_and_get_raw()
+        return self._raw
+
+    @raw.setter
+    def raw(self, raw):
+        self._raw = raw
 
 class EEGDashBaseRaw(BaseRaw):
     r"""MNE Raw object from EEG-Dash connection with Openneuro S3 file.

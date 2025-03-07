@@ -12,6 +12,7 @@ import xarray as xr
 from .data_utils import BIDSDataset, EEGDashBaseRaw, EEGDashBaseDataset
 from braindecode.datasets import BaseDataset, BaseConcatDataset
 from collections import defaultdict
+from pymongo import MongoClient, InsertOne, UpdateOne, DeleteOne
 
 class EEGDash:
     AWS_BUCKET = 's3://openneuro.org'
@@ -42,17 +43,6 @@ class EEGDash:
         }
         sessions = self.find(query)
         return len(sessions) > 0
-
-    def add(self, record:dict):
-        try:
-            input_record = self._validate_input(record)
-            self.__collection.insert_one(input_record)
-        # silent failing
-        except ValueError as e:
-            print(f"Failed to validate record: {record['data_name']}")
-            print(e)
-        except: 
-            print(f"Error adding record: {record['data_name']}")
 
     def _validate_input(self, record:dict):
         input_types = {
@@ -135,7 +125,6 @@ class EEGDash:
 
         participants_tsv = bids_dataset.subject_participant_tsv(bids_file)
         eeg_json = bids_dataset.eeg_json(bids_file)
-        channel_tsv = bids_dataset.channel_tsv(bids_file)
         attrs = {
             'data_name': f'{bids_dataset.dataset}_{f}',
             'dataset': bids_dataset.dataset,
@@ -145,16 +134,10 @@ class EEGDash:
             'session': bids_dataset.session(bids_file),
             'run': bids_dataset.run(bids_file),
             'modality': 'EEG',
+            'nchans': bids_dataset.num_channels(bids_file),
+            'ntimes': bids_dataset.num_times(bids_file),
             'participant_tsv': participants_tsv,
             'eeg_json': eeg_json,
-            'channel_tsv': channel_tsv,
-            'rawdatainfo': {
-                'sampling_frequency': bids_dataset.sfreq(bids_file), 
-                'nchans': bids_dataset.num_channels(bids_file),
-                'ntimes': bids_dataset.num_times(bids_file),
-                'channel_types': bids_dataset.channel_types(bids_file),
-                'channel_names': bids_dataset.channel_labels(bids_file),
-            },
             'bidsdependencies': bidsdependencies,
         }
 
@@ -172,24 +155,30 @@ class EEGDash:
             dataset=dataset,
             raw_format=raw_format,
         )
+        requests = []
         for bids_file in bids_dataset.get_files():
-            print('bids raw file', bids_file)
+            try:
+                data_id = f"{dataset}_{os.path.basename(bids_file)}"
 
-            signalstore_data_id = f"{dataset}_{os.path.basename(bids_file)}"
-
-            if self.exist(data_name=signalstore_data_id):
-                if overwrite:
-                    eeg_attrs = self.load_eeg_attrs_from_bids_file(bids_dataset, bids_file)
-                    print('updating record', eeg_attrs['data_name'])
-                    self.update(eeg_attrs)
+                if self.exist(data_name=data_id):
+                    if overwrite:
+                        eeg_attrs = self.load_eeg_attrs_from_bids_file(bids_dataset, bids_file)
+                        requests.append(UpdateOne(self.update_request(eeg_attrs)))
                 else:
-                    print('data already exist and not overwriting. skipped')
-                    continue
-            else:
-                eeg_attrs = self.load_eeg_attrs_from_bids_file(bids_dataset, bids_file)
-                # Assume raw data already exists on Openneuro, recreating record only
-                print('adding record', eeg_attrs['data_name'])
-                self.add(eeg_attrs)
+                    eeg_attrs = self.load_eeg_attrs_from_bids_file(bids_dataset, bids_file)
+                    requests.append(self.add_request(eeg_attrs))
+            except:
+                print('error adding record', bids_file)
+
+        print('Number of database requests', len(requests))
+
+        if requests:
+            result = self.__collection.bulk_write(requests, ordered=False)
+            print(f"Inserted: {result.inserted_count}")
+            print(f"Modified: {result.modified_count}")
+            print(f"Deleted: {result.deleted_count}")
+            print(f"Upserted: {result.upserted_count}")
+            print(f"Errors: {result.bulk_api_result.get('writeErrors', [])}")
 
     def get(self, query:dict):
         '''
@@ -205,6 +194,23 @@ class EEGDash:
                 delayed(self.load_eeg_data_from_s3)(self.get_s3path(session)) for session in sessions
             )
         return results
+
+    def add_request(self, record:dict):
+        return InsertOne(record)
+
+    def add(self, record:dict):
+        try:
+            # input_record = self._validate_input(record)
+            self.__collection.insert_one(record)
+        # silent failing
+        except ValueError as e:
+            print(f"Failed to validate record: {record['data_name']}")
+            print(e)
+        except: 
+            print(f"Error adding record: {record['data_name']}")
+
+    def update_request(self, record:dict):
+        return UpdateOne({'data_name': record['data_name']}, {'$set': record})
 
     def update(self, record:dict):
         try:
@@ -267,21 +273,33 @@ class EEGDashDataset(BaseConcatDataset):
     def load_bids_dataset(self, dataset, data_dir, description_fields: list[str],raw_format='eeglab', **kwargs):
         '''
         '''
-        bids_dataset = BIDSDataset(
-            data_dir=data_dir,
-            dataset=dataset,
-            raw_format=raw_format,
-        )
-        eegdashObj = EEGDash()
-        datasets = []
-        for bids_file in bids_dataset.get_files():
+        def get_base_dataset_from_bids_file(bids_dataset, bids_file):
             record = eegdashObj.load_eeg_attrs_from_bids_file(bids_dataset, bids_file)
             description = {}
             for field in description_fields:
                 value = self.find_key_in_nested_dict(record, field)
                 if value:
                     description[field] = value
-            datasets.append(EEGDashBaseDataset(record, self.CACHE_DIR, description=description, **kwargs))
+            return EEGDashBaseDataset(record, self.CACHE_DIR, description=description, **kwargs)
+
+        bids_dataset = BIDSDataset(
+            data_dir=data_dir,
+            dataset=dataset,
+            raw_format=raw_format,
+        )
+        eegdashObj = EEGDash()
+        datasets = Parallel(n_jobs=-1, prefer="threads", verbose=1)(
+                delayed(get_base_dataset_from_bids_file)(bids_dataset, bids_file) for bids_file in bids_dataset.get_files()
+            )
+        # datasets = []
+        # for bids_file in bids_dataset.get_files():
+        #     record = eegdashObj.load_eeg_attrs_from_bids_file(bids_dataset, bids_file)
+        #     description = {}
+        #     for field in description_fields:
+        #         value = self.find_key_in_nested_dict(record, field)
+        #         if value:
+        #             description[field] = value
+        #     datasets.append(EEGDashBaseDataset(record, self.CACHE_DIR, description=description, **kwargs))
         return datasets
 
 def main():

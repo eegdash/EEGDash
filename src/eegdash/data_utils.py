@@ -47,8 +47,8 @@ class EEGDashBaseDataset(BaseDataset):
         self.s3file = self.get_s3path(record['bidspath'])
         self.filecache = self.cache_dir / record['bidspath']
         self.bids_dependencies = record['bidsdependencies']
-        if os.path.exists(self.filecache):
-            self.raw = mne_bids.read_raw_bids(self.bidspath, verbose=False)
+        # if os.path.exists(self.filecache):
+        #     self.raw = mne_bids.read_raw_bids(self.bidspath, verbose=False)
 
     def get_s3path(self, filepath):
         return f"{self.AWS_BUCKET}/{filepath}"
@@ -77,6 +77,7 @@ class EEGDashBaseDataset(BaseDataset):
             if self.bids_dependencies:
                 self._download_dependencies()
             self._download_s3()
+        if self.raw is None:
             self.raw = mne_bids.read_raw_bids(self.bidspath, verbose=False)
 
     def __getitem__(self, index):

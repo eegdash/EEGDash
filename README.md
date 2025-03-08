@@ -2,11 +2,11 @@
 To leverage recent and ongoing advancements in large-scale computational methods and to ensure the preservation of scientific data generated from publicly funded research, the EEG-DaSh data archive will create a data-sharing resource for MEEG (EEG, MEG) data contributed by collaborators for machine learning (ML) and deep learning (DL) applications. 
 
 ## Data source
-The data in EEG-DaSh originates from a collaboration involving 25 laboratories, encompassing 27,053 participants. This extensive collection includes MEEG data, which is a combination of EEG and MEG signals. The data is sourced from various studies conducted by these labs, involving both healthy subjects and clinical populations with conditions such as ADHD, depression, schizophrenia, dementia, autism, and psychosis. Additionally, data spans different mental states like sleep, meditation, and cognitive tasks. In addition, EEG-DaSh will also incorporate a subset of the data converted from NEMAR, which includes 330 MEEG BIDS-formatted datasets, further expanding the archive with well-curated, standardized neuroelectromagnetic data.
+The data in EEG-DaSh originates from a collaboration involving 25 laboratories, encompassing 27,053 participants. This extensive collection includes MEEG data, which is a combination of EEG and MEG signals. The data is sourced from various studies conducted by these labs, involving both healthy subjects and clinical populations with conditions such as ADHD, depression, schizophrenia, dementia, autism, and psychosis. Additionally, data spans different mental states like sleep, meditation, and cognitive tasks. In addition, EEG-DaSh will incorporate a subset of the data converted from NEMAR, which includes 330 MEEG BIDS-formatted datasets, further expanding the archive with well-curated, standardized neuroelectromagnetic data.
 
-## Datasets available
+## Available data
 
-These are the current datasets available on EEGDash.
+The following datasets are currently available on EEGDash.
 
 | DatasetID | Participants | Files | Sessions | Population | Channels | Is 10-20? | Modality | Size |
 |---|---|---|---|---|---|---|---|---|
@@ -63,12 +63,12 @@ These are the current datasets available on EEGDash.
 EEGDash queries return a **Pytorch Dataset** formatted to facilitate machine learning (ML) and deep learning (DL) applications. PyTorch Datasets are the best format for EEGDash queries because they provide an efficient, scalable, and flexible structure for machine learning (ML) and deep learning (DL) applications. They allow seamless integration with PyTorch’s DataLoader, enabling efficient batching, shuffling, and parallel data loading, which is essential for training deep learning models on large EEG datasets. The dataset format supports GPU acceleration, on-the-fly preprocessing, and dynamic data loading, reducing memory overhead and improving computational efficiency. Additionally, it is compatible with various neural network architectures, including CNNs, RNNs, and Transformers, making it ideal for tasks such as EEG-based classification, brain-computer interfaces, and medical diagnostics.
 
 ## Data preprocessing
-EEGDash datasets are processed using the popular [BrainDecode](https://braindecode.org/stable/index.html) library. In fact, EEGDash datasets are BrainDecode datasets, which are themselves PyTorch datasets. This means that any preprocessing possible on BrainDecode datasets is also possible on EEGDash datasets. Look for [BrainDecode](https://braindecode.org/stable/index.html) tutorials to learn how to best preprocess EEG data.
+EEGDash datasets are processed using the popular [BrainDecode](https://braindecode.org/stable/index.html) library. In fact, EEGDash datasets are BrainDecode datasets, which are themselves PyTorch datasets. This means that any preprocessing possible on BrainDecode datasets is also possible on EEGDash datasets. Refer to [BrainDecode](https://braindecode.org/stable/index.html) tutorials for guidance on preprocessing EEG data.
 
 ### Install
 Use your preferred Python environment manager with Python > 3.9 to install the package.
 * Install _eegdash_ package (this is a temporary link that will be updated soon to allow direct `pip install eegdash`) -> `pip install -i https://test.pypi.org/simple/eegdash`
-* Check installation. Start a Python session and type `from eegdash import EEGDash`
+* To verify the installation, start a Python session and type: `from eegdash import EEGDash`
 
 ### Data access
 
@@ -79,7 +79,7 @@ from eegdash import EEGDashDataset
 ds_NDARDB033FW5 = EEGDashDataset({'dataset': 'ds005514', 'task': 'RestingState', 'subject': 'NDARDB033FW5'}, description_fields=['sex'])
 ```
 
-This will search and download the metadata for the task **RestingState** for subject **NDARDB033FW5** in BIDS dataset **ds005514**. The actual data will not be downloaded at this stage. Following standard practice, data is only downloaded once it is processed. The **ds_NDARDB033FW5** object is a fully functional BrainDecode dataset, which is itself a Pytorch dataset. This [tutorial](https://github.com/sccn/EEGDash/blob/develop/notebooks/tutorial_eoec.ipynb) shows how to preprocess the EEG data, extracting portions of the data containing eyes-open and eyes-closed segments, then perform eyes-open vs. eyes-closed classification using a (shallow) deep-learning model. 
+This will search and download the metadata for the task **RestingState** for subject **NDARDB033FW5** in BIDS dataset **ds005514**. The actual data will not be downloaded at this stage. Following standard practice, data is only downloaded once it is processed. The **ds_NDARDB033FW5** object is a fully functional BrainDecode dataset, which is itself a PyTorch dataset. This [tutorial](https://github.com/sccn/EEGDash/blob/develop/notebooks/tutorial_eoec.ipynb) shows how to preprocess the EEG data, extracting portions of the data containing eyes-open and eyes-closed segments, then perform eyes-open vs. eyes-closed classification using a (shallow) deep-learning model. 
 
 To use the data from multiple subjects, enter:
 
@@ -94,9 +94,9 @@ This will search and download the metadata for the task 'RestingState' for all s
 
 EEGDash automatically caches the downloaded data in the .eegdash_cache folder of the current directory from which the script is called. This means that if you run the tutorial [scripts](https://github.com/sccn/EEGDash/tree/develop/notebooks), the data will only be downloaded the first time the script is executed.
 
-## Education - Coming soon...
+## Education -- Coming soon...
 
-We organize workshops and educational events to foster cross-cultural education and student training, offering both online and in-person opportunities in collaboration with US and Israeli partners. There is no event planned for 2024. Events for 2025 will be advertised on the EEGLABNEWS mailing list so make sure to [subscribe](https://sccn.ucsd.edu/mailman/listinfo/eeglabnews).
+We organize workshops and educational events to foster cross-cultural education and student training, offering both online and in-person opportunities in collaboration with US and Israeli partners. Events for 2025 will be announced via the EEGLABNEWS mailing list. Be sure to [subscribe](https://sccn.ucsd.edu/mailman/listinfo/eeglabnews).
 
 ## About EEG-DaSh
 

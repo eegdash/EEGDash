@@ -65,7 +65,7 @@ EEGDash queries return a **Pytorch Dataset** formatted to facilitate machine lea
 ## Data preprocessing
 EEGDash datasets are processed using the popular [BrainDecode](https://braindecode.org/stable/index.html) library. In fact, EEGDash datasets are BrainDecode datasets, which are themselves PyTorch datasets. This means that any preprocessing possible on BrainDecode datasets is also possible on EEGDash datasets. Refer to [BrainDecode](https://braindecode.org/stable/index.html) tutorials for guidance on preprocessing EEG data.
 
-# EEG-Dash usage
+## EEG-Dash usage
 
 ### Install
 Use your preferred Python environment manager with Python > 3.9 to install the package.

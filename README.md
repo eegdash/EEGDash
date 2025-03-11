@@ -60,10 +60,12 @@ The following datasets are currently available on EEGDash.
 | [ds005787](https://nemar.org/dataexplorer/detail?dataset_id=ds005787) | 30 | ? | 4 | Healthy | 64 | 10-20 | Visual | 185 GB |
 
 ## Data format
-EEGDash queries return a **Pytorch Dataset** formatted to facilitate machine learning (ML) and deep learning (DL) applications. PyTorch Datasets are the best format for EEGDash queries because they provide an efficient, scalable, and flexible structure for machine learning (ML) and deep learning (DL) applications. They allow seamless integration with PyTorch’s DataLoader, enabling efficient batching, shuffling, and parallel data loading, which is essential for training deep learning models on large EEG datasets. The dataset format supports GPU acceleration, on-the-fly preprocessing, and dynamic data loading, reducing memory overhead and improving computational efficiency. Additionally, it is compatible with various neural network architectures, including CNNs, RNNs, and Transformers, making it ideal for tasks such as EEG-based classification, brain-computer interfaces, and medical diagnostics.
+EEGDash queries return a **Pytorch Dataset** formatted to facilitate machine learning (ML) and deep learning (DL) applications. PyTorch Datasets are the best format for EEGDash queries because they provide an efficient, scalable, and flexible structure for machine learning (ML) and deep learning (DL) applications. They allow seamless integration with PyTorch’s DataLoader, enabling efficient batching, shuffling, and parallel data loading, which is essential for training deep learning models on large EEG datasets.
 
 ## Data preprocessing
 EEGDash datasets are processed using the popular [BrainDecode](https://braindecode.org/stable/index.html) library. In fact, EEGDash datasets are BrainDecode datasets, which are themselves PyTorch datasets. This means that any preprocessing possible on BrainDecode datasets is also possible on EEGDash datasets. Refer to [BrainDecode](https://braindecode.org/stable/index.html) tutorials for guidance on preprocessing EEG data.
+
+## EEG-Dash usage
 
 ### Install
 Use your preferred Python environment manager with Python > 3.9 to install the package.
@@ -76,7 +78,7 @@ To use the data from a single subject, enter:
 
 ```python
 from eegdash import EEGDashDataset
-ds_NDARDB033FW5 = EEGDashDataset({'dataset': 'ds005514', 'task': 'RestingState', 'subject': 'NDARDB033FW5'}, description_fields=['sex'])
+ds_NDARDB033FW5 = EEGDashDataset({'dataset': 'ds005514', 'task': 'RestingState', 'subject': 'NDARDB033FW5'})
 ```
 
 This will search and download the metadata for the task **RestingState** for subject **NDARDB033FW5** in BIDS dataset **ds005514**. The actual data will not be downloaded at this stage. Following standard practice, data is only downloaded once it is processed. The **ds_NDARDB033FW5** object is a fully functional BrainDecode dataset, which is itself a PyTorch dataset. This [tutorial](https://github.com/sccn/EEGDash/blob/develop/notebooks/tutorial_eoec.ipynb) shows how to preprocess the EEG data, extracting portions of the data containing eyes-open and eyes-closed segments, then perform eyes-open vs. eyes-closed classification using a (shallow) deep-learning model. 

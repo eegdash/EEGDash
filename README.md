@@ -69,7 +69,7 @@ EEGDash datasets are processed using the popular [BrainDecode](https://braindeco
 
 ### Install
 Use your preferred Python environment manager with Python > 3.9 to install the package.
-* To install the eegdash package, use the following temporary command (a direct pip install eegdash option will be available soon): `pip install -i https://test.pypi.org/simple/eegdash`
+* To install the eegdash package, use the following command: `pip install eegdash`
 * To verify the installation, start a Python session and type: `from eegdash import EEGDash`
 
 ### Data access

@@ -6,3 +6,5 @@ pynwb
 h5py
 pymongo
 joblib
+braindecode
+mne-bids

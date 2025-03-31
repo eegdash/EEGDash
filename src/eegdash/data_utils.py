@@ -12,6 +12,103 @@ from mne._fiff.utils import _find_channels, _read_segments_file
 import s3fs
 import tempfile
 from mne._fiff.utils import _read_segments_file
+from braindecode.datasets import BaseDataset
+import mne_bids
+from mne_bids import (
+    BIDSPath,
+)
+
+class EEGDashBaseDataset(BaseDataset):
+    """Returns samples from an mne.io.Raw object along with a target.
+
+    Dataset which serves samples from an mne.io.Raw object along with a target.
+    The target is unique for the dataset, and is obtained through the
+    `description` attribute.
+
+    Parameters
+    ----------
+    raw : mne.io.Raw
+        Continuous data.
+    description : dict | pandas.Series | None
+        Holds additional description about the continuous signal / subject.
+    target_name : str | tuple | None
+        Name(s) of the index in `description` that should be used to provide the
+        target (e.g., to be used in a prediction task later on).
+    transform : callable | None
+        On-the-fly transform applied to the example before it is returned.
+    """
+    AWS_BUCKET = 's3://openneuro.org'
+    def __init__(self, record, cache_dir, **kwargs):
+        super().__init__(None, **kwargs)
+        self.record = record
+        self.cache_dir = Path(cache_dir)
+        bids_kwargs = self.get_raw_bids_args()
+        self.bidspath = BIDSPath(root=self.cache_dir / record['dataset'], datatype='eeg', suffix='eeg', **bids_kwargs)
+        self.s3file = self.get_s3path(record['bidspath'])
+        self.filecache = self.cache_dir / record['bidspath']
+        self.bids_dependencies = record['bidsdependencies']
+        self._raw = None
+        # if os.path.exists(self.filecache):
+        #     self.raw = mne_bids.read_raw_bids(self.bidspath, verbose=False)
+
+    def get_s3path(self, filepath):
+        return f"{self.AWS_BUCKET}/{filepath}"
+
+    def _download_s3(self):
+        self.filecache.parent.mkdir(parents=True, exist_ok=True)
+        filesystem = s3fs.S3FileSystem(anon=True, client_kwargs={'region_name': 'us-east-2'})
+        filesystem.download(self.s3file, self.filecache)
+        self.filenames = [self.filecache]
+
+    def _download_dependencies(self):
+        filesystem = s3fs.S3FileSystem(anon=True, client_kwargs={'region_name': 'us-east-2'})
+        for dep in self.bids_dependencies:
+            s3path = self.get_s3path(dep)
+            filepath = self.cache_dir / dep
+            if not filepath.exists():
+                filepath.parent.mkdir(parents=True, exist_ok=True)
+                filesystem.download(s3path, filepath) 
+
+    def get_raw_bids_args(self):
+        desired_fields = ['subject', 'session', 'task', 'run']
+        return {k: self.record[k] for k in desired_fields if self.record[k]}
+
+    def check_and_get_raw(self):
+        if not os.path.exists(self.filecache): # not preload
+            if self.bids_dependencies:
+                self._download_dependencies()
+            self._download_s3()
+        if self._raw is None:
+            self._raw = mne_bids.read_raw_bids(self.bidspath, verbose=False)
+
+    def __getitem__(self, index):
+        # self.check_and_get_raw()
+
+        X = self.raw[:, index][0]
+        y = None
+        if self.target_name is not None:
+            y = self.description[self.target_name]
+        if isinstance(y, pd.Series):
+            y = y.to_list()
+        if self.transform is not None:
+            X = self.transform(X)
+        return X, y
+    
+    def __len__(self):
+        if self._raw is None:
+            return self.record['rawdatainfo']['ntimes']
+        else:
+            return len(self._raw)
+
+    @property
+    def raw(self):
+        if self._raw is None:
+            self.check_and_get_raw()
+        return self._raw
+
+    @raw.setter
+    def raw(self, raw):
+        self._raw = raw
 
 class EEGDashBaseRaw(BaseRaw):
     r"""MNE Raw object from EEG-Dash connection with Openneuro S3 file.
@@ -67,7 +164,6 @@ class EEGDashBaseRaw(BaseRaw):
             if chtype == 'heog' or chtype == 'veog':
                 chtype = 'eog'
             ch_types.append(chtype)
-        print(ch_types)
         info = mne.create_info(ch_names=ch_names, sfreq=sfreq, ch_types=ch_types)
         self.s3file = self.get_s3path(input_fname)
         self.cache_dir = Path(cache_dir)

@@ -35,7 +35,10 @@ def scan_folders(root_path):
                     matching_folders.append(folder_path)
                     print(f"{folder_path} - OK")
                 else:
-                    print(f"{folder_path} - NOT OK")
+                    if first_fdt_file:
+                        print(f"{folder_path} - OK (2 files)")
+                    else:
+                        print(f"{folder_path} - NOT EEGLAB")
 
                 # Print the first found .set and .fdt files if they exist
                 if first_set_file:

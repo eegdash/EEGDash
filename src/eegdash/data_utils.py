@@ -17,6 +17,7 @@ import mne_bids
 from mne_bids import (
     BIDSPath,
 )
+from bids import BIDSLayout
 
 class EEGDashBaseDataset(BaseDataset):
     """Returns samples from an mne.io.Raw object along with a target.
@@ -96,7 +97,7 @@ class EEGDashBaseDataset(BaseDataset):
     
     def __len__(self):
         if self._raw is None:
-            return self.record['rawdatainfo']['ntimes']
+            return self.record['ntimes']
         else:
             return len(self._raw)
 
@@ -216,39 +217,49 @@ class EEGDashBaseRaw(BaseRaw):
         _read_segments_file(self, data, idx, fi, start, stop, cals, mult, dtype="<f4")
 
 
-class BIDSDataset():
+class EEGBIDSDataset():
     ALLOWED_FILE_FORMAT = ['eeglab', 'brainvision', 'biosemi', 'european']
-    RAW_EXTENSION = {
-        'eeglab': '.set',
-        'brainvision': '.vhdr',
-        'biosemi': '.bdf',
-        'european': '.edf'
-    }
+    RAW_EXTENSIONS = {
+            '.set': ['.set', '.fdt'], # eeglab
+            '.edf': ['.edf'], # european
+            '.vhdr': ['.eeg', '.vhdr', '.vmrk', '.dat', '.raw'], # brainvision
+            '.bdf': ['.bdf'], # biosemi
+        }
     METADATA_FILE_EXTENSIONS = ['eeg.json', 'channels.tsv', 'electrodes.tsv', 'events.tsv', 'events.json']
     def __init__(self,
             data_dir=None,                            # location of bids dataset 
             dataset='',                               # dataset name
-            raw_format='eeglab',                      # format of raw data
         ):                            
         if data_dir is None or not os.path.exists(data_dir):
             raise ValueError('data_dir must be specified and must exist')
         self.bidsdir = Path(data_dir)
         self.dataset = dataset
         assert str(self.bidsdir).endswith(self.dataset)
+        self.layout = BIDSLayout(data_dir)
 
-        if raw_format.lower() not in self.ALLOWED_FILE_FORMAT:
-            raise ValueError('raw_format must be one of {}'.format(self.ALLOWED_FILE_FORMAT))
-        self.raw_format = raw_format.lower()
+        # get all recording files in the bids directory
+        self.files = self.get_recordings(self.layout)
+        assert len(self.files) > 0, ValueError('Unable to construct EEG dataset. No EEG recordings found.')
+        assert self.check_eeg_dataset(), ValueError('Dataset is not an EEG dataset.')
+        # temp_dir = (Path().resolve() / 'data')
+        # if not os.path.exists(temp_dir):
+        #     os.mkdir(temp_dir)
+        # if not os.path.exists(temp_dir / f'{dataset}_files.npy'):
+        #     self.files = self.get_files_with_extension_parallel(self.bidsdir, extension=self.RAW_EXTENSION[self.raw_format])
+        #     np.save(temp_dir / f'{dataset}_files.npy', self.files)
+        # else:
+        #     self.files = np.load(temp_dir / f'{dataset}_files.npy', allow_pickle=True)
 
-        # get all .set files in the bids directory
-        temp_dir = (Path().resolve() / 'data')
-        if not os.path.exists(temp_dir):
-            os.mkdir(temp_dir)
-        if not os.path.exists(temp_dir / f'{dataset}_files.npy'):
-            self.files = self.get_files_with_extension_parallel(self.bidsdir, extension=self.RAW_EXTENSION[self.raw_format])
-            np.save(temp_dir / f'{dataset}_files.npy', self.files)
-        else:
-            self.files = np.load(temp_dir / f'{dataset}_files.npy', allow_pickle=True)
+    def check_eeg_dataset(self):
+        return self.get_bids_file_attribute('modality', self.files[0]).lower() == 'eeg'
+
+    def get_recordings(self, layout:BIDSLayout):
+        files = []
+        for ext, exts in self.RAW_EXTENSIONS.items():
+            files = layout.get(extension=ext, return_type='filename')
+            if files:
+                break 
+        return files
 
     def get_relative_bidspath(self, filename):
         bids_parent_dir = self.bidsdir.parent
@@ -301,11 +312,6 @@ class BIDSDataset():
                     filepath = path / file
                     bids_files.append(filepath)
 
-                # cur_file_basename = file[:file.rfind('_')] # TODO: change to just search for any file with extension
-                # if file.endswith(extension) and cur_file_basename in basename:
-                #     filepath = path / file
-                #     bids_files.append(filepath)
-
         # check if file is in top level directory
         if any(file in os.listdir(path) for file in top_level_files):
             return bids_files
@@ -338,7 +344,7 @@ class BIDSDataset():
         
     def scan_directory(self, directory, extension):
         result_files = []
-        directory_to_ignore = ['.git']
+        directory_to_ignore = ['.git', '.datalad', 'derivatives', 'code']
         with os.scandir(directory) as entries:
             for entry in entries:
                 if entry.is_file() and entry.name.endswith(extension):
@@ -419,32 +425,22 @@ class BIDSDataset():
                 json_dict.update(json.load(f))
         return json_dict
 
-    def sfreq(self, data_filepath):
-        json_files = self.get_bids_metadata_files(data_filepath, 'eeg.json')
-        if len(json_files) == 0:
-            raise ValueError('No eeg.json found')
-
-        metadata = self.resolve_bids_json(json_files)
-        if 'SamplingFrequency' not in metadata:
-            raise ValueError('SamplingFrequency not found in metadata')
-        else:
-            return metadata['SamplingFrequency']
-    
-    def task(self, data_filepath):
-        return self.get_property_from_filename('task', data_filepath)
-        
-    def session(self, data_filepath):
-        return self.get_property_from_filename('session', data_filepath)
-
-    def run(self, data_filepath):
-        return self.get_property_from_filename('run', data_filepath)
-
-    def subject(self, data_filepath):
-        return self.get_property_from_filename('sub', data_filepath)
-
-    def num_channels(self, data_filepath):
-        channels_tsv = pd.read_csv(self.get_bids_metadata_files(data_filepath, 'channels.tsv')[0], sep='\t')
-        return len(channels_tsv)
+    def get_bids_file_attribute(self, attribute, data_filepath):
+        entities = self.layout.parse_file_entities(data_filepath)
+        bidsfile = self.layout.get(**entities)[0]
+        attributes = bidsfile.get_entities(metadata='all')
+        attribute_mapping = {
+            'sfreq': 'SamplingFrequency',
+            'modality': 'datatype',
+            'task': 'task',
+            'session': 'session',
+            'run': 'run',
+            'subject': 'subject',
+            'ntimes': 'RecordingDuration',
+            'nchans': 'EEGChannelCount'
+        }
+        attribute_value = attributes.get(attribute_mapping.get(attribute), None)
+        return attribute_value
 
     def channel_labels(self, data_filepath):
         channels_tsv = pd.read_csv(self.get_bids_metadata_files(data_filepath, 'channels.tsv')[0], sep='\t')
@@ -462,9 +458,12 @@ class BIDSDataset():
     def subject_participant_tsv(self, data_filepath):
         '''Get participants_tsv info of a subject based on filepath'''
         participants_tsv = pd.read_csv(self.get_bids_metadata_files(data_filepath, 'participants.tsv')[0], sep='\t')
+        # if participants_tsv is not empty
+        if participants_tsv.empty:
+            return {}
         # set 'participant_id' as index
         participants_tsv.set_index('participant_id', inplace=True)
-        subject = f'sub-{self.subject(data_filepath)}'
+        subject = f"sub-{self.get_bids_file_attribute('subject', data_filepath)}"
         return participants_tsv.loc[subject].to_dict()
     
     def eeg_json(self, data_filepath):

@@ -1,15 +1,15 @@
-from typing import List
 import pymongo
 from dotenv import load_dotenv
 import os
 from pathlib import Path
 import s3fs
 from joblib import Parallel, delayed
+import json
 import tempfile
 import mne
 import numpy as np
 import xarray as xr
-from .data_utils import BIDSDataset, EEGDashBaseRaw, EEGDashBaseDataset
+from .data_utils import EEGBIDSDataset, EEGDashBaseRaw, EEGDashBaseDataset
 from braindecode.datasets import BaseDataset, BaseConcatDataset
 from collections import defaultdict
 from pymongo import MongoClient, InsertOne, UpdateOne, DeleteOne
@@ -18,6 +18,11 @@ class EEGDash:
     AWS_BUCKET = 's3://openneuro.org'
     def __init__(self, 
                  is_public=True):
+        # Load config file
+        config_path = Path(__file__).parent / 'config.json'
+        with open(config_path, 'r') as f:
+            self.config = json.load(f)
+
         if is_public:
             DB_CONNECTION_STRING="mongodb+srv://eegdash-user:mdzoMjQcHWTVnKDq@cluster0.vz35p.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
         else:
@@ -37,10 +42,9 @@ class EEGDash:
         # convert to list using get_item on each element
         return [result for result in results]
 
-    def exist(self, data_name=''):
-        query = {
-            "data_name": data_name
-        }
+    def exist(self, query:dict):
+        accepted_query_fields = ['data_name', 'dataset']
+        assert all(field in accepted_query_fields for field in query.keys())
         sessions = self.find(query)
         return len(sessions) > 0
 
@@ -104,66 +108,111 @@ class EEGDash:
         )
         return eeg_xarray
 
-    def load_eeg_attrs_from_bids_file(self, bids_dataset: BIDSDataset, bids_file):
+    def get_raw_extensions(self, bids_file, bids_dataset: EEGBIDSDataset):
+        bids_file = Path(bids_file)
+        extensions = {
+            '.set': ['.set', '.fdt'], # eeglab
+            '.edf': ['.edf'], # european
+            '.vhdr': ['.eeg', '.vhdr', '.vmrk', '.dat', '.raw'], # brainvision
+            '.bdf': ['.bdf'], # biosemi
+        }
+        return [str(bids_dataset.get_relative_bidspath(bids_file.with_suffix(suffix))) for suffix in extensions[bids_file.suffix] if bids_file.with_suffix(suffix).exists()]
+
+    def load_eeg_attrs_from_bids_file(self, bids_dataset: EEGBIDSDataset, bids_file):
         '''
         bids_file must be a file of the bids_dataset
         '''
         if bids_file not in bids_dataset.files:
             raise ValueError(f'{bids_file} not in {bids_dataset.dataset}')
+
+        # Initialize attrs with None values for all expected fields
+        attrs = {field: None for field in self.config['attributes'].keys()}
+
         f = os.path.basename(bids_file)
         dsnumber = bids_dataset.dataset
         # extract openneuro path by finding the first occurrence of the dataset name in the filename and remove the path before that
         openneuro_path = dsnumber + bids_file.split(dsnumber)[1]
 
-        bids_dependencies_files = ['dataset_description.json', 'participants.tsv', 'events.tsv', 'events.json', 'eeg.json', 'electrodes.tsv', 'channels.tsv', 'coordsystem.json']
+        # Update with actual values where available
+        try:
+            participants_tsv = bids_dataset.subject_participant_tsv(bids_file)
+        except Exception as e:
+            print(f"Error getting participants_tsv: {str(e)}")
+            participants_tsv = None
+            
+        try:
+            eeg_json = bids_dataset.eeg_json(bids_file)
+        except Exception as e:
+            print(f"Error getting eeg_json: {str(e)}")
+            eeg_json = None
+            
+        bids_dependencies_files = self.config['bids_dependencies_files']
         bidsdependencies = []
         for extension in bids_dependencies_files:
-            dep_path = bids_dataset.get_bids_metadata_files(bids_file, extension)
-            dep_path = [str(bids_dataset.get_relative_bidspath(dep)) for dep in dep_path]
+            try:
+                dep_path = bids_dataset.get_bids_metadata_files(bids_file, extension)
+                dep_path = [str(bids_dataset.get_relative_bidspath(dep)) for dep in dep_path]
+                bidsdependencies.extend(dep_path)
+            except Exception as e:
+                pass
+                
+        bidsdependencies.extend(self.get_raw_extensions(bids_file, bids_dataset))
 
-            bidsdependencies.extend(dep_path)
-
-        participants_tsv = bids_dataset.subject_participant_tsv(bids_file)
-        eeg_json = bids_dataset.eeg_json(bids_file)
-        attrs = {
-            'data_name': f'{bids_dataset.dataset}_{f}',
-            'dataset': bids_dataset.dataset,
-            'bidspath': openneuro_path,
-            'subject': bids_dataset.subject(bids_file),
-            'task': bids_dataset.task(bids_file),
-            'session': bids_dataset.session(bids_file),
-            'run': bids_dataset.run(bids_file),
-            'modality': 'EEG',
-            'nchans': bids_dataset.num_channels(bids_file),
-            'ntimes': bids_dataset.num_times(bids_file),
-            'participant_tsv': participants_tsv,
-            'eeg_json': eeg_json,
-            'bidsdependencies': bidsdependencies,
+        # Define field extraction functions with error handling
+        field_extractors = {
+            'data_name': lambda: f'{bids_dataset.dataset}_{f}',
+            'dataset': lambda: bids_dataset.dataset,
+            'bidspath': lambda: openneuro_path,
+            'subject': lambda: bids_dataset.get_bids_file_attribute('subject', bids_file),
+            'task': lambda: bids_dataset.get_bids_file_attribute('task', bids_file),
+            'session': lambda: bids_dataset.get_bids_file_attribute('session', bids_file),
+            'run': lambda: bids_dataset.get_bids_file_attribute('run', bids_file),
+            'modality': lambda: bids_dataset.get_bids_file_attribute('modality', bids_file),
+            'sampling_frequency': lambda: bids_dataset.get_bids_file_attribute('sfreq', bids_file),
+            'nchans': lambda: bids_dataset.get_bids_file_attribute('nchans', bids_file),
+            'ntimes': lambda: bids_dataset.get_bids_file_attribute('ntimes', bids_file),
+            'participant_tsv': lambda: participants_tsv,
+            'eeg_json': lambda: eeg_json,
+            'bidsdependencies': lambda: bidsdependencies,
         }
+        
+        # Dynamically populate attrs with error handling
+        for field, extractor in field_extractors.items():
+            try:
+                attrs[field] = extractor()
+            except Exception as e:
+                print(f"Error extracting {field}: {str(e)}")
+                attrs[field] = None
 
         return attrs
 
-    def add_bids_dataset(self, dataset, data_dir, raw_format='eeglab', overwrite=True):
+    def add_bids_dataset(self, dataset, data_dir, overwrite=True):
         '''
         Create new records for the dataset in the MongoDB database if not found
         '''
         if self.is_public:
             raise ValueError('This operation is not allowed for public users')
 
-        bids_dataset = BIDSDataset(
-            data_dir=data_dir,
-            dataset=dataset,
-            raw_format=raw_format,
-        )
+        if not overwrite and self.exist({'dataset': dataset}):
+            print(f'Dataset {dataset} already exists in the database')
+            return
+        try:
+            bids_dataset = EEGBIDSDataset(
+                data_dir=data_dir,
+                dataset=dataset,
+            )
+        except Exception as e:
+            print(f'Error creating bids dataset {dataset}: {str(e)}')
+            raise e
         requests = []
         for bids_file in bids_dataset.get_files():
             try:
                 data_id = f"{dataset}_{os.path.basename(bids_file)}"
 
-                if self.exist(data_name=data_id):
+                if self.exist({'data_name':data_id}):
                     if overwrite:
                         eeg_attrs = self.load_eeg_attrs_from_bids_file(bids_dataset, bids_file)
-                        requests.append(UpdateOne(self.update_request(eeg_attrs)))
+                        requests.append(self.update_request(eeg_attrs))
                 else:
                     eeg_attrs = self.load_eeg_attrs_from_bids_file(bids_dataset, bids_file)
                     requests.append(self.add_request(eeg_attrs))
@@ -224,6 +273,9 @@ class EEGDash:
     def remove_field_from_db(self, field):
         self.__collection.update_many({}, {'$unset': {field: 1}})
     
+    @property
+    def collection(self):
+        return self.__collection
 
 class EEGDashDataset(BaseConcatDataset):
     CACHE_DIR = '.eegdash_cache'
@@ -282,7 +334,7 @@ class EEGDashDataset(BaseConcatDataset):
                     description[field] = value
             return EEGDashBaseDataset(record, self.CACHE_DIR, description=description, **kwargs)
 
-        bids_dataset = BIDSDataset(
+        bids_dataset = EEGBIDSDataset(
             data_dir=data_dir,
             dataset=dataset,
             raw_format=raw_format,
@@ -291,15 +343,6 @@ class EEGDashDataset(BaseConcatDataset):
         datasets = Parallel(n_jobs=-1, prefer="threads", verbose=1)(
                 delayed(get_base_dataset_from_bids_file)(bids_dataset, bids_file) for bids_file in bids_dataset.get_files()
             )
-        # datasets = []
-        # for bids_file in bids_dataset.get_files():
-        #     record = eegdashObj.load_eeg_attrs_from_bids_file(bids_dataset, bids_file)
-        #     description = {}
-        #     for field in description_fields:
-        #         value = self.find_key_in_nested_dict(record, field)
-        #         if value:
-        #             description[field] = value
-        #     datasets.append(EEGDashBaseDataset(record, self.CACHE_DIR, description=description, **kwargs))
         return datasets
 
 def main():

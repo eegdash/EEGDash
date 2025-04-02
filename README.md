@@ -6,7 +6,7 @@ The data in EEG-DaSh originates from a collaboration involving 25 laboratories, 
 
 ## Featured data
 
-The following datasets are currently featured on EEGDash.
+The following HBN datasets are currently featured on EEGDash. More documentation is available [here](https://neuromechanist.github.io/data/hbn/).
 
 | DatasetID | Participants | Files | Sessions | Population | Channels | Is 10-20? | Modality | Size |
 |---|---|---|---|---|---|---|---|---|

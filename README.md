@@ -14,9 +14,7 @@ The following datasets are currently featured on EEGDash.
 | [ds005506](https://nemar.org/dataexplorer/detail?dataset_id=ds005506) | 150 | 5645 | 1 | Healthy | 129 | other | Visual | 112 GB |
 | [ds005507](https://nemar.org/dataexplorer/detail?dataset_id=ds005507) | 184 | 7273 | 1 | Healthy | 129 | other | Visual | 140 GB |
 | [ds005508](https://nemar.org/dataexplorer/detail?dataset_id=ds005508) | 324 | 13393 | 1 | Healthy | 129 | other | Visual | 230 GB |
-| [ds005509](https://nemar.org/dataexplorer/detail?dataset_id=ds005509) | 330 | 19980 | 1 | Healthy | 129 | other | Visual | 224 GB |
 | [ds005510](https://nemar.org/dataexplorer/detail?dataset_id=ds005510) | 135 | 4933 | 1 | Healthy | 129 | other | Visual | 91 GB |
-| [ds005511](https://nemar.org/dataexplorer/detail?dataset_id=ds005511) | 381 | 18604 | 1 | Healthy | 129 | other | Visual | 245 GB |
 | [ds005512](https://nemar.org/dataexplorer/detail?dataset_id=ds005512) | 257 | 9305 | 1 | Healthy | 129 | other | Visual | 157 GB |
 | [ds005514](https://nemar.org/dataexplorer/detail?dataset_id=ds005514) | 295 | 11565 | 1 | Healthy | 129 | other | Visual | 185 GB |
 

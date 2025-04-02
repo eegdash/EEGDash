@@ -18,7 +18,7 @@ The following HBN datasets are currently featured on EEGDash. Documentation abou
 | [ds005512](https://nemar.org/dataexplorer/detail?dataset_id=ds005512) | 257 | 9305 | 1 | Healthy | 129 | other | Visual | 157 GB |
 | [ds005514](https://nemar.org/dataexplorer/detail?dataset_id=ds005514) | 295 | 11565 | 1 | Healthy | 129 | other | Visual | 185 GB |
 
-A total of [253 datasets](datasets.md) are available through EEGDash. 
+A total of [246 other datasets](datasets.md) are also available through EEGDash. 
 
 ## Data format
 EEGDash queries return a **Pytorch Dataset** formatted to facilitate machine learning (ML) and deep learning (DL) applications. PyTorch Datasets are the best format for EEGDash queries because they provide an efficient, scalable, and flexible structure for machine learning (ML) and deep learning (DL) applications. They allow seamless integration with PyTorch’s DataLoader, enabling efficient batching, shuffling, and parallel data loading, which is essential for training deep learning models on large EEG datasets.

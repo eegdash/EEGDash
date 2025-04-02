@@ -74,11 +74,11 @@
 | ds003846    | 19             | 366     | 4          | Healthy                 | 64         | other       | Multisensory  | 0.011 TB |
 | ds003885    | 24             | 526     | 1          | Healthy                 | 128        | 10-20       | Visual        | 0.05 TB  |
 | ds003887    | 24             | 526     | 1          | Healthy                 | 128        | 10-20       | Visual        | 0.049 TB |
-| ds003944    | 82             | 351     | 1          | Schizophrenia/Psychosis | 61         | 10-20       | Resting State | 0.007 TB |
-| ds003947    | 61             | 267     | 1          | Schizophrenia/Psychosis | 61         | 10-20       | Resting State | 0.013 TB |
+| ds003944    | 82             | 351     | 1          | Psychosis | 61         | 10-20       | Resting State | 0.007 TB |
+| ds003947    | 61             | 267     | 1          | Psychosis | 61         | 10-20       | Resting State | 0.013 TB |
 | ds003969    | 98             | 1181    | 1          | Healthy                 | 64         | 10-20       | Auditory      | 0.058 TB |
 | ds003987    | 23             | 557     | 3          | Healthy                 | 64         | 10-20       | Visual        | 0.027 TB |
-| ds004000    | 43             | 392     | 1          | Schizophrenia/Psychosis | 128        | 10-20       | Multisensory  | 0.024 TB |
+| ds004000    | 43             | 392     | 1          | Psychosis | 128        | 10-20       | Multisensory  | 0.024 TB |
 | ds004010    | 24             | 102     | 1          | Healthy                 | 64         | other       | Multisensory  | 0.025 TB |
 | ds004015    | 36             | 305     | 1          | Healthy                 | 18         | other       | Auditory      | 0.006 TB |
 | ds004018    | 16             | 350     | 1          | Healthy                 | 63         | 10-20       | Visual        | 0.011 TB |
@@ -110,8 +110,8 @@
 | ds004356    | 22             | 639     | 1          | Healthy                 | 34         | 10-20       | Auditory      | 213.1 GB |
 | ds004357    | 16             | 71      | 1          | Healthy                 | 63         | 10-20       | Visual        | 0.021 TB |
 | ds004362    | 109            | 9162    | 1          | Healthy                 | 64         | 10-20       | Visual        | 0.008 TB |
-| ds004367    | 40             | 206     | 1          | Schizophrenia/Psychosis | 68         | 10-20       | Visual        | 0.03 TB  |
-| ds004368    | 39             | 206     | 2          | Schizophrenia/Psychosis | 63         | 10-20       | Visual        | 0.001 TB |
+| ds004367    | 40             | 206     | 1          | Psychosis | 68         | 10-20       | Visual        | 0.03 TB  |
+| ds004368    | 39             | 206     | 2          | Psychosis | 63         | 10-20       | Visual        | 0.001 TB |
 | ds004369    | 41             | 345     | 1          | Healthy                 | 4          | other       | Auditory      | 0.002 TB |
 | ds004381    | 14             | 1069    | 4          | Surgery                 | 4          | 10-20       | Other         | 0.005 TB |
 | ds004388    | 14             | 1069    | 4          | Surgery                 | 4          | 10-20       | Other         | 0.005 TB |

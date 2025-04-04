@@ -97,7 +97,7 @@ class EEGDashBaseDataset(BaseDataset):
     
     def __len__(self):
         if self._raw is None:
-            return self.record['ntimes']
+            return int(self.record['ntimes'] * self.record['sampling_frequency'])
         else:
             return len(self._raw)
 

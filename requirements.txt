@@ -10,3 +10,4 @@ braindecode
 mne-bids
 pybids
 pymatreader
+pyarrow

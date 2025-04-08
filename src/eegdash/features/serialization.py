@@ -11,6 +11,8 @@ from pathlib import Path
 import pandas as pd
 from joblib import Parallel, delayed
 
+from braindecode.datautil.serialization import _load_kwargs_json
+
 from .datasets import (
     FeaturesDataset,
     FeaturesConcatDataset,
@@ -94,12 +96,3 @@ def _load_parallel(path, i):
         kwargs = _load_kwargs_json(kwargs_name, sub_dir)
         setattr(dataset, kwargs_name, kwargs)
     return dataset
-
-
-def _load_kwargs_json(kwargs_name, sub_dir):
-    kwargs_file_name = ".".join([kwargs_name, "json"])
-    kwargs_file_path = os.path.join(sub_dir, kwargs_file_name)
-    if os.path.exists(kwargs_file_path):
-        kwargs = json.load(open(kwargs_file_path, "r"))
-        kwargs = [tuple(kwarg) for kwarg in kwargs]
-        return kwargs

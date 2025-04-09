@@ -320,4 +320,67 @@ class FeaturesConcatDataset(BaseConcatDataset):
             dataframes = [ds.features for ds in self.datasets]
         return pd.concat(dataframes, axis=0, ignore_index=True)
 
-# TODO: handle missing values
+    def _numeric_columns(self):
+        return self.datasets[0].features.select_dtypes(include=np.number).columns
+        
+    def count(self, numeric_only=False):
+        counts = np.array([ds.features.drop(columns=ds.target_name).count(numeric_only=numeric_only)
+                           for ds in self.datasets])
+        count = counts.sum(axis=0)
+        return pd.Series(count, index=self._numeric_columns())
+
+    def mean(self, numeric_only=False):
+        counts = np.array([ds.features.drop(columns=ds.target_name).count(numeric_only=numeric_only)
+                           for ds in self.datasets])
+        means = np.array([ds.features.drop(columns=ds.target_name).mean(numeric_only=numeric_only)
+                          for ds in self.datasets])
+        count = counts.sum(axis=0, keepdims=True)
+        mean = np.sum((counts / count) * means, axis=0)
+        return pd.Series(mean, index=self._numeric_columns())
+
+    def var(self, ddof=1, numeric_only=False):
+        counts = np.array([ds.features.drop(columns=ds.target_name).count(numeric_only=numeric_only)
+                           for ds in self.datasets])
+        means = np.array([ds.features.drop(columns=ds.target_name).mean(numeric_only=numeric_only)
+                          for ds in self.datasets])
+        variances = np.array([ds.features.drop(columns=ds.target_name).var(numeric_only=numeric_only,
+                                              ddof=ddof)
+                              for ds in self.datasets])
+        count = counts.sum(axis=0)
+        mean = np.sum((counts / count) * means, axis=0)
+        var = np.sum(((counts - ddof) / (count - ddof)) * variances, axis=0)
+        var += np.sum((counts / (count - ddof)) * (means ** 2), axis=0)
+        var -= (count / (count - ddof)) * (mean ** 2)
+        return pd.Series(var, index=self._numeric_columns())
+
+    def std(self, ddof=1, numeric_only=False):
+        return np.sqrt(self.var(ddof=ddof, numeric_only=numeric_only))
+
+    def zscore(self, ddof=1, numeric_only=False, eps=0):
+        mean = self.mean(numeric_only=numeric_only)
+        std = self.std(ddof=ddof, numeric_only=numeric_only) + eps
+        for ds in self.datasets:
+            cols_without_target = ds.features.columns[ds.features.columns != ds.target_name]
+            ds.features[cols_without_target] = (ds.features[cols_without_target] - mean) / std
+
+    @staticmethod
+    def _enforce_inplace_operations(func_name, kwargs):
+        if 'inplace' in kwargs and kwargs['inplace'] is False:
+            raise ValueError(f"{func_name} only works inplace, please change "
+                             + "to inplace=True (default).")
+        kwargs['inplace'] = True
+
+    def fillna(self, *args, **kwargs):
+        FeaturesConcatDataset._enforce_inplace_operations("fillna", kwargs)
+        for ds in self.datasets:
+            ds.features.fillna(*args, **kwargs)
+
+    def interpolate(self, *args, **kwargs):
+        FeaturesConcatDataset._enforce_inplace_operations("interpolate", kwargs)
+        for ds in self.datasets:
+            ds.features.interpolate(*args, **kwargs)
+
+    def dropna(self, *args, **kwargs):
+        FeaturesConcatDataset._enforce_inplace_operations("dropna", kwargs)
+        for ds in self.datasets:
+            ds.features.dropna(*args, **kwargs)

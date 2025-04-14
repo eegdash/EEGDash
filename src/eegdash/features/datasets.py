@@ -53,7 +53,8 @@ class FeaturesDataset(EEGWindowsDataset):
 
         # save target name for load/save later
         if target_name is not None:
-            self.set_description({'target_name': target_name}, overwrite=True)
+            # hush "target_name not in description" warning
+            self.set_description({target_name: target_name}, overwrite=True)
             self.n_features -= 1
         self.target_name = self._target_name(target_name)
 

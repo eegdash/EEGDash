@@ -352,6 +352,7 @@ class FeaturesConcatDataset(BaseConcatDataset):
         var = np.sum(((counts - ddof) / (count - ddof)) * variances, axis=0)
         var += np.sum((counts / (count - ddof)) * (means ** 2), axis=0)
         var -= (count / (count - ddof)) * (mean ** 2)
+        var = var.clip(min=0)
         return pd.Series(var, index=self._numeric_columns())
 
     def std(self, ddof=1, numeric_only=False):

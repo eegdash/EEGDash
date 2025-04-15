@@ -11,3 +11,4 @@ mne-bids
 pybids
 pymatreader
 pyarrow
+tqdm

@@ -6,7 +6,12 @@ from typing import Dict, no_type_check
 from collections.abc import Callable, Iterable
 import numpy as np
 import pandas as pd
-from braindecode.datasets.base import EEGWindowsDataset, BaseConcatDataset, _create_description
+from joblib import Parallel, delayed
+from braindecode.datasets.base import (
+    EEGWindowsDataset,
+    BaseConcatDataset,
+    _create_description,
+)
 
 
 class FeaturesDataset(EEGWindowsDataset):
@@ -81,6 +86,35 @@ class FeaturesDataset(EEGWindowsDataset):
         return len(self.features.index)
 
 
+def _compute_stats(
+    ds: FeaturesDataset,
+    return_count=False,
+    return_mean=False,
+    return_var=False,
+    ddof=1,
+    numeric_only=False,
+):
+    df = ds.features.drop(columns=ds.target_name)
+    res = []
+    if return_count:
+        res.append(df.count(numeric_only=numeric_only))
+    if return_mean:
+        res.append(df.mean(numeric_only=numeric_only))
+    if return_var:
+        res.append(df.var(ddof=ddof, numeric_only=numeric_only))
+    return tuple(res)
+
+
+def _pooled_var(counts, means, variances, ddof):
+    count = counts.sum(axis=0)
+    mean = np.sum((counts / count) * means, axis=0)
+    var = np.sum(((counts - ddof) / (count - ddof)) * variances, axis=0)
+    var += np.sum((counts / (count - ddof)) * (means**2), axis=0)
+    var -= (count / (count - ddof)) * (mean**2)
+    var = var.clip(min=0)
+    return count, mean, var
+
+
 class FeaturesConcatDataset(BaseConcatDataset):
     """A base class for concatenated datasets.
 
@@ -108,7 +142,6 @@ class FeaturesConcatDataset(BaseConcatDataset):
         super().__init__(list_of_ds)
 
         self.target_transform = target_transform
-
 
     @no_type_check  # TODO, it's a mess
     def split(
@@ -315,62 +348,96 @@ class FeaturesConcatDataset(BaseConcatDataset):
 
     def to_dataframe(self, include_metadata=False):
         if include_metadata:
-            dataframes = [ds.metadata.join(ds.features, lsuffix="_metadata")
-                          for ds in self.datasets]
+            dataframes = [
+                ds.metadata.join(ds.features, lsuffix="_metadata")
+                for ds in self.datasets
+            ]
         else:
             dataframes = [ds.features for ds in self.datasets]
         return pd.concat(dataframes, axis=0, ignore_index=True)
 
     def _numeric_columns(self):
         return self.datasets[0].features.select_dtypes(include=np.number).columns
-        
-    def count(self, numeric_only=False):
-        counts = np.array([ds.features.drop(columns=ds.target_name).count(numeric_only=numeric_only)
-                           for ds in self.datasets])
+
+    def count(self, numeric_only=False, n_jobs=1):
+        stats = Parallel(n_jobs)(
+            delayed(_compute_stats)(ds, return_count=True, numeric_only=numeric_only)
+            for ds in self.datasets
+        )
+        counts = np.array([s[0] for s in stats])
         count = counts.sum(axis=0)
         return pd.Series(count, index=self._numeric_columns())
 
-    def mean(self, numeric_only=False):
-        counts = np.array([ds.features.drop(columns=ds.target_name).count(numeric_only=numeric_only)
-                           for ds in self.datasets])
-        means = np.array([ds.features.drop(columns=ds.target_name).mean(numeric_only=numeric_only)
-                          for ds in self.datasets])
+    def mean(self, numeric_only=False, n_jobs=1):
+        stats = Parallel(n_jobs)(
+            delayed(_compute_stats)(
+                ds, return_count=True, return_mean=True, numeric_only=numeric_only
+            )
+            for ds in self.datasets
+        )
+        counts, means = np.array([s[0] for s in stats]), np.array([s[1] for s in stats])
         count = counts.sum(axis=0, keepdims=True)
         mean = np.sum((counts / count) * means, axis=0)
         return pd.Series(mean, index=self._numeric_columns())
 
-    def var(self, ddof=1, numeric_only=False):
-        counts = np.array([ds.features.drop(columns=ds.target_name).count(numeric_only=numeric_only)
-                           for ds in self.datasets])
-        means = np.array([ds.features.drop(columns=ds.target_name).mean(numeric_only=numeric_only)
-                          for ds in self.datasets])
-        variances = np.array([ds.features.drop(columns=ds.target_name).var(numeric_only=numeric_only,
-                                              ddof=ddof)
-                              for ds in self.datasets])
-        count = counts.sum(axis=0)
-        mean = np.sum((counts / count) * means, axis=0)
-        var = np.sum(((counts - ddof) / (count - ddof)) * variances, axis=0)
-        var += np.sum((counts / (count - ddof)) * (means ** 2), axis=0)
-        var -= (count / (count - ddof)) * (mean ** 2)
-        var = var.clip(min=0)
+    def var(self, ddof=1, numeric_only=False, n_jobs=1):
+        stats = Parallel(n_jobs)(
+            delayed(_compute_stats)(
+                ds,
+                return_count=True,
+                return_mean=True,
+                return_var=True,
+                ddof=ddof,
+                numeric_only=numeric_only,
+            )
+            for ds in self.datasets
+        )
+        counts, means, variances = (
+            np.array([s[0] for s in stats]),
+            np.array([s[1] for s in stats]),
+            np.array([s[2] for s in stats]),
+        )
+        _, _, var = _pooled_var(counts, means, variances, ddof)
         return pd.Series(var, index=self._numeric_columns())
 
-    def std(self, ddof=1, numeric_only=False):
-        return np.sqrt(self.var(ddof=ddof, numeric_only=numeric_only))
+    def std(self, ddof=1, numeric_only=False, n_jobs=1):
+        return np.sqrt(self.var(ddof=ddof, numeric_only=numeric_only, n_jobs=n_jobs))
 
-    def zscore(self, ddof=1, numeric_only=False, eps=0):
-        mean = self.mean(numeric_only=numeric_only)
-        std = self.std(ddof=ddof, numeric_only=numeric_only) + eps
+    def zscore(self, ddof=1, numeric_only=False, eps=0, n_jobs=1):
+        stats = Parallel(n_jobs)(
+            delayed(_compute_stats)(
+                ds,
+                return_count=True,
+                return_mean=True,
+                return_var=True,
+                ddof=ddof,
+                numeric_only=numeric_only,
+            )
+            for ds in self.datasets
+        )
+        counts, means, variances = (
+            np.array([s[0] for s in stats]),
+            np.array([s[1] for s in stats]),
+            np.array([s[2] for s in stats]),
+        )
+        _, mean, var = _pooled_var(counts, means, variances, ddof)
+        std = np.sqrt(var) + eps
         for ds in self.datasets:
-            cols_without_target = ds.features.columns[ds.features.columns != ds.target_name]
-            ds.features[cols_without_target] = (ds.features[cols_without_target] - mean) / std
+            cols_without_target = ds.features.columns[
+                ds.features.columns != ds.target_name
+            ]
+            ds.features[cols_without_target] = (
+                ds.features[cols_without_target] - mean
+            ) / std
 
     @staticmethod
     def _enforce_inplace_operations(func_name, kwargs):
-        if 'inplace' in kwargs and kwargs['inplace'] is False:
-            raise ValueError(f"{func_name} only works inplace, please change "
-                             + "to inplace=True (default).")
-        kwargs['inplace'] = True
+        if "inplace" in kwargs and kwargs["inplace"] is False:
+            raise ValueError(
+                f"{func_name} only works inplace, please change "
+                + "to inplace=True (default)."
+            )
+        kwargs["inplace"] = True
 
     def fillna(self, *args, **kwargs):
         FeaturesConcatDataset._enforce_inplace_operations("fillna", kwargs)

@@ -7,10 +7,18 @@ from .extractors import ByChannelPairFeatureExtractor, Feature
 @Feature()
 class CoherenceFeatureExtractor(ByChannelPairFeatureExtractor):
     def preprocess(self, x, **kwargs):
+        f_min = kwargs.pop('f_min') if 'f_min' in kwargs else None
+        f_max = kwargs.pop('f_max') if 'f_max' in kwargs else None
         n = x.shape[0]
         idx_x, idx_y = ByChannelPairFeatureExtractor.get_pair_iterators(n)
         ix, iy = list(chain(range(n), idx_x)), list(chain(range(n), idx_y))
         f, s = csd(x[ix], x[iy], **kwargs)
+        if f_min is not None or f_max is not None:
+            f_min_idx = f > f_min if f_min is not None else True
+            f_max_idx = f < f_max if f_max is not None else True
+            idx = np.logical_and(f_min_idx, f_max_idx)
+            f = f[idx]
+            s = s[:, idx]
         sx, sxy = np.split(s, [n], axis=0)
         sxx, syy = sx[idx_x].real, sx[idx_y].real
         return f, sxx, syy, sxy

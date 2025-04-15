@@ -7,7 +7,15 @@ from .extractors import ByChannelFeatureExtractor, Feature
 @Feature()
 class SpectralFeatureExtractor(ByChannelFeatureExtractor):
     def preprocess(self, x, **kwargs):
+        f_min = kwargs.pop('f_min') if 'f_min' in kwargs else None
+        f_max = kwargs.pop('f_max') if 'f_max' in kwargs else None
         f, p = welch(x, **kwargs)
+        if f_min is not None or f_max is not None:
+            f_min_idx = f > f_min if f_min is not None else True
+            f_max_idx = f < f_max if f_max is not None else True
+            idx = np.logical_and(f_min_idx, f_max_idx)
+            f = f[idx]
+            p = p[:, idx]
         return f, p
 
 

@@ -36,11 +36,15 @@ class FeatureExtractor:
                 r = f(ch_names, *z)
             else:
                 r = f(*z)
-            if isinstance(r, dict):
-                if isinstance(fname, str) and fname:
-                    fname += "_"
-                else:
+            if not isinstance(fname, str) or not fname:
+                fun = f.func if isinstance(f, partial) else f
+                if isinstance(fun, FeatureExtractor) or not hasattr(fun, "__name__"):
                     fname = ""
+                else:
+                    fname = fun.__name__
+            if isinstance(r, dict):
+                if fname:
+                    fname += "_"
                 for k, v in r.items():
                     self._add_feature_to_dict(results_dict, fname + k, v, f_channels)
             else:

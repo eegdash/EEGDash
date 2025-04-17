@@ -1,14 +1,40 @@
+from abc import ABC, abstractmethod
 from typing import Dict, List, Type
 from collections.abc import Callable
 from functools import partial
 import numpy as np
 
 
-class FeatureExtractor:
+class FitableFeature(ABC):
+    def __init__(self):
+        self._is_fitted = False
+        self.clear()
+
+    @abstractmethod
+    def clear(self):
+        pass
+
+    @abstractmethod
+    def partial_fit(self, *x, y=None):
+        pass
+
+    def fit(self):
+        self._is_fitted = True
+
+    def __call__(self, *args, **kwargs):
+        if not self._is_fitted:
+            raise RuntimeError(
+                f"{self.__class__} cannot be called, it has to be fitted first."
+            )
+
+
+class FeatureExtractor(FitableFeature):
     def __init__(
         self, feature_extractors: Dict[str, Callable], **preprocess_kwargs: Dict
     ):
         self.feature_extractors_dict = self._validate_execution_tree(feature_extractors)
+        self._is_fitable = self._check_is_fitable(feature_extractors)
+        super().__init__()
         self.preprocess_kwargs = preprocess_kwargs
         if self.preprocess_kwargs is None:
             self.preprocess_kwargs = dict()
@@ -28,6 +54,8 @@ class FeatureExtractor:
         return [""]
 
     def __call__(self, ch_names, *x):
+        if self._is_fitable:
+            super().__call__()
         f_channels = self.feature_channel_names(ch_names)
         results_dict = dict()
         z = self.preprocess(*x, **self.preprocess_kwargs)
@@ -51,12 +79,55 @@ class FeatureExtractor:
                 self._add_feature_to_dict(results_dict, fname, r, f_channels)
         return results_dict
 
+    def clear(self):
+        if not self._is_fitable:
+            return
+        for fname, f in self.feature_extractors_dict.items():
+            if isinstance(f, partial):
+                f = f.func
+            if isinstance(f, FitableFeature):
+                f.clear()
+
+    def partial_fit(self, *x, y=None):
+        if not self._is_fitable:
+            return
+        z = self.preprocess(*x, **self.preprocess_kwargs)
+        for fname, f in self.feature_extractors_dict.items():
+            if isinstance(f, partial):
+                f = f.func
+            if isinstance(f, FitableFeature):
+                f.partial_fit(*z, y=y)
+
+    def fit(self):
+        if not self._is_fitable:
+            return
+        for fname, f in self.feature_extractors_dict.items():
+            if isinstance(f, partial):
+                f = f.func
+            if isinstance(f, FitableFeature):
+                f.fit()
+        super().fit()
+
     def _validate_execution_tree(self, feature_extractors):
         for fname, f in feature_extractors.items():
             if isinstance(f, partial):
-                f.parent_extractor_type = f.func.parent_extractor_type
+                f = f.func
             assert type(self) in f.parent_extractor_type
         return feature_extractors
+
+    def _check_is_fitable(self, feature_extractors):
+        is_fitable = False
+        for fname, f in feature_extractors.items():
+            if isinstance(f, FeatureExtractor):
+                is_fitable = f._is_fitable
+            else:
+                if isinstance(f, partial):
+                    f = f.func
+                if isinstance(f, FitableFeature):
+                    is_fitable = True
+            if is_fitable:
+                break
+        return is_fitable
 
     def _add_feature_to_dict(self, results_dict, name, value, f_channels):
         if isinstance(value, np.ndarray):

@@ -59,3 +59,23 @@ def extract_features(
         )
     )
     return FeaturesConcatDataset(feature_ds_list)
+
+
+def fit_feature_extractor(
+    concat_dataset: BaseConcatDataset,
+    features: FeatureExtractor | Dict[str, Callable] | List[Callable],
+):
+    if isinstance(features, list):
+        features = dict(enumerate(features))
+    if not isinstance(features, FeatureExtractor):
+        features = FeatureExtractor(features)
+    features.clear()
+    for win_ds in tqdm(
+        concat_dataset.datasets,
+        total=len(concat_dataset.datasets),
+        desc="Fitting feature extractor",
+    ):
+        for X, y, _ in win_ds:
+            features.partial_fit(X, y=y)
+    features.fit()
+    return features

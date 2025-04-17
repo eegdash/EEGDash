@@ -12,3 +12,4 @@ pybids
 pymatreader
 pyarrow
 tqdm
+numba

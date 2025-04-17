@@ -1,14 +1,14 @@
 from itertools import chain
 import numpy as np
 from scipy.signal import csd
-from .extractors import ByChannelPairFeatureExtractor, Feature
+from .extractors import FeatureExtractor, ByChannelPairFeatureExtractor, Feature
 
 
-@Feature()
+@Feature(FeatureExtractor, ByChannelPairFeatureExtractor)
 class CoherenceFeatureExtractor(ByChannelPairFeatureExtractor):
     def preprocess(self, x, **kwargs):
-        f_min = kwargs.pop('f_min') if 'f_min' in kwargs else None
-        f_max = kwargs.pop('f_max') if 'f_max' in kwargs else None
+        f_min = kwargs.pop("f_min") if "f_min" in kwargs else None
+        f_max = kwargs.pop("f_max") if "f_max" in kwargs else None
         n = x.shape[0]
         idx_x, idx_y = ByChannelPairFeatureExtractor.get_pair_iterators(n)
         ix, iy = list(chain(range(n), idx_x)), list(chain(range(n), idx_y))

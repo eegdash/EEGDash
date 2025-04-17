@@ -1,4 +1,4 @@
-from typing import Dict
+from typing import Dict, List
 from collections.abc import Callable
 import pandas as pd
 from joblib import Parallel, delayed
@@ -37,17 +37,19 @@ def _extract_features_from_eegwindowsdataset(
 
 def extract_features(
     concat_dataset: BaseConcatDataset,
-    feature_extractor: FeatureExtractor | Dict[str, Callable],
+    features: FeatureExtractor | Dict[str, Callable] | List[Callable],
     target_name: str = "target",
     n_jobs=1,
 ):
-    if not isinstance(feature_extractor, FeatureExtractor):
-        feature_extractor = FeatureExtractor(feature_extractor)
+    if isinstance(features, list):
+        features = dict(enumerate(features))
+    if not isinstance(features, FeatureExtractor):
+        features = FeatureExtractor(features)
     feature_ds_list = list(
         tqdm(
             Parallel(n_jobs=n_jobs, return_as="generator")(
                 delayed(_extract_features_from_eegwindowsdataset)(
-                    win_ds, feature_extractor, target_name
+                    win_ds, features, target_name
                 )
                 for win_ds in concat_dataset.datasets
             ),

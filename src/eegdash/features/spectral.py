@@ -1,10 +1,10 @@
 import numpy as np
 from scipy.signal import welch
 from scipy.stats import linregress
-from .extractors import ByChannelFeatureExtractor, Feature
+from .extractors import FeatureExtractor, ByChannelFeatureExtractor, Feature
 
 
-@Feature()
+@Feature(FeatureExtractor, ByChannelFeatureExtractor)
 class SpectralFeatureExtractor(ByChannelFeatureExtractor):
     def preprocess(self, x, **kwargs):
         f_min = kwargs.pop('f_min') if 'f_min' in kwargs else None
@@ -21,14 +21,14 @@ class SpectralFeatureExtractor(ByChannelFeatureExtractor):
 
 @Feature(SpectralFeatureExtractor)
 class NormalizedSpectralFeatureExtractor(ByChannelFeatureExtractor):
-    def preprocess(self, *x, **kwargs):
+    def preprocess(self, *x):
         return (*x[:-1], x[-1] / x[-1].sum(axis=-1, keepdims=True))
 
 
 @Feature(SpectralFeatureExtractor)
 class DBSpectralFeatureExtractor(ByChannelFeatureExtractor):
-    def preprocess(self, *x, **kwargs):
-        return (*x[:-1], 10 * np.log10(x[-1]))
+    def preprocess(self, *x, eps=1e-15):
+        return (*x[:-1], 10 * np.log10(x[-1] + eps))
 
 
 @Feature(SpectralFeatureExtractor)
@@ -39,6 +39,21 @@ def root_total_power(f, p):
 @Feature(NormalizedSpectralFeatureExtractor)
 def spectral_moment(f, p):
     return np.sum(f * p, axis=-1)
+
+
+@Feature(SpectralFeatureExtractor)
+def spectral_hjorth_activity(f, p):
+    return np.sum(p, axis=-1)
+
+
+@Feature(NormalizedSpectralFeatureExtractor)
+def spectral_hjorth_mobility(f, p):
+    return np.sqrt(np.sum(np.power(f, 2) * p, axis=-1))
+
+
+@Feature(NormalizedSpectralFeatureExtractor)
+def spectral_hjorth_complexity(f, p):
+    return np.sqrt(np.sum(np.power(f, 4) * p, axis=-1))
 
 
 @Feature(NormalizedSpectralFeatureExtractor)
@@ -60,16 +75,9 @@ def spectral_edge(f, p, edge=0.9):
 
 @Feature(DBSpectralFeatureExtractor)
 def spectral_slope(f, p):
-    log_f = np.log(f)
-    exponent, intercept = np.empty(p.shape[0]), np.empty(p.shape[0])
-    for i in range(p.shape[0]):
-        ind = np.logical_and(f > 0, p[i] > 0)
-        if ind.sum() > 1:
-            r = linregress(log_f[ind], p[i, ind])
-            exponent[i], intercept[i] = r.slope, r.intercept
-        else:
-            exponent[i], intercept[i] = np.nan, np.nan
-    return {"exp": exponent, "int": intercept}
+    log_f = np.vstack((np.log(f), np.ones(f.shape[0]))).T
+    r = np.linalg.lstsq(log_f, p.T)[0]
+    return {"exp": r[0], "int": r[1]}
 
 
 @Feature(

@@ -69,13 +69,13 @@ class FeatureExtractor:
             results_dict[name] = value
 
 
-class Feature:
+class FeaturePredecessor:
     def __init__(self, *parent_extractor_type: List[Type]):
         parent_cls = parent_extractor_type
         if not parent_cls:
             parent_cls = [FeatureExtractor]
         for i, p_cls in enumerate(parent_cls):
-            if isinstance(p_cls, Feature):
+            if isinstance(p_cls, FeaturePredecessor):
                 parent_cls[i] = p_cls.parent_extractor_type
             assert issubclass(p_cls, FeatureExtractor)
         self.parent_extractor_type = parent_cls
@@ -85,13 +85,13 @@ class Feature:
         return func
 
 
-@Feature(FeatureExtractor)
+@FeaturePredecessor(FeatureExtractor)
 class ByChannelFeatureExtractor(FeatureExtractor):
     def feature_channel_names(self, ch_names):
         return ch_names
 
 
-@Feature(FeatureExtractor)
+@FeaturePredecessor(FeatureExtractor)
 class ByChannelPairFeatureExtractor(ByChannelFeatureExtractor):
     def __init__(
         self, feature_extractors, *, channel_pair_format="{}<>{}", **preprocess_kwargs

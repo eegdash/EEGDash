@@ -1,10 +1,10 @@
 from itertools import chain
 import numpy as np
 from scipy.signal import csd
-from .extractors import FeatureExtractor, ByChannelPairFeatureExtractor, Feature
+from .extractors import FeatureExtractor, ByChannelPairFeatureExtractor, FeaturePredecessor
 
 
-@Feature(FeatureExtractor, ByChannelPairFeatureExtractor)
+@FeaturePredecessor(FeatureExtractor, ByChannelPairFeatureExtractor)
 class CoherenceFeatureExtractor(ByChannelPairFeatureExtractor):
     def preprocess(self, x, **kwargs):
         f_min = kwargs.pop("f_min") if "f_min" in kwargs else None
@@ -37,7 +37,7 @@ def _avg_over_bands(f, x, bands):
     return bands_avg
 
 
-@Feature(CoherenceFeatureExtractor)
+@FeaturePredecessor(CoherenceFeatureExtractor)
 def connectivity_magnitude_square_coherence(
     f,
     sxx,

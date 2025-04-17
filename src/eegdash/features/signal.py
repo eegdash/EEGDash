@@ -4,55 +4,55 @@ import numba as nb
 from scipy import stats, special
 from sklearn.neighbors import KDTree
 
-from .extractors import FeatureExtractor, ByChannelFeatureExtractor, Feature
+from .extractors import FeatureExtractor, ByChannelFeatureExtractor, FeaturePredecessor
 
 
-@Feature(ByChannelFeatureExtractor)
+@FeaturePredecessor(ByChannelFeatureExtractor)
 def signal_mean(x):
     return x.mean(axis=-1)
 
 
-@Feature(ByChannelFeatureExtractor)
+@FeaturePredecessor(ByChannelFeatureExtractor)
 def signal_variance(x, **kwargs):
     return x.var(axis=-1, **kwargs)
 
 
-@Feature(ByChannelFeatureExtractor)
+@FeaturePredecessor(ByChannelFeatureExtractor)
 def signal_std(x, **kwargs):
     return x.std(axis=-1, **kwargs)
 
 
-@Feature(ByChannelFeatureExtractor)
+@FeaturePredecessor(ByChannelFeatureExtractor)
 def signal_skewness(x, **kwargs):
     return stats.skew(x, axis=x.ndim - 1, **kwargs)
 
 
-@Feature(ByChannelFeatureExtractor)
+@FeaturePredecessor(ByChannelFeatureExtractor)
 def signal_kurtosis(x, **kwargs):
     return stats.kurtosis(x, axis=x.ndim - 1, **kwargs)
 
 
-@Feature(ByChannelFeatureExtractor)
+@FeaturePredecessor(ByChannelFeatureExtractor)
 def signal_rms(x):
     return np.sqrt(np.power(x, 2).mean(axis=-1))
 
 
-@Feature(ByChannelFeatureExtractor)
+@FeaturePredecessor(ByChannelFeatureExtractor)
 def signal_amp_ptp(x, **kwargs):
     return np.ptp(x, axis=-1, **kwargs)
 
 
-@Feature(ByChannelFeatureExtractor)
+@FeaturePredecessor(ByChannelFeatureExtractor)
 def signal_quantile(x, q: numbers.Number = 0.5, **kwargs):
     return np.quantile(x, q=q, axis=-1, **kwargs)
 
 
-@Feature(ByChannelFeatureExtractor)
+@FeaturePredecessor(ByChannelFeatureExtractor)
 def signal_line_length(x):
     return np.abs(np.diff(x, axis=-1)).mean(axis=-1)
 
 
-@Feature(ByChannelFeatureExtractor)
+@FeaturePredecessor(ByChannelFeatureExtractor)
 def signal_zero_crossings(x, threshold=1e-15):
     zero_ind = np.logical_and(x > -threshold, x < threshold)
     zero_cross = np.diff(zero_ind, axis=-1).astype(int).sum(axis=-1)
@@ -62,23 +62,23 @@ def signal_zero_crossings(x, threshold=1e-15):
     return zero_cross
 
 
-@Feature(FeatureExtractor, ByChannelFeatureExtractor)
+@FeaturePredecessor(FeatureExtractor, ByChannelFeatureExtractor)
 class HjorthFeatureExtractor(ByChannelFeatureExtractor):
     def preprocess(self, *x, **kwargs):
         return (*x, np.diff(x[-1], axis=-1), x[-1].std(axis=-1))
 
 
-@Feature(HjorthFeatureExtractor)
+@FeaturePredecessor(HjorthFeatureExtractor)
 def signal_hjorth_mobility(x, dx, x_std):
     return dx.std(axis=-1) / x_std
 
 
-@Feature(HjorthFeatureExtractor)
+@FeaturePredecessor(HjorthFeatureExtractor)
 def signal_hjorth_complexity(x, dx, x_std):
     return np.diff(dx, axis=-1).std(axis=-1) / x_std
 
 
-@Feature(ByChannelFeatureExtractor)
+@FeaturePredecessor(ByChannelFeatureExtractor)
 @nb.njit(cache=True, fastmath=True)
 def signal_higuchi_fractal_dim(x, k_max=10, eps=1e-7):
     N = x.shape[-1]
@@ -96,7 +96,7 @@ def signal_higuchi_fractal_dim(x, k_max=10, eps=1e-7):
     return -hfd
 
 
-@Feature(ByChannelFeatureExtractor)
+@FeaturePredecessor(ByChannelFeatureExtractor)
 def signal_katz_fractal_dim(x, eps=1e-7):
     dists = np.abs(np.diff(x, axis=-1))
     L = dists.sum(axis=-1)
@@ -120,7 +120,7 @@ def _channel_app_samp_entropy_counts(x, m, r, l):
     return kdtree.query_radius(x_emb, r, count_only=True)
 
 
-@Feature(FeatureExtractor, ByChannelFeatureExtractor)
+@FeaturePredecessor(FeatureExtractor, ByChannelFeatureExtractor)
 class EntropyFeatureExtractor(ByChannelFeatureExtractor):
     def preprocess(self, x, m=2, r=0.2, l=1):
         rr = r * x.std(axis=-1)
@@ -132,21 +132,21 @@ class EntropyFeatureExtractor(ByChannelFeatureExtractor):
         return counts_m, counts_mp1
 
 
-@Feature(EntropyFeatureExtractor)
+@FeaturePredecessor(EntropyFeatureExtractor)
 def signal_app_entropy(counts_m, counts_mp1):
     phi_m = np.log(counts_m / counts_m.shape[-1]).mean(axis=-1)
     phi_mp1 = np.log(counts_mp1 / counts_mp1.shape[-1]).mean(axis=-1)
     return phi_m - phi_mp1
 
 
-@Feature(EntropyFeatureExtractor)
+@FeaturePredecessor(EntropyFeatureExtractor)
 def signal_samp_entropy(counts_m, counts_mp1):
     A = np.sum(counts_mp1 - 1)
     B = np.sum(counts_m - 1)
     return -np.log(A / B)
 
 
-@Feature(ByChannelFeatureExtractor)
+@FeaturePredecessor(ByChannelFeatureExtractor)
 def signal_svd_entropy(x, m=10, tau=1):
     x_emb = np.empty((x.shape[0], (x.shape[-1] - m + 1) // tau, m))
     for i in range(x.shape[0]):
@@ -156,7 +156,7 @@ def signal_svd_entropy(x, m=10, tau=1):
     return -np.sum(s * np.log(s), axis=-1)
 
 
-@Feature(ByChannelFeatureExtractor)
+@FeaturePredecessor(ByChannelFeatureExtractor)
 @nb.njit(cache=True, fastmath=True)
 def _hurst_exp(x, ns, a, gamma_ratios, log_n):
     h = np.empty(x.shape[0])
@@ -182,7 +182,7 @@ def _hurst_exp(x, ns, a, gamma_ratios, log_n):
     return h
 
 
-@Feature(ByChannelFeatureExtractor)
+@FeaturePredecessor(ByChannelFeatureExtractor)
 def signal_hurst_exp(x):
     ns = np.unique(np.power(2, np.arange(2, np.log2(x.shape[-1]) - 1)).astype(int))
     idx = ns > 340
@@ -195,7 +195,7 @@ def signal_hurst_exp(x):
     return _hurst_exp(x, ns, a, gamma_ratios, log_n)
 
 
-@Feature(ByChannelFeatureExtractor)
+@FeaturePredecessor(ByChannelFeatureExtractor)
 @nb.njit(cache=True, fastmath=True)
 def signal_dfa(x):
     ns = np.unique(np.floor(np.power(2, np.arange(2, np.log2(x.shape[-1]) - 1))))
@@ -207,7 +207,7 @@ def signal_dfa(x):
         X = np.cumsum(x[i] - np.mean(x[i]))
         for j, n in enumerate(ns):
             n = int(n)
-            Z = np.reshape(X[:n * (X.shape[0] // n)], (n, X.shape[0] // n))
+            Z = np.reshape(X[: n * (X.shape[0] // n)], (n, X.shape[0] // n))
             Fni2 = np.linalg.lstsq(a[:n], Z)[1] / n
             Fn[j] = np.sqrt(np.mean(Fni2))
         alpha[i] = np.linalg.lstsq(log_n, np.log(Fn))[0][0]

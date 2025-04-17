@@ -1,16 +1,16 @@
 """
-Convenience functions for storing and loading of windows datasets.
+Convenience functions for storing and loading of features datasets.
 
 see also: https://github.com/braindecode/braindecode//blob/master/braindecode/datautil/serialization.py#L165-L229
 """
 
-import os
 import json
 from pathlib import Path
 
 import pandas as pd
 from joblib import Parallel, delayed
 
+from mne.io import read_info
 from braindecode.datautil.serialization import _load_kwargs_json
 
 from .datasets import (
@@ -47,10 +47,7 @@ def load_features_concat_dataset(path, ids_to_load=None, n_jobs=1):
         ids_to_load = sorted(ids_to_load, key=lambda i: int(i))
     ids_to_load = [str(i) for i in ids_to_load]
 
-    datasets = Parallel(n_jobs)(
-        delayed(_load_parallel)(path, i)
-        for i in ids_to_load
-    )
+    datasets = Parallel(n_jobs)(delayed(_load_parallel)(path, i) for i in ids_to_load)
     return FeaturesConcatDataset(datasets)
 
 
@@ -65,6 +62,11 @@ def _load_parallel(path, i):
 
     description_file_path = sub_dir / "description.json"
     description = pd.read_json(description_file_path, typ="series")
+
+    raw_info_file_path = sub_dir / "raw-info.fif"
+    raw_info = None
+    if raw_info_file_path.exists():
+        raw_info = read_info(raw_info_file_path)
 
     target_file_path = sub_dir / "target_name.json"
     target_name = None
@@ -86,13 +88,10 @@ def _load_parallel(path, i):
         metadata=metadata,
         description=description,
         target_name=target_name,
+        raw_info=raw_info,
         raw_preproc_kwargs=raw_preproc_kwargs,
         window_kwargs=window_kwargs,
         window_preproc_kwargs=window_preproc_kwargs,
         features_kwargs=features_kwargs,
     )
-    setattr(dataset, "window_kwargs", window_kwargs)
-    for kwargs_name in ["raw_preproc_kwargs", "window_preproc_kwargs"]:
-        kwargs = _load_kwargs_json(kwargs_name, sub_dir)
-        setattr(dataset, kwargs_name, kwargs)
     return dataset

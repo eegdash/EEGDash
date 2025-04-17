@@ -28,6 +28,7 @@ def _extract_features_from_eegwindowsdataset(
         features_df,
         metadata=win_ds.metadata,
         description=win_ds.description,
+        raw_info=win_ds.raw.info,
         raw_preproc_kwargs=win_ds.raw_preproc_kwargs,
         window_kwargs=win_ds.window_kwargs,
         features_kwargs=feature_extractor.features_kwargs,

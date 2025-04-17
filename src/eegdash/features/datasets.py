@@ -1,3 +1,4 @@
+from __future__ import annotations
 import os
 import json
 import shutil
@@ -41,6 +42,7 @@ class FeaturesDataset(EEGWindowsDataset):
         description: dict | pd.Series | None = None,
         target_name: str | tuple[str, ...] | None = None,
         transform: Callable | None = None,
+        raw_info: Dict | None = None,
         raw_preproc_kwargs: Dict | None = None,
         window_kwargs: Dict | None = None,
         window_preproc_kwargs: Dict | None = None,
@@ -51,6 +53,7 @@ class FeaturesDataset(EEGWindowsDataset):
         self.metadata = metadata
         self._description = _create_description(description)
         self.transform = transform
+        self.raw_info = raw_info
         self.raw_preproc_kwargs = raw_preproc_kwargs
         self.window_kwargs = window_kwargs
         self.window_preproc_kwargs = window_preproc_kwargs
@@ -242,6 +245,7 @@ class FeaturesConcatDataset(BaseConcatDataset):
             0/
                 0-feat.parquet
                 description.json
+                raw-info.fif (if raw info was saved)
                 raw_preproc_kwargs.json (if raws were preprocessed)
                 window_kwargs.json (if this is a windowed dataset)
                 window_preproc_kwargs.json  (if windows were preprocessed)
@@ -250,6 +254,7 @@ class FeaturesConcatDataset(BaseConcatDataset):
             1/
                 1-feat.parquet
                 description.json
+                raw-info.fif (if raw info was saved)
                 raw_preproc_kwargs.json (if raws were preprocessed)
                 window_kwargs.json (if this is a windowed dataset)
                 window_preproc_kwargs.json  (if windows were preprocessed)
@@ -297,6 +302,8 @@ class FeaturesConcatDataset(BaseConcatDataset):
             self._save_metadata(sub_dir, ds)
             # save_dir/{i_ds+offset}/description.json
             self._save_description(sub_dir, ds.description)
+            # save_dir/{i_ds+offset}/raw-info.fif
+            self._save_raw_info(sub_dir, ds)
             # save_dir/{i_ds+offset}/raw_preproc_kwargs.json
             # save_dir/{i_ds+offset}/window_kwargs.json
             # save_dir/{i_ds+offset}/window_preproc_kwargs.json
@@ -329,6 +336,13 @@ class FeaturesConcatDataset(BaseConcatDataset):
         parquet_file_name = f"{i_ds + offset}-feat.parquet"
         parquet_file_path = os.path.join(sub_dir, parquet_file_name)
         ds.features.to_parquet(parquet_file_path)
+
+    @staticmethod
+    def _save_raw_info(sub_dir, ds):
+        if hasattr(ds, "raw_info"):
+            fif_file_name = "raw-info.fif"
+            fif_file_path = os.path.join(sub_dir, fif_file_name)
+            ds.raw_info.save(fif_file_path)
 
     @staticmethod
     def _save_kwargs(sub_dir, ds):
@@ -453,3 +467,14 @@ class FeaturesConcatDataset(BaseConcatDataset):
         FeaturesConcatDataset._enforce_inplace_operations("dropna", kwargs)
         for ds in self.datasets:
             ds.features.dropna(*args, **kwargs)
+
+    def drop(self, *args, **kwargs):
+        FeaturesConcatDataset._enforce_inplace_operations("drop", kwargs)
+        for ds in self.datasets:
+            ds.features.drop(*args, **kwargs)
+
+    def join(self, concat_dataset: FeaturesConcatDataset, **kwargs):
+        assert len(self.datasets) == len(concat_dataset.datasets)
+        for ds1, ds2 in zip(self.datasets, concat_dataset.datasets):
+            assert len(ds1) == len(ds2)
+            ds1.features.join(ds2, **kwargs)

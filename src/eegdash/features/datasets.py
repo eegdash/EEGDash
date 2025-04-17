@@ -478,3 +478,7 @@ class FeaturesConcatDataset(BaseConcatDataset):
         for ds1, ds2 in zip(self.datasets, concat_dataset.datasets):
             assert len(ds1) == len(ds2)
             ds1.features.join(ds2, **kwargs)
+
+    def transform(self, *args, **kwargs):
+        for ds in self.datasets:
+            ds.features.transform(*args, **kwargs)

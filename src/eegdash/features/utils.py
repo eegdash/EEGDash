@@ -1,8 +1,10 @@
 from typing import Dict, List
 from collections.abc import Callable
+import numpy as np
 import pandas as pd
 from joblib import Parallel, delayed
 from tqdm import tqdm
+from torch.utils.data import DataLoader
 from braindecode.datasets.base import EEGWindowsDataset, BaseConcatDataset
 from .datasets import FeaturesDataset, FeaturesConcatDataset
 from .extractors import FeatureExtractor
@@ -12,17 +14,20 @@ def _extract_features_from_eegwindowsdataset(
     win_ds: EEGWindowsDataset,
     feature_extractor: FeatureExtractor,
     target_name: str = "target",
+    batch_size: int = 512,
 ):
+    win_dl = DataLoader(win_ds, batch_size=batch_size, shuffle=False, drop_last=False)
     features_dict = dict()
     ch_names = win_ds.raw.ch_names
-    for X, y, _ in win_ds:
+    for X, y, _ in win_dl:
+        X = X.numpy()
         win_dict = dict()
-        win_dict.update(feature_extractor(ch_names, X))
+        win_dict.update(feature_extractor(X.shape[0], ch_names, X))
         win_dict[target_name] = y
         for k, v in win_dict.items():
             if k not in features_dict:
                 features_dict[k] = []
-            features_dict[k].append(v)
+            features_dict[k].extend(v)
     features_df = pd.DataFrame(features_dict)
     return FeaturesDataset(
         features_df,
@@ -39,8 +44,10 @@ def _extract_features_from_eegwindowsdataset(
 def extract_features(
     concat_dataset: BaseConcatDataset,
     features: FeatureExtractor | Dict[str, Callable] | List[Callable],
+    *,
     target_name: str = "target",
-    n_jobs=1,
+    batch_size: int = 512,
+    n_jobs: int = 1,
 ):
     if isinstance(features, list):
         features = dict(enumerate(features))
@@ -50,7 +57,7 @@ def extract_features(
         tqdm(
             Parallel(n_jobs=n_jobs, return_as="generator")(
                 delayed(_extract_features_from_eegwindowsdataset)(
-                    win_ds, features, target_name
+                    win_ds, features, target_name, batch_size
                 )
                 for win_ds in concat_dataset.datasets
             ),
@@ -61,21 +68,22 @@ def extract_features(
     return FeaturesConcatDataset(feature_ds_list)
 
 
-def fit_feature_extractor(
+def fit_feature_extractors(
     concat_dataset: BaseConcatDataset,
     features: FeatureExtractor | Dict[str, Callable] | List[Callable],
+    batch_size: int = 8192,
 ):
     if isinstance(features, list):
         features = dict(enumerate(features))
     if not isinstance(features, FeatureExtractor):
         features = FeatureExtractor(features)
     features.clear()
-    for win_ds in tqdm(
-        concat_dataset.datasets,
-        total=len(concat_dataset.datasets),
-        desc="Fitting feature extractor",
+    concat_dl = DataLoader(
+        concat_dataset, batch_size=batch_size, shuffle=False, drop_last=False
+    )
+    for X, y, _ in tqdm(
+        concat_dl, total=len(concat_dl), desc="Fitting feature extractors"
     ):
-        for X, y, _ in win_ds:
-            features.partial_fit(X, y=y)
+        features.partial_fit(X.numpy(), y=np.array(y))
     features.fit()
     return features

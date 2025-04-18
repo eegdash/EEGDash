@@ -135,7 +135,6 @@ class FeaturesConcatDataset(BaseConcatDataset):
 
     def __init__(
         self,
-        # list_of_ds: list[FeaturesDataset | FeaturesConcatDataset]
         list_of_ds: list[FeaturesDataset] | None = None,
         target_transform: Callable | None = None,
     ):
@@ -146,14 +145,10 @@ class FeaturesConcatDataset(BaseConcatDataset):
 
         self.target_transform = target_transform
 
-    @no_type_check  # TODO, it's a mess
     def split(
         self,
-        by: str | list[int] | list[list[int]] | dict[str, list[int]] | None = None,
-        property: str | None = None,
-        split_ids: list[int] | list[list[int]] | dict[str, list[int]] | None = None,
-        # ) -> dict[str, FeaturesConcatDataset]:
-    ):
+        by: str | list[int] | list[list[int]] | dict[str, list[int]],
+    ) -> dict[str, FeaturesConcatDataset]:
         """Split the dataset based on information listed in its description.
 
         The format could be based on a DataFrame or based on indices.
@@ -168,11 +163,6 @@ class FeaturesConcatDataset(BaseConcatDataset):
             datapoints of that split.
             If a dict then each key will be used in the returned
             splits dict and each value should be a list of int.
-        property : str
-            Some property which is listed in the info DataFrame.
-        split_ids : list | dict
-            List of indices to be combined in a subset.
-            It can be a list of int or a list of list of int.
 
         Returns
         -------
@@ -180,19 +170,6 @@ class FeaturesConcatDataset(BaseConcatDataset):
             A dictionary with the name of the split (a string) as key and the
             dataset as value.
         """
-
-        args_not_none = [by is not None, property is not None, split_ids is not None]
-        if sum(args_not_none) != 1:
-            raise ValueError("Splitting requires exactly one argument.")
-
-        if property is not None or split_ids is not None:
-            warnings.warn(
-                "Keyword arguments `property` and `split_ids` "
-                "are deprecated and will be removed in the future. "
-                "Use `by` instead.",
-                DeprecationWarning,
-            )
-            by = property if property is not None else split_ids
         if isinstance(by, str):
             split_ids = {
                 k: list(v) for k, v in self.description.groupby(by).groups.items()
@@ -207,7 +184,7 @@ class FeaturesConcatDataset(BaseConcatDataset):
             split_ids = {split_i: split for split_i, split in enumerate(by)}
 
         return {
-            str(split_name): FeaturesDataset(
+            str(split_name): FeaturesConcatDataset(
                 [self.datasets[ds_ind] for ds_ind in ds_inds],
                 target_transform=self.target_transform,
             )

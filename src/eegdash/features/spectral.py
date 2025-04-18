@@ -1,6 +1,6 @@
 import numpy as np
+import numba as nb
 from scipy.signal import welch
-from scipy.stats import linregress
 from .extractors import FeatureExtractor, ByChannelFeatureExtractor, FeaturePredecessor
 
 
@@ -9,13 +9,14 @@ class SpectralFeatureExtractor(ByChannelFeatureExtractor):
     def preprocess(self, x, **kwargs):
         f_min = kwargs.pop("f_min") if "f_min" in kwargs else None
         f_max = kwargs.pop("f_max") if "f_max" in kwargs else None
+        kwargs["axis"] = -1
         f, p = welch(x, **kwargs)
         if f_min is not None or f_max is not None:
             f_min_idx = f > f_min if f_min is not None else True
             f_max_idx = f < f_max if f_max is not None else True
             idx = np.logical_and(f_min_idx, f_max_idx)
             f = f[idx]
-            p = p[:, idx]
+            p = p[..., idx]
         return f, p
 
 
@@ -65,18 +66,19 @@ def spectral_entropy(f, p):
 
 
 @FeaturePredecessor(NormalizedSpectralFeatureExtractor)
+@nb.njit(cache=True, fastmath=True)
 def spectral_edge(f, p, edge=0.9):
-    ps = p.cumsum(axis=-1)
-    se = np.empty(ps.shape[0])
-    for i in range(ps.shape[0]):
-        se[i] = f[np.searchsorted(ps[i], edge)]
+    se = np.empty(p.shape[:-1])
+    for i in np.ndindex(p.shape[:-1]):
+        se[i] = f[np.searchsorted(np.cumsum(p[i]), edge)]
     return se
 
 
 @FeaturePredecessor(DBSpectralFeatureExtractor)
 def spectral_slope(f, p):
     log_f = np.vstack((np.log(f), np.ones(f.shape[0]))).T
-    r = np.linalg.lstsq(log_f, p.T)[0]
+    r = np.linalg.lstsq(log_f, p.reshape(-1, p.shape[-1]).T)[0]
+    r = r.reshape(2, *p.shape[:-1])
     return {"exp": r[0], "int": r[1]}
 
 
@@ -101,6 +103,6 @@ def spectral_bands_power(
         assert isinstance(v, tuple)
         assert len(v) == 2
         mask = np.logical_and(f > v[0], f < v[1])
-        power = p[:, mask].sum(axis=-1)
+        power = p[..., mask].sum(axis=-1)
         bands_power[k] = power
     return bands_power

@@ -6,5 +6,5 @@ from .extractors import (
     FeaturePredecessor,
     FitableFeature,
 )
-from .utils import extract_features, fit_feature_extractor
+from .utils import extract_features, fit_feature_extractors
 from .serialization import load_features_concat_dataset

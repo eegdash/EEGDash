@@ -47,13 +47,34 @@ class FeatureExtractor(FitableFeature):
             if isinstance(fe, partial):
                 self.features_kwargs[fn] = fe.keywords
 
+    def _validate_execution_tree(self, feature_extractors):
+        for fname, f in feature_extractors.items():
+            if isinstance(f, partial):
+                f = f.func
+            assert type(self) in f.parent_extractor_type
+        return feature_extractors
+
+    def _check_is_fitable(self, feature_extractors):
+        is_fitable = False
+        for fname, f in feature_extractors.items():
+            if isinstance(f, FeatureExtractor):
+                is_fitable = f._is_fitable
+            else:
+                if isinstance(f, partial):
+                    f = f.func
+                if isinstance(f, FitableFeature):
+                    is_fitable = True
+            if is_fitable:
+                break
+        return is_fitable
+
     def preprocess(self, *x, **kwargs):
         return (*x,)
 
     def feature_channel_names(self, ch_names):
         return [""]
 
-    def __call__(self, ch_names, *x):
+    def __call__(self, batch_size, ch_names, *x):
         if self._is_fitable:
             super().__call__()
         f_channels = self.feature_channel_names(ch_names)
@@ -61,7 +82,7 @@ class FeatureExtractor(FitableFeature):
         z = self.preprocess(*x, **self.preprocess_kwargs)
         for fname, f in self.feature_extractors_dict.items():
             if isinstance(f, FeatureExtractor):
-                r = f(ch_names, *z)
+                r = f(batch_size, ch_names, *z)
             else:
                 r = f(*z)
             if not isinstance(fname, str) or not fname:
@@ -74,10 +95,29 @@ class FeatureExtractor(FitableFeature):
                 if fname:
                     fname += "_"
                 for k, v in r.items():
-                    self._add_feature_to_dict(results_dict, fname + k, v, f_channels)
+                    self._add_feature_to_dict(
+                        results_dict, fname + k, v, f_channels, batch_size
+                    )
             else:
-                self._add_feature_to_dict(results_dict, fname, r, f_channels)
+                self._add_feature_to_dict(
+                    results_dict, fname, r, f_channels, batch_size
+                )
         return results_dict
+
+    def _add_feature_to_dict(self, results_dict, name, value, f_channels, batch_size):
+        if not isinstance(value, np.ndarray):
+            results_dict[name] = value
+        else:
+            assert value.shape[0] == batch_size
+            if value.ndim == 1:
+                results_dict[name] = value
+            else:
+                assert value.shape[1] == len(f_channels)
+                value = value.swapaxes(0, 1)
+                for cname, v in zip(f_channels, value):
+                    if cname:
+                        cname = "_" + cname
+                    results_dict[name + cname] = v
 
     def clear(self):
         if not self._is_fitable:
@@ -107,37 +147,6 @@ class FeatureExtractor(FitableFeature):
             if isinstance(f, FitableFeature):
                 f.fit()
         super().fit()
-
-    def _validate_execution_tree(self, feature_extractors):
-        for fname, f in feature_extractors.items():
-            if isinstance(f, partial):
-                f = f.func
-            assert type(self) in f.parent_extractor_type
-        return feature_extractors
-
-    def _check_is_fitable(self, feature_extractors):
-        is_fitable = False
-        for fname, f in feature_extractors.items():
-            if isinstance(f, FeatureExtractor):
-                is_fitable = f._is_fitable
-            else:
-                if isinstance(f, partial):
-                    f = f.func
-                if isinstance(f, FitableFeature):
-                    is_fitable = True
-            if is_fitable:
-                break
-        return is_fitable
-
-    def _add_feature_to_dict(self, results_dict, name, value, f_channels):
-        if isinstance(value, np.ndarray):
-            assert value.shape[0] == len(f_channels)
-            for cname, v in zip(f_channels, value):
-                if cname:
-                    cname = "_" + cname
-                results_dict[name + cname] = v
-        else:
-            results_dict[name] = value
 
 
 class FeaturePredecessor:

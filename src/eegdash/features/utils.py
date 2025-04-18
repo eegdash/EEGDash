@@ -77,6 +77,8 @@ def fit_feature_extractors(
         features = dict(enumerate(features))
     if not isinstance(features, FeatureExtractor):
         features = FeatureExtractor(features)
+    if not features._is_fitable:
+        return features
     features.clear()
     concat_dl = DataLoader(
         concat_dataset, batch_size=batch_size, shuffle=False, drop_last=False

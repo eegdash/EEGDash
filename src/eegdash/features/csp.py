@@ -17,15 +17,16 @@ def _update_mean_cov(count, mean, cov, x_count, x_mean, x_cov):
 
 
 @FeaturePredecessor()
-class CSP(FitableFeature):
+class CommonSpatialPattern(FitableFeature):
     def __init__(self):
         super().__init__()
 
     def clear(self):
         self._labels = None
-        self._counts = [0, 0]
-        self._means = [None, None]
-        self._covs = [None, None]
+        self._counts = np.array([0, 0])
+        self._means = np.array([None, None])
+        self._covs = np.array([None, None])
+        self._mean = None
         self._eigvals = None
         self._weights = None
 
@@ -40,7 +41,7 @@ class CSP(FitableFeature):
         return self._labels
 
     def _update_stats(self, l, x):
-        x_count, x_mean, x_cov = x.shape[0], x.mean(axis=0), np.cov(x.T)
+        x_count, x_mean, x_cov = x.shape[0], x.mean(axis=0), np.cov(x.T, ddof=0)
         if self._counts[l] == 0:
             self._counts[l] = x_count
             self._means[l] = x_mean
@@ -64,6 +65,10 @@ class CSP(FitableFeature):
         return x.swapaxes(1, 2).reshape(-1, x.shape[1])
 
     def fit(self):
+        alphas = self._counts / self._counts.sum()
+        self._mean = np.sum(alphas * self._means)
+        for l in range(len(self._labels)):
+            self._covs[l] *= self._counts[l] / (self._counts[1] - 1)
         l, w = scipy.linalg.eig(self._covs[0], self._covs[0] + self._covs[1])
         ord = np.abs(l - 0.5).argsort()[::-1]
         self._eigvals = l[ord]
@@ -83,6 +88,6 @@ class CSP(FitableFeature):
                 "CSP weights selection criterion is too strict,"
                 + "all weights were filtered out."
             )
-        proj = self.transform_input(x) @ w
+        proj = (self.transform_input(x) - self._mean) @ w
         proj = proj.reshape(x.shape[0], x.shape[2], -1).mean(axis=1)
         return {f"{i}": proj[:, i] for i in range(proj.shape[-1])}

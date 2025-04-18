@@ -33,7 +33,7 @@ class DBSpectralFeatureExtractor(ByChannelFeatureExtractor):
 
 
 @FeaturePredecessor(SpectralFeatureExtractor)
-def root_total_power(f, p):
+def spectral_root_total_power(f, p):
     return np.sqrt(p.sum(axis=-1))
 
 

@@ -21,6 +21,8 @@ def _extract_features_from_eegwindowsdataset(
     ch_names = win_ds.raw.ch_names
     for X, y, _ in win_dl:
         X = X.numpy()
+        if hasattr(y, "tolist"):
+            y = y.tolist()
         win_dict = dict()
         win_dict.update(feature_extractor(X.shape[0], ch_names, X))
         win_dict[target_name] = y

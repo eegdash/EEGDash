@@ -2,7 +2,26 @@ import numbers
 import numpy as np
 from scipy import stats
 
-from .extractors import FeatureExtractor, ByChannelFeatureExtractor, FeaturePredecessor
+from ..extractors import FeatureExtractor, ByChannelFeatureExtractor, FeaturePredecessor
+
+
+__all__ = [
+    "HjorthFeatureExtractor",
+    "signal_mean",
+    "signal_variance",
+    "signal_skewness",
+    "signal_kurtosis",
+    "signal_std",
+    "signal_root_mean_square",
+    "signal_peak_to_peak",
+    "signal_quantile",
+    "signal_zero_crossings",
+    "signal_line_length",
+    "signal_hjorth_activity",
+    "signal_hjorth_mobility",
+    "signal_hjorth_complexity",
+    "signal_decorrelation_time",
+]
 
 
 @FeaturePredecessor(ByChannelFeatureExtractor)
@@ -78,7 +97,7 @@ def signal_hjorth_complexity(x, dx, x_std):
 
 @FeaturePredecessor(ByChannelFeatureExtractor)
 def signal_decorrelation_time(x, fs=1):
-    f = np.fft.fft(x, axis=-1)
+    f = np.fft.fft(x - x.mean(axis=-1, keepdims=True), axis=-1)
     ac = np.fft.ifft(f.real**2 + f.imag**2, axis=-1)[..., : x.shape[-1] // 2]
     dct = np.empty(x.shape[:-1])
     for i in np.ndindex(x.shape[:-1]):

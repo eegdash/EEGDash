@@ -1,7 +1,24 @@
 import numpy as np
 import numba as nb
 from scipy.signal import welch
-from .extractors import FeatureExtractor, ByChannelFeatureExtractor, FeaturePredecessor
+
+from ..extractors import FeatureExtractor, ByChannelFeatureExtractor, FeaturePredecessor
+
+
+__all__ = [
+    "SpectralFeatureExtractor",
+    "NormalizedSpectralFeatureExtractor",
+    "DBSpectralFeatureExtractor",
+    "spectral_root_total_power",
+    "spectral_moment",
+    "spectral_entropy",
+    "spectral_edge",
+    "spectral_slope",
+    "spectral_bands_power",
+    "spectral_hjorth_activity",
+    "spectral_hjorth_mobility",
+    "spectral_hjorth_complexity",
+]
 
 
 @FeaturePredecessor(FeatureExtractor, ByChannelFeatureExtractor)

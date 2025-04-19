@@ -2,8 +2,17 @@ import numpy as np
 import numba as nb
 from scipy import special
 
-from .extractors import ByChannelFeatureExtractor, FeaturePredecessor
+from ..extractors import ByChannelFeatureExtractor, FeaturePredecessor
 from .signal import signal_zero_crossings
+
+
+__all__ = [
+    "dimensionality_higuchi_fractal_dim",
+    "dimensionality_petrosian_fractal_dim",
+    "dimensionality_katz_fractal_dim",
+    "dimensionality_hurst_exp",
+    "dimensionality_detrended_fluctuation_analysis",
+]
 
 
 @FeaturePredecessor(ByChannelFeatureExtractor)

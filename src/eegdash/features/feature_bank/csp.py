@@ -3,7 +3,12 @@ import numba as nb
 import scipy
 import scipy.linalg
 
-from .extractors import FeaturePredecessor, FitableFeature
+from ..extractors import FeaturePredecessor, FitableFeature
+
+
+__all__ = [
+    "CommonSpatialPattern",
+]
 
 
 @nb.njit(cache=True, fastmath=True, parallel=True)
@@ -59,7 +64,7 @@ class CommonSpatialPattern(FitableFeature):
             if ind.shape[0] > 0:
                 xl = self.transform_input(x[ind])
                 self._update_stats(i, xl)
-    
+
     @staticmethod
     def transform_input(x):
         return x.swapaxes(1, 2).reshape(-1, x.shape[1])

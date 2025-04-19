@@ -2,7 +2,16 @@ import numpy as np
 import numba as nb
 from sklearn.neighbors import KDTree
 
-from .extractors import FeatureExtractor, ByChannelFeatureExtractor, FeaturePredecessor
+from ..extractors import FeatureExtractor, ByChannelFeatureExtractor, FeaturePredecessor
+
+
+__all__ = [
+    "EntropyFeatureExtractor",
+    "complexity_approx_entropy",
+    "complexity_sample_entropy",
+    "complexity_svd_entropy",
+    "complexity_lempel_ziv",
+]
 
 
 @nb.njit(cache=True, fastmath=True)
@@ -53,6 +62,7 @@ def complexity_svd_entropy(x, m=10, tau=1):
     s = np.linalg.svdvals(x_emb)
     s /= s.sum(axis=-1, keepdims=True)
     return -np.sum(s * np.log(s), axis=-1)
+
 
 @FeaturePredecessor(ByChannelFeatureExtractor)
 @nb.njit(cache=True, fastmath=True)

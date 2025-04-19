@@ -1,7 +1,18 @@
 from itertools import chain
 import numpy as np
 from scipy.signal import csd
-from .extractors import FeatureExtractor, ByChannelPairFeatureExtractor, FeaturePredecessor
+
+from ..extractors import (
+    FeatureExtractor,
+    ByChannelPairFeatureExtractor,
+    FeaturePredecessor,
+)
+
+
+__all__ = [
+    "CoherenceFeatureExtractor",
+    "connectivity_magnitude_square_coherence",
+]
 
 
 @FeaturePredecessor(FeatureExtractor, ByChannelPairFeatureExtractor)

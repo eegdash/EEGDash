@@ -24,7 +24,9 @@ def _extract_features_from_eegwindowsdataset(
         if hasattr(y, "tolist"):
             y = y.tolist()
         win_dict = dict()
-        win_dict.update(feature_extractor(X.shape[0], ch_names, X))
+        win_dict.update(
+            feature_extractor(X, _batch_size=X.shape[0], _ch_names=ch_names)
+        )
         win_dict[target_name] = y
         for k, v in win_dict.items():
             if k not in features_dict:

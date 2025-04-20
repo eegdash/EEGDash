@@ -2,7 +2,8 @@ import numpy as np
 import numba as nb
 from scipy.signal import welch
 
-from ..extractors import FeatureExtractor, ByChannelFeatureExtractor, FeaturePredecessor
+from ..extractors import FeatureExtractor
+from ..decorators import FeaturePredecessor, univariate_feature
 
 
 __all__ = [
@@ -21,8 +22,8 @@ __all__ = [
 ]
 
 
-@FeaturePredecessor(FeatureExtractor, ByChannelFeatureExtractor)
-class SpectralFeatureExtractor(ByChannelFeatureExtractor):
+@FeaturePredecessor()
+class SpectralFeatureExtractor(FeatureExtractor):
     def preprocess(self, x, **kwargs):
         f_min = kwargs.pop("f_min") if "f_min" in kwargs else None
         f_max = kwargs.pop("f_max") if "f_max" in kwargs else None
@@ -38,43 +39,49 @@ class SpectralFeatureExtractor(ByChannelFeatureExtractor):
 
 
 @FeaturePredecessor(SpectralFeatureExtractor)
-class NormalizedSpectralFeatureExtractor(ByChannelFeatureExtractor):
+class NormalizedSpectralFeatureExtractor(FeatureExtractor):
     def preprocess(self, *x):
         return (*x[:-1], x[-1] / x[-1].sum(axis=-1, keepdims=True))
 
 
 @FeaturePredecessor(SpectralFeatureExtractor)
-class DBSpectralFeatureExtractor(ByChannelFeatureExtractor):
+class DBSpectralFeatureExtractor(FeatureExtractor):
     def preprocess(self, *x, eps=1e-15):
         return (*x[:-1], 10 * np.log10(x[-1] + eps))
 
 
 @FeaturePredecessor(SpectralFeatureExtractor)
+@univariate_feature
 def spectral_root_total_power(f, p):
     return np.sqrt(p.sum(axis=-1))
 
 
 @FeaturePredecessor(NormalizedSpectralFeatureExtractor)
+@univariate_feature
 def spectral_moment(f, p):
     return np.sum(f * p, axis=-1)
 
 
 @FeaturePredecessor(SpectralFeatureExtractor)
+@univariate_feature
 def spectral_hjorth_activity(f, p):
     return np.sum(p, axis=-1)
 
 
 @FeaturePredecessor(NormalizedSpectralFeatureExtractor)
+@univariate_feature
 def spectral_hjorth_mobility(f, p):
     return np.sqrt(np.sum(np.power(f, 2) * p, axis=-1))
 
 
 @FeaturePredecessor(NormalizedSpectralFeatureExtractor)
+@univariate_feature
 def spectral_hjorth_complexity(f, p):
     return np.sqrt(np.sum(np.power(f, 4) * p, axis=-1))
 
 
 @FeaturePredecessor(NormalizedSpectralFeatureExtractor)
+@univariate_feature
 def spectral_entropy(f, p):
     idx = p > 0
     plogp = np.zeros_like(p)
@@ -83,6 +90,7 @@ def spectral_entropy(f, p):
 
 
 @FeaturePredecessor(NormalizedSpectralFeatureExtractor)
+@univariate_feature
 @nb.njit(cache=True, fastmath=True)
 def spectral_edge(f, p, edge=0.9):
     se = np.empty(p.shape[:-1])
@@ -92,6 +100,7 @@ def spectral_edge(f, p, edge=0.9):
 
 
 @FeaturePredecessor(DBSpectralFeatureExtractor)
+@univariate_feature
 def spectral_slope(f, p):
     log_f = np.vstack((np.log(f), np.ones(f.shape[0]))).T
     r = np.linalg.lstsq(log_f, p.reshape(-1, p.shape[-1]).T)[0]
@@ -104,6 +113,7 @@ def spectral_slope(f, p):
     NormalizedSpectralFeatureExtractor,
     DBSpectralFeatureExtractor,
 )
+@univariate_feature
 def spectral_bands_power(
     f,
     p,

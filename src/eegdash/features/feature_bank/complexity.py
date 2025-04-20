@@ -2,7 +2,8 @@ import numpy as np
 import numba as nb
 from sklearn.neighbors import KDTree
 
-from ..extractors import FeatureExtractor, ByChannelFeatureExtractor, FeaturePredecessor
+from ..extractors import FeatureExtractor
+from ..decorators import FeaturePredecessor, univariate_feature
 
 
 __all__ = [
@@ -28,8 +29,8 @@ def _channel_app_samp_entropy_counts(x, m, r, l):
     return kdtree.query_radius(x_emb, r, count_only=True)
 
 
-@FeaturePredecessor(FeatureExtractor, ByChannelFeatureExtractor)
-class EntropyFeatureExtractor(ByChannelFeatureExtractor):
+@FeaturePredecessor()
+class EntropyFeatureExtractor(FeatureExtractor):
     def preprocess(self, x, m=2, r=0.2, l=1):
         rr = r * x.std(axis=-1)
         counts_m = np.empty((*x.shape[:-1], (x.shape[-1] - m + 1) // l))
@@ -41,6 +42,7 @@ class EntropyFeatureExtractor(ByChannelFeatureExtractor):
 
 
 @FeaturePredecessor(EntropyFeatureExtractor)
+@univariate_feature
 def complexity_approx_entropy(counts_m, counts_mp1):
     phi_m = np.log(counts_m / counts_m.shape[-1]).mean(axis=-1)
     phi_mp1 = np.log(counts_mp1 / counts_mp1.shape[-1]).mean(axis=-1)
@@ -48,13 +50,15 @@ def complexity_approx_entropy(counts_m, counts_mp1):
 
 
 @FeaturePredecessor(EntropyFeatureExtractor)
+@univariate_feature
 def complexity_sample_entropy(counts_m, counts_mp1):
     A = np.sum(counts_mp1 - 1, axis=-1)
     B = np.sum(counts_m - 1, axis=-1)
     return -np.log(A / B)
 
 
-@FeaturePredecessor(ByChannelFeatureExtractor)
+@FeaturePredecessor()
+@univariate_feature
 def complexity_svd_entropy(x, m=10, tau=1):
     x_emb = np.empty((*x.shape[:-1], (x.shape[-1] - m + 1) // tau, m))
     for i in np.ndindex(x.shape[:-1]):
@@ -64,7 +68,8 @@ def complexity_svd_entropy(x, m=10, tau=1):
     return -np.sum(s * np.log(s), axis=-1)
 
 
-@FeaturePredecessor(ByChannelFeatureExtractor)
+@FeaturePredecessor()
+@univariate_feature
 @nb.njit(cache=True, fastmath=True)
 def complexity_lempel_ziv(x, threshold=None):
     lzc = np.empty(x.shape[:-1])

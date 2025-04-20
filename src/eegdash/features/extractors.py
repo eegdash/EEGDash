@@ -1,8 +1,18 @@
 from abc import ABC, abstractmethod
-from typing import Dict, List, Type
+from typing import Dict
 from collections.abc import Callable
 from functools import partial
 import numpy as np
+from numba.core.dispatcher import Dispatcher
+
+
+def _get_underlying_func(func):
+    f = func
+    if isinstance(f, partial):
+        f = f.func
+    if isinstance(f, Dispatcher):
+        f = f.py_func
+    return f
 
 
 class FitableFeature(ABC):
@@ -35,6 +45,11 @@ class FeatureExtractor(FitableFeature):
         self.feature_extractors_dict = self._validate_execution_tree(feature_extractors)
         self._is_fitable = self._check_is_fitable(feature_extractors)
         super().__init__()
+
+        # bypassing FeaturePredecessor to avoid circular import
+        if not hasattr(self, "parent_extractor_type"):
+            self.parent_extractor_type = [FeatureExtractor]
+
         self.preprocess_kwargs = preprocess_kwargs
         if self.preprocess_kwargs is None:
             self.preprocess_kwargs = dict()
@@ -49,8 +64,7 @@ class FeatureExtractor(FitableFeature):
 
     def _validate_execution_tree(self, feature_extractors):
         for fname, f in feature_extractors.items():
-            if isinstance(f, partial):
-                f = f.func
+            f = _get_underlying_func(f)
             assert type(self) in f.parent_extractor_type
         return feature_extractors
 
@@ -60,8 +74,7 @@ class FeatureExtractor(FitableFeature):
             if isinstance(f, FeatureExtractor):
                 is_fitable = f._is_fitable
             else:
-                if isinstance(f, partial):
-                    f = f.func
+                f = _get_underlying_func(f)
                 if isinstance(f, FitableFeature):
                     is_fitable = True
             if is_fitable:
@@ -74,57 +87,47 @@ class FeatureExtractor(FitableFeature):
     def feature_channel_names(self, ch_names):
         return [""]
 
-    def __call__(self, batch_size, ch_names, *x):
+    def __call__(self, *x, _batch_size=None, _ch_names=None):
+        assert _batch_size is not None
+        assert _ch_names is not None
         if self._is_fitable:
             super().__call__()
-        f_channels = self.feature_channel_names(ch_names)
         results_dict = dict()
         z = self.preprocess(*x, **self.preprocess_kwargs)
         for fname, f in self.feature_extractors_dict.items():
             if isinstance(f, FeatureExtractor):
-                r = f(batch_size, ch_names, *z)
+                r = f(*z, _batch_size=_batch_size, _ch_names=_ch_names)
             else:
                 r = f(*z)
+            f = _get_underlying_func(f)
+            if hasattr(f, "feature_kind"):
+                r = f.feature_kind(r, _ch_names=_ch_names)
             if not isinstance(fname, str) or not fname:
-                fun = f.func if isinstance(f, partial) else f
-                if isinstance(fun, FeatureExtractor) or not hasattr(fun, "__name__"):
+                if isinstance(f, FeatureExtractor) or not hasattr(f, "__name__"):
                     fname = ""
                 else:
-                    fname = fun.__name__
+                    fname = f.__name__
             if isinstance(r, dict):
                 if fname:
                     fname += "_"
                 for k, v in r.items():
-                    self._add_feature_to_dict(
-                        results_dict, fname + k, v, f_channels, batch_size
-                    )
+                    self._add_feature_to_dict(results_dict, fname + k, v, _batch_size)
             else:
-                self._add_feature_to_dict(
-                    results_dict, fname, r, f_channels, batch_size
-                )
+                self._add_feature_to_dict(results_dict, fname, r, _batch_size)
         return results_dict
 
-    def _add_feature_to_dict(self, results_dict, name, value, f_channels, batch_size):
+    def _add_feature_to_dict(self, results_dict, name, value, batch_size):
         if not isinstance(value, np.ndarray):
             results_dict[name] = value
         else:
             assert value.shape[0] == batch_size
-            if value.ndim == 1:
-                results_dict[name] = value
-            else:
-                assert value.shape[1] == len(f_channels)
-                value = value.swapaxes(0, 1)
-                for cname, v in zip(f_channels, value):
-                    if cname:
-                        cname = "_" + cname
-                    results_dict[name + cname] = v
+            results_dict[name] = value
 
     def clear(self):
         if not self._is_fitable:
             return
         for fname, f in self.feature_extractors_dict.items():
-            if isinstance(f, partial):
-                f = f.func
+            f = _get_underlying_func(f)
             if isinstance(f, FitableFeature):
                 f.clear()
 
@@ -133,8 +136,7 @@ class FeatureExtractor(FitableFeature):
             return
         z = self.preprocess(*x, **self.preprocess_kwargs)
         for fname, f in self.feature_extractors_dict.items():
-            if isinstance(f, partial):
-                f = f.func
+            f = _get_underlying_func(f)
             if isinstance(f, FitableFeature):
                 f.partial_fit(*z, y=y)
 
@@ -142,43 +144,49 @@ class FeatureExtractor(FitableFeature):
         if not self._is_fitable:
             return
         for fname, f in self.feature_extractors_dict.items():
-            if isinstance(f, partial):
-                f = f.func
+            f = _get_underlying_func(f)
             if isinstance(f, FitableFeature):
                 f.fit()
         super().fit()
 
 
-class FeaturePredecessor:
-    def __init__(self, *parent_extractor_type: List[Type]):
-        parent_cls = parent_extractor_type
-        if not parent_cls:
-            parent_cls = [FeatureExtractor]
-        for i, p_cls in enumerate(parent_cls):
-            if isinstance(p_cls, FeaturePredecessor):
-                parent_cls[i] = p_cls.parent_extractor_type
-            assert issubclass(p_cls, FeatureExtractor)
-        self.parent_extractor_type = parent_cls
+class MultivariateFeature:
+    def __call__(self, x, _ch_names=None):
+        assert _ch_names is not None
+        f_channels = self.feature_channel_names(_ch_names)
+        if isinstance(x, dict):
+            r = dict()
+            for k, v in x.items():
+                r.update(self._array_to_dict(v, f_channels, k))
+            return r
+        return self._array_to_dict(x, f_channels)
 
-    def __call__(self, func: Callable):
-        func.parent_extractor_type = self.parent_extractor_type
-        return func
+    @staticmethod
+    def _array_to_dict(x, f_channels, name=""):
+        assert isinstance(x, np.ndarray)
+        if len(f_channels) == 0:
+            assert x.ndim == 1
+            if name:
+                return {name: x}
+            return x
+        assert x.shape[1] == len(f_channels)
+        x = x.swapaxes(0, 1)
+        names = [f"{name}_{ch}" for ch in f_channels] if name else f_channels
+        return dict(zip(names, x))
+
+    def feature_channel_names(self, ch_names):
+        return []
 
 
-@FeaturePredecessor(FeatureExtractor)
-class ByChannelFeatureExtractor(FeatureExtractor):
+class UnivariateFeature(MultivariateFeature):
     def feature_channel_names(self, ch_names):
         return ch_names
 
 
-@FeaturePredecessor(FeatureExtractor)
-class ByChannelPairFeatureExtractor(ByChannelFeatureExtractor):
-    def __init__(
-        self, feature_extractors, *, channel_pair_format="{}<>{}", **preprocess_kwargs
-    ):
-        super().__init__(feature_extractors, **preprocess_kwargs)
+class BivariateFeature(MultivariateFeature):
+    def __init__(self, *args, channel_pair_format="{}<>{}"):
+        super().__init__(*args)
         self.channel_pair_format = channel_pair_format
-        self.features_kwargs["channel_pair_format"] = channel_pair_format
 
     @staticmethod
     def get_pair_iterators(n):
@@ -187,7 +195,14 @@ class ByChannelPairFeatureExtractor(ByChannelFeatureExtractor):
     def feature_channel_names(self, ch_names):
         return [
             self.channel_pair_format.format(ch_names[i], ch_names[j])
-            for i, j in zip(
-                *ByChannelPairFeatureExtractor.get_pair_iterators(len(ch_names))
-            )
+            for i, j in zip(*self.get_pair_iterators(len(ch_names)))
+        ]
+
+
+class DirectedBivariateFeature(BivariateFeature):
+    @staticmethod
+    def get_pair_iterators(n):
+        return [
+            np.append(a, b)
+            for a, b in zip(np.tril_indices(n, -1), np.triu_indices(n, 1))
         ]

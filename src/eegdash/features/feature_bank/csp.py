@@ -3,7 +3,8 @@ import numba as nb
 import scipy
 import scipy.linalg
 
-from ..extractors import FeaturePredecessor, FitableFeature
+from ..extractors import FitableFeature
+from ..decorators import FeaturePredecessor, multivariate_feature
 
 
 __all__ = [
@@ -22,6 +23,7 @@ def _update_mean_cov(count, mean, cov, x_count, x_mean, x_cov):
 
 
 @FeaturePredecessor()
+@multivariate_feature
 class CommonSpatialPattern(FitableFeature):
     def __init__(self):
         super().__init__()

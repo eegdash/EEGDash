@@ -2,11 +2,8 @@ from itertools import chain
 import numpy as np
 from scipy.signal import csd
 
-from ..extractors import (
-    FeatureExtractor,
-    ByChannelPairFeatureExtractor,
-    FeaturePredecessor,
-)
+from ..extractors import FeatureExtractor, BivariateFeature
+from ..decorators import FeaturePredecessor, bivariate_feature
 
 
 __all__ = [
@@ -15,14 +12,14 @@ __all__ = [
 ]
 
 
-@FeaturePredecessor(FeatureExtractor, ByChannelPairFeatureExtractor)
-class CoherenceFeatureExtractor(ByChannelPairFeatureExtractor):
+@FeaturePredecessor()
+class CoherenceFeatureExtractor(FeatureExtractor):
     def preprocess(self, x, **kwargs):
         f_min = kwargs.pop("f_min") if "f_min" in kwargs else None
         f_max = kwargs.pop("f_max") if "f_max" in kwargs else None
         kwargs["axis"] = -1
         n = x.shape[1]
-        idx_x, idx_y = ByChannelPairFeatureExtractor.get_pair_iterators(n)
+        idx_x, idx_y = BivariateFeature.get_pair_iterators(n)
         ix, iy = list(chain(range(n), idx_x)), list(chain(range(n), idx_y))
         f, s = csd(x[:, ix], x[:, iy], **kwargs)
         if f_min is not None or f_max is not None:
@@ -50,6 +47,7 @@ def _avg_over_bands(f, x, bands):
 
 
 @FeaturePredecessor(CoherenceFeatureExtractor)
+@bivariate_feature
 def connectivity_magnitude_square_coherence(
     f,
     sxx,

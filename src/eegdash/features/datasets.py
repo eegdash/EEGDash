@@ -28,9 +28,6 @@ class FeaturesDataset(EEGWindowsDataset):
         Tabular data.
     description : dict | pandas.Series | None
         Holds additional description about the continuous signal / subject.
-    target_name : str | tuple | None
-        Name(s) of the column that should be used to provide the target (e.g.,
-        to be used in a prediction task later on).
     transform : callable | None
         On-the-fly transform applied to the example before it is returned.
     """
@@ -40,7 +37,6 @@ class FeaturesDataset(EEGWindowsDataset):
         features: pd.DataFrame,
         metadata: pd.DataFrame | None = None,
         description: dict | pd.Series | None = None,
-        target_name: str | tuple[str, ...] | None = None,
         transform: Callable | None = None,
         raw_info: Dict | None = None,
         raw_preproc_kwargs: Dict | None = None,
@@ -59,31 +55,23 @@ class FeaturesDataset(EEGWindowsDataset):
         self.window_preproc_kwargs = window_preproc_kwargs
         self.features_kwargs = features_kwargs
 
-        # save target name for load/save later
-        if target_name is not None:
-            # hush "target_name not in description" warning
-            self.set_description({target_name: target_name}, overwrite=True)
-            self.n_features -= 1
-        self.target_name = self._target_name(target_name)
+        self.crop_inds = metadata.loc[
+            :, ["i_window_in_trial", "i_start_in_trial", "i_stop_in_trial"]
+        ].to_numpy()
+        self.y = metadata.loc[:, "target"].to_list()
 
     def __getitem__(self, index):
-        X = self.features.iloc[index]
-        y = None
-        if self.target_name is not None:
-            # y = self.description[self.target_name]
-            y = X[self.target_name]
-            X = X.drop(self.target_name, inplace=False)
-        else:
-            X = X.copy()
-        if isinstance(y, pd.Series):
-            y = y.copy().to_list()
-        elif not isinstance(y, Iterable):
-            y = [y]
-        if isinstance(X, pd.Series | pd.DataFrame):
-            X = X.to_numpy().astype(np.float32)
+        crop_inds = self.crop_inds[index].tolist()
+        X = self.features.iloc[index].to_numpy()
+        X.astype("float32")
+        X = X.copy()
         if self.transform is not None:
             X = self.transform(X)
-        return X, y
+        y = self.y[index]
+        # y = y.copy()
+        # elif not isinstance(y, Iterable):
+        #     y = [y]
+        return X, y, crop_inds
 
     def __len__(self):
         return len(self.features.index)
@@ -97,14 +85,13 @@ def _compute_stats(
     ddof=1,
     numeric_only=False,
 ):
-    df = ds.features.drop(columns=ds.target_name)
     res = []
     if return_count:
-        res.append(df.count(numeric_only=numeric_only))
+        res.append(ds.features.count(numeric_only=numeric_only))
     if return_mean:
-        res.append(df.mean(numeric_only=numeric_only))
+        res.append(ds.features.mean(numeric_only=numeric_only))
     if return_var:
-        res.append(df.var(ddof=ddof, numeric_only=numeric_only))
+        res.append(ds.features.var(ddof=ddof, numeric_only=numeric_only))
     return tuple(res)
 
 
@@ -221,22 +208,22 @@ class FeaturesConcatDataset(BaseConcatDataset):
         path/
             0/
                 0-feat.parquet
+                metadata_df.pkl
                 description.json
                 raw-info.fif (if raw info was saved)
                 raw_preproc_kwargs.json (if raws were preprocessed)
                 window_kwargs.json (if this is a windowed dataset)
                 window_preproc_kwargs.json  (if windows were preprocessed)
                 features_kwargs.json
-                target_name.json (if target_name is not None)
             1/
                 1-feat.parquet
+                metadata_df.pkl
                 description.json
                 raw-info.fif (if raw info was saved)
                 raw_preproc_kwargs.json (if raws were preprocessed)
                 window_kwargs.json (if this is a windowed dataset)
                 window_preproc_kwargs.json  (if windows were preprocessed)
                 features_kwargs.json
-                target_name.json (if target_name is not None)
 
         Parameters
         ----------
@@ -286,8 +273,6 @@ class FeaturesConcatDataset(BaseConcatDataset):
             # save_dir/{i_ds+offset}/window_preproc_kwargs.json
             # save_dir/{i_ds+offset}/features_kwargs.json
             self._save_kwargs(sub_dir, ds)
-            # save_dir/{i_ds+offset}/target_name.json
-            self._save_target_name(sub_dir, ds)
         if overwrite:
             # the following will be True for all datasets preprocessed and
             # stored in parallel with braindecode.preprocessing.preprocess
@@ -337,10 +322,24 @@ class FeaturesConcatDataset(BaseConcatDataset):
                     with open(kwargs_file_path, "w") as f:
                         json.dump(kwargs, f)
 
-    def to_dataframe(self, include_metadata=False):
-        if include_metadata:
+    def to_dataframe(
+        self, include_metadata=False, include_target=False, include_crop_inds=False
+    ):
+        if include_metadata or (include_target and include_crop_inds):
             dataframes = [
-                ds.metadata.join(ds.features, lsuffix="_metadata")
+                ds.metadata.join(ds.features, how="right", lsuffix="_metadata")
+                for ds in self.datasets
+            ]
+        elif include_target:
+            dataframes = [
+                ds.features.join(ds.metadata["target"], how="left", rsuffix="_metadata")
+                for ds in self.datasets
+            ]
+        elif include_crop_inds:
+            dataframes = [
+                ds.metadata.drop("target", axis="columns").join(
+                    ds.features, how="right", lsuffix="_metadata"
+                )
                 for ds in self.datasets
             ]
         else:
@@ -414,12 +413,7 @@ class FeaturesConcatDataset(BaseConcatDataset):
         _, mean, var = _pooled_var(counts, means, variances, ddof)
         std = np.sqrt(var) + eps
         for ds in self.datasets:
-            cols_without_target = ds.features.columns[
-                ds.features.columns != ds.target_name
-            ]
-            ds.features[cols_without_target] = (
-                ds.features[cols_without_target] - mean
-            ) / std
+            ds.features = (ds.features - mean) / std
 
     @staticmethod
     def _enforce_inplace_operations(func_name, kwargs):

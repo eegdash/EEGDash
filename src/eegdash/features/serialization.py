@@ -68,26 +68,16 @@ def _load_parallel(path, i):
     if raw_info_file_path.exists():
         raw_info = read_info(raw_info_file_path)
 
-    target_file_path = sub_dir / "target_name.json"
-    target_name = None
-    if target_file_path.exists():
-        target_name = json.load(open(target_file_path, "r"))["target_name"]
-
     raw_preproc_kwargs = _load_kwargs_json("raw_preproc_kwargs", sub_dir)
     window_kwargs = _load_kwargs_json("window_kwargs", sub_dir)
     window_preproc_kwargs = _load_kwargs_json("window_preproc_kwargs", sub_dir)
     features_kwargs = _load_kwargs_json("features_kwargs", sub_dir)
     metadata = pd.read_pickle(path / i / "metadata_df.pkl")
-    target_file_path = sub_dir / "target_name.json"
-    target_name = None
-    if target_file_path.exists():
-        target_name = json.load(open(target_file_path, "r"))["target_name"]
 
     dataset = FeaturesDataset(
         features,
         metadata=metadata,
         description=description,
-        target_name=target_name,
         raw_info=raw_info,
         raw_preproc_kwargs=raw_preproc_kwargs,
         window_kwargs=window_kwargs,

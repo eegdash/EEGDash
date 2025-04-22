@@ -1,6 +1,6 @@
 from itertools import chain
 import numpy as np
-from scipy.signal import csd
+from scipy.signal import csd, coherence
 
 from ..extractors import FeatureExtractor, BivariateFeature
 from ..decorators import FeaturePredecessor, bivariate_feature
@@ -9,6 +9,8 @@ from ..decorators import FeaturePredecessor, bivariate_feature
 __all__ = [
     "CoherenceFeatureExtractor",
     "connectivity_magnitude_square_coherence",
+    "connectivity_imaginary_coherence",
+    "connectivity_lagged_coherence",
 ]
 
 
@@ -30,7 +32,8 @@ class CoherenceFeatureExtractor(FeatureExtractor):
             s = s[..., idx]
         sx, sxy = np.split(s, [n], axis=1)
         sxx, syy = sx[:, idx_x].real, sx[:, idx_y].real
-        return f, sxx, syy, sxy
+        c = sxy / np.sqrt(sxx * syy)
+        return f, c
 
 
 def _avg_over_bands(f, x, bands):
@@ -50,9 +53,7 @@ def _avg_over_bands(f, x, bands):
 @bivariate_feature
 def connectivity_magnitude_square_coherence(
     f,
-    sxx,
-    syy,
-    sxy,
+    c,
     bands={
         "delta": (1, 4.5),
         "theta": (4.5, 8),
@@ -60,5 +61,40 @@ def connectivity_magnitude_square_coherence(
         "beta": (12, 30),
     },
 ):
-    coherence = ((sxy.real**2) + (sxy.imag**2)) / (sxx * syy)
-    return _avg_over_bands(f, coherence, bands)
+    # https://neuroimage.usc.edu/brainstorm/Tutorials/Connectivity
+    coher = c.real**2 + c.imag**2
+    return _avg_over_bands(f, coher, bands)
+
+
+@FeaturePredecessor(CoherenceFeatureExtractor)
+@bivariate_feature
+def connectivity_imaginary_coherence(
+    f,
+    c,
+    bands={
+        "delta": (1, 4.5),
+        "theta": (4.5, 8),
+        "alpha": (8, 12),
+        "beta": (12, 30),
+    },
+):
+    # https://neuroimage.usc.edu/brainstorm/Tutorials/Connectivity
+    coher = c.imag
+    return _avg_over_bands(f, coher, bands)
+
+
+@FeaturePredecessor(CoherenceFeatureExtractor)
+@bivariate_feature
+def connectivity_lagged_coherence(
+    f,
+    c,
+    bands={
+        "delta": (1, 4.5),
+        "theta": (4.5, 8),
+        "alpha": (8, 12),
+        "beta": (12, 30),
+    },
+):
+    # https://neuroimage.usc.edu/brainstorm/Tutorials/Connectivity
+    coher = c.imag / np.sqrt(1 - c.real)
+    return _avg_over_bands(f, coher, bands)

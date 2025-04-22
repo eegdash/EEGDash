@@ -63,14 +63,11 @@ class FeaturesDataset(EEGWindowsDataset):
     def __getitem__(self, index):
         crop_inds = self.crop_inds[index].tolist()
         X = self.features.iloc[index].to_numpy()
-        X.astype("float32")
         X = X.copy()
+        X.astype("float32")
         if self.transform is not None:
             X = self.transform(X)
         y = self.y[index]
-        # y = y.copy()
-        # elif not isinstance(y, Iterable):
-        #     y = [y]
         return X, y, crop_inds
 
     def __len__(self):

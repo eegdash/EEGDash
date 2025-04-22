@@ -5,13 +5,18 @@ import pandas as pd
 from joblib import Parallel, delayed
 from tqdm import tqdm
 from torch.utils.data import DataLoader
-from braindecode.datasets.base import EEGWindowsDataset, BaseConcatDataset
+from braindecode.datasets.base import (
+    EEGWindowsDataset,
+    WindowsDataset,
+    BaseConcatDataset,
+)
+
 from .datasets import FeaturesDataset, FeaturesConcatDataset
 from .extractors import FeatureExtractor
 
 
 def _extract_features_from_eegwindowsdataset(
-    win_ds: EEGWindowsDataset,
+    win_ds: EEGWindowsDataset | WindowsDataset,
     feature_extractor: FeatureExtractor,
     target_name: str = "target",
     batch_size: int = 512,
@@ -33,6 +38,8 @@ def _extract_features_from_eegwindowsdataset(
                 features_dict[k] = []
             features_dict[k].extend(v)
     features_df = pd.DataFrame(features_dict)
+
+    # FUTURE: truely support WindowsDataset objects
     return FeaturesDataset(
         features_df,
         metadata=win_ds.metadata,

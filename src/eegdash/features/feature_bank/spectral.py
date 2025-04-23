@@ -22,7 +22,6 @@ __all__ = [
 ]
 
 
-@FeaturePredecessor()
 class SpectralFeatureExtractor(FeatureExtractor):
     def preprocess(self, x, **kwargs):
         f_min = kwargs.pop("f_min") if "f_min" in kwargs else None

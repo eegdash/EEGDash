@@ -1,6 +1,6 @@
 from itertools import chain
 import numpy as np
-from scipy.signal import csd, coherence
+from scipy.signal import csd
 
 from ..extractors import FeatureExtractor, BivariateFeature
 from ..decorators import FeaturePredecessor, bivariate_feature
@@ -14,7 +14,6 @@ __all__ = [
 ]
 
 
-@FeaturePredecessor()
 class CoherenceFeatureExtractor(FeatureExtractor):
     def preprocess(self, x, **kwargs):
         f_min = kwargs.pop("f_min") if "f_min" in kwargs else None

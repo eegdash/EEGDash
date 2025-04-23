@@ -65,7 +65,8 @@ class FeatureExtractor(FitableFeature):
     def _validate_execution_tree(self, feature_extractors):
         for fname, f in feature_extractors.items():
             f = _get_underlying_func(f)
-            assert type(self) in f.parent_extractor_type
+            pe_type = getattr(f, "parent_extractor_type", [FeatureExtractor])
+            assert type(self) in pe_type
         return feature_extractors
 
     def _check_is_fitable(self, feature_extractors):

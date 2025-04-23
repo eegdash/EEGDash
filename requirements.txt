@@ -8,3 +8,4 @@ pymongo
 joblib
 braindecode
 mne-bids
+pybids

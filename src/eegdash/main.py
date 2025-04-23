@@ -10,6 +10,7 @@ import mne
 import numpy as np
 import xarray as xr
 from .data_utils import EEGBIDSDataset, EEGDashBaseRaw, EEGDashBaseDataset
+from .data_config import config as data_config
 from braindecode.datasets import BaseDataset, BaseConcatDataset
 from collections import defaultdict
 from pymongo import MongoClient, InsertOne, UpdateOne, DeleteOne
@@ -19,10 +20,11 @@ class EEGDash:
     def __init__(self, 
                  is_public=True):
         # Load config file
-        config_path = Path(__file__).parent / 'config.json'
-        with open(config_path, 'r') as f:
-            self.config = json.load(f)
+        # config_path = Path(__file__).parent / 'config.json'
+        # with open(config_path, 'r') as f:
+        #     self.config = json.load(f)
 
+        self.config = data_config
         if is_public:
             DB_CONNECTION_STRING="mongodb+srv://eegdash-user:mdzoMjQcHWTVnKDq@cluster0.vz35p.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
         else:

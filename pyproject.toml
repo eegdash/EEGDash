@@ -29,6 +29,11 @@ dependencies = [
   "joblib",
   "braindecode",
   "mne-bids",
+  "pybids",
+  "pymatreader",
+  "pyarrow",
+  "tqdm",
+  "numba",
 ]
 [project.urls]
 Homepage = "https://github.com/sccn/EEG-Dash-Data"

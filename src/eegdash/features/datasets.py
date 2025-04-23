@@ -96,9 +96,9 @@ def _pooled_var(counts, means, variances, ddof):
     count = counts.sum(axis=0)
     mean = np.sum((counts / count) * means, axis=0)
     var = np.sum(((counts - ddof) / (count - ddof)) * variances, axis=0)
-    var += np.sum((counts / (count - ddof)) * (means**2), axis=0)
-    var -= (count / (count - ddof)) * (mean**2)
-    var = var.clip(min=0)
+    var[:] += np.sum((counts / (count - ddof)) * (means**2), axis=0)
+    var[:] -= (count / (count - ddof)) * (mean**2)
+    var[:] = var.clip(min=0)
     return count, mean, var
 
 
@@ -426,6 +426,11 @@ class FeaturesConcatDataset(BaseConcatDataset):
         for ds in self.datasets:
             ds.features.fillna(*args, **kwargs)
 
+    def replace(self, *args, **kwargs):
+        FeaturesConcatDataset._enforce_inplace_operations("replace", kwargs)
+        for ds in self.datasets:
+            ds.features.replace(*args, **kwargs)
+
     def interpolate(self, *args, **kwargs):
         FeaturesConcatDataset._enforce_inplace_operations("interpolate", kwargs)
         for ds in self.datasets:
@@ -446,7 +451,3 @@ class FeaturesConcatDataset(BaseConcatDataset):
         for ds1, ds2 in zip(self.datasets, concat_dataset.datasets):
             assert len(ds1) == len(ds2)
             ds1.features.join(ds2, **kwargs)
-
-    def transform(self, *args, **kwargs):
-        for ds in self.datasets:
-            ds.features.transform(*args, **kwargs)

@@ -280,15 +280,17 @@ class EEGDash:
         return self.__collection
 
 class EEGDashDataset(BaseConcatDataset):
-    CACHE_DIR = '.eegdash_cache'
+    # CACHE_DIR = '.eegdash_cache'
     def __init__(
         self,
         query:dict=None,
         data_dir:str | list =None,
         dataset:str | list =None,
         description_fields: list[str]=['subject', 'session', 'run', 'task', 'age', 'gender', 'sex'],
+        cache_dir:str='.eegdash_cache',
         **kwargs
     ):
+        self.cache_dir = cache_dir
         if query:
             datasets = self.find_datasets(query, description_fields, **kwargs)
         elif data_dir:
@@ -301,6 +303,7 @@ class EEGDashDataset(BaseConcatDataset):
                     datasets.extend(self.load_bids_dataset(dataset[i], data_dir[i], description_fields))
         # convert to list using get_item on each element
         super().__init__(datasets)
+
     
     def find_key_in_nested_dict(self, data, target_key):
         if isinstance(data, dict):
@@ -321,7 +324,7 @@ class EEGDashDataset(BaseConcatDataset):
                 value = self.find_key_in_nested_dict(record, field)
                 if value:
                     description[field] = value
-            datasets.append(EEGDashBaseDataset(record, self.CACHE_DIR, description=description, **kwargs))
+            datasets.append(EEGDashBaseDataset(record, self.cache_dir, description=description, **kwargs))
         return datasets
 
     def load_bids_dataset(self, dataset, data_dir, description_fields: list[str],raw_format='eeglab', **kwargs):
@@ -334,7 +337,7 @@ class EEGDashDataset(BaseConcatDataset):
                 value = self.find_key_in_nested_dict(record, field)
                 if value:
                     description[field] = value
-            return EEGDashBaseDataset(record, self.CACHE_DIR, description=description, **kwargs)
+            return EEGDashBaseDataset(record, self.cache_dir, description=description, **kwargs)
 
         bids_dataset = EEGBIDSDataset(
             data_dir=data_dir,

@@ -77,6 +77,8 @@ class CommonSpatialPattern(FitableFeature):
         for l in range(len(self._labels)):
             self._covs[l] *= self._counts[l] / (self._counts[1] - 1)
         l, w = scipy.linalg.eig(self._covs[0], self._covs[0] + self._covs[1])
+        ind = l > 0
+        l, w = l[ind], w[:, ind]
         ord = np.abs(l - 0.5).argsort()[::-1]
         self._eigvals = l[ord]
         self._weights = w[:, ord]

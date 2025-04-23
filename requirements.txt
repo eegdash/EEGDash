@@ -9,3 +9,7 @@ joblib
 braindecode
 mne-bids
 pybids
+pymatreader
+pyarrow
+tqdm
+numba

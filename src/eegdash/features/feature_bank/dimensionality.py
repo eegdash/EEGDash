@@ -2,7 +2,7 @@ import numpy as np
 import numba as nb
 from scipy import special
 
-from ..decorators import FeaturePredecessor, univariate_feature
+from ..decorators import univariate_feature
 from .signal import signal_zero_crossings
 
 
@@ -15,7 +15,6 @@ __all__ = [
 ]
 
 
-@FeaturePredecessor()
 @univariate_feature
 @nb.njit(cache=True, fastmath=True)
 def dimensionality_higuchi_fractal_dim(x, k_max=10, eps=1e-7):
@@ -34,7 +33,6 @@ def dimensionality_higuchi_fractal_dim(x, k_max=10, eps=1e-7):
     return hfd
 
 
-@FeaturePredecessor()
 @univariate_feature
 def dimensionality_petrosian_fractal_dim(x):
     nd = signal_zero_crossings(np.diff(x, axis=-1))
@@ -42,7 +40,6 @@ def dimensionality_petrosian_fractal_dim(x):
     return log_n / (np.log(nd) + log_n)
 
 
-@FeaturePredecessor()
 @univariate_feature
 def dimensionality_katz_fractal_dim(x):
     dists = np.abs(np.diff(x, axis=-1))
@@ -53,7 +50,6 @@ def dimensionality_katz_fractal_dim(x):
     return log_n / (np.log(d / L) + log_n)
 
 
-@FeaturePredecessor()
 @univariate_feature
 @nb.njit(cache=True, fastmath=True)
 def _hurst_exp(x, ns, a, gamma_ratios, log_n):
@@ -80,7 +76,6 @@ def _hurst_exp(x, ns, a, gamma_ratios, log_n):
     return h
 
 
-@FeaturePredecessor()
 @univariate_feature
 def dimensionality_hurst_exp(x):
     ns = np.unique(np.power(2, np.arange(2, np.log2(x.shape[-1]) - 1)).astype(int))
@@ -94,7 +89,6 @@ def dimensionality_hurst_exp(x):
     return _hurst_exp(x, ns, a, gamma_ratios, log_n)
 
 
-@FeaturePredecessor()
 @univariate_feature
 @nb.njit(cache=True, fastmath=True)
 def dimensionality_detrended_fluctuation_analysis(x):

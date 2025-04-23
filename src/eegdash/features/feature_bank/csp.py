@@ -4,7 +4,7 @@ import scipy
 import scipy.linalg
 
 from ..extractors import FitableFeature
-from ..decorators import FeaturePredecessor, multivariate_feature
+from ..decorators import multivariate_feature
 
 
 __all__ = [
@@ -22,7 +22,6 @@ def _update_mean_cov(count, mean, cov, x_count, x_mean, x_cov):
     cov[:] -= np.outer(mean, mean)
 
 
-@FeaturePredecessor()
 @multivariate_feature
 class CommonSpatialPattern(FitableFeature):
     def __init__(self):
@@ -77,6 +76,7 @@ class CommonSpatialPattern(FitableFeature):
         for l in range(len(self._labels)):
             self._covs[l] *= self._counts[l] / (self._counts[1] - 1)
         l, w = scipy.linalg.eig(self._covs[0], self._covs[0] + self._covs[1])
+        l = l.real
         ind = l > 0
         l, w = l[ind], w[:, ind]
         ord = np.abs(l - 0.5).argsort()[::-1]

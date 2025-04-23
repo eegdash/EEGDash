@@ -29,7 +29,6 @@ def _channel_app_samp_entropy_counts(x, m, r, l):
     return kdtree.query_radius(x_emb, r, count_only=True)
 
 
-@FeaturePredecessor()
 class EntropyFeatureExtractor(FeatureExtractor):
     def preprocess(self, x, m=2, r=0.2, l=1):
         rr = r * x.std(axis=-1)
@@ -57,7 +56,6 @@ def complexity_sample_entropy(counts_m, counts_mp1):
     return -np.log(A / B)
 
 
-@FeaturePredecessor()
 @univariate_feature
 def complexity_svd_entropy(x, m=10, tau=1):
     x_emb = np.empty((*x.shape[:-1], (x.shape[-1] - m + 1) // tau, m))
@@ -68,7 +66,6 @@ def complexity_svd_entropy(x, m=10, tau=1):
     return -np.sum(s * np.log(s), axis=-1)
 
 
-@FeaturePredecessor()
 @univariate_feature
 @nb.njit(cache=True, fastmath=True)
 def complexity_lempel_ziv(x, threshold=None):

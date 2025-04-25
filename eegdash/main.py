@@ -9,10 +9,11 @@ import numpy as np
 import pymongo
 import s3fs
 import xarray as xr
-from braindecode.datasets import BaseConcatDataset, BaseDataset
 from dotenv import load_dotenv
 from joblib import Parallel, delayed
 from pymongo import DeleteOne, InsertOne, MongoClient, UpdateOne
+
+from braindecode.datasets import BaseConcatDataset, BaseDataset
 
 from .data_config import config as data_config
 from .data_utils import EEGBIDSDataset, EEGDashBaseDataset, EEGDashBaseRaw

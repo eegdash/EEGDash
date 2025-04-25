@@ -11,13 +11,14 @@ import numpy as np
 import pandas as pd
 import s3fs
 from bids import BIDSLayout
-from braindecode.datasets import BaseDataset
 from joblib import Parallel, delayed
 from mne._fiff.utils import _find_channels, _read_segments_file
 from mne.io import BaseRaw
 from mne_bids import (
     BIDSPath,
 )
+
+from braindecode.datasets import BaseDataset
 
 
 class EEGDashBaseDataset(BaseDataset):

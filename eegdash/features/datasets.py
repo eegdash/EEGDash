@@ -9,12 +9,13 @@ from typing import Dict, no_type_check
 
 import numpy as np
 import pandas as pd
+from joblib import Parallel, delayed
+
 from braindecode.datasets.base import (
     BaseConcatDataset,
     EEGWindowsDataset,
     _create_description,
 )
-from joblib import Parallel, delayed
 
 
 class FeaturesDataset(EEGWindowsDataset):

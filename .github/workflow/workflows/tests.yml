@@ -1,0 +1,45 @@
+name: tests
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.number }}-${{ github.event.ref }}
+  cancel-in-progress: true
+on:
+  push:
+    branches:
+      - "master"
+  pull_request:
+    branches:
+      - '*' # all branches, including forks
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ "ubuntu-latest", "macos-latest", "windows-latest" ]
+        python-version: ["3.9", "3.10", "3.11"]
+    steps:
+    ## Install Braindecode
+    - name: Checking Out Repository
+      uses: actions/checkout@v4
+    # Cache MNE Data
+    # The cache key here is fixed except for os
+    # so if you download a new mne dataset in the code, best to manually increment the key below
+    - name: Create/Restore MNE Data Cache
+      id: cache-mne_data
+      uses: actions/cache@v3
+      with:
+        path: ~/mne_data
+        key: ${{ runner.os }}-v3
+    - uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Show Python Version
+      run: python --version
+    # Update pip
+    - name: Update pip
+      run: python -m pip install --upgrade pip
+    - name: Install EEGDash from Current Checkout
+      run: pip install -e .
+    # Show Braindecode Version
+    - run: python -c "import eegdash; print(eegdash.__version__)"

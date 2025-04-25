@@ -8,9 +8,10 @@ import json
 from pathlib import Path
 
 import pandas as pd
-from braindecode.datautil.serialization import _load_kwargs_json
 from joblib import Parallel, delayed
 from mne.io import read_info
+
+from braindecode.datautil.serialization import _load_kwargs_json
 
 from .datasets import (
     FeaturesConcatDataset,

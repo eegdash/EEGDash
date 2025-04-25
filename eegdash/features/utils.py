@@ -4,14 +4,15 @@ from typing import Dict, List
 
 import numpy as np
 import pandas as pd
+from joblib import Parallel, delayed
+from torch.utils.data import DataLoader
+from tqdm import tqdm
+
 from braindecode.datasets.base import (
     BaseConcatDataset,
     EEGWindowsDataset,
     WindowsDataset,
 )
-from joblib import Parallel, delayed
-from torch.utils.data import DataLoader
-from tqdm import tqdm
 
 from .datasets import FeaturesConcatDataset, FeaturesDataset
 from .extractors import FeatureExtractor

@@ -1,19 +1,22 @@
-import pymongo
-from dotenv import load_dotenv
-import os
-from pathlib import Path
-import s3fs
-from joblib import Parallel, delayed
 import json
+import os
 import tempfile
+from collections import defaultdict
+from pathlib import Path
+
 import mne
 import numpy as np
+import pymongo
+import s3fs
 import xarray as xr
-from .data_utils import EEGBIDSDataset, EEGDashBaseRaw, EEGDashBaseDataset
+from braindecode.datasets import BaseConcatDataset, BaseDataset
+from dotenv import load_dotenv
+from joblib import Parallel, delayed
+from pymongo import DeleteOne, InsertOne, MongoClient, UpdateOne
+
 from .data_config import config as data_config
-from braindecode.datasets import BaseDataset, BaseConcatDataset
-from collections import defaultdict
-from pymongo import MongoClient, InsertOne, UpdateOne, DeleteOne
+from .data_utils import EEGBIDSDataset, EEGDashBaseDataset, EEGDashBaseRaw
+
 
 class EEGDash:
     AWS_BUCKET = 's3://openneuro.org'

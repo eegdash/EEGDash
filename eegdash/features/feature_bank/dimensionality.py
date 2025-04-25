@@ -1,10 +1,9 @@
-import numpy as np
 import numba as nb
+import numpy as np
 from scipy import special
 
 from ..decorators import univariate_feature
 from .signal import signal_zero_crossings
-
 
 __all__ = [
     "dimensionality_higuchi_fractal_dim",

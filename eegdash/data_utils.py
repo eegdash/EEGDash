@@ -1,23 +1,24 @@
+import json
 import os
-import sys 
-from joblib import Parallel, delayed
+import re
+import sys
+import tempfile
+from pathlib import Path
+
 import mne
+import mne_bids
 import numpy as np
 import pandas as pd
-from pathlib import Path
-import re
-import json
-from mne.io import BaseRaw
-from mne._fiff.utils import _find_channels, _read_segments_file
 import s3fs
-import tempfile
-from mne._fiff.utils import _read_segments_file
+from bids import BIDSLayout
 from braindecode.datasets import BaseDataset
-import mne_bids
+from joblib import Parallel, delayed
+from mne._fiff.utils import _find_channels, _read_segments_file
+from mne.io import BaseRaw
 from mne_bids import (
     BIDSPath,
 )
-from bids import BIDSLayout
+
 
 class EEGDashBaseDataset(BaseDataset):
     """Returns samples from an mne.io.Raw object along with a target.

@@ -1,18 +1,20 @@
 from __future__ import annotations
-import os
+
 import json
+import os
 import shutil
 import warnings
-from typing import Dict, no_type_check
 from collections.abc import Callable, Iterable
+from typing import Dict, no_type_check
+
 import numpy as np
 import pandas as pd
-from joblib import Parallel, delayed
 from braindecode.datasets.base import (
-    EEGWindowsDataset,
     BaseConcatDataset,
+    EEGWindowsDataset,
     _create_description,
 )
+from joblib import Parallel, delayed
 
 
 class FeaturesDataset(EEGWindowsDataset):

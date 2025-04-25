@@ -1,10 +1,10 @@
 from itertools import chain
+
 import numpy as np
 from scipy.signal import csd
 
-from ..extractors import FeatureExtractor, BivariateFeature
 from ..decorators import FeaturePredecessor, bivariate_feature
-
+from ..extractors import BivariateFeature, FeatureExtractor
 
 __all__ = [
     "CoherenceFeatureExtractor",

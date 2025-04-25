@@ -1,14 +1,14 @@
-from typing import List, Type
 from collections.abc import Callable
+from typing import List, Type
 
 from .extractors import (
-    FeatureExtractor,
-    UnivariateFeature,
     BivariateFeature,
     DirectedBivariateFeature,
+    FeatureExtractor,
     MultivariateFeature,
+    UnivariateFeature,
+    _get_underlying_func,
 )
-from .extractors import _get_underlying_func
 
 
 class FeaturePredecessor:

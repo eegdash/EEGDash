@@ -1,10 +1,9 @@
-import numpy as np
 import numba as nb
+import numpy as np
 from scipy.signal import welch
 
-from ..extractors import FeatureExtractor
 from ..decorators import FeaturePredecessor, univariate_feature
-
+from ..extractors import FeatureExtractor
 
 __all__ = [
     "SpectralFeatureExtractor",

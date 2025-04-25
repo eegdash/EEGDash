@@ -1,11 +1,10 @@
-import numpy as np
 import numba as nb
+import numpy as np
 import scipy
 import scipy.linalg
 
-from ..extractors import FitableFeature
 from ..decorators import multivariate_feature
-
+from ..extractors import FitableFeature
 
 __all__ = [
     "CommonSpatialPattern",

@@ -1,18 +1,19 @@
-from typing import Dict, List
-from collections.abc import Callable
 import copy
+from collections.abc import Callable
+from typing import Dict, List
+
 import numpy as np
 import pandas as pd
-from joblib import Parallel, delayed
-from tqdm import tqdm
-from torch.utils.data import DataLoader
 from braindecode.datasets.base import (
+    BaseConcatDataset,
     EEGWindowsDataset,
     WindowsDataset,
-    BaseConcatDataset,
 )
+from joblib import Parallel, delayed
+from torch.utils.data import DataLoader
+from tqdm import tqdm
 
-from .datasets import FeaturesDataset, FeaturesConcatDataset
+from .datasets import FeaturesConcatDataset, FeaturesDataset
 from .extractors import FeatureExtractor
 
 
@@ -53,7 +54,7 @@ def _extract_features_from_windowsdataset(
         metadata.reset_index(drop=True, inplace=True)
         metadata.drop("orig_index", axis=1, inplace=True)
 
-    # FUTURE: truely support WindowsDataset objects
+    # FUTURE: truly support WindowsDataset objects
     return FeaturesDataset(
         features_df,
         metadata=metadata,

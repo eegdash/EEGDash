@@ -19,7 +19,8 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 dependencies = [
-  "git+https://github.com/braindecode/braindecode.git@master#egg=braindecode",  "mne_bids",
+  "git+https://github.com/braindecode/braindecode.git@master#egg=braindecode",  
+  "mne_bids",
   "numba",
   "numpy",
   "pandas",
@@ -27,10 +28,9 @@ dependencies = [
   "pymongo",
   "python-dotenv",
   "s3fs",
-  "scikit_learn",
   "scipy",
   "tqdm",
-  "xarray"
+  "xarray",
   "pre-commit",
 ]
 
@@ -58,7 +58,7 @@ skip = [".gitignore"]
 skip_glob = ["test/*", "examples/*"]
 py_version = 311
 profile = "black"
-sections = ["FUTURE", "STDLIB", "THIRDPARTY", "FIRSTPARTY", "LOCALFOLDER"]  # :contentReference[oaicite:0]{index=0}
+sections = ["FUTURE", "STDLIB", "THIRDPARTY", "FIRSTPARTY", "LOCALFOLDER"]  
 known_first_party = ["eegdash", "braindecode"]   
 lines_between_sections = 1
 

@@ -45,7 +45,7 @@ repos:
           ]
         files: ^(docs|examples)/
       - id: ruff
-        name: ruff lint braindecode preview
+        name: ruff lint eegdash preview
         args:
           [
             "--fix",
@@ -53,7 +53,7 @@ repos:
             "--select=NPY201",
             "--ignore=D100,D101,D102,D105,D107,D415,D417,D205",
           ]
-        files: ^braindecode/
+        files: ^eegdash/
       - id: ruff
         name: ruff lint docs & examples
         args:
@@ -65,7 +65,7 @@ repos:
         files: ^(docs|examples)/
       - id: ruff-format
         name: ruff format code
-        files: ^(braindecode|docs|examples)/
+        files: ^(eegdash|docs|examples)/
 
 
   - repo: https://github.com/codespell-project/codespell
@@ -89,7 +89,7 @@ repos:
     rev: v1.15.0
     hooks:
       - id: mypy
-        files: braindecode/.*.py|test/.*.py|examples/.*.py
+        files: eegdash/.*.py|test/.*.py|examples/.*.py
         additional_dependencies:
           [
             types-PyYAML,

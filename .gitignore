@@ -1,5 +1,5 @@
 old
-src/EEGDash.egg-info
+*.egg-info
 *.npy
 */*.npy
 */*/*.npy

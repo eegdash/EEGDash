@@ -4,6 +4,7 @@ from scipy.signal import welch
 
 from ..extractors import FeatureExtractor
 from ..decorators import FeaturePredecessor, univariate_feature
+from . import utils
 
 
 __all__ = [
@@ -26,14 +27,13 @@ class SpectralFeatureExtractor(FeatureExtractor):
     def preprocess(self, x, **kwargs):
         f_min = kwargs.pop("f_min") if "f_min" in kwargs else None
         f_max = kwargs.pop("f_max") if "f_max" in kwargs else None
+        assert "fs" in kwargs
         kwargs["axis"] = -1
         f, p = welch(x, **kwargs)
-        if f_min is not None or f_max is not None:
-            f_min_idx = f > f_min if f_min is not None else True
-            f_max_idx = f < f_max if f_max is not None else True
-            idx = np.logical_and(f_min_idx, f_max_idx)
-            f = f[idx]
-            p = p[..., idx]
+        f_min, f_max = utils.get_valid_freq_band(
+            kwargs["fs"], x.shape[-1], f_min, f_max
+        )
+        f, p = utils.slice_freq_band(f, p, f_min=f_min, f_max=f_max)
         return f, p
 
 
@@ -113,22 +113,5 @@ def spectral_slope(f, p):
     DBSpectralFeatureExtractor,
 )
 @univariate_feature
-def spectral_bands_power(
-    f,
-    p,
-    bands={
-        "delta": (1, 4.5),
-        "theta": (4.5, 8),
-        "alpha": (8, 12),
-        "beta": (12, 30),
-    },
-):
-    bands_power = dict()
-    for k, v in bands.items():
-        assert isinstance(k, str)
-        assert isinstance(v, tuple)
-        assert len(v) == 2
-        mask = np.logical_and(f > v[0], f < v[1])
-        power = p[..., mask].sum(axis=-1)
-        bands_power[k] = power
-    return bands_power
+def spectral_bands_power(f, p, bands=utils.DEFAULT_FREQ_BANDS):
+    return utils.reduce_freq_bands(f, p, bands, np.sum)

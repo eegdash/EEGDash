@@ -1,5 +1,6 @@
 import os
 
+
 def find_files_recursively(folder_path, extensions):
     """ Recursively find the first file of each specified extension in a folder. """
     first_files = {ext: None for ext in extensions}

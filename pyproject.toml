@@ -6,36 +6,62 @@ build-backend = "setuptools.build_meta"
 name = "eegdash"
 version = "0.0.8"
 authors = [
-  { name="Young Truong", email="dt.young112@gmail.com" },
-  { name="Arnaud Delorme", email="adelorme@gmail.com" },
+  { name = "Young Truong",    email = "dt.young112@gmail.com" },
+  { name = "Arnaud Delorme",  email = "adelorme@gmail.com" },
 ]
-description = "EEG data for machine learning"
-readme = "README.md"
-license = { file = "LICENSE" }
-requires-python = ">=3.8"
+description     = "EEG data for machine learning"
+readme          = "README.md"
+license         = { file = "LICENSE" }
+requires-python = ">3.10"
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
 dependencies = [
-  "xarray",
+  "braindecode @ git+https://github.com/braindecode/braindecode.git@master",
+  "mne_bids",
+  "numba",
+  "numpy",
+  "pandas",
+  "pybids",
+  "pymongo",
   "python-dotenv",
   "s3fs",
-  "mne",
-  "pynwb",
-  "h5py",
-  "pymongo",
-  "joblib",
-  "braindecode",
-  "mne-bids",
-  "pybids",
-  "pymatreader",
-  "pyarrow",
+  "scipy",
   "tqdm",
-  "numba",
+  "xarray",
+  "pre-commit",
 ]
+
 [project.urls]
 Homepage = "https://github.com/sccn/EEG-Dash-Data"
-Issues = "https://github.com/sccn/EEG-Dash-Data/issues"
+Issues   = "https://github.com/sccn/EEG-Dash-Data/issues"
 
+[tool.setuptools]
+py-modules = []
+
+[tool.setuptools.packages.find]
+where      = ["."]
+include    = ["eegdash*"]
+exclude    = []
+namespaces = false
+
+[tool.ruff]
+lint.ignore-init-module-imports = true
+line-length = 88
+target-version = "py311"
+
+[tool.isort]
+skip               = [".gitignore"]
+skip_glob          = ["test/*", "examples/*"]
+py_version         = 311
+profile            = "black"
+sections           = ["FUTURE", "STDLIB", "THIRDPARTY", "FIRSTPARTY", "LOCALFOLDER"]
+known_first_party  = ["eegdash", "braindecode"]
+lines_between_sections = 1
+
+[pytest]
+testpaths        = ["test"]
+python_files     = ["test_*.py", "*_test.py"]
+python_functions = ["test_*"]

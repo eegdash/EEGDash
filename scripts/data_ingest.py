@@ -1,7 +1,9 @@
 import argparse
-from eegdash import EEGDash
-from pathlib import Path
 import json
+from pathlib import Path
+
+from eegdash import EEGDash
+
 
 def main():
     # Create the parser

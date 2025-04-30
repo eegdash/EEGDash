@@ -39,7 +39,10 @@ To use the data from a single subject, enter:
 
 ```python
 from eegdash import EEGDashDataset
-ds_NDARDB033FW5 = EEGDashDataset({'dataset': 'ds005514', 'task': 'RestingState', 'subject': 'NDARDB033FW5'})
+
+ds_NDARDB033FW5 = EEGDashDataset(
+    {"dataset": "ds005514", "task": "RestingState", "subject": "NDARDB033FW5"}
+)
 ```
 
 This will search and download the metadata for the task **RestingState** for subject **NDARDB033FW5** in BIDS dataset **ds005514**. The actual data will not be downloaded at this stage. Following standard practice, data is only downloaded once it is processed. The **ds_NDARDB033FW5** object is a fully functional BrainDecode dataset, which is itself a PyTorch dataset. This [tutorial](https://github.com/sccn/EEGDash/blob/develop/notebooks/tutorial_eoec.ipynb) shows how to preprocess the EEG data, extracting portions of the data containing eyes-open and eyes-closed segments, then perform eyes-open vs. eyes-closed classification using a (shallow) deep-learning model. 
@@ -48,7 +51,10 @@ To use the data from multiple subjects, enter:
 
 ```python
 from eegdash import EEGDashDataset
-ds_ds005505rest = EEGDashDataset({'dataset': 'ds005505', 'task': 'RestingState'}, target_name='sex')
+
+ds_ds005505rest = EEGDashDataset(
+    {"dataset": "ds005505", "task": "RestingState"}, target_name="sex"
+)
 ```
 
 This will search and download the metadata for the task 'RestingState' for all subjects in BIDS dataset 'ds005505' (a total of 136). As above, the actual data will not be downloaded at this stage so this command is quick to execute. Also, the target class for each subject is assigned using the target_name parameter. This means that this object is ready to be directly fed to a deep learning model, although the [tutorial script](https://github.com/sccn/EEGDash/blob/develop/notebooks/tutorial_sex_classification.ipynb) performs minimal processing on it, prior to training a deep-learning model. Because 14 gigabytes of data are downloaded, this tutorial takes about 10 minutes to execute.

@@ -1,9 +1,9 @@
 import numbers
+
 import numpy as np
 from scipy import stats
 
 from ..decorators import univariate_feature
-
 
 __all__ = [
     "signal_mean",

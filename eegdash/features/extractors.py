@@ -1,7 +1,8 @@
 from abc import ABC, abstractmethod
-from typing import Dict
 from collections.abc import Callable
 from functools import partial
+from typing import Dict
+
 import numpy as np
 from numba.core.dispatcher import Dispatcher
 

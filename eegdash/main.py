@@ -397,7 +397,7 @@ class EEGDashDataset(BaseConcatDataset):
         bids_dataset = EEGBIDSDataset(
             data_dir=data_dir,
             dataset=dataset,
-            raw_format=raw_format,
+            # raw_format=raw_format,
         )
         eegdashObj = EEGDash()
         datasets = Parallel(n_jobs=-1, prefer="threads", verbose=1)(

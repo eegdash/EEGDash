@@ -364,7 +364,7 @@ class EEGDashDataset(BaseConcatDataset):
             description = {}
             for field in description_fields:
                 value = self.find_key_in_nested_dict(record, field)
-                if value:
+                if value is not None:
                     description[field] = value
             datasets.append(
                 EEGDashBaseDataset(
@@ -388,7 +388,7 @@ class EEGDashDataset(BaseConcatDataset):
             description = {}
             for field in description_fields:
                 value = self.find_key_in_nested_dict(record, field)
-                if value:
+                if value is not None:
                     description[field] = value
             return EEGDashBaseDataset(
                 record, self.cache_dir, description=description, **kwargs

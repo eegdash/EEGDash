@@ -2,8 +2,9 @@
 
 pip install -r requirements.txt
 
-## signalstore mongodb
-- Check args functions to double check input to db query
-- Create_index to the collection once its created to speed up querying
-- `find` has deserialization to convert timestamp to correct millisecond format and json_schema from bytes to dict
-- `add` has serialization before insert into db
+## Create package and release on Pypi
+Documentation is at https://packaging.python.org/en/latest/tutorials/packaging-projects/
+- Update version in pyproject.toml
+- Run "python -m build"
+- "python -m twine upload --repository testpypi dist/*" OR "python -m twine upload dist/*"
+Look for API token in email (different for test and regular)

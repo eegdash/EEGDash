@@ -105,7 +105,7 @@ def fit_feature_extractors(
         features = dict(enumerate(features))
     if not isinstance(features, FeatureExtractor):
         features = FeatureExtractor(features)
-    if not features._is_fitable:
+    if not features._is_trainable:
         return features
     features.clear()
     concat_dl = DataLoader(

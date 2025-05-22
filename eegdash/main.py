@@ -36,7 +36,7 @@ class EEGDash:
             DB_CONNECTION_STRING = os.getenv("DB_CONNECTION_STRING")
 
         self.__client = pymongo.MongoClient(DB_CONNECTION_STRING)
-        self.__db = self.__client["eegdash"]
+        self.__db = self.__client["eegdashstaging"]
         self.__collection = self.__db["records"]
 
         self.is_public = is_public

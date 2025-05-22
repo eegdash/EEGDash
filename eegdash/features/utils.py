@@ -17,8 +17,8 @@ from braindecode.datasets.base import (
 )
 
 from .datasets import FeaturesConcatDataset, FeaturesDataset
-from .extractors import FeatureExtractor, _get_underlying_func
-from . import feature_bank
+from .extractors import FeatureExtractor, MultivariateFeature, _get_underlying_func
+from . import feature_bank, extractors
 
 
 def _extract_features_from_windowsdataset(
@@ -149,3 +149,10 @@ def get_all_feature_extractors():
         ("FeatureExtractor", FeatureExtractor),
         *inspect.getmembers(feature_bank, isfeatureextractor),
     ]
+
+
+def get_all_feature_kinds():
+    def isfeaturekind(x):
+        return inspect.isclass(x) and issubclass(x, MultivariateFeature)
+
+    return inspect.getmembers(extractors, isfeaturekind)

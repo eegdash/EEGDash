@@ -4,7 +4,7 @@ import scipy
 import scipy.linalg
 
 from ..decorators import multivariate_feature
-from ..extractors import FitableFeature
+from ..extractors import TrainableFeature
 
 __all__ = [
     "CommonSpatialPattern",
@@ -22,7 +22,7 @@ def _update_mean_cov(count, mean, cov, x_count, x_mean, x_cov):
 
 
 @multivariate_feature
-class CommonSpatialPattern(FitableFeature):
+class CommonSpatialPattern(TrainableFeature):
     def __init__(self):
         super().__init__()
 

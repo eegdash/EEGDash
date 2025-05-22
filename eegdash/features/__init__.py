@@ -14,7 +14,7 @@ from .extractors import (
     BivariateFeature,
     DirectedBivariateFeature,
     FeatureExtractor,
-    FitableFeature,
+    TrainableFeature,
     MultivariateFeature,
     UnivariateFeature,
 )

@@ -16,9 +16,9 @@ def _get_underlying_func(func):
     return f
 
 
-class FitableFeature(ABC):
+class TrainableFeature(ABC):
     def __init__(self):
-        self._is_fitted = False
+        self._is_trained = False
         self.clear()
 
     @abstractmethod
@@ -39,12 +39,12 @@ class FitableFeature(ABC):
             )
 
 
-class FeatureExtractor(FitableFeature):
+class FeatureExtractor(TrainableFeature):
     def __init__(
         self, feature_extractors: Dict[str, Callable], **preprocess_kwargs: Dict
     ):
         self.feature_extractors_dict = self._validate_execution_tree(feature_extractors)
-        self._is_fitable = self._check_is_fitable(feature_extractors)
+        self._is_trainable = self._check_is_trainable(feature_extractors)
         super().__init__()
 
         # bypassing FeaturePredecessor to avoid circular import
@@ -70,18 +70,18 @@ class FeatureExtractor(FitableFeature):
             assert type(self) in pe_type
         return feature_extractors
 
-    def _check_is_fitable(self, feature_extractors):
-        is_fitable = False
+    def _check_is_trainable(self, feature_extractors):
+        is_trainable = False
         for fname, f in feature_extractors.items():
             if isinstance(f, FeatureExtractor):
-                is_fitable = f._is_fitable
+                is_trainable = f._is_trainable
             else:
                 f = _get_underlying_func(f)
-                if isinstance(f, FitableFeature):
-                    is_fitable = True
-            if is_fitable:
+                if isinstance(f, TrainableFeature):
+                    is_trainable = True
+            if is_trainable:
                 break
-        return is_fitable
+        return is_trainable
 
     def preprocess(self, *x, **kwargs):
         return (*x,)
@@ -92,7 +92,7 @@ class FeatureExtractor(FitableFeature):
     def __call__(self, *x, _batch_size=None, _ch_names=None):
         assert _batch_size is not None
         assert _ch_names is not None
-        if self._is_fitable:
+        if self._is_trainable:
             super().__call__()
         results_dict = dict()
         z = self.preprocess(*x, **self.preprocess_kwargs)
@@ -126,28 +126,28 @@ class FeatureExtractor(FitableFeature):
             results_dict[name] = value
 
     def clear(self):
-        if not self._is_fitable:
+        if not self._is_trainable:
             return
         for fname, f in self.feature_extractors_dict.items():
             f = _get_underlying_func(f)
-            if isinstance(f, FitableFeature):
+            if isinstance(f, TrainableFeature):
                 f.clear()
 
     def partial_fit(self, *x, y=None):
-        if not self._is_fitable:
+        if not self._is_trainable:
             return
         z = self.preprocess(*x, **self.preprocess_kwargs)
         for fname, f in self.feature_extractors_dict.items():
             f = _get_underlying_func(f)
-            if isinstance(f, FitableFeature):
+            if isinstance(f, TrainableFeature):
                 f.partial_fit(*z, y=y)
 
     def fit(self):
-        if not self._is_fitable:
+        if not self._is_trainable:
             return
         for fname, f in self.feature_extractors_dict.items():
             f = _get_underlying_func(f)
-            if isinstance(f, FitableFeature):
+            if isinstance(f, TrainableFeature):
                 f.fit()
         super().fit()
 

@@ -11,6 +11,7 @@ Look for API token in email (different for test and regular)
 
 ## Populate database
 - Log on mongodb.com with sccn user sccn3709@gmail.com (see email for pass)
+- Change eegdash or eegdashstaging in main.py
 - Run script/data_ingest.py
 
 # Remount

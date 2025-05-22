@@ -38,6 +38,10 @@ class FeatureKind:
 
 # Syntax sugar
 univariate_feature = FeatureKind(UnivariateFeature())
-bivariate_feature = FeatureKind(BivariateFeature())
-directed_bivariate_feature = FeatureKind(DirectedBivariateFeature())
+def bivariate_feature(func, directed=False):
+    if directed:
+        kind = DirectedBivariateFeature()
+    else:
+        kind = BivariateFeature()
+    return FeatureKind(kind)(func)
 multivariate_feature = FeatureKind(MultivariateFeature())

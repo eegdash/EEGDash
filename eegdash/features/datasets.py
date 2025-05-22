@@ -5,7 +5,7 @@ import os
 import shutil
 import warnings
 from collections.abc import Callable, Iterable
-from typing import Dict, no_type_check
+from typing import Dict, List, no_type_check
 
 import numpy as np
 import pandas as pd
@@ -323,23 +323,51 @@ class FeaturesConcatDataset(BaseConcatDataset):
                         json.dump(kwargs, f)
 
     def to_dataframe(
-        self, include_metadata=False, include_target=False, include_crop_inds=False
+        self,
+        include_metadata: bool | str | List[str] = False,
+        include_target: bool = False,
+        include_crop_inds: bool = False,
     ):
-        if include_metadata or (include_target and include_crop_inds):
+        if (
+            not isinstance(include_metadata, bool)
+            or include_metadata
+            or include_crop_inds
+        ):
+            include_dataset = False
+            if isinstance(include_metadata, bool) and include_metadata:
+                include_dataset = True
+                cols = self.datasets[0].metadata.columns
+            else:
+                cols = include_metadata
+                if isinstance(cols, bool) and not cols:
+                    cols = []
+                elif isinstance(cols, str):
+                    cols = [cols]
+                cols = set(cols)
+                if include_crop_inds:
+                    cols = {
+                        "i_dataset",
+                        "i_window_in_trial",
+                        "i_start_in_trial",
+                        "i_stop_in_trial",
+                        *cols,
+                    }
+                if include_target:
+                    cols.add("target")
+                cols = list(cols)
+                include_dataset = "i_dataset" in cols
+                if include_dataset:
+                    cols.remove("i_dataset")
             dataframes = [
-                ds.metadata.join(ds.features, how="right", lsuffix="_metadata")
+                ds.metadata[cols].join(ds.features, how="right", lsuffix="_metadata")
                 for ds in self.datasets
             ]
+            if include_dataset:
+                for i, df in enumerate(dataframes):
+                    df.insert(loc=0, column="i_dataset", value=i)
         elif include_target:
             dataframes = [
                 ds.features.join(ds.metadata["target"], how="left", rsuffix="_metadata")
-                for ds in self.datasets
-            ]
-        elif include_crop_inds:
-            dataframes = [
-                ds.metadata.drop("target", axis="columns").join(
-                    ds.features, how="right", lsuffix="_metadata"
-                )
                 for ds in self.datasets
             ]
         else:

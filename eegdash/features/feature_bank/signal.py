@@ -28,7 +28,7 @@ __all__ = [
 @FeaturePredecessor(FeatureExtractor)
 class HilbertFeatureExtractor(FeatureExtractor):
     def preprocess(self, x):
-        return (np.abs(signal.hilbert(x - x.mean(axis=-1, keepdims=True), axis=-1)),)
+        return np.abs(signal.hilbert(x - x.mean(axis=-1, keepdims=True), axis=-1))
 
 
 SIGNAL_PREDECESSORS = [FeatureExtractor, HilbertFeatureExtractor]

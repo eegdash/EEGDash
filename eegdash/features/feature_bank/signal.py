@@ -108,7 +108,9 @@ def signal_hjorth_mobility(x):
 @FeaturePredecessor(*SIGNAL_PREDECESSORS)
 @univariate_feature
 def signal_hjorth_complexity(x):
-    return np.diff(x, 2, axis=-1).std(axis=-1) / x.std(axis=-1)
+    return (np.diff(x, 2, axis=-1).std(axis=-1) * x.std(axis=-1)) / np.diff(
+        x, axis=-1
+    ).var(axis=-1)
 
 
 @FeaturePredecessor(*SIGNAL_PREDECESSORS)

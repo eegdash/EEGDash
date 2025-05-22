@@ -4,7 +4,6 @@ from .decorators import (
     FeatureKind,
     FeaturePredecessor,
     bivariate_feature,
-    directed_bivariate_feature,
     multivariate_feature,
     univariate_feature,
 )

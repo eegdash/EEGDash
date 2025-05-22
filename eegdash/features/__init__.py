@@ -22,4 +22,4 @@ from .extractors import (
 # Features:
 from .feature_bank import *
 from .serialization import load_features_concat_dataset
-from .utils import extract_features, fit_feature_extractors
+from .utils import extract_features, fit_feature_extractors, get_feature_predecessors

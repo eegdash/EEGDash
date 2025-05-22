@@ -15,7 +15,7 @@ from braindecode.datasets.base import (
 )
 
 from .datasets import FeaturesConcatDataset, FeaturesDataset
-from .extractors import FeatureExtractor
+from .extractors import FeatureExtractor, _get_underlying_func
 
 
 def _extract_features_from_windowsdataset(
@@ -114,3 +114,14 @@ def fit_feature_extractors(
         features.partial_fit(X.numpy(), y=np.array(y))
     features.fit()
     return features
+
+
+def get_feature_predecessors(feature_or_extractor: Callable):
+    current = _get_underlying_func(feature_or_extractor)
+    if current is FeatureExtractor:
+        return [current]
+    predecessor = getattr(current, "parent_extractor_type", [FeatureExtractor])
+    if len(predecessor) == 1:
+        return [current, *get_predecessors(predecessor[0])]
+    else:
+        return [current, [get_predecessors(pred) for pred in predecessor]]

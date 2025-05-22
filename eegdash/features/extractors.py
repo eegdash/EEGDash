@@ -86,9 +86,6 @@ class FeatureExtractor(TrainableFeature):
     def preprocess(self, *x, **kwargs):
         return (*x,)
 
-    def feature_channel_names(self, ch_names):
-        return [""]
-
     def __call__(self, *x, _batch_size=None, _ch_names=None):
         assert _batch_size is not None
         assert _ch_names is not None
@@ -96,6 +93,8 @@ class FeatureExtractor(TrainableFeature):
             super().__call__()
         results_dict = dict()
         z = self.preprocess(*x, **self.preprocess_kwargs)
+        if not isinstance(z, tuple):
+            z = (z,)
         for fname, f in self.feature_extractors_dict.items():
             if isinstance(f, FeatureExtractor):
                 r = f(*z, _batch_size=_batch_size, _ch_names=_ch_names)

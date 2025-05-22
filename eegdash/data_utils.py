@@ -291,7 +291,7 @@ class EEGBIDSDataset:
         return files
 
     def get_relative_bidspath(self, filename):
-        bids_parent_dir = self.bidsdir.parent
+        bids_parent_dir = self.bidsdir.parent.absolute()
         return str(Path(filename).relative_to(bids_parent_dir))
 
     def get_property_from_filename(self, property, filename):

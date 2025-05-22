@@ -127,7 +127,11 @@ def get_feature_predecessors(feature_or_extractor: Callable):
     if len(predecessor) == 1:
         return [current, *get_feature_predecessors(predecessor[0])]
     else:
-        return [current, [get_feature_predecessors(pred) for pred in predecessor]]
+        predecessors = [get_feature_predecessors(pred) for pred in predecessor]
+        for i in range(len(predecessors)):
+            if isinstance(predecessors[i], list) and len(predecessors[i]) == 1:
+                predecessors[i] = predecessors[i][0]
+        return [current, tuple(predecessors)]
 
 
 def get_feature_kind(feature: Callable):

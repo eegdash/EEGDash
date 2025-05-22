@@ -2,6 +2,8 @@ import copy
 from collections.abc import Callable
 from typing import Dict, List
 
+import inspect
+
 import numpy as np
 import pandas as pd
 from joblib import Parallel, delayed
@@ -16,6 +18,7 @@ from braindecode.datasets.base import (
 
 from .datasets import FeaturesConcatDataset, FeaturesDataset
 from .extractors import FeatureExtractor, _get_underlying_func
+from . import feature_bank
 
 
 def _extract_features_from_windowsdataset(
@@ -122,6 +125,27 @@ def get_feature_predecessors(feature_or_extractor: Callable):
         return [current]
     predecessor = getattr(current, "parent_extractor_type", [FeatureExtractor])
     if len(predecessor) == 1:
-        return [current, *get_predecessors(predecessor[0])]
+        return [current, *get_feature_predecessors(predecessor[0])]
     else:
-        return [current, [get_predecessors(pred) for pred in predecessor]]
+        return [current, [get_feature_predecessors(pred) for pred in predecessor]]
+
+
+def get_feature_kind(feature: Callable):
+    return _get_underlying_func(feature).feature_kind
+
+
+def get_all_features():
+    def isfeature(x):
+        return hasattr(_get_underlying_func(x), "feature_kind")
+
+    return inspect.getmembers(feature_bank, isfeature)
+
+
+def get_all_feature_extractors():
+    def isfeatureextractor(x):
+        return inspect.isclass(x) and issubclass(x, FeatureExtractor)
+
+    return [
+        ("FeatureExtractor", FeatureExtractor),
+        *inspect.getmembers(feature_bank, isfeatureextractor),
+    ]

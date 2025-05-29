@@ -1,4 +1,3 @@
-# Features datasets
 from .datasets import FeaturesConcatDataset, FeaturesDataset
 from .decorators import (
     FeatureKind,
@@ -7,8 +6,6 @@ from .decorators import (
     multivariate_feature,
     univariate_feature,
 )
-
-# Feature extraction
 from .extractors import (
     BivariateFeature,
     DirectedBivariateFeature,
@@ -17,16 +14,16 @@ from .extractors import (
     TrainableFeature,
     UnivariateFeature,
 )
-
-# Features:
 from .feature_bank import *
-from .serialization import load_features_concat_dataset
-from .utils import (
-    extract_features,
-    fit_feature_extractors,
+from .inspect import (
     get_all_feature_extractors,
     get_all_feature_kinds,
     get_all_features,
     get_feature_kind,
     get_feature_predecessors,
+)
+from .serialization import load_features_concat_dataset
+from .utils import (
+    extract_features,
+    fit_feature_extractors,
 )

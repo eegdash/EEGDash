@@ -95,10 +95,12 @@ def _compute_stats(
     return tuple(res)
 
 
-def _pooled_var(counts, means, variances, ddof):
+def _pooled_var(counts, means, variances, ddof, ddof_in=None):
+    if ddof_in is None:
+        ddof_in = ddof
     count = counts.sum(axis=0)
     mean = np.sum((counts / count) * means, axis=0)
-    var = np.sum(((counts - ddof) / (count - ddof)) * variances, axis=0)
+    var = np.sum(((counts - ddof_in) / (count - ddof)) * variances, axis=0)
     var[:] += np.sum((counts / (count - ddof)) * (means**2), axis=0)
     var[:] -= (count / (count - ddof)) * (mean**2)
     var[:] = var.clip(min=0)
@@ -405,7 +407,7 @@ class FeaturesConcatDataset(BaseConcatDataset):
                 return_count=True,
                 return_mean=True,
                 return_var=True,
-                ddof=ddof,
+                ddof=0,
                 numeric_only=numeric_only,
             )
             for ds in self.datasets
@@ -415,11 +417,13 @@ class FeaturesConcatDataset(BaseConcatDataset):
             np.array([s[1] for s in stats]),
             np.array([s[2] for s in stats]),
         )
-        _, _, var = _pooled_var(counts, means, variances, ddof)
+        _, _, var = _pooled_var(counts, means, variances, ddof, ddof_in=0)
         return pd.Series(var, index=self._numeric_columns())
 
-    def std(self, ddof=1, numeric_only=False, n_jobs=1):
-        return np.sqrt(self.var(ddof=ddof, numeric_only=numeric_only, n_jobs=n_jobs))
+    def std(self, ddof=1, numeric_only=False, eps=0, n_jobs=1):
+        return np.sqrt(
+            self.var(ddof=ddof, numeric_only=numeric_only, n_jobs=n_jobs) + eps
+        )
 
     def zscore(self, ddof=1, numeric_only=False, eps=0, n_jobs=1):
         stats = Parallel(n_jobs)(
@@ -428,7 +432,7 @@ class FeaturesConcatDataset(BaseConcatDataset):
                 return_count=True,
                 return_mean=True,
                 return_var=True,
-                ddof=ddof,
+                ddof=0,
                 numeric_only=numeric_only,
             )
             for ds in self.datasets
@@ -438,8 +442,8 @@ class FeaturesConcatDataset(BaseConcatDataset):
             np.array([s[1] for s in stats]),
             np.array([s[2] for s in stats]),
         )
-        _, mean, var = _pooled_var(counts, means, variances, ddof)
-        std = np.sqrt(var) + eps
+        _, mean, var = _pooled_var(counts, means, variances, ddof, ddof_in=0)
+        std = np.sqrt(var + eps)
         for ds in self.datasets:
             ds.features = (ds.features - mean) / std
 

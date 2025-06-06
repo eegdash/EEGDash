@@ -55,7 +55,7 @@ target-version = "py311"
 [tool.isort]
 skip               = [".gitignore"]
 skip_glob          = ["test/*", "examples/*"]
-py_version         = 311
+py_version         = 312
 profile            = "black"
 sections           = ["FUTURE", "STDLIB", "THIRDPARTY", "FIRSTPARTY", "LOCALFOLDER"]
 known_first_party  = ["eegdash", "braindecode"]

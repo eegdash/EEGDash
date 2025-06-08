@@ -392,13 +392,3 @@ class EEGDashDataset(BaseConcatDataset):
             for bids_file in bids_dataset.get_files()
         )
         return datasets
-
-
-def main():
-    eegdash = EEGDash()
-    record = eegdash.find({"dataset": "ds005511", "subject": "NDARUF236HM7"})
-    print(record)
-
-
-if __name__ == "__main__":
-    main()

@@ -13,6 +13,13 @@ def test_set_import_instanciate_eegdash():
     assert isinstance(eeg_pytorch_dataset_instance, Dataset)
 
 
+def test_dataset_api():
+    eegdash = EEGDash()
+    record = eegdash.find({"dataset": "ds005511", "subject": "NDARUF236HM7"})
+    print(record)
+    assert isinstance(record, list)
+
+
 def test_number_recordings():
     eeg_dash_instance = EEGDash()
 

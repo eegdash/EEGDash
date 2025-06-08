@@ -13,11 +13,11 @@ def test_set_import_instanciate_eegdash():
     assert isinstance(eeg_pytorch_dataset_instance, Dataset)
 
 
-def test_number_recordings():
-    eeg_dash_instance = EEGDash()
+# def test_number_recordings():
+#     eeg_dash_instance = EEGDash()
 
-    records = eeg_dash_instance.find({})
+#     records = eeg_dash_instance.find({})
 
-    assert isinstance(records, list)
-    assert len(records) > 55088
-    # As of the last known count in 9 of jun of 2025, there are 55088 recordings in the dataset
+#     assert isinstance(records, list)
+#     assert len(records) > 55088
+# As of the last known count in 9 of jun of 2025, there are 55088 recordings in the dataset

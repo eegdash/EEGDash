@@ -3,7 +3,7 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.event.number }}-${{ github.event.ref }}
   cancel-in-progress: true
 
-on: [pull_request]
+on: [push, pull_request]
 
 jobs:
   pre-commit:

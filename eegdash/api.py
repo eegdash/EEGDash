@@ -347,9 +347,9 @@ class EEGDashDataset(BaseConcatDataset):
         return None
 
     def find_datasets(self, query: dict, description_fields: list[str], **kwargs):
-        eegdashObj = EEGDash()
+        eeg_dash_instance = EEGDash()
         datasets = []
-        for record in eegdashObj.find(query):
+        for record in eeg_dash_instance.find(query):
             description = {}
             for field in description_fields:
                 value = self.find_key_in_nested_dict(record, field)
@@ -372,7 +372,9 @@ class EEGDashDataset(BaseConcatDataset):
         """ """
 
         def get_base_dataset_from_bids_file(bids_dataset, bids_file):
-            record = eegdashObj.load_eeg_attrs_from_bids_file(bids_dataset, bids_file)
+            record = eeg_dash_instance.load_eeg_attrs_from_bids_file(
+                bids_dataset, bids_file
+            )
             description = {}
             for field in description_fields:
                 value = self.find_key_in_nested_dict(record, field)
@@ -386,7 +388,7 @@ class EEGDashDataset(BaseConcatDataset):
             data_dir=data_dir,
             dataset=dataset,
         )
-        eegdashObj = EEGDash()
+        eeg_dash_instance = EEGDash()
         datasets = Parallel(n_jobs=-1, prefer="threads", verbose=1)(
             delayed(get_base_dataset_from_bids_file)(bids_dataset, bids_file)
             for bids_file in bids_dataset.get_files()

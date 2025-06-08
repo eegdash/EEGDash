@@ -1,10 +1,8 @@
-"""
-Convenience functions for storing and loading of features datasets.
+"""Convenience functions for storing and loading of features datasets.
 
 see also: https://github.com/braindecode/braindecode//blob/master/braindecode/datautil/serialization.py#L165-L229
 """
 
-import json
 from pathlib import Path
 
 import pandas as pd
@@ -34,6 +32,7 @@ def load_features_concat_dataset(path, ids_to_load=None, n_jobs=1):
     Returns
     -------
     concat_dataset: FeaturesConcatDataset of FeaturesDatasets
+
     """
     # Make sure we always work with a pathlib.Path
     path = Path(path)

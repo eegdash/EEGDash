@@ -22,7 +22,7 @@ from .data_utils import EEGBIDSDataset, EEGDashBaseDataset, EEGDashBaseRaw
 class EEGDash:
     AWS_BUCKET = "s3://openneuro.org"
 
-    def __init__(self, is_public=True):
+    def __init__(self, is_public=True, is_staging=False):
         # Load config file
         # config_path = Path(__file__).parent / 'config.json'
         # with open(config_path, 'r') as f:
@@ -36,7 +36,7 @@ class EEGDash:
             DB_CONNECTION_STRING = os.getenv("DB_CONNECTION_STRING")
 
         self.__client = pymongo.MongoClient(DB_CONNECTION_STRING)
-        self.__db = self.__client["eegdashstaging"]
+        self.__db = self.__client["eegdash"] if not is_staging else self.__client["eegdashstaging"]
         self.__collection = self.__db["records"]
 
         self.is_public = is_public

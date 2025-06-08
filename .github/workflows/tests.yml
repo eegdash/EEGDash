@@ -5,7 +5,7 @@ concurrency:
 on:
   push:
     branches:
-      - "master"
+      - "*"
   pull_request:
     branches:
       - '*' # all branches, including forks
@@ -17,7 +17,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ "ubuntu-latest", "macos-latest", "windows-latest" ]
-        python-version: ["3.10", "3.11"]
+        python-version: ["3.10", "3.13"] # first and last supported Python version
     steps:
     ## Install Braindecode
     - name: Checking Out Repository
@@ -41,5 +41,5 @@ jobs:
       run: python -m pip install --upgrade pip
     - name: Install EEGDash from Current Checkout
       run: pip install -e .
-    # Show Braindecode Version
+    # Show EEGDash Version
     - run: python -c "import eegdash; print(eegdash.__version__)"

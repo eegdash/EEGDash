@@ -21,7 +21,7 @@ classifiers = [
 ]
 dependencies = [
   "braindecode @ git+https://github.com/braindecode/braindecode.git@master",
-  "mne_bids",
+  "mne_bids>=0.16.0",
   "numba",
   "numpy",
   "pandas",
@@ -32,12 +32,37 @@ dependencies = [
   "scipy",
   "tqdm",
   "xarray",
-  "pre-commit",
 ]
 
 [project.urls]
 Homepage = "https://github.com/sccn/EEG-Dash-Data"
 Issues   = "https://github.com/sccn/EEG-Dash-Data/issues"
+
+
+[project.optional-dependencies]
+tests = [
+    'pytest',
+    'pytest-cov',
+    'codecov',
+    'pytest_cases',
+]
+docs = [
+    'sphinx_gallery',
+    'sphinx_rtd_theme',
+    'pydata_sphinx_theme',
+    'numpydoc',
+    'memory_profiler',
+    'pillow',
+    'ipython',
+    'sphinx_design',
+    'lightning',
+    'seaborn',
+    'pre-commit',
+    'openneuro-py'
+]
+dev = [
+  "pre-commit"
+]
 
 [tool.setuptools]
 py-modules = []
@@ -63,6 +88,6 @@ known_first_party  = ["eegdash", "braindecode"]
 lines_between_sections = 1
 
 [pytest]
-testpaths        = ["test"]
+testpaths        = ["tests"]
 python_files     = ["test_*.py", "*_test.py"]
 python_functions = ["test_*"]

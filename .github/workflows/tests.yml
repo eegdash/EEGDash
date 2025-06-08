@@ -31,7 +31,9 @@ jobs:
       with:
         path: ~/mne_data
         key: ${{ runner.os }}-v3
-    - uses: actions/setup-python@v4
+
+    - name: Install uv and set the python version
+      uses: astral-sh/setup-uv@v5
       with:
         python-version: ${{ matrix.python-version }}
     - name: Show Python Version
@@ -40,7 +42,7 @@ jobs:
     - name: Update pip
       run: python -m pip install --upgrade pip
     - name: Install EEGDash from Current Checkout
-      run: pip install -e .[tests]
+      run: uv pip install -e .[tests]
     # Show EEGDash Version
     - name: Show EEGDash Version
       run: python -c "import eegdash; print(eegdash.__version__)"

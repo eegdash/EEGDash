@@ -1,13 +1,11 @@
 default_language_version:
     python: python3
 ci:
-    autofix_commit_msg: '[pre-commit.ci] auto fixes from pre-commit.com hooks
-
-        '
+    autofix_commit_msg: '[pre-commit.ci] auto fixes from pre-commit.com hooks'
     autofix_prs: true
     autoupdate_branch: master
     autoupdate_commit_msg: '[pre-commit.ci] pre-commit autoupdate'
-    autoupdate_schedule: quarterly
+    autoupdate_schedule: weekly
     skip: []
     submodules: false
 repos:

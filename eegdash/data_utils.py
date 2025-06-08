@@ -1,4 +1,5 @@
 import json
+import logging
 import os
 import re
 from pathlib import Path
@@ -16,6 +17,8 @@ from mne_bids import (
 )
 
 from braindecode.datasets import BaseDataset
+
+logger = logging.getLogger("eegdash")
 
 
 class EEGDashBaseDataset(BaseDataset):
@@ -46,6 +49,7 @@ class EEGDashBaseDataset(BaseDataset):
         self.record = record
         self.cache_dir = Path(cache_dir)
         bids_kwargs = self.get_raw_bids_args()
+
         self.bidspath = BIDSPath(
             root=self.cache_dir / record["dataset"],
             datatype="eeg",
@@ -56,8 +60,6 @@ class EEGDashBaseDataset(BaseDataset):
         self.filecache = self.cache_dir / record["bidspath"]
         self.bids_dependencies = record["bidsdependencies"]
         self._raw = None
-        # if os.path.exists(self.filecache):
-        #     self.raw = mne_bids.read_raw_bids(self.bidspath, verbose=False)
 
     def get_s3path(self, filepath):
         return f"{self.AWS_BUCKET}/{filepath}"
@@ -94,8 +96,6 @@ class EEGDashBaseDataset(BaseDataset):
             self._raw = mne_bids.read_raw_bids(self.bidspath, verbose=False)
 
     def __getitem__(self, index):
-        # self.check_and_get_raw()
-
         X = self.raw[:, index][0]
         y = None
         if self.target_name is not None:
@@ -106,7 +106,7 @@ class EEGDashBaseDataset(BaseDataset):
             X = self.transform(X)
         return X, y
 
-    def __len__(self):
+    def __len__(self) -> int:
         if self._raw is None:
             return int(self.record["ntimes"] * self.record["sampling_frequency"])
         else:
@@ -157,13 +157,10 @@ class EEGDashBaseRaw(BaseRaw):
         self,
         input_fname,
         metadata,
-        eog=(),
         preload=False,
         *,
         cache_dir="./.eegdash_cache",
         bids_dependencies: list = [],
-        uint16_codec=None,
-        montage_units="auto",
         verbose=None,
     ):
         """Get to work with S3 endpoint first, no caching"""
@@ -267,14 +264,6 @@ class EEGBIDSDataset:
             "Unable to construct EEG dataset. No EEG recordings found."
         )
         assert self.check_eeg_dataset(), ValueError("Dataset is not an EEG dataset.")
-        # temp_dir = (Path().resolve() / 'data')
-        # if not os.path.exists(temp_dir):
-        #     os.mkdir(temp_dir)
-        # if not os.path.exists(temp_dir / f'{dataset}_files.npy'):
-        #     self.files = self.get_files_with_extension_parallel(self.bidsdir, extension=self.RAW_EXTENSION[self.raw_format])
-        #     np.save(temp_dir / f'{dataset}_files.npy', self.files)
-        # else:
-        #     self.files = np.load(temp_dir / f'{dataset}_files.npy', allow_pickle=True)
 
     def check_eeg_dataset(self):
         return self.get_bids_file_attribute("modality", self.files[0]).lower() == "eeg"
@@ -302,8 +291,8 @@ class EEGBIDSDataset:
 
     def merge_json_inheritance(self, json_files):
         """Merge list of json files found by get_bids_file_inheritance,
-        expecting the order (from left to right) is from lowest level to highest level,
-        and return a merged dictionary
+        expecting the order (from left to right) is from lowest
+        level to highest level, and return a merged dictionary
         """
         json_files.reverse()
         json_dict = {}
@@ -396,7 +385,9 @@ class EEGBIDSDataset:
 
         # Use joblib.Parallel and delayed to parallelize directory scanning
         while dirs_to_scan:
-            print(f"Scanning {len(dirs_to_scan)} directories...", dirs_to_scan)
+            logger.info(
+                f"Directories to scan: {len(dirs_to_scan)}, files: {dirs_to_scan}"
+            )
             # Run the scan_directory function in parallel across directories
             results = Parallel(n_jobs=max_workers, prefer="threads", verbose=1)(
                 delayed(self.scan_directory)(d, extension) for d in dirs_to_scan
@@ -410,12 +401,13 @@ class EEGBIDSDataset:
                         dirs_to_scan.append(path)  # Queue up subdirectories to scan
                     else:
                         result_files.append(path)  # Add files to the final result
-            print(f"Current number of files: {len(result_files)}")
+            logger.info(f"Found {len(result_files)} files.")
 
         return result_files
 
     def load_and_preprocess_raw(self, raw_file, preprocess=False):
-        print(f"Loading {raw_file}")
+        """Load and preprocess raw EEG data from a file."""
+        logger.info(f"Loading raw data from {raw_file}")
         EEG = mne.io.read_raw_eeglab(raw_file, preload=True, verbose="error")
 
         if preprocess:
@@ -427,9 +419,6 @@ class EEGBIDSDataset:
             sfreq = 128
             if EEG.info["sfreq"] != sfreq:
                 EEG = EEG.resample(sfreq)
-            # # normalize data to zero mean and unit variance
-            # scalar = preprocessing.StandardScaler()
-            # mat_data = scalar.fit_transform(mat_data.T).T # scalar normalize for each feature and expects shape data x features
 
         mat_data = EEG.get_data()
 

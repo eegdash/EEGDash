@@ -8,6 +8,7 @@ version = "0.1.0"
 authors = [
   { name = "Young Truong",    email = "dt.young112@gmail.com" },
   { name = "Arnaud Delorme",  email = "adelorme@gmail.com" },
+  { name = "Bruno Aristimunha", email = "b.aristimunha@gmail.com"}
 ]
 description     = "EEG data for machine learning"
 readme          = "README.md"

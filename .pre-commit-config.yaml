@@ -9,31 +9,19 @@ ci:
     skip: []
     submodules: false
 repos:
--   repo: https://github.com/charliermarsh/ruff-pre-commit
-    rev: v0.11.7
+-   repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.4.8
     hooks:
     -   id: ruff
-        name: ruff lint docs & examples
+        name: ruff lint & format
         args:
         - --fix
-        - --select=E,W,F,I,D
-        - --ignore=E402,E501,F401,D103,D400,D100,D101,D102,D105,D107,D415,D417,D205
-        files: ^(docs|examples)/
-    -   id: ruff
-        name: ruff lint eegdash preview
-        args:
-        - --fix
-        - --preview
-        - --select=NPY201
-        - --ignore=D100,D101,D102,D105,D107,D415,D417,D205
-        files: ^eegdash/
-    -   id: ruff
-        name: ruff lint docs & examples
-        args:
-        - --fix
-        - --select=D
-        - --ignore=D103,D400,E402,D100,D101,D102,D105,D107,D415,D417,D205
-        files: ^(docs|examples)/
+        - --show-fixes
+        # Selects all rules from your original config (E,W,F,I,D) and enables import sorting (I)
+        # and unused import removal (F401 is part of 'F' and is no longer ignored).
+        - --select=E,W,F,I,D,NPY201
+        - --ignore=E402,E501,D100,D101,D102,D103,D105,D107,D205,D400,D415,D417
+        files: ^(eegdash|docs|examples)/
     -   id: ruff-format
         name: ruff format code
         files: ^(eegdash|docs|examples)/

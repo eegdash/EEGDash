@@ -40,6 +40,9 @@ jobs:
     - name: Update pip
       run: python -m pip install --upgrade pip
     - name: Install EEGDash from Current Checkout
-      run: pip install -e .
+      run: pip install -e .[tests]
     # Show EEGDash Version
-    - run: python -c "import eegdash; print(eegdash.__version__)"
+    - name: Show EEGDash Version
+      run: python -c "import eegdash; print(eegdash.__version__)"
+    - name: Run Tests
+      run: pytest tests/

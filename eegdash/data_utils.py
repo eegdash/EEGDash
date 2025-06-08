@@ -1,18 +1,15 @@
 import json
 import os
 import re
-import sys
-import tempfile
 from pathlib import Path
 
 import mne
 import mne_bids
-import numpy as np
 import pandas as pd
 import s3fs
 from bids import BIDSLayout
 from joblib import Parallel, delayed
-from mne._fiff.utils import _find_channels, _read_segments_file
+from mne._fiff.utils import _read_segments_file
 from mne.io import BaseRaw
 from mne_bids import (
     BIDSPath,
@@ -39,6 +36,7 @@ class EEGDashBaseDataset(BaseDataset):
         target (e.g., to be used in a prediction task later on).
     transform : callable | None
         On-the-fly transform applied to the example before it is returned.
+
     """
 
     AWS_BUCKET = "s3://openneuro.org"
@@ -150,6 +148,7 @@ class EEGDashBaseRaw(BaseRaw):
     Notes
     -----
     .. versionadded:: 0.11.0
+
     """
 
     AWS_BUCKET = "s3://openneuro.org"
@@ -167,9 +166,7 @@ class EEGDashBaseRaw(BaseRaw):
         montage_units="auto",
         verbose=None,
     ):
-        """
-        Get to work with S3 endpoint first, no caching
-        """
+        """Get to work with S3 endpoint first, no caching"""
         # Create a simple RawArray
         sfreq = metadata["sfreq"]  # Sampling frequency
         n_times = metadata["n_times"]
@@ -304,8 +301,7 @@ class EEGBIDSDataset:
         return lookup.group(1) if lookup else ""
 
     def merge_json_inheritance(self, json_files):
-        """
-        Merge list of json files found by get_bids_file_inheritance,
+        """Merge list of json files found by get_bids_file_inheritance,
         expecting the order (from left to right) is from lowest level to highest level,
         and return a merged dictionary
         """
@@ -316,8 +312,7 @@ class EEGBIDSDataset:
         return json_dict
 
     def get_bids_file_inheritance(self, path, basename, extension):
-        """
-        Get all files with given extension that applies to the basename file
+        """Get all files with given extension that applies to the basename file
         following the BIDS inheritance principle in the order of lowest level first
         @param
             basename: bids file basename without _eeg.set extension for example
@@ -353,16 +348,19 @@ class EEGBIDSDataset:
             return bids_files
 
     def get_bids_metadata_files(self, filepath, metadata_file_extension):
-        """
-        (Wrapper for self.get_bids_file_inheritance)
+        """Function to use the self.get_bids_file_inheritance.
+
         Get all BIDS metadata files that are associated with the given filepath, following the BIDS inheritance principle.
 
         Args:
+        ----
             filepath (str or Path): The filepath to get the associated metadata files for.
             metadata_files_extensions (list): A list of file extensions to search for metadata files.
 
         Returns:
+        -------
             list: A list of filepaths for all the associated metadata files
+
         """
         if isinstance(filepath, str):
             filepath = Path(filepath)
@@ -443,13 +441,16 @@ class EEGBIDSDataset:
         return self.files
 
     def resolve_bids_json(self, json_files: list):
-        """
-        Resolve the BIDS JSON files and return a dictionary of the resolved values.
+        """Resolve the BIDS JSON files and return a dictionary of the resolved values.
+
         Args:
+        ----
             json_files (list): A list of JSON files to resolve in order of leaf level first
 
         Returns:
+        -------
             dict: A dictionary of the resolved values.
+
         """
         if len(json_files) == 0:
             raise ValueError("No JSON files provided")

@@ -4,8 +4,8 @@ import json
 import os
 import shutil
 import warnings
-from collections.abc import Callable, Iterable
-from typing import Dict, List, no_type_check
+from collections.abc import Callable
+from typing import Dict, List
 
 import numpy as np
 import pandas as pd
@@ -33,6 +33,7 @@ class FeaturesDataset(EEGWindowsDataset):
         Holds additional description about the continuous signal / subject.
     transform : callable | None
         On-the-fly transform applied to the example before it is returned.
+
     """
 
     def __init__(
@@ -158,6 +159,7 @@ class FeaturesConcatDataset(BaseConcatDataset):
         splits : dict
             A dictionary with the name of the split (a string) as key and the
             dataset as value.
+
         """
         if isinstance(by, str):
             split_ids = {
@@ -189,6 +191,7 @@ class FeaturesConcatDataset(BaseConcatDataset):
             DataFrame containing as many rows as there are windows in the
             BaseConcatDataset, with the metadata and description information
             for each window.
+
         """
         if not all([isinstance(ds, FeaturesDataset) for ds in self.datasets]):
             raise TypeError(
@@ -240,6 +243,7 @@ class FeaturesConcatDataset(BaseConcatDataset):
             concat. This is useful in the setting of very large datasets, where
             one dataset has to be processed and saved at a time to account for
             its original position.
+
         """
         if len(self.datasets) == 0:
             raise ValueError("Expect at least one dataset")

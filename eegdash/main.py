@@ -1,7 +1,5 @@
-import json
 import os
 import tempfile
-from collections import defaultdict
 from pathlib import Path
 
 import mne
@@ -11,12 +9,12 @@ import s3fs
 import xarray as xr
 from dotenv import load_dotenv
 from joblib import Parallel, delayed
-from pymongo import DeleteOne, InsertOne, MongoClient, UpdateOne
+from pymongo import InsertOne, UpdateOne
 
-from braindecode.datasets import BaseConcatDataset, BaseDataset
+from braindecode.datasets import BaseConcatDataset
 
 from .data_config import config as data_config
-from .data_utils import EEGBIDSDataset, EEGDashBaseDataset, EEGDashBaseRaw
+from .data_utils import EEGBIDSDataset, EEGDashBaseDataset
 
 
 class EEGDash:
@@ -97,9 +95,7 @@ class EEGDash:
             return eeg_data
 
     def load_eeg_data_from_bids_file(self, bids_file, eeg_attrs=None):
-        """
-        bids_file must be a file of the bids_dataset
-        """
+        """bids_file must be a file of the bids_dataset"""
         EEG = mne.io.read_raw_eeglab(bids_file)
         eeg_data = EEG.get_data()
 
@@ -132,9 +128,7 @@ class EEGDash:
         ]
 
     def load_eeg_attrs_from_bids_file(self, bids_dataset: EEGBIDSDataset, bids_file):
-        """
-        bids_file must be a file of the bids_dataset
-        """
+        """bids_file must be a file of the bids_dataset"""
         if bids_file not in bids_dataset.files:
             raise ValueError(f"{bids_file} not in {bids_dataset.dataset}")
 
@@ -168,7 +162,7 @@ class EEGDash:
                     str(bids_dataset.get_relative_bidspath(dep)) for dep in dep_path
                 ]
                 bidsdependencies.extend(dep_path)
-            except Exception as e:
+            except Exception:
                 pass
 
         bidsdependencies.extend(self.get_raw_extensions(bids_file, bids_dataset))
@@ -210,9 +204,7 @@ class EEGDash:
         return attrs
 
     def add_bids_dataset(self, dataset, data_dir, overwrite=True):
-        """
-        Create new records for the dataset in the MongoDB database if not found
-        """
+        """Create new records for the dataset in the MongoDB database if not found"""
         if self.is_public:
             raise ValueError("This operation is not allowed for public users")
 
@@ -257,11 +249,11 @@ class EEGDash:
             print(f"Errors: {result.bulk_api_result.get('writeErrors', [])}")
 
     def get(self, query: dict):
-        """
-        query: {
+        """query: {
             'dataset': 'dsxxxx',
 
-        }"""
+        }
+        """
         sessions = self.find(query)
         results = []
         if sessions:
@@ -335,12 +327,12 @@ class EEGDashDataset(BaseConcatDataset):
         if query:
             datasets = self.find_datasets(query, description_fields, **kwargs)
         elif data_dir:
-            if type(data_dir) == str:
+            if isinstance(data_dir, str):
                 datasets = self.load_bids_dataset(dataset, data_dir, description_fields)
             else:
-                assert len(data_dir) == len(dataset), (
-                    "Number of datasets and their directories must match"
-                )
+                assert len(data_dir) == len(
+                    dataset
+                ), "Number of datasets and their directories must match"
                 datasets = []
                 for i in range(len(data_dir)):
                     datasets.extend(

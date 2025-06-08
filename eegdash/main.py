@@ -330,9 +330,9 @@ class EEGDashDataset(BaseConcatDataset):
             if isinstance(data_dir, str):
                 datasets = self.load_bids_dataset(dataset, data_dir, description_fields)
             else:
-                assert len(data_dir) == len(
-                    dataset
-                ), "Number of datasets and their directories must match"
+                assert len(data_dir) == len(dataset), (
+                    "Number of datasets and their directories must match"
+                )
                 datasets = []
                 for i in range(len(data_dir)):
                     datasets.extend(
@@ -400,3 +400,13 @@ class EEGDashDataset(BaseConcatDataset):
             for bids_file in bids_dataset.get_files()
         )
         return datasets
+
+
+def main():
+    eegdash = EEGDash()
+    record = eegdash.find({"dataset": "ds005511", "subject": "NDARUF236HM7"})
+    print(record)
+
+
+if __name__ == "__main__":
+    main()

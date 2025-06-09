@@ -1,6 +1,12 @@
 ## Install locally
-
 pip install -r requirements.txt
+
+pip uninstall eegdash -y
+python -m pip install --editable /Users/arno/Python/EEG-Dash-Data
+# Warning use the exact command above, pip install by itself might not work
+
+# check if working from different folders
+python -c "from eegdash import EEGDashDataset; print(EEGDashDataset)"
 
 ## Create package and release on Pypi
 Documentation is at https://packaging.python.org/en/latest/tutorials/packaging-projects/

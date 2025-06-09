@@ -298,6 +298,15 @@ class EEGDash:
     def collection(self):
         return self.__collection
 
+    def close(self):
+        """Close the MongoDB client connection."""
+        if hasattr(self, '_EEGDash__client'):
+            self.__client.close()
+
+    def __del__(self):
+        """Ensure connection is closed when object is deleted."""
+        self.close()
+
 
 class EEGDashDataset(BaseConcatDataset):
     def __init__(
@@ -349,19 +358,22 @@ class EEGDashDataset(BaseConcatDataset):
 
     def find_datasets(self, query: dict, description_fields: list[str], **kwargs):
         eeg_dash_instance = EEGDash()
-        datasets = []
-        for record in eeg_dash_instance.find(query):
-            description = {}
-            for field in description_fields:
-                value = self.find_key_in_nested_dict(record, field)
-                if value is not None:
-                    description[field] = value
-            datasets.append(
-                EEGDashBaseDataset(
-                    record, self.cache_dir, description=description, **kwargs
+        try:
+            datasets = []
+            for record in eeg_dash_instance.find(query):
+                description = {}
+                for field in description_fields:
+                    value = self.find_key_in_nested_dict(record, field)
+                    if value is not None:
+                        description[field] = value
+                datasets.append(
+                    EEGDashBaseDataset(
+                        record, self.cache_dir, description=description, **kwargs
+                    )
                 )
-            )
-        return datasets
+            return datasets
+        finally:
+            eeg_dash_instance.close()
 
     def load_bids_dataset(
         self,
@@ -371,8 +383,7 @@ class EEGDashDataset(BaseConcatDataset):
         **kwargs,
     ):
         """ """
-
-        def get_base_dataset_from_bids_file(bids_dataset, bids_file):
+        def get_base_dataset_from_bids_file(bids_dataset, bids_file, eeg_dash_instance):
             record = eeg_dash_instance.load_eeg_attrs_from_bids_file(
                 bids_dataset, bids_file
             )
@@ -390,8 +401,11 @@ class EEGDashDataset(BaseConcatDataset):
             dataset=dataset,
         )
         eeg_dash_instance = EEGDash()
-        datasets = Parallel(n_jobs=-1, prefer="threads", verbose=1)(
-            delayed(get_base_dataset_from_bids_file)(bids_dataset, bids_file)
-            for bids_file in bids_dataset.get_files()
-        )
-        return datasets
+        try:
+            datasets = Parallel(n_jobs=-1, prefer="threads", verbose=1)(
+                delayed(get_base_dataset_from_bids_file)(bids_dataset, bids_file, eeg_dash_instance)
+                for bids_file in bids_dataset.get_files()
+            )
+            return datasets
+        finally:
+            eeg_dash_instance.close()

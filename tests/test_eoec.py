@@ -209,13 +209,7 @@ class TestEEGDashEOEC(unittest.TestCase):
         optimizer = torch.optim.Adamax(model.parameters(), lr=0.002, weight_decay=0.001)
         scheduler = torch.optim.lr_scheduler.ExponentialLR(optimizer, gamma=1)
 
-        device = torch.device(
-            "cuda"
-            if torch.cuda.is_available()
-            else "mps"
-            if torch.backends.mps.is_available()
-            else "cpu"
-        )
+        device = torch.device("cpu")
         model = model.to(device=device)  # move the model parameters to CPU/GPU
         epochs = 6
 

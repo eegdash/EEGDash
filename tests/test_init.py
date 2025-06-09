@@ -1,7 +1,9 @@
+import unittest
+
 from torch.utils.data import Dataset
 
 from eegdash import EEGDash, EEGDashDataset
-import unittest
+
 
 class TestEEGDash(unittest.TestCase):
     def setUp(self):
@@ -10,7 +12,7 @@ class TestEEGDash(unittest.TestCase):
 
     def tearDown(self):
         """Clean up test fixtures after each test method."""
-        if hasattr(self, 'eeg_dash'):
+        if hasattr(self, "eeg_dash"):
             self.eeg_dash.close()
 
     def test_set_import_instanciate_eegdash(self):
@@ -30,6 +32,7 @@ class TestEEGDash(unittest.TestCase):
         assert isinstance(records, list)
         assert len(records) >= 55088
         # As of the last known count in 9 of jun of 2025, there are 55088 recordings in the dataset
+
 
 if __name__ == "__main__":
     unittest.main()

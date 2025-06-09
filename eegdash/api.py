@@ -194,7 +194,7 @@ class EEGDash:
             try:
                 attrs[field] = extractor()
             except Exception as e:
-                logger.error(f"Error extracting {field}: {str(e)}")
+                logger.error("Error extracting %s : %s", field, str(e))
                 attrs[field] = None
 
         return attrs
@@ -213,7 +213,7 @@ class EEGDash:
                 dataset=dataset,
             )
         except Exception as e:
-            logger.error(f"Error creating bids dataset {dataset}: {str(e)}")
+            logger.error("Error creating bids dataset %s: $s", dataset, str(e))
             raise e
         requests = []
         for bids_file in bids_dataset.get_files():
@@ -231,18 +231,19 @@ class EEGDash:
                         bids_dataset, bids_file
                     )
                     requests.append(self.add_request(eeg_attrs))
-            except:
-                logger.error(f"Error adding record {bids_file}")
+            except Exception as e:
+                logger.error("Error adding record %s", bids_file)
+                logger.error(str(e))
 
-        logger.info(f"Number of requests: {len(requests)}")
+        logger.info("Number of requests: %s", len(requests))
 
         if requests:
             result = self.__collection.bulk_write(requests, ordered=False)
-            logger.info(f"Inserted: {result.inserted_count}")
-            logger.info(f"Modified: {result.modified_count}")
-            logger.info(f"Deleted: {result.deleted_count}")
-            logger.info(f"Upserted: {result.upserted_count}")
-            logger.info(f"Errors: {result.bulk_api_result.get('writeErrors', [])}")
+            logger.info("Inserted: %s ", result.inserted_count)
+            logger.info("Modified: %s ", result.modified_count)
+            logger.info("Deleted: %s", result.deleted_count)
+            logger.info("Upserted: %s", result.upserted_count)
+            logger.info("Errors: %s ", result.bulk_api_result.get("writeErrors", []))
 
     def get(self, query: dict):
         """query: {
@@ -253,7 +254,7 @@ class EEGDash:
         sessions = self.find(query)
         results = []
         if sessions:
-            logger.info(f"Found {len(sessions)} records")
+            logger.info("Found %s records", len(sessions))
             results = Parallel(
                 n_jobs=-1 if len(sessions) > 1 else 1, prefer="threads", verbose=1
             )(
@@ -269,10 +270,10 @@ class EEGDash:
         try:
             self.__collection.insert_one(record)
         except ValueError as e:
-            logger.error(f"Validation error for record: {record['data_name']}")
+            logger.error("Validation error for record: %s ", record["data_name"])
             logger.error(e)
         except:
-            logger.error(f"Error adding record: {record['data_name']}")
+            logger.error("Error adding record: %s ", record["data_name"])
 
     def update_request(self, record: dict):
         return UpdateOne({"data_name": record["data_name"]}, {"$set": record})
@@ -283,7 +284,7 @@ class EEGDash:
                 {"data_name": record["data_name"]}, {"$set": record}
             )
         except:  # silent failure
-            logger.error(f"Error updating record: {record['data_name']}")
+            logger.error("Error updating record: %s", record["data_name"])
 
     def remove_field(self, record, field):
         self.__collection.update_one(
@@ -327,7 +328,7 @@ class EEGDashDataset(BaseConcatDataset):
                     "Number of datasets and their directories must match"
                 )
                 datasets = []
-                for i in range(len(data_dir)):
+                for i, _ in enumerate(data_dir):
                     datasets.extend(
                         self.load_bids_dataset(
                             dataset[i], data_dir[i], description_fields

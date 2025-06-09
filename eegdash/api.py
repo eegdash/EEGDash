@@ -300,7 +300,7 @@ class EEGDash:
 
     def close(self):
         """Close the MongoDB client connection."""
-        if hasattr(self, '_EEGDash__client'):
+        if hasattr(self, "_EEGDash__client"):
             self.__client.close()
 
     def __del__(self):
@@ -383,6 +383,7 @@ class EEGDashDataset(BaseConcatDataset):
         **kwargs,
     ):
         """ """
+
         def get_base_dataset_from_bids_file(bids_dataset, bids_file, eeg_dash_instance):
             record = eeg_dash_instance.load_eeg_attrs_from_bids_file(
                 bids_dataset, bids_file
@@ -403,7 +404,9 @@ class EEGDashDataset(BaseConcatDataset):
         eeg_dash_instance = EEGDash()
         try:
             datasets = Parallel(n_jobs=-1, prefer="threads", verbose=1)(
-                delayed(get_base_dataset_from_bids_file)(bids_dataset, bids_file, eeg_dash_instance)
+                delayed(get_base_dataset_from_bids_file)(
+                    bids_dataset, bids_file, eeg_dash_instance
+                )
                 for bids_file in bids_dataset.get_files()
             )
             return datasets

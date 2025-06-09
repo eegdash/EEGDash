@@ -1,41 +1,44 @@
+import unittest
+import warnings
+
+import mne
 import numpy as np
 import torch
-import warnings
-import unittest
-from eegdash import EEGDashDataset
+from sklearn.model_selection import train_test_split
+from torch.nn import functional as F
+from torch.utils.data import DataLoader, TensorDataset
+from torchinfo import summary
+
+from braindecode.models import ShallowFBCSPNet
 from braindecode.preprocessing import (
-    preprocess,
     Preprocessor,
     create_windows_from_events,
+    preprocess,
 )
-import mne
-from sklearn.model_selection import train_test_split
-from torch.utils.data import DataLoader, TensorDataset
-from torch.nn import functional as F
-from braindecode.models import ShallowFBCSPNet
-from torchinfo import summary
+from eegdash import EEGDashDataset
 
 # %% [markdown]
 # # EEGDash example for eyes open vs. closed classification
-# 
+#
 # The code below provides an example of using the *EEGDash* library in combination with PyTorch to develop a deep learning model for analyzing EEG data, specifically for eyes open vs. closed classification in a single subject.
-# 
+#
 # 1. **Data Retrieval Using EEGDash**: An instance of *EEGDashDataset* is created to search and retrieve an EEG dataset. At this step, only the metadata is transferred.
-# 
+#
 # 2. **Data Preprocessing Using BrainDecode**: This process preprocesses EEG data using Braindecode by reannotating events, selecting specific channels, resampling, filtering, and extracting 2-second epochs, ensuring balanced eyes-open and eyes-closed data for analysis.
-# 
+#
 # 3. **Creating train and testing sets**: The dataset is split into training (80%) and testing (20%) sets with balanced labels, converted into PyTorch tensors, and wrapped in DataLoader objects for efficient mini-batch training.
-# 
+#
 # 4. **Model Definition**: The model is a shallow convolutional neural network (ShallowFBCSPNet) with 24 input channels (EEG channels), 2 output classes (eyes-open and eyes-closed).
-# 
-# 5. **Model Training and Evaluation Process**: This section trains the neural network, normalizes input data, computes cross-entropy loss, updates model parameters, and evaluates classication accuracy over six epochs.
-# 
-# 
+#
+# 5. **Model Training and Evaluation Process**: This section trains the neural network, normalizes input data, computes cross-entropy loss, updates model parameters, and evaluates classification accuracy over six epochs.
+#
+#
 
 # %% [markdown]
 # ## Data Retrieval Using EEGDash
-# 
+#
 # First we find one resting state dataset. This dataset contains both eyes open and eyes closed data.
+
 
 # %%
 class hbn_ec_ec_reannotation(Preprocessor):
@@ -75,7 +78,6 @@ class hbn_ec_ec_reannotation(Preprocessor):
 
 
 class TestEEGDashEOEC(unittest.TestCase):
-
     def test_eoec_dataset(self):
         ds_eoec = EEGDashDataset(
             {"dataset": "ds005514", "task": "RestingState", "subject": "NDARDB033FW5"}
@@ -83,7 +85,6 @@ class TestEEGDashEOEC(unittest.TestCase):
         assert isinstance(ds_eoec, EEGDashDataset)
 
         warnings.simplefilter("ignore", category=RuntimeWarning)
-
 
         # BrainDecode preprocessors
         preprocessors = [
@@ -132,15 +133,15 @@ class TestEEGDashEOEC(unittest.TestCase):
 
         # %% [markdown]
         # ## Creating training and test sets
-        # 
+        #
         # The code below creates a training and test set. We first split the data into training and test sets using the **train_test_split** function from the **sklearn** library. We then create a **TensorDataset** for the training and test sets.
-        # 
+        #
         # 1.	**Set Random Seed** – The random seed is fixed using torch.manual_seed(random_state) to ensure reproducibility in dataset splitting and model training.
         # 2.	**Extract Labels from the Dataset** – Labels (eye-open or eye-closed events) are extracted from windows_ds, stored as a NumPy array, and printed for verification.
         # 3.	**Split Dataset into Train and Test Sets** – The dataset is split into training (80%) and testing (20%) subsets using train_test_split(), ensuring balanced stratification based on the extracted labels. Stratification means that we have as many eyes-open and eyes-closed samples in the training and testing sets.
         # 4.	**Convert Data to PyTorch Tensors** – The selected training and testing samples are converted into FloatTensor for input features and LongTensor for labels, making them compatible with PyTorch models.
         # 5.	**Create DataLoaders** – The datasets are wrapped in PyTorch DataLoader objects with a batch size of 10, enabling efficient mini-batch training and shuffling.
-        # 
+        #
 
         # %%
         # Set random seed for reproducibility
@@ -154,7 +155,10 @@ class TestEEGDashEOEC(unittest.TestCase):
 
         # Get balanced indices for male and female subjects
         train_indices, test_indices = train_test_split(
-            range(len(windows_ds)), test_size=0.2, stratify=eo_ec, random_state=random_state
+            range(len(windows_ds)),
+            test_size=0.2,
+            stratify=eo_ec,
+            random_state=random_state,
         )
 
         # Convert the data to tensors
@@ -183,7 +187,7 @@ class TestEEGDashEOEC(unittest.TestCase):
 
         # %% [markdown]
         # # Check labels
-        # 
+        #
         # It is good practice to verify the labels and ensure the random seed is functioning correctly. If all labels are 0s (eyes closed) or 1s (eyes open), it could indicate an issue with data loading or stratification, requiring further investigation.
 
         # %%
@@ -194,8 +198,8 @@ class TestEEGDashEOEC(unittest.TestCase):
 
         # %% [markdown]
         # # Create model
-        # 
-        # The model is a shallow convolutional neural network (ShallowFBCSPNet) with 24 input channels (EEG channels), 2 output classes (eyes-open and eyes-closed), and an input window size of 256 samples (2 seconds of EEG data). 
+        #
+        # The model is a shallow convolutional neural network (ShallowFBCSPNet) with 24 input channels (EEG channels), 2 output classes (eyes-open and eyes-closed), and an input window size of 256 samples (2 seconds of EEG data).
 
         # %%
         torch.manual_seed(random_state)
@@ -215,14 +219,14 @@ class TestEEGDashEOEC(unittest.TestCase):
         model = model.to(device=device)  # move the model parameters to CPU/GPU
         epochs = 6
 
-
         def normalize_data(x):
             mean = x.mean(dim=2, keepdim=True)
-            std = x.std(dim=2, keepdim=True) + 1e-7  # add small epsilon for numerical stability
+            std = (
+                x.std(dim=2, keepdim=True) + 1e-7
+            )  # add small epsilon for numerical stability
             x = (x - mean) / std
             x = x.to(device=device, dtype=torch.float32)  # move to device, e.g. GPU
             return x
-
 
         for e in range(epochs):
             # training

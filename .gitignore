@@ -1,4 +1,3 @@
-old
 *.egg-info
 *.npy
 */*.npy
@@ -14,3 +13,4 @@ dist/
 **/*/eegdash.egg-info/
 .env
 tests/data/
+.ruff_cache/

@@ -14,7 +14,7 @@ from .extractors import (
     TrainableFeature,
     UnivariateFeature,
 )
-from .feature_bank import *
+from .feature_bank import *  # noqa: F401
 from .inspect import (
     get_all_feature_extractors,
     get_all_feature_kinds,
@@ -27,3 +27,27 @@ from .utils import (
     extract_features,
     fit_feature_extractors,
 )
+
+__all__ = [
+    "FeaturesConcatDataset",
+    "FeaturesDataset",
+    "FeatureKind",
+    "FeaturePredecessor",
+    "bivariate_feature",
+    "multivariate_feature",
+    "univariate_feature",
+    "BivariateFeature",
+    "DirectedBivariateFeature",
+    "FeatureExtractor",
+    "MultivariateFeature",
+    "TrainableFeature",
+    "UnivariateFeature",
+    "get_all_feature_extractors",
+    "get_all_feature_kinds",
+    "get_all_features",
+    "get_feature_kind",
+    "get_feature_predecessors",
+    "load_features_concat_dataset",
+    "extract_features",
+    "fit_feature_extractors",
+]

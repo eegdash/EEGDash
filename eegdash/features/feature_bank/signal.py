@@ -1,9 +1,9 @@
 import numbers
 
 import numpy as np
-from scipy import stats, signal
+from scipy import signal, stats
 
-from ..decorators import univariate_feature, FeaturePredecessor
+from ..decorators import FeaturePredecessor, univariate_feature
 from ..extractors import FeatureExtractor
 
 __all__ = [

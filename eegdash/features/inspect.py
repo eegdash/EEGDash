@@ -1,8 +1,8 @@
-from collections.abc import Callable
 import inspect
+from collections.abc import Callable
 
+from . import extractors, feature_bank
 from .extractors import FeatureExtractor, MultivariateFeature, _get_underlying_func
-from . import feature_bank, extractors
 
 
 def get_feature_predecessors(feature_or_extractor: Callable):

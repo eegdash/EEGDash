@@ -1,7 +1,6 @@
-import json
+import logging
 import os
 import tempfile
-from collections import defaultdict
 from pathlib import Path
 
 import mne
@@ -11,23 +10,20 @@ import s3fs
 import xarray as xr
 from dotenv import load_dotenv
 from joblib import Parallel, delayed
-from pymongo import DeleteOne, InsertOne, MongoClient, UpdateOne
+from pymongo import InsertOne, UpdateOne
 
-from braindecode.datasets import BaseConcatDataset, BaseDataset
+from braindecode.datasets import BaseConcatDataset
 
 from .data_config import config as data_config
-from .data_utils import EEGBIDSDataset, EEGDashBaseDataset, EEGDashBaseRaw
+from .data_utils import EEGBIDSDataset, EEGDashBaseDataset
+
+logger = logging.getLogger("eegdash")
 
 
 class EEGDash:
     AWS_BUCKET = "s3://openneuro.org"
 
     def __init__(self, is_public=True, is_staging=False):
-        # Load config file
-        # config_path = Path(__file__).parent / 'config.json'
-        # with open(config_path, 'r') as f:
-        #     self.config = json.load(f)
-
         self.config = data_config
         if is_public:
             DB_CONNECTION_STRING = "mongodb+srv://eegdash-user:mdzoMjQcHWTVnKDq@cluster0.vz35p.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
@@ -36,7 +32,11 @@ class EEGDash:
             DB_CONNECTION_STRING = os.getenv("DB_CONNECTION_STRING")
 
         self.__client = pymongo.MongoClient(DB_CONNECTION_STRING)
-        self.__db = self.__client["eegdash"] if not is_staging else self.__client["eegdashstaging"]
+        self.__db = (
+            self.__client["eegdash"]
+            if not is_staging
+            else self.__client["eegdashstaging"]
+        )
         self.__collection = self.__db["records"]
 
         self.is_public = is_public
@@ -47,7 +47,6 @@ class EEGDash:
     def find(self, *args):
         results = self.__collection.find(*args)
 
-        # convert to list using get_item on each element
         return [result for result in results]
 
     def exist(self, query: dict):
@@ -92,10 +91,8 @@ class EEGDash:
             os.unlink(tmp_path)
             return eeg_data
 
-    def load_eeg_data_from_bids_file(self, bids_file, eeg_attrs=None):
-        """
-        bids_file must be a file of the bids_dataset
-        """
+    def load_eeg_data_from_bids_file(self, bids_file):
+        """bids_file must be a file of the bids_dataset"""
         EEG = mne.io.read_raw_eeglab(bids_file)
         eeg_data = EEG.get_data()
 
@@ -109,7 +106,6 @@ class EEGDash:
             data=eeg_data,
             dims=["channel", "time"],
             coords={"time": time_steps, "channel": channel_names},
-            # attrs=attrs
         )
         return eeg_xarray
 
@@ -128,16 +124,14 @@ class EEGDash:
         ]
 
     def load_eeg_attrs_from_bids_file(self, bids_dataset: EEGBIDSDataset, bids_file):
-        """
-        bids_file must be a file of the bids_dataset
-        """
+        """bids_file must be a file of the bids_dataset"""
         if bids_file not in bids_dataset.files:
             raise ValueError(f"{bids_file} not in {bids_dataset.dataset}")
 
         # Initialize attrs with None values for all expected fields
         attrs = {field: None for field in self.config["attributes"].keys()}
 
-        f = os.path.basename(bids_file)
+        file = os.path.basename(bids_file)
         dsnumber = bids_dataset.dataset
         # extract openneuro path by finding the first occurrence of the dataset name in the filename and remove the path before that
         openneuro_path = dsnumber + bids_file.split(dsnumber)[1]
@@ -164,14 +158,14 @@ class EEGDash:
                     str(bids_dataset.get_relative_bidspath(dep)) for dep in dep_path
                 ]
                 bidsdependencies.extend(dep_path)
-            except Exception as e:
+            except Exception:
                 pass
 
         bidsdependencies.extend(self.get_raw_extensions(bids_file, bids_dataset))
 
         # Define field extraction functions with error handling
         field_extractors = {
-            "data_name": lambda: f"{bids_dataset.dataset}_{f}",
+            "data_name": lambda: f"{bids_dataset.dataset}_{file}",
             "dataset": lambda: bids_dataset.dataset,
             "bidspath": lambda: openneuro_path,
             "subject": lambda: bids_dataset.get_bids_file_attribute(
@@ -200,15 +194,13 @@ class EEGDash:
             try:
                 attrs[field] = extractor()
             except Exception as e:
-                print(f"Error extracting {field}: {str(e)}")
+                logger.error("Error extracting %s : %s", field, str(e))
                 attrs[field] = None
 
         return attrs
 
     def add_bids_dataset(self, dataset, data_dir, overwrite=True):
-        """
-        Create new records for the dataset in the MongoDB database if not found
-        """
+        """Create new records for the dataset in the MongoDB database if not found"""
         if self.is_public:
             raise ValueError("This operation is not allowed for public users")
 
@@ -221,7 +213,7 @@ class EEGDash:
                 dataset=dataset,
             )
         except Exception as e:
-            print(f"Error creating bids dataset {dataset}: {str(e)}")
+            logger.error("Error creating bids dataset %s: $s", dataset, str(e))
             raise e
         requests = []
         for bids_file in bids_dataset.get_files():
@@ -239,29 +231,30 @@ class EEGDash:
                         bids_dataset, bids_file
                     )
                     requests.append(self.add_request(eeg_attrs))
-            except:
-                print("error adding record", bids_file)
+            except Exception as e:
+                logger.error("Error adding record %s", bids_file)
+                logger.error(str(e))
 
-        print("Number of database requests", len(requests))
+        logger.info("Number of requests: %s", len(requests))
 
         if requests:
             result = self.__collection.bulk_write(requests, ordered=False)
-            print(f"Inserted: {result.inserted_count}")
-            print(f"Modified: {result.modified_count}")
-            print(f"Deleted: {result.deleted_count}")
-            print(f"Upserted: {result.upserted_count}")
-            print(f"Errors: {result.bulk_api_result.get('writeErrors', [])}")
+            logger.info("Inserted: %s ", result.inserted_count)
+            logger.info("Modified: %s ", result.modified_count)
+            logger.info("Deleted: %s", result.deleted_count)
+            logger.info("Upserted: %s", result.upserted_count)
+            logger.info("Errors: %s ", result.bulk_api_result.get("writeErrors", []))
 
     def get(self, query: dict):
-        """
-        query: {
+        """query: {
             'dataset': 'dsxxxx',
 
-        }"""
+        }
+        """
         sessions = self.find(query)
         results = []
         if sessions:
-            print(f"Found {len(sessions)} records")
+            logger.info("Found %s records", len(sessions))
             results = Parallel(
                 n_jobs=-1 if len(sessions) > 1 else 1, prefer="threads", verbose=1
             )(
@@ -275,14 +268,12 @@ class EEGDash:
 
     def add(self, record: dict):
         try:
-            # input_record = self._validate_input(record)
             self.__collection.insert_one(record)
-        # silent failing
         except ValueError as e:
-            print(f"Failed to validate record: {record['data_name']}")
-            print(e)
+            logger.error("Validation error for record: %s ", record["data_name"])
+            logger.error(e)
         except:
-            print(f"Error adding record: {record['data_name']}")
+            logger.error("Error adding record: %s ", record["data_name"])
 
     def update_request(self, record: dict):
         return UpdateOne({"data_name": record["data_name"]}, {"$set": record})
@@ -293,7 +284,7 @@ class EEGDash:
                 {"data_name": record["data_name"]}, {"$set": record}
             )
         except:  # silent failure
-            print(f"Error updating record {record['data_name']}")
+            logger.error("Error updating record: %s", record["data_name"])
 
     def remove_field(self, record, field):
         self.__collection.update_one(
@@ -309,7 +300,6 @@ class EEGDash:
 
 
 class EEGDashDataset(BaseConcatDataset):
-    # CACHE_DIR = '.eegdash_cache'
     def __init__(
         self,
         query: dict = None,
@@ -331,20 +321,20 @@ class EEGDashDataset(BaseConcatDataset):
         if query:
             datasets = self.find_datasets(query, description_fields, **kwargs)
         elif data_dir:
-            if type(data_dir) == str:
+            if isinstance(data_dir, str):
                 datasets = self.load_bids_dataset(dataset, data_dir, description_fields)
             else:
                 assert len(data_dir) == len(dataset), (
                     "Number of datasets and their directories must match"
                 )
                 datasets = []
-                for i in range(len(data_dir)):
+                for i, _ in enumerate(data_dir):
                     datasets.extend(
                         self.load_bids_dataset(
                             dataset[i], data_dir[i], description_fields
                         )
                     )
-        # convert to list using get_item on each element
+
         super().__init__(datasets)
 
     def find_key_in_nested_dict(self, data, target_key):
@@ -358,9 +348,9 @@ class EEGDashDataset(BaseConcatDataset):
         return None
 
     def find_datasets(self, query: dict, description_fields: list[str], **kwargs):
-        eegdashObj = EEGDash()
+        eeg_dash_instance = EEGDash()
         datasets = []
-        for record in eegdashObj.find(query):
+        for record in eeg_dash_instance.find(query):
             description = {}
             for field in description_fields:
                 value = self.find_key_in_nested_dict(record, field)
@@ -378,13 +368,14 @@ class EEGDashDataset(BaseConcatDataset):
         dataset,
         data_dir,
         description_fields: list[str],
-        raw_format="eeglab",
         **kwargs,
     ):
         """ """
 
         def get_base_dataset_from_bids_file(bids_dataset, bids_file):
-            record = eegdashObj.load_eeg_attrs_from_bids_file(bids_dataset, bids_file)
+            record = eeg_dash_instance.load_eeg_attrs_from_bids_file(
+                bids_dataset, bids_file
+            )
             description = {}
             for field in description_fields:
                 value = self.find_key_in_nested_dict(record, field)
@@ -398,19 +389,9 @@ class EEGDashDataset(BaseConcatDataset):
             data_dir=data_dir,
             dataset=dataset,
         )
-        eegdashObj = EEGDash()
+        eeg_dash_instance = EEGDash()
         datasets = Parallel(n_jobs=-1, prefer="threads", verbose=1)(
             delayed(get_base_dataset_from_bids_file)(bids_dataset, bids_file)
             for bids_file in bids_dataset.get_files()
         )
         return datasets
-
-
-def main():
-    eegdash = EEGDash()
-    record = eegdash.find({"dataset": "ds005511", "subject": "NDARUF236HM7"})
-    print(record)
-
-
-if __name__ == "__main__":
-    main()

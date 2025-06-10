@@ -2,8 +2,8 @@ import numba as nb
 import numpy as np
 from scipy import special
 
-from ..decorators import univariate_feature, FeaturePredecessor
-from .signal import signal_zero_crossings, SIGNAL_PREDECESSORS
+from ..decorators import FeaturePredecessor, univariate_feature
+from .signal import SIGNAL_PREDECESSORS, signal_zero_crossings
 
 __all__ = [
     "dimensionality_higuchi_fractal_dim",

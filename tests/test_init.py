@@ -1,6 +1,11 @@
+from pathlib import Path
+
+from mne import get_config
 from torch.utils.data import Dataset
 
 from eegdash import EEGDash, EEGDashDataset
+
+cache_folder = Path(get_config("MNE_DATA"))
 
 
 def test_set_import_instanciate_eegdash():
@@ -8,7 +13,12 @@ def test_set_import_instanciate_eegdash():
     assert isinstance(eeg_dash_instance, EEGDash)
 
     eeg_pytorch_dataset_instance = EEGDashDataset(
-        {"dataset": "ds005514", "task": "RestingState", "subject": "NDARDB033FW5"}
+        query={
+            "dataset": "ds005514",
+            "task": "RestingState",
+            "subject": "NDARDB033FW5",
+        },
+        cache_dir=cache_folder,
     )
     assert isinstance(eeg_pytorch_dataset_instance, Dataset)
 

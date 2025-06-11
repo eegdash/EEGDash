@@ -23,10 +23,13 @@ from braindecode.util import set_random_seeds
 from eegdash import EEGDashDataset
 from eegdash.preprocessing import hbn_ec_ec_reannotation
 
-cache_folder = Path(get_config("MNE_DATA"))
+cache_folder = get_config("MNE_DATA")
 if cache_folder is None:
     cache_folder = Path.home() / "mne_data"
     set_config("MNE_DATA", str(cache_folder))
+else:
+    cache_folder = Path(cache_folder)
+
 
 logger = logging.getLogger("eegdash")
 

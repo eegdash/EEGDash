@@ -11,6 +11,12 @@ logger = logging.getLogger("eegdash")
 
 
 class hbn_ec_ec_reannotation(Preprocessor):
+    """Preprocessor to reannotate the raw data for eyes open and eyes closed events.
+
+    This processor is designed for HBN datasets.
+
+    """
+
     def __init__(self):
         super().__init__(fn=self.transform, apply_on_array=False)
 
@@ -30,7 +36,7 @@ class hbn_ec_ec_reannotation(Preprocessor):
         """
         events, event_id = mne.events_from_annotations(raw)
 
-        print(event_id)
+        logger.info("Original events found with ids: %s", event_id)
 
         # Create new events array for 2-second segments
         new_events = []
@@ -47,10 +53,13 @@ class hbn_ec_ec_reannotation(Preprocessor):
 
         # replace events in raw
         new_events = np.array(new_events)
+
         annot_from_events = mne.annotations_from_events(
             events=new_events,
             event_desc={1: "eyes_closed", 2: "eyes_open"},
             sfreq=raw.info["sfreq"],
         )
+
         raw.set_annotations(annot_from_events)
+
         return raw

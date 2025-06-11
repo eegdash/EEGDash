@@ -90,7 +90,7 @@ def preprocess_instance(eeg_dash_dataset):
         )
         return eeg_dash_dataset
 
-    except ValueError as e:
+    except Exception as e:
         warnings.warn(f"Failed to load dataset creating a new instance: {e}. ")
 
         preprocessors = [

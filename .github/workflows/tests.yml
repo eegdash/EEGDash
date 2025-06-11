@@ -45,4 +45,4 @@ jobs:
     - name: Show EEGDash Version
       run: python -c "import eegdash; print(eegdash.__version__)"
     - name: Run Tests
-      run: pytest -vvv tests/
+      run: pytest -vvv --log-cli-level=INFO tests/

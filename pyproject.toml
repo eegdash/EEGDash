@@ -80,7 +80,7 @@ target-version = "py311"
 
 [tool.isort]
 skip               = [".gitignore"]
-skip_glob          = ["test/*", "examples/*"]
+skip_glob          = ["examples/*"]
 py_version         = 312
 profile            = "black"
 sections           = ["FUTURE", "STDLIB", "THIRDPARTY", "FIRSTPARTY", "LOCALFOLDER"]

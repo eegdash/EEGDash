@@ -5,7 +5,7 @@ from pathlib import Path
 import numpy as np
 import pytest
 import torch
-from mne import get_config
+from mne import get_config, set_config
 from sklearn.model_selection import train_test_split
 from sklearn.utils import check_random_state
 from skorch.helper import SliceDataset
@@ -24,6 +24,10 @@ from eegdash import EEGDashDataset
 from eegdash.preprocessing import hbn_ec_ec_reannotation
 
 cache_folder = Path(get_config("MNE_DATA"))
+if cache_folder is None:
+    cache_folder = Path.home() / "mne_data"
+    set_config("MNE_DATA", str(cache_folder))
+
 logger = logging.getLogger("eegdash")
 
 seed = 42

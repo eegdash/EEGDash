@@ -3,9 +3,11 @@ import logging
 import os
 import re
 from pathlib import Path
+from typing import Any
 
 import mne
 import mne_bids
+import numpy as np
 import pandas as pd
 import s3fs
 from bids import BIDSLayout
@@ -22,29 +24,28 @@ logger = logging.getLogger("eegdash")
 
 
 class EEGDashBaseDataset(BaseDataset):
-    """Returns samples from an mne.io.Raw object along with a target.
-
-    Dataset which serves samples from an mne.io.Raw object along with a target.
-    The target is unique for the dataset, and is obtained through the
-    `description` attribute.
-
-    Parameters
-    ----------
-    raw : mne.io.Raw
-        Continuous data.
-    description : dict | pandas.Series | None
-        Holds additional description about the continuous signal / subject.
-    target_name : str | tuple | None
-        Name(s) of the index in `description` that should be used to provide the
-        target (e.g., to be used in a prediction task later on).
-    transform : callable | None
-        On-the-fly transform applied to the example before it is returned.
-
+    """A single EEG recording hosted on AWS S3 and cached locally upon first access.
+    This is a subclass of braindecode's BaseDataset, which can consequently be used in
+    conjunction with the preprocessing and training pipelines of braindecode.
     """
 
     AWS_BUCKET = "s3://openneuro.org"
 
-    def __init__(self, record, cache_dir, **kwargs):
+    def __init__(self, record: dict[str, Any], cache_dir: str, **kwargs):
+        """Create a new EEGDashBaseDataset instance. Users do not usually need to call this
+        directly -- instead use the EEGDashDataset class to load a collection of these
+        recordings from a local BIDS folder or using a database query.
+
+        Parameters
+        ----------
+        record : dict
+            A fully resolved metadata record for the data to load.
+        cache_dir : str
+            A local directory where the data will be cached.
+        kwargs : dict
+            Additional keyword arguments to pass to the BaseDataset constructor.
+
+        """
         super().__init__(None, **kwargs)
         self.record = record
         self.cache_dir = Path(cache_dir)
@@ -61,10 +62,12 @@ class EEGDashBaseDataset(BaseDataset):
         self.bids_dependencies = record["bidsdependencies"]
         self._raw = None
 
-    def get_s3path(self, filepath):
+    def get_s3path(self, filepath: str) -> str:
+        """Helper to form an AWS S3 URI for the given relative filepath."""
         return f"{self.AWS_BUCKET}/{filepath}"
 
-    def _download_s3(self):
+    def _download_s3(self) -> None:
+        """Fetch the given data from its S3 location and cache it locally."""
         self.filecache.parent.mkdir(parents=True, exist_ok=True)
         filesystem = s3fs.S3FileSystem(
             anon=True, client_kwargs={"region_name": "us-east-2"}
@@ -72,7 +75,10 @@ class EEGDashBaseDataset(BaseDataset):
         filesystem.download(self.s3file, self.filecache)
         self.filenames = [self.filecache]
 
-    def _download_dependencies(self):
+    def _download_dependencies(self) -> None:
+        """Download all BIDS dependency files (metadata files, recording sidecar files)
+        from S3 and cache them locally.
+        """
         filesystem = s3fs.S3FileSystem(
             anon=True, client_kwargs={"region_name": "us-east-2"}
         )
@@ -83,11 +89,15 @@ class EEGDashBaseDataset(BaseDataset):
                 filepath.parent.mkdir(parents=True, exist_ok=True)
                 filesystem.download(s3path, filepath)
 
-    def get_raw_bids_args(self):
+    def get_raw_bids_args(self) -> dict[str, Any]:
+        """Helper to restrict the metadata record to the fields needed to locate a BIDS
+        recording.
+        """
         desired_fields = ["subject", "session", "task", "run"]
         return {k: self.record[k] for k in desired_fields if self.record[k]}
 
-    def check_and_get_raw(self):
+    def check_and_get_raw(self) -> None:
+        """Download the S3 file and BIDS dependencies if not already cached."""
         if not os.path.exists(self.filecache):  # not preload
             if self.bids_dependencies:
                 self._download_dependencies()
@@ -95,7 +105,10 @@ class EEGDashBaseDataset(BaseDataset):
         if self._raw is None:
             self._raw = mne_bids.read_raw_bids(self.bidspath, verbose=False)
 
+    # === BaseDataset and PyTorch Dataset interface ===
+
     def __getitem__(self, index):
+        """Main function to access a sample from the dataset."""
         X = self.raw[:, index][0]
         y = None
         if self.target_name is not None:
@@ -107,13 +120,19 @@ class EEGDashBaseDataset(BaseDataset):
         return X, y
 
     def __len__(self) -> int:
+        """Return the number of samples in the dataset."""
         if self._raw is None:
+            # FIXME: this is a bit strange and should definitely not change as a side effect
+            #  of accessing the data (which it will, since ntimes is the actual length but rounded down)
             return int(self.record["ntimes"] * self.record["sampling_frequency"])
         else:
             return len(self._raw)
 
     @property
     def raw(self):
+        """Return the MNE Raw object for this recording. This will perform the actual
+        retrieval if not yet done so.
+        """
         if self._raw is None:
             self.check_and_get_raw()
         return self._raw
@@ -124,30 +143,28 @@ class EEGDashBaseDataset(BaseDataset):
 
 
 class EEGDashBaseRaw(BaseRaw):
-    r"""MNE Raw object from EEG-Dash connection with Openneuro S3 file.
+    """Wrapper around the MNE BaseRaw class that automatically fetches the data from S3
+    (when _read_segment is called) and caches it locally. Currently for internal use.
 
     Parameters
     ----------
     input_fname : path-like
         Path to the S3 file
-    eog : list | tuple | 'auto'
-        Names or indices of channels that should be designated EOG channels.
-        If 'auto', the channel names containing ``EOG`` or ``EYE`` are used.
-        Defaults to empty tuple.
-    %(preload)s
-        Note that preload=False will be effective only if the data is stored
-        in a separate binary file.
-    %(uint16_codec)s
-    %(montage_units)s
-    %(verbose)s
+    metadata : dict
+        The metadata record for the recording (e.g., from the database).
+    preload : bool
+        Whether to pre-loaded the data before the first access.
+    cache_dir : str
+        Local path under which the data will be cached.
+    bids_dependencies : list
+        List of additional BIDS metadata files that should be downloaded and cached
+        alongside the main recording file.
+    verbose : str | int | None
+        Optionally the verbosity level for MNE logging (see MNE documentation for possible values).
 
     See Also
     --------
     mne.io.Raw : Documentation of attributes and methods.
-
-    Notes
-    -----
-    .. versionadded:: 0.11.0
 
     """
 
@@ -155,13 +172,13 @@ class EEGDashBaseRaw(BaseRaw):
 
     def __init__(
         self,
-        input_fname,
-        metadata,
-        preload=False,
+        input_fname: str,
+        metadata: dict[str, Any],
+        preload: bool = False,
         *,
-        cache_dir="./.eegdash_cache",
-        bids_dependencies: list = [],
-        verbose=None,
+        cache_dir: str = "./.eegdash_cache",
+        bids_dependencies: list[str] = [],
+        verbose: Any = None,
     ):
         """Get to work with S3 endpoint first, no caching"""
         # Create a simple RawArray
@@ -231,6 +248,20 @@ class EEGDashBaseRaw(BaseRaw):
 
 
 class EEGBIDSDataset:
+    """A one-stop shop interface to a local BIDS dataset containing EEG recordings.
+
+    This is mainly tailored to the needs of EEGDash application and is used to centralize
+    interactions with the BIDS dataset, such as parsing the metadata.
+
+    Parameters
+    ----------
+    data_dir : str | Path
+        The path to the local BIDS dataset directory.
+    dataset : str
+        A name for the dataset.
+
+    """
+
     ALLOWED_FILE_FORMAT = ["eeglab", "brainvision", "biosemi", "european"]
     RAW_EXTENSIONS = {
         ".set": [".set", ".fdt"],  # eeglab
@@ -265,10 +296,12 @@ class EEGBIDSDataset:
         )
         assert self.check_eeg_dataset(), ValueError("Dataset is not an EEG dataset.")
 
-    def check_eeg_dataset(self):
+    def check_eeg_dataset(self) -> bool:
+        """Check if the dataset is EEG."""
         return self.get_bids_file_attribute("modality", self.files[0]).lower() == "eeg"
 
-    def get_recordings(self, layout: BIDSLayout):
+    def get_recordings(self, layout: BIDSLayout) -> list[str]:
+        """Get a list of all EEG recording files in the BIDS layout."""
         files = []
         for ext, exts in self.RAW_EXTENSIONS.items():
             files = layout.get(extension=ext, return_type="filename")
@@ -276,11 +309,15 @@ class EEGBIDSDataset:
                 break
         return files
 
-    def get_relative_bidspath(self, filename):
+    def get_relative_bidspath(self, filename: str) -> str:
+        """Make the given file path relative to the BIDS directory."""
         bids_parent_dir = self.bidsdir.parent.absolute()
         return str(Path(filename).relative_to(bids_parent_dir))
 
-    def get_property_from_filename(self, property, filename):
+    def get_property_from_filename(self, property: str, filename: str) -> str:
+        """Parse a property out of a BIDS-compliant filename. Returns an empty string
+        if not found.
+        """
         import platform
 
         if platform.system() == "Windows":
@@ -289,23 +326,38 @@ class EEGBIDSDataset:
             lookup = re.search(rf"{property}-(.*?)[_\/]", filename)
         return lookup.group(1) if lookup else ""
 
-    def merge_json_inheritance(self, json_files):
-        """Merge list of json files found by get_bids_file_inheritance,
+    def merge_json_inheritance(self, json_files: list[str | Path]) -> dict:
+        """Internal helper to merge list of json files found by get_bids_file_inheritance,
         expecting the order (from left to right) is from lowest
         level to highest level, and return a merged dictionary
         """
         json_files.reverse()
         json_dict = {}
         for f in json_files:
-            json_dict.update(json.load(open(f)))
+            json_dict.update(json.load(open(f)))  # FIXME: should close file
         return json_dict
 
-    def get_bids_file_inheritance(self, path, basename, extension):
-        """Get all files with given extension that applies to the basename file
-        following the BIDS inheritance principle in the order of lowest level first
-        @param
-            basename: bids file basename without _eeg.set extension for example
-            extension: e.g. channels.tsv
+    def get_bids_file_inheritance(
+        self, path: str | Path, basename: str, extension: str
+    ) -> list[Path]:
+        """Get all file paths that apply to the basename file in the specified directory
+        and that end with the specified suffix, recursively searching parent directories
+        (following the BIDS inheritance principle in the order of lowest level first).
+
+        Parameters
+        ----------
+        path : str | Path
+            The directory path to search for files.
+        basename : str
+            BIDS file basename without _eeg.set extension for example
+        extension : str
+            Only consider files that end with the specified suffix; e.g. channels.tsv
+
+        Returns
+        -------
+        list[Path]
+            A list of file paths that match the given basename and extension.
+
         """
         top_level_files = ["README", "dataset_description.json", "participants.tsv"]
         bids_files = []
@@ -336,19 +388,24 @@ class EEGBIDSDataset:
             )
             return bids_files
 
-    def get_bids_metadata_files(self, filepath, metadata_file_extension):
-        """Function to use the self.get_bids_file_inheritance.
+    def get_bids_metadata_files(
+        self, filepath: str | Path, metadata_file_extension: list[str]
+    ) -> list[Path]:
+        """Retrieve all metadata file paths that apply to a given data file path and that
+        end with a specific suffix (following the BIDS inheritance principle).
 
-        Get all BIDS metadata files that are associated with the given filepath, following the BIDS inheritance principle.
+        Parameters
+        ----------
+        filepath: str | Path
+            The filepath to get the associated metadata files for.
+        metadata_file_extension : str
+            Consider only metadata files that end with the specified suffix,
+            e.g., channels.tsv or eeg.json
 
-        Args:
-        ----
-            filepath (str or Path): The filepath to get the associated metadata files for.
-            metadata_files_extensions (list): A list of file extensions to search for metadata files.
-
-        Returns:
+        Returns
         -------
-            list: A list of filepaths for all the associated metadata files
+        list[Path]:
+            A list of filepaths for all matching metadata files
 
         """
         if isinstance(filepath, str):
@@ -363,7 +420,11 @@ class EEGBIDSDataset:
         )
         return meta_files
 
-    def scan_directory(self, directory, extension):
+    def scan_directory(self, directory: str, extension: str) -> list[Path]:
+        """Return a list of file paths that end with the given extension in the specified
+        directory. Ignores certain special directories like .git, .datalad, derivatives,
+        and code.
+        """
         result_files = []
         directory_to_ignore = [".git", ".datalad", "derivatives", "code"]
         with os.scandir(directory) as entries:
@@ -378,8 +439,27 @@ class EEGBIDSDataset:
         return result_files
 
     def get_files_with_extension_parallel(
-        self, directory, extension=".set", max_workers=-1
-    ):
+        self, directory: str, extension: str = ".set", max_workers: int = -1
+    ) -> list[Path]:
+        """Efficiently scan a directory and its subdirectories for files that end with
+        the given extension.
+
+        Parameters
+        ----------
+        directory : str
+            The root directory to scan for files.
+        extension : str
+            Only consider files that end with this suffix, e.g. '.set'.
+        max_workers : int
+            Optionally specify the maximum number of worker threads to use for parallel scanning.
+            Defaults to all available CPU cores if set to -1.
+
+        Returns
+        -------
+        list[Path]:
+            A list of filepaths for all matching metadata files
+
+        """
         result_files = []
         dirs_to_scan = [directory]
 
@@ -405,8 +485,13 @@ class EEGBIDSDataset:
 
         return result_files
 
-    def load_and_preprocess_raw(self, raw_file, preprocess=False):
-        """Load and preprocess raw EEG data from a file."""
+    def load_and_preprocess_raw(
+        self, raw_file: str, preprocess: bool = False
+    ) -> np.ndarray:
+        """Utility function to load a raw data file with MNE and apply some simple
+        (hardcoded) preprocessing and return as a numpy array. Not meant for purposes
+        other than testing or debugging.
+        """
         logger.info(f"Loading raw data from {raw_file}")
         EEG = mne.io.read_raw_eeglab(raw_file, preload=True, verbose="error")
 
@@ -426,17 +511,19 @@ class EEGBIDSDataset:
             raise ValueError("Expect raw data to be CxT dimension")
         return mat_data
 
-    def get_files(self):
+    def get_files(self) -> list[Path]:
+        """Get all EEG recording file paths (with valid extensions) in the BIDS folder."""
         return self.files
 
-    def resolve_bids_json(self, json_files: list):
+    def resolve_bids_json(self, json_files: list[str]) -> dict:
         """Resolve the BIDS JSON files and return a dictionary of the resolved values.
 
-        Args:
-        ----
-            json_files (list): A list of JSON files to resolve in order of leaf level first
+        Parameters
+        ----------
+        json_files : list
+            A list of JSON file paths to resolve in order of leaf level first.
 
-        Returns:
+        Returns
         -------
             dict: A dictionary of the resolved values.
 
@@ -451,7 +538,10 @@ class EEGBIDSDataset:
                 json_dict.update(json.load(f))
         return json_dict
 
-    def get_bids_file_attribute(self, attribute, data_filepath):
+    def get_bids_file_attribute(self, attribute: str, data_filepath: str) -> Any:
+        """Retrieve a specific attribute from the BIDS file metadata applicable
+        to the provided recording file path.
+        """
         entities = self.layout.parse_file_entities(data_filepath)
         bidsfile = self.layout.get(**entities)[0]
         attributes = bidsfile.get_entities(metadata="all")
@@ -468,27 +558,32 @@ class EEGBIDSDataset:
         attribute_value = attributes.get(attribute_mapping.get(attribute), None)
         return attribute_value
 
-    def channel_labels(self, data_filepath):
+    def channel_labels(self, data_filepath: str) -> list[str]:
+        """Get a list of channel labels for the given data file path."""
         channels_tsv = pd.read_csv(
             self.get_bids_metadata_files(data_filepath, "channels.tsv")[0], sep="\t"
         )
         return channels_tsv["name"].tolist()
 
-    def channel_types(self, data_filepath):
+    def channel_types(self, data_filepath: str) -> list[str]:
+        """Get a list of channel types for the given data file path."""
         channels_tsv = pd.read_csv(
             self.get_bids_metadata_files(data_filepath, "channels.tsv")[0], sep="\t"
         )
         return channels_tsv["type"].tolist()
 
-    def num_times(self, data_filepath):
+    def num_times(self, data_filepath: str) -> int:
+        """Get the approximate number of time points in the EEG recording based on the BIDS metadata."""
         eeg_jsons = self.get_bids_metadata_files(data_filepath, "eeg.json")
         eeg_json_dict = self.merge_json_inheritance(eeg_jsons)
         return int(
             eeg_json_dict["SamplingFrequency"] * eeg_json_dict["RecordingDuration"]
         )
 
-    def subject_participant_tsv(self, data_filepath):
-        """Get participants_tsv info of a subject based on filepath"""
+    def subject_participant_tsv(self, data_filepath: str) -> dict[str, Any]:
+        """Get BIDS participants.tsv record for the subject to which the given file
+        path corresponds, as a dictionary.
+        """
         participants_tsv = pd.read_csv(
             self.get_bids_metadata_files(data_filepath, "participants.tsv")[0], sep="\t"
         )
@@ -500,12 +595,16 @@ class EEGBIDSDataset:
         subject = f"sub-{self.get_bids_file_attribute('subject', data_filepath)}"
         return participants_tsv.loc[subject].to_dict()
 
-    def eeg_json(self, data_filepath):
+    def eeg_json(self, data_filepath: str) -> dict[str, Any]:
+        """Get BIDS eeg.json metadata for the given data file path."""
         eeg_jsons = self.get_bids_metadata_files(data_filepath, "eeg.json")
         eeg_json_dict = self.merge_json_inheritance(eeg_jsons)
         return eeg_json_dict
 
-    def channel_tsv(self, data_filepath):
+    def channel_tsv(self, data_filepath: str) -> dict[str, Any]:
+        """Get BIDS channels.tsv metadata for the given data file path, as a dictionary
+        of lists and/or single values.
+        """
         channels_tsv = pd.read_csv(
             self.get_bids_metadata_files(data_filepath, "channels.tsv")[0], sep="\t"
         )

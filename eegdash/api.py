@@ -74,6 +74,20 @@ class EEGDash:
             anon=True, client_kwargs={"region_name": "us-east-2"}
         )
 
+    # MongoDB Operations
+
+    # These methods provide a high-level interface to interact with the MongoDB
+    # collection, allowing users to find, add, and update EEG data records.
+    # - find:
+    # - exist:
+    # - add_request:
+    # - add:
+    # - update_request:
+    # - remove_field:
+    # - remove_field_from_db:
+    # - close: Close the MongoDB connection.
+    # - __del__: Destructor to close the MongoDB connection.
+
     def find(self, query: dict[str, Any], *args, **kwargs) -> list[Mapping[str, Any]]:
         """Find records in the MongoDB collection that satisfy the given query.
 

@@ -75,7 +75,6 @@ class EEGDash:
         )
 
     # MongoDB Operations
-
     # These methods provide a high-level interface to interact with the MongoDB
     # collection, allowing users to find, add, and update EEG data records.
     # - find:

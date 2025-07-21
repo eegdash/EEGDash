@@ -6,12 +6,11 @@ from typing import Any, Mapping
 
 import mne
 import numpy as np
-import pymongo
-import s3fs
 import xarray as xr
 from dotenv import load_dotenv
 from joblib import Parallel, delayed
-from pymongo import InsertOne, UpdateOne
+from pymongo import InsertOne, MongoClient, UpdateOne
+from s3fs import S3FileSystem
 
 from braindecode.datasets import BaseConcatDataset
 
@@ -55,13 +54,15 @@ class EEGDash:
 
         """
         self.config = data_config
-        if is_public:
+        self.is_public = is_public
+
+        if self.is_public:
             DB_CONNECTION_STRING = mne.utils.get_config("EEGDASH_DB_URI")
         else:
             load_dotenv()
             DB_CONNECTION_STRING = os.getenv("DB_CONNECTION_STRING")
 
-        self.__client = pymongo.MongoClient(DB_CONNECTION_STRING)
+        self.__client = MongoClient(DB_CONNECTION_STRING)
         self.__db = (
             self.__client["eegdash"]
             if not is_staging
@@ -69,8 +70,7 @@ class EEGDash:
         )
         self.__collection = self.__db["records"]
 
-        self.is_public = is_public
-        self.filesystem = s3fs.S3FileSystem(
+        self.filesystem = S3FileSystem(
             anon=True, client_kwargs={"region_name": "us-east-2"}
         )
 
@@ -206,14 +206,14 @@ class EEGDash:
         Currently, only non-epoched .set files are supported.
 
         """
-        EEG = mne.io.read_raw_eeglab(bids_file)
-        eeg_data = EEG.get_data()
+        raw_object = mne.io.read_raw(bids_file)
+        eeg_data = raw_object.get_data()
 
-        fs = EEG.info["sfreq"]
+        fs = raw_object.info["sfreq"]
         max_time = eeg_data.shape[1] / fs
         time_steps = np.linspace(0, max_time, eeg_data.shape[1]).squeeze()  # in seconds
 
-        channel_names = EEG.ch_names
+        channel_names = raw_object.ch_names
 
         eeg_xarray = xr.DataArray(
             data=eeg_data,

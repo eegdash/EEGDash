@@ -14,3 +14,4 @@ dist/
 .env
 tests/data/
 .ruff_cache/
+.vscode/

@@ -6,12 +6,11 @@ from typing import Any, Mapping
 
 import mne
 import numpy as np
-import pymongo
-import s3fs
 import xarray as xr
 from dotenv import load_dotenv
 from joblib import Parallel, delayed
-from pymongo import InsertOne, UpdateOne
+from pymongo import InsertOne, MongoClient, UpdateOne
+from s3fs import S3FileSystem
 
 from braindecode.datasets import BaseConcatDataset
 
@@ -55,13 +54,15 @@ class EEGDash:
 
         """
         self.config = data_config
-        if is_public:
-            DB_CONNECTION_STRING = "mongodb+srv://eegdash-user:mdzoMjQcHWTVnKDq@cluster0.vz35p.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+        self.is_public = is_public
+
+        if self.is_public:
+            DB_CONNECTION_STRING = mne.utils.get_config("EEGDASH_DB_URI")
         else:
             load_dotenv()
             DB_CONNECTION_STRING = os.getenv("DB_CONNECTION_STRING")
 
-        self.__client = pymongo.MongoClient(DB_CONNECTION_STRING)
+        self.__client = MongoClient(DB_CONNECTION_STRING)
         self.__db = (
             self.__client["eegdash"]
             if not is_staging
@@ -69,10 +70,22 @@ class EEGDash:
         )
         self.__collection = self.__db["records"]
 
-        self.is_public = is_public
-        self.filesystem = s3fs.S3FileSystem(
+        self.filesystem = S3FileSystem(
             anon=True, client_kwargs={"region_name": "us-east-2"}
         )
+
+    # MongoDB Operations
+    # These methods provide a high-level interface to interact with the MongoDB
+    # collection, allowing users to find, add, and update EEG data records.
+    # - find:
+    # - exist:
+    # - add_request:
+    # - add:
+    # - update_request:
+    # - remove_field:
+    # - remove_field_from_db:
+    # - close: Close the MongoDB connection.
+    # - __del__: Destructor to close the MongoDB connection.
 
     def find(self, query: dict[str, Any], *args, **kwargs) -> list[Mapping[str, Any]]:
         """Find records in the MongoDB collection that satisfy the given query.
@@ -105,7 +118,20 @@ class EEGDash:
 
     def exist(self, query: dict[str, Any]) -> bool:
         """Check if the given query matches any records in the MongoDB collection.
+
         Note that currently only a limited set of query fields is allowed here.
+
+        Parameters
+        ----------
+        query: dict
+            A dictionary that specifies the query to be executed; this is a reference
+            document that is used to match records in the MongoDB collection.
+
+        Returns
+        -------
+        bool:
+            True if at least one record matches the query, False otherwise.
+
         """
         accepted_query_fields = ["data_name", "dataset"]
         assert all(field in accepted_query_fields for field in query.keys())
@@ -114,7 +140,17 @@ class EEGDash:
 
     def _validate_input(self, record: dict[str, Any]) -> dict[str, Any]:
         """Internal method to validate the input record against the expected schema.
-        Returns the record itself on success, or raises a ValueError if the record is invalid.
+
+        Parameters
+        ----------
+        record: dict
+            A dictionary representing the EEG data record to be validated.
+
+        Returns
+        -------
+        dict:
+            Returns the record itself on success, or raises a ValueError if the record is invalid.
+
         """
         input_types = {
             "data_name": str,
@@ -183,14 +219,14 @@ class EEGDash:
         Currently, only non-epoched .set files are supported.
 
         """
-        EEG = mne.io.read_raw_eeglab(bids_file)
-        eeg_data = EEG.get_data()
+        raw_object = mne.io.read_raw(bids_file)
+        eeg_data = raw_object.get_data()
 
-        fs = EEG.info["sfreq"]
+        fs = raw_object.info["sfreq"]
         max_time = eeg_data.shape[1] / fs
         time_steps = np.linspace(0, max_time, eeg_data.shape[1]).squeeze()  # in seconds
 
-        channel_names = EEG.ch_names
+        channel_names = raw_object.ch_names
 
         eeg_xarray = xr.DataArray(
             data=eeg_data,
@@ -251,7 +287,7 @@ class EEGDash:
         # Initialize attrs with None values for all expected fields
         attrs = {field: None for field in self.config["attributes"].keys()}
 
-        file = os.path.basename(bids_file)
+        file = Path(bids_file).name
         dsnumber = bids_dataset.dataset
         # extract openneuro path by finding the first occurrence of the dataset name in the filename and remove the path before that
         openneuro_path = dsnumber + bids_file.split(dsnumber)[1]
@@ -260,13 +296,13 @@ class EEGDash:
         try:
             participants_tsv = bids_dataset.subject_participant_tsv(bids_file)
         except Exception as e:
-            print(f"Error getting participants_tsv: {str(e)}")
+            logger.error("Error getting participants_tsv: %s", str(e))
             participants_tsv = None
 
         try:
             eeg_json = bids_dataset.eeg_json(bids_file)
         except Exception as e:
-            print(f"Error getting eeg_json: {str(e)}")
+            logger.error("Error getting eeg_json: %s", str(e))
             eeg_json = None
 
         bids_dependencies_files = self.config["bids_dependencies_files"]
@@ -339,7 +375,7 @@ class EEGDash:
             raise ValueError("This operation is not allowed for public users")
 
         if not overwrite and self.exist({"dataset": dataset}):
-            print(f"Dataset {dataset} already exists in the database")
+            logger.info("Dataset %s already exists in the database", dataset)
             return
         try:
             bids_dataset = EEGBIDSDataset(
@@ -352,7 +388,7 @@ class EEGDash:
         requests = []
         for bids_file in bids_dataset.get_files():
             try:
-                data_id = f"{dataset}_{os.path.basename(bids_file)}"
+                data_id = f"{dataset}_{Path(bids_file).name}"
 
                 if self.exist({"data_name": data_id}):
                     if overwrite:

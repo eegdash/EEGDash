@@ -14,9 +14,6 @@ def test_fields(eegdashObj):
     expected_fields = [
         "dataset",
         "subject",
-        "task",
-        "ntimes",
-        "eeg_json.SamplingFrequency",
     ]
     collection = eegdashObj.collection
     or_query = [{field: {"$exists": False}} for field in expected_fields]

@@ -20,7 +20,7 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 dependencies = [
-  "braindecode @ git+https://github.com/braindecode/braindecode.git@master",
+  "braindecode>=1.0",
   "mne_bids>=0.16.0",
   "numba",
   "numpy",

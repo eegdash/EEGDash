@@ -25,6 +25,7 @@ logger = logging.getLogger("eegdash")
 
 class EEGDashBaseDataset(BaseDataset):
     """A single EEG recording hosted on AWS S3 and cached locally upon first access.
+
     This is a subclass of braindecode's BaseDataset, which can consequently be used in
     conjunction with the preprocessing and training pipelines of braindecode.
     """

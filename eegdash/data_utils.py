@@ -32,7 +32,7 @@ class EEGDashBaseDataset(BaseDataset):
 
     AWS_BUCKET = "s3://openneuro.org"
 
-    def __init__(self, record: dict[str, Any], cache_dir: str, **kwargs):
+    def __init__(self, record: dict[str, Any], cache_dir: str, s3_bucket: str | None = None, **kwargs):
         """Create a new EEGDashBaseDataset instance. Users do not usually need to call this
         directly -- instead use the EEGDashDataset class to load a collection of these
         recordings from a local BIDS folder or using a database query.
@@ -58,6 +58,7 @@ class EEGDashBaseDataset(BaseDataset):
             suffix="eeg",
             **bids_kwargs,
         )
+        self.s3_bucket = s3_bucket if s3_bucket else self.AWS_BUCKET
         self.s3file = self.get_s3path(record["bidspath"])
         self.filecache = self.cache_dir / record["bidspath"]
         self.bids_dependencies = record["bidsdependencies"]
@@ -65,7 +66,7 @@ class EEGDashBaseDataset(BaseDataset):
 
     def get_s3path(self, filepath: str) -> str:
         """Helper to form an AWS S3 URI for the given relative filepath."""
-        return f"{self.AWS_BUCKET}/{filepath}"
+        return f"{self.s3_bucket}/{filepath}"
 
     def _download_s3(self) -> None:
         """Fetch the given data from its S3 location and cache it locally."""

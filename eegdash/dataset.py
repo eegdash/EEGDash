@@ -57,8 +57,4 @@ class EEGChallengeDataset(EEGDashDataset):
             s3_bucket=s3_bucket,
             **kwargs,
         )
-
-if __name__ == "__main__":
-    # Example usage
-    eeg_challenge_dataset = EEGChallengeDataset(release="R5")
-    print(eeg_challenge_dataset.datasets[0].s3file)
+        

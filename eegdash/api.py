@@ -504,7 +504,6 @@ class EEGDashDataset(BaseConcatDataset):
     def __init__(
         self,
         query: dict | None = None,
-        *,
         data_dir: str | list | None = None,
         dataset: str | list | None = None,
         description_fields: list[str] = [
@@ -517,6 +516,7 @@ class EEGDashDataset(BaseConcatDataset):
             "sex",
         ],
         cache_dir: str = ".eegdash_cache",
+        s3_bucket: str | None = None,
         **kwargs,
     ):
         """Create a new EEGDashDataset from a given query or local BIDS dataset directory
@@ -541,17 +541,21 @@ class EEGDashDataset(BaseConcatDataset):
             see also data_config.description_fields for the default set of fields.
         cache_dir : str
             A directory where the dataset will be cached locally.
+        s3_bucket : str | None
+            An optional S3 bucket URI (e.g., "s3://mybucket") to use instead of the
+            default OpenNeuro bucket for loading data files
         kwargs : dict
             Additional keyword arguments to be passed to the EEGDashBaseDataset
             constructor.
 
         """
         self.cache_dir = cache_dir
+        self.s3_bucket = s3_bucket
         if query:
             datasets = self.find_datasets(query, description_fields, **kwargs)
         elif data_dir:
             if isinstance(data_dir, str):
-                datasets = self.load_bids_dataset(dataset, data_dir, description_fields)
+                datasets = self.load_bids_dataset(dataset, data_dir, description_fields, s3_bucket)
             else:
                 assert len(data_dir) == len(dataset), (
                     "Number of datasets and their directories must match"
@@ -560,7 +564,7 @@ class EEGDashDataset(BaseConcatDataset):
                 for i, _ in enumerate(data_dir):
                     datasets.extend(
                         self.load_bids_dataset(
-                            dataset[i], data_dir[i], description_fields
+                            dataset[i], data_dir[i], description_fields, s3_bucket
                         )
                     )
 
@@ -612,7 +616,7 @@ class EEGDashDataset(BaseConcatDataset):
                         description[field] = value
                 datasets.append(
                     EEGDashBaseDataset(
-                        record, self.cache_dir, description=description, **kwargs
+                        record, self.cache_dir, self.s3_bucket, description=description, **kwargs
                     )
                 )
             return datasets
@@ -624,6 +628,7 @@ class EEGDashDataset(BaseConcatDataset):
         dataset,
         data_dir,
         description_fields: list[str],
+        s3_bucket: str | None = None,
         **kwargs,
     ):
         """Helper method to load a single local BIDS dataset and return it as a list of
@@ -640,10 +645,11 @@ class EEGDashDataset(BaseConcatDataset):
             and included in the returned dataset description(s).
 
         """
-
-        def get_base_dataset_from_bids_file(
-            bids_dataset: EEGBIDSDataset, bids_file: str, eeg_dash_instance: EEGDash
-        ) -> EEGDashBaseDataset:
+        def get_base_dataset_from_bids_file(bids_dataset: EEGBIDSDataset, 
+                                            bids_file: str, 
+                                            eeg_dash_instance: EEGDash, 
+                                            s3_bucket: str | None
+                                        ) -> EEGDashBaseDataset:
             """Instantiate a single EEGDashBaseDataset given a local BIDS file. Note
             this does not actually load the data from disk, but will access the metadata.
             """
@@ -656,7 +662,7 @@ class EEGDashDataset(BaseConcatDataset):
                 if value is not None:
                     description[field] = value
             return EEGDashBaseDataset(
-                record, self.cache_dir, description=description, **kwargs
+                record, self.cache_dir, s3_bucket, description=description, **kwargs
             )
 
         bids_dataset = EEGBIDSDataset(
@@ -667,7 +673,7 @@ class EEGDashDataset(BaseConcatDataset):
         try:
             datasets = Parallel(n_jobs=-1, prefer="threads", verbose=1)(
                 delayed(get_base_dataset_from_bids_file)(
-                    bids_dataset, bids_file, eeg_dash_instance
+                    bids_dataset, bids_file, eeg_dash_instance, s3_bucket
                 )
                 for bids_file in bids_dataset.get_files()
             )

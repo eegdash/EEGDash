@@ -45,7 +45,6 @@ class EEGChallengeDataset(EEGDashDataset):
             "R8": "ds005512",
             "R7": "ds005511",
             "R6": "ds005510",
-            "R5": "ds005509",
             "R4": "ds005508",
             "R3": "ds005507",
             "R2": "ds005506",
@@ -57,4 +56,3 @@ class EEGChallengeDataset(EEGDashDataset):
             s3_bucket=s3_bucket,
             **kwargs,
         )
-        

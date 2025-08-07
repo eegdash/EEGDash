@@ -1,10 +1,10 @@
 [build-system]
-requires = ["setuptools>=61.0"]
+requires = ["setuptools", "setuptools-scm"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "eegdash"
-version = "0.1.0"
+dynamic = ["version"]
 authors = [
   { name = "Young Truong",    email = "dt.young112@gmail.com" },
   { name = "Arnaud Delorme",  email = "adelorme@gmail.com" },
@@ -14,10 +14,25 @@ description     = "EEG data for machine learning"
 readme          = "README.md"
 license         = { file = "LICENSE" }
 requires-python = ">3.10"
+
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
+    "Intended Audience :: Science/Research",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python",
+    "Topic :: Software Development",
+    "Topic :: Scientific/Engineering",
+    "Development Status :: 3 - Alpha",
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: POSIX",
+    "Operating System :: Unix",
+    "Operating System :: MacOS",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
 ]
 dependencies = [
   "braindecode>=1.0",
@@ -46,26 +61,17 @@ tests = [
     'codecov',
     'pytest_cases',
 ]
-docs = [
-    'sphinx_gallery',
-    'sphinx_rtd_theme',
-    'pydata_sphinx_theme',
-    'numpydoc',
-    'memory_profiler',
-    'pillow',
-    'ipython',
-    'sphinx_design',
-    'lightning',
-    'seaborn',
-    'pre-commit',
-    'openneuro-py'
-]
 dev = [
   "pre-commit"
 ]
 
+all = [eegdash[tests], eegdash[dev]]
+
 [tool.setuptools]
 py-modules = []
+
+[tool.setuptools.dynamic]
+version = {attr = "spd_learn.__version__"}
 
 [tool.setuptools.packages.find]
 where      = ["."]

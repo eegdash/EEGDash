@@ -1,5 +1,7 @@
 import pytest
+
 from eegdash.dataset import EEGChallengeDataset
+
 
 @pytest.mark.skip("Skipping test for EEGChallengeDataset initialization")
 def test_eeg_challenge_dataset_initialization():

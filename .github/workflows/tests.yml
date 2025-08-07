@@ -45,4 +45,5 @@ jobs:
     - name: Show EEGDash Version
       run: python -c "import eegdash; print(eegdash.__version__)"
     - name: Run Tests
-      run: pytest -vvv --log-cli-level=INFO tests/
+      run: pytest -vvv -s --tb=long --durations=0 --log-cli-level=INFO --cov=eegdash --cov-report=xml tests --verbose 
+

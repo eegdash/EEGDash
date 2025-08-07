@@ -3,8 +3,8 @@ requires = ["setuptools", "setuptools-scm"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "eegdash"
 dynamic = ["version"]
+name = "eegdash"
 authors = [
   { name = "Young Truong",    email = "dt.young112@gmail.com" },
   { name = "Arnaud Delorme",  email = "adelorme@gmail.com" },
@@ -65,13 +65,16 @@ dev = [
   "pre-commit"
 ]
 
-all = [eegdash[tests], eegdash[dev]]
+all = [
+  "eegdash[tests]",
+  "eegdash[dev]",
+]
 
 [tool.setuptools]
 py-modules = []
 
 [tool.setuptools.dynamic]
-version = {attr = "spd_learn.__version__"}
+version = {attr = "eegdash.__version__"}
 
 [tool.setuptools.packages.find]
 where      = ["."]

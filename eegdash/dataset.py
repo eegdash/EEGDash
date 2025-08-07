@@ -1,5 +1,6 @@
 from .api import EEGDashDataset
 
+
 class EEGChallengeDataset(EEGDashDataset):
     def __init__(
         self,

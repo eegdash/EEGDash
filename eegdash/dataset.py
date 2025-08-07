@@ -47,6 +47,7 @@ class EEGChallengeDataset(EEGDashDataset):
             "R7": "ds005511",
             "R6": "ds005510",
             "R4": "ds005508",
+            "R5": "ds005509",
             "R3": "ds005507",
             "R2": "ds005506",
             "R1": "ds005505",

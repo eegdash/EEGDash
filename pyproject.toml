@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools", "setuptools-scm"]
+requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -16,7 +16,6 @@ license         = { file = "LICENSE" }
 requires-python = ">3.10"
 
 classifiers = [
-    "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
     "Intended Audience :: Science/Research",
@@ -65,11 +64,24 @@ dev = [
   "pre-commit"
 ]
 
-all = [
-  "eegdash[tests]",
-  "eegdash[dev]",
+docs = [
+  "sphinx",
+  "sphinx_gallery",
+  "sphinx_rtd_theme",
+  "numpydoc"
 ]
 
+all = [
+  "pytest",
+  "pytest-cov",
+  "codecov",
+  "pytest_cases",
+  "pre-commit",
+  "sphinx",
+  "sphinx_gallery",
+  "sphinx_rtd_theme",
+  "numpydoc"
+]
 [tool.setuptools]
 py-modules = []
 

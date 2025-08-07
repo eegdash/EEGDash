@@ -135,7 +135,7 @@ def test_complete_train(windows_ds):
     label_eye_open_closed = np.array(
         SliceDataset(windows_ds, idx=1)
     ).T  # Extract labels (eyes open/closed)
-    
+
     # train-test split
     train_idx, valid_idx = train_test_split(
         range(len(windows_ds)),

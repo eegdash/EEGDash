@@ -1,10 +1,11 @@
+import os
 from pathlib import Path
+
 import pytest
 from mne import get_config
 from torch.utils.data import Dataset
 
 from eegdash import EEGDash, EEGDashDataset
-import os
 
 cache_folder = Path(get_config("MNE_DATA"))
 

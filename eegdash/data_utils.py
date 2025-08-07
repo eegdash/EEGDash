@@ -32,7 +32,13 @@ class EEGDashBaseDataset(BaseDataset):
 
     AWS_BUCKET = "s3://openneuro.org"
 
-    def __init__(self, record: dict[str, Any], cache_dir: str, s3_bucket: str | None = None, **kwargs):
+    def __init__(
+        self,
+        record: dict[str, Any],
+        cache_dir: str,
+        s3_bucket: str | None = None,
+        **kwargs,
+    ):
         """Create a new EEGDashBaseDataset instance. Users do not usually need to call this
         directly -- instead use the EEGDashDataset class to load a collection of these
         recordings from a local BIDS folder or using a database query.

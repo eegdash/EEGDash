@@ -555,7 +555,9 @@ class EEGDashDataset(BaseConcatDataset):
             datasets = self.find_datasets(query, description_fields, **kwargs)
         elif data_dir:
             if isinstance(data_dir, str):
-                datasets = self.load_bids_dataset(dataset, data_dir, description_fields, s3_bucket)
+                datasets = self.load_bids_dataset(
+                    dataset, data_dir, description_fields, s3_bucket
+                )
             else:
                 assert len(data_dir) == len(dataset), (
                     "Number of datasets and their directories must match"
@@ -616,7 +618,11 @@ class EEGDashDataset(BaseConcatDataset):
                         description[field] = value
                 datasets.append(
                     EEGDashBaseDataset(
-                        record, self.cache_dir, self.s3_bucket, description=description, **kwargs
+                        record,
+                        self.cache_dir,
+                        self.s3_bucket,
+                        description=description,
+                        **kwargs,
                     )
                 )
             return datasets
@@ -645,11 +651,13 @@ class EEGDashDataset(BaseConcatDataset):
             and included in the returned dataset description(s).
 
         """
-        def get_base_dataset_from_bids_file(bids_dataset: EEGBIDSDataset, 
-                                            bids_file: str, 
-                                            eeg_dash_instance: EEGDash, 
-                                            s3_bucket: str | None
-                                        ) -> EEGDashBaseDataset:
+
+        def get_base_dataset_from_bids_file(
+            bids_dataset: EEGBIDSDataset,
+            bids_file: str,
+            eeg_dash_instance: EEGDash,
+            s3_bucket: str | None,
+        ) -> EEGDashBaseDataset:
             """Instantiate a single EEGDashBaseDataset given a local BIDS file. Note
             this does not actually load the data from disk, but will access the metadata.
             """

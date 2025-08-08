@@ -6,7 +6,7 @@ class EEGChallengeDataset(EEGDashDataset):
         self,
         release: str = "R5",
         cache_dir: str = ".eegdash_cache",
-        s3_bucket: str | None = "s3://nmdatasets/NeurIPS25/R5_L100",
+        s3_bucket: str | None = "s3://nmdatasets/NeurIPS25/",
         **kwargs,
     ):
         """Create a new EEGDashDataset from a given query or local BIDS dataset directory
@@ -52,9 +52,13 @@ class EEGChallengeDataset(EEGDashDataset):
             "R2": "ds005506",
             "R1": "ds005505",
         }
+        self.release = release
+        if release not in dsnumber_release_map:
+            raise ValueError(f"Unknown release: {release}")
+
         super().__init__(
             query={"dataset": dsnumber_release_map[release]},
             cache_dir=cache_dir,
-            s3_bucket=s3_bucket,
+            s3_bucket=f"{s3_bucket}/{release}_L100",
             **kwargs,
         )

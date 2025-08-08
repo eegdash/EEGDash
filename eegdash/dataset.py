@@ -5,7 +5,7 @@ class EEGChallengeDataset(EEGDashDataset):
     def __init__(
         self,
         release: str = "R5",
-        additional_query: dict | None = None,
+        query: dict | None = None,
         cache_dir: str = ".eegdash_cache",
         s3_bucket: str | None = "s3://nmdatasets/NeurIPS25/R5_L100",
         **kwargs,
@@ -18,9 +18,9 @@ class EEGChallengeDataset(EEGDashDataset):
         ----------
         release: str
             Release name. Can be one of ["R1", ..., "R11"]
-        additional_query : dict | None
-            Optionally a dictionary that specifies a query to be executed, 
-            in addition to the dataset (automatically infered from the release argument. 
+        query : dict | None
+            Optionally a dictionary that specifies a query to be executed,
+            in addition to the dataset (automatically inferred from the release argument).
             See EEGDash.find() for details on the query format.
         cache_dir : str
             A directory where the dataset will be cached locally.
@@ -45,9 +45,16 @@ class EEGChallengeDataset(EEGDashDataset):
             "R2": "ds005506",
             "R1": "ds005505",
         }
-        query = additional_query or {}
-        assert "dataset" not in querry
-        querry["dataset"] = dsnumber_release_map[release] 
+        dataset = dsnumber_release_map[release] 
+        if query is None:  
+            query = {"dataset": dataset}  
+        elif "dataset" not in query:  
+            query["dataset"] = dataset  
+        elif query["dataset"] != dataset:  
+            raise ValueError(  
+                f"Query dataset {query['dataset']} does not match the release {release} "  
+                f"which corresponds to dataset {dataset}."  
+            )  
         super().__init__(
             query=query,
             cache_dir=cache_dir,

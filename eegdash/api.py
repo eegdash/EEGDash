@@ -23,29 +23,30 @@ logger = logging.getLogger("eegdash")
 
 class MongoDBClientSingleton:
     """Singleton class to manage MongoDB client connections."""
-    
+
     _instances = {}
     _lock = threading.Lock()
-    
+
     @classmethod
     def get_client(cls, connection_string: str, is_staging: bool = False):
         """Get or create a MongoDB client for the given connection string and staging flag.
-        
+
         Parameters
         ----------
         connection_string : str
             The MongoDB connection string
         is_staging : bool
             Whether to use staging database
-            
+
         Returns
         -------
         tuple
             A tuple of (client, database, collection)
+
         """
         # Create a unique key based on connection string and staging flag
         key = (connection_string, is_staging)
-        
+
         if key not in cls._instances:
             with cls._lock:
                 # Double-check pattern to avoid race conditions
@@ -55,9 +56,9 @@ class MongoDBClientSingleton:
                     db = client[db_name]
                     collection = db["records"]
                     cls._instances[key] = (client, db, collection)
-        
+
         return cls._instances[key]
-    
+
     @classmethod
     def close_all(cls):
         """Close all MongoDB client connections."""
@@ -540,7 +541,7 @@ class EEGDash:
 
     def close(self):
         """Close the MongoDB client connection.
-        
+
         Note: Since MongoDB clients are now managed by a singleton,
         this method no longer closes connections. Use close_all_connections()
         class method to close all connections if needed.

@@ -1,10 +1,10 @@
-import pytest
-import threading
-import time
-from unittest.mock import MagicMock, patch
 from concurrent.futures import ThreadPoolExecutor, as_completed
+from unittest.mock import MagicMock, patch
 
-from eegdash.api import MongoDBClientSingleton, EEGDash
+import pytest
+
+from eegdash.api import EEGDash, MongoDBClientSingleton
+
 
 @pytest.fixture()
 def eegdashObj():
@@ -25,6 +25,7 @@ def test_fields(eegdashObj):
     missing_count = collection.count_documents({"$or": or_query})
     assert missing_count == 0, f"Missing fields in {missing_count} records"
 
+
 class TestEEGDashSingletonIntegration:
     """Test cases for EEGDash integration with MongoDB singleton."""
 
@@ -36,8 +37,8 @@ class TestEEGDashSingletonIntegration:
         """Teardown method to clean up after each test."""
         MongoDBClientSingleton.close_all()
 
-    @patch('mne.utils.get_config')
-    @patch('eegdash.api.MongoClient')
+    @patch("mne.utils.get_config")
+    @patch("eegdash.api.MongoClient")
     def test_eegdash_uses_singleton(self, mock_mongo_client, mock_get_config):
         """Test that EEGDash instances use the singleton pattern."""
         mock_get_config.return_value = "mongodb://test_connection"
@@ -60,8 +61,8 @@ class TestEEGDashSingletonIntegration:
         # MongoClient should only be called once
         mock_mongo_client.assert_called_once()
 
-    @patch('mne.utils.get_config')
-    @patch('eegdash.api.MongoClient')
+    @patch("mne.utils.get_config")
+    @patch("eegdash.api.MongoClient")
     def test_eegdash_different_staging_flags(self, mock_mongo_client, mock_get_config):
         """Test that EEGDash instances with different staging flags use different connections."""
         mock_get_config.return_value = "mongodb://test_connection"
@@ -75,6 +76,12 @@ class TestEEGDashSingletonIntegration:
         # Create EEGDash instances with different staging flags
         eegdash_prod = EEGDash(is_public=True, is_staging=False)
         eegdash_staging = EEGDash(is_public=True, is_staging=True)
+        assert eegdash_prod._EEGDash__client is not eegdash_staging._EEGDash__client
+        assert eegdash_prod._EEGDash__db is not eegdash_staging._EEGDash__db
+        assert (
+            eegdash_prod._EEGDash__collection
+            is not eegdash_staging._EEGDash__collection
+        )
 
         # Should create two different singleton instances
         assert len(MongoDBClientSingleton._instances) == 2
@@ -84,9 +91,10 @@ class TestEEGDashSingletonIntegration:
 
     def test_eegdash_close_behavior(self):
         """Test that EEGDash.close() doesn't affect singleton connections."""
-        with patch('mne.utils.get_config') as mock_get_config, \
-             patch('eegdash.api.MongoClient') as mock_mongo_client:
-            
+        with (
+            patch("mne.utils.get_config") as mock_get_config,
+            patch("eegdash.api.MongoClient") as mock_mongo_client,
+        ):
             mock_get_config.return_value = "mongodb://test_connection"
             mock_client = MagicMock()
             mock_db = MagicMock()
@@ -97,7 +105,7 @@ class TestEEGDashSingletonIntegration:
 
             # Create EEGDash instance
             eegdash1 = EEGDash(is_public=True, is_staging=False)
-            
+
             # Close the instance
             eegdash1.close()
 
@@ -110,9 +118,10 @@ class TestEEGDashSingletonIntegration:
 
     def test_eegdash_close_all_connections(self):
         """Test that EEGDash.close_all_connections() properly closes singleton connections."""
-        with patch('mne.utils.get_config') as mock_get_config, \
-             patch('eegdash.api.MongoClient') as mock_mongo_client:
-            
+        with (
+            patch("mne.utils.get_config") as mock_get_config,
+            patch("eegdash.api.MongoClient") as mock_mongo_client,
+        ):
             mock_get_config.return_value = "mongodb://test_connection"
             mock_client = MagicMock()
             mock_db = MagicMock()
@@ -122,8 +131,8 @@ class TestEEGDashSingletonIntegration:
             mock_mongo_client.return_value = mock_client
 
             # Create EEGDash instance
-            eegdash = EEGDash(is_public=True, is_staging=False)
-            
+            _ = EEGDash(is_public=True, is_staging=False)
+
             # Close all connections
             EEGDash.close_all_connections()
 
@@ -136,12 +145,13 @@ class TestEEGDashSingletonIntegration:
     def test_concurrent_eegdash_creation(self):
         """Test concurrent creation of EEGDash instances."""
         results = []
-        
+
         def create_eegdash():
             """Worker function to create EEGDash instance."""
-            with patch('mne.utils.get_config') as mock_get_config, \
-                 patch('eegdash.api.MongoClient') as mock_mongo_client:
-                
+            with (
+                patch("mne.utils.get_config") as mock_get_config,
+                patch("eegdash.api.MongoClient") as mock_mongo_client,
+            ):
                 mock_get_config.return_value = "mongodb://test_connection"
                 mock_client = MagicMock()
                 mock_db = MagicMock()
@@ -149,14 +159,15 @@ class TestEEGDashSingletonIntegration:
                 mock_client.__getitem__.return_value = mock_db
                 mock_db.__getitem__.return_value = mock_collection
                 mock_mongo_client.return_value = mock_client
-                
+
                 eegdash = EEGDash(is_public=True, is_staging=False)
                 results.append(eegdash)
 
         # Set up the mock outside the threads
-        with patch('mne.utils.get_config') as mock_get_config, \
-             patch('eegdash.api.MongoClient') as mock_mongo_client:
-            
+        with (
+            patch("mne.utils.get_config") as mock_get_config,
+            patch("eegdash.api.MongoClient") as mock_mongo_client,
+        ):
             mock_get_config.return_value = "mongodb://test_connection"
             mock_client = MagicMock()
             mock_db = MagicMock()
@@ -167,10 +178,15 @@ class TestEEGDashSingletonIntegration:
 
             # Create multiple threads
             with ThreadPoolExecutor(max_workers=5) as executor:
-                futures = [executor.submit(lambda: results.append(
-                    EEGDash(is_public=True, is_staging=False)
-                )) for _ in range(10)]
-                
+                futures = [
+                    executor.submit(
+                        lambda: results.append(
+                            EEGDash(is_public=True, is_staging=False)
+                        )
+                    )
+                    for _ in range(10)
+                ]
+
                 # Wait for all to complete
                 for future in as_completed(futures):
                     future.result()

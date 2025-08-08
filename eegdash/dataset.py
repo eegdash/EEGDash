@@ -45,17 +45,17 @@ class EEGChallengeDataset(EEGDashDataset):
             "R2": "ds005506",
             "R1": "ds005505",
         }
-        
+
         self.release = release
         if release not in dsnumber_release_map:
             raise ValueError(f"Unknown release: {release}")
 
-        dataset = dsnumber_release_map[release] 
-        if query is None:  
-            query = {"dataset": dataset}  
-        elif "dataset" not in query:  
-            query["dataset"] = dataset  
-        elif query["dataset"] != dataset:  
+        dataset = dsnumber_release_map[release]
+        if query is None:
+            query = {"dataset": dataset}
+        elif "dataset" not in query:
+            query["dataset"] = dataset
+        elif query["dataset"] != dataset:
             raise ValueError(
                 f"Query dataset {query['dataset']} does not match the release {release} "
                 f"which corresponds to dataset {dataset}."

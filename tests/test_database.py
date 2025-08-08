@@ -1,11 +1,12 @@
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from unittest.mock import MagicMock
+
 import pytest
 
 from eegdash.api import EEGDash, MongoDBClientSingleton
 
-
 # --- Fixtures ---------------------------------------------------------------
+
 
 @pytest.fixture(autouse=True)
 def reset_singleton():
@@ -18,8 +19,7 @@ def reset_singleton():
 
 @pytest.fixture
 def mongo_mocks(monkeypatch):
-    """
-    Patch mne.utils.get_config and eegdash.api.MongoClient.
+    """Patch mne.utils.get_config and eegdash.api.MongoClient.
     Return a structure tracking how many clients were constructed and references to them.
     """
     # Always return a test URI (so code path doesn't branch on env)
@@ -51,7 +51,6 @@ def test_fields_live_db():
     or_query = [{f: {"$exists": False}} for f in expected]
     missing = eegdash.collection.count_documents({"$or": or_query})
     assert missing == 0, f"Missing fields in {missing} records"
-
 
 
 def test_uses_singleton(mongo_mocks):

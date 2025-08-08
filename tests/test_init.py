@@ -1,7 +1,5 @@
-import os
 from pathlib import Path
 
-import pytest
 from mne import get_config
 from torch.utils.data import Dataset
 

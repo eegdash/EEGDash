@@ -1,6 +1,7 @@
 import logging
 import os
 import tempfile
+import threading
 from pathlib import Path
 from typing import Any, Mapping
 
@@ -18,6 +19,55 @@ from .data_config import config as data_config
 from .data_utils import EEGBIDSDataset, EEGDashBaseDataset
 
 logger = logging.getLogger("eegdash")
+
+
+class MongoDBClientSingleton:
+    """Singleton class to manage MongoDB client connections."""
+    
+    _instances = {}
+    _lock = threading.Lock()
+    
+    @classmethod
+    def get_client(cls, connection_string: str, is_staging: bool = False):
+        """Get or create a MongoDB client for the given connection string and staging flag.
+        
+        Parameters
+        ----------
+        connection_string : str
+            The MongoDB connection string
+        is_staging : bool
+            Whether to use staging database
+            
+        Returns
+        -------
+        tuple
+            A tuple of (client, database, collection)
+        """
+        # Create a unique key based on connection string and staging flag
+        key = (connection_string, is_staging)
+        
+        if key not in cls._instances:
+            with cls._lock:
+                # Double-check pattern to avoid race conditions
+                if key not in cls._instances:
+                    client = MongoClient(connection_string)
+                    db_name = "eegdashstaging" if is_staging else "eegdash"
+                    db = client[db_name]
+                    collection = db["records"]
+                    cls._instances[key] = (client, db, collection)
+        
+        return cls._instances[key]
+    
+    @classmethod
+    def close_all(cls):
+        """Close all MongoDB client connections."""
+        with cls._lock:
+            for client, _, _ in cls._instances.values():
+                try:
+                    client.close()
+                except Exception:
+                    pass
+            cls._instances.clear()
 
 
 class EEGDash:
@@ -55,6 +105,7 @@ class EEGDash:
         """
         self.config = data_config
         self.is_public = is_public
+        self.is_staging = is_staging
 
         if self.is_public:
             DB_CONNECTION_STRING = mne.utils.get_config("EEGDASH_DB_URI")
@@ -62,13 +113,10 @@ class EEGDash:
             load_dotenv()
             DB_CONNECTION_STRING = os.getenv("DB_CONNECTION_STRING")
 
-        self.__client = MongoClient(DB_CONNECTION_STRING)
-        self.__db = (
-            self.__client["eegdash"]
-            if not is_staging
-            else self.__client["eegdashstaging"]
+        # Use singleton to get MongoDB client, database, and collection
+        self.__client, self.__db, self.__collection = MongoDBClientSingleton.get_client(
+            DB_CONNECTION_STRING, is_staging
         )
-        self.__collection = self.__db["records"]
 
         self.filesystem = S3FileSystem(
             anon=True, client_kwargs={"region_name": "us-east-2"}
@@ -491,13 +539,24 @@ class EEGDash:
         return self.__collection
 
     def close(self):
-        """Close the MongoDB client connection."""
-        if hasattr(self, "_EEGDash__client"):
-            self.__client.close()
+        """Close the MongoDB client connection.
+        
+        Note: Since MongoDB clients are now managed by a singleton,
+        this method no longer closes connections. Use close_all_connections()
+        class method to close all connections if needed.
+        """
+        # Individual instances no longer close the shared client
+        pass
+
+    @classmethod
+    def close_all_connections(cls):
+        """Close all MongoDB client connections managed by the singleton."""
+        MongoDBClientSingleton.close_all()
 
     def __del__(self):
         """Ensure connection is closed when object is deleted."""
-        self.close()
+        # No longer needed since we're using singleton pattern
+        pass
 
 
 class EEGDashDataset(BaseConcatDataset):

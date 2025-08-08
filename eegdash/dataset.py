@@ -56,9 +56,10 @@ class EEGChallengeDataset(EEGDashDataset):
         elif "dataset" not in query:  
             query["dataset"] = dataset  
         elif query["dataset"] != dataset:  
-            raise ValueError(  
-                f"Query dataset {query['dataset']} does not match the release {release} "  
-                f"which corresponds to dataset {dataset}."  
+            raise ValueError(
+                f"Query dataset {query['dataset']} does not match the release {release} "
+                f"which corresponds to dataset {dataset}."
+            )
 
         super().__init__(
             query=query,

@@ -1,201 +1,125 @@
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from unittest.mock import MagicMock, patch
-
+from unittest.mock import MagicMock
 import pytest
 
 from eegdash.api import EEGDash, MongoDBClientSingleton
 
 
-@pytest.fixture()
-def eegdashObj():
-    """Fixture to create an instance of EEGDashDataset."""
-    from eegdash import EEGDash
+# --- Fixtures ---------------------------------------------------------------
 
-    return EEGDash(is_public=True)
-
-
-def test_fields(eegdashObj):
-    """Test that mongodb records have the expected fields."""
-    expected_fields = [
-        "dataset",
-        "subject",
-    ]
-    collection = eegdashObj.collection
-    or_query = [{field: {"$exists": False}} for field in expected_fields]
-    missing_count = collection.count_documents({"$or": or_query})
-    assert missing_count == 0, f"Missing fields in {missing_count} records"
+@pytest.fixture(autouse=True)
+def reset_singleton():
+    """Clean the singleton registry before/after each test."""
+    MongoDBClientSingleton._instances.clear()
+    yield
+    MongoDBClientSingleton.close_all()
+    MongoDBClientSingleton._instances.clear()
 
 
-class TestEEGDashSingletonIntegration:
-    """Test cases for EEGDash integration with MongoDB singleton."""
+@pytest.fixture
+def mongo_mocks(monkeypatch):
+    """
+    Patch mne.utils.get_config and eegdash.api.MongoClient.
+    Return a structure tracking how many clients were constructed and references to them.
+    """
+    # Always return a test URI (so code path doesn't branch on env)
+    monkeypatch.setattr(
+        "mne.utils.get_config",
+        lambda *a, **k: "mongodb://test_connection",
+        raising=True,
+    )
 
-    def setup_method(self):
-        """Setup method to clear singleton instances before each test."""
-        MongoDBClientSingleton._instances.clear()
+    created = {"count": 0, "clients": []}  # list of {"client","db","coll"}
 
-    def teardown_method(self):
-        """Teardown method to clean up after each test."""
-        MongoDBClientSingleton.close_all()
+    def fake_mongo_client(*args, **kwargs):
+        created["count"] += 1
+        client = MagicMock(name=f"MongoClient[{created['count']}]")
+        db = MagicMock(name=f"DB[{created['count']}]")
+        coll = MagicMock(name=f"Coll[{created['count']}]")
+        client.__getitem__.return_value = db
+        db.__getitem__.return_value = coll
+        created["clients"].append({"client": client, "db": db, "coll": coll})
+        return client
 
-    @patch("mne.utils.get_config")
-    @patch("eegdash.api.MongoClient")
-    def test_eegdash_uses_singleton(self, mock_mongo_client, mock_get_config):
-        """Test that EEGDash instances use the singleton pattern."""
-        mock_get_config.return_value = "mongodb://test_connection"
-        mock_client = MagicMock()
-        mock_db = MagicMock()
-        mock_collection = MagicMock()
-        mock_client.__getitem__.return_value = mock_db
-        mock_db.__getitem__.return_value = mock_collection
-        mock_mongo_client.return_value = mock_client
+    monkeypatch.setattr("eegdash.api.MongoClient", fake_mongo_client, raising=True)
+    return created
 
-        # Create two EEGDash instances with same parameters
-        eegdash1 = EEGDash(is_public=True, is_staging=False)
-        eegdash2 = EEGDash(is_public=True, is_staging=False)
 
-        # Should use the same underlying MongoDB connection
-        assert eegdash1._EEGDash__client is eegdash2._EEGDash__client
-        assert eegdash1._EEGDash__db is eegdash2._EEGDash__db
-        assert eegdash1._EEGDash__collection is eegdash2._EEGDash__collection
+def test_fields_live_db():
+    expected = ["dataset", "subject"]
+    eegdash = EEGDash(is_public=True)
+    or_query = [{f: {"$exists": False}} for f in expected]
+    missing = eegdash.collection.count_documents({"$or": or_query})
+    assert missing == 0, f"Missing fields in {missing} records"
 
-        # MongoClient should only be called once
-        mock_mongo_client.assert_called_once()
 
-    @patch("mne.utils.get_config")
-    @patch("eegdash.api.MongoClient")
-    def test_eegdash_different_staging_flags(self, mock_mongo_client, mock_get_config):
-        """Test that EEGDash instances with different staging flags use different connections."""
-        mock_get_config.return_value = "mongodb://test_connection"
-        mock_client = MagicMock()
-        mock_db = MagicMock()
-        mock_collection = MagicMock()
-        mock_client.__getitem__.return_value = mock_db
-        mock_db.__getitem__.return_value = mock_collection
-        mock_mongo_client.return_value = mock_client
 
-        # Create EEGDash instances with different staging flags
-        eegdash_prod = EEGDash(is_public=True, is_staging=False)
-        eegdash_staging = EEGDash(is_public=True, is_staging=True)
-        assert eegdash_prod._EEGDash__client is not eegdash_staging._EEGDash__client
-        assert eegdash_prod._EEGDash__db is not eegdash_staging._EEGDash__db
-        assert (
-            eegdash_prod._EEGDash__collection
-            is not eegdash_staging._EEGDash__collection
-        )
+def test_uses_singleton(mongo_mocks):
+    """EEGDash instances with same flags share the same underlying connection."""
+    e1 = EEGDash(is_public=True, is_staging=False)
+    e2 = EEGDash(is_public=True, is_staging=False)
 
-        # Should create two different singleton instances
-        assert len(MongoDBClientSingleton._instances) == 2
+    assert e1._EEGDash__client is e2._EEGDash__client
+    assert e1._EEGDash__db is e2._EEGDash__db
+    assert e1._EEGDash__collection is e2._EEGDash__collection
 
-        # MongoClient should be called twice
-        assert mock_mongo_client.call_count == 2
+    assert len(MongoDBClientSingleton._instances) == 1
+    assert mongo_mocks["count"] == 1  # only one MongoClient() constructed
 
-    def test_eegdash_close_behavior(self):
-        """Test that EEGDash.close() doesn't affect singleton connections."""
-        with (
-            patch("mne.utils.get_config") as mock_get_config,
-            patch("eegdash.api.MongoClient") as mock_mongo_client,
-        ):
-            mock_get_config.return_value = "mongodb://test_connection"
-            mock_client = MagicMock()
-            mock_db = MagicMock()
-            mock_collection = MagicMock()
-            mock_client.__getitem__.return_value = mock_db
-            mock_db.__getitem__.return_value = mock_collection
-            mock_mongo_client.return_value = mock_client
 
-            # Create EEGDash instance
-            eegdash1 = EEGDash(is_public=True, is_staging=False)
+def test_different_staging_flags_use_different_connections(mongo_mocks):
+    """Changing is_staging should produce a distinct singleton entry."""
+    prod = EEGDash(is_public=True, is_staging=False)
+    stg = EEGDash(is_public=True, is_staging=True)
 
-            # Close the instance
-            eegdash1.close()
+    assert prod._EEGDash__client is not stg._EEGDash__client
+    assert prod._EEGDash__db is not stg._EEGDash__db
+    assert prod._EEGDash__collection is not stg._EEGDash__collection
 
-            # Client should not be closed
-            mock_client.close.assert_not_called()
+    assert len(MongoDBClientSingleton._instances) == 2
+    assert mongo_mocks["count"] == 2  # two distinct MongoClient() calls
 
-            # Create another instance - should reuse the same connection
-            eegdash2 = EEGDash(is_public=True, is_staging=False)
-            assert eegdash1._EEGDash__client is eegdash2._EEGDash__client
 
-    def test_eegdash_close_all_connections(self):
-        """Test that EEGDash.close_all_connections() properly closes singleton connections."""
-        with (
-            patch("mne.utils.get_config") as mock_get_config,
-            patch("eegdash.api.MongoClient") as mock_mongo_client,
-        ):
-            mock_get_config.return_value = "mongodb://test_connection"
-            mock_client = MagicMock()
-            mock_db = MagicMock()
-            mock_collection = MagicMock()
-            mock_client.__getitem__.return_value = mock_db
-            mock_db.__getitem__.return_value = mock_collection
-            mock_mongo_client.return_value = mock_client
+def test_close_does_not_close_singleton(mongo_mocks):
+    """EEGDash.close() should not close the shared Mongo client."""
+    e1 = EEGDash(is_public=True, is_staging=False)
+    client = e1._EEGDash__client  # grab the underlying client
+    e1.close()
 
-            # Create EEGDash instance
-            _ = EEGDash(is_public=True, is_staging=False)
+    client.close.assert_not_called()
 
-            # Close all connections
-            EEGDash.close_all_connections()
+    e2 = EEGDash(is_public=True, is_staging=False)
+    assert e2._EEGDash__client is client
 
-            # Client should be closed
-            mock_client.close.assert_called_once()
 
-            # Singleton instances should be cleared
-            assert len(MongoDBClientSingleton._instances) == 0
+def test_close_all_connections_closes_clients(mongo_mocks):
+    """EEGDash.close_all_connections() closes clients and clears the registry."""
+    inst = EEGDash(is_public=True, is_staging=False)
+    client = inst._EEGDash__client
 
-    def test_concurrent_eegdash_creation(self):
-        """Test concurrent creation of EEGDash instances."""
-        results = []
+    EEGDash.close_all_connections()
 
-        def create_eegdash():
-            """Worker function to create EEGDash instance."""
-            with (
-                patch("mne.utils.get_config") as mock_get_config,
-                patch("eegdash.api.MongoClient") as mock_mongo_client,
-            ):
-                mock_get_config.return_value = "mongodb://test_connection"
-                mock_client = MagicMock()
-                mock_db = MagicMock()
-                mock_collection = MagicMock()
-                mock_client.__getitem__.return_value = mock_db
-                mock_db.__getitem__.return_value = mock_collection
-                mock_mongo_client.return_value = mock_client
+    client.close.assert_called_once()
+    assert len(MongoDBClientSingleton._instances) == 0
 
-                eegdash = EEGDash(is_public=True, is_staging=False)
-                results.append(eegdash)
 
-        # Set up the mock outside the threads
-        with (
-            patch("mne.utils.get_config") as mock_get_config,
-            patch("eegdash.api.MongoClient") as mock_mongo_client,
-        ):
-            mock_get_config.return_value = "mongodb://test_connection"
-            mock_client = MagicMock()
-            mock_db = MagicMock()
-            mock_collection = MagicMock()
-            mock_client.__getitem__.return_value = mock_db
-            mock_db.__getitem__.return_value = mock_collection
-            mock_mongo_client.return_value = mock_client
+def test_concurrent_creation_shares_singleton(mongo_mocks):
+    """Concurrent EEGDash() calls should converge to one singleton instance."""
+    results = []
 
-            # Create multiple threads
-            with ThreadPoolExecutor(max_workers=5) as executor:
-                futures = [
-                    executor.submit(
-                        lambda: results.append(
-                            EEGDash(is_public=True, is_staging=False)
-                        )
-                    )
-                    for _ in range(10)
-                ]
+    def make_instance():
+        results.append(EEGDash(is_public=True, is_staging=False))
 
-                # Wait for all to complete
-                for future in as_completed(futures):
-                    future.result()
+    with ThreadPoolExecutor(max_workers=5) as ex:
+        futures = [ex.submit(make_instance) for _ in range(10)]
+        for f in as_completed(futures):
+            f.result()
 
-            # All instances should share the same underlying connection
-            if results:
-                first_client = results[0]._EEGDash__client
-                for eegdash in results[1:]:
-                    assert eegdash._EEGDash__client is first_client
+    assert len(results) == 10
+    first_client = results[0]._EEGDash__client
+    for inst in results[1:]:
+        assert inst._EEGDash__client is first_client
 
-            # Should only have one singleton instance
-            assert len(MongoDBClientSingleton._instances) <= 1
+    # Requires thread-safe singleton creation in production code (lock + double-check).
+    assert len(MongoDBClientSingleton._instances) == 1
+    assert mongo_mocks["count"] == 1  # only one MongoClient() constructed

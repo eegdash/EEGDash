@@ -82,7 +82,6 @@ def preprocess_instance(eeg_dash_dataset):
     ]
     pre_processed_dir = cache_folder / "preprocessed"
     pre_processed_dir.mkdir(parents=True, exist_ok=True)
-
     try:
         eeg_dash_dataset = load_concat_dataset(
             pre_processed_dir,

@@ -36,7 +36,7 @@ class EEGDash:
 
     AWS_BUCKET = "s3://openneuro.org"
 
-    def __init__(self, is_public: bool = True, is_staging: bool = False) -> None:
+    def __init__(self, *, is_public: bool = True, is_staging: bool = False) -> None:
         """Create new instance of the EEGDash Database client.
 
         Parameters

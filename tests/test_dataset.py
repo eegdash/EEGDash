@@ -28,10 +28,29 @@ def warmed_mongo():
 def test_eeg_challenge_dataset_initialization():
     """Test the initialization of EEGChallengeDataset."""
     dataset = EEGChallengeDataset(release="R5")
-    assert dataset.s3_bucket == "s3://nmdatasets/NeurIPS25//R5_L100"
-    assert (
-        dataset.datasets[0].s3file
-        == "s3://nmdatasets/NeurIPS25//R5_L100/ds005509/sub-NDARAC350XUM/eeg/sub-NDARAC350XUM_task-DespicableMe_eeg.set"
+
+    release = "R5"
+    expected_bucket_prefix = f"s3://nmdatasets/NeurIPS25//{release}_L100"
+    assert dataset.s3_bucket == expected_bucket_prefix, (
+        f"Unexpected s3_bucket: {dataset.s3_bucket} (expected {expected_bucket_prefix})"
+    )
+
+    # Expected components (kept explicit for readability & easier future edits)
+    expected_dataset = "ds005509"
+    expected_subject = "sub-NDARAC350XUM"
+    expected_task = "DespicableMe"
+    expected_suffix = (
+        f"{expected_dataset}/{expected_subject}/eeg/"
+        f"{expected_subject}_task-{expected_task}_eeg.set"
+    )
+
+    expected_full_path = f"{dataset.s3_bucket}/{expected_suffix}"
+    first_file = dataset.datasets[0].s3file
+
+    assert first_file == expected_full_path, (
+        "Mismatch in first dataset s3 file path.\n"
+        f"Got     : {first_file}\n"
+        f"Expected: {expected_full_path}"
     )
 
 

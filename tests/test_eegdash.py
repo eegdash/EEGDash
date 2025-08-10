@@ -45,10 +45,7 @@ def patch_manager(monkeypatch):
 
 @pytest.fixture
 def eegdash_instance():
-    return EEGDash(is_public=True)  # connection string access is patched implicitly
-
-
-# ---------------- Tests for exist() -----------------
+    return EEGDash(is_public=True)
 
 
 def test_exist_returns_true_for_matching_data_name(eegdash_instance):

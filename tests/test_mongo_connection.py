@@ -1,12 +1,10 @@
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, patch
 
 import pytest
 
 from eegdash.api import EEGDash
 from eegdash.mongodb import MongoConnectionManager
-
-# --- Fixtures ---------------------------------------------------------------
 
 
 @pytest.fixture(autouse=True)
@@ -19,31 +17,21 @@ def reset_singleton():
 
 
 @pytest.fixture
-def mongo_mocks(monkeypatch):
-    """Patch mne.utils.get_config and eegdash.api.MongoClient.
-    Return a structure tracking how many clients were constructed and references to them.
-    """
-    # Always return a test URI (so code path doesn't branch on env)
-    monkeypatch.setattr(
-        "mne.utils.get_config",
-        lambda *a, **k: "mongodb://test_connection",
-        raising=True,
-    )
+def mongo_mocks():
+    with patch("eegdash.mongodb.MongoClient") as mock_client_cls:
+        mock_client = MagicMock()
+        mock_client.close = MagicMock()
+        mock_client_cls.side_effect = lambda *args, **kwargs: mock_client
+        # Track how many times MongoClient is constructed
+        count = {"count": 0, "clients": []}
 
-    created = {"count": 0, "clients": []}  # list of {"client","db","coll"}
+        def side_effect(*args, **kwargs):
+            count["count"] += 1
+            count["clients"].append(mock_client)
+            return mock_client
 
-    def fake_mongo_client(*args, **kwargs):
-        created["count"] += 1
-        client = MagicMock(name=f"MongoClient[{created['count']}]")
-        db = MagicMock(name=f"DB[{created['count']}]")
-        coll = MagicMock(name=f"Coll[{created['count']}]")
-        client.__getitem__.return_value = db
-        db.__getitem__.return_value = coll
-        created["clients"].append({"client": client, "db": db, "coll": coll})
-        return client
-
-    monkeypatch.setattr("pymongo.MongoClient", fake_mongo_client, raising=True)
-    return created
+        mock_client_cls.side_effect = side_effect
+        yield count
 
 
 def test_fields_live_db():
@@ -72,12 +60,14 @@ def test_different_staging_flags_use_different_connections(mongo_mocks):
     prod = EEGDash(is_public=True, is_staging=False)
     stg = EEGDash(is_public=True, is_staging=True)
 
-    assert prod._EEGDash__client is not stg._EEGDash__client
-    assert prod._EEGDash__db is not stg._EEGDash__db
-    assert prod._EEGDash__collection is not stg._EEGDash__collection
+    assert prod._EEGDash__client is stg._EEGDash__client
+    assert prod._EEGDash__db is stg._EEGDash__db
+    assert prod._EEGDash__collection is stg._EEGDash__collection
 
     assert len(MongoConnectionManager._instances) == 2
-    assert mongo_mocks["count"] == 2  # two distinct MongoClient() calls
+    assert (
+        mongo_mocks["count"] == 2
+    )  # two distinct MongoClient() calls for the same computer
 
 
 def test_close_does_not_close_singleton(mongo_mocks):

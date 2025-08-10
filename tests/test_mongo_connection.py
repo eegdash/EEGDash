@@ -55,7 +55,7 @@ def test_uses_singleton(mongo_mocks):
     assert mongo_mocks["count"] == 1  # only one MongoClient() constructed
 
 
-def test_different_staging_flags_use_different_connections(mongo_mocks):
+def test_different_staging_flags_use_same_connections(mongo_mocks):
     """Changing is_staging should produce a distinct singleton entry."""
     prod = EEGDash(is_public=True, is_staging=False)
     stg = EEGDash(is_public=True, is_staging=True)

@@ -489,7 +489,7 @@ class EEGDash:
     @classmethod
     def close_all_connections(cls):
         """Close all MongoDB client connections managed by the singleton."""
-        MongoDBClientSingleton.close_all()
+        MongoConnectionManager.close_all()
 
     def __del__(self):
         """Ensure connection is closed when object is deleted."""

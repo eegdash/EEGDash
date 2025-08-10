@@ -1,6 +1,7 @@
-def __init__mongo_client():
-    from mne.utils import get_config, set_config, use_log_level
+from mne.utils import get_config, set_config, use_log_level
 
+
+def __init__mongo_client():
     with use_log_level("ERROR"):
         if get_config("EEGDASH_DB_URI") is None:
             set_config(

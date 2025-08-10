@@ -1,7 +1,5 @@
-import os
 from pathlib import Path
 
-import pytest
 from mne import get_config
 from torch.utils.data import Dataset
 
@@ -32,7 +30,6 @@ def test_dataset_api():
     assert isinstance(record, list)
 
 
-@pytest.mark.skipif("CI" in os.environ, reason="This test is only for local testing")
 def test_number_recordings():
     eeg_dash_instance = EEGDash()
 

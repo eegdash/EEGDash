@@ -103,26 +103,48 @@ class EEGDash:
         return [result for result in results]
 
     def exist(self, query: dict[str, Any]) -> bool:
-        """Check if the given query matches any records in the MongoDB collection.
+        """Return True if at least one record matches the query, else False.
 
-        Note that currently only a limited set of query fields is allowed here.
+        This is a lightweight existence check that uses MongoDB's ``find_one``
+        instead of fetching all matching documents (which would be wasteful in
+        both time and memory for broad queries). Only a restricted set of
+        fields is accepted to avoid accidental full scans caused by malformed
+        or unsupported keys.
 
         Parameters
         ----------
-        query: dict
-            A dictionary that specifies the query to be executed; this is a reference
-            document that is used to match records in the MongoDB collection.
+        query : dict
+            Mapping of allowed field(s) to value(s). Allowed keys: ``data_name``
+            and ``dataset``. The query must not be empty.
 
         Returns
         -------
-        bool:
-            True if at least one record matches the query, False otherwise.
+        bool
+            True if at least one matching record exists; False otherwise.
+
+        Raises
+        ------
+        TypeError
+            If ``query`` is not a dict.
+        ValueError
+            If ``query`` is empty or contains unsupported field names.
 
         """
-        accepted_query_fields = ["data_name", "dataset"]
-        assert all(field in accepted_query_fields for field in query.keys())
-        sessions = self.find(query)
-        return len(sessions) > 0
+        if not isinstance(query, dict):
+            raise TypeError("query must be a dict")
+        if not query:
+            raise ValueError("query cannot be empty")
+
+        accepted_query_fields = {"data_name", "dataset"}
+        unknown = set(query.keys()) - accepted_query_fields
+        if unknown:
+            raise ValueError(
+                f"Unsupported query field(s): {', '.join(sorted(unknown))}. "
+                f"Allowed: {sorted(accepted_query_fields)}"
+            )
+
+        doc = self.__collection.find_one(query, projection={"_id": 1})
+        return doc is not None
 
     def _validate_input(self, record: dict[str, Any]) -> dict[str, Any]:
         """Internal method to validate the input record against the expected schema.

@@ -36,7 +36,7 @@ class EEGDash:
 
     AWS_BUCKET = "s3://openneuro.org"
 
-    def __init__(self, *, is_public: bool = True, is_staging: bool = False) -> None:
+    def __init__(self, is_public: bool = True, is_staging: bool = False) -> None:
         """Create new instance of the EEGDash Database client.
 
         Parameters
@@ -648,28 +648,6 @@ class EEGDashDataset(BaseConcatDataset):
             and included in the returned dataset description(s).
 
         """
-
-        def get_base_dataset_from_bids_file(
-            bids_dataset: EEGBIDSDataset,
-            bids_file: str,
-            eeg_dash_instance: EEGDash,
-            s3_bucket: str | None,
-        ) -> EEGDashBaseDataset:
-            """Instantiate a single EEGDashBaseDataset given a local BIDS file. Note
-            this does not actually load the data from disk, but will access the metadata.
-            """
-            record = eeg_dash_instance.load_eeg_attrs_from_bids_file(
-                bids_dataset, bids_file
-            )
-            description = {}
-            for field in description_fields:
-                value = self.find_key_in_nested_dict(record, field)
-                if value is not None:
-                    description[field] = value
-            return EEGDashBaseDataset(
-                record, self.cache_dir, s3_bucket, description=description, **kwargs
-            )
-
         bids_dataset = EEGBIDSDataset(
             data_dir=data_dir,
             dataset=dataset,
@@ -677,11 +655,41 @@ class EEGDashDataset(BaseConcatDataset):
         eeg_dash_instance = EEGDash()
         try:
             datasets = Parallel(n_jobs=-1, prefer="threads", verbose=1)(
-                delayed(get_base_dataset_from_bids_file)(
-                    bids_dataset, bids_file, eeg_dash_instance, s3_bucket
+                delayed(self.get_base_dataset_from_bids_file)(
+                    bids_dataset=bids_dataset,
+                    bids_file=bids_file,
+                    eeg_dash_instance=eeg_dash_instance,
+                    s3_bucket=s3_bucket,
+                    description_fields=description_fields,
                 )
                 for bids_file in bids_dataset.get_files()
             )
             return datasets
         finally:
             eeg_dash_instance.close()
+
+    def get_base_dataset_from_bids_file(
+        self,
+        bids_dataset: EEGBIDSDataset,
+        bids_file: str,
+        eeg_dash_instance: EEGDash,
+        s3_bucket: str | None,
+        description_fields: list[str],
+    ) -> EEGDashBaseDataset:
+        """Instantiate a single EEGDashBaseDataset given a local BIDS file. Note
+        this does not actually load the data from disk, but will access the metadata.
+        """
+        record = eeg_dash_instance.load_eeg_attrs_from_bids_file(
+            bids_dataset, bids_file
+        )
+        description = {}
+        for field in description_fields:
+            value = self.find_key_in_nested_dict(record, field)
+            if value is not None:
+                description[field] = value
+        return EEGDashBaseDataset(
+            record,
+            self.cache_dir,
+            s3_bucket,
+            description=description,
+        )

@@ -207,3 +207,4 @@ def test_complete_train(windows_ds):
             f"Epoch {e}, Train accuracy: {correct_train:.2f}, \
             Valid accuracy: {correct_val:.2f}"
         )
+

@@ -3,7 +3,8 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from eegdash.api import EEGDash, MongoConnectionManager
+from eegdash.api import EEGDash
+from eegdash.mongodb import MongoConnectionManager
 
 # --- Fixtures ---------------------------------------------------------------
 
@@ -41,7 +42,7 @@ def mongo_mocks(monkeypatch):
         created["clients"].append({"client": client, "db": db, "coll": coll})
         return client
 
-    monkeypatch.setattr("eegdash.api.MongoClient", fake_mongo_client, raising=True)
+    monkeypatch.setattr("pymongo.MongoClient", fake_mongo_client, raising=True)
     return created
 
 

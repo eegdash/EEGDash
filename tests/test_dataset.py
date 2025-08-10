@@ -1,12 +1,15 @@
 import time
+
 import pytest
+
 from eegdash.api import EEGDash
 from eegdash.dataset import EEGChallengeDataset
 
-RELEASES = ["R1","R2","R3","R4","R5","R6","R7","R8","R9","R10","R11"]
+RELEASES = ["R1", "R2", "R3", "R4", "R5", "R6", "R7", "R8", "R9", "R10", "R11"]
 FILES_PER_RELEASE = [1342, 1405, 1812, 3342, 3326, 1227, 3100, 2320, 2885, 2516, 3397]
 
 RELEASE_FILES = list(zip(RELEASES, FILES_PER_RELEASE))
+
 
 def _load_release(release):
     ds = EEGChallengeDataset(release=release)
@@ -17,7 +20,7 @@ def _load_release(release):
 @pytest.fixture(scope="session")
 def warmed_mongo():
     try:
-       EEGDash()
+        EEGDash()
     except Exception:
         pytest.skip("Mongo not reachable")
 
@@ -30,6 +33,7 @@ def test_eeg_challenge_dataset_initialization():
         dataset.datasets[0].s3file
         == "s3://nmdatasets/NeurIPS25//R5_L100/ds005509/sub-NDARAC350XUM/eeg/sub-NDARAC350XUM_task-DespicableMe_eeg.set"
     )
+
 
 @pytest.mark.parametrize("release, number_files", RELEASE_FILES)
 def test_eeg_challenge_dataset_amount_files(release, number_files):
@@ -44,9 +48,9 @@ def test_mongodb_load_benchmark(benchmark, warmed_mongo, release):
     result = benchmark.pedantic(
         _load_release,
         args=(release,),
-        iterations=1,      # I/O-bound → 1 iteration per round
-        rounds=5,          # take min/median across several cold-ish runs
-        warmup_rounds=1,   # do one warmup round
+        iterations=1,  # I/O-bound → 1 iteration per round
+        rounds=5,  # take min/median across several cold-ish runs
+        warmup_rounds=1,  # do one warmup round
     )
     assert result is not None
 

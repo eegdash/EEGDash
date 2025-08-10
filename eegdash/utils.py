@@ -8,4 +8,5 @@ def __init__mongo_client():
         set_config(
             "EEGDASH_DB_URI",
             "mongodb+srv://eegdash-user:mdzoMjQcHWTVnKDq@cluster0.vz35p.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0",
+            set_env=True,
         )

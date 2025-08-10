@@ -1,6 +1,6 @@
 import threading
-from pymongo import MongoClient
 
+from pymongo import MongoClient
 
 # MongoDB Operations
 # These methods provide a high-level interface to interact with the MongoDB

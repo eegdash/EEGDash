@@ -61,6 +61,6 @@ class MongoConnectionManager:
             for client, _, _ in cls._instances.values():
                 try:
                     client.close()
-                except Exception:
+                except:
                     pass
             cls._instances.clear()

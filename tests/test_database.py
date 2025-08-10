@@ -3,7 +3,7 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from eegdash.api import EEGDash, MongoDBClientSingleton
+from eegdash.api import EEGDash, MongoConnectionManager
 
 # --- Fixtures ---------------------------------------------------------------
 
@@ -11,10 +11,10 @@ from eegdash.api import EEGDash, MongoDBClientSingleton
 @pytest.fixture(autouse=True)
 def reset_singleton():
     """Clean the singleton registry before/after each test."""
-    MongoDBClientSingleton._instances.clear()
+    MongoConnectionManager._instances.clear()
     yield
-    MongoDBClientSingleton.close_all()
-    MongoDBClientSingleton._instances.clear()
+    MongoConnectionManager.close_all()
+    MongoConnectionManager._instances.clear()
 
 
 @pytest.fixture
@@ -62,7 +62,7 @@ def test_uses_singleton(mongo_mocks):
     assert e1._EEGDash__db is e2._EEGDash__db
     assert e1._EEGDash__collection is e2._EEGDash__collection
 
-    assert len(MongoDBClientSingleton._instances) == 1
+    assert len(MongoConnectionManager._instances) == 1
     assert mongo_mocks["count"] == 1  # only one MongoClient() constructed
 
 
@@ -75,7 +75,7 @@ def test_different_staging_flags_use_different_connections(mongo_mocks):
     assert prod._EEGDash__db is not stg._EEGDash__db
     assert prod._EEGDash__collection is not stg._EEGDash__collection
 
-    assert len(MongoDBClientSingleton._instances) == 2
+    assert len(MongoConnectionManager._instances) == 2
     assert mongo_mocks["count"] == 2  # two distinct MongoClient() calls
 
 
@@ -99,7 +99,7 @@ def test_close_all_connections_closes_clients(mongo_mocks):
     EEGDash.close_all_connections()
 
     client.close.assert_called_once()
-    assert len(MongoDBClientSingleton._instances) == 0
+    assert len(MongoConnectionManager._instances) == 0
 
 
 def test_concurrent_creation_shares_singleton(mongo_mocks):
@@ -120,5 +120,5 @@ def test_concurrent_creation_shares_singleton(mongo_mocks):
         assert inst._EEGDash__client is first_client
 
     # Requires thread-safe singleton creation in production code (lock + double-check).
-    assert len(MongoDBClientSingleton._instances) == 1
+    assert len(MongoConnectionManager._instances) == 1
     assert mongo_mocks["count"] == 1  # only one MongoClient() constructed

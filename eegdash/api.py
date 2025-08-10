@@ -9,13 +9,14 @@ import numpy as np
 import xarray as xr
 from dotenv import load_dotenv
 from joblib import Parallel, delayed
-from pymongo import InsertOne, MongoClient, UpdateOne
+from pymongo import InsertOne, UpdateOne
 from s3fs import S3FileSystem
 
 from braindecode.datasets import BaseConcatDataset
 
 from .data_config import config as data_config
 from .data_utils import EEGBIDSDataset, EEGDashBaseDataset
+from .mongodb import MongoConnectionManager
 
 logger = logging.getLogger("eegdash")
 
@@ -55,6 +56,7 @@ class EEGDash:
         """
         self.config = data_config
         self.is_public = is_public
+        self.is_staging = is_staging
 
         if self.is_public:
             DB_CONNECTION_STRING = mne.utils.get_config("EEGDASH_DB_URI")
@@ -62,30 +64,14 @@ class EEGDash:
             load_dotenv()
             DB_CONNECTION_STRING = os.getenv("DB_CONNECTION_STRING")
 
-        self.__client = MongoClient(DB_CONNECTION_STRING)
-        self.__db = (
-            self.__client["eegdash"]
-            if not is_staging
-            else self.__client["eegdashstaging"]
+        # Use singleton to get MongoDB client, database, and collection
+        self.__client, self.__db, self.__collection = MongoConnectionManager.get_client(
+            DB_CONNECTION_STRING, is_staging
         )
-        self.__collection = self.__db["records"]
 
         self.filesystem = S3FileSystem(
             anon=True, client_kwargs={"region_name": "us-east-2"}
         )
-
-    # MongoDB Operations
-    # These methods provide a high-level interface to interact with the MongoDB
-    # collection, allowing users to find, add, and update EEG data records.
-    # - find:
-    # - exist:
-    # - add_request:
-    # - add:
-    # - update_request:
-    # - remove_field:
-    # - remove_field_from_db:
-    # - close: Close the MongoDB connection.
-    # - __del__: Destructor to close the MongoDB connection.
 
     def find(self, query: dict[str, Any], *args, **kwargs) -> list[Mapping[str, Any]]:
         """Find records in the MongoDB collection that satisfy the given query.
@@ -117,26 +103,48 @@ class EEGDash:
         return [result for result in results]
 
     def exist(self, query: dict[str, Any]) -> bool:
-        """Check if the given query matches any records in the MongoDB collection.
+        """Return True if at least one record matches the query, else False.
 
-        Note that currently only a limited set of query fields is allowed here.
+        This is a lightweight existence check that uses MongoDB's ``find_one``
+        instead of fetching all matching documents (which would be wasteful in
+        both time and memory for broad queries). Only a restricted set of
+        fields is accepted to avoid accidental full scans caused by malformed
+        or unsupported keys.
 
         Parameters
         ----------
-        query: dict
-            A dictionary that specifies the query to be executed; this is a reference
-            document that is used to match records in the MongoDB collection.
+        query : dict
+            Mapping of allowed field(s) to value(s). Allowed keys: ``data_name``
+            and ``dataset``. The query must not be empty.
 
         Returns
         -------
-        bool:
-            True if at least one record matches the query, False otherwise.
+        bool
+            True if at least one matching record exists; False otherwise.
+
+        Raises
+        ------
+        TypeError
+            If ``query`` is not a dict.
+        ValueError
+            If ``query`` is empty or contains unsupported field names.
 
         """
-        accepted_query_fields = ["data_name", "dataset"]
-        assert all(field in accepted_query_fields for field in query.keys())
-        sessions = self.find(query)
-        return len(sessions) > 0
+        if not isinstance(query, dict):
+            raise TypeError("query must be a dict")
+        if not query:
+            raise ValueError("query cannot be empty")
+
+        accepted_query_fields = {"data_name", "dataset"}
+        unknown = set(query.keys()) - accepted_query_fields
+        if unknown:
+            raise ValueError(
+                f"Unsupported query field(s): {', '.join(sorted(unknown))}. "
+                f"Allowed: {sorted(accepted_query_fields)}"
+            )
+
+        doc = self.__collection.find_one(query, projection={"_id": 1})
+        return doc is not None
 
     def _validate_input(self, record: dict[str, Any]) -> dict[str, Any]:
         """Internal method to validate the input record against the expected schema.
@@ -491,13 +499,24 @@ class EEGDash:
         return self.__collection
 
     def close(self):
-        """Close the MongoDB client connection."""
-        if hasattr(self, "_EEGDash__client"):
-            self.__client.close()
+        """Close the MongoDB client connection.
+
+        Note: Since MongoDB clients are now managed by a singleton,
+        this method no longer closes connections. Use close_all_connections()
+        class method to close all connections if needed.
+        """
+        # Individual instances no longer close the shared client
+        pass
+
+    @classmethod
+    def close_all_connections(cls):
+        """Close all MongoDB client connections managed by the singleton."""
+        MongoConnectionManager.close_all()
 
     def __del__(self):
         """Ensure connection is closed when object is deleted."""
-        self.close()
+        # No longer needed since we're using singleton pattern
+        pass
 
 
 class EEGDashDataset(BaseConcatDataset):
@@ -651,28 +670,6 @@ class EEGDashDataset(BaseConcatDataset):
             and included in the returned dataset description(s).
 
         """
-
-        def get_base_dataset_from_bids_file(
-            bids_dataset: EEGBIDSDataset,
-            bids_file: str,
-            eeg_dash_instance: EEGDash,
-            s3_bucket: str | None,
-        ) -> EEGDashBaseDataset:
-            """Instantiate a single EEGDashBaseDataset given a local BIDS file. Note
-            this does not actually load the data from disk, but will access the metadata.
-            """
-            record = eeg_dash_instance.load_eeg_attrs_from_bids_file(
-                bids_dataset, bids_file
-            )
-            description = {}
-            for field in description_fields:
-                value = self.find_key_in_nested_dict(record, field)
-                if value is not None:
-                    description[field] = value
-            return EEGDashBaseDataset(
-                record, self.cache_dir, s3_bucket, description=description, **kwargs
-            )
-
         bids_dataset = EEGBIDSDataset(
             data_dir=data_dir,
             dataset=dataset,
@@ -680,11 +677,41 @@ class EEGDashDataset(BaseConcatDataset):
         eeg_dash_instance = EEGDash()
         try:
             datasets = Parallel(n_jobs=-1, prefer="threads", verbose=1)(
-                delayed(get_base_dataset_from_bids_file)(
-                    bids_dataset, bids_file, eeg_dash_instance, s3_bucket
+                delayed(self.get_base_dataset_from_bids_file)(
+                    bids_dataset=bids_dataset,
+                    bids_file=bids_file,
+                    eeg_dash_instance=eeg_dash_instance,
+                    s3_bucket=s3_bucket,
+                    description_fields=description_fields,
                 )
                 for bids_file in bids_dataset.get_files()
             )
             return datasets
         finally:
             eeg_dash_instance.close()
+
+    def get_base_dataset_from_bids_file(
+        self,
+        bids_dataset: EEGBIDSDataset,
+        bids_file: str,
+        eeg_dash_instance: EEGDash,
+        s3_bucket: str | None,
+        description_fields: list[str],
+    ) -> EEGDashBaseDataset:
+        """Instantiate a single EEGDashBaseDataset given a local BIDS file. Note
+        this does not actually load the data from disk, but will access the metadata.
+        """
+        record = eeg_dash_instance.load_eeg_attrs_from_bids_file(
+            bids_dataset, bids_file
+        )
+        description = {}
+        for field in description_fields:
+            value = self.find_key_in_nested_dict(record, field)
+            if value is not None:
+                description[field] = value
+        return EEGDashBaseDataset(
+            record,
+            self.cache_dir,
+            s3_bucket,
+            description=description,
+        )

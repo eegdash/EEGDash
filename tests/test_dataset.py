@@ -1,3 +1,4 @@
+import time
 import pytest
 from eegdash.api import EEGDash
 from eegdash.dataset import EEGChallengeDataset
@@ -48,3 +49,11 @@ def test_mongodb_load_benchmark(benchmark, warmed_mongo, release):
         warmup_rounds=1,   # do one warmup round
     )
     assert result is not None
+
+
+@pytest.mark.parametrize("release", RELEASES)
+def test_mongodb_load_under_slo(release):
+    start_time = time.perf_counter()
+    _ = EEGChallengeDataset(release=release)
+    duration = time.perf_counter() - start_time
+    assert duration < 10, f"{release} took {duration:.2f}s"

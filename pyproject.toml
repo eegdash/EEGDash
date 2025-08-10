@@ -59,6 +59,7 @@ tests = [
     'pytest-cov',
     'codecov',
     'pytest_cases',
+    'pytest-benchmark',
 ]
 dev = [
   "pre-commit"

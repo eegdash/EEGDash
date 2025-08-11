@@ -14,9 +14,7 @@ from bids import BIDSLayout
 from joblib import Parallel, delayed
 from mne._fiff.utils import _read_segments_file
 from mne.io import BaseRaw
-from mne_bids import (
-    BIDSPath,
-)
+from mne_bids import BIDSPath
 
 from braindecode.datasets import BaseDataset
 
@@ -30,7 +28,7 @@ class EEGDashBaseDataset(BaseDataset):
     conjunction with the preprocessing and training pipelines of braindecode.
     """
 
-    AWS_BUCKET = "s3://openneuro.org"
+    _AWS_BUCKET = "s3://openneuro.org"
 
     def __init__(
         self,
@@ -64,7 +62,7 @@ class EEGDashBaseDataset(BaseDataset):
             suffix="eeg",
             **bids_kwargs,
         )
-        self.s3_bucket = s3_bucket if s3_bucket else self.AWS_BUCKET
+        self.s3_bucket = s3_bucket if s3_bucket else self._AWS_BUCKET
         self.s3file = self.get_s3path(record["bidspath"])
         self.filecache = self.cache_dir / record["bidspath"]
         self.bids_dependencies = record["bidsdependencies"]
@@ -176,7 +174,7 @@ class EEGDashBaseRaw(BaseRaw):
 
     """
 
-    AWS_BUCKET = "s3://openneuro.org"
+    _AWS_BUCKET = "s3://openneuro.org"
 
     def __init__(
         self,
@@ -218,7 +216,7 @@ class EEGDashBaseRaw(BaseRaw):
         )
 
     def get_s3path(self, filepath):
-        return f"{self.AWS_BUCKET}/{filepath}"
+        return f"{self._AWS_BUCKET}/{filepath}"
 
     def _download_s3(self):
         self.filecache.parent.mkdir(parents=True, exist_ok=True)

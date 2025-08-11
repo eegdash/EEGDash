@@ -11,10 +11,7 @@ from mne.io import read_info
 
 from braindecode.datautil.serialization import _load_kwargs_json
 
-from .datasets import (
-    FeaturesConcatDataset,
-    FeaturesDataset,
-)
+from .datasets import FeaturesConcatDataset, FeaturesDataset
 
 
 def load_features_concat_dataset(path, ids_to_load=None, n_jobs=1):

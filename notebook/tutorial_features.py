@@ -95,10 +95,11 @@ windows_ds = load_concat_dataset(
 # %% [markdown]
 # ## Feature Extraction
 
+from functools import partial
+
 # %%
 from eegdash import features
 from eegdash.features import extract_features, fit_feature_extractors
-from functools import partial
 
 sfreq = windows_ds.datasets[0].raw.info["sfreq"]
 filter_freqs = dict(windows_ds.datasets[0].raw_preproc_kwargs)["filter"]
@@ -234,12 +235,13 @@ features_ds.to_dataframe(include_target=True)
 # 4. **Create DataLoaders** – The datasets are wrapped in PyTorch `DataLoader` objects with a batch size of 100, allowing efficient mini-batch training and shuffling. Although there are only 136 subjects, the dataset contains more than 10,000 2-second samples.
 #
 
-# %%
-from eegdash.features import FeaturesConcatDataset
-from sklearn.model_selection import train_test_split
-from torch.utils.data import DataLoader
 import numpy as np
 import torch
+from sklearn.model_selection import train_test_split
+from torch.utils.data import DataLoader
+
+# %%
+from eegdash.features import FeaturesConcatDataset
 
 # random seed for reproducibility
 random_state = 0
@@ -331,10 +333,11 @@ np.array(label).T
 #
 #
 
+from torch import nn
+
 # %%
 # create model
 from torchinfo import summary
-from torch import nn
 
 # MLP
 model = nn.Sequential(

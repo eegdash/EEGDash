@@ -67,22 +67,36 @@ dev = [
 
 docs = [
   "sphinx",
+  "sphinx_design",
   "sphinx_gallery",
   "sphinx_rtd_theme",
-  "numpydoc"
+  "pydata-sphinx-theme",
+  "numpydoc",
+  "memory_profiler",
+  "ipython",
+  "sphinx_design",
+  "numpydoc",
+  "lightgbm",
 ]
 
 all = [
+  "pre-commit",
   "pytest",
   "pytest-cov",
   "codecov",
   "pytest_cases",
-  "pre-commit",
+  "pytest-benchmark",
   "sphinx",
+  "sphinx_design",
   "sphinx_gallery",
   "sphinx_rtd_theme",
-  "numpydoc"
+  "pydata-sphinx-theme",
+  "numpydoc",
+  "memory_profiler",
+  "ipython",
+  "lightgbm",
 ]
+
 [tool.setuptools]
 py-modules = []
 

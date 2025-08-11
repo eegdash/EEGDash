@@ -82,18 +82,21 @@ for i, file in enumerate(subject_files):
 #    - Window duration: 1s
 #    - Efficient memory usage with on-demand loading
 
-# %%
-from braindecode.preprocessing import (
-    preprocess,
-    Preprocessor,
-    create_windows_from_events,
-)
-from braindecode.datasets import BaseConcatDataset, BaseDataset
-import warnings
 import logging
+import warnings
+
 import mne
 import numpy as np
 from mne.io import read_raw_eeglab
+
+from braindecode.datasets import BaseConcatDataset, BaseDataset
+
+# %%
+from braindecode.preprocessing import (
+    Preprocessor,
+    create_windows_from_events,
+    preprocess,
+)
 
 mne.set_log_level("ERROR")
 logging.getLogger("joblib").setLevel(logging.ERROR)
@@ -252,9 +255,10 @@ for label in np.unique(labels):
 #
 # This architecture is particularly effective for EEG classification tasks, incorporating frequency-band specific spatial patterns.
 
+from torchinfo import summary
+
 # %%
 from braindecode.models import ShallowFBCSPNet
-from torchinfo import summary
 
 model = ShallowFBCSPNet(
     in_chans=30,

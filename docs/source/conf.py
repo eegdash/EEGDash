@@ -66,6 +66,11 @@ html_theme_options = {
     "show_toc_level": 1,
     "navbar_end": ["theme-switcher"],
     "footer_start": ["copyright"],
+    "logo": {
+        "image_light": "_static/eegdash_icon.png",
+        "image_dark": "_static/eegdash_icon.png",
+        "alt_text": "EEG Dash Logo",
+    },
 }
 
 sphinx_gallery_conf = {
@@ -78,7 +83,7 @@ sphinx_gallery_conf = {
     "show_api_usage": True,
     "doc_module": ("eegdash", "numpy", "scipy", "matplotlib"),
     "reference_url": {"eegdash": None},
-    "filename_pattern": r"^(?!_).*\.py",
+    "filename_pattern": r"^plot_(?!_).*\.py",
     "matplotlib_animations": True,
     "first_notebook_cell": (
         "# For tips on running notebooks in Google Colab:\n"

@@ -47,6 +47,7 @@ repos:
         exclude_types:
         - csv
         - json
+        - svg
 -   repo: https://github.com/asottile/blacken-docs
     rev: 1.19.1
     hooks:

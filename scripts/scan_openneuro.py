@@ -1,7 +1,8 @@
 import os
 
+
 def find_files_recursively(folder_path, extensions):
-    """ Recursively find the first file of each specified extension in a folder. """
+    """Recursively find the first file of each specified extension in a folder."""
     first_files = {ext: None for ext in extensions}
 
     for dirpath, _, filenames in os.walk(folder_path):
@@ -9,12 +10,13 @@ def find_files_recursively(folder_path, extensions):
             for ext in extensions:
                 if filename.endswith(ext) and first_files[ext] is None:
                     first_files[ext] = os.path.join(dirpath, filename)
-        
+
         # Stop searching if we found all required files
         if all(first_files.values()):
             break
-    
+
     return first_files
+
 
 def scan_folders(root_path):
     matching_folders = []
@@ -24,7 +26,7 @@ def scan_folders(root_path):
         for entry in entries:
             if entry.is_dir() and entry.name.startswith("ds00"):
                 folder_path = os.path.join(root_path, entry.name)
-                
+
                 # Recursively find the first .set and .fdt files
                 first_files = find_files_recursively(folder_path, [".set", ".fdt"])
 
@@ -47,6 +49,7 @@ def scan_folders(root_path):
                     print(f"  First .fdt file: {first_fdt_file}")
 
     return matching_folders
+
 
 if __name__ == "__main__":
     root_directory = input("Enter the root directory to scan: ").strip()

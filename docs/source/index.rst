@@ -9,6 +9,12 @@
 EEG Dash Homepage
 ==================
 
+.. image:: _static/eegdash.png
+   :alt: EEG Dash Logo
+   :class: logo mainlogo
+   :align: center
+   :scale: 75%
+
 
 .. rst-class:: h4 text-center font-weight-light my-4
 

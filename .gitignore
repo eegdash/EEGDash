@@ -35,3 +35,5 @@ cover
 docs/source/api/
 
 examples/data
+#Mac files
+.DS_Store

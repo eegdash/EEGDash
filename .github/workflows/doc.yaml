@@ -10,8 +10,13 @@ on:
     branches:
       - '*' # all branches, including forks
 
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
 jobs:
-  test:
+  docs:
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -52,12 +57,15 @@ jobs:
           cd docs
           make html
 
-      - name: Deploy
-        uses: peaceiris/actions-gh-pages@v4
+      - uses: actions/upload-pages-artifact@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          # publish_branch: gh-pages   # optional; default is gh-pages
-          publish_dir: docs/build/html
-          force_orphan: true
+          path: docs/build/html
 
+  deploy:
+    needs: docs
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/deploy-pages@v4
+        with:
+          artifact_name: github-pages  # optional; this is the default
 

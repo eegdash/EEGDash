@@ -1,8 +1,9 @@
 """Tests showing BIDSDataset not able to handle example EEGLAB dataset and slower than pybids"""
 
 # %%
-from braindecode.datasets import BIDSDataset
 from bids import BIDSLayout
+
+from braindecode.datasets import BIDSDataset
 
 # %%
 bids = BIDSDataset(root="/mnt/nemar/openneuro/ds003645", preload=False)

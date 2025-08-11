@@ -61,18 +61,21 @@ test_files = all_files[0:3]
 #
 # Finally, we use **create_windows_from_events** to extract windows centered on events (-128 to +128 samples around each event).
 
+import logging
+import warnings
+
+import mne
+import numpy as np
+from mne.io import read_raw_eeglab
+
+from braindecode.datasets import BaseConcatDataset, BaseDataset
+
 # %%
 from braindecode.preprocessing import (
-    preprocess,
     Preprocessor,
     create_windows_from_events,
+    preprocess,
 )
-import mne
-from mne.io import read_raw_eeglab
-from braindecode.datasets import BaseConcatDataset, BaseDataset
-import numpy as np
-import warnings
-import logging
 
 mne.set_log_level("ERROR")
 logging.getLogger("joblib").setLevel(logging.ERROR)
@@ -205,9 +208,10 @@ for label in np.unique(labels):
 #
 # The model is a shallow convolutional neural network (ShallowFBCSPNet) with 64 input channels (EEG channels), 2 output classes (oddball, standard), and an input window size of 256 samples (1 seconds of EEG data).
 
+from torchinfo import summary
+
 # %%
 from braindecode.models import ShallowFBCSPNet
-from torchinfo import summary
 
 model = ShallowFBCSPNet(
     in_chans=64, n_classes=2, input_window_samples=256, final_conv_length="auto"

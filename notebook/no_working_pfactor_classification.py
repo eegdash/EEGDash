@@ -72,6 +72,7 @@ ds_sexdata = EEGDashDataset(
 # %%
 import numpy as np
 import pandas as pd
+
 from braindecode.datasets import BaseConcatDataset
 
 res = ds_sexdata.description["p_factor"].isna()
@@ -140,13 +141,14 @@ p_factor = []
 for ds in ds_sexdata:
     p_factor.append(ds.description)
 
+import os
+
 # %%
 from braindecode.preprocessing import (
-    preprocess,
     Preprocessor,
     create_fixed_length_windows,
+    preprocess,
 )
-import os
 
 # Alternatively, if you want to include this as a preprocessing step in a Braindecode pipeline:
 #    Preprocessor('pick_channels', ch_names=['E22', 'E9', 'E33', 'E24', 'E11', 'E124', 'E122', 'E29', 'E6', 'E111', 'E45', 'E36', 'E104', 'E108', 'E42', 'E55', 'E93', 'E58', 'E52', 'E62', 'E92', 'E96', 'E70', 'Cz']),
@@ -220,11 +222,12 @@ windows_ds[1000][0].shape
 # 4. **Create DataLoaders** – The datasets are wrapped in PyTorch `DataLoader` objects with a batch size of 100, allowing efficient mini-batch training and shuffling. Although there are only 136 subjects, the dataset contains more than 10,000 2-second samples.
 #
 
-# %%
-from braindecode.datasets import BaseConcatDataset
+import torch
 from sklearn.model_selection import train_test_split
 from torch.utils.data import DataLoader
-import torch
+
+# %%
+from braindecode.datasets import BaseConcatDataset
 
 # random seed for reproducibility
 random_state = 0
@@ -288,10 +291,11 @@ np.array(label).T
 #
 #
 
+from torch import nn
+
 # %%
 # create model
 from torchinfo import summary
-from torch import nn
 
 model = nn.Sequential(
     # First VGG block

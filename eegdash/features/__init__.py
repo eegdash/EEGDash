@@ -14,7 +14,6 @@ from .extractors import (
     TrainableFeature,
     UnivariateFeature,
 )
-from .feature_bank import *  # noqa: F401
 from .inspect import (
     get_all_feature_extractors,
     get_all_feature_kinds,
@@ -48,3 +47,9 @@ __all__ = [
     "extract_features",
     "fit_feature_extractors",
 ]
+
+
+# This import is not working because of the indice
+# way of the numba, needs to be improve later.
+# TO DO
+# from .feature_bank import *

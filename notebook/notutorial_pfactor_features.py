@@ -66,10 +66,11 @@ raw_valid = BaseConcatDataset(
 
 # %%
 import os
+
 from braindecode.preprocessing import (
-    preprocess,
     Preprocessor,
     create_fixed_length_windows,
+    preprocess,
 )
 
 
@@ -135,10 +136,11 @@ windows_valid.save(f"data/hbn_preprocessed_{task_name}_valid", overwrite=True)
 # %% [markdown]
 # ## Extracting EEG Features Using EEGDash.features
 
+from functools import partial
+
 # %%
 from eegdash import features
 from eegdash.features import extract_features
-from functools import partial
 
 sfreq = windows_train.datasets[0].raw.info["sfreq"]
 filter_freqs = dict(windows_train.datasets[0].raw_preproc_kwargs)["filter"]

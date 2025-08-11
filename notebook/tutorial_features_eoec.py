@@ -45,15 +45,17 @@ ds_eoec = EEGDashDataset(
 #
 # Finally, we use **create_windows_from_events** to extract 5-second epochs from the data. These epochs serve as the dataset samples. At this stage, each sample is automatically labeled with the corresponding event type (eyes-open or eyes-closed). windows_ds is a PyTorch dataset, and when queried, it returns labels for eyes-open and eyes-closed (assigned as labels 0 and 1, corresponding to their respective event markers).
 
+import warnings
+
+import mne
+import numpy as np
+
 # %%
 from braindecode.preprocessing import (
-    preprocess,
     Preprocessor,
     create_windows_from_events,
+    preprocess,
 )
-import numpy as np
-import mne
-import warnings
 
 warnings.simplefilter("ignore", category=RuntimeWarning)
 
@@ -196,6 +198,7 @@ features_ds.to_dataframe(include_crop_inds=True)
 
 # %%
 from functools import partial
+
 from scipy.signal import welch
 
 sfreq = windows_ds.datasets[0].raw.info["sfreq"]
@@ -425,8 +428,7 @@ features_ds.to_dataframe()
 # %%
 import torch
 from sklearn.model_selection import train_test_split
-from torch.utils.data import DataLoader
-from torch.utils.data import TensorDataset
+from torch.utils.data import DataLoader, TensorDataset
 
 # Set random seed for reproducibility
 random_state = 42

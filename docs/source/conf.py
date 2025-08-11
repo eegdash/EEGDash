@@ -26,9 +26,10 @@ html_static_path = ["_static/"]
 
 html_sidebars = {
     "api": [],
+    "examples": [],
 }
 
-# html_logo = "_static/eeg_dash.png"
+html_logo = "_static/eegdash.png"
 
 # -- Project information -----------------------------------------------------
 from datetime import datetime, timezone

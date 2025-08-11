@@ -1,5 +1,4 @@
-old
-src/EEGDash.egg-info
+*.egg-info
 *.npy
 */*.npy
 */*/*.npy
@@ -14,3 +13,6 @@ dist/
 **/*/eegdash.egg-info/
 .env
 tests/data/
+.ruff_cache/
+.vscode/
+build/

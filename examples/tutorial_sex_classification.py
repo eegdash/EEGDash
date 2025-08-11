@@ -106,8 +106,9 @@ windows_ds.save("data/hbn_preprocessed_restingstate", overwrite=True)
 # %%
 import matplotlib.pyplot as plt
 
+
 plt.figure()
-plt.plot(windows_ds[1000][0][0, :].transpose())  # first channel of first epoch
+plt.plot(windows_ds[150][0][0, :].transpose())  # first channel of first epoch
 plt.show()
 
 # %% [markdown]

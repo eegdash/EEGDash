@@ -74,8 +74,6 @@ docs = [
   "numpydoc",
   "memory_profiler",
   "ipython",
-  "sphinx_design",
-  "numpydoc",
   "lightgbm",
 ]
 

@@ -59,10 +59,10 @@ jobs:
               --pr "${{ steps.ver.outputs.pr_number }}"
           else
             # Fallback path must be supported by your script; if not, change the script
-            # to accept --suffix and append a compliant .devN/.postN label.
+            # to accept --pr and append a compliant .devN/.postN label.
             python scripts/release_script.py \
               --init-file eegdash/__init__.py \
-              --suffix "${{ steps.ver.outputs.suffix }}"
+              --pr "${{ steps.ver.outputs.suffix }}"
           fi
 
       - name: Build sdist and wheel

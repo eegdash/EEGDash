@@ -23,8 +23,13 @@ The code below provides an example of using the *EEGDash* library in combination
 from eegdash import EEGDashDataset
 
 ds_sexdata1 = EEGDashDataset(
-    {"dataset": "ds005505", "task": "RestingState"}, target_name="sex"
+    {
+        "dataset": "ds005505",
+        "task": "RestingState",
+    },
+    target_name="sex",
 )
+
 ds_sexdata2 = EEGDashDataset(
     {"dataset": "ds005506", "task": "RestingState"}, target_name="sex"
 )

@@ -16,7 +16,7 @@ EEG Dash Homepage
    :alt: EEG Dash Logo
    :class: logo mainlogo
    :align: center
-   :scale: 25%
+   :scale: 33.5%
 
 
 .. rst-class:: h4 text-center font-weight-light my-4

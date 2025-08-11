@@ -88,7 +88,7 @@ sphinx_gallery_conf = {
     "show_api_usage": True,
     "doc_module": ("eegdash", "numpy", "scipy", "matplotlib"),
     "reference_url": {"eegdash": None},
-    "filename_pattern": r"^plot_(?!_).*\.py",
+    "filename_pattern": r"/(?:plot|tutorial)_(?!_).*\.py",
     "matplotlib_animations": True,
     "first_notebook_cell": (
         "# For tips on running notebooks in Google Colab:\n"

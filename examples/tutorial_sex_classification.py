@@ -22,9 +22,9 @@ The code below provides an example of using the *EEGDash* library in combination
 from eegdash import EEGDashDataset
 
 ds_sexdata = EEGDashDataset(
-    {"dataset": "ds005505", "task": "RestingState"}, target_name="sex"
+    {"dataset": "ds005505", "task": "RestingState", "subject": "NDARAC904DMU"},
+    target_name="sex",
 )
-
 # %% [markdown]
 # ## Data Preprocessing Using Braindecode
 #
@@ -44,14 +44,13 @@ from braindecode.preprocessing import (
     preprocess,
     Preprocessor,
     create_fixed_length_windows,
-    Pick,
 )
 import os
 
 # Alternatively, if you want to include this as a preprocessing step in a Braindecode pipeline:
 preprocessors = [
-    Pick(
-        eeg=True,
+    Preprocessor(
+        "pick_channels",
         ch_names=[
             "E22",
             "E9",

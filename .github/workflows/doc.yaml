@@ -66,8 +66,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - uses: actions/deploy-pages@v4
-        with:
-          artifact_name: github-pages  # optional; this is the default
-
+      - id: deployment
+        uses: actions/deploy-pages@v4

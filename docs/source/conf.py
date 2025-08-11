@@ -35,6 +35,9 @@ html_logo = "_static/eegdash.png"
 from datetime import datetime, timezone
 
 project = "EEG Dash"
+html_title = "EEG Dash"
+html_short_title = "EEG Dash"
+
 td = datetime.now(tz=timezone.utc)
 
 # We need to triage which date type we use so that incremental builds work
@@ -67,11 +70,13 @@ html_theme_options = {
     "navbar_end": ["theme-switcher"],
     "footer_start": ["copyright"],
     "logo": {
-        "image_light": "_static/eegdash_icon.png",
-        "image_dark": "_static/eegdash_icon.png",
+        "image_light": "_static/eegdash_long.png",
+        "image_dark": "_static/eegdash_long.png",
         "alt_text": "EEG Dash Logo",
     },
 }
+
+html_favicon = "_static/eegdash_icon.png"
 
 sphinx_gallery_conf = {
     "examples_dirs": ["../../examples"],

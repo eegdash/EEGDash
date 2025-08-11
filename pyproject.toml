@@ -75,7 +75,8 @@ docs = [
   "memory_profiler",
   "ipython",
   "sphinx_design",
-  "numpydoc"
+  "numpydoc",
+  "lightgbm",
 ]
 
 all = [
@@ -93,6 +94,7 @@ all = [
   "numpydoc",
   "memory_profiler",
   "ipython",
+  "lightgbm",
 ]
 
 [tool.setuptools]

@@ -1,4 +1,8 @@
-"""# EEG Classification Tutorial: P3 Visual Oddball Task
+# %% [markdown]
+""".. _p3-visual-oddball:
+
+P3 Visual Oddball Classification
+================================
 
 This tutorial demonstrates using the *EEGDash* library with PyTorch to classify EEG responses from a visual P3 oddball paradigm.
 

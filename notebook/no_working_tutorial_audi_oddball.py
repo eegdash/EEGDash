@@ -1,4 +1,8 @@
-"""# EEGDash Example for Auditory Oddball Classification
+# %% [markdown]
+""".. _auditory-oddball-tutorial:
+
+Auditory Oddball Classification
+===============================
 
 This tutorial demonstrates using the *EEGDash* library with PyTorch to classify EEG responses in an auditory oddball paradigm.
 
@@ -43,6 +47,7 @@ dataset = EEGBIDSDataset(dataset="ds003061")
 all_files = dataset.get_files()
 test_files = all_files[0:3]
 
+# %% [markdown]
 # ## Data Preprocessing Using Braindecode
 #
 # [Braindecode](https://braindecode.org/) provides a powerful framework for EEG data preprocessing and analysis.

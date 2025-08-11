@@ -6,7 +6,6 @@ from pathlib import Path
 from typing import Any
 
 import mne
-import mne_bids
 import numpy as np
 import pandas as pd
 import s3fs
@@ -109,7 +108,7 @@ class EEGDashBaseDataset(BaseDataset):
                 self._download_dependencies()
             self._download_s3()
         if self._raw is None:
-            self._raw = mne_bids.read_raw_bids(self.bidspath, verbose=False)
+            self._raw = mne.io.read_raw(self.bidspath, verbose=False)
 
     # === BaseDataset and PyTorch Dataset interface ===
 

@@ -1,5 +1,8 @@
 :html_theme.sidebar_secondary.remove:
 
+EEGDASH Documentation
+=====================
+
 .. title:: EEG Dash
 
 .. raw:: html
@@ -13,7 +16,7 @@ EEG Dash Homepage
    :alt: EEG Dash Logo
    :class: logo mainlogo
    :align: center
-   :scale: 75%
+   :scale: 25%
 
 
 .. rst-class:: h4 text-center font-weight-light my-4

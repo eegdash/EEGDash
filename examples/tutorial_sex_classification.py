@@ -18,13 +18,33 @@ The code below provides an example of using the *EEGDash* library in combination
 #
 # First we find one resting state dataset for a collection of subject. The dataset ds005505 contains 136 subjects with both male and female participants.
 
+query = {
+    "dataset": "ds005505",
+    "task": "RestingState",
+    "subject": {
+        "$in": [
+            "NDARCA153NKE",
+            "NDARXT792GY8",
+            "NDARVU683CTN",
+            "NDARJM828PAL",
+            "NDARBX121UM9",
+            "NDARLF616PBU",
+            "NDARPL306LC6",
+            "NDARAW320CGR",
+            "NDARPX219TW0",
+            "NDARWA513WM2",
+        ]
+    },
+}
+
 # %%
 from eegdash import EEGDashDataset
 
 ds_sexdata = EEGDashDataset(
-    {"dataset": "ds005505", "task": "RestingState", "subject": "NDARAC904DMU"},
+    query=query,
     target_name="sex",
 )
+
 # %% [markdown]
 # ## Data Preprocessing Using Braindecode
 #

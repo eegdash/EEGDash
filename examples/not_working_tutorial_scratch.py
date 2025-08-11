@@ -8,7 +8,7 @@
 # %autoreload 2
 from eegdash import EEGDash, EEGDashDataset
 
-eegdashdata = EEGDash(is_public=False)
+eegdashdata = EEGDash()
 
 # %%
 import mne_bids
@@ -19,7 +19,15 @@ from mne_bids import (
 # %%
 records = eegdashdata.find({"dataset": "ds002718", "subject": "012"})
 record = records[0]
-record
+
+print(record)
+
+# Downloading with eegdash Dataset
+eegdashdata = EEGDashDataset(
+    query={"dataset": "ds002718", "subject": "012"}, cache_dir=".eegdash_cache"
+)
+
+eeg = eegdashdata.load_data()
 
 # %%
 bidspath = BIDSPath(

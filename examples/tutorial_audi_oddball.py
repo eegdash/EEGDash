@@ -38,14 +38,11 @@ This tutorial demonstrates using the *EEGDash* library with PyTorch to classify 
 # %%
 from eegdash.data_utils import EEGBIDSDataset
 
-dataset = EEGBIDSDataset(
-    data_dir="d:/Users/vivian/Desktop/UCSD/EEG/ds003061/ds003061", dataset="ds003061"
-)
+dataset = EEGBIDSDataset(dataset="ds003061")
 
 all_files = dataset.get_files()
 test_files = all_files[0:3]
 
-# %% [markdown]
 # ## Data Preprocessing Using Braindecode
 #
 # [Braindecode](https://braindecode.org/) provides a powerful framework for EEG data preprocessing and analysis.

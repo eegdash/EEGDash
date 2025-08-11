@@ -1,4 +1,10 @@
-"""# EEGDash example for eyes open vs. closed classification
+# %% [markdown]
+""".. _tutorial-open-closed:
+
+Eyes Open vs. Closed Classification
+===================================
+
+EEGDash example for eyes open vs. closed classification.
 
 The code below provides an example of using the *EEGDash* library in combination with PyTorch to develop a deep learning model for analyzing EEG data, specifically for eyes open vs. closed classification in a single subject.
 

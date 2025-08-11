@@ -1,4 +1,8 @@
-"""# EEGDash example for sex classification
+# %% [markdown]
+""".. _tutorial-features:
+
+EEG Features for Sex Classification
+===================================
 
 The code below provides an example of using the *EEGDash* library in combination with PyTorch to develop a deep learning model for detecting sex in a collection of 136 subjects.
 
@@ -50,21 +54,39 @@ The code below provides an example of using the *EEGDash* library in combination
 
 # %%
 # import os
-# from braindecode.preprocessing import (preprocess, Preprocessor, create_fixed_length_windows)
+# from braindecode.preprocessing import (
+#     preprocess,
+#     Preprocessor,
+#     create_fixed_length_windows,
+# )
 
-# # Alternatively, if you want to include this as a preprocessing step in a Braindecode pipeline:
+# %% [markdown]
+# ### Alternatively, if you want to include this as a preprocessing step in a Braindecode pipeline:
+
+# %%
 # preprocessors = [
-#     Preprocessor('pick_channels', ch_names=['E22', 'E9', 'E33', 'E24', 'E11', 'E124', 'E122', 'E29', 'E6', 'E111', 'E45', 'E36', 'E104', 'E108', 'E42', 'E55', 'E93', 'E58', 'E52', 'E62', 'E92', 'E96', 'E70', 'Cz']),
-#     Preprocessor("resample", sfreq=128),
-#     Preprocessor("filter", l_freq=1, h_freq=55)
+#     Preprocessor(
+#         'pick_channels',
+#        ch_names=['E22', 'E9', 'E33', 'E24', 'E11', 'E124', 'E122', 'E29', 'E6', 'E111', 'E45', 'E36', 'E104', 'E108', 'E42', 'E55', 'E93', 'E58', 'E52', 'E62', 'E92', 'E96', 'E70', 'Cz'],
+#     ),
+#     Preprocessor('resample', sfreq=128),
+#     Preprocessor('filter', l_freq=1, h_freq=55),
 # ]
-# preprocess(ds_sexdata, preprocessors, n_jobs=-1) #, save_dir='xxxx'' will save and set preload to false
+# preprocess(ds_sexdata, preprocessors, n_jobs=-1)  # , save_dir='xxxx' will save and set preload to false
 
-# # extract windows and save to disk
-# windows_ds = create_fixed_length_windows(ds_sexdata, start_offset_samples=0, stop_offset_samples=None,
-#         window_size_samples=int(30 * ds_sexdata.datasets[0].raw.info["sfreq"]),
-#         window_stride_samples=int(15 * ds_sexdata.datasets[0].raw.info["sfreq"]),
-#         drop_last_window=True, preload=False)
+# %% [markdown]
+# ### Extract windows and save to disk
+
+# %%
+# windows_ds = create_fixed_length_windows(
+#     ds_sexdata,
+#     start_offset_samples=0,
+#     stop_offset_samples=None,
+#     window_size_samples=int(30 * ds_sexdata.datasets[0].raw.info["sfreq"]),
+#     window_stride_samples=int(15 * ds_sexdata.datasets[0].raw.info["sfreq"]),
+#     drop_last_window=True,
+#     preload=False,
+# )
 # os.makedirs('data/hbn_preprocessed_restingstate', exist_ok=True)
 # windows_ds.save('data/hbn_preprocessed_restingstate', overwrite=True)
 

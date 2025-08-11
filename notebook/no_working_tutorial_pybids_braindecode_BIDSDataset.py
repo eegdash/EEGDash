@@ -1,4 +1,11 @@
-"""Tests showing BIDSDataset not able to handle example EEGLAB dataset and slower than pybids"""
+# %% [markdown]
+""".. _pybids-bidsdataset-demo:
+
+Exploring Braindecode's BIDSDataset
+===================================
+
+Tests showing BIDSDataset not able to handle example EEGLAB dataset and slower than pybids
+"""
 
 # %%
 from bids import BIDSLayout

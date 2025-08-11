@@ -79,9 +79,20 @@ docs = [
 ]
 
 all = [
-  "eegdash[dev]",
-  "eegdash[tests]",
-  "eegdash[docs]",
+  "pre-commit",
+  "pytest",
+  "pytest-cov",
+  "codecov",
+  "pytest_cases",
+  "pytest-benchmark",
+  "sphinx",
+  "sphinx_design",
+  "sphinx_gallery",
+  "sphinx_rtd_theme",
+  "pydata-sphinx-theme",
+  "numpydoc",
+  "memory_profiler",
+  "ipython",
 ]
 
 [tool.setuptools]

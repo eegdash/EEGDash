@@ -12,11 +12,11 @@ EEGDASH Documentation
 EEG Dash Homepage
 ==================
 
-.. image:: _static/eegdash.png
+.. image:: _static/logos/eegdash.png
    :alt: EEG Dash Logo
    :class: logo mainlogo
    :align: center
-   :scale: 33.5%
+   :scale: 50%
 
 
 .. rst-class:: h4 text-center font-weight-light my-4

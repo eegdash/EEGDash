@@ -67,22 +67,23 @@ dev = [
 
 docs = [
   "sphinx",
+  "sphinx_design",
   "sphinx_gallery",
   "sphinx_rtd_theme",
+  "pydata-sphinx-theme",
+  "numpydoc",
+  "memory_profiler",
+  "ipython",
+  "sphinx_design",
   "numpydoc"
 ]
 
 all = [
-  "pytest",
-  "pytest-cov",
-  "codecov",
-  "pytest_cases",
-  "pre-commit",
-  "sphinx",
-  "sphinx_gallery",
-  "sphinx_rtd_theme",
-  "numpydoc"
+  "eegdash[dev]",
+  "eegdash[tests]",
+  "eegdash[docs]",
 ]
+
 [tool.setuptools]
 py-modules = []
 

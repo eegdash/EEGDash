@@ -23,10 +23,7 @@ from .inspect import (
     get_feature_predecessors,
 )
 from .serialization import load_features_concat_dataset
-from .utils import (
-    extract_features,
-    fit_feature_extractors,
-)
+from .utils import extract_features, fit_feature_extractors
 
 __all__ = [
     "FeaturesConcatDataset",

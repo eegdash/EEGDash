@@ -56,6 +56,8 @@ jobs:
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_branch: gh-pages
+          # publish_branch: gh-pages   # optional; default is gh-pages
           publish_dir: docs/build/html
           force_orphan: true
+
+

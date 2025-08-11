@@ -5,7 +5,7 @@ concurrency:
 on:
   push:
     branches:
-      - "*"
+      - "main"
   pull_request:
     branches:
       - '*' # all branches, including forks

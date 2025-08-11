@@ -1,4 +1,8 @@
-"""# Predicting p-factor from EEG - Example
+# %% [markdown]
+""".. _pfactor-features:
+
+Predicting p-factor from EEG
+============================
 
 The code below provides an example of using the *braindecode* and *EEGDash* libraries in combination with LightGBM to predict a subject's p-factor.
 

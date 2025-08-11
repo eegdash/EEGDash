@@ -52,8 +52,9 @@ jobs:
           cd docs
           make html
 
-      - name: Upload HTML Docs as Artifacts
-        uses: actions/upload-artifact@v4
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v4
         with:
-          name: HTML-Docs
-          path: ./docs/build/
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: main
+          publish_dir: ./docs/build/html

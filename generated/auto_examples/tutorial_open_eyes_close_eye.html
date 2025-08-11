@@ -1,0 +1,3072 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>&lt;no title&gt; &#8212; EEG Dash</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=d2d258e8" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../../_static/documentation_options.js?v=37f418d5"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'generated/auto_examples/tutorial_open_eyes_close_eye';</script>
+    <link rel="icon" href="../../_static/eegdash_icon.png"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="prev" title="&lt;no title&gt;" href="tutorial_eoec.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="0.2" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/eegdash_long.png" class="logo__image only-light" alt="EEG Dash Logo"/>
+    <img src="../../_static/eegdash_long.png" class="logo__image only-dark pst-js-only" alt="EEG Dash Logo"/>
+  
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../api/modules.html">
+    API
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    Examples
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../api/modules.html">
+    API
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    Examples
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"></div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">EEGDash Examples</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">&lt;no title&gt;</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p><a class="reference internal" href="#sphx-glr-download-generated-auto-examples-tutorial-open-eyes-close-eye-py"><span class="std std-ref">Go to the end</span></a>
+to download the full example code. or to run this example in your browser via Binder</p>
+</div>
+<p class="sphx-glr-example-title" id="sphx-glr-generated-auto-examples-tutorial-open-eyes-close-eye-py"># EEGDash example for eyes open vs. closed classification</p>
+<p>The code below provides an example of using the <em>EEGDash</em> library in combination with PyTorch to develop a deep learning model for analyzing EEG data, specifically for eyes open vs. closed classification in a single subject.</p>
+<ol class="arabic simple">
+<li><p><strong>Data Retrieval Using EEGDash</strong>: An instance of <em>EEGDashDataset</em> is created to search and retrieve an EEG dataset. At this step, only the metadata is transferred.</p></li>
+<li><p><strong>Data Preprocessing Using BrainDecode</strong>: This process preprocesses EEG data using Braindecode by reannotating events, selecting specific channels, resampling, filtering, and extracting 2-second epochs, ensuring balanced eyes-open and eyes-closed data for analysis.</p></li>
+<li><p><strong>Creating train and testing sets</strong>: The dataset is split into training (80%) and testing (20%) sets with balanced labels, converted into PyTorch tensors, and wrapped in DataLoader objects for efficient mini-batch training.</p></li>
+<li><p><strong>Model Definition</strong>: The model is a shallow convolutional neural network (ShallowFBCSPNet) with 24 input channels (EEG channels), 2 output classes (eyes-open and eyes-closed).</p></li>
+<li><p><strong>Model Training and Evaluation Process</strong>: This section trains the neural network, normalizes input data, computes cross-entropy loss, updates model parameters, and evaluates classification accuracy over six epochs.</p></li>
+</ol>
+<p>## Data Retrieval Using EEGDash</p>
+<p>First we find one resting state dataset. This dataset contains both eyes open and eyes closed data.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">eegdash</span><span class="w"> </span><span class="kn">import</span> <a href="../../api/eegdash.html#eegdash.EEGDashDataset" title="eegdash.EEGDashDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class"><span class="n">EEGDashDataset</span></a>
+
+<a href="../../api/eegdash.html#eegdash.EEGDashDataset" title="eegdash.EEGDashDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ds_eoec</span></a> <span class="o">=</span> <a href="../../api/eegdash.html#eegdash.EEGDashDataset" title="eegdash.EEGDashDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class"><span class="n">EEGDashDataset</span></a><span class="p">(</span>
+    <span class="p">{</span><span class="s2">&quot;dataset&quot;</span><span class="p">:</span> <span class="s2">&quot;ds005514&quot;</span><span class="p">,</span> <span class="s2">&quot;task&quot;</span><span class="p">:</span> <span class="s2">&quot;RestingState&quot;</span><span class="p">,</span> <span class="s2">&quot;subject&quot;</span><span class="p">:</span> <span class="s2">&quot;NDARDB033FW5&quot;</span><span class="p">}</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>## Data Preprocessing Using Braindecode</p>
+<p>[BrainDecode](<a class="reference external" href="https://braindecode.org/stable/install/install.html">https://braindecode.org/stable/install/install.html</a>) is a specialized library for preprocessing EEG and MEG data. In this dataset, there are two key events in the continuous data: <strong>instructed_toCloseEyes</strong>, marking the start of a 40-second eyes-closed period, and <strong>instructed_toOpenEyes</strong>, indicating the start of a 20-second eyes-open period.</p>
+<p>For the eyes-closed event, we extract 14 seconds of data from 15 to 29 seconds after the event onset. Similarly, for the eyes-open event, we extract data from 5 to 19 seconds after the event onset. This ensures an equal amount of data for both conditions. The event extraction is handled by the custom function <strong>hbn_ec_ec_reannotation</strong>.</p>
+<p>Next, we apply four preprocessing steps in Braindecode:
+1.      <strong>Reannotation</strong> of event markers using hbn_ec_ec_reannotation().
+2.      <strong>Selection</strong> of 24 specific EEG channels from the original 128.
+3.      <strong>Resampling</strong> the EEG data to a frequency of 128 Hz.
+4.      <strong>Filtering</strong> the EEG signals to retain frequencies between 1 Hz and 55 Hz.</p>
+<p>When calling the <strong>preprocess</strong> function, the data is retrieved from the remote repository.</p>
+<p>Finally, we use <strong>create_windows_from_events</strong> to extract 2-second epochs from the data. These epochs serve as the dataset samples. At this stage, each sample is automatically labeled with the corresponding event type (eyes-open or eyes-closed). windows_ds is a PyTorch dataset, and when queried, it returns labels for eyes-open and eyes-closed (assigned as labels 0 and 1, corresponding to their respective event markers).</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">braindecode.preprocessing</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">preprocess</span><span class="p">,</span>
+    <span class="n">Preprocessor</span><span class="p">,</span>
+    <span class="n">create_windows_from_events</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">mne</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+
+<span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">RuntimeWarning</span><span class="p">)</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">hbn_ec_ec_reannotation</span><span class="p">(</span><span class="n">Preprocessor</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">fn</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">transform</span><span class="p">,</span> <span class="n">apply_on_array</span><span class="o">=</span><span class="kc">False</span>
+        <span class="p">)</span>  <span class="c1"># Pass the transform method as the function</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">raw</span><span class="p">):</span>  <span class="c1"># Changed from &#39;apply&#39; to &#39;transform&#39;</span>
+        <span class="c1"># Create events array from annotations</span>
+        <span class="n">events</span><span class="p">,</span> <span class="n">event_id</span> <span class="o">=</span> <span class="n">mne</span><span class="o">.</span><span class="n">events_from_annotations</span><span class="p">(</span><span class="n">raw</span><span class="p">)</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="n">event_id</span><span class="p">)</span>
+
+        <span class="c1"># Create new events array for 2-second segments</span>
+        <span class="n">new_events</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">sfreq</span> <span class="o">=</span> <span class="n">raw</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;sfreq&quot;</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">events</span><span class="p">[</span><span class="n">events</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="n">event_id</span><span class="p">[</span><span class="s2">&quot;instructed_toCloseEyes&quot;</span><span class="p">]]:</span>
+            <span class="c1"># For each original event, create events every 2 seconds from 15s to 29s after</span>
+            <span class="n">start_times</span> <span class="o">=</span> <span class="n">event</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">29</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">sfreq</span>
+            <span class="n">new_events</span><span class="o">.</span><span class="n">extend</span><span class="p">([[</span><span class="nb">int</span><span class="p">(</span><span class="n">t</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">start_times</span><span class="p">])</span>
+
+        <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">events</span><span class="p">[</span><span class="n">events</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="n">event_id</span><span class="p">[</span><span class="s2">&quot;instructed_toOpenEyes&quot;</span><span class="p">]]:</span>
+            <span class="c1"># For each original event, create events every 2 seconds from 5s to 19s after</span>
+            <span class="n">start_times</span> <span class="o">=</span> <span class="n">event</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">19</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">sfreq</span>
+            <span class="n">new_events</span><span class="o">.</span><span class="n">extend</span><span class="p">([[</span><span class="nb">int</span><span class="p">(</span><span class="n">t</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">start_times</span><span class="p">])</span>
+
+        <span class="c1"># replace events in raw</span>
+        <span class="n">new_events</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">new_events</span><span class="p">)</span>
+        <span class="n">annot_from_events</span> <span class="o">=</span> <span class="n">mne</span><span class="o">.</span><span class="n">annotations_from_events</span><span class="p">(</span>
+            <span class="n">events</span><span class="o">=</span><span class="n">new_events</span><span class="p">,</span>
+            <span class="n">event_desc</span><span class="o">=</span><span class="p">{</span><span class="mi">1</span><span class="p">:</span> <span class="s2">&quot;eyes_closed&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">:</span> <span class="s2">&quot;eyes_open&quot;</span><span class="p">},</span>
+            <span class="n">sfreq</span><span class="o">=</span><span class="n">raw</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;sfreq&quot;</span><span class="p">],</span>
+        <span class="p">)</span>
+        <span class="n">raw</span><span class="o">.</span><span class="n">set_annotations</span><span class="p">(</span><span class="n">annot_from_events</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">raw</span>
+
+
+<span class="c1"># BrainDecode preprocessors</span>
+<span class="n">preprocessors</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">hbn_ec_ec_reannotation</span><span class="p">(),</span>
+    <span class="n">Preprocessor</span><span class="p">(</span>
+        <span class="s2">&quot;pick_channels&quot;</span><span class="p">,</span>
+        <span class="n">ch_names</span><span class="o">=</span><span class="p">[</span>
+            <span class="s2">&quot;E22&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;E9&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;E33&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;E24&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;E11&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;E124&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;E122&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;E29&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;E6&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;E111&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;E45&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;E36&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;E104&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;E108&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;E42&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;E55&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;E93&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;E58&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;E52&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;E62&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;E92&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;E96&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;E70&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Cz&quot;</span><span class="p">,</span>
+        <span class="p">],</span>
+    <span class="p">),</span>
+    <span class="n">Preprocessor</span><span class="p">(</span><span class="s2">&quot;resample&quot;</span><span class="p">,</span> <span class="n">sfreq</span><span class="o">=</span><span class="mi">128</span><span class="p">),</span>
+    <span class="n">Preprocessor</span><span class="p">(</span><span class="s2">&quot;filter&quot;</span><span class="p">,</span> <span class="n">l_freq</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">h_freq</span><span class="o">=</span><span class="mi">55</span><span class="p">),</span>
+<span class="p">]</span>
+<span class="n">preprocess</span><span class="p">(</span><a href="../../api/eegdash.html#eegdash.EEGDashDataset" title="eegdash.EEGDashDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ds_eoec</span></a><span class="p">,</span> <span class="n">preprocessors</span><span class="p">)</span>
+
+<span class="c1"># Extract 2-second segments</span>
+<span class="n">windows_ds</span> <span class="o">=</span> <span class="n">create_windows_from_events</span><span class="p">(</span>
+    <a href="../../api/eegdash.html#eegdash.EEGDashDataset" title="eegdash.EEGDashDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ds_eoec</span></a><span class="p">,</span>
+    <span class="n">trial_start_offset_samples</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="n">trial_stop_offset_samples</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <a href="../../api/eegdash.html#eegdash.EEGDashDataset" title="eegdash.EEGDashDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ds_eoec</span></a><span class="o">.</span><span class="n">datasets</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">raw</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;sfreq&quot;</span><span class="p">]),</span>
+    <span class="n">preload</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Used Annotations descriptions: [np.str_(&#39;boundary&#39;), np.str_(&#39;break cnt&#39;), np.str_(&#39;instructed_toCloseEyes&#39;), np.str_(&#39;instructed_toOpenEyes&#39;), np.str_(&#39;resting_start&#39;)]
+{np.str_(&#39;boundary&#39;): 1, np.str_(&#39;break cnt&#39;): 2, np.str_(&#39;instructed_toCloseEyes&#39;): 3, np.str_(&#39;instructed_toOpenEyes&#39;): 4, np.str_(&#39;resting_start&#39;): 5}
+NOTE: pick_channels() is a legacy function. New code should use inst.pick(...).
+Filtering raw data in 1 contiguous segment
+Setting up band-pass filter from 1 - 55 Hz
+
+FIR filter parameters
+---------------------
+Designing a one-pass, zero-phase, non-causal bandpass filter:
+- Windowed time-domain design (firwin) method
+- Hamming window with 0.0194 passband ripple and 53 dB stopband attenuation
+- Lower passband edge: 1.00
+- Lower transition bandwidth: 1.00 Hz (-6 dB cutoff frequency: 0.50 Hz)
+- Upper passband edge: 55.00 Hz
+- Upper transition bandwidth: 9.00 Hz (-6 dB cutoff frequency: 59.50 Hz)
+- Filter length: 423 samples (3.305 s)
+
+Used Annotations descriptions: [np.str_(&#39;eyes_closed&#39;), np.str_(&#39;eyes_open&#39;)]
+</pre></div>
+</div>
+<p>## Plotting a Single Channel for One Sample</p>
+<p>It’s always a good practice to verify that the data has been properly loaded and processed. Here, we plot a single channel from one sample to ensure the signal is present and looks as expected.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">windows_ds</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span><span class="o">.</span><span class="n">transpose</span><span class="p">())</span>  <span class="c1"># first channel of first epoch</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_tutorial_open_eyes_close_eye_001.png" srcset="../../_images/sphx_glr_tutorial_open_eyes_close_eye_001.png" alt="tutorial open eyes close eye" class = "sphx-glr-single-img"/><p>## Features</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">eegdash</span><span class="w"> </span><span class="kn">import</span> <span class="n">features</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">eegdash.features</span><span class="w"> </span><span class="kn">import</span> <a href="../../api/eegdash.features.html#eegdash.features.extract_features" title="eegdash.features.extract_features" class="sphx-glr-backref-module-eegdash-features sphx-glr-backref-type-py-function"><span class="n">extract_features</span></a>
+<span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">partial</span>
+
+<span class="n">sfreq</span> <span class="o">=</span> <span class="n">windows_ds</span><span class="o">.</span><span class="n">datasets</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">raw</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;sfreq&quot;</span><span class="p">]</span>
+<span class="n">filter_freqs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">windows_ds</span><span class="o">.</span><span class="n">datasets</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">raw_preproc_kwargs</span><span class="p">)[</span><span class="s2">&quot;filter&quot;</span><span class="p">]</span>
+<span class="n">features_dict</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;sig&quot;</span><span class="p">:</span> <a href="../../api/eegdash.features.html#eegdash.features.FeatureExtractor" title="eegdash.features.FeatureExtractor" class="sphx-glr-backref-module-eegdash-features sphx-glr-backref-type-py-class"><span class="n">features</span><span class="o">.</span><span class="n">FeatureExtractor</span></a><span class="p">(</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;mean&quot;</span><span class="p">:</span> <a href="../../api/eegdash.features.html#eegdash.features.signal_mean" title="eegdash.features.signal_mean" class="sphx-glr-backref-module-eegdash-features sphx-glr-backref-type-py-function"><span class="n">features</span><span class="o">.</span><span class="n">signal_mean</span></a><span class="p">,</span>
+            <span class="s2">&quot;var&quot;</span><span class="p">:</span> <a href="../../api/eegdash.features.html#eegdash.features.signal_variance" title="eegdash.features.signal_variance" class="sphx-glr-backref-module-eegdash-features sphx-glr-backref-type-py-function"><span class="n">features</span><span class="o">.</span><span class="n">signal_variance</span></a><span class="p">,</span>
+            <span class="s2">&quot;std&quot;</span><span class="p">:</span> <a href="../../api/eegdash.features.html#eegdash.features.signal_std" title="eegdash.features.signal_std" class="sphx-glr-backref-module-eegdash-features sphx-glr-backref-type-py-function"><span class="n">features</span><span class="o">.</span><span class="n">signal_std</span></a><span class="p">,</span>
+            <span class="s2">&quot;skew&quot;</span><span class="p">:</span> <a href="../../api/eegdash.features.html#eegdash.features.signal_skewness" title="eegdash.features.signal_skewness" class="sphx-glr-backref-module-eegdash-features sphx-glr-backref-type-py-function"><span class="n">features</span><span class="o">.</span><span class="n">signal_skewness</span></a><span class="p">,</span>
+            <span class="s2">&quot;kurt&quot;</span><span class="p">:</span> <a href="../../api/eegdash.features.html#eegdash.features.signal_kurtosis" title="eegdash.features.signal_kurtosis" class="sphx-glr-backref-module-eegdash-features sphx-glr-backref-type-py-function"><span class="n">features</span><span class="o">.</span><span class="n">signal_kurtosis</span></a><span class="p">,</span>
+            <span class="s2">&quot;rms&quot;</span><span class="p">:</span> <a href="../../api/eegdash.features.html#eegdash.features.signal_root_mean_square" title="eegdash.features.signal_root_mean_square" class="sphx-glr-backref-module-eegdash-features sphx-glr-backref-type-py-function"><span class="n">features</span><span class="o">.</span><span class="n">signal_root_mean_square</span></a><span class="p">,</span>
+            <span class="s2">&quot;ptp&quot;</span><span class="p">:</span> <a href="../../api/eegdash.features.html#eegdash.features.signal_peak_to_peak" title="eegdash.features.signal_peak_to_peak" class="sphx-glr-backref-module-eegdash-features sphx-glr-backref-type-py-function"><span class="n">features</span><span class="o">.</span><span class="n">signal_peak_to_peak</span></a><span class="p">,</span>
+            <span class="s2">&quot;quan.1&quot;</span><span class="p">:</span> <span class="n">partial</span><span class="p">(</span><a href="../../api/eegdash.features.html#eegdash.features.signal_quantile" title="eegdash.features.signal_quantile" class="sphx-glr-backref-module-eegdash-features sphx-glr-backref-type-py-function"><span class="n">features</span><span class="o">.</span><span class="n">signal_quantile</span></a><span class="p">,</span> <span class="n">q</span><span class="o">=</span><span class="mf">0.1</span><span class="p">),</span>
+            <span class="s2">&quot;quan.9&quot;</span><span class="p">:</span> <span class="n">partial</span><span class="p">(</span><a href="../../api/eegdash.features.html#eegdash.features.signal_quantile" title="eegdash.features.signal_quantile" class="sphx-glr-backref-module-eegdash-features sphx-glr-backref-type-py-function"><span class="n">features</span><span class="o">.</span><span class="n">signal_quantile</span></a><span class="p">,</span> <span class="n">q</span><span class="o">=</span><span class="mf">0.9</span><span class="p">),</span>
+            <span class="s2">&quot;line_len&quot;</span><span class="p">:</span> <a href="../../api/eegdash.features.html#eegdash.features.signal_line_length" title="eegdash.features.signal_line_length" class="sphx-glr-backref-module-eegdash-features sphx-glr-backref-type-py-function"><span class="n">features</span><span class="o">.</span><span class="n">signal_line_length</span></a><span class="p">,</span>
+            <span class="s2">&quot;zero_x&quot;</span><span class="p">:</span> <a href="../../api/eegdash.features.html#eegdash.features.signal_zero_crossings" title="eegdash.features.signal_zero_crossings" class="sphx-glr-backref-module-eegdash-features sphx-glr-backref-type-py-function"><span class="n">features</span><span class="o">.</span><span class="n">signal_zero_crossings</span></a><span class="p">,</span>
+        <span class="p">},</span>
+    <span class="p">),</span>
+    <span class="s2">&quot;spec&quot;</span><span class="p">:</span> <a href="../../api/eegdash.features.html#eegdash.features.SpectralFeatureExtractor" title="eegdash.features.SpectralFeatureExtractor" class="sphx-glr-backref-module-eegdash-features sphx-glr-backref-type-py-class"><span class="n">features</span><span class="o">.</span><span class="n">SpectralFeatureExtractor</span></a><span class="p">(</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;rtot_power&quot;</span><span class="p">:</span> <a href="../../api/eegdash.features.html#eegdash.features.spectral_root_total_power" title="eegdash.features.spectral_root_total_power" class="sphx-glr-backref-module-eegdash-features sphx-glr-backref-type-py-function"><span class="n">features</span><span class="o">.</span><span class="n">spectral_root_total_power</span></a><span class="p">,</span>
+            <span class="s2">&quot;band_power&quot;</span><span class="p">:</span> <span class="n">partial</span><span class="p">(</span>
+                <a href="../../api/eegdash.features.html#eegdash.features.spectral_bands_power" title="eegdash.features.spectral_bands_power" class="sphx-glr-backref-module-eegdash-features sphx-glr-backref-type-py-function"><span class="n">features</span><span class="o">.</span><span class="n">spectral_bands_power</span></a><span class="p">,</span>
+                <span class="n">bands</span><span class="o">=</span><span class="p">{</span>
+                    <span class="s2">&quot;theta&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mf">4.5</span><span class="p">,</span> <span class="mi">8</span><span class="p">),</span>
+                    <span class="s2">&quot;alpha&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">12</span><span class="p">),</span>
+                    <span class="s2">&quot;beta&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">30</span><span class="p">),</span>
+                <span class="p">},</span>
+            <span class="p">),</span>
+            <span class="mi">0</span><span class="p">:</span> <a href="../../api/eegdash.features.html#eegdash.features.NormalizedSpectralFeatureExtractor" title="eegdash.features.NormalizedSpectralFeatureExtractor" class="sphx-glr-backref-module-eegdash-features sphx-glr-backref-type-py-class"><span class="n">features</span><span class="o">.</span><span class="n">NormalizedSpectralFeatureExtractor</span></a><span class="p">(</span>
+                <span class="p">{</span>
+                    <span class="s2">&quot;moment&quot;</span><span class="p">:</span> <a href="../../api/eegdash.features.html#eegdash.features.spectral_moment" title="eegdash.features.spectral_moment" class="sphx-glr-backref-module-eegdash-features sphx-glr-backref-type-py-function"><span class="n">features</span><span class="o">.</span><span class="n">spectral_moment</span></a><span class="p">,</span>
+                    <span class="s2">&quot;entropy&quot;</span><span class="p">:</span> <a href="../../api/eegdash.features.html#eegdash.features.spectral_entropy" title="eegdash.features.spectral_entropy" class="sphx-glr-backref-module-eegdash-features sphx-glr-backref-type-py-function"><span class="n">features</span><span class="o">.</span><span class="n">spectral_entropy</span></a><span class="p">,</span>
+                    <span class="s2">&quot;edge&quot;</span><span class="p">:</span> <span class="n">partial</span><span class="p">(</span><a href="../../api/eegdash.features.html#eegdash.features.spectral_edge" title="eegdash.features.spectral_edge" class="sphx-glr-backref-module-eegdash-features sphx-glr-backref-type-py-function"><span class="n">features</span><span class="o">.</span><span class="n">spectral_edge</span></a><span class="p">,</span> <span class="n">edge</span><span class="o">=</span><span class="mf">0.9</span><span class="p">),</span>
+                <span class="p">},</span>
+            <span class="p">),</span>
+            <span class="mi">1</span><span class="p">:</span> <a href="../../api/eegdash.features.html#eegdash.features.DBSpectralFeatureExtractor" title="eegdash.features.DBSpectralFeatureExtractor" class="sphx-glr-backref-module-eegdash-features sphx-glr-backref-type-py-class"><span class="n">features</span><span class="o">.</span><span class="n">DBSpectralFeatureExtractor</span></a><span class="p">(</span>
+                <span class="p">{</span>
+                    <span class="s2">&quot;slope&quot;</span><span class="p">:</span> <a href="../../api/eegdash.features.html#eegdash.features.spectral_slope" title="eegdash.features.spectral_slope" class="sphx-glr-backref-module-eegdash-features sphx-glr-backref-type-py-function"><span class="n">features</span><span class="o">.</span><span class="n">spectral_slope</span></a><span class="p">,</span>
+                <span class="p">},</span>
+            <span class="p">),</span>
+        <span class="p">},</span>
+        <span class="n">fs</span><span class="o">=</span><span class="n">sfreq</span><span class="p">,</span>
+        <span class="n">f_min</span><span class="o">=</span><span class="n">filter_freqs</span><span class="p">[</span><span class="s2">&quot;l_freq&quot;</span><span class="p">],</span>
+        <span class="n">f_max</span><span class="o">=</span><span class="n">filter_freqs</span><span class="p">[</span><span class="s2">&quot;h_freq&quot;</span><span class="p">],</span>
+        <span class="n">nperseg</span><span class="o">=</span><span class="mi">2</span> <span class="o">*</span> <span class="n">sfreq</span><span class="p">,</span>
+        <span class="n">noverlap</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="mf">1.5</span> <span class="o">*</span> <span class="n">sfreq</span><span class="p">),</span>
+    <span class="p">),</span>
+<span class="p">}</span>
+
+<a href="../../api/eegdash.features.html#eegdash.features.FeaturesConcatDataset" title="eegdash.features.FeaturesConcatDataset" class="sphx-glr-backref-module-eegdash-features sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">features_ds</span></a> <span class="o">=</span> <a href="../../api/eegdash.features.html#eegdash.features.extract_features" title="eegdash.features.extract_features" class="sphx-glr-backref-module-eegdash-features sphx-glr-backref-type-py-function"><span class="n">extract_features</span></a><span class="p">(</span><span class="n">windows_ds</span><span class="p">,</span> <span class="n">features_dict</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">512</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Extracting features:   0%|          | 0/1 [00:00&lt;?, ?it/s]
+Extracting features: 100%|██████████| 1/1 [00:00&lt;00:00,  1.30it/s]
+Extracting features: 100%|██████████| 1/1 [00:00&lt;00:00,  1.30it/s]
+</pre></div>
+</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="../../api/eegdash.features.html#eegdash.features.FeaturesConcatDataset.to_dataframe" title="eegdash.features.FeaturesConcatDataset.to_dataframe" class="sphx-glr-backref-module-eegdash-features sphx-glr-backref-type-py-method"><span class="n">features_ds</span><span class="o">.</span><span class="n">to_dataframe</span></a><span class="p">(</span><span class="n">include_crop_inds</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>i_dataset</th>
+      <th>i_window_in_trial</th>
+      <th>i_stop_in_trial</th>
+      <th>i_start_in_trial</th>
+      <th>sig_mean_E22</th>
+      <th>sig_mean_E9</th>
+      <th>sig_mean_E33</th>
+      <th>sig_mean_E24</th>
+      <th>sig_mean_E11</th>
+      <th>sig_mean_E124</th>
+      <th>sig_mean_E122</th>
+      <th>sig_mean_E29</th>
+      <th>sig_mean_E6</th>
+      <th>sig_mean_E111</th>
+      <th>sig_mean_E45</th>
+      <th>sig_mean_E36</th>
+      <th>sig_mean_E104</th>
+      <th>sig_mean_E108</th>
+      <th>sig_mean_E42</th>
+      <th>sig_mean_E55</th>
+      <th>sig_mean_E93</th>
+      <th>sig_mean_E58</th>
+      <th>sig_mean_E52</th>
+      <th>sig_mean_E62</th>
+      <th>sig_mean_E92</th>
+      <th>sig_mean_E96</th>
+      <th>sig_mean_E70</th>
+      <th>sig_mean_Cz</th>
+      <th>sig_var_E22</th>
+      <th>sig_var_E9</th>
+      <th>sig_var_E33</th>
+      <th>sig_var_E24</th>
+      <th>sig_var_E11</th>
+      <th>sig_var_E124</th>
+      <th>sig_var_E122</th>
+      <th>sig_var_E29</th>
+      <th>sig_var_E6</th>
+      <th>sig_var_E111</th>
+      <th>sig_var_E45</th>
+      <th>sig_var_E36</th>
+      <th>...</th>
+      <th>spec_slope_exp_E6</th>
+      <th>spec_slope_exp_E111</th>
+      <th>spec_slope_exp_E45</th>
+      <th>spec_slope_exp_E36</th>
+      <th>spec_slope_exp_E104</th>
+      <th>spec_slope_exp_E108</th>
+      <th>spec_slope_exp_E42</th>
+      <th>spec_slope_exp_E55</th>
+      <th>spec_slope_exp_E93</th>
+      <th>spec_slope_exp_E58</th>
+      <th>spec_slope_exp_E52</th>
+      <th>spec_slope_exp_E62</th>
+      <th>spec_slope_exp_E92</th>
+      <th>spec_slope_exp_E96</th>
+      <th>spec_slope_exp_E70</th>
+      <th>spec_slope_exp_Cz</th>
+      <th>spec_slope_int_E22</th>
+      <th>spec_slope_int_E9</th>
+      <th>spec_slope_int_E33</th>
+      <th>spec_slope_int_E24</th>
+      <th>spec_slope_int_E11</th>
+      <th>spec_slope_int_E124</th>
+      <th>spec_slope_int_E122</th>
+      <th>spec_slope_int_E29</th>
+      <th>spec_slope_int_E6</th>
+      <th>spec_slope_int_E111</th>
+      <th>spec_slope_int_E45</th>
+      <th>spec_slope_int_E36</th>
+      <th>spec_slope_int_E104</th>
+      <th>spec_slope_int_E108</th>
+      <th>spec_slope_int_E42</th>
+      <th>spec_slope_int_E55</th>
+      <th>spec_slope_int_E93</th>
+      <th>spec_slope_int_E58</th>
+      <th>spec_slope_int_E52</th>
+      <th>spec_slope_int_E62</th>
+      <th>spec_slope_int_E92</th>
+      <th>spec_slope_int_E96</th>
+      <th>spec_slope_int_E70</th>
+      <th>spec_slope_int_Cz</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0</td>
+      <td>0</td>
+      <td>8348</td>
+      <td>8092</td>
+      <td>5.647381e-07</td>
+      <td>-2.509246e-06</td>
+      <td>8.135321e-06</td>
+      <td>1.344657e-06</td>
+      <td>3.320702e-08</td>
+      <td>-1.906805e-06</td>
+      <td>-4.112673e-06</td>
+      <td>1.295402e-06</td>
+      <td>-2.178132e-08</td>
+      <td>-2.257983e-07</td>
+      <td>-2.851448e-08</td>
+      <td>1.342354e-06</td>
+      <td>-6.570781e-07</td>
+      <td>-3.317879e-06</td>
+      <td>1.745271e-06</td>
+      <td>-4.988726e-08</td>
+      <td>-4.033573e-07</td>
+      <td>1.735549e-06</td>
+      <td>1.463278e-06</td>
+      <td>3.765560e-07</td>
+      <td>-6.545338e-08</td>
+      <td>-2.257548e-08</td>
+      <td>1.055586e-06</td>
+      <td>0.0</td>
+      <td>1.624210e-09</td>
+      <td>2.094186e-09</td>
+      <td>6.899828e-10</td>
+      <td>3.730915e-10</td>
+      <td>2.048093e-10</td>
+      <td>1.638218e-10</td>
+      <td>5.547134e-10</td>
+      <td>1.327766e-10</td>
+      <td>1.719833e-11</td>
+      <td>1.229020e-10</td>
+      <td>5.976994e-10</td>
+      <td>1.678021e-10</td>
+      <td>...</td>
+      <td>-5.443558</td>
+      <td>-1.133723</td>
+      <td>-0.946698</td>
+      <td>-0.822402</td>
+      <td>0.630770</td>
+      <td>-2.694937</td>
+      <td>-4.892312</td>
+      <td>-5.099055</td>
+      <td>0.284527</td>
+      <td>-4.925044</td>
+      <td>-3.798238</td>
+      <td>-6.846302</td>
+      <td>-2.247533</td>
+      <td>-4.643545</td>
+      <td>-5.502004</td>
+      <td>1.368221e-14</td>
+      <td>-91.466200</td>
+      <td>-88.808147</td>
+      <td>-110.193490</td>
+      <td>-107.043451</td>
+      <td>-98.386451</td>
+      <td>-106.770413</td>
+      <td>-115.385272</td>
+      <td>-118.526719</td>
+      <td>-115.133650</td>
+      <td>-114.552498</td>
+      <td>-112.534768</td>
+      <td>-114.524515</td>
+      <td>-117.576555</td>
+      <td>-105.304400</td>
+      <td>-102.550099</td>
+      <td>-112.708474</td>
+      <td>-116.428729</td>
+      <td>-103.793444</td>
+      <td>-109.095191</td>
+      <td>-103.952145</td>
+      <td>-111.006048</td>
+      <td>-104.675563</td>
+      <td>-102.440827</td>
+      <td>-150.0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>0</td>
+      <td>0</td>
+      <td>8604</td>
+      <td>8348</td>
+      <td>1.130721e-06</td>
+      <td>1.416919e-07</td>
+      <td>-6.768836e-07</td>
+      <td>1.253810e-06</td>
+      <td>4.680605e-07</td>
+      <td>4.802966e-07</td>
+      <td>-4.785971e-07</td>
+      <td>6.302905e-07</td>
+      <td>-3.432872e-08</td>
+      <td>2.703486e-08</td>
+      <td>3.331637e-06</td>
+      <td>6.381330e-07</td>
+      <td>2.084254e-07</td>
+      <td>3.030904e-06</td>
+      <td>2.292330e-07</td>
+      <td>9.263586e-08</td>
+      <td>3.363145e-07</td>
+      <td>6.923362e-07</td>
+      <td>3.427558e-07</td>
+      <td>2.351422e-07</td>
+      <td>3.936032e-07</td>
+      <td>9.640848e-07</td>
+      <td>6.068580e-07</td>
+      <td>0.0</td>
+      <td>2.989271e-10</td>
+      <td>3.036215e-10</td>
+      <td>1.999872e-10</td>
+      <td>2.294926e-10</td>
+      <td>5.573965e-11</td>
+      <td>5.521882e-11</td>
+      <td>1.996601e-10</td>
+      <td>6.744971e-11</td>
+      <td>1.541522e-11</td>
+      <td>3.932854e-11</td>
+      <td>1.739172e-10</td>
+      <td>6.073825e-11</td>
+      <td>...</td>
+      <td>-5.978106</td>
+      <td>-1.082155</td>
+      <td>-4.314771</td>
+      <td>-3.342842</td>
+      <td>-1.937825</td>
+      <td>-3.286655</td>
+      <td>-4.520653</td>
+      <td>-5.214057</td>
+      <td>-2.988137</td>
+      <td>-5.144027</td>
+      <td>-5.423761</td>
+      <td>-7.052579</td>
+      <td>-4.601101</td>
+      <td>-6.105956</td>
+      <td>-5.390414</td>
+      <td>1.368221e-14</td>
+      <td>-112.616688</td>
+      <td>-117.515661</td>
+      <td>-106.867388</td>
+      <td>-114.938540</td>
+      <td>-110.135568</td>
+      <td>-123.354596</td>
+      <td>-115.427896</td>
+      <td>-113.350110</td>
+      <td>-115.423647</td>
+      <td>-121.843487</td>
+      <td>-106.941773</td>
+      <td>-113.227655</td>
+      <td>-116.445651</td>
+      <td>-110.071458</td>
+      <td>-109.939679</td>
+      <td>-117.077513</td>
+      <td>-113.602565</td>
+      <td>-104.561765</td>
+      <td>-106.023036</td>
+      <td>-107.080706</td>
+      <td>-109.806065</td>
+      <td>-104.344680</td>
+      <td>-104.799112</td>
+      <td>-150.0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0</td>
+      <td>0</td>
+      <td>8860</td>
+      <td>8604</td>
+      <td>-8.737620e-07</td>
+      <td>2.451451e-07</td>
+      <td>3.854794e-07</td>
+      <td>1.361636e-07</td>
+      <td>2.133896e-07</td>
+      <td>-3.657373e-07</td>
+      <td>-2.154700e-07</td>
+      <td>1.182029e-07</td>
+      <td>3.607569e-07</td>
+      <td>-3.161839e-07</td>
+      <td>-9.093048e-08</td>
+      <td>-1.508677e-07</td>
+      <td>-3.219608e-07</td>
+      <td>-4.474920e-07</td>
+      <td>-9.617318e-08</td>
+      <td>-2.628006e-07</td>
+      <td>-3.523298e-07</td>
+      <td>-8.203292e-07</td>
+      <td>-2.940256e-07</td>
+      <td>-3.662685e-07</td>
+      <td>-4.853758e-07</td>
+      <td>-2.982538e-07</td>
+      <td>-4.140346e-07</td>
+      <td>0.0</td>
+      <td>2.071230e-10</td>
+      <td>2.448873e-10</td>
+      <td>1.271494e-10</td>
+      <td>1.561715e-10</td>
+      <td>3.971667e-11</td>
+      <td>6.785902e-11</td>
+      <td>1.877776e-10</td>
+      <td>5.382186e-11</td>
+      <td>1.482049e-11</td>
+      <td>3.315333e-11</td>
+      <td>1.028511e-10</td>
+      <td>4.844652e-11</td>
+      <td>...</td>
+      <td>-5.196363</td>
+      <td>-2.650875</td>
+      <td>-5.784763</td>
+      <td>-4.146387</td>
+      <td>-3.148592</td>
+      <td>-4.129374</td>
+      <td>-5.707941</td>
+      <td>-6.082078</td>
+      <td>-4.445137</td>
+      <td>-3.622188</td>
+      <td>-6.379328</td>
+      <td>-6.598300</td>
+      <td>-4.527242</td>
+      <td>-5.146481</td>
+      <td>-3.762430</td>
+      <td>1.368221e-14</td>
+      <td>-112.561694</td>
+      <td>-114.040198</td>
+      <td>-110.651924</td>
+      <td>-120.517134</td>
+      <td>-113.823859</td>
+      <td>-116.307572</td>
+      <td>-107.091403</td>
+      <td>-114.506506</td>
+      <td>-119.115604</td>
+      <td>-117.843452</td>
+      <td>-105.921733</td>
+      <td>-112.677148</td>
+      <td>-115.633214</td>
+      <td>-107.658470</td>
+      <td>-107.551500</td>
+      <td>-116.664468</td>
+      <td>-112.225315</td>
+      <td>-109.640782</td>
+      <td>-104.855979</td>
+      <td>-109.204333</td>
+      <td>-111.056288</td>
+      <td>-106.110173</td>
+      <td>-110.122209</td>
+      <td>-150.0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0</td>
+      <td>0</td>
+      <td>9116</td>
+      <td>8860</td>
+      <td>3.482372e-07</td>
+      <td>-5.419446e-07</td>
+      <td>-7.257668e-08</td>
+      <td>-2.957054e-07</td>
+      <td>-6.512602e-07</td>
+      <td>3.577126e-07</td>
+      <td>-8.752924e-08</td>
+      <td>-2.192180e-07</td>
+      <td>-4.143881e-07</td>
+      <td>5.844701e-08</td>
+      <td>4.478459e-07</td>
+      <td>2.746805e-07</td>
+      <td>2.540251e-07</td>
+      <td>1.778549e-07</td>
+      <td>3.874337e-07</td>
+      <td>1.849465e-07</td>
+      <td>1.291131e-07</td>
+      <td>8.163645e-07</td>
+      <td>3.536903e-07</td>
+      <td>7.296893e-08</td>
+      <td>2.031624e-07</td>
+      <td>-2.344859e-07</td>
+      <td>2.700799e-07</td>
+      <td>0.0</td>
+      <td>9.384070e-10</td>
+      <td>1.222201e-09</td>
+      <td>1.624123e-10</td>
+      <td>3.233305e-10</td>
+      <td>1.618766e-10</td>
+      <td>9.580604e-11</td>
+      <td>1.432219e-10</td>
+      <td>4.485759e-11</td>
+      <td>2.104486e-11</td>
+      <td>2.278924e-11</td>
+      <td>1.018486e-10</td>
+      <td>3.453104e-11</td>
+      <td>...</td>
+      <td>-8.213502</td>
+      <td>-2.668710</td>
+      <td>-4.699632</td>
+      <td>-3.241352</td>
+      <td>-4.778524</td>
+      <td>-3.625943</td>
+      <td>-4.329016</td>
+      <td>-6.678969</td>
+      <td>-4.829041</td>
+      <td>-4.823105</td>
+      <td>-4.778225</td>
+      <td>-7.812262</td>
+      <td>-5.205623</td>
+      <td>-6.450212</td>
+      <td>-6.438607</td>
+      <td>1.368221e-14</td>
+      <td>-92.455600</td>
+      <td>-91.085801</td>
+      <td>-105.933876</td>
+      <td>-106.220219</td>
+      <td>-95.092310</td>
+      <td>-108.094258</td>
+      <td>-109.414616</td>
+      <td>-114.400709</td>
+      <td>-107.423703</td>
+      <td>-118.901207</td>
+      <td>-108.056381</td>
+      <td>-116.768820</td>
+      <td>-113.050319</td>
+      <td>-111.040049</td>
+      <td>-111.997524</td>
+      <td>-113.929940</td>
+      <td>-110.304608</td>
+      <td>-107.195038</td>
+      <td>-109.591408</td>
+      <td>-103.861655</td>
+      <td>-106.993096</td>
+      <td>-102.303912</td>
+      <td>-103.017479</td>
+      <td>-150.0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>0</td>
+      <td>0</td>
+      <td>9372</td>
+      <td>9116</td>
+      <td>1.078094e-06</td>
+      <td>2.234204e-06</td>
+      <td>8.322080e-07</td>
+      <td>2.739075e-07</td>
+      <td>5.221804e-07</td>
+      <td>4.892659e-07</td>
+      <td>1.715459e-06</td>
+      <td>-4.352711e-07</td>
+      <td>-3.344520e-07</td>
+      <td>3.478329e-07</td>
+      <td>8.005165e-07</td>
+      <td>-2.992030e-07</td>
+      <td>4.290462e-07</td>
+      <td>1.761273e-06</td>
+      <td>-3.393055e-07</td>
+      <td>2.835962e-07</td>
+      <td>7.977295e-07</td>
+      <td>1.172844e-06</td>
+      <td>4.603560e-07</td>
+      <td>9.023698e-07</td>
+      <td>1.031344e-06</td>
+      <td>1.610909e-06</td>
+      <td>1.578167e-06</td>
+      <td>0.0</td>
+      <td>3.281150e-10</td>
+      <td>2.966900e-10</td>
+      <td>1.718613e-10</td>
+      <td>1.900112e-10</td>
+      <td>4.090073e-11</td>
+      <td>6.561697e-11</td>
+      <td>1.523522e-10</td>
+      <td>4.633987e-11</td>
+      <td>1.404191e-11</td>
+      <td>1.830471e-11</td>
+      <td>1.235392e-10</td>
+      <td>4.727223e-11</td>
+      <td>...</td>
+      <td>-5.391382</td>
+      <td>-2.285273</td>
+      <td>-4.958704</td>
+      <td>-4.555290</td>
+      <td>-4.567103</td>
+      <td>-4.774964</td>
+      <td>-5.893506</td>
+      <td>-6.490993</td>
+      <td>-5.963318</td>
+      <td>-5.221218</td>
+      <td>-5.700657</td>
+      <td>-7.263556</td>
+      <td>-6.162863</td>
+      <td>-5.829781</td>
+      <td>-5.615325</td>
+      <td>1.368221e-14</td>
+      <td>-114.850891</td>
+      <td>-113.800801</td>
+      <td>-112.373805</td>
+      <td>-115.078051</td>
+      <td>-114.352484</td>
+      <td>-119.513402</td>
+      <td>-112.864059</td>
+      <td>-118.098851</td>
+      <td>-118.853379</td>
+      <td>-122.097778</td>
+      <td>-107.186576</td>
+      <td>-111.719843</td>
+      <td>-115.787526</td>
+      <td>-108.167958</td>
+      <td>-106.720846</td>
+      <td>-115.076339</td>
+      <td>-109.082730</td>
+      <td>-105.041034</td>
+      <td>-105.644516</td>
+      <td>-106.383149</td>
+      <td>-106.617372</td>
+      <td>-105.062852</td>
+      <td>-104.805347</td>
+      <td>-150.0</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>65</th>
+      <td>0</td>
+      <td>0</td>
+      <td>43419</td>
+      <td>43163</td>
+      <td>2.604641e-06</td>
+      <td>2.696607e-06</td>
+      <td>3.207271e-07</td>
+      <td>1.414571e-06</td>
+      <td>8.683887e-07</td>
+      <td>6.164495e-07</td>
+      <td>4.839150e-07</td>
+      <td>5.002917e-07</td>
+      <td>4.847126e-08</td>
+      <td>-1.719417e-07</td>
+      <td>-2.072909e-09</td>
+      <td>1.159853e-07</td>
+      <td>3.258835e-07</td>
+      <td>4.057289e-07</td>
+      <td>-7.897253e-07</td>
+      <td>-1.676093e-07</td>
+      <td>-2.014890e-07</td>
+      <td>-7.270719e-07</td>
+      <td>-7.175649e-07</td>
+      <td>-6.511005e-07</td>
+      <td>-6.239371e-07</td>
+      <td>-7.622945e-07</td>
+      <td>-6.772801e-07</td>
+      <td>0.0</td>
+      <td>2.959224e-10</td>
+      <td>4.583059e-10</td>
+      <td>3.235904e-10</td>
+      <td>1.430450e-10</td>
+      <td>9.441327e-11</td>
+      <td>1.134989e-10</td>
+      <td>3.664311e-10</td>
+      <td>7.256851e-11</td>
+      <td>2.265229e-11</td>
+      <td>4.741751e-11</td>
+      <td>2.521238e-10</td>
+      <td>9.757545e-11</td>
+      <td>...</td>
+      <td>-9.385246</td>
+      <td>-3.453349</td>
+      <td>-7.825144</td>
+      <td>-5.687076</td>
+      <td>-4.473274</td>
+      <td>-6.291506</td>
+      <td>-7.356578</td>
+      <td>-9.420371</td>
+      <td>-6.799543</td>
+      <td>-6.891224</td>
+      <td>-8.024868</td>
+      <td>-9.541607</td>
+      <td>-8.661030</td>
+      <td>-7.511203</td>
+      <td>-7.108181</td>
+      <td>1.368221e-14</td>
+      <td>-104.315484</td>
+      <td>-101.267471</td>
+      <td>-99.866813</td>
+      <td>-105.307338</td>
+      <td>-99.451149</td>
+      <td>-103.311591</td>
+      <td>-101.854311</td>
+      <td>-107.033407</td>
+      <td>-105.219936</td>
+      <td>-113.259978</td>
+      <td>-98.574236</td>
+      <td>-107.569894</td>
+      <td>-109.861875</td>
+      <td>-100.419406</td>
+      <td>-101.826238</td>
+      <td>-104.721328</td>
+      <td>-102.156632</td>
+      <td>-101.039168</td>
+      <td>-99.035498</td>
+      <td>-97.832438</td>
+      <td>-96.538766</td>
+      <td>-98.014539</td>
+      <td>-100.639059</td>
+      <td>-150.0</td>
+    </tr>
+    <tr>
+      <th>66</th>
+      <td>0</td>
+      <td>0</td>
+      <td>43675</td>
+      <td>43419</td>
+      <td>-1.158709e-06</td>
+      <td>-9.353611e-07</td>
+      <td>6.243006e-07</td>
+      <td>-4.668101e-07</td>
+      <td>-2.474646e-07</td>
+      <td>8.406842e-08</td>
+      <td>3.288290e-07</td>
+      <td>2.380407e-07</td>
+      <td>4.667859e-08</td>
+      <td>4.627327e-07</td>
+      <td>-2.137553e-06</td>
+      <td>5.488546e-07</td>
+      <td>-1.778368e-07</td>
+      <td>2.714144e-06</td>
+      <td>6.517842e-07</td>
+      <td>-1.561107e-07</td>
+      <td>3.076232e-07</td>
+      <td>6.790661e-07</td>
+      <td>5.794216e-07</td>
+      <td>-2.894240e-09</td>
+      <td>1.204528e-06</td>
+      <td>1.164113e-06</td>
+      <td>5.989144e-07</td>
+      <td>0.0</td>
+      <td>2.366535e-10</td>
+      <td>4.280760e-10</td>
+      <td>2.850756e-10</td>
+      <td>1.016519e-10</td>
+      <td>7.673143e-11</td>
+      <td>9.454587e-11</td>
+      <td>4.416522e-10</td>
+      <td>6.003248e-11</td>
+      <td>1.667594e-11</td>
+      <td>1.002068e-10</td>
+      <td>1.272379e-09</td>
+      <td>8.611547e-11</td>
+      <td>...</td>
+      <td>-6.704927</td>
+      <td>0.474238</td>
+      <td>-6.383475</td>
+      <td>-1.770402</td>
+      <td>0.335162</td>
+      <td>-3.984670</td>
+      <td>-4.526275</td>
+      <td>-6.110717</td>
+      <td>-1.820648</td>
+      <td>-7.928704</td>
+      <td>-6.940430</td>
+      <td>-8.504161</td>
+      <td>-5.102482</td>
+      <td>-7.673347</td>
+      <td>-7.557961</td>
+      <td>1.368221e-14</td>
+      <td>-104.038235</td>
+      <td>-102.512319</td>
+      <td>-107.181389</td>
+      <td>-109.364695</td>
+      <td>-105.367976</td>
+      <td>-110.220481</td>
+      <td>-107.030257</td>
+      <td>-115.252274</td>
+      <td>-113.580869</td>
+      <td>-123.804174</td>
+      <td>-101.403267</td>
+      <td>-118.706601</td>
+      <td>-121.294992</td>
+      <td>-105.730776</td>
+      <td>-111.331056</td>
+      <td>-114.300917</td>
+      <td>-115.154807</td>
+      <td>-97.786849</td>
+      <td>-103.718402</td>
+      <td>-102.189729</td>
+      <td>-106.480432</td>
+      <td>-98.017597</td>
+      <td>-98.486938</td>
+      <td>-150.0</td>
+    </tr>
+    <tr>
+      <th>67</th>
+      <td>0</td>
+      <td>0</td>
+      <td>43931</td>
+      <td>43675</td>
+      <td>9.350503e-07</td>
+      <td>7.273056e-07</td>
+      <td>-3.974258e-07</td>
+      <td>-4.191231e-07</td>
+      <td>-5.750178e-08</td>
+      <td>-3.900544e-07</td>
+      <td>-9.148928e-07</td>
+      <td>-6.347679e-07</td>
+      <td>-2.232283e-07</td>
+      <td>-5.310954e-07</td>
+      <td>2.112546e-06</td>
+      <td>-6.919887e-07</td>
+      <td>-2.149410e-07</td>
+      <td>-3.366092e-06</td>
+      <td>-4.039456e-07</td>
+      <td>1.889348e-07</td>
+      <td>-5.329377e-07</td>
+      <td>-2.981728e-07</td>
+      <td>-3.509953e-07</td>
+      <td>1.818678e-07</td>
+      <td>-1.070838e-06</td>
+      <td>-1.253710e-06</td>
+      <td>-2.644788e-07</td>
+      <td>0.0</td>
+      <td>6.297132e-10</td>
+      <td>9.562527e-10</td>
+      <td>3.741349e-10</td>
+      <td>1.960394e-10</td>
+      <td>9.572930e-11</td>
+      <td>1.351714e-10</td>
+      <td>4.085920e-10</td>
+      <td>7.463680e-11</td>
+      <td>2.277286e-11</td>
+      <td>9.204933e-11</td>
+      <td>8.768947e-10</td>
+      <td>9.459875e-11</td>
+      <td>...</td>
+      <td>-3.518970</td>
+      <td>-1.976418</td>
+      <td>-7.187842</td>
+      <td>-4.508846</td>
+      <td>-1.682033</td>
+      <td>-3.548323</td>
+      <td>-5.549556</td>
+      <td>-4.913010</td>
+      <td>-2.669762</td>
+      <td>-7.140187</td>
+      <td>-6.713695</td>
+      <td>-5.937026</td>
+      <td>-2.641118</td>
+      <td>-5.700985</td>
+      <td>-6.237035</td>
+      <td>1.368221e-14</td>
+      <td>-102.685739</td>
+      <td>-103.742239</td>
+      <td>-101.435788</td>
+      <td>-109.401772</td>
+      <td>-108.379284</td>
+      <td>-109.394329</td>
+      <td>-105.035938</td>
+      <td>-111.188108</td>
+      <td>-116.530786</td>
+      <td>-115.285506</td>
+      <td>-98.349897</td>
+      <td>-109.210090</td>
+      <td>-115.391977</td>
+      <td>-107.147347</td>
+      <td>-104.924466</td>
+      <td>-116.952986</td>
+      <td>-111.992011</td>
+      <td>-97.748327</td>
+      <td>-100.684414</td>
+      <td>-107.478497</td>
+      <td>-112.420522</td>
+      <td>-102.707378</td>
+      <td>-101.104331</td>
+      <td>-150.0</td>
+    </tr>
+    <tr>
+      <th>68</th>
+      <td>0</td>
+      <td>0</td>
+      <td>44187</td>
+      <td>43931</td>
+      <td>-1.334396e-04</td>
+      <td>-4.969487e-05</td>
+      <td>-2.251352e-06</td>
+      <td>-4.908819e-06</td>
+      <td>-1.746263e-05</td>
+      <td>-9.156347e-06</td>
+      <td>-2.058691e-06</td>
+      <td>-1.066565e-06</td>
+      <td>-3.003059e-06</td>
+      <td>-1.929009e-06</td>
+      <td>5.101439e-06</td>
+      <td>-1.360117e-06</td>
+      <td>1.711183e-07</td>
+      <td>-3.081095e-06</td>
+      <td>-2.064597e-06</td>
+      <td>-6.523205e-07</td>
+      <td>9.353215e-08</td>
+      <td>-4.226238e-07</td>
+      <td>-2.701477e-06</td>
+      <td>-7.023075e-08</td>
+      <td>-7.965886e-07</td>
+      <td>-3.047513e-06</td>
+      <td>-1.086471e-06</td>
+      <td>0.0</td>
+      <td>7.889692e-08</td>
+      <td>1.538159e-08</td>
+      <td>2.631983e-10</td>
+      <td>3.274583e-10</td>
+      <td>1.304036e-09</td>
+      <td>4.359379e-10</td>
+      <td>2.718342e-10</td>
+      <td>5.453258e-11</td>
+      <td>5.561130e-11</td>
+      <td>7.333197e-11</td>
+      <td>3.394514e-10</td>
+      <td>6.382059e-11</td>
+      <td>...</td>
+      <td>-7.066758</td>
+      <td>-1.246852</td>
+      <td>-7.194413</td>
+      <td>-4.432464</td>
+      <td>-1.428294</td>
+      <td>-3.945737</td>
+      <td>-6.509259</td>
+      <td>-7.009361</td>
+      <td>-3.052565</td>
+      <td>-6.402521</td>
+      <td>-6.701929</td>
+      <td>-8.741496</td>
+      <td>-5.732781</td>
+      <td>-8.346280</td>
+      <td>-6.905985</td>
+      <td>1.368221e-14</td>
+      <td>-104.842203</td>
+      <td>-109.491130</td>
+      <td>-107.561873</td>
+      <td>-109.022036</td>
+      <td>-107.336963</td>
+      <td>-113.621137</td>
+      <td>-112.665825</td>
+      <td>-113.751918</td>
+      <td>-112.403246</td>
+      <td>-118.412395</td>
+      <td>-99.985096</td>
+      <td>-109.633453</td>
+      <td>-115.902412</td>
+      <td>-106.362102</td>
+      <td>-104.102471</td>
+      <td>-110.698731</td>
+      <td>-110.934666</td>
+      <td>-100.587623</td>
+      <td>-102.646614</td>
+      <td>-100.844665</td>
+      <td>-103.707894</td>
+      <td>-95.452643</td>
+      <td>-99.766156</td>
+      <td>-150.0</td>
+    </tr>
+    <tr>
+      <th>69</th>
+      <td>0</td>
+      <td>0</td>
+      <td>44443</td>
+      <td>44187</td>
+      <td>1.370442e-04</td>
+      <td>3.529626e-05</td>
+      <td>3.354098e-06</td>
+      <td>5.302295e-06</td>
+      <td>1.753034e-05</td>
+      <td>8.853639e-06</td>
+      <td>1.556609e-06</td>
+      <td>1.294490e-06</td>
+      <td>3.178853e-06</td>
+      <td>1.588480e-06</td>
+      <td>-4.938269e-06</td>
+      <td>1.643405e-06</td>
+      <td>-9.913554e-07</td>
+      <td>3.878280e-06</td>
+      <td>2.005955e-06</td>
+      <td>2.562061e-07</td>
+      <td>-7.316454e-07</td>
+      <td>5.150016e-07</td>
+      <td>2.515836e-06</td>
+      <td>-4.922697e-07</td>
+      <td>2.157270e-07</td>
+      <td>3.398296e-06</td>
+      <td>1.160926e-06</td>
+      <td>0.0</td>
+      <td>2.472606e-07</td>
+      <td>2.879515e-08</td>
+      <td>2.572089e-10</td>
+      <td>6.656413e-10</td>
+      <td>6.202069e-09</td>
+      <td>2.061056e-09</td>
+      <td>3.584678e-10</td>
+      <td>1.674592e-10</td>
+      <td>1.687799e-10</td>
+      <td>1.463667e-10</td>
+      <td>7.838981e-10</td>
+      <td>9.658057e-11</td>
+      <td>...</td>
+      <td>-8.418650</td>
+      <td>-1.337128</td>
+      <td>-7.233839</td>
+      <td>-4.699691</td>
+      <td>-1.213908</td>
+      <td>-3.352998</td>
+      <td>-4.452312</td>
+      <td>-5.940242</td>
+      <td>-1.944298</td>
+      <td>-5.295867</td>
+      <td>-4.298549</td>
+      <td>-6.716717</td>
+      <td>-2.248563</td>
+      <td>-5.917898</td>
+      <td>-6.102177</td>
+      <td>1.368221e-14</td>
+      <td>-90.539229</td>
+      <td>-94.604742</td>
+      <td>-102.596640</td>
+      <td>-106.077951</td>
+      <td>-95.752387</td>
+      <td>-103.222494</td>
+      <td>-108.820670</td>
+      <td>-110.484145</td>
+      <td>-107.120333</td>
+      <td>-118.914830</td>
+      <td>-99.352296</td>
+      <td>-110.778479</td>
+      <td>-118.848237</td>
+      <td>-108.273271</td>
+      <td>-110.681550</td>
+      <td>-114.607123</td>
+      <td>-115.166697</td>
+      <td>-103.361047</td>
+      <td>-109.661662</td>
+      <td>-106.992751</td>
+      <td>-112.384386</td>
+      <td>-102.769318</td>
+      <td>-102.503490</td>
+      <td>-150.0</td>
+    </tr>
+  </tbody>
+</table>
+<p>70 rows × 484 columns</p>
+</div>
+</div>
+<br />
+<br /><div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="../../api/eegdash.features.html#eegdash.features.FeaturesConcatDataset.fillna" title="eegdash.features.FeaturesConcatDataset.fillna" class="sphx-glr-backref-module-eegdash-features sphx-glr-backref-type-py-method"><span class="n">features_ds</span><span class="o">.</span><span class="n">fillna</span></a><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<a href="../../api/eegdash.features.html#eegdash.features.FeaturesConcatDataset.zscore" title="eegdash.features.FeaturesConcatDataset.zscore" class="sphx-glr-backref-module-eegdash-features sphx-glr-backref-type-py-method"><span class="n">features_ds</span><span class="o">.</span><span class="n">zscore</span></a><span class="p">(</span><span class="n">eps</span><span class="o">=</span><span class="mf">1e-7</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="../../api/eegdash.features.html#eegdash.features.FeaturesConcatDataset.to_dataframe" title="eegdash.features.FeaturesConcatDataset.to_dataframe" class="sphx-glr-backref-module-eegdash-features sphx-glr-backref-type-py-method"><span class="n">features_ds</span><span class="o">.</span><span class="n">to_dataframe</span></a><span class="p">(</span><span class="n">include_target</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>sig_mean_E22</th>
+      <th>sig_mean_E9</th>
+      <th>sig_mean_E33</th>
+      <th>sig_mean_E24</th>
+      <th>sig_mean_E11</th>
+      <th>sig_mean_E124</th>
+      <th>sig_mean_E122</th>
+      <th>sig_mean_E29</th>
+      <th>sig_mean_E6</th>
+      <th>sig_mean_E111</th>
+      <th>sig_mean_E45</th>
+      <th>sig_mean_E36</th>
+      <th>sig_mean_E104</th>
+      <th>sig_mean_E108</th>
+      <th>sig_mean_E42</th>
+      <th>sig_mean_E55</th>
+      <th>sig_mean_E93</th>
+      <th>sig_mean_E58</th>
+      <th>sig_mean_E52</th>
+      <th>sig_mean_E62</th>
+      <th>sig_mean_E92</th>
+      <th>sig_mean_E96</th>
+      <th>sig_mean_E70</th>
+      <th>sig_mean_Cz</th>
+      <th>sig_var_E22</th>
+      <th>sig_var_E9</th>
+      <th>sig_var_E33</th>
+      <th>sig_var_E24</th>
+      <th>sig_var_E11</th>
+      <th>sig_var_E124</th>
+      <th>sig_var_E122</th>
+      <th>sig_var_E29</th>
+      <th>sig_var_E6</th>
+      <th>sig_var_E111</th>
+      <th>sig_var_E45</th>
+      <th>sig_var_E36</th>
+      <th>sig_var_E104</th>
+      <th>sig_var_E108</th>
+      <th>sig_var_E42</th>
+      <th>sig_var_E55</th>
+      <th>...</th>
+      <th>spec_slope_exp_E111</th>
+      <th>spec_slope_exp_E45</th>
+      <th>spec_slope_exp_E36</th>
+      <th>spec_slope_exp_E104</th>
+      <th>spec_slope_exp_E108</th>
+      <th>spec_slope_exp_E42</th>
+      <th>spec_slope_exp_E55</th>
+      <th>spec_slope_exp_E93</th>
+      <th>spec_slope_exp_E58</th>
+      <th>spec_slope_exp_E52</th>
+      <th>spec_slope_exp_E62</th>
+      <th>spec_slope_exp_E92</th>
+      <th>spec_slope_exp_E96</th>
+      <th>spec_slope_exp_E70</th>
+      <th>spec_slope_exp_Cz</th>
+      <th>spec_slope_int_E22</th>
+      <th>spec_slope_int_E9</th>
+      <th>spec_slope_int_E33</th>
+      <th>spec_slope_int_E24</th>
+      <th>spec_slope_int_E11</th>
+      <th>spec_slope_int_E124</th>
+      <th>spec_slope_int_E122</th>
+      <th>spec_slope_int_E29</th>
+      <th>spec_slope_int_E6</th>
+      <th>spec_slope_int_E111</th>
+      <th>spec_slope_int_E45</th>
+      <th>spec_slope_int_E36</th>
+      <th>spec_slope_int_E104</th>
+      <th>spec_slope_int_E108</th>
+      <th>spec_slope_int_E42</th>
+      <th>spec_slope_int_E55</th>
+      <th>spec_slope_int_E93</th>
+      <th>spec_slope_int_E58</th>
+      <th>spec_slope_int_E52</th>
+      <th>spec_slope_int_E62</th>
+      <th>spec_slope_int_E92</th>
+      <th>spec_slope_int_E96</th>
+      <th>spec_slope_int_E70</th>
+      <th>spec_slope_int_Cz</th>
+      <th>target</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0.001951</td>
+      <td>-0.006719</td>
+      <td>0.025121</td>
+      <td>0.004072</td>
+      <td>0.000266</td>
+      <td>-0.005717</td>
+      <td>-0.012260</td>
+      <td>0.003947</td>
+      <td>-0.000029</td>
+      <td>-0.000534</td>
+      <td>-0.000968</td>
+      <td>0.004046</td>
+      <td>-0.001965</td>
+      <td>-0.010382</td>
+      <td>0.005371</td>
+      <td>-0.000123</td>
+      <td>-0.001221</td>
+      <td>0.005291</td>
+      <td>0.004466</td>
+      <td>0.001198</td>
+      <td>-0.000150</td>
+      <td>-0.000128</td>
+      <td>0.003222</td>
+      <td>0.0</td>
+      <td>-0.000013</td>
+      <td>5.523004e-07</td>
+      <td>8.361981e-07</td>
+      <td>3.235755e-07</td>
+      <td>-2.889065e-07</td>
+      <td>4.224450e-08</td>
+      <td>8.075199e-07</td>
+      <td>2.056527e-07</td>
+      <td>-3.244810e-08</td>
+      <td>2.577373e-07</td>
+      <td>4.241905e-07</td>
+      <td>3.050408e-07</td>
+      <td>4.227976e-07</td>
+      <td>9.721692e-07</td>
+      <td>1.081002e-06</td>
+      <td>5.316444e-09</td>
+      <td>...</td>
+      <td>1.492490</td>
+      <td>3.939595</td>
+      <td>2.151313</td>
+      <td>2.204210</td>
+      <td>1.641740</td>
+      <td>0.953571</td>
+      <td>1.650173</td>
+      <td>2.643766</td>
+      <td>1.092136</td>
+      <td>1.994584</td>
+      <td>1.001964</td>
+      <td>2.225460</td>
+      <td>1.626073</td>
+      <td>0.985645</td>
+      <td>0.0</td>
+      <td>1.447121</td>
+      <td>1.450051</td>
+      <td>-1.489614</td>
+      <td>0.409050</td>
+      <td>1.018804</td>
+      <td>0.370136</td>
+      <td>-2.237950</td>
+      <td>-1.557122</td>
+      <td>-0.577616</td>
+      <td>-0.311079</td>
+      <td>-2.769303</td>
+      <td>-1.093724</td>
+      <td>-1.422565</td>
+      <td>-0.217352</td>
+      <td>0.599968</td>
+      <td>-0.076764</td>
+      <td>-1.885502</td>
+      <td>-0.579490</td>
+      <td>-1.409001</td>
+      <td>0.012830</td>
+      <td>-1.395235</td>
+      <td>-0.920786</td>
+      <td>-0.362538</td>
+      <td>0.0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>0.003736</td>
+      <td>0.001662</td>
+      <td>-0.002745</td>
+      <td>0.003785</td>
+      <td>0.001641</td>
+      <td>0.001832</td>
+      <td>-0.000768</td>
+      <td>0.001844</td>
+      <td>-0.000069</td>
+      <td>0.000265</td>
+      <td>0.009657</td>
+      <td>0.001819</td>
+      <td>0.000772</td>
+      <td>0.009694</td>
+      <td>0.000576</td>
+      <td>0.000328</td>
+      <td>0.001118</td>
+      <td>0.001992</td>
+      <td>0.000923</td>
+      <td>0.000750</td>
+      <td>0.001301</td>
+      <td>0.002992</td>
+      <td>0.001803</td>
+      <td>0.0</td>
+      <td>-0.000017</td>
+      <td>-5.109961e-06</td>
+      <td>-7.133039e-07</td>
+      <td>-1.305241e-07</td>
+      <td>-7.603062e-07</td>
+      <td>-3.011882e-07</td>
+      <td>-3.152575e-07</td>
+      <td>-9.290543e-10</td>
+      <td>-3.808679e-08</td>
+      <td>-6.545192e-09</td>
+      <td>-9.159266e-07</td>
+      <td>-3.352464e-08</td>
+      <td>-2.866534e-08</td>
+      <td>-3.433118e-07</td>
+      <td>-1.231895e-07</td>
+      <td>-1.727352e-08</td>
+      <td>...</td>
+      <td>1.512826</td>
+      <td>1.764399</td>
+      <td>0.995077</td>
+      <td>1.258441</td>
+      <td>1.296934</td>
+      <td>1.154090</td>
+      <td>1.554212</td>
+      <td>1.295095</td>
+      <td>0.967133</td>
+      <td>1.028553</td>
+      <td>0.811013</td>
+      <td>1.044905</td>
+      <td>0.639442</td>
+      <td>1.069751</td>
+      <td>0.0</td>
+      <td>-1.051914</td>
+      <td>-1.736985</td>
+      <td>-0.800559</td>
+      <td>-1.099110</td>
+      <td>-0.890059</td>
+      <td>-2.830874</td>
+      <td>-2.246926</td>
+      <td>-0.386441</td>
+      <td>-0.644879</td>
+      <td>-1.813293</td>
+      <td>-1.453910</td>
+      <td>-0.816922</td>
+      <td>-1.200489</td>
+      <td>-1.409381</td>
+      <td>-1.034594</td>
+      <td>-1.313005</td>
+      <td>-1.347661</td>
+      <td>-0.728354</td>
+      <td>-0.717287</td>
+      <td>-0.848564</td>
+      <td>-1.163734</td>
+      <td>-0.851869</td>
+      <td>-0.956851</td>
+      <td>0.0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>-0.002586</td>
+      <td>0.001989</td>
+      <td>0.000614</td>
+      <td>0.000250</td>
+      <td>0.000836</td>
+      <td>-0.000843</td>
+      <td>0.000064</td>
+      <td>0.000225</td>
+      <td>0.001181</td>
+      <td>-0.000820</td>
+      <td>-0.001165</td>
+      <td>-0.000676</td>
+      <td>-0.000905</td>
+      <td>-0.001305</td>
+      <td>-0.000453</td>
+      <td>-0.000796</td>
+      <td>-0.001060</td>
+      <td>-0.002792</td>
+      <td>-0.001091</td>
+      <td>-0.001151</td>
+      <td>-0.001478</td>
+      <td>-0.001000</td>
+      <td>-0.001425</td>
+      <td>0.0</td>
+      <td>-0.000018</td>
+      <td>-5.295695e-06</td>
+      <td>-9.436373e-07</td>
+      <td>-3.623856e-07</td>
+      <td>-8.109753e-07</td>
+      <td>-2.612164e-07</td>
+      <td>-3.528331e-07</td>
+      <td>-4.402409e-08</td>
+      <td>-3.996750e-08</td>
+      <td>-2.607291e-08</td>
+      <td>-1.140657e-06</td>
+      <td>-7.239448e-08</td>
+      <td>-7.331385e-08</td>
+      <td>-3.173424e-07</td>
+      <td>-1.277883e-07</td>
+      <td>-1.688024e-08</td>
+      <td>...</td>
+      <td>0.894163</td>
+      <td>0.815037</td>
+      <td>0.626455</td>
+      <td>0.812631</td>
+      <td>0.805864</td>
+      <td>0.513520</td>
+      <td>0.829918</td>
+      <td>0.694662</td>
+      <td>1.835851</td>
+      <td>0.460670</td>
+      <td>1.231540</td>
+      <td>1.081952</td>
+      <td>1.286763</td>
+      <td>2.296780</td>
+      <td>0.0</td>
+      <td>-1.045416</td>
+      <td>-1.351148</td>
+      <td>-1.584586</td>
+      <td>-2.164762</td>
+      <td>-1.489290</td>
+      <td>-1.470687</td>
+      <td>-0.491378</td>
+      <td>-0.647959</td>
+      <td>-1.501203</td>
+      <td>-0.989137</td>
+      <td>-1.214011</td>
+      <td>-0.699421</td>
+      <td>-1.040951</td>
+      <td>-0.806000</td>
+      <td>-0.506333</td>
+      <td>-1.196132</td>
+      <td>-1.085559</td>
+      <td>-1.712426</td>
+      <td>-0.454518</td>
+      <td>-1.433267</td>
+      <td>-1.404927</td>
+      <td>-1.219589</td>
+      <td>-2.298327</td>
+      <td>0.0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0.001268</td>
+      <td>-0.000500</td>
+      <td>-0.000834</td>
+      <td>-0.001115</td>
+      <td>-0.001898</td>
+      <td>0.001444</td>
+      <td>0.000468</td>
+      <td>-0.000842</td>
+      <td>-0.001271</td>
+      <td>0.000365</td>
+      <td>0.000538</td>
+      <td>0.000669</td>
+      <td>0.000916</td>
+      <td>0.000672</td>
+      <td>0.001077</td>
+      <td>0.000620</td>
+      <td>0.000463</td>
+      <td>0.002384</td>
+      <td>0.000958</td>
+      <td>0.000238</td>
+      <td>0.000699</td>
+      <td>-0.000798</td>
+      <td>0.000738</td>
+      <td>0.0</td>
+      <td>-0.000015</td>
+      <td>-2.205157e-06</td>
+      <td>-8.321263e-07</td>
+      <td>1.662175e-07</td>
+      <td>-4.246717e-07</td>
+      <td>-1.728402e-07</td>
+      <td>-4.937308e-07</td>
+      <td>-7.237159e-08</td>
+      <td>-2.028431e-08</td>
+      <td>-5.884707e-08</td>
+      <td>-1.143828e-06</td>
+      <td>-1.163991e-07</td>
+      <td>-1.050998e-07</td>
+      <td>-4.292795e-07</td>
+      <td>-1.744050e-07</td>
+      <td>-1.984031e-08</td>
+      <td>...</td>
+      <td>0.887129</td>
+      <td>1.515845</td>
+      <td>1.041634</td>
+      <td>0.212483</td>
+      <td>1.099224</td>
+      <td>1.257482</td>
+      <td>0.331860</td>
+      <td>0.536455</td>
+      <td>1.150326</td>
+      <td>1.412189</td>
+      <td>0.107774</td>
+      <td>0.741675</td>
+      <td>0.407186</td>
+      <td>0.279717</td>
+      <td>0.0</td>
+      <td>1.330218</td>
+      <td>1.197191</td>
+      <td>-0.607167</td>
+      <td>0.566309</td>
+      <td>1.553999</td>
+      <td>0.114613</td>
+      <td>-0.980614</td>
+      <td>-0.624033</td>
+      <td>1.210656</td>
+      <td>-1.207074</td>
+      <td>-1.716050</td>
+      <td>-1.572751</td>
+      <td>-0.533749</td>
+      <td>-1.651582</td>
+      <td>-1.489786</td>
+      <td>-0.422384</td>
+      <td>-0.720034</td>
+      <td>-1.238557</td>
+      <td>-1.520727</td>
+      <td>0.037745</td>
+      <td>-0.621054</td>
+      <td>-0.426815</td>
+      <td>-0.507861</td>
+      <td>0.0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>0.003570</td>
+      <td>0.008277</td>
+      <td>0.002027</td>
+      <td>0.000686</td>
+      <td>0.001812</td>
+      <td>0.001860</td>
+      <td>0.006170</td>
+      <td>-0.001526</td>
+      <td>-0.001018</td>
+      <td>0.001280</td>
+      <td>0.001653</td>
+      <td>-0.001145</td>
+      <td>0.001469</td>
+      <td>0.005680</td>
+      <td>-0.001221</td>
+      <td>0.000932</td>
+      <td>0.002577</td>
+      <td>0.003511</td>
+      <td>0.001295</td>
+      <td>0.002860</td>
+      <td>0.003318</td>
+      <td>0.005038</td>
+      <td>0.004875</td>
+      <td>0.0</td>
+      <td>-0.000017</td>
+      <td>-5.131880e-06</td>
+      <td>-8.022458e-07</td>
+      <td>-2.553753e-07</td>
+      <td>-8.072310e-07</td>
+      <td>-2.683064e-07</td>
+      <td>-4.648580e-07</td>
+      <td>-6.768422e-08</td>
+      <td>-4.242959e-08</td>
+      <td>-7.302839e-08</td>
+      <td>-1.075236e-06</td>
+      <td>-7.610794e-08</td>
+      <td>-1.159172e-07</td>
+      <td>-4.111793e-07</td>
+      <td>-1.414685e-07</td>
+      <td>-1.308539e-08</td>
+      <td>...</td>
+      <td>1.038347</td>
+      <td>1.348529</td>
+      <td>0.438874</td>
+      <td>0.290329</td>
+      <td>0.429666</td>
+      <td>0.413403</td>
+      <td>0.488711</td>
+      <td>0.069017</td>
+      <td>0.923069</td>
+      <td>0.863997</td>
+      <td>0.615711</td>
+      <td>0.261521</td>
+      <td>0.825766</td>
+      <td>0.900234</td>
+      <td>0.0</td>
+      <td>-1.315896</td>
+      <td>-1.324571</td>
+      <td>-1.941301</td>
+      <td>-1.125760</td>
+      <td>-1.575175</td>
+      <td>-2.089463</td>
+      <td>-1.707018</td>
+      <td>-1.460361</td>
+      <td>-1.440382</td>
+      <td>-1.865687</td>
+      <td>-1.511484</td>
+      <td>-0.495093</td>
+      <td>-1.071253</td>
+      <td>-0.933400</td>
+      <td>-0.322594</td>
+      <td>-0.746763</td>
+      <td>-0.487501</td>
+      <td>-0.821214</td>
+      <td>-0.632061</td>
+      <td>-0.656504</td>
+      <td>-0.548569</td>
+      <td>-1.001451</td>
+      <td>-0.958422</td>
+      <td>0.0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>65</th>
+      <td>0.008385</td>
+      <td>0.009738</td>
+      <td>0.000410</td>
+      <td>0.004293</td>
+      <td>0.002907</td>
+      <td>0.002263</td>
+      <td>0.002275</td>
+      <td>0.001433</td>
+      <td>0.000193</td>
+      <td>-0.000364</td>
+      <td>-0.000885</td>
+      <td>0.000168</td>
+      <td>0.001143</td>
+      <td>0.001393</td>
+      <td>-0.002646</td>
+      <td>-0.000495</td>
+      <td>-0.000583</td>
+      <td>-0.002497</td>
+      <td>-0.002430</td>
+      <td>-0.002052</td>
+      <td>-0.001917</td>
+      <td>-0.002467</td>
+      <td>-0.002257</td>
+      <td>0.0</td>
+      <td>-0.000017</td>
+      <td>-4.620806e-06</td>
+      <td>-3.224363e-07</td>
+      <td>-4.038952e-07</td>
+      <td>-6.380095e-07</td>
+      <td>-1.168905e-07</td>
+      <td>2.121189e-07</td>
+      <td>1.525802e-08</td>
+      <td>-1.520116e-08</td>
+      <td>1.903438e-08</td>
+      <td>-6.686158e-07</td>
+      <td>8.296481e-08</td>
+      <td>6.743984e-08</td>
+      <td>-3.264812e-09</td>
+      <td>2.062562e-07</td>
+      <td>1.731128e-08</td>
+      <td>...</td>
+      <td>0.577687</td>
+      <td>-0.502699</td>
+      <td>-0.080326</td>
+      <td>0.324878</td>
+      <td>-0.454054</td>
+      <td>-0.375960</td>
+      <td>-1.955621</td>
+      <td>-0.275593</td>
+      <td>-0.030228</td>
+      <td>-0.517258</td>
+      <td>-1.493082</td>
+      <td>-0.991565</td>
+      <td>-0.308624</td>
+      <td>-0.224947</td>
+      <td>0.0</td>
+      <td>-0.071086</td>
+      <td>0.066848</td>
+      <td>0.649722</td>
+      <td>0.740692</td>
+      <td>0.845824</td>
+      <td>1.037743</td>
+      <td>0.611480</td>
+      <td>1.042069</td>
+      <td>1.721805</td>
+      <td>-0.044772</td>
+      <td>0.514017</td>
+      <td>0.390676</td>
+      <td>0.092366</td>
+      <td>1.004166</td>
+      <td>0.760085</td>
+      <td>2.183237</td>
+      <td>0.830590</td>
+      <td>-0.045842</td>
+      <td>0.855998</td>
+      <td>1.697784</td>
+      <td>1.395802</td>
+      <td>0.466582</td>
+      <td>0.091526</td>
+      <td>0.0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>66</th>
+      <td>-0.003484</td>
+      <td>-0.001743</td>
+      <td>0.001369</td>
+      <td>-0.001656</td>
+      <td>-0.000621</td>
+      <td>0.000579</td>
+      <td>0.001785</td>
+      <td>0.000604</td>
+      <td>0.000187</td>
+      <td>0.001643</td>
+      <td>-0.007637</td>
+      <td>0.001537</td>
+      <td>-0.000450</td>
+      <td>0.008693</td>
+      <td>0.001913</td>
+      <td>-0.000459</td>
+      <td>0.001027</td>
+      <td>0.001950</td>
+      <td>0.001671</td>
+      <td>-0.000002</td>
+      <td>0.003866</td>
+      <td>0.003625</td>
+      <td>0.001778</td>
+      <td>0.0</td>
+      <td>-0.000018</td>
+      <td>-4.716401e-06</td>
+      <td>-4.442309e-07</td>
+      <td>-5.347920e-07</td>
+      <td>-6.939244e-07</td>
+      <td>-1.768252e-07</td>
+      <td>4.499890e-07</td>
+      <td>-2.438438e-08</td>
+      <td>-3.410006e-08</td>
+      <td>1.859689e-07</td>
+      <td>2.557715e-06</td>
+      <td>4.672518e-08</td>
+      <td>3.319292e-07</td>
+      <td>1.237658e-06</td>
+      <td>4.956287e-08</td>
+      <td>-1.064000e-08</td>
+      <td>...</td>
+      <td>2.126629</td>
+      <td>0.428372</td>
+      <td>1.716424</td>
+      <td>2.095365</td>
+      <td>0.890186</td>
+      <td>1.151056</td>
+      <td>0.806022</td>
+      <td>1.776219</td>
+      <td>-0.622457</td>
+      <td>0.127213</td>
+      <td>-0.532718</td>
+      <td>0.793411</td>
+      <td>-0.418016</td>
+      <td>-0.563951</td>
+      <td>0.0</td>
+      <td>-0.038327</td>
+      <td>-0.071352</td>
+      <td>-0.865609</td>
+      <td>-0.034366</td>
+      <td>-0.115474</td>
+      <td>-0.295782</td>
+      <td>-0.478502</td>
+      <td>-0.816613</td>
+      <td>-0.217458</td>
+      <td>-2.217268</td>
+      <td>-0.151332</td>
+      <td>-1.986353</td>
+      <td>-2.152753</td>
+      <td>-0.323970</td>
+      <td>-1.342364</td>
+      <td>-0.527354</td>
+      <td>-1.643065</td>
+      <td>0.584303</td>
+      <td>-0.198386</td>
+      <td>0.498081</td>
+      <td>-0.522150</td>
+      <td>0.465945</td>
+      <td>0.633883</td>
+      <td>0.0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>67</th>
+      <td>0.003119</td>
+      <td>0.003513</td>
+      <td>-0.001861</td>
+      <td>-0.001506</td>
+      <td>-0.000021</td>
+      <td>-0.000920</td>
+      <td>-0.002148</td>
+      <td>-0.002157</td>
+      <td>-0.000666</td>
+      <td>-0.001500</td>
+      <td>0.005802</td>
+      <td>-0.002387</td>
+      <td>-0.000567</td>
+      <td>-0.010534</td>
+      <td>-0.001426</td>
+      <td>0.000633</td>
+      <td>-0.001631</td>
+      <td>-0.001141</td>
+      <td>-0.001271</td>
+      <td>0.000582</td>
+      <td>-0.003330</td>
+      <td>-0.004021</td>
+      <td>-0.000952</td>
+      <td>0.0</td>
+      <td>-0.000016</td>
+      <td>-3.046160e-06</td>
+      <td>-1.626005e-07</td>
+      <td>-2.363122e-07</td>
+      <td>-6.338478e-07</td>
+      <td>-4.835607e-08</td>
+      <td>3.454434e-07</td>
+      <td>2.179852e-08</td>
+      <td>-1.481991e-08</td>
+      <td>1.601726e-07</td>
+      <td>1.307083e-06</td>
+      <td>7.355165e-08</td>
+      <td>2.433262e-07</td>
+      <td>1.322368e-06</td>
+      <td>1.143754e-07</td>
+      <td>-2.000804e-08</td>
+      <td>...</td>
+      <td>1.160152</td>
+      <td>-0.091111</td>
+      <td>0.460180</td>
+      <td>1.352625</td>
+      <td>1.144454</td>
+      <td>0.598972</td>
+      <td>1.805412</td>
+      <td>1.426298</td>
+      <td>-0.172344</td>
+      <td>0.261959</td>
+      <td>1.843682</td>
+      <td>2.028037</td>
+      <td>0.912660</td>
+      <td>0.431645</td>
+      <td>0.0</td>
+      <td>0.121477</td>
+      <td>-0.207895</td>
+      <td>0.324684</td>
+      <td>-0.041448</td>
+      <td>-0.604717</td>
+      <td>-0.136321</td>
+      <td>-0.058526</td>
+      <td>0.102491</td>
+      <td>-0.901672</td>
+      <td>-0.462106</td>
+      <td>0.566778</td>
+      <td>0.040591</td>
+      <td>-0.993579</td>
+      <td>-0.678191</td>
+      <td>0.074762</td>
+      <td>-1.277769</td>
+      <td>-1.041160</td>
+      <td>0.591766</td>
+      <td>0.484735</td>
+      <td>-0.958089</td>
+      <td>-1.668116</td>
+      <td>-0.510849</td>
+      <td>-0.025727</td>
+      <td>0.0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>68</th>
+      <td>-0.420671</td>
+      <td>-0.155885</td>
+      <td>-0.007724</td>
+      <td>-0.015703</td>
+      <td>-0.055058</td>
+      <td>-0.028641</td>
+      <td>-0.005765</td>
+      <td>-0.003522</td>
+      <td>-0.009457</td>
+      <td>-0.005920</td>
+      <td>0.015254</td>
+      <td>-0.004500</td>
+      <td>0.000654</td>
+      <td>-0.009633</td>
+      <td>-0.006677</td>
+      <td>-0.002028</td>
+      <td>0.000350</td>
+      <td>-0.001534</td>
+      <td>-0.008704</td>
+      <td>-0.000215</td>
+      <td>-0.002462</td>
+      <td>-0.009693</td>
+      <td>-0.003551</td>
+      <td>0.0</td>
+      <td>0.000231</td>
+      <td>4.257076e-05</td>
+      <td>-5.134130e-07</td>
+      <td>1.792708e-07</td>
+      <td>3.187155e-06</td>
+      <td>9.027512e-07</td>
+      <td>-8.702277e-08</td>
+      <td>-4.177658e-08</td>
+      <td>8.902436e-08</td>
+      <td>1.009831e-07</td>
+      <td>-3.924615e-07</td>
+      <td>-2.377740e-08</td>
+      <td>9.944061e-08</td>
+      <td>1.935233e-07</td>
+      <td>4.426169e-08</td>
+      <td>-2.321988e-09</td>
+      <td>...</td>
+      <td>1.447874</td>
+      <td>-0.095355</td>
+      <td>0.495220</td>
+      <td>1.446053</td>
+      <td>0.912874</td>
+      <td>0.081189</td>
+      <td>0.056174</td>
+      <td>1.268544</td>
+      <td>0.248741</td>
+      <td>0.268951</td>
+      <td>-0.752419</td>
+      <td>0.477252</td>
+      <td>-0.872018</td>
+      <td>-0.072550</td>
+      <td>0.0</td>
+      <td>-0.133320</td>
+      <td>-0.846122</td>
+      <td>-0.944433</td>
+      <td>0.031091</td>
+      <td>-0.435373</td>
+      <td>-0.952162</td>
+      <td>-1.665273</td>
+      <td>-0.477310</td>
+      <td>0.055683</td>
+      <td>-1.106361</td>
+      <td>0.182202</td>
+      <td>-0.049772</td>
+      <td>-1.093813</td>
+      <td>-0.481836</td>
+      <td>0.256586</td>
+      <td>0.491902</td>
+      <td>-0.839939</td>
+      <td>0.041646</td>
+      <td>0.042934</td>
+      <td>0.868420</td>
+      <td>0.012729</td>
+      <td>1.000178</td>
+      <td>0.311507</td>
+      <td>0.0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>69</th>
+      <td>0.432379</td>
+      <td>0.112794</td>
+      <td>0.010002</td>
+      <td>0.016587</td>
+      <td>0.055594</td>
+      <td>0.028310</td>
+      <td>0.005667</td>
+      <td>0.003944</td>
+      <td>0.010092</td>
+      <td>0.005203</td>
+      <td>-0.016494</td>
+      <td>0.004998</td>
+      <td>-0.003022</td>
+      <td>0.012374</td>
+      <td>0.006195</td>
+      <td>0.000845</td>
+      <td>-0.002259</td>
+      <td>0.001431</td>
+      <td>0.007795</td>
+      <td>-0.001550</td>
+      <td>0.000739</td>
+      <td>0.010690</td>
+      <td>0.003556</td>
+      <td>0.0</td>
+      <td>0.000764</td>
+      <td>8.498816e-05</td>
+      <td>-5.323530e-07</td>
+      <td>1.248699e-06</td>
+      <td>1.867609e-05</td>
+      <td>6.041827e-06</td>
+      <td>1.869367e-07</td>
+      <td>3.153289e-07</td>
+      <td>4.468949e-07</td>
+      <td>3.319391e-07</td>
+      <td>1.013002e-06</td>
+      <td>7.981873e-08</td>
+      <td>1.583297e-07</td>
+      <td>9.276458e-07</td>
+      <td>9.497467e-08</td>
+      <td>2.085551e-08</td>
+      <td>...</td>
+      <td>1.412272</td>
+      <td>-0.120817</td>
+      <td>0.372631</td>
+      <td>1.524991</td>
+      <td>1.258274</td>
+      <td>1.190961</td>
+      <td>0.948269</td>
+      <td>1.725263</td>
+      <td>0.880457</td>
+      <td>1.697255</td>
+      <td>1.121921</td>
+      <td>2.224943</td>
+      <td>0.766317</td>
+      <td>0.533288</td>
+      <td>0.0</td>
+      <td>1.556647</td>
+      <td>0.806527</td>
+      <td>0.084195</td>
+      <td>0.593485</td>
+      <td>1.446757</td>
+      <td>1.054941</td>
+      <td>-0.855537</td>
+      <td>0.261691</td>
+      <td>1.281020</td>
+      <td>-1.209881</td>
+      <td>0.331028</td>
+      <td>-0.294167</td>
+      <td>-1.672284</td>
+      <td>-0.959734</td>
+      <td>-1.198695</td>
+      <td>-0.613996</td>
+      <td>-1.645327</td>
+      <td>-0.495712</td>
+      <td>-1.536545</td>
+      <td>-0.824347</td>
+      <td>-1.661145</td>
+      <td>-0.523750</td>
+      <td>-0.378330</td>
+      <td>0.0</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+<p>70 rows × 481 columns</p>
+</div>
+</div>
+<br />
+<br /><p>## Creating training and test sets</p>
+<p>The code below creates a training and test set. We first split the data into training and test sets using the <strong>train_test_split</strong> function from the <strong>sklearn</strong> library. We then create a <strong>TensorDataset</strong> for the training and test sets.</p>
+<ol class="arabic simple">
+<li><p><strong>Set Random Seed</strong> – The random seed is fixed using torch.manual_seed(random_state) to ensure reproducibility in dataset splitting and model training.</p></li>
+<li><p><strong>Extract Labels from the Dataset</strong> – Labels (eye-open or eye-closed events) are extracted from windows_ds, stored as a NumPy array, and printed for verification.</p></li>
+<li><p><strong>Split Dataset into Train and Test Sets</strong> – The dataset is split into training (80%) and testing (20%) subsets using train_test_split(), ensuring balanced stratification based on the extracted labels. Stratification means that we have as many eyes-open and eyes-closed samples in the training and testing sets.</p></li>
+<li><p><strong>Convert Data to PyTorch Tensors</strong> – The selected training and testing samples are converted into FloatTensor for input features and LongTensor for labels, making them compatible with PyTorch models.</p></li>
+<li><p><strong>Create DataLoaders</strong> – The datasets are wrapped in PyTorch DataLoader objects with a batch size of 10, enabling efficient mini-batch training and shuffling.</p></li>
+</ol>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">train_test_split</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">torch.utils.data</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataLoader</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">torch.utils.data</span><span class="w"> </span><span class="kn">import</span> <span class="n">TensorDataset</span>
+
+<span class="c1"># Set random seed for reproducibility</span>
+<span class="n">random_state</span> <span class="o">=</span> <span class="mi">42</span>
+<span class="n">torch</span><span class="o">.</span><span class="n">manual_seed</span><span class="p">(</span><span class="n">random_state</span><span class="p">)</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">random_state</span><span class="p">)</span>
+
+<span class="c1"># Extract labels from the dataset</span>
+<span class="n">eo_ec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">ds</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">ds</span> <span class="ow">in</span> <a href="../../api/eegdash.features.html#eegdash.features.FeaturesConcatDataset" title="eegdash.features.FeaturesConcatDataset" class="sphx-glr-backref-module-eegdash-features sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">features_ds</span></a><span class="p">])</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>  <span class="c1"># check labels</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;labels: &quot;</span><span class="p">,</span> <span class="n">eo_ec</span><span class="p">)</span>
+
+<span class="c1"># Get balanced indices for male and female subjects</span>
+<span class="n">train_indices</span><span class="p">,</span> <span class="n">test_indices</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span>
+    <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><a href="../../api/eegdash.features.html#eegdash.features.FeaturesConcatDataset" title="eegdash.features.FeaturesConcatDataset" class="sphx-glr-backref-module-eegdash-features sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">features_ds</span></a><span class="p">)),</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">stratify</span><span class="o">=</span><span class="n">eo_ec</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span>
+<span class="p">)</span>
+
+<span class="c1"># Convert the data to tensors</span>
+<span class="n">X_train</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">FloatTensor</span><span class="p">(</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><a href="../../api/eegdash.features.html#eegdash.features.FeaturesConcatDataset" title="eegdash.features.FeaturesConcatDataset" class="sphx-glr-backref-module-eegdash-features sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">features_ds</span></a><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">train_indices</span><span class="p">])</span>
+<span class="p">)</span>  <span class="c1"># Convert list of arrays to single tensor</span>
+<span class="n">X_test</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">FloatTensor</span><span class="p">(</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><a href="../../api/eegdash.features.html#eegdash.features.FeaturesConcatDataset" title="eegdash.features.FeaturesConcatDataset" class="sphx-glr-backref-module-eegdash-features sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">features_ds</span></a><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">test_indices</span><span class="p">])</span>
+<span class="p">)</span>  <span class="c1"># Convert list of arrays to single tensor</span>
+<span class="n">y_train</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">LongTensor</span><span class="p">(</span><span class="n">eo_ec</span><span class="p">[</span><span class="n">train_indices</span><span class="p">])</span>  <span class="c1"># Convert targets to tensor</span>
+<span class="n">y_test</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">LongTensor</span><span class="p">(</span><span class="n">eo_ec</span><span class="p">[</span><span class="n">test_indices</span><span class="p">])</span>  <span class="c1"># Convert targets to tensor</span>
+<span class="n">dataset_train</span> <span class="o">=</span> <span class="n">TensorDataset</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="n">dataset_test</span> <span class="o">=</span> <span class="n">TensorDataset</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)</span>
+
+<span class="c1"># Create data loaders for training and testing (batch size 10)</span>
+<span class="n">train_loader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span><span class="n">dataset_train</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">test_loader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span><span class="n">dataset_test</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Print shapes and sizes to verify split</span>
+<span class="nb">print</span><span class="p">(</span>
+    <span class="sa">f</span><span class="s2">&quot;Shape of data </span><span class="si">{</span><span class="n">X_train</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2"> number of samples - Train: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">train_loader</span><span class="p">)</span><span class="si">}</span><span class="s2">, Test: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">test_loader</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span>
+    <span class="sa">f</span><span class="s2">&quot;Eyes-Open/Eyes-Closed balance, train: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">eo_ec</span><span class="p">[</span><span class="n">train_indices</span><span class="p">])</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">, test: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">eo_ec</span><span class="p">[</span><span class="n">test_indices</span><span class="p">])</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>labels:  [1 1 1 1 1 1 1 0 0 0 0 0 0 0 1 1 1 1 1 1 1 0 0 0 0 0 0 0 1 1 1 1 1 1 1 0 0
+ 0 0 0 0 0 1 1 1 1 1 1 1 0 0 0 0 0 0 0 1 1 1 1 1 1 1 0 0 0 0 0 0 0]
+Shape of data torch.Size([56, 480]) number of samples - Train: 6, Test: 2
+Eyes-Open/Eyes-Closed balance, train: 0.50, test: 0.50
+</pre></div>
+</div>
+<p># Check labels</p>
+<p>It is good practice to verify the labels and ensure the random seed is functioning correctly. If all labels are 0s (eyes closed) or 1s (eyes open), it could indicate an issue with data loading or stratification, requiring further investigation.</p>
+<p>Visualize a batch of target labels</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">dataiter</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">(</span><span class="n">train_loader</span><span class="p">)</span>
+<span class="n">first_item</span><span class="p">,</span> <span class="n">label</span> <span class="o">=</span> <span class="n">dataiter</span><span class="o">.</span><span class="fm">__next__</span><span class="p">()</span>
+<span class="n">label</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>tensor([0, 1, 1, 1, 1, 0, 1, 1, 0, 0])
+</pre></div>
+</div>
+<p># Create model</p>
+<p>The model is a shallow convolutional neural network (ShallowFBCSPNet) with 24 input channels (EEG channels), 2 output classes (eyes-open and eyes-closed), and an input window size of 256 samples (2 seconds of EEG data).</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">torch</span><span class="w"> </span><span class="kn">import</span> <span class="n">nn</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">torchinfo</span><span class="w"> </span><span class="kn">import</span> <span class="n">summary</span>
+
+<span class="n">torch</span><span class="o">.</span><span class="n">manual_seed</span><span class="p">(</span><span class="n">random_state</span><span class="p">)</span>
+<span class="c1"># MLP</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">Flatten</span><span class="p">(),</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><a href="../../api/eegdash.features.html#eegdash.features.FeaturesConcatDataset" title="eegdash.features.FeaturesConcatDataset" class="sphx-glr-backref-module-eegdash-features sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">features_ds</span></a><span class="o">.</span><span class="n">datasets</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">n_features</span><span class="p">,</span> <span class="mi">100</span><span class="p">),</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">),</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">),</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+<span class="p">)</span>
+
+<span class="n">summary</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">input_size</span><span class="o">=</span><span class="n">first_item</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>==========================================================================================
+Layer (type:depth-idx)                   Output Shape              Param #
+==========================================================================================
+Sequential                               [10, 2]                   --
+├─Flatten: 1-1                           [10, 480]                 --
+├─Linear: 1-2                            [10, 100]                 48,100
+├─Linear: 1-3                            [10, 100]                 10,100
+├─Linear: 1-4                            [10, 100]                 10,100
+├─Linear: 1-5                            [10, 2]                   202
+==========================================================================================
+Total params: 68,502
+Trainable params: 68,502
+Non-trainable params: 0
+Total mult-adds (Units.MEGABYTES): 0.69
+==========================================================================================
+Input size (MB): 0.02
+Forward/backward pass size (MB): 0.02
+Params size (MB): 0.27
+Estimated Total Size (MB): 0.32
+==========================================================================================
+
+==========================================================================================
+Layer (type:depth-idx)                   Output Shape              Param #
+==========================================================================================
+Sequential                               [10, 2]                   --
+├─Flatten: 1-1                           [10, 480]                 --
+├─Linear: 1-2                            [10, 100]                 48,100
+├─Linear: 1-3                            [10, 100]                 10,100
+├─Linear: 1-4                            [10, 100]                 10,100
+├─Linear: 1-5                            [10, 2]                   202
+==========================================================================================
+Total params: 68,502
+Trainable params: 68,502
+Non-trainable params: 0
+Total mult-adds (Units.MEGABYTES): 0.69
+==========================================================================================
+Input size (MB): 0.02
+Forward/backward pass size (MB): 0.02
+Params size (MB): 0.27
+Estimated Total Size (MB): 0.32
+==========================================================================================
+</pre></div>
+</div>
+<p># Model Training and Evaluation Process</p>
+<p>This section trains the neural network using the Adamax optimizer, normalizes input data, computes cross-entropy loss, updates model parameters, and tracks accuracy across six epochs.</p>
+<ol class="arabic simple">
+<li><p><strong>Set Up Optimizer and Learning Rate Scheduler</strong> – The <cite>Adamax</cite> optimizer initializes with a learning rate of 0.002 and weight decay of 0.001 for regularization. An <cite>ExponentialLR</cite> scheduler with a decay factor of 1 keeps the learning rate constant.</p></li>
+<li><p><strong>Allocate Model to Device</strong> – The model moves to the specified device (CPU, GPU, or MPS for Mac silicon) to optimize computation efficiency.</p></li>
+<li><p><strong>Normalize Input Data</strong> – The <cite>normalize_data</cite> function standardizes input data by subtracting the mean and dividing by the standard deviation along the time dimension before transferring it to the appropriate device.</p></li>
+<li><p><strong>Evaluates Classification Accuracy Over Six Epochs</strong> – The training loop iterates through data batches with the model in training mode. It normalizes inputs, computes predictions, calculates cross-entropy loss, performs backpropagation, updates model parameters, and steps the learning rate scheduler. It tracks correct predictions to compute accuracy.</p></li>
+<li><p><strong>Evaluate on Test Data</strong> – After each epoch, the model runs in evaluation mode on the test set. It computes predictions on normalized data and calculates test accuracy by comparing outputs with actual labels.</p></li>
+</ol>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">torch.nn</span><span class="w"> </span><span class="kn">import</span> <span class="n">functional</span> <span class="k">as</span> <span class="n">F</span>
+
+<span class="n">optimizer</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Adamax</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="mf">0.002</span><span class="p">,</span> <span class="n">weight_decay</span><span class="o">=</span><span class="mf">0.001</span><span class="p">)</span>
+<span class="n">scheduler</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">lr_scheduler</span><span class="o">.</span><span class="n">ExponentialLR</span><span class="p">(</span><span class="n">optimizer</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">&quot;cpu&quot;</span><span class="p">)</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>  <span class="c1"># move the model parameters to CPU/GPU</span>
+<span class="n">epochs</span> <span class="o">=</span> <span class="mi">6</span>
+
+<span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">epochs</span><span class="p">):</span>
+    <span class="c1"># training</span>
+    <span class="n">correct_train</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">t</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">train_loader</span><span class="p">):</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">train</span><span class="p">()</span>  <span class="c1"># put model to training mode</span>
+        <span class="n">scores</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">long</span><span class="p">)</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">preds</span> <span class="o">=</span> <span class="n">scores</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">correct_train</span> <span class="o">+=</span> <span class="p">(</span><span class="n">preds</span> <span class="o">==</span> <span class="n">y</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">dataset_train</span><span class="p">)</span>
+
+        <span class="n">loss</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">cross_entropy</span><span class="p">(</span><span class="n">scores</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+        <span class="n">optimizer</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
+        <span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+        <span class="n">optimizer</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+        <span class="n">scheduler</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+
+    <span class="c1"># Validation</span>
+    <span class="n">correct_test</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">t</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">test_loader</span><span class="p">):</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>  <span class="c1"># put model to testing mode</span>
+        <span class="n">scores</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">long</span><span class="p">)</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">preds</span> <span class="o">=</span> <span class="n">scores</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">correct_test</span> <span class="o">+=</span> <span class="p">(</span><span class="n">preds</span> <span class="o">==</span> <span class="n">y</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">dataset_test</span><span class="p">)</span>
+
+    <span class="c1"># Reporting</span>
+    <span class="nb">print</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;Epoch </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">, Train accuracy: </span><span class="si">{</span><span class="n">correct_train</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">, Test accuracy: </span><span class="si">{</span><span class="n">correct_test</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Epoch 0, Train accuracy: 0.55, Test accuracy: 0.79
+Epoch 1, Train accuracy: 0.79, Test accuracy: 0.79
+Epoch 2, Train accuracy: 0.82, Test accuracy: 0.79
+Epoch 3, Train accuracy: 0.82, Test accuracy: 0.79
+Epoch 4, Train accuracy: 0.89, Test accuracy: 0.64
+Epoch 5, Train accuracy: 0.89, Test accuracy: 0.64
+</pre></div>
+</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">lightgbm</span><span class="w"> </span><span class="kn">import</span> <span class="n">LGBMClassifier</span>
+
+<span class="n">data_df</span> <span class="o">=</span> <a href="../../api/eegdash.features.html#eegdash.features.FeaturesConcatDataset.to_dataframe" title="eegdash.features.FeaturesConcatDataset.to_dataframe" class="sphx-glr-backref-module-eegdash-features sphx-glr-backref-type-py-method"><span class="n">features_ds</span><span class="o">.</span><span class="n">to_dataframe</span></a><span class="p">(</span><span class="n">include_target</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">data_df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s2">&quot;target&quot;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">train_indices</span><span class="p">],</span>
+    <span class="n">data_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">train_indices</span><span class="p">,</span> <span class="s2">&quot;target&quot;</span><span class="p">],</span>
+<span class="p">)</span>
+<span class="n">X_val</span><span class="p">,</span> <span class="n">y_val</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">data_df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s2">&quot;target&quot;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">test_indices</span><span class="p">],</span>
+    <span class="n">data_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">test_indices</span><span class="p">,</span> <span class="s2">&quot;target&quot;</span><span class="p">],</span>
+<span class="p">)</span>
+
+<span class="n">clf</span> <span class="o">=</span> <span class="n">LGBMClassifier</span><span class="p">()</span>
+<span class="n">clf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+
+<span class="n">y_hat_train</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span>
+<span class="n">correct_train</span> <span class="o">=</span> <span class="p">(</span><span class="n">y_train</span> <span class="o">==</span> <span class="n">y_hat_train</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+<span class="n">y_hat_val</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_val</span><span class="p">)</span>
+<span class="n">correct_val</span> <span class="o">=</span> <span class="p">(</span><span class="n">y_val</span> <span class="o">==</span> <span class="n">y_hat_val</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Train accuracy: </span><span class="si">{</span><span class="n">correct_train</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">, Validation accuracy: </span><span class="si">{</span><span class="n">correct_val</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[LightGBM] [Info] Number of positive: 28, number of negative: 28
+[LightGBM] [Info] Auto-choosing col-wise multi-threading, the overhead of testing was 0.000348 seconds.
+You can set `force_col_wise=true` to remove the overhead.
+[LightGBM] [Info] Total Bins 9205
+[LightGBM] [Info] Number of data points in the train set: 56, number of used features: 460
+[LightGBM] [Info] [binary:BoostFromScore]: pavg=0.500000 -&gt; initscore=0.000000
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+Train accuracy: 1.00, Validation accuracy: 0.86
+</pre></div>
+</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">lightgbm</span><span class="w"> </span><span class="kn">import</span> <span class="n">plot_importance</span>
+
+<span class="n">plot_importance</span><span class="p">(</span><span class="n">clf</span><span class="p">,</span> <span class="n">importance_type</span><span class="o">=</span><span class="s2">&quot;split&quot;</span><span class="p">,</span> <span class="n">max_num_features</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_tutorial_open_eyes_close_eye_002.png" srcset="../../_images/sphx_glr_tutorial_open_eyes_close_eye_002.png" alt="Feature importance" class = "sphx-glr-single-img"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;Axes: title={&#39;center&#39;: &#39;Feature importance&#39;}, xlabel=&#39;Feature importance&#39;, ylabel=&#39;Features&#39;&gt;
+</pre></div>
+</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">plot_importance</span><span class="p">(</span><span class="n">clf</span><span class="p">,</span> <span class="n">importance_type</span><span class="o">=</span><span class="s2">&quot;gain&quot;</span><span class="p">,</span> <span class="n">max_num_features</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_tutorial_open_eyes_close_eye_003.png" srcset="../../_images/sphx_glr_tutorial_open_eyes_close_eye_003.png" alt="Feature importance" class = "sphx-glr-single-img"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;Axes: title={&#39;center&#39;: &#39;Feature importance&#39;}, xlabel=&#39;Feature importance&#39;, ylabel=&#39;Features&#39;&gt;
+</pre></div>
+</div>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 5.357 seconds)</p>
+<p><strong>Estimated memory usage:</strong>  1246 MB</p>
+<div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-generated-auto-examples-tutorial-open-eyes-close-eye-py">
+<div class="binder-badge docutils container">
+<a class="reference external image-reference" href="https://mybinder.org/v2/gh/sccn/sccn.github.io/eegdash/main?urlpath=lab/tree/notebooks/generated/auto_examples/tutorial_open_eyes_close_eye.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo.svg" style="width: 150px;" />
+</a>
+</div>
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/ee2af760905be625968515cd734fd447/tutorial_open_eyes_close_eye.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">tutorial_open_eyes_close_eye.ipynb</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/8be73b1d8564257ef6acd74a9413c9e8/tutorial_open_eyes_close_eye.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">tutorial_open_eyes_close_eye.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-zip docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/e16139a08d7045019de8341670860cb0/tutorial_open_eyes_close_eye.zip"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">zipped:</span> <span class="pre">tutorial_open_eyes_close_eye.zip</span></code></a></p>
+</div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="tutorial_eoec.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">&lt;no title&gt;</p>
+      </div>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="simple visible nav section-nav flex-column">
+</ul>
+
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/generated/auto_examples/tutorial_open_eyes_close_eye.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2025–2025, EEG Dash Developers.
+      <br/>
+    
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

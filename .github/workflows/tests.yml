@@ -1,0 +1,49 @@
+name: tests
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.number }}-${{ github.event.ref }}
+  cancel-in-progress: true
+on:
+  push:
+    branches: 
+      - main
+      - develop
+  pull_request:
+    branches:
+      - '*' # all branches, including forks
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ "ubuntu-latest", "macos-latest", "windows-latest" ]
+        python-version: ["3.10", "3.12"] # first and last supported Python version
+    steps:
+    ## Install Braindecode
+    - name: Checking Out Repository
+      uses: actions/checkout@v4
+    # Cache MNE Data
+    # The cache key here is fixed except for os
+    # so if you download a new mne dataset in the code, best to manually increment the key below
+    - name: Create/Restore MNE Data Cache
+      id: cache-mne_data
+      uses: actions/cache@v3
+      with:
+        path: ~/mne_data
+        key: ${{ runner.os }}-v3
+
+    - name: Install uv and set the python version
+      uses: astral-sh/setup-uv@v5
+      with:
+        enable-cache: true
+        python-version: ${{ matrix.python-version }}
+    - name: Show Python Version
+      run: python --version
+    - name: Install EEGDash from Current Checkout
+      run: uv pip install -e .[tests]
+    # Show EEGDash Version
+    - name: Show EEGDash Version
+      run: python -c "import eegdash; print(eegdash.__version__)"
+    - name: Run Tests
+      run: pytest -vvv -s --tb=long --durations=0 --log-cli-level=INFO --cov=eegdash --cov-report=xml tests --verbose 

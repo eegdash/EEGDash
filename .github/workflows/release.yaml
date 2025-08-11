@@ -62,7 +62,7 @@ jobs:
             # to accept --pr and append a compliant .devN/.postN label.
             python scripts/release_script.py \
               --init-file eegdash/__init__.py \
-              --pr "${{ steps.ver.outputs.suffix }}"
+              --suffix "${{ steps.ver.outputs.suffix }}"
           fi
 
       - name: Build sdist and wheel

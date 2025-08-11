@@ -59,13 +59,14 @@ ds_sexdata = EEGDashDataset(
 #
 # Finally, we use **create_windows_from_events** to extract 2-second epochs from the data. These epochs serve as the dataset samples.
 
+import os
+
 # %%
 from braindecode.preprocessing import (
-    preprocess,
     Preprocessor,
     create_fixed_length_windows,
+    preprocess,
 )
-import os
 
 # Alternatively, if you want to include this as a preprocessing step in a Braindecode pipeline:
 preprocessors = [
@@ -126,7 +127,6 @@ windows_ds.save("data/hbn_preprocessed_restingstate", overwrite=True)
 # %%
 import matplotlib.pyplot as plt
 
-
 plt.figure()
 plt.plot(windows_ds[150][0][0, :].transpose())  # first channel of first epoch
 plt.show()
@@ -155,12 +155,13 @@ windows_ds = load_concat_dataset(
 # 4. **Create DataLoaders** – The datasets are wrapped in PyTorch `DataLoader` objects with a batch size of 100, allowing efficient mini-batch training and shuffling. Although there are only 136 subjects, the dataset contains more than 10,000 2-second samples.
 #
 
-# %%
-from braindecode.datasets import BaseConcatDataset
-from sklearn.model_selection import train_test_split
-from torch.utils.data import DataLoader
 import numpy as np
 import torch
+from sklearn.model_selection import train_test_split
+from torch.utils.data import DataLoader
+
+# %%
+from braindecode.datasets import BaseConcatDataset
 
 # random seed for reproducibility
 random_state = 0
@@ -224,10 +225,11 @@ np.array(label).T
 #
 #
 
+from torch import nn
+
 # %%
 # create model
 from torchinfo import summary
-from torch import nn
 
 model = nn.Sequential(
     # First VGG block

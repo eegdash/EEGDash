@@ -34,7 +34,7 @@ jobs:
 
       - name: Bump version to PR pre-release
         run: |
-            python scripts/bump_pr_dev_version.py --init-file eegdash/__init__.py --pr "${{ github.event.pull_request.number }}"
+            python scripts/release_script.py --init-file eegdash/__init__.py --pr "${{ github.event.pull_request.number }}"
 
       - name: Build sdist and wheel
         run: python -m build

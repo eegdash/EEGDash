@@ -97,9 +97,9 @@ class EEGDashBaseDataset(BaseDataset):
         size = info.get("size") or info.get("Size")
 
         download_callback = TqdmCallback(
+            size=size,
             tqdm_kwargs=dict(
                 desc=f"Downloading {Path(self.s3file).name}",
-                total=size,
                 unit="B",
                 unit_scale=True,
                 unit_divisor=1024,
@@ -108,11 +108,10 @@ class EEGDashBaseDataset(BaseDataset):
                 mininterval=0.2,
                 smoothing=0.1,
                 miniters=1,
-                bar_format="{desc}: {percentage:3.0f}%|{bar}| "
-                "{n_fmt}/{total_fmt} [{elapsed}<{remaining}, {rate_fmt}]",
-            )
+                bar_format="{desc}: {percentage:3.0f}%|{bar}| {n_fmt}/{total_fmt} "
+                "[{elapsed}<{remaining}, {rate_fmt}]",
+            ),
         )
-
         filesystem.get(self.s3file, self.filecache, callback=download_callback)
         self.filenames = [self.filecache]
 
@@ -133,9 +132,9 @@ class EEGDashBaseDataset(BaseDataset):
                 size = info.get("size") or info.get("Size")
 
                 download_callback = TqdmCallback(
+                    size=size,
                     tqdm_kwargs=dict(
-                        desc=f"Downloading {Path(self.s3file).name}",
-                        total=size,
+                        desc=f"Downloading {Path(s3path).name}",
                         unit="B",
                         unit_scale=True,
                         unit_divisor=1024,
@@ -144,11 +143,10 @@ class EEGDashBaseDataset(BaseDataset):
                         mininterval=0.2,
                         smoothing=0.1,
                         miniters=1,
-                        bar_format="{desc}: {percentage:3.0f}%|{bar}| "
-                        "{n_fmt}/{total_fmt} [{elapsed}<{remaining}, {rate_fmt}]",
-                    )
+                        bar_format="{desc}: {percentage:3.0f}%|{bar}| {n_fmt}/{total_fmt} "
+                        "[{elapsed}<{remaining}, {rate_fmt}]",
+                    ),
                 )
-
                 filesystem.get(s3path, filepath, callback=download_callback)
 
     def get_raw_bids_args(self) -> dict[str, Any]:

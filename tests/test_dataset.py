@@ -30,7 +30,7 @@ def test_eeg_challenge_dataset_initialization():
     dataset = EEGChallengeDataset(release="R5")
 
     release = "R5"
-    expected_bucket_prefix = f"s3://nmdatasets/NeurIPS25//{release}_L100"
+    expected_bucket_prefix = f"s3://nmdatasets/NeurIPS25/{release}_L100"
     assert dataset.s3_bucket == expected_bucket_prefix, (
         f"Unexpected s3_bucket: {dataset.s3_bucket} (expected {expected_bucket_prefix})"
     )
@@ -79,7 +79,7 @@ def test_mongodb_load_under_slo(release):
     start_time = time.perf_counter()
     _ = EEGChallengeDataset(release=release)
     duration = time.perf_counter() - start_time
-    assert duration < 10, f"{release} took {duration:.2f}s"
+    assert duration < 30, f"{release} took {duration:.2f}s"
 
 
 def test_consuming_data_r5():

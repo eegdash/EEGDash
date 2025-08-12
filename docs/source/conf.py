@@ -29,7 +29,7 @@ html_sidebars = {
     "examples": [],
 }
 
-html_logo = "_static/eegdash.png"
+html_logo = "_static/eegdash_icon.svg"
 
 # -- Project information -----------------------------------------------------
 from datetime import datetime, timezone

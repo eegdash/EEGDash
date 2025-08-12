@@ -10,6 +10,7 @@ import numpy as np
 import pandas as pd
 import s3fs
 from bids import BIDSLayout
+from fsspec.callbacks import TqdmCallback
 from joblib import Parallel, delayed
 from mne._fiff.utils import _read_segments_file
 from mne.io import BaseRaw
@@ -92,8 +93,27 @@ class EEGDashBaseDataset(BaseDataset):
         )
         if not self.s3_open_neuro:
             self.s3file = re.sub(r"(^|/)ds\d{6}/", r"\1", self.s3file, count=1)
+        info = filesystem.info(self.s3file)
+        size = info.get("size") or info.get("Size")
 
-        filesystem.download(self.s3file, self.filecache)
+        download_callback = TqdmCallback(
+            tqdm_kwargs=dict(
+                desc=f"Downloading {Path(self.s3file).name}",
+                total=size,
+                unit="B",
+                unit_scale=True,
+                unit_divisor=1024,
+                dynamic_ncols=True,
+                leave=True,
+                mininterval=0.2,
+                smoothing=0.1,
+                miniters=1,
+                bar_format="{desc}: {percentage:3.0f}%|{bar}| "
+                "{n_fmt}/{total_fmt} [{elapsed}<{remaining}, {rate_fmt}]",
+            )
+        )
+
+        filesystem.get(self.s3file, self.filecache, callback=download_callback)
         self.filenames = [self.filecache]
 
     def _download_dependencies(self) -> None:
@@ -108,7 +128,28 @@ class EEGDashBaseDataset(BaseDataset):
             filepath = self.cache_dir / dep
             if not filepath.exists():
                 filepath.parent.mkdir(parents=True, exist_ok=True)
-                filesystem.download(s3path, filepath)
+
+                info = filesystem.info(s3path)
+                size = info.get("size") or info.get("Size")
+
+                download_callback = TqdmCallback(
+                    tqdm_kwargs=dict(
+                        desc=f"Downloading {Path(self.s3file).name}",
+                        total=size,
+                        unit="B",
+                        unit_scale=True,
+                        unit_divisor=1024,
+                        dynamic_ncols=True,
+                        leave=True,
+                        mininterval=0.2,
+                        smoothing=0.1,
+                        miniters=1,
+                        bar_format="{desc}: {percentage:3.0f}%|{bar}| "
+                        "{n_fmt}/{total_fmt} [{elapsed}<{remaining}, {rate_fmt}]",
+                    )
+                )
+
+                filesystem.get(s3path, filepath, callback=download_callback)
 
     def get_raw_bids_args(self) -> dict[str, Any]:
         """Helper to restrict the metadata record to the fields needed to locate a BIDS
@@ -124,7 +165,7 @@ class EEGDashBaseDataset(BaseDataset):
                 self._download_dependencies()
             self._download_s3()
         if self._raw is None:
-            self._raw = mne.io.read_raw(fname=self.bidspath, verbose=False)
+            self._raw = mne.io.read_raw(fname=self.bidspath, verbose="ERROR")
 
     # === BaseDataset and PyTorch Dataset interface ===
 

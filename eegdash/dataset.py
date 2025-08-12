@@ -1,5 +1,19 @@
 from .api import EEGDashDataset
 
+RELEASE_TO_OPENNEURO_DATASET_MAP = {
+    "R11": "ds005516",
+    "R10": "ds005515",
+    "R9": "ds005514",
+    "R8": "ds005512",
+    "R7": "ds005511",
+    "R6": "ds005510",
+    "R4": "ds005508",
+    "R5": "ds005509",
+    "R3": "ds005507",
+    "R2": "ds005506",
+    "R1": "ds005505",
+}
+
 
 class EEGChallengeDataset(EEGDashDataset):
     def __init__(
@@ -7,7 +21,7 @@ class EEGChallengeDataset(EEGDashDataset):
         release: str = "R5",
         query: dict | None = None,
         cache_dir: str = ".eegdash_cache",
-        s3_bucket: str | None = "s3://nmdatasets/NeurIPS25/",
+        s3_bucket: str | None = "s3://nmdatasets/NeurIPS25",
         **kwargs,
     ):
         """Create a new EEGDashDataset from a given query or local BIDS dataset directory
@@ -32,25 +46,11 @@ class EEGChallengeDataset(EEGDashDataset):
             constructor.
 
         """
-        dsnumber_release_map = {
-            "R11": "ds005516",
-            "R10": "ds005515",
-            "R9": "ds005514",
-            "R8": "ds005512",
-            "R7": "ds005511",
-            "R6": "ds005510",
-            "R4": "ds005508",
-            "R5": "ds005509",
-            "R3": "ds005507",
-            "R2": "ds005506",
-            "R1": "ds005505",
-        }
-
         self.release = release
-        if release not in dsnumber_release_map:
+        if release not in RELEASE_TO_OPENNEURO_DATASET_MAP:
             raise ValueError(f"Unknown release: {release}")
 
-        dataset = dsnumber_release_map[release]
+        dataset = RELEASE_TO_OPENNEURO_DATASET_MAP[release]
         if query is None:
             query = {"dataset": dataset}
         elif "dataset" not in query:

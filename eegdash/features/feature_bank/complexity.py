@@ -98,5 +98,5 @@ def complexity_lempel_ziv(x, threshold=None, normalize=True):
                 else:
                     k = 1
         if normalize:
-            lzc[i] *= (np.log2(n) / n)
+            lzc[i] *= np.log2(n) / n
     return lzc

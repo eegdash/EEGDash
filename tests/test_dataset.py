@@ -84,5 +84,5 @@ def test_mongodb_load_under_slo(release):
 
 def test_consuming_data_r5():
     dataset_obj = EEGChallengeDataset(release="R5", query=dict(task="RestingState"))
-    raw = dataset_obj.datasets[0]
+    raw = dataset_obj.datasets[0].raw
     assert raw is not None

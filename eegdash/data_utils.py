@@ -61,10 +61,23 @@ class EEGDashBaseDataset(BaseDataset):
             suffix="eeg",
             **bids_kwargs,
         )
-        self.s3_bucket = s3_bucket if s3_bucket else self._AWS_BUCKET
+        if s3_bucket:
+            self.s3_bucket = s3_bucket
+            self.s3_open_neuro = False
+        else:
+            self.s3_bucket = self._AWS_BUCKET
+            self.s3_open_neuro = True
+
         self.s3file = self.get_s3path(record["bidspath"])
         self.filecache = self.cache_dir / record["bidspath"]
         self.bids_dependencies = record["bidsdependencies"]
+        # Temporary fix for BIDS dependencies path
+        # just to release to the competition
+        if not self.s3_open_neuro:
+            self.bids_dependencies = [
+                dep.split("/", 1)[1] for dep in self.bids_dependencies
+            ]
+
         self._raw = None
 
     def get_s3path(self, filepath: str) -> str:
@@ -77,6 +90,9 @@ class EEGDashBaseDataset(BaseDataset):
         filesystem = s3fs.S3FileSystem(
             anon=True, client_kwargs={"region_name": "us-east-2"}
         )
+        if not self.s3_open_neuro:
+            self.s3file = re.sub(r"(^|/)ds\d{6}/", r"\1", self.s3file, count=1)
+
         filesystem.download(self.s3file, self.filecache)
         self.filenames = [self.filecache]
 
@@ -215,6 +231,7 @@ class EEGDashBaseRaw(BaseRaw):
         )
 
     def get_s3path(self, filepath):
+        print(f"Getting S3 path for {filepath}")
         return f"{self._AWS_BUCKET}/{filepath}"
 
     def _download_s3(self):

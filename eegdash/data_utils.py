@@ -135,7 +135,6 @@ class EEGDashBaseDataset(BaseDataset):
             self._download_s3()
         if self._raw is None:
             self._raw = mne.io.read_raw(fname=self.bidspath, verbose=False)
-
     # === BaseDataset and PyTorch Dataset interface ===
 
     def __getitem__(self, index):

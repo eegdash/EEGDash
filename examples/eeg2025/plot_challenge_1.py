@@ -106,7 +106,7 @@ print("BIDS Events File Structure:")
 print(f"Shape: {events_df.shape}")
 print(f"Columns: {list(events_df.columns)}")
 print(f"\nFirst 10 rows:")
-display(events_df.head(10))
+print(events_df.head(10))
 
 print(f"\nFeedback column unique values:")
 print(events_df['feedback'].value_counts())

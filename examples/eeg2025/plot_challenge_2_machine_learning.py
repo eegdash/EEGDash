@@ -21,8 +21,6 @@ The code below provides an example of using the *braindecode* and *EEGDash* libr
 
 """
 
-
-
 # %%
 from eegdash import EEGDashDataset
 
@@ -31,7 +29,14 @@ hbn_datasets_train = ["ds005505", "ds005506", "ds005507"]
 hbn_datasets_valid = ["ds005509"]
 
 task_name = "RestingState"
-
+target_name = "p_factor"
+desc_fields = [
+    "subject_id",
+    "session_id",
+    "run_id",
+    "task_name",
+    "target_name",
+]
 
 datasets_train = [
     EEGDashDataset(
@@ -62,16 +67,16 @@ raw_valid = BaseConcatDataset(
 
 # %% [markdown]
 # ## Data Preprocessing Using Braindecode
-# 
-# [BrainDecode](https://braindecode.org/stable/install/install.html) is a specialized library for preprocessing EEG and MEG data. 
-# 
+#
+# [BrainDecode](https://braindecode.org/stable/install/install.html) is a specialized library for preprocessing EEG and MEG data.
+#
 # We apply three preprocessing steps in Braindecode:
 # 1.	**Selection** of 24 specific EEG channels from the original 128.
 # 2.	**Resampling** the EEG data to a frequency of 128 Hz.
 # 3.	**Filtering** the EEG signals to retain frequencies between 1 Hz and 55 Hz.
-# 
+#
 # When calling the **preprocess** function, the data is retrieved from the remote repository.
-# 
+#
 # Finally, we use **create_windows_from_events** to extract 10-second epochs from the data. These epochs serve as the dataset samples.
 
 # %%
@@ -284,5 +289,3 @@ plot_importance(model, importance_type="split", max_num_features=10)
 
 # %%
 plot_importance(model, importance_type="gain", max_num_features=10)
-
-

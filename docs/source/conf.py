@@ -60,24 +60,32 @@ switcher_version_match = "dev" if release.endswith("dev0") else version
 
 autosummary_generate = True
 
-icon_links = [{
-  "name": "GitHub", "url": "https://github.com/sccn/EEGDash",
-  "icon": "fa-brands fa-github", "type": "fontawesome",
-},
-{
-  "name": "PyPI", "url": "https://pypi.org/project/eegdash/",
-  "icon": "fa-solid fa-box", "type": "fontawesome",
-},
-{
-  "name": "Docs (Stable)", "url": "https://sccn.github.io/EEGDash",
-  "icon": "fa-solid fa-book", "type": "fontawesome",
-},
-{
-"name": "Discord",
-"url": "https://discord.gg/8jd7nVKwsc",
-"icon": "fa-brands fa-discord",
-"type": "fontawesome",
-}]
+icon_links = [
+    {
+        "name": "GitHub",
+        "url": "https://github.com/sccn/EEGDash",
+        "icon": "fa-brands fa-github",
+        "type": "fontawesome",
+    },
+    {
+        "name": "PyPI",
+        "url": "https://pypi.org/project/eegdash/",
+        "icon": "fa-solid fa-box",
+        "type": "fontawesome",
+    },
+    {
+        "name": "Docs (Stable)",
+        "url": "https://sccn.github.io/EEGDash",
+        "icon": "fa-solid fa-book",
+        "type": "fontawesome",
+    },
+    {
+        "name": "Discord",
+        "url": "https://discord.gg/8jd7nVKwsc",
+        "icon": "fa-brands fa-discord",
+        "type": "fontawesome",
+    },
+]
 html_theme_options = {
     "icon_links_label": "External Links",  # for screen reader
     "use_edit_page_button": False,
@@ -105,6 +113,7 @@ html_sidebars = {
 }
 
 from sphinx_gallery.sorting import ExplicitOrder, FileNameSortKey
+
 EX_DIR = "../../examples"  # relative to docs/source
 
 sphinx_gallery_conf = {
@@ -124,11 +133,13 @@ sphinx_gallery_conf = {
         "# `pip install eegdash`\n"
         "%matplotlib inline"
     ),
-    "subsection_order": ExplicitOrder([
-        f"{EX_DIR}/core",
-        f"{EX_DIR}/eeg2025",
-        "*",
-    ]),
+    "subsection_order": ExplicitOrder(
+        [
+            f"{EX_DIR}/core",
+            f"{EX_DIR}/eeg2025",
+            "*",
+        ]
+    ),
     "within_subsection_order": FileNameSortKey,
 }
 html_css_files = ["custom.css"]

@@ -22,11 +22,12 @@ exclude_patterns = []
 
 
 html_theme = "pydata_sphinx_theme"
-html_static_path = ["_static/"]
+html_static_path = ["_static"]
 
 html_sidebars = {
-    "api": [],
-    "examples": [],
+    "Installation": [],
+    "API": [],
+    "Examples": [],
 }
 
 html_logo = "_static/eegdash_icon.svg"
@@ -59,6 +60,32 @@ switcher_version_match = "dev" if release.endswith("dev0") else version
 
 autosummary_generate = True
 
+icon_links = [
+    {
+        "name": "GitHub",
+        "url": "https://github.com/sccn/EEGDash",
+        "icon": "fa-brands fa-github",
+        "type": "fontawesome",
+    },
+    {
+        "name": "PyPI",
+        "url": "https://pypi.org/project/eegdash/",
+        "icon": "fa-solid fa-box",
+        "type": "fontawesome",
+    },
+    {
+        "name": "Docs (Stable)",
+        "url": "https://sccn.github.io/EEGDash",
+        "icon": "fa-solid fa-book",
+        "type": "fontawesome",
+    },
+    {
+        "name": "Discord",
+        "url": "https://discord.gg/8jd7nVKwsc",
+        "icon": "fa-brands fa-discord",
+        "type": "fontawesome",
+    },
+]
 html_theme_options = {
     "icon_links_label": "External Links",  # for screen reader
     "use_edit_page_button": False,
@@ -67,19 +94,30 @@ html_theme_options = {
     "header_links_before_dropdown": 6,
     "navigation_depth": 6,
     "show_toc_level": 1,
-    "navbar_end": ["theme-switcher"],
+    "navbar_end": ["theme-switcher", "navbar-icon-links"],
+    "icon_links": icon_links,
     "footer_start": ["copyright"],
     "logo": {
         "image_light": "_static/eegdash_long.png",
         "image_dark": "_static/eegdash_long.png",
         "alt_text": "EEG Dash Logo",
     },
+    "external_links": [
+        {"name": "EEG2025 competition", "url": "https://eeg2025.github.io/"},
+    ],
 }
 
 html_favicon = "_static/eegdash_icon.png"
+html_sidebars = {
+    "api": [],
+}
+
+from sphinx_gallery.sorting import ExplicitOrder, FileNameSortKey
+
+EX_DIR = "../../examples"  # relative to docs/source
 
 sphinx_gallery_conf = {
-    "examples_dirs": ["../../examples"],
+    "examples_dirs": [EX_DIR],
     "gallery_dirs": ["generated/auto_examples"],
     "nested_sections": False,
     "backreferences_dir": "gen_modules/backreferences",
@@ -95,13 +133,21 @@ sphinx_gallery_conf = {
         "# `pip install eegdash`\n"
         "%matplotlib inline"
     ),
+    "subsection_order": ExplicitOrder(
+        [
+            f"{EX_DIR}/core",
+            f"{EX_DIR}/eeg2025",
+            "*",
+        ]
+    ),
+    "within_subsection_order": FileNameSortKey,
 }
-
-sphinx_gallery_conf["binder"] = dict(
-    org="sccn",
-    repo="sccn.github.io/eegdash",
-    branch="main",
-    binderhub_url="https://mybinder.org",
-    dependencies="binder/requirements.txt",
-    use_jupyter_lab=True,
-)
+html_css_files = ["custom.css"]
+# sphinx_gallery_conf["binder"] = dict(
+#     org="sccn",
+#     repo="https://eeglab.org/EEGDash",
+#     branch="main",
+#     binderhub_url="https://mybinder.org",
+#     dependencies="binder/requirements.txt",
+#     use_jupyter_lab=True,
+# )

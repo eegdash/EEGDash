@@ -16,7 +16,7 @@ EEG Dash Homepage
    :alt: EEG Dash Logo
    :class: logo mainlogo
    :align: center
-   :scale: 50%
+   :scale: 40%
 
 
 .. rst-class:: h4 text-center font-weight-light my-4
@@ -29,17 +29,18 @@ research for machine learning and deep learning applications.
 
     <h2 style="text-align: center;">Institutions</h2>
 
+
 .. list-table::
    :width: 100%
-   :class: borderless
+   :class: borderless logos-row
 
-   * - .. image:: _static/logos/ucsd.png
+   * - .. image:: _static/logos/ucsd_white.png
          :alt: University of California, San Diego (UCSD)
          :class: logo mainlogo
          :align: center
          :width: 100%
          
-     - .. image:: _static/logos/bgu.png
+     - .. image:: _static/logos/bgu_white.png
          :alt: Ben-Gurion University of the Negev (BGU)
          :class: logo mainlogo
          :align: center
@@ -48,5 +49,6 @@ research for machine learning and deep learning applications.
 .. toctree::
    :hidden:
 
+   Install <install/install>
    API <api/modules.rst>
    Examples <generated/auto_examples/index>

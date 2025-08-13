@@ -1,5 +1,13 @@
 # EEG-Dash
 
+[![PyPI version](https://img.shields.io/pypi/v/eegdash)](https://pypi.org/project/eegdash/)
+[![Docs](https://img.shields.io/badge/docs-stable-brightgreen.svg)](https://sccn.github.io/eegdash)
+
+[![License: GPL-2.0-or-later](https://img.shields.io/badge/License-GPL--2.0--or--later-blue.svg)](LICENSE)
+[![Python versions](https://img.shields.io/pypi/pyversions/eegdash.svg)](https://pypi.org/project/eegdash/)
+[![Downloads](https://pepy.tech/badge/eegdash)](https://pepy.tech/project/eegdash)
+<!-- [![Coverage](https://img.shields.io/codecov/c/github/sccn/eegdash)](https://codecov.io/gh/sccn/eegdash) -->
+
 To leverage recent and ongoing advancements in large-scale computational methods and to ensure the preservation of scientific data generated from publicly funded research, the EEG-DaSh data archive will create a data-sharing resource for MEEG (EEG, MEG) data contributed by collaborators for machine learning (ML) and deep learning (DL) applications. 
 
 ## Data source
@@ -45,7 +53,9 @@ To use the data from a single subject, enter:
 from eegdash import EEGDashDataset
 
 ds_NDARDB033FW5 = EEGDashDataset(
-    {"dataset": "ds005514", "task": "RestingState", "subject": "NDARDB033FW5"}
+    {"dataset": "ds005514", "task":
+     "RestingState", "subject": "NDARDB033FW5"}, 
+     cache_dir="."
 )
 ```
 
@@ -57,7 +67,7 @@ To use the data from multiple subjects, enter:
 from eegdash import EEGDashDataset
 
 ds_ds005505rest = EEGDashDataset(
-    {"dataset": "ds005505", "task": "RestingState"}, target_name="sex"
+    {"dataset": "ds005505", "task": "RestingState"}, target_name="sex", cache_dir=".
 )
 ```
 

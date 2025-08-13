@@ -1,4 +1,3 @@
-# %% [markdown]
 """.. _tutorial-eoec:
 
 Eyes Open vs. Closed Classification

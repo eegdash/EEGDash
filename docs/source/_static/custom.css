@@ -1,0 +1,46 @@
+
+/* Spacing + sizing for the two homepage logos */
+table.logos-row td {
+  padding: 0 16px !important;   /* horizontal gap between logos */
+  vertical-align: middle;
+}
+
+table.logos-row img.logo.mainlogo {
+  display: block;
+  margin: 0 auto;
+  width: 100%;
+  max-height: 90px;             /* adjust as needed */
+  object-fit: contain;
+}
+
+
+
+/* Remove grey/zebra background from the logos table (pydata theme tables) */
+table.logos-row,
+table.logos-row tbody tr,
+table.logos-row td,
+table.logos-row th {
+  background: transparent !important;
+  box-shadow: none !important;
+  border: 0 !important;
+}
+
+/* Also disable zebra striping specifically for this table */
+table.logos-row tbody tr:nth-child(odd) td,
+table.logos-row tbody tr:nth-child(odd) th {
+  background: transparent !important;
+}
+
+/* Keep the horizontal gap and sizing */
+table.logos-row td {
+  padding: 0 16px !important;
+  vertical-align: middle;
+}
+
+table.logos-row img.logo.mainlogo {
+  display: block;
+  margin: 0 auto;
+  width: 100%;
+  max-height: 90px;
+  object-fit: contain;
+}

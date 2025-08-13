@@ -29,24 +29,22 @@ research for machine learning and deep learning applications.
 
     <h2 style="text-align: center;">Institutions</h2>
 
-.. list-table::
-   :width: 100%
-   :class: borderless
+.. grid:: 2
+   :gutter: 2
 
-   * - .. image:: _static/logos/ucsd.png
-         :alt: University of California, San Diego (UCSD)
-         :class: logo mainlogo
-         :align: center
-         :width: 100%
-         
-     - .. image:: _static/logos/bgu.png
-         :alt: Ben-Gurion University of the Negev (BGU)
-         :class: logo mainlogo
-         :align: center
-         :width: 100%
+   .. grid-item-card:: 
+      :class-card: logo-card
+      .. image:: _static/logos/ucsd_white.png
+         :class: logo-img
+
+   .. grid-item-card:: 
+      :class-card: logo-card
+      .. image:: _static/logos/bgu_white.png
+         :class: logo-img
 
 .. toctree::
    :hidden:
 
+   Installation <installation>
    API <api/modules.rst>
    Examples <generated/auto_examples/index>

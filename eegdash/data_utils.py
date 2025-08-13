@@ -55,21 +55,25 @@ class EEGDashBaseDataset(BaseDataset):
         self.cache_dir = Path(cache_dir)
         bids_kwargs = self.get_raw_bids_args()
 
+        if s3_bucket:
+            self.s3_bucket = s3_bucket
+            self.s3_open_neuro = False
+            bids_root = self.cache_dir
+            self.filecache = self.cache_dir / record["bidspath"]
+        else:
+            self.s3_bucket = self._AWS_BUCKET
+            self.s3_open_neuro = True
+            bids_root = self.cache_dir / record["dataset"]
+            self.filecache = self.cache_dir / record["bidspath"]
+
         self.bidspath = BIDSPath(
-            root=self.cache_dir / record["dataset"],
+            root=bids_root,
             datatype="eeg",
             suffix="eeg",
             **bids_kwargs,
         )
-        if s3_bucket:
-            self.s3_bucket = s3_bucket
-            self.s3_open_neuro = False
-        else:
-            self.s3_bucket = self._AWS_BUCKET
-            self.s3_open_neuro = True
 
         self.s3file = self.get_s3path(record["bidspath"])
-        self.filecache = self.cache_dir / record["bidspath"]
         self.bids_dependencies = record["bidsdependencies"]
         # Temporary fix for BIDS dependencies path
         # just to release to the competition
@@ -85,14 +89,18 @@ class EEGDashBaseDataset(BaseDataset):
         return f"{self.s3_bucket}/{filepath}"
 
     def _download_s3(self) -> None:
-        """Fetch the given data from its S3 location and cache it locally."""
-        self.filecache.parent.mkdir(parents=True, exist_ok=True)
+        """Download function that gets the raw EEG data from S3."""
         filesystem = s3fs.S3FileSystem(
             anon=True, client_kwargs={"region_name": "us-east-2"}
         )
         if not self.s3_open_neuro:
             self.s3file = re.sub(r"(^|/)ds\d{6}/", r"\1", self.s3file, count=1)
+            self.filecache = re.sub(
+                r"(^|/)ds\d{6}/", r"\1", str(self.filecache), count=1
+            )
+            self.filecache = Path(self.filecache)
 
+        self.filecache.parent.mkdir(parents=True, exist_ok=True)
         filesystem.download(self.s3file, self.filecache)
         self.filenames = [self.filecache]
 
@@ -106,6 +114,8 @@ class EEGDashBaseDataset(BaseDataset):
         for dep in self.bids_dependencies:
             s3path = self.get_s3path(dep)
             filepath = self.cache_dir / dep
+            # here, we download the dependency and it is fine
+            # in the case of the competition.
             if not filepath.exists():
                 filepath.parent.mkdir(parents=True, exist_ok=True)
                 filesystem.download(s3path, filepath)

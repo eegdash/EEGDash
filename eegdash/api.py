@@ -587,6 +587,10 @@ class EEGDashDataset(BaseConcatDataset):
                         )
                     )
 
+        self.filesystem = S3FileSystem(
+            anon=True, client_kwargs={"region_name": "us-east-2"}
+        )
+
         super().__init__(datasets)
 
     def find_key_in_nested_dict(self, data: Any, target_key: str) -> Any:

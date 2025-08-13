@@ -532,7 +532,7 @@ class EEGDashDataset(BaseConcatDataset):
             "gender",
             "sex",
         ],
-        cache_dir: str = ".eegdash_cache",
+        cache_dir: str = "~/eegdash_cache",
         s3_bucket: str | None = None,
         **kwargs,
     ):

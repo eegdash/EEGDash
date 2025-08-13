@@ -1,46 +1,29 @@
 """.. _challenge_2:
 
-Challenge 2 - Predicting p-factor from EEG
-============================================
+Challenge 2: Predicting the p-factor from EEG
+=============================================
 
-This tutorial shows you how to start to play with the challenge 2, the prediction of p-factor.
-The design of this task was inspired by the need to identify and extract relevant biomarkers 
-from EEG signals that can predict mental health outcomes.
+This tutorial presents Challenge 2: regression of the p-factor (a general psychopathology factor) from EEG recordings.
+The objective is to identify reproducible EEG biomarkers linked to mental health outcomes.
 
-The design is aimed to force the model of EEG signal processing to focus on the relevant 
-features that are indicative of mental health states. The emerging behavior of the large or small
-model should ideally highlight these features and improve the interpretability of the results.
+The challenge encourages learning physiologically meaningful signal representations.
+Models of any size should emphasize robust, interpretable features that generalize across subjects,
+sessions, and acquisition sites.
 
-We need to go beyond traditional classification and focus on challenges that highlight the 
-extrapolation and the generalization of the model.
+Unlike a standard in-distribution classification task, this regression problem stresses out-of-distribution robustness
+and extrapolation. The goal is not only to minimize error on seen subjects, but also to transfer effectively to unseen data.
 
-For this challenge, we assume that you already have the dataset downloaded and prepared for use.
+Ensure the dataset is available locally. If not, see the [dataset download guide](https://eeg2025.github.io/data/#downloading-the-data)
 
-Several ways to download the dataset can be check in the [documentation](https://eeg2025.github.io/data/#downloading-the-data),
-if you haven't done so already.
-
+This tutorial is divided as follows:
+1. **Loading the data**
+2. **Wrap the data into a PyTorch-compatible dataset**
+3. **Define, train and save a model**
 """
-######################################################################
-# Fill...
-# -----------------------------------------
-# Short answer: ....
-#
-# Fill here
-#
-# - Fill here?
-#
-# Some figure here!
-
-
 
 ######################################################################
-# .. warning::
-#    Some warning about the data leakage, the pre-processed steps
-#
-
-######################################################################
-# Loading and preprocessing of data, defining a model, etc.
-# ----------------------------------------------------------
+# Loading the data
+# ----------------
 #
 
 import random
@@ -50,30 +33,26 @@ from braindecode.preprocessing import create_fixed_length_windows
 from braindecode.datasets.base import EEGWindowsDataset, BaseConcatDataset, BaseDataset
 
 
-
 ######################################################################
-# Loading data
-# ~~~~~~~~~~~~~
+# Define local path and (down)load the data
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #
 # In this challenge 2 example, we load the EEG 2025 release using EEG Dash and Braindecode,
 # we load all the public datasets available in the EEG 2025 release.
-#
+
 # The first step is define the cache folder!
-cache_dir = (Path.home() / "mne_data" / "eeg_challenge_cache").resolve()
-cache_dir = cache_dir.expanduser()
+cache_dir = Path("~/mne_data/eeg2025_competition").expanduser()
+
 # Creating the path if it does not exist
 cache_dir.mkdir(parents=True, exist_ok=True)
-# We load all the releases
-# We are loading the releasing between 1 to 11.
 
-release_list = ["R{}".format(i) for i in range(1, 11+1)]
+# We define the list of releases to load.
+# Here, all releases are loaded, i.e., 1 to 11.
+release_list = ["R{}".format(i) for i in range(1, 11 + 1)]
 
-print(release_list)
-
-# For this challenge, we gonna sample across all the possibles task, but for start,
-# we recommend to focus on the Resting State task.
-
-all_datasets = [
+# For this tutorial, we will only load the "resting state" recording,
+# but you may use all available data.
+all_datasets_list = [
     EEGChallengeDataset(
         release=release,
         query=dict(
@@ -89,44 +68,50 @@ all_datasets = [
             "sex",
             "p_factor",
         ],
+        cache_dir=cache_dir,
     )
     for release in release_list
 ]
-
-# Issue with eegchallenge object again.
-print(all_datasets[0].datasets[0].raw)
+print("Datasets loaded")
 
 ######################################################################
-# Combine the PyTorch datasets into single dataset
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# Combine all datasets into a single BaseConcatDataset
-print("Combining all datasets into a single PyTorch dataset object with braindecode.")
-all_datasets = BaseConcatDataset(all_datasets)
+# Combine the datasets into single one
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Here, we combine the datasets from the different releases into a single
+# ``BaseConcatDataset`` object.
 
-description = all_datasets.description
-
-print(description)
+all_datasets = BaseConcatDataset(all_datasets_list)
+print(all_datasets.description)
 
 ######################################################################
-# How to inspect your data
+# Inspect your data
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # We can check what is inside the dataset consuming the
-# MNE-object inside the Braindecode dataset
+# MNE-object inside the Braindecode dataset.
+#
+# The following snippet, if uncommented, will show the first 10 seconds of the raw EEG signal.
+# We can also inspect the data further by looking at the events and annotations.
+# We strong recommend you to take a look into the details and check how the events are structured.
 
-# raw = all_datasets.datasets[0].raw
+
+# raw = all_datasets.datasets[0].raw  # mne.io.Raw object
 # print(raw.info)
 
 # raw.plot(duration=10, scalings="auto", show=True)
-
-# The visualization shows the raw EEG signal for the first 10 seconds.
-# We can also inspect the data further by looking at the events and annotations.
-# We strong recommend you to take a look into the details and check how the events are structured.
 
 # print(raw.annotations)
 
 SFREQ = 100
 
-# Extract 2-second windows, uniformly sampled over the whole signal
+######################################################################
+# Wrap the data into a PyTorch-compatible dataset
+# ---------------------------------------------------------
+#
+# The class below defines a dataset wrapper that will extract 2-second windows,
+# uniformly sampled over the whole signal. In addition, it will add useful information
+# about the extracted windows, such as the p-factor, the subject or the task.
+
+
 class DatasetWrapper(BaseDataset):
     def __init__(self, dataset: EEGWindowsDataset, crop_size_samples: int, seed=None):
         self.dataset = dataset
@@ -139,14 +124,15 @@ class DatasetWrapper(BaseDataset):
     def __getitem__(self, index):
         X, _, crop_inds = self.dataset[index]
 
-        p_factor = self.dataset.raw.info["subject_info"]["p_factor"]
+        # P-factor label:
+        p_factor = self.dataset.description["p_factor"]
         p_factor = float(p_factor)
 
         # Addtional information:
         infos = {
-            "subject": self.dataset.raw.info["subject_info"]["his_id"],
-            "sex": self.dataset.raw.info["subject_info"]["sex"],
-            "age": float(self.dataset.raw.info["subject_info"]["age"]),
+            "subject": self.dataset.description["subject"],
+            "sex": self.dataset.description["sex"],
+            "age": float(self.dataset.description["age"]),
             "task": self.dataset.description["task"],
             "session": self.dataset.description.get("session", None) or "",
             "run": self.dataset.description.get("run", None) or "",
@@ -163,6 +149,12 @@ class DatasetWrapper(BaseDataset):
         return X, p_factor, (i_window_in_trial, i_start, i_stop), infos
 
 
+# Filter out recordings that are too short
+all_datasets = BaseConcatDataset(
+    [ds for ds in all_datasets.datasets if ds.raw.n_times >= 4 * SFREQ]
+)
+
+# Create 4-seconds windows with 2-seconds stride
 windows_ds = create_fixed_length_windows(
     all_datasets,
     window_size_samples=4 * SFREQ,
@@ -170,30 +162,38 @@ windows_ds = create_fixed_length_windows(
     drop_last_window=True,
 )
 
+# Wrap each sub-dataset in the windows_ds
 windows_ds = BaseConcatDataset(
     [DatasetWrapper(ds, crop_size_samples=2 * SFREQ) for ds in windows_ds.datasets]
 )
 
-# Now we have our pytorch dataset necessary for the training!
 
 ######################################################################
-# %%
+# Define, train and save a model
+# ------------------------
+# Now we have our pytorch dataset necessary for the training!
+#
+# Below, we define a simple EEGNetv4 model from Braindecode and train it for one epoch
+# using pure PyTorch code.
+# However, you can use any pytorch model you want, or training framework.
 import torch
 from torch.utils.data import DataLoader
 from torch import optim
 from torch.nn.functional import l1_loss
 from braindecode.models import EEGNetv4
 
+# Use GPU if available
+DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
 # Create PyTorch Dataloader
 dataloader = DataLoader(windows_ds, batch_size=10, shuffle=True)
 
 # Initialize model
-model = EEGNetv4(n_chans=129, n_outputs=1, n_times=2 * SFREQ)
+model = EEGNetv4(n_chans=129, n_outputs=1, n_times=2 * SFREQ).to(DEVICE)
 
 # All the braindecode models expect the input to be of shape (batch_size, n_channels, n_times)
 # and have a test coverage about the behavior of the model.
 print(model)
-
 
 # Specify optimizer
 optimizer = optim.Adamax(params=model.parameters(), lr=0.002)
@@ -202,19 +202,24 @@ optimizer = optim.Adamax(params=model.parameters(), lr=0.002)
 for epoch in range(1):
 
     for idx, batch in enumerate(dataloader):
-        X, y, crop_inds, infos = batch
-        X = X.to(torch.float)
-        y = y.to(torch.float32)
-        y_pred = torch.squeeze(model(X))
-
-        loss = l1_loss(y_pred, y)
-
-        print(f"Epoch {0} - step {idx}, loss: {loss.item()}")
-
+        # Reset gradients
         optimizer.zero_grad()
 
-        loss.backward()
+        # Unpack the batch
+        X, y, crop_inds, infos = batch
+        X = X.to(dtype=torch.float32, device=DEVICE)
+        y = y.to(dtype=torch.float32, device=DEVICE).unsqueeze(1)
 
+        # Forward pass
+        y_pred = model(X)
+
+        # Compute loss
+        loss = l1_loss(y_pred, y)
+        print(f"Epoch {0} - step {idx}, loss: {loss.item()}")
+
+        # Gradient backpropagation
+        loss.backward()
         optimizer.step()
 
-
+# Finally, we can save the model for later use
+torch.save(model.state_dict(), "./example_submission_challenge_2/weights.pt")

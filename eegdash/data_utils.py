@@ -133,7 +133,7 @@ class EEGDashBaseDataset(BaseDataset):
         if not os.path.exists(self.filecache):  # not preload
             if self.bids_dependencies:
                 self._download_dependencies()
-            self._download_s3(self.s3file)
+            self._download_s3()
         if self._raw is None:
             self._raw = mne.io.read_raw(fname=self.bidspath, verbose=False)
 

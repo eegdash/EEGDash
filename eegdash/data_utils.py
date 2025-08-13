@@ -89,17 +89,17 @@ class EEGDashBaseDataset(BaseDataset):
         """Helper to form an AWS S3 URI for the given relative filepath."""
         return f"{self.s3_bucket}/{filepath}"
 
-    def _download_s3(self, s3file: str) -> None:
+    def _download_s3(self) -> None:
         """Download function that gets the raw EEG data from S3."""
         filesystem = s3fs.S3FileSystem(
             anon=True, client_kwargs={"region_name": "us-east-2"}
         )
         if not self.s3_open_neuro:
-            s3file = re.sub(r"(^|/)ds\d{6}/", r"\1", s3file, count=1)
+            self.s3file = re.sub(r"(^|/)ds\d{6}/", r"\1", self.s3file, count=1)
 
         self.filecache.parent.mkdir(parents=True, exist_ok=True)
 
-        filesystem.download(s3file, self.filecache)
+        filesystem.download(self.s3file, self.filecache)
         self.filenames = [self.filecache]
 
     def _download_dependencies(self) -> None:
@@ -133,7 +133,7 @@ class EEGDashBaseDataset(BaseDataset):
         if not os.path.exists(self.filecache):  # not preload
             if self.bids_dependencies:
                 self._download_dependencies()
-            self._download_s3()
+            self._download_s3(self.s3file)
         if self._raw is None:
             self._raw = mne.io.read_raw(fname=self.bidspath, verbose=False)
 
@@ -245,7 +245,7 @@ class EEGDashBaseRaw(BaseRaw):
         print(f"Getting S3 path for {filepath}")
         return f"{self._AWS_BUCKET}/{filepath}"
 
-    def _download_s3(self):
+    def _download_s3(self) -> None:
         self.filecache.parent.mkdir(parents=True, exist_ok=True)
         filesystem = s3fs.S3FileSystem(
             anon=True, client_kwargs={"region_name": "us-east-2"}

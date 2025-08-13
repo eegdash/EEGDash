@@ -6,7 +6,7 @@
 
 Computation times
 =================
-**00:21.372** total execution time for 2 files **from generated/auto_examples**:
+**00:00.000** total execution time for 0 files **from generated/auto_examples**:
 
 .. container::
 
@@ -32,9 +32,6 @@ Computation times
    * - Example
      - Time
      - Mem (MB)
-   * - :ref:`sphx_glr_generated_auto_examples_tutorial_open_eyes_close_eye.py` (``tutorial_open_eyes_close_eye.py``)
-     - 00:11.306
-     - 1245.9
-   * - :ref:`sphx_glr_generated_auto_examples_tutorial_eoec.py` (``tutorial_eoec.py``)
-     - 00:10.066
-     - 1320.2
+   * - N/A
+     - N/A
+     - N/A

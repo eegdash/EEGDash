@@ -11,7 +11,8 @@ FILES_PER_RELEASE = [1342, 1405, 1812, 3342, 3326, 1227, 3100, 2320, 2885, 2516,
 
 RELEASE_FILES = list(zip(RELEASES, FILES_PER_RELEASE))
 
-CACHE_DIR = Path("~/mne_data") / "eeg_challenge_cache"
+CACHE_DIR = Path("~/mne_data").resolve() / "eeg_challenge_cache"
+CACHE_DIR.mkdir(parents=True, exist_ok=True)
 
 
 def _load_release(release):
@@ -61,6 +62,22 @@ def test_eeg_challenge_dataset_initialization():
 def test_eeg_challenge_dataset_amount_files(release, number_files):
     dataset = EEGChallengeDataset(release=release, cache_dir=CACHE_DIR)
     assert len(dataset.datasets) == number_files
+
+
+@pytest.mark.parametrize("release", RELEASES)
+def test_mongodb_load_benchmark(benchmark, warmed_mongo, release):
+    # Group makes the report nicer when comparing releases
+    benchmark.group = "EEGChallengeDataset.load"
+
+    result = benchmark.pedantic(
+        _load_release,
+        args=(release,),
+        iterations=1,  # I/O-bound → 1 iteration per round
+        rounds=5,  # take min/median across several cold-ish runs
+        warmup_rounds=1,  # do one warmup round
+    )
+
+    assert result is not None
 
 
 @pytest.mark.parametrize("release", RELEASES)

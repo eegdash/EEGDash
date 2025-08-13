@@ -59,6 +59,24 @@ switcher_version_match = "dev" if release.endswith("dev0") else version
 
 autosummary_generate = True
 
+icon_links = [{
+  "name": "GitHub", "url": "https://github.com/sccn/EEGDash",
+  "icon": "fa-brands fa-github", "type": "fontawesome",
+},
+{
+  "name": "PyPI", "url": "https://pypi.org/project/eegdash/",
+  "icon": "fa-solid fa-box", "type": "fontawesome",
+},
+{
+  "name": "Docs (Stable)", "url": "https://sccn.github.io/EEGDash",
+  "icon": "fa-solid fa-book", "type": "fontawesome",
+},
+{
+    "name": "Discord",
+    "url": "https://discord.gg/your-invite",  # ← replace with your link
+    "icon": "fa-brands fa-discord",
+    "type": "fontawesome",
+}],
 html_theme_options = {
     "icon_links_label": "External Links",  # for screen reader
     "use_edit_page_button": False,
@@ -67,7 +85,8 @@ html_theme_options = {
     "header_links_before_dropdown": 6,
     "navigation_depth": 6,
     "show_toc_level": 1,
-    "navbar_end": ["theme-switcher"],
+    "navbar_end": ["theme-switcher", "navbar-icon-links"],
+    "icon_links": icon_links,
     "footer_start": ["copyright"],
     "logo": {
         "image_light": "_static/eegdash_long.png",

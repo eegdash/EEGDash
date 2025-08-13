@@ -25,8 +25,9 @@ html_theme = "pydata_sphinx_theme"
 html_static_path = ["_static/"]
 
 html_sidebars = {
-    "api": [],
-    "examples": [],
+    "Installation": [],
+    "API": [],
+    "Examples": [],
 }
 
 html_logo = "_static/eegdash_icon.svg"
@@ -72,11 +73,11 @@ icon_links = [{
   "icon": "fa-solid fa-book", "type": "fontawesome",
 },
 {
-    "name": "Discord",
-    "url": "https://discord.gg/your-invite",  # ← replace with your link
-    "icon": "fa-brands fa-discord",
-    "type": "fontawesome",
-}],
+"name": "Discord",
+"url": "https://discord.gg/8jd7nVKwsc",
+"icon": "fa-brands fa-discord",
+"type": "fontawesome",
+}]
 html_theme_options = {
     "icon_links_label": "External Links",  # for screen reader
     "use_edit_page_button": False,
@@ -93,9 +94,14 @@ html_theme_options = {
         "image_dark": "_static/eegdash_long.png",
         "alt_text": "EEG Dash Logo",
     },
+    "external_links": [
+        {"name": "EEG2025 competition", "url": "https://eeg2025.github.io/"},
+    ],
 }
 
 html_favicon = "_static/eegdash_icon.png"
+
+from sphinx_gallery.sorting import ExplicitOrder, FileNameSortKey
 
 sphinx_gallery_conf = {
     "examples_dirs": ["../../examples"],
@@ -114,6 +120,13 @@ sphinx_gallery_conf = {
         "# `pip install eegdash`\n"
         "%matplotlib inline"
     ),
+    "subsection_order": ExplicitOrder(
+        [
+            "../examples/core",
+            "../examples/eeg2025",
+        ]
+    ),
+    "within_subsection_order": FileNameSortKey,
 }
 
 sphinx_gallery_conf["binder"] = dict(

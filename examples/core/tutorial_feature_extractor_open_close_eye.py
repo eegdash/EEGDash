@@ -1,8 +1,7 @@
-# %% [markdown]
 """.. _tutorial-open-closed:
 
-Eyes Open vs. Closed Classification
-===================================
+EEGDash Feature Extractor
+==========================
 
 EEGDash example for eyes open vs. closed classification.
 

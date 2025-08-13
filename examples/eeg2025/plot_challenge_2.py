@@ -48,7 +48,7 @@ cache_dir.mkdir(parents=True, exist_ok=True)
 
 # We define the list of releases to load.
 # Here, all releases are loaded, i.e., 1 to 11.
-release_list = ["R{}".format(i) for i in [5]] #range(1, 11 + 1)]
+release_list = ["R{}".format(i) for i in [5]]  # range(1, 11 + 1)]
 
 # For this tutorial, we will only load the "resting state" recording,
 # but you may use all available data.
@@ -128,7 +128,7 @@ class DatasetWrapper(BaseDataset):
         p_factor = self.dataset.description["p_factor"]
         p_factor = float(p_factor)
 
-        # Addtional information:
+        # Additional information:
         infos = {
             "subject": self.dataset.description["subject"],
             "sex": self.dataset.description["sex"],
@@ -200,7 +200,6 @@ optimizer = optim.Adamax(params=model.parameters(), lr=0.002)
 
 # Train model for 1 epoch
 for epoch in range(1):
-
     for idx, batch in enumerate(dataloader):
         # Reset gradients
         optimizer.zero_grad()

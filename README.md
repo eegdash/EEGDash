@@ -53,7 +53,9 @@ To use the data from a single subject, enter:
 from eegdash import EEGDashDataset
 
 ds_NDARDB033FW5 = EEGDashDataset(
-    {"dataset": "ds005514", "task": "RestingState", "subject": "NDARDB033FW5"}, cache_dir="."
+    {"dataset": "ds005514", "task":
+     "RestingState", "subject": "NDARDB033FW5"}, 
+     cache_dir="."
 )
 ```
 

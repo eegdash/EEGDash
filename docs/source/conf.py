@@ -132,11 +132,11 @@ sphinx_gallery_conf = {
     "within_subsection_order": FileNameSortKey,
 }
 html_css_files = ["custom.css"]
-sphinx_gallery_conf["binder"] = dict(
-    org="sccn",
-    repo="sccn.github.io/eegdash",
-    branch="main",
-    binderhub_url="https://mybinder.org",
-    dependencies="binder/requirements.txt",
-    use_jupyter_lab=True,
-)
+# sphinx_gallery_conf["binder"] = dict(
+#     org="sccn",
+#     repo="https://eeglab.org/EEGDash",
+#     branch="main",
+#     binderhub_url="https://mybinder.org",
+#     dependencies="binder/requirements.txt",
+#     use_jupyter_lab=True,
+# )

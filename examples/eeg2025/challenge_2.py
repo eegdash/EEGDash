@@ -59,7 +59,7 @@ from braindecode.datasets.base import EEGWindowsDataset, BaseConcatDataset, Base
 # we load all the public datasets available in the EEG 2025 release.
 #
 # The first step is define the cache folder!
-cache_dir = Path("~/mne_data/eeg2025_competition")
+cache_dir = (Path.home() / "mne_data" / "eeg_challenge_cache").resolve()
 cache_dir = cache_dir.expanduser()
 # Creating the path if it does not exist
 cache_dir.mkdir(parents=True, exist_ok=True)

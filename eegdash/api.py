@@ -532,7 +532,7 @@ class EEGDashDataset(BaseConcatDataset):
             "gender",
             "sex",
         ],
-        cache_dir: str = ".eegdash_cache",
+        cache_dir: str = "~/eegdash_cache",
         s3_bucket: str | None = None,
         **kwargs,
     ):
@@ -586,6 +586,10 @@ class EEGDashDataset(BaseConcatDataset):
                             dataset[i], data_dir[i], description_fields, s3_bucket
                         )
                     )
+
+        self.filesystem = S3FileSystem(
+            anon=True, client_kwargs={"region_name": "us-east-2"}
+        )
 
         super().__init__(datasets)
 

@@ -18,9 +18,9 @@ RELEASE_TO_OPENNEURO_DATASET_MAP = {
 class EEGChallengeDataset(EEGDashDataset):
     def __init__(
         self,
-        release: str = "R5",
+        release: str,
+        cache_dir: str,
         query: dict | None = None,
-        cache_dir: str = ".eegdash_cache",
         s3_bucket: str | None = "s3://nmdatasets/NeurIPS25",
         **kwargs,
     ):

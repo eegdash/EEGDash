@@ -100,6 +100,9 @@ html_theme_options = {
 }
 
 html_favicon = "_static/eegdash_icon.png"
+html_sidebars = {
+    "api": [],
+}
 
 from sphinx_gallery.sorting import ExplicitOrder, FileNameSortKey
 EX_DIR = "../../examples"  # relative to docs/source

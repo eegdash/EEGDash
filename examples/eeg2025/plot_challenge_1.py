@@ -1,6 +1,6 @@
 """.. _tutorial-challenge-1:
 
-Challenge 1 - Transfer Learning task
+Challenge 1: Transfer Learning task
 =====================================
 
 # # Tutorial for Contrast-Change Detection (CCD) Task - EEG 2025 Competition

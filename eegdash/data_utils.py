@@ -53,24 +53,24 @@ class EEGDashBaseDataset(BaseDataset):
         super().__init__(None, **kwargs)
         self.record = record
         self.cache_dir = Path(cache_dir)
-        bids_kwargs = self.get_raw_bids_args()
+        self.bids_kwargs = self.get_raw_bids_args()
 
         if s3_bucket:
             self.s3_bucket = s3_bucket
             self.s3_open_neuro = False
-            self.filecache = self.cache_dir / record["bidspath"]
         else:
             self.s3_bucket = self._AWS_BUCKET
             self.s3_open_neuro = True
-            self.filecache = self.cache_dir / record["bidspath"]
 
-        bids_root = self.cache_dir / record["dataset"]
+        self.filecache = self.cache_dir / record["bidspath"]
+
+        self.bids_root = self.cache_dir / record["dataset"]
 
         self.bidspath = BIDSPath(
-            root=bids_root,
+            root=self.bids_root,
             datatype="eeg",
             suffix="eeg",
-            **bids_kwargs,
+            **self.bids_kwargs,
         )
 
         self.s3file = self.get_s3path(record["bidspath"])
@@ -89,20 +89,17 @@ class EEGDashBaseDataset(BaseDataset):
         """Helper to form an AWS S3 URI for the given relative filepath."""
         return f"{self.s3_bucket}/{filepath}"
 
-    def _download_s3(self) -> None:
+    def _download_s3(self, s3file: str) -> None:
         """Download function that gets the raw EEG data from S3."""
         filesystem = s3fs.S3FileSystem(
             anon=True, client_kwargs={"region_name": "us-east-2"}
         )
         if not self.s3_open_neuro:
-            self.s3file = re.sub(r"(^|/)ds\d{6}/", r"\1", self.s3file, count=1)
-            self.filecache = re.sub(
-                r"(^|/)ds\d{6}/", r"\1", str(self.filecache), count=1
-            )
-            self.filecache = Path(self.filecache)
+            s3file = re.sub(r"(^|/)ds\d{6}/", r"\1", s3file, count=1)
 
         self.filecache.parent.mkdir(parents=True, exist_ok=True)
-        filesystem.download(self.s3file, self.filecache)
+
+        filesystem.download(s3file, self.filecache)
         self.filenames = [self.filecache]
 
     def _download_dependencies(self) -> None:

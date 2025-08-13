@@ -1,0 +1,1129 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>eegdash.features.feature_bank package &#8212; EEG Dash</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css?v=d2d258e8" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../_static/documentation_options.js?v=71d9d8e6"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'api/eegdash.features.feature_bank';</script>
+    <link rel="icon" href="../_static/eegdash_icon.png"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="eegdash.features.feature_bank.complexity module" href="eegdash.features.feature_bank.complexity.html" />
+    <link rel="prev" title="eegdash.features package" href="eegdash.features.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="0.3" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/eegdash_long.png" class="logo__image only-light" alt="EEG Dash Logo"/>
+    <img src="../_static/eegdash_long.png" class="logo__image only-dark pst-js-only" alt="EEG Dash Logo"/>
+  
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="modules.html">
+    API
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../generated/auto_examples/index.html">
+    Examples
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="modules.html">
+    API
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../generated/auto_examples/index.html">
+    Examples
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="eegdash.html">eegdash package</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2 current active has-children"><a class="reference internal" href="eegdash.features.html">eegdash.features package</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l3 current active has-children"><a class="current reference internal" href="#">eegdash.features.feature_bank package</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="eegdash.features.feature_bank.complexity.html">eegdash.features.feature_bank.complexity module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eegdash.features.feature_bank.connectivity.html">eegdash.features.feature_bank.connectivity module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eegdash.features.feature_bank.csp.html">eegdash.features.feature_bank.csp module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eegdash.features.feature_bank.dimensionality.html">eegdash.features.feature_bank.dimensionality module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eegdash.features.feature_bank.signal.html">eegdash.features.feature_bank.signal module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eegdash.features.feature_bank.spectral.html">eegdash.features.feature_bank.spectral module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eegdash.features.feature_bank.utils.html">eegdash.features.feature_bank.utils module</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="eegdash.features.datasets.html">eegdash.features.datasets module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eegdash.features.decorators.html">eegdash.features.decorators module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eegdash.features.extractors.html">eegdash.features.extractors module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eegdash.features.inspect.html">eegdash.features.inspect module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eegdash.features.serialization.html">eegdash.features.serialization module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eegdash.features.utils.html">eegdash.features.utils module</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.api.html">eegdash.api module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.data_config.html">eegdash.data_config module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.data_utils.html">eegdash.data_utils module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.html">eegdash.dataset module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.mongodb.html">eegdash.mongodb module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.preprocessing.html">eegdash.preprocessing module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.utils.html">eegdash.utils module</a></li>
+</ul>
+</details></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="modules.html" class="nav-link">eegdash</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="eegdash.html" class="nav-link">eegdash package</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="eegdash.features.html" class="nav-link">eegdash.features package</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">eegdash.features.feature_bank package</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="module-eegdash.features.feature_bank">
+<span id="eegdash-features-feature-bank-package"></span><h1>eegdash.features.feature_bank package<a class="headerlink" href="#module-eegdash.features.feature_bank" title="Link to this heading">#</a></h1>
+<p>Feature bank public API exports.</p>
+<p>This module consolidates and re-exports the feature extractors and feature
+functions so users can import them directly from
+<code class="docutils literal notranslate"><span class="pre">eegdash.features.feature_bank</span></code>.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="eegdash.features.feature_bank.CoherenceFeatureExtractor">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.</span></span><span class="sig-name descname"><span class="pre">CoherenceFeatureExtractor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">feature_extractors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Callable</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">preprocess_kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.features.feature_bank.CoherenceFeatureExtractor" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="eegdash.features.extractors.html#eegdash.features.extractors.FeatureExtractor" title="eegdash.features.extractors.FeatureExtractor"><code class="xref py py-class docutils literal notranslate"><span class="pre">FeatureExtractor</span></code></a></p>
+<p class="rubric">Methods</p>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
+<tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__call__</span></code>(*x[, _batch_size, _ch_names])</p></td>
+<td><p>Call self as a function.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="pst-scrollable-table-container"><table class="table">
+<tbody>
+<tr class="row-odd"><td><p><strong>clear</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><strong>fit</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><strong>partial_fit</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><strong>preprocess</strong></p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="eegdash.features.feature_bank.CoherenceFeatureExtractor.preprocess">
+<span class="sig-name descname"><span class="pre">preprocess</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.features.feature_bank.CoherenceFeatureExtractor.preprocess" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="eegdash.features.feature_bank.CommonSpatialPattern">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.</span></span><span class="sig-name descname"><span class="pre">CommonSpatialPattern</span></span><a class="headerlink" href="#eegdash.features.feature_bank.CommonSpatialPattern" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="eegdash.features.extractors.html#eegdash.features.extractors.TrainableFeature" title="eegdash.features.extractors.TrainableFeature"><code class="xref py py-class docutils literal notranslate"><span class="pre">TrainableFeature</span></code></a></p>
+<p class="rubric">Methods</p>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
+<tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__call__</span></code>(x[, n_select, crit_select])</p></td>
+<td><p>Call self as a function.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="pst-scrollable-table-container"><table class="table">
+<tbody>
+<tr class="row-odd"><td><p><strong>clear</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><strong>feature_kind</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><strong>fit</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><strong>partial_fit</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><strong>transform_input</strong></p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="eegdash.features.feature_bank.CommonSpatialPattern.clear">
+<span class="sig-name descname"><span class="pre">clear</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.features.feature_bank.CommonSpatialPattern.clear" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="eegdash.features.feature_bank.CommonSpatialPattern.feature_kind">
+<span class="sig-name descname"><span class="pre">feature_kind</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;eegdash.features.extractors.MultivariateFeature</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#eegdash.features.feature_bank.CommonSpatialPattern.feature_kind" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eegdash.features.feature_bank.CommonSpatialPattern.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.features.feature_bank.CommonSpatialPattern.fit" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eegdash.features.feature_bank.CommonSpatialPattern.partial_fit">
+<span class="sig-name descname"><span class="pre">partial_fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.features.feature_bank.CommonSpatialPattern.partial_fit" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eegdash.features.feature_bank.CommonSpatialPattern.transform_input">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">transform_input</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.features.feature_bank.CommonSpatialPattern.transform_input" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="eegdash.features.feature_bank.DBSpectralFeatureExtractor">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.</span></span><span class="sig-name descname"><span class="pre">DBSpectralFeatureExtractor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">feature_extractors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Callable</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">preprocess_kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.features.feature_bank.DBSpectralFeatureExtractor" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="eegdash.features.extractors.html#eegdash.features.extractors.FeatureExtractor" title="eegdash.features.extractors.FeatureExtractor"><code class="xref py py-class docutils literal notranslate"><span class="pre">FeatureExtractor</span></code></a></p>
+<p class="rubric">Methods</p>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
+<tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__call__</span></code>(*x[, _batch_size, _ch_names])</p></td>
+<td><p>Call self as a function.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="pst-scrollable-table-container"><table class="table">
+<tbody>
+<tr class="row-odd"><td><p><strong>clear</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><strong>fit</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><strong>partial_fit</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><strong>preprocess</strong></p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="eegdash.features.feature_bank.DBSpectralFeatureExtractor.parent_extractor_type">
+<span class="sig-name descname"><span class="pre">parent_extractor_type</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(&lt;class</span> <span class="pre">'eegdash.features.feature_bank.spectral.SpectralFeatureExtractor'&gt;,)</span></em><a class="headerlink" href="#eegdash.features.feature_bank.DBSpectralFeatureExtractor.parent_extractor_type" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eegdash.features.feature_bank.DBSpectralFeatureExtractor.preprocess">
+<span class="sig-name descname"><span class="pre">preprocess</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-15</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.features.feature_bank.DBSpectralFeatureExtractor.preprocess" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="eegdash.features.feature_bank.EntropyFeatureExtractor">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.</span></span><span class="sig-name descname"><span class="pre">EntropyFeatureExtractor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">feature_extractors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Callable</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">preprocess_kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.features.feature_bank.EntropyFeatureExtractor" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="eegdash.features.extractors.html#eegdash.features.extractors.FeatureExtractor" title="eegdash.features.extractors.FeatureExtractor"><code class="xref py py-class docutils literal notranslate"><span class="pre">FeatureExtractor</span></code></a></p>
+<p class="rubric">Methods</p>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
+<tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__call__</span></code>(*x[, _batch_size, _ch_names])</p></td>
+<td><p>Call self as a function.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="pst-scrollable-table-container"><table class="table">
+<tbody>
+<tr class="row-odd"><td><p><strong>clear</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><strong>fit</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><strong>partial_fit</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><strong>preprocess</strong></p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="eegdash.features.feature_bank.EntropyFeatureExtractor.parent_extractor_type">
+<span class="sig-name descname"><span class="pre">parent_extractor_type</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(&lt;class</span> <span class="pre">'eegdash.features.extractors.FeatureExtractor'&gt;,</span> <span class="pre">&lt;class</span> <span class="pre">'eegdash.features.feature_bank.signal.HilbertFeatureExtractor'&gt;)</span></em><a class="headerlink" href="#eegdash.features.feature_bank.EntropyFeatureExtractor.parent_extractor_type" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eegdash.features.feature_bank.EntropyFeatureExtractor.preprocess">
+<span class="sig-name descname"><span class="pre">preprocess</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">m</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">l</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.features.feature_bank.EntropyFeatureExtractor.preprocess" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="eegdash.features.feature_bank.HilbertFeatureExtractor">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.</span></span><span class="sig-name descname"><span class="pre">HilbertFeatureExtractor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">feature_extractors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Callable</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">preprocess_kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.features.feature_bank.HilbertFeatureExtractor" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="eegdash.features.extractors.html#eegdash.features.extractors.FeatureExtractor" title="eegdash.features.extractors.FeatureExtractor"><code class="xref py py-class docutils literal notranslate"><span class="pre">FeatureExtractor</span></code></a></p>
+<p class="rubric">Methods</p>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
+<tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__call__</span></code>(*x[, _batch_size, _ch_names])</p></td>
+<td><p>Call self as a function.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="pst-scrollable-table-container"><table class="table">
+<tbody>
+<tr class="row-odd"><td><p><strong>clear</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><strong>fit</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><strong>partial_fit</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><strong>preprocess</strong></p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="eegdash.features.feature_bank.HilbertFeatureExtractor.parent_extractor_type">
+<span class="sig-name descname"><span class="pre">parent_extractor_type</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(&lt;class</span> <span class="pre">'eegdash.features.extractors.FeatureExtractor'&gt;,)</span></em><a class="headerlink" href="#eegdash.features.feature_bank.HilbertFeatureExtractor.parent_extractor_type" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eegdash.features.feature_bank.HilbertFeatureExtractor.preprocess">
+<span class="sig-name descname"><span class="pre">preprocess</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.features.feature_bank.HilbertFeatureExtractor.preprocess" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="eegdash.features.feature_bank.NormalizedSpectralFeatureExtractor">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.</span></span><span class="sig-name descname"><span class="pre">NormalizedSpectralFeatureExtractor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">feature_extractors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Callable</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">preprocess_kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.features.feature_bank.NormalizedSpectralFeatureExtractor" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="eegdash.features.extractors.html#eegdash.features.extractors.FeatureExtractor" title="eegdash.features.extractors.FeatureExtractor"><code class="xref py py-class docutils literal notranslate"><span class="pre">FeatureExtractor</span></code></a></p>
+<p class="rubric">Methods</p>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
+<tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__call__</span></code>(*x[, _batch_size, _ch_names])</p></td>
+<td><p>Call self as a function.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="pst-scrollable-table-container"><table class="table">
+<tbody>
+<tr class="row-odd"><td><p><strong>clear</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><strong>fit</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><strong>partial_fit</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><strong>preprocess</strong></p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="eegdash.features.feature_bank.NormalizedSpectralFeatureExtractor.parent_extractor_type">
+<span class="sig-name descname"><span class="pre">parent_extractor_type</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(&lt;class</span> <span class="pre">'eegdash.features.feature_bank.spectral.SpectralFeatureExtractor'&gt;,)</span></em><a class="headerlink" href="#eegdash.features.feature_bank.NormalizedSpectralFeatureExtractor.parent_extractor_type" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eegdash.features.feature_bank.NormalizedSpectralFeatureExtractor.preprocess">
+<span class="sig-name descname"><span class="pre">preprocess</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.features.feature_bank.NormalizedSpectralFeatureExtractor.preprocess" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="eegdash.features.feature_bank.SpectralFeatureExtractor">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.</span></span><span class="sig-name descname"><span class="pre">SpectralFeatureExtractor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">feature_extractors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Callable</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">preprocess_kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.features.feature_bank.SpectralFeatureExtractor" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="eegdash.features.extractors.html#eegdash.features.extractors.FeatureExtractor" title="eegdash.features.extractors.FeatureExtractor"><code class="xref py py-class docutils literal notranslate"><span class="pre">FeatureExtractor</span></code></a></p>
+<p class="rubric">Methods</p>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
+<tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__call__</span></code>(*x[, _batch_size, _ch_names])</p></td>
+<td><p>Call self as a function.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="pst-scrollable-table-container"><table class="table">
+<tbody>
+<tr class="row-odd"><td><p><strong>clear</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><strong>fit</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><strong>partial_fit</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><strong>preprocess</strong></p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="eegdash.features.feature_bank.SpectralFeatureExtractor.preprocess">
+<span class="sig-name descname"><span class="pre">preprocess</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.features.feature_bank.SpectralFeatureExtractor.preprocess" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eegdash.features.feature_bank.complexity_approx_entropy">
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.</span></span><span class="sig-name descname"><span class="pre">complexity_approx_entropy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">counts_m</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">counts_mp1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.features.feature_bank.complexity_approx_entropy" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eegdash.features.feature_bank.complexity_lempel_ziv">
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.</span></span><span class="sig-name descname"><span class="pre">complexity_lempel_ziv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.features.feature_bank.complexity_lempel_ziv" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eegdash.features.feature_bank.complexity_sample_entropy">
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.</span></span><span class="sig-name descname"><span class="pre">complexity_sample_entropy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">counts_m</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">counts_mp1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.features.feature_bank.complexity_sample_entropy" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eegdash.features.feature_bank.complexity_svd_entropy">
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.</span></span><span class="sig-name descname"><span class="pre">complexity_svd_entropy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">m</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.features.feature_bank.complexity_svd_entropy" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eegdash.features.feature_bank.connectivity_imaginary_coherence">
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.</span></span><span class="sig-name descname"><span class="pre">connectivity_imaginary_coherence</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bands</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{'alpha':</span> <span class="pre">(8,</span> <span class="pre">12),</span> <span class="pre">'beta':</span> <span class="pre">(12,</span> <span class="pre">30),</span> <span class="pre">'delta':</span> <span class="pre">(1,</span> <span class="pre">4.5),</span> <span class="pre">'theta':</span> <span class="pre">(4.5,</span> <span class="pre">8)}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.features.feature_bank.connectivity_imaginary_coherence" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eegdash.features.feature_bank.connectivity_lagged_coherence">
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.</span></span><span class="sig-name descname"><span class="pre">connectivity_lagged_coherence</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bands</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{'alpha':</span> <span class="pre">(8,</span> <span class="pre">12),</span> <span class="pre">'beta':</span> <span class="pre">(12,</span> <span class="pre">30),</span> <span class="pre">'delta':</span> <span class="pre">(1,</span> <span class="pre">4.5),</span> <span class="pre">'theta':</span> <span class="pre">(4.5,</span> <span class="pre">8)}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.features.feature_bank.connectivity_lagged_coherence" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eegdash.features.feature_bank.connectivity_magnitude_square_coherence">
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.</span></span><span class="sig-name descname"><span class="pre">connectivity_magnitude_square_coherence</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bands</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{'alpha':</span> <span class="pre">(8,</span> <span class="pre">12),</span> <span class="pre">'beta':</span> <span class="pre">(12,</span> <span class="pre">30),</span> <span class="pre">'delta':</span> <span class="pre">(1,</span> <span class="pre">4.5),</span> <span class="pre">'theta':</span> <span class="pre">(4.5,</span> <span class="pre">8)}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.features.feature_bank.connectivity_magnitude_square_coherence" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eegdash.features.feature_bank.dimensionality_detrended_fluctuation_analysis">
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.</span></span><span class="sig-name descname"><span class="pre">dimensionality_detrended_fluctuation_analysis</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.features.feature_bank.dimensionality_detrended_fluctuation_analysis" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eegdash.features.feature_bank.dimensionality_higuchi_fractal_dim">
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.</span></span><span class="sig-name descname"><span class="pre">dimensionality_higuchi_fractal_dim</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-07</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.features.feature_bank.dimensionality_higuchi_fractal_dim" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eegdash.features.feature_bank.dimensionality_hurst_exp">
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.</span></span><span class="sig-name descname"><span class="pre">dimensionality_hurst_exp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.features.feature_bank.dimensionality_hurst_exp" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eegdash.features.feature_bank.dimensionality_katz_fractal_dim">
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.</span></span><span class="sig-name descname"><span class="pre">dimensionality_katz_fractal_dim</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.features.feature_bank.dimensionality_katz_fractal_dim" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eegdash.features.feature_bank.dimensionality_petrosian_fractal_dim">
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.</span></span><span class="sig-name descname"><span class="pre">dimensionality_petrosian_fractal_dim</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.features.feature_bank.dimensionality_petrosian_fractal_dim" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eegdash.features.feature_bank.signal_decorrelation_time">
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.</span></span><span class="sig-name descname"><span class="pre">signal_decorrelation_time</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.features.feature_bank.signal_decorrelation_time" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eegdash.features.feature_bank.signal_hjorth_activity">
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.</span></span><span class="sig-name descname"><span class="pre">signal_hjorth_activity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.features.feature_bank.signal_hjorth_activity" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eegdash.features.feature_bank.signal_hjorth_complexity">
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.</span></span><span class="sig-name descname"><span class="pre">signal_hjorth_complexity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.features.feature_bank.signal_hjorth_complexity" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eegdash.features.feature_bank.signal_hjorth_mobility">
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.</span></span><span class="sig-name descname"><span class="pre">signal_hjorth_mobility</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.features.feature_bank.signal_hjorth_mobility" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eegdash.features.feature_bank.signal_kurtosis">
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.</span></span><span class="sig-name descname"><span class="pre">signal_kurtosis</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.features.feature_bank.signal_kurtosis" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eegdash.features.feature_bank.signal_line_length">
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.</span></span><span class="sig-name descname"><span class="pre">signal_line_length</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.features.feature_bank.signal_line_length" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eegdash.features.feature_bank.signal_mean">
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.</span></span><span class="sig-name descname"><span class="pre">signal_mean</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.features.feature_bank.signal_mean" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eegdash.features.feature_bank.signal_peak_to_peak">
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.</span></span><span class="sig-name descname"><span class="pre">signal_peak_to_peak</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.features.feature_bank.signal_peak_to_peak" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eegdash.features.feature_bank.signal_quantile">
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.</span></span><span class="sig-name descname"><span class="pre">signal_quantile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Number</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.features.feature_bank.signal_quantile" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eegdash.features.feature_bank.signal_root_mean_square">
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.</span></span><span class="sig-name descname"><span class="pre">signal_root_mean_square</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.features.feature_bank.signal_root_mean_square" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eegdash.features.feature_bank.signal_skewness">
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.</span></span><span class="sig-name descname"><span class="pre">signal_skewness</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.features.feature_bank.signal_skewness" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eegdash.features.feature_bank.signal_std">
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.</span></span><span class="sig-name descname"><span class="pre">signal_std</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.features.feature_bank.signal_std" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eegdash.features.feature_bank.signal_variance">
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.</span></span><span class="sig-name descname"><span class="pre">signal_variance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.features.feature_bank.signal_variance" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eegdash.features.feature_bank.signal_zero_crossings">
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.</span></span><span class="sig-name descname"><span class="pre">signal_zero_crossings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-15</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.features.feature_bank.signal_zero_crossings" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eegdash.features.feature_bank.spectral_bands_power">
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.</span></span><span class="sig-name descname"><span class="pre">spectral_bands_power</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bands</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{'alpha':</span> <span class="pre">(8,</span> <span class="pre">12),</span> <span class="pre">'beta':</span> <span class="pre">(12,</span> <span class="pre">30),</span> <span class="pre">'delta':</span> <span class="pre">(1,</span> <span class="pre">4.5),</span> <span class="pre">'theta':</span> <span class="pre">(4.5,</span> <span class="pre">8)}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.features.feature_bank.spectral_bands_power" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eegdash.features.feature_bank.spectral_edge">
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.</span></span><span class="sig-name descname"><span class="pre">spectral_edge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.9</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.features.feature_bank.spectral_edge" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eegdash.features.feature_bank.spectral_entropy">
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.</span></span><span class="sig-name descname"><span class="pre">spectral_entropy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.features.feature_bank.spectral_entropy" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eegdash.features.feature_bank.spectral_hjorth_activity">
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.</span></span><span class="sig-name descname"><span class="pre">spectral_hjorth_activity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.features.feature_bank.spectral_hjorth_activity" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eegdash.features.feature_bank.spectral_hjorth_complexity">
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.</span></span><span class="sig-name descname"><span class="pre">spectral_hjorth_complexity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.features.feature_bank.spectral_hjorth_complexity" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eegdash.features.feature_bank.spectral_hjorth_mobility">
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.</span></span><span class="sig-name descname"><span class="pre">spectral_hjorth_mobility</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.features.feature_bank.spectral_hjorth_mobility" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eegdash.features.feature_bank.spectral_moment">
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.</span></span><span class="sig-name descname"><span class="pre">spectral_moment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.features.feature_bank.spectral_moment" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eegdash.features.feature_bank.spectral_root_total_power">
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.</span></span><span class="sig-name descname"><span class="pre">spectral_root_total_power</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.features.feature_bank.spectral_root_total_power" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eegdash.features.feature_bank.spectral_slope">
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.</span></span><span class="sig-name descname"><span class="pre">spectral_slope</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.features.feature_bank.spectral_slope" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading">#</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="eegdash.features.feature_bank.complexity.html">eegdash.features.feature_bank.complexity module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.features.feature_bank.complexity.html#eegdash.features.feature_bank.complexity.EntropyFeatureExtractor"><code class="docutils literal notranslate"><span class="pre">EntropyFeatureExtractor</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="eegdash.features.feature_bank.complexity.html#eegdash.features.feature_bank.complexity.EntropyFeatureExtractor.parent_extractor_type"><code class="docutils literal notranslate"><span class="pre">EntropyFeatureExtractor.parent_extractor_type</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="eegdash.features.feature_bank.complexity.html#eegdash.features.feature_bank.complexity.EntropyFeatureExtractor.preprocess"><code class="docutils literal notranslate"><span class="pre">EntropyFeatureExtractor.preprocess()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.features.feature_bank.complexity.html#eegdash.features.feature_bank.complexity.complexity_approx_entropy"><code class="docutils literal notranslate"><span class="pre">complexity_approx_entropy()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.features.feature_bank.complexity.html#eegdash.features.feature_bank.complexity.complexity_lempel_ziv"><code class="docutils literal notranslate"><span class="pre">complexity_lempel_ziv()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.features.feature_bank.complexity.html#eegdash.features.feature_bank.complexity.complexity_sample_entropy"><code class="docutils literal notranslate"><span class="pre">complexity_sample_entropy()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.features.feature_bank.complexity.html#eegdash.features.feature_bank.complexity.complexity_svd_entropy"><code class="docutils literal notranslate"><span class="pre">complexity_svd_entropy()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="eegdash.features.feature_bank.connectivity.html">eegdash.features.feature_bank.connectivity module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.features.feature_bank.connectivity.html#eegdash.features.feature_bank.connectivity.CoherenceFeatureExtractor"><code class="docutils literal notranslate"><span class="pre">CoherenceFeatureExtractor</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="eegdash.features.feature_bank.connectivity.html#eegdash.features.feature_bank.connectivity.CoherenceFeatureExtractor.preprocess"><code class="docutils literal notranslate"><span class="pre">CoherenceFeatureExtractor.preprocess()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.features.feature_bank.connectivity.html#eegdash.features.feature_bank.connectivity.connectivity_imaginary_coherence"><code class="docutils literal notranslate"><span class="pre">connectivity_imaginary_coherence()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.features.feature_bank.connectivity.html#eegdash.features.feature_bank.connectivity.connectivity_lagged_coherence"><code class="docutils literal notranslate"><span class="pre">connectivity_lagged_coherence()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.features.feature_bank.connectivity.html#eegdash.features.feature_bank.connectivity.connectivity_magnitude_square_coherence"><code class="docutils literal notranslate"><span class="pre">connectivity_magnitude_square_coherence()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="eegdash.features.feature_bank.csp.html">eegdash.features.feature_bank.csp module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.features.feature_bank.csp.html#eegdash.features.feature_bank.csp.CommonSpatialPattern"><code class="docutils literal notranslate"><span class="pre">CommonSpatialPattern</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="eegdash.features.feature_bank.csp.html#eegdash.features.feature_bank.csp.CommonSpatialPattern.clear"><code class="docutils literal notranslate"><span class="pre">CommonSpatialPattern.clear()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="eegdash.features.feature_bank.csp.html#eegdash.features.feature_bank.csp.CommonSpatialPattern.feature_kind"><code class="docutils literal notranslate"><span class="pre">CommonSpatialPattern.feature_kind</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="eegdash.features.feature_bank.csp.html#eegdash.features.feature_bank.csp.CommonSpatialPattern.fit"><code class="docutils literal notranslate"><span class="pre">CommonSpatialPattern.fit()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="eegdash.features.feature_bank.csp.html#eegdash.features.feature_bank.csp.CommonSpatialPattern.partial_fit"><code class="docutils literal notranslate"><span class="pre">CommonSpatialPattern.partial_fit()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="eegdash.features.feature_bank.csp.html#eegdash.features.feature_bank.csp.CommonSpatialPattern.transform_input"><code class="docutils literal notranslate"><span class="pre">CommonSpatialPattern.transform_input()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="eegdash.features.feature_bank.dimensionality.html">eegdash.features.feature_bank.dimensionality module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.features.feature_bank.dimensionality.html#eegdash.features.feature_bank.dimensionality.dimensionality_detrended_fluctuation_analysis"><code class="docutils literal notranslate"><span class="pre">dimensionality_detrended_fluctuation_analysis()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.features.feature_bank.dimensionality.html#eegdash.features.feature_bank.dimensionality.dimensionality_higuchi_fractal_dim"><code class="docutils literal notranslate"><span class="pre">dimensionality_higuchi_fractal_dim()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.features.feature_bank.dimensionality.html#eegdash.features.feature_bank.dimensionality.dimensionality_hurst_exp"><code class="docutils literal notranslate"><span class="pre">dimensionality_hurst_exp()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.features.feature_bank.dimensionality.html#eegdash.features.feature_bank.dimensionality.dimensionality_katz_fractal_dim"><code class="docutils literal notranslate"><span class="pre">dimensionality_katz_fractal_dim()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.features.feature_bank.dimensionality.html#eegdash.features.feature_bank.dimensionality.dimensionality_petrosian_fractal_dim"><code class="docutils literal notranslate"><span class="pre">dimensionality_petrosian_fractal_dim()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="eegdash.features.feature_bank.signal.html">eegdash.features.feature_bank.signal module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.features.feature_bank.signal.html#eegdash.features.feature_bank.signal.HilbertFeatureExtractor"><code class="docutils literal notranslate"><span class="pre">HilbertFeatureExtractor</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="eegdash.features.feature_bank.signal.html#eegdash.features.feature_bank.signal.HilbertFeatureExtractor.parent_extractor_type"><code class="docutils literal notranslate"><span class="pre">HilbertFeatureExtractor.parent_extractor_type</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="eegdash.features.feature_bank.signal.html#eegdash.features.feature_bank.signal.HilbertFeatureExtractor.preprocess"><code class="docutils literal notranslate"><span class="pre">HilbertFeatureExtractor.preprocess()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.features.feature_bank.signal.html#eegdash.features.feature_bank.signal.signal_decorrelation_time"><code class="docutils literal notranslate"><span class="pre">signal_decorrelation_time()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.features.feature_bank.signal.html#eegdash.features.feature_bank.signal.signal_hjorth_activity"><code class="docutils literal notranslate"><span class="pre">signal_hjorth_activity()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.features.feature_bank.signal.html#eegdash.features.feature_bank.signal.signal_hjorth_complexity"><code class="docutils literal notranslate"><span class="pre">signal_hjorth_complexity()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.features.feature_bank.signal.html#eegdash.features.feature_bank.signal.signal_hjorth_mobility"><code class="docutils literal notranslate"><span class="pre">signal_hjorth_mobility()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.features.feature_bank.signal.html#eegdash.features.feature_bank.signal.signal_kurtosis"><code class="docutils literal notranslate"><span class="pre">signal_kurtosis()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.features.feature_bank.signal.html#eegdash.features.feature_bank.signal.signal_line_length"><code class="docutils literal notranslate"><span class="pre">signal_line_length()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.features.feature_bank.signal.html#eegdash.features.feature_bank.signal.signal_mean"><code class="docutils literal notranslate"><span class="pre">signal_mean()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.features.feature_bank.signal.html#eegdash.features.feature_bank.signal.signal_peak_to_peak"><code class="docutils literal notranslate"><span class="pre">signal_peak_to_peak()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.features.feature_bank.signal.html#eegdash.features.feature_bank.signal.signal_quantile"><code class="docutils literal notranslate"><span class="pre">signal_quantile()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.features.feature_bank.signal.html#eegdash.features.feature_bank.signal.signal_root_mean_square"><code class="docutils literal notranslate"><span class="pre">signal_root_mean_square()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.features.feature_bank.signal.html#eegdash.features.feature_bank.signal.signal_skewness"><code class="docutils literal notranslate"><span class="pre">signal_skewness()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.features.feature_bank.signal.html#eegdash.features.feature_bank.signal.signal_std"><code class="docutils literal notranslate"><span class="pre">signal_std()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.features.feature_bank.signal.html#eegdash.features.feature_bank.signal.signal_variance"><code class="docutils literal notranslate"><span class="pre">signal_variance()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.features.feature_bank.signal.html#eegdash.features.feature_bank.signal.signal_zero_crossings"><code class="docutils literal notranslate"><span class="pre">signal_zero_crossings()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="eegdash.features.feature_bank.spectral.html">eegdash.features.feature_bank.spectral module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.features.feature_bank.spectral.html#eegdash.features.feature_bank.spectral.DBSpectralFeatureExtractor"><code class="docutils literal notranslate"><span class="pre">DBSpectralFeatureExtractor</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="eegdash.features.feature_bank.spectral.html#eegdash.features.feature_bank.spectral.DBSpectralFeatureExtractor.parent_extractor_type"><code class="docutils literal notranslate"><span class="pre">DBSpectralFeatureExtractor.parent_extractor_type</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="eegdash.features.feature_bank.spectral.html#eegdash.features.feature_bank.spectral.DBSpectralFeatureExtractor.preprocess"><code class="docutils literal notranslate"><span class="pre">DBSpectralFeatureExtractor.preprocess()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.features.feature_bank.spectral.html#eegdash.features.feature_bank.spectral.NormalizedSpectralFeatureExtractor"><code class="docutils literal notranslate"><span class="pre">NormalizedSpectralFeatureExtractor</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="eegdash.features.feature_bank.spectral.html#eegdash.features.feature_bank.spectral.NormalizedSpectralFeatureExtractor.parent_extractor_type"><code class="docutils literal notranslate"><span class="pre">NormalizedSpectralFeatureExtractor.parent_extractor_type</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="eegdash.features.feature_bank.spectral.html#eegdash.features.feature_bank.spectral.NormalizedSpectralFeatureExtractor.preprocess"><code class="docutils literal notranslate"><span class="pre">NormalizedSpectralFeatureExtractor.preprocess()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.features.feature_bank.spectral.html#eegdash.features.feature_bank.spectral.SpectralFeatureExtractor"><code class="docutils literal notranslate"><span class="pre">SpectralFeatureExtractor</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="eegdash.features.feature_bank.spectral.html#eegdash.features.feature_bank.spectral.SpectralFeatureExtractor.preprocess"><code class="docutils literal notranslate"><span class="pre">SpectralFeatureExtractor.preprocess()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.features.feature_bank.spectral.html#eegdash.features.feature_bank.spectral.spectral_bands_power"><code class="docutils literal notranslate"><span class="pre">spectral_bands_power()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.features.feature_bank.spectral.html#eegdash.features.feature_bank.spectral.spectral_edge"><code class="docutils literal notranslate"><span class="pre">spectral_edge()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.features.feature_bank.spectral.html#eegdash.features.feature_bank.spectral.spectral_entropy"><code class="docutils literal notranslate"><span class="pre">spectral_entropy()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.features.feature_bank.spectral.html#eegdash.features.feature_bank.spectral.spectral_hjorth_activity"><code class="docutils literal notranslate"><span class="pre">spectral_hjorth_activity()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.features.feature_bank.spectral.html#eegdash.features.feature_bank.spectral.spectral_hjorth_complexity"><code class="docutils literal notranslate"><span class="pre">spectral_hjorth_complexity()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.features.feature_bank.spectral.html#eegdash.features.feature_bank.spectral.spectral_hjorth_mobility"><code class="docutils literal notranslate"><span class="pre">spectral_hjorth_mobility()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.features.feature_bank.spectral.html#eegdash.features.feature_bank.spectral.spectral_moment"><code class="docutils literal notranslate"><span class="pre">spectral_moment()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.features.feature_bank.spectral.html#eegdash.features.feature_bank.spectral.spectral_root_total_power"><code class="docutils literal notranslate"><span class="pre">spectral_root_total_power()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.features.feature_bank.spectral.html#eegdash.features.feature_bank.spectral.spectral_slope"><code class="docutils literal notranslate"><span class="pre">spectral_slope()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="eegdash.features.feature_bank.utils.html">eegdash.features.feature_bank.utils module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.features.feature_bank.utils.html#eegdash.features.feature_bank.utils.get_valid_freq_band"><code class="docutils literal notranslate"><span class="pre">get_valid_freq_band()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.features.feature_bank.utils.html#eegdash.features.feature_bank.utils.reduce_freq_bands"><code class="docutils literal notranslate"><span class="pre">reduce_freq_bands()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.features.feature_bank.utils.html#eegdash.features.feature_bank.utils.slice_freq_band"><code class="docutils literal notranslate"><span class="pre">slice_freq_band()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="eegdash.features.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">eegdash.features package</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="eegdash.features.feature_bank.complexity.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">eegdash.features.feature_bank.complexity module</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.features.feature_bank.CoherenceFeatureExtractor"><code class="docutils literal notranslate"><span class="pre">CoherenceFeatureExtractor</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.features.feature_bank.CoherenceFeatureExtractor.preprocess"><code class="docutils literal notranslate"><span class="pre">CoherenceFeatureExtractor.preprocess()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.features.feature_bank.CommonSpatialPattern"><code class="docutils literal notranslate"><span class="pre">CommonSpatialPattern</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.features.feature_bank.CommonSpatialPattern.clear"><code class="docutils literal notranslate"><span class="pre">CommonSpatialPattern.clear()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.features.feature_bank.CommonSpatialPattern.feature_kind"><code class="docutils literal notranslate"><span class="pre">CommonSpatialPattern.feature_kind</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.features.feature_bank.CommonSpatialPattern.fit"><code class="docutils literal notranslate"><span class="pre">CommonSpatialPattern.fit()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.features.feature_bank.CommonSpatialPattern.partial_fit"><code class="docutils literal notranslate"><span class="pre">CommonSpatialPattern.partial_fit()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.features.feature_bank.CommonSpatialPattern.transform_input"><code class="docutils literal notranslate"><span class="pre">CommonSpatialPattern.transform_input()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.features.feature_bank.DBSpectralFeatureExtractor"><code class="docutils literal notranslate"><span class="pre">DBSpectralFeatureExtractor</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.features.feature_bank.DBSpectralFeatureExtractor.parent_extractor_type"><code class="docutils literal notranslate"><span class="pre">DBSpectralFeatureExtractor.parent_extractor_type</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.features.feature_bank.DBSpectralFeatureExtractor.preprocess"><code class="docutils literal notranslate"><span class="pre">DBSpectralFeatureExtractor.preprocess()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.features.feature_bank.EntropyFeatureExtractor"><code class="docutils literal notranslate"><span class="pre">EntropyFeatureExtractor</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.features.feature_bank.EntropyFeatureExtractor.parent_extractor_type"><code class="docutils literal notranslate"><span class="pre">EntropyFeatureExtractor.parent_extractor_type</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.features.feature_bank.EntropyFeatureExtractor.preprocess"><code class="docutils literal notranslate"><span class="pre">EntropyFeatureExtractor.preprocess()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.features.feature_bank.HilbertFeatureExtractor"><code class="docutils literal notranslate"><span class="pre">HilbertFeatureExtractor</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.features.feature_bank.HilbertFeatureExtractor.parent_extractor_type"><code class="docutils literal notranslate"><span class="pre">HilbertFeatureExtractor.parent_extractor_type</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.features.feature_bank.HilbertFeatureExtractor.preprocess"><code class="docutils literal notranslate"><span class="pre">HilbertFeatureExtractor.preprocess()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.features.feature_bank.NormalizedSpectralFeatureExtractor"><code class="docutils literal notranslate"><span class="pre">NormalizedSpectralFeatureExtractor</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.features.feature_bank.NormalizedSpectralFeatureExtractor.parent_extractor_type"><code class="docutils literal notranslate"><span class="pre">NormalizedSpectralFeatureExtractor.parent_extractor_type</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.features.feature_bank.NormalizedSpectralFeatureExtractor.preprocess"><code class="docutils literal notranslate"><span class="pre">NormalizedSpectralFeatureExtractor.preprocess()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.features.feature_bank.SpectralFeatureExtractor"><code class="docutils literal notranslate"><span class="pre">SpectralFeatureExtractor</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.features.feature_bank.SpectralFeatureExtractor.preprocess"><code class="docutils literal notranslate"><span class="pre">SpectralFeatureExtractor.preprocess()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.features.feature_bank.complexity_approx_entropy"><code class="docutils literal notranslate"><span class="pre">complexity_approx_entropy()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.features.feature_bank.complexity_lempel_ziv"><code class="docutils literal notranslate"><span class="pre">complexity_lempel_ziv()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.features.feature_bank.complexity_sample_entropy"><code class="docutils literal notranslate"><span class="pre">complexity_sample_entropy()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.features.feature_bank.complexity_svd_entropy"><code class="docutils literal notranslate"><span class="pre">complexity_svd_entropy()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.features.feature_bank.connectivity_imaginary_coherence"><code class="docutils literal notranslate"><span class="pre">connectivity_imaginary_coherence()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.features.feature_bank.connectivity_lagged_coherence"><code class="docutils literal notranslate"><span class="pre">connectivity_lagged_coherence()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.features.feature_bank.connectivity_magnitude_square_coherence"><code class="docutils literal notranslate"><span class="pre">connectivity_magnitude_square_coherence()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.features.feature_bank.dimensionality_detrended_fluctuation_analysis"><code class="docutils literal notranslate"><span class="pre">dimensionality_detrended_fluctuation_analysis()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.features.feature_bank.dimensionality_higuchi_fractal_dim"><code class="docutils literal notranslate"><span class="pre">dimensionality_higuchi_fractal_dim()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.features.feature_bank.dimensionality_hurst_exp"><code class="docutils literal notranslate"><span class="pre">dimensionality_hurst_exp()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.features.feature_bank.dimensionality_katz_fractal_dim"><code class="docutils literal notranslate"><span class="pre">dimensionality_katz_fractal_dim()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.features.feature_bank.dimensionality_petrosian_fractal_dim"><code class="docutils literal notranslate"><span class="pre">dimensionality_petrosian_fractal_dim()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.features.feature_bank.signal_decorrelation_time"><code class="docutils literal notranslate"><span class="pre">signal_decorrelation_time()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.features.feature_bank.signal_hjorth_activity"><code class="docutils literal notranslate"><span class="pre">signal_hjorth_activity()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.features.feature_bank.signal_hjorth_complexity"><code class="docutils literal notranslate"><span class="pre">signal_hjorth_complexity()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.features.feature_bank.signal_hjorth_mobility"><code class="docutils literal notranslate"><span class="pre">signal_hjorth_mobility()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.features.feature_bank.signal_kurtosis"><code class="docutils literal notranslate"><span class="pre">signal_kurtosis()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.features.feature_bank.signal_line_length"><code class="docutils literal notranslate"><span class="pre">signal_line_length()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.features.feature_bank.signal_mean"><code class="docutils literal notranslate"><span class="pre">signal_mean()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.features.feature_bank.signal_peak_to_peak"><code class="docutils literal notranslate"><span class="pre">signal_peak_to_peak()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.features.feature_bank.signal_quantile"><code class="docutils literal notranslate"><span class="pre">signal_quantile()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.features.feature_bank.signal_root_mean_square"><code class="docutils literal notranslate"><span class="pre">signal_root_mean_square()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.features.feature_bank.signal_skewness"><code class="docutils literal notranslate"><span class="pre">signal_skewness()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.features.feature_bank.signal_std"><code class="docutils literal notranslate"><span class="pre">signal_std()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.features.feature_bank.signal_variance"><code class="docutils literal notranslate"><span class="pre">signal_variance()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.features.feature_bank.signal_zero_crossings"><code class="docutils literal notranslate"><span class="pre">signal_zero_crossings()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.features.feature_bank.spectral_bands_power"><code class="docutils literal notranslate"><span class="pre">spectral_bands_power()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.features.feature_bank.spectral_edge"><code class="docutils literal notranslate"><span class="pre">spectral_edge()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.features.feature_bank.spectral_entropy"><code class="docutils literal notranslate"><span class="pre">spectral_entropy()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.features.feature_bank.spectral_hjorth_activity"><code class="docutils literal notranslate"><span class="pre">spectral_hjorth_activity()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.features.feature_bank.spectral_hjorth_complexity"><code class="docutils literal notranslate"><span class="pre">spectral_hjorth_complexity()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.features.feature_bank.spectral_hjorth_mobility"><code class="docutils literal notranslate"><span class="pre">spectral_hjorth_mobility()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.features.feature_bank.spectral_moment"><code class="docutils literal notranslate"><span class="pre">spectral_moment()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.features.feature_bank.spectral_root_total_power"><code class="docutils literal notranslate"><span class="pre">spectral_root_total_power()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.features.feature_bank.spectral_slope"><code class="docutils literal notranslate"><span class="pre">spectral_slope()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#submodules">Submodules</a></li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/api/eegdash.features.feature_bank.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2025–2025, EEG Dash Developers.
+      <br/>
+    
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

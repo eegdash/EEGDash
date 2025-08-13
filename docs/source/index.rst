@@ -35,16 +35,14 @@ research for machine learning and deep learning applications.
    .. grid-item-card:: 
       :class-card: logo-card
       .. image:: _static/logos/ucsd_white.png
-         :class: logo-img
 
    .. grid-item-card:: 
       :class-card: logo-card
       .. image:: _static/logos/bgu_white.png
-         :class: logo-img
 
 .. toctree::
    :hidden:
 
-   Installation <installation>
+   Install <install/install>
    API <api/modules.rst>
    Examples <generated/auto_examples/index>

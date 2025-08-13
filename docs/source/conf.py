@@ -22,7 +22,7 @@ exclude_patterns = []
 
 
 html_theme = "pydata_sphinx_theme"
-html_static_path = ["_static/"]
+html_static_path = ["_static"]
 
 html_sidebars = {
     "Installation": [],
@@ -102,9 +102,10 @@ html_theme_options = {
 html_favicon = "_static/eegdash_icon.png"
 
 from sphinx_gallery.sorting import ExplicitOrder, FileNameSortKey
+EX_DIR = "../../examples"  # relative to docs/source
 
 sphinx_gallery_conf = {
-    "examples_dirs": ["../../examples"],
+    "examples_dirs": [EX_DIR],
     "gallery_dirs": ["generated/auto_examples"],
     "nested_sections": False,
     "backreferences_dir": "gen_modules/backreferences",
@@ -120,15 +121,14 @@ sphinx_gallery_conf = {
         "# `pip install eegdash`\n"
         "%matplotlib inline"
     ),
-    "subsection_order": ExplicitOrder(
-        [
-            "../examples/core",
-            "../examples/eeg2025",
-        ]
-    ),
+    "subsection_order": ExplicitOrder([
+        f"{EX_DIR}/core",
+        f"{EX_DIR}/eeg2025",
+        "*",
+    ]),
     "within_subsection_order": FileNameSortKey,
 }
-
+html_css_files = ["custom.css"]
 sphinx_gallery_conf["binder"] = dict(
     org="sccn",
     repo="sccn.github.io/eegdash",

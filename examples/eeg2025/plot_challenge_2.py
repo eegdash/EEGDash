@@ -22,8 +22,8 @@ This tutorial is divided as follows:
 """
 
 ######################################################################
-# Loading the data
-# ----------------
+# 1. Loading the data
+# --------------------
 #
 
 import random
@@ -34,21 +34,21 @@ from braindecode.datasets.base import EEGWindowsDataset, BaseConcatDataset, Base
 
 
 ######################################################################
-# Define local path and (down)load the data
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# 2. Define local path and download the data
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #
 # In this challenge 2 example, we load the EEG 2025 release using EEG Dash and Braindecode,
 # we load all the public datasets available in the EEG 2025 release.
 
 # The first step is define the cache folder!
-cache_dir = Path("~/mne_data/eeg2025_competition").expanduser()
+cache_dir = (Path.home() / "mne_data" / "eeg_challenge_cache").resolve()
 
 # Creating the path if it does not exist
 cache_dir.mkdir(parents=True, exist_ok=True)
 
 # We define the list of releases to load.
 # Here, all releases are loaded, i.e., 1 to 11.
-release_list = ["R{}".format(i) for i in range(1, 11 + 1)]
+release_list = ["R{}".format(i) for i in [5]] #range(1, 11 + 1)]
 
 # For this tutorial, we will only load the "resting state" recording,
 # but you may use all available data.

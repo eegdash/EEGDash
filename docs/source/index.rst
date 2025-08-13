@@ -29,11 +29,21 @@ research for machine learning and deep learning applications.
 
     <h2 style="text-align: center;">Institutions</h2>
 
-.. image:: _static/logos/ucsd.png
-   :alt: University of California, San Diego (UCSD)
-   :class: logo mainlogo
-   :align: center
-   :scale: 50%
+.. list-table::
+   :width: 100%
+   :class: borderless
+
+   * - .. image:: _static/logos/ucsd.png
+         :alt: University of California, San Diego (UCSD)
+         :class: logo mainlogo
+         :align: center
+         :width: 100%
+         
+     - .. image:: _static/logos/bgu.png
+         :alt: Ben-Gurion University of the Negev (BGU)
+         :class: logo mainlogo
+         :align: center
+         :width: 100%
 
 .. toctree::
    :hidden:

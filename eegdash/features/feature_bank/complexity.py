@@ -71,7 +71,7 @@ def complexity_svd_entropy(x, m=10, tau=1):
 @FeaturePredecessor(*SIGNAL_PREDECESSORS)
 @univariate_feature
 @nb.njit(cache=True, fastmath=True)
-def complexity_lempel_ziv(x, threshold=None):
+def complexity_lempel_ziv(x, threshold=None, normalize=True):
     lzc = np.empty(x.shape[:-1])
     for i in np.ndindex(x.shape[:-1]):
         t = np.median(x[i]) if threshold is None else threshold
@@ -97,4 +97,6 @@ def complexity_lempel_ziv(x, threshold=None):
                     j, k, k_max = 0, 1, 1
                 else:
                     k = 1
+        if normalize:
+            lzc[i] *= np.log2(n) / n
     return lzc

@@ -1,4 +1,11 @@
-"""Tutorial Scratch."""
+# %% [markdown]
+""".. _scratch-tutorial:
+
+Scratch Tutorial
+================
+
+A minimal exploration script using EEGDash utilities.
+"""
 # raw = mne.io.read_raw_eeglab('./.eegdash_cache/sub-NDARDB033FW5_task-RestingState_eeg.set', preload=True)
 # for preprocessor in preprocessors:
 #     raw = preprocessor.apply(raw)

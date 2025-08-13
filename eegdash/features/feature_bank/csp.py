@@ -97,5 +97,5 @@ class CommonSpatialPattern(TrainableFeature):
                 + "all weights were filtered out."
             )
         proj = (self.transform_input(x) - self._mean) @ w
-        proj = proj.reshape(x.shape[0], x.shape[2], -1).mean(axis=1)
+        proj = proj.reshape(x.shape[0], x.shape[2], -1).var(axis=1)
         return {f"{i}": proj[:, i] for i in range(proj.shape[-1])}

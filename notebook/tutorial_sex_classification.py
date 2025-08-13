@@ -1,4 +1,8 @@
-"""# EEGDash example for sex classification
+# %% [markdown]
+""".. _sex-classification:
+
+Sex Classification Tutorial
+===========================
 
 The code below provides an example of using the *EEGDash* library in combination with PyTorch to develop a deep learning model for detecting sex in a collection of 136 subjects.
 

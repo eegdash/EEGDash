@@ -58,13 +58,13 @@ class EEGDashBaseDataset(BaseDataset):
         if s3_bucket:
             self.s3_bucket = s3_bucket
             self.s3_open_neuro = False
-            bids_root = self.cache_dir
             self.filecache = self.cache_dir / record["bidspath"]
         else:
             self.s3_bucket = self._AWS_BUCKET
             self.s3_open_neuro = True
-            bids_root = self.cache_dir / record["dataset"]
             self.filecache = self.cache_dir / record["bidspath"]
+
+        bids_root = self.cache_dir / record["dataset"]
 
         self.bidspath = BIDSPath(
             root=bids_root,
@@ -78,6 +78,7 @@ class EEGDashBaseDataset(BaseDataset):
         # Temporary fix for BIDS dependencies path
         # just to release to the competition
         if not self.s3_open_neuro:
+            self.bids_dependencies_original = self.bids_dependencies
             self.bids_dependencies = [
                 dep.split("/", 1)[1] for dep in self.bids_dependencies
             ]
@@ -111,8 +112,11 @@ class EEGDashBaseDataset(BaseDataset):
         filesystem = s3fs.S3FileSystem(
             anon=True, client_kwargs={"region_name": "us-east-2"}
         )
-        for dep in self.bids_dependencies:
+        for i, dep in enumerate(self.bids_dependencies):
             s3path = self.get_s3path(dep)
+            if not self.s3_open_neuro:
+                dep = self.bids_dependencies_original[i]
+
             filepath = self.cache_dir / dep
             # here, we download the dependency and it is fine
             # in the case of the competition.
@@ -207,7 +211,7 @@ class EEGDashBaseRaw(BaseRaw):
         metadata: dict[str, Any],
         preload: bool = False,
         *,
-        cache_dir: str = "./.eegdash_cache",
+        cache_dir: str = "~/eegdash_cache",
         bids_dependencies: list[str] = [],
         verbose: Any = None,
     ):

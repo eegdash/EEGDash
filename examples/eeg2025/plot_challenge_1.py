@@ -1,20 +1,48 @@
 """.. _tutorial-challenge-1:
 
-Challenge 1: Transfer Learning task
-=====================================
+Challenge 1: Transfer Learning (Contrast‑Change Detection, CCD)
+===============================================================
 
-# # Tutorial for Contrast-Change Detection (CCD) Task - EEG 2025 Competition
-# 
-# This tutorial demonstrates how to load EEG data for the contrast-change detection (CCD) task from the EEG 2025 competition, extract epochs, and calculate response times and correctness information. We'll use `EEGDash` and `braindecode`.
-# This tutorial does NOT address the use of `SuS` task for challenge 1.
-# 
-# ## Key Features:
-# - Load data for subject `NDARAG340ERT` from dataset `ds005507` (This data is available in the R3 minsets as well)
-# - Extract stimulus events (`left_target`, `right_target`) and calculate response times and correctness from button presses and feedback
-# - Epoch the data based on contrast trial start events
+This tutorial walks you through preparing **Challenge 1** data for the EEG 2025 competition.
+You will load a CCD recording from OpenNeuro, extract trial‑wise behavioral metadata
+(**stimulus side, correctness, response time**), epoch around contrast‑change onsets,
+and produce a :class:`braindecode.datasets.WindowsDataset` ready for training.
+
+Why this matters
+----------------
+Challenge 1 evaluates representations that **transfer across subjects, sessions, and sites**.
+Your pipeline should emphasize **robust, interpretable features** over brittle task‑specific hacks.
+
+What you’ll do
+--------------
+- Load subject ``NDARAG340ERT`` from OpenNeuro ``ds005507`` (also in the R3 minsets).
+- Read the BIDS ``events.tsv`` to access **stimulus**, **button press**, and **feedback** rows.
+- Compute **response time** and **correctness** per trial.
+- Epoch around **contrast‑change** onsets and attach the behavioral metadata.
+- Build a :class:`braindecode.datasets.WindowsDataset` for model training/evaluation.
+
+Prerequisites
+-------------
+- Packages: :mod:`eegdash`, :mod:`braindecode`, :mod:`mne`, :mod:`numpy`, :mod:`pandas`.
+- Data: a BIDS cache managed by EEGDash (it will download on first use).
+- Hardware: any modern CPU; a GPU is optional for later modeling steps.
+
+Notes
+-----
+- This tutorial **only** covers the CCD task for Challenge 1. The **SuS** task is not covered here.
+- Large models are allowed, but the emphasis is on **features that generalize** across cohorts.
+
+References
+----------
+- `OpenNeuro ds005507 (CCD) <https://openneuro.org/datasets/ds005507>`_
+- `EEGDash documentation <https://github.com/eegdash/eegdash>`_
+- `Braindecode documentation <https://braindecode.org/>`_
+
 """
+
 # %%
 import os
+from pathlib import Path
 import pandas as pd
 import numpy as np
 import mne
@@ -22,27 +50,30 @@ import matplotlib.pyplot as plt
 from eegdash import EEGDashDataset
 from braindecode.preprocessing import create_windows_from_events
 import warnings
-from IPython.display import display
 
 # Suppress warnings for cleaner output
 warnings.filterwarnings('ignore')
 
 
-# %% [markdown]
-# ## 1. Loading the Data
-# 
+#########################
+# 1. Loading the Data
+# --------------------
+#
 # We'll load the data for subject `NDARAG340ERT` from the `ds005507` dataset. `EEGDashDataset` will handle the download and preprocessing automatically.
 # 
 
 # %%
 # Load the dataset
-cache_dir = "~/.eegdash_cache"  # keep the cache in the home directory
+cache_dir = (Path.home() / "mne_data" / "eeg_challenge_cache").resolve()
+
 dataset_name = "ds005507"
 dataset = EEGDashDataset({
     "dataset": dataset_name, 
     "subject": "NDARAG340ERT",
     "task": "contrastChangeDetection", "run": 1,
-})
+},
+cache_dir=cache_dir
+)
 
 # Get the raw EEG data
 raw = dataset.datasets[0].raw
@@ -53,11 +84,12 @@ print(f"Number of channels: {len(raw.ch_names)}")
 print(f"Channel names: {raw.ch_names[:10]}...")  # Show first 10 channels
 
 
-# %% [markdown]
-# ## 2. Reading BIDS Events File with Additional Columns
+#######################################################
+# 2. Reading BIDS Events File with Additional Columns
+# ----------------------------------------------------
 # 
-# The power of BIDS-formatted datasets is that they include rich metadata in standardized formats. The events.tsv file contains additional columns like `feedback` that aren't available through MNE's annotation system. Let's read the BIDS events file directly using pandas to access ALL the columns: 
-# 
+# The power of BIDS-formatted datasets is that they include rich metadata in standardized formats. The events.tsv file contains additional columns like `feedback` that aren't available through MNE's annotation system. Let's read the BIDS events file directly using pandas to access ALL the columns:
+#
 
 # %%
 # The key insight: We can read the BIDS events.tsv file directly using pandas!
@@ -79,10 +111,10 @@ display(events_df.head(10))
 print(f"\nFeedback column unique values:")
 print(events_df['feedback'].value_counts())
 
-
-# %% [markdown]
-# ## 3. Calculate Response Times and Correctness from BIDS Events
-# 
+##############################################################
+# 3. Calculate Response Times and Correctness from BIDS Events
+# ------------------------------------------------------------
+#
 # Now we'll calculate response times and correctness by matching stimulus events with their corresponding button presses and feedback. This approach uses the temporal sequence of events in the BIDS file.
 # 
 
@@ -146,12 +178,12 @@ print(f"Incorrect responses: {stimulus_metadata['response_time'].notna().sum()-s
 print(f"Response time statistics:")
 print(stimulus_metadata['response_time'].describe())
 print(f"First few trials with calculated metrics:")
-display(stimulus_metadata[['onset', 'value', 'response_time', 'correct', 'response_type', 'contrast_trial_start']].head(8))
+print(stimulus_metadata[['onset', 'value', 'response_time', 'correct', 'response_type', 'contrast_trial_start']].head(8))
 
 
-# %% [markdown]
-# ## 4. Creating Epochs with Braindecode and BIDS Metadata
-# 
+##############################################################
+# 4. Creating Epochs with Braindecode and BIDS Metadata
+# ----------------------------------------------------- 
 # Now we'll create epochs using `braindecode`'s `create_windows_from_events`. According to the EEG 2025 challenge requirements, epochs should start from **contrast trial starts** and be **2 seconds long**. This epoching approach ensures we capture:
 # 
 # - The entire trial from contrast trial start (t=0)
@@ -162,7 +194,6 @@ display(stimulus_metadata[['onset', 'value', 'response_time', 'correct', 'respon
 # We'll use our enhanced metadata that includes the behavioral information extracted from the BIDS events file.
 # 
 
-# %%
 # Create epochs from contrast trial starts with 2-second duration as per EEG 2025 challenge
 # IMPORTANT: Only epoch trials that have valid behavioral data (stimulus + response)
 
@@ -230,7 +261,6 @@ print(f"Created {len(windows_dataset)} epochs with behavioral data")
 print(f"All epochs should now have valid stimulus and response information")
 
 
-# %% [markdown]
 # ## Conclusion
 # - The epoched data is now ready under `windows_dataset`.
 # - The response time is under `stimulus_metadata['response_time']`. (required for challenge 1 regression task)

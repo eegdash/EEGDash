@@ -48,6 +48,8 @@ dependencies = [
   "scipy",
   "tqdm",
   "xarray",
+  "h5io >= 0.2.4",
+  "pymatreader",
 ]
 
 [project.urls]

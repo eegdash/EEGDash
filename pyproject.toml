@@ -74,6 +74,7 @@ docs = [
   "sphinx_design",
   "sphinx_gallery",
   "sphinx_rtd_theme",
+  "sphinx-autoapi",
   "pydata-sphinx-theme",
   "numpydoc",
   "memory_profiler",

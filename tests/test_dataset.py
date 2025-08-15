@@ -96,3 +96,15 @@ def test_consuming_data_r5():
     )
     raw = dataset_obj.datasets[0].raw
     assert raw is not None
+
+
+@pytest.mark.parametrize("eeg_dash_instance", [None, EEGDash()])
+def test_eeg_dash_integration(eeg_dash_instance):
+    dataset_obj = EEGChallengeDataset(
+        release="R5",
+        query=dict(task="RestingState", subject="NDARAC350XUM"),
+        cache_dir=CACHE_DIR,
+        eeg_dash_instance=eeg_dash_instance,
+    )
+    raw = dataset_obj.datasets[0].raw
+    assert raw is not None

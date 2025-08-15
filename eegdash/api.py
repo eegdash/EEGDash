@@ -534,6 +534,7 @@ class EEGDashDataset(BaseConcatDataset):
         ],
         cache_dir: str = "~/eegdash_cache",
         s3_bucket: str | None = None,
+        eeg_dash_instance=None,
         **kwargs,
     ):
         """Create a new EEGDashDataset from a given query or local BIDS dataset directory
@@ -568,28 +569,50 @@ class EEGDashDataset(BaseConcatDataset):
         """
         self.cache_dir = cache_dir
         self.s3_bucket = s3_bucket
-        if query:
-            datasets = self.find_datasets(query, description_fields, **kwargs)
-        elif data_dir:
-            if isinstance(data_dir, str):
-                datasets = self.load_bids_dataset(
-                    dataset, data_dir, description_fields, s3_bucket
-                )
-            else:
-                assert len(data_dir) == len(dataset), (
-                    "Number of datasets and their directories must match"
-                )
-                datasets = []
-                for i, _ in enumerate(data_dir):
-                    datasets.extend(
-                        self.load_bids_dataset(
-                            dataset[i], data_dir[i], description_fields, s3_bucket
-                        )
+        self.eeg_dash = eeg_dash_instance or EEGDash()
+        _owns_client = eeg_dash_instance is None
+
+        try:
+            if query:
+                datasets = self.find_datasets(query, description_fields, **kwargs)
+            elif data_dir:
+                if isinstance(data_dir, str):
+                    datasets = self.load_bids_dataset(
+                        dataset, data_dir, description_fields, s3_bucket, **kwargs
                     )
+                else:
+                    assert len(data_dir) == len(dataset), (
+                        "Number of datasets and their directories must match"
+                    )
+                    datasets = []
+                    for i, _ in enumerate(data_dir):
+                        datasets.extend(
+                            self.load_bids_dataset(
+                                dataset[i],
+                                data_dir[i],
+                                description_fields,
+                                s3_bucket,
+                                **kwargs,
+                            )
+                        )
+            else:
+                raise ValueError(
+                    "Exactly one of 'query' or 'data_dir' must be provided."
+                )
+        finally:
+            # If we created the client, close it now that construction is done.
+            if _owns_client:
+                try:
+                    self.eeg_dash.close()
+                except Exception:
+                    # Don't let close errors break construction
+                    pass
 
         self.filesystem = S3FileSystem(
             anon=True, client_kwargs={"region_name": "us-east-2"}
         )
+
+        self.eeg_dash.close()
 
         super().__init__(datasets)
 
@@ -628,27 +651,23 @@ class EEGDashDataset(BaseConcatDataset):
             A list of EEGDashBaseDataset objects that match the query.
 
         """
-        eeg_dash_instance = EEGDash()
-        try:
-            datasets = []
-            for record in eeg_dash_instance.find(query):
-                description = {}
-                for field in description_fields:
-                    value = self.find_key_in_nested_dict(record, field)
-                    if value is not None:
-                        description[field] = value
-                datasets.append(
-                    EEGDashBaseDataset(
-                        record,
-                        self.cache_dir,
-                        self.s3_bucket,
-                        description=description,
-                        **kwargs,
-                    )
+        datasets: list[EEGDashBaseDataset] = []
+        for record in self.eeg_dash.find(query):
+            description = {}
+            for field in description_fields:
+                value = self.find_key_in_nested_dict(record, field)
+                if value is not None:
+                    description[field] = value
+            datasets.append(
+                EEGDashBaseDataset(
+                    record,
+                    self.cache_dir,
+                    self.s3_bucket,
+                    description=description,
+                    **kwargs,
                 )
-            return datasets
-        finally:
-            eeg_dash_instance.close()
+            )
+        return datasets
 
     def load_bids_dataset(
         self,
@@ -676,36 +695,28 @@ class EEGDashDataset(BaseConcatDataset):
             data_dir=data_dir,
             dataset=dataset,
         )
-        eeg_dash_instance = EEGDash()
-        try:
-            datasets = Parallel(n_jobs=-1, prefer="threads", verbose=1)(
-                delayed(self.get_base_dataset_from_bids_file)(
-                    bids_dataset=bids_dataset,
-                    bids_file=bids_file,
-                    eeg_dash_instance=eeg_dash_instance,
-                    s3_bucket=s3_bucket,
-                    description_fields=description_fields,
-                )
-                for bids_file in bids_dataset.get_files()
+        datasets = Parallel(n_jobs=-1, prefer="threads", verbose=1)(
+            delayed(self.get_base_dataset_from_bids_file)(
+                bids_dataset=bids_dataset,
+                bids_file=bids_file,
+                s3_bucket=s3_bucket,
+                description_fields=description_fields,
+                **kwargs,
             )
-            return datasets
-        finally:
-            eeg_dash_instance.close()
+            for bids_file in bids_dataset.get_files()
+        )
+        return datasets
 
     def get_base_dataset_from_bids_file(
         self,
-        bids_dataset: EEGBIDSDataset,
+        bids_dataset: "EEGBIDSDataset",
         bids_file: str,
-        eeg_dash_instance: EEGDash,
         s3_bucket: str | None,
         description_fields: list[str],
-    ) -> EEGDashBaseDataset:
-        """Instantiate a single EEGDashBaseDataset given a local BIDS file. Note
-        this does not actually load the data from disk, but will access the metadata.
-        """
-        record = eeg_dash_instance.load_eeg_attrs_from_bids_file(
-            bids_dataset, bids_file
-        )
+        **kwargs,
+    ) -> "EEGDashBaseDataset":
+        """Instantiate a single EEGDashBaseDataset given a local BIDS file (metadata only)."""
+        record = self.eeg_dash.load_eeg_attrs_from_bids_file(bids_dataset, bids_file)
         description = {}
         for field in description_fields:
             value = self.find_key_in_nested_dict(record, field)
@@ -716,4 +727,5 @@ class EEGDashDataset(BaseConcatDataset):
             self.cache_dir,
             s3_bucket,
             description=description,
+            **kwargs,
         )

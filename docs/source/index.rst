@@ -51,4 +51,5 @@ research for machine learning and deep learning applications.
 
    Install <install/install>
    API <api/modules.rst>
+   Dataset Summary <dataset_summary>
    Examples <generated/auto_examples/index>

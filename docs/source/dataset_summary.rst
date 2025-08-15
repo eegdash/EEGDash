@@ -7,11 +7,6 @@
 .. _data_summary:
 
 
-.. automodule:: eegdash.datasets
-
-.. currentmodule:: eegdash.datasets
-
-
 EEG Dash Datasets
 ==================
 

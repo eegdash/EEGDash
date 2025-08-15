@@ -9,21 +9,17 @@ APIDIR := $(SOURCEDIR)/api
 help:
 	@$(SPHINXBUILD) -M help "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
 
-.PHONY: apidoc
-apidoc:
-	@sphinx-apidoc -o "$(APIDIR)" "../$(PKG)" -f -e -M
-
 # Standard build runs examples
-html: apidoc
+html:
 
 # Fast build: do NOT execute examples (sphinx-gallery)
 .PHONY: html-noplot
-html-noplot: apidoc
-	@python prepare_summary_tables.py ../eegdash $(BUILDDIR)
+html-noplot: 
+	@python prepare_summary_tables.py ../eegdash/ $(BUILDDIR)
 	@$(SPHINXBUILD) -M html "$(SOURCEDIR)" "$(BUILDDIR)" \
 		$(SPHINXOPTS) -D sphinx_gallery_conf.plot_gallery=0 $(O)
 
-.PHONY: help apidoc
+.PHONY: help 
 Makefile: ;          
 
 %: Makefile

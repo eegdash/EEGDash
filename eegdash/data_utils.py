@@ -10,11 +10,12 @@ import numpy as np
 import pandas as pd
 import s3fs
 from bids import BIDSLayout
+from fsspec.callbacks import TqdmCallback
 from joblib import Parallel, delayed
 from mne._fiff.utils import _read_segments_file
 from mne.io import BaseRaw
 from mne_bids import BIDSPath
-from fsspec.callbacks import TqdmCallback
+
 from braindecode.datasets import BaseDataset
 
 logger = logging.getLogger("eegdash")
@@ -105,11 +106,16 @@ class EEGDashBaseDataset(BaseDataset):
             size=size,
             tqdm_kwargs=dict(
                 desc=f"Downloading {Path(self.s3file).name}",
-                unit="B", unit_scale=True, unit_divisor=1024,
-                dynamic_ncols=True, leave=True,
-                mininterval=0.2, smoothing=0.1, miniters=1,
+                unit="B",
+                unit_scale=True,
+                unit_divisor=1024,
+                dynamic_ncols=True,
+                leave=True,
+                mininterval=0.2,
+                smoothing=0.1,
+                miniters=1,
                 bar_format="{desc}: {percentage:3.0f}%|{bar}| {n_fmt}/{total_fmt} "
-                        "[{elapsed}<{remaining}, {rate_fmt}]",
+                "[{elapsed}<{remaining}, {rate_fmt}]",
             ),
         )
         filesystem.get(self.s3file, self.filecache, callback=callback)
@@ -140,15 +146,19 @@ class EEGDashBaseDataset(BaseDataset):
                     size=size,
                     tqdm_kwargs=dict(
                         desc=f"Downloading {Path(s3path).name}",
-                        unit="B", unit_scale=True, unit_divisor=1024,
-                        dynamic_ncols=True, leave=True,
-                        mininterval=0.2, smoothing=0.1, miniters=1,
+                        unit="B",
+                        unit_scale=True,
+                        unit_divisor=1024,
+                        dynamic_ncols=True,
+                        leave=True,
+                        mininterval=0.2,
+                        smoothing=0.1,
+                        miniters=1,
                         bar_format="{desc}: {percentage:3.0f}%|{bar}| {n_fmt}/{total_fmt} "
-                                "[{elapsed}<{remaining}, {rate_fmt}]",
+                        "[{elapsed}<{remaining}, {rate_fmt}]",
                     ),
                 )
                 filesystem.get(s3path, filepath, callback=callback)
-
 
     def get_raw_bids_args(self) -> dict[str, Any]:
         """Helper to restrict the metadata record to the fields needed to locate a BIDS

@@ -1,7 +1,5 @@
-from pathlib import Path
 import importlib.util
-
-import pytest
+from pathlib import Path
 
 
 class DummyBase:

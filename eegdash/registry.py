@@ -28,6 +28,7 @@ def register_openneuro_datasets(
     -------
     dict
         Mapping from class names to the generated classes.
+
     """
     if base_class is None:
         from .api import EEGDashDataset as base_class  # lazy import
@@ -46,13 +47,25 @@ def register_openneuro_datasets(
                 continue
             class_name = dataset_id.upper()
 
-            def __init__(self, cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, **kwargs):
+            def __init__(
+                self,
+                cache_dir: str,
+                query: dict | None = None,
+                s3_bucket: str | None = None,
+                **kwargs,
+            ):
                 q = {"dataset": self._dataset}
                 if query:
                     q.update(query)
-                super().__init__(query=q, cache_dir=cache_dir, s3_bucket=s3_bucket, **kwargs)
+                super().__init__(
+                    query=q, cache_dir=cache_dir, s3_bucket=s3_bucket, **kwargs
+                )
 
-            cls = type(class_name, (base_class,), {"_dataset": dataset_id, "__init__": __init__})
+            cls = type(
+                class_name,
+                (base_class,),
+                {"_dataset": dataset_id, "__init__": __init__},
+            )
             namespace[class_name] = cls
             registered[class_name] = cls
 

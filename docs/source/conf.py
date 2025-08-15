@@ -27,6 +27,7 @@ html_static_path = ["_static"]
 html_sidebars = {
     "Installation": [],
     "API": [],
+    "Dataset Summary": [],
     "Examples": [],
 }
 
@@ -108,9 +109,7 @@ html_theme_options = {
 }
 
 html_favicon = "_static/eegdash_icon.png"
-html_sidebars = {
-    "api": [],
-}
+html_sidebars = {"api": [], "dataset_summary": []}
 
 from sphinx_gallery.sorting import ExplicitOrder, FileNameSortKey
 

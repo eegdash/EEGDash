@@ -6,7 +6,7 @@
 
 Computation times
 =================
-**00:21.288** total execution time for 5 files **from all galleries**:
+**00:33.951** total execution time for 5 files **from all galleries**:
 
 .. container::
 
@@ -33,11 +33,11 @@ Computation times
      - Time
      - Mem (MB)
    * - :ref:`sphx_glr_generated_auto_examples_core_tutorial_feature_extractor_open_close_eye.py` (``../../examples/core/tutorial_feature_extractor_open_close_eye.py``)
-     - 00:11.461
-     - 1196.0
+     - 00:17.149
+     - 1221.5
    * - :ref:`sphx_glr_generated_auto_examples_core_tutorial_eoec.py` (``../../examples/core/tutorial_eoec.py``)
-     - 00:09.827
-     - 1318.7
+     - 00:16.801
+     - 1359.0
    * - :ref:`sphx_glr_generated_auto_examples_eeg2025_challenge_1.py` (``../../examples/eeg2025/challenge_1.py``)
      - 00:00.000
      - 0.0

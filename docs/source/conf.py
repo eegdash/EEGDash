@@ -1,6 +1,20 @@
-project = "eegdash"
-copyright = "2025, Arnaud Delorme"
+import os
+from datetime import datetime, timezone
+
+from sphinx_gallery.sorting import ExplicitOrder, FileNameSortKey
+
+import eegdash
+
+# -- Project information -----------------------------------------------------
+
+project = "EEG Dash"
+copyright = f"2025–{datetime.now(tz=timezone.utc).year}, {project} Developers"
 author = "Arnaud Delorme"
+release = eegdash.__version__
+version = ".".join(release.split(".")[:2])
+
+
+# -- General configuration ---------------------------------------------------
 
 extensions = [
     "sphinx.ext.autodoc",
@@ -14,78 +28,24 @@ extensions = [
     "sphinx.ext.githubpages",
     "sphinx.ext.napoleon",
     "sphinx_design",
+    # "autoapi.extension",
     "numpydoc",
     "sphinx_gallery.gen_gallery",
 ]
-templates_path = ["_templates"]
-exclude_patterns = []
 
+templates_path = ["_templates"]
+exclude_patterns = ["build", "Thumbs.db", ".DS_Store"]
+
+# -- Options for HTML output -------------------------------------------------
 
 html_theme = "pydata_sphinx_theme"
 html_static_path = ["_static"]
-
-html_sidebars = {
-    "Installation": [],
-    "API": [],
-    "Examples": [],
-}
-
 html_logo = "_static/eegdash_icon.svg"
-
-# -- Project information -----------------------------------------------------
-from datetime import datetime, timezone
-
-project = "EEG Dash"
+html_favicon = "_static/eegdash_icon.png"
 html_title = "EEG Dash"
 html_short_title = "EEG Dash"
+html_css_files = ["custom.css"]
 
-td = datetime.now(tz=timezone.utc)
-
-# We need to triage which date type we use so that incremental builds work
-# (Sphinx looks at variable changes and rewrites all files if some change)
-copyright = f"2025–{td.year}, {project} Developers"  # noqa: E501
-
-author = f"{project} developers"
-
-import eegdash
-
-release = eegdash.__version__
-# The full version, including alpha/beta/rc tags.
-version = ".".join(release.split(".")[:2])
-
-exclude_patterns = ["build", "Thumbs.db", ".DS_Store"]
-
-html_theme = "pydata_sphinx_theme"
-switcher_version_match = "dev" if release.endswith("dev0") else version
-
-autosummary_generate = True
-
-icon_links = [
-    {
-        "name": "GitHub",
-        "url": "https://github.com/sccn/EEGDash",
-        "icon": "fa-brands fa-github",
-        "type": "fontawesome",
-    },
-    {
-        "name": "PyPI",
-        "url": "https://pypi.org/project/eegdash/",
-        "icon": "fa-solid fa-box",
-        "type": "fontawesome",
-    },
-    {
-        "name": "Docs (Stable)",
-        "url": "https://sccn.github.io/EEGDash",
-        "icon": "fa-solid fa-book",
-        "type": "fontawesome",
-    },
-    {
-        "name": "Discord",
-        "url": "https://discord.gg/8jd7nVKwsc",
-        "icon": "fa-brands fa-discord",
-        "type": "fontawesome",
-    },
-]
 html_theme_options = {
     "icon_links_label": "External Links",  # for screen reader
     "use_edit_page_button": False,
@@ -95,7 +55,6 @@ html_theme_options = {
     "navigation_depth": 6,
     "show_toc_level": 1,
     "navbar_end": ["theme-switcher", "navbar-icon-links"],
-    "icon_links": icon_links,
     "footer_start": ["copyright"],
     "logo": {
         "image_light": "_static/eegdash_long.png",
@@ -105,17 +64,45 @@ html_theme_options = {
     "external_links": [
         {"name": "EEG2025 competition", "url": "https://eeg2025.github.io/"},
     ],
+    "icon_links": [
+        {
+            "name": "GitHub",
+            "url": "https://github.com/sccn/EEGDash",
+            "icon": "fa-brands fa-github",
+            "type": "fontawesome",
+        },
+        {
+            "name": "PyPI",
+            "url": "https://pypi.org/project/eegdash/",
+            "icon": "fa-solid fa-box",
+            "type": "fontawesome",
+        },
+        {
+            "name": "Docs (Stable)",
+            "url": "https://sccn.github.io/EEGDash",
+            "icon": "fa-solid fa-book",
+            "type": "fontawesome",
+        },
+        {
+            "name": "Discord",
+            "url": "https://discord.gg/8jd7nVKwsc",
+            "icon": "fa-brands fa-discord",
+            "type": "fontawesome",
+        },
+    ],
 }
 
-html_favicon = "_static/eegdash_icon.png"
-html_sidebars = {
-    "api": [],
-}
+html_sidebars = {"api": [], "dataset_summary": [], "installation": []}
 
-from sphinx_gallery.sorting import ExplicitOrder, FileNameSortKey
 
+# -- Extension configurations ------------------------------------------------
+
+
+# Numpydoc
+numpydoc_show_class_members = False
+
+# Sphinx Gallery
 EX_DIR = "../../examples"  # relative to docs/source
-
 sphinx_gallery_conf = {
     "examples_dirs": [EX_DIR],
     "gallery_dirs": ["generated/auto_examples"],
@@ -142,12 +129,14 @@ sphinx_gallery_conf = {
     ),
     "within_subsection_order": FileNameSortKey,
 }
-html_css_files = ["custom.css"]
-# sphinx_gallery_conf["binder"] = dict(
-#     org="sccn",
-#     repo="https://eeglab.org/EEGDash",
-#     branch="main",
-#     binderhub_url="https://mybinder.org",
-#     dependencies="binder/requirements.txt",
-#     use_jupyter_lab=True,
-# )
+
+# -- Custom Setup Function to fix the error -----------------------------------
+
+
+def setup(app):
+    """Create the back-references directory if it doesn't exist."""
+    backreferences_dir = os.path.join(
+        app.srcdir, sphinx_gallery_conf["backreferences_dir"]
+    )
+    if not os.path.exists(backreferences_dir):
+        os.makedirs(backreferences_dir)

@@ -53,7 +53,7 @@ jobs:
       - name: Create Docs
         run: |
           cd docs
-          pip install pandas
+          pip install -e .[docs]
           make html
 
       # New step to deploy the docs to the gh-pages branch

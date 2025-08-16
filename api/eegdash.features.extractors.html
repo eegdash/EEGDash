@@ -153,6 +153,13 @@
 
 
 <li class="nav-item ">
+  <a class="nav-link nav-internal" href="../dataset_summary.html">
+    Dataset Summary
+  </a>
+</li>
+
+
+<li class="nav-item ">
   <a class="nav-link nav-internal" href="../generated/auto_examples/index.html">
     Examples
   </a>
@@ -305,6 +312,13 @@
 
 
 <li class="nav-item ">
+  <a class="nav-link nav-internal" href="../dataset_summary.html">
+    Dataset Summary
+  </a>
+</li>
+
+
+<li class="nav-item ">
   <a class="nav-link nav-internal" href="../generated/auto_examples/index.html">
     Examples
   </a>
@@ -423,6 +437,7 @@
 <li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.html">eegdash.dataset module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.mongodb.html">eegdash.mongodb module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.preprocessing.html">eegdash.preprocessing module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.registry.html">eegdash.registry module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.utils.html">eegdash.utils module</a></li>
 </ul>
 </details></li>
@@ -498,26 +513,6 @@
 <dt class="sig sig-object py" id="eegdash.features.extractors.BivariateFeature">
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">eegdash.features.extractors.</span></span><span class="sig-name descname"><span class="pre">BivariateFeature</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel_pair_format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'{}&lt;&gt;{}'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.features.extractors.BivariateFeature" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#eegdash.features.extractors.MultivariateFeature" title="eegdash.features.extractors.MultivariateFeature"><code class="xref py py-class docutils literal notranslate"><span class="pre">MultivariateFeature</span></code></a></p>
-<p class="rubric">Methods</p>
-<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
-<tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__call__</span></code>(x[, _ch_names])</p></td>
-<td><p>Call self as a function.</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="pst-scrollable-table-container"><table class="table">
-<tbody>
-<tr class="row-odd"><td><p><strong>feature_channel_names</strong></p></td>
-<td></td>
-</tr>
-<tr class="row-even"><td><p><strong>get_pair_iterators</strong></p></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-</div>
 <dl class="py method">
 <dt class="sig sig-object py" id="eegdash.features.extractors.BivariateFeature.feature_channel_names">
 <span class="sig-name descname"><span class="pre">feature_channel_names</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ch_names</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.features.extractors.BivariateFeature.feature_channel_names" title="Link to this definition">#</a></dt>
@@ -534,26 +529,6 @@
 <dt class="sig sig-object py" id="eegdash.features.extractors.DirectedBivariateFeature">
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">eegdash.features.extractors.</span></span><span class="sig-name descname"><span class="pre">DirectedBivariateFeature</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel_pair_format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'{}&lt;&gt;{}'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.features.extractors.DirectedBivariateFeature" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#eegdash.features.extractors.BivariateFeature" title="eegdash.features.extractors.BivariateFeature"><code class="xref py py-class docutils literal notranslate"><span class="pre">BivariateFeature</span></code></a></p>
-<p class="rubric">Methods</p>
-<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
-<tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__call__</span></code>(x[, _ch_names])</p></td>
-<td><p>Call self as a function.</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="pst-scrollable-table-container"><table class="table">
-<tbody>
-<tr class="row-odd"><td><p><strong>feature_channel_names</strong></p></td>
-<td></td>
-</tr>
-<tr class="row-even"><td><p><strong>get_pair_iterators</strong></p></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-</div>
 <dl class="py method">
 <dt class="sig sig-object py" id="eegdash.features.extractors.DirectedBivariateFeature.get_pair_iterators">
 <em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_pair_iterators</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.features.extractors.DirectedBivariateFeature.get_pair_iterators" title="Link to this definition">#</a></dt>
@@ -565,32 +540,6 @@
 <dt class="sig sig-object py" id="eegdash.features.extractors.FeatureExtractor">
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">eegdash.features.extractors.</span></span><span class="sig-name descname"><span class="pre">FeatureExtractor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">feature_extractors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Callable</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">preprocess_kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.features.extractors.FeatureExtractor" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#eegdash.features.extractors.TrainableFeature" title="eegdash.features.extractors.TrainableFeature"><code class="xref py py-class docutils literal notranslate"><span class="pre">TrainableFeature</span></code></a></p>
-<p class="rubric">Methods</p>
-<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
-<tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__call__</span></code>(*x[, _batch_size, _ch_names])</p></td>
-<td><p>Call self as a function.</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="pst-scrollable-table-container"><table class="table">
-<tbody>
-<tr class="row-odd"><td><p><strong>clear</strong></p></td>
-<td></td>
-</tr>
-<tr class="row-even"><td><p><strong>fit</strong></p></td>
-<td></td>
-</tr>
-<tr class="row-odd"><td><p><strong>partial_fit</strong></p></td>
-<td></td>
-</tr>
-<tr class="row-even"><td><p><strong>preprocess</strong></p></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-</div>
 <dl class="py method">
 <dt class="sig sig-object py" id="eegdash.features.extractors.FeatureExtractor.clear">
 <span class="sig-name descname"><span class="pre">clear</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.features.extractors.FeatureExtractor.clear" title="Link to this definition">#</a></dt>
@@ -617,23 +566,6 @@
 <dt class="sig sig-object py" id="eegdash.features.extractors.MultivariateFeature">
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">eegdash.features.extractors.</span></span><span class="sig-name descname"><span class="pre">MultivariateFeature</span></span><a class="headerlink" href="#eegdash.features.extractors.MultivariateFeature" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p class="rubric">Methods</p>
-<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
-<tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__call__</span></code>(x[, _ch_names])</p></td>
-<td><p>Call self as a function.</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="pst-scrollable-table-container"><table class="table">
-<tbody>
-<tr class="row-odd"><td><p><strong>feature_channel_names</strong></p></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-</div>
 <dl class="py method">
 <dt class="sig sig-object py" id="eegdash.features.extractors.MultivariateFeature.feature_channel_names">
 <span class="sig-name descname"><span class="pre">feature_channel_names</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ch_names</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.features.extractors.MultivariateFeature.feature_channel_names" title="Link to this definition">#</a></dt>
@@ -645,29 +577,6 @@
 <dt class="sig sig-object py" id="eegdash.features.extractors.TrainableFeature">
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">eegdash.features.extractors.</span></span><span class="sig-name descname"><span class="pre">TrainableFeature</span></span><a class="headerlink" href="#eegdash.features.extractors.TrainableFeature" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></p>
-<p class="rubric">Methods</p>
-<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
-<tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__call__</span></code>(*args, **kwargs)</p></td>
-<td><p>Call self as a function.</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="pst-scrollable-table-container"><table class="table">
-<tbody>
-<tr class="row-odd"><td><p><strong>clear</strong></p></td>
-<td></td>
-</tr>
-<tr class="row-even"><td><p><strong>fit</strong></p></td>
-<td></td>
-</tr>
-<tr class="row-odd"><td><p><strong>partial_fit</strong></p></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-</div>
 <dl class="py method">
 <dt class="sig sig-object py" id="eegdash.features.extractors.TrainableFeature.clear">
 <em class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">clear</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.features.extractors.TrainableFeature.clear" title="Link to this definition">#</a></dt>
@@ -689,23 +598,6 @@
 <dt class="sig sig-object py" id="eegdash.features.extractors.UnivariateFeature">
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">eegdash.features.extractors.</span></span><span class="sig-name descname"><span class="pre">UnivariateFeature</span></span><a class="headerlink" href="#eegdash.features.extractors.UnivariateFeature" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#eegdash.features.extractors.MultivariateFeature" title="eegdash.features.extractors.MultivariateFeature"><code class="xref py py-class docutils literal notranslate"><span class="pre">MultivariateFeature</span></code></a></p>
-<p class="rubric">Methods</p>
-<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
-<tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__call__</span></code>(x[, _ch_names])</p></td>
-<td><p>Call self as a function.</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="pst-scrollable-table-container"><table class="table">
-<tbody>
-<tr class="row-odd"><td><p><strong>feature_channel_names</strong></p></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-</div>
 <dl class="py method">
 <dt class="sig sig-object py" id="eegdash.features.extractors.UnivariateFeature.feature_channel_names">
 <span class="sig-name descname"><span class="pre">feature_channel_names</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ch_names</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.features.extractors.UnivariateFeature.feature_channel_names" title="Link to this definition">#</a></dt>

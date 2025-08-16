@@ -1,0 +1,7 @@
+eegdash.registry module
+=======================
+
+.. automodule:: eegdash.registry
+   :members:
+   :show-inheritance:
+   :undoc-members:

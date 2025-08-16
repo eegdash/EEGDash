@@ -153,6 +153,13 @@
 
 
 <li class="nav-item ">
+  <a class="nav-link nav-internal" href="../dataset_summary.html">
+    Dataset Summary
+  </a>
+</li>
+
+
+<li class="nav-item ">
   <a class="nav-link nav-internal" href="../generated/auto_examples/index.html">
     Examples
   </a>
@@ -305,6 +312,13 @@
 
 
 <li class="nav-item ">
+  <a class="nav-link nav-internal" href="../dataset_summary.html">
+    Dataset Summary
+  </a>
+</li>
+
+
+<li class="nav-item ">
   <a class="nav-link nav-internal" href="../generated/auto_examples/index.html">
     Examples
   </a>
@@ -423,6 +437,7 @@
 <li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.html">eegdash.dataset module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.mongodb.html">eegdash.mongodb module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.preprocessing.html">eegdash.preprocessing module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.registry.html">eegdash.registry module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.utils.html">eegdash.utils module</a></li>
 </ul>
 </details></li>
@@ -508,77 +523,7 @@ a pandas DataFrame with additional description.</p>
 <li><p><strong>target_transform</strong> (<em>callable</em><em> | </em><em>None</em>) – Optional function to call on targets before returning them.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Attributes<span class="colon">:</span></dt>
-<dd class="field-even"><dl class="simple">
-<dt><strong>cummulative_sizes</strong></dt><dd></dd>
-<dt><strong>description</strong></dt><dd></dd>
-<dt><strong>target_transform</strong></dt><dd></dd>
-<dt><strong>transform</strong></dt><dd></dd>
 </dl>
-</dd>
-</dl>
-<p class="rubric">Methods</p>
-<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#eegdash.features.datasets.FeaturesConcatDataset.get_metadata" title="eegdash.features.datasets.FeaturesConcatDataset.get_metadata"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_metadata</span></code></a>()</p></td>
-<td><p>Concatenate the metadata and description of the wrapped Epochs.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#eegdash.features.datasets.FeaturesConcatDataset.save" title="eegdash.features.datasets.FeaturesConcatDataset.save"><code class="xref py py-obj docutils literal notranslate"><span class="pre">save</span></code></a>(path[, overwrite, offset])</p></td>
-<td><p>Save datasets to files by creating one subdirectory for each dataset: path/     0/         0-feat.parquet         metadata_df.pkl         description.json         raw-info.fif (if raw info was saved)         raw_preproc_kwargs.json (if raws were preprocessed)         window_kwargs.json (if this is a windowed dataset)         window_preproc_kwargs.json  (if windows were preprocessed)         features_kwargs.json     1/         1-feat.parquet         metadata_df.pkl         description.json         raw-info.fif (if raw info was saved)         raw_preproc_kwargs.json (if raws were preprocessed)         window_kwargs.json (if this is a windowed dataset)         window_preproc_kwargs.json  (if windows were preprocessed)         features_kwargs.json</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_description</span></code>(description[, overwrite])</p></td>
-<td><p>Update (add or overwrite) the dataset description.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#eegdash.features.datasets.FeaturesConcatDataset.split" title="eegdash.features.datasets.FeaturesConcatDataset.split"><code class="xref py py-obj docutils literal notranslate"><span class="pre">split</span></code></a>(by)</p></td>
-<td><p>Split the dataset based on information listed in its description.</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="pst-scrollable-table-container"><table class="table">
-<tbody>
-<tr class="row-odd"><td><p><strong>count</strong></p></td>
-<td></td>
-</tr>
-<tr class="row-even"><td><p><strong>cumsum</strong></p></td>
-<td></td>
-</tr>
-<tr class="row-odd"><td><p><strong>drop</strong></p></td>
-<td></td>
-</tr>
-<tr class="row-even"><td><p><strong>dropna</strong></p></td>
-<td></td>
-</tr>
-<tr class="row-odd"><td><p><strong>fillna</strong></p></td>
-<td></td>
-</tr>
-<tr class="row-even"><td><p><strong>interpolate</strong></p></td>
-<td></td>
-</tr>
-<tr class="row-odd"><td><p><strong>join</strong></p></td>
-<td></td>
-</tr>
-<tr class="row-even"><td><p><strong>mean</strong></p></td>
-<td></td>
-</tr>
-<tr class="row-odd"><td><p><strong>replace</strong></p></td>
-<td></td>
-</tr>
-<tr class="row-even"><td><p><strong>std</strong></p></td>
-<td></td>
-</tr>
-<tr class="row-odd"><td><p><strong>to_dataframe</strong></p></td>
-<td></td>
-</tr>
-<tr class="row-even"><td><p><strong>var</strong></p></td>
-<td></td>
-</tr>
-<tr class="row-odd"><td><p><strong>zscore</strong></p></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-</div>
 <dl class="py method">
 <dt class="sig sig-object py" id="eegdash.features.datasets.FeaturesConcatDataset.count">
 <span class="sig-name descname"><span class="pre">count</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">numeric_only</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.features.datasets.FeaturesConcatDataset.count" title="Link to this definition">#</a></dt>
@@ -744,22 +689,7 @@ target. The target is unique for the dataset, and is obtained through the
 <li><p><strong>transform</strong> (<em>callable</em><em> | </em><em>None</em>) – On-the-fly transform applied to the example before it is returned.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Attributes<span class="colon">:</span></dt>
-<dd class="field-even"><dl class="simple">
-<dt><strong>description</strong></dt><dd></dd>
-<dt><strong>transform</strong></dt><dd></dd>
 </dl>
-</dd>
-</dl>
-<p class="rubric">Methods</p>
-<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
-<tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_description</span></code>(description[, overwrite])</p></td>
-<td><p>Update (add or overwrite) the dataset description.</p></td>
-</tr>
-</tbody>
-</table>
-</div>
 </dd></dl>
 
 </section>

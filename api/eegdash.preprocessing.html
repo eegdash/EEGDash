@@ -52,7 +52,7 @@
     <link rel="icon" href="../_static/eegdash_icon.png"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="eegdash.utils module" href="eegdash.utils.html" />
+    <link rel="next" title="eegdash.registry module" href="eegdash.registry.html" />
     <link rel="prev" title="eegdash.mongodb module" href="eegdash.mongodb.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -148,6 +148,13 @@
 <li class="nav-item current active">
   <a class="nav-link nav-internal" href="modules.html">
     API
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../dataset_summary.html">
+    Dataset Summary
   </a>
 </li>
 
@@ -305,6 +312,13 @@
 
 
 <li class="nav-item ">
+  <a class="nav-link nav-internal" href="../dataset_summary.html">
+    Dataset Summary
+  </a>
+</li>
+
+
+<li class="nav-item ">
   <a class="nav-link nav-internal" href="../generated/auto_examples/index.html">
     Examples
   </a>
@@ -423,6 +437,7 @@
 <li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.html">eegdash.dataset module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.mongodb.html">eegdash.mongodb module</a></li>
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">eegdash.preprocessing module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.registry.html">eegdash.registry module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.utils.html">eegdash.utils module</a></li>
 </ul>
 </details></li>
@@ -497,23 +512,6 @@
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Preprocessor</span></code></p>
 <p>Preprocessor to reannotate the raw data for eyes open and eyes closed events.</p>
 <p>This processor is designed for HBN datasets.</p>
-<p class="rubric">Methods</p>
-<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#eegdash.preprocessing.hbn_ec_ec_reannotation.transform" title="eegdash.preprocessing.hbn_ec_ec_reannotation.transform"><code class="xref py py-obj docutils literal notranslate"><span class="pre">transform</span></code></a>(raw)</p></td>
-<td><p>Reannotate the raw data to create new events for eyes open and eyes closed</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="pst-scrollable-table-container"><table class="table">
-<tbody>
-<tr class="row-odd"><td><p><strong>apply</strong></p></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-</div>
 <dl class="py method">
 <dt class="sig sig-object py" id="eegdash.preprocessing.hbn_ec_ec_reannotation.transform">
 <span class="sig-name descname"><span class="pre">transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">raw</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.preprocessing.hbn_ec_ec_reannotation.transform" title="Link to this definition">#</a></dt>
@@ -553,11 +551,11 @@ the original events, and replaces the existing annotations with these new events
       </div>
     </a>
     <a class="right-next"
-       href="eegdash.utils.html"
+       href="eegdash.registry.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">eegdash.utils module</p>
+        <p class="prev-next-title">eegdash.registry module</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

@@ -153,6 +153,13 @@
 
 
 <li class="nav-item ">
+  <a class="nav-link nav-internal" href="../dataset_summary.html">
+    Dataset Summary
+  </a>
+</li>
+
+
+<li class="nav-item ">
   <a class="nav-link nav-internal" href="../generated/auto_examples/index.html">
     Examples
   </a>
@@ -305,6 +312,13 @@
 
 
 <li class="nav-item ">
+  <a class="nav-link nav-internal" href="../dataset_summary.html">
+    Dataset Summary
+  </a>
+</li>
+
+
+<li class="nav-item ">
   <a class="nav-link nav-internal" href="../generated/auto_examples/index.html">
     Examples
   </a>
@@ -423,6 +437,7 @@
 <li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.html">eegdash.dataset module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.mongodb.html">eegdash.mongodb module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.preprocessing.html">eegdash.preprocessing module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.registry.html">eegdash.registry module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.utils.html">eegdash.utils module</a></li>
 </ul>
 </details></li>
@@ -502,32 +517,6 @@ functions so users can import them directly from
 <dt class="sig sig-object py" id="eegdash.features.feature_bank.CoherenceFeatureExtractor">
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.</span></span><span class="sig-name descname"><span class="pre">CoherenceFeatureExtractor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">feature_extractors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Callable</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">preprocess_kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.features.feature_bank.CoherenceFeatureExtractor" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="eegdash.features.extractors.html#eegdash.features.extractors.FeatureExtractor" title="eegdash.features.extractors.FeatureExtractor"><code class="xref py py-class docutils literal notranslate"><span class="pre">FeatureExtractor</span></code></a></p>
-<p class="rubric">Methods</p>
-<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
-<tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__call__</span></code>(*x[, _batch_size, _ch_names])</p></td>
-<td><p>Call self as a function.</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="pst-scrollable-table-container"><table class="table">
-<tbody>
-<tr class="row-odd"><td><p><strong>clear</strong></p></td>
-<td></td>
-</tr>
-<tr class="row-even"><td><p><strong>fit</strong></p></td>
-<td></td>
-</tr>
-<tr class="row-odd"><td><p><strong>partial_fit</strong></p></td>
-<td></td>
-</tr>
-<tr class="row-even"><td><p><strong>preprocess</strong></p></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-</div>
 <dl class="py method">
 <dt class="sig sig-object py" id="eegdash.features.feature_bank.CoherenceFeatureExtractor.preprocess">
 <span class="sig-name descname"><span class="pre">preprocess</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.features.feature_bank.CoherenceFeatureExtractor.preprocess" title="Link to this definition">#</a></dt>
@@ -539,35 +528,6 @@ functions so users can import them directly from
 <dt class="sig sig-object py" id="eegdash.features.feature_bank.CommonSpatialPattern">
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.</span></span><span class="sig-name descname"><span class="pre">CommonSpatialPattern</span></span><a class="headerlink" href="#eegdash.features.feature_bank.CommonSpatialPattern" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="eegdash.features.extractors.html#eegdash.features.extractors.TrainableFeature" title="eegdash.features.extractors.TrainableFeature"><code class="xref py py-class docutils literal notranslate"><span class="pre">TrainableFeature</span></code></a></p>
-<p class="rubric">Methods</p>
-<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
-<tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__call__</span></code>(x[, n_select, crit_select])</p></td>
-<td><p>Call self as a function.</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="pst-scrollable-table-container"><table class="table">
-<tbody>
-<tr class="row-odd"><td><p><strong>clear</strong></p></td>
-<td></td>
-</tr>
-<tr class="row-even"><td><p><strong>feature_kind</strong></p></td>
-<td></td>
-</tr>
-<tr class="row-odd"><td><p><strong>fit</strong></p></td>
-<td></td>
-</tr>
-<tr class="row-even"><td><p><strong>partial_fit</strong></p></td>
-<td></td>
-</tr>
-<tr class="row-odd"><td><p><strong>transform_input</strong></p></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-</div>
 <dl class="py method">
 <dt class="sig sig-object py" id="eegdash.features.feature_bank.CommonSpatialPattern.clear">
 <span class="sig-name descname"><span class="pre">clear</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.features.feature_bank.CommonSpatialPattern.clear" title="Link to this definition">#</a></dt>
@@ -599,32 +559,6 @@ functions so users can import them directly from
 <dt class="sig sig-object py" id="eegdash.features.feature_bank.DBSpectralFeatureExtractor">
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.</span></span><span class="sig-name descname"><span class="pre">DBSpectralFeatureExtractor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">feature_extractors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Callable</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">preprocess_kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.features.feature_bank.DBSpectralFeatureExtractor" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="eegdash.features.extractors.html#eegdash.features.extractors.FeatureExtractor" title="eegdash.features.extractors.FeatureExtractor"><code class="xref py py-class docutils literal notranslate"><span class="pre">FeatureExtractor</span></code></a></p>
-<p class="rubric">Methods</p>
-<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
-<tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__call__</span></code>(*x[, _batch_size, _ch_names])</p></td>
-<td><p>Call self as a function.</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="pst-scrollable-table-container"><table class="table">
-<tbody>
-<tr class="row-odd"><td><p><strong>clear</strong></p></td>
-<td></td>
-</tr>
-<tr class="row-even"><td><p><strong>fit</strong></p></td>
-<td></td>
-</tr>
-<tr class="row-odd"><td><p><strong>partial_fit</strong></p></td>
-<td></td>
-</tr>
-<tr class="row-even"><td><p><strong>preprocess</strong></p></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-</div>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="eegdash.features.feature_bank.DBSpectralFeatureExtractor.parent_extractor_type">
 <span class="sig-name descname"><span class="pre">parent_extractor_type</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(&lt;class</span> <span class="pre">'eegdash.features.feature_bank.spectral.SpectralFeatureExtractor'&gt;,)</span></em><a class="headerlink" href="#eegdash.features.feature_bank.DBSpectralFeatureExtractor.parent_extractor_type" title="Link to this definition">#</a></dt>
@@ -641,32 +575,6 @@ functions so users can import them directly from
 <dt class="sig sig-object py" id="eegdash.features.feature_bank.EntropyFeatureExtractor">
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.</span></span><span class="sig-name descname"><span class="pre">EntropyFeatureExtractor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">feature_extractors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Callable</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">preprocess_kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.features.feature_bank.EntropyFeatureExtractor" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="eegdash.features.extractors.html#eegdash.features.extractors.FeatureExtractor" title="eegdash.features.extractors.FeatureExtractor"><code class="xref py py-class docutils literal notranslate"><span class="pre">FeatureExtractor</span></code></a></p>
-<p class="rubric">Methods</p>
-<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
-<tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__call__</span></code>(*x[, _batch_size, _ch_names])</p></td>
-<td><p>Call self as a function.</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="pst-scrollable-table-container"><table class="table">
-<tbody>
-<tr class="row-odd"><td><p><strong>clear</strong></p></td>
-<td></td>
-</tr>
-<tr class="row-even"><td><p><strong>fit</strong></p></td>
-<td></td>
-</tr>
-<tr class="row-odd"><td><p><strong>partial_fit</strong></p></td>
-<td></td>
-</tr>
-<tr class="row-even"><td><p><strong>preprocess</strong></p></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-</div>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="eegdash.features.feature_bank.EntropyFeatureExtractor.parent_extractor_type">
 <span class="sig-name descname"><span class="pre">parent_extractor_type</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(&lt;class</span> <span class="pre">'eegdash.features.extractors.FeatureExtractor'&gt;,</span> <span class="pre">&lt;class</span> <span class="pre">'eegdash.features.feature_bank.signal.HilbertFeatureExtractor'&gt;)</span></em><a class="headerlink" href="#eegdash.features.feature_bank.EntropyFeatureExtractor.parent_extractor_type" title="Link to this definition">#</a></dt>
@@ -683,32 +591,6 @@ functions so users can import them directly from
 <dt class="sig sig-object py" id="eegdash.features.feature_bank.HilbertFeatureExtractor">
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.</span></span><span class="sig-name descname"><span class="pre">HilbertFeatureExtractor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">feature_extractors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Callable</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">preprocess_kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.features.feature_bank.HilbertFeatureExtractor" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="eegdash.features.extractors.html#eegdash.features.extractors.FeatureExtractor" title="eegdash.features.extractors.FeatureExtractor"><code class="xref py py-class docutils literal notranslate"><span class="pre">FeatureExtractor</span></code></a></p>
-<p class="rubric">Methods</p>
-<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
-<tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__call__</span></code>(*x[, _batch_size, _ch_names])</p></td>
-<td><p>Call self as a function.</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="pst-scrollable-table-container"><table class="table">
-<tbody>
-<tr class="row-odd"><td><p><strong>clear</strong></p></td>
-<td></td>
-</tr>
-<tr class="row-even"><td><p><strong>fit</strong></p></td>
-<td></td>
-</tr>
-<tr class="row-odd"><td><p><strong>partial_fit</strong></p></td>
-<td></td>
-</tr>
-<tr class="row-even"><td><p><strong>preprocess</strong></p></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-</div>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="eegdash.features.feature_bank.HilbertFeatureExtractor.parent_extractor_type">
 <span class="sig-name descname"><span class="pre">parent_extractor_type</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(&lt;class</span> <span class="pre">'eegdash.features.extractors.FeatureExtractor'&gt;,)</span></em><a class="headerlink" href="#eegdash.features.feature_bank.HilbertFeatureExtractor.parent_extractor_type" title="Link to this definition">#</a></dt>
@@ -725,32 +607,6 @@ functions so users can import them directly from
 <dt class="sig sig-object py" id="eegdash.features.feature_bank.NormalizedSpectralFeatureExtractor">
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.</span></span><span class="sig-name descname"><span class="pre">NormalizedSpectralFeatureExtractor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">feature_extractors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Callable</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">preprocess_kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.features.feature_bank.NormalizedSpectralFeatureExtractor" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="eegdash.features.extractors.html#eegdash.features.extractors.FeatureExtractor" title="eegdash.features.extractors.FeatureExtractor"><code class="xref py py-class docutils literal notranslate"><span class="pre">FeatureExtractor</span></code></a></p>
-<p class="rubric">Methods</p>
-<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
-<tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__call__</span></code>(*x[, _batch_size, _ch_names])</p></td>
-<td><p>Call self as a function.</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="pst-scrollable-table-container"><table class="table">
-<tbody>
-<tr class="row-odd"><td><p><strong>clear</strong></p></td>
-<td></td>
-</tr>
-<tr class="row-even"><td><p><strong>fit</strong></p></td>
-<td></td>
-</tr>
-<tr class="row-odd"><td><p><strong>partial_fit</strong></p></td>
-<td></td>
-</tr>
-<tr class="row-even"><td><p><strong>preprocess</strong></p></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-</div>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="eegdash.features.feature_bank.NormalizedSpectralFeatureExtractor.parent_extractor_type">
 <span class="sig-name descname"><span class="pre">parent_extractor_type</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(&lt;class</span> <span class="pre">'eegdash.features.feature_bank.spectral.SpectralFeatureExtractor'&gt;,)</span></em><a class="headerlink" href="#eegdash.features.feature_bank.NormalizedSpectralFeatureExtractor.parent_extractor_type" title="Link to this definition">#</a></dt>
@@ -767,32 +623,6 @@ functions so users can import them directly from
 <dt class="sig sig-object py" id="eegdash.features.feature_bank.SpectralFeatureExtractor">
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.</span></span><span class="sig-name descname"><span class="pre">SpectralFeatureExtractor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">feature_extractors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Callable</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">preprocess_kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.features.feature_bank.SpectralFeatureExtractor" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="eegdash.features.extractors.html#eegdash.features.extractors.FeatureExtractor" title="eegdash.features.extractors.FeatureExtractor"><code class="xref py py-class docutils literal notranslate"><span class="pre">FeatureExtractor</span></code></a></p>
-<p class="rubric">Methods</p>
-<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
-<tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__call__</span></code>(*x[, _batch_size, _ch_names])</p></td>
-<td><p>Call self as a function.</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="pst-scrollable-table-container"><table class="table">
-<tbody>
-<tr class="row-odd"><td><p><strong>clear</strong></p></td>
-<td></td>
-</tr>
-<tr class="row-even"><td><p><strong>fit</strong></p></td>
-<td></td>
-</tr>
-<tr class="row-odd"><td><p><strong>partial_fit</strong></p></td>
-<td></td>
-</tr>
-<tr class="row-even"><td><p><strong>preprocess</strong></p></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-</div>
 <dl class="py method">
 <dt class="sig sig-object py" id="eegdash.features.feature_bank.SpectralFeatureExtractor.preprocess">
 <span class="sig-name descname"><span class="pre">preprocess</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.features.feature_bank.SpectralFeatureExtractor.preprocess" title="Link to this definition">#</a></dt>

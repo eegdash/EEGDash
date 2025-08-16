@@ -26,4 +26,5 @@ Submodules
    eegdash.dataset
    eegdash.mongodb
    eegdash.preprocessing
+   eegdash.registry
    eegdash.utils

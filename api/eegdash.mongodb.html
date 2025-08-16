@@ -153,6 +153,13 @@
 
 
 <li class="nav-item ">
+  <a class="nav-link nav-internal" href="../dataset_summary.html">
+    Dataset Summary
+  </a>
+</li>
+
+
+<li class="nav-item ">
   <a class="nav-link nav-internal" href="../generated/auto_examples/index.html">
     Examples
   </a>
@@ -305,6 +312,13 @@
 
 
 <li class="nav-item ">
+  <a class="nav-link nav-internal" href="../dataset_summary.html">
+    Dataset Summary
+  </a>
+</li>
+
+
+<li class="nav-item ">
   <a class="nav-link nav-internal" href="../generated/auto_examples/index.html">
     Examples
   </a>
@@ -423,6 +437,7 @@
 <li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.html">eegdash.dataset module</a></li>
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">eegdash.mongodb module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.preprocessing.html">eegdash.preprocessing module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.registry.html">eegdash.registry module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.utils.html">eegdash.utils module</a></li>
 </ul>
 </details></li>
@@ -496,18 +511,6 @@
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">eegdash.mongodb.</span></span><span class="sig-name descname"><span class="pre">MongoConnectionManager</span></span><a class="headerlink" href="#eegdash.mongodb.MongoConnectionManager" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Singleton class to manage MongoDB client connections.</p>
-<p class="rubric">Methods</p>
-<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#eegdash.mongodb.MongoConnectionManager.close_all" title="eegdash.mongodb.MongoConnectionManager.close_all"><code class="xref py py-obj docutils literal notranslate"><span class="pre">close_all</span></code></a>()</p></td>
-<td><p>Close all MongoDB client connections.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#eegdash.mongodb.MongoConnectionManager.get_client" title="eegdash.mongodb.MongoConnectionManager.get_client"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_client</span></code></a>(connection_string[, is_staging])</p></td>
-<td><p>Get or create a MongoDB client for the given connection string and staging flag.</p></td>
-</tr>
-</tbody>
-</table>
-</div>
 <dl class="py method">
 <dt class="sig sig-object py" id="eegdash.mongodb.MongoConnectionManager.close_all">
 <em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">close_all</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.mongodb.MongoConnectionManager.close_all" title="Link to this definition">#</a></dt>

@@ -153,6 +153,13 @@
 
 
 <li class="nav-item ">
+  <a class="nav-link nav-internal" href="../dataset_summary.html">
+    Dataset Summary
+  </a>
+</li>
+
+
+<li class="nav-item ">
   <a class="nav-link nav-internal" href="../generated/auto_examples/index.html">
     Examples
   </a>
@@ -305,6 +312,13 @@
 
 
 <li class="nav-item ">
+  <a class="nav-link nav-internal" href="../dataset_summary.html">
+    Dataset Summary
+  </a>
+</li>
+
+
+<li class="nav-item ">
   <a class="nav-link nav-internal" href="../generated/auto_examples/index.html">
     Examples
   </a>
@@ -423,6 +437,7 @@
 <li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.html">eegdash.dataset module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.mongodb.html">eegdash.mongodb module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.preprocessing.html">eegdash.preprocessing module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.registry.html">eegdash.registry module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.utils.html">eegdash.utils module</a></li>
 </ul>
 </details></li>
@@ -506,69 +521,6 @@ interactions with the BIDS dataset, such as parsing the metadata.</p>
 </ul>
 </dd>
 </dl>
-<p class="rubric">Methods</p>
-<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#eegdash.data_utils.EEGBIDSDataset.channel_labels" title="eegdash.data_utils.EEGBIDSDataset.channel_labels"><code class="xref py py-obj docutils literal notranslate"><span class="pre">channel_labels</span></code></a>(data_filepath)</p></td>
-<td><p>Get a list of channel labels for the given data file path.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#eegdash.data_utils.EEGBIDSDataset.channel_tsv" title="eegdash.data_utils.EEGBIDSDataset.channel_tsv"><code class="xref py py-obj docutils literal notranslate"><span class="pre">channel_tsv</span></code></a>(data_filepath)</p></td>
-<td><p>Get BIDS channels.tsv metadata for the given data file path, as a dictionary of lists and/or single values.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#eegdash.data_utils.EEGBIDSDataset.channel_types" title="eegdash.data_utils.EEGBIDSDataset.channel_types"><code class="xref py py-obj docutils literal notranslate"><span class="pre">channel_types</span></code></a>(data_filepath)</p></td>
-<td><p>Get a list of channel types for the given data file path.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#eegdash.data_utils.EEGBIDSDataset.check_eeg_dataset" title="eegdash.data_utils.EEGBIDSDataset.check_eeg_dataset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_eeg_dataset</span></code></a>()</p></td>
-<td><p>Check if the dataset is EEG.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#eegdash.data_utils.EEGBIDSDataset.eeg_json" title="eegdash.data_utils.EEGBIDSDataset.eeg_json"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eeg_json</span></code></a>(data_filepath)</p></td>
-<td><p>Get BIDS eeg.json metadata for the given data file path.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#eegdash.data_utils.EEGBIDSDataset.get_bids_file_attribute" title="eegdash.data_utils.EEGBIDSDataset.get_bids_file_attribute"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_bids_file_attribute</span></code></a>(attribute, data_filepath)</p></td>
-<td><p>Retrieve a specific attribute from the BIDS file metadata applicable to the provided recording file path.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#eegdash.data_utils.EEGBIDSDataset.get_bids_file_inheritance" title="eegdash.data_utils.EEGBIDSDataset.get_bids_file_inheritance"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_bids_file_inheritance</span></code></a>(path, basename, ...)</p></td>
-<td><p>Get all file paths that apply to the basename file in the specified directory and that end with the specified suffix, recursively searching parent directories (following the BIDS inheritance principle in the order of lowest level first).</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#eegdash.data_utils.EEGBIDSDataset.get_bids_metadata_files" title="eegdash.data_utils.EEGBIDSDataset.get_bids_metadata_files"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_bids_metadata_files</span></code></a>(filepath, ...)</p></td>
-<td><p>Retrieve all metadata file paths that apply to a given data file path and that end with a specific suffix (following the BIDS inheritance principle).</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#eegdash.data_utils.EEGBIDSDataset.get_files" title="eegdash.data_utils.EEGBIDSDataset.get_files"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_files</span></code></a>()</p></td>
-<td><p>Get all EEG recording file paths (with valid extensions) in the BIDS folder.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#eegdash.data_utils.EEGBIDSDataset.get_files_with_extension_parallel" title="eegdash.data_utils.EEGBIDSDataset.get_files_with_extension_parallel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_files_with_extension_parallel</span></code></a>(directory)</p></td>
-<td><p>Efficiently scan a directory and its subdirectories for files that end with the given extension.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#eegdash.data_utils.EEGBIDSDataset.get_property_from_filename" title="eegdash.data_utils.EEGBIDSDataset.get_property_from_filename"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_property_from_filename</span></code></a>(property, filename)</p></td>
-<td><p>Parse a property out of a BIDS-compliant filename.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#eegdash.data_utils.EEGBIDSDataset.get_recordings" title="eegdash.data_utils.EEGBIDSDataset.get_recordings"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_recordings</span></code></a>(layout)</p></td>
-<td><p>Get a list of all EEG recording files in the BIDS layout.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#eegdash.data_utils.EEGBIDSDataset.get_relative_bidspath" title="eegdash.data_utils.EEGBIDSDataset.get_relative_bidspath"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_relative_bidspath</span></code></a>(filename)</p></td>
-<td><p>Make the given file path relative to the BIDS directory.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#eegdash.data_utils.EEGBIDSDataset.load_and_preprocess_raw" title="eegdash.data_utils.EEGBIDSDataset.load_and_preprocess_raw"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_and_preprocess_raw</span></code></a>(raw_file[, preprocess])</p></td>
-<td><p>Utility function to load a raw data file with MNE and apply some simple (hardcoded) preprocessing and return as a numpy array.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#eegdash.data_utils.EEGBIDSDataset.merge_json_inheritance" title="eegdash.data_utils.EEGBIDSDataset.merge_json_inheritance"><code class="xref py py-obj docutils literal notranslate"><span class="pre">merge_json_inheritance</span></code></a>(json_files)</p></td>
-<td><p>Internal helper to merge list of json files found by get_bids_file_inheritance, expecting the order (from left to right) is from lowest level to highest level, and return a merged dictionary</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#eegdash.data_utils.EEGBIDSDataset.num_times" title="eegdash.data_utils.EEGBIDSDataset.num_times"><code class="xref py py-obj docutils literal notranslate"><span class="pre">num_times</span></code></a>(data_filepath)</p></td>
-<td><p>Get the approximate number of time points in the EEG recording based on the BIDS metadata.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#eegdash.data_utils.EEGBIDSDataset.resolve_bids_json" title="eegdash.data_utils.EEGBIDSDataset.resolve_bids_json"><code class="xref py py-obj docutils literal notranslate"><span class="pre">resolve_bids_json</span></code></a>(json_files)</p></td>
-<td><p>Resolve the BIDS JSON files and return a dictionary of the resolved values.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#eegdash.data_utils.EEGBIDSDataset.scan_directory" title="eegdash.data_utils.EEGBIDSDataset.scan_directory"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scan_directory</span></code></a>(directory, extension)</p></td>
-<td><p>Return a list of file paths that end with the given extension in the specified directory.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#eegdash.data_utils.EEGBIDSDataset.subject_participant_tsv" title="eegdash.data_utils.EEGBIDSDataset.subject_participant_tsv"><code class="xref py py-obj docutils literal notranslate"><span class="pre">subject_participant_tsv</span></code></a>(data_filepath)</p></td>
-<td><p>Get BIDS participants.tsv record for the subject to which the given file path corresponds, as a dictionary.</p></td>
-</tr>
-</tbody>
-</table>
-</div>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="eegdash.data_utils.EEGBIDSDataset.ALLOWED_FILE_FORMAT">
 <span class="sig-name descname"><span class="pre">ALLOWED_FILE_FORMAT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['eeglab',</span> <span class="pre">'brainvision',</span> <span class="pre">'biosemi',</span> <span class="pre">'european']</span></em><a class="headerlink" href="#eegdash.data_utils.EEGBIDSDataset.ALLOWED_FILE_FORMAT" title="Link to this definition">#</a></dt>
@@ -778,34 +730,6 @@ path corresponds, as a dictionary.</p>
 <p>A single EEG recording hosted on AWS S3 and cached locally upon first access.</p>
 <p>This is a subclass of braindecode’s BaseDataset, which can consequently be used in
 conjunction with the preprocessing and training pipelines of braindecode.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Attributes<span class="colon">:</span></dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>description</strong></dt><dd></dd>
-<dt><a class="reference internal" href="#eegdash.data_utils.EEGDashBaseDataset.raw" title="eegdash.data_utils.EEGDashBaseDataset.raw"><code class="xref py py-obj docutils literal notranslate"><span class="pre">raw</span></code></a></dt><dd><p>Return the MNE Raw object for this recording.</p>
-</dd>
-<dt><strong>transform</strong></dt><dd></dd>
-</dl>
-</dd>
-</dl>
-<p class="rubric">Methods</p>
-<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#eegdash.data_utils.EEGDashBaseDataset.check_and_get_raw" title="eegdash.data_utils.EEGDashBaseDataset.check_and_get_raw"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_and_get_raw</span></code></a>()</p></td>
-<td><p>Download the S3 file and BIDS dependencies if not already cached.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#eegdash.data_utils.EEGDashBaseDataset.get_raw_bids_args" title="eegdash.data_utils.EEGDashBaseDataset.get_raw_bids_args"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_raw_bids_args</span></code></a>()</p></td>
-<td><p>Helper to restrict the metadata record to the fields needed to locate a BIDS recording.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#eegdash.data_utils.EEGDashBaseDataset.get_s3path" title="eegdash.data_utils.EEGDashBaseDataset.get_s3path"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_s3path</span></code></a>(filepath)</p></td>
-<td><p>Helper to form an AWS S3 URI for the given relative filepath.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_description</span></code>(description[, overwrite])</p></td>
-<td><p>Update (add or overwrite) the dataset description.</p></td>
-</tr>
-</tbody>
-</table>
-</div>
 <dl class="py method">
 <dt class="sig sig-object py" id="eegdash.data_utils.EEGDashBaseDataset.check_and_get_raw">
 <span class="sig-name descname"><span class="pre">check_and_get_raw</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#eegdash.data_utils.EEGDashBaseDataset.check_and_get_raw" title="Link to this definition">#</a></dt>
@@ -859,201 +783,6 @@ alongside the main recording file.</p></li>
 <dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">mne.io.Raw</span></code></dt><dd><p>Documentation of attributes and methods.</p>
 </dd>
 </dl>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Attributes<span class="colon">:</span></dt>
-<dd class="field-odd"><dl class="simple">
-<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">annotations</span></code></dt><dd><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Annotations</span></code> for marking segments of data.</p>
-</dd>
-<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">ch_names</span></code></dt><dd><p>Channel names.</p>
-</dd>
-<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">compensation_grade</span></code></dt><dd><p>The current gradient compensation grade.</p>
-</dd>
-<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">duration</span></code></dt><dd><p>Duration of the data in seconds.</p>
-</dd>
-<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">filenames</span></code></dt><dd><p>The filenames used.</p>
-</dd>
-<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">first_samp</span></code></dt><dd><p>The first data sample.</p>
-</dd>
-<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">first_time</span></code></dt><dd><p>The first time point (including first_samp but not meas_date).</p>
-</dd>
-<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">last_samp</span></code></dt><dd><p>The last data sample.</p>
-</dd>
-<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">n_times</span></code></dt><dd><p>Number of time points.</p>
-</dd>
-<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">proj</span></code></dt><dd><p>Whether or not projections are active.</p>
-</dd>
-<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">times</span></code></dt><dd><p>Time points.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-<p class="rubric">Methods</p>
-<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
-<tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_channels</span></code>(add_list[, force_update_info])</p></td>
-<td><p>Append new channels from other MNE objects to the instance.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_events</span></code>(events[, stim_channel, replace])</p></td>
-<td><p>Add events to stim channel.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_proj</span></code>(projs[, remove_existing, verbose])</p></td>
-<td><p>Add SSP projection vectors.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_reference_channels</span></code>(ref_channels)</p></td>
-<td><p>Add reference channels to data that consists of all zeros.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">anonymize</span></code>([daysback, keep_his, verbose])</p></td>
-<td><p>Anonymize measurement information in place.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">append</span></code>(raws[, preload])</p></td>
-<td><p>Concatenate raw instances as if they were continuous.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">apply_function</span></code>(fun[, picks, dtype, n_jobs, ...])</p></td>
-<td><p>Apply a function to a subset of channels.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">apply_gradient_compensation</span></code>(grade[, verbose])</p></td>
-<td><p>Apply CTF gradient compensation.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">apply_hilbert</span></code>([picks, envelope, n_jobs, ...])</p></td>
-<td><p>Compute analytic signal or envelope for a subset of channels/vertices.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">apply_proj</span></code>([verbose])</p></td>
-<td><p>Apply the signal space projection (SSP) operators to the data.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">close</span></code>()</p></td>
-<td><p>Clean up the object.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_psd</span></code>([method, fmin, fmax, tmin, ...])</p></td>
-<td><p>Perform spectral analysis on sensor data.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_tfr</span></code>(method, freqs, *[, tmin, tmax, ...])</p></td>
-<td><p>Compute a time-frequency representation of sensor data.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">copy</span></code>()</p></td>
-<td><p>Return copy of Raw instance.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">crop</span></code>([tmin, tmax, include_tmax, verbose])</p></td>
-<td><p>Crop raw data file.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">crop_by_annotations</span></code>([annotations, verbose])</p></td>
-<td><p>Get crops of raw data file for selected annotations.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">del_proj</span></code>([idx])</p></td>
-<td><p>Remove SSP projection vector.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">describe</span></code>([data_frame])</p></td>
-<td><p>Describe channels (name, type, descriptive statistics).</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">drop_channels</span></code>(ch_names[, on_missing])</p></td>
-<td><p>Drop channel(s).</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">export</span></code>(fname[, fmt, physical_range, ...])</p></td>
-<td><p>Export Raw to external formats.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">filter</span></code>(l_freq, h_freq[, picks, ...])</p></td>
-<td><p>Filter a subset of channels/vertices.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_channel_types</span></code>([picks, unique, only_data_chs])</p></td>
-<td><p>Get a list of channel type for each channel.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_data</span></code>([picks, start, stop, ...])</p></td>
-<td><p>Get data in the given range.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_montage</span></code>()</p></td>
-<td><p>Get a DigMontage from instance.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">interpolate_bads</span></code>([reset_bads, mode, origin, ...])</p></td>
-<td><p>Interpolate bad MEG and EEG channels.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">interpolate_to</span></code>(sensors[, origin, method, reg])</p></td>
-<td><p>Interpolate EEG data onto a new montage.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_bad_channels</span></code>([bad_file, force, verbose])</p></td>
-<td><p>Mark channels as bad from a text file.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_data</span></code>([verbose])</p></td>
-<td><p>Load raw data.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">notch_filter</span></code>(freqs[, picks, filter_length, ...])</p></td>
-<td><p>Notch filter a subset of channels.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">pick</span></code>(picks[, exclude, verbose])</p></td>
-<td><p>Pick a subset of channels.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">pick_channels</span></code>(ch_names[, ordered, verbose])</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">pick_types</span></code>([meg, eeg, stim, eog, ecg, emg, ...])</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot</span></code>([events, duration, start, n_channels, ...])</p></td>
-<td><p>Plot raw data.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_projs_topomap</span></code>([ch_type, sensors, ...])</p></td>
-<td><p>Plot SSP vector.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_psd</span></code>([fmin, fmax, tmin, tmax, picks, ...])</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_psd_topo</span></code>([tmin, tmax, fmin, fmax, ...])</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_psd_topomap</span></code>([bands, tmin, tmax, ...])</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_sensors</span></code>([kind, ch_type, title, ...])</p></td>
-<td><p>Plot sensor positions.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">rename_channels</span></code>(mapping[, allow_duplicates, ...])</p></td>
-<td><p>Rename channels.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">reorder_channels</span></code>(ch_names)</p></td>
-<td><p>Reorder channels.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">resample</span></code>(sfreq, *[, npad, window, ...])</p></td>
-<td><p>Resample all channels.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">rescale</span></code>(scalings, *[, verbose])</p></td>
-<td><p>Rescale channels.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">save</span></code>(fname[, picks, tmin, tmax, ...])</p></td>
-<td><p>Save raw data to file.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">savgol_filter</span></code>(h_freq[, verbose])</p></td>
-<td><p>Filter the data using Savitzky-Golay polynomial method.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_annotations</span></code>(annotations[, emit_warning, ...])</p></td>
-<td><p>Setter for annotations.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_channel_types</span></code>(mapping, *[, ...])</p></td>
-<td><p>Specify the sensor types of channels.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_eeg_reference</span></code>([ref_channels, ...])</p></td>
-<td><p>Specify which reference to use for EEG data.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_meas_date</span></code>(meas_date)</p></td>
-<td><p>Set the measurement start date.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_montage</span></code>(montage[, match_case, ...])</p></td>
-<td><p>Set EEG/sEEG/ECoG/DBS/fNIRS channel positions and digitization points.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">time_as_index</span></code>(times[, use_rounding, origin])</p></td>
-<td><p>Convert time to indices.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_data_frame</span></code>([picks, index, scalings, ...])</p></td>
-<td><p>Export data in tabular structure as a pandas DataFrame.</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="pst-scrollable-table-container"><table class="table">
-<tbody>
-<tr class="row-odd"><td><p><strong>get_s3path</strong></p></td>
-<td></td>
-</tr>
-</tbody>
-</table>
 </div>
 <dl class="py method">
 <dt class="sig sig-object py" id="eegdash.data_utils.EEGDashBaseRaw.get_s3path">

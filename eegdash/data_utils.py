@@ -2,10 +2,12 @@ import json
 import logging
 import os
 import re
+import warnings
 from pathlib import Path
 from typing import Any
 
 import mne
+import mne_bids
 import numpy as np
 import pandas as pd
 import s3fs
@@ -174,7 +176,16 @@ class EEGDashBaseDataset(BaseDataset):
                 self._download_dependencies()
             self._download_s3()
         if self._raw is None:
-            self._raw = mne.io.read_raw(fname=self.bidspath, verbose=False)
+            # capturing any warnings
+            # to-do: remove this once is fixed on the mne-bids side.
+            with warnings.catch_warnings(record=True) as w:
+                self._raw = mne_bids.read_raw_bids(
+                    bids_path=self.bidspath, verbose="ERROR"
+                )
+                for warning in w:
+                    logger.warning(
+                        f"Warning while reading BIDS file: {warning.message}"
+                    )
 
     # === BaseDataset and PyTorch Dataset interface ===
 

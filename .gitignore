@@ -39,3 +39,4 @@ examples/data
 .DS_Store
 
 data/
+*.json

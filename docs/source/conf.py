@@ -28,7 +28,7 @@ extensions = [
     "sphinx.ext.githubpages",
     "sphinx.ext.napoleon",
     "sphinx_design",
-    "autoapi.extension",
+    # "autoapi.extension",
     "numpydoc",
     "sphinx_gallery.gen_gallery",
 ]
@@ -97,19 +97,6 @@ html_sidebars = {"api": [], "dataset_summary": [], "installation": []}
 
 # -- Extension configurations ------------------------------------------------
 
-# AutoAPI
-autoapi_dirs = ["../../eegdash"]
-autoapi_ignore = ["**/test_*.py", "**/migrations/*", "**/features/*"]
-
-# Autodoc
-autodoc_default_options = {
-    "members": True,
-    "undoc-members": True,
-    "inherited-members": True,
-    "show-inheritance": True,
-}
-autodoc_mock_imports = ["torch", "braindecode", "mne", "s3fs", "boto3"]
-autodoc_typehints = "description"
 
 # Numpydoc
 numpydoc_show_class_members = False

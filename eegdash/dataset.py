@@ -1,4 +1,7 @@
+from pathlib import Path
+
 from .api import EEGDashDataset
+from .registry import register_openneuro_datasets
 
 RELEASE_TO_OPENNEURO_DATASET_MAP = {
     "R11": "ds005516",
@@ -67,3 +70,13 @@ class EEGChallengeDataset(EEGDashDataset):
             s3_bucket=f"{s3_bucket}/{release}_L100",
             **kwargs,
         )
+
+
+registered_classes = register_openneuro_datasets(
+    summary_file=Path(__file__).with_name("dataset_summary.csv"),
+    base_class=EEGDashDataset,
+    namespace=globals(),
+)
+
+
+__all__ = ["EEGChallengeDataset"] + list(registered_classes.keys())

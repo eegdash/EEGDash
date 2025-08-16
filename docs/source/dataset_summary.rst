@@ -5,7 +5,9 @@
 :html_theme.sidebar_primary.remove:
 
 .. _data_summary:
+.. automodule:: eegdash.dataset
 
+.. currentmodule:: eegdash.dataset
 
 EEG Dash Datasets
 ==================

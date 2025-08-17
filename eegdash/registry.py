@@ -58,6 +58,8 @@ def register_openneuro_datasets(
             init = make_init(dataset_id)
             init.__doc__ = f"""Create an instance for OpenNeuro dataset ``{dataset_id}``.
 
+            {markdown_table(row[1:])}
+
             Parameters
             ----------
             cache_dir : str
@@ -90,3 +92,18 @@ def register_openneuro_datasets(
                     ns_all.append(class_name)
 
     return registered
+
+
+def markdown_table(rows: list[str]) -> str:
+    """Create a Markdown table from a list of strings."""
+    if not rows:
+        return ""
+
+    # Create the header
+    header = "| " + " | ".join(rows[0].split(",")) + " |"
+    separator = "| " + " | ".join(["---"] * len(rows[0].split(","))) + " |"
+
+    # Create the body
+    body = "\n".join("| " + " | ".join(row.split(",")) + " |" for row in rows[1:])
+
+    return f"{header}\n{separator}\n{body}\n"

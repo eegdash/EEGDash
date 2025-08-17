@@ -128,3 +128,10 @@ lines_between_sections = 1
 testpaths        = ["tests"]
 python_files     = ["test_*.py", "*_test.py"]
 python_functions = ["test_*"]
+
+[tool.setuptools]
+py-modules = []
+include-package-data = true
+
+[tool.setuptools.package-data]
+eegdash = ["dataset_summary.csv"]

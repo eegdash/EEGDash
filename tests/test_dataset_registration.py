@@ -16,6 +16,7 @@ def test_register_openneuro_datasets(tmp_path: Path):
     summary.write_text(
         "\n".join(
             [
+                "dataset_id,num_subjects,num_sessions,num_runs,num_channels,sampling_rate,duration",
                 "ds002718,18,18,1,74,250,14.844",
                 "ds000001,1,1,1,1,1,1",
             ]

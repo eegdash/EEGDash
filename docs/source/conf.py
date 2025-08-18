@@ -96,7 +96,7 @@ html_sidebars = {"api": [], "dataset_summary": [], "installation": []}
 
 
 # -- Extension configurations ------------------------------------------------
-
+autoclass_content = "both"
 
 # Numpydoc
 numpydoc_show_class_members = False

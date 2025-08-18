@@ -521,8 +521,8 @@ class EEGDashDataset(BaseConcatDataset):
     def __init__(
         self,
         query: dict | None = None,
-        data_dir: str | list | None = None,
-        dataset: str | list | None = None,
+        cache_dir: str = "~/eegdash_cache",
+        dataset: str | None = None,
         description_fields: list[str] = [
             "subject",
             "session",
@@ -532,8 +532,8 @@ class EEGDashDataset(BaseConcatDataset):
             "gender",
             "sex",
         ],
-        cache_dir: str = "~/eegdash_cache",
         s3_bucket: str | None = None,
+        data_dir: str | None = None,
         eeg_dash_instance=None,
         **kwargs,
     ):
@@ -546,19 +546,18 @@ class EEGDashDataset(BaseConcatDataset):
         query : dict | None
             Optionally a dictionary that specifies the query to be executed; see
             EEGDash.find() for details on the query format.
-        data_dir : str | list[str] | None
-            Optionally a string or a list of strings specifying one or more local
-            BIDS dataset directories from which to load the EEG data files. Exactly one
+        cache_dir : str
+            A directory where the dataset will be cached locally.
+        data_dir : str | None
+            Optionally a string specifying a local BIDS dataset directory from which to load the EEG data files. Exactly one
             of query or data_dir must be provided.
-        dataset : str | list[str] | None
-            If data_dir is given, a name or list of names for for the dataset(s) to be loaded.
+        dataset : str | None
+            If data_dir is given, a name for the dataset to be loaded.
         description_fields : list[str]
             A list of fields to be extracted from the dataset records
             and included in the returned data description(s). Examples are typical
             subject metadata fields such as "subject", "session", "run", "task", etc.;
             see also data_config.description_fields for the default set of fields.
-        cache_dir : str
-            A directory where the dataset will be cached locally.
         s3_bucket : str | None
             An optional S3 bucket URI (e.g., "s3://mybucket") to use instead of the
             default OpenNeuro bucket for loading data files
@@ -652,7 +651,10 @@ class EEGDashDataset(BaseConcatDataset):
 
         """
         datasets: list[EEGDashBaseDataset] = []
-        for record in self.eeg_dash.find(query):
+
+        records = self.eeg_dash.find(query)
+
+        for record in records:
             description = {}
             for field in description_fields:
                 value = self.find_key_in_nested_dict(record, field)

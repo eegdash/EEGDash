@@ -730,6 +730,18 @@ path corresponds, as a dictionary.</p>
 <p>A single EEG recording hosted on AWS S3 and cached locally upon first access.</p>
 <p>This is a subclass of braindecode’s BaseDataset, which can consequently be used in
 conjunction with the preprocessing and training pipelines of braindecode.</p>
+<p>Create a new EEGDashBaseDataset instance. Users do not usually need to call this
+directly – instead use the EEGDashDataset class to load a collection of these
+recordings from a local BIDS folder or using a database query.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>record</strong> (<em>dict</em>) – A fully resolved metadata record for the data to load.</p></li>
+<li><p><strong>cache_dir</strong> (<em>str</em>) – A local directory where the data will be cached.</p></li>
+<li><p><strong>kwargs</strong> (<em>dict</em>) – Additional keyword arguments to pass to the BaseDataset constructor.</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="eegdash.data_utils.EEGDashBaseDataset.check_and_get_raw">
 <span class="sig-name descname"><span class="pre">check_and_get_raw</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#eegdash.data_utils.EEGDashBaseDataset.check_and_get_raw" title="Link to this definition">#</a></dt>
@@ -784,6 +796,7 @@ alongside the main recording file.</p></li>
 </dd>
 </dl>
 </div>
+<p>Get to work with S3 endpoint first, no caching</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="eegdash.data_utils.EEGDashBaseRaw.get_s3path">
 <span class="sig-name descname"><span class="pre">get_s3path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filepath</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.data_utils.EEGDashBaseRaw.get_s3path" title="Link to this definition">#</a></dt>

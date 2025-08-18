@@ -507,6 +507,24 @@
 <dt class="sig sig-object py" id="eegdash.EEGChallengeDataset">
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">eegdash.</span></span><span class="sig-name descname"><span class="pre">EEGChallengeDataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">release</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cache_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">query</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s3_bucket</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'s3://nmdatasets/NeurIPS25'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.EEGChallengeDataset" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="eegdash.api.html#eegdash.api.EEGDashDataset" title="eegdash.api.EEGDashDataset"><code class="xref py py-class docutils literal notranslate"><span class="pre">EEGDashDataset</span></code></a></p>
+<p>Create a new EEGDashDataset from a given query or local BIDS dataset directory
+and dataset name. An EEGDashDataset is pooled collection of EEGDashBaseDataset
+instances (individual recordings) and is a subclass of braindecode’s BaseConcatDataset.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>release</strong> (<em>str</em>) – Release name. Can be one of [“R1”, …, “R11”]</p></li>
+<li><p><strong>query</strong> (<em>dict</em><em> | </em><em>None</em>) – Optionally a dictionary that specifies a query to be executed,
+in addition to the dataset (automatically inferred from the release argument).
+See EEGDash.find() for details on the query format.</p></li>
+<li><p><strong>cache_dir</strong> (<em>str</em>) – A directory where the dataset will be cached locally.</p></li>
+<li><p><strong>s3_bucket</strong> (<em>str</em><em> | </em><em>None</em>) – An optional S3 bucket URI to use instead of the
+default OpenNeuro bucket for loading data files.</p></li>
+<li><p><strong>kwargs</strong> (<em>dict</em>) – Additional keyword arguments to be passed to the EEGDashDataset
+constructor.</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py class">
@@ -520,6 +538,22 @@ update EEG data records.</p>
 <p>While this class provides basic support for loading EEG data, please see
 the EEGDashDataset class for a more complete way to retrieve and work with full
 datasets.</p>
+<p>Create new instance of the EEGDash Database client.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>is_public</strong> (<em>bool</em>) – Whether to connect to the public MongoDB database; if False, connect to a
+private database instance as per the DB_CONNECTION_STRING env variable
+(or .env file entry).</p></li>
+<li><p><strong>is_staging</strong> (<em>bool</em>) – If True, use staging MongoDB database (“eegdashstaging”); otherwise use the
+production database (“eegdash”).</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">eegdash</span> <span class="o">=</span> <span class="n">EEGDash</span><span class="p">()</span>
+</pre></div>
+</div>
 <dl class="py method">
 <dt class="sig sig-object py" id="eegdash.EEGDash.add">
 <span class="sig-name descname"><span class="pre">add</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">record</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.EEGDash.add" title="Link to this definition">#</a></dt>
@@ -745,6 +779,30 @@ collection. WARNING: this operation is destructive and should be used with cauti
 <dt class="sig sig-object py" id="eegdash.EEGDashDataset">
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">eegdash.</span></span><span class="sig-name descname"><span class="pre">EEGDashDataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">list</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dataset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">list</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description_fields</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">['subject',</span> <span class="pre">'session',</span> <span class="pre">'run',</span> <span class="pre">'task',</span> <span class="pre">'age',</span> <span class="pre">'gender',</span> <span class="pre">'sex']</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cache_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'~/eegdash_cache'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s3_bucket</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eeg_dash_instance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.EEGDashDataset" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseConcatDataset</span></code></p>
+<p>Create a new EEGDashDataset from a given query or local BIDS dataset directory
+and dataset name. An EEGDashDataset is pooled collection of EEGDashBaseDataset
+instances (individual recordings) and is a subclass of braindecode’s BaseConcatDataset.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>query</strong> (<em>dict</em><em> | </em><em>None</em>) – Optionally a dictionary that specifies the query to be executed; see
+EEGDash.find() for details on the query format.</p></li>
+<li><p><strong>data_dir</strong> (<em>str</em><em> | </em><em>list</em><em>[</em><em>str</em><em>] </em><em>| </em><em>None</em>) – Optionally a string or a list of strings specifying one or more local
+BIDS dataset directories from which to load the EEG data files. Exactly one
+of query or data_dir must be provided.</p></li>
+<li><p><strong>dataset</strong> (<em>str</em><em> | </em><em>list</em><em>[</em><em>str</em><em>] </em><em>| </em><em>None</em>) – If data_dir is given, a name or list of names for for the dataset(s) to be loaded.</p></li>
+<li><p><strong>description_fields</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – A list of fields to be extracted from the dataset records
+and included in the returned data description(s). Examples are typical
+subject metadata fields such as “subject”, “session”, “run”, “task”, etc.;
+see also data_config.description_fields for the default set of fields.</p></li>
+<li><p><strong>cache_dir</strong> (<em>str</em>) – A directory where the dataset will be cached locally.</p></li>
+<li><p><strong>s3_bucket</strong> (<em>str</em><em> | </em><em>None</em>) – An optional S3 bucket URI (e.g., “s3://mybucket”) to use instead of the
+default OpenNeuro bucket for loading data files</p></li>
+<li><p><strong>kwargs</strong> (<em>dict</em>) – Additional keyword arguments to be passed to the EEGDashBaseDataset
+constructor.</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="eegdash.EEGDashDataset.find_datasets">
 <span class="sig-name descname"><span class="pre">find_datasets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description_fields</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="eegdash.data_utils.html#eegdash.data_utils.EEGDashBaseDataset" title="eegdash.data_utils.EEGDashBaseDataset"><span class="pre">EEGDashBaseDataset</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#eegdash.EEGDashDataset.find_datasets" title="Link to this definition">#</a></dt>
@@ -1105,7 +1163,6 @@ and included in the returned dataset description(s).</p></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="eegdash.dataset.html">eegdash.dataset module</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.html#eegdash.dataset.DATASET"><code class="docutils literal notranslate"><span class="pre">DATASET</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.html#eegdash.dataset.DS001785"><code class="docutils literal notranslate"><span class="pre">DS001785</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.html#eegdash.dataset.DS001787"><code class="docutils literal notranslate"><span class="pre">DS001787</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.html#eegdash.dataset.DS001810"><code class="docutils literal notranslate"><span class="pre">DS001810</span></code></a></li>
@@ -1379,6 +1436,7 @@ and included in the returned dataset description(s).</p></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="eegdash.registry.html">eegdash.registry module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.registry.html#eegdash.registry.markdown_table"><code class="docutils literal notranslate"><span class="pre">markdown_table()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.registry.html#eegdash.registry.register_openneuro_datasets"><code class="docutils literal notranslate"><span class="pre">register_openneuro_datasets()</span></code></a></li>
 </ul>
 </li>

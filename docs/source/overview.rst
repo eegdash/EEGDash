@@ -11,20 +11,21 @@ The architecture of eegdash can be visualized as follows:
 .. code-block:: text
 
       +-----------------+
-      |   eegdash       |
-      |   Interface     |
+      |     MongoDB     |
+      |    (Metadata)   |
       +-----------------+
             |
             |
-+-----------v-----------+      +-----------------+
-|     MongoDB           |<---->|   S3 Filesystem |
-| (Metadata)            |      |   (Raw Data)    |
-+-----------------------+      +-----------------+
+      +-----------v-----------+      +-----------------+
+      |       eegdash         |<---->|   S3 Filesystem |
+      |     Interface         |      |    (Raw Data)   |
+      +-----------------------+      +-----------------+
             |
             |
-+-----------v-----------+
-|      BIDS Parser      |
-+-----------------------+
+      +-----------v-----------+
+      |      BIDS Parser      |
+      +-----------------------+
+
 
 
 The components are:

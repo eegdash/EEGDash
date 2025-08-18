@@ -28,10 +28,10 @@ This tutorial is divided as follows:
 
 import random
 from pathlib import Path
-from eegdash import EEGChallengeDataset
-from braindecode.preprocessing import create_fixed_length_windows
-from braindecode.datasets.base import EEGWindowsDataset, BaseConcatDataset, BaseDataset
 
+from braindecode.datasets.base import BaseConcatDataset, BaseDataset, EEGWindowsDataset
+from braindecode.preprocessing import create_fixed_length_windows
+from eegdash import EEGChallengeDataset
 
 ######################################################################
 # 2. Define local path and download the data
@@ -177,9 +177,10 @@ windows_ds = BaseConcatDataset(
 # using pure PyTorch code.
 # However, you can use any pytorch model you want, or training framework.
 import torch
-from torch.utils.data import DataLoader
 from torch import optim
 from torch.nn.functional import l1_loss
+from torch.utils.data import DataLoader
+
 from braindecode.models import EEGNetv4
 
 # Use GPU if available

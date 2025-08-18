@@ -123,7 +123,7 @@ sphinx_gallery_conf = {
     "subsection_order": ExplicitOrder(
         [
             f"{EX_DIR}/core",
-            f"{EX_DIR}/eeg2025",
+            # f"{EX_DIR}/eeg2025",
             "*",
         ]
     ),

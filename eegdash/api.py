@@ -5,6 +5,7 @@ from pathlib import Path
 from typing import Any, Mapping
 
 import mne
+from mne_bids import read_raw_bids, get_bids_path_from_fname
 import numpy as np
 import xarray as xr
 from dotenv import load_dotenv
@@ -285,14 +286,15 @@ class EEGDash:
         Parameters
         ----------
         bids_file : str
-            Path to the file on the local filesystem.
+            Path to the BIDS-compliant file on the local filesystem.
 
         Notes
         -----
         Currently, only non-epoched .set files are supported.
 
         """
-        raw_object = mne.io.read_raw(bids_file)
+        bids_path = get_bids_path_from_fname(bids_file, verbose=False)
+        raw_object = read_raw_bids(bids_path=bids_path, verbose=False)
         eeg_data = raw_object.get_data()
 
         fs = raw_object.info["sfreq"]

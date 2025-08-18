@@ -49,6 +49,7 @@ dependencies = [
   "xarray",
   "h5io >= 0.2.4",
   "pymatreader",
+  "eeglabio",
   "tabulate",
 ]
 

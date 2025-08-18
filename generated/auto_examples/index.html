@@ -44,7 +44,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../../_static/documentation_options.js?v=1e28cc32"></script>
+    <script src="../../_static/documentation_options.js?v=ba50482b"></script>
     <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/design-tabs.js?v=f930bc37"></script>
@@ -138,6 +138,13 @@
 <nav>
   <ul class="bd-navbar-elements navbar-nav">
     
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../overview.html">
+    Overview
+  </a>
+</li>
+
+
 <li class="nav-item ">
   <a class="nav-link nav-internal" href="../../install/install.html">
     Install
@@ -298,6 +305,13 @@
   <ul class="bd-navbar-elements navbar-nav">
     
 <li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../overview.html">
+    Overview
+  </a>
+</li>
+
+
+<li class="nav-item ">
   <a class="nav-link nav-internal" href="../../install/install.html">
     Install
   </a>
@@ -414,11 +428,6 @@
 <li class="toctree-l1"><a class="reference internal" href="core/tutorial_eoec.html">Eyes Open vs. Closed Classification</a></li>
 <li class="toctree-l1"><a class="reference internal" href="core/tutorial_feature_extractor_open_close_eye.html">EEGDash Feature Extractor</a></li>
 </ul>
-<ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="eeg2025/challenge_1.html">Challenge 1: Transfer Learning (Contrast‑Change Detection, CCD)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="eeg2025/challenge_2.html">Challenge 2: Predicting the p-factor from EEG</a></li>
-<li class="toctree-l1"><a class="reference internal" href="eeg2025/challenge_2_machine_learning.html">Predicting p-factor from EEG - Example</a></li>
-</ul>
 </div>
 </nav></div>
     </div>
@@ -490,21 +499,6 @@
   <div class="sphx-glr-thumbnail-title">EEGDash Feature Extractor</div>
 </div></div><div class="toctree-wrapper compound">
 </div>
-<section id="eeg-foundation-challenge">
-<h2>EEG Foundation Challenge<a class="headerlink" href="#eeg-foundation-challenge" title="Link to this heading">#</a></h2>
-<p>How to model things for the Challenge 1 and Challenge 2.</p>
-<p>Examples on how to do play for the competition.</p>
-<div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="This tutorial walks you through preparing Challenge 1 data for the EEG 2025 competition. You will load a CCD recording from OpenNeuro, extract trial‑wise behavioral metadata (stimulus side, correctness, response time), epoch around contrast‑change onsets, and produce a braindecode.datasets.WindowsDataset ready for training."><img alt="" src="../../_images/sphx_glr_challenge_1_thumb.png" />
-<p><a class="reference internal" href="eeg2025/challenge_1.html#sphx-glr-generated-auto-examples-eeg2025-challenge-1-py"><span class="std std-ref">Challenge 1: Transfer Learning (Contrast‑Change Detection, CCD)</span></a></p>
-  <div class="sphx-glr-thumbnail-title">Challenge 1: Transfer Learning (Contrast‑Change Detection, CCD)</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="This tutorial presents Challenge 2: regression of the p-factor (a general psychopathology factor) from EEG recordings. The objective is to identify reproducible EEG biomarkers linked to mental health outcomes."><img alt="" src="../../_images/sphx_glr_challenge_2_thumb.png" />
-<p><a class="reference internal" href="eeg2025/challenge_2.html#sphx-glr-generated-auto-examples-eeg2025-challenge-2-py"><span class="std std-ref">Challenge 2: Predicting the p-factor from EEG</span></a></p>
-  <div class="sphx-glr-thumbnail-title">Challenge 2: Predicting the p-factor from EEG</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="# Tutorial for Predicting p-factor from EEG - EEG 2025 Competition"><img alt="" src="../../_images/sphx_glr_challenge_2_machine_learning_thumb.png" />
-<p><a class="reference internal" href="eeg2025/challenge_2_machine_learning.html#sphx-glr-generated-auto-examples-eeg2025-challenge-2-machine-learning-py"><span class="std std-ref">Predicting p-factor from EEG - Example</span></a></p>
-  <div class="sphx-glr-thumbnail-title">Predicting p-factor from EEG - Example</div>
-</div></div><div class="toctree-wrapper compound">
-</div>
 <div class="sphx-glr-footer sphx-glr-footer-gallery docutils container">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/7707201515439f3349bc2714b51d89ab/auto_examples_python.zip"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">all</span> <span class="pre">examples</span> <span class="pre">in</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">auto_examples_python.zip</span></code></a></p>
@@ -514,7 +508,6 @@
 </div>
 </div>
 <p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
-</section>
 </section>
 
 
@@ -565,10 +558,7 @@
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Tutorials!</a></li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#eeg-dash">EEG Dash</a><ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eeg-foundation-challenge">EEG Foundation Challenge</a></li>
-</ul>
-</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#eeg-dash">EEG Dash</a></li>
 </ul>
 
   </nav></div>

@@ -5,11 +5,11 @@ from pathlib import Path
 from typing import Any, Mapping
 
 import mne
-from mne_bids import read_raw_bids, get_bids_path_from_fname
 import numpy as np
 import xarray as xr
 from dotenv import load_dotenv
 from joblib import Parallel, delayed
+from mne_bids import get_bids_path_from_fname, read_raw_bids
 from pymongo import InsertOne, UpdateOne
 from s3fs import S3FileSystem
 

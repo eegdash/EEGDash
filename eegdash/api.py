@@ -34,6 +34,19 @@ class EEGDash:
 
     """
 
+    _ALLOWED_QUERY_FIELDS = {
+        "data_name",
+        "dataset",
+        "subject",
+        "task",
+        "session",
+        "run",
+        "modality",
+        "sampling_frequency",
+        "nchans",
+        "ntimes",
+    }
+
     def __init__(self, *, is_public: bool = True, is_staging: bool = False) -> None:
         """Create new instance of the EEGDash Database client.
 
@@ -71,34 +84,59 @@ class EEGDash:
             anon=True, client_kwargs={"region_name": "us-east-2"}
         )
 
-    def find(self, query: dict[str, Any], *args, **kwargs) -> list[Mapping[str, Any]]:
-        """Find records in the MongoDB collection that satisfy the given query.
+    def find(
+        self, query: dict[str, Any] = None, /, **kwargs
+    ) -> list[Mapping[str, Any]]:
+        """Find records in the MongoDB collection.
+
+        This method can be called in two ways:
+        1. With a pre-built MongoDB query dictionary (positional argument):
+           >>> eegdash.find({"dataset": "ds002718", "subject": {"$in": ["012", "013"]}})
+        2. With user-friendly keyword arguments for simple and multi-value queries:
+           >>> eegdash.find(dataset="ds002718", subject="012")
+           >>> eegdash.find(dataset="ds002718", subject=["012", "013"])
 
         Parameters
         ----------
-        query: dict
-            A dictionary that specifies the query to be executed; this is a reference
-            document that is used to match records in the MongoDB collection.
-        args:
-            Additional positional arguments for the MongoDB find() method; see
-            https://pymongo.readthedocs.io/en/stable/api/pymongo/collection.html#pymongo.collection.Collection.find
-        kwargs:
-            Additional keyword arguments for the MongoDB find() method.
+        query: dict, optional
+            A complete MongoDB query dictionary. This is a positional-only argument.
+        **kwargs:
+            Keyword arguments representing field-value pairs for the query.
+            Values can be single items (str, int) or lists of items for multi-search.
 
         Returns
         -------
         list:
             A list of DB records (string-keyed dictionaries) that match the query.
 
-        Example
-        -------
-        >>> eegdash = EEGDash()
-        >>> eegdash.find({"dataset": "ds002718", "subject": "012"})
+        Raises
+        ------
+        ValueError
+            If both a `query` dictionary and keyword arguments are provided.
 
         """
-        results = self.__collection.find(query, *args, **kwargs)
+        if query is not None and kwargs:
+            raise ValueError(
+                "Provide either a positional 'query' dictionary or keyword arguments, not both."
+            )
 
-        return [result for result in results]
+        final_query = {}
+        if query is not None:
+            final_query = query
+        elif kwargs:
+            final_query = self._build_query_from_kwargs(**kwargs)
+        else:
+            # By default, an empty query {} returns all documents.
+            # This can be dangerous, so we can either allow it or raise an error.
+            # Let's require an explicit query for safety.
+            raise ValueError(
+                "find() requires a query dictionary or at least one keyword argument. "
+                "To find all documents, use find({})."
+            )
+
+        results = self.__collection.find(final_query)
+
+        return list(results)
 
     def exist(self, query: dict[str, Any]) -> bool:
         """Return True if at least one record matches the query, else False.
@@ -183,6 +221,35 @@ class EEGDash:
                 raise ValueError(f"Invalid input: {key}")
 
         return record
+
+    def _build_query_from_kwargs(self, **kwargs) -> dict[str, Any]:
+        """Builds and validates a MongoDB query from user-friendly keyword arguments.
+
+        Translates list values into MongoDB's `$in` operator.
+        """
+        # 1. Validate that all provided keys are allowed for querying
+        unknown_fields = set(kwargs.keys()) - self._ALLOWED_QUERY_FIELDS
+        if unknown_fields:
+            raise ValueError(
+                f"Unsupported query field(s): {', '.join(sorted(unknown_fields))}. "
+                f"Allowed fields are: {', '.join(sorted(self._ALLOWED_QUERY_FIELDS))}"
+            )
+
+        # 2. Construct the query dictionary
+        query = {}
+        for key, value in kwargs.items():
+            if isinstance(value, (list, tuple)):
+                if not value:
+                    raise ValueError(
+                        f"Received an empty list for query parameter '{key}'. This is not supported."
+                    )
+                # If the value is a list, use the `$in` operator for multi-search
+                query[key] = {"$in": value}
+            else:
+                # Otherwise, it's a direct match
+                query[key] = value
+
+        return query
 
     def load_eeg_data_from_s3(self, s3path: str) -> xr.DataArray:
         """Load an EEGLAB .set file from an AWS S3 URI and return it as an xarray DataArray.
@@ -541,11 +608,27 @@ class EEGDashDataset(BaseConcatDataset):
         and dataset name. An EEGDashDataset is pooled collection of EEGDashBaseDataset
         instances (individual recordings) and is a subclass of braindecode's BaseConcatDataset.
 
+
+        Querying Examples:
+        ------------------
+        # Find by single subject
+        >>> ds = EEGDashDataset(dataset="ds005505", subject="NDARCA153NKE")
+
+        # Find by a list of subjects and a specific task
+        >>> subjects = ["NDARCA153NKE", "NDARXT792GY8"]
+        >>> ds = EEGDashDataset(dataset="ds005505", subject=subjects, task="RestingState")
+
+        # Use a raw MongoDB query for advanced filtering
+        >>> raw_query = {"dataset": "ds005505", "subject": {"$in": subjects}}
+        >>> ds = EEGDashDataset(query=raw_query)
+
         Parameters
         ----------
         query : dict | None
-            Optionally a dictionary that specifies the query to be executed; see
-            EEGDash.find() for details on the query format.
+            A raw MongoDB query dictionary. If provided, keyword arguments for filtering are ignored.
+        **kwargs : dict
+            Keyword arguments for filtering (e.g., `subject="X"`, `task=["T1", "T2"]`) and/or
+            arguments to be passed to the EEGDashBaseDataset constructor (e.g., `subject=...`).
         cache_dir : str
             A directory where the dataset will be cached locally.
         data_dir : str | None
@@ -571,17 +654,31 @@ class EEGDashDataset(BaseConcatDataset):
         self.eeg_dash = eeg_dash_instance or EEGDash()
         _owns_client = eeg_dash_instance is None
 
+        # Separate query kwargs from other kwargs passed to the BaseDataset constructor
+        query_kwargs = {
+            k: v for k, v in kwargs.items() if k in EEGDash._ALLOWED_QUERY_FIELDS
+        }
+        base_dataset_kwargs = {k: v for k, v in kwargs.items() if k not in query_kwargs}
+
+        if query and query_kwargs:
+            raise ValueError(
+                "Provide either a 'query' dictionary or keyword arguments for filtering, not both."
+            )
+
         try:
-            if query:
-                datasets = self.find_datasets(query, description_fields, **kwargs)
-            elif data_dir:
+            if data_dir:
+                # This path loads from a local directory and is not affected by DB query logic
                 if isinstance(data_dir, str):
                     datasets = self.load_bids_dataset(
-                        dataset, data_dir, description_fields, s3_bucket, **kwargs
+                        dataset,
+                        data_dir,
+                        description_fields,
+                        s3_bucket,
+                        **base_dataset_kwargs,
                     )
                 else:
                     assert len(data_dir) == len(dataset), (
-                        "Number of datasets and their directories must match"
+                        "Number of datasets and directories must match"
                     )
                     datasets = []
                     for i, _ in enumerate(data_dir):
@@ -591,27 +688,28 @@ class EEGDashDataset(BaseConcatDataset):
                                 data_dir[i],
                                 description_fields,
                                 s3_bucket,
-                                **kwargs,
+                                **base_dataset_kwargs,
                             )
                         )
+            elif query or query_kwargs:
+                # This is the DB query path that we are improving
+                datasets = self.find_datasets(
+                    query=query,
+                    description_fields=description_fields,
+                    query_kwargs=query_kwargs,
+                    base_dataset_kwargs=base_dataset_kwargs,
+                )
+                # We only need filesystem if we need to access S3
+                self.filesystem = S3FileSystem(
+                    anon=True, client_kwargs={"region_name": "us-east-2"}
+                )
             else:
                 raise ValueError(
-                    "Exactly one of 'query' or 'data_dir' must be provided."
+                    "You must provide either a 'query' or keyword arguments for filtering, or a 'data_dir'."
                 )
         finally:
-            # If we created the client, close it now that construction is done.
             if _owns_client:
-                try:
-                    self.eeg_dash.close()
-                except Exception:
-                    # Don't let close errors break construction
-                    pass
-
-        self.filesystem = S3FileSystem(
-            anon=True, client_kwargs={"region_name": "us-east-2"}
-        )
-
-        self.eeg_dash.close()
+                self.eeg_dash.close()
 
         super().__init__(datasets)
 
@@ -629,7 +727,11 @@ class EEGDashDataset(BaseConcatDataset):
         return None
 
     def find_datasets(
-        self, query: dict[str, Any], description_fields: list[str], **kwargs
+        self,
+        query: dict[str, Any],
+        description_fields: list[str],
+        query_kwargs: dict,
+        base_dataset_kwargs: dict,
     ) -> list[EEGDashBaseDataset]:
         """Helper method to find datasets in the MongoDB collection that satisfy the
         given query and return them as a list of EEGDashBaseDataset objects.
@@ -652,7 +754,7 @@ class EEGDashDataset(BaseConcatDataset):
         """
         datasets: list[EEGDashBaseDataset] = []
 
-        records = self.eeg_dash.find(query)
+        records = self.eeg_dash.find(query, **query_kwargs)
 
         for record in records:
             description = {}
@@ -666,7 +768,7 @@ class EEGDashDataset(BaseConcatDataset):
                     self.cache_dir,
                     self.s3_bucket,
                     description=description,
-                    **kwargs,
+                    **base_dataset_kwargs,
                 )
             )
         return datasets

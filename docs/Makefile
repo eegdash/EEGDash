@@ -1,20 +1,31 @@
 # Minimal makefile for Sphinx documentation
-#
-
-# You can set these variables from the command line, and also
-# from the environment for the first two.
 SPHINXOPTS    ?=
 SPHINXBUILD   ?= sphinx-build
-SOURCEDIR     = .
-BUILDDIR      = _build
+SOURCEDIR     = source
+BUILDDIR      = build
+PKG ?= eegdash
+APIDIR := $(SOURCEDIR)/api
 
-# Put it first so that "make" without argument is like "make help".
 help:
 	@$(SPHINXBUILD) -M help "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
 
-.PHONY: help Makefile
+.PHONY: apidoc
+apidoc:
+	@sphinx-apidoc -o "$(APIDIR)" "../$(PKG)" -f -e -M
 
-# Catch-all target: route all unknown targets to Sphinx using the new
-# "make mode" option.  $(O) is meant as a shortcut for $(SPHINXOPTS).
+# Standard build runs examples
+html: apidoc
+
+# Fast build: do NOT execute examples (sphinx-gallery)
+.PHONY: html-noplot
+html-noplot: apidoc
+	@python prepare_summary_tables.py ../eegdash/ $(BUILDDIR)
+	@$(SPHINXBUILD) -M html "$(SOURCEDIR)" "$(BUILDDIR)" \
+		$(SPHINXOPTS) -D sphinx_gallery_conf.plot_gallery=0 $(O)
+
+.PHONY: help apidoc
+Makefile: ;          
+
 %: Makefile
+	@python prepare_summary_tables.py ../eegdash/ $(BUILDDIR)
 	@$(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)

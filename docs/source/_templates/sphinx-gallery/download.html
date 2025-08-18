@@ -1,0 +1,10 @@
+{% extends "!sphinx-gallery/download.html" %}
+{% block buttons -%}
+  {{ super() }}
+  {# Sphinx-Gallery exposes example.short_fname (repo-relative path like "examples/plot_x.py") #}
+  {%- set path = example.short_fname|replace('\\', '/') -%}
+  <a class="sphx-glr-download-link"
+     href="https://colab.research.google.com/github/{{ github_user }}/{{ github_repo }}/blob/{{ github_version }}/{{ path }}">
+     Open in Colab
+  </a>
+{%- endblock %}

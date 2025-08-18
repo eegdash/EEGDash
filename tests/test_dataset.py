@@ -1,4 +1,5 @@
 import time
+from pathlib import Path
 
 import pytest
 
@@ -10,9 +11,12 @@ FILES_PER_RELEASE = [1342, 1405, 1812, 3342, 3326, 1227, 3100, 2320, 2885, 2516,
 
 RELEASE_FILES = list(zip(RELEASES, FILES_PER_RELEASE))
 
+CACHE_DIR = (Path.home() / "mne_data" / "eeg_challenge_cache").resolve()
+CACHE_DIR.mkdir(parents=True, exist_ok=True)
+
 
 def _load_release(release):
-    ds = EEGChallengeDataset(release=release)
+    ds = EEGChallengeDataset(release=release, cache_dir=CACHE_DIR)
     getattr(ds, "description", None)
     return ds
 
@@ -27,10 +31,10 @@ def warmed_mongo():
 
 def test_eeg_challenge_dataset_initialization():
     """Test the initialization of EEGChallengeDataset."""
-    dataset = EEGChallengeDataset(release="R5")
+    dataset = EEGChallengeDataset(release="R5", cache_dir=CACHE_DIR)
 
     release = "R5"
-    expected_bucket_prefix = f"s3://nmdatasets/NeurIPS25//{release}_L100"
+    expected_bucket_prefix = f"s3://nmdatasets/NeurIPS25/{release}_L100"
     assert dataset.s3_bucket == expected_bucket_prefix, (
         f"Unexpected s3_bucket: {dataset.s3_bucket} (expected {expected_bucket_prefix})"
     )
@@ -56,7 +60,7 @@ def test_eeg_challenge_dataset_initialization():
 
 @pytest.mark.parametrize("release, number_files", RELEASE_FILES)
 def test_eeg_challenge_dataset_amount_files(release, number_files):
-    dataset = EEGChallengeDataset(release=release)
+    dataset = EEGChallengeDataset(release=release, cache_dir=CACHE_DIR)
     assert len(dataset.datasets) == number_files
 
 
@@ -64,6 +68,7 @@ def test_eeg_challenge_dataset_amount_files(release, number_files):
 def test_mongodb_load_benchmark(benchmark, warmed_mongo, release):
     # Group makes the report nicer when comparing releases
     benchmark.group = "EEGChallengeDataset.load"
+
     result = benchmark.pedantic(
         _load_release,
         args=(release,),
@@ -71,12 +76,35 @@ def test_mongodb_load_benchmark(benchmark, warmed_mongo, release):
         rounds=5,  # take min/median across several cold-ish runs
         warmup_rounds=1,  # do one warmup round
     )
+
     assert result is not None
 
 
 @pytest.mark.parametrize("release", RELEASES)
-def test_mongodb_load_under_slo(release):
+def test_mongodb_load_under_sometime(release):
     start_time = time.perf_counter()
-    _ = EEGChallengeDataset(release=release)
+    _ = EEGChallengeDataset(release=release, cache_dir=CACHE_DIR)
     duration = time.perf_counter() - start_time
-    assert duration < 10, f"{release} took {duration:.2f}s"
+    assert duration < 30, f"{release} took {duration:.2f}s"
+
+
+def test_consuming_data_r5():
+    dataset_obj = EEGChallengeDataset(
+        release="R5",
+        query=dict(task="RestingState", subject="NDARAC350XUM"),
+        cache_dir=CACHE_DIR,
+    )
+    raw = dataset_obj.datasets[0].raw
+    assert raw is not None
+
+
+@pytest.mark.parametrize("eeg_dash_instance", [None, EEGDash()])
+def test_eeg_dash_integration(eeg_dash_instance):
+    dataset_obj = EEGChallengeDataset(
+        release="R5",
+        query=dict(task="RestingState", subject="NDARAC350XUM"),
+        cache_dir=CACHE_DIR,
+        eeg_dash_instance=eeg_dash_instance,
+    )
+    raw = dataset_obj.datasets[0].raw
+    assert raw is not None

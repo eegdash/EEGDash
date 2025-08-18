@@ -16,3 +16,27 @@ tests/data/
 .ruff_cache/
 .vscode/
 build/
+
+
+dist/
+docs/build/
+docs/source/sg_execution_times.rst
+docs/source/gen_modules/
+docs/source/generated/
+docs/auto_examples/
+docs/auto_tutorials/
+docs/modules/generated/
+docs/sphinxext/cachedir
+pip-log.txt
+.coverage*
+tags
+cover
+
+docs/source/api/
+
+examples/data
+#Mac files
+.DS_Store
+
+data/
+*.json

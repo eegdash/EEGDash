@@ -602,6 +602,7 @@ class EEGDashDataset(BaseConcatDataset):
         s3_bucket: str | None = None,
         data_dir: str | None = None,
         eeg_dash_instance=None,
+        records: list[dict] | None = None,
         **kwargs,
     ):
         """Create a new EEGDashDataset from a given query or local BIDS dataset directory
@@ -644,6 +645,9 @@ class EEGDashDataset(BaseConcatDataset):
         s3_bucket : str | None
             An optional S3 bucket URI (e.g., "s3://mybucket") to use instead of the
             default OpenNeuro bucket for loading data files
+        records : list[dict] | None
+            Optional list of pre-fetched metadata records. If provided, the dataset is
+            constructed directly from these records without querying MongoDB.
         kwargs : dict
             Additional keyword arguments to be passed to the EEGDashBaseDataset
             constructor.
@@ -651,8 +655,11 @@ class EEGDashDataset(BaseConcatDataset):
         """
         self.cache_dir = cache_dir
         self.s3_bucket = s3_bucket
-        self.eeg_dash = eeg_dash_instance or EEGDash()
-        _owns_client = eeg_dash_instance is None
+        self.eeg_dash = eeg_dash_instance
+        _owns_client = False
+        if self.eeg_dash is None and records is None:
+            self.eeg_dash = EEGDash()
+            _owns_client = True
 
         # Separate query kwargs from other kwargs passed to the BaseDataset constructor
         query_kwargs = {
@@ -666,7 +673,17 @@ class EEGDashDataset(BaseConcatDataset):
             )
 
         try:
-            if data_dir:
+            if records is not None:
+                datasets = [
+                    EEGDashBaseDataset(
+                        record,
+                        self.cache_dir,
+                        self.s3_bucket,
+                        **base_dataset_kwargs,
+                    )
+                    for record in records
+                ]
+            elif data_dir:
                 # This path loads from a local directory and is not affected by DB query logic
                 if isinstance(data_dir, str):
                     datasets = self.load_bids_dataset(
@@ -705,10 +722,10 @@ class EEGDashDataset(BaseConcatDataset):
                 )
             else:
                 raise ValueError(
-                    "You must provide either a 'query' or keyword arguments for filtering, or a 'data_dir'."
+                    "You must provide either 'records', a 'data_dir', or a query/keyword arguments for filtering."
                 )
         finally:
-            if _owns_client:
+            if _owns_client and self.eeg_dash is not None:
                 self.eeg_dash.close()
 
         super().__init__(datasets)

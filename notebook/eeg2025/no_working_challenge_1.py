@@ -42,13 +42,15 @@ References
 
 # %%
 import os
-from pathlib import Path
-import pandas as pd
-import numpy as np
-import mne
-from eegdash import EEGDashDataset
-from braindecode.preprocessing import create_windows_from_events
 import warnings
+from pathlib import Path
+
+import mne
+import numpy as np
+import pandas as pd
+
+from braindecode.preprocessing import create_windows_from_events
+from eegdash import EEGDashDataset
 
 # Suppress warnings for cleaner output
 warnings.filterwarnings("ignore")

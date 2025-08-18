@@ -5,8 +5,7 @@ from pathlib import Path
 from typing import Any, Mapping
 
 import mne
-from mne_bids import read_raw_bids
-from mne_bids.utils import get_bids_path_from_fname
+from mne_bids import read_raw_bids, get_bids_path_from_fname
 import numpy as np
 import xarray as xr
 from dotenv import load_dotenv

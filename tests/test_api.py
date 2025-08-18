@@ -34,7 +34,7 @@ def dummy_bids_dataset(tmpdir_factory):
     )
 
     # Write BIDS data
-    write_raw_bids(raw, bids_path, overwrite=True, format="EEGlab", allow_preload=True)
+    write_raw_bids(raw, bids_path, overwrite=True, format="EEGLAB", allow_preload=True)
 
     return str(bids_path.fpath)
 

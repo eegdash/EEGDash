@@ -1,9 +1,10 @@
-import pytest
-from eegdash.api import EEGDash
-import xarray as xr
-import numpy as np
 import mne
+import numpy as np
+import pytest
+import xarray as xr
 from mne_bids import BIDSPath, write_raw_bids
+
+from eegdash.api import EEGDash
 
 
 # Fixture to create a dummy BIDS dataset for testing
@@ -38,17 +39,19 @@ def dummy_bids_dataset(tmpdir_factory):
 
     return str(bids_path.fpath)
 
+
 def test_load_eeg_data_from_bids_file(dummy_bids_dataset):
     eegdash = EEGDash()
     data = eegdash.load_eeg_data_from_bids_file(dummy_bids_dataset)
     assert isinstance(data, xr.DataArray)
+
 
 def test_load_eeg_data_from_bids_file_content(dummy_bids_dataset):
     eegdash = EEGDash()
     data = eegdash.load_eeg_data_from_bids_file(dummy_bids_dataset)
 
     # Check dimensions
-    assert data.dims == ('channel', 'time')
+    assert data.dims == ("channel", "time")
 
     # Check shape
     assert data.shape == (3, 100)

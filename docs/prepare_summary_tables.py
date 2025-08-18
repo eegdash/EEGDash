@@ -29,6 +29,11 @@ def prepare_table(df: pd.DataFrame):
     df["n_tasks"] = df["n_tasks"].astype(int)
     # number of records are always int
     df["n_records"] = df["n_records"].astype(int)
+
+    # from the sample frequency list, I will apply int
+    df["sampling_freqs"] = df["sampling_freqs"].apply(parse_freqs)
+    # clean repeat values of the sampling frequency
+    df["sampling_freqs"] = df["sampling_freqs"].apply(lambda x: list(set(x)))
     # Creating the total line
     df.loc["Total"] = df.sum(numeric_only=True)
     df.loc["Total", "dataset"] = "Total"
@@ -63,6 +68,14 @@ def main(source_dir: str, target_dir: str):
 
         # (If you add a 'Total' row after this, cast again or build it as Int64.)
         df.to_csv(target_file, index=False, na_rep="")
+
+
+def parse_freqs(value):
+    if isinstance(value, str):
+        return [int(float(f)) for f in value.strip("[]").split(",")]
+    elif isinstance(value, (int, float)) and not pd.isna(value):
+        return [int(value)]
+    return []  # for other types like nan
 
 
 if __name__ == "__main__":

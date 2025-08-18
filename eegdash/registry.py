@@ -133,4 +133,4 @@ def markdown_table(row_series: pd.Series) -> str:
 
     # Indent the table to fit within the admonition block
     indented_table = "\n".join("    " + line for line in table.split("\n"))
-    return f".. admonition:: Dataset Summary\n\n{indented_table}"
+    return f"\n\n{indented_table}"

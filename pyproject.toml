@@ -8,15 +8,16 @@ name = "eegdash"
 authors = [
   { name = "Young Truong",    email = "dt.young112@gmail.com" },
   { name = "Arnaud Delorme",  email = "adelorme@gmail.com" },
+  { name = "Aviv Dotan",  email = "avivd220@gmail.com" },
+  { name = "Oren Shriki",  email = "oren70@gmail.com" },
   { name = "Bruno Aristimunha", email = "b.aristimunha@gmail.com"}
 ]
 description     = "EEG data for machine learning"
 readme          = "README.md"
-license         = { file = "LICENSE" }
+license         = "GPL-3.0-only"
 requires-python = ">=3.10"
 
 classifiers = [
-    "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
     "Intended Audience :: Science/Research",
     "Intended Audience :: Developers",
@@ -46,6 +47,9 @@ dependencies = [
   "scipy",
   "tqdm",
   "xarray",
+  "h5io >= 0.2.4",
+  "pymatreader",
+  "tabulate",
 ]
 
 [project.urls]
@@ -67,24 +71,37 @@ dev = [
 
 docs = [
   "sphinx",
+  "sphinx_design",
   "sphinx_gallery",
   "sphinx_rtd_theme",
-  "numpydoc"
+  "pydata-sphinx-theme",
+  "numpydoc",
+  "memory_profiler",
+  "ipython",
+  "lightgbm",
 ]
 
 all = [
+  "pre-commit",
   "pytest",
   "pytest-cov",
   "codecov",
   "pytest_cases",
-  "pre-commit",
+  "pytest-benchmark",
   "sphinx",
+  "sphinx_design",
   "sphinx_gallery",
   "sphinx_rtd_theme",
-  "numpydoc"
+  "pydata-sphinx-theme",
+  "numpydoc",
+  "memory_profiler",
+  "ipython",
+  "lightgbm",
 ]
+
 [tool.setuptools]
 py-modules = []
+include-package-data = true
 
 [tool.setuptools.dynamic]
 version = {attr = "eegdash.__version__"}
@@ -94,6 +111,9 @@ where      = ["."]
 include    = ["eegdash*"]
 exclude    = []
 namespaces = false
+
+[tool.setuptools.package-data]
+eegdash = ["dataset_summary.csv"]
 
 [tool.ruff]
 lint.ignore-init-module-imports = true

@@ -10,7 +10,7 @@ ci:
     submodules: false
 repos:
 -   repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.12.7
+    rev: v0.12.8
     hooks:
     -   id: ruff
         name: ruff lint & format
@@ -21,8 +21,19 @@ repos:
         # and unused import removal (F401 is part of 'F' and is no longer ignored).
         - --select=E,W,F,D,NPY201
         - --ignore=E402,E501,D100,D101,D102,D103,D104,D105,D107,D205,D400,D415,D417,F403,D401,E741,E722,D419
-        files: ^(eegdash|docs|examples|notebooks|scripts|tests)/
+        files: ^(eegdash|docs|notebooks|scripts|tests)/
         exclude: \.ipynb$
+    -   id: ruff 
+        name: ruff examples
+        args:
+        - --fix
+        - --show-fixes
+        # Selects all rules from your original config (E,W,F,I,D) and enables import sorting (I)
+        # and unused import removal (F401 is part of 'F' and is no longer ignored).
+        - --select=E,W,F,D,NPY201
+        - --ignore=I,E402,E501,D100,D101,D102,D103,D104,D105,D107,D205,D400,D415,D417,F403,D401,E741,E722,D419
+        files: ^(examples)/
+
     -   id: ruff-format
         name: ruff format code
 -   repo: https://github.com/codespell-project/codespell
@@ -36,11 +47,12 @@ repos:
         exclude_types:
         - csv
         - json
+        - svg
 -   repo: https://github.com/asottile/blacken-docs
     rev: 1.19.1
     hooks:
     -   id: blacken-docs
-        exclude: ^.github|CONTRIBUTING.md
+        exclude: ^.github|CONTRIBUTING.md|README.md|docs/|examples/|notebooks/|scripts/|tests/
 -   repo: https://github.com/PyCQA/isort
     rev: 6.0.1
     hooks:

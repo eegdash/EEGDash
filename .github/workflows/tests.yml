@@ -4,8 +4,9 @@ concurrency:
   cancel-in-progress: true
 on:
   push:
-    branches:
-      - "*"
+    branches: 
+      - main
+      - develop
   pull_request:
     branches:
       - '*' # all branches, including forks
@@ -46,4 +47,3 @@ jobs:
       run: python -c "import eegdash; print(eegdash.__version__)"
     - name: Run Tests
       run: pytest -vvv -s --tb=long --durations=0 --log-cli-level=INFO --cov=eegdash --cov-report=xml tests --verbose 
-

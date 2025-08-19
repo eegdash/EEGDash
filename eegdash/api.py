@@ -676,6 +676,7 @@ class EEGDashDataset(BaseConcatDataset):
 
         try:
             if records is not None:
+                self.records = records
                 datasets = [
                     EEGDashBaseDataset(
                         record,
@@ -683,16 +684,16 @@ class EEGDashDataset(BaseConcatDataset):
                         self.s3_bucket,
                         **base_dataset_kwargs,
                     )
-                    for record in records
+                    for record in self.records
                 ]
             elif data_dir:
                 # This path loads from a local directory and is not affected by DB query logic
-                if isinstance(data_dir, str):
+                if isinstance(data_dir, str) or isinstance(data_dir, Path):
                     datasets = self.load_bids_dataset(
-                        dataset,
-                        data_dir,
-                        description_fields,
-                        s3_bucket,
+                        dataset=dataset,
+                        data_dir=data_dir,
+                        description_fields=description_fields,
+                        s3_bucket=s3_bucket,
                         **base_dataset_kwargs,
                     )
                 else:
@@ -703,10 +704,10 @@ class EEGDashDataset(BaseConcatDataset):
                     for i, _ in enumerate(data_dir):
                         datasets.extend(
                             self.load_bids_dataset(
-                                dataset[i],
-                                data_dir[i],
-                                description_fields,
-                                s3_bucket,
+                                dataset=dataset[i],
+                                data_dir=data_dir[i],
+                                description_fields=description_fields,
+                                s3_bucket=s3_bucket,
                                 **base_dataset_kwargs,
                             )
                         )
@@ -773,9 +774,9 @@ class EEGDashDataset(BaseConcatDataset):
         """
         datasets: list[EEGDashBaseDataset] = []
 
-        records = self.eeg_dash.find(query, **query_kwargs)
+        self.records = self.eeg_dash.find(query, **query_kwargs)
 
-        for record in records:
+        for record in self.records:
             description = {}
             for field in description_fields:
                 value = self.find_key_in_nested_dict(record, field)
@@ -794,8 +795,8 @@ class EEGDashDataset(BaseConcatDataset):
 
     def load_bids_dataset(
         self,
-        dataset,
-        data_dir,
+        dataset: str,
+        data_dir: str | Path,
         description_fields: list[str],
         s3_bucket: str | None = None,
         **kwargs,

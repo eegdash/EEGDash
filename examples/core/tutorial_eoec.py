@@ -19,10 +19,12 @@ The code below provides an example of using the *EEGDash* library in combination
 """
 
 
-# %% [markdown]
-# ## Data Retrieval Using EEGDash
+# %%
+# Data Retrieval Using EEGDash
+# ----------------------------
 #
-# First we find one resting state dataset. This dataset contains both eyes open and eyes closed data.
+# First we find one resting state dataset. This dataset contains both eyes open
+# and eyes closed data.
 
 # %%
 from eegdash import EEGDashDataset
@@ -31,22 +33,37 @@ ds_eoec = EEGDashDataset(
     {"dataset": "ds005514", "task": "RestingState", "subject": "NDARDB033FW5"}
 )
 
-# %% [markdown]
-# ## Data Preprocessing Using Braindecode
+# %%
+# Data Preprocessing Using Braindecode
+# ------------------------------------
 #
-# [BrainDecode](https://braindecode.org/stable/install/install.html) is a specialized library for preprocessing EEG and MEG data. In this dataset, there are two key events in the continuous data: **instructed_toCloseEyes**, marking the start of a 40-second eyes-closed period, and **instructed_toOpenEyes**, indicating the start of a 20-second eyes-open period.
+# [BrainDecode](https://braindecode.org/stable/install/install.html) is a
+# specialized library for preprocessing EEG and MEG data. In this dataset, there
+# are two key events in the continuous data: **instructed_toCloseEyes**, marking
+# the start of a 40-second eyes-closed period, and **instructed_toOpenEyes**,
+# indicating the start of a 20-second eyes-open period.
 #
-# For the eyes-closed event, we extract 14 seconds of data from 15 to 29 seconds after the event onset. Similarly, for the eyes-open event, we extract data from 5 to 19 seconds after the event onset. This ensures an equal amount of data for both conditions. The event extraction is handled by the custom function **hbn_ec_ec_reannotation**.
+# For the eyes-closed event, we extract 14 seconds of data from 15 to 29 seconds
+# after the event onset. Similarly, for the eyes-open event, we extract data
+# from 5 to 19 seconds after the event onset. This ensures an equal amount of
+# data for both conditions. The event extraction is handled by the custom
+# function **hbn_ec_ec_reannotation**.
 #
 # Next, we apply four preprocessing steps in Braindecode:
-# 1.	**Reannotation** of event markers using hbn_ec_ec_reannotation().
-# 2.	**Selection** of 24 specific EEG channels from the original 128.
-# 3.	**Resampling** the EEG data to a frequency of 128 Hz.
-# 4.	**Filtering** the EEG signals to retain frequencies between 1 Hz and 55 Hz.
+# 1. **Reannotation** of event markers using `hbn_ec_ec_reannotation()`.
+# 2. **Selection** of 24 specific EEG channels from the original 128.
+# 3. **Resampling** the EEG data to a frequency of 128 Hz.
+# 4. **Filtering** the EEG signals to retain frequencies between 1 Hz and 55 Hz.
 #
-# When calling the **preprocess** function, the data is retrieved from the remote repository.
+# When calling the `preprocess` function, the data is retrieved from the remote
+# repository.
 #
-# Finally, we use **create_windows_from_events** to extract 2-second epochs from the data. These epochs serve as the dataset samples. At this stage, each sample is automatically labeled with the corresponding event type (eyes-open or eyes-closed). windows_ds is a PyTorch dataset, and when queried, it returns labels for eyes-open and eyes-closed (assigned as labels 0 and 1, corresponding to their respective event markers).
+# Finally, we use `create_windows_from_events` to extract 2-second epochs from
+# the data. These epochs serve as the dataset samples. At this stage, each
+# sample is automatically labeled with the corresponding event type (eyes-open
+# or eyes-closed). `windows_ds` is a PyTorch dataset, and when queried, it
+# returns labels for eyes-open and eyes-closed (assigned as labels 0 and 1,
+# corresponding to their respective event markers).
 
 # %%
 from braindecode.preprocessing import (
@@ -142,10 +159,13 @@ windows_ds = create_windows_from_events(
     preload=True,
 )
 
-# %% [markdown]
-# ## Plotting a Single Channel for One Sample
+# %%
+# Plotting a Single Channel for One Sample
+# ----------------------------------------
 #
-# It’s always a good practice to verify that the data has been properly loaded and processed. Here, we plot a single channel from one sample to ensure the signal is present and looks as expected.
+# It’s always a good practice to verify that the data has been properly loaded
+# and processed. Here, we plot a single channel from one sample to ensure the
+# signal is present and looks as expected.
 
 # %%
 import matplotlib.pyplot as plt
@@ -154,16 +174,30 @@ plt.figure()
 plt.plot(windows_ds[2][0][0, :].transpose())  # first channel of first epoch
 plt.show()
 
-# %% [markdown]
-# ## Creating training and test sets
+# %%
+# Creating training and test sets
+# -------------------------------
 #
-# The code below creates a training and test set. We first split the data into training and test sets using the **train_test_split** function from the **sklearn** library. We then create a **TensorDataset** for the training and test sets.
+# The code below creates a training and test set. We first split the data into
+# training and test sets using the **train_test_split** function from the
+# **sklearn** library. We then create a **TensorDataset** for the training and
+# test sets.
 #
-# 1.	**Set Random Seed** – The random seed is fixed using torch.manual_seed(random_state) to ensure reproducibility in dataset splitting and model training.
-# 2.	**Extract Labels from the Dataset** – Labels (eye-open or eye-closed events) are extracted from windows_ds, stored as a NumPy array, and printed for verification.
-# 3.	**Split Dataset into Train and Test Sets** – The dataset is split into training (80%) and testing (20%) subsets using train_test_split(), ensuring balanced stratification based on the extracted labels. Stratification means that we have as many eyes-open and eyes-closed samples in the training and testing sets.
-# 4.	**Convert Data to PyTorch Tensors** – The selected training and testing samples are converted into FloatTensor for input features and LongTensor for labels, making them compatible with PyTorch models.
-# 5.	**Create DataLoaders** – The datasets are wrapped in PyTorch DataLoader objects with a batch size of 10, enabling efficient mini-batch training and shuffling.
+# 1. **Set Random Seed** – The random seed is fixed using
+#    `torch.manual_seed(random_state)` to ensure reproducibility in dataset
+#    splitting and model training.
+# 2. **Extract Labels from the Dataset** – Labels (eye-open or eye-closed
+#    events) are extracted from `windows_ds`, stored as a NumPy array, and
+#    printed for verification.
+# 3. **Split Dataset into Train and Test Sets** – The dataset is split into
+#    training (80%) and testing (20%) subsets using `train_test_split()`,
+#    ensuring balanced stratification based on the extracted labels.
+# 4. **Convert Data to PyTorch Tensors** – The selected training and testing
+#    samples are converted into `FloatTensor` for input features and
+#    `LongTensor` for labels, making them compatible with PyTorch models.
+# 5. **Create DataLoaders** – The datasets are wrapped in PyTorch DataLoader
+#    objects with a batch size of 10, enabling efficient mini-batch training and
+#    shuffling.
 #
 
 # %%
@@ -210,10 +244,14 @@ print(
     f"Eyes-Open/Eyes-Closed balance, train: {np.mean(eo_ec[train_indices]):.2f}, test: {np.mean(eo_ec[test_indices]):.2f}"
 )
 
-# %% [markdown]
-# # Check labels
+# %%
+# Check labels
+# ------------
 #
-# It is good practice to verify the labels and ensure the random seed is functioning correctly. If all labels are 0s (eyes closed) or 1s (eyes open), it could indicate an issue with data loading or stratification, requiring further investigation.
+# It is good practice to verify the labels and ensure the random seed is
+# functioning correctly. If all labels are 0s (eyes closed) or 1s (eyes open),
+# it could indicate an issue with data loading or stratification, requiring
+# further investigation.
 
 # %%
 # Visualize a batch of target labels
@@ -221,10 +259,13 @@ dataiter = iter(train_loader)
 first_item, label = dataiter.__next__()
 label
 
-# %% [markdown]
-# # Create model
+# %%
+# Create model
+# ------------
 #
-# The model is a shallow convolutional neural network (ShallowFBCSPNet) with 24 input channels (EEG channels), 2 output classes (eyes-open and eyes-closed), and an input window size of 256 samples (2 seconds of EEG data).
+# The model is a shallow convolutional neural network (ShallowFBCSPNet) with 24
+# input channels (EEG channels), 2 output classes (eyes-open and eyes-closed),
+# and an input window size of 256 samples (2 seconds of EEG data).
 
 # %%
 import torch
@@ -237,20 +278,31 @@ torch.manual_seed(random_state)
 model = ShallowFBCSPNet(24, 2, n_times=256, final_conv_length="auto")
 summary(model, input_size=(1, 24, 256))
 
-# %% [markdown]
-# # Model Training and Evaluation Process
+# %%
+# Model Training and Evaluation Process
+# -------------------------------------
 #
-# This section trains the neural network using the Adamax optimizer, normalizes input data, computes cross-entropy loss, updates model parameters, and tracks accuracy across six epochs.
+# This section trains the neural network using the Adamax optimizer, normalizes
+# input data, computes cross-entropy loss, updates model parameters, and tracks
+# accuracy across six epochs.
 #
-# 1. **Set Up Optimizer and Learning Rate Scheduler** – The `Adamax` optimizer initializes with a learning rate of 0.002 and weight decay of 0.001 for regularization. An `ExponentialLR` scheduler with a decay factor of 1 keeps the learning rate constant.
-#
-# 2. **Allocate Model to Device** – The model moves to the specified device (CPU, GPU, or MPS for Mac silicon) to optimize computation efficiency.
-#
-# 3. **Normalize Input Data** – The `normalize_data` function standardizes input data by subtracting the mean and dividing by the standard deviation along the time dimension before transferring it to the appropriate device.
-#
-# 4. **Evaluates Classification Accuracy Over Six Epochs** – The training loop iterates through data batches with the model in training mode. It normalizes inputs, computes predictions, calculates cross-entropy loss, performs backpropagation, updates model parameters, and steps the learning rate scheduler. It tracks correct predictions to compute accuracy.
-#
-# 5. **Evaluate on Test Data** – After each epoch, the model runs in evaluation mode on the test set. It computes predictions on normalized data and calculates test accuracy by comparing outputs with actual labels.
+# 1. **Set Up Optimizer and Learning Rate Scheduler** – The `Adamax` optimizer
+#    initializes with a learning rate of 0.002 and weight decay of 0.001 for
+#    regularization. An `ExponentialLR` scheduler with a decay factor of 1 keeps
+#    the learning rate constant.
+# 2. **Allocate Model to Device** – The model moves to the specified device
+#    (CPU, GPU, or MPS for Mac silicon) to optimize computation efficiency.
+# 3. **Normalize Input Data** – The `normalize_data` function standardizes input
+#    data by subtracting the mean and dividing by the standard deviation along
+#    the time dimension before transferring it to the appropriate device.
+# 4. **Evaluates Classification Accuracy Over Six Epochs** – The training loop
+#    iterates through data batches with the model in training mode. It
+#    normalizes inputs, computes predictions, calculates cross-entropy loss,
+#    performs backpropagation, updates model parameters, and steps the learning
+#    rate scheduler. It tracks correct predictions to compute accuracy.
+# 5. **Evaluate on Test Data** – After each epoch, the model runs in evaluation
+#    mode on the test set. It computes predictions on normalized data and
+#    calculates test accuracy by comparing outputs with actual labels.
 
 # %%
 optimizer = torch.optim.Adamax(model.parameters(), lr=0.002, weight_decay=0.001)

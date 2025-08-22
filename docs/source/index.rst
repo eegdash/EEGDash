@@ -25,7 +25,7 @@ The EEG-DaSh data archive will establish a data-sharing resource for MEEG (EEG, 
 large-scale computational advancements to preserve and share scientific data from publicly funded 
 research for machine learning and deep learning applications.
 
-The EEG-DaSh data archive is a collaborative effort led by the University of California, San Diego (UCSD) and Ben-Gurion University of the Negev (BGU) and partially funded by the National Science Foundation (NSF). All are welcome to contribute to the project to the https://github.com/sccn/EEGDash project.
+The EEG-DaSh data archive is a collaborative effort led by the University of California, San Diego (UCSD) and Ben-Gurion University of the Negev (BGU) and partially funded by the National Science Foundation (NSF). All are welcome to contribute to the https://github.com/sccn/EEGDash project.
 
 The archive is currently still in :bdg-danger:`beta testing` mode, so be kind. 
 

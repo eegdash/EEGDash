@@ -11,7 +11,7 @@
 
 To leverage recent and ongoing advancements in large-scale computational methods and to ensure the preservation of scientific data generated from publicly funded research, the EEG-DaSh data archive will create a data-sharing resource for MEEG (EEG, MEG) data contributed by collaborators for machine learning (ML) and deep learning (DL) applications.
 
-The archive is currently still in <span style="color: red;">beta testing</span> mode, so be kind. 
+The archive is currently still in :bdg-danger:`beta testing` mode, so be kind. 
 
 EEG Dash Datasets
 ==================

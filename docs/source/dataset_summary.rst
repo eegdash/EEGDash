@@ -9,11 +9,16 @@
 
 .. currentmodule:: eegdash.dataset
 
+To leverage recent and ongoing advancements in large-scale computational methods and to ensure the preservation of scientific data generated from publicly funded research, the EEG-DaSh data archive will create a data-sharing resource for MEEG (EEG, MEG) data contributed by collaborators for machine learning (ML) and deep learning (DL) applications.
+
+The archive is currently still in <span style="color: red;">beta testing</span> mode, so be kind. 
+
 EEG Dash Datasets
 ==================
 
+The data in EEG-DaSh originates from a collaboration involving 25 laboratories, encompassing 27,053 participants. This extensive collection includes MEEG data, which is a combination of EEG and MEG signals. The data is sourced from various studies conducted by these labs, involving both healthy subjects and clinical populations with conditions such as ADHD, depression, schizophrenia, dementia, autism, and psychosis. Additionally, data spans different mental states like sleep, meditation, and cognitive tasks. In addition, EEG-DaSh will incorporate a subset of the data converted from NEMAR, which includes 330 MEEG BIDS-formatted datasets, further expanding the archive with well-curated, standardized neuroelectromagnetic data.
 
-Columns definitions:
+Columns definitions for the table below:
    - **dataset**: Name of the dataset.
    - **n_records**: Number of EEG records in the dataset.
    - **n_subjects**: Number of subjects in the dataset.

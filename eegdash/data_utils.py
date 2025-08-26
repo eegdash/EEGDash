@@ -2,6 +2,7 @@ import json
 import logging
 import os
 import re
+import traceback
 import warnings
 from pathlib import Path
 from typing import Any
@@ -179,9 +180,19 @@ class EEGDashBaseDataset(BaseDataset):
             # capturing any warnings
             # to-do: remove this once is fixed on the mne-bids side.
             with warnings.catch_warnings(record=True) as w:
-                self._raw = mne_bids.read_raw_bids(
-                    bids_path=self.bidspath, verbose="ERROR"
-                )
+                try:
+                    self._raw = mne_bids.read_raw_bids(
+                        bids_path=self.bidspath, verbose="ERROR"
+                    )
+                except Exception as e:
+                    logger.error(
+                        f"Error while reading BIDS file: {self.bidspath}"
+                        "This may be due to a missing or corrupted file."
+                        "Please check the file and try again."
+                    )
+                    logger.error(f"Exception: {e}")
+                    logger.error(traceback.format_exc())
+                    raise e
                 for warning in w:
                     logger.warning(
                         f"Warning while reading BIDS file: {warning.message}"

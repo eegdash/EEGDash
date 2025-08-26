@@ -21,8 +21,9 @@ RELEASE_TO_OPENNEURO_DATASET_MAP = {
 class EEGChallengeDataset(EEGDashDataset):
     def __init__(
         self,
-        release: str,
+        release: str | list[str],
         cache_dir: str,
+        mini: bool = True,
         query: dict | None = None,
         s3_bucket: str | None = "s3://nmdatasets/NeurIPS25",
         **kwargs,
@@ -35,6 +36,9 @@ class EEGChallengeDataset(EEGDashDataset):
         ----------
         release: str
             Release name. Can be one of ["R1", ..., "R11"]
+        mini: bool, default True
+            Whether to use the mini-release version of the dataset. It is recommended
+            to use the mini version for faster training and evaluation.
         query : dict | None
             Optionally a dictionary that specifies a query to be executed,
             in addition to the dataset (automatically inferred from the release argument).
@@ -53,21 +57,30 @@ class EEGChallengeDataset(EEGDashDataset):
         if release not in RELEASE_TO_OPENNEURO_DATASET_MAP:
             raise ValueError(f"Unknown release: {release}")
 
-        dataset = RELEASE_TO_OPENNEURO_DATASET_MAP[release]
-        if query is None:
-            query = {"dataset": dataset}
-        elif "dataset" not in query:
-            query["dataset"] = dataset
-        elif query["dataset"] != dataset:
+        dataset_parameters = []
+        if isinstance(release, str):
+            dataset_parameters.append(RELEASE_TO_OPENNEURO_DATASET_MAP[release])
+        else:
             raise ValueError(
-                f"Query dataset {query['dataset']} does not match the release {release} "
-                f"which corresponds to dataset {dataset}."
+                f"Unknown release type: {type(release)}, the expected type is str."
             )
 
+        if "dataset" in query:
+            raise ValueError(
+                "Query using the parameters `dataset` with the class EEGChallengeDataset is not possible"
+                "Please use the release argument instead, or the object EEGDashDataset instead."
+            )
+
+        if mini:
+            s3_bucket = f"{s3_bucket}/R{release}_mini_L100_bdf"
+        else:
+            s3_bucket = f"{s3_bucket}/R{release}_L100_bdf"
+
         super().__init__(
+            dataset=dataset_parameters,
             query=query,
             cache_dir=cache_dir,
-            s3_bucket=f"{s3_bucket}/{release}_L100",
+            s3_bucket=s3_bucket,
             **kwargs,
         )
 

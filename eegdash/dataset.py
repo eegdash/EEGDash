@@ -17,6 +17,20 @@ RELEASE_TO_OPENNEURO_DATASET_MAP = {
     "R1": "ds005505",
 }
 
+SUBJECT_MINI_RELEASE_MAP = {
+    "R11": [""],
+    "R10": [""],
+    "R9": [""],
+    "R8": [""],
+    "R7": [""],
+    "R6": [""],
+    "R4": [""],
+    "R5": [""],
+    "R3": [""],
+    "R2": [""],
+    "R1": [""],
+}
+
 
 class EEGChallengeDataset(EEGDashDataset):
     def __init__(
@@ -72,7 +86,14 @@ class EEGChallengeDataset(EEGDashDataset):
             )
 
         if mini:
+            if "subject" in query:
+                raise ValueError(
+                    "Query using the parameters `subject` with the class EEGChallengeDataset and `mini==True` is not possible"
+                    "Please don't use the `subject` selection twice."
+                    "Set `mini=False` to use the `subject` selection."
+                )
             s3_bucket = f"{s3_bucket}/R{release}_mini_L100_bdf"
+
         else:
             s3_bucket = f"{s3_bucket}/R{release}_L100_bdf"
 

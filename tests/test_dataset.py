@@ -94,7 +94,6 @@ def test_consuming_one_raw(release, mini):
     dataset_obj = EEGChallengeDataset(
         release=release,
         task="RestingState",
-        subject="NDARAC350XUM",
         cache_dir=CACHE_DIR,
         mini=mini,
     )

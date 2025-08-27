@@ -266,7 +266,7 @@ SUBJECT_MINI_RELEASE_MAP = {
 class EEGChallengeDataset(EEGDashDataset):
     def __init__(
         self,
-        release: str | list[str],
+        release: str,
         cache_dir: str,
         mini: bool = True,
         query: dict | None = None,

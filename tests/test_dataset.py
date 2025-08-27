@@ -11,7 +11,7 @@ FILES_PER_RELEASE = [1342, 1405, 1812, 3342, 3326, 1227, 3100, 2320, 2885, 2516,
 
 RELEASE_FILES = list(zip(RELEASES, FILES_PER_RELEASE))
 
-CACHE_DIR = (Path.home() / "mne_data" / "eeg_challenge_cache").resolve()
+CACHE_DIR = (Path.home() / "mne_data" / "eeg_challenge_completed").resolve()
 CACHE_DIR.mkdir(parents=True, exist_ok=True)
 
 

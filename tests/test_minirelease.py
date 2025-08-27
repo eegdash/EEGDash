@@ -5,9 +5,9 @@ import pytest
 
 from eegdash.dataset import EEGChallengeDataset
 
-# Reuse the same cache directory pattern as other tests to benefit from caching
-CACHE_DIR = (Path.home() / "mne_data" / "eeg_challenge_cache").resolve()
-CACHE_DIR.mkdir(parents=True, exist_ok=True)
+# Shared cache directory constant for all tests in the suite.
+EEG_CHALLENGE_CACHE_DIR = (Path.home() / "mne_data" / "eeg_challenge_cache").resolve()
+EEG_CHALLENGE_CACHE_DIR.mkdir(parents=True, exist_ok=True)
 
 
 @pytest.fixture(scope="session")

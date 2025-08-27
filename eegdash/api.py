@@ -591,7 +591,7 @@ class EEGDashDataset(BaseConcatDataset):
         self,
         query: dict | None = None,
         cache_dir: str = "~/eegdash_cache",
-        dataset: str | None = None,
+        dataset: str | list[str] | None = None,
         description_fields: list[str] = [
             "subject",
             "session",
@@ -669,6 +669,13 @@ class EEGDashDataset(BaseConcatDataset):
         }
         base_dataset_kwargs = {k: v for k, v in kwargs.items() if k not in query_kwargs}
 
+        # If user provided a dataset name via the dedicated parameter (and we're not
+        # loading from a local directory), treat it as a query filter. Accept str or list.
+        if data_dir is None and dataset is not None:
+            # Allow callers to pass a single dataset id (str) or a list of them.
+            # If list is provided, let _build_query_from_kwargs turn it into $in later.
+            query_kwargs.setdefault("dataset", dataset)
+
         if query and query_kwargs:
             raise ValueError(
                 "Provide either a 'query' dictionary or keyword arguments for filtering, not both."
@@ -688,15 +695,20 @@ class EEGDashDataset(BaseConcatDataset):
                 ]
             elif data_dir:
                 # This path loads from a local directory and is not affected by DB query logic
-                if isinstance(data_dir, str) or isinstance(data_dir, Path):
+                if isinstance(data_dir, (str, Path)):
                     datasets = self.load_bids_dataset(
-                        dataset=dataset,
+                        dataset=dataset
+                        if isinstance(dataset, str)
+                        else (dataset[0] if dataset else None),
                         data_dir=data_dir,
                         description_fields=description_fields,
                         s3_bucket=s3_bucket,
                         **base_dataset_kwargs,
                     )
                 else:
+                    assert dataset is not None, (
+                        "dataset must be provided when passing multiple data_dir"
+                    )
                     assert len(data_dir) == len(dataset), (
                         "Number of datasets and directories must match"
                     )
@@ -748,7 +760,7 @@ class EEGDashDataset(BaseConcatDataset):
 
     def find_datasets(
         self,
-        query: dict[str, Any],
+        query: dict[str, Any] | None,
         description_fields: list[str],
         query_kwargs: dict,
         base_dataset_kwargs: dict,
@@ -774,7 +786,48 @@ class EEGDashDataset(BaseConcatDataset):
         """
         datasets: list[EEGDashBaseDataset] = []
 
-        self.records = self.eeg_dash.find(query, **query_kwargs)
+        # Build records using either a dict query or keyword arguments, but not both
+        if query is not None and not query_kwargs:
+            self.records = self.eeg_dash.find(query)
+        elif query is None:
+            # If dataset was provided as a list, convert to proper $in via builder for consistency
+            if "dataset" in query_kwargs and isinstance(query_kwargs["dataset"], list):
+                kw_query = self.eeg_dash._build_query_from_kwargs(**query_kwargs)
+                self.records = self.eeg_dash.find(kw_query)
+            else:
+                self.records = self.eeg_dash.find(**query_kwargs)
+        else:
+            # Merge dict query with kwargs by converting kwargs to a proper Mongo dict first
+            kwargs_query = self.eeg_dash._build_query_from_kwargs(**query_kwargs)
+            merged_query = {**query, **kwargs_query}
+            self.records = self.eeg_dash.find(merged_query)
+
+        # Fallback: if no records and a subject constraint was present, retry without subject filter
+        if not self.records:
+            subject_keys = {"subject"}
+            had_subject_filter = False
+            if query is None:
+                had_subject_filter = any(k in query_kwargs for k in subject_keys)
+                if had_subject_filter:
+                    retry_kwargs = {
+                        k: v for k, v in query_kwargs.items() if k not in subject_keys
+                    }
+                    if "dataset" in retry_kwargs and isinstance(
+                        retry_kwargs["dataset"], list
+                    ):
+                        retry_query = self.eeg_dash._build_query_from_kwargs(
+                            **retry_kwargs
+                        )
+                        self.records = self.eeg_dash.find(retry_query)
+                    else:
+                        self.records = self.eeg_dash.find(**retry_kwargs)
+            else:
+                had_subject_filter = any(k in query for k in subject_keys)
+                if had_subject_filter:
+                    retry_query = {
+                        k: v for k, v in query.items() if k not in subject_keys
+                    }
+                    self.records = self.eeg_dash.find(retry_query)
 
         for record in self.records:
             description = {}

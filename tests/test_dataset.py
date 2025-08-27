@@ -16,7 +16,7 @@ CACHE_DIR.mkdir(parents=True, exist_ok=True)
 
 
 def _load_release(release):
-    ds = EEGChallengeDataset(release=release, cache_dir=CACHE_DIR)
+    ds = EEGChallengeDataset(release=release, mini=False, cache_dir=CACHE_DIR)
     getattr(ds, "description", None)
     return ds
 
@@ -31,10 +31,10 @@ def warmed_mongo():
 
 def test_eeg_challenge_dataset_initialization():
     """Test the initialization of EEGChallengeDataset."""
-    dataset = EEGChallengeDataset(release="R5", cache_dir=CACHE_DIR)
+    dataset = EEGChallengeDataset(release="R5", mini=False, cache_dir=CACHE_DIR)
 
     release = "R5"
-    expected_bucket_prefix = f"s3://nmdatasets/NeurIPS25/{release}_L100"
+    expected_bucket_prefix = f"s3://nmdatasets/NeurIPS25/{release}_L100_bdf"
     assert dataset.s3_bucket == expected_bucket_prefix, (
         f"Unexpected s3_bucket: {dataset.s3_bucket} (expected {expected_bucket_prefix})"
     )
@@ -60,7 +60,7 @@ def test_eeg_challenge_dataset_initialization():
 
 @pytest.mark.parametrize("release, number_files", RELEASE_FILES)
 def test_eeg_challenge_dataset_amount_files(release, number_files):
-    dataset = EEGChallengeDataset(release=release, cache_dir=CACHE_DIR)
+    dataset = EEGChallengeDataset(release=release, mini=False, cache_dir=CACHE_DIR)
     assert len(dataset.datasets) == number_files
 
 
@@ -91,8 +91,10 @@ def test_mongodb_load_under_sometime(release):
 def test_consuming_data_r5():
     dataset_obj = EEGChallengeDataset(
         release="R5",
-        query=dict(task="RestingState", subject="NDARAC350XUM"),
+        task="RestingState",
+        subject="NDARAC350XUM",
         cache_dir=CACHE_DIR,
+        mini=False,
     )
     raw = dataset_obj.datasets[0].raw
     assert raw is not None
@@ -102,7 +104,8 @@ def test_consuming_data_r5():
 def test_eeg_dash_integration(eeg_dash_instance):
     dataset_obj = EEGChallengeDataset(
         release="R5",
-        query=dict(task="RestingState", subject="NDARAC350XUM"),
+        task="RestingState",
+        subject="NDARAC350XUM",
         cache_dir=CACHE_DIR,
         eeg_dash_instance=eeg_dash_instance,
     )

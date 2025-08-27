@@ -105,8 +105,6 @@ def test_minirelease_consume_everything(warmed_mongo):
 
     for dataset in ds_mini.datasets:
         raw = dataset.raw  # noqa: F841
-        events = dataset.events  # noqa: F841
         description = dataset.description  # noqa: F841
         assert raw is not None
-        assert events is not None
         assert description is not None

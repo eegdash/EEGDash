@@ -91,10 +91,15 @@ def test_mongodb_load_under_sometime(release):
 @pytest.mark.parametrize("mini", [True, False])
 @pytest.mark.parametrize("release", RELEASES)
 def test_consuming_one_raw(release, mini):
+    if mini:
+        cache_dir = CACHE_DIR.parent / f"mini-{release}"
+        cache_dir.mkdir(parents=True, exist_ok=True)
+    else:
+        cache_dir = CACHE_DIR
     dataset_obj = EEGChallengeDataset(
         release=release,
         task="RestingState",
-        cache_dir=CACHE_DIR,
+        cache_dir=cache_dir,
         mini=mini,
     )
     raw = dataset_obj.datasets[0].raw

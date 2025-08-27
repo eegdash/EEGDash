@@ -786,48 +786,7 @@ class EEGDashDataset(BaseConcatDataset):
         """
         datasets: list[EEGDashBaseDataset] = []
 
-        # Build records using either a dict query or keyword arguments, but not both
-        if query is not None and not query_kwargs:
-            self.records = self.eeg_dash.find(query)
-        elif query is None:
-            # If dataset was provided as a list, convert to proper $in via builder for consistency
-            if "dataset" in query_kwargs and isinstance(query_kwargs["dataset"], list):
-                kw_query = self.eeg_dash._build_query_from_kwargs(**query_kwargs)
-                self.records = self.eeg_dash.find(kw_query)
-            else:
-                self.records = self.eeg_dash.find(**query_kwargs)
-        else:
-            # Merge dict query with kwargs by converting kwargs to a proper Mongo dict first
-            kwargs_query = self.eeg_dash._build_query_from_kwargs(**query_kwargs)
-            merged_query = {**query, **kwargs_query}
-            self.records = self.eeg_dash.find(merged_query)
-
-        # Fallback: if no records and a subject constraint was present, retry without subject filter
-        if not self.records:
-            subject_keys = {"subject"}
-            had_subject_filter = False
-            if query is None:
-                had_subject_filter = any(k in query_kwargs for k in subject_keys)
-                if had_subject_filter:
-                    retry_kwargs = {
-                        k: v for k, v in query_kwargs.items() if k not in subject_keys
-                    }
-                    if "dataset" in retry_kwargs and isinstance(
-                        retry_kwargs["dataset"], list
-                    ):
-                        retry_query = self.eeg_dash._build_query_from_kwargs(
-                            **retry_kwargs
-                        )
-                        self.records = self.eeg_dash.find(retry_query)
-                    else:
-                        self.records = self.eeg_dash.find(**retry_kwargs)
-            else:
-                had_subject_filter = any(k in query for k in subject_keys)
-                if had_subject_filter:
-                    retry_query = {
-                        k: v for k, v in query.items() if k not in subject_keys
-                    }
-                    self.records = self.eeg_dash.find(retry_query)
+        self.records = self.eeg_dash.find(query, **query_kwargs)
 
         for record in self.records:
             description = {}

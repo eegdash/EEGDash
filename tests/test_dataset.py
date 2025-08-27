@@ -94,7 +94,7 @@ def test_consuming_data_r5():
         task="RestingState",
         subject="NDARAC350XUM",
         cache_dir=CACHE_DIR,
-        mini=False,
+        mini=True,
     )
     raw = dataset_obj.datasets[0].raw
     assert raw is not None
@@ -105,9 +105,8 @@ def test_eeg_dash_integration(eeg_dash_instance):
     dataset_obj = EEGChallengeDataset(
         release="R5",
         task="RestingState",
-        subject="NDARAC350XUM",
         cache_dir=CACHE_DIR,
-        mini=False,
+        mini=True,
         eeg_dash_instance=eeg_dash_instance,
     )
     raw = dataset_obj.datasets[0].raw

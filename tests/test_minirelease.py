@@ -86,3 +86,17 @@ def test_minirelease_subject_raw_equivalence(warmed_mongo):
     assert np.allclose(data_mini, data_full, rtol=1e-6, atol=0), (
         "Raw data mismatch between mini and full"
     )
+
+
+def test_minirelease_consume_everything(warmed_mongo):
+    """Simply try to load all data in the mini release to catch any errors."""
+    release = "R5"
+    ds_mini = EEGChallengeDataset(release=release, mini=True, cache_dir=CACHE_DIR)
+
+    for dataset in ds_mini.datasets:
+        raw = dataset.raw  # noqa: F841
+        events = dataset.events  # noqa: F841
+        description = dataset.description  # noqa: F841
+        assert raw is not None
+        assert events is not None
+        assert description is not None

@@ -323,7 +323,7 @@ class EEGChallengeDataset(EEGDashDataset):
         if self.mini:
             if query and "subject" in query:
                 raise ValueError(
-                    "Query using the parameters `subject` with the class EEGChallengeDataset and `mini==True` is not possible"
+                    "Query using the parameters `subject` with the class EEGChallengeDataset and `mini==True` is not possible."
                     "Please don't use the `subject` selection twice."
                     "Set `mini=False` to use the `subject` selection."
                 )

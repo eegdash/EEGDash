@@ -6,7 +6,9 @@ import pytest
 from eegdash.dataset import EEGChallengeDataset
 
 # Shared cache directory constant for all tests in the suite.
-EEG_CHALLENGE_CACHE_DIR = (Path.home() / "mne_data" / "eeg_challenge_cache").resolve()
+EEG_CHALLENGE_CACHE_DIR = (
+    Path.home() / "mne_data" / "eeg_challenge_cache" / "mini"
+).resolve()
 EEG_CHALLENGE_CACHE_DIR.mkdir(parents=True, exist_ok=True)
 
 

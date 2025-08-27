@@ -88,25 +88,29 @@ def test_mongodb_load_under_sometime(release):
     assert duration < 30, f"{release} took {duration:.2f}s"
 
 
-def test_consuming_data_r5():
+@pytest.mark.parametrize("mini", [True, False])
+@pytest.mark.parametrize("release", RELEASES)
+def test_consuming_one_raw(release, mini):
     dataset_obj = EEGChallengeDataset(
-        release="R5",
+        release=release,
         task="RestingState",
         subject="NDARAC350XUM",
         cache_dir=CACHE_DIR,
-        mini=True,
+        mini=mini,
     )
     raw = dataset_obj.datasets[0].raw
     assert raw is not None
 
 
+@pytest.mark.parametrize("mini", [True, False])
+@pytest.mark.parametrize("release", RELEASES)
 @pytest.mark.parametrize("eeg_dash_instance", [None, EEGDash()])
-def test_eeg_dash_integration(eeg_dash_instance):
+def test_eeg_dash_integration(eeg_dash_instance, release, mini):
     dataset_obj = EEGChallengeDataset(
-        release="R5",
+        release=release,
         task="RestingState",
         cache_dir=CACHE_DIR,
-        mini=True,
+        mini=mini,
         eeg_dash_instance=eeg_dash_instance,
     )
     raw = dataset_obj.datasets[0].raw

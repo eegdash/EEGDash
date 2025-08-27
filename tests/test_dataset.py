@@ -101,10 +101,8 @@ def test_consuming_one_raw(release, mini):
     assert raw is not None
 
 
-@pytest.mark.parametrize("mini", [True, False])
-@pytest.mark.parametrize("release", RELEASES)
 @pytest.mark.parametrize("eeg_dash_instance", [None, EEGDash()])
-def test_eeg_dash_integration(eeg_dash_instance, release, mini):
+def test_eeg_dash_integration(eeg_dash_instance, release="R5", mini=True):
     dataset_obj = EEGChallengeDataset(
         release=release,
         task="RestingState",

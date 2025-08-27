@@ -316,7 +316,7 @@ class EEGChallengeDataset(EEGDashDataset):
 
         if query and "dataset" in query:
             raise ValueError(
-                "Query using the parameters `dataset` with the class EEGChallengeDataset is not possible"
+                "Query using the parameters `dataset` with the class EEGChallengeDataset is not possible."
                 "Please use the release argument instead, or the object EEGDashDataset instead."
             )
 

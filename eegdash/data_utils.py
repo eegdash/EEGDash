@@ -201,8 +201,8 @@ class EEGDashBaseDataset(BaseDataset):
                     )
                 except Exception as e:
                     logger.error(
-                        f"Error while reading BIDS file: {self.bidspath}"
-                        "This may be due to a missing or corrupted file."
+                        f"Error while reading BIDS file: {self.bidspath}\n"
+                        "This may be due to a missing or corrupted file.\n"
                         "Please check the file and try again."
                     )
                     logger.error(f"Exception: {e}")

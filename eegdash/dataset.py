@@ -299,8 +299,12 @@ class EEGChallengeDataset(EEGDashDataset):
 
         """
         self.release = release
+        self.mini = mini
+
         if release not in RELEASE_TO_OPENNEURO_DATASET_MAP:
-            raise ValueError(f"Unknown release: {release}")
+            raise ValueError(
+                f"Unknown release: {release}, expected one of {list(RELEASE_TO_OPENNEURO_DATASET_MAP.keys())}"
+            )
 
         dataset_parameters = []
         if isinstance(release, str):
@@ -316,19 +320,16 @@ class EEGChallengeDataset(EEGDashDataset):
                 "Please use the release argument instead, or the object EEGDashDataset instead."
             )
 
-        if mini:
+        if self.mini:
             if query and "subject" in query:
                 raise ValueError(
                     "Query using the parameters `subject` with the class EEGChallengeDataset and `mini==True` is not possible"
                     "Please don't use the `subject` selection twice."
                     "Set `mini=False` to use the `subject` selection."
                 )
-            # Database stores 'subject' without the 'sub-' prefix; strip it for querying
             kwargs["subject"] = SUBJECT_MINI_RELEASE_MAP[release]
-            # release already includes the 'R' prefix (e.g., 'R1'), avoid doubling it
             s3_bucket = f"{s3_bucket}/{release}_mini_L100_bdf"
         else:
-            # release already includes the 'R' prefix (e.g., 'R1'), avoid doubling it
             s3_bucket = f"{s3_bucket}/{release}_L100_bdf"
 
         super().__init__(

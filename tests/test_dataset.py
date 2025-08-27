@@ -107,6 +107,7 @@ def test_eeg_dash_integration(eeg_dash_instance):
         task="RestingState",
         subject="NDARAC350XUM",
         cache_dir=CACHE_DIR,
+        mini=False,
         eeg_dash_instance=eeg_dash_instance,
     )
     raw = dataset_obj.datasets[0].raw

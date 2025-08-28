@@ -2,6 +2,7 @@ import json
 import logging
 import os
 import re
+import traceback
 import warnings
 from pathlib import Path
 from typing import Any
@@ -66,9 +67,7 @@ class EEGDashBaseDataset(BaseDataset):
             self.s3_open_neuro = True
 
         self.filecache = self.cache_dir / record["bidspath"]
-
         self.bids_root = self.cache_dir / record["dataset"]
-
         self.bidspath = BIDSPath(
             root=self.bids_root,
             datatype="eeg",
@@ -99,6 +98,9 @@ class EEGDashBaseDataset(BaseDataset):
         )
         if not self.s3_open_neuro:
             self.s3file = re.sub(r"(^|/)ds\d{6}/", r"\1", self.s3file, count=1)
+            if self.s3file.endswith(".set"):
+                self.s3file = self.s3file[:-4] + ".bdf"
+                self.filecache = self.filecache.with_suffix(".bdf")
 
         self.filecache.parent.mkdir(parents=True, exist_ok=True)
         info = filesystem.info(self.s3file)
@@ -132,11 +134,21 @@ class EEGDashBaseDataset(BaseDataset):
             anon=True, client_kwargs={"region_name": "us-east-2"}
         )
         for i, dep in enumerate(self.bids_dependencies):
+            if not self.s3_open_neuro:
+                # fix this when our bucket is integrated into the
+                # mongodb
+                # if the file have ".set" replace to ".bdf"
+                if dep.endswith(".set"):
+                    dep = dep[:-4] + ".bdf"
+
             s3path = self.get_s3path(dep)
             if not self.s3_open_neuro:
                 dep = self.bids_dependencies_original[i]
 
             filepath = self.cache_dir / dep
+            if not self.s3_open_neuro:
+                if self.filecache.suffix == ".set":
+                    self.filecache = self.filecache.with_suffix(".bdf")
             # here, we download the dependency and it is fine
             # in the case of the competition.
             if not filepath.exists():
@@ -179,9 +191,23 @@ class EEGDashBaseDataset(BaseDataset):
             # capturing any warnings
             # to-do: remove this once is fixed on the mne-bids side.
             with warnings.catch_warnings(record=True) as w:
-                self._raw = mne_bids.read_raw_bids(
-                    bids_path=self.bidspath, verbose="ERROR"
-                )
+                try:
+                    # TO-DO: remove this once is fixed on the our side
+                    if not self.s3_open_neuro:
+                        self.bidspath = self.bidspath.update(extension=".bdf")
+
+                    self._raw = mne_bids.read_raw_bids(
+                        bids_path=self.bidspath, verbose="ERROR"
+                    )
+                except Exception as e:
+                    logger.error(
+                        f"Error while reading BIDS file: {self.bidspath}\n"
+                        "This may be due to a missing or corrupted file.\n"
+                        "Please check the file and try again."
+                    )
+                    logger.error(f"Exception: {e}")
+                    logger.error(traceback.format_exc())
+                    raise e
                 for warning in w:
                     logger.warning(
                         f"Warning while reading BIDS file: {warning.message}"
@@ -292,7 +318,6 @@ class EEGDashBaseRaw(BaseRaw):
         )
 
     def get_s3path(self, filepath):
-        print(f"Getting S3 path for {filepath}")
         return f"{self._AWS_BUCKET}/{filepath}"
 
     def _download_s3(self) -> None:
@@ -513,7 +538,6 @@ class EEGBIDSDataset:
         with os.scandir(directory) as entries:
             for entry in entries:
                 if entry.is_file() and entry.name.endswith(extension):
-                    print("Adding ", entry.path)
                     result_files.append(entry.path)
                 elif entry.is_dir():
                     # check that entry path doesn't contain any name in ignore list

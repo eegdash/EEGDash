@@ -652,7 +652,7 @@ and <code class="docutils literal notranslate"><span class="pre">dataset</span><
 <dt class="sig sig-object py" id="eegdash.EEGDash.find">
 <span class="sig-name descname"><span class="pre">find</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Mapping</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#eegdash.EEGDash.find" title="Link to this definition">#</a></dt>
 <dd><p>Find records in the MongoDB collection.</p>
-<p>This method can be called in two ways:
+<p>This method supports four usage patterns:
 1. With a pre-built MongoDB query dictionary (positional argument):</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">eegdash</span><span class="o">.</span><span class="n">find</span><span class="p">({</span><span class="s2">&quot;dataset&quot;</span><span class="p">:</span> <span class="s2">&quot;ds002718&quot;</span><span class="p">,</span> <span class="s2">&quot;subject&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;$in&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;012&quot;</span><span class="p">,</span> <span class="s2">&quot;013&quot;</span><span class="p">]}})</span>
 </pre></div>
@@ -661,6 +661,10 @@ and <code class="docutils literal notranslate"><span class="pre">dataset</span><
 <li><p>With user-friendly keyword arguments for simple and multi-value queries:
 &gt;&gt;&gt; eegdash.find(dataset=”ds002718”, subject=”012”)
 &gt;&gt;&gt; eegdash.find(dataset=”ds002718”, subject=[“012”, “013”])</p></li>
+<li><p>With an explicit empty query to return all documents:
+&gt;&gt;&gt; eegdash.find({})  # fetches all records (use with care)</p></li>
+<li><p>By combining a raw query with kwargs (merged via logical AND):
+&gt;&gt;&gt; eegdash.find({“dataset”: “ds002718”}, subject=[“012”, “013”])  # yields {“$and”:[{“dataset”:”ds002718”}, {“subject”:{“$in”:[“012”,”013”]}}]}</p></li>
 </ol>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -675,9 +679,6 @@ Values can be single items (str, int) or lists of items for multi-search.</p></l
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>list</p>
-</dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>ValueError</strong> – If both a <cite>query</cite> dictionary and keyword arguments are provided.</p>
 </dd>
 </dl>
 </dd></dl>

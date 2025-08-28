@@ -120,3 +120,24 @@ def test_find_duplicate_task_consistent_ok(eegdash_instance, mock_mongo_connecti
     _ = eegdash_instance.find(raw_query, task="RestingState")
     called_with = mock_mongo_connection.find.call_args[0][0]
     assert "$and" in called_with
+
+
+def test_find_all_documents_with_empty_query(eegdash_instance, mock_mongo_connection):
+    mock_mongo_connection.find.return_value = [{"_id": "1"}]
+    res = eegdash_instance.find({})
+    mock_mongo_connection.find.assert_called_once_with({})
+    assert len(res) == 1
+
+
+def test_build_query_rejects_none_and_empty(eegdash_instance):
+    with pytest.raises(ValueError, match="None for query parameter 'task'"):
+        eegdash_instance._build_query_from_kwargs(task=None)
+    with pytest.raises(ValueError, match="empty string for query parameter 'task'"):
+        eegdash_instance._build_query_from_kwargs(task="   ")
+
+
+def test_build_query_cleans_list_values(eegdash_instance):
+    q = eegdash_instance._build_query_from_kwargs(
+        task=[" A ", None, "B", "", "A"]
+    )  # dedupe + strip
+    assert q == {"task": {"$in": ["A", "B"]}}

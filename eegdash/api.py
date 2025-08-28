@@ -96,7 +96,9 @@ class EEGDash:
         2. With user-friendly keyword arguments for simple and multi-value queries:
            >>> eegdash.find(dataset="ds002718", subject="012")
            >>> eegdash.find(dataset="ds002718", subject=["012", "013"])
-        3. By combining a raw query with kwargs (merged via logical AND):
+        3. With an explicit empty query to return all documents:
+           >>> eegdash.find({})  # fetches all records (use with care)
+        4. By combining a raw query with kwargs (merged via logical AND):
            >>> eegdash.find({"dataset": "ds002718"}, subject=["012", "013"])  # yields {"$and":[{"dataset":"ds002718"}, {"subject":{"$in":["012","013"]}}]}
 
         Parameters
@@ -115,19 +117,28 @@ class EEGDash:
         """
         final_query: dict[str, Any] | None = None
 
+        # Accept explicit empty dict {} to mean "match all"
         raw_query = query if isinstance(query, dict) else None
         kwargs_query = self._build_query_from_kwargs(**kwargs) if kwargs else None
 
-        if raw_query and kwargs_query:
+        # Determine presence, treating {} as a valid raw query
+        has_raw = isinstance(raw_query, dict)
+        has_kwargs = kwargs_query is not None
+
+        if has_raw and has_kwargs:
             # Detect conflicting constraints on the same field (e.g., task specified
             # differently in both places) and raise a clear error instead of silently
             # producing an empty result.
             self._raise_if_conflicting_constraints(raw_query, kwargs_query)
             # Merge with logical AND so both constraints apply
-            final_query = {"$and": [raw_query, kwargs_query]}
-        elif raw_query:
+            if raw_query:  # non-empty dict adds constraints
+                final_query = {"$and": [raw_query, kwargs_query]}
+            else:  # {} adds nothing; use kwargs_query only
+                final_query = kwargs_query
+        elif has_raw:
+            # May be {} meaning match-all, or a non-empty dict
             final_query = raw_query
-        elif kwargs_query:
+        elif has_kwargs:
             final_query = kwargs_query
         else:
             # Avoid accidental full scans
@@ -225,9 +236,12 @@ class EEGDash:
         return record
 
     def _build_query_from_kwargs(self, **kwargs) -> dict[str, Any]:
-        """Builds and validates a MongoDB query from user-friendly keyword arguments.
+        """Build and validate a MongoDB query from user-friendly keyword arguments.
 
-        Translates list values into MongoDB's `$in` operator.
+        Improvements:
+        - Reject None values and empty/whitespace-only strings
+        - For list/tuple/set values: strip strings, drop None/empties, deduplicate, and use `$in`
+        - Preserve scalars as exact matches
         """
         # 1. Validate that all provided keys are allowed for querying
         unknown_fields = set(kwargs.keys()) - self._ALLOWED_QUERY_FIELDS
@@ -240,15 +254,38 @@ class EEGDash:
         # 2. Construct the query dictionary
         query = {}
         for key, value in kwargs.items():
-            if isinstance(value, (list, tuple)):
-                if not value:
+            # None is not a valid constraint
+            if value is None:
+                raise ValueError(
+                    f"Received None for query parameter '{key}'. Provide a concrete value."
+                )
+
+            # Handle list-like values as multi-constraints
+            if isinstance(value, (list, tuple, set)):
+                cleaned: list[Any] = []
+                for item in value:
+                    if item is None:
+                        continue
+                    if isinstance(item, str):
+                        item = item.strip()
+                        if not item:
+                            continue
+                    cleaned.append(item)
+                # Deduplicate while preserving order
+                cleaned = list(dict.fromkeys(cleaned))
+                if not cleaned:
                     raise ValueError(
                         f"Received an empty list for query parameter '{key}'. This is not supported."
                     )
-                # If the value is a list, use the `$in` operator for multi-search
-                query[key] = {"$in": value}
+                query[key] = {"$in": cleaned}
             else:
-                # Otherwise, it's a direct match
+                # Scalars: trim strings and validate
+                if isinstance(value, str):
+                    value = value.strip()
+                    if not value:
+                        raise ValueError(
+                            f"Received an empty string for query parameter '{key}'."
+                        )
                 query[key] = value
 
         return query

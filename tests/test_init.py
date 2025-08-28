@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from mne import get_config
+from mne.utils import get_config
 from torch.utils.data import Dataset
 
 from eegdash import EEGDash, EEGDashDataset
@@ -33,7 +33,7 @@ def test_dataset_api():
 def test_number_recordings():
     eeg_dash_instance = EEGDash()
 
-    records = eeg_dash_instance.find({})
+    records = eeg_dash_instance.find(query={})
 
     assert isinstance(records, list)
     assert len(records) >= 55088

@@ -321,7 +321,9 @@ class EEGChallengeDataset(EEGDashDataset):
             )
 
         if self.mini:
-            if query and "subject" in query:
+            # Disallow mixing subject selection with mini=True since mini already
+            # applies a predefined subject subset.
+            if (query and "subject" in query) or ("subject" in kwargs):
                 raise ValueError(
                     "Query using the parameters `subject` with the class EEGChallengeDataset and `mini==True` is not possible."
                     "Please don't use the `subject` selection twice."

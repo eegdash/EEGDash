@@ -67,7 +67,8 @@ tests = [
     'pytest-benchmark',
 ]
 dev = [
-  "pre-commit"
+  "pre-commit",
+  "ipykernel"
 ]
 
 docs = [

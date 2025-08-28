@@ -4,7 +4,7 @@ import pytest
 
 from eegdash import EEGDash, EEGDashDataset
 
-CACHE_DIR = (Path.home() / "mne_data" / "eeg_challenge_cache").resolve()
+CACHE_DIR = (Path.home() / "mne_data" / "openneuro").resolve()
 CACHE_DIR.mkdir(parents=True, exist_ok=True)
 
 

@@ -90,7 +90,7 @@ class EEGDash:
     ) -> list[Mapping[str, Any]]:
         """Find records in the MongoDB collection.
 
-        This method supports three usage patterns:
+        This method supports four usage patterns:
         1. With a pre-built MongoDB query dictionary (positional argument):
            >>> eegdash.find({"dataset": "ds002718", "subject": {"$in": ["012", "013"]}})
         2. With user-friendly keyword arguments for simple and multi-value queries:

@@ -33,7 +33,7 @@ def test_dataset_api():
 def test_number_recordings():
     eeg_dash_instance = EEGDash()
 
-    records = eeg_dash_instance.find(query={})
+    records = eeg_dash_instance.find({})
 
     assert isinstance(records, list)
     assert len(records) >= 55088

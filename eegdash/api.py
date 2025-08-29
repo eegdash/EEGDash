@@ -90,12 +90,16 @@ class EEGDash:
     ) -> list[Mapping[str, Any]]:
         """Find records in the MongoDB collection.
 
-        This method can be called in two ways:
+        This method supports four usage patterns:
         1. With a pre-built MongoDB query dictionary (positional argument):
            >>> eegdash.find({"dataset": "ds002718", "subject": {"$in": ["012", "013"]}})
         2. With user-friendly keyword arguments for simple and multi-value queries:
            >>> eegdash.find(dataset="ds002718", subject="012")
            >>> eegdash.find(dataset="ds002718", subject=["012", "013"])
+        3. With an explicit empty query to return all documents:
+           >>> eegdash.find({})  # fetches all records (use with care)
+        4. By combining a raw query with kwargs (merged via logical AND):
+           >>> eegdash.find({"dataset": "ds002718"}, subject=["012", "013"])  # yields {"$and":[{"dataset":"ds002718"}, {"subject":{"$in":["012","013"]}}]}
 
         Parameters
         ----------
@@ -110,26 +114,34 @@ class EEGDash:
         list:
             A list of DB records (string-keyed dictionaries) that match the query.
 
-        Raises
-        ------
-        ValueError
-            If both a `query` dictionary and keyword arguments are provided.
-
         """
-        if query is not None and kwargs:
-            raise ValueError(
-                "Provide either a positional 'query' dictionary or keyword arguments, not both."
-            )
+        final_query: dict[str, Any] | None = None
 
-        final_query = {}
-        if query is not None:
-            final_query = query
-        elif kwargs:
-            final_query = self._build_query_from_kwargs(**kwargs)
+        # Accept explicit empty dict {} to mean "match all"
+        raw_query = query if isinstance(query, dict) else None
+        kwargs_query = self._build_query_from_kwargs(**kwargs) if kwargs else None
+
+        # Determine presence, treating {} as a valid raw query
+        has_raw = isinstance(raw_query, dict)
+        has_kwargs = kwargs_query is not None
+
+        if has_raw and has_kwargs:
+            # Detect conflicting constraints on the same field (e.g., task specified
+            # differently in both places) and raise a clear error instead of silently
+            # producing an empty result.
+            self._raise_if_conflicting_constraints(raw_query, kwargs_query)
+            # Merge with logical AND so both constraints apply
+            if raw_query:  # non-empty dict adds constraints
+                final_query = {"$and": [raw_query, kwargs_query]}
+            else:  # {} adds nothing; use kwargs_query only
+                final_query = kwargs_query
+        elif has_raw:
+            # May be {} meaning match-all, or a non-empty dict
+            final_query = raw_query
+        elif has_kwargs:
+            final_query = kwargs_query
         else:
-            # By default, an empty query {} returns all documents.
-            # This can be dangerous, so we can either allow it or raise an error.
-            # Let's require an explicit query for safety.
+            # Avoid accidental full scans
             raise ValueError(
                 "find() requires a query dictionary or at least one keyword argument. "
                 "To find all documents, use find({})."
@@ -224,9 +236,12 @@ class EEGDash:
         return record
 
     def _build_query_from_kwargs(self, **kwargs) -> dict[str, Any]:
-        """Builds and validates a MongoDB query from user-friendly keyword arguments.
+        """Build and validate a MongoDB query from user-friendly keyword arguments.
 
-        Translates list values into MongoDB's `$in` operator.
+        Improvements:
+        - Reject None values and empty/whitespace-only strings
+        - For list/tuple/set values: strip strings, drop None/empties, deduplicate, and use `$in`
+        - Preserve scalars as exact matches
         """
         # 1. Validate that all provided keys are allowed for querying
         unknown_fields = set(kwargs.keys()) - self._ALLOWED_QUERY_FIELDS
@@ -239,18 +254,107 @@ class EEGDash:
         # 2. Construct the query dictionary
         query = {}
         for key, value in kwargs.items():
-            if isinstance(value, (list, tuple)):
-                if not value:
+            # None is not a valid constraint
+            if value is None:
+                raise ValueError(
+                    f"Received None for query parameter '{key}'. Provide a concrete value."
+                )
+
+            # Handle list-like values as multi-constraints
+            if isinstance(value, (list, tuple, set)):
+                cleaned: list[Any] = []
+                for item in value:
+                    if item is None:
+                        continue
+                    if isinstance(item, str):
+                        item = item.strip()
+                        if not item:
+                            continue
+                    cleaned.append(item)
+                # Deduplicate while preserving order
+                cleaned = list(dict.fromkeys(cleaned))
+                if not cleaned:
                     raise ValueError(
                         f"Received an empty list for query parameter '{key}'. This is not supported."
                     )
-                # If the value is a list, use the `$in` operator for multi-search
-                query[key] = {"$in": value}
+                query[key] = {"$in": cleaned}
             else:
-                # Otherwise, it's a direct match
+                # Scalars: trim strings and validate
+                if isinstance(value, str):
+                    value = value.strip()
+                    if not value:
+                        raise ValueError(
+                            f"Received an empty string for query parameter '{key}'."
+                        )
                 query[key] = value
 
         return query
+
+    # --- Query merging and conflict detection helpers ---
+    def _extract_simple_constraint(self, query: dict[str, Any], key: str):
+        """Extract a simple constraint for a given key from a query dict.
+
+        Supports only top-level equality (key: value) and $in (key: {"$in": [...]})
+        constraints. Returns a tuple (kind, value) where kind is "eq" or "in". If the
+        key is not present or uses other operators, returns None.
+        """
+        if not isinstance(query, dict) or key not in query:
+            return None
+        val = query[key]
+        if isinstance(val, dict):
+            if "$in" in val and isinstance(val["$in"], (list, tuple)):
+                return ("in", list(val["$in"]))
+            return None  # unsupported operator shape for conflict checking
+        else:
+            return ("eq", val)
+
+    def _raise_if_conflicting_constraints(
+        self, raw_query: dict[str, Any], kwargs_query: dict[str, Any]
+    ) -> None:
+        """Raise ValueError if both query sources define incompatible constraints.
+
+        We conservatively check only top-level fields with simple equality or $in
+        constraints. If a field appears in both queries and constraints are mutually
+        exclusive, raise an explicit error to avoid silent empty result sets.
+        """
+        if not raw_query or not kwargs_query:
+            return
+
+        # Only consider fields we generally allow; skip meta operators like $and
+        raw_keys = set(raw_query.keys()) & self._ALLOWED_QUERY_FIELDS
+        kw_keys = set(kwargs_query.keys()) & self._ALLOWED_QUERY_FIELDS
+        dup_keys = raw_keys & kw_keys
+        for key in dup_keys:
+            rc = self._extract_simple_constraint(raw_query, key)
+            kc = self._extract_simple_constraint(kwargs_query, key)
+            if rc is None or kc is None:
+                # If either side is non-simple, skip conflict detection for this key
+                continue
+
+            r_kind, r_val = rc
+            k_kind, k_val = kc
+
+            # Normalize to sets when appropriate for simpler checks
+            if r_kind == "eq" and k_kind == "eq":
+                if r_val != k_val:
+                    raise ValueError(
+                        f"Conflicting constraints for '{key}': query={r_val!r} vs kwargs={k_val!r}"
+                    )
+            elif r_kind == "in" and k_kind == "eq":
+                if k_val not in r_val:
+                    raise ValueError(
+                        f"Conflicting constraints for '{key}': query in {r_val!r} vs kwargs={k_val!r}"
+                    )
+            elif r_kind == "eq" and k_kind == "in":
+                if r_val not in k_val:
+                    raise ValueError(
+                        f"Conflicting constraints for '{key}': query={r_val!r} vs kwargs in {k_val!r}"
+                    )
+            elif r_kind == "in" and k_kind == "in":
+                if len(set(r_val).intersection(k_val)) == 0:
+                    raise ValueError(
+                        f"Conflicting constraints for '{key}': disjoint sets {r_val!r} and {k_val!r}"
+                    )
 
     def load_eeg_data_from_s3(self, s3path: str) -> xr.DataArray:
         """Load an EEGLAB .set file from an AWS S3 URI and return it as an xarray DataArray.
@@ -676,10 +780,8 @@ class EEGDashDataset(BaseConcatDataset):
             # If list is provided, let _build_query_from_kwargs turn it into $in later.
             query_kwargs.setdefault("dataset", dataset)
 
-        if query and query_kwargs:
-            raise ValueError(
-                "Provide either a 'query' dictionary or keyword arguments for filtering, not both."
-            )
+        # Allow mixing raw DB query with additional keyword filters. Both will be
+        # merged by EEGDash.find() (logical AND), so we do not raise here.
 
         try:
             if records is not None:
@@ -723,7 +825,7 @@ class EEGDashDataset(BaseConcatDataset):
                                 **base_dataset_kwargs,
                             )
                         )
-            elif query or query_kwargs:
+            elif query is not None or query_kwargs:
                 # This is the DB query path that we are improving
                 datasets = self.find_datasets(
                     query=query,
@@ -786,6 +888,10 @@ class EEGDashDataset(BaseConcatDataset):
         """
         datasets: list[EEGDashBaseDataset] = []
 
+        # Build records using either a raw query OR keyword filters, but not both.
+        # Note: callers may accidentally pass an empty dict for `query` along with
+        # kwargs. In that case, treat it as if no query was provided and rely on kwargs.
+        # Always delegate merging of raw query + kwargs to EEGDash.find
         self.records = self.eeg_dash.find(query, **query_kwargs)
 
         for record in self.records:

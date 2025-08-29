@@ -57,7 +57,9 @@ def test_minirelease_subject_raw_equivalence(warmed_mongo):
     subject = ds_mini_all.description["subject"].iloc[0]
 
     ds_mini = EEGChallengeDataset(
-        release=release, mini=True, cache_dir=EEG_CHALLENGE_CACHE_DIR, subject=subject
+        release=release,
+        mini=True,
+        cache_dir=EEG_CHALLENGE_CACHE_DIR,
     )
     ds_full = EEGChallengeDataset(
         release=release, mini=False, cache_dir=EEG_CHALLENGE_CACHE_DIR, subject=subject

@@ -2,10 +2,55 @@ import csv
 import json
 import re
 from collections import defaultdict
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 from typing import Any, Dict, Iterable, List
 
-# ---------- helpers ----------
+from s3fs import S3FileSystem
+
+
+# Initialize anonymous S3 client for the OpenNeuro public bucket
+def get_s3_dataset_info(dataset: str, fs: S3FileSystem | None = None) -> dict:
+    """Fetch dataset information from S3 (OpenNeuro public bucket).
+
+    Returns dict with keys:
+      - total_size: total bytes under the dataset prefix
+    """
+    # Reuse a provided filesystem when running in parallel to avoid extra overhead
+    local_fs = fs or S3FileSystem(anon=True, client_kwargs={"region_name": "us-east-2"})
+    prefix = "s3://openneuro.org"
+    path = f"{prefix}/{dataset}"
+
+    try:
+        total_size = int(local_fs.du(path, total=True) or 0)
+    except Exception:
+        total_size = 0
+    return {"total_size": total_size}
+
+
+def human_readable_size(num_bytes: int) -> str:
+    """Format bytes using the closest unit among MB, GB, TB (fallback to KB/B).
+
+    Chooses the largest unit such that the value is >= 1. Uses base 1024.
+    """
+    if num_bytes is None:
+        return "0 B"
+    size = float(num_bytes)
+    units = [
+        (1024**4, "TB"),
+        (1024**3, "GB"),
+        (1024**2, "MB"),
+        (1024**1, "KB"),
+        (1, "B"),
+    ]
+    for factor, unit in units:
+        if size >= factor:
+            value = size / factor
+            # Use no decimals for B/KB; two decimals otherwise
+            if unit in ("B", "KB"):
+                return f"{int(round(value))} {unit}"
+            return f"{value:.2f} {unit}"
+    return "0 B"
 
 
 def _canonical_key(v: Any) -> str:
@@ -188,6 +233,42 @@ def normalize_to_dataset(
     return out
 
 
+def enrich_with_s3_size(
+    dataset_json: Dict[str, Dict[str, Any]],
+    *,
+    max_workers: int = 16,
+) -> Dict[str, Dict[str, Any]]:
+    """Augment each dataset blob with S3 size info and human-readable size.
+
+    Parallelizes S3 queries across datasets to speed up the process.
+
+    Adds keys per dataset:
+      - size_bytes
+      - size
+      - s3_item_count
+    """
+    if not dataset_json:
+        return dataset_json
+
+    fs = S3FileSystem(anon=True, client_kwargs={"region_name": "us-east-2"})
+
+    def worker(ds: str) -> tuple[str, dict]:
+        return ds, get_s3_dataset_info(ds, fs=fs)
+
+    datasets = list(dataset_json.keys())
+    # Bound workers to avoid overwhelming the network
+    workers = max(1, min(max_workers, len(datasets)))
+    with ThreadPoolExecutor(max_workers=workers) as ex:
+        futures = {ex.submit(worker, ds): ds for ds in datasets}
+        for fut in as_completed(futures):
+            ds, info = fut.result()
+            blob = dataset_json.get(ds, {})
+            size_bytes = int(info.get("total_size") or 0)
+            blob["size_bytes"] = size_bytes
+            blob["size"] = human_readable_size(size_bytes)
+    return dataset_json
+
+
 def dataset_summary_table(
     dataset_json: Dict[str, Dict[str, Any]],
 ) -> List[Dict[str, Any]]:
@@ -209,6 +290,9 @@ def dataset_summary_table(
                     )
                 ),
                 "duration_hours_total": blob["duration"]["hours_total"],
+                "size": blob.get("size", "0 B"),
+                "size_bytes": blob.get("size_bytes", 0),
+                "s3_item_count": blob.get("s3_item_count", 0),
             }
         )
     return rows
@@ -271,10 +355,12 @@ def save_consolidation(
 # ---------- example usage ----------
 from eegdash import EEGDash
 
-records = EEGDash().find(query={})
+records = EEGDash().find({})
 
 
 records_to_table = normalize_to_dataset(records)
+# Enrich with S3 sizes before producing summary
+records_to_table = enrich_with_s3_size(records_to_table, max_workers=60)
 summary_rows = dataset_summary_table(records_to_table)
 
 files = save_consolidation(

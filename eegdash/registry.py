@@ -105,6 +105,7 @@ def markdown_table(row_series: pd.Series) -> str:
     """Create a reStructuredText grid table from a pandas Series."""
     if row_series.empty:
         return ""
+    dataset_id = row_series["dataset"]
 
     # Prepare the dataframe with user's suggested logic
     df = (
@@ -137,7 +138,6 @@ def markdown_table(row_series: pd.Series) -> str:
     # Use tabulate for the final rst formatting
     table = tabulate(df, headers="keys", tablefmt="rst", showindex=False)
 
-    dataset_id = row_series["dataset_id"]
     # Add a caption for the table
     caption = f"Short overview of dataset {dataset_id} more details in the `Nemar documentation <https://nemar.org/dataexplorer/detail?dataset_id={dataset_id}>`_."
     # adding caption below the table

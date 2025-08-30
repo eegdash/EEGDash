@@ -137,7 +137,7 @@ def markdown_table(row_series: pd.Series) -> str:
     # Use tabulate for the final rst formatting
     table = tabulate(df, headers="keys", tablefmt="rst", showindex=False)
 
-    dataset_id = row_series["dataset"]
+    dataset_id = row_series["dataset_id"]
     # Add a caption for the table
     caption = f"Short overview of dataset {dataset_id} more details in the `Nemar documentation <https://nemar.org/dataexplorer/detail?dataset_id={dataset_id}>`_."
     # adding caption below the table

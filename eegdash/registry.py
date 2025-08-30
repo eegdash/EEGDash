@@ -57,7 +57,7 @@ def register_openneuro_datasets(
 
         init = make_init(dataset_id)
 
-        doc = f"""Create an instance for OpenNeuro dataset ``{dataset_id}``.
+        doc = f"""OpenNeuro dataset ``{dataset_id}``.
 
         {markdown_table(row_series)}
 
@@ -69,11 +69,15 @@ def register_openneuro_datasets(
             Extra Mongo query merged with ``{{'dataset': '{dataset_id}'}}``.
         s3_bucket : str | None
             Optional S3 bucket name.
+        subject : str | None
+            Optional subject identifier.
+        task : str | None
+            Optional task identifier.
         **kwargs
             Passed through to {base_class.__name__}.
         """
 
-        init.__doc__ = doc
+        # init.__doc__ = doc
 
         cls = type(
             class_name,
@@ -101,6 +105,7 @@ def markdown_table(row_series: pd.Series) -> str:
     """Create a reStructuredText grid table from a pandas Series."""
     if row_series.empty:
         return ""
+    dataset_id = row_series["dataset"]
 
     # Prepare the dataframe with user's suggested logic
     df = (
@@ -112,6 +117,7 @@ def markdown_table(row_series: pd.Series) -> str:
                 "n_tasks": "#Classes",
                 "sampling_freqs": "Freq(Hz)",
                 "duration_hours_total": "Duration(H)",
+                "size": "Size",
             }
         )
         .reindex(
@@ -122,6 +128,7 @@ def markdown_table(row_series: pd.Series) -> str:
                 "#Classes",
                 "Freq(Hz)",
                 "Duration(H)",
+                "Size",
             ]
         )
         .infer_objects(copy=False)
@@ -131,6 +138,9 @@ def markdown_table(row_series: pd.Series) -> str:
     # Use tabulate for the final rst formatting
     table = tabulate(df, headers="keys", tablefmt="rst", showindex=False)
 
+    # Add a caption for the table
+    caption = f"Short overview of dataset {dataset_id} more details in the `Nemar documentation <https://nemar.org/dataexplorer/detail?dataset_id={dataset_id}>`_."
+    # adding caption below the table
     # Indent the table to fit within the admonition block
     indented_table = "\n".join("    " + line for line in table.split("\n"))
-    return f"\n\n{indented_table}"
+    return f"\n\n{indented_table}\n\n{caption}"

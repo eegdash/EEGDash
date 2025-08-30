@@ -44,3 +44,37 @@ table.logos-row img.logo.mainlogo {
   max-height: 90px;
   object-fit: contain;
 }
+
+/* -------------------------------------------------------------
+   Dataset summary table: increase font size slightly and
+   align with PyData theme base font size.
+   Only affects tables we render via pandas (class `sd-table`).
+---------------------------------------------------------------- */
+.dataTables_wrapper .sd-table,
+.dataTables_wrapper .sd-table thead th,
+.dataTables_wrapper .sd-table tbody td,
+.dataTables_wrapper .sd-table tfoot td {
+  font-size: var(--pst-font-size-base, 1rem);
+  line-height: 1.5;
+}
+
+/* Captions for embedded figures/tables on dataset summary */
+figure.eegdash-figure figcaption.eegdash-caption {
+  color: var(--pst-color-text-muted, #5b6168);
+  font-size: calc(var(--pst-font-size-base, 1rem) * 0.95);
+  line-height: 1.5;
+  margin-top: 0.35rem;
+  text-align: center;
+}
+
+/* Make the DataTables filter input and buttons match size */
+.dataTables_wrapper .dataTables_filter input {
+  font-size: var(--pst-font-size-base, 1rem);
+  padding: 6px 10px;
+}
+
+.dataTables_wrapper .dt-buttons .dt-button,
+.dataTables_wrapper .dt-buttons .dt-button:active,
+.dataTables_wrapper .dt-buttons .dt-button:focus {
+  font-size: var(--pst-font-size-base, 1rem);
+}

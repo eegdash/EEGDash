@@ -31,6 +31,8 @@ extensions = [
     # "autoapi.extension",
     "numpydoc",
     "sphinx_gallery.gen_gallery",
+    # Generate sitemap.xml for search engines
+    "sphinx_sitemap",
 ]
 
 templates_path = ["_templates"]
@@ -45,6 +47,10 @@ html_favicon = "_static/eegdash_icon.png"
 html_title = "EEG Dash"
 html_short_title = "EEG Dash"
 html_css_files = ["custom.css"]
+
+# Required for sphinx-sitemap: set the canonical base URL of the site
+# Make sure this matches the actual published docs URL and ends with '/'
+html_baseurl = "https://sccn.github.io/eegdash/"
 
 html_theme_options = {
     "icon_links_label": "External Links",  # for screen reader
@@ -95,6 +101,9 @@ html_theme_options = {
 
 html_sidebars = {"api": [], "dataset_summary": [], "installation": []}
 
+# Copy extra files (e.g., robots.txt) to the output root
+html_extra_path = ["_extra"]
+
 
 # -- Extension configurations ------------------------------------------------
 autoclass_content = "both"
@@ -141,3 +150,7 @@ def setup(app):
     )
     if not os.path.exists(backreferences_dir):
         os.makedirs(backreferences_dir)
+
+
+# Configure sitemap URL format (omit .html where possible)
+sitemap_url_scheme = "{link}"

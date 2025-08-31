@@ -6,9 +6,11 @@ from typing import Any, Mapping
 
 import mne
 import numpy as np
+import platformdirs
 import xarray as xr
 from dotenv import load_dotenv
 from joblib import Parallel, delayed
+from mne.utils import warn
 from mne_bids import get_bids_path_from_fname, read_raw_bids
 from pymongo import InsertOne, UpdateOne
 from s3fs import S3FileSystem
@@ -693,9 +695,8 @@ class EEGDash:
 class EEGDashDataset(BaseConcatDataset):
     def __init__(
         self,
-        query: dict | None = None,
-        cache_dir: str = "~/eegdash_cache",
-        dataset: str | list[str] | None = None,
+        cache_dir: str | Path,
+        query: dict[str, Any] = None,
         description_fields: list[str] = [
             "subject",
             "session",
@@ -706,9 +707,9 @@ class EEGDashDataset(BaseConcatDataset):
             "sex",
         ],
         s3_bucket: str | None = None,
-        data_dir: str | None = None,
         eeg_dash_instance=None,
         records: list[dict] | None = None,
+        offline_mode: bool = False,
         **kwargs,
     ):
         """Create a new EEGDashDataset from a given query or local BIDS dataset directory
@@ -754,34 +755,36 @@ class EEGDashDataset(BaseConcatDataset):
         records : list[dict] | None
             Optional list of pre-fetched metadata records. If provided, the dataset is
             constructed directly from these records without querying MongoDB.
+        offline_mode : bool
+            If True, do not attempt to query MongoDB at all. This is useful if you want to
+            work with a local cache only, or if you are offline.
         kwargs : dict
             Additional keyword arguments to be passed to the EEGDashBaseDataset
             constructor.
 
         """
-        self.cache_dir = cache_dir
+        self.cache_dir = Path(cache_dir or platformdirs.user_cache_dir("EEGDash"))
+        if not self.cache_dir.exists():
+            warn(f"Cache directory does not exist, creating it: {self.cache_dir}")
+            self.cache_dir.mkdir(exist_ok=True, parents=True)
         self.s3_bucket = s3_bucket
         self.eeg_dash = eeg_dash_instance
+
+        # Separate query kwargs from other kwargs passed to the BaseDataset constructor
+        self.query = query or {}
+        self.query.update(
+            {k: v for k, v in kwargs.items() if k in EEGDash._ALLOWED_QUERY_FIELDS}
+        )
+        base_dataset_kwargs = {k: v for k, v in kwargs.items() if k not in self.query}
+        if "dataset" not in self.query:
+            raise ValueError("You must provide a 'dataset' argument")
+
+        self.data_dir = self.cache_dir / self.query["dataset"]
+
         _owns_client = False
         if self.eeg_dash is None and records is None:
             self.eeg_dash = EEGDash()
             _owns_client = True
-
-        # Separate query kwargs from other kwargs passed to the BaseDataset constructor
-        query_kwargs = {
-            k: v for k, v in kwargs.items() if k in EEGDash._ALLOWED_QUERY_FIELDS
-        }
-        base_dataset_kwargs = {k: v for k, v in kwargs.items() if k not in query_kwargs}
-
-        # If user provided a dataset name via the dedicated parameter (and we're not
-        # loading from a local directory), treat it as a query filter. Accept str or list.
-        if data_dir is None and dataset is not None:
-            # Allow callers to pass a single dataset id (str) or a list of them.
-            # If list is provided, let _build_query_from_kwargs turn it into $in later.
-            query_kwargs.setdefault("dataset", dataset)
-
-        # Allow mixing raw DB query with additional keyword filters. Both will be
-        # merged by EEGDash.find() (logical AND), so we do not raise here.
 
         try:
             if records is not None:
@@ -795,42 +798,25 @@ class EEGDashDataset(BaseConcatDataset):
                     )
                     for record in self.records
                 ]
-            elif data_dir:
-                # This path loads from a local directory and is not affected by DB query logic
-                if isinstance(data_dir, (str, Path)):
+            elif offline_mode:  # only assume local data is complete if in offline mode
+                if self.data_dir.exists():
+                    # This path loads from a local directory and is not affected by DB query logic
                     datasets = self.load_bids_dataset(
-                        dataset=dataset
-                        if isinstance(dataset, str)
-                        else (dataset[0] if dataset else None),
-                        data_dir=data_dir,
+                        dataset=self.query["dataset"],
+                        data_dir=self.data_dir,
                         description_fields=description_fields,
                         s3_bucket=s3_bucket,
                         **base_dataset_kwargs,
                     )
                 else:
-                    assert dataset is not None, (
-                        "dataset must be provided when passing multiple data_dir"
+                    raise ValueError(
+                        f"Offline mode is enabled, but local data_dir {self.data_dir} does not exist."
                     )
-                    assert len(data_dir) == len(dataset), (
-                        "Number of datasets and directories must match"
-                    )
-                    datasets = []
-                    for i, _ in enumerate(data_dir):
-                        datasets.extend(
-                            self.load_bids_dataset(
-                                dataset=dataset[i],
-                                data_dir=data_dir[i],
-                                description_fields=description_fields,
-                                s3_bucket=s3_bucket,
-                                **base_dataset_kwargs,
-                            )
-                        )
-            elif query is not None or query_kwargs:
+            elif self.query:
                 # This is the DB query path that we are improving
-                datasets = self.find_datasets(
-                    query=query,
+                datasets = self._find_datasets(
+                    query=self.eeg_dash._build_query_from_kwargs(**self.query),
                     description_fields=description_fields,
-                    query_kwargs=query_kwargs,
                     base_dataset_kwargs=base_dataset_kwargs,
                 )
                 # We only need filesystem if we need to access S3
@@ -860,11 +846,10 @@ class EEGDashDataset(BaseConcatDataset):
                     return result
         return None
 
-    def find_datasets(
+    def _find_datasets(
         self,
         query: dict[str, Any] | None,
         description_fields: list[str],
-        query_kwargs: dict,
         base_dataset_kwargs: dict,
     ) -> list[EEGDashBaseDataset]:
         """Helper method to find datasets in the MongoDB collection that satisfy the
@@ -888,11 +873,7 @@ class EEGDashDataset(BaseConcatDataset):
         """
         datasets: list[EEGDashBaseDataset] = []
 
-        # Build records using either a raw query OR keyword filters, but not both.
-        # Note: callers may accidentally pass an empty dict for `query` along with
-        # kwargs. In that case, treat it as if no query was provided and rely on kwargs.
-        # Always delegate merging of raw query + kwargs to EEGDash.find
-        self.records = self.eeg_dash.find(query, **query_kwargs)
+        self.records = self.eeg_dash.find(query)
 
         for record in self.records:
             description = {}
@@ -903,8 +884,8 @@ class EEGDashDataset(BaseConcatDataset):
             datasets.append(
                 EEGDashBaseDataset(
                     record,
-                    self.cache_dir,
-                    self.s3_bucket,
+                    cache_dir=self.cache_dir,
+                    s3_bucket=self.s3_bucket,
                     description=description,
                     **base_dataset_kwargs,
                 )

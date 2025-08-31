@@ -18,19 +18,21 @@ The code below provides an example of using the *EEGDash* library in combination
 5. **Model Training and Evaluation Process**: This section trains the neural network, normalizes input data, computes cross-entropy loss, updates model parameters, and evaluates classification accuracy over six epochs.
 """
 
-
 # %%
 # Data Retrieval Using EEGDash
 # ----------------------------
 #
 # First we find one resting state dataset. This dataset contains both eyes open
 # and eyes closed data.
+from pathlib import Path
 
+cache_folder = Path.home() / "eegdash"
 # %%
 from eegdash import EEGDashDataset
 
 ds_eoec = EEGDashDataset(
-    {"dataset": "ds005514", "task": "RestingState", "subject": "NDARDB033FW5"}
+    query={"dataset": "ds005514", "task": "RestingState", "subject": "NDARDB033FW5"},
+    cache_dir=cache_folder,
 )
 
 # %%

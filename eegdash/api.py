@@ -10,6 +10,7 @@ import platformdirs
 import xarray as xr
 from dotenv import load_dotenv
 from joblib import Parallel, delayed
+from mne.utils import warn
 from mne_bids import get_bids_path_from_fname, read_raw_bids
 from pymongo import InsertOne, UpdateOne
 from s3fs import S3FileSystem
@@ -694,8 +695,8 @@ class EEGDash:
 class EEGDashDataset(BaseConcatDataset):
     def __init__(
         self,
-        cache_dir: str,
-        query: dict[str, Any] = None,
+        query: dict[str, Any],
+        cache_dir: str | Path,
         description_fields: list[str] = [
             "subject",
             "session",
@@ -763,7 +764,9 @@ class EEGDashDataset(BaseConcatDataset):
 
         """
         self.cache_dir = Path(cache_dir or platformdirs.user_cache_dir("EEGDash"))
-        os.makedirs(self.cache_dir, exist_ok=True)
+        if not self.cache_dir.exists():
+            warn(f"Cache directory does not exist, creating it: {self.cache_dir}")
+            self.cache_dir.mkdir(exist_ok=True, parents=True)
         self.s3_bucket = s3_bucket
         self.eeg_dash = eeg_dash_instance
 

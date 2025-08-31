@@ -3,10 +3,10 @@ import os
 import tempfile
 from pathlib import Path
 from typing import Any, Mapping
-import platformdirs
 
 import mne
 import numpy as np
+import platformdirs
 import xarray as xr
 from dotenv import load_dotenv
 from joblib import Parallel, delayed
@@ -770,9 +770,7 @@ class EEGDashDataset(BaseConcatDataset):
         # Separate query kwargs from other kwargs passed to the BaseDataset constructor
         self.query = query or {}
         self.query.update(
-            {
-                k: v for k, v in kwargs.items() if k in EEGDash._ALLOWED_QUERY_FIELDS
-            }
+            {k: v for k, v in kwargs.items() if k in EEGDash._ALLOWED_QUERY_FIELDS}
         )
         base_dataset_kwargs = {k: v for k, v in kwargs.items() if k not in self.query}
         if "dataset" not in self.query:
@@ -797,7 +795,7 @@ class EEGDashDataset(BaseConcatDataset):
                     )
                     for record in self.records
                 ]
-            elif offline_mode: # only assume local data is complete if in offline mode
+            elif offline_mode:  # only assume local data is complete if in offline mode
                 if self.data_dir.exists():
                     # This path loads from a local directory and is not affected by DB query logic
                     datasets = self.load_bids_dataset(

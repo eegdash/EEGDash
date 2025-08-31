@@ -90,6 +90,7 @@ html_theme_options = {
             "type": "fontawesome",
         },
     ],
+    "analytics": dict(google_analytics_id="G-CHY0V439ZQ"),
 }
 
 html_sidebars = {"api": [], "dataset_summary": [], "installation": []}

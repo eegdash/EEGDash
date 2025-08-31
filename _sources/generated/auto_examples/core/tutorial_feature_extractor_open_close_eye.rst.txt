@@ -334,7 +334,7 @@ Features
 
  .. code-block:: none
 
-    Extracting features:   0%|          | 0/1 [00:00<?, ?it/s]    Extracting features: 100%|██████████| 1/1 [00:00<00:00,  1.25it/s]    Extracting features: 100%|██████████| 1/1 [00:00<00:00,  1.25it/s]
+    Extracting features:   0%|          | 0/1 [00:00<?, ?it/s]    Extracting features: 100%|██████████| 1/1 [00:00<00:00,  1.27it/s]    Extracting features: 100%|██████████| 1/1 [00:00<00:00,  1.27it/s]
 
 
 
@@ -2777,7 +2777,7 @@ accuracy across six epochs.
  .. code-block:: none
 
     [LightGBM] [Info] Number of positive: 28, number of negative: 28
-    [LightGBM] [Info] Auto-choosing col-wise multi-threading, the overhead of testing was 0.000324 seconds.
+    [LightGBM] [Info] Auto-choosing col-wise multi-threading, the overhead of testing was 0.000337 seconds.
     You can set `force_col_wise=true` to remove the overhead.
     [LightGBM] [Info] Total Bins 9205
     [LightGBM] [Info] Number of data points in the train set: 56, number of used features: 460
@@ -2940,9 +2940,9 @@ accuracy across six epochs.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 5.706 seconds)
+   **Total running time of the script:** (0 minutes 5.438 seconds)
 
-**Estimated memory usage:**  1242 MB
+**Estimated memory usage:**  1243 MB
 
 
 .. _sphx_glr_download_generated_auto_examples_core_tutorial_feature_extractor_open_close_eye.py:

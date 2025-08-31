@@ -335,7 +335,7 @@ class EEGChallengeDataset(EEGDashDataset):
             s3_bucket = f"{s3_bucket}/{release}_L100_bdf"
 
         super().__init__(
-            dataset=dataset_parameters,
+            dataset=RELEASE_TO_OPENNEURO_DATASET_MAP[release],
             query=query,
             cache_dir=cache_dir,
             s3_bucket=s3_bucket,

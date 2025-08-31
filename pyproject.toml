@@ -67,7 +67,8 @@ tests = [
     'pytest-benchmark',
 ]
 dev = [
-  "pre-commit"
+  "pre-commit",
+  "ipykernel"
 ]
 
 docs = [
@@ -77,6 +78,7 @@ docs = [
   "sphinx_rtd_theme",
   "pydata-sphinx-theme",
   "sphinx-autobuild",
+  "sphinx-sitemap",
   "numpydoc",
   "memory_profiler",
   "ipython",

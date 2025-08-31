@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from mne import get_config
+from mne.utils import get_config
 from torch.utils.data import Dataset
 
 from eegdash import EEGDash, EEGDashDataset

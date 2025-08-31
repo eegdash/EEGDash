@@ -694,8 +694,8 @@ class EEGDash:
 class EEGDashDataset(BaseConcatDataset):
     def __init__(
         self,
+        cache_dir: str,
         query: dict[str, Any] = None,
-        cache_dir: str = None,
         description_fields: list[str] = [
             "subject",
             "session",

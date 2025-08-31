@@ -12,7 +12,9 @@ def test_dataset_loads_without_eegdash(monkeypatch):
     """Dataset should load from records without contacting network resources."""
     eeg_dash = EEGDash()
 
-    records = eeg_dash.find(subject="NDARAC350XUM", task="RestingState")
+    records = eeg_dash.find(
+        dataset="ds005509", subject="NDARAC350XUM", task="RestingState"
+    )
 
     # test with internet
     dataset_internet = EEGDashDataset(
@@ -24,14 +26,14 @@ def test_dataset_loads_without_eegdash(monkeypatch):
     # Monkeypatch any network calls inside EEGDashDataset to raise if called
     monkeypatch.setattr(
         EEGDashDataset,
-        "find_datasets",
+        "_find_datasets",
         lambda *args, **kwargs: pytest.skip(
             "Skipping network download in offline test"
         ),
     )
     monkeypatch.setattr(
         EEGDashDataset,
-        "find_datasets",
+        "_find_datasets",
         lambda *args, **kwargs: pytest.skip(
             "Skipping network download in offline test"
         ),
@@ -39,7 +41,7 @@ def test_dataset_loads_without_eegdash(monkeypatch):
     # TO-DO: discover way to do this pytest
 
     dataset_without_internet = EEGDashDataset(
-        records=records, cache_dir=CACHE_DIR, eeg_dash_instance=None
+        dataset="ds005509", records=records, cache_dir=CACHE_DIR, eeg_dash_instance=None
     )
 
     assert dataset_internet.datasets[0].raw == dataset_without_internet.datasets[0].raw

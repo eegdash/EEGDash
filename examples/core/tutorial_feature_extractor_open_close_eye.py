@@ -27,11 +27,19 @@ The code below provides an example of using the *EEGDash* library in combination
 # and eyes closed data.
 
 # %%
+from pathlib import Path
+
 from eegdash import EEGDashDataset
 
+cache_folder = Path.home() / "eegdash"
+
 ds_eoec = EEGDashDataset(
-    {"dataset": "ds005514", "task": "RestingState", "subject": "NDARDB033FW5"}
+    dataset="ds005514",
+    task="RestingState",
+    subject="NDARDB033FW5",
+    cache_dir=cache_folder,
 )
+
 
 # %%
 # Data Preprocessing Using Braindecode

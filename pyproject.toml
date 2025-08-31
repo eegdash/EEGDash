@@ -82,25 +82,13 @@ docs = [
   "memory_profiler",
   "ipython",
   "lightgbm",
+  "plotly"
 ]
 
 all = [
-  "pre-commit",
-  "pytest",
-  "pytest-cov",
-  "codecov",
-  "pytest_cases",
-  "pytest-benchmark",
-  "sphinx",
-  "sphinx_design",
-  "sphinx_gallery",
-  "sphinx_rtd_theme",
-  "pydata-sphinx-theme",
-  "sphinx-autobuild",
-  "numpydoc",
-  "memory_profiler",
-  "ipython",
-  "lightgbm",
+  "eegdash[docs]",
+  "eegdash[dev]",
+  "eegdash[tests]",
 ]
 
 [tool.setuptools]

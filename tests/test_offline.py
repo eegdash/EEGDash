@@ -4,7 +4,7 @@ import pytest
 
 from eegdash import EEGDash, EEGDashDataset
 
-CACHE_DIR = (Path.home() / "mne_data" / "eeg_challenge_cache").resolve()
+CACHE_DIR = (Path.home() / "mne_data" / "openneuro").resolve()
 CACHE_DIR.mkdir(parents=True, exist_ok=True)
 
 
@@ -24,14 +24,14 @@ def test_dataset_loads_without_eegdash(monkeypatch):
     # Monkeypatch any network calls inside EEGDashDataset to raise if called
     monkeypatch.setattr(
         EEGDashDataset,
-        "find_datasets",
+        "_find_datasets",
         lambda *args, **kwargs: pytest.skip(
             "Skipping network download in offline test"
         ),
     )
     monkeypatch.setattr(
         EEGDashDataset,
-        "find_datasets",
+        "_find_datasets",
         lambda *args, **kwargs: pytest.skip(
             "Skipping network download in offline test"
         ),

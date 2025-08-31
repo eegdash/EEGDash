@@ -7,4 +7,4 @@ __init__mongo_client()
 
 __all__ = ["EEGDash", "EEGDashDataset", "EEGChallengeDataset"]
 
-__version__ = "0.3.5"
+__version__ = "0.3.6"

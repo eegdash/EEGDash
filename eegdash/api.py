@@ -788,10 +788,10 @@ class EEGDashDataset(BaseConcatDataset):
             warn(
                 "If you are not participating in the competition, you can ignore this warning!"
                 "\n\n"
-                "[EEGChallengeDataset] EEG 2025 Competition Data Notice:\n"
-                "-------------------------------------------------------\n"
+                "EEG 2025 Competition Data Notice:\n"
+                "---------------------------------\n"
                 " You are loading the dataset that is used in the EEG 2025 Competition:\n"
-                "IMPORTANT: The data accessed via `EEGDashDataset` is NOT identical to what you get from `EEGChallengeDataset` directly.\n"
+                "IMPORTANT: The data accessed via `EEGDashDataset` is NOT identical to what you get from `EEGChallengeDataset` object directly.\n"
                 "and it is not what you will use for the competition. Downsampling and filtering were applied to the data"
                 "to allow more people to participate.\n"
                 "\n",

@@ -794,7 +794,7 @@ class EEGDashDataset(BaseConcatDataset):
                 "IMPORTANT: The data accessed via `EEGDashDataset` is NOT identical to what you get from `EEGChallengeDataset` object directly.\n"
                 "and it is not what you will use for the competition. Downsampling and filtering were applied to the data"
                 "to allow more people to participate.\n"
-                "\n",
+                "\n"
                 "If you are participating in the competition, always use `EEGChallengeDataset` to ensure consistency with the challenge data.\n"
                 "\n",
                 UserWarning,

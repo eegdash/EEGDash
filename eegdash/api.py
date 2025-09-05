@@ -17,6 +17,7 @@ from s3fs import S3FileSystem
 
 from braindecode.datasets import BaseConcatDataset
 
+from .const import RELEASE_TO_OPENNEURO_DATASET_MAP
 from .data_config import config as data_config
 from .data_utils import EEGBIDSDataset, EEGDashBaseDataset
 from .mongodb import MongoConnectionManager
@@ -710,6 +711,7 @@ class EEGDashDataset(BaseConcatDataset):
         eeg_dash_instance=None,
         records: list[dict] | None = None,
         offline_mode: bool = False,
+        n_jobs: int = -1,
         **kwargs,
     ):
         """Create a new EEGDashDataset from a given query or local BIDS dataset directory
@@ -758,6 +760,8 @@ class EEGDashDataset(BaseConcatDataset):
         offline_mode : bool
             If True, do not attempt to query MongoDB at all. This is useful if you want to
             work with a local cache only, or if you are offline.
+        n_jobs : int
+            The number of jobs to run in parallel (default is -1, meaning using all processors).
         kwargs : dict
             Additional keyword arguments to be passed to the EEGDashBaseDataset
             constructor.
@@ -780,7 +784,22 @@ class EEGDashDataset(BaseConcatDataset):
             raise ValueError("You must provide a 'dataset' argument")
 
         self.data_dir = self.cache_dir / self.query["dataset"]
-
+        if self.query["dataset"] in RELEASE_TO_OPENNEURO_DATASET_MAP.values():
+            warn(
+                "If you are not participating in the competition, you can ignore this warning!"
+                "\n\n"
+                "EEG 2025 Competition Data Notice:\n"
+                "---------------------------------\n"
+                " You are loading the dataset that is used in the EEG 2025 Competition:\n"
+                "IMPORTANT: The data accessed via `EEGDashDataset` is NOT identical to what you get from `EEGChallengeDataset` object directly.\n"
+                "and it is not what you will use for the competition. Downsampling and filtering were applied to the data"
+                "to allow more people to participate.\n"
+                "\n",
+                "If you are participating in the competition, always use `EEGChallengeDataset` to ensure consistency with the challenge data.\n"
+                "\n",
+                UserWarning,
+                module="eegdash",
+            )
         _owns_client = False
         if self.eeg_dash is None and records is None:
             self.eeg_dash = EEGDash()
@@ -801,11 +820,12 @@ class EEGDashDataset(BaseConcatDataset):
             elif offline_mode:  # only assume local data is complete if in offline mode
                 if self.data_dir.exists():
                     # This path loads from a local directory and is not affected by DB query logic
-                    datasets = self.load_bids_dataset(
+                    datasets = self.load_bids_daxtaset(
                         dataset=self.query["dataset"],
                         data_dir=self.data_dir,
                         description_fields=description_fields,
                         s3_bucket=s3_bucket,
+                        n_jobs=n_jobs,
                         **base_dataset_kwargs,
                     )
                 else:
@@ -898,6 +918,7 @@ class EEGDashDataset(BaseConcatDataset):
         data_dir: str | Path,
         description_fields: list[str],
         s3_bucket: str | None = None,
+        n_jobs: int = -1,
         **kwargs,
     ):
         """Helper method to load a single local BIDS dataset and return it as a list of
@@ -912,13 +933,17 @@ class EEGDashDataset(BaseConcatDataset):
         description_fields : list[str]
             A list of fields to be extracted from the dataset records
             and included in the returned dataset description(s).
+        s3_bucket : str | None
+            The S3 bucket to upload the dataset files to (if any).
+        n_jobs : int
+            The number of jobs to run in parallel (default is -1, meaning using all processors).
 
         """
         bids_dataset = EEGBIDSDataset(
             data_dir=data_dir,
             dataset=dataset,
         )
-        datasets = Parallel(n_jobs=-1, prefer="threads", verbose=1)(
+        datasets = Parallel(n_jobs=n_jobs, prefer="threads", verbose=1)(
             delayed(self.get_base_dataset_from_bids_file)(
                 bids_dataset=bids_dataset,
                 bids_file=bids_file,

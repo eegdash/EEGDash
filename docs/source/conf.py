@@ -47,13 +47,7 @@ html_favicon = "_static/eegdash_icon.png"
 html_title = "EEG Dash"
 html_short_title = "EEG Dash"
 html_css_files = ["custom.css"]
-html_js_files = [
-    (
-        "https://www.googletagmanager.com/gtag/js?id=G-CHY0V439ZQ",
-        {"async": "async"},
-    ),
-    "js/ga4.js",
-]
+html_js_files = []
 
 # Required for sphinx-sitemap: set the canonical base URL of the site
 # Make sure this matches the actual published docs URL and ends with '/'

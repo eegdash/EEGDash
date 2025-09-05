@@ -66,6 +66,23 @@ and eyes closed data.
 
 
 
+.. rst-class:: sphx-glr-script-out
+
+ .. code-block:: none
+
+    /home/runner/work/EEGDash/EEGDash/eegdash/api.py:788: UserWarning: If you are not participating in the competition, you can ignore this warning!
+
+    EEG 2025 Competition Data Notice:
+    ---------------------------------
+     You are loading the dataset that is used in the EEG 2025 Competition:
+    IMPORTANT: The data accessed via `EEGDashDataset` is NOT identical to what you get from `EEGChallengeDataset` object directly.
+    and it is not what you will use for the competition. Downsampling and filtering were applied to the datato allow more people to participate.
+
+    If you are participating in the competition, always use `EEGChallengeDataset` to ensure consistency with the challenge data.
+
+
+      warn(
+
 
 
 
@@ -102,56 +119,21 @@ or eyes-closed). `windows_ds` is a PyTorch dataset, and when queried, it
 returns labels for eyes-open and eyes-closed (assigned as labels 0 and 1,
 corresponding to their respective event markers).
 
-.. GENERATED FROM PYTHON SOURCE LINES 77-170
+.. GENERATED FROM PYTHON SOURCE LINES 75-133
 
 .. code-block:: Python
 
+
+    from eegdash.hbn.preprocessing import hbn_ec_ec_reannotation
     from braindecode.preprocessing import (
         preprocess,
         Preprocessor,
         create_windows_from_events,
     )
     import numpy as np
-    import mne
     import warnings
 
     warnings.simplefilter("ignore", category=RuntimeWarning)
-
-
-    class hbn_ec_ec_reannotation(Preprocessor):
-        def __init__(self):
-            super().__init__(
-                fn=self.transform, apply_on_array=False
-            )  # Pass the transform method as the function
-
-        def transform(self, raw):  # Changed from 'apply' to 'transform'
-            # Create events array from annotations
-            events, event_id = mne.events_from_annotations(raw)
-
-            print(event_id)
-
-            # Create new events array for 2-second segments
-            new_events = []
-            sfreq = raw.info["sfreq"]
-            for event in events[events[:, 2] == event_id["instructed_toCloseEyes"]]:
-                # For each original event, create events every 2 seconds from 15s to 29s after
-                start_times = event[0] + np.arange(15, 29, 2) * sfreq
-                new_events.extend([[int(t), 0, 1] for t in start_times])
-
-            for event in events[events[:, 2] == event_id["instructed_toOpenEyes"]]:
-                # For each original event, create events every 2 seconds from 5s to 19s after
-                start_times = event[0] + np.arange(5, 19, 2) * sfreq
-                new_events.extend([[int(t), 0, 2] for t in start_times])
-
-            # replace events in raw
-            new_events = np.array(new_events)
-            annot_from_events = mne.annotations_from_events(
-                events=new_events,
-                event_desc={1: "eyes_closed", 2: "eyes_open"},
-                sfreq=raw.info["sfreq"],
-            )
-            raw.set_annotations(annot_from_events)
-            return raw
 
 
     # BrainDecode preprocessors
@@ -208,7 +190,6 @@ corresponding to their respective event markers).
  .. code-block:: none
 
     Used Annotations descriptions: [np.str_('boundary'), np.str_('break cnt'), np.str_('instructed_toCloseEyes'), np.str_('instructed_toOpenEyes'), np.str_('resting_start')]
-    {np.str_('boundary'): 1, np.str_('break cnt'): 2, np.str_('instructed_toCloseEyes'): 3, np.str_('instructed_toOpenEyes'): 4, np.str_('resting_start'): 5}
     NOTE: pick_channels() is a legacy function. New code should use inst.pick(...).
     Filtering raw data in 1 contiguous segment
     Setting up band-pass filter from 1 - 55 Hz
@@ -229,7 +210,7 @@ corresponding to their respective event markers).
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 171-177
+.. GENERATED FROM PYTHON SOURCE LINES 134-140
 
 Plotting a Single Channel for One Sample
 ----------------------------------------
@@ -238,7 +219,7 @@ It’s always a good practice to verify that the data has been properly loaded
 and processed. Here, we plot a single channel from one sample to ensure the
 signal is present and looks as expected.
 
-.. GENERATED FROM PYTHON SOURCE LINES 179-185
+.. GENERATED FROM PYTHON SOURCE LINES 142-148
 
 .. code-block:: Python
 
@@ -260,12 +241,12 @@ signal is present and looks as expected.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 186-188
+.. GENERATED FROM PYTHON SOURCE LINES 149-151
 
 Features
 --------
 
-.. GENERATED FROM PYTHON SOURCE LINES 188-245
+.. GENERATED FROM PYTHON SOURCE LINES 151-208
 
 .. code-block:: Python
 
@@ -334,12 +315,12 @@ Features
 
  .. code-block:: none
 
-    Extracting features:   0%|          | 0/1 [00:00<?, ?it/s]    Extracting features: 100%|██████████| 1/1 [00:00<00:00,  1.30it/s]    Extracting features: 100%|██████████| 1/1 [00:00<00:00,  1.29it/s]
+    Extracting features:   0%|          | 0/1 [00:00<?, ?it/s]    Extracting features: 100%|██████████| 1/1 [00:00<00:00,  1.31it/s]    Extracting features: 100%|██████████| 1/1 [00:00<00:00,  1.31it/s]
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 246-248
+.. GENERATED FROM PYTHON SOURCE LINES 209-211
 
 .. code-block:: Python
 
@@ -373,8 +354,8 @@ Features
           <th></th>
           <th>i_dataset</th>
           <th>i_window_in_trial</th>
-          <th>i_stop_in_trial</th>
           <th>i_start_in_trial</th>
+          <th>i_stop_in_trial</th>
           <th>sig_mean_E22</th>
           <th>sig_mean_E9</th>
           <th>sig_mean_E33</th>
@@ -459,8 +440,8 @@ Features
           <th>0</th>
           <td>0</td>
           <td>0</td>
-          <td>8348</td>
           <td>8092</td>
+          <td>8348</td>
           <td>5.647381e-07</td>
           <td>-2.509246e-06</td>
           <td>8.135321e-06</td>
@@ -543,8 +524,8 @@ Features
           <th>1</th>
           <td>0</td>
           <td>0</td>
-          <td>8604</td>
           <td>8348</td>
+          <td>8604</td>
           <td>1.130721e-06</td>
           <td>1.416919e-07</td>
           <td>-6.768836e-07</td>
@@ -627,8 +608,8 @@ Features
           <th>2</th>
           <td>0</td>
           <td>0</td>
-          <td>8860</td>
           <td>8604</td>
+          <td>8860</td>
           <td>-8.737620e-07</td>
           <td>2.451451e-07</td>
           <td>3.854794e-07</td>
@@ -711,8 +692,8 @@ Features
           <th>3</th>
           <td>0</td>
           <td>0</td>
-          <td>9116</td>
           <td>8860</td>
+          <td>9116</td>
           <td>3.482372e-07</td>
           <td>-5.419446e-07</td>
           <td>-7.257668e-08</td>
@@ -795,8 +776,8 @@ Features
           <th>4</th>
           <td>0</td>
           <td>0</td>
-          <td>9372</td>
           <td>9116</td>
+          <td>9372</td>
           <td>1.078094e-06</td>
           <td>2.234204e-06</td>
           <td>8.322080e-07</td>
@@ -963,8 +944,8 @@ Features
           <th>65</th>
           <td>0</td>
           <td>0</td>
-          <td>43419</td>
           <td>43163</td>
+          <td>43419</td>
           <td>2.604641e-06</td>
           <td>2.696607e-06</td>
           <td>3.207271e-07</td>
@@ -1047,8 +1028,8 @@ Features
           <th>66</th>
           <td>0</td>
           <td>0</td>
-          <td>43675</td>
           <td>43419</td>
+          <td>43675</td>
           <td>-1.158709e-06</td>
           <td>-9.353611e-07</td>
           <td>6.243006e-07</td>
@@ -1131,8 +1112,8 @@ Features
           <th>67</th>
           <td>0</td>
           <td>0</td>
-          <td>43931</td>
           <td>43675</td>
+          <td>43931</td>
           <td>9.350503e-07</td>
           <td>7.273056e-07</td>
           <td>-3.974258e-07</td>
@@ -1215,8 +1196,8 @@ Features
           <th>68</th>
           <td>0</td>
           <td>0</td>
-          <td>44187</td>
           <td>43931</td>
+          <td>44187</td>
           <td>-1.334396e-04</td>
           <td>-4.969487e-05</td>
           <td>-2.251352e-06</td>
@@ -1299,8 +1280,8 @@ Features
           <th>69</th>
           <td>0</td>
           <td>0</td>
-          <td>44443</td>
           <td>44187</td>
+          <td>44443</td>
           <td>1.370442e-04</td>
           <td>3.529626e-05</td>
           <td>3.354098e-06</td>
@@ -1387,7 +1368,7 @@ Features
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 249-252
+.. GENERATED FROM PYTHON SOURCE LINES 212-215
 
 .. code-block:: Python
 
@@ -1401,7 +1382,7 @@ Features
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 253-255
+.. GENERATED FROM PYTHON SOURCE LINES 216-218
 
 .. code-block:: Python
 
@@ -2449,7 +2430,7 @@ Features
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 256-279
+.. GENERATED FROM PYTHON SOURCE LINES 219-242
 
 Creating training and test sets
 -------------------------------
@@ -2475,7 +2456,7 @@ test sets.
    objects with a batch size of 10, enabling efficient mini-batch training and
    shuffling.
 
-.. GENERATED FROM PYTHON SOURCE LINES 279-323
+.. GENERATED FROM PYTHON SOURCE LINES 242-286
 
 .. code-block:: Python
 
@@ -2539,7 +2520,7 @@ test sets.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 324-331
+.. GENERATED FROM PYTHON SOURCE LINES 287-294
 
 Check labels
 ------------
@@ -2549,7 +2530,7 @@ functioning correctly. If all labels are 0s (eyes closed) or 1s (eyes open),
 it could indicate an issue with data loading or stratification, requiring
 further investigation.
 
-.. GENERATED FROM PYTHON SOURCE LINES 331-337
+.. GENERATED FROM PYTHON SOURCE LINES 294-300
 
 .. code-block:: Python
 
@@ -2572,7 +2553,7 @@ further investigation.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 338-344
+.. GENERATED FROM PYTHON SOURCE LINES 301-307
 
 Create model
 ------------
@@ -2581,7 +2562,7 @@ The model is a shallow convolutional neural network (ShallowFBCSPNet) with 24
 input channels (EEG channels), 2 output classes (eyes-open and eyes-closed),
 and an input window size of 256 samples (2 seconds of EEG data).
 
-.. GENERATED FROM PYTHON SOURCE LINES 344-361
+.. GENERATED FROM PYTHON SOURCE LINES 307-324
 
 .. code-block:: Python
 
@@ -2654,7 +2635,7 @@ and an input window size of 256 samples (2 seconds of EEG data).
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 362-386
+.. GENERATED FROM PYTHON SOURCE LINES 325-349
 
 Model Training and Evaluation Process
 -------------------------------------
@@ -2681,7 +2662,7 @@ accuracy across six epochs.
    mode on the test set. It computes predictions on normalized data and
    calculates test accuracy by comparing outputs with actual labels.
 
-.. GENERATED FROM PYTHON SOURCE LINES 386-426
+.. GENERATED FROM PYTHON SOURCE LINES 349-389
 
 .. code-block:: Python
 
@@ -2743,7 +2724,7 @@ accuracy across six epochs.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 427-448
+.. GENERATED FROM PYTHON SOURCE LINES 390-411
 
 .. code-block:: Python
 
@@ -2777,7 +2758,7 @@ accuracy across six epochs.
  .. code-block:: none
 
     [LightGBM] [Info] Number of positive: 28, number of negative: 28
-    [LightGBM] [Info] Auto-choosing col-wise multi-threading, the overhead of testing was 0.000338 seconds.
+    [LightGBM] [Info] Auto-choosing col-wise multi-threading, the overhead of testing was 0.000331 seconds.
     You can set `force_col_wise=true` to remove the overhead.
     [LightGBM] [Info] Total Bins 9205
     [LightGBM] [Info] Number of data points in the train set: 56, number of used features: 460
@@ -2888,7 +2869,7 @@ accuracy across six epochs.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 449-453
+.. GENERATED FROM PYTHON SOURCE LINES 412-416
 
 .. code-block:: Python
 
@@ -2914,7 +2895,7 @@ accuracy across six epochs.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 454-455
+.. GENERATED FROM PYTHON SOURCE LINES 417-418
 
 .. code-block:: Python
 
@@ -2940,9 +2921,9 @@ accuracy across six epochs.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 5.480 seconds)
+   **Total running time of the script:** (0 minutes 5.331 seconds)
 
-**Estimated memory usage:**  1243 MB
+**Estimated memory usage:**  1332 MB
 
 
 .. _sphx_glr_download_generated_auto_examples_core_tutorial_feature_extractor_open_close_eye.py:

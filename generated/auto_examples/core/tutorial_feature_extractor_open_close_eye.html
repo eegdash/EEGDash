@@ -44,7 +44,7 @@
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../../../_static/documentation_options.js?v=8da8c241"></script>
+    <script src="../../../_static/documentation_options.js?v=29d04658"></script>
     <script src="../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
@@ -532,6 +532,20 @@ and eyes closed data.</p>
 <span class="p">)</span>
 </pre></div>
 </div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/home/runner/work/EEGDash/EEGDash/eegdash/api.py:788: UserWarning: If you are not participating in the competition, you can ignore this warning!
+
+EEG 2025 Competition Data Notice:
+---------------------------------
+ You are loading the dataset that is used in the EEG 2025 Competition:
+IMPORTANT: The data accessed via `EEGDashDataset` is NOT identical to what you get from `EEGChallengeDataset` object directly.
+and it is not what you will use for the competition. Downsampling and filtering were applied to the datato allow more people to participate.
+
+If you are participating in the competition, always use `EEGChallengeDataset` to ensure consistency with the challenge data.
+
+
+  warn(
+</pre></div>
+</div>
 </section>
 <section id="data-preprocessing-using-braindecode">
 <h2>Data Preprocessing Using Braindecode<a class="headerlink" href="#data-preprocessing-using-braindecode" title="Link to this heading">#</a></h2>
@@ -558,52 +572,16 @@ sample is automatically labeled with the corresponding event type (eyes-open
 or eyes-closed). <cite>windows_ds</cite> is a PyTorch dataset, and when queried, it
 returns labels for eyes-open and eyes-closed (assigned as labels 0 and 1,
 corresponding to their respective event markers).</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">braindecode.preprocessing</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">eegdash.hbn.preprocessing</span><span class="w"> </span><span class="kn">import</span> <span class="n">hbn_ec_ec_reannotation</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">braindecode.preprocessing</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">preprocess</span><span class="p">,</span>
     <span class="n">Preprocessor</span><span class="p">,</span>
     <span class="n">create_windows_from_events</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">mne</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
 
 <span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">RuntimeWarning</span><span class="p">)</span>
-
-
-<span class="k">class</span><span class="w"> </span><span class="nc">hbn_ec_ec_reannotation</span><span class="p">(</span><span class="n">Preprocessor</span><span class="p">):</span>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
-            <span class="n">fn</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">transform</span><span class="p">,</span> <span class="n">apply_on_array</span><span class="o">=</span><span class="kc">False</span>
-        <span class="p">)</span>  <span class="c1"># Pass the transform method as the function</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">raw</span><span class="p">):</span>  <span class="c1"># Changed from &#39;apply&#39; to &#39;transform&#39;</span>
-        <span class="c1"># Create events array from annotations</span>
-        <span class="n">events</span><span class="p">,</span> <span class="n">event_id</span> <span class="o">=</span> <span class="n">mne</span><span class="o">.</span><span class="n">events_from_annotations</span><span class="p">(</span><span class="n">raw</span><span class="p">)</span>
-
-        <span class="nb">print</span><span class="p">(</span><span class="n">event_id</span><span class="p">)</span>
-
-        <span class="c1"># Create new events array for 2-second segments</span>
-        <span class="n">new_events</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">sfreq</span> <span class="o">=</span> <span class="n">raw</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;sfreq&quot;</span><span class="p">]</span>
-        <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">events</span><span class="p">[</span><span class="n">events</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="n">event_id</span><span class="p">[</span><span class="s2">&quot;instructed_toCloseEyes&quot;</span><span class="p">]]:</span>
-            <span class="c1"># For each original event, create events every 2 seconds from 15s to 29s after</span>
-            <span class="n">start_times</span> <span class="o">=</span> <span class="n">event</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">29</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">sfreq</span>
-            <span class="n">new_events</span><span class="o">.</span><span class="n">extend</span><span class="p">([[</span><span class="nb">int</span><span class="p">(</span><span class="n">t</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">start_times</span><span class="p">])</span>
-
-        <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">events</span><span class="p">[</span><span class="n">events</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="n">event_id</span><span class="p">[</span><span class="s2">&quot;instructed_toOpenEyes&quot;</span><span class="p">]]:</span>
-            <span class="c1"># For each original event, create events every 2 seconds from 5s to 19s after</span>
-            <span class="n">start_times</span> <span class="o">=</span> <span class="n">event</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">19</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">sfreq</span>
-            <span class="n">new_events</span><span class="o">.</span><span class="n">extend</span><span class="p">([[</span><span class="nb">int</span><span class="p">(</span><span class="n">t</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">start_times</span><span class="p">])</span>
-
-        <span class="c1"># replace events in raw</span>
-        <span class="n">new_events</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">new_events</span><span class="p">)</span>
-        <span class="n">annot_from_events</span> <span class="o">=</span> <span class="n">mne</span><span class="o">.</span><span class="n">annotations_from_events</span><span class="p">(</span>
-            <span class="n">events</span><span class="o">=</span><span class="n">new_events</span><span class="p">,</span>
-            <span class="n">event_desc</span><span class="o">=</span><span class="p">{</span><span class="mi">1</span><span class="p">:</span> <span class="s2">&quot;eyes_closed&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">:</span> <span class="s2">&quot;eyes_open&quot;</span><span class="p">},</span>
-            <span class="n">sfreq</span><span class="o">=</span><span class="n">raw</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;sfreq&quot;</span><span class="p">],</span>
-        <span class="p">)</span>
-        <span class="n">raw</span><span class="o">.</span><span class="n">set_annotations</span><span class="p">(</span><span class="n">annot_from_events</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">raw</span>
 
 
 <span class="c1"># BrainDecode preprocessors</span>
@@ -653,7 +631,6 @@ corresponding to their respective event markers).</p>
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Used Annotations descriptions: [np.str_(&#39;boundary&#39;), np.str_(&#39;break cnt&#39;), np.str_(&#39;instructed_toCloseEyes&#39;), np.str_(&#39;instructed_toOpenEyes&#39;), np.str_(&#39;resting_start&#39;)]
-{np.str_(&#39;boundary&#39;): 1, np.str_(&#39;break cnt&#39;): 2, np.str_(&#39;instructed_toCloseEyes&#39;): 3, np.str_(&#39;instructed_toOpenEyes&#39;): 4, np.str_(&#39;resting_start&#39;): 5}
 NOTE: pick_channels() is a legacy function. New code should use inst.pick(...).
 Filtering raw data in 1 contiguous segment
 Setting up band-pass filter from 1 - 55 Hz
@@ -746,8 +723,8 @@ signal is present and looks as expected.</p>
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Extracting features:   0%|          | 0/1 [00:00&lt;?, ?it/s]
-Extracting features: 100%|██████████| 1/1 [00:00&lt;00:00,  1.30it/s]
-Extracting features: 100%|██████████| 1/1 [00:00&lt;00:00,  1.29it/s]
+Extracting features: 100%|██████████| 1/1 [00:00&lt;00:00,  1.31it/s]
+Extracting features: 100%|██████████| 1/1 [00:00&lt;00:00,  1.31it/s]
 </pre></div>
 </div>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="../../../api/eegdash.features.html#eegdash.features.FeaturesConcatDataset.to_dataframe" title="eegdash.features.FeaturesConcatDataset.to_dataframe" class="sphx-glr-backref-module-eegdash-features sphx-glr-backref-type-py-method"><span class="n">features_ds</span><span class="o">.</span><span class="n">to_dataframe</span></a><span class="p">(</span><span class="n">include_crop_inds</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -774,8 +751,8 @@ Extracting features: 100%|██████████| 1/1 [00:00&lt;00:00,  
       <th></th>
       <th>i_dataset</th>
       <th>i_window_in_trial</th>
-      <th>i_stop_in_trial</th>
       <th>i_start_in_trial</th>
+      <th>i_stop_in_trial</th>
       <th>sig_mean_E22</th>
       <th>sig_mean_E9</th>
       <th>sig_mean_E33</th>
@@ -860,8 +837,8 @@ Extracting features: 100%|██████████| 1/1 [00:00&lt;00:00,  
       <th>0</th>
       <td>0</td>
       <td>0</td>
-      <td>8348</td>
       <td>8092</td>
+      <td>8348</td>
       <td>5.647381e-07</td>
       <td>-2.509246e-06</td>
       <td>8.135321e-06</td>
@@ -944,8 +921,8 @@ Extracting features: 100%|██████████| 1/1 [00:00&lt;00:00,  
       <th>1</th>
       <td>0</td>
       <td>0</td>
-      <td>8604</td>
       <td>8348</td>
+      <td>8604</td>
       <td>1.130721e-06</td>
       <td>1.416919e-07</td>
       <td>-6.768836e-07</td>
@@ -1028,8 +1005,8 @@ Extracting features: 100%|██████████| 1/1 [00:00&lt;00:00,  
       <th>2</th>
       <td>0</td>
       <td>0</td>
-      <td>8860</td>
       <td>8604</td>
+      <td>8860</td>
       <td>-8.737620e-07</td>
       <td>2.451451e-07</td>
       <td>3.854794e-07</td>
@@ -1112,8 +1089,8 @@ Extracting features: 100%|██████████| 1/1 [00:00&lt;00:00,  
       <th>3</th>
       <td>0</td>
       <td>0</td>
-      <td>9116</td>
       <td>8860</td>
+      <td>9116</td>
       <td>3.482372e-07</td>
       <td>-5.419446e-07</td>
       <td>-7.257668e-08</td>
@@ -1196,8 +1173,8 @@ Extracting features: 100%|██████████| 1/1 [00:00&lt;00:00,  
       <th>4</th>
       <td>0</td>
       <td>0</td>
-      <td>9372</td>
       <td>9116</td>
+      <td>9372</td>
       <td>1.078094e-06</td>
       <td>2.234204e-06</td>
       <td>8.322080e-07</td>
@@ -1364,8 +1341,8 @@ Extracting features: 100%|██████████| 1/1 [00:00&lt;00:00,  
       <th>65</th>
       <td>0</td>
       <td>0</td>
-      <td>43419</td>
       <td>43163</td>
+      <td>43419</td>
       <td>2.604641e-06</td>
       <td>2.696607e-06</td>
       <td>3.207271e-07</td>
@@ -1448,8 +1425,8 @@ Extracting features: 100%|██████████| 1/1 [00:00&lt;00:00,  
       <th>66</th>
       <td>0</td>
       <td>0</td>
-      <td>43675</td>
       <td>43419</td>
+      <td>43675</td>
       <td>-1.158709e-06</td>
       <td>-9.353611e-07</td>
       <td>6.243006e-07</td>
@@ -1532,8 +1509,8 @@ Extracting features: 100%|██████████| 1/1 [00:00&lt;00:00,  
       <th>67</th>
       <td>0</td>
       <td>0</td>
-      <td>43931</td>
       <td>43675</td>
+      <td>43931</td>
       <td>9.350503e-07</td>
       <td>7.273056e-07</td>
       <td>-3.974258e-07</td>
@@ -1616,8 +1593,8 @@ Extracting features: 100%|██████████| 1/1 [00:00&lt;00:00,  
       <th>68</th>
       <td>0</td>
       <td>0</td>
-      <td>44187</td>
       <td>43931</td>
+      <td>44187</td>
       <td>-1.334396e-04</td>
       <td>-4.969487e-05</td>
       <td>-2.251352e-06</td>
@@ -1700,8 +1677,8 @@ Extracting features: 100%|██████████| 1/1 [00:00&lt;00:00,  
       <th>69</th>
       <td>0</td>
       <td>0</td>
-      <td>44443</td>
       <td>44187</td>
+      <td>44443</td>
       <td>1.370442e-04</td>
       <td>3.529626e-05</td>
       <td>3.354098e-06</td>
@@ -3078,7 +3055,7 @@ Epoch 5, Train accuracy: 0.89, Test accuracy: 0.64
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[LightGBM] [Info] Number of positive: 28, number of negative: 28
-[LightGBM] [Info] Auto-choosing col-wise multi-threading, the overhead of testing was 0.000338 seconds.
+[LightGBM] [Info] Auto-choosing col-wise multi-threading, the overhead of testing was 0.000331 seconds.
 You can set `force_col_wise=true` to remove the overhead.
 [LightGBM] [Info] Total Bins 9205
 [LightGBM] [Info] Number of data points in the train set: 56, number of used features: 460
@@ -3200,8 +3177,8 @@ Train accuracy: 1.00, Validation accuracy: 0.86
 <img src="../../../_images/sphx_glr_tutorial_feature_extractor_open_close_eye_003.png" srcset="../../../_images/sphx_glr_tutorial_feature_extractor_open_close_eye_003.png" alt="Feature importance" class = "sphx-glr-single-img"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;Axes: title={&#39;center&#39;: &#39;Feature importance&#39;}, xlabel=&#39;Feature importance&#39;, ylabel=&#39;Features&#39;&gt;
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 5.480 seconds)</p>
-<p><strong>Estimated memory usage:</strong>  1243 MB</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 5.331 seconds)</p>
+<p><strong>Estimated memory usage:</strong>  1332 MB</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-generated-auto-examples-core-tutorial-feature-extractor-open-close-eye-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../../_downloads/f3cf56a30a7c06a2eccae3b5b3d28e35/tutorial_feature_extractor_open_close_eye.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">tutorial_feature_extractor_open_close_eye.ipynb</span></code></a></p>

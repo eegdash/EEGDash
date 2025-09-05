@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>eegdash.preprocessing module &#8212; EEG Dash</title>
+    <title>eegdash.const module &#8212; EEG Dash</title>
   
   
   
@@ -44,17 +44,17 @@
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../_static/documentation_options.js?v=8da8c241"></script>
+    <script src="../_static/documentation_options.js?v=29d04658"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/design-tabs.js?v=f930bc37"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'api/eegdash.preprocessing';</script>
-    <link rel="canonical" href="https://sccn.github.io/eegdash/api/eegdash.preprocessing.html" />
+    <script>DOCUMENTATION_OPTIONS.pagename = 'api/eegdash.const';</script>
+    <link rel="canonical" href="https://sccn.github.io/eegdash/api/eegdash.const.html" />
     <link rel="icon" href="../_static/eegdash_icon.png"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="eegdash.registry module" href="eegdash.registry.html" />
-    <link rel="prev" title="eegdash.mongodb module" href="eegdash.mongodb.html" />
+    <link rel="next" title="eegdash.data_config module" href="eegdash.data_config.html" />
+    <link rel="prev" title="eegdash.api module" href="eegdash.api.html" />
   
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -458,11 +458,11 @@
 </ul>
 </details></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.api.html">eegdash.api module</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">eegdash.const module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.data_config.html">eegdash.data_config module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.data_utils.html">eegdash.data_utils module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.html">eegdash.dataset module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.mongodb.html">eegdash.mongodb module</a></li>
-<li class="toctree-l2 current active"><a class="current reference internal" href="#">eegdash.preprocessing module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.registry.html">eegdash.registry module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.utils.html">eegdash.utils module</a></li>
 </ul>
@@ -513,7 +513,7 @@
     
     <li class="breadcrumb-item"><a href="eegdash.html" class="nav-link">eegdash package</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">eegdash.preprocessing module</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">eegdash.const module</span></li>
   </ul>
 </nav>
 </div>
@@ -530,31 +530,8 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="module-eegdash.preprocessing">
-<span id="eegdash-preprocessing-module"></span><h1>eegdash.preprocessing module<a class="headerlink" href="#module-eegdash.preprocessing" title="Link to this heading">#</a></h1>
-<dl class="py class">
-<dt class="sig sig-object py" id="eegdash.preprocessing.hbn_ec_ec_reannotation">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">eegdash.preprocessing.</span></span><span class="sig-name descname"><span class="pre">hbn_ec_ec_reannotation</span></span><a class="headerlink" href="#eegdash.preprocessing.hbn_ec_ec_reannotation" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Preprocessor</span></code></p>
-<p>Preprocessor to reannotate the raw data for eyes open and eyes closed events.</p>
-<p>This processor is designed for HBN datasets.</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="eegdash.preprocessing.hbn_ec_ec_reannotation.transform">
-<span class="sig-name descname"><span class="pre">transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">raw</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.preprocessing.hbn_ec_ec_reannotation.transform" title="Link to this definition">#</a></dt>
-<dd><p>Reannotate the raw data to create new events for eyes open and eyes closed</p>
-<p>This function modifies the raw MNE object by creating new events based on
-the existing annotations for “instructed_toCloseEyes” and “instructed_toOpenEyes”.
-It generates new events every 2 seconds within specified time ranges after
-the original events, and replaces the existing annotations with these new events.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>raw</strong> (<em>mne.io.Raw</em>) – The raw MNE object containing EEG data and annotations.</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
+  <section id="module-eegdash.const">
+<span id="eegdash-const-module"></span><h1>eegdash.const module<a class="headerlink" href="#module-eegdash.const" title="Link to this heading">#</a></h1>
 </section>
 
 
@@ -568,20 +545,20 @@ the original events, and replaces the existing annotations with these new events
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="eegdash.mongodb.html"
+       href="eegdash.api.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">eegdash.mongodb module</p>
+        <p class="prev-next-title">eegdash.api module</p>
       </div>
     </a>
     <a class="right-next"
-       href="eegdash.registry.html"
+       href="eegdash.data_config.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">eegdash.registry module</p>
+        <p class="prev-next-title">eegdash.data_config module</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -597,25 +574,10 @@ the original events, and replaces the existing annotations with these new events
 
 
   <div class="sidebar-secondary-item">
-<div
-    id="pst-page-navigation-heading-2"
-    class="page-toc tocsection onthispage">
-    <i class="fa-solid fa-list"></i> On this page
-  </div>
-  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
-    <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.preprocessing.hbn_ec_ec_reannotation"><code class="docutils literal notranslate"><span class="pre">hbn_ec_ec_reannotation</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.preprocessing.hbn_ec_ec_reannotation.transform"><code class="docutils literal notranslate"><span class="pre">hbn_ec_ec_reannotation.transform()</span></code></a></li>
-</ul>
-</li>
-</ul>
-  </nav></div>
-
-  <div class="sidebar-secondary-item">
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
-      <li><a href="../_sources/api/eegdash.preprocessing.rst.txt"
+      <li><a href="../_sources/api/eegdash.const.rst.txt"
             rel="nofollow">Show Source</a></li>
     </ul>
    </div></div>

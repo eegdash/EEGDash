@@ -22,7 +22,7 @@ from braindecode.preprocessing import (
 )
 from braindecode.util import set_random_seeds
 from eegdash import EEGDashDataset
-from eegdash.preprocessing import hbn_ec_ec_reannotation
+from eegdash.hbn.preprocessing import hbn_ec_ec_reannotation
 
 cache_folder = get_config("MNE_DATA")
 if cache_folder is None:

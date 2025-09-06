@@ -77,7 +77,7 @@ class EEGDashBaseDataset(BaseDataset):
         )
         # TO-DO: remove this once find a better solution using mne-bids or update competition dataset
         try:
-            bidspath_str = str(self.bidspath)
+            _ = str(self.bidspath)
         except RuntimeError:
             try:
                 self.bidspath = self.bidspath.update(extension=".bdf")

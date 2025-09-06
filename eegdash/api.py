@@ -37,6 +37,7 @@ ALLOWED_QUERY_FIELDS = {
     "ntimes",
 }
 
+
 class EEGDash:
     """A high-level interface to the EEGDash database.
 
@@ -253,7 +254,9 @@ class EEGDash:
     def _build_query_from_kwargs(self, **kwargs) -> dict[str, Any]:
         return build_query_from_kwargs(**kwargs)
 
-    def load_eeg_attrs_from_bids_file(self, bids_dataset: EEGBIDSDataset, bids_file: str) -> dict[str, Any]:
+    def load_eeg_attrs_from_bids_file(
+        self, bids_dataset: EEGBIDSDataset, bids_file: str
+    ) -> dict[str, Any]:
         """Load EEG attributes from a BIDS file.
 
         Parameters
@@ -821,6 +824,7 @@ class EEGDashDataset(BaseConcatDataset):
             **kwargs,
         )
 
+
 def build_query_from_kwargs(**kwargs) -> dict[str, Any]:
     """Build and validate a MongoDB query from user-friendly keyword arguments.
 
@@ -876,9 +880,8 @@ def build_query_from_kwargs(**kwargs) -> dict[str, Any]:
 
     return query
 
-def get_raw_extensions(
-    bids_file: str, bids_dataset: EEGBIDSDataset
-) -> list[str]:
+
+def get_raw_extensions(bids_file: str, bids_dataset: EEGBIDSDataset) -> list[str]:
     """Helper to find paths to additional "sidecar" files that may be associated
     with a given main data file in a BIDS dataset; paths are returned as relative to
     the parent dataset path.
@@ -966,17 +969,11 @@ def load_eeg_attrs_from_bids_file(
         "data_name": lambda: f"{bids_dataset.dataset}_{file}",
         "dataset": lambda: bids_dataset.dataset,
         "bidspath": lambda: openneuro_path,
-        "subject": lambda: bids_dataset.get_bids_file_attribute(
-            "subject", bids_file
-        ),
+        "subject": lambda: bids_dataset.get_bids_file_attribute("subject", bids_file),
         "task": lambda: bids_dataset.get_bids_file_attribute("task", bids_file),
-        "session": lambda: bids_dataset.get_bids_file_attribute(
-            "session", bids_file
-        ),
+        "session": lambda: bids_dataset.get_bids_file_attribute("session", bids_file),
         "run": lambda: bids_dataset.get_bids_file_attribute("run", bids_file),
-        "modality": lambda: bids_dataset.get_bids_file_attribute(
-            "modality", bids_file
-        ),
+        "modality": lambda: bids_dataset.get_bids_file_attribute("modality", bids_file),
         "sampling_frequency": lambda: bids_dataset.get_bids_file_attribute(
             "sfreq", bids_file
         ),

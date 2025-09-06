@@ -24,6 +24,18 @@ from .mongodb import MongoConnectionManager
 
 logger = logging.getLogger("eegdash")
 
+ALLOWED_QUERY_FIELDS = {
+    "data_name",
+    "dataset",
+    "subject",
+    "task",
+    "session",
+    "run",
+    "modality",
+    "sampling_frequency",
+    "nchans",
+    "ntimes",
+}
 
 class EEGDash:
     """A high-level interface to the EEGDash database.
@@ -122,7 +134,7 @@ class EEGDash:
 
         # Accept explicit empty dict {} to mean "match all"
         raw_query = query if isinstance(query, dict) else None
-        kwargs_query = self._build_query_from_kwargs(**kwargs) if kwargs else None
+        kwargs_query = build_query_from_kwargs(**kwargs) if kwargs else None
 
         # Determine presence, treating {} as a valid raw query
         has_raw = isinstance(raw_query, dict)
@@ -239,59 +251,25 @@ class EEGDash:
         return record
 
     def _build_query_from_kwargs(self, **kwargs) -> dict[str, Any]:
-        """Build and validate a MongoDB query from user-friendly keyword arguments.
+        return build_query_from_kwargs(**kwargs)
 
-        Improvements:
-        - Reject None values and empty/whitespace-only strings
-        - For list/tuple/set values: strip strings, drop None/empties, deduplicate, and use `$in`
-        - Preserve scalars as exact matches
+    def load_eeg_attrs_from_bids_file(self, bids_dataset: EEGBIDSDataset, bids_file: str) -> dict[str, Any]:
+        """Load EEG attributes from a BIDS file.
+
+        Parameters
+        ----------
+        bids_dataset: EEGBIDSDataset
+            The BIDS dataset object.
+        bids_file: str
+            The path to the BIDS file.
+
+        Returns
+        -------
+        dict[str, Any]
+            A dictionary containing the EEG attributes.
+
         """
-        # 1. Validate that all provided keys are allowed for querying
-        unknown_fields = set(kwargs.keys()) - self._ALLOWED_QUERY_FIELDS
-        if unknown_fields:
-            raise ValueError(
-                f"Unsupported query field(s): {', '.join(sorted(unknown_fields))}. "
-                f"Allowed fields are: {', '.join(sorted(self._ALLOWED_QUERY_FIELDS))}"
-            )
-
-        # 2. Construct the query dictionary
-        query = {}
-        for key, value in kwargs.items():
-            # None is not a valid constraint
-            if value is None:
-                raise ValueError(
-                    f"Received None for query parameter '{key}'. Provide a concrete value."
-                )
-
-            # Handle list-like values as multi-constraints
-            if isinstance(value, (list, tuple, set)):
-                cleaned: list[Any] = []
-                for item in value:
-                    if item is None:
-                        continue
-                    if isinstance(item, str):
-                        item = item.strip()
-                        if not item:
-                            continue
-                    cleaned.append(item)
-                # Deduplicate while preserving order
-                cleaned = list(dict.fromkeys(cleaned))
-                if not cleaned:
-                    raise ValueError(
-                        f"Received an empty list for query parameter '{key}'. This is not supported."
-                    )
-                query[key] = {"$in": cleaned}
-            else:
-                # Scalars: trim strings and validate
-                if isinstance(value, str):
-                    value = value.strip()
-                    if not value:
-                        raise ValueError(
-                            f"Received an empty string for query parameter '{key}'."
-                        )
-                query[key] = value
-
-        return query
+        return load_eeg_attrs_from_bids_file(bids_dataset, bids_file)
 
     # --- Query merging and conflict detection helpers ---
     def _extract_simple_constraint(self, query: dict[str, Any], key: str):
@@ -416,126 +394,6 @@ class EEGDash:
             coords={"time": time_steps, "channel": channel_names},
         )
         return eeg_xarray
-
-    def get_raw_extensions(
-        self, bids_file: str, bids_dataset: EEGBIDSDataset
-    ) -> list[str]:
-        """Helper to find paths to additional "sidecar" files that may be associated
-        with a given main data file in a BIDS dataset; paths are returned as relative to
-        the parent dataset path.
-
-        For example, if the input file is a .set file, this will return the relative path
-        to a corresponding .fdt file (if any).
-        """
-        bids_file = Path(bids_file)
-        extensions = {
-            ".set": [".set", ".fdt"],  # eeglab
-            ".edf": [".edf"],  # european
-            ".vhdr": [".eeg", ".vhdr", ".vmrk", ".dat", ".raw"],  # brainvision
-            ".bdf": [".bdf"],  # biosemi
-        }
-        return [
-            str(bids_dataset.get_relative_bidspath(bids_file.with_suffix(suffix)))
-            for suffix in extensions[bids_file.suffix]
-            if bids_file.with_suffix(suffix).exists()
-        ]
-
-    def load_eeg_attrs_from_bids_file(
-        self, bids_dataset: EEGBIDSDataset, bids_file: str
-    ) -> dict[str, Any]:
-        """Build the metadata record for a given BIDS file (single recording) in a BIDS dataset.
-
-        Attributes are at least the ones defined in data_config attributes (set to None if missing),
-        but are typically a superset, and include, among others, the paths to relevant
-        meta-data files needed to load and interpret the file in question.
-
-        Parameters
-        ----------
-        bids_dataset : EEGBIDSDataset
-            The BIDS dataset object containing the file.
-        bids_file : str
-            The path to the BIDS file within the dataset.
-
-        Returns
-        -------
-        dict:
-            A dictionary representing the metadata record for the given file. This is the
-            same format as the records stored in the database.
-
-        """
-        if bids_file not in bids_dataset.files:
-            raise ValueError(f"{bids_file} not in {bids_dataset.dataset}")
-
-        # Initialize attrs with None values for all expected fields
-        attrs = {field: None for field in self.config["attributes"].keys()}
-
-        file = Path(bids_file).name
-        dsnumber = bids_dataset.dataset
-        # extract openneuro path by finding the first occurrence of the dataset name in the filename and remove the path before that
-        openneuro_path = dsnumber + bids_file.split(dsnumber)[1]
-
-        # Update with actual values where available
-        try:
-            participants_tsv = bids_dataset.subject_participant_tsv(bids_file)
-        except Exception as e:
-            logger.error("Error getting participants_tsv: %s", str(e))
-            participants_tsv = None
-
-        try:
-            eeg_json = bids_dataset.eeg_json(bids_file)
-        except Exception as e:
-            logger.error("Error getting eeg_json: %s", str(e))
-            eeg_json = None
-
-        bids_dependencies_files = self.config["bids_dependencies_files"]
-        bidsdependencies = []
-        for extension in bids_dependencies_files:
-            try:
-                dep_path = bids_dataset.get_bids_metadata_files(bids_file, extension)
-                dep_path = [
-                    str(bids_dataset.get_relative_bidspath(dep)) for dep in dep_path
-                ]
-                bidsdependencies.extend(dep_path)
-            except Exception:
-                pass
-
-        bidsdependencies.extend(self.get_raw_extensions(bids_file, bids_dataset))
-
-        # Define field extraction functions with error handling
-        field_extractors = {
-            "data_name": lambda: f"{bids_dataset.dataset}_{file}",
-            "dataset": lambda: bids_dataset.dataset,
-            "bidspath": lambda: openneuro_path,
-            "subject": lambda: bids_dataset.get_bids_file_attribute(
-                "subject", bids_file
-            ),
-            "task": lambda: bids_dataset.get_bids_file_attribute("task", bids_file),
-            "session": lambda: bids_dataset.get_bids_file_attribute(
-                "session", bids_file
-            ),
-            "run": lambda: bids_dataset.get_bids_file_attribute("run", bids_file),
-            "modality": lambda: bids_dataset.get_bids_file_attribute(
-                "modality", bids_file
-            ),
-            "sampling_frequency": lambda: bids_dataset.get_bids_file_attribute(
-                "sfreq", bids_file
-            ),
-            "nchans": lambda: bids_dataset.get_bids_file_attribute("nchans", bids_file),
-            "ntimes": lambda: bids_dataset.get_bids_file_attribute("ntimes", bids_file),
-            "participant_tsv": lambda: participants_tsv,
-            "eeg_json": lambda: eeg_json,
-            "bidsdependencies": lambda: bidsdependencies,
-        }
-
-        # Dynamically populate attrs with error handling
-        for field, extractor in field_extractors.items():
-            try:
-                attrs[field] = extractor()
-            except Exception as e:
-                logger.error("Error extracting %s : %s", field, str(e))
-                attrs[field] = None
-
-        return attrs
 
     def add_bids_dataset(
         self, dataset: str, data_dir: str, overwrite: bool = True
@@ -708,10 +566,10 @@ class EEGDashDataset(BaseConcatDataset):
             "sex",
         ],
         s3_bucket: str | None = None,
-        eeg_dash_instance=None,
         records: list[dict] | None = None,
         download: bool = True,
         n_jobs: int = -1,
+        eeg_dash_instance: EEGDash | None = None,
         **kwargs,
     ):
         """Create a new EEGDashDataset from a given query or local BIDS dataset directory
@@ -753,7 +611,7 @@ class EEGDashDataset(BaseConcatDataset):
             Optional list of pre-fetched metadata records. If provided, the dataset is
             constructed directly from these records without querying MongoDB.
         download : bool (default: True)
-            If True, EEGDash will assume that the data has already been downloaded and will not attempt to query MongoDB nor S3 and will parse the local files.
+            If False, EEGDash will assume that the data has already been downloaded and will not attempt to query MongoDB nor S3 and will parse the local files.
         n_jobs : int
             The number of jobs to run in parallel (default is -1, meaning using all processors).
         kwargs : dict
@@ -766,7 +624,6 @@ class EEGDashDataset(BaseConcatDataset):
             warn(f"Cache directory does not exist, creating it: {self.cache_dir}")
             self.cache_dir.mkdir(exist_ok=True, parents=True)
         self.s3_bucket = s3_bucket
-        self.eeg_dash = eeg_dash_instance
 
         # Separate query kwargs from other kwargs passed to the BaseDataset constructor
         self.query = query or {}
@@ -794,56 +651,47 @@ class EEGDashDataset(BaseConcatDataset):
                 UserWarning,
                 module="eegdash",
             )
-        _owns_client = False
-        if self.eeg_dash is None and records is None:
-            self.eeg_dash = EEGDash()
-            _owns_client = True
-
-        try:
-            if records is not None:
-                self.records = records
-                datasets = [
-                    EEGDashBaseDataset(
-                        record,
-                        self.cache_dir,
-                        self.s3_bucket,
-                        **base_dataset_kwargs,
-                    )
-                    for record in self.records
-                ]
-            elif not download:  # only assume local data is complete if not downloading
-                if self.data_dir.exists():
-                    # This path loads from a local directory and is not affected by DB query logic
-                    datasets = self.load_bids_dataset(
-                        dataset=self.query["dataset"],
-                        data_dir=self.data_dir,
-                        description_fields=description_fields,
-                        s3_bucket=s3_bucket,
-                        n_jobs=n_jobs,
-                        **base_dataset_kwargs,
-                    )
-                else:
-                    raise ValueError(
-                        f"Offline mode is enabled, but local data_dir {self.data_dir} does not exist."
-                    )
-            elif self.query:
-                # This is the DB query path that we are improving
-                datasets = self._find_datasets(
-                    query=self.eeg_dash._build_query_from_kwargs(**self.query),
-                    description_fields=description_fields,
-                    base_dataset_kwargs=base_dataset_kwargs,
+        if records is not None:
+            self.records = records
+            datasets = [
+                EEGDashBaseDataset(
+                    record,
+                    self.cache_dir,
+                    self.s3_bucket,
+                    **base_dataset_kwargs,
                 )
-                # We only need filesystem if we need to access S3
-                self.filesystem = S3FileSystem(
-                    anon=True, client_kwargs={"region_name": "us-east-2"}
+                for record in self.records
+            ]
+        elif not download:  # only assume local data is complete if not downloading
+            if self.data_dir.exists():
+                # This path loads from a local directory and is not affected by DB query logic
+                datasets = self.load_bids_dataset(
+                    dataset=self.query["dataset"],
+                    data_dir=self.data_dir,
+                    description_fields=description_fields,
+                    s3_bucket=s3_bucket,
+                    n_jobs=n_jobs,
+                    **base_dataset_kwargs,
                 )
             else:
                 raise ValueError(
-                    "You must provide either 'records', a 'data_dir', or a query/keyword arguments for filtering."
+                    f"Offline mode is enabled, but local data_dir {self.data_dir} does not exist."
                 )
-        finally:
-            if _owns_client and self.eeg_dash is not None:
-                self.eeg_dash.close()
+        elif self.query:
+            # This is the DB query path that we are improving
+            datasets = self._find_datasets(
+                query=build_query_from_kwargs(**self.query),
+                description_fields=description_fields,
+                base_dataset_kwargs=base_dataset_kwargs,
+            )
+            # We only need filesystem if we need to access S3
+            self.filesystem = S3FileSystem(
+                anon=True, client_kwargs={"region_name": "us-east-2"}
+            )
+        else:
+            raise ValueError(
+                "You must provide either 'records', a 'data_dir', or a query/keyword arguments for filtering."
+            )
 
         super().__init__(datasets)
 
@@ -886,8 +734,8 @@ class EEGDashDataset(BaseConcatDataset):
 
         """
         datasets: list[EEGDashBaseDataset] = []
-
-        self.records = self.eeg_dash.find(query)
+        eegdash_instance = EEGDash()
+        self.records = eegdash_instance.find(query)
 
         for record in self.records:
             description = {}
@@ -959,7 +807,7 @@ class EEGDashDataset(BaseConcatDataset):
         **kwargs,
     ) -> "EEGDashBaseDataset":
         """Instantiate a single EEGDashBaseDataset given a local BIDS file (metadata only)."""
-        record = self.eeg_dash.load_eeg_attrs_from_bids_file(bids_dataset, bids_file)
+        record = load_eeg_attrs_from_bids_file(bids_dataset, bids_file)
         description = {}
         for field in description_fields:
             value = self.find_key_in_nested_dict(record, field)
@@ -972,3 +820,179 @@ class EEGDashDataset(BaseConcatDataset):
             description=description,
             **kwargs,
         )
+
+def build_query_from_kwargs(**kwargs) -> dict[str, Any]:
+    """Build and validate a MongoDB query from user-friendly keyword arguments.
+
+    Improvements:
+    - Reject None values and empty/whitespace-only strings
+    - For list/tuple/set values: strip strings, drop None/empties, deduplicate, and use `$in`
+    - Preserve scalars as exact matches
+    """
+    # 1. Validate that all provided keys are allowed for querying
+    unknown_fields = set(kwargs.keys()) - ALLOWED_QUERY_FIELDS
+    if unknown_fields:
+        raise ValueError(
+            f"Unsupported query field(s): {', '.join(sorted(unknown_fields))}. "
+            f"Allowed fields are: {', '.join(sorted(ALLOWED_QUERY_FIELDS))}"
+        )
+
+    # 2. Construct the query dictionary
+    query = {}
+    for key, value in kwargs.items():
+        # None is not a valid constraint
+        if value is None:
+            raise ValueError(
+                f"Received None for query parameter '{key}'. Provide a concrete value."
+            )
+
+        # Handle list-like values as multi-constraints
+        if isinstance(value, (list, tuple, set)):
+            cleaned: list[Any] = []
+            for item in value:
+                if item is None:
+                    continue
+                if isinstance(item, str):
+                    item = item.strip()
+                    if not item:
+                        continue
+                cleaned.append(item)
+            # Deduplicate while preserving order
+            cleaned = list(dict.fromkeys(cleaned))
+            if not cleaned:
+                raise ValueError(
+                    f"Received an empty list for query parameter '{key}'. This is not supported."
+                )
+            query[key] = {"$in": cleaned}
+        else:
+            # Scalars: trim strings and validate
+            if isinstance(value, str):
+                value = value.strip()
+                if not value:
+                    raise ValueError(
+                        f"Received an empty string for query parameter '{key}'."
+                    )
+            query[key] = value
+
+    return query
+
+def get_raw_extensions(
+    bids_file: str, bids_dataset: EEGBIDSDataset
+) -> list[str]:
+    """Helper to find paths to additional "sidecar" files that may be associated
+    with a given main data file in a BIDS dataset; paths are returned as relative to
+    the parent dataset path.
+
+    For example, if the input file is a .set file, this will return the relative path
+    to a corresponding .fdt file (if any).
+    """
+    bids_file = Path(bids_file)
+    extensions = {
+        ".set": [".set", ".fdt"],  # eeglab
+        ".edf": [".edf"],  # european
+        ".vhdr": [".eeg", ".vhdr", ".vmrk", ".dat", ".raw"],  # brainvision
+        ".bdf": [".bdf"],  # biosemi
+    }
+    return [
+        str(bids_dataset.get_relative_bidspath(bids_file.with_suffix(suffix)))
+        for suffix in extensions[bids_file.suffix]
+        if bids_file.with_suffix(suffix).exists()
+    ]
+
+
+def load_eeg_attrs_from_bids_file(
+    bids_dataset: EEGBIDSDataset, bids_file: str
+) -> dict[str, Any]:
+    """Build the metadata record for a given BIDS file (single recording) in a BIDS dataset.
+
+    Attributes are at least the ones defined in data_config attributes (set to None if missing),
+    but are typically a superset, and include, among others, the paths to relevant
+    meta-data files needed to load and interpret the file in question.
+
+    Parameters
+    ----------
+    bids_dataset : EEGBIDSDataset
+        The BIDS dataset object containing the file.
+    bids_file : str
+        The path to the BIDS file within the dataset.
+
+    Returns
+    -------
+    dict:
+        A dictionary representing the metadata record for the given file. This is the
+        same format as the records stored in the database.
+
+    """
+    if bids_file not in bids_dataset.files:
+        raise ValueError(f"{bids_file} not in {bids_dataset.dataset}")
+
+    # Initialize attrs with None values for all expected fields
+    attrs = {field: None for field in data_config["attributes"].keys()}
+
+    file = Path(bids_file).name
+    dsnumber = bids_dataset.dataset
+    # extract openneuro path by finding the first occurrence of the dataset name in the filename and remove the path before that
+    openneuro_path = dsnumber + bids_file.split(dsnumber)[1]
+
+    # Update with actual values where available
+    try:
+        participants_tsv = bids_dataset.subject_participant_tsv(bids_file)
+    except Exception as e:
+        logger.error("Error getting participants_tsv: %s", str(e))
+        participants_tsv = None
+
+    try:
+        eeg_json = bids_dataset.eeg_json(bids_file)
+    except Exception as e:
+        logger.error("Error getting eeg_json: %s", str(e))
+        eeg_json = None
+
+    bids_dependencies_files = data_config["bids_dependencies_files"]
+    bidsdependencies = []
+    for extension in bids_dependencies_files:
+        try:
+            dep_path = bids_dataset.get_bids_metadata_files(bids_file, extension)
+            dep_path = [
+                str(bids_dataset.get_relative_bidspath(dep)) for dep in dep_path
+            ]
+            bidsdependencies.extend(dep_path)
+        except Exception:
+            pass
+
+    bidsdependencies.extend(get_raw_extensions(bids_file, bids_dataset))
+
+    # Define field extraction functions with error handling
+    field_extractors = {
+        "data_name": lambda: f"{bids_dataset.dataset}_{file}",
+        "dataset": lambda: bids_dataset.dataset,
+        "bidspath": lambda: openneuro_path,
+        "subject": lambda: bids_dataset.get_bids_file_attribute(
+            "subject", bids_file
+        ),
+        "task": lambda: bids_dataset.get_bids_file_attribute("task", bids_file),
+        "session": lambda: bids_dataset.get_bids_file_attribute(
+            "session", bids_file
+        ),
+        "run": lambda: bids_dataset.get_bids_file_attribute("run", bids_file),
+        "modality": lambda: bids_dataset.get_bids_file_attribute(
+            "modality", bids_file
+        ),
+        "sampling_frequency": lambda: bids_dataset.get_bids_file_attribute(
+            "sfreq", bids_file
+        ),
+        "nchans": lambda: bids_dataset.get_bids_file_attribute("nchans", bids_file),
+        "ntimes": lambda: bids_dataset.get_bids_file_attribute("ntimes", bids_file),
+        "participant_tsv": lambda: participants_tsv,
+        "eeg_json": lambda: eeg_json,
+        "bidsdependencies": lambda: bidsdependencies,
+    }
+
+    # Dynamically populate attrs with error handling
+    for field, extractor in field_extractors.items():
+        try:
+            attrs[field] = extractor()
+        except Exception as e:
+            logger.error("Error extracting %s : %s", field, str(e))
+            attrs[field] = None
+
+    return attrs

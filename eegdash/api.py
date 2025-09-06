@@ -762,11 +762,48 @@ class EEGDashDataset(BaseConcatDataset):
     def _find_local_bids_records(
         self, dataset_root: Path, filters: dict[str, Any]
     ) -> list[dict]:
-        """Discover BIDS EEG files locally and return minimal records honoring filters.
+        """Discover local BIDS EEG files and build minimal records.
 
-        Filters can include BIDS entities: subject, session, task, run.
-        Values can be scalars or lists. The 'dataset' entry must be present and
-        is used to build the bidspath relative to the parent of the dataset root.
+        This helper enumerates EEG recordings under ``dataset_root`` via
+        ``mne_bids.find_matching_paths`` and applies entity filters to produce a
+        list of records suitable for ``EEGDashBaseDataset``. No network access
+        is performed and files are not read.
+
+        Parameters
+        ----------
+        dataset_root : Path
+            Local dataset directory. May be the plain dataset folder (e.g.,
+            ``ds005509``) or a suffixed cache variant (e.g.,
+            ``ds005509-bdf-mini``).
+        filters : dict of {str, Any}
+            Query filters. Must include ``'dataset'`` with the dataset id (without
+            local suffixes). May include BIDS entities ``'subject'``,
+            ``'session'``, ``'task'``, and ``'run'``. Each value can be a scalar
+            or a sequence of scalars.
+
+        Returns
+        -------
+        records : list of dict
+            One record per matched EEG file with at least:
+
+            - ``'data_name'``
+            - ``'dataset'`` (dataset id, without suffixes)
+            - ``'bidspath'`` (normalized to start with the dataset id)
+            - ``'subject'``, ``'session'``, ``'task'``, ``'run'`` (may be None)
+            - ``'bidsdependencies'`` (empty list)
+            - ``'modality'`` (``"eeg"``)
+            - ``'sampling_frequency'``, ``'nchans'``, ``'ntimes'`` (minimal
+              defaults for offline usage)
+
+        Notes
+        -----
+        - Matching uses ``datatypes=['eeg']`` and ``suffixes=['eeg']``.
+        - ``bidspath`` is constructed as
+          ``<dataset_id> / <relative_path_from_dataset_root>`` to ensure the
+          first path component is the dataset id (without local cache suffixes).
+        - Minimal defaults are set for ``sampling_frequency``, ``nchans``, and
+          ``ntimes`` to satisfy dataset length requirements offline.
+
         """
         dataset_id = filters["dataset"]
         arg_map = {

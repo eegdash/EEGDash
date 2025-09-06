@@ -66,8 +66,27 @@ class EEGDashBaseDataset(BaseDataset):
             self.s3_bucket = self._AWS_BUCKET
             self.s3_open_neuro = True
 
-        self.filecache = self.cache_dir / record["bidspath"]
-        self.bids_root = self.cache_dir / record["dataset"]
+        # Compute a dataset folder name under cache_dir that encodes preprocessing
+        # (e.g., bdf, mini) to avoid overlapping with the original dataset cache.
+        self.dataset_folder = record.get("dataset", "")
+        if s3_bucket:
+            suffixes: list[str] = []
+            bucket_lower = str(s3_bucket).lower()
+            if "bdf" in bucket_lower:
+                suffixes.append("bdf")
+            if "mini" in bucket_lower:
+                suffixes.append("mini")
+            if suffixes:
+                self.dataset_folder = f"{self.dataset_folder}-{'-'.join(suffixes)}"
+
+        # Place files under the dataset-specific folder (with suffix if any)
+        rel = Path(record["bidspath"])  # usually starts with dataset id
+        if rel.parts and rel.parts[0] == record.get("dataset"):
+            rel = Path(self.dataset_folder, *rel.parts[1:])
+        else:
+            rel = Path(self.dataset_folder) / rel
+        self.filecache = self.cache_dir / rel
+        self.bids_root = self.cache_dir / self.dataset_folder
         self.bidspath = BIDSPath(
             root=self.bids_root,
             datatype="eeg",
@@ -156,7 +175,12 @@ class EEGDashBaseDataset(BaseDataset):
             if not self.s3_open_neuro:
                 dep = self.bids_dependencies_original[i]
 
-            filepath = self.cache_dir / dep
+            dep_path = Path(dep)
+            if dep_path.parts and dep_path.parts[0] == self.record.get("dataset"):
+                dep_local = Path(self.dataset_folder, *dep_path.parts[1:])
+            else:
+                dep_local = Path(self.dataset_folder) / dep_path
+            filepath = self.cache_dir / dep_local
             if not self.s3_open_neuro:
                 if self.filecache.suffix == ".set":
                     self.filecache = self.filecache.with_suffix(".bdf")
@@ -401,7 +425,13 @@ class EEGBIDSDataset:
             raise ValueError("data_dir must be specified and must exist")
         self.bidsdir = Path(data_dir)
         self.dataset = dataset
-        assert str(self.bidsdir).endswith(self.dataset)
+        # Accept exact dataset folder or a variant with informative suffixes
+        # (e.g., dsXXXXX-bdf, dsXXXXX-bdf-mini) to avoid collisions.
+        dir_name = self.bidsdir.name
+        if not (dir_name == self.dataset or dir_name.startswith(self.dataset + "-")):
+            raise AssertionError(
+                f"BIDS directory '{dir_name}' does not correspond to dataset '{self.dataset}'"
+            )
         self.layout = BIDSLayout(data_dir)
 
         # get all recording files in the bids directory

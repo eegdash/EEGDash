@@ -4,7 +4,7 @@ from pathlib import Path
 import pytest
 
 from eegdash.api import EEGDash
-from eegdash.dataset import EEGChallengeDataset
+from eegdash.dataset.dataset import EEGChallengeDataset
 
 RELEASES = ["R1", "R2", "R3", "R4", "R5", "R6", "R7", "R8", "R9", "R10", "R11"]
 FILES_PER_RELEASE = [1342, 1405, 1812, 3342, 3326, 1227, 3100, 2320, 2885, 2516, 3397]

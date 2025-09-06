@@ -1,5 +1,5 @@
 from .api import EEGDash, EEGDashDataset
-from .dataset import EEGChallengeDataset
+from .dataset.dataset import EEGChallengeDataset
 from .utils import __init__mongo_client
 
 __init__mongo_client()

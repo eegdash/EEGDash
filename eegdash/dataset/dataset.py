@@ -3,8 +3,8 @@ from pathlib import Path
 
 from mne.utils import warn
 
-from .api import EEGDashDataset
-from .const import RELEASE_TO_OPENNEURO_DATASET_MAP, SUBJECT_MINI_RELEASE_MAP
+from ..api import EEGDashDataset
+from ..const import RELEASE_TO_OPENNEURO_DATASET_MAP, SUBJECT_MINI_RELEASE_MAP
 from .registry import register_openneuro_datasets
 
 logger = logging.getLogger("eegdash")

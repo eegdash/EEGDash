@@ -72,8 +72,19 @@ class EEGDashBaseDataset(BaseDataset):
             root=self.bids_root,
             datatype="eeg",
             suffix="eeg",
+            # extension='.bdf',
             **self.bids_kwargs,
         )
+        # TO-DO: remove this once find a better solution using mne-bids or update competition dataset
+        try:
+            bidspath_str = str(self.bidspath)
+        except RuntimeError:
+            try:
+                self.bidspath = self.bidspath.update(extension=".bdf")
+                self.filecache = self.filecache.with_suffix(".bdf")
+            except Exception as e:
+                logger.error(f"Error while updating BIDS path: {e}")
+                raise e
 
         self.s3file = self.get_s3path(record["bidspath"])
         self.bids_dependencies = record["bidsdependencies"]
@@ -192,10 +203,6 @@ class EEGDashBaseDataset(BaseDataset):
             # to-do: remove this once is fixed on the mne-bids side.
             with warnings.catch_warnings(record=True) as w:
                 try:
-                    # TO-DO: remove this once is fixed on the our side
-                    if not self.s3_open_neuro:
-                        self.bidspath = self.bidspath.update(extension=".bdf")
-
                     self._raw = mne_bids.read_raw_bids(
                         bids_path=self.bidspath, verbose="ERROR"
                     )

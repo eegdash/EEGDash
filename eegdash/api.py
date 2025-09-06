@@ -710,7 +710,7 @@ class EEGDashDataset(BaseConcatDataset):
         s3_bucket: str | None = None,
         eeg_dash_instance=None,
         records: list[dict] | None = None,
-        offline_mode: bool = False,
+        download: bool = True,
         n_jobs: int = -1,
         **kwargs,
     ):
@@ -734,18 +734,13 @@ class EEGDashDataset(BaseConcatDataset):
 
         Parameters
         ----------
-        query : dict | None
-            A raw MongoDB query dictionary. If provided, keyword arguments for filtering are ignored.
         **kwargs : dict
             Keyword arguments for filtering (e.g., `subject="X"`, `task=["T1", "T2"]`) and/or
             arguments to be passed to the EEGDashBaseDataset constructor (e.g., `subject=...`).
+        query : dict | None
+            Additional filtering options as a raw MongoDB query dictionary. If provided, it will be merged with keyword arguments.
         cache_dir : str
-            A directory where the dataset will be cached locally.
-        data_dir : str | None
-            Optionally a string specifying a local BIDS dataset directory from which to load the EEG data files. Exactly one
-            of query or data_dir must be provided.
-        dataset : str | None
-            If data_dir is given, a name for the dataset to be loaded.
+            Optional. A directory where the dataset will be cached locally. If not specified, a default cache directory will be used.
         description_fields : list[str]
             A list of fields to be extracted from the dataset records
             and included in the returned data description(s). Examples are typical
@@ -757,9 +752,8 @@ class EEGDashDataset(BaseConcatDataset):
         records : list[dict] | None
             Optional list of pre-fetched metadata records. If provided, the dataset is
             constructed directly from these records without querying MongoDB.
-        offline_mode : bool
-            If True, do not attempt to query MongoDB at all. This is useful if you want to
-            work with a local cache only, or if you are offline.
+        download : bool (default: True)
+            If True, EEGDash will assume that the data has already been downloaded and will not attempt to query MongoDB nor S3 and will parse the local files.
         n_jobs : int
             The number of jobs to run in parallel (default is -1, meaning using all processors).
         kwargs : dict
@@ -794,7 +788,7 @@ class EEGDashDataset(BaseConcatDataset):
                 "IMPORTANT: The data accessed via `EEGDashDataset` is NOT identical to what you get from `EEGChallengeDataset` object directly.\n"
                 "and it is not what you will use for the competition. Downsampling and filtering were applied to the data"
                 "to allow more people to participate.\n"
-                "\n",
+                "\n"
                 "If you are participating in the competition, always use `EEGChallengeDataset` to ensure consistency with the challenge data.\n"
                 "\n",
                 UserWarning,
@@ -817,10 +811,10 @@ class EEGDashDataset(BaseConcatDataset):
                     )
                     for record in self.records
                 ]
-            elif offline_mode:  # only assume local data is complete if in offline mode
+            elif not download:  # only assume local data is complete if not downloading
                 if self.data_dir.exists():
                     # This path loads from a local directory and is not affected by DB query logic
-                    datasets = self.load_bids_daxtaset(
+                    datasets = self.load_bids_dataset(
                         dataset=self.query["dataset"],
                         data_dir=self.data_dir,
                         description_fields=description_fields,
@@ -939,6 +933,7 @@ class EEGDashDataset(BaseConcatDataset):
             The number of jobs to run in parallel (default is -1, meaning using all processors).
 
         """
+        print(f"Loading local BIDS dataset {dataset} from {data_dir}")
         bids_dataset = EEGBIDSDataset(
             data_dir=data_dir,
             dataset=dataset,

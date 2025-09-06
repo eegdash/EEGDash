@@ -3,8 +3,8 @@ from pathlib import Path
 
 import pytest
 
-from eegdash.api import EEGDash
-from eegdash.dataset.dataset import EEGChallengeDataset
+from eegdash.api import EEGDash, EEGDashDataset
+from eegdash.dataset import EEGChallengeDataset
 
 RELEASES = ["R1", "R2", "R3", "R4", "R5", "R6", "R7", "R8", "R9", "R10", "R11"]
 FILES_PER_RELEASE = [1342, 1405, 1812, 3342, 3326, 1227, 3100, 2320, 2885, 2516, 3397]
@@ -117,3 +117,36 @@ def test_eeg_dash_integration(eeg_dash_instance, release="R5", mini=True):
     )
     raw = dataset_obj.datasets[0].raw
     assert raw is not None
+
+
+def test_eeg_dash_integration_warning():
+    """Test that EEGChallengeDataset emits the expected UserWarning on init."""
+    release = "R5"
+    mini = True
+    with pytest.warns(UserWarning) as record:
+        _ = EEGChallengeDataset(
+            release=release,
+            task="RestingState",
+            cache_dir=CACHE_DIR,
+            mini=mini,
+        )
+    # There may be multiple warnings, check that at least one matches expected text
+    found = any("EEG 2025 Competition Data Notice" in str(w.message) for w in record)
+    assert found, (
+        "Expected competition warning not found in warnings emitted by EEGChallengeDataset"
+    )
+
+
+def test_eeg_dashdataset():
+    """Test that EEGDashDataset emits the expected UserWarning on init."""
+    with pytest.warns(UserWarning) as record:
+        _ = EEGDashDataset(
+            dataset="ds005505",
+            task="RestingState",
+            cache_dir=CACHE_DIR,
+        )
+    # There may be multiple warnings, check that at least one matches expected text
+    found = any("EEG 2025 Competition Data Notice" in str(w.message) for w in record)
+    assert found, (
+        "Expected competition warning not found in warnings emitted by EEGChallengeDataset"
+    )

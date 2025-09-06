@@ -3,6 +3,7 @@ import os
 import tempfile
 from pathlib import Path
 from typing import Any, Mapping
+from urllib.parse import urlsplit
 
 import mne
 import numpy as np
@@ -313,8 +314,6 @@ class EEGDash:
             A DataArray containing the EEG data, with dimensions "channel" and "time".
 
         """
-        from urllib.parse import urlsplit
-
         # choose a temp dir so sidecars can be colocated
         with tempfile.TemporaryDirectory() as tmpdir:
             # Derive local filenames from the S3 key to keep base name consistent
@@ -355,18 +354,7 @@ class EEGDash:
                     pass
 
             # Read using appropriate MNE reader
-            if ext == ".set":
-                raw = mne.io.read_raw_eeglab(
-                    str(local_main), preload=True, verbose=False
-                )
-            elif ext in {".edf", ".bdf"}:
-                raw = mne.io.read_raw_edf(str(local_main), preload=True, verbose=False)
-            elif ext == ".vhdr":
-                raw = mne.io.read_raw_brainvision(
-                    str(local_main), preload=True, verbose=False
-                )
-            else:
-                raise ValueError(f"Unsupported EEG file extension in S3 path: {ext}")
+            raw = mne.io.read_raw(str(local_main), preload=True, verbose=False)
 
             data = raw.get_data()
             fs = raw.info["sfreq"]
@@ -603,7 +591,6 @@ class EEGDashDataset(BaseConcatDataset):
         and dataset name. An EEGDashDataset is pooled collection of EEGDashBaseDataset
         instances (individual recordings) and is a subclass of braindecode's BaseConcatDataset.
 
-
         Querying Examples:
         ------------------
         # Find by single subject
@@ -619,38 +606,52 @@ class EEGDashDataset(BaseConcatDataset):
 
         Parameters
         ----------
-        **kwargs : dict
-            Keyword arguments for filtering (e.g., `subject="X"`, `task=["T1", "T2"]`) and/or
-            arguments to be passed to the EEGDashBaseDataset constructor (e.g., `subject=...`).
+        cache_dir : str | Path
+            Directory where data are cached locally. If not specified, a default
+            cache directory under the user cache is used.
         query : dict | None
-            Additional filtering options as a raw MongoDB query dictionary. If provided, it will be merged with keyword arguments.
-        cache_dir : str
-            Optional. A directory where the dataset will be cached locally. If not specified, a default cache directory will be used.
+            Raw MongoDB query to filter records. If provided, it is merged with
+            keyword filtering arguments (see ``**kwargs``) using logical AND.
+            You must provide at least a ``dataset`` (either in ``query`` or
+            as a keyword argument). Only fields in ``ALLOWED_QUERY_FIELDS`` are
+            considered for filtering.
         description_fields : list[str]
-            A list of fields to be extracted from the dataset records
-            and included in the returned data description(s). Examples are typical
-            subject metadata fields such as "subject", "session", "run", "task", etc.;
-            see also data_config.description_fields for the default set of fields.
+            Fields to extract from each record and include in dataset descriptions
+            (e.g., "subject", "session", "run", "task").
         s3_bucket : str | None
-            An optional S3 bucket URI (e.g., "s3://mybucket") to use instead of the
-            default OpenNeuro bucket for loading data files
+            Optional S3 bucket URI (e.g., "s3://mybucket") to use instead of the
+            default OpenNeuro bucket when downloading data files.
         records : list[dict] | None
-            Optional list of pre-fetched metadata records. If provided, the dataset is
-            constructed directly from these records without querying MongoDB.
-        download : bool (default: True)
-            If False, EEGDash will assume that the data has already been downloaded and will not attempt to query MongoDB nor S3 and will parse the local files.
+            Pre-fetched metadata records. If provided, the dataset is constructed
+            directly from these records and no MongoDB query is performed.
+        download : bool, default True
+            If False, load from local BIDS files only. Local data are expected
+            under ``cache_dir / dataset``; no DB or S3 access is attempted.
         n_jobs : int
-            The number of jobs to run in parallel (default is -1, meaning using all processors).
-        kwargs : dict
-            Additional keyword arguments to be passed to the EEGDashBaseDataset
-            constructor.
+            Number of parallel jobs to use where applicable (-1 uses all cores).
+        eeg_dash_instance : EEGDash | None
+            Optional existing EEGDash client to reuse for DB queries. If None,
+            a new client is created on demand.
+        **kwargs : dict
+            Additional keyword arguments serving two purposes:
+            - Filtering: any keys present in ``ALLOWED_QUERY_FIELDS`` are treated
+              as query filters (e.g., ``dataset``, ``subject``, ``task``, ...).
+            - Dataset options: remaining keys are forwarded to the
+              ``EEGDashBaseDataset`` constructor.
 
         """
+        # Parameters that don't need validation
+        self.s3_bucket = s3_bucket
+        self.records = records
+        self.download = download
+        self.n_jobs = n_jobs
+        self.eeg_dash_instance = eeg_dash_instance or EEGDash()
+
         self.cache_dir = Path(cache_dir or platformdirs.user_cache_dir("EEGDash"))
+
         if not self.cache_dir.exists():
             warn(f"Cache directory does not exist, creating it: {self.cache_dir}")
             self.cache_dir.mkdir(exist_ok=True, parents=True)
-        self.s3_bucket = s3_bucket
 
         # Separate query kwargs from other kwargs passed to the BaseDataset constructor
         self.query = query or {}

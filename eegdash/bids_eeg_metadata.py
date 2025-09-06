@@ -3,7 +3,7 @@ from pathlib import Path
 from typing import Any
 
 from .const import ALLOWED_QUERY_FIELDS
-from .data_config import config as data_config
+from .const import config as data_config
 from .data_utils import EEGBIDSDataset
 
 logger = logging.getLogger("eegdash")

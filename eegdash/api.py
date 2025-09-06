@@ -18,8 +18,11 @@ from s3fs import S3FileSystem
 from braindecode.datasets import BaseConcatDataset
 
 from .bids_eeg_metadata import build_query_from_kwargs, load_eeg_attrs_from_bids_file
-from .const import ALLOWED_QUERY_FIELDS, RELEASE_TO_OPENNEURO_DATASET_MAP
-from .data_config import config as data_config
+from .const import (
+    ALLOWED_QUERY_FIELDS,
+    RELEASE_TO_OPENNEURO_DATASET_MAP,
+)
+from .const import config as data_config
 from .data_utils import EEGBIDSDataset, EEGDashBaseDataset
 from .mongodb import MongoConnectionManager
 

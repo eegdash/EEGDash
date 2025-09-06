@@ -229,29 +229,6 @@ class EEGDash:
 
         return record
 
-    def _build_query_from_kwargs(self, **kwargs) -> dict[str, Any]:
-        return build_query_from_kwargs(**kwargs)
-
-    def load_eeg_attrs_from_bids_file(
-        self, bids_dataset: EEGBIDSDataset, bids_file: str
-    ) -> dict[str, Any]:
-        """Load EEG attributes from a BIDS file.
-
-        Parameters
-        ----------
-        bids_dataset: EEGBIDSDataset
-            The BIDS dataset object.
-        bids_file: str
-            The path to the BIDS file.
-
-        Returns
-        -------
-        dict[str, Any]
-            A dictionary containing the EEG attributes.
-
-        """
-        return load_eeg_attrs_from_bids_file(bids_dataset, bids_file)
-
     # --- Query merging and conflict detection helpers ---
     def _extract_simple_constraint(self, query: dict[str, Any], key: str):
         """Extract a simple constraint for a given key from a query dict.
@@ -319,32 +296,89 @@ class EEGDash:
                     )
 
     def load_eeg_data_from_s3(self, s3path: str) -> xr.DataArray:
-        """Load an EEGLAB .set file from an AWS S3 URI and return it as an xarray DataArray.
+        """Load EEG data from an S3 URI and return it as an xarray DataArray.
+
+        This method preserves the original filename, downloads necessary sidecar
+        files when applicable (e.g., .fdt for EEGLAB, .vmrk/.eeg for BrainVision),
+        and uses MNE's direct readers rather than ``read_raw_bids``.
 
         Parameters
         ----------
         s3path : str
-            An S3 URI (should start with "s3://") for the file in question.
+            An S3 URI (should start with "s3://").
 
         Returns
         -------
         xr.DataArray
             A DataArray containing the EEG data, with dimensions "channel" and "time".
 
-        Example
-        -------
-        >>> eegdash = EEGDash()
-        >>> mypath = "s3://openneuro.org/path/to/your/eeg_data.set"
-        >>> mydata = eegdash.load_eeg_data_from_s3(mypath)
-
         """
-        with tempfile.NamedTemporaryFile(delete=False, suffix=".set") as tmp:
-            with self.filesystem.open(s3path) as s3_file:
-                tmp.write(s3_file.read())
-            tmp_path = tmp.name
-            eeg_data = self.load_eeg_data_from_bids_file(tmp_path)
-            os.unlink(tmp_path)
-            return eeg_data
+        from urllib.parse import urlsplit
+
+        # choose a temp dir so sidecars can be colocated
+        with tempfile.TemporaryDirectory() as tmpdir:
+            # Derive local filenames from the S3 key to keep base name consistent
+            s3_key = urlsplit(s3path).path  # e.g., "/dsXXXX/sub-.../..._eeg.set"
+            basename = Path(s3_key).name
+            ext = Path(basename).suffix.lower()
+            local_main = Path(tmpdir) / basename
+
+            # Download main file
+            with (
+                self.filesystem.open(s3path, mode="rb") as fsrc,
+                open(local_main, "wb") as fdst,
+            ):
+                fdst.write(fsrc.read())
+
+            # Determine and fetch any required sidecars
+            sidecars: list[str] = []
+            if ext == ".set":  # EEGLAB
+                sidecars = [".fdt"]
+            elif ext == ".vhdr":  # BrainVision
+                sidecars = [".vmrk", ".eeg", ".dat", ".raw"]
+
+            for sc_ext in sidecars:
+                sc_key = s3_key[: -len(ext)] + sc_ext
+                sc_uri = f"s3://{urlsplit(s3path).netloc}{sc_key}"
+                try:
+                    # If sidecar exists, download next to the main file
+                    info = self.filesystem.info(sc_uri)
+                    if info:
+                        sc_local = Path(tmpdir) / Path(sc_key).name
+                        with (
+                            self.filesystem.open(sc_uri, mode="rb") as fsrc,
+                            open(sc_local, "wb") as fdst,
+                        ):
+                            fdst.write(fsrc.read())
+                except Exception:
+                    # Sidecar not present; skip silently
+                    pass
+
+            # Read using appropriate MNE reader
+            if ext == ".set":
+                raw = mne.io.read_raw_eeglab(
+                    str(local_main), preload=True, verbose=False
+                )
+            elif ext in {".edf", ".bdf"}:
+                raw = mne.io.read_raw_edf(str(local_main), preload=True, verbose=False)
+            elif ext == ".vhdr":
+                raw = mne.io.read_raw_brainvision(
+                    str(local_main), preload=True, verbose=False
+                )
+            else:
+                raise ValueError(f"Unsupported EEG file extension in S3 path: {ext}")
+
+            data = raw.get_data()
+            fs = raw.info["sfreq"]
+            max_time = data.shape[1] / fs
+            time_steps = np.linspace(0, max_time, data.shape[1]).squeeze()
+            channel_names = raw.ch_names
+
+            return xr.DataArray(
+                data=data,
+                dims=["channel", "time"],
+                coords={"time": time_steps, "channel": channel_names},
+            )
 
     def load_eeg_data_from_bids_file(self, bids_file: str) -> xr.DataArray:
         """Load EEG data from a local file and return it as a xarray DataArray.
@@ -404,7 +438,7 @@ class EEGDash:
                 dataset=dataset,
             )
         except Exception as e:
-            logger.error("Error creating bids dataset %s: $s", dataset, str(e))
+            logger.error("Error creating bids dataset %s: %s", dataset, str(e))
             raise e
         requests = []
         for bids_file in bids_dataset.get_files():
@@ -413,15 +447,13 @@ class EEGDash:
 
                 if self.exist({"data_name": data_id}):
                     if overwrite:
-                        eeg_attrs = self.load_eeg_attrs_from_bids_file(
+                        eeg_attrs = load_eeg_attrs_from_bids_file(
                             bids_dataset, bids_file
                         )
-                        requests.append(self.update_request(eeg_attrs))
+                        requests.append(self._update_request(eeg_attrs))
                 else:
-                    eeg_attrs = self.load_eeg_attrs_from_bids_file(
-                        bids_dataset, bids_file
-                    )
-                    requests.append(self.add_request(eeg_attrs))
+                    eeg_attrs = load_eeg_attrs_from_bids_file(bids_dataset, bids_file)
+                    requests.append(self._add_request(eeg_attrs))
             except Exception as e:
                 logger.error("Error adding record %s", bids_file)
                 logger.error(str(e))
@@ -462,12 +494,22 @@ class EEGDash:
             results = Parallel(
                 n_jobs=-1 if len(sessions) > 1 else 1, prefer="threads", verbose=1
             )(
-                delayed(self.load_eeg_data_from_s3)(self.get_s3path(session))
+                delayed(self.load_eeg_data_from_s3)(self._get_s3path(session))
                 for session in sessions
             )
         return results
 
-    def add_request(self, record: dict):
+    def _get_s3path(self, record: Mapping[str, Any] | str) -> str:
+        """Internal helper to build S3 URI from a record or relative path."""
+        if isinstance(record, str):
+            rel = record
+        else:
+            rel = record.get("bidspath")
+            if not rel:
+                raise ValueError("Record missing 'bidspath' for S3 path resolution")
+        return f"s3://openneuro.org/{rel}"
+
+    def _add_request(self, record: dict):
         """Internal helper method to create a MongoDB insertion request for a record."""
         return InsertOne(record)
 
@@ -481,7 +523,7 @@ class EEGDash:
         except:
             logger.error("Error adding record: %s ", record["data_name"])
 
-    def update_request(self, record: dict):
+    def _update_request(self, record: dict):
         """Internal helper method to create a MongoDB update request for a record."""
         return UpdateOne({"data_name": record["data_name"]}, {"$set": record})
 
@@ -493,6 +535,10 @@ class EEGDash:
             )
         except:  # silent failure
             logger.error("Error updating record: %s", record["data_name"])
+
+    def exists(self, query: dict[str, Any]) -> bool:
+        """Alias for exist(), provided for API clarity."""
+        return self.exist(query)
 
     def remove_field(self, record, field):
         """Remove a specific field from a record in the MongoDB collection."""
@@ -676,7 +722,7 @@ class EEGDashDataset(BaseConcatDataset):
 
         super().__init__(datasets)
 
-    def find_key_in_nested_dict(self, data: Any, target_key: str) -> Any:
+    def _find_key_in_nested_dict(self, data: Any, target_key: str) -> Any:
         """Helper to recursively search for a key in a nested dictionary structure; returns
         the value associated with the first occurrence of the key, or None if not found.
         """
@@ -684,7 +730,7 @@ class EEGDashDataset(BaseConcatDataset):
             if target_key in data:
                 return data[target_key]
             for value in data.values():
-                result = self.find_key_in_nested_dict(value, target_key)
+                result = self._find_key_in_nested_dict(value, target_key)
                 if result is not None:
                     return result
         return None
@@ -721,7 +767,7 @@ class EEGDashDataset(BaseConcatDataset):
         for record in self.records:
             description = {}
             for field in description_fields:
-                value = self.find_key_in_nested_dict(record, field)
+                value = self._find_key_in_nested_dict(record, field)
                 if value is not None:
                     description[field] = value
             datasets.append(
@@ -768,7 +814,7 @@ class EEGDashDataset(BaseConcatDataset):
             dataset=dataset,
         )
         datasets = Parallel(n_jobs=n_jobs, prefer="threads", verbose=1)(
-            delayed(self.get_base_dataset_from_bids_file)(
+            delayed(self._get_base_dataset_from_bids_file)(
                 bids_dataset=bids_dataset,
                 bids_file=bids_file,
                 s3_bucket=s3_bucket,
@@ -779,7 +825,7 @@ class EEGDashDataset(BaseConcatDataset):
         )
         return datasets
 
-    def get_base_dataset_from_bids_file(
+    def _get_base_dataset_from_bids_file(
         self,
         bids_dataset: "EEGBIDSDataset",
         bids_file: str,
@@ -791,7 +837,7 @@ class EEGDashDataset(BaseConcatDataset):
         record = load_eeg_attrs_from_bids_file(bids_dataset, bids_file)
         description = {}
         for field in description_fields:
-            value = self.find_key_in_nested_dict(record, field)
+            value = self._find_key_in_nested_dict(record, field)
             if value is not None:
                 description[field] = value
         return EEGDashBaseDataset(

@@ -3,7 +3,7 @@ from pathlib import Path
 import numpy as np
 import pytest
 
-from eegdash.dataset import EEGChallengeDataset
+from eegdash.dataset.dataset import EEGChallengeDataset
 
 # Shared cache directory constant for all tests in the suite.
 EEG_CHALLENGE_CACHE_DIR = (

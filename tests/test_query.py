@@ -3,6 +3,7 @@ from unittest.mock import MagicMock, patch
 import pytest
 
 from eegdash import EEGDash
+from eegdash.bids_eeg_metadata import build_query_from_kwargs
 
 
 # Mock the MongoConnectionManager to prevent actual DB connections during tests
@@ -131,9 +132,9 @@ def test_find_all_documents_with_empty_query(eegdash_instance, mock_mongo_connec
 
 def test_build_query_rejects_none_and_empty(eegdash_instance):
     with pytest.raises(ValueError, match="None for query parameter 'task'"):
-        eegdash_instance._build_query_from_kwargs(task=None)
+        build_query_from_kwargs(task=None)
     with pytest.raises(ValueError, match="empty string for query parameter 'task'"):
-        eegdash_instance._build_query_from_kwargs(task="   ")
+        build_query_from_kwargs(task="   ")
 
 
 def test_build_query_cleans_list_values(eegdash_instance):

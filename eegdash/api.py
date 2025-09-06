@@ -230,6 +230,14 @@ class EEGDash:
 
         return record
 
+    def _build_query_from_kwargs(self, **kwargs) -> dict[str, Any]:
+        """Internal helper to build a validated MongoDB query from keyword args.
+
+        This delegates to the module-level builder used across the package and
+        is exposed here for testing and convenience.
+        """
+        return build_query_from_kwargs(**kwargs)
+
     # --- Query merging and conflict detection helpers ---
     def _extract_simple_constraint(self, query: dict[str, Any], key: str):
         """Extract a simple constraint for a given key from a query dict.
@@ -660,9 +668,31 @@ class EEGDashDataset(BaseConcatDataset):
         )
         base_dataset_kwargs = {k: v for k, v in kwargs.items() if k not in self.query}
         if "dataset" not in self.query:
-            raise ValueError("You must provide a 'dataset' argument")
+            # If explicit records are provided, infer dataset from records
+            if isinstance(records, list) and records and isinstance(records[0], dict):
+                inferred = records[0].get("dataset")
+                if inferred:
+                    self.query["dataset"] = inferred
+                else:
+                    raise ValueError("You must provide a 'dataset' argument")
+            else:
+                raise ValueError("You must provide a 'dataset' argument")
 
-        self.data_dir = self.cache_dir / self.query["dataset"]
+        # Decide on a dataset subfolder name for cache isolation. If using
+        # challenge/preprocessed buckets (e.g., BDF, mini subsets), append
+        # informative suffixes to avoid overlapping with the original dataset.
+        dataset_folder = self.query["dataset"]
+        if self.s3_bucket:
+            suffixes: list[str] = []
+            bucket_lower = str(self.s3_bucket).lower()
+            if "bdf" in bucket_lower:
+                suffixes.append("bdf")
+            if "mini" in bucket_lower:
+                suffixes.append("mini")
+            if suffixes:
+                dataset_folder = f"{dataset_folder}-{'-'.join(suffixes)}"
+
+        self.data_dir = self.cache_dir / dataset_folder
         if self.query["dataset"] in RELEASE_TO_OPENNEURO_DATASET_MAP.values():
             warn(
                 "If you are not participating in the competition, you can ignore this warning!"

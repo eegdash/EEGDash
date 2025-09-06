@@ -759,7 +759,7 @@ class EEGDashDataset(BaseConcatDataset):
             The number of jobs to run in parallel (default is -1, meaning using all processors).
 
         """
-        print(f"Loading local BIDS dataset {dataset} from {data_dir}")
+        logger.info(f"Loading local BIDS dataset {dataset} from {data_dir}")
         bids_dataset = EEGBIDSDataset(
             data_dir=data_dir,
             dataset=dataset,

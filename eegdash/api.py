@@ -12,7 +12,7 @@ import xarray as xr
 from dotenv import load_dotenv
 from joblib import Parallel, delayed
 from mne.utils import warn
-from mne_bids import get_bids_path_from_fname, read_raw_bids
+from mne_bids import find_matching_paths, get_bids_path_from_fname, read_raw_bids
 from pymongo import InsertOne, UpdateOne
 from s3fs import S3FileSystem
 
@@ -639,7 +639,7 @@ class EEGDashDataset(BaseConcatDataset):
             Number of parallel jobs to use where applicable (-1 uses all cores).
         eeg_dash_instance : EEGDash | None
             Optional existing EEGDash client to reuse for DB queries. If None,
-            a new client is created on demand.
+            a new client is created on demand, not used in the case of no download.
         **kwargs : dict
             Additional keyword arguments serving two purposes:
             - Filtering: any keys present in ``ALLOWED_QUERY_FIELDS`` are treated
@@ -693,6 +693,7 @@ class EEGDashDataset(BaseConcatDataset):
                 dataset_folder = f"{dataset_folder}-{'-'.join(suffixes)}"
 
         self.data_dir = self.cache_dir / dataset_folder
+
         if self.query["dataset"] in RELEASE_TO_OPENNEURO_DATASET_MAP.values():
             warn(
                 "If you are not participating in the competition, you can ignore this warning!"
@@ -721,20 +722,25 @@ class EEGDashDataset(BaseConcatDataset):
                 for record in self.records
             ]
         elif not download:  # only assume local data is complete if not downloading
-            if self.data_dir.exists():
-                # This path loads from a local directory and is not affected by DB query logic
-                datasets = self.load_bids_dataset(
-                    dataset=self.query["dataset"],
-                    data_dir=self.data_dir,
-                    description_fields=description_fields,
-                    s3_bucket=s3_bucket,
-                    n_jobs=n_jobs,
-                    **base_dataset_kwargs,
-                )
-            else:
+            if not self.data_dir.exists():
                 raise ValueError(
                     f"Offline mode is enabled, but local data_dir {self.data_dir} does not exist."
                 )
+            records = self._find_local_bids_records(self.data_dir, self.query)
+            datasets = [
+                EEGDashBaseDataset(
+                    record=record,
+                    cache_dir=self.cache_dir,
+                    s3_bucket=self.s3_bucket,
+                    description={
+                        k: record.get(k)
+                        for k in description_fields
+                        if record.get(k) is not None
+                    },
+                    **base_dataset_kwargs,
+                )
+                for record in records
+            ]
         elif self.query:
             # This is the DB query path that we are improving
             datasets = self._find_datasets(
@@ -752,6 +758,80 @@ class EEGDashDataset(BaseConcatDataset):
             )
 
         super().__init__(datasets)
+
+    def _find_local_bids_records(
+        self, dataset_root: Path, filters: dict[str, Any]
+    ) -> list[dict]:
+        """Discover BIDS EEG files locally and return minimal records honoring filters.
+
+        Filters can include BIDS entities: subject, session, task, run.
+        Values can be scalars or lists. The 'dataset' entry must be present and
+        is used to build the bidspath relative to the parent of the dataset root.
+        """
+        dataset_id = filters["dataset"]
+        arg_map = {
+            "subjects": "subject",
+            "sessions": "session",
+            "tasks": "task",
+            "runs": "run",
+        }
+        matching_args: dict[str, list[str]] = {}
+        for finder_key, entity_key in arg_map.items():
+            entity_val = filters.get(entity_key)
+            if entity_val is None:
+                continue
+            if isinstance(entity_val, (list, tuple, set)):
+                entity_vals = list(entity_val)
+                if not entity_vals:
+                    continue
+                matching_args[finder_key] = entity_vals
+            else:
+                matching_args[finder_key] = [entity_val]
+
+        paths = find_matching_paths(
+            root=str(dataset_root),
+            datatypes=["eeg"],
+            suffixes=["eeg"],
+            ignore_json=True,
+            **matching_args,
+        )
+
+        records: list[dict] = []
+        seen_files: set[str] = set()
+
+        for bids_path in paths:
+            fpath = str(Path(bids_path.fpath).resolve())
+            if fpath in seen_files:
+                continue
+            seen_files.add(fpath)
+
+            # Build bidspath as dataset_id / relative_path_from_dataset_root
+            rel_from_root = (
+                Path(bids_path.fpath)
+                .resolve()
+                .relative_to(Path(bids_path.root).resolve())
+            )
+            bidspath = str(Path(dataset_id) / rel_from_root)
+
+            rec = {
+                "data_name": f"{dataset_id}_{Path(bids_path.fpath).name}",
+                "dataset": dataset_id,
+                "bidspath": bidspath,
+                "subject": (bids_path.subject or None),
+                "session": (bids_path.session or None),
+                "task": (bids_path.task or None),
+                "run": (bids_path.run or None),
+                # minimal fields to satisfy BaseDataset
+                "bidsdependencies": [],  # not needed to just run.
+                "modality": "eeg",
+                # this information is from eegdash schema but not available locally
+                "sampling_frequency": 1.0,
+                "nchans": 1,
+                "ntimes": 1,
+            }
+            records.append(rec)
+
+        return records
 
     def _find_key_in_nested_dict(self, data: Any, target_key: str) -> Any:
         """Helper to recursively search for a key in a nested dictionary structure; returns
@@ -811,70 +891,3 @@ class EEGDashDataset(BaseConcatDataset):
                 )
             )
         return datasets
-
-    def load_bids_dataset(
-        self,
-        dataset: str,
-        data_dir: str | Path,
-        description_fields: list[str],
-        s3_bucket: str | None = None,
-        n_jobs: int = -1,
-        **kwargs,
-    ):
-        """Helper method to load a single local BIDS dataset and return it as a list of
-        EEGDashBaseDatasets (one for each recording in the dataset).
-
-        Parameters
-        ----------
-        dataset : str
-            A name for the dataset to be loaded (e.g., "ds002718").
-        data_dir : str
-            The path to the local BIDS dataset directory.
-        description_fields : list[str]
-            A list of fields to be extracted from the dataset records
-            and included in the returned dataset description(s).
-        s3_bucket : str | None
-            The S3 bucket to upload the dataset files to (if any).
-        n_jobs : int
-            The number of jobs to run in parallel (default is -1, meaning using all processors).
-
-        """
-        logger.info(f"Loading local BIDS dataset {dataset} from {data_dir}")
-        bids_dataset = EEGBIDSDataset(
-            data_dir=data_dir,
-            dataset=dataset,
-        )
-        datasets = Parallel(n_jobs=n_jobs, prefer="threads", verbose=1)(
-            delayed(self._get_base_dataset_from_bids_file)(
-                bids_dataset=bids_dataset,
-                bids_file=bids_file,
-                s3_bucket=s3_bucket,
-                description_fields=description_fields,
-                **kwargs,
-            )
-            for bids_file in bids_dataset.get_files()
-        )
-        return datasets
-
-    def _get_base_dataset_from_bids_file(
-        self,
-        bids_dataset: "EEGBIDSDataset",
-        bids_file: str,
-        s3_bucket: str | None,
-        description_fields: list[str],
-        **kwargs,
-    ) -> "EEGDashBaseDataset":
-        """Instantiate a single EEGDashBaseDataset given a local BIDS file (metadata only)."""
-        record = load_eeg_attrs_from_bids_file(bids_dataset, bids_file)
-        description = {}
-        for field in description_fields:
-            value = self._find_key_in_nested_dict(record, field)
-            if value is not None:
-                description[field] = value
-        return EEGDashBaseDataset(
-            record,
-            self.cache_dir,
-            s3_bucket,
-            description=description,
-            **kwargs,
-        )

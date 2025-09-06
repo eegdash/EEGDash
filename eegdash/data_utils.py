@@ -227,6 +227,9 @@ class EEGDashBaseDataset(BaseDataset):
             # to-do: remove this once is fixed on the mne-bids side.
             with warnings.catch_warnings(record=True) as w:
                 try:
+                    # TO-DO: remove this once is fixed on the our side
+                    if not self.s3_open_neuro:
+                        self.bidspath = self.bidspath.update(extension=".bdf")
                     self._raw = mne_bids.read_raw_bids(
                         bids_path=self.bidspath, verbose="ERROR"
                     )

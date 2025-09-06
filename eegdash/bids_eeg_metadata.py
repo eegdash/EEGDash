@@ -8,6 +8,11 @@ from .data_utils import EEGBIDSDataset
 
 logger = logging.getLogger("eegdash")
 
+__all__ = [
+    "build_query_from_kwargs",
+    "load_eeg_attrs_from_bids_file",
+]
+
 
 def build_query_from_kwargs(**kwargs) -> dict[str, Any]:
     """Build and validate a MongoDB query from user-friendly keyword arguments.
@@ -65,7 +70,7 @@ def build_query_from_kwargs(**kwargs) -> dict[str, Any]:
     return query
 
 
-def get_raw_extensions(bids_file: str, bids_dataset: EEGBIDSDataset) -> list[str]:
+def _get_raw_extensions(bids_file: str, bids_dataset: EEGBIDSDataset) -> list[str]:
     """Helper to find paths to additional "sidecar" files that may be associated
     with a given main data file in a BIDS dataset; paths are returned as relative to
     the parent dataset path.
@@ -81,7 +86,7 @@ def get_raw_extensions(bids_file: str, bids_dataset: EEGBIDSDataset) -> list[str
         ".bdf": [".bdf"],  # biosemi
     }
     return [
-        str(bids_dataset.get_relative_bidspath(bids_file.with_suffix(suffix)))
+        str(bids_dataset._get_relative_bidspath(bids_file.with_suffix(suffix)))
         for suffix in extensions[bids_file.suffix]
         if bids_file.with_suffix(suffix).exists()
     ]
@@ -146,7 +151,7 @@ def load_eeg_attrs_from_bids_file(
         except Exception:
             pass
 
-    bidsdependencies.extend(get_raw_extensions(bids_file, bids_dataset))
+    bidsdependencies.extend(_get_raw_extensions(bids_file, bids_dataset))
 
     # Define field extraction functions with error handling
     field_extractors = {

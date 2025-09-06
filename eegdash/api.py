@@ -51,19 +51,6 @@ class EEGDash:
 
     """
 
-    _ALLOWED_QUERY_FIELDS = {
-        "data_name",
-        "dataset",
-        "subject",
-        "task",
-        "session",
-        "run",
-        "modality",
-        "sampling_frequency",
-        "nchans",
-        "ntimes",
-    }
-
     def __init__(self, *, is_public: bool = True, is_staging: bool = False) -> None:
         """Create new instance of the EEGDash Database client.
 
@@ -305,8 +292,8 @@ class EEGDash:
             return
 
         # Only consider fields we generally allow; skip meta operators like $and
-        raw_keys = set(raw_query.keys()) & self._ALLOWED_QUERY_FIELDS
-        kw_keys = set(kwargs_query.keys()) & self._ALLOWED_QUERY_FIELDS
+        raw_keys = set(raw_query.keys()) & ALLOWED_QUERY_FIELDS
+        kw_keys = set(kwargs_query.keys()) & ALLOWED_QUERY_FIELDS
         dup_keys = raw_keys & kw_keys
         for key in dup_keys:
             rc = self._extract_simple_constraint(raw_query, key)
@@ -631,7 +618,7 @@ class EEGDashDataset(BaseConcatDataset):
         # Separate query kwargs from other kwargs passed to the BaseDataset constructor
         self.query = query or {}
         self.query.update(
-            {k: v for k, v in kwargs.items() if k in EEGDash._ALLOWED_QUERY_FIELDS}
+            {k: v for k, v in kwargs.items() if k in ALLOWED_QUERY_FIELDS}
         )
         base_dataset_kwargs = {k: v for k, v in kwargs.items() if k not in self.query}
         if "dataset" not in self.query:

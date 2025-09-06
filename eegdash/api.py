@@ -31,33 +31,31 @@ logger = logging.getLogger("eegdash")
 
 
 class EEGDash:
-    """A high-level interface to the EEGDash database.
+    """High-level interface to the EEGDash metadata database.
 
-    This class is primarily used to interact with the metadata records stored in the
-    EEGDash database (or a private instance of it), allowing users to find, add, and
-    update EEG data records.
+    Provides methods to query, insert, and update metadata records stored in the
+    EEGDash MongoDB database (public or private). Also includes utilities to load
+    EEG data from S3 for matched records.
 
-    While this class provides basic support for loading EEG data, please see
-    the EEGDashDataset class for a more complete way to retrieve and work with full
-    datasets.
-
+    For working with collections of
+    recordings as PyTorch datasets, prefer :class:`EEGDashDataset`.
     """
 
     def __init__(self, *, is_public: bool = True, is_staging: bool = False) -> None:
-        """Create new instance of the EEGDash Database client.
+        """Create a new EEGDash client.
 
         Parameters
         ----------
-        is_public: bool
-            Whether to connect to the public MongoDB database; if False, connect to a
-            private database instance as per the DB_CONNECTION_STRING env variable
-            (or .env file entry).
-        is_staging: bool
-            If True, use staging MongoDB database ("eegdashstaging"); otherwise use the
-            production database ("eegdash").
+        is_public : bool, default True
+            Connect to the public MongoDB database. If ``False``, connect to a
+            private database instance using the ``DB_CONNECTION_STRING`` environment
+            variable (or value from a ``.env`` file).
+        is_staging : bool, default False
+            If ``True``, use the staging database (``eegdashstaging``); otherwise
+            use the production database (``eegdash``).
 
-        Example
-        -------
+        Examples
+        --------
         >>> eegdash = EEGDash()
 
         """
@@ -98,16 +96,18 @@ class EEGDash:
 
         Parameters
         ----------
-        query: dict, optional
-            A complete MongoDB query dictionary. This is a positional-only argument.
-        **kwargs:
-            Keyword arguments representing field-value pairs for the query.
-            Values can be single items (str, int) or lists of items for multi-search.
+        query : dict, optional
+            Complete MongoDB query dictionary. This is a positional-only
+            argument.
+        **kwargs
+            User-friendly field filters that are converted to a MongoDB query.
+            Values can be scalars (e.g., ``"sub-01"``) or sequences (translated
+            to ``$in`` queries).
 
         Returns
         -------
-        list:
-            A list of DB records (string-keyed dictionaries) that match the query.
+        list of dict
+            DB records that match the query.
 
         """
         final_query: dict[str, Any] | None = None
@@ -305,11 +305,11 @@ class EEGDash:
                     )
 
     def load_eeg_data_from_s3(self, s3path: str) -> xr.DataArray:
-        """Load EEG data from an S3 URI and return it as an xarray DataArray.
+        """Load EEG data from an S3 URI into an ``xarray.DataArray``.
 
-        This method preserves the original filename, downloads necessary sidecar
-        files when applicable (e.g., .fdt for EEGLAB, .vmrk/.eeg for BrainVision),
-        and uses MNE's direct readers rather than ``read_raw_bids``.
+        Preserves the original filename, downloads sidecar files when applicable
+        (e.g., ``.fdt`` for EEGLAB, ``.vmrk``/``.eeg`` for BrainVision), and uses
+        MNE's direct readers.
 
         Parameters
         ----------
@@ -319,7 +319,12 @@ class EEGDash:
         Returns
         -------
         xr.DataArray
-            A DataArray containing the EEG data, with dimensions "channel" and "time".
+            EEG data with dimensions ``("channel", "time")``.
+
+        Raises
+        ------
+        ValueError
+            If the file extension is unsupported.
 
         """
         # choose a temp dir so sidecars can be colocated
@@ -377,16 +382,18 @@ class EEGDash:
             )
 
     def load_eeg_data_from_bids_file(self, bids_file: str) -> xr.DataArray:
-        """Load EEG data from a local file and return it as a xarray DataArray.
+        """Load EEG data from a local BIDS-formatted file.
 
         Parameters
         ----------
         bids_file : str
-            Path to the BIDS-compliant file on the local filesystem.
+            Path to a BIDS-compliant EEG file (e.g., ``*_eeg.edf``, ``*_eeg.bdf``,
+            ``*_eeg.vhdr``, ``*_eeg.set``).
 
-        Notes
-        -----
-        Currently, only non-epoched .set files are supported.
+        Returns
+        -------
+        xr.DataArray
+            EEG data with dimensions ``("channel", "time")``.
 
         """
         bids_path = get_bids_path_from_fname(bids_file, verbose=False)
@@ -409,17 +416,22 @@ class EEGDash:
     def add_bids_dataset(
         self, dataset: str, data_dir: str, overwrite: bool = True
     ) -> None:
-        """Traverse the BIDS dataset at data_dir and add its records to the MongoDB database,
-        under the given dataset name.
+        """Scan a local BIDS dataset and upsert records into MongoDB.
 
         Parameters
         ----------
-        dataset : str)
-            The name of the dataset to be added (e.g., "ds002718").
+        dataset : str
+            Dataset identifier (e.g., ``"ds002718"``).
         data_dir : str
-            The path to the BIDS dataset directory.
-        overwrite : bool
-            Whether to overwrite/update existing records in the database.
+            Path to the local BIDS dataset directory.
+        overwrite : bool, default True
+            If ``True``, update existing records when encountered; otherwise,
+            skip records that already exist.
+
+        Raises
+        ------
+        ValueError
+            If called on a public client ``(is_public=True)``.
 
         """
         if self.is_public:
@@ -465,22 +477,22 @@ class EEGDash:
             logger.info("Errors: %s ", result.bulk_api_result.get("writeErrors", []))
 
     def get(self, query: dict[str, Any]) -> list[xr.DataArray]:
-        """Retrieve a list of EEG data arrays that match the given query. See also
-        the `find()` method for details on the query format.
+        """Download and return EEG data arrays for records matching a query.
 
         Parameters
         ----------
         query : dict
-            A dictionary that specifies the query to be executed; this is a reference
-            document that is used to match records in the MongoDB collection.
+            MongoDB query used to select records.
 
         Returns
         -------
-            A list of xarray DataArray objects containing the EEG data for each matching record.
+        list of xr.DataArray
+            EEG data for each matching record, with dimensions ``("channel", "time")``.
 
         Notes
         -----
-        Retrieval is done in parallel, and the downloaded data are not cached locally.
+        Retrieval runs in parallel. Downloaded files are read and discarded
+        (no on-disk caching here).
 
         """
         sessions = self.find(query)
@@ -496,7 +508,25 @@ class EEGDash:
         return results
 
     def _get_s3path(self, record: Mapping[str, Any] | str) -> str:
-        """Internal helper to build S3 URI from a record or relative path."""
+        """Build an S3 URI from a DB record or a relative path.
+
+        Parameters
+        ----------
+        record : dict or str
+            Either a DB record containing a ``'bidspath'`` key, or a relative
+            path string under the OpenNeuro bucket.
+
+        Returns
+        -------
+        str
+            Fully qualified S3 URI.
+
+        Raises
+        ------
+        ValueError
+            If a mapping is provided but ``'bidspath'`` is missing.
+
+        """
         if isinstance(record, str):
             rel = record
         else:
@@ -524,7 +554,14 @@ class EEGDash:
         return UpdateOne({"data_name": record["data_name"]}, {"$set": record})
 
     def update(self, record: dict):
-        """Update a single record in the MongoDB collection."""
+        """Update a single record in the MongoDB collection.
+
+        Parameters
+        ----------
+        record : dict
+            Record content to set at the matching ``data_name``.
+
+        """
         try:
             self.__collection.update_one(
                 {"data_name": record["data_name"]}, {"$set": record}
@@ -533,18 +570,32 @@ class EEGDash:
             logger.error("Error updating record: %s", record["data_name"])
 
     def exists(self, query: dict[str, Any]) -> bool:
-        """Alias for exist(), provided for API clarity."""
+        """Alias for :meth:`exist` provided for API clarity."""
         return self.exist(query)
 
     def remove_field(self, record, field):
-        """Remove a specific field from a record in the MongoDB collection."""
+        """Remove a specific field from a record in the MongoDB collection.
+
+        Parameters
+        ----------
+        record : dict
+            Record identifying object with ``data_name``.
+        field : str
+            Field name to remove.
+
+        """
         self.__collection.update_one(
             {"data_name": record["data_name"]}, {"$unset": {field: 1}}
         )
 
     def remove_field_from_db(self, field):
-        """Removed all occurrences of a specific field from all records in the MongoDB
-        collection. WARNING: this operation is destructive and should be used with caution.
+        """Remove a field from all records (destructive).
+
+        Parameters
+        ----------
+        field : str
+            Field name to remove from every document.
+
         """
         self.__collection.update_many({}, {"$unset": {field: 1}})
 
@@ -554,11 +605,13 @@ class EEGDash:
         return self.__collection
 
     def close(self):
-        """Close the MongoDB client connection.
+        """Backward-compatibility no-op; connections are managed globally.
 
-        Note: Since MongoDB clients are now managed by a singleton,
-        this method no longer closes connections. Use close_all_connections()
-        class method to close all connections if needed.
+        Notes
+        -----
+        Connections are managed by :class:`MongoConnectionManager`. Use
+        :meth:`close_all_connections` to explicitly close all clients.
+
         """
         # Individual instances no longer close the shared client
         pass
@@ -569,7 +622,7 @@ class EEGDash:
         MongoConnectionManager.close_all()
 
     def __del__(self):
-        """Ensure connection is closed when object is deleted."""
+        """Destructor; no explicit action needed due to global connection manager."""
         # No longer needed since we're using singleton pattern
         pass
 

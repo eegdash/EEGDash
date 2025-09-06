@@ -1,3 +1,16 @@
+ALLOWED_QUERY_FIELDS = {
+    "data_name",
+    "dataset",
+    "subject",
+    "task",
+    "session",
+    "run",
+    "modality",
+    "sampling_frequency",
+    "nchans",
+    "ntimes",
+}
+
 RELEASE_TO_OPENNEURO_DATASET_MAP = {
     "R11": "ds005516",
     "R10": "ds005515",

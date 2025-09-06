@@ -89,7 +89,7 @@ def test_mongodb_load_under_sometime(release):
 
 
 @pytest.mark.parametrize("mini", [True, False])
-@pytest.mark.parametrize("release", RELEASES[:1])
+@pytest.mark.parametrize("release", RELEASES)
 def test_consuming_one_raw(release, mini):
     cache_dir = CACHE_DIR
     print(f"Testing release {release} mini={mini} with cache dir {cache_dir}")

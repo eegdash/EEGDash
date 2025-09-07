@@ -16,7 +16,7 @@ def register_openneuro_datasets(
 ) -> Dict[str, type]:
     """Dynamically create dataset classes from a summary file."""
     if base_class is None:
-        from .api import EEGDashDataset as base_class  # lazy import
+        from ..api import EEGDashDataset as base_class  # lazy import
 
     summary_path = Path(summary_file)
     namespace = namespace if namespace is not None else globals()
@@ -59,7 +59,7 @@ def register_openneuro_datasets(
 
         doc = f"""OpenNeuro dataset ``{dataset_id}``.
 
-        {markdown_table(row_series)}
+        {_markdown_table(row_series)}
 
         Parameters
         ----------
@@ -101,7 +101,7 @@ def register_openneuro_datasets(
     return registered
 
 
-def markdown_table(row_series: pd.Series) -> str:
+def _markdown_table(row_series: pd.Series) -> str:
     """Create a reStructuredText grid table from a pandas Series."""
     if row_series.empty:
         return ""

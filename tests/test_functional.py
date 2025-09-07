@@ -1,7 +1,7 @@
 import shutil
 from pathlib import Path
 
-from eegdash.dataset import EEGDashDataset
+from eegdash.dataset.dataset import EEGDashDataset
 
 
 def test_progress_bar_output(capsys, tmp_path):

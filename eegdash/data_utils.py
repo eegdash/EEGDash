@@ -57,7 +57,7 @@ class EEGDashBaseDataset(BaseDataset):
         super().__init__(None, **kwargs)
         self.record = record
         self.cache_dir = Path(cache_dir)
-        self.bids_kwargs = self.get_raw_bids_args()
+        self.bids_kwargs = self._get_raw_bids_args()
 
         if s3_bucket:
             self.s3_bucket = s3_bucket
@@ -66,8 +66,27 @@ class EEGDashBaseDataset(BaseDataset):
             self.s3_bucket = self._AWS_BUCKET
             self.s3_open_neuro = True
 
-        self.filecache = self.cache_dir / record["bidspath"]
-        self.bids_root = self.cache_dir / record["dataset"]
+        # Compute a dataset folder name under cache_dir that encodes preprocessing
+        # (e.g., bdf, mini) to avoid overlapping with the original dataset cache.
+        self.dataset_folder = record.get("dataset", "")
+        if s3_bucket:
+            suffixes: list[str] = []
+            bucket_lower = str(s3_bucket).lower()
+            if "bdf" in bucket_lower:
+                suffixes.append("bdf")
+            if "mini" in bucket_lower:
+                suffixes.append("mini")
+            if suffixes:
+                self.dataset_folder = f"{self.dataset_folder}-{'-'.join(suffixes)}"
+
+        # Place files under the dataset-specific folder (with suffix if any)
+        rel = Path(record["bidspath"])  # usually starts with dataset id
+        if rel.parts and rel.parts[0] == record.get("dataset"):
+            rel = Path(self.dataset_folder, *rel.parts[1:])
+        else:
+            rel = Path(self.dataset_folder) / rel
+        self.filecache = self.cache_dir / rel
+        self.bids_root = self.cache_dir / self.dataset_folder
         self.bidspath = BIDSPath(
             root=self.bids_root,
             datatype="eeg",
@@ -86,7 +105,7 @@ class EEGDashBaseDataset(BaseDataset):
                 logger.error(f"Error while updating BIDS path: {e}")
                 raise e
 
-        self.s3file = self.get_s3path(record["bidspath"])
+        self.s3file = self._get_s3path(record["bidspath"])
         self.bids_dependencies = record["bidsdependencies"]
         # Temporary fix for BIDS dependencies path
         # just to release to the competition
@@ -98,7 +117,7 @@ class EEGDashBaseDataset(BaseDataset):
 
         self._raw = None
 
-    def get_s3path(self, filepath: str) -> str:
+    def _get_s3path(self, filepath: str) -> str:
         """Helper to form an AWS S3 URI for the given relative filepath."""
         return f"{self.s3_bucket}/{filepath}"
 
@@ -152,11 +171,16 @@ class EEGDashBaseDataset(BaseDataset):
                 if dep.endswith(".set"):
                     dep = dep[:-4] + ".bdf"
 
-            s3path = self.get_s3path(dep)
+            s3path = self._get_s3path(dep)
             if not self.s3_open_neuro:
                 dep = self.bids_dependencies_original[i]
 
-            filepath = self.cache_dir / dep
+            dep_path = Path(dep)
+            if dep_path.parts and dep_path.parts[0] == self.record.get("dataset"):
+                dep_local = Path(self.dataset_folder, *dep_path.parts[1:])
+            else:
+                dep_local = Path(self.dataset_folder) / dep_path
+            filepath = self.cache_dir / dep_local
             if not self.s3_open_neuro:
                 if self.filecache.suffix == ".set":
                     self.filecache = self.filecache.with_suffix(".bdf")
@@ -185,14 +209,14 @@ class EEGDashBaseDataset(BaseDataset):
                 )
                 filesystem.get(s3path, filepath, callback=callback)
 
-    def get_raw_bids_args(self) -> dict[str, Any]:
+    def _get_raw_bids_args(self) -> dict[str, Any]:
         """Helper to restrict the metadata record to the fields needed to locate a BIDS
         recording.
         """
         desired_fields = ["subject", "session", "task", "run"]
         return {k: self.record[k] for k in desired_fields if self.record[k]}
 
-    def check_and_get_raw(self) -> None:
+    def _ensure_raw(self) -> None:
         """Download the S3 file and BIDS dependencies if not already cached."""
         if not os.path.exists(self.filecache):  # not preload
             if self.bids_dependencies:
@@ -203,6 +227,9 @@ class EEGDashBaseDataset(BaseDataset):
             # to-do: remove this once is fixed on the mne-bids side.
             with warnings.catch_warnings(record=True) as w:
                 try:
+                    # TO-DO: remove this once is fixed on the our side
+                    if not self.s3_open_neuro:
+                        self.bidspath = self.bidspath.update(extension=".bdf")
                     self._raw = mne_bids.read_raw_bids(
                         bids_path=self.bidspath, verbose="ERROR"
                     )
@@ -249,7 +276,7 @@ class EEGDashBaseDataset(BaseDataset):
         retrieval if not yet done so.
         """
         if self._raw is None:
-            self.check_and_get_raw()
+            self._ensure_raw()
         return self._raw
 
     @raw.setter
@@ -307,7 +334,7 @@ class EEGDashBaseRaw(BaseRaw):
                 chtype = "eog"
             ch_types.append(chtype)
         info = mne.create_info(ch_names=ch_names, sfreq=sfreq, ch_types=ch_types)
-        self.s3file = self.get_s3path(input_fname)
+        self.s3file = self._get_s3path(input_fname)
         self.cache_dir = Path(cache_dir)
         self.filecache = self.cache_dir / input_fname
         self.bids_dependencies = bids_dependencies
@@ -324,7 +351,7 @@ class EEGDashBaseRaw(BaseRaw):
             verbose=verbose,
         )
 
-    def get_s3path(self, filepath):
+    def _get_s3path(self, filepath):
         return f"{self._AWS_BUCKET}/{filepath}"
 
     def _download_s3(self) -> None:
@@ -340,7 +367,7 @@ class EEGDashBaseRaw(BaseRaw):
             anon=True, client_kwargs={"region_name": "us-east-2"}
         )
         for dep in self.bids_dependencies:
-            s3path = self.get_s3path(dep)
+            s3path = self._get_s3path(dep)
             filepath = self.cache_dir / dep
             if not filepath.exists():
                 filepath.parent.mkdir(parents=True, exist_ok=True)
@@ -401,11 +428,17 @@ class EEGBIDSDataset:
             raise ValueError("data_dir must be specified and must exist")
         self.bidsdir = Path(data_dir)
         self.dataset = dataset
-        assert str(self.bidsdir).endswith(self.dataset)
+        # Accept exact dataset folder or a variant with informative suffixes
+        # (e.g., dsXXXXX-bdf, dsXXXXX-bdf-mini) to avoid collisions.
+        dir_name = self.bidsdir.name
+        if not (dir_name == self.dataset or dir_name.startswith(self.dataset + "-")):
+            raise AssertionError(
+                f"BIDS directory '{dir_name}' does not correspond to dataset '{self.dataset}'"
+            )
         self.layout = BIDSLayout(data_dir)
 
         # get all recording files in the bids directory
-        self.files = self.get_recordings(self.layout)
+        self.files = self._get_recordings(self.layout)
         assert len(self.files) > 0, ValueError(
             "Unable to construct EEG dataset. No EEG recordings found."
         )
@@ -415,7 +448,7 @@ class EEGBIDSDataset:
         """Check if the dataset is EEG."""
         return self.get_bids_file_attribute("modality", self.files[0]).lower() == "eeg"
 
-    def get_recordings(self, layout: BIDSLayout) -> list[str]:
+    def _get_recordings(self, layout: BIDSLayout) -> list[str]:
         """Get a list of all EEG recording files in the BIDS layout."""
         files = []
         for ext, exts in self.RAW_EXTENSIONS.items():
@@ -424,12 +457,12 @@ class EEGBIDSDataset:
                 break
         return files
 
-    def get_relative_bidspath(self, filename: str) -> str:
+    def _get_relative_bidspath(self, filename: str) -> str:
         """Make the given file path relative to the BIDS directory."""
         bids_parent_dir = self.bidsdir.parent.absolute()
         return str(Path(filename).relative_to(bids_parent_dir))
 
-    def get_property_from_filename(self, property: str, filename: str) -> str:
+    def _get_property_from_filename(self, property: str, filename: str) -> str:
         """Parse a property out of a BIDS-compliant filename. Returns an empty string
         if not found.
         """
@@ -441,7 +474,7 @@ class EEGBIDSDataset:
             lookup = re.search(rf"{property}-(.*?)[_\/]", filename)
         return lookup.group(1) if lookup else ""
 
-    def merge_json_inheritance(self, json_files: list[str | Path]) -> dict:
+    def _merge_json_inheritance(self, json_files: list[str | Path]) -> dict:
         """Internal helper to merge list of json files found by get_bids_file_inheritance,
         expecting the order (from left to right) is from lowest
         level to highest level, and return a merged dictionary
@@ -452,7 +485,7 @@ class EEGBIDSDataset:
             json_dict.update(json.load(open(f)))  # FIXME: should close file
         return json_dict
 
-    def get_bids_file_inheritance(
+    def _get_bids_file_inheritance(
         self, path: str | Path, basename: str, extension: str
     ) -> list[Path]:
         """Get all file paths that apply to the basename file in the specified directory
@@ -499,7 +532,7 @@ class EEGBIDSDataset:
         else:
             # call get_bids_file_inheritance recursively with parent directory
             bids_files.extend(
-                self.get_bids_file_inheritance(path.parent, basename, extension)
+                self._get_bids_file_inheritance(path.parent, basename, extension)
             )
             return bids_files
 
@@ -530,12 +563,12 @@ class EEGBIDSDataset:
         path, filename = os.path.split(filepath)
         basename = filename[: filename.rfind("_")]
         # metadata files
-        meta_files = self.get_bids_file_inheritance(
+        meta_files = self._get_bids_file_inheritance(
             path, basename, metadata_file_extension
         )
         return meta_files
 
-    def scan_directory(self, directory: str, extension: str) -> list[Path]:
+    def _scan_directory(self, directory: str, extension: str) -> list[Path]:
         """Return a list of file paths that end with the given extension in the specified
         directory. Ignores certain special directories like .git, .datalad, derivatives,
         and code.
@@ -552,7 +585,7 @@ class EEGBIDSDataset:
                         result_files.append(entry.path)  # Add directory to scan later
         return result_files
 
-    def get_files_with_extension_parallel(
+    def _get_files_with_extension_parallel(
         self, directory: str, extension: str = ".set", max_workers: int = -1
     ) -> list[Path]:
         """Efficiently scan a directory and its subdirectories for files that end with
@@ -584,7 +617,7 @@ class EEGBIDSDataset:
             )
             # Run the scan_directory function in parallel across directories
             results = Parallel(n_jobs=max_workers, prefer="threads", verbose=1)(
-                delayed(self.scan_directory)(d, extension) for d in dirs_to_scan
+                delayed(self._scan_directory)(d, extension) for d in dirs_to_scan
             )
 
             # Reset the directories to scan and process the results
@@ -689,7 +722,7 @@ class EEGBIDSDataset:
     def num_times(self, data_filepath: str) -> int:
         """Get the approximate number of time points in the EEG recording based on the BIDS metadata."""
         eeg_jsons = self.get_bids_metadata_files(data_filepath, "eeg.json")
-        eeg_json_dict = self.merge_json_inheritance(eeg_jsons)
+        eeg_json_dict = self._merge_json_inheritance(eeg_jsons)
         return int(
             eeg_json_dict["SamplingFrequency"] * eeg_json_dict["RecordingDuration"]
         )
@@ -712,7 +745,7 @@ class EEGBIDSDataset:
     def eeg_json(self, data_filepath: str) -> dict[str, Any]:
         """Get BIDS eeg.json metadata for the given data file path."""
         eeg_jsons = self.get_bids_metadata_files(data_filepath, "eeg.json")
-        eeg_json_dict = self.merge_json_inheritance(eeg_jsons)
+        eeg_json_dict = self._merge_json_inheritance(eeg_jsons)
         return eeg_json_dict
 
     def channel_tsv(self, data_filepath: str) -> dict[str, Any]:

@@ -3,7 +3,7 @@ from pathlib import Path
 
 import pytest
 
-from eegdash.api import EEGDash
+from eegdash.api import EEGDash, EEGDashDataset
 from eegdash.dataset import EEGChallengeDataset
 
 RELEASES = ["R1", "R2", "R3", "R4", "R5", "R6", "R7", "R8", "R9", "R10", "R11"]
@@ -91,11 +91,8 @@ def test_mongodb_load_under_sometime(release):
 @pytest.mark.parametrize("mini", [True, False])
 @pytest.mark.parametrize("release", RELEASES)
 def test_consuming_one_raw(release, mini):
-    if mini:
-        cache_dir = CACHE_DIR / "mini"
-        cache_dir.mkdir(parents=True, exist_ok=True)
-    else:
-        cache_dir = CACHE_DIR
+    cache_dir = CACHE_DIR
+    print(f"Testing release {release} mini={mini} with cache dir {cache_dir}")
     dataset_obj = EEGChallengeDataset(
         release=release,
         task="RestingState",
@@ -117,3 +114,36 @@ def test_eeg_dash_integration(eeg_dash_instance, release="R5", mini=True):
     )
     raw = dataset_obj.datasets[0].raw
     assert raw is not None
+
+
+def test_eeg_dash_integration_warning():
+    """Test that EEGChallengeDataset emits the expected UserWarning on init."""
+    release = "R5"
+    mini = True
+    with pytest.warns(UserWarning) as record:
+        _ = EEGChallengeDataset(
+            release=release,
+            task="RestingState",
+            cache_dir=CACHE_DIR,
+            mini=mini,
+        )
+    # There may be multiple warnings, check that at least one matches expected text
+    found = any("EEG 2025 Competition Data Notice" in str(w.message) for w in record)
+    assert found, (
+        "Expected competition warning not found in warnings emitted by EEGChallengeDataset"
+    )
+
+
+def test_eeg_dashdataset():
+    """Test that EEGDashDataset emits the expected UserWarning on init."""
+    with pytest.warns(UserWarning) as record:
+        _ = EEGDashDataset(
+            dataset="ds005505",
+            task="RestingState",
+            cache_dir=CACHE_DIR,
+        )
+    # There may be multiple warnings, check that at least one matches expected text
+    found = any("EEG 2025 Competition Data Notice" in str(w.message) for w in record)
+    assert found, (
+        "Expected competition warning not found in warnings emitted by EEGChallengeDataset"
+    )

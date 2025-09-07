@@ -1,17 +1,7 @@
-""".. _challenge-1:
-
-Challenge 1: Cross-Task Transfer Learning!
-==========================================
-
-.. contents:: This example covers:
-   :local:
-   :depth: 2
-"""
-
-######################################################################
+# %% [markdown]
 # <a target="_blank" href="https://colab.research.google.com/github/eeg2025/startkit/blob/main/challenge_1.ipynb"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/></a>
 
-######################################################################
+# %% [markdown]
 # # Challenge 1: Cross-Task Transfer Learning!
 #
 # ## How can we use the knowledge from one EEG Decoding task into another?
@@ -26,12 +16,12 @@ Challenge 1: Cross-Task Transfer Learning!
 #
 # This means your submitted model might be trained on a subset of tasks and fine-tuned on data from another condition, evaluating its capacity to generalize with task-specific fine-tuning.
 
-######################################################################
+# %% [markdown]
 # __________
 #
 # Note: For simplicity purposes, we will only show how to do the decoding directly in our target task, and it is up to the teams to think about how to use the passive task to perform the pre-training.
 
-######################################################################
+# %% [markdown]
 # ---
 # ## Summary table for this start kit
 #
@@ -48,22 +38,13 @@ Challenge 1: Cross-Task Transfer Learning!
 # 6. Evaluating test performance.
 # 7. Going further, *benchmark go brrr!*
 
-######################################################################
-# Install dependencies on colab
-# -----------------------------
-# tags:["hide-input"]
-#!pip install braindecode
-#!pip install eegdash
+# %% Install dependencies on colab [code] tags=["hide-input"]
+# !pip install braindecode
+# !pip install eegdash
 
-
-######################################################################
-# Setup
-# -----
-# Imports and device selection.
-
+# %% Imports and setup [code]
 from pathlib import Path
 import torch
-
 from braindecode.datasets import BaseConcatDataset
 from braindecode.preprocessing import (
     preprocess,
@@ -94,16 +75,26 @@ else:
     )
 print(msg)
 
-######################################################################
-# 1) What are we decoding?
-# ------------------------
-# The CCD task combines SSVEP-like (continuous flicker) and ERP-like
-# (event-locked) components. We aim to predict response time from the
-# relevant windows.
+# %% [markdown]
+# ## 1. What are we decoding?
+#
+# The Contrast Change Detection (CCD) task relates to [Steady-State Visual Evoked Potentials (SSVEP)](https://en.wikipedia.org/wiki/Steady-state_visually_evoked_potential) and [Event-Related Potentials (ERP)](https://en.wikipedia.org/wiki/Event-related_potential).
+#
+# Algorithmically, what the subject sees during recording is:
+#
+# * Two flickering striped discs: one tilted left, one tilted right.
+# * After a variable delay, **one disc's contrast gradually increases** **while the other decreases**.
+# * They **press left or right** to indicate which disc got stronger.
+# * They receive **feedback** (🙂 correct / 🙁 incorrect).
+#
+# **The task parallels SSVEP and ERP:**
+#
+# * The continuous flicker **tags the EEG at fixed frequencies (and harmonics)** → SSVEP-like signals.
+# * The **ramp onset**, the **button press**, and the **feedback** are **time-locked events** that yield ERP-like components.
+#
+# Your task (**label**) is to predict the response time for the subject during this windows.
 
-######################################################################
-# 2) Load the competition dataset
-# -------------------------------
+# %% Load the data [code]
 from eegdash.dataset import EEGChallengeDataset
 from eegdash.hbn.windows import (
     annotate_trials_with_target,
@@ -116,24 +107,16 @@ DATA_DIR = Path("data")
 DATA_DIR.mkdir(parents=True, exist_ok=True)
 
 dataset_ccd = EEGChallengeDataset(
-    task="contrastChangeDetection",
-    release="R5",
-    cache_dir=DATA_DIR,
-    mini=True,
+    task="contrastChangeDetection", release="R5", cache_dir=DATA_DIR, mini=True
 )
 
 # For visualization purposes, we will see just one object.
 raw = dataset_ccd.datasets[0].raw  # get the Raw object of the first recording
 
 # To download all data directly, you can do:
-raws = Parallel(n_jobs=-1, prefer="threads")(
-    delayed(lambda d: d.raw)(d) for d in dataset_ccd.datasets
-)
+raws = Parallel(n_jobs=-1)(delayed(lambda d: d.raw)(d) for d in dataset_ccd.datasets)
 
-
-######################################################################
-# 3) Create windows of interest
-# -----------------------------
+# %% Create windows of interest [code]
 EPOCH_LEN_S = 2.0
 SFREQ = 100  # by definition here
 
@@ -184,9 +167,7 @@ single_windows = add_extras_columns(
     ),
 )
 
-######################################################################
-# 4) Split the data
-# -----------------
+# %% Split the data [code]
 # Extract meta information
 meta_information = single_windows.get_metadata()
 
@@ -236,11 +217,8 @@ print(f"Train:\t{len(train_set)}")
 print(f"Valid:\t{len(valid_set)}")
 print(f"Test:\t{len(test_set)}")
 
-######################################################################
-# 5) Create dataloaders
-# ---------------------
+# %% Create dataloaders [code]
 batch_size = 128
-
 # Set num_workers to 0 to avoid multiprocessing issues in notebooks/tutorials
 num_workers = 0
 
@@ -254,9 +232,7 @@ test_loader = DataLoader(
     test_set, batch_size=batch_size, shuffle=False, num_workers=num_workers
 )
 
-######################################################################
-# 6) Build the model
-# ------------------
+# %% Build the model [code]
 # For any braindecode model, you can initialize only inputing the signal related parameters
 # You can use any Pytorch module that you want here.
 model = EEGNeX(
@@ -270,9 +246,7 @@ print(model)
 model.to(device)
 
 
-######################################################################
-# 7) Define training and validation functions
-# -------------------------------------------
+# %% Define training functions [code]
 def train_one_epoch(
     dataloader: DataLoader,
     model: Module,
@@ -374,9 +348,7 @@ def valid_model(
     return avg_loss, rmse
 
 
-######################################################################
-# 8) Train the model
-# ------------------
+# %% Train the model [code]
 lr = 1e-3
 weight_decay = 1e-5
 n_epochs = (
@@ -425,8 +397,6 @@ for epoch in range(1, n_epochs + 1):
 if best_state is not None:
     model.load_state_dict(best_state)
 
-######################################################################
-# 9) Save the model
-# -----------------
+# %% Save the model [code]
 torch.save(model.state_dict(), "weights_challenge_1.pt")
 print("Model saved as 'weights_challenge_1.pt'")

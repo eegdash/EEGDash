@@ -1,8 +1,19 @@
-# %% [markdown]
+""".. _challenge-2:
+
+Challenge 2: Predicting the p-factor from EEG
+=============================================
+
+.. contents:: This example covers:
+   :local:
+   :depth: 2
+
+"""
+
+######################################################################
 # <a target="_blank" href="https://colab.research.google.com/github/eeg2025/startkit/blob/main/challenge_2.ipynb"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/></a>
 
 
-# %% [markdown]
+######################################################################
 # # Challenge 2: Predicting the p-factor from EEG
 
 # The psychopathology factor (P-factor) is a widely recognized construct in mental health research, representing a common underlying dimension of psychopathology across various disorders.
@@ -18,7 +29,7 @@
 
 # Ensure the dataset is available locally. If not, see the [dataset download guide](https://eeg2025.github.io/data/#downloading-the-data)
 
-# %% [markdown]
+######################################################################
 # ## Contents of this start kit
 
 # 0. Understand the P-factor regression task.
@@ -57,11 +68,17 @@
 # |* Like and support open-source :) |
 # ----
 
-# %% Install dependencies on colab [code] tags=["hide-input"]
+######################################################################
+# Install dependencies on colab
+# -----------------------------
+# tags:["hide-input"]
 #!pip install braindecode
 #!pip install eegdash
 
-# %% Imports [code] tags=["hide-input"]
+######################################################################
+# Imports
+# -------
+# tags:["hide-input"]
 from pathlib import Path
 import math
 import os
@@ -77,13 +94,18 @@ from braindecode.datasets.base import EEGWindowsDataset, BaseConcatDataset, Base
 from braindecode.models import EEGNeX
 from eegdash import EEGChallengeDataset
 
-# %% [markdown]
-# ⚠️ **In case of colab, before starting, make sure you're on a GPU instance for faster training!** ⚠️
+######################################################################
+# .. warning::
+#    In case of Colab, before starting, make sure you're on a GPU instance
+#    for faster training! If running on Google Colab, please request a GPU runtime
+#    by clicking `Runtime/Change runtime type` in the top bar menu, then selecting
+#    'T4 GPU' under 'Hardware accelerator'.
 
-# > If running on Google Colab, please request a GPU runtime by clicking `Runtime/Change runtime type` in the top bar menu, then selecting 'T4 GPU' under 'Hardware accelerator'.
 
-
-# %% Identify whether a CUDA-enabled GPU is available [code] tags=["hide-input"]
+######################################################################
+# Identify whether a CUDA-enabled GPU is available
+# ------------------------------------------------
+# tags:["hide-input"]
 device = "cuda" if torch.cuda.is_available() else "cpu"
 if device == "cuda":
     msg = "CUDA-enabled GPU found. Training should be faster."
@@ -96,7 +118,7 @@ else:
     )
 print(msg)
 
-# %% [markdown]
+######################################################################
 # ## 0. Understanding the P-factor regression task.
 #
 # The psychopathology factor (P-factor) is a widely recognized construct in mental health research, representing a common underlying dimension of psychopathology across various disorders.
@@ -121,7 +143,7 @@ print(msg)
 
 # %%
 # The first step is to define the cache folder!
-DATA_DIR = Path("~/mne_data/eeg2025_competition")
+DATA_DIR = Path("~/eegdash/eeg2025_competition")
 
 # Creating the path if it does not exist
 DATA_DIR.mkdir(parents=True, exist_ok=True)

@@ -68,15 +68,53 @@ class EEGChallengeDataset(EEGDashDataset):
             )
 
         if self.mini:
-            # Disallow mixing subject selection with mini=True since mini already
-            # applies a predefined subject subset.
-            if (query and "subject" in query) or ("subject" in kwargs):
-                raise ValueError(
-                    "Query using the parameters `subject` with the class EEGChallengeDataset and `mini==True` is not possible."
-                    "Please don't use the `subject` selection twice."
-                    "Set `mini=False` to use the `subject` selection."
+            # When using the mini release, restrict subjects to the predefined subset.
+            # If the user specifies subject(s), ensure they all belong to the mini subset;
+            # otherwise, default to the full mini subject list for this release.
+
+            allowed_subjects = set(SUBJECT_MINI_RELEASE_MAP[release])
+
+            # Normalize potential 'subjects' -> 'subject' for convenience
+            if "subjects" in kwargs and "subject" not in kwargs:
+                kwargs["subject"] = kwargs.pop("subjects")
+
+            # Collect user-requested subjects from kwargs/query, supporting str, list-like,
+            # or Mongo-style {"$in": [...]} shapes for 'subject'.
+            requested_subjects: list[str] = []
+
+            # From kwargs
+            if "subject" in kwargs and kwargs["subject"] is not None:
+                val = kwargs["subject"]
+                if isinstance(val, (list, tuple, set)):
+                    requested_subjects.extend(list(val))
+                else:
+                    requested_subjects.append(val)
+
+            # From query (top-level only)
+            if query and isinstance(query, dict) and "subject" in query:
+                qval = query["subject"]
+                if isinstance(qval, dict) and "$in" in qval:
+                    requested_subjects.extend(list(qval["$in"]))
+                elif isinstance(qval, (list, tuple, set)):
+                    requested_subjects.extend(list(qval))
+                elif qval is not None:
+                    requested_subjects.append(qval)
+
+            # Validate if any subjects were explicitly requested
+            if requested_subjects:
+                invalid = sorted(
+                    {s for s in requested_subjects if s not in allowed_subjects}
                 )
-            kwargs["subject"] = SUBJECT_MINI_RELEASE_MAP[release]
+                if invalid:
+                    raise ValueError(
+                        "Some requested subject(s) are not part of the mini release for "
+                        f"{release}: {invalid}. Allowed subjects: {sorted(allowed_subjects)}"
+                    )
+                # Do not override user selection; keep their (validated) subjects as-is.
+            else:
+                # No subject specified by the user: default to the full mini subset
+                kwargs["subject"] = sorted(allowed_subjects)
+
             s3_bucket = f"{s3_bucket}/{release}_mini_L100_bdf"
         else:
             s3_bucket = f"{s3_bucket}/{release}_L100_bdf"
@@ -104,6 +142,7 @@ class EEGChallengeDataset(EEGDashDataset):
             query=query,
             cache_dir=cache_dir,
             s3_bucket=s3_bucket,
+            _suppress_comp_warning=True,
             **kwargs,
         )
 

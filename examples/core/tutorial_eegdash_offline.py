@@ -14,7 +14,6 @@ import platformdirs
 
 from eegdash.const import RELEASE_TO_OPENNEURO_DATASET_MAP
 from eegdash.dataset.dataset import EEGChallengeDataset
-from eegdash.api import EEGDashDataset
 
 
 # We'll use Release R2 as an example (HBN subset). EEGChallengeDataset uses a
@@ -59,8 +58,8 @@ print(f"Local dataset folder exists: {offline_root.exists()}\n{offline_root}")
 # an internet connection. The key is to instantiate your dataset object
 # with the `download=False` flag. This tells EEGDash to look for data in
 # the `cache_dir` instead of trying to connect to the database or S3.
-ds_offline = EEGDashDataset(
-    dataset=dataset_id,
+ds_offline = EEGChallengeDataset(
+    release=release,
     cache_dir=cache_dir,
     task=task,
     download=False,
@@ -80,9 +79,9 @@ if ds_offline.datasets:
 # filters. This example shows how to load data for a specific subject
 # from the local cache.
 
-ds_offline_sub = EEGDashDataset(
+ds_offline_sub = EEGChallengeDataset(
     cache_dir=cache_dir,
-    dataset=dataset_id,
+    release=release,
     download=False,
     subject="NDARAB793GL3",
     # pass a bucket string to imply the "-bdf-mini" cache suffix
@@ -91,8 +90,12 @@ ds_offline_sub = EEGDashDataset(
 
 print(f"Filtered by subject=NDARAB793GL3: {len(ds_offline_sub.datasets)} recording(s).")
 if ds_offline_sub.datasets:
-    rec = ds_offline_sub.datasets[0].record
-    print({k: rec[k] for k in ("dataset", "subject", "session", "task", "run")})
+    keys = ("dataset", "subject", "task", "run")
+    print("Records (dataset, subject, task, run):")
+    for idx, base_ds in enumerate(ds_offline_sub.datasets, start=1):
+        rec = base_ds.record
+        summary = ", ".join(f"{k}={rec.get(k)}" for k in keys)
+        print(f"  {idx:03d}: {summary}")
 
 
 # %%

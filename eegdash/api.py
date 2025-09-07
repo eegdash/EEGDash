@@ -702,6 +702,7 @@ class EEGDashDataset(BaseConcatDataset):
 
         """
         # Parameters that don't need validation
+        _suppress_comp_warning: bool = kwargs.pop("_suppress_comp_warning", False)
         self.s3_bucket = s3_bucket
         self.records = records
         self.download = download
@@ -747,7 +748,10 @@ class EEGDashDataset(BaseConcatDataset):
 
         self.data_dir = self.cache_dir / dataset_folder
 
-        if self.query["dataset"] in RELEASE_TO_OPENNEURO_DATASET_MAP.values():
+        if (
+            not _suppress_comp_warning
+            and self.query["dataset"] in RELEASE_TO_OPENNEURO_DATASET_MAP.values()
+        ):
             warn(
                 "If you are not participating in the competition, you can ignore this warning!"
                 "\n\n"

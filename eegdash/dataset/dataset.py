@@ -4,6 +4,7 @@ from pathlib import Path
 from mne.utils import warn
 
 from ..api import EEGDashDataset
+from ..bids_eeg_metadata import build_query_from_kwargs
 from ..const import RELEASE_TO_OPENNEURO_DATASET_MAP, SUBJECT_MINI_RELEASE_MAP
 from .registry import register_openneuro_datasets
 
@@ -78,17 +79,20 @@ class EEGChallengeDataset(EEGDashDataset):
             if "subjects" in kwargs and "subject" not in kwargs:
                 kwargs["subject"] = kwargs.pop("subjects")
 
-            # Collect user-requested subjects from kwargs/query, supporting str, list-like,
-            # or Mongo-style {"$in": [...]} shapes for 'subject'.
+            # Collect user-requested subjects from kwargs/query. We canonicalize
+            # kwargs via build_query_from_kwargs to leverage existing validation,
+            # and support Mongo-style {"$in": [...]} shapes from a raw query.
             requested_subjects: list[str] = []
 
             # From kwargs
             if "subject" in kwargs and kwargs["subject"] is not None:
-                val = kwargs["subject"]
-                if isinstance(val, (list, tuple, set)):
-                    requested_subjects.extend(list(val))
-                else:
-                    requested_subjects.append(val)
+                # Use the shared query builder to normalize scalars/lists
+                built = build_query_from_kwargs(subject=kwargs["subject"])
+                s_val = built.get("subject")
+                if isinstance(s_val, dict) and "$in" in s_val:
+                    requested_subjects.extend(list(s_val["$in"]))
+                elif s_val is not None:
+                    requested_subjects.append(s_val)  # type: ignore[arg-type]
 
             # From query (top-level only)
             if query and isinstance(query, dict) and "subject" in query:

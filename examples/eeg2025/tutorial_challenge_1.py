@@ -48,22 +48,15 @@ Challenge 1: Cross-Task Transfer Learning!
 # 6. Evaluating test performance.
 # 7. Going further, *benchmark go brrr!*
 
-######################################################################
-# Install dependencies on colab
-# -----------------------------
-# tags:["hide-input"]
-#!pip install braindecode
-#!pip install eegdash
-
+# %% Install dependencies on colab [code] tags=["hide-input"]
+# !pip install braindecode
+# !pip install eegdash
 
 ######################################################################
-# Setup
-# -----
-# Imports and device selection.
-
+# Imports and setup
+# -----------------
 from pathlib import Path
 import torch
-
 from braindecode.datasets import BaseConcatDataset
 from braindecode.preprocessing import (
     preprocess,
@@ -95,11 +88,23 @@ else:
 print(msg)
 
 ######################################################################
-# 1) What are we decoding?
-# ------------------------
-# The CCD task combines SSVEP-like (continuous flicker) and ERP-like
-# (event-locked) components. We aim to predict response time from the
-# relevant windows.
+# ## 1. What are we decoding?
+#
+# The Contrast Change Detection (CCD) task relates to [Steady-State Visual Evoked Potentials (SSVEP)](https://en.wikipedia.org/wiki/Steady-state_visually_evoked_potential) and [Event-Related Potentials (ERP)](https://en.wikipedia.org/wiki/Event-related_potential).
+#
+# Algorithmically, what the subject sees during recording is:
+#
+# * Two flickering striped discs: one tilted left, one tilted right.
+# * After a variable delay, **one disc's contrast gradually increases** **while the other decreases**.
+# * They **press left or right** to indicate which disc got stronger.
+# * They receive **feedback** (🙂 correct / 🙁 incorrect).
+#
+# **The task parallels SSVEP and ERP:**
+#
+# * The continuous flicker **tags the EEG at fixed frequencies (and harmonics)** → SSVEP-like signals.
+# * The **ramp onset**, the **button press**, and the **feedback** are **time-locked events** that yield ERP-like components.
+#
+# Your task (**label**) is to predict the response time for the subject during this windows.
 
 ######################################################################
 # 2) Load the competition dataset
@@ -116,20 +121,14 @@ DATA_DIR = Path("data")
 DATA_DIR.mkdir(parents=True, exist_ok=True)
 
 dataset_ccd = EEGChallengeDataset(
-    task="contrastChangeDetection",
-    release="R5",
-    cache_dir=DATA_DIR,
-    mini=True,
+    task="contrastChangeDetection", release="R5", cache_dir=DATA_DIR, mini=True
 )
 
 # For visualization purposes, we will see just one object.
 raw = dataset_ccd.datasets[0].raw  # get the Raw object of the first recording
 
 # To download all data directly, you can do:
-raws = Parallel(n_jobs=-1, prefer="threads")(
-    delayed(lambda d: d.raw)(d) for d in dataset_ccd.datasets
-)
-
+raws = Parallel(n_jobs=-1)(delayed(lambda d: d.raw)(d) for d in dataset_ccd.datasets)
 
 ######################################################################
 # 3) Create windows of interest
@@ -240,7 +239,6 @@ print(f"Test:\t{len(test_set)}")
 # 5) Create dataloaders
 # ---------------------
 batch_size = 128
-
 # Set num_workers to 0 to avoid multiprocessing issues in notebooks/tutorials
 num_workers = 0
 

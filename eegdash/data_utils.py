@@ -94,16 +94,6 @@ class EEGDashBaseDataset(BaseDataset):
             # extension='.bdf',
             **self.bids_kwargs,
         )
-        # TO-DO: remove this once find a better solution using mne-bids or update competition dataset
-        try:
-            _ = str(self.bidspath)
-        except RuntimeError:
-            try:
-                self.bidspath = self.bidspath.update(extension=".bdf")
-                self.filecache = self.filecache.with_suffix(".bdf")
-            except Exception as e:
-                logger.error(f"Error while updating BIDS path: {e}")
-                raise e
 
         self.s3file = self._get_s3path(record["bidspath"])
         self.bids_dependencies = record["bidsdependencies"]
@@ -182,8 +172,9 @@ class EEGDashBaseDataset(BaseDataset):
                 dep_local = Path(self.dataset_folder) / dep_path
             filepath = self.cache_dir / dep_local
             if not self.s3_open_neuro:
-                if self.filecache.suffix == ".set":
-                    self.filecache = self.filecache.with_suffix(".bdf")
+                if filepath.suffix == ".set":
+                    filepath = filepath.with_suffix(".bdf")
+
             # here, we download the dependency and it is fine
             # in the case of the competition.
             if not filepath.exists():

@@ -40,6 +40,7 @@ ds_online = EEGChallengeDataset(
     task=task,
     mini=True,
 )
+
 # Optional prefetch of all recordings (downloads everything to cache).
 from joblib import Parallel, delayed
 
@@ -114,6 +115,20 @@ print("online shape:", raw_online.get_data().shape)
 print("offline shape:", raw_offline.get_data().shape)
 print("shapes equal:", raw_online.get_data().shape == raw_offline.get_data().shape)
 
+######################################################################
+# Step 4.1: Comparing Descriptions, Online vs. Offline Data
+# -----------------------------------------
+#
+# If you have network access, you can uncomment the block below to download and
+# compare shapes.
+
+description_online = ds_online.description
+description_offline = ds_offline.description
+print(description_offline)
+print(description_online)
+print("Online description shape:", description_online.shape)
+print("Offline description shape:", description_offline.shape)
+print("Descriptions equal:", description_online.equals(description_offline))
 
 ######################################################################
 # Notes and troubleshooting

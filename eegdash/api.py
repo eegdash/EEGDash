@@ -927,14 +927,8 @@ class EEGDashDataset(BaseConcatDataset):
             **matching_args,
         )
         records_out: list[dict] = []
-        seen_abs_paths: set[str] = set()
 
         for bids_path in matched_paths:
-            fpath = str(Path(bids_path.fpath).resolve())
-            if fpath in seen_abs_paths:
-                continue
-            seen_abs_paths.add(fpath)
-
             # Build bidspath as dataset_id / relative_path_from_dataset_root (POSIX)
             rel_from_root = (
                 Path(bids_path.fpath)

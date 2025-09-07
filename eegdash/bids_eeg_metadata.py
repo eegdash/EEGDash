@@ -1,4 +1,5 @@
 import logging
+import re
 from pathlib import Path
 from typing import Any
 
@@ -11,6 +12,8 @@ logger = logging.getLogger("eegdash")
 __all__ = [
     "build_query_from_kwargs",
     "load_eeg_attrs_from_bids_file",
+    "merge_participants_fields",
+    "normalize_key",
 ]
 
 
@@ -182,3 +185,73 @@ def load_eeg_attrs_from_bids_file(
             attrs[field] = None
 
     return attrs
+
+
+def normalize_key(key: str) -> str:
+    """Normalize a metadata key for robust matching.
+
+    Lowercase and replace non-alphanumeric characters with underscores, then strip
+    leading/trailing underscores. This allows tolerant matching such as
+    "p-factor" ≈ "p_factor" ≈ "P Factor".
+    """
+    return re.sub(r"[^a-z0-9]+", "_", str(key).lower()).strip("_")
+
+
+def merge_participants_fields(
+    description: dict[str, Any],
+    participants_row: dict[str, Any] | None,
+    description_fields: list[str] | None = None,
+) -> dict[str, Any]:
+    """Merge participants.tsv fields into a dataset description dictionary.
+
+    - Preserves existing entries in ``description`` (no overwrites).
+    - Fills requested ``description_fields`` first, preserving their original names.
+    - Adds all remaining participants columns generically using normalized keys
+      unless a matching requested field already captured them.
+
+    Parameters
+    ----------
+    description : dict
+        Current description to be enriched in-place and returned.
+    participants_row : dict | None
+        A mapping of participants.tsv columns for the current subject.
+    description_fields : list[str] | None
+        Optional list of requested description fields. When provided, matching is
+        performed by normalized names; the original requested field names are kept.
+
+    Returns
+    -------
+    dict
+        The enriched description (same object as input for convenience).
+
+    """
+    if not isinstance(description, dict) or not isinstance(participants_row, dict):
+        return description
+
+    # Normalize participants keys and keep first non-None value per normalized key
+    norm_map: dict[str, Any] = {}
+    for pk, pv in participants_row.items():
+        nk = normalize_key(pk)
+        if nk not in norm_map and pv is not None:
+            norm_map[nk] = pv
+
+    # Ensure description_fields is a list for matching
+    requested = list(description_fields or [])
+
+    # 1) Fill requested fields first using normalized matching, preserving names
+    for key in requested:
+        if key in description:
+            continue
+        nk = normalize_key(key)
+        if nk in norm_map:
+            description[key] = norm_map[nk]
+
+    # 2) Add remaining participants columns generically under normalized names,
+    #    unless a requested field already captured them
+    requested_norm = {normalize_key(k) for k in requested}
+    for nk, pv in norm_map.items():
+        if nk in requested_norm:
+            continue
+        if nk not in description:
+            description[nk] = pv
+    return description

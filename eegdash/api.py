@@ -24,7 +24,12 @@ from .const import (
     RELEASE_TO_OPENNEURO_DATASET_MAP,
 )
 from .const import config as data_config
-from .data_utils import EEGBIDSDataset, EEGDashBaseDataset
+from .data_utils import (
+    EEGBIDSDataset,
+    EEGDashBaseDataset,
+    merge_participants_fields,
+    normalize_key,
+)
 from .mongodb import MongoConnectionManager
 
 logger = logging.getLogger("eegdash")
@@ -784,20 +789,49 @@ class EEGDashDataset(BaseConcatDataset):
                     f"Offline mode is enabled, but local data_dir {self.data_dir} does not exist."
                 )
             records = self._find_local_bids_records(self.data_dir, self.query)
-            datasets = [
-                EEGDashBaseDataset(
-                    record=record,
-                    cache_dir=self.cache_dir,
-                    s3_bucket=self.s3_bucket,
-                    description={
-                        k: record.get(k)
-                        for k in description_fields
-                        if record.get(k) is not None
-                    },
-                    **base_dataset_kwargs,
+            # Try to enrich from local participants.tsv to restore requested fields
+            try:
+                bids_ds = EEGBIDSDataset(
+                    data_dir=str(self.data_dir), dataset=self.query["dataset"]
+                )  # type: ignore[index]
+            except Exception:
+                bids_ds = None
+
+            datasets = []
+            for record in records:
+                # Start with entity values from filename
+                desc: dict[str, Any] = {
+                    k: record.get(k)
+                    for k in ("subject", "session", "run", "task")
+                    if record.get(k) is not None
+                }
+
+                if bids_ds is not None:
+                    try:
+                        rel_from_dataset = Path(record["bidspath"]).relative_to(
+                            record["dataset"]
+                        )  # type: ignore[index]
+                        local_file = (self.data_dir / rel_from_dataset).as_posix()
+                        part_row = bids_ds.subject_participant_tsv(local_file)
+                        desc = merge_participants_fields(
+                            description=desc,
+                            participants_row=part_row
+                            if isinstance(part_row, dict)
+                            else None,
+                            description_fields=description_fields,
+                        )
+                    except Exception:
+                        pass
+
+                datasets.append(
+                    EEGDashBaseDataset(
+                        record=record,
+                        cache_dir=self.cache_dir,
+                        s3_bucket=self.s3_bucket,
+                        description=desc,
+                        **base_dataset_kwargs,
+                    )
                 )
-                for record in records
-            ]
         elif self.query:
             # This is the DB query path that we are improving
             datasets = self._find_datasets(
@@ -915,7 +949,7 @@ class EEGDashDataset(BaseConcatDataset):
                 "session": (bids_path.session or None),
                 "task": (bids_path.task or None),
                 "run": (bids_path.run or None),
-                # minimal fields to satisfy BaseDataset
+                # minimal fields to satisfy BaseDataset from eegdash
                 "bidsdependencies": [],  # not needed to just run.
                 "modality": "eeg",
                 # this information is from eegdash schema but not available locally
@@ -928,16 +962,24 @@ class EEGDashDataset(BaseConcatDataset):
         return records
 
     def _find_key_in_nested_dict(self, data: Any, target_key: str) -> Any:
-        """Helper to recursively search for a key in a nested dictionary structure; returns
-        the value associated with the first occurrence of the key, or None if not found.
+        """Recursively search for target_key in nested dicts/lists with normalized matching.
+
+        This makes lookups tolerant to naming differences like "p-factor" vs "p_factor".
+        Returns the first match or None.
         """
+        norm_target = normalize_key(target_key)
         if isinstance(data, dict):
-            if target_key in data:
-                return data[target_key]
-            for value in data.values():
-                result = self._find_key_in_nested_dict(value, target_key)
-                if result is not None:
-                    return result
+            for k, v in data.items():
+                if normalize_key(k) == norm_target:
+                    return v
+                res = self._find_key_in_nested_dict(v, target_key)
+                if res is not None:
+                    return res
+        elif isinstance(data, list):
+            for item in data:
+                res = self._find_key_in_nested_dict(item, target_key)
+                if res is not None:
+                    return res
         return None
 
     def _find_datasets(
@@ -969,11 +1011,20 @@ class EEGDashDataset(BaseConcatDataset):
         self.records = self.eeg_dash_instance.find(query)
 
         for record in self.records:
-            description = {}
+            description: dict[str, Any] = {}
+            # Requested fields first (normalized matching)
             for field in description_fields:
                 value = self._find_key_in_nested_dict(record, field)
                 if value is not None:
                     description[field] = value
+            # Merge all participants.tsv columns generically
+            part = self._find_key_in_nested_dict(record, "participant_tsv")
+            if isinstance(part, dict):
+                description = merge_participants_fields(
+                    description=description,
+                    participants_row=part,
+                    description_fields=description_fields,
+                )
             datasets.append(
                 EEGDashBaseDataset(
                     record,

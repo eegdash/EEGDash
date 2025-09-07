@@ -233,6 +233,41 @@ class EEGDashBaseDataset(BaseDataset):
                     self._raw = mne_bids.read_raw_bids(
                         bids_path=self.bidspath, verbose="ERROR"
                     )
+                    # Parse unmapped participants.tsv fields reported by mne-bids and
+                    # inject them into Raw.info and the dataset description generically.
+                    extras = self._extract_unmapped_participants_from_warnings(w)
+                    if extras:
+                        # 1) Attach to Raw.info under subject_info.participants_extras
+                        try:
+                            subject_info = self._raw.info.get("subject_info") or {}
+                            if not isinstance(subject_info, dict):
+                                subject_info = {}
+                            pe = subject_info.get("participants_extras") or {}
+                            if not isinstance(pe, dict):
+                                pe = {}
+                            # Merge without overwriting
+                            for k, v in extras.items():
+                                pe.setdefault(k, v)
+                            subject_info["participants_extras"] = pe
+                            self._raw.info["subject_info"] = subject_info
+                        except Exception:
+                            # Non-fatal; continue
+                            pass
+
+                        # 2) Also add to this dataset's description, if possible, so
+                        #    targets can be selected later without naming specifics.
+                        try:
+                            import pandas as _pd  # local import to avoid top-level cost
+
+                            if isinstance(self.description, dict):
+                                for k, v in extras.items():
+                                    self.description.setdefault(k, v)
+                            elif isinstance(self.description, _pd.Series):
+                                for k, v in extras.items():
+                                    if k not in self.description.index:
+                                        self.description.loc[k] = v
+                        except Exception:
+                            pass
                 except Exception as e:
                     logger.error(
                         f"Error while reading BIDS file: {self.bidspath}\n"
@@ -246,6 +281,46 @@ class EEGDashBaseDataset(BaseDataset):
                     logger.warning(
                         f"Warning while reading BIDS file: {warning.message}"
                     )
+
+    def _extract_unmapped_participants_from_warnings(
+        self, warnings_list: list[Any]
+    ) -> dict[str, Any]:
+        """Scan captured warnings from mne-bids and extract unmapped participants.tsv
+        entries in a generic way.
+
+        Optionally, the column name can carry a note in parentheses that we ignore
+        for key/value extraction. Returns a mapping of column name -> raw value.
+        """
+        extras: dict[str, Any] = {}
+        header = "Unable to map the following column(s) to MNE:"
+        for wr in warnings_list:
+            try:
+                msg = str(wr.message)
+            except Exception:
+                continue
+            if header not in msg:
+                continue
+            lines = msg.splitlines()
+            # Find the header line, then parse subsequent lines as entries
+            try:
+                idx = next(i for i, ln in enumerate(lines) if header in ln)
+            except StopIteration:
+                idx = -1
+            for line in lines[idx + 1 :]:
+                line = line.strip()
+                if not line:
+                    continue
+                # Pattern:  <col>(optional note): <value>
+                # Examples: "gender: F", "Ethnicity: Indian", "foo (ignored): bar"
+                m = re.match(r"^([^:]+?)(?:\s*\([^)]*\))?\s*:\s*(.*)$", line)
+                if not m:
+                    continue
+                col = m.group(1).strip()
+                val = m.group(2).strip()
+                # Keep original column names as provided to stay agnostic
+                if col and col not in extras:
+                    extras[col] = val
+        return extras
 
     # === BaseDataset and PyTorch Dataset interface ===
 

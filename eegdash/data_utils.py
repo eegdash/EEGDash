@@ -4,6 +4,8 @@ import os
 import re
 import traceback
 import warnings
+import io
+from contextlib import redirect_stderr
 from pathlib import Path
 from typing import Any
 
@@ -91,7 +93,6 @@ class EEGDashBaseDataset(BaseDataset):
             root=self.bids_root,
             datatype="eeg",
             suffix="eeg",
-            # extension='.bdf',
             **self.bids_kwargs,
         )
 
@@ -174,6 +175,8 @@ class EEGDashBaseDataset(BaseDataset):
             if not self.s3_open_neuro:
                 if filepath.suffix == ".set":
                     filepath = filepath.with_suffix(".bdf")
+                if self.filecache.suffix == ".set":
+                    self.filecache = self.filecache.with_suffix(".bdf")
 
             # here, we download the dependency and it is fine
             # in the case of the competition.
@@ -209,6 +212,12 @@ class EEGDashBaseDataset(BaseDataset):
 
     def _ensure_raw(self) -> None:
         """Download the S3 file and BIDS dependencies if not already cached."""
+        # TO-DO: remove this once is fixed on the our side
+        # for the competition
+        if not self.s3_open_neuro:
+            self.bidspath = self.bidspath.update(extension=".bdf")
+            self.filecache = self.filecache.with_suffix(".bdf")
+
         if not os.path.exists(self.filecache):  # not preload
             if self.bids_dependencies:
                 self._download_dependencies()
@@ -217,13 +226,15 @@ class EEGDashBaseDataset(BaseDataset):
             # capturing any warnings
             # to-do: remove this once is fixed on the mne-bids side.
             with warnings.catch_warnings(record=True) as w:
+                # Ensure all warnings are captured into 'w' and not shown to users
+                warnings.simplefilter("always")
                 try:
-                    # TO-DO: remove this once is fixed on the our side
-                    if not self.s3_open_neuro:
-                        self.bidspath = self.bidspath.update(extension=".bdf")
-                    self._raw = mne_bids.read_raw_bids(
-                        bids_path=self.bidspath, verbose="ERROR"
-                    )
+                    # mne-bids emits RuntimeWarnings to stderr; silence stderr during read
+                    _stderr_buffer = io.StringIO()
+                    with redirect_stderr(_stderr_buffer):
+                        self._raw = mne_bids.read_raw_bids(
+                            bids_path=self.bidspath, verbose="ERROR"
+                        )
                     # Parse unmapped participants.tsv fields reported by mne-bids and
                     # inject them into Raw.info and the dataset description generically.
                     extras = self._extract_unmapped_participants_from_warnings(w)
@@ -268,10 +279,20 @@ class EEGDashBaseDataset(BaseDataset):
                     logger.error(f"Exception: {e}")
                     logger.error(traceback.format_exc())
                     raise e
-                for warning in w:
-                    logger.warning(
-                        f"Warning while reading BIDS file: {warning.message}"
-                    )
+                # Filter noisy mapping notices from mne-bids; surface others
+                for captured_warning in w:
+                    try:
+                        msg = str(captured_warning.message)
+                    except Exception:
+                        continue
+                    # Suppress verbose participants mapping messages
+                    if "Unable to map the following column" in msg and "MNE" in msg:
+                        logger.debug(
+                            "Suppressed mne-bids mapping warning while reading BIDS file: %s",
+                            msg,
+                        )
+                        continue
+                    logger.warning("Warning while reading BIDS file: %s", msg)
 
     def _extract_unmapped_participants_from_warnings(
         self, warnings_list: list[Any]

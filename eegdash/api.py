@@ -3,6 +3,7 @@ import os
 import tempfile
 from pathlib import Path
 from typing import Any, Mapping
+from urllib.parse import urlsplit
 
 import mne
 import numpy as np
@@ -11,14 +12,18 @@ import xarray as xr
 from dotenv import load_dotenv
 from joblib import Parallel, delayed
 from mne.utils import warn
-from mne_bids import get_bids_path_from_fname, read_raw_bids
+from mne_bids import find_matching_paths, get_bids_path_from_fname, read_raw_bids
 from pymongo import InsertOne, UpdateOne
 from s3fs import S3FileSystem
 
 from braindecode.datasets import BaseConcatDataset
 
-from .const import RELEASE_TO_OPENNEURO_DATASET_MAP
-from .data_config import config as data_config
+from .bids_eeg_metadata import build_query_from_kwargs, load_eeg_attrs_from_bids_file
+from .const import (
+    ALLOWED_QUERY_FIELDS,
+    RELEASE_TO_OPENNEURO_DATASET_MAP,
+)
+from .const import config as data_config
 from .data_utils import EEGBIDSDataset, EEGDashBaseDataset
 from .mongodb import MongoConnectionManager
 
@@ -26,46 +31,31 @@ logger = logging.getLogger("eegdash")
 
 
 class EEGDash:
-    """A high-level interface to the EEGDash database.
+    """High-level interface to the EEGDash metadata database.
 
-    This class is primarily used to interact with the metadata records stored in the
-    EEGDash database (or a private instance of it), allowing users to find, add, and
-    update EEG data records.
+    Provides methods to query, insert, and update metadata records stored in the
+    EEGDash MongoDB database (public or private). Also includes utilities to load
+    EEG data from S3 for matched records.
 
-    While this class provides basic support for loading EEG data, please see
-    the EEGDashDataset class for a more complete way to retrieve and work with full
-    datasets.
-
+    For working with collections of
+    recordings as PyTorch datasets, prefer :class:`EEGDashDataset`.
     """
 
-    _ALLOWED_QUERY_FIELDS = {
-        "data_name",
-        "dataset",
-        "subject",
-        "task",
-        "session",
-        "run",
-        "modality",
-        "sampling_frequency",
-        "nchans",
-        "ntimes",
-    }
-
     def __init__(self, *, is_public: bool = True, is_staging: bool = False) -> None:
-        """Create new instance of the EEGDash Database client.
+        """Create a new EEGDash client.
 
         Parameters
         ----------
-        is_public: bool
-            Whether to connect to the public MongoDB database; if False, connect to a
-            private database instance as per the DB_CONNECTION_STRING env variable
-            (or .env file entry).
-        is_staging: bool
-            If True, use staging MongoDB database ("eegdashstaging"); otherwise use the
-            production database ("eegdash").
+        is_public : bool, default True
+            Connect to the public MongoDB database. If ``False``, connect to a
+            private database instance using the ``DB_CONNECTION_STRING`` environment
+            variable (or value from a ``.env`` file).
+        is_staging : bool, default False
+            If ``True``, use the staging database (``eegdashstaging``); otherwise
+            use the production database (``eegdash``).
 
-        Example
-        -------
+        Examples
+        --------
         >>> eegdash = EEGDash()
 
         """
@@ -106,23 +96,25 @@ class EEGDash:
 
         Parameters
         ----------
-        query: dict, optional
-            A complete MongoDB query dictionary. This is a positional-only argument.
-        **kwargs:
-            Keyword arguments representing field-value pairs for the query.
-            Values can be single items (str, int) or lists of items for multi-search.
+        query : dict, optional
+            Complete MongoDB query dictionary. This is a positional-only
+            argument.
+        **kwargs
+            User-friendly field filters that are converted to a MongoDB query.
+            Values can be scalars (e.g., ``"sub-01"``) or sequences (translated
+            to ``$in`` queries).
 
         Returns
         -------
-        list:
-            A list of DB records (string-keyed dictionaries) that match the query.
+        list of dict
+            DB records that match the query.
 
         """
         final_query: dict[str, Any] | None = None
 
         # Accept explicit empty dict {} to mean "match all"
         raw_query = query if isinstance(query, dict) else None
-        kwargs_query = self._build_query_from_kwargs(**kwargs) if kwargs else None
+        kwargs_query = build_query_from_kwargs(**kwargs) if kwargs else None
 
         # Determine presence, treating {} as a valid raw query
         has_raw = isinstance(raw_query, dict)
@@ -239,59 +231,12 @@ class EEGDash:
         return record
 
     def _build_query_from_kwargs(self, **kwargs) -> dict[str, Any]:
-        """Build and validate a MongoDB query from user-friendly keyword arguments.
+        """Internal helper to build a validated MongoDB query from keyword args.
 
-        Improvements:
-        - Reject None values and empty/whitespace-only strings
-        - For list/tuple/set values: strip strings, drop None/empties, deduplicate, and use `$in`
-        - Preserve scalars as exact matches
+        This delegates to the module-level builder used across the package and
+        is exposed here for testing and convenience.
         """
-        # 1. Validate that all provided keys are allowed for querying
-        unknown_fields = set(kwargs.keys()) - self._ALLOWED_QUERY_FIELDS
-        if unknown_fields:
-            raise ValueError(
-                f"Unsupported query field(s): {', '.join(sorted(unknown_fields))}. "
-                f"Allowed fields are: {', '.join(sorted(self._ALLOWED_QUERY_FIELDS))}"
-            )
-
-        # 2. Construct the query dictionary
-        query = {}
-        for key, value in kwargs.items():
-            # None is not a valid constraint
-            if value is None:
-                raise ValueError(
-                    f"Received None for query parameter '{key}'. Provide a concrete value."
-                )
-
-            # Handle list-like values as multi-constraints
-            if isinstance(value, (list, tuple, set)):
-                cleaned: list[Any] = []
-                for item in value:
-                    if item is None:
-                        continue
-                    if isinstance(item, str):
-                        item = item.strip()
-                        if not item:
-                            continue
-                    cleaned.append(item)
-                # Deduplicate while preserving order
-                cleaned = list(dict.fromkeys(cleaned))
-                if not cleaned:
-                    raise ValueError(
-                        f"Received an empty list for query parameter '{key}'. This is not supported."
-                    )
-                query[key] = {"$in": cleaned}
-            else:
-                # Scalars: trim strings and validate
-                if isinstance(value, str):
-                    value = value.strip()
-                    if not value:
-                        raise ValueError(
-                            f"Received an empty string for query parameter '{key}'."
-                        )
-                query[key] = value
-
-        return query
+        return build_query_from_kwargs(**kwargs)
 
     # --- Query merging and conflict detection helpers ---
     def _extract_simple_constraint(self, query: dict[str, Any], key: str):
@@ -324,8 +269,8 @@ class EEGDash:
             return
 
         # Only consider fields we generally allow; skip meta operators like $and
-        raw_keys = set(raw_query.keys()) & self._ALLOWED_QUERY_FIELDS
-        kw_keys = set(kwargs_query.keys()) & self._ALLOWED_QUERY_FIELDS
+        raw_keys = set(raw_query.keys()) & ALLOWED_QUERY_FIELDS
+        kw_keys = set(kwargs_query.keys()) & ALLOWED_QUERY_FIELDS
         dup_keys = raw_keys & kw_keys
         for key in dup_keys:
             rc = self._extract_simple_constraint(raw_query, key)
@@ -360,44 +305,95 @@ class EEGDash:
                     )
 
     def load_eeg_data_from_s3(self, s3path: str) -> xr.DataArray:
-        """Load an EEGLAB .set file from an AWS S3 URI and return it as an xarray DataArray.
+        """Load EEG data from an S3 URI into an ``xarray.DataArray``.
+
+        Preserves the original filename, downloads sidecar files when applicable
+        (e.g., ``.fdt`` for EEGLAB, ``.vmrk``/``.eeg`` for BrainVision), and uses
+        MNE's direct readers.
 
         Parameters
         ----------
         s3path : str
-            An S3 URI (should start with "s3://") for the file in question.
+            An S3 URI (should start with "s3://").
 
         Returns
         -------
         xr.DataArray
-            A DataArray containing the EEG data, with dimensions "channel" and "time".
+            EEG data with dimensions ``("channel", "time")``.
 
-        Example
-        -------
-        >>> eegdash = EEGDash()
-        >>> mypath = "s3://openneuro.org/path/to/your/eeg_data.set"
-        >>> mydata = eegdash.load_eeg_data_from_s3(mypath)
+        Raises
+        ------
+        ValueError
+            If the file extension is unsupported.
 
         """
-        with tempfile.NamedTemporaryFile(delete=False, suffix=".set") as tmp:
-            with self.filesystem.open(s3path) as s3_file:
-                tmp.write(s3_file.read())
-            tmp_path = tmp.name
-            eeg_data = self.load_eeg_data_from_bids_file(tmp_path)
-            os.unlink(tmp_path)
-            return eeg_data
+        # choose a temp dir so sidecars can be colocated
+        with tempfile.TemporaryDirectory() as tmpdir:
+            # Derive local filenames from the S3 key to keep base name consistent
+            s3_key = urlsplit(s3path).path  # e.g., "/dsXXXX/sub-.../..._eeg.set"
+            basename = Path(s3_key).name
+            ext = Path(basename).suffix.lower()
+            local_main = Path(tmpdir) / basename
+
+            # Download main file
+            with (
+                self.filesystem.open(s3path, mode="rb") as fsrc,
+                open(local_main, "wb") as fdst,
+            ):
+                fdst.write(fsrc.read())
+
+            # Determine and fetch any required sidecars
+            sidecars: list[str] = []
+            if ext == ".set":  # EEGLAB
+                sidecars = [".fdt"]
+            elif ext == ".vhdr":  # BrainVision
+                sidecars = [".vmrk", ".eeg", ".dat", ".raw"]
+
+            for sc_ext in sidecars:
+                sc_key = s3_key[: -len(ext)] + sc_ext
+                sc_uri = f"s3://{urlsplit(s3path).netloc}{sc_key}"
+                try:
+                    # If sidecar exists, download next to the main file
+                    info = self.filesystem.info(sc_uri)
+                    if info:
+                        sc_local = Path(tmpdir) / Path(sc_key).name
+                        with (
+                            self.filesystem.open(sc_uri, mode="rb") as fsrc,
+                            open(sc_local, "wb") as fdst,
+                        ):
+                            fdst.write(fsrc.read())
+                except Exception:
+                    # Sidecar not present; skip silently
+                    pass
+
+            # Read using appropriate MNE reader
+            raw = mne.io.read_raw(str(local_main), preload=True, verbose=False)
+
+            data = raw.get_data()
+            fs = raw.info["sfreq"]
+            max_time = data.shape[1] / fs
+            time_steps = np.linspace(0, max_time, data.shape[1]).squeeze()
+            channel_names = raw.ch_names
+
+            return xr.DataArray(
+                data=data,
+                dims=["channel", "time"],
+                coords={"time": time_steps, "channel": channel_names},
+            )
 
     def load_eeg_data_from_bids_file(self, bids_file: str) -> xr.DataArray:
-        """Load EEG data from a local file and return it as a xarray DataArray.
+        """Load EEG data from a local BIDS-formatted file.
 
         Parameters
         ----------
         bids_file : str
-            Path to the BIDS-compliant file on the local filesystem.
+            Path to a BIDS-compliant EEG file (e.g., ``*_eeg.edf``, ``*_eeg.bdf``,
+            ``*_eeg.vhdr``, ``*_eeg.set``).
 
-        Notes
-        -----
-        Currently, only non-epoched .set files are supported.
+        Returns
+        -------
+        xr.DataArray
+            EEG data with dimensions ``("channel", "time")``.
 
         """
         bids_path = get_bids_path_from_fname(bids_file, verbose=False)
@@ -417,140 +413,25 @@ class EEGDash:
         )
         return eeg_xarray
 
-    def get_raw_extensions(
-        self, bids_file: str, bids_dataset: EEGBIDSDataset
-    ) -> list[str]:
-        """Helper to find paths to additional "sidecar" files that may be associated
-        with a given main data file in a BIDS dataset; paths are returned as relative to
-        the parent dataset path.
-
-        For example, if the input file is a .set file, this will return the relative path
-        to a corresponding .fdt file (if any).
-        """
-        bids_file = Path(bids_file)
-        extensions = {
-            ".set": [".set", ".fdt"],  # eeglab
-            ".edf": [".edf"],  # european
-            ".vhdr": [".eeg", ".vhdr", ".vmrk", ".dat", ".raw"],  # brainvision
-            ".bdf": [".bdf"],  # biosemi
-        }
-        return [
-            str(bids_dataset.get_relative_bidspath(bids_file.with_suffix(suffix)))
-            for suffix in extensions[bids_file.suffix]
-            if bids_file.with_suffix(suffix).exists()
-        ]
-
-    def load_eeg_attrs_from_bids_file(
-        self, bids_dataset: EEGBIDSDataset, bids_file: str
-    ) -> dict[str, Any]:
-        """Build the metadata record for a given BIDS file (single recording) in a BIDS dataset.
-
-        Attributes are at least the ones defined in data_config attributes (set to None if missing),
-        but are typically a superset, and include, among others, the paths to relevant
-        meta-data files needed to load and interpret the file in question.
-
-        Parameters
-        ----------
-        bids_dataset : EEGBIDSDataset
-            The BIDS dataset object containing the file.
-        bids_file : str
-            The path to the BIDS file within the dataset.
-
-        Returns
-        -------
-        dict:
-            A dictionary representing the metadata record for the given file. This is the
-            same format as the records stored in the database.
-
-        """
-        if bids_file not in bids_dataset.files:
-            raise ValueError(f"{bids_file} not in {bids_dataset.dataset}")
-
-        # Initialize attrs with None values for all expected fields
-        attrs = {field: None for field in self.config["attributes"].keys()}
-
-        file = Path(bids_file).name
-        dsnumber = bids_dataset.dataset
-        # extract openneuro path by finding the first occurrence of the dataset name in the filename and remove the path before that
-        openneuro_path = dsnumber + bids_file.split(dsnumber)[1]
-
-        # Update with actual values where available
-        try:
-            participants_tsv = bids_dataset.subject_participant_tsv(bids_file)
-        except Exception as e:
-            logger.error("Error getting participants_tsv: %s", str(e))
-            participants_tsv = None
-
-        try:
-            eeg_json = bids_dataset.eeg_json(bids_file)
-        except Exception as e:
-            logger.error("Error getting eeg_json: %s", str(e))
-            eeg_json = None
-
-        bids_dependencies_files = self.config["bids_dependencies_files"]
-        bidsdependencies = []
-        for extension in bids_dependencies_files:
-            try:
-                dep_path = bids_dataset.get_bids_metadata_files(bids_file, extension)
-                dep_path = [
-                    str(bids_dataset.get_relative_bidspath(dep)) for dep in dep_path
-                ]
-                bidsdependencies.extend(dep_path)
-            except Exception:
-                pass
-
-        bidsdependencies.extend(self.get_raw_extensions(bids_file, bids_dataset))
-
-        # Define field extraction functions with error handling
-        field_extractors = {
-            "data_name": lambda: f"{bids_dataset.dataset}_{file}",
-            "dataset": lambda: bids_dataset.dataset,
-            "bidspath": lambda: openneuro_path,
-            "subject": lambda: bids_dataset.get_bids_file_attribute(
-                "subject", bids_file
-            ),
-            "task": lambda: bids_dataset.get_bids_file_attribute("task", bids_file),
-            "session": lambda: bids_dataset.get_bids_file_attribute(
-                "session", bids_file
-            ),
-            "run": lambda: bids_dataset.get_bids_file_attribute("run", bids_file),
-            "modality": lambda: bids_dataset.get_bids_file_attribute(
-                "modality", bids_file
-            ),
-            "sampling_frequency": lambda: bids_dataset.get_bids_file_attribute(
-                "sfreq", bids_file
-            ),
-            "nchans": lambda: bids_dataset.get_bids_file_attribute("nchans", bids_file),
-            "ntimes": lambda: bids_dataset.get_bids_file_attribute("ntimes", bids_file),
-            "participant_tsv": lambda: participants_tsv,
-            "eeg_json": lambda: eeg_json,
-            "bidsdependencies": lambda: bidsdependencies,
-        }
-
-        # Dynamically populate attrs with error handling
-        for field, extractor in field_extractors.items():
-            try:
-                attrs[field] = extractor()
-            except Exception as e:
-                logger.error("Error extracting %s : %s", field, str(e))
-                attrs[field] = None
-
-        return attrs
-
     def add_bids_dataset(
         self, dataset: str, data_dir: str, overwrite: bool = True
     ) -> None:
-        """Traverse the BIDS dataset at data_dir and add its records to the MongoDB database,
-        under the given dataset name.
+        """Scan a local BIDS dataset and upsert records into MongoDB.
 
         Parameters
         ----------
-        dataset : str)
-            The name of the dataset to be added (e.g., "ds002718").
+        dataset : str
+            Dataset identifier (e.g., ``"ds002718"``).
         data_dir : str
-            The path to the BIDS dataset directory.
-        overwrite : bool
-            Whether to overwrite/update existing records in the database.
+            Path to the local BIDS dataset directory.
+        overwrite : bool, default True
+            If ``True``, update existing records when encountered; otherwise,
+            skip records that already exist.
+
+        Raises
+        ------
+        ValueError
+            If called on a public client ``(is_public=True)``.
 
         """
         if self.is_public:
@@ -565,7 +446,7 @@ class EEGDash:
                 dataset=dataset,
             )
         except Exception as e:
-            logger.error("Error creating bids dataset %s: $s", dataset, str(e))
+            logger.error("Error creating bids dataset %s: %s", dataset, str(e))
             raise e
         requests = []
         for bids_file in bids_dataset.get_files():
@@ -574,15 +455,13 @@ class EEGDash:
 
                 if self.exist({"data_name": data_id}):
                     if overwrite:
-                        eeg_attrs = self.load_eeg_attrs_from_bids_file(
+                        eeg_attrs = load_eeg_attrs_from_bids_file(
                             bids_dataset, bids_file
                         )
-                        requests.append(self.update_request(eeg_attrs))
+                        requests.append(self._update_request(eeg_attrs))
                 else:
-                    eeg_attrs = self.load_eeg_attrs_from_bids_file(
-                        bids_dataset, bids_file
-                    )
-                    requests.append(self.add_request(eeg_attrs))
+                    eeg_attrs = load_eeg_attrs_from_bids_file(bids_dataset, bids_file)
+                    requests.append(self._add_request(eeg_attrs))
             except Exception as e:
                 logger.error("Error adding record %s", bids_file)
                 logger.error(str(e))
@@ -598,22 +477,22 @@ class EEGDash:
             logger.info("Errors: %s ", result.bulk_api_result.get("writeErrors", []))
 
     def get(self, query: dict[str, Any]) -> list[xr.DataArray]:
-        """Retrieve a list of EEG data arrays that match the given query. See also
-        the `find()` method for details on the query format.
+        """Download and return EEG data arrays for records matching a query.
 
         Parameters
         ----------
         query : dict
-            A dictionary that specifies the query to be executed; this is a reference
-            document that is used to match records in the MongoDB collection.
+            MongoDB query used to select records.
 
         Returns
         -------
-            A list of xarray DataArray objects containing the EEG data for each matching record.
+        list of xr.DataArray
+            EEG data for each matching record, with dimensions ``("channel", "time")``.
 
         Notes
         -----
-        Retrieval is done in parallel, and the downloaded data are not cached locally.
+        Retrieval runs in parallel. Downloaded files are read and discarded
+        (no on-disk caching here).
 
         """
         sessions = self.find(query)
@@ -623,12 +502,40 @@ class EEGDash:
             results = Parallel(
                 n_jobs=-1 if len(sessions) > 1 else 1, prefer="threads", verbose=1
             )(
-                delayed(self.load_eeg_data_from_s3)(self.get_s3path(session))
+                delayed(self.load_eeg_data_from_s3)(self._get_s3path(session))
                 for session in sessions
             )
         return results
 
-    def add_request(self, record: dict):
+    def _get_s3path(self, record: Mapping[str, Any] | str) -> str:
+        """Build an S3 URI from a DB record or a relative path.
+
+        Parameters
+        ----------
+        record : dict or str
+            Either a DB record containing a ``'bidspath'`` key, or a relative
+            path string under the OpenNeuro bucket.
+
+        Returns
+        -------
+        str
+            Fully qualified S3 URI.
+
+        Raises
+        ------
+        ValueError
+            If a mapping is provided but ``'bidspath'`` is missing.
+
+        """
+        if isinstance(record, str):
+            rel = record
+        else:
+            rel = record.get("bidspath")
+            if not rel:
+                raise ValueError("Record missing 'bidspath' for S3 path resolution")
+        return f"s3://openneuro.org/{rel}"
+
+    def _add_request(self, record: dict):
         """Internal helper method to create a MongoDB insertion request for a record."""
         return InsertOne(record)
 
@@ -642,12 +549,19 @@ class EEGDash:
         except:
             logger.error("Error adding record: %s ", record["data_name"])
 
-    def update_request(self, record: dict):
+    def _update_request(self, record: dict):
         """Internal helper method to create a MongoDB update request for a record."""
         return UpdateOne({"data_name": record["data_name"]}, {"$set": record})
 
     def update(self, record: dict):
-        """Update a single record in the MongoDB collection."""
+        """Update a single record in the MongoDB collection.
+
+        Parameters
+        ----------
+        record : dict
+            Record content to set at the matching ``data_name``.
+
+        """
         try:
             self.__collection.update_one(
                 {"data_name": record["data_name"]}, {"$set": record}
@@ -655,15 +569,33 @@ class EEGDash:
         except:  # silent failure
             logger.error("Error updating record: %s", record["data_name"])
 
+    def exists(self, query: dict[str, Any]) -> bool:
+        """Alias for :meth:`exist` provided for API clarity."""
+        return self.exist(query)
+
     def remove_field(self, record, field):
-        """Remove a specific field from a record in the MongoDB collection."""
+        """Remove a specific field from a record in the MongoDB collection.
+
+        Parameters
+        ----------
+        record : dict
+            Record identifying object with ``data_name``.
+        field : str
+            Field name to remove.
+
+        """
         self.__collection.update_one(
             {"data_name": record["data_name"]}, {"$unset": {field: 1}}
         )
 
     def remove_field_from_db(self, field):
-        """Removed all occurrences of a specific field from all records in the MongoDB
-        collection. WARNING: this operation is destructive and should be used with caution.
+        """Remove a field from all records (destructive).
+
+        Parameters
+        ----------
+        field : str
+            Field name to remove from every document.
+
         """
         self.__collection.update_many({}, {"$unset": {field: 1}})
 
@@ -673,11 +605,13 @@ class EEGDash:
         return self.__collection
 
     def close(self):
-        """Close the MongoDB client connection.
+        """Backward-compatibility no-op; connections are managed globally.
 
-        Note: Since MongoDB clients are now managed by a singleton,
-        this method no longer closes connections. Use close_all_connections()
-        class method to close all connections if needed.
+        Notes
+        -----
+        Connections are managed by :class:`MongoConnectionManager`. Use
+        :meth:`close_all_connections` to explicitly close all clients.
+
         """
         # Individual instances no longer close the shared client
         pass
@@ -688,7 +622,7 @@ class EEGDash:
         MongoConnectionManager.close_all()
 
     def __del__(self):
-        """Ensure connection is closed when object is deleted."""
+        """Destructor; no explicit action needed due to global connection manager."""
         # No longer needed since we're using singleton pattern
         pass
 
@@ -708,16 +642,15 @@ class EEGDashDataset(BaseConcatDataset):
             "sex",
         ],
         s3_bucket: str | None = None,
-        eeg_dash_instance=None,
         records: list[dict] | None = None,
-        offline_mode: bool = False,
+        download: bool = True,
         n_jobs: int = -1,
+        eeg_dash_instance: EEGDash | None = None,
         **kwargs,
     ):
         """Create a new EEGDashDataset from a given query or local BIDS dataset directory
         and dataset name. An EEGDashDataset is pooled collection of EEGDashBaseDataset
         instances (individual recordings) and is a subclass of braindecode's BaseConcatDataset.
-
 
         Querying Examples:
         ------------------
@@ -734,57 +667,91 @@ class EEGDashDataset(BaseConcatDataset):
 
         Parameters
         ----------
+        cache_dir : str | Path
+            Directory where data are cached locally. If not specified, a default
+            cache directory under the user cache is used.
         query : dict | None
-            A raw MongoDB query dictionary. If provided, keyword arguments for filtering are ignored.
-        **kwargs : dict
-            Keyword arguments for filtering (e.g., `subject="X"`, `task=["T1", "T2"]`) and/or
-            arguments to be passed to the EEGDashBaseDataset constructor (e.g., `subject=...`).
-        cache_dir : str
-            A directory where the dataset will be cached locally.
-        data_dir : str | None
-            Optionally a string specifying a local BIDS dataset directory from which to load the EEG data files. Exactly one
-            of query or data_dir must be provided.
-        dataset : str | None
-            If data_dir is given, a name for the dataset to be loaded.
+            Raw MongoDB query to filter records. If provided, it is merged with
+            keyword filtering arguments (see ``**kwargs``) using logical AND.
+            You must provide at least a ``dataset`` (either in ``query`` or
+            as a keyword argument). Only fields in ``ALLOWED_QUERY_FIELDS`` are
+            considered for filtering.
         description_fields : list[str]
-            A list of fields to be extracted from the dataset records
-            and included in the returned data description(s). Examples are typical
-            subject metadata fields such as "subject", "session", "run", "task", etc.;
-            see also data_config.description_fields for the default set of fields.
+            Fields to extract from each record and include in dataset descriptions
+            (e.g., "subject", "session", "run", "task").
         s3_bucket : str | None
-            An optional S3 bucket URI (e.g., "s3://mybucket") to use instead of the
-            default OpenNeuro bucket for loading data files
+            Optional S3 bucket URI (e.g., "s3://mybucket") to use instead of the
+            default OpenNeuro bucket when downloading data files.
         records : list[dict] | None
-            Optional list of pre-fetched metadata records. If provided, the dataset is
-            constructed directly from these records without querying MongoDB.
-        offline_mode : bool
-            If True, do not attempt to query MongoDB at all. This is useful if you want to
-            work with a local cache only, or if you are offline.
+            Pre-fetched metadata records. If provided, the dataset is constructed
+            directly from these records and no MongoDB query is performed.
+        download : bool, default True
+            If False, load from local BIDS files only. Local data are expected
+            under ``cache_dir / dataset``; no DB or S3 access is attempted.
         n_jobs : int
-            The number of jobs to run in parallel (default is -1, meaning using all processors).
-        kwargs : dict
-            Additional keyword arguments to be passed to the EEGDashBaseDataset
-            constructor.
+            Number of parallel jobs to use where applicable (-1 uses all cores).
+        eeg_dash_instance : EEGDash | None
+            Optional existing EEGDash client to reuse for DB queries. If None,
+            a new client is created on demand, not used in the case of no download.
+        **kwargs : dict
+            Additional keyword arguments serving two purposes:
+            - Filtering: any keys present in ``ALLOWED_QUERY_FIELDS`` are treated
+              as query filters (e.g., ``dataset``, ``subject``, ``task``, ...).
+            - Dataset options: remaining keys are forwarded to the
+              ``EEGDashBaseDataset`` constructor.
 
         """
+        # Parameters that don't need validation
+        _suppress_comp_warning: bool = kwargs.pop("_suppress_comp_warning", False)
+        self.s3_bucket = s3_bucket
+        self.records = records
+        self.download = download
+        self.n_jobs = n_jobs
+        self.eeg_dash_instance = eeg_dash_instance or EEGDash()
+
         self.cache_dir = Path(cache_dir or platformdirs.user_cache_dir("EEGDash"))
+
         if not self.cache_dir.exists():
             warn(f"Cache directory does not exist, creating it: {self.cache_dir}")
             self.cache_dir.mkdir(exist_ok=True, parents=True)
-        self.s3_bucket = s3_bucket
-        self.eeg_dash = eeg_dash_instance
 
         # Separate query kwargs from other kwargs passed to the BaseDataset constructor
         self.query = query or {}
         self.query.update(
-            {k: v for k, v in kwargs.items() if k in EEGDash._ALLOWED_QUERY_FIELDS}
+            {k: v for k, v in kwargs.items() if k in ALLOWED_QUERY_FIELDS}
         )
         base_dataset_kwargs = {k: v for k, v in kwargs.items() if k not in self.query}
         if "dataset" not in self.query:
-            raise ValueError("You must provide a 'dataset' argument")
+            # If explicit records are provided, infer dataset from records
+            if isinstance(records, list) and records and isinstance(records[0], dict):
+                inferred = records[0].get("dataset")
+                if inferred:
+                    self.query["dataset"] = inferred
+                else:
+                    raise ValueError("You must provide a 'dataset' argument")
+            else:
+                raise ValueError("You must provide a 'dataset' argument")
 
-        self.data_dir = self.cache_dir / self.query["dataset"]
-        if self.query["dataset"] in RELEASE_TO_OPENNEURO_DATASET_MAP.values():
+        # Decide on a dataset subfolder name for cache isolation. If using
+        # challenge/preprocessed buckets (e.g., BDF, mini subsets), append
+        # informative suffixes to avoid overlapping with the original dataset.
+        dataset_folder = self.query["dataset"]
+        if self.s3_bucket:
+            suffixes: list[str] = []
+            bucket_lower = str(self.s3_bucket).lower()
+            if "bdf" in bucket_lower:
+                suffixes.append("bdf")
+            if "mini" in bucket_lower:
+                suffixes.append("mini")
+            if suffixes:
+                dataset_folder = f"{dataset_folder}-{'-'.join(suffixes)}"
+
+        self.data_dir = self.cache_dir / dataset_folder
+
+        if (
+            not _suppress_comp_warning
+            and self.query["dataset"] in RELEASE_TO_OPENNEURO_DATASET_MAP.values()
+        ):
             warn(
                 "If you are not participating in the competition, you can ignore this warning!"
                 "\n\n"
@@ -800,60 +767,167 @@ class EEGDashDataset(BaseConcatDataset):
                 UserWarning,
                 module="eegdash",
             )
-        _owns_client = False
-        if self.eeg_dash is None and records is None:
-            self.eeg_dash = EEGDash()
-            _owns_client = True
-
-        try:
-            if records is not None:
-                self.records = records
-                datasets = [
-                    EEGDashBaseDataset(
-                        record,
-                        self.cache_dir,
-                        self.s3_bucket,
-                        **base_dataset_kwargs,
-                    )
-                    for record in self.records
-                ]
-            elif offline_mode:  # only assume local data is complete if in offline mode
-                if self.data_dir.exists():
-                    # This path loads from a local directory and is not affected by DB query logic
-                    datasets = self.load_bids_daxtaset(
-                        dataset=self.query["dataset"],
-                        data_dir=self.data_dir,
-                        description_fields=description_fields,
-                        s3_bucket=s3_bucket,
-                        n_jobs=n_jobs,
-                        **base_dataset_kwargs,
-                    )
-                else:
-                    raise ValueError(
-                        f"Offline mode is enabled, but local data_dir {self.data_dir} does not exist."
-                    )
-            elif self.query:
-                # This is the DB query path that we are improving
-                datasets = self._find_datasets(
-                    query=self.eeg_dash._build_query_from_kwargs(**self.query),
-                    description_fields=description_fields,
-                    base_dataset_kwargs=base_dataset_kwargs,
+        if records is not None:
+            self.records = records
+            datasets = [
+                EEGDashBaseDataset(
+                    record,
+                    self.cache_dir,
+                    self.s3_bucket,
+                    **base_dataset_kwargs,
                 )
-                # We only need filesystem if we need to access S3
-                self.filesystem = S3FileSystem(
-                    anon=True, client_kwargs={"region_name": "us-east-2"}
-                )
-            else:
+                for record in self.records
+            ]
+        elif not download:  # only assume local data is complete if not downloading
+            if not self.data_dir.exists():
                 raise ValueError(
-                    "You must provide either 'records', a 'data_dir', or a query/keyword arguments for filtering."
+                    f"Offline mode is enabled, but local data_dir {self.data_dir} does not exist."
                 )
-        finally:
-            if _owns_client and self.eeg_dash is not None:
-                self.eeg_dash.close()
+            records = self._find_local_bids_records(self.data_dir, self.query)
+            datasets = [
+                EEGDashBaseDataset(
+                    record=record,
+                    cache_dir=self.cache_dir,
+                    s3_bucket=self.s3_bucket,
+                    description={
+                        k: record.get(k)
+                        for k in description_fields
+                        if record.get(k) is not None
+                    },
+                    **base_dataset_kwargs,
+                )
+                for record in records
+            ]
+        elif self.query:
+            # This is the DB query path that we are improving
+            datasets = self._find_datasets(
+                query=build_query_from_kwargs(**self.query),
+                description_fields=description_fields,
+                base_dataset_kwargs=base_dataset_kwargs,
+            )
+            # We only need filesystem if we need to access S3
+            self.filesystem = S3FileSystem(
+                anon=True, client_kwargs={"region_name": "us-east-2"}
+            )
+        else:
+            raise ValueError(
+                "You must provide either 'records', a 'data_dir', or a query/keyword arguments for filtering."
+            )
 
         super().__init__(datasets)
 
-    def find_key_in_nested_dict(self, data: Any, target_key: str) -> Any:
+    def _find_local_bids_records(
+        self, dataset_root: Path, filters: dict[str, Any]
+    ) -> list[dict]:
+        """Discover local BIDS EEG files and build minimal records.
+
+        This helper enumerates EEG recordings under ``dataset_root`` via
+        ``mne_bids.find_matching_paths`` and applies entity filters to produce a
+        list of records suitable for ``EEGDashBaseDataset``. No network access
+        is performed and files are not read.
+
+        Parameters
+        ----------
+        dataset_root : Path
+            Local dataset directory. May be the plain dataset folder (e.g.,
+            ``ds005509``) or a suffixed cache variant (e.g.,
+            ``ds005509-bdf-mini``).
+        filters : dict of {str, Any}
+            Query filters. Must include ``'dataset'`` with the dataset id (without
+            local suffixes). May include BIDS entities ``'subject'``,
+            ``'session'``, ``'task'``, and ``'run'``. Each value can be a scalar
+            or a sequence of scalars.
+
+        Returns
+        -------
+        records : list of dict
+            One record per matched EEG file with at least:
+
+            - ``'data_name'``
+            - ``'dataset'`` (dataset id, without suffixes)
+            - ``'bidspath'`` (normalized to start with the dataset id)
+            - ``'subject'``, ``'session'``, ``'task'``, ``'run'`` (may be None)
+            - ``'bidsdependencies'`` (empty list)
+            - ``'modality'`` (``"eeg"``)
+            - ``'sampling_frequency'``, ``'nchans'``, ``'ntimes'`` (minimal
+              defaults for offline usage)
+
+        Notes
+        -----
+        - Matching uses ``datatypes=['eeg']`` and ``suffixes=['eeg']``.
+        - ``bidspath`` is constructed as
+          ``<dataset_id> / <relative_path_from_dataset_root>`` to ensure the
+          first path component is the dataset id (without local cache suffixes).
+        - Minimal defaults are set for ``sampling_frequency``, ``nchans``, and
+          ``ntimes`` to satisfy dataset length requirements offline.
+
+        """
+        dataset_id = filters["dataset"]
+        arg_map = {
+            "subjects": "subject",
+            "sessions": "session",
+            "tasks": "task",
+            "runs": "run",
+        }
+        matching_args: dict[str, list[str]] = {}
+        for finder_key, entity_key in arg_map.items():
+            entity_val = filters.get(entity_key)
+            if entity_val is None:
+                continue
+            if isinstance(entity_val, (list, tuple, set)):
+                entity_vals = list(entity_val)
+                if not entity_vals:
+                    continue
+                matching_args[finder_key] = entity_vals
+            else:
+                matching_args[finder_key] = [entity_val]
+
+        paths = find_matching_paths(
+            root=str(dataset_root),
+            datatypes=["eeg"],
+            suffixes=["eeg"],
+            ignore_json=True,
+            **matching_args,
+        )
+
+        records: list[dict] = []
+        seen_files: set[str] = set()
+
+        for bids_path in paths:
+            fpath = str(Path(bids_path.fpath).resolve())
+            if fpath in seen_files:
+                continue
+            seen_files.add(fpath)
+
+            # Build bidspath as dataset_id / relative_path_from_dataset_root (POSIX)
+            rel_from_root = (
+                Path(bids_path.fpath)
+                .resolve()
+                .relative_to(Path(bids_path.root).resolve())
+            )
+            bidspath = f"{dataset_id}/{rel_from_root.as_posix()}"
+
+            rec = {
+                "data_name": f"{dataset_id}_{Path(bids_path.fpath).name}",
+                "dataset": dataset_id,
+                "bidspath": bidspath,
+                "subject": (bids_path.subject or None),
+                "session": (bids_path.session or None),
+                "task": (bids_path.task or None),
+                "run": (bids_path.run or None),
+                # minimal fields to satisfy BaseDataset
+                "bidsdependencies": [],  # not needed to just run.
+                "modality": "eeg",
+                # this information is from eegdash schema but not available locally
+                "sampling_frequency": 1.0,
+                "nchans": 1,
+                "ntimes": 1,
+            }
+            records.append(rec)
+
+        return records
+
+    def _find_key_in_nested_dict(self, data: Any, target_key: str) -> Any:
         """Helper to recursively search for a key in a nested dictionary structure; returns
         the value associated with the first occurrence of the key, or None if not found.
         """
@@ -861,7 +935,7 @@ class EEGDashDataset(BaseConcatDataset):
             if target_key in data:
                 return data[target_key]
             for value in data.values():
-                result = self.find_key_in_nested_dict(value, target_key)
+                result = self._find_key_in_nested_dict(value, target_key)
                 if result is not None:
                     return result
         return None
@@ -892,13 +966,12 @@ class EEGDashDataset(BaseConcatDataset):
 
         """
         datasets: list[EEGDashBaseDataset] = []
-
-        self.records = self.eeg_dash.find(query)
+        self.records = self.eeg_dash_instance.find(query)
 
         for record in self.records:
             description = {}
             for field in description_fields:
-                value = self.find_key_in_nested_dict(record, field)
+                value = self._find_key_in_nested_dict(record, field)
                 if value is not None:
                     description[field] = value
             datasets.append(
@@ -911,69 +984,3 @@ class EEGDashDataset(BaseConcatDataset):
                 )
             )
         return datasets
-
-    def load_bids_dataset(
-        self,
-        dataset: str,
-        data_dir: str | Path,
-        description_fields: list[str],
-        s3_bucket: str | None = None,
-        n_jobs: int = -1,
-        **kwargs,
-    ):
-        """Helper method to load a single local BIDS dataset and return it as a list of
-        EEGDashBaseDatasets (one for each recording in the dataset).
-
-        Parameters
-        ----------
-        dataset : str
-            A name for the dataset to be loaded (e.g., "ds002718").
-        data_dir : str
-            The path to the local BIDS dataset directory.
-        description_fields : list[str]
-            A list of fields to be extracted from the dataset records
-            and included in the returned dataset description(s).
-        s3_bucket : str | None
-            The S3 bucket to upload the dataset files to (if any).
-        n_jobs : int
-            The number of jobs to run in parallel (default is -1, meaning using all processors).
-
-        """
-        bids_dataset = EEGBIDSDataset(
-            data_dir=data_dir,
-            dataset=dataset,
-        )
-        datasets = Parallel(n_jobs=n_jobs, prefer="threads", verbose=1)(
-            delayed(self.get_base_dataset_from_bids_file)(
-                bids_dataset=bids_dataset,
-                bids_file=bids_file,
-                s3_bucket=s3_bucket,
-                description_fields=description_fields,
-                **kwargs,
-            )
-            for bids_file in bids_dataset.get_files()
-        )
-        return datasets
-
-    def get_base_dataset_from_bids_file(
-        self,
-        bids_dataset: "EEGBIDSDataset",
-        bids_file: str,
-        s3_bucket: str | None,
-        description_fields: list[str],
-        **kwargs,
-    ) -> "EEGDashBaseDataset":
-        """Instantiate a single EEGDashBaseDataset given a local BIDS file (metadata only)."""
-        record = self.eeg_dash.load_eeg_attrs_from_bids_file(bids_dataset, bids_file)
-        description = {}
-        for field in description_fields:
-            value = self.find_key_in_nested_dict(record, field)
-            if value is not None:
-                description[field] = value
-        return EEGDashBaseDataset(
-            record,
-            self.cache_dir,
-            s3_bucket,
-            description=description,
-            **kwargs,
-        )

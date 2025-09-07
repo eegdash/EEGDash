@@ -1,5 +1,5 @@
 from eegdash.api import EEGDashDataset
-from eegdash.dataset import EEGChallengeDataset
+from eegdash.dataset.dataset import EEGChallengeDataset
 
 
 def test_challenge_dataset_passes_task_and_dataset_filters(tmp_path):

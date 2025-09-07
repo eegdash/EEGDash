@@ -1,9 +1,13 @@
 import mne
 import numpy as np
 import pandas as pd
+import logging
+
 from mne_bids import get_bids_path_from_fname
 
 from braindecode.datasets.base import BaseConcatDataset
+
+logger = logging.getLogger("eegdash")
 
 
 def build_trial_table(events_df: pd.DataFrame) -> pd.DataFrame:
@@ -295,7 +299,7 @@ def keep_only_recordings_with(desc, concat_ds):
         if np.any(ds.raw.annotations.description == desc):
             kept.append(ds)
         else:
-            print(
-                f"[warn] Recording {ds.raw.filenames[0]} does not contain event '{desc}'"
+            logging.warning(
+                f"Recording {ds.raw.filenames[0]} does not contain event '{desc}'"
             )
     return BaseConcatDataset(kept)

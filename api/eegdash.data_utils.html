@@ -53,8 +53,8 @@
     <link rel="icon" href="../_static/eegdash_icon.png"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="eegdash.dataset module" href="eegdash.dataset.html" />
-    <link rel="prev" title="eegdash.data_config module" href="eegdash.data_config.html" />
+    <link rel="next" title="eegdash.mongodb module" href="eegdash.mongodb.html" />
+    <link rel="prev" title="eegdash.const module" href="eegdash.const.html" />
   
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -438,6 +438,11 @@
   <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
   <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="eegdash.html">eegdash package</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2 has-children"><a class="reference internal" href="eegdash.dataset.html">eegdash.dataset package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="eegdash.dataset.dataset.html">eegdash.dataset.dataset module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eegdash.dataset.registry.html">eegdash.dataset.registry module</a></li>
+</ul>
+</details></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="eegdash.features.html">eegdash.features package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3 has-children"><a class="reference internal" href="eegdash.features.feature_bank.html">eegdash.features.feature_bank package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l4"><a class="reference internal" href="eegdash.features.feature_bank.complexity.html">eegdash.features.feature_bank.complexity module</a></li>
@@ -458,12 +463,10 @@
 </ul>
 </details></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.api.html">eegdash.api module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.bids_eeg_metadata.html">eegdash.bids_eeg_metadata module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.const.html">eegdash.const module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.data_config.html">eegdash.data_config module</a></li>
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">eegdash.data_utils module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.html">eegdash.dataset module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.mongodb.html">eegdash.mongodb module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.registry.html">eegdash.registry module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.utils.html">eegdash.utils module</a></li>
 </ul>
 </details></li>
@@ -601,29 +604,6 @@ to the provided recording file path.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="eegdash.data_utils.EEGBIDSDataset.get_bids_file_inheritance">
-<span class="sig-name descname"><span class="pre">get_bids_file_inheritance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">basename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extension</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Path</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#eegdash.data_utils.EEGBIDSDataset.get_bids_file_inheritance" title="Link to this definition">#</a></dt>
-<dd><p>Get all file paths that apply to the basename file in the specified directory
-and that end with the specified suffix, recursively searching parent directories
-(following the BIDS inheritance principle in the order of lowest level first).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>path</strong> (<em>str</em><em> | </em><em>Path</em>) – The directory path to search for files.</p></li>
-<li><p><strong>basename</strong> (<em>str</em>) – BIDS file basename without _eeg.set extension for example</p></li>
-<li><p><strong>extension</strong> (<em>str</em>) – Only consider files that end with the specified suffix; e.g. channels.tsv</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>A list of file paths that match the given basename and extension.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>list[Path]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
 <dt class="sig sig-object py" id="eegdash.data_utils.EEGBIDSDataset.get_bids_metadata_files">
 <span class="sig-name descname"><span class="pre">get_bids_metadata_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filepath</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata_file_extension</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Path</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#eegdash.data_utils.EEGBIDSDataset.get_bids_metadata_files" title="Link to this definition">#</a></dt>
 <dd><p>Retrieve all metadata file paths that apply to a given data file path and that
@@ -652,61 +632,11 @@ e.g., channels.tsv or eeg.json</p></li>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="eegdash.data_utils.EEGBIDSDataset.get_files_with_extension_parallel">
-<span class="sig-name descname"><span class="pre">get_files_with_extension_parallel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">directory</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extension</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'.set'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_workers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">-1</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Path</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#eegdash.data_utils.EEGBIDSDataset.get_files_with_extension_parallel" title="Link to this definition">#</a></dt>
-<dd><p>Efficiently scan a directory and its subdirectories for files that end with
-the given extension.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>directory</strong> (<em>str</em>) – The root directory to scan for files.</p></li>
-<li><p><strong>extension</strong> (<em>str</em>) – Only consider files that end with this suffix, e.g. ‘.set’.</p></li>
-<li><p><strong>max_workers</strong> (<em>int</em>) – Optionally specify the maximum number of worker threads to use for parallel scanning.
-Defaults to all available CPU cores if set to -1.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>A list of filepaths for all matching metadata files</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>list[Path]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="eegdash.data_utils.EEGBIDSDataset.get_property_from_filename">
-<span class="sig-name descname"><span class="pre">get_property_from_filename</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">property</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#eegdash.data_utils.EEGBIDSDataset.get_property_from_filename" title="Link to this definition">#</a></dt>
-<dd><p>Parse a property out of a BIDS-compliant filename. Returns an empty string
-if not found.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="eegdash.data_utils.EEGBIDSDataset.get_recordings">
-<span class="sig-name descname"><span class="pre">get_recordings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">layout</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">BIDSLayout</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#eegdash.data_utils.EEGBIDSDataset.get_recordings" title="Link to this definition">#</a></dt>
-<dd><p>Get a list of all EEG recording files in the BIDS layout.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="eegdash.data_utils.EEGBIDSDataset.get_relative_bidspath">
-<span class="sig-name descname"><span class="pre">get_relative_bidspath</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#eegdash.data_utils.EEGBIDSDataset.get_relative_bidspath" title="Link to this definition">#</a></dt>
-<dd><p>Make the given file path relative to the BIDS directory.</p>
-</dd></dl>
-
-<dl class="py method">
 <dt class="sig sig-object py" id="eegdash.data_utils.EEGBIDSDataset.load_and_preprocess_raw">
 <span class="sig-name descname"><span class="pre">load_and_preprocess_raw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">raw_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">preprocess</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#eegdash.data_utils.EEGBIDSDataset.load_and_preprocess_raw" title="Link to this definition">#</a></dt>
 <dd><p>Utility function to load a raw data file with MNE and apply some simple
 (hardcoded) preprocessing and return as a numpy array. Not meant for purposes
 other than testing or debugging.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="eegdash.data_utils.EEGBIDSDataset.merge_json_inheritance">
-<span class="sig-name descname"><span class="pre">merge_json_inheritance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json_files</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="headerlink" href="#eegdash.data_utils.EEGBIDSDataset.merge_json_inheritance" title="Link to this definition">#</a></dt>
-<dd><p>Internal helper to merge list of json files found by get_bids_file_inheritance,
-expecting the order (from left to right) is from lowest
-level to highest level, and return a merged dictionary</p>
 </dd></dl>
 
 <dl class="py method">
@@ -730,14 +660,6 @@ level to highest level, and return a merged dictionary</p>
 <dd class="field-odd"><p>A dictionary of the resolved values.</p>
 </dd>
 </dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="eegdash.data_utils.EEGBIDSDataset.scan_directory">
-<span class="sig-name descname"><span class="pre">scan_directory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">directory</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extension</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Path</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#eegdash.data_utils.EEGBIDSDataset.scan_directory" title="Link to this definition">#</a></dt>
-<dd><p>Return a list of file paths that end with the given extension in the specified
-directory. Ignores certain special directories like .git, .datalad, derivatives,
-and code.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -768,25 +690,6 @@ recordings from a local BIDS folder or using a database query.</p>
 </ul>
 </dd>
 </dl>
-<dl class="py method">
-<dt class="sig sig-object py" id="eegdash.data_utils.EEGDashBaseDataset.check_and_get_raw">
-<span class="sig-name descname"><span class="pre">check_and_get_raw</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#eegdash.data_utils.EEGDashBaseDataset.check_and_get_raw" title="Link to this definition">#</a></dt>
-<dd><p>Download the S3 file and BIDS dependencies if not already cached.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="eegdash.data_utils.EEGDashBaseDataset.get_raw_bids_args">
-<span class="sig-name descname"><span class="pre">get_raw_bids_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#eegdash.data_utils.EEGDashBaseDataset.get_raw_bids_args" title="Link to this definition">#</a></dt>
-<dd><p>Helper to restrict the metadata record to the fields needed to locate a BIDS
-recording.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="eegdash.data_utils.EEGDashBaseDataset.get_s3path">
-<span class="sig-name descname"><span class="pre">get_s3path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filepath</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#eegdash.data_utils.EEGDashBaseDataset.get_s3path" title="Link to this definition">#</a></dt>
-<dd><p>Helper to form an AWS S3 URI for the given relative filepath.</p>
-</dd></dl>
-
 <dl class="py property">
 <dt class="sig sig-object py" id="eegdash.data_utils.EEGDashBaseDataset.raw">
 <em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">raw</span></span><a class="headerlink" href="#eegdash.data_utils.EEGDashBaseDataset.raw" title="Link to this definition">#</a></dt>
@@ -823,11 +726,6 @@ alongside the main recording file.</p></li>
 </dl>
 </div>
 <p>Get to work with S3 endpoint first, no caching</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="eegdash.data_utils.EEGDashBaseRaw.get_s3path">
-<span class="sig-name descname"><span class="pre">get_s3path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filepath</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.data_utils.EEGDashBaseRaw.get_s3path" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
 </dd></dl>
 
 </section>
@@ -843,20 +741,20 @@ alongside the main recording file.</p></li>
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="eegdash.data_config.html"
+       href="eegdash.const.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">eegdash.data_config module</p>
+        <p class="prev-next-title">eegdash.const module</p>
       </div>
     </a>
     <a class="right-next"
-       href="eegdash.dataset.html"
+       href="eegdash.mongodb.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">eegdash.dataset module</p>
+        <p class="prev-next-title">eegdash.mongodb module</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -889,32 +787,19 @@ alongside the main recording file.</p></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.data_utils.EEGBIDSDataset.check_eeg_dataset"><code class="docutils literal notranslate"><span class="pre">EEGBIDSDataset.check_eeg_dataset()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.data_utils.EEGBIDSDataset.eeg_json"><code class="docutils literal notranslate"><span class="pre">EEGBIDSDataset.eeg_json()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.data_utils.EEGBIDSDataset.get_bids_file_attribute"><code class="docutils literal notranslate"><span class="pre">EEGBIDSDataset.get_bids_file_attribute()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.data_utils.EEGBIDSDataset.get_bids_file_inheritance"><code class="docutils literal notranslate"><span class="pre">EEGBIDSDataset.get_bids_file_inheritance()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.data_utils.EEGBIDSDataset.get_bids_metadata_files"><code class="docutils literal notranslate"><span class="pre">EEGBIDSDataset.get_bids_metadata_files()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.data_utils.EEGBIDSDataset.get_files"><code class="docutils literal notranslate"><span class="pre">EEGBIDSDataset.get_files()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.data_utils.EEGBIDSDataset.get_files_with_extension_parallel"><code class="docutils literal notranslate"><span class="pre">EEGBIDSDataset.get_files_with_extension_parallel()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.data_utils.EEGBIDSDataset.get_property_from_filename"><code class="docutils literal notranslate"><span class="pre">EEGBIDSDataset.get_property_from_filename()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.data_utils.EEGBIDSDataset.get_recordings"><code class="docutils literal notranslate"><span class="pre">EEGBIDSDataset.get_recordings()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.data_utils.EEGBIDSDataset.get_relative_bidspath"><code class="docutils literal notranslate"><span class="pre">EEGBIDSDataset.get_relative_bidspath()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.data_utils.EEGBIDSDataset.load_and_preprocess_raw"><code class="docutils literal notranslate"><span class="pre">EEGBIDSDataset.load_and_preprocess_raw()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.data_utils.EEGBIDSDataset.merge_json_inheritance"><code class="docutils literal notranslate"><span class="pre">EEGBIDSDataset.merge_json_inheritance()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.data_utils.EEGBIDSDataset.num_times"><code class="docutils literal notranslate"><span class="pre">EEGBIDSDataset.num_times()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.data_utils.EEGBIDSDataset.resolve_bids_json"><code class="docutils literal notranslate"><span class="pre">EEGBIDSDataset.resolve_bids_json()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.data_utils.EEGBIDSDataset.scan_directory"><code class="docutils literal notranslate"><span class="pre">EEGBIDSDataset.scan_directory()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.data_utils.EEGBIDSDataset.subject_participant_tsv"><code class="docutils literal notranslate"><span class="pre">EEGBIDSDataset.subject_participant_tsv()</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.data_utils.EEGDashBaseDataset"><code class="docutils literal notranslate"><span class="pre">EEGDashBaseDataset</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.data_utils.EEGDashBaseDataset.check_and_get_raw"><code class="docutils literal notranslate"><span class="pre">EEGDashBaseDataset.check_and_get_raw()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.data_utils.EEGDashBaseDataset.get_raw_bids_args"><code class="docutils literal notranslate"><span class="pre">EEGDashBaseDataset.get_raw_bids_args()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.data_utils.EEGDashBaseDataset.get_s3path"><code class="docutils literal notranslate"><span class="pre">EEGDashBaseDataset.get_s3path()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.data_utils.EEGDashBaseDataset.raw"><code class="docutils literal notranslate"><span class="pre">EEGDashBaseDataset.raw</span></code></a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.data_utils.EEGDashBaseRaw"><code class="docutils literal notranslate"><span class="pre">EEGDashBaseRaw</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.data_utils.EEGDashBaseRaw.get_s3path"><code class="docutils literal notranslate"><span class="pre">EEGDashBaseRaw.get_s3path()</span></code></a></li>
-</ul>
-</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.data_utils.EEGDashBaseRaw"><code class="docutils literal notranslate"><span class="pre">EEGDashBaseRaw</span></code></a></li>
 </ul>
   </nav></div>
 

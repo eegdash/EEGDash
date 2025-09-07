@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>eegdash.registry module &#8212; EEG Dash</title>
+    <title>eegdash.bids_eeg_metadata module &#8212; EEG Dash</title>
   
   
   
@@ -48,13 +48,13 @@
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/design-tabs.js?v=f930bc37"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'api/eegdash.registry';</script>
-    <link rel="canonical" href="https://sccn.github.io/eegdash/api/eegdash.registry.html" />
+    <script>DOCUMENTATION_OPTIONS.pagename = 'api/eegdash.bids_eeg_metadata';</script>
+    <link rel="canonical" href="https://sccn.github.io/eegdash/api/eegdash.bids_eeg_metadata.html" />
     <link rel="icon" href="../_static/eegdash_icon.png"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="eegdash.utils module" href="eegdash.utils.html" />
-    <link rel="prev" title="eegdash.mongodb module" href="eegdash.mongodb.html" />
+    <link rel="next" title="eegdash.const module" href="eegdash.const.html" />
+    <link rel="prev" title="eegdash.api module" href="eegdash.api.html" />
   
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -438,6 +438,11 @@
   <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
   <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="eegdash.html">eegdash package</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2 has-children"><a class="reference internal" href="eegdash.dataset.html">eegdash.dataset package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="eegdash.dataset.dataset.html">eegdash.dataset.dataset module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eegdash.dataset.registry.html">eegdash.dataset.registry module</a></li>
+</ul>
+</details></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="eegdash.features.html">eegdash.features package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3 has-children"><a class="reference internal" href="eegdash.features.feature_bank.html">eegdash.features.feature_bank package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l4"><a class="reference internal" href="eegdash.features.feature_bank.complexity.html">eegdash.features.feature_bank.complexity module</a></li>
@@ -458,12 +463,10 @@
 </ul>
 </details></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.api.html">eegdash.api module</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">eegdash.bids_eeg_metadata module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.const.html">eegdash.const module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.data_config.html">eegdash.data_config module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.data_utils.html">eegdash.data_utils module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.html">eegdash.dataset module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.mongodb.html">eegdash.mongodb module</a></li>
-<li class="toctree-l2 current active"><a class="current reference internal" href="#">eegdash.registry module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.utils.html">eegdash.utils module</a></li>
 </ul>
 </details></li>
@@ -513,7 +516,7 @@
     
     <li class="breadcrumb-item"><a href="eegdash.html" class="nav-link">eegdash package</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">eegdash.registry module</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">eegdash.bids_eeg_metadata module</span></li>
   </ul>
 </nav>
 </div>
@@ -530,18 +533,40 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="module-eegdash.registry">
-<span id="eegdash-registry-module"></span><h1>eegdash.registry module<a class="headerlink" href="#module-eegdash.registry" title="Link to this heading">#</a></h1>
+  <section id="module-eegdash.bids_eeg_metadata">
+<span id="eegdash-bids-eeg-metadata-module"></span><h1>eegdash.bids_eeg_metadata module<a class="headerlink" href="#module-eegdash.bids_eeg_metadata" title="Link to this heading">#</a></h1>
 <dl class="py function">
-<dt class="sig sig-object py" id="eegdash.registry.markdown_table">
-<span class="sig-prename descclassname"><span class="pre">eegdash.registry.</span></span><span class="sig-name descname"><span class="pre">markdown_table</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">row_series</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Series</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#eegdash.registry.markdown_table" title="Link to this definition">#</a></dt>
-<dd><p>Create a reStructuredText grid table from a pandas Series.</p>
+<dt class="sig sig-object py" id="eegdash.bids_eeg_metadata.build_query_from_kwargs">
+<span class="sig-prename descclassname"><span class="pre">eegdash.bids_eeg_metadata.</span></span><span class="sig-name descname"><span class="pre">build_query_from_kwargs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#eegdash.bids_eeg_metadata.build_query_from_kwargs" title="Link to this definition">#</a></dt>
+<dd><p>Build and validate a MongoDB query from user-friendly keyword arguments.</p>
+<p>Improvements:
+- Reject None values and empty/whitespace-only strings
+- For list/tuple/set values: strip strings, drop None/empties, deduplicate, and use <cite>$in</cite>
+- Preserve scalars as exact matches</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="eegdash.registry.register_openneuro_datasets">
-<span class="sig-prename descclassname"><span class="pre">eegdash.registry.</span></span><span class="sig-name descname"><span class="pre">register_openneuro_datasets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">summary_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_class</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">namespace</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_to_all</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">type</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#eegdash.registry.register_openneuro_datasets" title="Link to this definition">#</a></dt>
-<dd><p>Dynamically create dataset classes from a summary file.</p>
+<dt class="sig sig-object py" id="eegdash.bids_eeg_metadata.load_eeg_attrs_from_bids_file">
+<span class="sig-prename descclassname"><span class="pre">eegdash.bids_eeg_metadata.</span></span><span class="sig-name descname"><span class="pre">load_eeg_attrs_from_bids_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bids_dataset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="eegdash.data_utils.html#eegdash.data_utils.EEGBIDSDataset" title="eegdash.data_utils.EEGBIDSDataset"><span class="pre">EEGBIDSDataset</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">bids_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#eegdash.bids_eeg_metadata.load_eeg_attrs_from_bids_file" title="Link to this definition">#</a></dt>
+<dd><p>Build the metadata record for a given BIDS file (single recording) in a BIDS dataset.</p>
+<p>Attributes are at least the ones defined in data_config attributes (set to None if missing),
+but are typically a superset, and include, among others, the paths to relevant
+meta-data files needed to load and interpret the file in question.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bids_dataset</strong> (<a class="reference internal" href="eegdash.data_utils.html#eegdash.data_utils.EEGBIDSDataset" title="eegdash.data_utils.EEGBIDSDataset"><em>EEGBIDSDataset</em></a>) – The BIDS dataset object containing the file.</p></li>
+<li><p><strong>bids_file</strong> (<em>str</em>) – The path to the BIDS file within the dataset.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A dictionary representing the metadata record for the given file. This is the
+same format as the records stored in the database.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
 </dd></dl>
 
 </section>
@@ -557,20 +582,20 @@
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="eegdash.mongodb.html"
+       href="eegdash.api.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">eegdash.mongodb module</p>
+        <p class="prev-next-title">eegdash.api module</p>
       </div>
     </a>
     <a class="right-next"
-       href="eegdash.utils.html"
+       href="eegdash.const.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">eegdash.utils module</p>
+        <p class="prev-next-title">eegdash.const module</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -593,8 +618,8 @@
   </div>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.registry.markdown_table"><code class="docutils literal notranslate"><span class="pre">markdown_table()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.registry.register_openneuro_datasets"><code class="docutils literal notranslate"><span class="pre">register_openneuro_datasets()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.bids_eeg_metadata.build_query_from_kwargs"><code class="docutils literal notranslate"><span class="pre">build_query_from_kwargs()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.bids_eeg_metadata.load_eeg_attrs_from_bids_file"><code class="docutils literal notranslate"><span class="pre">load_eeg_attrs_from_bids_file()</span></code></a></li>
 </ul>
   </nav></div>
 
@@ -602,7 +627,7 @@
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
-      <li><a href="../_sources/api/eegdash.registry.rst.txt"
+      <li><a href="../_sources/api/eegdash.bids_eeg_metadata.rst.txt"
             rel="nofollow">Show Source</a></li>
     </ul>
    </div></div>

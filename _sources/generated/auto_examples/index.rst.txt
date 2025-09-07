@@ -33,6 +33,23 @@ Playing with eegdash!
 
 .. raw:: html
 
+    <div class="sphx-glr-thumbcontainer" tooltip="Many HPC clusters restrict or block network access. It&#x27;s common to have dedicated queues for internet-enabled jobs that differ from GPU queues. This tutorial shows how to use EEGDash offline once a dataset is present on disk.">
+
+.. only:: html
+
+  .. image:: /generated/auto_examples/core/images/thumb/sphx_glr_tutorial_eegdash_offline_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_generated_auto_examples_core_tutorial_eegdash_offline.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Working Offline with EEGDash</div>
+    </div>
+
+
+.. raw:: html
+
     <div class="sphx-glr-thumbcontainer" tooltip="EEGDash example for eyes open vs. closed classification.">
 
 .. only:: html
@@ -75,6 +92,7 @@ Playing with eegdash!
 .. toctree::
    :hidden:
 
+   /generated/auto_examples/core/tutorial_eegdash_offline
    /generated/auto_examples/core/tutorial_eoec
    /generated/auto_examples/core/tutorial_feature_extractor_open_close_eye
 

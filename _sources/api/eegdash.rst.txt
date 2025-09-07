@@ -12,6 +12,7 @@ Subpackages
 .. toctree::
    :maxdepth: 4
 
+   eegdash.dataset
    eegdash.features
 
 Submodules
@@ -21,10 +22,8 @@ Submodules
    :maxdepth: 4
 
    eegdash.api
+   eegdash.bids_eeg_metadata
    eegdash.const
-   eegdash.data_config
    eegdash.data_utils
-   eegdash.dataset
    eegdash.mongodb
-   eegdash.registry
    eegdash.utils

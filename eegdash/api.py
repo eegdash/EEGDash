@@ -927,6 +927,26 @@ class EEGDashDataset(BaseConcatDataset):
             **matching_args,
         )
 
+        # Deduplicate to one file per subject by default when no explicit
+        # run filter is provided. Keep the lowest run number (e.g., run-01).
+        if not filters.get("run"):
+            chosen: dict[str, Any] = {}
+
+            def _run_order(p) -> int:
+                try:
+                    return int(p.run) if p.run is not None else 0
+                except Exception:
+                    return 0
+
+            for bp in sorted(paths, key=_run_order):
+                subj = getattr(bp, "subject", None)
+                if subj is None:
+                    continue
+                if subj not in chosen:
+                    chosen[subj] = bp
+            if chosen:
+                paths = list(chosen.values())
+
         records: list[dict] = []
         seen_files: set[str] = set()
 

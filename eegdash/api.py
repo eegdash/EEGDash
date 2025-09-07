@@ -948,7 +948,7 @@ class EEGDashDataset(BaseConcatDataset):
                 # minimal fields to satisfy BaseDataset from eegdash
                 "bidsdependencies": [],  # not needed to just run.
                 "modality": "eeg",
-                # prefer values sourced from BIDS metadata when available
+                # minimal numeric defaults for offline length calculation
                 "sampling_frequency": None,
                 "nchans": None,
                 "ntimes": None,

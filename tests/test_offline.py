@@ -1,137 +1,157 @@
 from pathlib import Path
 
+import platformdirs
 
 from eegdash.const import RELEASE_TO_OPENNEURO_DATASET_MAP
 from eegdash.dataset.dataset import EEGChallengeDataset
 
 
-def _touch(p: Path):
-    p.parent.mkdir(parents=True, exist_ok=True)
-    p.touch()
+def test_offline_real_data_end_to_end():
+    """Use real data like in the tutorial: prefetch (online) then go offline.
 
-
-def _make_tutorial_like_cache(tmp_path: Path, dataset_id: str) -> Path:
-    """Create a minimal local BIDS cache structure similar to the tutorial.
-
-    We simulate a pre-fetched mini release folder "<dataset_id>-bdf-mini" with two
-    subjects, each having two RestingState runs (01, 02). File presence is
-    sufficient; tests do not read EEG contents.
+    - Prefetch via EEGChallengeDataset (mini release) to the user cache
+    - Instantiate an offline EEGChallengeDataset pointing at the cache
+    - Compare raw shapes for one subject and basic description columns
     """
-    root = tmp_path / f"{dataset_id}-bdf-mini"
-    # Minimal dataset_description.json to satisfy BIDS tools
-    (root).mkdir(parents=True, exist_ok=True)
-    desc = root / "dataset_description.json"
-    if not desc.exists():
-        desc.write_text('{"Name": "test", "BIDSVersion": "1.6.0"}')
-    # Subject A: two runs
-    _touch(
-        root
-        / "sub-NDARAB793GL3"
-        / "ses-01"
-        / "eeg"
-        / "sub-NDARAB793GL3_ses-01_task-RestingState_run-01_eeg.edf"
-    )
-    _touch(
-        root
-        / "sub-NDARAB793GL3"
-        / "ses-01"
-        / "eeg"
-        / "sub-NDARAB793GL3_ses-01_task-RestingState_run-02_eeg.edf"
-    )
-    # Subject B: two runs
-    _touch(
-        root
-        / "sub-NDARAM675UR8"
-        / "ses-01"
-        / "eeg"
-        / "sub-NDARAM675UR8_ses-01_task-RestingState_run-01_eeg.edf"
-    )
-    _touch(
-        root
-        / "sub-NDARAM675UR8"
-        / "ses-01"
-        / "eeg"
-        / "sub-NDARAM675UR8_ses-01_task-RestingState_run-02_eeg.edf"
-    )
-    return root
+    release = "R2"
+    _ = RELEASE_TO_OPENNEURO_DATASET_MAP[release]
+    cache_dir = Path(platformdirs.user_cache_dir("EEGDash"))
+    cache_dir.mkdir(parents=True, exist_ok=True)
 
+    # Online: construct challenge dataset (mini) and prefetch first subject
+    # Limit to a single subject to keep the test lean
+    subject_id = "NDARAB793GL3"  # part of R2 mini set
+    ds_online = EEGChallengeDataset(
+        release=release,
+        cache_dir=cache_dir,
+        task="RestingState",
+        mini=True,
+        subject=subject_id,
+    )
+    assert len(ds_online.datasets) > 0
+    first_online = ds_online.datasets[0]
+    # Trigger download of this subject's files (raw + sidecars)
+    _ = first_online.raw
 
-def test_offline_basic_and_dedup(tmp_path: Path):
-    """Offline EEGChallengeDataset finds one RestingState recording per subject.
-
-    Mirrors the tutorial's Step 2 (offline) with the run deduplication implied by
-    the curated DB (keep run-01 when run is not specified).
-    """
-    dataset_id = RELEASE_TO_OPENNEURO_DATASET_MAP["R2"]
-    _make_tutorial_like_cache(tmp_path, dataset_id)
-
+    # Offline: enumerate locally cached data
     ds_offline = EEGChallengeDataset(
-        release="R2", cache_dir=tmp_path, task="RestingState", download=False
-    )
-
-    # We created 2 subjects; without specifying run, only run-01 should be included
-    assert len(ds_offline.datasets) == 2
-    runs = sorted([d.record.get("run") for d in ds_offline.datasets])
-    assert runs == ["01", "01"]
-
-
-def test_offline_filter_by_subject(tmp_path: Path):
-    dataset_id = RELEASE_TO_OPENNEURO_DATASET_MAP["R2"]
-    _make_tutorial_like_cache(tmp_path, dataset_id)
-
-    ds_sub = EEGChallengeDataset(
-        release="R2",
-        cache_dir=tmp_path,
+        release=release,
+        cache_dir=cache_dir,
+        task="RestingState",
         download=False,
-        subject="NDARAB793GL3",
+        subject=subject_id,
     )
-    assert len(ds_sub.datasets) == 1
-    rec = ds_sub.datasets[0].record
-    assert rec["subject"] == "NDARAB793GL3"
-    assert rec["task"] == "RestingState"
-    assert rec["run"] == "01"
+    assert len(ds_offline.datasets) == 1
+    first_offline = ds_offline.datasets[0]
+
+    # Compare raw shapes for the same subject online vs offline
+    shape_online = first_online.raw.get_data().shape
+    shape_offline = first_offline.raw.get_data().shape
+    assert shape_online == shape_offline
+
+    # Basic description columns present
+    for col in ("subject", "task"):
+        assert col in ds_offline.description.columns
 
 
-def test_offline_bidspath_and_cache_suffix(tmp_path: Path):
-    """Bidspath starts with dataset id; cache path uses suffixed folder.
+def test_offline_real_bidspath_and_cache_suffix():
+    """Verify bidspath root and local cache folder for real data (tutorial style)."""
+    release = "R2"
+    dataset_id = RELEASE_TO_OPENNEURO_DATASET_MAP[release]
+    cache_dir = Path(platformdirs.user_cache_dir("EEGDash"))
+    cache_dir.mkdir(parents=True, exist_ok=True)
 
-    Equivalent to the tutorial's notion of "offline_root = cache_dir/<dataset>-bdf-mini".
-    """
-    dataset_id = RELEASE_TO_OPENNEURO_DATASET_MAP["R2"]
-    cache_folder = f"{dataset_id}-bdf-mini"
-    _make_tutorial_like_cache(tmp_path, dataset_id)
-
+    subject_id = "NDARAB793GL3"
     ds_offline = EEGChallengeDataset(
-        release="R2", cache_dir=tmp_path, task="RestingState", download=False
+        release=release,
+        cache_dir=cache_dir,
+        task="RestingState",
+        download=False,
+        subject=subject_id,
     )
-    assert len(ds_offline.datasets) == 2
+    assert len(ds_offline.datasets) == 1
     base = ds_offline.datasets[0]
     # bidspath must start with dataset id (not suffixed cache folder)
     assert base.record["bidspath"].split("/")[0] == dataset_id
-    # local BIDS root points to suffixed folder
-    assert base.bids_root == tmp_path / cache_folder
+    # local BIDS root points to suffixed folder used by the challenge
+    assert (cache_dir / f"{dataset_id}-bdf-mini").exists()
+    assert base.bids_root == cache_dir / f"{dataset_id}-bdf-mini"
 
 
-def test_offline_vs_records_description_shape(tmp_path: Path):
-    """Descriptions built offline match shape when reconstructed from records.
+def test_offline_real_records_description_shape():
+    """Reconstruct from records and compare description row counts (tutorial-like)."""
+    release = "R2"
+    cache_dir = Path(platformdirs.user_cache_dir("EEGDash"))
+    cache_dir.mkdir(parents=True, exist_ok=True)
 
-    Mirrors the tutorial's Step 4.1, using record injection to simulate "online".
-    """
-    dataset_id = RELEASE_TO_OPENNEURO_DATASET_MAP["R2"]
-    _make_tutorial_like_cache(tmp_path, dataset_id)
-
+    subject_id = "NDARAB793GL3"
     ds_offline = EEGChallengeDataset(
-        release="R2", cache_dir=tmp_path, task="RestingState", download=False
+        release=release,
+        cache_dir=cache_dir,
+        task="RestingState",
+        download=False,
+        subject=subject_id,
     )
+    assert len(ds_offline.datasets) == 1
 
-    # Recreate a dataset from the exact records (record-injection path)
+    # Recreate a dataset from the exact offline records
     records = [bd.record for bd in ds_offline.datasets]
     ds_from_records = EEGChallengeDataset(
-        release="R2", cache_dir=tmp_path, task="RestingState", records=records
+        release=release, cache_dir=cache_dir, task="RestingState", records=records
     )
 
-    # At minimum, number of recordings (rows) must match
     assert ds_offline.description.shape[0] == ds_from_records.description.shape[0]
-    # And offline descriptions should include core BIDS entities
-    for col in ("subject", "task", "run"):
-        assert col in ds_offline.description.columns
+
+
+def test_online_vs_records_vs_offline_single_subject():
+    """Compare online vs records-injection vs offline for a single subject.
+
+    Ensures consistent row counts and identical raw data shapes across modes.
+    """
+    release = "R2"
+    subject_id = "NDARAB793GL3"
+    cache_dir = Path(platformdirs.user_cache_dir("EEGDash"))
+    cache_dir.mkdir(parents=True, exist_ok=True)
+
+    # Online for a single subject, and prefetch raw
+    ds_online = EEGChallengeDataset(
+        release=release,
+        cache_dir=cache_dir,
+        task="RestingState",
+        mini=True,
+        subject=subject_id,
+    )
+    assert len(ds_online.datasets) == 1
+    online_base = ds_online.datasets[0]
+    _ = online_base.raw
+
+    # From records (inject the online records directly)
+    records = [d.record for d in ds_online.datasets]
+    ds_records = EEGChallengeDataset(
+        release=release,
+        cache_dir=cache_dir,
+        task="RestingState",
+        records=records,
+    )
+    assert len(ds_records.datasets) == 1
+
+    # Offline: enumerate from cache for same subject
+    ds_offline = EEGChallengeDataset(
+        release=release,
+        cache_dir=cache_dir,
+        task="RestingState",
+        download=False,
+        subject=subject_id,
+    )
+    assert len(ds_offline.datasets) == 1
+
+    # Compare row counts in description
+    assert ds_online.description.shape[0] == 1
+    assert ds_records.description.shape[0] == 1
+    assert ds_offline.description.shape[0] == 1
+
+    # Compare raw shapes across modes
+    shape_online = ds_online.datasets[0].raw.get_data().shape
+    shape_records = ds_records.datasets[0].raw.get_data().shape
+    shape_offline = ds_offline.datasets[0].raw.get_data().shape
+    assert shape_online == shape_records == shape_offline

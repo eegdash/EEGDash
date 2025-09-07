@@ -966,8 +966,7 @@ class EEGDashDataset(BaseConcatDataset):
 
         """
         datasets: list[EEGDashBaseDataset] = []
-        eegdash_instance = EEGDash()
-        self.records = eegdash_instance.find(query)
+        self.records = self.eeg_dash_instance.find(query)
 
         for record in self.records:
             description = {}

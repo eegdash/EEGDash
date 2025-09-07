@@ -919,42 +919,21 @@ class EEGDashDataset(BaseConcatDataset):
             else:
                 matching_args[finder_key] = [entity_val]
 
-        paths = find_matching_paths(
+        matched_paths = find_matching_paths(
             root=str(dataset_root),
             datatypes=["eeg"],
             suffixes=["eeg"],
             ignore_json=True,
             **matching_args,
         )
+        records_out: list[dict] = []
+        seen_abs_paths: set[str] = set()
 
-        # Deduplicate to one file per subject by default when no explicit
-        # run filter is provided. Keep the lowest run number (e.g., run-01).
-        if not filters.get("run"):
-            chosen: dict[str, Any] = {}
-
-            def _run_order(p) -> int:
-                try:
-                    return int(p.run) if p.run is not None else 0
-                except Exception:
-                    return 0
-
-            for bp in sorted(paths, key=_run_order):
-                subj = getattr(bp, "subject", None)
-                if subj is None:
-                    continue
-                if subj not in chosen:
-                    chosen[subj] = bp
-            if chosen:
-                paths = list(chosen.values())
-
-        records: list[dict] = []
-        seen_files: set[str] = set()
-
-        for bids_path in paths:
+        for bids_path in matched_paths:
             fpath = str(Path(bids_path.fpath).resolve())
-            if fpath in seen_files:
+            if fpath in seen_abs_paths:
                 continue
-            seen_files.add(fpath)
+            seen_abs_paths.add(fpath)
 
             # Build bidspath as dataset_id / relative_path_from_dataset_root (POSIX)
             rel_from_root = (
@@ -975,14 +954,14 @@ class EEGDashDataset(BaseConcatDataset):
                 # minimal fields to satisfy BaseDataset from eegdash
                 "bidsdependencies": [],  # not needed to just run.
                 "modality": "eeg",
-                # this information is from eegdash schema but not available locally
-                "sampling_frequency": 1.0,
-                "nchans": 1,
-                "ntimes": 1,
+                # prefer values sourced from BIDS metadata when available
+                "sampling_frequency": None,
+                "nchans": None,
+                "ntimes": None,
             }
-            records.append(rec)
+            records_out.append(rec)
 
-        return records
+        return records_out
 
     def _find_key_in_nested_dict(self, data: Any, target_key: str) -> Any:
         """Recursively search for target_key in nested dicts/lists with normalized matching.

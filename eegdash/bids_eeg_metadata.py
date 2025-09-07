@@ -5,7 +5,6 @@ from typing import Any
 
 from .const import ALLOWED_QUERY_FIELDS
 from .const import config as data_config
-from .data_utils import EEGBIDSDataset
 
 logger = logging.getLogger("eegdash")
 
@@ -73,7 +72,7 @@ def build_query_from_kwargs(**kwargs) -> dict[str, Any]:
     return query
 
 
-def _get_raw_extensions(bids_file: str, bids_dataset: EEGBIDSDataset) -> list[str]:
+def _get_raw_extensions(bids_file: str, bids_dataset) -> list[str]:
     """Helper to find paths to additional "sidecar" files that may be associated
     with a given main data file in a BIDS dataset; paths are returned as relative to
     the parent dataset path.
@@ -95,9 +94,7 @@ def _get_raw_extensions(bids_file: str, bids_dataset: EEGBIDSDataset) -> list[st
     ]
 
 
-def load_eeg_attrs_from_bids_file(
-    bids_dataset: EEGBIDSDataset, bids_file: str
-) -> dict[str, Any]:
+def load_eeg_attrs_from_bids_file(bids_dataset, bids_file: str) -> dict[str, Any]:
     """Build the metadata record for a given BIDS file (single recording) in a BIDS dataset.
 
     Attributes are at least the ones defined in data_config attributes (set to None if missing),

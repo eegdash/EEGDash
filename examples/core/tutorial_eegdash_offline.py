@@ -121,7 +121,6 @@ print("shapes equal:", raw_online.get_data().shape == raw_offline.get_data().sha
 #
 # If you have network access, you can uncomment the block below to download and
 # compare shapes.
-
 description_online = ds_online.description
 description_offline = ds_offline.description
 print(description_offline)

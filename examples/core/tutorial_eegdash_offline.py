@@ -24,10 +24,6 @@ task = "RestingState"
 cache_dir = Path(platformdirs.user_cache_dir("EEGDash"))
 cache_dir.mkdir(parents=True, exist_ok=True)
 
-# Bucket string used to hint cache suffix ("-bdf-mini") for offline matching
-challenge_bucket = f"s3://nmdatasets/NeurIPS25/{release}_mini_L100_bdf"
-
-
 ######################################################################
 # Step 1: Populate the local cache (Online)
 # -----------------------------------------
@@ -49,10 +45,6 @@ from joblib import Parallel, delayed
 
 _ = Parallel(n_jobs=-1)(delayed(lambda d: d.raw)(d) for d in ds_online.datasets)
 
-# After this completes, the dataset will be available offline under:
-offline_root = cache_dir / f"{dataset_id}-bdf-mini"
-print(f"Local dataset folder exists: {offline_root.exists()}\n{offline_root}")
-
 
 ######################################################################
 # Step 2: Basic Offline Usage
@@ -61,13 +53,17 @@ print(f"Local dataset folder exists: {offline_root.exists()}\n{offline_root}")
 # internet connection. The key is to instantiate your dataset object with the
 # ``download=False`` flag. This tells EEGDash to look for data in the
 # ``cache_dir`` instead of trying to connect to the database or S3.
+
+
+# Here we check that the local cache folder exists
+offline_root = cache_dir / f"{dataset_id}-bdf-mini"
+print(f"Local dataset folder exists: {offline_root.exists()}\n{offline_root}")
+
 ds_offline = EEGChallengeDataset(
     release=release,
     cache_dir=cache_dir,
     task=task,
     download=False,
-    # Hint for cache subfolder suffixing ("-bdf-mini")
-    s3_bucket=challenge_bucket,
 )
 
 print(f"Found {len(ds_offline.datasets)} recording(s) offline.")
@@ -88,8 +84,6 @@ ds_offline_sub = EEGChallengeDataset(
     release=release,
     download=False,
     subject="NDARAB793GL3",
-    # pass a bucket string to imply the "-bdf-mini" cache suffix
-    s3_bucket=challenge_bucket,
 )
 
 print(f"Filtered by subject=NDARAB793GL3: {len(ds_offline_sub.datasets)} recording(s).")

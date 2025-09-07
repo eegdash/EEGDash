@@ -227,10 +227,10 @@ def merge_participants_fields(
 
     # Normalize participants keys and keep first non-None value per normalized key
     norm_map: dict[str, Any] = {}
-    for pk, pv in participants_row.items():
-        nk = normalize_key(pk)
-        if nk not in norm_map and pv is not None:
-            norm_map[nk] = pv
+    for part_key, part_value in participants_row.items():
+        norm_key = normalize_key(part_key)
+        if norm_key not in norm_map and part_value is not None:
+            norm_map[norm_key] = part_value
 
     # Ensure description_fields is a list for matching
     requested = list(description_fields or [])
@@ -239,16 +239,16 @@ def merge_participants_fields(
     for key in requested:
         if key in description:
             continue
-        nk = normalize_key(key)
-        if nk in norm_map:
-            description[key] = norm_map[nk]
+        requested_norm_key = normalize_key(key)
+        if requested_norm_key in norm_map:
+            description[key] = norm_map[requested_norm_key]
 
     # 2) Add remaining participants columns generically under normalized names,
     #    unless a requested field already captured them
     requested_norm = {normalize_key(k) for k in requested}
-    for nk, pv in norm_map.items():
-        if nk in requested_norm:
+    for norm_key, part_value in norm_map.items():
+        if norm_key in requested_norm:
             continue
-        if nk not in description:
-            description[nk] = pv
+        if norm_key not in description:
+            description[norm_key] = part_value
     return description

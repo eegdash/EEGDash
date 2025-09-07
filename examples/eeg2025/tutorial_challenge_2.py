@@ -56,17 +56,19 @@ Challenge 2: Predicting the p-factor from EEG
 # The entire decoding community will only go further when we stop solving the same problems over and over again, and start working together.
 
 # %% [markdown]
-# ----
-# | The tutorial assumes some prior knowledge of deep learning concepts and EEG concepts:|
-# | --- |
-# |* Standard neural network architectures, e.g., convolutional neural networks|
-# |* Optimization by batch gradient descent and backpropagation|
-# |* Overfitting, early stopping, regularisation |
-# |* Some knowledge of pytorch and, optionally, of the pytorch Lightning framework|
-# |* That you know what EEG is |
-# |* That you have basic familiarity with EEG preprocessing |
-# |* Like and support open-source :) |
-# ----
+# ::
+#
+#     ----
+#     | The tutorial assumes some prior knowledge of deep learning concepts and EEG concepts:|
+#     | --- |
+#     |* Standard neural network architectures, e.g., convolutional neural networks|
+#     |* Optimization by batch gradient descent and backpropagation|
+#     |* Overfitting, early stopping, regularisation |
+#     |* Some knowledge of pytorch |
+#     |* That you know what EEG is |
+#     |* That you have basic familiarity with EEG preprocessing |
+#     |* Like and support open-source :) |
+#     ----
 
 ######################################################################
 # Install dependencies on colab

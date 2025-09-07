@@ -895,13 +895,13 @@ class EEGDashDataset(BaseConcatDataset):
                 continue
             seen_files.add(fpath)
 
-            # Build bidspath as dataset_id / relative_path_from_dataset_root
+            # Build bidspath as dataset_id / relative_path_from_dataset_root (POSIX)
             rel_from_root = (
                 Path(bids_path.fpath)
                 .resolve()
                 .relative_to(Path(bids_path.root).resolve())
             )
-            bidspath = str(Path(dataset_id) / rel_from_root)
+            bidspath = f"{dataset_id}/{rel_from_root.as_posix()}"
 
             rec = {
                 "data_name": f"{dataset_id}_{Path(bids_path.fpath).name}",

@@ -339,11 +339,16 @@ class EEGDashBaseDataset(BaseDataset):
     def __len__(self) -> int:
         """Return the number of samples in the dataset."""
         if self._raw is None:
-            # FIXME: this is a bit strange and should definitely not change as a side effect
-            #  of accessing the data (which it will, since ntimes is the actual length but rounded down)
-            return int(self.record["ntimes"] * self.record["sampling_frequency"])
-        else:
-            return len(self._raw)
+            if (
+                self.record["ntimes"] is None
+                or self.record["sampling_frequency"] is None
+            ):
+                self._ensure_raw()
+            else:
+                # FIXME: this is a bit strange and should definitely not change as a side effect
+                #  of accessing the data (which it will, since ntimes is the actual length but rounded down)
+                return int(self.record["ntimes"] * self.record["sampling_frequency"])
+        return len(self._raw)
 
     @property
     def raw(self):

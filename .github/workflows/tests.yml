@@ -31,10 +31,14 @@ jobs:
     # so if you download a new mne dataset in the code, best to manually increment the key below
     - name: Create/Restore EEGDash Cache (workspace)
       id: cache-mne_data
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
-        path: ${{ github.workspace }}/.eegdash_cache
-        key: ${{ runner.os }}-v3
+        path: ${{ env.EEGDASH_CACHE_DIR }}
+        # Use a stable key so caches can be reused across runs.
+        # Keep in sync with docs workflow; bump suffix to invalidate.
+        key: ${{ runner.os }}-data-v1
+        restore-keys: |
+          ${{ runner.os }}-data-
 
     - name: Install uv and set the python version
       uses: astral-sh/setup-uv@v5

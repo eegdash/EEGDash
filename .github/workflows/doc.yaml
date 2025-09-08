@@ -48,9 +48,11 @@ jobs:
         with:
           path: |
             ${{ env.EEGDASH_CACHE_DIR }}
-          key: ${{ runner.os }}-data-${{ github.run_id }}
+          # Use a stable key so caches can be reused across runs.
+          # Bump the suffix (v1 -> v2) to invalidate when needed.
+          key: ${{ runner.os }}-data-v1
           restore-keys: |
-            ${{ runner.os }}-data
+            ${{ runner.os }}-data-
 
       - name: Create Docs
         run: |

@@ -3,7 +3,6 @@ import logging
 import mne
 import numpy as np
 import pandas as pd
-
 from mne_bids import get_bids_path_from_fname
 
 from braindecode.datasets.base import BaseConcatDataset

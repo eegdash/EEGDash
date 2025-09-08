@@ -61,4 +61,5 @@ repos:
         args:
         - --profile=black
         - --filter-files
-        exclude: ^\.gitignore
+        # Ignore tutorials (examples/) and the .gitignore sentinel
+        exclude: ^(examples/|\.gitignore)

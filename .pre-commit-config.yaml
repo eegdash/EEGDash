@@ -57,4 +57,9 @@ repos:
     rev: 6.0.1
     hooks:
     -   id: isort
-        exclude: ^\.gitignore
+        name: isort (python)
+        args:
+        - --profile=black
+        - --filter-files
+        # Ignore tutorials (examples/) and the .gitignore sentinel
+        exclude: ^(examples/|\.gitignore)

@@ -23,6 +23,8 @@ from mne_bids import BIDSPath
 
 from braindecode.datasets import BaseDataset
 
+from .paths import get_default_cache_dir
+
 logger = logging.getLogger("eegdash")
 
 
@@ -410,7 +412,7 @@ class EEGDashBaseRaw(BaseRaw):
         metadata: dict[str, Any],
         preload: bool = False,
         *,
-        cache_dir: str = "~/eegdash_cache",
+        cache_dir: str | None = None,
         bids_dependencies: list[str] = [],
         verbose: Any = None,
     ):
@@ -426,8 +428,9 @@ class EEGDashBaseRaw(BaseRaw):
                 chtype = "eog"
             ch_types.append(chtype)
         info = mne.create_info(ch_names=ch_names, sfreq=sfreq, ch_types=ch_types)
+
         self.s3file = self._get_s3path(input_fname)
-        self.cache_dir = Path(cache_dir)
+        self.cache_dir = Path(cache_dir) if cache_dir else get_default_cache_dir()
         self.filecache = self.cache_dir / input_fname
         self.bids_dependencies = bids_dependencies
 

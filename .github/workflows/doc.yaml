@@ -16,6 +16,10 @@ permissions:
 jobs:
   docs:
     runs-on: ${{ matrix.os }}
+    env:
+      EEGDASH_CACHE_DIR: ${{ github.workspace }}/.eegdash_cache
+      MNE_DATA: ${{ github.workspace }}/.eegdash_cache
+      NILEARN_DATA: ${{ github.workspace }}/.nilearn_data
     strategy:
       fail-fast: false
       matrix:
@@ -39,13 +43,13 @@ jobs:
           . .venv/bin/activate
           echo PATH=$PATH >> $GITHUB_ENV
 
-      - name: Create/Restore Data Caches mne and Nilearn
+      - name: Create/Restore Data Caches (workspace)
         id: cache-data
         uses: actions/cache@v4
         with:
           path: |
-            ~/mne_data
-            ~/nilearn_data
+            ${{ env.EEGDASH_CACHE_DIR }}
+            ${{ env.NILEARN_DATA }}
           key: ${{ runner.os }}-data-${{ github.run_id }}
           restore-keys: |
             ${{ runner.os }}-data

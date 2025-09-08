@@ -441,6 +441,10 @@
 <li class="toctree-l1"><a class="reference internal" href="tutorial_eoec.html">Eyes Open vs. Closed Classification</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorial_feature_extractor_open_close_eye.html">EEGDash Feature Extractor</a></li>
 </ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../eeg2025/tutorial_challenge_1.html">Challenge 1: Cross-Task Transfer Learning!</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../eeg2025/tutorial_challenge_2.html">Challenge 2: Predicting the p-factor from EEG</a></li>
+</ul>
 </div>
 </nav></div>
     </div>
@@ -526,25 +530,53 @@ on disk.</p>
 <span class="c1"># Choose a cache directory. This should be on a fast local filesystem.</span>
 <span class="n">cache_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">platformdirs</span><span class="o">.</span><span class="n">user_cache_dir</span><span class="p">(</span><span class="s2">&quot;EEGDash&quot;</span><span class="p">))</span>
 <span class="n">cache_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-</pre></div>
-</div>
-<section id="step-1-populate-the-local-cache-online">
-<h2>Step 1: Populate the local cache (Online)<a class="headerlink" href="#step-1-populate-the-local-cache-online" title="Link to this heading">#</a></h2>
-<p>This block downloads the dataset from S3 to your local cache directory.
-Run this part on a machine with internet access. If the dataset is already
-on your disk at the specified <code class="docutils literal notranslate"><span class="pre">cache_dir</span></code>, you can comment out or skip
-this section.</p>
-<p>To keep this example self-contained, we prefetch the data here.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="../../../api/eegdash.html#eegdash.EEGChallengeDataset" title="eegdash.EEGChallengeDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ds_online</span></a> <span class="o">=</span> <a href="../../../api/eegdash.html#eegdash.EEGChallengeDataset" title="eegdash.EEGChallengeDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class"><span class="n">EEGChallengeDataset</span></a><span class="p">(</span>
+
+<span class="c1"># ######################################################################</span>
+<span class="c1"># Step 1: Populate the local cache (Online)</span>
+<span class="c1"># -----------------------------------------</span>
+<span class="c1"># This block downloads the dataset from S3 to your local cache directory.</span>
+<span class="c1"># Run this part on a machine with internet access. If the dataset is already</span>
+<span class="c1"># on your disk at the specified ``cache_dir``, you can comment out or skip</span>
+<span class="c1"># this section.</span>
+<span class="c1">#</span>
+<span class="c1"># To keep this example self-contained, we prefetch the data here.</span>
+
+<a href="../../../api/eegdash.html#eegdash.EEGChallengeDataset" title="eegdash.EEGChallengeDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ds_online</span></a> <span class="o">=</span> <a href="../../../api/eegdash.html#eegdash.EEGChallengeDataset" title="eegdash.EEGChallengeDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class"><span class="n">EEGChallengeDataset</span></a><span class="p">(</span>
     <span class="n">release</span><span class="o">=</span><span class="n">release</span><span class="p">,</span>
     <span class="n">cache_dir</span><span class="o">=</span><span class="n">cache_dir</span><span class="p">,</span>
     <span class="n">task</span><span class="o">=</span><span class="n">task</span><span class="p">,</span>
     <span class="n">mini</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
 <span class="p">)</span>
+
 <span class="c1"># Optional prefetch of all recordings (downloads everything to cache).</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">joblib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Parallel</span><span class="p">,</span> <span class="n">delayed</span>
 
 <span class="n">_</span> <span class="o">=</span> <span class="n">Parallel</span><span class="p">(</span><span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">)(</span><span class="n">delayed</span><span class="p">(</span><span class="k">lambda</span> <span class="n">d</span><span class="p">:</span> <span class="n">d</span><span class="o">.</span><span class="n">raw</span><span class="p">)(</span><span class="n">d</span><span class="p">)</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <a href="../../../api/eegdash.html#eegdash.EEGChallengeDataset" title="eegdash.EEGChallengeDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ds_online</span></a><span class="o">.</span><span class="n">datasets</span><span class="p">)</span>
+
+
+<span class="c1"># ######################################################################</span>
+<span class="c1"># Step 2: Basic Offline Usage</span>
+<span class="c1"># ---------------------------</span>
+<span class="c1"># Once the data is cached locally, you can interact with it without needing an</span>
+<span class="c1"># internet connection. The key is to instantiate your dataset object with the</span>
+<span class="c1"># ``download=False`` flag. This tells EEGDash to look for data in the</span>
+<span class="c1"># ``cache_dir`` instead of trying to connect to the database or S3.</span>
+
+
+<span class="c1"># Here we check that the local cache folder exists</span>
+<span class="n">offline_root</span> <span class="o">=</span> <span class="n">cache_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">dataset_id</span><span class="si">}</span><span class="s2">-bdf-mini&quot;</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Local dataset folder exists: </span><span class="si">{</span><span class="n">offline_root</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span><span class="si">}</span><span class="se">\n</span><span class="si">{</span><span class="n">offline_root</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<a href="../../../api/eegdash.html#eegdash.EEGChallengeDataset" title="eegdash.EEGChallengeDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ds_offline</span></a> <span class="o">=</span> <a href="../../../api/eegdash.html#eegdash.EEGChallengeDataset" title="eegdash.EEGChallengeDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class"><span class="n">EEGChallengeDataset</span></a><span class="p">(</span>
+    <span class="n">release</span><span class="o">=</span><span class="n">release</span><span class="p">,</span>
+    <span class="n">cache_dir</span><span class="o">=</span><span class="n">cache_dir</span><span class="p">,</span>
+    <span class="n">task</span><span class="o">=</span><span class="n">task</span><span class="p">,</span>
+    <span class="n">download</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Found </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><a href="../../../api/eegdash.html#eegdash.EEGChallengeDataset" title="eegdash.EEGChallengeDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ds_offline</span></a><span class="o">.</span><span class="n">datasets</span><span class="p">)</span><span class="si">}</span><span class="s2"> recording(s) offline.&quot;</span><span class="p">)</span>
+<span class="k">if</span> <a href="../../../api/eegdash.html#eegdash.EEGChallengeDataset" title="eegdash.EEGChallengeDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ds_offline</span></a><span class="o">.</span><span class="n">datasets</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;First record bidspath:&quot;</span><span class="p">,</span> <a href="../../../api/eegdash.html#eegdash.EEGChallengeDataset" title="eegdash.EEGChallengeDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ds_offline</span></a><span class="o">.</span><span class="n">datasets</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">record</span><span class="p">[</span><span class="s2">&quot;bidspath&quot;</span><span class="p">])</span>
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/home/runner/work/EEGDash/EEGDash/eegdash/dataset/dataset.py:126: UserWarning:
@@ -563,32 +595,7 @@ If you are participating in the competition, always use `EEGChallengeDataset` to
 
 
   warn(
-</pre></div>
-</div>
-</section>
-<section id="step-2-basic-offline-usage">
-<h2>Step 2: Basic Offline Usage<a class="headerlink" href="#step-2-basic-offline-usage" title="Link to this heading">#</a></h2>
-<p>Once the data is cached locally, you can interact with it without needing an
-internet connection. The key is to instantiate your dataset object with the
-<code class="docutils literal notranslate"><span class="pre">download=False</span></code> flag. This tells EEGDash to look for data in the
-<code class="docutils literal notranslate"><span class="pre">cache_dir</span></code> instead of trying to connect to the database or S3.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Here we check that the local cache folder exists</span>
-<span class="n">offline_root</span> <span class="o">=</span> <span class="n">cache_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">dataset_id</span><span class="si">}</span><span class="s2">-bdf-mini&quot;</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Local dataset folder exists: </span><span class="si">{</span><span class="n">offline_root</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span><span class="si">}</span><span class="se">\n</span><span class="si">{</span><span class="n">offline_root</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-
-<a href="../../../api/eegdash.html#eegdash.EEGChallengeDataset" title="eegdash.EEGChallengeDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ds_offline</span></a> <span class="o">=</span> <a href="../../../api/eegdash.html#eegdash.EEGChallengeDataset" title="eegdash.EEGChallengeDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class"><span class="n">EEGChallengeDataset</span></a><span class="p">(</span>
-    <span class="n">release</span><span class="o">=</span><span class="n">release</span><span class="p">,</span>
-    <span class="n">cache_dir</span><span class="o">=</span><span class="n">cache_dir</span><span class="p">,</span>
-    <span class="n">task</span><span class="o">=</span><span class="n">task</span><span class="p">,</span>
-    <span class="n">download</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-<span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Found </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><a href="../../../api/eegdash.html#eegdash.EEGChallengeDataset" title="eegdash.EEGChallengeDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ds_offline</span></a><span class="o">.</span><span class="n">datasets</span><span class="p">)</span><span class="si">}</span><span class="s2"> recording(s) offline.&quot;</span><span class="p">)</span>
-<span class="k">if</span> <a href="../../../api/eegdash.html#eegdash.EEGChallengeDataset" title="eegdash.EEGChallengeDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ds_offline</span></a><span class="o">.</span><span class="n">datasets</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;First record bidspath:&quot;</span><span class="p">,</span> <a href="../../../api/eegdash.html#eegdash.EEGChallengeDataset" title="eegdash.EEGChallengeDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ds_offline</span></a><span class="o">.</span><span class="n">datasets</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">record</span><span class="p">[</span><span class="s2">&quot;bidspath&quot;</span><span class="p">])</span>
-</pre></div>
-</div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Local dataset folder exists: True
+Local dataset folder exists: True
 /home/runner/.cache/EEGDash/ds005506-bdf-mini
 /home/runner/work/EEGDash/EEGDash/eegdash/dataset/dataset.py:126: UserWarning:
 
@@ -606,16 +613,18 @@ If you are participating in the competition, always use `EEGChallengeDataset` to
 
 
   warn(
-Found 40 recording(s) offline.
+Found 20 recording(s) offline.
 First record bidspath: ds005506/sub-NDARAB793GL3/eeg/sub-NDARAB793GL3_task-RestingState_eeg.bdf
 </pre></div>
 </div>
-<blockquote>
-<div><p>Even without a database connection, you can still filter your dataset by
+<section id="id1">
+<h2>%%<a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
+<section id="step-3-filtering-entities-offline">
+<h3>Step 3: Filtering Entities Offline<a class="headerlink" href="#step-3-filtering-entities-offline" title="Link to this heading">#</a></h3>
+<p>Even without a database connection, you can still filter your dataset by
 BIDS entities like subject, session, or task. When <code class="docutils literal notranslate"><span class="pre">download=False</span></code>, EEGDash
 uses the BIDS directory structure and filenames to apply these filters. This
 example shows how to load data for a specific subject from the local cache.</p>
-</div></blockquote>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="../../../api/eegdash.html#eegdash.EEGChallengeDataset" title="eegdash.EEGChallengeDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ds_offline_sub</span></a> <span class="o">=</span> <a href="../../../api/eegdash.html#eegdash.EEGChallengeDataset" title="eegdash.EEGChallengeDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class"><span class="n">EEGChallengeDataset</span></a><span class="p">(</span>
     <span class="n">cache_dir</span><span class="o">=</span><span class="n">cache_dir</span><span class="p">,</span>
     <span class="n">release</span><span class="o">=</span><span class="n">release</span><span class="p">,</span>
@@ -631,6 +640,47 @@ example shows how to load data for a specific subject from the local cache.</p>
         <span class="n">rec</span> <span class="o">=</span> <a href="../../../api/eegdash.data_utils.html#eegdash.data_utils.EEGDashBaseDataset" title="eegdash.data_utils.EEGDashBaseDataset" class="sphx-glr-backref-module-eegdash-data_utils sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">base_ds</span></a><span class="o">.</span><span class="n">record</span>
         <span class="n">summary</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">=</span><span class="si">{</span><span class="n">rec</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">k</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">idx</span><span class="si">:</span><span class="s2">03d</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">summary</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+
+<span class="c1"># ######################################################################</span>
+<span class="c1"># Step 4: Comparing Online vs. Offline Data</span>
+<span class="c1"># -----------------------------------------</span>
+<span class="c1"># As a sanity check, you can verify that the data loaded from your local cache</span>
+<span class="c1"># is identical to the data fetched from the online sources. This section</span>
+<span class="c1"># compares the shape of the raw data from the online and offline datasets to</span>
+<span class="c1"># ensure they match. This is a good way to confirm your local cache is complete</span>
+<span class="c1"># and correct.</span>
+<span class="c1">#</span>
+<span class="c1"># If you have network access, you can uncomment the block below to download and</span>
+<span class="c1"># compare shapes.</span>
+
+<span class="n">raw_online</span> <span class="o">=</span> <a href="../../../api/eegdash.html#eegdash.EEGChallengeDataset" title="eegdash.EEGChallengeDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ds_online</span></a><span class="o">.</span><span class="n">datasets</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">raw</span>
+<span class="n">raw_offline</span> <span class="o">=</span> <a href="../../../api/eegdash.html#eegdash.EEGChallengeDataset" title="eegdash.EEGChallengeDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ds_offline</span></a><span class="o">.</span><span class="n">datasets</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">raw</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;online shape:&quot;</span><span class="p">,</span> <span class="n">raw_online</span><span class="o">.</span><span class="n">get_data</span><span class="p">()</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;offline shape:&quot;</span><span class="p">,</span> <span class="n">raw_offline</span><span class="o">.</span><span class="n">get_data</span><span class="p">()</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;shapes equal:&quot;</span><span class="p">,</span> <span class="n">raw_online</span><span class="o">.</span><span class="n">get_data</span><span class="p">()</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="n">raw_offline</span><span class="o">.</span><span class="n">get_data</span><span class="p">()</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+<span class="c1"># ######################################################################</span>
+<span class="c1"># Step 4.1: Comparing Descriptions, Online vs. Offline Data</span>
+<span class="c1"># ---------------------------------------------------------</span>
+<span class="c1">#</span>
+<span class="c1"># If you have network access, you can uncomment the block below to download and</span>
+<span class="c1"># compare shapes.</span>
+<span class="n">description_online</span> <span class="o">=</span> <a href="../../../api/eegdash.html#eegdash.EEGChallengeDataset" title="eegdash.EEGChallengeDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ds_online</span></a><span class="o">.</span><span class="n">description</span>
+<span class="n">description_offline</span> <span class="o">=</span> <a href="../../../api/eegdash.html#eegdash.EEGChallengeDataset" title="eegdash.EEGChallengeDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ds_offline</span></a><span class="o">.</span><span class="n">description</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">description_offline</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">description_online</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Online description shape:&quot;</span><span class="p">,</span> <span class="n">description_online</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Offline description shape:&quot;</span><span class="p">,</span> <span class="n">description_offline</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Descriptions equal:&quot;</span><span class="p">,</span> <span class="n">description_online</span><span class="o">.</span><span class="n">equals</span><span class="p">(</span><span class="n">description_offline</span><span class="p">))</span>
+
+<span class="c1"># ######################################################################</span>
+<span class="c1"># Notes and troubleshooting</span>
+<span class="c1"># -------------------------</span>
+<span class="c1"># - Working offline selects recordings by parsing BIDS filenames and directory</span>
+<span class="c1">#   structure. Some DB-only fields are unavailable; entity filters (subject,</span>
+<span class="c1">#   session, task, run) usually suffice.</span>
+<span class="c1"># - If you encounter issues, please open a GitHub issue so we can discuss.</span>
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/home/runner/work/EEGDash/EEGDash/eegdash/dataset/dataset.py:126: UserWarning:
@@ -649,45 +699,65 @@ If you are participating in the competition, always use `EEGChallengeDataset` to
 
 
   warn(
-Filtered by subject=NDARAB793GL3: 2 recording(s).
+Filtered by subject=NDARAB793GL3: 1 recording(s).
 Records (dataset, subject, task, run):
   001: dataset=ds005506, subject=NDARAB793GL3, task=RestingState, run=None
-  002: dataset=ds005506, subject=NDARAB793GL3, task=RestingState, run=None
-</pre></div>
-</div>
-</section>
-<section id="step-4-comparing-online-vs-offline-data">
-<h2>Step 4: Comparing Online vs. Offline Data<a class="headerlink" href="#step-4-comparing-online-vs-offline-data" title="Link to this heading">#</a></h2>
-<p>As a sanity check, you can verify that the data loaded from your local cache
-is identical to the data fetched from the online sources. This section
-compares the shape of the raw data from the online and offline datasets to
-ensure they match. This is a good way to confirm your local cache is complete
-and correct.</p>
-<p>If you have network access, you can uncomment the block below to download and
-compare shapes.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">raw_online</span> <span class="o">=</span> <a href="../../../api/eegdash.html#eegdash.EEGChallengeDataset" title="eegdash.EEGChallengeDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ds_online</span></a><span class="o">.</span><span class="n">datasets</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">raw</span>
-<span class="n">raw_offline</span> <span class="o">=</span> <a href="../../../api/eegdash.html#eegdash.EEGChallengeDataset" title="eegdash.EEGChallengeDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ds_offline</span></a><span class="o">.</span><span class="n">datasets</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">raw</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;online shape:&quot;</span><span class="p">,</span> <span class="n">raw_online</span><span class="o">.</span><span class="n">get_data</span><span class="p">()</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;offline shape:&quot;</span><span class="p">,</span> <span class="n">raw_offline</span><span class="o">.</span><span class="n">get_data</span><span class="p">()</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;shapes equal:&quot;</span><span class="p">,</span> <span class="n">raw_online</span><span class="o">.</span><span class="n">get_data</span><span class="p">()</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="n">raw_offline</span><span class="o">.</span><span class="n">get_data</span><span class="p">()</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
-</pre></div>
-</div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>online shape: (129, 40800)
+online shape: (129, 40800)
 offline shape: (129, 40800)
 shapes equal: True
+         subject          task  ...  seqlearning8target symbolsearch
+0   NDARAB793GL3  RestingState  ...           available    available
+1   NDARAM675UR8  RestingState  ...         unavailable    available
+2   NDARBM839WR5  RestingState  ...           available    available
+3   NDARBU730PN8  RestingState  ...           available    available
+4   NDARCT974NAJ  RestingState  ...           available    available
+5   NDARCW933FD5  RestingState  ...           available    available
+6   NDARCZ770BRG  RestingState  ...           available    available
+7   NDARDW741HCF  RestingState  ...         unavailable    available
+8   NDARDZ058NZN  RestingState  ...         unavailable    available
+9   NDAREC377AU2  RestingState  ...           available    available
+10  NDAREM500WWH  RestingState  ...         unavailable    available
+11  NDAREV527ZRF  RestingState  ...           available    available
+12  NDAREV601CE7  RestingState  ...           available    available
+13  NDARFF070XHV  RestingState  ...           available    available
+14  NDARFR108JNB  RestingState  ...         unavailable    available
+15  NDARFT305CG1  RestingState  ...         unavailable    available
+16  NDARGA056TMW  RestingState  ...           available    available
+17  NDARGH775KF5  RestingState  ...           available    available
+18  NDARGJ878ZP4  RestingState  ...         unavailable    available
+19  NDARHA387FPM  RestingState  ...           available    available
+
+[20 rows x 25 columns]
+         subject          task  ...  seqlearning8target symbolsearch
+0   NDARAB793GL3  RestingState  ...           available    available
+1   NDARAM675UR8  RestingState  ...         unavailable    available
+2   NDARBM839WR5  RestingState  ...           available    available
+3   NDARBU730PN8  RestingState  ...           available    available
+4   NDARCT974NAJ  RestingState  ...           available    available
+5   NDARCW933FD5  RestingState  ...           available    available
+6   NDARCZ770BRG  RestingState  ...           available    available
+7   NDARDW741HCF  RestingState  ...         unavailable    available
+8   NDARDZ058NZN  RestingState  ...         unavailable    available
+9   NDAREC377AU2  RestingState  ...           available    available
+10  NDAREM500WWH  RestingState  ...         unavailable    available
+11  NDAREV527ZRF  RestingState  ...           available    available
+12  NDAREV601CE7  RestingState  ...           available    available
+13  NDARFF070XHV  RestingState  ...           available    available
+14  NDARFR108JNB  RestingState  ...         unavailable    available
+15  NDARFT305CG1  RestingState  ...         unavailable    available
+16  NDARGA056TMW  RestingState  ...           available    available
+17  NDARGH775KF5  RestingState  ...           available    available
+18  NDARGJ878ZP4  RestingState  ...         unavailable    available
+19  NDARHA387FPM  RestingState  ...           available    available
+
+[20 rows x 25 columns]
+Online description shape: (20, 25)
+Offline description shape: (20, 25)
+Descriptions equal: True
 </pre></div>
 </div>
-</section>
-<section id="notes-and-troubleshooting">
-<h2>Notes and troubleshooting<a class="headerlink" href="#notes-and-troubleshooting" title="Link to this heading">#</a></h2>
-<ul class="simple">
-<li><p>Working offline selects recordings by parsing BIDS filenames and directory
-structure. Some DB-only fields are unavailable; entity filters (subject,
-session, task, run) usually suffice.</p></li>
-<li><p>If you encounter issues, please open a GitHub issue so we can discuss.</p></li>
-</ul>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 40.622 seconds)</p>
-<p><strong>Estimated memory usage:</strong>  1064 MB</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (1 minutes 14.590 seconds)</p>
+<p><strong>Estimated memory usage:</strong>  1145 MB</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-generated-auto-examples-core-tutorial-eegdash-offline-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../../_downloads/9c3f6685782eda7736ccb2b49cd04723/tutorial_eegdash_offline.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">tutorial_eegdash_offline.ipynb</span></code></a></p>
@@ -700,6 +770,7 @@ session, task, run) usually suffice.</p></li>
 </div>
 </div>
 <p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+</section>
 </section>
 </section>
 
@@ -750,10 +821,10 @@ session, task, run) usually suffice.</p></li>
   </div>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-1-populate-the-local-cache-online">Step 1: Populate the local cache (Online)</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-2-basic-offline-usage">Step 2: Basic Offline Usage</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-4-comparing-online-vs-offline-data">Step 4: Comparing Online vs. Offline Data</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#notes-and-troubleshooting">Notes and troubleshooting</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">%%</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-3-filtering-entities-offline">Step 3: Filtering Entities Offline</a></li>
+</ul>
+</li>
 </ul>
   </nav></div>
 

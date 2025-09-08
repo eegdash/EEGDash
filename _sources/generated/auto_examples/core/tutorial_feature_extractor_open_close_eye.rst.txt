@@ -70,7 +70,7 @@ and eyes closed data.
 
  .. code-block:: none
 
-    /home/runner/work/EEGDash/EEGDash/eegdash/api.py:755: UserWarning: If you are not participating in the competition, you can ignore this warning!
+    /home/runner/work/EEGDash/EEGDash/eegdash/api.py:763: UserWarning: If you are not participating in the competition, you can ignore this warning!
 
     EEG 2025 Competition Data Notice:
     ---------------------------------
@@ -315,7 +315,7 @@ Features
 
  .. code-block:: none
 
-    Extracting features:   0%|          | 0/1 [00:00<?, ?it/s]    Extracting features: 100%|██████████| 1/1 [00:00<00:00,  1.22it/s]    Extracting features: 100%|██████████| 1/1 [00:00<00:00,  1.22it/s]
+    Extracting features:   0%|          | 0/1 [00:00<?, ?it/s]    Extracting features: 100%|██████████| 1/1 [00:00<00:00,  1.24it/s]    Extracting features: 100%|██████████| 1/1 [00:00<00:00,  1.24it/s]
 
 
 
@@ -2758,7 +2758,7 @@ accuracy across six epochs.
  .. code-block:: none
 
     [LightGBM] [Info] Number of positive: 28, number of negative: 28
-    [LightGBM] [Info] Auto-choosing col-wise multi-threading, the overhead of testing was 0.000316 seconds.
+    [LightGBM] [Info] Auto-choosing col-wise multi-threading, the overhead of testing was 0.000318 seconds.
     You can set `force_col_wise=true` to remove the overhead.
     [LightGBM] [Info] Total Bins 9205
     [LightGBM] [Info] Number of data points in the train set: 56, number of used features: 460
@@ -2921,9 +2921,9 @@ accuracy across six epochs.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 5.567 seconds)
+   **Total running time of the script:** (0 minutes 5.836 seconds)
 
-**Estimated memory usage:**  1333 MB
+**Estimated memory usage:**  1332 MB
 
 
 .. _sphx_glr_download_generated_auto_examples_core_tutorial_feature_extractor_open_close_eye.py:

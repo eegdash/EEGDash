@@ -96,6 +96,67 @@ Playing with eegdash!
    /generated/auto_examples/core/tutorial_eoec
    /generated/auto_examples/core/tutorial_feature_extractor_open_close_eye
 
+EEG 2025 Foundation Challenge 
+=============================
+
+1. Cross-Task Transfer Learning: Developing models that can effectively transfer knowledge from passive EEG tasks to active tasks
+2. Subject Invariant Representation: Creating robust representations that generalize across different subjects while predicting clinical factors
+
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbnails">
+
+.. thumbnail-parent-div-open
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Challenge 1: Cross-Task Transfer Learning!">
+
+.. only:: html
+
+  .. image:: /generated/auto_examples/eeg2025/images/thumb/sphx_glr_tutorial_challenge_1_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_generated_auto_examples_eeg2025_tutorial_challenge_1.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Challenge 1: Cross-Task Transfer Learning!</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Challenge 2: Predicting the p-factor from EEG">
+
+.. only:: html
+
+  .. image:: /generated/auto_examples/eeg2025/images/thumb/sphx_glr_tutorial_challenge_2_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_generated_auto_examples_eeg2025_tutorial_challenge_2.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Challenge 2: Predicting the p-factor from EEG</div>
+    </div>
+
+
+.. thumbnail-parent-div-close
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /generated/auto_examples/eeg2025/tutorial_challenge_1
+   /generated/auto_examples/eeg2025/tutorial_challenge_2
+
 
 .. only:: html
 

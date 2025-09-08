@@ -1,6 +1,6 @@
-"""===========================
+"""============================
 Working Offline with EEGDash
-===========================
+============================
 
 Many HPC clusters restrict or block network access. It's common to have
 dedicated queues for internet-enabled jobs that differ from GPU queues.
@@ -24,7 +24,7 @@ task = "RestingState"
 cache_dir = Path(platformdirs.user_cache_dir("EEGDash"))
 cache_dir.mkdir(parents=True, exist_ok=True)
 
-######################################################################
+# ######################################################################
 # Step 1: Populate the local cache (Online)
 # -----------------------------------------
 # This block downloads the dataset from S3 to your local cache directory.
@@ -40,13 +40,14 @@ ds_online = EEGChallengeDataset(
     task=task,
     mini=True,
 )
+
 # Optional prefetch of all recordings (downloads everything to cache).
 from joblib import Parallel, delayed
 
 _ = Parallel(n_jobs=-1)(delayed(lambda d: d.raw)(d) for d in ds_online.datasets)
 
 
-######################################################################
+# ######################################################################
 # Step 2: Basic Offline Usage
 # ---------------------------
 # Once the data is cached locally, you can interact with it without needing an
@@ -71,7 +72,8 @@ if ds_offline.datasets:
     print("First record bidspath:", ds_offline.datasets[0].record["bidspath"])
 
 # %%
-######################################################################
+# %%
+# ######################################################################
 # Step 3: Filtering Entities Offline
 # ----------------------------------
 # Even without a database connection, you can still filter your dataset by
@@ -96,7 +98,7 @@ if ds_offline_sub.datasets:
         print(f"  {idx:03d}: {summary}")
 
 
-######################################################################
+# ######################################################################
 # Step 4: Comparing Online vs. Offline Data
 # -----------------------------------------
 # As a sanity check, you can verify that the data loaded from your local cache
@@ -114,8 +116,21 @@ print("online shape:", raw_online.get_data().shape)
 print("offline shape:", raw_offline.get_data().shape)
 print("shapes equal:", raw_online.get_data().shape == raw_offline.get_data().shape)
 
+# ######################################################################
+# Step 4.1: Comparing Descriptions, Online vs. Offline Data
+# ---------------------------------------------------------
+#
+# If you have network access, you can uncomment the block below to download and
+# compare shapes.
+description_online = ds_online.description
+description_offline = ds_offline.description
+print(description_offline)
+print(description_online)
+print("Online description shape:", description_online.shape)
+print("Offline description shape:", description_offline.shape)
+print("Descriptions equal:", description_online.equals(description_offline))
 
-######################################################################
+# ######################################################################
 # Notes and troubleshooting
 # -------------------------
 # - Working offline selects recordings by parsing BIDS filenames and directory

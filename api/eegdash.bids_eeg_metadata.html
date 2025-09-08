@@ -547,7 +547,7 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="eegdash.bids_eeg_metadata.load_eeg_attrs_from_bids_file">
-<span class="sig-prename descclassname"><span class="pre">eegdash.bids_eeg_metadata.</span></span><span class="sig-name descname"><span class="pre">load_eeg_attrs_from_bids_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bids_dataset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="eegdash.data_utils.html#eegdash.data_utils.EEGBIDSDataset" title="eegdash.data_utils.EEGBIDSDataset"><span class="pre">EEGBIDSDataset</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">bids_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#eegdash.bids_eeg_metadata.load_eeg_attrs_from_bids_file" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">eegdash.bids_eeg_metadata.</span></span><span class="sig-name descname"><span class="pre">load_eeg_attrs_from_bids_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bids_dataset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bids_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#eegdash.bids_eeg_metadata.load_eeg_attrs_from_bids_file" title="Link to this definition">#</a></dt>
 <dd><p>Build the metadata record for a given BIDS file (single recording) in a BIDS dataset.</p>
 <p>Attributes are at least the ones defined in data_config attributes (set to None if missing),
 but are typically a superset, and include, among others, the paths to relevant
@@ -567,6 +567,43 @@ same format as the records stored in the database.</p>
 <dd class="field-odd"><p>dict</p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eegdash.bids_eeg_metadata.merge_participants_fields">
+<span class="sig-prename descclassname"><span class="pre">eegdash.bids_eeg_metadata.</span></span><span class="sig-name descname"><span class="pre">merge_participants_fields</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">participants_row</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description_fields</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#eegdash.bids_eeg_metadata.merge_participants_fields" title="Link to this definition">#</a></dt>
+<dd><p>Merge participants.tsv fields into a dataset description dictionary.</p>
+<ul class="simple">
+<li><p>Preserves existing entries in <code class="docutils literal notranslate"><span class="pre">description</span></code> (no overwrites).</p></li>
+<li><p>Fills requested <code class="docutils literal notranslate"><span class="pre">description_fields</span></code> first, preserving their original names.</p></li>
+<li><p>Adds all remaining participants columns generically using normalized keys
+unless a matching requested field already captured them.</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>description</strong> (<em>dict</em>) – Current description to be enriched in-place and returned.</p></li>
+<li><p><strong>participants_row</strong> (<em>dict</em><em> | </em><em>None</em>) – A mapping of participants.tsv columns for the current subject.</p></li>
+<li><p><strong>description_fields</strong> (<em>list</em><em>[</em><em>str</em><em>] </em><em>| </em><em>None</em>) – Optional list of requested description fields. When provided, matching is
+performed by normalized names; the original requested field names are kept.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The enriched description (same object as input for convenience).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eegdash.bids_eeg_metadata.normalize_key">
+<span class="sig-prename descclassname"><span class="pre">eegdash.bids_eeg_metadata.</span></span><span class="sig-name descname"><span class="pre">normalize_key</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#eegdash.bids_eeg_metadata.normalize_key" title="Link to this definition">#</a></dt>
+<dd><p>Normalize a metadata key for robust matching.</p>
+<p>Lowercase and replace non-alphanumeric characters with underscores, then strip
+leading/trailing underscores. This allows tolerant matching such as
+“p-factor” ≈ “p_factor” ≈ “P Factor”.</p>
 </dd></dl>
 
 </section>
@@ -620,6 +657,8 @@ same format as the records stored in the database.</p>
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.bids_eeg_metadata.build_query_from_kwargs"><code class="docutils literal notranslate"><span class="pre">build_query_from_kwargs()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.bids_eeg_metadata.load_eeg_attrs_from_bids_file"><code class="docutils literal notranslate"><span class="pre">load_eeg_attrs_from_bids_file()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.bids_eeg_metadata.merge_participants_fields"><code class="docutils literal notranslate"><span class="pre">merge_participants_fields()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.bids_eeg_metadata.normalize_key"><code class="docutils literal notranslate"><span class="pre">normalize_key()</span></code></a></li>
 </ul>
   </nav></div>
 

@@ -17,16 +17,16 @@
 
 .. _sphx_glr_generated_auto_examples_core_tutorial_eegdash_offline.py:
 
-===========================
+============================
 Working Offline with EEGDash
-===========================
+============================
 
 Many HPC clusters restrict or block network access. It's common to have
 dedicated queues for internet-enabled jobs that differ from GPU queues.
 This tutorial shows how to use EEGDash offline once a dataset is present
 on disk.
 
-.. GENERATED FROM PYTHON SOURCE LINES 10-27
+.. GENERATED FROM PYTHON SOURCE LINES 10-74
 
 .. code-block:: Python
 
@@ -47,28 +47,15 @@ on disk.
     cache_dir = Path(platformdirs.user_cache_dir("EEGDash"))
     cache_dir.mkdir(parents=True, exist_ok=True)
 
-
-
-
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 28-36
-
-Step 1: Populate the local cache (Online)
------------------------------------------
-This block downloads the dataset from S3 to your local cache directory.
-Run this part on a machine with internet access. If the dataset is already
-on your disk at the specified ``cache_dir``, you can comment out or skip
-this section.
-
-To keep this example self-contained, we prefetch the data here.
-
-.. GENERATED FROM PYTHON SOURCE LINES 36-49
-
-.. code-block:: Python
-
+    # ######################################################################
+    # Step 1: Populate the local cache (Online)
+    # -----------------------------------------
+    # This block downloads the dataset from S3 to your local cache directory.
+    # Run this part on a machine with internet access. If the dataset is already
+    # on your disk at the specified ``cache_dir``, you can comment out or skip
+    # this section.
+    #
+    # To keep this example self-contained, we prefetch the data here.
 
     ds_online = EEGChallengeDataset(
         release=release,
@@ -76,53 +63,20 @@ To keep this example self-contained, we prefetch the data here.
         task=task,
         mini=True,
     )
+
     # Optional prefetch of all recordings (downloads everything to cache).
     from joblib import Parallel, delayed
 
     _ = Parallel(n_jobs=-1)(delayed(lambda d: d.raw)(d) for d in ds_online.datasets)
 
 
-
-
-
-
-.. rst-class:: sphx-glr-script-out
-
- .. code-block:: none
-
-    /home/runner/work/EEGDash/EEGDash/eegdash/dataset/dataset.py:126: UserWarning: 
-
-    [EEGChallengeDataset] EEG 2025 Competition Data Notice:
-    -------------------------------------------------------
-    This object loads the HBN dataset that has been preprocessed for the EEG Challenge:
-      - Downsampled from 500Hz to 100Hz
-      - Bandpass filtered (0.5–50 Hz)
-
-    For full preprocessing details, see:
-      https://github.com/eeg2025/downsample-datasets
-
-    IMPORTANT: The data accessed via `EEGChallengeDataset` is NOT identical to what you get from `EEGDashDataset` directly.
-    If you are participating in the competition, always use `EEGChallengeDataset` to ensure consistency with the challenge data.
-
-
-      warn(
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 50-56
-
-Step 2: Basic Offline Usage
----------------------------
-Once the data is cached locally, you can interact with it without needing an
-internet connection. The key is to instantiate your dataset object with the
-``download=False`` flag. This tells EEGDash to look for data in the
-``cache_dir`` instead of trying to connect to the database or S3.
-
-.. GENERATED FROM PYTHON SOURCE LINES 56-73
-
-.. code-block:: Python
-
+    # ######################################################################
+    # Step 2: Basic Offline Usage
+    # ---------------------------
+    # Once the data is cached locally, you can interact with it without needing an
+    # internet connection. The key is to instantiate your dataset object with the
+    # ``download=False`` flag. This tells EEGDash to look for data in the
+    # ``cache_dir`` instead of trying to connect to the database or S3.
 
 
     # Here we check that the local cache folder exists
@@ -148,6 +102,22 @@ internet connection. The key is to instantiate your dataset object with the
 
  .. code-block:: none
 
+    /home/runner/work/EEGDash/EEGDash/eegdash/dataset/dataset.py:126: UserWarning: 
+
+    [EEGChallengeDataset] EEG 2025 Competition Data Notice:
+    -------------------------------------------------------
+    This object loads the HBN dataset that has been preprocessed for the EEG Challenge:
+      - Downsampled from 500Hz to 100Hz
+      - Bandpass filtered (0.5–50 Hz)
+
+    For full preprocessing details, see:
+      https://github.com/eeg2025/downsample-datasets
+
+    IMPORTANT: The data accessed via `EEGChallengeDataset` is NOT identical to what you get from `EEGDashDataset` directly.
+    If you are participating in the competition, always use `EEGChallengeDataset` to ensure consistency with the challenge data.
+
+
+      warn(
     Local dataset folder exists: True
     /home/runner/.cache/EEGDash/ds005506-bdf-mini
     /home/runner/work/EEGDash/EEGDash/eegdash/dataset/dataset.py:126: UserWarning: 
@@ -166,23 +136,24 @@ internet connection. The key is to instantiate your dataset object with the
 
 
       warn(
-    Found 40 recording(s) offline.
+    Found 20 recording(s) offline.
     First record bidspath: ds005506/sub-NDARAB793GL3/eeg/sub-NDARAB793GL3_task-RestingState_eeg.bdf
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 74-81
+.. GENERATED FROM PYTHON SOURCE LINES 75-83
 
-#####################################################################
- Step 3: Filtering Entities Offline
- ----------------------------------
- Even without a database connection, you can still filter your dataset by
- BIDS entities like subject, session, or task. When ``download=False``, EEGDash
- uses the BIDS directory structure and filenames to apply these filters. This
- example shows how to load data for a specific subject from the local cache.
+%%
+######################################################################
+Step 3: Filtering Entities Offline
+----------------------------------
+Even without a database connection, you can still filter your dataset by
+BIDS entities like subject, session, or task. When ``download=False``, EEGDash
+uses the BIDS directory structure and filenames to apply these filters. This
+example shows how to load data for a specific subject from the local cache.
 
-.. GENERATED FROM PYTHON SOURCE LINES 81-99
+.. GENERATED FROM PYTHON SOURCE LINES 83-140
 
 .. code-block:: Python
 
@@ -204,6 +175,45 @@ internet connection. The key is to instantiate your dataset object with the
             print(f"  {idx:03d}: {summary}")
 
 
+    # ######################################################################
+    # Step 4: Comparing Online vs. Offline Data
+    # -----------------------------------------
+    # As a sanity check, you can verify that the data loaded from your local cache
+    # is identical to the data fetched from the online sources. This section
+    # compares the shape of the raw data from the online and offline datasets to
+    # ensure they match. This is a good way to confirm your local cache is complete
+    # and correct.
+    #
+    # If you have network access, you can uncomment the block below to download and
+    # compare shapes.
+
+    raw_online = ds_online.datasets[0].raw
+    raw_offline = ds_offline.datasets[0].raw
+    print("online shape:", raw_online.get_data().shape)
+    print("offline shape:", raw_offline.get_data().shape)
+    print("shapes equal:", raw_online.get_data().shape == raw_offline.get_data().shape)
+
+    # ######################################################################
+    # Step 4.1: Comparing Descriptions, Online vs. Offline Data
+    # ---------------------------------------------------------
+    #
+    # If you have network access, you can uncomment the block below to download and
+    # compare shapes.
+    description_online = ds_online.description
+    description_offline = ds_offline.description
+    print(description_offline)
+    print(description_online)
+    print("Online description shape:", description_online.shape)
+    print("Offline description shape:", description_offline.shape)
+    print("Descriptions equal:", description_online.equals(description_offline))
+
+    # ######################################################################
+    # Notes and troubleshooting
+    # -------------------------
+    # - Working offline selects recordings by parsing BIDS filenames and directory
+    #   structure. Some DB-only fields are unavailable; entity filters (subject,
+    #   session, task, run) usually suffice.
+    # - If you encounter issues, please open a GitHub issue so we can discuss.
 
 
 
@@ -228,69 +238,71 @@ internet connection. The key is to instantiate your dataset object with the
 
 
       warn(
-    Filtered by subject=NDARAB793GL3: 2 recording(s).
+    Filtered by subject=NDARAB793GL3: 1 recording(s).
     Records (dataset, subject, task, run):
       001: dataset=ds005506, subject=NDARAB793GL3, task=RestingState, run=None
-      002: dataset=ds005506, subject=NDARAB793GL3, task=RestingState, run=None
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 100-110
-
-Step 4: Comparing Online vs. Offline Data
------------------------------------------
-As a sanity check, you can verify that the data loaded from your local cache
-is identical to the data fetched from the online sources. This section
-compares the shape of the raw data from the online and offline datasets to
-ensure they match. This is a good way to confirm your local cache is complete
-and correct.
-
-If you have network access, you can uncomment the block below to download and
-compare shapes.
-
-.. GENERATED FROM PYTHON SOURCE LINES 110-118
-
-.. code-block:: Python
-
-
-    raw_online = ds_online.datasets[0].raw
-    raw_offline = ds_offline.datasets[0].raw
-    print("online shape:", raw_online.get_data().shape)
-    print("offline shape:", raw_offline.get_data().shape)
-    print("shapes equal:", raw_online.get_data().shape == raw_offline.get_data().shape)
-
-
-
-
-
-
-.. rst-class:: sphx-glr-script-out
-
- .. code-block:: none
-
     online shape: (129, 40800)
     offline shape: (129, 40800)
     shapes equal: True
+             subject          task  ...  seqlearning8target symbolsearch
+    0   NDARAB793GL3  RestingState  ...           available    available
+    1   NDARAM675UR8  RestingState  ...         unavailable    available
+    2   NDARBM839WR5  RestingState  ...           available    available
+    3   NDARBU730PN8  RestingState  ...           available    available
+    4   NDARCT974NAJ  RestingState  ...           available    available
+    5   NDARCW933FD5  RestingState  ...           available    available
+    6   NDARCZ770BRG  RestingState  ...           available    available
+    7   NDARDW741HCF  RestingState  ...         unavailable    available
+    8   NDARDZ058NZN  RestingState  ...         unavailable    available
+    9   NDAREC377AU2  RestingState  ...           available    available
+    10  NDAREM500WWH  RestingState  ...         unavailable    available
+    11  NDAREV527ZRF  RestingState  ...           available    available
+    12  NDAREV601CE7  RestingState  ...           available    available
+    13  NDARFF070XHV  RestingState  ...           available    available
+    14  NDARFR108JNB  RestingState  ...         unavailable    available
+    15  NDARFT305CG1  RestingState  ...         unavailable    available
+    16  NDARGA056TMW  RestingState  ...           available    available
+    17  NDARGH775KF5  RestingState  ...           available    available
+    18  NDARGJ878ZP4  RestingState  ...         unavailable    available
+    19  NDARHA387FPM  RestingState  ...           available    available
+
+    [20 rows x 25 columns]
+             subject          task  ...  seqlearning8target symbolsearch
+    0   NDARAB793GL3  RestingState  ...           available    available
+    1   NDARAM675UR8  RestingState  ...         unavailable    available
+    2   NDARBM839WR5  RestingState  ...           available    available
+    3   NDARBU730PN8  RestingState  ...           available    available
+    4   NDARCT974NAJ  RestingState  ...           available    available
+    5   NDARCW933FD5  RestingState  ...           available    available
+    6   NDARCZ770BRG  RestingState  ...           available    available
+    7   NDARDW741HCF  RestingState  ...         unavailable    available
+    8   NDARDZ058NZN  RestingState  ...         unavailable    available
+    9   NDAREC377AU2  RestingState  ...           available    available
+    10  NDAREM500WWH  RestingState  ...         unavailable    available
+    11  NDAREV527ZRF  RestingState  ...           available    available
+    12  NDAREV601CE7  RestingState  ...           available    available
+    13  NDARFF070XHV  RestingState  ...           available    available
+    14  NDARFR108JNB  RestingState  ...         unavailable    available
+    15  NDARFT305CG1  RestingState  ...         unavailable    available
+    16  NDARGA056TMW  RestingState  ...           available    available
+    17  NDARGH775KF5  RestingState  ...           available    available
+    18  NDARGJ878ZP4  RestingState  ...         unavailable    available
+    19  NDARHA387FPM  RestingState  ...           available    available
+
+    [20 rows x 25 columns]
+    Online description shape: (20, 25)
+    Offline description shape: (20, 25)
+    Descriptions equal: True
 
 
 
-
-.. GENERATED FROM PYTHON SOURCE LINES 119-125
-
-Notes and troubleshooting
--------------------------
-- Working offline selects recordings by parsing BIDS filenames and directory
-  structure. Some DB-only fields are unavailable; entity filters (subject,
-  session, task, run) usually suffice.
-- If you encounter issues, please open a GitHub issue so we can discuss.
 
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 40.622 seconds)
+   **Total running time of the script:** (1 minutes 14.590 seconds)
 
-**Estimated memory usage:**  1064 MB
+**Estimated memory usage:**  1145 MB
 
 
 .. _sphx_glr_download_generated_auto_examples_core_tutorial_eegdash_offline.py:

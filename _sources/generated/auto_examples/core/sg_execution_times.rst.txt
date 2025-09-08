@@ -6,7 +6,7 @@
 
 Computation times
 =================
-**01:42.031** total execution time for 3 files **from generated/auto_examples/core**:
+**00:57.908** total execution time for 3 files **from generated/auto_examples/core**:
 
 .. container::
 
@@ -33,11 +33,11 @@ Computation times
      - Time
      - Mem (MB)
    * - :ref:`sphx_glr_generated_auto_examples_core_tutorial_eegdash_offline.py` (``tutorial_eegdash_offline.py``)
-     - 01:14.590
-     - 1145.3
+     - 00:44.006
+     - 1196.2
    * - :ref:`sphx_glr_generated_auto_examples_core_tutorial_eoec.py` (``tutorial_eoec.py``)
-     - 00:21.606
-     - 1253.2
+     - 00:08.455
+     - 1271.9
    * - :ref:`sphx_glr_generated_auto_examples_core_tutorial_feature_extractor_open_close_eye.py` (``tutorial_feature_extractor_open_close_eye.py``)
-     - 00:05.836
-     - 1332.3
+     - 00:05.448
+     - 1332.6

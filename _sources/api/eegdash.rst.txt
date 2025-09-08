@@ -26,4 +26,5 @@ Submodules
    eegdash.const
    eegdash.data_utils
    eegdash.mongodb
+   eegdash.paths
    eegdash.utils

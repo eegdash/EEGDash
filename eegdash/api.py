@@ -7,7 +7,6 @@ from urllib.parse import urlsplit
 
 import mne
 import numpy as np
-import platformdirs
 import xarray as xr
 from dotenv import load_dotenv
 from joblib import Parallel, delayed
@@ -34,6 +33,7 @@ from .data_utils import (
     EEGDashBaseDataset,
 )
 from .mongodb import MongoConnectionManager
+from .paths import get_default_cache_dir
 
 logger = logging.getLogger("eegdash")
 
@@ -717,7 +717,8 @@ class EEGDashDataset(BaseConcatDataset):
         self.n_jobs = n_jobs
         self.eeg_dash_instance = eeg_dash_instance or EEGDash()
 
-        self.cache_dir = Path(cache_dir or platformdirs.user_cache_dir("EEGDash"))
+        # Resolve a unified cache directory across code/tests/CI
+        self.cache_dir = Path(cache_dir or get_default_cache_dir())
 
         if not self.cache_dir.exists():
             warn(f"Cache directory does not exist, creating it: {self.cache_dir}")

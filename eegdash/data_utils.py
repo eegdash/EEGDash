@@ -1,10 +1,11 @@
+import io
 import json
 import logging
 import os
 import re
 import traceback
 import warnings
-import io
+
 from contextlib import redirect_stderr
 from pathlib import Path
 from typing import Any

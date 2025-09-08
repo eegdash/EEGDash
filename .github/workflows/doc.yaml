@@ -19,7 +19,6 @@ jobs:
     env:
       EEGDASH_CACHE_DIR: ${{ github.workspace }}/.eegdash_cache
       MNE_DATA: ${{ github.workspace }}/.eegdash_cache
-      NILEARN_DATA: ${{ github.workspace }}/.nilearn_data
     strategy:
       fail-fast: false
       matrix:
@@ -49,7 +48,6 @@ jobs:
         with:
           path: |
             ${{ env.EEGDASH_CACHE_DIR }}
-            ${{ env.NILEARN_DATA }}
           key: ${{ runner.os }}-data-${{ github.run_id }}
           restore-keys: |
             ${{ runner.os }}-data

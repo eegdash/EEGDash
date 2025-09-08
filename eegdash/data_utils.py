@@ -1,9 +1,11 @@
+import io
 import json
 import logging
 import os
 import re
 import traceback
 import warnings
+from contextlib import redirect_stderr
 from pathlib import Path
 from typing import Any
 
@@ -91,19 +93,8 @@ class EEGDashBaseDataset(BaseDataset):
             root=self.bids_root,
             datatype="eeg",
             suffix="eeg",
-            # extension='.bdf',
             **self.bids_kwargs,
         )
-        # TO-DO: remove this once find a better solution using mne-bids or update competition dataset
-        try:
-            _ = str(self.bidspath)
-        except RuntimeError:
-            try:
-                self.bidspath = self.bidspath.update(extension=".bdf")
-                self.filecache = self.filecache.with_suffix(".bdf")
-            except Exception as e:
-                logger.error(f"Error while updating BIDS path: {e}")
-                raise e
 
         self.s3file = self._get_s3path(record["bidspath"])
         self.bids_dependencies = record["bidsdependencies"]
@@ -182,8 +173,11 @@ class EEGDashBaseDataset(BaseDataset):
                 dep_local = Path(self.dataset_folder) / dep_path
             filepath = self.cache_dir / dep_local
             if not self.s3_open_neuro:
+                if filepath.suffix == ".set":
+                    filepath = filepath.with_suffix(".bdf")
                 if self.filecache.suffix == ".set":
                     self.filecache = self.filecache.with_suffix(".bdf")
+
             # here, we download the dependency and it is fine
             # in the case of the competition.
             if not filepath.exists():
@@ -218,6 +212,12 @@ class EEGDashBaseDataset(BaseDataset):
 
     def _ensure_raw(self) -> None:
         """Download the S3 file and BIDS dependencies if not already cached."""
+        # TO-DO: remove this once is fixed on the our side
+        # for the competition
+        if not self.s3_open_neuro:
+            self.bidspath = self.bidspath.update(extension=".bdf")
+            self.filecache = self.filecache.with_suffix(".bdf")
+
         if not os.path.exists(self.filecache):  # not preload
             if self.bids_dependencies:
                 self._download_dependencies()
@@ -226,13 +226,50 @@ class EEGDashBaseDataset(BaseDataset):
             # capturing any warnings
             # to-do: remove this once is fixed on the mne-bids side.
             with warnings.catch_warnings(record=True) as w:
+                # Ensure all warnings are captured into 'w' and not shown to users
+                warnings.simplefilter("always")
                 try:
-                    # TO-DO: remove this once is fixed on the our side
-                    if not self.s3_open_neuro:
-                        self.bidspath = self.bidspath.update(extension=".bdf")
-                    self._raw = mne_bids.read_raw_bids(
-                        bids_path=self.bidspath, verbose="ERROR"
-                    )
+                    # mne-bids emits RuntimeWarnings to stderr; silence stderr during read
+                    _stderr_buffer = io.StringIO()
+                    with redirect_stderr(_stderr_buffer):
+                        self._raw = mne_bids.read_raw_bids(
+                            bids_path=self.bidspath, verbose="ERROR"
+                        )
+                    # Parse unmapped participants.tsv fields reported by mne-bids and
+                    # inject them into Raw.info and the dataset description generically.
+                    extras = self._extract_unmapped_participants_from_warnings(w)
+                    if extras:
+                        # 1) Attach to Raw.info under subject_info.participants_extras
+                        try:
+                            subject_info = self._raw.info.get("subject_info") or {}
+                            if not isinstance(subject_info, dict):
+                                subject_info = {}
+                            pe = subject_info.get("participants_extras") or {}
+                            if not isinstance(pe, dict):
+                                pe = {}
+                            # Merge without overwriting
+                            for k, v in extras.items():
+                                pe.setdefault(k, v)
+                            subject_info["participants_extras"] = pe
+                            self._raw.info["subject_info"] = subject_info
+                        except Exception:
+                            # Non-fatal; continue
+                            pass
+
+                        # 2) Also add to this dataset's description, if possible, so
+                        #    targets can be selected later without naming specifics.
+                        try:
+                            import pandas as _pd  # local import to avoid top-level cost
+
+                            if isinstance(self.description, dict):
+                                for k, v in extras.items():
+                                    self.description.setdefault(k, v)
+                            elif isinstance(self.description, _pd.Series):
+                                for k, v in extras.items():
+                                    if k not in self.description.index:
+                                        self.description.loc[k] = v
+                        except Exception:
+                            pass
                 except Exception as e:
                     logger.error(
                         f"Error while reading BIDS file: {self.bidspath}\n"
@@ -242,10 +279,60 @@ class EEGDashBaseDataset(BaseDataset):
                     logger.error(f"Exception: {e}")
                     logger.error(traceback.format_exc())
                     raise e
-                for warning in w:
-                    logger.warning(
-                        f"Warning while reading BIDS file: {warning.message}"
-                    )
+                # Filter noisy mapping notices from mne-bids; surface others
+                for captured_warning in w:
+                    try:
+                        msg = str(captured_warning.message)
+                    except Exception:
+                        continue
+                    # Suppress verbose participants mapping messages
+                    if "Unable to map the following column" in msg and "MNE" in msg:
+                        logger.debug(
+                            "Suppressed mne-bids mapping warning while reading BIDS file: %s",
+                            msg,
+                        )
+                        continue
+                    logger.warning("Warning while reading BIDS file: %s", msg)
+
+    def _extract_unmapped_participants_from_warnings(
+        self, warnings_list: list[Any]
+    ) -> dict[str, Any]:
+        """Scan captured warnings from mne-bids and extract unmapped participants.tsv
+        entries in a generic way.
+
+        Optionally, the column name can carry a note in parentheses that we ignore
+        for key/value extraction. Returns a mapping of column name -> raw value.
+        """
+        extras: dict[str, Any] = {}
+        header = "Unable to map the following column(s) to MNE:"
+        for wr in warnings_list:
+            try:
+                msg = str(wr.message)
+            except Exception:
+                continue
+            if header not in msg:
+                continue
+            lines = msg.splitlines()
+            # Find the header line, then parse subsequent lines as entries
+            try:
+                idx = next(i for i, ln in enumerate(lines) if header in ln)
+            except StopIteration:
+                idx = -1
+            for line in lines[idx + 1 :]:
+                line = line.strip()
+                if not line:
+                    continue
+                # Pattern:  <col>(optional note): <value>
+                # Examples: "gender: F", "Ethnicity: Indian", "foo (ignored): bar"
+                m = re.match(r"^([^:]+?)(?:\s*\([^)]*\))?\s*:\s*(.*)$", line)
+                if not m:
+                    continue
+                col = m.group(1).strip()
+                val = m.group(2).strip()
+                # Keep original column names as provided to stay agnostic
+                if col and col not in extras:
+                    extras[col] = val
+        return extras
 
     # === BaseDataset and PyTorch Dataset interface ===
 
@@ -264,11 +351,16 @@ class EEGDashBaseDataset(BaseDataset):
     def __len__(self) -> int:
         """Return the number of samples in the dataset."""
         if self._raw is None:
-            # FIXME: this is a bit strange and should definitely not change as a side effect
-            #  of accessing the data (which it will, since ntimes is the actual length but rounded down)
-            return int(self.record["ntimes"] * self.record["sampling_frequency"])
-        else:
-            return len(self._raw)
+            if (
+                self.record["ntimes"] is None
+                or self.record["sampling_frequency"] is None
+            ):
+                self._ensure_raw()
+            else:
+                # FIXME: this is a bit strange and should definitely not change as a side effect
+                #  of accessing the data (which it will, since ntimes is the actual length but rounded down)
+                return int(self.record["ntimes"] * self.record["sampling_frequency"])
+        return len(self._raw)
 
     @property
     def raw(self):

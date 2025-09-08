@@ -40,3 +40,5 @@ examples/data
 
 data/
 *.json
+*.isorted
+*.py.isorted

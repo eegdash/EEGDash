@@ -114,13 +114,14 @@ line-length = 88
 target-version = "py311"
 
 [tool.isort]
-skip               = [".gitignore"]
-skip_glob          = ["examples/*"]
-py_version         = 312
-profile            = "black"
-sections           = ["FUTURE", "STDLIB", "THIRDPARTY", "FIRSTPARTY", "LOCALFOLDER"]
-known_first_party  = ["eegdash", "braindecode"]
+skip                   = [".gitignore"]
+# Format examples too; pre-commit selects files, no need for skip_glob
+py_version             = 312
+profile                = "black"
+sections               = ["FUTURE", "STDLIB", "THIRDPARTY", "FIRSTPARTY", "LOCALFOLDER"]
+known_first_party      = ["eegdash", "braindecode"]
 lines_between_sections = 1
+atomic                 = false
 
 [pytest]
 testpaths        = ["tests"]

@@ -1,9 +1,8 @@
 from pathlib import Path
 
-import platformdirs
-
 from eegdash.const import RELEASE_TO_OPENNEURO_DATASET_MAP
 from eegdash.dataset.dataset import EEGChallengeDataset
+from eegdash.paths import get_default_cache_dir
 
 
 def test_offline_real_data_end_to_end():
@@ -15,7 +14,7 @@ def test_offline_real_data_end_to_end():
     """
     release = "R2"
     _ = RELEASE_TO_OPENNEURO_DATASET_MAP[release]
-    cache_dir = Path(platformdirs.user_cache_dir("EEGDash"))
+    cache_dir = Path(get_default_cache_dir())
     cache_dir.mkdir(parents=True, exist_ok=True)
 
     # Online: construct challenge dataset (mini) and prefetch first subject
@@ -58,7 +57,7 @@ def test_offline_real_bidspath_and_cache_suffix():
     """Verify bidspath root and local cache folder for real data (tutorial style)."""
     release = "R2"
     dataset_id = RELEASE_TO_OPENNEURO_DATASET_MAP[release]
-    cache_dir = Path(platformdirs.user_cache_dir("EEGDash"))
+    cache_dir = Path(get_default_cache_dir())
     cache_dir.mkdir(parents=True, exist_ok=True)
 
     subject_id = "NDARAB793GL3"
@@ -81,7 +80,7 @@ def test_offline_real_bidspath_and_cache_suffix():
 def test_offline_real_records_description_shape():
     """Reconstruct from records and compare description row counts (tutorial-like)."""
     release = "R2"
-    cache_dir = Path(platformdirs.user_cache_dir("EEGDash"))
+    cache_dir = Path(get_default_cache_dir())
     cache_dir.mkdir(parents=True, exist_ok=True)
 
     subject_id = "NDARAB793GL3"
@@ -110,7 +109,7 @@ def test_online_vs_records_vs_offline_single_subject():
     """
     release = "R2"
     subject_id = "NDARAB793GL3"
-    cache_dir = Path(platformdirs.user_cache_dir("EEGDash"))
+    cache_dir = Path(get_default_cache_dir())
     cache_dir.mkdir(parents=True, exist_ok=True)
 
     # Online for a single subject, and prefetch raw

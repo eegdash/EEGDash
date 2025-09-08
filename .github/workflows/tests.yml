@@ -14,6 +14,9 @@ on:
 jobs:
   test:
     runs-on: ${{ matrix.os }}
+    env:
+      EEGDASH_CACHE_DIR: ${{ github.workspace }}/.eegdash_cache
+      MNE_DATA: ${{ github.workspace }}/.eegdash_cache
     strategy:
       fail-fast: false
       matrix:
@@ -26,11 +29,11 @@ jobs:
     # Cache MNE Data
     # The cache key here is fixed except for os
     # so if you download a new mne dataset in the code, best to manually increment the key below
-    - name: Create/Restore MNE Data Cache
+    - name: Create/Restore EEGDash Cache (workspace)
       id: cache-mne_data
       uses: actions/cache@v3
       with:
-        path: ~/mne_data
+        path: ${{ github.workspace }}/.eegdash_cache
         key: ${{ runner.os }}-v3
 
     - name: Install uv and set the python version

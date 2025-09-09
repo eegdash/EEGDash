@@ -1,4 +1,7 @@
 import os
+import sys
+import inspect
+import importlib
 from datetime import datetime, timezone
 
 from sphinx_gallery.sorting import ExplicitOrder, FileNameSortKey
@@ -26,6 +29,7 @@ extensions = [
     "sphinx.ext.ifconfig",
     "sphinx.ext.intersphinx",
     "sphinx.ext.githubpages",
+    "sphinx.ext.linkcode",
     "sphinx.ext.napoleon",
     "sphinx_design",
     # "autoapi.extension",
@@ -55,7 +59,8 @@ html_baseurl = "https://sccn.github.io/eegdash/"
 
 html_theme_options = {
     "icon_links_label": "External Links",  # for screen reader
-    "use_edit_page_button": False,
+    # Show an "Edit this page" button linking to GitHub
+    "use_edit_page_button": True,
     "navigation_with_keys": False,
     "collapse_navigation": False,
     "header_links_before_dropdown": 6,
@@ -103,6 +108,69 @@ html_sidebars = {"api": [], "dataset_summary": [], "installation": []}
 
 # Copy extra files (e.g., robots.txt) to the output root
 html_extra_path = ["_extra"]
+
+# Provide GitHub context so the edit button and custom templates
+# (e.g., Sphinx-Gallery "Open in Colab") know where the source lives.
+# These values should match the repository and docs location.
+html_context = {
+    "github_user": "sccn",
+    "github_repo": "EEGDash",
+    # Branch used to build and host the docs
+    "github_version": "main",
+    # Path to the documentation root within the repo
+    "doc_path": "docs/source",
+}
+
+
+# Linkcode configuration: map documented objects to GitHub source lines
+def _linkcode_resolve_py_domain(info):
+    modname = info.get("module")
+    fullname = info.get("fullname")
+    if not modname:
+        return None
+
+    try:
+        submod = sys.modules.get(modname)
+        if submod is None:
+            submod = importlib.import_module(modname)
+
+        obj = submod
+        for part in fullname.split("."):
+            obj = getattr(obj, part)
+
+        # Unwrap decorators to reach the actual implementation
+        obj = inspect.unwrap(obj)
+        fn = inspect.getsourcefile(obj) or inspect.getfile(obj)
+        if not fn:
+            return None
+        fn = os.path.realpath(fn)
+
+        # Compute line numbers
+        try:
+            source, start = inspect.getsourcelines(obj)
+            end = start + len(source) - 1
+            linespec = f"#L{start}-L{end}"
+        except OSError:
+            linespec = ""
+
+        # Make path relative to repo root (parent of the installed package dir)
+        pkg_dir = os.path.realpath(os.path.dirname(eegdash.__file__))
+        repo_root = os.path.realpath(os.path.join(pkg_dir, os.pardir))
+        rel_path = os.path.relpath(fn, start=repo_root)
+
+        # Choose commit/branch for links; override via env if provided
+        commit = os.environ.get(
+            "LINKCODE_COMMIT", html_context.get("github_version", "main")
+        )
+        return f"https://github.com/{html_context['github_user']}/{html_context['github_repo']}/blob/{commit}/{rel_path}{linespec}"
+    except Exception:
+        return None
+
+
+def linkcode_resolve(domain, info):
+    if domain == "py":
+        return _linkcode_resolve_py_domain(info)
+    return None
 
 
 # -- Extension configurations ------------------------------------------------

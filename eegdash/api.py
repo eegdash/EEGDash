@@ -4,11 +4,11 @@ import tempfile
 from pathlib import Path
 from typing import Any, Mapping
 from urllib.parse import urlsplit
-from docstring_inheritance import NumpyDocstringInheritanceInitMeta
 
 import mne
 import numpy as np
 import xarray as xr
+from docstring_inheritance import NumpyDocstringInheritanceInitMeta
 from dotenv import load_dotenv
 from joblib import Parallel, delayed
 from mne.utils import warn

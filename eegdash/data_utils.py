@@ -261,12 +261,10 @@ class EEGDashBaseDataset(BaseDataset):
                         # 2) Also add to this dataset's description, if possible, so
                         #    targets can be selected later without naming specifics.
                         try:
-                            import pandas as _pd  # local import to avoid top-level cost
-
                             if isinstance(self.description, dict):
                                 for k, v in extras.items():
                                     self.description.setdefault(k, v)
-                            elif isinstance(self.description, _pd.Series):
+                            elif isinstance(self.description, pd.Series):
                                 for k, v in extras.items():
                                     if k not in self.description.index:
                                         self.description.loc[k] = v

@@ -294,7 +294,6 @@ class EEGDashBaseDataset(BaseDataset):
                             msg,
                         )
                         continue
-                    logger.debug("Warning while reading BIDS file: %s", msg)
 
     def _extract_unmapped_participants_from_warnings(
         self, warnings_list: list[Any]

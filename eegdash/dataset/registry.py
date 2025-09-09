@@ -61,12 +61,9 @@ def register_openneuro_datasets(
 
         {_markdown_table(row_series)}
 
-        Notes
-        -----
-        This class is a thin convenience wrapper for the dataset
-        ``{dataset_id}`` and forwards its constructor arguments to
-        :class:`{base_class.__name__}`. Refer to the base class documentation
-        for the list of parameters and usage examples.
+        This class is a thin convenience wrapper for the dataset ``{dataset_id}``.
+        Constructor arguments are forwarded to :class:`{base_class.__name__}`; see the
+        base class documentation for parameter details and examples.
         """
 
         # init.__doc__ = doc

@@ -92,16 +92,13 @@ class EEGDash:
     ) -> list[Mapping[str, Any]]:
         """Find records in the MongoDB collection.
 
-        This method supports four usage patterns:
-        1. With a pre-built MongoDB query dictionary (positional argument):
-           >>> eegdash.find({"dataset": "ds002718", "subject": {"$in": ["012", "013"]}})
-        2. With user-friendly keyword arguments for simple and multi-value queries:
-           >>> eegdash.find(dataset="ds002718", subject="012")
-           >>> eegdash.find(dataset="ds002718", subject=["012", "013"])
-        3. With an explicit empty query to return all documents:
-           >>> eegdash.find({})  # fetches all records (use with care)
-        4. By combining a raw query with kwargs (merged via logical AND):
-           >>> eegdash.find({"dataset": "ds002718"}, subject=["012", "013"])  # yields {"$and":[{"dataset":"ds002718"}, {"subject":{"$in":["012","013"]}}]}
+        Examples
+        --------
+        >>> eegdash.find({"dataset": "ds002718", "subject": {"$in": ["012", "013"]}})  # pre-built query
+        >>> eegdash.find(dataset="ds002718", subject="012")  # keyword filters
+        >>> eegdash.find(dataset="ds002718", subject=["012", "013"])  # sequence -> $in
+        >>> eegdash.find({})  # fetch all (use with care)
+        >>> eegdash.find({"dataset": "ds002718"}, subject=["012", "013"])  # combine query + kwargs (AND)
 
         Parameters
         ----------
@@ -641,8 +638,8 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
     and dataset name. An EEGDashDataset is pooled collection of EEGDashBaseDataset
     instances (individual recordings) and is a subclass of braindecode's BaseConcatDataset.
 
-    Querying Examples:
-    ------------------
+    Examples
+    --------
     # Find by single subject
     >>> ds = EEGDashDataset(dataset="ds005505", subject="NDARCA153NKE")
 
@@ -695,10 +692,11 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
         a new client is created on demand, not used in the case of no download.
     **kwargs : dict
         Additional keyword arguments serving two purposes:
-        - Filtering: any keys present in ``ALLOWED_QUERY_FIELDS`` are treated
-            as query filters (e.g., ``dataset``, ``subject``, ``task``, ...).
-        - Dataset options: remaining keys are forwarded to the
-            ``EEGDashBaseDataset`` constructor.
+
+        - Filtering: any keys present in ``ALLOWED_QUERY_FIELDS`` are treated as
+          query filters (e.g., ``dataset``, ``subject``, ``task``, ...).
+        - Dataset options: remaining keys are forwarded to
+          ``EEGDashBaseDataset``.
 
     """
 

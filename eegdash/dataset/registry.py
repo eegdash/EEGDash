@@ -25,8 +25,8 @@ def register_openneuro_datasets(
 
     df = pd.read_csv(summary_path, comment="#", skip_blank_lines=True)
     for _, row_series in df.iterrows():
-        row = row_series.tolist()
-        dataset_id = str(row[0]).strip()
+        # Use the explicit 'dataset' column, not the CSV index.
+        dataset_id = str(row_series.get("dataset", "")).strip()
         if not dataset_id:
             continue
 
@@ -61,20 +61,12 @@ def register_openneuro_datasets(
 
         {_markdown_table(row_series)}
 
-        Parameters
-        ----------
-        cache_dir : str
-            Local cache directory.
-        query : dict | None
-            Extra Mongo query merged with ``{{'dataset': '{dataset_id}'}}``.
-        s3_bucket : str | None
-            Optional S3 bucket name.
-        subject : str | None
-            Optional subject identifier.
-        task : str | None
-            Optional task identifier.
-        **kwargs
-            Passed through to {base_class.__name__}.
+        Notes
+        -----
+        This class is a thin convenience wrapper for the dataset
+        ``{dataset_id}`` and forwards its constructor arguments to
+        :class:`{base_class.__name__}`. Refer to the base class documentation
+        for the list of parameters and usage examples.
         """
 
         # init.__doc__ = doc

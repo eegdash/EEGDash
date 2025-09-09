@@ -1,5 +1,7 @@
 """.. _challenge-1:
 
+:html_theme.sidebar_secondary.remove: true
+
 Challenge 1: Cross-Task Transfer Learning!
 ==========================================
 
@@ -309,6 +311,27 @@ single_windows = add_extras_columns(
         "response_type",
     ),
 )
+######################################################################
+# Inspect the label distribution
+# -------------------------------
+import numpy as np
+from skorch.helper import SliceDataset
+
+y_label = np.array(list(SliceDataset(single_windows, 1)))
+
+# Plot histogram of the response times with plotly
+import plotly.express as px
+import plotly.io as pio
+
+pio.renderers.default = "notebook_connected"
+fig = px.histogram(
+    y_label,
+    nbins=30,
+    title="Response Time Distribution",
+    labels={"value": "Response Time (s)", "count": "Count"},
+)
+fig.show()
+
 
 ######################################################################
 # Split the data

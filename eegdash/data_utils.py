@@ -287,20 +287,6 @@ class EEGDashBaseDataset(BaseDataset):
                         msg = str(captured_warning.message)
                     except Exception:
                         continue
-                    # Suppress Python datetime utcnow() deprecation noise from deps
-                    try:
-                        cat = getattr(captured_warning, "category", None)
-                    except Exception:
-                        cat = None
-                    if (cat is not None and issubclass(cat, DeprecationWarning)) and (
-                        "utcnow() is deprecated" in msg
-                        or "datetime.datetime.utcnow() is deprecated" in msg
-                    ):
-                        logger.debug(
-                            "Suppressed deprecation warning while reading BIDS file: %s",
-                            msg,
-                        )
-                        continue
                     # Suppress verbose participants mapping messages
                     if "Unable to map the following column" in msg and "MNE" in msg:
                         logger.debug(
@@ -308,7 +294,7 @@ class EEGDashBaseDataset(BaseDataset):
                             msg,
                         )
                         continue
-                    logger.warning("Warning while reading BIDS file: %s", msg)
+                    logger.debug("Warning while reading BIDS file: %s", msg)
 
     def _extract_unmapped_participants_from_warnings(
         self, warnings_list: list[Any]

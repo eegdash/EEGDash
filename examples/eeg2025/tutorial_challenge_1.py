@@ -64,7 +64,6 @@ Challenge 1: Cross-Task Transfer Learning!
 # directly in our target task, and it is up to the teams to think about
 # how to use the passive task to perform the pre-training.
 
-
 ######################################################################
 # Install dependencies
 # --------------------
@@ -127,40 +126,52 @@ print(msg)
 # To start to talk about what we want to analyse, the important thing
 # is to understand some basic concepts.
 #
-## **The brain decodes the problem**
+######################################################################
+# The brain decodes the problem
+# =============================
 #
 # Broadly speaking, here *brain decoding* is the following problem:
-# given brain time-series signals $X \in \mathbb{R}^{C \times T}$ with
-# labels $y \in \mathcal{Y}$, we implement a neural network $f$ that
+# given brain time-series signals :math:`X \in \mathbb{R}^{C \times T}` with
+# labels :math:`y \in \mathcal{Y}`, we implement a neural network :math:`f` that
 # **decodes/translates** brain activity into the target label.
 #
 # We aim to translate recorded brain activity into its originating
-# stimulus, behavior, or mental state, [King, J-R. et al. (2020)](https://lauragwilliams.github.io/d/m/CognitionAlgorithm.pdf).
-#
-# The neural network $f$ applies a series of transformation layers
-# (e.g., `torch.nn.Conv2d`, `torch.nn.Linear`, `torch.nn.ELU`, `torch.nn.BatchNorm2d`)
+# stimulus, behavior, or mental state, `King, J-R. et al. (2020) <https://lauragwilliams.github.io/d/m/CognitionAlgorithm.pdf>`_.
+
+# The neural network :math:`f` applies a series of transformation layers
+# (e.g., ``torch.nn.Conv2d``, ``torch.nn.Linear``, ``torch.nn.ELU``, ``torch.nn.BatchNorm2d``)
 # to the data to filter, extract features, and learn embeddings
 # relevant to the optimization objective—in other words:
-#
-# $$
-# f_{\theta}: X \to y,
-# $$
-#
-# where $C$ (`n_chans`) is the number of channels/electrodes and $T$ (`n_times`)
+
+# .. math::
+
+#    f_{\theta}: X \to y,
+
+# where :math:`C` (``n_chans``) is the number of channels/electrodes and :math:`T` (``n_times``)
 # is the temporal window length/epoch size over the interval of interest.
-# Here, $\theta$ denotes the parameters learned by the neural network.
-#
+# Here, :math:`\theta` denotes the parameters learned by the neural network.
+
 # ----
+
 # For the competition, the HBN-EEG (Healthy Brain Network EEG Datasets)
-# dataset has `n_chans = 129` with the last channels as [reference channel](https://mne.tools/stable/auto_tutorials/preprocessing/55_setting_eeg_reference.html),
-# and we define the window length as `n_times = 200`, corresponding to 2-second windows.
-#
+# dataset has ``n_chans = 129`` with the last channels as a `reference channel <https://mne.tools/stable/auto_tutorials/preprocessing/55_setting_eeg_reference.html>`_,
+# and we define the window length as ``n_times = 200``, corresponding to 2-second windows.
+
 # Your model should follow this definition exactly; any specific selection of channels,
 # filtering, or domain-adaptation technique must be performed **within the layers of the neural network model**.
-#
-# In this tutorial, we will use the `EEGNeX` model from `braindecode` as an example.
+
+# In this tutorial, we will use the ``EEGNeX`` model from ``braindecode`` as an example.
 # You can use any model you want, as long as it follows the input/output
 # definitions above.
+
+######################################################################
+# Understand the task: Contrast Change Detection (CCD)
+# --------------------------------------------------------
+# If you are interested to get more neuroscience insight, we recommend these two references, [HBN-EEG](https://www.biorxiv.org/content/10.1101/2024.10.03.615261v2.full.pdf) and [ Langer, N et al. (2017)](https://www.nature.com/articles/sdata201740#Sec2)
+
+# Your task (**label**) is to predict the response time for the subject during this windows.
+
+# In the Video, we have an example of recording cognitive activity:
 
 
 # The Contrast Change Detection (CCD) task relates to
@@ -192,9 +203,11 @@ print(msg)
 #              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
 #              allowfullscreen></iframe>
 #    </div>
+# In the figure below, we have the timeline representation of the cognitive task:
+# ![https://eeg2025.github.io/assets/img/CCD_sequence.png](https://eeg2025.github.io/assets/img/image-2.jpg)
 
 ######################################################################
-# 2) Load the competition dataset
+# Load the competition dataset
 # -------------------------------
 from eegdash.dataset import EEGChallengeDataset
 from eegdash.hbn.windows import (
@@ -210,15 +223,42 @@ DATA_DIR.mkdir(parents=True, exist_ok=True)
 dataset_ccd = EEGChallengeDataset(
     task="contrastChangeDetection", release="R5", cache_dir=DATA_DIR, mini=True
 )
+# The dataset contains 20 subjects in the minirelease, and each subject has multiple recordings
+# (sessions). Each recording is represented as a dataset object within the `dataset_ccd.datasets` list.
+print(f"Number of recordings in the dataset: {len(dataset_ccd.datasets)}")
+print(
+    f"Number of unique subjects in the dataset: {dataset_ccd.description['subject'].nunique()}"
+)
 
-# For visualization purposes, we will see just one object.
+# Now, we have a Pytorch Dataset object that contains the set of recordings for the task
+# `contrastChangeDetection`.
+
+# This dataset object have very rich Raw object details that can help you to
+# understand better the data. The framework behind this is braindecode,
+# and if you want to understand in depth what is happening, we recommend the
+# braindecode github itself.
+
+# We can also access the Raw object for visualization purposes, we will see just one object.
 raw = dataset_ccd.datasets[0].raw  # get the Raw object of the first recording
 
-# To download all data directly, you can do:
+# And to download all the data all data directly, you can do:
 raws = Parallel(n_jobs=-1)(delayed(lambda d: d.raw)(d) for d in dataset_ccd.datasets)
 
+# You can also perform this operation with wget or the aws cli.
+# The solution probably will be faster, but this is the simplest way to do it.
+# Please check more details in the `HBN` data webpage [HBN-EEG](https://neuromechanist.github.io/data/hbn/).
+# You need to download the 100Hz preprocessed data in BDF format.
+
+# Example of wget for release R1:
+# !wget https://sccn.ucsd.edu/download/eeg2025/R1_L100_bdf.zip -o R1_L100_bdf.zip
+# !unzip R1_L100_bdf.zip -d data/R1_L100_bdf
+# !rm R1_L100_bdf.zip
+# Example of aws cli for release R1:
+# !aws s3 sync s3://nmdatasets/NeurIPS25/R1_L100_bdf data/R1_L100_bdf --no-sign-request
+
+
 ######################################################################
-# 3) Create windows of interest
+# Create windows of interest
 # -----------------------------
 EPOCH_LEN_S = 2.0
 SFREQ = 100  # by definition here
@@ -323,8 +363,8 @@ print(f"Valid:\t{len(valid_set)}")
 print(f"Test:\t{len(test_set)}")
 
 ######################################################################
-# 5) Create dataloaders
-# ---------------------
+# Create dataloaders
+# -------------------
 batch_size = 128
 # Set num_workers to 0 to avoid multiprocessing issues in notebooks/tutorials
 num_workers = 0
@@ -340,10 +380,11 @@ test_loader = DataLoader(
 )
 
 ######################################################################
-# 6) Build the model
-# ------------------
+# Build the model
+# -----------------
 # For any braindecode model, you can initialize only inputing the signal related parameters
 # You can use any Pytorch module that you want here.
+#
 model = EEGNeX(
     n_chans=129,  # 129 channels
     n_outputs=1,  # 1 output for regression
@@ -356,7 +397,7 @@ model.to(device)
 
 
 ######################################################################
-# 7) Define training and validation functions
+# Define training and validation functions
 # -------------------------------------------
 def train_one_epoch(
     dataloader: DataLoader,
@@ -460,7 +501,7 @@ def valid_model(
 
 
 ######################################################################
-# 8) Train the model
+# Train the model
 # ------------------
 lr = 1e-3
 weight_decay = 1e-5
@@ -511,7 +552,7 @@ if best_state is not None:
     model.load_state_dict(best_state)
 
 ######################################################################
-# 9) Save the model
+# Save the model
 # -----------------
 torch.save(model.state_dict(), "weights_challenge_1.pt")
 print("Model saved as 'weights_challenge_1.pt'")

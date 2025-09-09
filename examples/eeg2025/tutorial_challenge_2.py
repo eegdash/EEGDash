@@ -10,11 +10,14 @@ Challenge 2: Predicting the p-factor from EEG
 """
 
 ######################################################################
-# <a target="_blank" href="https://colab.research.google.com/github/eeg2025/startkit/blob/main/challenge_2.ipynb"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/></a>
+# .. image:: https://colab.research.google.com/assets/colab-badge.svg
+#    :target: https://colab.research.google.com/github/eeg2025/startkit/blob/main/challenge_2.ipynb
+#    :alt: Open In Colab
 
 
 ######################################################################
-# # Challenge 2: Predicting the p-factor from EEG
+# Overview
+# --------
 
 # The psychopathology factor (P-factor) is a widely recognized construct in mental health research, representing a common underlying dimension of psychopathology across various disorders.
 # Currently, the P-factor is often assessed using self-report questionnaires or clinician ratings, which can be subjective, prone to bias, and time-consuming.
@@ -27,17 +30,23 @@ Challenge 2: Predicting the p-factor from EEG
 # Unlike a standard in-distribution classification task, this regression problem stresses out-of-distribution robustness
 # and extrapolation. The goal is not only to minimize error on seen subjects, but also to transfer effectively to unseen data.
 
-# Ensure the dataset is available locally. If not, see the [dataset download guide](https://eeg2025.github.io/data/#downloading-the-data)
+# Ensure the dataset is available locally. If not, see the
+# `dataset download guide <https://eeg2025.github.io/data/#downloading-the-data>`__.
 
 ######################################################################
-# ## Contents of this start kit
+# Contents of this start kit
+# --------------------------
 
 # 0. Understand the P-factor regression task.
 # 1. Loading the data.
 # 2. Wrap the data into a PyTorch-compatible dataset.
 # 3. Define, train and save a model.
 
-# > **Note:** If you need additional explanations on the [`EEGChallengeDataset`](https://eeglab.org/EEGDash/api/eegdash.html#eegdash.EEGChallengeDataset) class, dataloading, [`braindecode`](https://braindecode.org/stable/models/models_table.html)'s deep learning models, or brain decoding in general, please refer to the start-kit of challenge 1 which delves deeper into these topics.
+# .. note:: If you need additional explanations on the
+#    `EEGChallengeDataset <https://eeglab.org/EEGDash/api/eegdash.html#eegdash.EEGChallengeDataset>`__
+#    class, dataloading, `braindecode <https://braindecode.org/stable/models/models_table.html>`__'s
+#    deep learning models, or brain decoding in general, please refer to the
+#    start-kit of challenge 1 which delves deeper into these topics.
 
 # More contents will be released during the competition inside the [`eegdash`](https://eeglab.org/EEGDash/overview.html) [examples webpage](https://eeglab.org/EEGDash/generated/auto_examples/index.html).
 
@@ -135,9 +144,11 @@ print(msg)
 # If contestants are successful in this task, it could pave the way for more objective and efficient assessments of the P-factor in clinical settings.
 
 # %% [markdown]
-# ## 1. Loading the data
+# 1. Loading the data
+# -------------------
 
-# ### A. Define local path and (down)load the data
+# A. Define local path and (down)load the data
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 # In this challenge 2 example, we load the EEG 2025 release using EEG Dash.
 
@@ -177,7 +188,8 @@ print("Datasets loaded")
 sub_rm = ["NDARWV769JM7"]
 
 # %% [markdown]
-# ### B. Combine the datasets into a single one
+# B. Combine the datasets into a single one
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 # Here, we combine the datasets from the different releases into a single
 # ``BaseConcatDataset`` object.
@@ -191,7 +203,8 @@ raws = Parallel(n_jobs=os.cpu_count())(
 )
 
 # %% [markdown]
-# ### C. Inspect your data
+# C. Inspect your data
+# ~~~~~~~~~~~~~~~~~~~~
 
 # We can check what is inside the dataset consuming the
 # MNE-object inside the Braindecode dataset.

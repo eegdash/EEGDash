@@ -9,22 +9,40 @@ Challenge 1: Cross-Task Transfer Learning!
 """
 
 ######################################################################
-# <a target="_blank" href="https://colab.research.google.com/github/eeg2025/startkit/blob/main/challenge_1.ipynb"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/></a>
+# .. image:: https://colab.research.google.com/assets/colab-badge.svg
+#    :target: https://colab.research.google.com/github/eeg2025/startkit/blob/main/challenge_1.ipynb
+#    :alt: Open In Colab
 
 ######################################################################
-# # Challenge 1: Cross-Task Transfer Learning!
+# How can we use the knowledge from one EEG Decoding task into another?
+# ---------------------------------------------------------------------
+# Transfer learning is a widespread technique used in deep learning. It
+# uses knowledge learned from one source task/domain in another target
+# task/domain. It has been studied in depth in computer vision, natural
+# language processing, and speech, but what about EEG brain decoding?
 #
-# ## How can we use the knowledge from one EEG Decoding task into another?
+# The cross-task transfer learning scenario in EEG decoding is remarkably
+# underexplored compared to the development of new models,
+# `Aristimunha et al. (2023) <https://arxiv.org/abs/2308.02408>`__, even
+# though it can be much more useful for real applications, see
+# `Wimpff et al. (2025) <https://arxiv.org/abs/2502.06828>`__,
+# `Wu et al. (2025) <https://arxiv.org/abs/2507.09882>`__.
 #
-# Transfer learning is a widespread technique used in deep learning. It uses knowledge learned from one source task/domain in another target task/domain. It has been studied in depth in computer vision, natural language processing, and speech, but what about EEG brain decoding?
+# Our Challenge 1 addresses a key goal in neurotechnology: decoding
+# cognitive function from EEG using the pre-trained knowledge from another.
+# In other words, developing models that can effectively
+# transfer/adapt/adjust/fine-tune knowledge from passive EEG tasks to
+# active tasks.
 #
-# The cross-task transfer learning scenario in EEG decoding is remarkably underexplored in comparison to the developers of new models, [Aristimunha et al., (2023)](https://arxiv.org/abs/2308.02408), even though it can be much more useful for real applications, see [Wimpff et al. (2025)](https://arxiv.org/abs/2502.06828), [Wu et al. (2025)](https://arxiv.org/abs/2507.09882).
+# The ability to generalize and transfer is something critical that we
+# believe should be focused on. To go beyond just comparing metrics numbers
+# that are often not comparable, given the specificities of EEG, such as
+# pre-processing, inter-subject variability, and many other unique
+# components of this type of data.
 #
-# Our Challenge 1 addresses a key goal in neurotechnology: decoding cognitive function from EEG using the pre-trained knowledge from another. In other words, developing models that can effectively transfer/adapt/adjust/fine-tune knowledge from passive EEG tasks to active tasks.
-#
-# The ability to generalize and transfer is something critical that we believe should be focused. To go beyond just comparing metrics numbers that are often not comparable, given the specificities of EEG, such as pre-processing, inter-subject variability, and many other unique components of this type of data.
-#
-# This means your submitted model might be trained on a subset of tasks and fine-tuned on data from another condition, evaluating its capacity to generalize with task-specific fine-tuning.
+# This means your submitted model might be trained on a subset of tasks
+# and fine-tuned on data from another condition, evaluating its capacity to
+# generalize with task-specific fine-tuning.
 
 ######################################################################
 # __________
@@ -32,23 +50,39 @@ Challenge 1: Cross-Task Transfer Learning!
 # Note: For simplicity purposes, we will only show how to do the decoding directly in our target task, and it is up to the teams to think about how to use the passive task to perform the pre-training.
 
 ######################################################################
-# ---
-# ## Summary table for this start kit
-#
-# In this tutorial, we are going to show in more detail what we want from Challenge 1:
+# Summary table for this start kit
+# --------------------------------
+# In this tutorial, we are going to show in more detail what we want
+# from Challenge 1:
 #
 # **Contents**:
 #
 # 0. Understand the Contrast Change Detection - CCD task.
-# 1. Understand the [`EEGChallengeDataset`](https://eeglab.org/EEGDash/api/eegdash.html#eegdash.EEGChallengeDataset) object.
+# 1. Understand the `EEGChallengeDataset <https://eeglab.org/EEGDash/api/eegdash.html#eegdash.EEGChallengeDataset>`__ object.
 # 2. Preparing the dataloaders.
-# 3. Building the deep learning model with [`braindecode`](https://braindecode.org/stable/models/models_table.html).
+# 3. Building the deep learning model with `braindecode <https://braindecode.org/stable/models/models_table.html>`__.
 # 4. Designing the training loop.
 # 5. Training the model.
 # 6. Evaluating test performance.
 # 7. Going further, *benchmark go brrr!*
 
-# %% Install dependencies on colab [code] tags=["hide-input"]
+# | The tutorial assumes some prior knowledge of deep learning concepts and EEG concepts:|
+# | --- |
+# |* Standard neural network architectures, e.g., convolutional neural networks|
+# |* Optimization by batch gradient descent and backpropagation|
+# |* Overfitting, early stopping, regularisation |
+# |* Some knowledge of pytorch and, optionally, of the pytorch Lightning framework|
+# |* That you know what EEG is |
+# |* That you have basic familiarity with EEG preprocessing |
+# |* Like and support open-source :) |
+
+# **NOTE: You will still be able to run the whole notebook at your own pace and learn about these concepts along the way**
+# **NOTE: If you just want run the code and start to play, please go to the challenge version 1 python, clean in the folder**
+
+###### ----
+# For the challenge, we will need two significant dependencies:
+# `braindecode` and `eegdash`. The libraries will install PyTorch, Pytorch Audio, Scikit-learn, MNE, MNE-BIDS, and many other packages necessary for the many functions.
+# %% Install dependencies on colab or your local machine
 # !pip install braindecode
 # !pip install eegdash
 
@@ -74,7 +108,15 @@ from tqdm import tqdm
 import copy
 from joblib import Parallel, delayed
 
+######################################################################
+# 0. Check GPU availability
+# -------------------------
+#
 # Identify whether a CUDA-enabled GPU is available
+# and set the device accordingly.
+# If using Google Colab, ensure that the runtime is set to use a GPU.
+# This can be done by navigating to `Runtime` > `Change runtime type` and selecting
+# `GPU` as the hardware accelerator.
 device = "cuda" if torch.cuda.is_available() else "cpu"
 if device == "cuda":
     msg = "CUDA-enabled GPU found. Training should be faster."
@@ -88,9 +130,12 @@ else:
 print(msg)
 
 ######################################################################
-# ## 1. What are we decoding?
+# 1. What are we decoding?
+# ------------------------
 #
-# The Contrast Change Detection (CCD) task relates to [Steady-State Visual Evoked Potentials (SSVEP)](https://en.wikipedia.org/wiki/Steady-state_visually_evoked_potential) and [Event-Related Potentials (ERP)](https://en.wikipedia.org/wiki/Event-related_potential).
+# The Contrast Change Detection (CCD) task relates to
+# `Steady-State Visual Evoked Potentials (SSVEP) <https://en.wikipedia.org/wiki/Steady-state_visually_evoked_potential>`__
+# and `Event-Related Potentials (ERP) <https://en.wikipedia.org/wiki/Event-related_potential>`__.
 #
 # Algorithmically, what the subject sees during recording is:
 #
@@ -105,6 +150,18 @@ print(msg)
 # * The **ramp onset**, the **button press**, and the **feedback** are **time-locked events** that yield ERP-like components.
 #
 # Your task (**label**) is to predict the response time for the subject during this windows.
+
+######################################################################
+# Stimulus demonstration
+# ----------------------
+# .. raw:: html
+#
+#    <div class="video-wrapper">
+#      <iframe src="https://www.youtube.com/embed/tOW2Vu2zHoU?start=1630"
+#              title="Contrast Change Detection (CCD) task demo"
+#              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+#              allowfullscreen></iframe>
+#    </div>
 
 ######################################################################
 # 2) Load the competition dataset

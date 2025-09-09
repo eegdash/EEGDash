@@ -6,6 +6,7 @@ Challenge 1: Cross-Task Transfer Learning!
 .. contents:: This example covers:
    :local:
    :depth: 2
+
 """
 
 ######################################################################
@@ -63,7 +64,7 @@ Challenge 1: Cross-Task Transfer Learning!
 # Note: For simplicity purposes, we will only show how to do the decoding
 # directly in our target task, and it is up to the teams to think about
 # how to use the passive task to perform the pre-training.
-
+#
 ######################################################################
 # Install dependencies
 # --------------------
@@ -73,8 +74,7 @@ Challenge 1: Cross-Task Transfer Learning!
 # necessary for the many functions.
 # Install dependencies on colab or your local machine, as eegdash
 # have braindecode as a dependency.
-# you can just run
-# !pip install eegdash
+# you can just run ``pip install eegdash``.
 
 ######################################################################
 # Imports and setup
@@ -136,30 +136,29 @@ print(msg)
 # **decodes/translates** brain activity into the target label.
 #
 # We aim to translate recorded brain activity into its originating
-# stimulus, behavior, or mental state, `King, J-R. et al. (2020) <https://lauragwilliams.github.io/d/m/CognitionAlgorithm.pdf>`_.
-
+# stimulus, behavior, or mental state, `King, J-R. et al. (2020) <https://lauragwilliams.github.io/d/m/CognitionAlgorithm.pdf>`__.
+#
 # The neural network :math:`f` applies a series of transformation layers
 # (e.g., ``torch.nn.Conv2d``, ``torch.nn.Linear``, ``torch.nn.ELU``, ``torch.nn.BatchNorm2d``)
 # to the data to filter, extract features, and learn embeddings
 # relevant to the optimization objective—in other words:
-
+#
 # .. math::
-
+#
 #    f_{\theta}: X \to y,
-
+#
 # where :math:`C` (``n_chans``) is the number of channels/electrodes and :math:`T` (``n_times``)
 # is the temporal window length/epoch size over the interval of interest.
 # Here, :math:`\theta` denotes the parameters learned by the neural network.
-
-# ----
-
+#
+######################################################################
 # For the competition, the HBN-EEG (Healthy Brain Network EEG Datasets)
 # dataset has ``n_chans = 129`` with the last channels as a `reference channel <https://mne.tools/stable/auto_tutorials/preprocessing/55_setting_eeg_reference.html>`_,
 # and we define the window length as ``n_times = 200``, corresponding to 2-second windows.
-
+#
 # Your model should follow this definition exactly; any specific selection of channels,
 # filtering, or domain-adaptation technique must be performed **within the layers of the neural network model**.
-
+#
 # In this tutorial, we will use the ``EEGNeX`` model from ``braindecode`` as an example.
 # You can use any model you want, as long as it follows the input/output
 # definitions above.
@@ -167,13 +166,11 @@ print(msg)
 ######################################################################
 # Understand the task: Contrast Change Detection (CCD)
 # --------------------------------------------------------
-# If you are interested to get more neuroscience insight, we recommend these two references, [HBN-EEG](https://www.biorxiv.org/content/10.1101/2024.10.03.615261v2.full.pdf) and [ Langer, N et al. (2017)](https://www.nature.com/articles/sdata201740#Sec2)
-
+# If you are interested to get more neuroscience insight, we recommend these two references, `HBN-EEG <https://www.biorxiv.org/content/10.1101/2024.10.03.615261v2.full.pdf>`__ and `Langer, N et al. (2017) <https://www.nature.com/articles/sdata201740#Sec2>`__.
 # Your task (**label**) is to predict the response time for the subject during this windows.
-
+#
 # In the Video, we have an example of recording cognitive activity:
-
-
+#
 # The Contrast Change Detection (CCD) task relates to
 # `Steady-State Visual Evoked Potentials (SSVEP) <https://en.wikipedia.org/wiki/Steady-state_visually_evoked_potential>`__
 # and `Event-Related Potentials (ERP) <https://en.wikipedia.org/wiki/Event-related_potential>`__.
@@ -191,6 +188,10 @@ print(msg)
 # * The **ramp onset**, the **button press**, and the **feedback** are **time-locked events** that yield ERP-like components.
 #
 # Your task (**label**) is to predict the response time for the subject during this windows.
+######################################################################
+# In the figure below, we have the timeline representation of the cognitive task:
+# .. image:: https://eeg2025.github.io/assets/img/image-2.jpg
+#    :alt: Open In Colab
 
 ######################################################################
 # Stimulus demonstration
@@ -203,10 +204,9 @@ print(msg)
 #              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
 #              allowfullscreen></iframe>
 #    </div>
-# In the figure below, we have the timeline representation of the cognitive task:
-# ![https://eeg2025.github.io/assets/img/CCD_sequence.png](https://eeg2025.github.io/assets/img/image-2.jpg)
-
+#
 ######################################################################
+
 # Load the competition dataset
 # -------------------------------
 from eegdash.dataset import EEGChallengeDataset
@@ -311,8 +311,8 @@ single_windows = add_extras_columns(
 )
 
 ######################################################################
-# 4) Split the data
-# -----------------
+# Split the data
+# ---------------
 # Extract meta information
 meta_information = single_windows.get_metadata()
 

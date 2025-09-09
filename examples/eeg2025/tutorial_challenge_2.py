@@ -78,11 +78,16 @@ Challenge 2: Predicting the p-factor from EEG
 #    - An appreciation for open-source work :)
 
 ######################################################################
-# Install dependencies on colab
+# %% [markdown]
+# Install dependencies on Colab
 # -----------------------------
-# tags:["hide-input"]
-#!pip install braindecode
-#!pip install eegdash
+#
+# .. note:: These installs are optional; skip on local environments
+#    where you already have the dependencies installed.
+#
+# .. code-block:: bash
+#
+#    pip install eegdash
 
 ######################################################################
 # Imports

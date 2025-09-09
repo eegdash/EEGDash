@@ -1,7 +1,7 @@
-import os
-import sys
 import inspect
 import importlib
+import os
+import sys
 from datetime import datetime, timezone
 
 from sphinx_gallery.sorting import ExplicitOrder, FileNameSortKey

@@ -18,52 +18,32 @@ Challenge 2: Predicting the p-factor from EEG
 ######################################################################
 # Overview
 # --------
-
 # The psychopathology factor (P-factor) is a widely recognized construct in mental health research, representing a common underlying dimension of psychopathology across various disorders.
 # Currently, the P-factor is often assessed using self-report questionnaires or clinician ratings, which can be subjective, prone to bias, and time-consuming.
 # **The Challenge 2** consists of developing a model to predict the P-factor from EEG recordings.
-
+#
 # The challenge encourages learning physiologically meaningful signal representations and discovery of reproducible biomarkers.
 # Models of any size should emphasize robust, interpretable features that generalize across subjects,
 # sessions, and acquisition sites.
-
+#
 # Unlike a standard in-distribution classification task, this regression problem stresses out-of-distribution robustness
 # and extrapolation. The goal is not only to minimize error on seen subjects, but also to transfer effectively to unseen data.
-
 # Ensure the dataset is available locally. If not, see the
 # `dataset download guide <https://eeg2025.github.io/data/#downloading-the-data>`__.
 
 ######################################################################
 # Contents of this start kit
 # --------------------------
-
-# 0. Understand the P-factor regression task.
-# 1. Loading the data.
-# 2. Wrap the data into a PyTorch-compatible dataset.
-# 3. Define, train and save a model.
-
 # .. note:: If you need additional explanations on the
 #    `EEGChallengeDataset <https://eeglab.org/EEGDash/api/eegdash.html#eegdash.EEGChallengeDataset>`__
 #    class, dataloading, `braindecode <https://braindecode.org/stable/models/models_table.html>`__'s
 #    deep learning models, or brain decoding in general, please refer to the
 #    start-kit of challenge 1 which delves deeper into these topics.
-
-# More contents will be released during the competition inside the [`eegdash`](https://eeglab.org/EEGDash/overview.html) [examples webpage](https://eeglab.org/EEGDash/generated/auto_examples/index.html).
-
-# We will establish direct communication channels with you over the next two months, resolve platform issues, and discuss other details.
-
-# We are going to do weekly one-hour support time to help teams that may have difficulties with any technical aspects that may arise.
-
-# We will have closer communication starting next week, 08/09/2025.
-
-# Before we begin, I just want to make a deal with you, ok?
-
-# This is a community competition with a strong open-source foundation. When I say open-source, I mean volunteer work.
-
-# So, if you see something that does not work or could be improved, first, **please be kind**, and we will fix it together on GitHub, okay?
-
-# The entire decoding community will only go further when we stop solving the same problems over and over again, and start working together.
-
+#
+# More contents will be released during the competition inside the
+# `eegdash <https://eeglab.org/EEGDash/overview.html>`__
+# `examples webpage <https://eeglab.org/EEGDash/generated/auto_examples/index.html>`__.
+#
 # %% [markdown]
 # .. admonition:: Prerequisites
 #    :class: important
@@ -92,7 +72,6 @@ Challenge 2: Predicting the p-factor from EEG
 ######################################################################
 # Imports
 # -------
-# tags:["hide-input"]
 from pathlib import Path
 import math
 import os
@@ -116,10 +95,12 @@ from eegdash import EEGChallengeDataset
 #    'T4 GPU' under 'Hardware accelerator'.
 
 
+# Understanding the P-factor regression task.
+# -------------------------------------------------
+
 ######################################################################
 # Identify whether a CUDA-enabled GPU is available
 # ------------------------------------------------
-# tags:["hide-input"]
 device = "cuda" if torch.cuda.is_available() else "cpu"
 if device == "cuda":
     msg = "CUDA-enabled GPU found. Training should be faster."
@@ -133,31 +114,33 @@ else:
 print(msg)
 
 ######################################################################
-# ## 0. Understanding the P-factor regression task.
+# Understanding the P-factor regression task.
+# -------------------------------------------------
 #
 # The psychopathology factor (P-factor) is a widely recognized construct in mental health research, representing a common underlying dimension of psychopathology across various disorders.
 # The P-factor is thought to reflect the shared variance among different psychiatric conditions, suggesting that individuals with higher P-factor scores may be more vulnerable to a range of mental health issues.
 # Currently, the P-factor is often assessed using self-report questionnaires or clinician ratings, which can be subjective, prone to bias, and time-consuming.
-# In the dataset of this challenge, the P-factor was assessed using the Child Behavior Checklist (CBCL) [McElroy et al., (2017)](https://doi.org/10.1111/jcpp.12849).
-
+# In the dataset of this challenge, the P-factor was assessed using the Child
+# Behavior Checklist (CBCL) `McElroy et al., (2017) <https://doi.org/10.1111/jcpp.12849>`__.
+#
 # The goal of Challenge 2 is to develop a model to predict the P-factor from EEG recordings.
 # **The feasibility of using EEG data for this purpose is still an open question**.
 # The solution may involve finding meaningful representations of the EEG data that correlate with the P-factor scores.
 # The challenge encourages learning physiologically meaningful signal representations and discovery of reproducible biomarkers.
 # If contestants are successful in this task, it could pave the way for more objective and efficient assessments of the P-factor in clinical settings.
 
-# %% [markdown]
-# 1. Loading the data
+######################################################################
+# Loading the data
 # -------------------
 
-# A. Define local path and (down)load the data
+# Define local path and (down)load the data
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 # In this challenge 2 example, we load the EEG 2025 release using EEG Dash.
 
 # > **Note:** in this example notebook, we load the contrast change detection task from one mini release only as an example. Naturally, you are encouraged to train your models on all complete releases, using data from all the tasks you deem relevant.
 
-# %%
+######################################################################
 # The first step is to define the cache folder!
 DATA_DIR = Path("~/eegdash/eeg2025_competition")
 
@@ -190,8 +173,8 @@ all_datasets_list = [
 print("Datasets loaded")
 sub_rm = ["NDARWV769JM7"]
 
-# %% [markdown]
-# B. Combine the datasets into a single one
+######################################################################
+# Combine the datasets into a single one
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 # Here, we combine the datasets from the different releases into a single
@@ -205,8 +188,8 @@ raws = Parallel(n_jobs=os.cpu_count())(
     delayed(lambda d: d.raw)(d) for d in all_datasets.datasets
 )
 
-# %% [markdown]
-# C. Inspect your data
+######################################################################
+# Inspect your data
 # ~~~~~~~~~~~~~~~~~~~~
 
 # We can check what is inside the dataset consuming the
@@ -216,18 +199,21 @@ raws = Parallel(n_jobs=os.cpu_count())(
 # We can also inspect the data further by looking at the events and annotations.
 # We strongly recommend you to take a look into the details and check how the events are structured.
 
-# %%
-# raw = all_datasets.datasets[0].raw  # mne.io.Raw object
-# print(raw.info)
+######################################################################
+raw = all_datasets.datasets[0].raw  # mne.io.Raw object
 
-# raw.plot(duration=10, scalings="auto", show=True)
+print(raw.info)
 
-# print(raw.annotations)
+raw.plot(duration=10, scalings="auto", show=True)
+
+print(raw.annotations)
 
 SFREQ = 100
 
 # %% [markdown]
-# ## 2. Wrap the data into a PyTorch-compatible dataset
+######################################################################
+# Wrap the data into a PyTorch-compatible dataset
+# --------------------------------------------------
 
 # The class below defines a dataset wrapper that will extract 2-second windows,
 # uniformly sampled over the whole signal. In addition, it will add useful information
@@ -303,8 +289,9 @@ windows_ds = BaseConcatDataset(
 
 
 # %% [markdown]
-# ## 3. Define, train and save a model
-
+######################################################################
+# Define, train and save a model
+# ---------------------------------
 # Now we have our pytorch dataset necessary for the training!
 #
 # Below, we define a simple EEGNeX model from Braindecode.

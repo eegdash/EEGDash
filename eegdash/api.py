@@ -4,6 +4,7 @@ import tempfile
 from pathlib import Path
 from typing import Any, Mapping
 from urllib.parse import urlsplit
+from docstring_inheritance import NumpyDocstringInheritanceInitMeta
 
 import mne
 import numpy as np
@@ -14,7 +15,6 @@ from mne.utils import warn
 from mne_bids import find_matching_paths, get_bids_path_from_fname, read_raw_bids
 from pymongo import InsertOne, UpdateOne
 from s3fs import S3FileSystem
-from docstring_inheritance import NumpyDocstringInheritanceInitMeta
 
 from braindecode.datasets import BaseConcatDataset
 

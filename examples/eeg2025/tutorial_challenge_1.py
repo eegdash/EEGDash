@@ -14,6 +14,19 @@ Challenge 1: Cross-Task Transfer Learning!
 #    :alt: Open In Colab
 
 ######################################################################
+# Preliminary notes
+# -----------------
+# Before we begin, I just want to make a deal with you, ok?
+# This is a community competition with a strong open-source foundation.
+# When I say open-source, I mean volunteer work.
+#
+# So, if you see something that does not work or could be improved, first, **please be kind**, and
+# we will fix it together on GitHub, okay?
+#
+# The entire decoding community will only go further when we stop
+# solving the same problems over and over again, and it starts working together.
+
+######################################################################
 # How can we use the knowledge from one EEG Decoding task into another?
 # ---------------------------------------------------------------------
 # Transfer learning is a widespread technique used in deep learning. It
@@ -47,33 +60,21 @@ Challenge 1: Cross-Task Transfer Learning!
 ######################################################################
 # __________
 #
-# Note: For simplicity purposes, we will only show how to do the decoding directly in our target task, and it is up to the teams to think about how to use the passive task to perform the pre-training.
+# Note: For simplicity purposes, we will only show how to do the decoding
+# directly in our target task, and it is up to the teams to think about
+# how to use the passive task to perform the pre-training.
+
 
 ######################################################################
-# Summary table for this start kit
-# --------------------------------
-# In this tutorial, we are going to show in more detail what we want
-# from Challenge 1:
-#
-# **Contents**:
-#
-# 0. Understand the Contrast Change Detection - CCD task.
-# 1. Understand the `EEGChallengeDataset <https://eeglab.org/EEGDash/api/eegdash.html#eegdash.EEGChallengeDataset>`__ object.
-# 2. Preparing the dataloaders.
-# 3. Building the deep learning model with `braindecode <https://braindecode.org/stable/models/models_table.html>`__.
-# 4. Designing the training loop.
-# 5. Training the model.
-# 6. Evaluating test performance.
-# 7. Going further, *benchmark go brrr!*
-#
-# **NOTE: You will still be able to run the whole notebook at your own pace and learn about these concepts along the way**
-# **NOTE: If you just want run the code and start to play, please go to the challenge version 1 python, clean in the folder**
-
-###### ----
+# Install dependencies
+# --------------------
 # For the challenge, we will need two significant dependencies:
-# `braindecode` and `eegdash`. The libraries will install PyTorch, Pytorch Audio, Scikit-learn, MNE, MNE-BIDS, and many other packages necessary for the many functions.
-# %% Install dependencies on colab or your local machine
-# !pip install braindecode
+# `braindecode` and `eegdash`. The libraries will install PyTorch,
+# Pytorch Audio, Scikit-learn, MNE, MNE-BIDS, and many other packages
+# necessary for the many functions.
+# Install dependencies on colab or your local machine, as eegdash
+# have braindecode as a dependency.
+# you can just run
 # !pip install eegdash
 
 ######################################################################
@@ -99,8 +100,8 @@ import copy
 from joblib import Parallel, delayed
 
 ######################################################################
-# 0. Check GPU availability
-# -------------------------
+# Check GPU availability
+# ----------------------
 #
 # Identify whether a CUDA-enabled GPU is available
 # and set the device accordingly.
@@ -120,9 +121,48 @@ else:
 print(msg)
 
 ######################################################################
-# 1. What are we decoding?
-# ------------------------
+# What are we decoding?
+# ---------------------
 #
+# To start to talk about what we want to analyse, the important thing
+# is to understand some basic concepts.
+#
+## **The brain decodes the problem**
+#
+# Broadly speaking, here *brain decoding* is the following problem:
+# given brain time-series signals $X \in \mathbb{R}^{C \times T}$ with
+# labels $y \in \mathcal{Y}$, we implement a neural network $f$ that
+# **decodes/translates** brain activity into the target label.
+#
+# We aim to translate recorded brain activity into its originating
+# stimulus, behavior, or mental state, [King, J-R. et al. (2020)](https://lauragwilliams.github.io/d/m/CognitionAlgorithm.pdf).
+#
+# The neural network $f$ applies a series of transformation layers
+# (e.g., `torch.nn.Conv2d`, `torch.nn.Linear`, `torch.nn.ELU`, `torch.nn.BatchNorm2d`)
+# to the data to filter, extract features, and learn embeddings
+# relevant to the optimization objective—in other words:
+#
+# $$
+# f_{\theta}: X \to y,
+# $$
+#
+# where $C$ (`n_chans`) is the number of channels/electrodes and $T$ (`n_times`)
+# is the temporal window length/epoch size over the interval of interest.
+# Here, $\theta$ denotes the parameters learned by the neural network.
+#
+# ----
+# For the competition, the HBN-EEG (Healthy Brain Network EEG Datasets)
+# dataset has `n_chans = 129` with the last channels as [reference channel](https://mne.tools/stable/auto_tutorials/preprocessing/55_setting_eeg_reference.html),
+# and we define the window length as `n_times = 200`, corresponding to 2-second windows.
+#
+# Your model should follow this definition exactly; any specific selection of channels,
+# filtering, or domain-adaptation technique must be performed **within the layers of the neural network model**.
+#
+# In this tutorial, we will use the `EEGNeX` model from `braindecode` as an example.
+# You can use any model you want, as long as it follows the input/output
+# definitions above.
+
+
 # The Contrast Change Detection (CCD) task relates to
 # `Steady-State Visual Evoked Potentials (SSVEP) <https://en.wikipedia.org/wiki/Steady-state_visually_evoked_potential>`__
 # and `Event-Related Potentials (ERP) <https://en.wikipedia.org/wiki/Event-related_potential>`__.

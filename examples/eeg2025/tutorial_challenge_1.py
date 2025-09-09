@@ -65,17 +65,6 @@ Challenge 1: Cross-Task Transfer Learning!
 # 5. Training the model.
 # 6. Evaluating test performance.
 # 7. Going further, *benchmark go brrr!*
-
-# | The tutorial assumes some prior knowledge of deep learning concepts and EEG concepts:|
-# | --- |
-# |* Standard neural network architectures, e.g., convolutional neural networks|
-# |* Optimization by batch gradient descent and backpropagation|
-# |* Overfitting, early stopping, regularisation |
-# |* Some knowledge of pytorch and, optionally, of the pytorch Lightning framework|
-# |* That you know what EEG is |
-# |* That you have basic familiarity with EEG preprocessing |
-# |* Like and support open-source :) |
-
 # **NOTE: You will still be able to run the whole notebook at your own pace and learn about these concepts along the way**
 # **NOTE: If you just want run the code and start to play, please go to the challenge version 1 python, clean in the folder**
 

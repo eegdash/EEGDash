@@ -14,6 +14,7 @@ from mne.utils import warn
 from mne_bids import find_matching_paths, get_bids_path_from_fname, read_raw_bids
 from pymongo import InsertOne, UpdateOne
 from s3fs import S3FileSystem
+from docstring_inheritance import NumpyDocstringInheritanceInitMeta
 
 from braindecode.datasets import BaseConcatDataset
 
@@ -635,7 +636,72 @@ class EEGDash:
         pass
 
 
-class EEGDashDataset(BaseConcatDataset):
+class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitMeta):
+    """Create a new EEGDashDataset from a given query or local BIDS dataset directory
+    and dataset name. An EEGDashDataset is pooled collection of EEGDashBaseDataset
+    instances (individual recordings) and is a subclass of braindecode's BaseConcatDataset.
+
+    Querying Examples:
+    ------------------
+    # Find by single subject
+    >>> ds = EEGDashDataset(dataset="ds005505", subject="NDARCA153NKE")
+
+    # Find by a list of subjects and a specific task
+    >>> subjects = ["NDARCA153NKE", "NDARXT792GY8"]
+    >>> ds = EEGDashDataset(dataset="ds005505", subject=subjects, task="RestingState")
+
+    # Use a raw MongoDB query for advanced filtering
+    >>> raw_query = {"dataset": "ds005505", "subject": {"$in": subjects}}
+    >>> ds = EEGDashDataset(query=raw_query)
+
+    Parameters
+    ----------
+    cache_dir : str | Path
+        Directory where data are cached locally. If not specified, a default
+        cache directory under the user cache is used.
+    query : dict | None
+        Raw MongoDB query to filter records. If provided, it is merged with
+        keyword filtering arguments (see ``**kwargs``) using logical AND.
+        You must provide at least a ``dataset`` (either in ``query`` or
+        as a keyword argument). Only fields in ``ALLOWED_QUERY_FIELDS`` are
+        considered for filtering.
+    dataset : str
+        Dataset identifier (e.g., ``"ds002718"``). Required if ``query`` does
+        not already specify a dataset.
+    task : str | list[str]
+        Task name(s) to filter by (e.g., ``"RestingState"``).
+    subject : str | list[str]
+        Subject identifier(s) to filter by (e.g., ``"NDARCA153NKE"``).
+    session : str | list[str]
+        Session identifier(s) to filter by (e.g., ``"1"``).
+    run : str | list[str]
+        Run identifier(s) to filter by (e.g., ``"1"``).
+    description_fields : list[str]
+        Fields to extract from each record and include in dataset descriptions
+        (e.g., "subject", "session", "run", "task").
+    s3_bucket : str | None
+        Optional S3 bucket URI (e.g., "s3://mybucket") to use instead of the
+        default OpenNeuro bucket when downloading data files.
+    records : list[dict] | None
+        Pre-fetched metadata records. If provided, the dataset is constructed
+        directly from these records and no MongoDB query is performed.
+    download : bool, default True
+        If False, load from local BIDS files only. Local data are expected
+        under ``cache_dir / dataset``; no DB or S3 access is attempted.
+    n_jobs : int
+        Number of parallel jobs to use where applicable (-1 uses all cores).
+    eeg_dash_instance : EEGDash | None
+        Optional existing EEGDash client to reuse for DB queries. If None,
+        a new client is created on demand, not used in the case of no download.
+    **kwargs : dict
+        Additional keyword arguments serving two purposes:
+        - Filtering: any keys present in ``ALLOWED_QUERY_FIELDS`` are treated
+            as query filters (e.g., ``dataset``, ``subject``, ``task``, ...).
+        - Dataset options: remaining keys are forwarded to the
+            ``EEGDashBaseDataset`` constructor.
+
+    """
+
     def __init__(
         self,
         cache_dir: str | Path,
@@ -656,59 +722,6 @@ class EEGDashDataset(BaseConcatDataset):
         eeg_dash_instance: EEGDash | None = None,
         **kwargs,
     ):
-        """Create a new EEGDashDataset from a given query or local BIDS dataset directory
-        and dataset name. An EEGDashDataset is pooled collection of EEGDashBaseDataset
-        instances (individual recordings) and is a subclass of braindecode's BaseConcatDataset.
-
-        Querying Examples:
-        ------------------
-        # Find by single subject
-        >>> ds = EEGDashDataset(dataset="ds005505", subject="NDARCA153NKE")
-
-        # Find by a list of subjects and a specific task
-        >>> subjects = ["NDARCA153NKE", "NDARXT792GY8"]
-        >>> ds = EEGDashDataset(dataset="ds005505", subject=subjects, task="RestingState")
-
-        # Use a raw MongoDB query for advanced filtering
-        >>> raw_query = {"dataset": "ds005505", "subject": {"$in": subjects}}
-        >>> ds = EEGDashDataset(query=raw_query)
-
-        Parameters
-        ----------
-        cache_dir : str | Path
-            Directory where data are cached locally. If not specified, a default
-            cache directory under the user cache is used.
-        query : dict | None
-            Raw MongoDB query to filter records. If provided, it is merged with
-            keyword filtering arguments (see ``**kwargs``) using logical AND.
-            You must provide at least a ``dataset`` (either in ``query`` or
-            as a keyword argument). Only fields in ``ALLOWED_QUERY_FIELDS`` are
-            considered for filtering.
-        description_fields : list[str]
-            Fields to extract from each record and include in dataset descriptions
-            (e.g., "subject", "session", "run", "task").
-        s3_bucket : str | None
-            Optional S3 bucket URI (e.g., "s3://mybucket") to use instead of the
-            default OpenNeuro bucket when downloading data files.
-        records : list[dict] | None
-            Pre-fetched metadata records. If provided, the dataset is constructed
-            directly from these records and no MongoDB query is performed.
-        download : bool, default True
-            If False, load from local BIDS files only. Local data are expected
-            under ``cache_dir / dataset``; no DB or S3 access is attempted.
-        n_jobs : int
-            Number of parallel jobs to use where applicable (-1 uses all cores).
-        eeg_dash_instance : EEGDash | None
-            Optional existing EEGDash client to reuse for DB queries. If None,
-            a new client is created on demand, not used in the case of no download.
-        **kwargs : dict
-            Additional keyword arguments serving two purposes:
-            - Filtering: any keys present in ``ALLOWED_QUERY_FIELDS`` are treated
-              as query filters (e.g., ``dataset``, ``subject``, ``task``, ...).
-            - Dataset options: remaining keys are forwarded to the
-              ``EEGDashBaseDataset`` constructor.
-
-        """
         # Parameters that don't need validation
         _suppress_comp_warning: bool = kwargs.pop("_suppress_comp_warning", False)
         self.s3_bucket = s3_bucket

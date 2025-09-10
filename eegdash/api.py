@@ -654,8 +654,7 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
     Parameters
     ----------
     cache_dir : str | Path
-        Directory where data are cached locally. If not specified, a default
-        cache directory under the user cache is used.
+        Directory where data are cached locally.
     query : dict | None
         Raw MongoDB query to filter records. If provided, it is merged with
         keyword filtering arguments (see ``**kwargs``) using logical AND.
@@ -728,8 +727,7 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
         self.n_jobs = n_jobs
         self.eeg_dash_instance = eeg_dash_instance or EEGDash()
 
-        # Resolve a unified cache directory across code/tests/CI
-        self.cache_dir = Path(cache_dir or get_default_cache_dir())
+        self.cache_dir = Path(cache_dir)
 
         if not self.cache_dir.exists():
             warn(f"Cache directory does not exist, creating it: {self.cache_dir}")

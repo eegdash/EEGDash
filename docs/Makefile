@@ -11,7 +11,7 @@ help:
 
 .PHONY: apidoc
 apidoc:
-	@python -m sphinx.ext.apidoc -o "$(APIDIR)/datasets" "../$(PKG)/dataset" -f -e -M
+	@python -m sphinx.ext.apidoc -o "$(APIDIR)/datasets" "../$(PKG)/datasets" -f -e -M
 
 # Standard build runs examples
 html: apidoc

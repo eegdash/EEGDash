@@ -14,7 +14,6 @@ import mne_bids
 import numpy as np
 import pandas as pd
 from bids import BIDSLayout
-from fsspec.callbacks import TqdmCallback
 from joblib import Parallel, delayed
 from mne._fiff.utils import _read_segments_file
 from mne.io import BaseRaw
@@ -22,8 +21,8 @@ from mne_bids import BIDSPath
 
 from braindecode.datasets import BaseDataset
 
-from .paths import get_default_cache_dir
 from . import downloader
+from .paths import get_default_cache_dir
 
 logger = logging.getLogger("eegdash")
 
@@ -110,7 +109,6 @@ class EEGDashBaseDataset(BaseDataset):
 
         self._raw = None
 
-
     def _get_raw_bids_args(self) -> dict[str, Any]:
         """Helper to restrict the metadata record to the fields needed to locate a BIDS
         recording.
@@ -137,7 +135,9 @@ class EEGDashBaseDataset(BaseDataset):
                     self.record,
                     self.s3_open_neuro,
                 )
-            self.filecache = downloader.download_s3_file(self.s3file, self.filecache, self.s3_open_neuro)
+            self.filecache = downloader.download_s3_file(
+                self.s3file, self.filecache, self.s3_open_neuro
+            )
             self.filenames = [self.filecache]
         if self._raw is None:
             # capturing any warnings
@@ -352,7 +352,9 @@ class EEGDashBaseRaw(BaseRaw):
         self.bids_dependencies = bids_dependencies
 
         if preload and not os.path.exists(self.filecache):
-            self.filecache = downloader.download_s3_file(self.s3file, self.filecache, self.s3_open_neuro)
+            self.filecache = downloader.download_s3_file(
+                self.s3file, self.filecache, self.s3_open_neuro
+            )
             self.filenames = [self.filecache]
             preload = self.filecache
 
@@ -378,7 +380,9 @@ class EEGDashBaseRaw(BaseRaw):
                     self.record,
                     self.s3_open_neuro,
                 )
-            self.filecache = downloader.download_s3_file(self.s3file, self.filecache, self.s3_open_neuro)
+            self.filecache = downloader.download_s3_file(
+                self.s3file, self.filecache, self.s3_open_neuro
+            )
             self.filenames = [self.filecache]
         else:  # not preload and file is not cached
             self.filenames = [self.filecache]

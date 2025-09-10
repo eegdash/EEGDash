@@ -1,8 +1,9 @@
+import logging
 import re
 from pathlib import Path
+
 import s3fs
 from fsspec.callbacks import TqdmCallback
-import logging
 
 logger = logging.getLogger(__name__)
 
@@ -129,6 +130,7 @@ def load_eeg_from_s3(s3path: str):
     """
     import tempfile
     from urllib.parse import urlsplit
+
     import mne
     import numpy as np
     import xarray as xr

@@ -1,9 +1,7 @@
 import logging
 import os
-import tempfile
 from pathlib import Path
 from typing import Any, Mapping
-from urllib.parse import urlsplit
 
 import mne
 import numpy as np
@@ -17,6 +15,7 @@ from pymongo import InsertOne, UpdateOne
 
 from braindecode.datasets import BaseConcatDataset
 
+from . import downloader
 from .bids_eeg_metadata import (
     build_query_from_kwargs,
     load_eeg_attrs_from_bids_file,
@@ -34,7 +33,6 @@ from .data_utils import (
 )
 from .mongodb import MongoConnectionManager
 from .paths import get_default_cache_dir
-from . import downloader
 
 logger = logging.getLogger("eegdash")
 
@@ -427,7 +425,9 @@ class EEGDash:
             results = Parallel(
                 n_jobs=-1 if len(sessions) > 1 else 1, prefer="threads", verbose=1
             )(
-                delayed(downloader.load_eeg_from_s3)(downloader.get_s3path("s3://openneuro.org", session["bidspath"]))
+                delayed(downloader.load_eeg_from_s3)(
+                    downloader.get_s3path("s3://openneuro.org", session["bidspath"])
+                )
                 for session in sessions
             )
         return results

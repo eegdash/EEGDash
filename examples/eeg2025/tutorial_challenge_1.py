@@ -224,7 +224,7 @@ from eegdash.hbn.windows import (
     add_extras_columns,
 )
 
-DATA_DIR = Path("data")
+DATA_DIR = Path("/Users/baristim/mne_data/eeg_challenge_completed")
 DATA_DIR.mkdir(parents=True, exist_ok=True)
 
 dataset_ccd = EEGChallengeDataset(
@@ -326,24 +326,16 @@ from skorch.helper import SliceDataset
 
 y_label = np.array(list(SliceDataset(single_windows, 1)))
 
-# Plot histogram of the response times with plotly
-import plotly.express as px
-import plotly.io as pio
+# Plot histogram of the response times with matplotlib
+import matplotlib.pyplot as plt
 
-# Prefer a renderer that plays nicely with Sphinx-Gallery so docs render
-# an image instead of a raw HTML MIME bundle. Fall back to a notebook renderer
-# when Sphinx-Gallery is unavailable.
-if "sphinx_gallery" in pio.renderers:
-    pio.renderers.default = "sphinx_gallery"
-else:
-    pio.renderers.default = "notebook_connected"
-fig = px.histogram(
-    y_label,
-    nbins=30,
-    title="Response Time Distribution",
-    labels={"value": "Response Time (s)", "count": "Count"},
-)
-fig.show()
+fig, ax = plt.subplots(figsize=(10, 5))
+ax.hist(y_label, bins=30)
+ax.set_title("Response Time Distribution")
+ax.set_xlabel("Response Time (s)")
+ax.set_ylabel("Count")
+plt.tight_layout()
+plt.show()
 
 
 ######################################################################

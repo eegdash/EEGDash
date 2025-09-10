@@ -224,8 +224,8 @@ from eegdash.hbn.windows import (
     add_extras_columns,
 )
 
-# Match tests' cache layout under ~/mne_data/eeg_challenge_cache
-DATA_DIR = (Path.home() / "mne_data" / "eeg_challenge_cache").resolve()
+# Match tests' cache layout under ~/eegdash_cache/eeg_challenge_cache
+DATA_DIR = (Path.home() / "eegdash_cache" / "eeg_challenge_cache").resolve()
 DATA_DIR.mkdir(parents=True, exist_ok=True)
 
 dataset_ccd = EEGChallengeDataset(

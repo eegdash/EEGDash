@@ -1,3 +1,10 @@
+"""
+This module defines specialized dataset classes for eegdash.
+
+It includes the EEGChallengeDataset for the EEG 2025 Challenge, which is a
+subclass of EEGDashDataset with specific configurations for the challenge.
+It also dynamically registers other OpenNeuro datasets based on a summary file.
+"""
 import logging
 from pathlib import Path
 
@@ -35,6 +42,10 @@ class EEGChallengeDataset(EEGDashDataset):
     **kwargs
         Passed through to :class:`EEGDashDataset`.
 
+    Raises
+    ------
+    ValueError
+        If the release name is unknown, or if the query contains the `dataset` key.
     """
 
     def __init__(
@@ -151,6 +162,8 @@ class EEGChallengeDataset(EEGDashDataset):
         )
 
 
+# Dynamically register OpenNeuro datasets as classes in the current namespace.
+# This allows for easy access to datasets by their class name, e.g., AmsterdamOpenHeart.
 registered_classes = register_openneuro_datasets(
     summary_file=Path(__file__).with_name("dataset_summary.csv"),
     base_class=EEGDashDataset,

@@ -1,3 +1,11 @@
+"""
+This module provides preprocessing functions for the HBN (Healthy Brain Network)
+dataset.
+
+It includes a preprocessor for re-annotating the raw data to create new events
+for eyes open and eyes closed, which is useful for cleaning and segmenting the
+data.
+"""
 import logging
 
 import mne
@@ -9,17 +17,21 @@ logger = logging.getLogger("eegdash")
 
 
 class hbn_ec_ec_reannotation(Preprocessor):
-    """Preprocessor to reannotate the raw data for eyes open and eyes closed events.
+    """Preprocessor to re-annotate HBN data for eyes open/closed events.
 
-    This processor is designed for HBN datasets.
+    This preprocessor is specifically designed for HBN datasets to create new
+    annotations for "eyes_open" and "eyes_closed" events based on the original
+    "instructed_toOpenEyes" and "instructed_toCloseEyes" events.
 
+    This is useful for creating epochs of clean, artifact-free data for further
+    analysis.
     """
 
     def __init__(self):
         super().__init__(fn=self.transform, apply_on_array=False)
 
     def transform(self, raw):
-        """Reannotate the raw data to create new events for eyes open and eyes closed
+        """Re-annotate the raw data for eyes open and eyes closed events.
 
         This function modifies the raw MNE object by creating new events based on
         the existing annotations for "instructed_toCloseEyes" and "instructed_toOpenEyes".
@@ -31,6 +43,10 @@ class hbn_ec_ec_reannotation(Preprocessor):
         raw : mne.io.Raw
             The raw MNE object containing EEG data and annotations.
 
+        Returns
+        -------
+        mne.io.Raw
+            The modified raw MNE object with the new annotations.
         """
         events, event_id = mne.events_from_annotations(raw)
 

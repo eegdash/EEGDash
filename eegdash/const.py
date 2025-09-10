@@ -1,3 +1,12 @@
+"""
+This module defines constants used throughout the eegdash package.
+
+It includes configurations for database queries, mappings between data releases
+and their corresponding OpenNeuro dataset identifiers, and other static data
+that is used across the application.
+"""
+
+# A set of fields that are allowed in user-facing queries.
 ALLOWED_QUERY_FIELDS = {
     "data_name",
     "dataset",
@@ -11,6 +20,7 @@ ALLOWED_QUERY_FIELDS = {
     "ntimes",
 }
 
+# A mapping from internal release identifiers to OpenNeuro dataset identifiers.
 RELEASE_TO_OPENNEURO_DATASET_MAP = {
     "R11": "ds005516",
     "R10": "ds005515",
@@ -25,6 +35,7 @@ RELEASE_TO_OPENNEURO_DATASET_MAP = {
     "R1": "ds005505",
 }
 
+# A mapping from release identifiers to a list of subject identifiers for mini-releases.
 SUBJECT_MINI_RELEASE_MAP = {
     "R11": [
         "NDARAB678VYW",
@@ -270,7 +281,9 @@ SUBJECT_MINI_RELEASE_MAP = {
     ],
 }
 
+# General configuration for data handling and metadata.
 config = {
+    # A list of fields that are required for a record to be considered valid.
     "required_fields": ["data_name"],
     # Default set of user-facing primary record attributes expected in the database. Records
     # where any of these are missing will be loaded with the respective attribute set to None.
@@ -288,9 +301,9 @@ config = {
         "nchans": "int",
         "ntimes": "int",  # note: this is really the number of seconds in the data, rounded down
     },
-    # queryable descriptive fields for a given recording
+    # Queryable descriptive fields for a given recording.
     "description_fields": ["subject", "session", "run", "task", "age", "gender", "sex"],
-    # list of filenames that may be present in the BIDS dataset directory that are used
+    # List of filenames that may be present in the BIDS dataset directory that are used
     # to load and interpret a given BIDS recording.
     "bids_dependencies_files": [
         "dataset_description.json",
@@ -302,5 +315,6 @@ config = {
         "channels.tsv",
         "coordsystem.json",
     ],
+    # A list of fields that are accepted in existence checks.
     "accepted_query_fields": ["data_name", "dataset"],
 }

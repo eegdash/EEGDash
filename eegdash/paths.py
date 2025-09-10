@@ -1,3 +1,9 @@
+"""
+This module provides utility functions for path management in eegdash.
+
+It includes functions for resolving cache directories and other path-related
+operations, ensuring a consistent and predictable file structure.
+"""
 from __future__ import annotations
 
 import os
@@ -9,10 +15,20 @@ from mne.utils import get_config as mne_get_config
 def get_default_cache_dir() -> Path:
     """Resolve a consistent default cache directory for EEGDash.
 
-    Priority order:
-    1) Environment variable ``EEGDASH_CACHE_DIR`` if set.
-    2) MNE config ``MNE_DATA`` if set (aligns with tests and ecosystem caches).
-    3) ``.eegdash_cache`` under the current working directory.
+    This function determines the cache directory based on a priority order,
+    making it easy to configure the cache location for different environments.
+
+    Returns
+    -------
+    Path
+        The path to the default cache directory.
+
+    Notes
+    -----
+    The priority order for resolving the cache directory is as follows:
+    1. Environment variable ``EEGDASH_CACHE_DIR`` if set.
+    2. MNE config ``MNE_DATA`` if set (aligns with tests and ecosystem caches).
+    3. ``.eegdash_cache`` under the current working directory.
     """
     # 1) Explicit env var wins
     env_dir = os.environ.get("EEGDASH_CACHE_DIR")

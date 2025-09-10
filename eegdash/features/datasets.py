@@ -1,3 +1,7 @@
+"""
+This module provides classes for handling feature datasets, extending the
+functionality of braindecode's dataset classes to work with tabular feature data.
+"""
 from __future__ import annotations
 
 import json
@@ -19,21 +23,31 @@ from braindecode.datasets.base import (
 
 
 class FeaturesDataset(EEGWindowsDataset):
-    """Returns samples from a pandas DataFrame object along with a target.
+    """A dataset class for handling tabular feature data.
 
-    Dataset which serves samples from a pandas DataFrame object along with a
-    target. The target is unique for the dataset, and is obtained through the
-    `description` attribute.
+    This dataset serves samples from a pandas DataFrame of features, along with
+    a target variable obtained from the dataset's description.
 
     Parameters
     ----------
-    features : a pandas DataFrame
-        Tabular data.
-    description : dict | pandas.Series | None
-        Holds additional description about the continuous signal / subject.
+    features : pd.DataFrame
+        A DataFrame containing the feature data.
+    metadata : pd.DataFrame | None
+        A DataFrame containing metadata for the features.
+    description : dict | pd.Series | None
+        Additional information about the continuous signal or subject.
     transform : callable | None
-        On-the-fly transform applied to the example before it is returned.
-
+        A function to apply to the features on-the-fly.
+    raw_info : dict | None
+        Information about the raw data.
+    raw_preproc_kwargs : dict | None
+        Keyword arguments for raw data preprocessing.
+    window_kwargs : dict | None
+        Keyword arguments for windowing.
+    window_preproc_kwargs : dict | None
+        Keyword arguments for window preprocessing.
+    features_kwargs : dict | None
+        Keyword arguments for feature extraction.
     """
 
     def __init__(
@@ -65,6 +79,18 @@ class FeaturesDataset(EEGWindowsDataset):
         self.y = metadata.loc[:, "target"].to_list()
 
     def __getitem__(self, index):
+        """Get a sample from the dataset.
+
+        Parameters
+        ----------
+        index : int
+            The index of the sample to retrieve.
+
+        Returns
+        -------
+        tuple
+            A tuple containing the features, target, and crop indices.
+        """
         crop_inds = self.crop_inds[index].tolist()
         X = self.features.iloc[index].to_numpy()
         X = X.copy()
@@ -75,6 +101,13 @@ class FeaturesDataset(EEGWindowsDataset):
         return X, y, crop_inds
 
     def __len__(self):
+        """Get the number of samples in the dataset.
+
+        Returns
+        -------
+        int
+            The number of samples.
+        """
         return len(self.features.index)
 
 
@@ -86,6 +119,28 @@ def _compute_stats(
     ddof=1,
     numeric_only=False,
 ):
+    """Compute statistics for a FeaturesDataset.
+
+    Parameters
+    ----------
+    ds : FeaturesDataset
+        The dataset to compute statistics for.
+    return_count : bool
+        Whether to return the count of non-NA cells.
+    return_mean : bool
+        Whether to return the mean of the values.
+    return_var : bool
+        Whether to return the variance of the values.
+    ddof : int
+        Delta Degrees of Freedom for variance calculation.
+    numeric_only : bool
+        Whether to include only numeric columns.
+
+    Returns
+    -------
+    tuple
+        A tuple of computed statistics.
+    """
     res = []
     if return_count:
         res.append(ds.features.count(numeric_only=numeric_only))
@@ -97,6 +152,26 @@ def _compute_stats(
 
 
 def _pooled_var(counts, means, variances, ddof, ddof_in=None):
+    """Compute the pooled variance.
+
+    Parameters
+    ----------
+    counts : array-like
+        The counts of each group.
+    means : array-like
+        The means of each group.
+    variances : array-like
+        The variances of each group.
+    ddof : int
+        Delta Degrees of Freedom for the pooled variance.
+    ddof_in : int, optional
+        Delta Degrees of Freedom for the input variances.
+
+    Returns
+    -------
+    tuple
+        A tuple of (count, mean, variance).
+    """
     if ddof_in is None:
         ddof_in = ddof
     count = counts.sum(axis=0)
@@ -109,18 +184,17 @@ def _pooled_var(counts, means, variances, ddof, ddof_in=None):
 
 
 class FeaturesConcatDataset(BaseConcatDataset):
-    """A base class for concatenated datasets.
+    """A concatenated dataset of FeaturesDataset objects.
 
-    Holds either mne.Raw or mne.Epoch in self.datasets and has
-    a pandas DataFrame with additional description.
+    This class holds a list of `FeaturesDataset` objects and provides methods
+    for splitting, saving, and manipulating the concatenated data.
 
     Parameters
     ----------
-    list_of_ds : list
-        list of BaseDataset, BaseConcatDataset or WindowsDataset
+    list_of_ds : list[FeaturesDataset]
+        A list of `FeaturesDataset` objects to concatenate.
     target_transform : callable | None
-        Optional function to call on targets before returning them.
-
+        An optional function to apply to targets before returning them.
     """
 
     def __init__(
@@ -209,41 +283,23 @@ class FeaturesConcatDataset(BaseConcatDataset):
         return pd.concat(all_dfs)
 
     def save(self, path: str, overwrite: bool = False, offset: int = 0):
-        """Save datasets to files by creating one subdirectory for each dataset:
-        path/
-            0/
-                0-feat.parquet
-                metadata_df.pkl
-                description.json
-                raw-info.fif (if raw info was saved)
-                raw_preproc_kwargs.json (if raws were preprocessed)
-                window_kwargs.json (if this is a windowed dataset)
-                window_preproc_kwargs.json  (if windows were preprocessed)
-                features_kwargs.json
-            1/
-                1-feat.parquet
-                metadata_df.pkl
-                description.json
-                raw-info.fif (if raw info was saved)
-                raw_preproc_kwargs.json (if raws were preprocessed)
-                window_kwargs.json (if this is a windowed dataset)
-                window_preproc_kwargs.json  (if windows were preprocessed)
-                features_kwargs.json
+        """Save datasets to files by creating one subdirectory for each dataset.
 
         Parameters
         ----------
         path : str
-            Directory in which subdirectories are created to store
-             -feat.parquet and .json files to.
+            Directory in which to save the datasets.
         overwrite : bool
-            Whether to delete old subdirectories that will be saved to in this
-            call.
+            Whether to overwrite existing subdirectories.
         offset : int
-            If provided, the integer is added to the id of the dataset in the
-            concat. This is useful in the setting of very large datasets, where
-            one dataset has to be processed and saved at a time to account for
-            its original position.
+            An offset to add to the subdirectory names.
 
+        Raises
+        ------
+        ValueError
+            If the dataset is empty.
+        FileExistsError
+            If a subdirectory already exists and `overwrite` is False.
         """
         if len(self.datasets) == 0:
             raise ValueError("Expect at least one dataset")
@@ -301,12 +357,34 @@ class FeaturesConcatDataset(BaseConcatDataset):
 
     @staticmethod
     def _save_features(sub_dir, ds, i_ds, offset):
+        """Save the features of a dataset to a parquet file.
+
+        Parameters
+        ----------
+        sub_dir : str
+            The directory to save the file in.
+        ds : FeaturesDataset
+            The dataset to save.
+        i_ds : int
+            The index of the dataset.
+        offset : int
+            The offset for the filename.
+        """
         parquet_file_name = f"{i_ds + offset}-feat.parquet"
         parquet_file_path = os.path.join(sub_dir, parquet_file_name)
         ds.features.to_parquet(parquet_file_path)
 
     @staticmethod
     def _save_raw_info(sub_dir, ds):
+        """Save the raw info of a dataset to a fif file.
+
+        Parameters
+        ----------
+        sub_dir : str
+            The directory to save the file in.
+        ds : FeaturesDataset
+            The dataset to save.
+        """
         if hasattr(ds, "raw_info"):
             fif_file_name = "raw-info.fif"
             fif_file_path = os.path.join(sub_dir, fif_file_name)
@@ -314,6 +392,15 @@ class FeaturesConcatDataset(BaseConcatDataset):
 
     @staticmethod
     def _save_kwargs(sub_dir, ds):
+        """Save the kwargs of a dataset to json files.
+
+        Parameters
+        ----------
+        sub_dir : str
+            The directory to save the files in.
+        ds : FeaturesDataset
+            The dataset to save.
+        """
         for kwargs_name in [
             "raw_preproc_kwargs",
             "window_kwargs",
@@ -333,7 +420,23 @@ class FeaturesConcatDataset(BaseConcatDataset):
         include_metadata: bool | str | List[str] = False,
         include_target: bool = False,
         include_crop_inds: bool = False,
-    ):
+    ) -> pd.DataFrame:
+        """Convert the dataset to a pandas DataFrame.
+
+        Parameters
+        ----------
+        include_metadata : bool | str | list[str]
+            Whether to include metadata in the DataFrame.
+        include_target : bool
+            Whether to include the target in the DataFrame.
+        include_crop_inds : bool
+            Whether to include crop indices in the DataFrame.
+
+        Returns
+        -------
+        pd.DataFrame
+            The dataset as a DataFrame.
+        """
         if (
             not isinstance(include_metadata, bool)
             or include_metadata
@@ -380,10 +483,31 @@ class FeaturesConcatDataset(BaseConcatDataset):
             dataframes = [ds.features for ds in self.datasets]
         return pd.concat(dataframes, axis=0, ignore_index=True)
 
-    def _numeric_columns(self):
+    def _numeric_columns(self) -> pd.Index:
+        """Get the numeric columns of the features.
+
+        Returns
+        -------
+        pd.Index
+            The numeric columns.
+        """
         return self.datasets[0].features.select_dtypes(include=np.number).columns
 
-    def count(self, numeric_only=False, n_jobs=1):
+    def count(self, numeric_only=False, n_jobs=1) -> pd.Series:
+        """Compute the count of non-NA cells for each column.
+
+        Parameters
+        ----------
+        numeric_only : bool
+            Whether to include only numeric columns.
+        n_jobs : int
+            The number of parallel jobs to run.
+
+        Returns
+        -------
+        pd.Series
+            The counts for each column.
+        """
         stats = Parallel(n_jobs)(
             delayed(_compute_stats)(ds, return_count=True, numeric_only=numeric_only)
             for ds in self.datasets
@@ -392,7 +516,21 @@ class FeaturesConcatDataset(BaseConcatDataset):
         count = counts.sum(axis=0)
         return pd.Series(count, index=self._numeric_columns())
 
-    def mean(self, numeric_only=False, n_jobs=1):
+    def mean(self, numeric_only=False, n_jobs=1) -> pd.Series:
+        """Compute the mean of the values for each column.
+
+        Parameters
+        ----------
+        numeric_only : bool
+            Whether to include only numeric columns.
+        n_jobs : int
+            The number of parallel jobs to run.
+
+        Returns
+        -------
+        pd.Series
+            The means for each column.
+        """
         stats = Parallel(n_jobs)(
             delayed(_compute_stats)(
                 ds, return_count=True, return_mean=True, numeric_only=numeric_only
@@ -404,7 +542,23 @@ class FeaturesConcatDataset(BaseConcatDataset):
         mean = np.sum((counts / count) * means, axis=0)
         return pd.Series(mean, index=self._numeric_columns())
 
-    def var(self, ddof=1, numeric_only=False, n_jobs=1):
+    def var(self, ddof=1, numeric_only=False, n_jobs=1) -> pd.Series:
+        """Compute the variance of the values for each column.
+
+        Parameters
+        ----------
+        ddof : int
+            Delta Degrees of Freedom.
+        numeric_only : bool
+            Whether to include only numeric columns.
+        n_jobs : int
+            The number of parallel jobs to run.
+
+        Returns
+        -------
+        pd.Series
+            The variances for each column.
+        """
         stats = Parallel(n_jobs)(
             delayed(_compute_stats)(
                 ds,
@@ -424,12 +578,43 @@ class FeaturesConcatDataset(BaseConcatDataset):
         _, _, var = _pooled_var(counts, means, variances, ddof, ddof_in=0)
         return pd.Series(var, index=self._numeric_columns())
 
-    def std(self, ddof=1, numeric_only=False, eps=0, n_jobs=1):
+    def std(self, ddof=1, numeric_only=False, eps=0, n_jobs=1) -> pd.Series:
+        """Compute the standard deviation of the values for each column.
+
+        Parameters
+        ----------
+        ddof : int
+            Delta Degrees of Freedom.
+        numeric_only : bool
+            Whether to include only numeric columns.
+        eps : float
+            A small value to add to the variance to avoid taking the square root of zero.
+        n_jobs : int
+            The number of parallel jobs to run.
+
+        Returns
+        -------
+        pd.Series
+            The standard deviations for each column.
+        """
         return np.sqrt(
             self.var(ddof=ddof, numeric_only=numeric_only, n_jobs=n_jobs) + eps
         )
 
     def zscore(self, ddof=1, numeric_only=False, eps=0, n_jobs=1):
+        """Compute the z-score of the values for each column.
+
+        Parameters
+        ----------
+        ddof : int
+            Delta Degrees of Freedom.
+        numeric_only : bool
+            Whether to include only numeric columns.
+        eps : float
+            A small value to add to the variance to avoid taking the square root of zero.
+        n_jobs : int
+            The number of parallel jobs to run.
+        """
         stats = Parallel(n_jobs)(
             delayed(_compute_stats)(
                 ds,
@@ -453,6 +638,20 @@ class FeaturesConcatDataset(BaseConcatDataset):
 
     @staticmethod
     def _enforce_inplace_operations(func_name, kwargs):
+        """Enforce that a method is called with `inplace=True`.
+
+        Parameters
+        ----------
+        func_name : str
+            The name of the method.
+        kwargs : dict
+            The keyword arguments passed to the method.
+
+        Raises
+        ------
+        ValueError
+            If `inplace` is False.
+        """
         if "inplace" in kwargs and kwargs["inplace"] is False:
             raise ValueError(
                 f"{func_name} only works inplace, please change "
@@ -461,31 +660,85 @@ class FeaturesConcatDataset(BaseConcatDataset):
         kwargs["inplace"] = True
 
     def fillna(self, *args, **kwargs):
+        """Fill NA/NaN values using the specified method.
+
+        Parameters
+        ----------
+        *args
+            Positional arguments passed to `pandas.DataFrame.fillna`.
+        **kwargs
+            Keyword arguments passed to `pandas.DataFrame.fillna`.
+        """
         FeaturesConcatDataset._enforce_inplace_operations("fillna", kwargs)
         for ds in self.datasets:
             ds.features.fillna(*args, **kwargs)
 
     def replace(self, *args, **kwargs):
+        """Replace values given in `to_replace` with `value`.
+
+        Parameters
+        ----------
+        *args
+            Positional arguments passed to `pandas.DataFrame.replace`.
+        **kwargs
+            Keyword arguments passed to `pandas.DataFrame.replace`.
+        """
         FeaturesConcatDataset._enforce_inplace_operations("replace", kwargs)
         for ds in self.datasets:
             ds.features.replace(*args, **kwargs)
 
     def interpolate(self, *args, **kwargs):
+        """Interpolate values according to different methods.
+
+        Parameters
+        ----------
+        *args
+            Positional arguments passed to `pandas.DataFrame.interpolate`.
+        **kwargs
+            Keyword arguments passed to `pandas.DataFrame.interpolate`.
+        """
         FeaturesConcatDataset._enforce_inplace_operations("interpolate", kwargs)
         for ds in self.datasets:
             ds.features.interpolate(*args, **kwargs)
 
     def dropna(self, *args, **kwargs):
+        """Remove missing values.
+
+        Parameters
+        ----------
+        *args
+            Positional arguments passed to `pandas.DataFrame.dropna`.
+        **kwargs
+            Keyword arguments passed to `pandas.DataFrame.dropna`.
+        """
         FeaturesConcatDataset._enforce_inplace_operations("dropna", kwargs)
         for ds in self.datasets:
             ds.features.dropna(*args, **kwargs)
 
     def drop(self, *args, **kwargs):
+        """Drop specified labels from rows or columns.
+
+        Parameters
+        ----------
+        *args
+            Positional arguments passed to `pandas.DataFrame.drop`.
+        **kwargs
+            Keyword arguments passed to `pandas.DataFrame.drop`.
+        """
         FeaturesConcatDataset._enforce_inplace_operations("drop", kwargs)
         for ds in self.datasets:
             ds.features.drop(*args, **kwargs)
 
     def join(self, concat_dataset: FeaturesConcatDataset, **kwargs):
+        """Join columns of another FeaturesConcatDataset.
+
+        Parameters
+        ----------
+        concat_dataset : FeaturesConcatDataset
+            The dataset to join with.
+        **kwargs
+            Keyword arguments passed to `pandas.DataFrame.join`.
+        """
         assert len(self.datasets) == len(concat_dataset.datasets)
         for ds1, ds2 in zip(self.datasets, concat_dataset.datasets):
             assert len(ds1) == len(ds2)

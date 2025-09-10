@@ -2,96 +2,135 @@
 
 [![PyPI version](https://img.shields.io/pypi/v/eegdash)](https://pypi.org/project/eegdash/)
 [![Docs](https://img.shields.io/badge/docs-stable-brightgreen.svg)](https://sccn.github.io/eegdash)
-
 [![License: GPL-2.0-or-later](https://img.shields.io/badge/License-GPL--2.0--or--later-blue.svg)](LICENSE)
 [![Python versions](https://img.shields.io/pypi/pyversions/eegdash.svg)](https://pypi.org/project/eegdash/)
 [![Downloads](https://pepy.tech/badge/eegdash)](https://pepy.tech/project/eegdash)
-<!-- [![Coverage](https://img.shields.io/codecov/c/github/sccn/eegdash)](https://codecov.io/gh/sccn/eegdash) -->
 
-To leverage recent and ongoing advancements in large-scale computational methods and to ensure the preservation of scientific data generated from publicly funded research, the EEG-DaSh data archive will create a data-sharing resource for MEEG (EEG, MEG) data contributed by collaborators for machine learning (ML) and deep learning (DL) applications. 
+EEG-Dash is a Python package designed to simplify access to and analysis of large-scale MEEG (EEG, MEG) datasets. It provides a high-level interface for querying and retrieving data from the EEG-DaSh data archive, as well as tools for feature extraction and analysis.
 
-## Data source
+## Core Concepts
 
-The data in EEG-DaSh originates from a collaboration involving 25 laboratories, encompassing 27,053 participants. This extensive collection includes MEEG data, which is a combination of EEG and MEG signals. The data is sourced from various studies conducted by these labs, involving both healthy subjects and clinical populations with conditions such as ADHD, depression, schizophrenia, dementia, autism, and psychosis. Additionally, data spans different mental states like sleep, meditation, and cognitive tasks. In addition, EEG-DaSh will incorporate a subset of the data converted from NEMAR, which includes 330 MEEG BIDS-formatted datasets, further expanding the archive with well-curated, standardized neuroelectromagnetic data.
+The `eegdash` package is built around a few core concepts:
 
-## Featured data
+-   **`EEGDash`**: The main entry point for interacting with the EEG-DaSh database. It provides methods for finding, adding, and updating metadata records.
+-   **`EEGDashDataset`**: A PyTorch-compatible dataset class that represents a collection of EEG recordings. It allows for easy integration with machine learning and deep learning pipelines.
+-   **Feature Extractors**: A set of classes and functions for extracting features from EEG signals. These are designed to be modular and extensible, allowing you to easily create and apply custom feature extraction pipelines.
 
-The following HBN datasets are currently featured on EEGDash. Documentation about these datasets is available [here](https://neuromechanist.github.io/data/hbn/).
+## Getting Started
 
-| DatasetID | Participants | Files | Sessions | Population | Channels | Is 10-20? | Modality | Size |
-|---|---|---|---|---|---|---|---|---|
-| [ds005505](https://nemar.org/dataexplorer/detail?dataset_id=ds005505) | 136 | 5393 | 1 | Healthy | 129 | other | Visual | 103 GB |
-| [ds005506](https://nemar.org/dataexplorer/detail?dataset_id=ds005506) | 150 | 5645 | 1 | Healthy | 129 | other | Visual | 112 GB |
-| [ds005507](https://nemar.org/dataexplorer/detail?dataset_id=ds005507) | 184 | 7273 | 1 | Healthy | 129 | other | Visual | 140 GB |
-| [ds005508](https://nemar.org/dataexplorer/detail?dataset_id=ds005508) | 324 | 13393 | 1 | Healthy | 129 | other | Visual | 230 GB |
-| [ds005510](https://nemar.org/dataexplorer/detail?dataset_id=ds005510) | 135 | 4933 | 1 | Healthy | 129 | other | Visual | 91 GB |
-| [ds005512](https://nemar.org/dataexplorer/detail?dataset_id=ds005512) | 257 | 9305 | 1 | Healthy | 129 | other | Visual | 157 GB |
-| [ds005514](https://nemar.org/dataexplorer/detail?dataset_id=ds005514) | 295 | 11565 | 1 | Healthy | 129 | other | Visual | 185 GB |
+### Installation
 
-A total of [246 other datasets](datasets.md) are also available through EEGDash. 
+To get started with `eegdash`, you need to have Python > 3.9 installed. You can install the package using `pip`:
 
-## Data format
+```bash
+pip install eegdash
+```
 
-EEGDash queries return a **Pytorch Dataset** formatted to facilitate machine learning (ML) and deep learning (DL) applications. PyTorch Datasets are the best format for EEGDash queries because they provide an efficient, scalable, and flexible structure for machine learning (ML) and deep learning (DL) applications. They allow seamless integration with PyTorch’s DataLoader, enabling efficient batching, shuffling, and parallel data loading, which is essential for training deep learning models on large EEG datasets.
+To verify the installation, open a Python interpreter and run:
 
-## Data preprocessing
+```python
+from eegdash import EEGDash
+```
 
-EEGDash datasets are processed using the popular [braindecode](https://braindecode.org/stable/index.html) library. In fact, EEGDash datasets are braindecode datasets, which are themselves PyTorch datasets. This means that any preprocessing possible on braindecode datasets is also possible on EEGDash datasets. Refer to [braindecode](https://braindecode.org/stable/index.html) tutorials for guidance on preprocessing EEG data.
+### Basic Usage
 
-## EEG-Dash usage
-
-### Install
-Use your preferred Python environment manager with Python > 3.9 to install the package.
-* To install the eegdash package, use the following command: `pip install eegdash`
-* To verify the installation, start a Python session and type: `from eegdash import EEGDash`
-
-### Data access
-
-To use the data from a single subject, enter:
+Here's a simple example of how to query the database and load a dataset:
 
 ```python
 from eegdash import EEGDashDataset
 
-ds_NDARDB033FW5 = EEGDashDataset(
-    {"dataset": "ds005514", "task":
-     "RestingState", "subject": "NDARDB033FW5"}, 
-     cache_dir="."
+# Find all recordings for a specific subject and task
+ds = EEGDashDataset(
+    dataset="ds005505",
+    subject="NDARCA153NKE",
+    task="RestingState",
+    cache_dir="."
 )
+
+# The `ds` object is a braindecode dataset, which is a PyTorch dataset.
+# You can now use it with a PyTorch DataLoader:
+from torch.utils.data import DataLoader
+
+loader = DataLoader(ds, batch_size=32, shuffle=True)
 ```
 
-This will search and download the metadata for the task **RestingState** for subject **NDARDB033FW5** in BIDS dataset **ds005514**. The actual data will not be downloaded at this stage. Following standard practice, data is only downloaded once it is processed. The **ds_NDARDB033FW5** object is a fully functional braindecode dataset, which is itself a PyTorch dataset. This [tutorial](https://github.com/sccn/EEGDash/blob/develop/notebooks/tutorial_eoec.ipynb) shows how to preprocess the EEG data, extracting portions of the data containing eyes-open and eyes-closed segments, then perform eyes-open vs. eyes-closed classification using a (shallow) deep-learning model. 
+## Data Access
 
-To use the data from multiple subjects, enter:
+### Querying the Database
+
+You can query the database using keyword arguments to `EEGDashDataset`, or by passing a raw MongoDB query.
+
+**Keyword Arguments:**
 
 ```python
-from eegdash import EEGDashDataset
-
-ds_ds005505rest = EEGDashDataset(
-    {"dataset": "ds005505", "task": "RestingState"}, target_name="sex", cache_dir=".
+# Find all recordings for a list of subjects and a specific task
+subjects = ["NDARCA153NKE", "NDARXT792GY8"]
+ds = EEGDashDataset(
+    dataset="ds005505",
+    subject=subjects,
+    task="RestingState",
+    cache_dir="."
 )
 ```
 
-This will search and download the metadata for the task 'RestingState' for all subjects in BIDS dataset 'ds005505' (a total of 136). As above, the actual data will not be downloaded at this stage so this command is quick to execute. Also, the target class for each subject is assigned using the target_name parameter. This means that this object is ready to be directly fed to a deep learning model, although the [tutorial script](https://github.com/sccn/EEGDash/blob/develop/notebooks/tutorial_sex_classification.ipynb) performs minimal processing on it, prior to training a deep-learning model. Because 14 gigabytes of data are downloaded, this tutorial takes about 10 minutes to execute.
+**Raw MongoDB Query:**
 
-### Automatic caching
+```python
+# Use a raw MongoDB query for more advanced filtering
+raw_query = {
+    "dataset": "ds005505",
+    "subject": {"$in": ["NDARCA153NKE", "NDARXT792GY8"]},
+    "task": "RestingState"
+}
+ds = EEGDashDataset(query=raw_query, cache_dir=".")
+```
+
+### Automatic Caching
 
 By default, EEGDash caches downloaded data under a single, consistent folder:
 
-- If ``EEGDASH_CACHE_DIR`` is set in your environment, that path is used.
-- Else, if MNE’s ``MNE_DATA`` config is set, that path is used to align with other EEG tooling.
-- Otherwise, ``.eegdash_cache`` in the current working directory is used.
+-   If `EEGDASH_CACHE_DIR` is set in your environment, that path is used.
+-   Else, if MNE’s `MNE_DATA` config is set, that path is used to align with other EEG tooling.
+-   Otherwise, `.eegdash_cache` in the current working directory is used.
 
-This means that if you run the tutorial [scripts](https://github.com/sccn/EEGDash/tree/develop/notebooks), the data will only be downloaded the first time the script is executed and reused thereafter.
+This means that data is only downloaded the first time it is accessed and is reused in subsequent runs.
 
-## Education -- Coming soon...
+## Feature Extraction
 
-We organize workshops and educational events to foster cross-cultural education and student training, offering both online and in-person opportunities in collaboration with US and Israeli partners. Events for 2025 will be announced via the EEGLABNEWS mailing list. Be sure to [subscribe](https://sccn.ucsd.edu/mailman/listinfo/eeglabnews).
+`eegdash` provides a powerful and flexible feature extraction pipeline. You can use the built-in feature extractors or create your own.
+
+Here's an example of how to extract features from a dataset:
+
+```python
+from eegdash.features import extract_features
+from eegdash.features.feature_bank import signal_mean, signal_std
+
+# Define the features to extract
+features = {
+    "mean": signal_mean,
+    "std": signal_std,
+}
+
+# Extract the features
+feature_ds = extract_features(ds, features)
+
+# The `feature_ds` object is a FeaturesConcatDataset, which can be converted
+# to a pandas DataFrame for further analysis.
+df = feature_ds.to_dataframe()
+```
+
+## Contributing
+
+We welcome contributions to `eegdash`! If you'd like to contribute, please follow these steps:
+
+1.  Fork the repository on GitHub.
+2.  Create a new branch for your feature or bug fix.
+3.  Make your changes and write tests for them.
+4.  Run the tests to ensure everything is working correctly.
+5.  Submit a pull request with a clear description of your changes.
 
 ## About EEG-DaSh
 
-EEG-DaSh is a collaborative initiative between the United States and Israel, supported by the National Science Foundation (NSF). The partnership brings together experts from the Swartz Center for Computational Neuroscience (SCCN) at the University of California San Diego (UCSD) and Ben-Gurion University (BGU) in Israel. 
+EEG-DaSh is a collaborative initiative between the United States and Israel, supported by the National Science Foundation (NSF). The partnership brings together experts from the Swartz Center for Computational Neuroscience (SCCN) at the University of California San Diego (UCSD) and Ben-Gurion University (BGU) in Israel.
 
 ![Screenshot 2024-10-03 at 09 14 06](https://github.com/user-attachments/assets/327639d3-c3b4-46b1-9335-37803209b0d3)
-
-
-

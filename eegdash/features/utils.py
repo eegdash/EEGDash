@@ -1,3 +1,9 @@
+"""
+This module provides utility functions for feature extraction from EEG data.
+
+It includes functions for extracting features from windowed datasets and for
+fitting feature extractors to the data.
+"""
 import copy
 from collections.abc import Callable
 from typing import Dict, List
@@ -23,6 +29,22 @@ def _extract_features_from_windowsdataset(
     feature_extractor: FeatureExtractor,
     batch_size: int = 512,
 ):
+    """Extract features from a single EEGWindowsDataset.
+
+    Parameters
+    ----------
+    win_ds : EEGWindowsDataset or WindowsDataset
+        The windowed dataset to extract features from.
+    feature_extractor : FeatureExtractor
+        The feature extractor to use.
+    batch_size : int, default 512
+        The batch size for feature extraction.
+
+    Returns
+    -------
+    FeaturesDataset
+        A dataset containing the extracted features.
+    """
     metadata = win_ds.metadata
     if not win_ds.targets_from == "metadata":
         metadata = copy.deepcopy(metadata)
@@ -74,6 +96,26 @@ def extract_features(
     batch_size: int = 512,
     n_jobs: int = 1,
 ):
+    """Extract features from a concatenated dataset of windowed datasets.
+
+    Parameters
+    ----------
+    concat_dataset : BaseConcatDataset
+        A concatenated dataset of `EEGWindowsDataset` or `WindowsDataset` objects.
+    features : FeatureExtractor or dict or list
+        The feature extractor(s) to use. Can be a `FeatureExtractor` instance,
+        a dictionary of feature functions, or a list of feature functions.
+    batch_size : int, default 512
+        The batch size for feature extraction.
+    n_jobs : int, default 1
+        The number of parallel jobs to use for feature extraction.
+
+    Returns
+    -------
+    FeaturesConcatDataset
+        A concatenated dataset of `FeaturesDataset` objects containing the
+        extracted features.
+    """
     if isinstance(features, list):
         features = dict(enumerate(features))
     if not isinstance(features, FeatureExtractor):
@@ -98,6 +140,23 @@ def fit_feature_extractors(
     features: FeatureExtractor | Dict[str, Callable] | List[Callable],
     batch_size: int = 8192,
 ):
+    """Fit trainable feature extractors to a dataset.
+
+    Parameters
+    ----------
+    concat_dataset : BaseConcatDataset
+        A concatenated dataset of `EEGWindowsDataset` or `WindowsDataset` objects.
+    features : FeatureExtractor or dict or list
+        The feature extractor(s) to fit. Can be a `FeatureExtractor` instance,
+        a dictionary of feature functions, or a list of feature functions.
+    batch_size : int, default 8192
+        The batch size for fitting.
+
+    Returns
+    -------
+    FeatureExtractor
+        The fitted feature extractor.
+    """
     if isinstance(features, list):
         features = dict(enumerate(features))
     if not isinstance(features, FeatureExtractor):

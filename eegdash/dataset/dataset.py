@@ -12,6 +12,31 @@ logger = logging.getLogger("eegdash")
 
 
 class EEGChallengeDataset(EEGDashDataset):
+    """EEG 2025 Challenge dataset helper.
+
+    This class provides a convenient wrapper around :class:`EEGDashDataset`
+    configured for the EEG 2025 Challenge releases. It maps a given
+    ``release`` to its corresponding OpenNeuro dataset and optionally restricts
+    to the official "mini" subject subset.
+
+    Parameters
+    ----------
+    release : str
+        Release name. One of ["R1", ..., "R11"].
+    cache_dir : str
+        Local cache directory for data files.
+    mini : bool, default True
+        If True, restrict subjects to the challenge mini subset.
+    query : dict | None
+        Additional MongoDB-style filters to AND with the release selection.
+        Must not contain the key ``dataset``.
+    s3_bucket : str | None, default "s3://nmdatasets/NeurIPS25"
+        Base S3 bucket used to locate the challenge data.
+    **kwargs
+        Passed through to :class:`EEGDashDataset`.
+
+    """
+
     def __init__(
         self,
         release: str,
@@ -21,31 +46,6 @@ class EEGChallengeDataset(EEGDashDataset):
         s3_bucket: str | None = "s3://nmdatasets/NeurIPS25",
         **kwargs,
     ):
-        """Create a new EEGDashDataset from a given query or local BIDS dataset directory
-        and dataset name. An EEGDashDataset is pooled collection of EEGDashBaseDataset
-        instances (individual recordings) and is a subclass of braindecode's BaseConcatDataset.
-
-        Parameters
-        ----------
-        release: str
-            Release name. Can be one of ["R1", ..., "R11"]
-        mini: bool, default True
-            Whether to use the mini-release version of the dataset. It is recommended
-            to use the mini version for faster training and evaluation.
-        query : dict | None
-            Optionally a dictionary that specifies a query to be executed,
-            in addition to the dataset (automatically inferred from the release argument).
-            See EEGDash.find() for details on the query format.
-        cache_dir : str
-            A directory where the dataset will be cached locally.
-        s3_bucket : str | None
-            An optional S3 bucket URI to use instead of the
-            default OpenNeuro bucket for loading data files.
-        kwargs : dict
-            Additional keyword arguments to be passed to the EEGDashDataset
-            constructor.
-
-        """
         self.release = release
         self.mini = mini
 

@@ -21,6 +21,7 @@ from mne_bids import BIDSPath
 from braindecode.datasets import BaseDataset
 
 from . import downloader
+from .bids_eeg_metadata import enrich_from_participants
 from .paths import get_default_cache_dir
 
 logger = logging.getLogger("eegdash")
@@ -148,36 +149,11 @@ class EEGDashBaseDataset(BaseDataset):
                     self._raw = mne_bids.read_raw_bids(
                         bids_path=self.bidspath, verbose="ERROR"
                     )
+                # Enrich Raw.info and description with participants.tsv extras
+                enrich_from_participants(
+                    self.bids_root, self.bidspath, self._raw, self.description
+                )
 
-                # Read participants.tsv directly to attach any extra fields for this subject
-                extras = self._extract_participants_extras_from_tsv()
-                if extras:
-                    # 1) Attach to Raw.info under subject_info.participants_extras
-                    try:
-                        subject_info = self._raw.info.get("subject_info") or {}
-                        if not isinstance(subject_info, dict):
-                            subject_info = {}
-                        pe = subject_info.get("participants_extras") or {}
-                        if not isinstance(pe, dict):
-                            pe = {}
-                        for k, v in extras.items():
-                            pe.setdefault(k, v)  # Merge without overwriting
-                        subject_info["participants_extras"] = pe
-                        self._raw.info["subject_info"] = subject_info
-                    except Exception:
-                        pass  # Non-fatal
-
-                    # 2) Also add to this dataset's description, if possible
-                    try:
-                        if isinstance(self.description, dict):
-                            for k, v in extras.items():
-                                self.description.setdefault(k, v)
-                        elif isinstance(self.description, pd.Series):
-                            for k, v in extras.items():
-                                if k not in self.description.index:
-                                    self.description.loc[k] = v
-                    except Exception:
-                        pass
             except Exception as e:
                 logger.error(
                     f"Error while reading BIDS file: {self.bidspath}\n"
@@ -187,65 +163,6 @@ class EEGDashBaseDataset(BaseDataset):
                 logger.error(f"Exception: {e}")
                 logger.error(traceback.format_exc())
                 raise e
-
-    def _extract_participants_extras_from_tsv(self) -> dict[str, Any]:
-        """Read participants.tsv directly and return non-standard fields for this subject.
-
-        This avoids parsing mne-bids warnings by loading the row matching the current
-        subject and returning all columns except the identifier. Values are treated as
-        strings, and empty/NA-like values are ignored.
-        """
-        try:
-            participants_tsv = self.bids_root / "participants.tsv"
-            if not participants_tsv.exists():
-                return {}
-
-            # Load as strings to avoid type coercion surprises
-            df = pd.read_csv(participants_tsv, sep="\t", dtype=str)
-            if df.empty:
-                return {}
-
-            # Determine the participant identifier to match
-            subj = getattr(self.bidspath, "subject", None) or self.bids_kwargs.get(
-                "subject"
-            )
-            if not subj:
-                return {}
-            candidates = {subj, f"sub-{subj}"}
-
-            # Find the row for this subject
-            row = None
-            id_col = None
-            for candidate_col in ("participant_id", "participant", "subject"):
-                if candidate_col in df.columns:
-                    matched = df[df[candidate_col].isin(candidates)]
-                    if not matched.empty:
-                        row = matched.iloc[0]
-                        id_col = candidate_col
-                        break
-            if row is None:
-                return {}
-
-            # Collect extras: everything except the identifier column
-            na_like = {"", "n/a", "na", "nan", "unknown", "None", None}
-            extras: dict[str, Any] = {}
-            for col in df.columns:
-                if col == id_col:
-                    continue
-                val = row.get(col)
-                if isinstance(val, float) and pd.isna(val):
-                    continue
-                if val is None:
-                    continue
-                sval = str(val).strip()
-                if sval.lower() in na_like:
-                    continue
-                if col not in extras:
-                    extras[col] = sval
-            return extras
-        except Exception:
-            # Don't let metadata parsing issues break data loading
-            return {}
 
     # === BaseDataset and PyTorch Dataset interface ===
     def __getitem__(self, index):

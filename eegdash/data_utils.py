@@ -166,11 +166,6 @@ class EEGDashBaseDataset(BaseDataset):
                 logger.error(traceback.format_exc())
                 raise e
 
-    def load(self):
-        if self.raw is None:
-            self.raw = self._load_data()
-        return self
-
     def __len__(self) -> int:
         """Return the number of samples in the dataset."""
         if self._raw is None:

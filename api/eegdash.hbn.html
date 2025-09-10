@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>eegdash.features.feature_bank.complexity module &#8212; EEG Dash</title>
+    <title>eegdash.hbn package &#8212; EEG Dash</title>
   
   
   
@@ -48,13 +48,13 @@
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/design-tabs.js?v=f930bc37"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'api/eegdash.features.feature_bank.complexity';</script>
-    <link rel="canonical" href="https://sccn.github.io/eegdash/api/eegdash.features.feature_bank.complexity.html" />
+    <script>DOCUMENTATION_OPTIONS.pagename = 'api/eegdash.hbn';</script>
+    <link rel="canonical" href="https://sccn.github.io/eegdash/api/eegdash.hbn.html" />
     <link rel="icon" href="../_static/eegdash_icon.png"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="eegdash.features.feature_bank.connectivity module" href="eegdash.features.feature_bank.connectivity.html" />
-    <link rel="prev" title="eegdash.features.feature_bank package" href="eegdash.features.feature_bank.html" />
+    <link rel="next" title="eegdash.hbn.preprocessing module" href="eegdash.hbn.preprocessing.html" />
+    <link rel="prev" title="eegdash.features.utils module" href="eegdash.features.utils.html" />
   
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -443,9 +443,9 @@
 <li class="toctree-l3"><a class="reference internal" href="eegdash.dataset.registry.html">eegdash.dataset.registry module</a></li>
 </ul>
 </details></li>
-<li class="toctree-l2 current active has-children"><a class="reference internal" href="eegdash.features.html">eegdash.features package</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
-<li class="toctree-l3 current active has-children"><a class="reference internal" href="eegdash.features.feature_bank.html">eegdash.features.feature_bank package</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
-<li class="toctree-l4 current active"><a class="current reference internal" href="#">eegdash.features.feature_bank.complexity module</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="eegdash.features.html">eegdash.features package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="eegdash.features.feature_bank.html">eegdash.features.feature_bank package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="eegdash.features.feature_bank.complexity.html">eegdash.features.feature_bank.complexity module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="eegdash.features.feature_bank.connectivity.html">eegdash.features.feature_bank.connectivity module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="eegdash.features.feature_bank.csp.html">eegdash.features.feature_bank.csp module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="eegdash.features.feature_bank.dimensionality.html">eegdash.features.feature_bank.dimensionality module</a></li>
@@ -462,7 +462,7 @@
 <li class="toctree-l3"><a class="reference internal" href="eegdash.features.utils.html">eegdash.features.utils module</a></li>
 </ul>
 </details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="eegdash.hbn.html">eegdash.hbn package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 current active has-children"><a class="current reference internal" href="#">eegdash.hbn package</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="eegdash.hbn.preprocessing.html">eegdash.hbn.preprocessing module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="eegdash.hbn.windows.html">eegdash.hbn.windows module</a></li>
 </ul>
@@ -522,13 +522,7 @@
     
     <li class="breadcrumb-item"><a href="eegdash.html" class="nav-link">eegdash package</a></li>
     
-    
-    <li class="breadcrumb-item"><a href="eegdash.features.html" class="nav-link">eegdash.features package</a></li>
-    
-    
-    <li class="breadcrumb-item"><a href="eegdash.features.feature_bank.html" class="nav-link">eegdash.features.feature_bank package</a></li>
-    
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">eegdash.features.feature_bank.complexity module</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">eegdash.hbn package</span></li>
   </ul>
 </nav>
 </div>
@@ -545,44 +539,80 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="module-eegdash.features.feature_bank.complexity">
-<span id="eegdash-features-feature-bank-complexity-module"></span><h1>eegdash.features.feature_bank.complexity module<a class="headerlink" href="#module-eegdash.features.feature_bank.complexity" title="Link to this heading">#</a></h1>
-<dl class="py class">
-<dt class="sig sig-object py" id="eegdash.features.feature_bank.complexity.EntropyFeatureExtractor">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.complexity.</span></span><span class="sig-name descname"><span class="pre">EntropyFeatureExtractor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">feature_extractors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Callable</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">preprocess_kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/feature_bank/complexity.py#L32-L41"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.feature_bank.complexity.EntropyFeatureExtractor" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <a class="reference internal" href="eegdash.features.extractors.html#eegdash.features.extractors.FeatureExtractor" title="eegdash.features.extractors.FeatureExtractor"><code class="xref py py-class docutils literal notranslate"><span class="pre">FeatureExtractor</span></code></a></p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="eegdash.features.feature_bank.complexity.EntropyFeatureExtractor.parent_extractor_type">
-<span class="sig-name descname"><span class="pre">parent_extractor_type</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(&lt;class</span> <span class="pre">'eegdash.features.extractors.FeatureExtractor'&gt;,</span> <span class="pre">&lt;class</span> <span class="pre">'eegdash.features.feature_bank.signal.HilbertFeatureExtractor'&gt;)</span></em><a class="headerlink" href="#eegdash.features.feature_bank.complexity.EntropyFeatureExtractor.parent_extractor_type" title="Link to this definition">#</a></dt>
+  <section id="module-eegdash.hbn">
+<span id="eegdash-hbn-package"></span><h1>eegdash.hbn package<a class="headerlink" href="#module-eegdash.hbn" title="Link to this heading">#</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="eegdash.hbn.add_aux_anchors">
+<span class="sig-prename descclassname"><span class="pre">eegdash.hbn.</span></span><span class="sig-name descname"><span class="pre">add_aux_anchors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">raw</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stim_desc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'stimulus_anchor'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resp_desc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'response_anchor'</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/hbn/windows.py#L169-L217"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.hbn.add_aux_anchors" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
-<dl class="py method">
-<dt class="sig sig-object py" id="eegdash.features.feature_bank.complexity.EntropyFeatureExtractor.preprocess">
-<span class="sig-name descname"><span class="pre">preprocess</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">m</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">l</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/feature_bank/complexity.py#L34-L41"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.feature_bank.complexity.EntropyFeatureExtractor.preprocess" title="Link to this definition">#</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="eegdash.hbn.add_extras_columns">
+<span class="sig-prename descclassname"><span class="pre">eegdash.hbn.</span></span><span class="sig-name descname"><span class="pre">add_extras_columns</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">windows_concat_ds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">original_concat_ds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">desc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'contrast_trial_start'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keys</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">('target',</span> <span class="pre">'rt_from_stimulus',</span> <span class="pre">'rt_from_trialstart',</span> <span class="pre">'stimulus_onset',</span> <span class="pre">'response_onset',</span> <span class="pre">'correct',</span> <span class="pre">'response_type')</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/hbn/windows.py#L220-L293"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.hbn.add_extras_columns" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eegdash.hbn.annotate_trials_with_target">
+<span class="sig-prename descclassname"><span class="pre">eegdash.hbn.</span></span><span class="sig-name descname"><span class="pre">annotate_trials_with_target</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">raw</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_field</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'rt_from_stimulus'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epoch_length</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">require_stimulus</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">require_response</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/hbn/windows.py#L107-L166"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.hbn.annotate_trials_with_target" title="Link to this definition">#</a></dt>
+<dd><p>Create ‘contrast_trial_start’ annotations with float target in extras.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eegdash.hbn.build_trial_table">
+<span class="sig-prename descclassname"><span class="pre">eegdash.hbn.</span></span><span class="sig-name descname"><span class="pre">build_trial_table</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">events_df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/hbn/windows.py#L13-L82"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.hbn.build_trial_table" title="Link to this definition">#</a></dt>
+<dd><p>One row per contrast trial with stimulus/response metrics.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="eegdash.hbn.hbn_ec_ec_reannotation">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">eegdash.hbn.</span></span><span class="sig-name descname"><span class="pre">hbn_ec_ec_reannotation</span></span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/hbn/preprocessing.py#L11-L63"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.hbn.hbn_ec_ec_reannotation" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Preprocessor</span></code></p>
+<p>Preprocessor to reannotate the raw data for eyes open and eyes closed events.</p>
+<p>This processor is designed for HBN datasets.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="eegdash.hbn.hbn_ec_ec_reannotation.transform">
+<span class="sig-name descname"><span class="pre">transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">raw</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/hbn/preprocessing.py#L21-L63"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.hbn.hbn_ec_ec_reannotation.transform" title="Link to this definition">#</a></dt>
+<dd><p>Reannotate the raw data to create new events for eyes open and eyes closed</p>
+<p>This function modifies the raw MNE object by creating new events based on
+the existing annotations for “instructed_toCloseEyes” and “instructed_toOpenEyes”.
+It generates new events every 2 seconds within specified time ranges after
+the original events, and replaces the existing annotations with these new events.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>raw</strong> (<em>mne.io.Raw</em>) – The raw MNE object containing EEG data and annotations.</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="eegdash.features.feature_bank.complexity.complexity_approx_entropy">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.complexity.</span></span><span class="sig-name descname"><span class="pre">complexity_approx_entropy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">counts_m</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">counts_mp1</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/feature_bank/complexity.py#L44-L49"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.feature_bank.complexity.complexity_approx_entropy" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="eegdash.hbn.keep_only_recordings_with">
+<span class="sig-prename descclassname"><span class="pre">eegdash.hbn.</span></span><span class="sig-name descname"><span class="pre">keep_only_recordings_with</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">desc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">concat_ds</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/hbn/windows.py#L296-L305"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.hbn.keep_only_recordings_with" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
-<dl class="py function">
-<dt class="sig sig-object py" id="eegdash.features.feature_bank.complexity.complexity_lempel_ziv">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.complexity.</span></span><span class="sig-name descname"><span class="pre">complexity_lempel_ziv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/feature_bank/complexity.py#L71-L102"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.feature_bank.complexity.complexity_lempel_ziv" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="eegdash.features.feature_bank.complexity.complexity_sample_entropy">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.complexity.</span></span><span class="sig-name descname"><span class="pre">complexity_sample_entropy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">counts_m</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">counts_mp1</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/feature_bank/complexity.py#L52-L57"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.feature_bank.complexity.complexity_sample_entropy" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="eegdash.features.feature_bank.complexity.complexity_svd_entropy">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.complexity.</span></span><span class="sig-name descname"><span class="pre">complexity_svd_entropy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">m</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/feature_bank/complexity.py#L60-L68"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.feature_bank.complexity.complexity_svd_entropy" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading">#</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="eegdash.hbn.preprocessing.html">eegdash.hbn.preprocessing module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.hbn.preprocessing.html#eegdash.hbn.preprocessing.hbn_ec_ec_reannotation"><code class="docutils literal notranslate"><span class="pre">hbn_ec_ec_reannotation</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="eegdash.hbn.preprocessing.html#eegdash.hbn.preprocessing.hbn_ec_ec_reannotation.transform"><code class="docutils literal notranslate"><span class="pre">hbn_ec_ec_reannotation.transform()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="eegdash.hbn.windows.html">eegdash.hbn.windows module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.hbn.windows.html#eegdash.hbn.windows.add_aux_anchors"><code class="docutils literal notranslate"><span class="pre">add_aux_anchors()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.hbn.windows.html#eegdash.hbn.windows.add_extras_columns"><code class="docutils literal notranslate"><span class="pre">add_extras_columns()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.hbn.windows.html#eegdash.hbn.windows.annotate_trials_with_target"><code class="docutils literal notranslate"><span class="pre">annotate_trials_with_target()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.hbn.windows.html#eegdash.hbn.windows.build_trial_table"><code class="docutils literal notranslate"><span class="pre">build_trial_table()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.hbn.windows.html#eegdash.hbn.windows.keep_only_recordings_with"><code class="docutils literal notranslate"><span class="pre">keep_only_recordings_with()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
 </section>
 
 
@@ -596,20 +626,20 @@
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="eegdash.features.feature_bank.html"
+       href="eegdash.features.utils.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">eegdash.features.feature_bank package</p>
+        <p class="prev-next-title">eegdash.features.utils module</p>
       </div>
     </a>
     <a class="right-next"
-       href="eegdash.features.feature_bank.connectivity.html"
+       href="eegdash.hbn.preprocessing.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">eegdash.features.feature_bank.connectivity module</p>
+        <p class="prev-next-title">eegdash.hbn.preprocessing module</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -632,15 +662,16 @@
   </div>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.features.feature_bank.complexity.EntropyFeatureExtractor"><code class="docutils literal notranslate"><span class="pre">EntropyFeatureExtractor</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.features.feature_bank.complexity.EntropyFeatureExtractor.parent_extractor_type"><code class="docutils literal notranslate"><span class="pre">EntropyFeatureExtractor.parent_extractor_type</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.features.feature_bank.complexity.EntropyFeatureExtractor.preprocess"><code class="docutils literal notranslate"><span class="pre">EntropyFeatureExtractor.preprocess()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.hbn.add_aux_anchors"><code class="docutils literal notranslate"><span class="pre">add_aux_anchors()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.hbn.add_extras_columns"><code class="docutils literal notranslate"><span class="pre">add_extras_columns()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.hbn.annotate_trials_with_target"><code class="docutils literal notranslate"><span class="pre">annotate_trials_with_target()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.hbn.build_trial_table"><code class="docutils literal notranslate"><span class="pre">build_trial_table()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.hbn.hbn_ec_ec_reannotation"><code class="docutils literal notranslate"><span class="pre">hbn_ec_ec_reannotation</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.hbn.hbn_ec_ec_reannotation.transform"><code class="docutils literal notranslate"><span class="pre">hbn_ec_ec_reannotation.transform()</span></code></a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.features.feature_bank.complexity.complexity_approx_entropy"><code class="docutils literal notranslate"><span class="pre">complexity_approx_entropy()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.features.feature_bank.complexity.complexity_lempel_ziv"><code class="docutils literal notranslate"><span class="pre">complexity_lempel_ziv()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.features.feature_bank.complexity.complexity_sample_entropy"><code class="docutils literal notranslate"><span class="pre">complexity_sample_entropy()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.features.feature_bank.complexity.complexity_svd_entropy"><code class="docutils literal notranslate"><span class="pre">complexity_svd_entropy()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.hbn.keep_only_recordings_with"><code class="docutils literal notranslate"><span class="pre">keep_only_recordings_with()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#submodules">Submodules</a></li>
 </ul>
   </nav></div>
 
@@ -648,7 +679,7 @@
 
   
   <div class="tocsection editthispage">
-    <a href="https://github.com/sccn/EEGDash/edit/main/docs/source/api/eegdash.features.feature_bank.complexity.rst">
+    <a href="https://github.com/sccn/EEGDash/edit/main/docs/source/api/eegdash.hbn.rst">
       <i class="fa-solid fa-pencil"></i>
       
       
@@ -664,7 +695,7 @@
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
-      <li><a href="../_sources/api/eegdash.features.feature_bank.complexity.rst.txt"
+      <li><a href="../_sources/api/eegdash.hbn.rst.txt"
             rel="nofollow">Show Source</a></li>
     </ul>
    </div></div>

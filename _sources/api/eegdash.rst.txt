@@ -14,6 +14,7 @@ Subpackages
 
    eegdash.dataset
    eegdash.features
+   eegdash.hbn
 
 Submodules
 ----------

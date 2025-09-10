@@ -36,7 +36,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css?v=2082cf3c" />
     <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
-    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=9a68e97c" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=235a86f3" />
   
   <!-- So that users can add custom icons -->
   <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
@@ -44,7 +44,7 @@
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../_static/documentation_options.js?v=29d04658"></script>
+    <script src="../_static/documentation_options.js?v=65b26183"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/design-tabs.js?v=f930bc37"></script>
@@ -462,6 +462,11 @@
 <li class="toctree-l3"><a class="reference internal" href="eegdash.features.utils.html">eegdash.features.utils module</a></li>
 </ul>
 </details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="eegdash.hbn.html">eegdash.hbn package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="eegdash.hbn.preprocessing.html">eegdash.hbn.preprocessing module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eegdash.hbn.windows.html">eegdash.hbn.windows module</a></li>
+</ul>
+</details></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.api.html">eegdash.api module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.bids_eeg_metadata.html">eegdash.bids_eeg_metadata module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.const.html">eegdash.const module</a></li>
@@ -538,25 +543,45 @@
 <span id="eegdash-dataset-package"></span><h1>eegdash.dataset package<a class="headerlink" href="#module-eegdash.dataset" title="Link to this heading">#</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="eegdash.dataset.EEGChallengeDataset">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">eegdash.dataset.</span></span><span class="sig-name descname"><span class="pre">EEGChallengeDataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">release</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cache_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mini</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">query</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s3_bucket</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'s3://nmdatasets/NeurIPS25'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.dataset.EEGChallengeDataset" title="Link to this definition">#</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">eegdash.dataset.</span></span><span class="sig-name descname"><span class="pre">EEGChallengeDataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">release</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cache_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mini</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">query</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s3_bucket</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'s3://nmdatasets/NeurIPS25'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/dataset/dataset.py#L14-L151"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.dataset.EEGChallengeDataset" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="eegdash.api.html#eegdash.api.EEGDashDataset" title="eegdash.api.EEGDashDataset"><code class="xref py py-class docutils literal notranslate"><span class="pre">EEGDashDataset</span></code></a></p>
-<p>Create a new EEGDashDataset from a given query or local BIDS dataset directory
-and dataset name. An EEGDashDataset is pooled collection of EEGDashBaseDataset
-instances (individual recordings) and is a subclass of braindecode’s BaseConcatDataset.</p>
+<p>EEG 2025 Challenge dataset helper.</p>
+<p>This class provides a convenient wrapper around <code class="xref py py-class docutils literal notranslate"><span class="pre">EEGDashDataset</span></code>
+configured for the EEG 2025 Challenge releases. It maps a given
+<code class="docutils literal notranslate"><span class="pre">release</span></code> to its corresponding OpenNeuro dataset and optionally restricts
+to the official “mini” subject subset.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>release</strong> (<em>str</em>) – Release name. Can be one of [“R1”, …, “R11”]</p></li>
-<li><p><strong>mini</strong> (<em>bool</em><em>, </em><em>default True</em>) – Whether to use the mini-release version of the dataset. It is recommended
-to use the mini version for faster training and evaluation.</p></li>
-<li><p><strong>query</strong> (<em>dict</em><em> | </em><em>None</em>) – Optionally a dictionary that specifies a query to be executed,
-in addition to the dataset (automatically inferred from the release argument).
-See EEGDash.find() for details on the query format.</p></li>
-<li><p><strong>cache_dir</strong> (<em>str</em>) – A directory where the dataset will be cached locally.</p></li>
-<li><p><strong>s3_bucket</strong> (<em>str</em><em> | </em><em>None</em>) – An optional S3 bucket URI to use instead of the
-default OpenNeuro bucket for loading data files.</p></li>
-<li><p><strong>kwargs</strong> (<em>dict</em>) – Additional keyword arguments to be passed to the EEGDashDataset
-constructor.</p></li>
+<li><p><strong>release</strong> (<em>str</em>) – Release name. One of [“R1”, …, “R11”].</p></li>
+<li><p><strong>cache_dir</strong> (<em>str</em>) – Local cache directory for data files.</p></li>
+<li><p><strong>mini</strong> (<em>bool</em><em>, </em><em>default True</em>) – If True, restrict subjects to the challenge mini subset.</p></li>
+<li><p><strong>query</strong> (<em>dict</em><em> | </em><em>None</em>) – Additional MongoDB-style filters to AND with the release selection.
+Must not contain the key <code class="docutils literal notranslate"><span class="pre">dataset</span></code>.</p></li>
+<li><p><strong>s3_bucket</strong> (<em>str</em><em> | </em><em>None</em><em>, </em><em>default &quot;s3://nmdatasets/NeurIPS25&quot;</em>) – Base S3 bucket used to locate the challenge data.</p></li>
+<li><p><strong>**kwargs</strong> – Passed through to <code class="xref py py-class docutils literal notranslate"><span class="pre">EEGDashDataset</span></code>.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<p># Find by single subject
+&gt;&gt;&gt; ds = EEGDashDataset(dataset=”ds005505”, subject=”NDARCA153NKE”)</p>
+<p># Find by a list of subjects and a specific task
+&gt;&gt;&gt; subjects = [“NDARCA153NKE”, “NDARXT792GY8”]
+&gt;&gt;&gt; ds = EEGDashDataset(dataset=”ds005505”, subject=subjects, task=”RestingState”)</p>
+<p># Use a raw MongoDB query for advanced filtering
+&gt;&gt;&gt; raw_query = {“dataset”: “ds005505”, “subject”: {“$in”: subjects}}
+&gt;&gt;&gt; ds = EEGDashDataset(query=raw_query)</p>
+<p>Initialize self.  See help(type(self)) for accurate signature.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>release</strong> – The description is missing.</p></li>
+<li><p><strong>cache_dir</strong> – The description is missing.</p></li>
+<li><p><strong>mini</strong> – The description is missing.</p></li>
+<li><p><strong>query</strong> – The description is missing.</p></li>
+<li><p><strong>s3_bucket</strong> – The description is missing.</p></li>
+<li><p><strong>**kwargs</strong> – The description is missing.</p></li>
 </ul>
 </dd>
 </dl>
@@ -564,7 +589,7 @@ constructor.</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="eegdash.dataset.register_openneuro_datasets">
-<span class="sig-prename descclassname"><span class="pre">eegdash.dataset.</span></span><span class="sig-name descname"><span class="pre">register_openneuro_datasets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">summary_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_class</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">namespace</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_to_all</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">type</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#eegdash.dataset.register_openneuro_datasets" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">eegdash.dataset.</span></span><span class="sig-name descname"><span class="pre">register_openneuro_datasets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">summary_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_class</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">namespace</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_to_all</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">type</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/dataset/registry.py#L10-L90"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.dataset.register_openneuro_datasets" title="Link to this definition">#</a></dt>
 <dd><p>Dynamically create dataset classes from a summary file.</p>
 </dd></dl>
 
@@ -573,262 +598,262 @@ constructor.</p></li>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="eegdash.dataset.dataset.html">eegdash.dataset.dataset module</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.0"><code class="docutils literal notranslate"><span class="pre">0</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.1"><code class="docutils literal notranslate"><span class="pre">1</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.10"><code class="docutils literal notranslate"><span class="pre">10</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.100"><code class="docutils literal notranslate"><span class="pre">100</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.101"><code class="docutils literal notranslate"><span class="pre">101</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.102"><code class="docutils literal notranslate"><span class="pre">102</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.103"><code class="docutils literal notranslate"><span class="pre">103</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.104"><code class="docutils literal notranslate"><span class="pre">104</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.105"><code class="docutils literal notranslate"><span class="pre">105</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.106"><code class="docutils literal notranslate"><span class="pre">106</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.107"><code class="docutils literal notranslate"><span class="pre">107</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.108"><code class="docutils literal notranslate"><span class="pre">108</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.109"><code class="docutils literal notranslate"><span class="pre">109</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.11"><code class="docutils literal notranslate"><span class="pre">11</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.110"><code class="docutils literal notranslate"><span class="pre">110</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.111"><code class="docutils literal notranslate"><span class="pre">111</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.112"><code class="docutils literal notranslate"><span class="pre">112</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.113"><code class="docutils literal notranslate"><span class="pre">113</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.114"><code class="docutils literal notranslate"><span class="pre">114</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.115"><code class="docutils literal notranslate"><span class="pre">115</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.116"><code class="docutils literal notranslate"><span class="pre">116</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.117"><code class="docutils literal notranslate"><span class="pre">117</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.118"><code class="docutils literal notranslate"><span class="pre">118</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.119"><code class="docutils literal notranslate"><span class="pre">119</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.12"><code class="docutils literal notranslate"><span class="pre">12</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.120"><code class="docutils literal notranslate"><span class="pre">120</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.121"><code class="docutils literal notranslate"><span class="pre">121</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.122"><code class="docutils literal notranslate"><span class="pre">122</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.123"><code class="docutils literal notranslate"><span class="pre">123</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.124"><code class="docutils literal notranslate"><span class="pre">124</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.125"><code class="docutils literal notranslate"><span class="pre">125</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.126"><code class="docutils literal notranslate"><span class="pre">126</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.127"><code class="docutils literal notranslate"><span class="pre">127</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.128"><code class="docutils literal notranslate"><span class="pre">128</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.129"><code class="docutils literal notranslate"><span class="pre">129</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.13"><code class="docutils literal notranslate"><span class="pre">13</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.130"><code class="docutils literal notranslate"><span class="pre">130</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.131"><code class="docutils literal notranslate"><span class="pre">131</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.132"><code class="docutils literal notranslate"><span class="pre">132</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.133"><code class="docutils literal notranslate"><span class="pre">133</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.134"><code class="docutils literal notranslate"><span class="pre">134</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.135"><code class="docutils literal notranslate"><span class="pre">135</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.136"><code class="docutils literal notranslate"><span class="pre">136</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.137"><code class="docutils literal notranslate"><span class="pre">137</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.138"><code class="docutils literal notranslate"><span class="pre">138</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.139"><code class="docutils literal notranslate"><span class="pre">139</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.14"><code class="docutils literal notranslate"><span class="pre">14</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.140"><code class="docutils literal notranslate"><span class="pre">140</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.141"><code class="docutils literal notranslate"><span class="pre">141</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.142"><code class="docutils literal notranslate"><span class="pre">142</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.143"><code class="docutils literal notranslate"><span class="pre">143</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.144"><code class="docutils literal notranslate"><span class="pre">144</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.145"><code class="docutils literal notranslate"><span class="pre">145</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.146"><code class="docutils literal notranslate"><span class="pre">146</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.147"><code class="docutils literal notranslate"><span class="pre">147</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.148"><code class="docutils literal notranslate"><span class="pre">148</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.149"><code class="docutils literal notranslate"><span class="pre">149</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.15"><code class="docutils literal notranslate"><span class="pre">15</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.150"><code class="docutils literal notranslate"><span class="pre">150</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.151"><code class="docutils literal notranslate"><span class="pre">151</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.152"><code class="docutils literal notranslate"><span class="pre">152</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.153"><code class="docutils literal notranslate"><span class="pre">153</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.154"><code class="docutils literal notranslate"><span class="pre">154</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.155"><code class="docutils literal notranslate"><span class="pre">155</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.156"><code class="docutils literal notranslate"><span class="pre">156</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.157"><code class="docutils literal notranslate"><span class="pre">157</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.158"><code class="docutils literal notranslate"><span class="pre">158</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.159"><code class="docutils literal notranslate"><span class="pre">159</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.16"><code class="docutils literal notranslate"><span class="pre">16</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.160"><code class="docutils literal notranslate"><span class="pre">160</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.161"><code class="docutils literal notranslate"><span class="pre">161</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.162"><code class="docutils literal notranslate"><span class="pre">162</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.163"><code class="docutils literal notranslate"><span class="pre">163</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.164"><code class="docutils literal notranslate"><span class="pre">164</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.165"><code class="docutils literal notranslate"><span class="pre">165</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.166"><code class="docutils literal notranslate"><span class="pre">166</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.167"><code class="docutils literal notranslate"><span class="pre">167</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.168"><code class="docutils literal notranslate"><span class="pre">168</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.169"><code class="docutils literal notranslate"><span class="pre">169</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.17"><code class="docutils literal notranslate"><span class="pre">17</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.170"><code class="docutils literal notranslate"><span class="pre">170</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.171"><code class="docutils literal notranslate"><span class="pre">171</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.172"><code class="docutils literal notranslate"><span class="pre">172</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.173"><code class="docutils literal notranslate"><span class="pre">173</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.174"><code class="docutils literal notranslate"><span class="pre">174</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.175"><code class="docutils literal notranslate"><span class="pre">175</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.176"><code class="docutils literal notranslate"><span class="pre">176</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.177"><code class="docutils literal notranslate"><span class="pre">177</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.178"><code class="docutils literal notranslate"><span class="pre">178</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.179"><code class="docutils literal notranslate"><span class="pre">179</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.18"><code class="docutils literal notranslate"><span class="pre">18</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.180"><code class="docutils literal notranslate"><span class="pre">180</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.181"><code class="docutils literal notranslate"><span class="pre">181</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.182"><code class="docutils literal notranslate"><span class="pre">182</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.183"><code class="docutils literal notranslate"><span class="pre">183</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.184"><code class="docutils literal notranslate"><span class="pre">184</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.185"><code class="docutils literal notranslate"><span class="pre">185</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.186"><code class="docutils literal notranslate"><span class="pre">186</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.187"><code class="docutils literal notranslate"><span class="pre">187</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.188"><code class="docutils literal notranslate"><span class="pre">188</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.189"><code class="docutils literal notranslate"><span class="pre">189</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.19"><code class="docutils literal notranslate"><span class="pre">19</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.190"><code class="docutils literal notranslate"><span class="pre">190</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.191"><code class="docutils literal notranslate"><span class="pre">191</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.192"><code class="docutils literal notranslate"><span class="pre">192</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.193"><code class="docutils literal notranslate"><span class="pre">193</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.194"><code class="docutils literal notranslate"><span class="pre">194</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.195"><code class="docutils literal notranslate"><span class="pre">195</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.196"><code class="docutils literal notranslate"><span class="pre">196</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.197"><code class="docutils literal notranslate"><span class="pre">197</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.198"><code class="docutils literal notranslate"><span class="pre">198</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.199"><code class="docutils literal notranslate"><span class="pre">199</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.2"><code class="docutils literal notranslate"><span class="pre">2</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.20"><code class="docutils literal notranslate"><span class="pre">20</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.200"><code class="docutils literal notranslate"><span class="pre">200</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.201"><code class="docutils literal notranslate"><span class="pre">201</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.202"><code class="docutils literal notranslate"><span class="pre">202</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.203"><code class="docutils literal notranslate"><span class="pre">203</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.204"><code class="docutils literal notranslate"><span class="pre">204</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.205"><code class="docutils literal notranslate"><span class="pre">205</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.206"><code class="docutils literal notranslate"><span class="pre">206</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.207"><code class="docutils literal notranslate"><span class="pre">207</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.208"><code class="docutils literal notranslate"><span class="pre">208</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.209"><code class="docutils literal notranslate"><span class="pre">209</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.21"><code class="docutils literal notranslate"><span class="pre">21</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.210"><code class="docutils literal notranslate"><span class="pre">210</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.211"><code class="docutils literal notranslate"><span class="pre">211</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.212"><code class="docutils literal notranslate"><span class="pre">212</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.213"><code class="docutils literal notranslate"><span class="pre">213</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.214"><code class="docutils literal notranslate"><span class="pre">214</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.215"><code class="docutils literal notranslate"><span class="pre">215</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.216"><code class="docutils literal notranslate"><span class="pre">216</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.217"><code class="docutils literal notranslate"><span class="pre">217</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.218"><code class="docutils literal notranslate"><span class="pre">218</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.219"><code class="docutils literal notranslate"><span class="pre">219</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.22"><code class="docutils literal notranslate"><span class="pre">22</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.220"><code class="docutils literal notranslate"><span class="pre">220</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.221"><code class="docutils literal notranslate"><span class="pre">221</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.222"><code class="docutils literal notranslate"><span class="pre">222</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.223"><code class="docutils literal notranslate"><span class="pre">223</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.224"><code class="docutils literal notranslate"><span class="pre">224</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.225"><code class="docutils literal notranslate"><span class="pre">225</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.226"><code class="docutils literal notranslate"><span class="pre">226</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.227"><code class="docutils literal notranslate"><span class="pre">227</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.228"><code class="docutils literal notranslate"><span class="pre">228</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.229"><code class="docutils literal notranslate"><span class="pre">229</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.23"><code class="docutils literal notranslate"><span class="pre">23</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.230"><code class="docutils literal notranslate"><span class="pre">230</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.231"><code class="docutils literal notranslate"><span class="pre">231</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.232"><code class="docutils literal notranslate"><span class="pre">232</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.233"><code class="docutils literal notranslate"><span class="pre">233</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.234"><code class="docutils literal notranslate"><span class="pre">234</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.235"><code class="docutils literal notranslate"><span class="pre">235</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.236"><code class="docutils literal notranslate"><span class="pre">236</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.237"><code class="docutils literal notranslate"><span class="pre">237</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.238"><code class="docutils literal notranslate"><span class="pre">238</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.239"><code class="docutils literal notranslate"><span class="pre">239</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.24"><code class="docutils literal notranslate"><span class="pre">24</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.240"><code class="docutils literal notranslate"><span class="pre">240</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.241"><code class="docutils literal notranslate"><span class="pre">241</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.242"><code class="docutils literal notranslate"><span class="pre">242</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.243"><code class="docutils literal notranslate"><span class="pre">243</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.244"><code class="docutils literal notranslate"><span class="pre">244</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.245"><code class="docutils literal notranslate"><span class="pre">245</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.246"><code class="docutils literal notranslate"><span class="pre">246</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.247"><code class="docutils literal notranslate"><span class="pre">247</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.248"><code class="docutils literal notranslate"><span class="pre">248</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.249"><code class="docutils literal notranslate"><span class="pre">249</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.25"><code class="docutils literal notranslate"><span class="pre">25</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.250"><code class="docutils literal notranslate"><span class="pre">250</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.251"><code class="docutils literal notranslate"><span class="pre">251</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.252"><code class="docutils literal notranslate"><span class="pre">252</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.253"><code class="docutils literal notranslate"><span class="pre">253</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.254"><code class="docutils literal notranslate"><span class="pre">254</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.26"><code class="docutils literal notranslate"><span class="pre">26</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.27"><code class="docutils literal notranslate"><span class="pre">27</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.28"><code class="docutils literal notranslate"><span class="pre">28</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.29"><code class="docutils literal notranslate"><span class="pre">29</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.3"><code class="docutils literal notranslate"><span class="pre">3</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.30"><code class="docutils literal notranslate"><span class="pre">30</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.31"><code class="docutils literal notranslate"><span class="pre">31</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.32"><code class="docutils literal notranslate"><span class="pre">32</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.33"><code class="docutils literal notranslate"><span class="pre">33</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.34"><code class="docutils literal notranslate"><span class="pre">34</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.35"><code class="docutils literal notranslate"><span class="pre">35</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.36"><code class="docutils literal notranslate"><span class="pre">36</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.37"><code class="docutils literal notranslate"><span class="pre">37</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.38"><code class="docutils literal notranslate"><span class="pre">38</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.39"><code class="docutils literal notranslate"><span class="pre">39</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.4"><code class="docutils literal notranslate"><span class="pre">4</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.40"><code class="docutils literal notranslate"><span class="pre">40</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.41"><code class="docutils literal notranslate"><span class="pre">41</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.42"><code class="docutils literal notranslate"><span class="pre">42</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.43"><code class="docutils literal notranslate"><span class="pre">43</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.44"><code class="docutils literal notranslate"><span class="pre">44</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.45"><code class="docutils literal notranslate"><span class="pre">45</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.46"><code class="docutils literal notranslate"><span class="pre">46</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.47"><code class="docutils literal notranslate"><span class="pre">47</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.48"><code class="docutils literal notranslate"><span class="pre">48</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.49"><code class="docutils literal notranslate"><span class="pre">49</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.5"><code class="docutils literal notranslate"><span class="pre">5</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.50"><code class="docutils literal notranslate"><span class="pre">50</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.51"><code class="docutils literal notranslate"><span class="pre">51</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.52"><code class="docutils literal notranslate"><span class="pre">52</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.53"><code class="docutils literal notranslate"><span class="pre">53</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.54"><code class="docutils literal notranslate"><span class="pre">54</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.55"><code class="docutils literal notranslate"><span class="pre">55</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.56"><code class="docutils literal notranslate"><span class="pre">56</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.57"><code class="docutils literal notranslate"><span class="pre">57</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.58"><code class="docutils literal notranslate"><span class="pre">58</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.59"><code class="docutils literal notranslate"><span class="pre">59</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.6"><code class="docutils literal notranslate"><span class="pre">6</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.60"><code class="docutils literal notranslate"><span class="pre">60</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.61"><code class="docutils literal notranslate"><span class="pre">61</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.62"><code class="docutils literal notranslate"><span class="pre">62</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.63"><code class="docutils literal notranslate"><span class="pre">63</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.64"><code class="docutils literal notranslate"><span class="pre">64</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.65"><code class="docutils literal notranslate"><span class="pre">65</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.66"><code class="docutils literal notranslate"><span class="pre">66</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.67"><code class="docutils literal notranslate"><span class="pre">67</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.68"><code class="docutils literal notranslate"><span class="pre">68</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.69"><code class="docutils literal notranslate"><span class="pre">69</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.7"><code class="docutils literal notranslate"><span class="pre">7</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.70"><code class="docutils literal notranslate"><span class="pre">70</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.71"><code class="docutils literal notranslate"><span class="pre">71</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.72"><code class="docutils literal notranslate"><span class="pre">72</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.73"><code class="docutils literal notranslate"><span class="pre">73</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.74"><code class="docutils literal notranslate"><span class="pre">74</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.75"><code class="docutils literal notranslate"><span class="pre">75</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.76"><code class="docutils literal notranslate"><span class="pre">76</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.77"><code class="docutils literal notranslate"><span class="pre">77</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.78"><code class="docutils literal notranslate"><span class="pre">78</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.79"><code class="docutils literal notranslate"><span class="pre">79</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.8"><code class="docutils literal notranslate"><span class="pre">8</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.80"><code class="docutils literal notranslate"><span class="pre">80</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.81"><code class="docutils literal notranslate"><span class="pre">81</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.82"><code class="docutils literal notranslate"><span class="pre">82</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.83"><code class="docutils literal notranslate"><span class="pre">83</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.84"><code class="docutils literal notranslate"><span class="pre">84</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.85"><code class="docutils literal notranslate"><span class="pre">85</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.86"><code class="docutils literal notranslate"><span class="pre">86</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.87"><code class="docutils literal notranslate"><span class="pre">87</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.88"><code class="docutils literal notranslate"><span class="pre">88</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.89"><code class="docutils literal notranslate"><span class="pre">89</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.9"><code class="docutils literal notranslate"><span class="pre">9</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.90"><code class="docutils literal notranslate"><span class="pre">90</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.91"><code class="docutils literal notranslate"><span class="pre">91</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.92"><code class="docutils literal notranslate"><span class="pre">92</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.93"><code class="docutils literal notranslate"><span class="pre">93</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.94"><code class="docutils literal notranslate"><span class="pre">94</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.95"><code class="docutils literal notranslate"><span class="pre">95</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.96"><code class="docutils literal notranslate"><span class="pre">96</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.97"><code class="docutils literal notranslate"><span class="pre">97</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.98"><code class="docutils literal notranslate"><span class="pre">98</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.99"><code class="docutils literal notranslate"><span class="pre">99</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS001785"><code class="docutils literal notranslate"><span class="pre">DS001785</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS001787"><code class="docutils literal notranslate"><span class="pre">DS001787</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS001810"><code class="docutils literal notranslate"><span class="pre">DS001810</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS001849"><code class="docutils literal notranslate"><span class="pre">DS001849</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS001971"><code class="docutils literal notranslate"><span class="pre">DS001971</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS002034"><code class="docutils literal notranslate"><span class="pre">DS002034</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS002094"><code class="docutils literal notranslate"><span class="pre">DS002094</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS002158"><code class="docutils literal notranslate"><span class="pre">DS002158</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS002181"><code class="docutils literal notranslate"><span class="pre">DS002181</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS002218"><code class="docutils literal notranslate"><span class="pre">DS002218</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS002336"><code class="docutils literal notranslate"><span class="pre">DS002336</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS002338"><code class="docutils literal notranslate"><span class="pre">DS002338</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS002578"><code class="docutils literal notranslate"><span class="pre">DS002578</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS002680"><code class="docutils literal notranslate"><span class="pre">DS002680</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS002691"><code class="docutils literal notranslate"><span class="pre">DS002691</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS002718"><code class="docutils literal notranslate"><span class="pre">DS002718</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS002720"><code class="docutils literal notranslate"><span class="pre">DS002720</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS002721"><code class="docutils literal notranslate"><span class="pre">DS002721</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS002722"><code class="docutils literal notranslate"><span class="pre">DS002722</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS002723"><code class="docutils literal notranslate"><span class="pre">DS002723</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS002724"><code class="docutils literal notranslate"><span class="pre">DS002724</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS002725"><code class="docutils literal notranslate"><span class="pre">DS002725</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS002778"><code class="docutils literal notranslate"><span class="pre">DS002778</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS002814"><code class="docutils literal notranslate"><span class="pre">DS002814</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS002833"><code class="docutils literal notranslate"><span class="pre">DS002833</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS002893"><code class="docutils literal notranslate"><span class="pre">DS002893</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS003004"><code class="docutils literal notranslate"><span class="pre">DS003004</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS003039"><code class="docutils literal notranslate"><span class="pre">DS003039</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS003061"><code class="docutils literal notranslate"><span class="pre">DS003061</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS003190"><code class="docutils literal notranslate"><span class="pre">DS003190</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS003194"><code class="docutils literal notranslate"><span class="pre">DS003194</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS003195"><code class="docutils literal notranslate"><span class="pre">DS003195</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS003343"><code class="docutils literal notranslate"><span class="pre">DS003343</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS003421"><code class="docutils literal notranslate"><span class="pre">DS003421</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS003458"><code class="docutils literal notranslate"><span class="pre">DS003458</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS003474"><code class="docutils literal notranslate"><span class="pre">DS003474</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS003478"><code class="docutils literal notranslate"><span class="pre">DS003478</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS003490"><code class="docutils literal notranslate"><span class="pre">DS003490</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS003505"><code class="docutils literal notranslate"><span class="pre">DS003505</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS003506"><code class="docutils literal notranslate"><span class="pre">DS003506</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS003509"><code class="docutils literal notranslate"><span class="pre">DS003509</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS003516"><code class="docutils literal notranslate"><span class="pre">DS003516</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS003517"><code class="docutils literal notranslate"><span class="pre">DS003517</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS003518"><code class="docutils literal notranslate"><span class="pre">DS003518</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS003519"><code class="docutils literal notranslate"><span class="pre">DS003519</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS003522"><code class="docutils literal notranslate"><span class="pre">DS003522</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS003523"><code class="docutils literal notranslate"><span class="pre">DS003523</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS003555"><code class="docutils literal notranslate"><span class="pre">DS003555</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS003570"><code class="docutils literal notranslate"><span class="pre">DS003570</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS003574"><code class="docutils literal notranslate"><span class="pre">DS003574</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS003602"><code class="docutils literal notranslate"><span class="pre">DS003602</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS003626"><code class="docutils literal notranslate"><span class="pre">DS003626</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS003638"><code class="docutils literal notranslate"><span class="pre">DS003638</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS003645"><code class="docutils literal notranslate"><span class="pre">DS003645</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS003655"><code class="docutils literal notranslate"><span class="pre">DS003655</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS003670"><code class="docutils literal notranslate"><span class="pre">DS003670</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS003690"><code class="docutils literal notranslate"><span class="pre">DS003690</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS003702"><code class="docutils literal notranslate"><span class="pre">DS003702</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS003710"><code class="docutils literal notranslate"><span class="pre">DS003710</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS003739"><code class="docutils literal notranslate"><span class="pre">DS003739</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS003751"><code class="docutils literal notranslate"><span class="pre">DS003751</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS003753"><code class="docutils literal notranslate"><span class="pre">DS003753</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS003766"><code class="docutils literal notranslate"><span class="pre">DS003766</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS003768"><code class="docutils literal notranslate"><span class="pre">DS003768</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS003801"><code class="docutils literal notranslate"><span class="pre">DS003801</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS003805"><code class="docutils literal notranslate"><span class="pre">DS003805</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS003810"><code class="docutils literal notranslate"><span class="pre">DS003810</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS003816"><code class="docutils literal notranslate"><span class="pre">DS003816</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS003822"><code class="docutils literal notranslate"><span class="pre">DS003822</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS003825"><code class="docutils literal notranslate"><span class="pre">DS003825</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS003838"><code class="docutils literal notranslate"><span class="pre">DS003838</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS003846"><code class="docutils literal notranslate"><span class="pre">DS003846</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS003885"><code class="docutils literal notranslate"><span class="pre">DS003885</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS003887"><code class="docutils literal notranslate"><span class="pre">DS003887</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS003944"><code class="docutils literal notranslate"><span class="pre">DS003944</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS003947"><code class="docutils literal notranslate"><span class="pre">DS003947</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS003969"><code class="docutils literal notranslate"><span class="pre">DS003969</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS003987"><code class="docutils literal notranslate"><span class="pre">DS003987</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS004000"><code class="docutils literal notranslate"><span class="pre">DS004000</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS004010"><code class="docutils literal notranslate"><span class="pre">DS004010</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS004015"><code class="docutils literal notranslate"><span class="pre">DS004015</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS004018"><code class="docutils literal notranslate"><span class="pre">DS004018</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS004022"><code class="docutils literal notranslate"><span class="pre">DS004022</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS004024"><code class="docutils literal notranslate"><span class="pre">DS004024</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS004033"><code class="docutils literal notranslate"><span class="pre">DS004033</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS004040"><code class="docutils literal notranslate"><span class="pre">DS004040</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS004043"><code class="docutils literal notranslate"><span class="pre">DS004043</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS004067"><code class="docutils literal notranslate"><span class="pre">DS004067</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS004075"><code class="docutils literal notranslate"><span class="pre">DS004075</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS004117"><code class="docutils literal notranslate"><span class="pre">DS004117</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS004152"><code class="docutils literal notranslate"><span class="pre">DS004152</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS004196"><code class="docutils literal notranslate"><span class="pre">DS004196</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS004200"><code class="docutils literal notranslate"><span class="pre">DS004200</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS004252"><code class="docutils literal notranslate"><span class="pre">DS004252</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS004256"><code class="docutils literal notranslate"><span class="pre">DS004256</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS004262"><code class="docutils literal notranslate"><span class="pre">DS004262</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS004264"><code class="docutils literal notranslate"><span class="pre">DS004264</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS004279"><code class="docutils literal notranslate"><span class="pre">DS004279</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS004284"><code class="docutils literal notranslate"><span class="pre">DS004284</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS004295"><code class="docutils literal notranslate"><span class="pre">DS004295</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS004306"><code class="docutils literal notranslate"><span class="pre">DS004306</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS004315"><code class="docutils literal notranslate"><span class="pre">DS004315</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS004317"><code class="docutils literal notranslate"><span class="pre">DS004317</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS004324"><code class="docutils literal notranslate"><span class="pre">DS004324</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS004347"><code class="docutils literal notranslate"><span class="pre">DS004347</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS004348"><code class="docutils literal notranslate"><span class="pre">DS004348</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS004350"><code class="docutils literal notranslate"><span class="pre">DS004350</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS004356"><code class="docutils literal notranslate"><span class="pre">DS004356</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS004357"><code class="docutils literal notranslate"><span class="pre">DS004357</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS004362"><code class="docutils literal notranslate"><span class="pre">DS004362</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS004367"><code class="docutils literal notranslate"><span class="pre">DS004367</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS004368"><code class="docutils literal notranslate"><span class="pre">DS004368</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS004369"><code class="docutils literal notranslate"><span class="pre">DS004369</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS004381"><code class="docutils literal notranslate"><span class="pre">DS004381</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS004388"><code class="docutils literal notranslate"><span class="pre">DS004388</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS004389"><code class="docutils literal notranslate"><span class="pre">DS004389</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS004408"><code class="docutils literal notranslate"><span class="pre">DS004408</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS004444"><code class="docutils literal notranslate"><span class="pre">DS004444</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS004446"><code class="docutils literal notranslate"><span class="pre">DS004446</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS004447"><code class="docutils literal notranslate"><span class="pre">DS004447</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS004448"><code class="docutils literal notranslate"><span class="pre">DS004448</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS004460"><code class="docutils literal notranslate"><span class="pre">DS004460</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS004475"><code class="docutils literal notranslate"><span class="pre">DS004475</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS004477"><code class="docutils literal notranslate"><span class="pre">DS004477</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS004504"><code class="docutils literal notranslate"><span class="pre">DS004504</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS004505"><code class="docutils literal notranslate"><span class="pre">DS004505</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS004511"><code class="docutils literal notranslate"><span class="pre">DS004511</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS004515"><code class="docutils literal notranslate"><span class="pre">DS004515</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS004519"><code class="docutils literal notranslate"><span class="pre">DS004519</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS004520"><code class="docutils literal notranslate"><span class="pre">DS004520</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS004521"><code class="docutils literal notranslate"><span class="pre">DS004521</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS004532"><code class="docutils literal notranslate"><span class="pre">DS004532</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS004554"><code class="docutils literal notranslate"><span class="pre">DS004554</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS004561"><code class="docutils literal notranslate"><span class="pre">DS004561</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS004572"><code class="docutils literal notranslate"><span class="pre">DS004572</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS004574"><code class="docutils literal notranslate"><span class="pre">DS004574</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS004577"><code class="docutils literal notranslate"><span class="pre">DS004577</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS004579"><code class="docutils literal notranslate"><span class="pre">DS004579</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS004580"><code class="docutils literal notranslate"><span class="pre">DS004580</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS004582"><code class="docutils literal notranslate"><span class="pre">DS004582</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS004584"><code class="docutils literal notranslate"><span class="pre">DS004584</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS004587"><code class="docutils literal notranslate"><span class="pre">DS004587</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS004588"><code class="docutils literal notranslate"><span class="pre">DS004588</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS004595"><code class="docutils literal notranslate"><span class="pre">DS004595</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS004598"><code class="docutils literal notranslate"><span class="pre">DS004598</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS004602"><code class="docutils literal notranslate"><span class="pre">DS004602</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS004603"><code class="docutils literal notranslate"><span class="pre">DS004603</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS004621"><code class="docutils literal notranslate"><span class="pre">DS004621</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS004625"><code class="docutils literal notranslate"><span class="pre">DS004625</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS004626"><code class="docutils literal notranslate"><span class="pre">DS004626</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS004635"><code class="docutils literal notranslate"><span class="pre">DS004635</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS004657"><code class="docutils literal notranslate"><span class="pre">DS004657</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS004660"><code class="docutils literal notranslate"><span class="pre">DS004660</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS004661"><code class="docutils literal notranslate"><span class="pre">DS004661</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS004718"><code class="docutils literal notranslate"><span class="pre">DS004718</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS004745"><code class="docutils literal notranslate"><span class="pre">DS004745</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS004752"><code class="docutils literal notranslate"><span class="pre">DS004752</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS004771"><code class="docutils literal notranslate"><span class="pre">DS004771</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS004784"><code class="docutils literal notranslate"><span class="pre">DS004784</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS004785"><code class="docutils literal notranslate"><span class="pre">DS004785</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS004796"><code class="docutils literal notranslate"><span class="pre">DS004796</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS004802"><code class="docutils literal notranslate"><span class="pre">DS004802</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS004816"><code class="docutils literal notranslate"><span class="pre">DS004816</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS004817"><code class="docutils literal notranslate"><span class="pre">DS004817</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS004840"><code class="docutils literal notranslate"><span class="pre">DS004840</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS004841"><code class="docutils literal notranslate"><span class="pre">DS004841</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS004842"><code class="docutils literal notranslate"><span class="pre">DS004842</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS004843"><code class="docutils literal notranslate"><span class="pre">DS004843</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS004844"><code class="docutils literal notranslate"><span class="pre">DS004844</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS004849"><code class="docutils literal notranslate"><span class="pre">DS004849</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS004850"><code class="docutils literal notranslate"><span class="pre">DS004850</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS004851"><code class="docutils literal notranslate"><span class="pre">DS004851</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS004852"><code class="docutils literal notranslate"><span class="pre">DS004852</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS004853"><code class="docutils literal notranslate"><span class="pre">DS004853</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS004854"><code class="docutils literal notranslate"><span class="pre">DS004854</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS004855"><code class="docutils literal notranslate"><span class="pre">DS004855</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS004860"><code class="docutils literal notranslate"><span class="pre">DS004860</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS004883"><code class="docutils literal notranslate"><span class="pre">DS004883</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS004902"><code class="docutils literal notranslate"><span class="pre">DS004902</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS004917"><code class="docutils literal notranslate"><span class="pre">DS004917</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS004942"><code class="docutils literal notranslate"><span class="pre">DS004942</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS004951"><code class="docutils literal notranslate"><span class="pre">DS004951</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS004952"><code class="docutils literal notranslate"><span class="pre">DS004952</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS004980"><code class="docutils literal notranslate"><span class="pre">DS004980</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS004995"><code class="docutils literal notranslate"><span class="pre">DS004995</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS005021"><code class="docutils literal notranslate"><span class="pre">DS005021</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS005028"><code class="docutils literal notranslate"><span class="pre">DS005028</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS005034"><code class="docutils literal notranslate"><span class="pre">DS005034</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS005048"><code class="docutils literal notranslate"><span class="pre">DS005048</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS005079"><code class="docutils literal notranslate"><span class="pre">DS005079</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS005089"><code class="docutils literal notranslate"><span class="pre">DS005089</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS005095"><code class="docutils literal notranslate"><span class="pre">DS005095</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS005106"><code class="docutils literal notranslate"><span class="pre">DS005106</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS005114"><code class="docutils literal notranslate"><span class="pre">DS005114</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS005121"><code class="docutils literal notranslate"><span class="pre">DS005121</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS005131"><code class="docutils literal notranslate"><span class="pre">DS005131</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS005170"><code class="docutils literal notranslate"><span class="pre">DS005170</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS005185"><code class="docutils literal notranslate"><span class="pre">DS005185</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS005189"><code class="docutils literal notranslate"><span class="pre">DS005189</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS005207"><code class="docutils literal notranslate"><span class="pre">DS005207</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS005262"><code class="docutils literal notranslate"><span class="pre">DS005262</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS005273"><code class="docutils literal notranslate"><span class="pre">DS005273</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS005274"><code class="docutils literal notranslate"><span class="pre">DS005274</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS005296"><code class="docutils literal notranslate"><span class="pre">DS005296</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS005305"><code class="docutils literal notranslate"><span class="pre">DS005305</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS005307"><code class="docutils literal notranslate"><span class="pre">DS005307</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS005340"><code class="docutils literal notranslate"><span class="pre">DS005340</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS005342"><code class="docutils literal notranslate"><span class="pre">DS005342</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS005345"><code class="docutils literal notranslate"><span class="pre">DS005345</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS005363"><code class="docutils literal notranslate"><span class="pre">DS005363</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS005383"><code class="docutils literal notranslate"><span class="pre">DS005383</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS005385"><code class="docutils literal notranslate"><span class="pre">DS005385</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS005397"><code class="docutils literal notranslate"><span class="pre">DS005397</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS005403"><code class="docutils literal notranslate"><span class="pre">DS005403</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS005406"><code class="docutils literal notranslate"><span class="pre">DS005406</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS005410"><code class="docutils literal notranslate"><span class="pre">DS005410</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS005416"><code class="docutils literal notranslate"><span class="pre">DS005416</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS005420"><code class="docutils literal notranslate"><span class="pre">DS005420</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS005429"><code class="docutils literal notranslate"><span class="pre">DS005429</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS005486"><code class="docutils literal notranslate"><span class="pre">DS005486</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS005505"><code class="docutils literal notranslate"><span class="pre">DS005505</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS005506"><code class="docutils literal notranslate"><span class="pre">DS005506</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS005507"><code class="docutils literal notranslate"><span class="pre">DS005507</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS005508"><code class="docutils literal notranslate"><span class="pre">DS005508</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS005509"><code class="docutils literal notranslate"><span class="pre">DS005509</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS005510"><code class="docutils literal notranslate"><span class="pre">DS005510</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS005511"><code class="docutils literal notranslate"><span class="pre">DS005511</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS005512"><code class="docutils literal notranslate"><span class="pre">DS005512</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS005514"><code class="docutils literal notranslate"><span class="pre">DS005514</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS005515"><code class="docutils literal notranslate"><span class="pre">DS005515</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS005516"><code class="docutils literal notranslate"><span class="pre">DS005516</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS005520"><code class="docutils literal notranslate"><span class="pre">DS005520</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS005530"><code class="docutils literal notranslate"><span class="pre">DS005530</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS005540"><code class="docutils literal notranslate"><span class="pre">DS005540</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS005555"><code class="docutils literal notranslate"><span class="pre">DS005555</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS005565"><code class="docutils literal notranslate"><span class="pre">DS005565</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS005571"><code class="docutils literal notranslate"><span class="pre">DS005571</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS005586"><code class="docutils literal notranslate"><span class="pre">DS005586</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS005594"><code class="docutils literal notranslate"><span class="pre">DS005594</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS005620"><code class="docutils literal notranslate"><span class="pre">DS005620</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS005672"><code class="docutils literal notranslate"><span class="pre">DS005672</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS005688"><code class="docutils literal notranslate"><span class="pre">DS005688</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS005692"><code class="docutils literal notranslate"><span class="pre">DS005692</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS005697"><code class="docutils literal notranslate"><span class="pre">DS005697</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS005779"><code class="docutils literal notranslate"><span class="pre">DS005779</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS005787"><code class="docutils literal notranslate"><span class="pre">DS005787</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS005795"><code class="docutils literal notranslate"><span class="pre">DS005795</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS005811"><code class="docutils literal notranslate"><span class="pre">DS005811</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS005815"><code class="docutils literal notranslate"><span class="pre">DS005815</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS005863"><code class="docutils literal notranslate"><span class="pre">DS005863</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS005866"><code class="docutils literal notranslate"><span class="pre">DS005866</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS005868"><code class="docutils literal notranslate"><span class="pre">DS005868</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS005873"><code class="docutils literal notranslate"><span class="pre">DS005873</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.DS005876"><code class="docutils literal notranslate"><span class="pre">DS005876</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.EEGChallengeDataset"><code class="docutils literal notranslate"><span class="pre">EEGChallengeDataset</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.dataset.html#eegdash.dataset.dataset.TEST"><code class="docutils literal notranslate"><span class="pre">TEST</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="eegdash.dataset.registry.html">eegdash.dataset.registry module</a><ul>
@@ -892,6 +917,22 @@ constructor.</p></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#submodules">Submodules</a></li>
 </ul>
   </nav></div>
+
+  <div class="sidebar-secondary-item">
+
+  
+  <div class="tocsection editthispage">
+    <a href="https://github.com/sccn/EEGDash/edit/main/docs/source/api/eegdash.dataset.rst">
+      <i class="fa-solid fa-pencil"></i>
+      
+      
+        
+          Edit on GitHub
+        
+      
+    </a>
+  </div>
+</div>
 
   <div class="sidebar-secondary-item">
   <div role="note" aria-label="source link">

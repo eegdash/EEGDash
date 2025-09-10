@@ -36,7 +36,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css?v=2082cf3c" />
     <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
-    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=9a68e97c" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=235a86f3" />
   
   <!-- So that users can add custom icons -->
   <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
@@ -44,7 +44,7 @@
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../_static/documentation_options.js?v=29d04658"></script>
+    <script src="../_static/documentation_options.js?v=65b26183"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/design-tabs.js?v=f930bc37"></script>
@@ -462,6 +462,11 @@
 <li class="toctree-l3"><a class="reference internal" href="eegdash.features.utils.html">eegdash.features.utils module</a></li>
 </ul>
 </details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="eegdash.hbn.html">eegdash.hbn package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="eegdash.hbn.preprocessing.html">eegdash.hbn.preprocessing module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eegdash.hbn.windows.html">eegdash.hbn.windows module</a></li>
+</ul>
+</details></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.api.html">eegdash.api module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.bids_eeg_metadata.html">eegdash.bids_eeg_metadata module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.const.html">eegdash.const module</a></li>
@@ -544,7 +549,7 @@
 <span id="eegdash-features-feature-bank-signal-module"></span><h1>eegdash.features.feature_bank.signal module<a class="headerlink" href="#module-eegdash.features.feature_bank.signal" title="Link to this heading">#</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="eegdash.features.feature_bank.signal.HilbertFeatureExtractor">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.signal.</span></span><span class="sig-name descname"><span class="pre">HilbertFeatureExtractor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">feature_extractors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Callable</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">preprocess_kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.features.feature_bank.signal.HilbertFeatureExtractor" title="Link to this definition">#</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.signal.</span></span><span class="sig-name descname"><span class="pre">HilbertFeatureExtractor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">feature_extractors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Callable</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">preprocess_kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/feature_bank/signal.py#L28-L31"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.feature_bank.signal.HilbertFeatureExtractor" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="eegdash.features.extractors.html#eegdash.features.extractors.FeatureExtractor" title="eegdash.features.extractors.FeatureExtractor"><code class="xref py py-class docutils literal notranslate"><span class="pre">FeatureExtractor</span></code></a></p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="eegdash.features.feature_bank.signal.HilbertFeatureExtractor.parent_extractor_type">
@@ -553,79 +558,79 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="eegdash.features.feature_bank.signal.HilbertFeatureExtractor.preprocess">
-<span class="sig-name descname"><span class="pre">preprocess</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.features.feature_bank.signal.HilbertFeatureExtractor.preprocess" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">preprocess</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/feature_bank/signal.py#L30-L31"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.feature_bank.signal.HilbertFeatureExtractor.preprocess" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="eegdash.features.feature_bank.signal.signal_decorrelation_time">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.signal.</span></span><span class="sig-name descname"><span class="pre">signal_decorrelation_time</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.features.feature_bank.signal.signal_decorrelation_time" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.signal.</span></span><span class="sig-name descname"><span class="pre">signal_decorrelation_time</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/feature_bank/signal.py#L116-L124"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.feature_bank.signal.signal_decorrelation_time" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="eegdash.features.feature_bank.signal.signal_hjorth_activity">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.signal.</span></span><span class="sig-name descname"><span class="pre">signal_hjorth_activity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.features.feature_bank.signal.signal_hjorth_activity" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.signal.</span></span><span class="sig-name descname"><span class="pre">signal_hjorth_activity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/feature_bank/signal.py#L43-L46"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.feature_bank.signal.signal_hjorth_activity" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="eegdash.features.feature_bank.signal.signal_hjorth_complexity">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.signal.</span></span><span class="sig-name descname"><span class="pre">signal_hjorth_complexity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.features.feature_bank.signal.signal_hjorth_complexity" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.signal.</span></span><span class="sig-name descname"><span class="pre">signal_hjorth_complexity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/feature_bank/signal.py#L108-L113"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.feature_bank.signal.signal_hjorth_complexity" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="eegdash.features.feature_bank.signal.signal_hjorth_mobility">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.signal.</span></span><span class="sig-name descname"><span class="pre">signal_hjorth_mobility</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.features.feature_bank.signal.signal_hjorth_mobility" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.signal.</span></span><span class="sig-name descname"><span class="pre">signal_hjorth_mobility</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/feature_bank/signal.py#L102-L105"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.feature_bank.signal.signal_hjorth_mobility" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="eegdash.features.feature_bank.signal.signal_kurtosis">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.signal.</span></span><span class="sig-name descname"><span class="pre">signal_kurtosis</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.features.feature_bank.signal.signal_kurtosis" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.signal.</span></span><span class="sig-name descname"><span class="pre">signal_kurtosis</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/feature_bank/signal.py#L61-L64"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.feature_bank.signal.signal_kurtosis" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="eegdash.features.feature_bank.signal.signal_line_length">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.signal.</span></span><span class="sig-name descname"><span class="pre">signal_line_length</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.features.feature_bank.signal.signal_line_length" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.signal.</span></span><span class="sig-name descname"><span class="pre">signal_line_length</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/feature_bank/signal.py#L85-L88"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.feature_bank.signal.signal_line_length" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="eegdash.features.feature_bank.signal.signal_mean">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.signal.</span></span><span class="sig-name descname"><span class="pre">signal_mean</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.features.feature_bank.signal.signal_mean" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.signal.</span></span><span class="sig-name descname"><span class="pre">signal_mean</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/feature_bank/signal.py#L37-L40"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.feature_bank.signal.signal_mean" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="eegdash.features.feature_bank.signal.signal_peak_to_peak">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.signal.</span></span><span class="sig-name descname"><span class="pre">signal_peak_to_peak</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.features.feature_bank.signal.signal_peak_to_peak" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.signal.</span></span><span class="sig-name descname"><span class="pre">signal_peak_to_peak</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/feature_bank/signal.py#L73-L76"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.feature_bank.signal.signal_peak_to_peak" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="eegdash.features.feature_bank.signal.signal_quantile">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.signal.</span></span><span class="sig-name descname"><span class="pre">signal_quantile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Number</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.features.feature_bank.signal.signal_quantile" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.signal.</span></span><span class="sig-name descname"><span class="pre">signal_quantile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Number</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/feature_bank/signal.py#L79-L82"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.feature_bank.signal.signal_quantile" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="eegdash.features.feature_bank.signal.signal_root_mean_square">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.signal.</span></span><span class="sig-name descname"><span class="pre">signal_root_mean_square</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.features.feature_bank.signal.signal_root_mean_square" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.signal.</span></span><span class="sig-name descname"><span class="pre">signal_root_mean_square</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/feature_bank/signal.py#L67-L70"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.feature_bank.signal.signal_root_mean_square" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="eegdash.features.feature_bank.signal.signal_skewness">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.signal.</span></span><span class="sig-name descname"><span class="pre">signal_skewness</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.features.feature_bank.signal.signal_skewness" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.signal.</span></span><span class="sig-name descname"><span class="pre">signal_skewness</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/feature_bank/signal.py#L55-L58"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.feature_bank.signal.signal_skewness" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="eegdash.features.feature_bank.signal.signal_std">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.signal.</span></span><span class="sig-name descname"><span class="pre">signal_std</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.features.feature_bank.signal.signal_std" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.signal.</span></span><span class="sig-name descname"><span class="pre">signal_std</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/feature_bank/signal.py#L49-L52"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.feature_bank.signal.signal_std" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="eegdash.features.feature_bank.signal.signal_variance">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.signal.</span></span><span class="sig-name descname"><span class="pre">signal_variance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.features.feature_bank.signal.signal_variance" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.signal.</span></span><span class="sig-name descname"><span class="pre">signal_variance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/feature_bank/signal.py#L43-L46"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.feature_bank.signal.signal_variance" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="eegdash.features.feature_bank.signal.signal_zero_crossings">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.signal.</span></span><span class="sig-name descname"><span class="pre">signal_zero_crossings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-15</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.features.feature_bank.signal.signal_zero_crossings" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.signal.</span></span><span class="sig-name descname"><span class="pre">signal_zero_crossings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-15</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/feature_bank/signal.py#L91-L99"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.feature_bank.signal.signal_zero_crossings" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 </section>
@@ -698,6 +703,22 @@
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.features.feature_bank.signal.signal_zero_crossings"><code class="docutils literal notranslate"><span class="pre">signal_zero_crossings()</span></code></a></li>
 </ul>
   </nav></div>
+
+  <div class="sidebar-secondary-item">
+
+  
+  <div class="tocsection editthispage">
+    <a href="https://github.com/sccn/EEGDash/edit/main/docs/source/api/eegdash.features.feature_bank.signal.rst">
+      <i class="fa-solid fa-pencil"></i>
+      
+      
+        
+          Edit on GitHub
+        
+      
+    </a>
+  </div>
+</div>
 
   <div class="sidebar-secondary-item">
   <div role="note" aria-label="source link">

@@ -1,0 +1,7 @@
+eegdash.hbn.windows module
+==========================
+
+.. automodule:: eegdash.hbn.windows
+   :members:
+   :show-inheritance:
+   :undoc-members:

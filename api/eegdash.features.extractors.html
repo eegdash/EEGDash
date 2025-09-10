@@ -36,7 +36,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css?v=2082cf3c" />
     <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
-    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=9a68e97c" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=235a86f3" />
   
   <!-- So that users can add custom icons -->
   <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
@@ -44,7 +44,7 @@
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../_static/documentation_options.js?v=29d04658"></script>
+    <script src="../_static/documentation_options.js?v=65b26183"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/design-tabs.js?v=f930bc37"></script>
@@ -462,6 +462,11 @@
 <li class="toctree-l3"><a class="reference internal" href="eegdash.features.utils.html">eegdash.features.utils module</a></li>
 </ul>
 </details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="eegdash.hbn.html">eegdash.hbn package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="eegdash.hbn.preprocessing.html">eegdash.hbn.preprocessing module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eegdash.hbn.windows.html">eegdash.hbn.windows module</a></li>
+</ul>
+</details></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.api.html">eegdash.api module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.bids_eeg_metadata.html">eegdash.bids_eeg_metadata module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.const.html">eegdash.const module</a></li>
@@ -541,96 +546,96 @@
 <span id="eegdash-features-extractors-module"></span><h1>eegdash.features.extractors module<a class="headerlink" href="#module-eegdash.features.extractors" title="Link to this heading">#</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="eegdash.features.extractors.BivariateFeature">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">eegdash.features.extractors.</span></span><span class="sig-name descname"><span class="pre">BivariateFeature</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel_pair_format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'{}&lt;&gt;{}'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.features.extractors.BivariateFeature" title="Link to this definition">#</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">eegdash.features.extractors.</span></span><span class="sig-name descname"><span class="pre">BivariateFeature</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel_pair_format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'{}&lt;&gt;{}'</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/extractors.py#L187-L200"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.extractors.BivariateFeature" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#eegdash.features.extractors.MultivariateFeature" title="eegdash.features.extractors.MultivariateFeature"><code class="xref py py-class docutils literal notranslate"><span class="pre">MultivariateFeature</span></code></a></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="eegdash.features.extractors.BivariateFeature.feature_channel_names">
-<span class="sig-name descname"><span class="pre">feature_channel_names</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ch_names</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.features.extractors.BivariateFeature.feature_channel_names" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">feature_channel_names</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ch_names</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/extractors.py#L196-L200"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.extractors.BivariateFeature.feature_channel_names" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="eegdash.features.extractors.BivariateFeature.get_pair_iterators">
-<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_pair_iterators</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.features.extractors.BivariateFeature.get_pair_iterators" title="Link to this definition">#</a></dt>
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_pair_iterators</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/extractors.py#L192-L194"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.extractors.BivariateFeature.get_pair_iterators" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="eegdash.features.extractors.DirectedBivariateFeature">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">eegdash.features.extractors.</span></span><span class="sig-name descname"><span class="pre">DirectedBivariateFeature</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel_pair_format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'{}&lt;&gt;{}'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.features.extractors.DirectedBivariateFeature" title="Link to this definition">#</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">eegdash.features.extractors.</span></span><span class="sig-name descname"><span class="pre">DirectedBivariateFeature</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel_pair_format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'{}&lt;&gt;{}'</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/extractors.py#L203-L209"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.extractors.DirectedBivariateFeature" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#eegdash.features.extractors.BivariateFeature" title="eegdash.features.extractors.BivariateFeature"><code class="xref py py-class docutils literal notranslate"><span class="pre">BivariateFeature</span></code></a></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="eegdash.features.extractors.DirectedBivariateFeature.get_pair_iterators">
-<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_pair_iterators</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.features.extractors.DirectedBivariateFeature.get_pair_iterators" title="Link to this definition">#</a></dt>
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_pair_iterators</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/extractors.py#L204-L209"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.extractors.DirectedBivariateFeature.get_pair_iterators" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="eegdash.features.extractors.FeatureExtractor">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">eegdash.features.extractors.</span></span><span class="sig-name descname"><span class="pre">FeatureExtractor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">feature_extractors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Callable</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">preprocess_kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.features.extractors.FeatureExtractor" title="Link to this definition">#</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">eegdash.features.extractors.</span></span><span class="sig-name descname"><span class="pre">FeatureExtractor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">feature_extractors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Callable</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">preprocess_kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/extractors.py#L42-L151"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.extractors.FeatureExtractor" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#eegdash.features.extractors.TrainableFeature" title="eegdash.features.extractors.TrainableFeature"><code class="xref py py-class docutils literal notranslate"><span class="pre">TrainableFeature</span></code></a></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="eegdash.features.extractors.FeatureExtractor.clear">
-<span class="sig-name descname"><span class="pre">clear</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.features.extractors.FeatureExtractor.clear" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">clear</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/extractors.py#L127-L133"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.extractors.FeatureExtractor.clear" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="eegdash.features.extractors.FeatureExtractor.fit">
-<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.features.extractors.FeatureExtractor.fit" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/extractors.py#L144-L151"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.extractors.FeatureExtractor.fit" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="eegdash.features.extractors.FeatureExtractor.partial_fit">
-<span class="sig-name descname"><span class="pre">partial_fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.features.extractors.FeatureExtractor.partial_fit" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">partial_fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/extractors.py#L135-L142"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.extractors.FeatureExtractor.partial_fit" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="eegdash.features.extractors.FeatureExtractor.preprocess">
-<span class="sig-name descname"><span class="pre">preprocess</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.features.extractors.FeatureExtractor.preprocess" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">preprocess</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/extractors.py#L86-L87"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.extractors.FeatureExtractor.preprocess" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="eegdash.features.extractors.MultivariateFeature">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">eegdash.features.extractors.</span></span><span class="sig-name descname"><span class="pre">MultivariateFeature</span></span><a class="headerlink" href="#eegdash.features.extractors.MultivariateFeature" title="Link to this definition">#</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">eegdash.features.extractors.</span></span><span class="sig-name descname"><span class="pre">MultivariateFeature</span></span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/extractors.py#L154-L179"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.extractors.MultivariateFeature" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="eegdash.features.extractors.MultivariateFeature.feature_channel_names">
-<span class="sig-name descname"><span class="pre">feature_channel_names</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ch_names</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.features.extractors.MultivariateFeature.feature_channel_names" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">feature_channel_names</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ch_names</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/extractors.py#L178-L179"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.extractors.MultivariateFeature.feature_channel_names" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="eegdash.features.extractors.TrainableFeature">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">eegdash.features.extractors.</span></span><span class="sig-name descname"><span class="pre">TrainableFeature</span></span><a class="headerlink" href="#eegdash.features.extractors.TrainableFeature" title="Link to this definition">#</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">eegdash.features.extractors.</span></span><span class="sig-name descname"><span class="pre">TrainableFeature</span></span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/extractors.py#L19-L39"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.extractors.TrainableFeature" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="eegdash.features.extractors.TrainableFeature.clear">
-<em class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">clear</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.features.extractors.TrainableFeature.clear" title="Link to this definition">#</a></dt>
+<em class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">clear</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/extractors.py#L24-L26"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.extractors.TrainableFeature.clear" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="eegdash.features.extractors.TrainableFeature.fit">
-<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.features.extractors.TrainableFeature.fit" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/extractors.py#L32-L33"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.extractors.TrainableFeature.fit" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="eegdash.features.extractors.TrainableFeature.partial_fit">
-<em class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">partial_fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.features.extractors.TrainableFeature.partial_fit" title="Link to this definition">#</a></dt>
+<em class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">partial_fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/extractors.py#L28-L30"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.extractors.TrainableFeature.partial_fit" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="eegdash.features.extractors.UnivariateFeature">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">eegdash.features.extractors.</span></span><span class="sig-name descname"><span class="pre">UnivariateFeature</span></span><a class="headerlink" href="#eegdash.features.extractors.UnivariateFeature" title="Link to this definition">#</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">eegdash.features.extractors.</span></span><span class="sig-name descname"><span class="pre">UnivariateFeature</span></span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/extractors.py#L182-L184"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.extractors.UnivariateFeature" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#eegdash.features.extractors.MultivariateFeature" title="eegdash.features.extractors.MultivariateFeature"><code class="xref py py-class docutils literal notranslate"><span class="pre">MultivariateFeature</span></code></a></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="eegdash.features.extractors.UnivariateFeature.feature_channel_names">
-<span class="sig-name descname"><span class="pre">feature_channel_names</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ch_names</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eegdash.features.extractors.UnivariateFeature.feature_channel_names" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">feature_channel_names</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ch_names</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/extractors.py#L183-L184"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.extractors.UnivariateFeature.feature_channel_names" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -716,6 +721,22 @@
 </li>
 </ul>
   </nav></div>
+
+  <div class="sidebar-secondary-item">
+
+  
+  <div class="tocsection editthispage">
+    <a href="https://github.com/sccn/EEGDash/edit/main/docs/source/api/eegdash.features.extractors.rst">
+      <i class="fa-solid fa-pencil"></i>
+      
+      
+        
+          Edit on GitHub
+        
+      
+    </a>
+  </div>
+</div>
 
   <div class="sidebar-secondary-item">
   <div role="note" aria-label="source link">

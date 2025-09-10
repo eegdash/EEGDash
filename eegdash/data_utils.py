@@ -72,6 +72,7 @@ class EEGDashBaseDataset(BaseDataset):
         # Compute a dataset folder name under cache_dir that encodes preprocessing
         # (e.g., bdf, mini) to avoid overlapping with the original dataset cache.
         self.dataset_folder = record.get("dataset", "")
+        # TODO: remove this hack when competition is over
         if s3_bucket:
             suffixes: list[str] = []
             bucket_lower = str(s3_bucket).lower()
@@ -90,6 +91,7 @@ class EEGDashBaseDataset(BaseDataset):
             rel = Path(self.dataset_folder) / rel
         self.filecache = self.cache_dir / rel
         self.bids_root = self.cache_dir / self.dataset_folder
+
         self.bidspath = BIDSPath(
             root=self.bids_root,
             datatype="eeg",
@@ -100,8 +102,8 @@ class EEGDashBaseDataset(BaseDataset):
         self.s3file = downloader.get_s3path(self.s3_bucket, record["bidspath"])
         self.bids_dependencies = record["bidsdependencies"]
         self.bids_dependencies_original = record["bidsdependencies"]
-        # Temporary fix for BIDS dependencies path
-        # just to release to the competition
+        # TODO: removing temporary fix for BIDS dependencies path
+        # when the competition is over and dataset is digested properly
         if not self.s3_open_neuro:
             self.bids_dependencies = [
                 dep.split("/", 1)[1] for dep in self.bids_dependencies
@@ -249,7 +251,6 @@ class EEGDashBaseDataset(BaseDataset):
         return extras
 
     # === BaseDataset and PyTorch Dataset interface ===
-
     def __getitem__(self, index):
         """Main function to access a sample from the dataset."""
         X = self.raw[:, index][0]

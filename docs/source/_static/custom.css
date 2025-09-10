@@ -78,3 +78,22 @@ figure.eegdash-figure figcaption.eegdash-caption {
 .dataTables_wrapper .dt-buttons .dt-button:focus {
   font-size: var(--pst-font-size-base, 1rem);
 }
+
+/* Responsive YouTube/video embeds */
+.video-wrapper {
+  position: relative;
+  padding-bottom: 56.25%; /* 16:9 */
+  height: 0;
+  overflow: hidden;
+  max-width: 100%;
+  background: #000;
+  border-radius: 8px;
+}
+.video-wrapper iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}

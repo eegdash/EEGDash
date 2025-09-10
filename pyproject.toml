@@ -51,6 +51,7 @@ dependencies = [
   "pymatreader",
   "eeglabio",
   "tabulate",
+  "docstring_inheritance",
 ]
 
 [project.urls]
@@ -83,7 +84,8 @@ docs = [
   "memory_profiler",
   "ipython",
   "lightgbm",
-  "plotly"
+  "plotly",
+  "nbformat",
 ]
 
 all = [

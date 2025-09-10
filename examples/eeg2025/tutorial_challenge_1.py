@@ -224,7 +224,8 @@ from eegdash.hbn.windows import (
     add_extras_columns,
 )
 
-DATA_DIR = Path("/Users/baristim/mne_data/eeg_challenge_completed")
+# Match tests' cache layout under ~/mne_data/eeg_challenge_cache
+DATA_DIR = (Path.home() / "mne_data" / "eeg_challenge_cache").resolve()
 DATA_DIR.mkdir(parents=True, exist_ok=True)
 
 dataset_ccd = EEGChallengeDataset(

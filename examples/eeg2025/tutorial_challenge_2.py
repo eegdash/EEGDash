@@ -147,7 +147,8 @@ print(msg)
 
 ######################################################################
 # The first step is to define the cache folder!
-DATA_DIR = Path("/Users/baristim/mne_data/eeg_challenge_completed")
+# Match tests' cache layout under ~/mne_data/eeg_challenge_cache
+DATA_DIR = (Path.home() / "mne_data" / "eeg_challenge_cache").resolve()
 
 # Creating the path if it does not exist
 DATA_DIR.mkdir(parents=True, exist_ok=True)

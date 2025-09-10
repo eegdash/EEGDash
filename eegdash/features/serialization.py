@@ -1,4 +1,5 @@
-"""Convenience functions for storing and loading of features datasets.
+"""This module provides convenience functions for storing and loading of
+features datasets.
 
 see also: https://github.com/braindecode/braindecode//blob/master/braindecode/datautil/serialization.py#L165-L229
 """
@@ -28,8 +29,8 @@ def load_features_concat_dataset(path, ids_to_load=None, n_jobs=1):
 
     Returns
     -------
-    concat_dataset: FeaturesConcatDataset of FeaturesDatasets
-
+    concat_dataset: FeaturesConcatDataset
+        A concatenated dataset of `FeaturesDataset` objects.
     """
     # Make sure we always work with a pathlib.Path
     path = Path(path)
@@ -48,6 +49,20 @@ def load_features_concat_dataset(path, ids_to_load=None, n_jobs=1):
 
 
 def _load_parallel(path, i):
+    """Load a single FeaturesDataset in parallel.
+
+    Parameters
+    ----------
+    path : str | pathlib.Path
+        Path to the directory containing the dataset.
+    i : str
+        The ID of the dataset to load.
+
+    Returns
+    -------
+    dataset : FeaturesDataset
+        The loaded dataset.
+    """
     sub_dir = path / i
 
     parquet_name_pattern = "{}-feat.parquet"

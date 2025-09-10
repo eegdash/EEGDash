@@ -19,10 +19,32 @@ __all__ = [
 def build_query_from_kwargs(**kwargs) -> dict[str, Any]:
     """Build and validate a MongoDB query from user-friendly keyword arguments.
 
-    Improvements:
-    - Reject None values and empty/whitespace-only strings
-    - For list/tuple/set values: strip strings, drop None/empties, deduplicate, and use `$in`
-    - Preserve scalars as exact matches
+    This function takes keyword arguments and constructs a MongoDB query dictionary.
+    It validates the keys against a list of allowed fields, handles different
+    value types (scalars, lists), and cleans the input data.
+
+    Parameters
+    ----------
+    **kwargs : dict
+        Keyword arguments representing the query filters. Allowed keys are defined
+        in ``ALLOWED_QUERY_FIELDS``.
+
+    Returns
+    -------
+    dict
+        A MongoDB query dictionary.
+
+    Raises
+    ------
+    ValueError
+        If an unsupported query field is provided, or if a value is None or an
+        empty string/list.
+
+    Notes
+    -----
+    - Rejects None values and empty/whitespace-only strings.
+    - For list/tuple/set values: strips strings, drops None/empties, deduplicates, and uses `$in`.
+    - Preserves scalars as exact matches.
     """
     # 1. Validate that all provided keys are allowed for querying
     unknown_fields = set(kwargs.keys()) - ALLOWED_QUERY_FIELDS
@@ -73,12 +95,23 @@ def build_query_from_kwargs(**kwargs) -> dict[str, Any]:
 
 
 def _get_raw_extensions(bids_file: str, bids_dataset) -> list[str]:
-    """Helper to find paths to additional "sidecar" files that may be associated
-    with a given main data file in a BIDS dataset; paths are returned as relative to
-    the parent dataset path.
+    """Get paths to sidecar files associated with a BIDS data file.
 
-    For example, if the input file is a .set file, this will return the relative path
-    to a corresponding .fdt file (if any).
+    This helper function finds paths to additional "sidecar" files (e.g., `.fdt` for
+    `.set` files) that may be associated with a given main data file in a BIDS
+    dataset. The paths are returned as relative to the parent dataset path.
+
+    Parameters
+    ----------
+    bids_file : str
+        The path to the main BIDS data file.
+    bids_dataset : EEGBIDSDataset
+        The BIDS dataset object containing the file.
+
+    Returns
+    -------
+    list[str]
+        A list of relative paths to the sidecar files.
     """
     bids_file = Path(bids_file)
     extensions = {
@@ -95,11 +128,11 @@ def _get_raw_extensions(bids_file: str, bids_dataset) -> list[str]:
 
 
 def load_eeg_attrs_from_bids_file(bids_dataset, bids_file: str) -> dict[str, Any]:
-    """Build the metadata record for a given BIDS file (single recording) in a BIDS dataset.
+    """Build the metadata record for a given BIDS file in a BIDS dataset.
 
-    Attributes are at least the ones defined in data_config attributes (set to None if missing),
-    but are typically a superset, and include, among others, the paths to relevant
-    meta-data files needed to load and interpret the file in question.
+    This function constructs a metadata record for a single recording file within a
+    BIDS dataset. The attributes are based on the fields defined in the data
+    configuration, with additional metadata such as paths to related files.
 
     Parameters
     ----------
@@ -110,10 +143,14 @@ def load_eeg_attrs_from_bids_file(bids_dataset, bids_file: str) -> dict[str, Any
 
     Returns
     -------
-    dict:
+    dict
         A dictionary representing the metadata record for the given file. This is the
         same format as the records stored in the database.
 
+    Raises
+    ------
+    ValueError
+        If the specified `bids_file` is not found in the `bids_dataset`.
     """
     if bids_file not in bids_dataset.files:
         raise ValueError(f"{bids_file} not in {bids_dataset.dataset}")
@@ -187,9 +224,20 @@ def load_eeg_attrs_from_bids_file(bids_dataset, bids_file: str) -> dict[str, Any
 def normalize_key(key: str) -> str:
     """Normalize a metadata key for robust matching.
 
-    Lowercase and replace non-alphanumeric characters with underscores, then strip
-    leading/trailing underscores. This allows tolerant matching such as
-    "p-factor" ≈ "p_factor" ≈ "P Factor".
+    This function converts a key to a standardized format by making it lowercase,
+    replacing non-alphanumeric characters with underscores, and stripping any
+    leading or trailing underscores. This allows for tolerant matching of keys
+    (e.g., "p-factor" ≈ "p_factor" ≈ "P Factor").
+
+    Parameters
+    ----------
+    key : str
+        The key to be normalized.
+
+    Returns
+    -------
+    str
+        The normalized key.
     """
     return re.sub(r"[^a-z0-9]+", "_", str(key).lower()).strip("_")
 
@@ -201,26 +249,31 @@ def merge_participants_fields(
 ) -> dict[str, Any]:
     """Merge participants.tsv fields into a dataset description dictionary.
 
-    - Preserves existing entries in ``description`` (no overwrites).
-    - Fills requested ``description_fields`` first, preserving their original names.
-    - Adds all remaining participants columns generically using normalized keys
-      unless a matching requested field already captured them.
+    This function enriches a description dictionary with data from a
+    `participants.tsv` row. It preserves existing entries in `description`
+    and adds new fields from the participants data.
 
     Parameters
     ----------
     description : dict
-        Current description to be enriched in-place and returned.
-    participants_row : dict | None
-        A mapping of participants.tsv columns for the current subject.
-    description_fields : list[str] | None
-        Optional list of requested description fields. When provided, matching is
-        performed by normalized names; the original requested field names are kept.
+        The current description dictionary to be enriched.
+    participants_row : dict or None
+        A dictionary representing a row from a `participants.tsv` file.
+    description_fields : list of str, optional
+        A list of specific fields to include in the description. Matching is
+        done using normalized keys, but the original field names are preserved.
 
     Returns
     -------
     dict
-        The enriched description (same object as input for convenience).
+        The enriched description dictionary.
 
+    Notes
+    -----
+    - Preserves existing entries in ``description`` (no overwrites).
+    - Fills requested ``description_fields`` first, preserving their original names.
+    - Adds all remaining participants columns generically using normalized keys
+      unless a matching requested field already captured them.
     """
     if not isinstance(description, dict) or not isinstance(participants_row, dict):
         return description

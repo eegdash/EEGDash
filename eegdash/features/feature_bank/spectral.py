@@ -1,3 +1,12 @@
+"""
+This module provides functions for calculating spectral features from EEG
+signals.
+
+It includes feature extractors for raw, normalized, and decibel-scaled
+power spectral densities, as well as functions for calculating various
+spectral measures such as power in different frequency bands, spectral
+entropy, and Hjorth parameters.
+"""
 import numba as nb
 import numpy as np
 from scipy.signal import welch
@@ -23,7 +32,27 @@ __all__ = [
 
 
 class SpectralFeatureExtractor(FeatureExtractor):
+    """A feature extractor for spectral features.
+
+    This extractor calculates the power spectral density (PSD) of the input
+    signal using Welch's method.
+    """
+
     def preprocess(self, x, **kwargs):
+        """Calculate the power spectral density (PSD) of the input signal.
+
+        Parameters
+        ----------
+        x : np.ndarray
+            The input time series.
+        **kwargs
+            Keyword arguments for `scipy.signal.welch`.
+
+        Returns
+        -------
+        tuple
+            A tuple of (frequencies, power_spectral_density).
+        """
         f_min = kwargs.pop("f_min") if "f_min" in kwargs else None
         f_max = kwargs.pop("f_max") if "f_max" in kwargs else None
         assert "fs" in kwargs
@@ -38,49 +67,171 @@ class SpectralFeatureExtractor(FeatureExtractor):
 
 @FeaturePredecessor(SpectralFeatureExtractor)
 class NormalizedSpectralFeatureExtractor(FeatureExtractor):
+    """A feature extractor for normalized spectral features.
+
+    This extractor normalizes the power spectral density (PSD) by dividing
+    by the total power.
+    """
+
     def preprocess(self, *x):
+        """Normalize the power spectral density (PSD).
+
+        Parameters
+        ----------
+        *x : tuple
+            A tuple of (frequencies, power_spectral_density).
+
+        Returns
+        -------
+        tuple
+            A tuple of (frequencies, normalized_power_spectral_density).
+        """
         return (*x[:-1], x[-1] / x[-1].sum(axis=-1, keepdims=True))
 
 
 @FeaturePredecessor(SpectralFeatureExtractor)
 class DBSpectralFeatureExtractor(FeatureExtractor):
+    """A feature extractor for decibel-scaled spectral features.
+
+    This extractor converts the power spectral density (PSD) to a decibel
+    scale.
+    """
+
     def preprocess(self, *x, eps=1e-15):
+        """Convert the power spectral density (PSD) to a decibel scale.
+
+        Parameters
+        ----------
+        *x : tuple
+            A tuple of (frequencies, power_spectral_density).
+        eps : float, default 1e-15
+            A small epsilon value to avoid taking the log of zero.
+
+        Returns
+        -------
+        tuple
+            A tuple of (frequencies, db_power_spectral_density).
+        """
         return (*x[:-1], 10 * np.log10(x[-1] + eps))
 
 
 @FeaturePredecessor(SpectralFeatureExtractor)
 @univariate_feature
 def spectral_root_total_power(f, p):
+    """Calculate the root of the total power.
+
+    Parameters
+    ----------
+    f : np.ndarray
+        The frequencies.
+    p : np.ndarray
+        The power spectral density.
+
+    Returns
+    -------
+    np.ndarray
+        The root of the total power for each channel.
+    """
     return np.sqrt(p.sum(axis=-1))
 
 
 @FeaturePredecessor(NormalizedSpectralFeatureExtractor)
 @univariate_feature
 def spectral_moment(f, p):
+    """Calculate the spectral moment.
+
+    Parameters
+    ----------
+    f : np.ndarray
+        The frequencies.
+    p : np.ndarray
+        The normalized power spectral density.
+
+    Returns
+    -------
+    np.ndarray
+        The spectral moment for each channel.
+    """
     return np.sum(f * p, axis=-1)
 
 
 @FeaturePredecessor(SpectralFeatureExtractor)
 @univariate_feature
 def spectral_hjorth_activity(f, p):
+    """Calculate the spectral Hjorth activity.
+
+    Parameters
+    ----------
+    f : np.ndarray
+        The frequencies.
+    p : np.ndarray
+        The power spectral density.
+
+    Returns
+    -------
+    np.ndarray
+        The spectral Hjorth activity for each channel.
+    """
     return np.sum(p, axis=-1)
 
 
 @FeaturePredecessor(NormalizedSpectralFeatureExtractor)
 @univariate_feature
 def spectral_hjorth_mobility(f, p):
+    """Calculate the spectral Hjorth mobility.
+
+    Parameters
+    ----------
+    f : np.ndarray
+        The frequencies.
+    p : np.ndarray
+        The normalized power spectral density.
+
+    Returns
+    -------
+    np.ndarray
+        The spectral Hjorth mobility for each channel.
+    """
     return np.sqrt(np.sum(np.power(f, 2) * p, axis=-1))
 
 
 @FeaturePredecessor(NormalizedSpectralFeatureExtractor)
 @univariate_feature
 def spectral_hjorth_complexity(f, p):
+    """Calculate the spectral Hjorth complexity.
+
+    Parameters
+    ----------
+    f : np.ndarray
+        The frequencies.
+    p : np.ndarray
+        The normalized power spectral density.
+
+    Returns
+    -------
+    np.ndarray
+        The spectral Hjorth complexity for each channel.
+    """
     return np.sqrt(np.sum(np.power(f, 4) * p, axis=-1))
 
 
 @FeaturePredecessor(NormalizedSpectralFeatureExtractor)
 @univariate_feature
 def spectral_entropy(f, p):
+    """Calculate the spectral entropy.
+
+    Parameters
+    ----------
+    f : np.ndarray
+        The frequencies.
+    p : np.ndarray
+        The normalized power spectral density.
+
+    Returns
+    -------
+    np.ndarray
+        The spectral entropy for each channel.
+    """
     idx = p > 0
     plogp = np.zeros_like(p)
     plogp[idx] = p[idx] * np.log(p[idx])
@@ -91,6 +242,22 @@ def spectral_entropy(f, p):
 @univariate_feature
 @nb.njit(cache=True, fastmath=True)
 def spectral_edge(f, p, edge=0.9):
+    """Calculate the spectral edge frequency.
+
+    Parameters
+    ----------
+    f : np.ndarray
+        The frequencies.
+    p : np.ndarray
+        The normalized power spectral density.
+    edge : float, default 0.9
+        The edge frequency to calculate (e.g., 0.9 for 90%).
+
+    Returns
+    -------
+    np.ndarray
+        The spectral edge frequency for each channel.
+    """
     se = np.empty(p.shape[:-1])
     for i in np.ndindex(p.shape[:-1]):
         se[i] = f[np.searchsorted(np.cumsum(p[i]), edge)]
@@ -100,6 +267,20 @@ def spectral_edge(f, p, edge=0.9):
 @FeaturePredecessor(DBSpectralFeatureExtractor)
 @univariate_feature
 def spectral_slope(f, p):
+    """Calculate the spectral slope.
+
+    Parameters
+    ----------
+    f : np.ndarray
+        The frequencies.
+    p : np.ndarray
+        The decibel-scaled power spectral density.
+
+    Returns
+    -------
+    dict
+        A dictionary with the spectral slope ('exp') and intercept ('int').
+    """
     log_f = np.vstack((np.log(f), np.ones(f.shape[0]))).T
     r = np.linalg.lstsq(log_f, p.reshape(-1, p.shape[-1]).T)[0]
     r = r.reshape(2, *p.shape[:-1])
@@ -113,4 +294,20 @@ def spectral_slope(f, p):
 )
 @univariate_feature
 def spectral_bands_power(f, p, bands=utils.DEFAULT_FREQ_BANDS):
+    """Calculate the power in different frequency bands.
+
+    Parameters
+    ----------
+    f : np.ndarray
+        The frequencies.
+    p : np.ndarray
+        The power spectral density.
+    bands : dict, optional
+        A dictionary of frequency bands.
+
+    Returns
+    -------
+    dict
+        A dictionary of power values for each frequency band.
+    """
     return utils.reduce_freq_bands(f, p, bands, np.sum)

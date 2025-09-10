@@ -1,3 +1,10 @@
+"""
+This module provides functions for creating and manipulating windows of data
+from HBN (Healthy Brain Network) datasets, with a focus on contrast trials.
+
+It includes functions for building trial tables, annotating trials with
+targets, and adding auxiliary anchors to the data.
+"""
 import logging
 
 import mne
@@ -11,7 +18,18 @@ logger = logging.getLogger("eegdash")
 
 
 def build_trial_table(events_df: pd.DataFrame) -> pd.DataFrame:
-    """One row per contrast trial with stimulus/response metrics."""
+    """Build a table of contrast trials with stimulus and response metrics.
+
+    Parameters
+    ----------
+    events_df : pd.DataFrame
+        A DataFrame of events.
+
+    Returns
+    -------
+    pd.DataFrame
+        A DataFrame with one row per contrast trial.
+    """
     events_df = events_df.copy()
     events_df["onset"] = pd.to_numeric(events_df["onset"], errors="raise")
     events_df = events_df.sort_values("onset", kind="mergesort").reset_index(drop=True)
@@ -84,10 +102,34 @@ def build_trial_table(events_df: pd.DataFrame) -> pd.DataFrame:
 
 # Aux functions to inject the annot
 def _to_float_or_none(x):
+    """Convert a value to a float or None.
+
+    Parameters
+    ----------
+    x : any
+        The value to convert.
+
+    Returns
+    -------
+    float or None
+        The converted value.
+    """
     return None if pd.isna(x) else float(x)
 
 
 def _to_int_or_none(x):
+    """Convert a value to an int or None.
+
+    Parameters
+    ----------
+    x : any
+        The value to convert.
+
+    Returns
+    -------
+    int or None
+        The converted value.
+    """
     if pd.isna(x):
         return None
     if isinstance(x, (bool, np.bool_)):
@@ -101,6 +143,18 @@ def _to_int_or_none(x):
 
 
 def _to_str_or_none(x):
+    """Convert a value to a string or None.
+
+    Parameters
+    ----------
+    x : any
+        The value to convert.
+
+    Returns
+    -------
+    str or None
+        The converted value.
+    """
     return None if (x is None or (isinstance(x, float) and np.isnan(x))) else str(x)
 
 
@@ -111,7 +165,26 @@ def annotate_trials_with_target(
     require_stimulus=True,
     require_response=True,
 ):
-    """Create 'contrast_trial_start' annotations with float target in extras."""
+    """Create 'contrast_trial_start' annotations with a float target.
+
+    Parameters
+    ----------
+    raw : mne.io.Raw
+        The raw MNE object.
+    target_field : str, default 'rt_from_stimulus'
+        The field to use as the target.
+    epoch_length : float, default 2.0
+        The length of the epochs in seconds.
+    require_stimulus : bool, default True
+        Whether to require a stimulus in each trial.
+    require_response : bool, default True
+        Whether to require a response in each trial.
+
+    Returns
+    -------
+    mne.io.Raw
+        The annotated raw MNE object.
+    """
     fnames = raw.filenames
     assert len(fnames) == 1, "Expected a single filename"
     bids_path = get_bids_path_from_fname(fnames[0])
@@ -167,6 +240,22 @@ def annotate_trials_with_target(
 
 
 def add_aux_anchors(raw, stim_desc="stimulus_anchor", resp_desc="response_anchor"):
+    """Add auxiliary anchors for stimulus and response onsets.
+
+    Parameters
+    ----------
+    raw : mne.io.Raw
+        The raw MNE object.
+    stim_desc : str, default 'stimulus_anchor'
+        The description for stimulus anchors.
+    resp_desc : str, default 'response_anchor'
+        The description for response anchors.
+
+    Returns
+    -------
+    mne.io.Raw
+        The raw MNE object with auxiliary anchors.
+    """
     ann = raw.annotations
     mask = ann.description == "contrast_trial_start"
     if not np.any(mask):
@@ -231,6 +320,24 @@ def add_extras_columns(
         "response_type",
     ),
 ):
+    """Add columns from annotation extras to the metadata of a windows dataset.
+
+    Parameters
+    ----------
+    windows_concat_ds : braindecode.datasets.BaseConcatDataset
+        The concatenated windows dataset.
+    original_concat_ds : braindecode.datasets.BaseConcatDataset
+        The original concatenated dataset with annotations.
+    desc : str, default 'contrast_trial_start'
+        The description of the annotations to use.
+    keys : tuple, optional
+        The keys to extract from the annotation extras.
+
+    Returns
+    -------
+    braindecode.datasets.BaseConcatDataset
+        The windows dataset with added metadata columns.
+    """
     float_cols = {
         "target",
         "rt_from_stimulus",
@@ -294,6 +401,21 @@ def add_extras_columns(
 
 
 def keep_only_recordings_with(desc, concat_ds):
+    """Filter a concatenated dataset to keep only recordings with a specific
+    annotation description.
+
+    Parameters
+    ----------
+    desc : str
+        The annotation description to keep.
+    concat_ds : braindecode.datasets.BaseConcatDataset
+        The concatenated dataset to filter.
+
+    Returns
+    -------
+    braindecode.datasets.BaseConcatDataset
+        The filtered concatenated dataset.
+    """
     kept = []
     for ds in concat_ds.datasets:
         if np.any(ds.raw.annotations.description == desc):

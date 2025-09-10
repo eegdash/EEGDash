@@ -1,5 +1,13 @@
+"""
+This module provides utility functions for feature extraction, particularly
+for spectral features.
+
+It includes functions for handling frequency bands and for reducing data
+across these bands.
+"""
 import numpy as np
 
+# Default frequency bands for spectral analysis.
 DEFAULT_FREQ_BANDS = {
     "delta": (1, 4.5),
     "theta": (4.5, 8),
@@ -9,6 +17,24 @@ DEFAULT_FREQ_BANDS = {
 
 
 def get_valid_freq_band(fs, n, f_min=None, f_max=None):
+    """Get a valid frequency band for a given sampling rate and signal length.
+
+    Parameters
+    ----------
+    fs : int
+        The sampling frequency.
+    n : int
+        The number of samples in the signal.
+    f_min : float, optional
+        The minimum frequency.
+    f_max : float, optional
+        The maximum frequency.
+
+    Returns
+    -------
+    tuple
+        A tuple of (f_min, f_max).
+    """
     f0 = 2 * fs / n
     f1 = fs / 2
     if f_min is None:
@@ -23,6 +49,24 @@ def get_valid_freq_band(fs, n, f_min=None, f_max=None):
 
 
 def slice_freq_band(f, *x, f_min=None, f_max=None):
+    """Slice a frequency band from a frequency vector and corresponding data.
+
+    Parameters
+    ----------
+    f : np.ndarray
+        The frequency vector.
+    *x : np.ndarray
+        The data arrays to slice.
+    f_min : float, optional
+        The minimum frequency.
+    f_max : float, optional
+        The maximum frequency.
+
+    Returns
+    -------
+    tuple
+        A tuple of (sliced_f, *sliced_x).
+    """
     if f_min is None and f_max is None:
         return f, *x
     else:
@@ -37,6 +81,24 @@ def slice_freq_band(f, *x, f_min=None, f_max=None):
 
 
 def reduce_freq_bands(f, x, bands, reduce_func=np.sum):
+    """Reduce data across specified frequency bands.
+
+    Parameters
+    ----------
+    f : np.ndarray
+        The frequency vector.
+    x : np.ndarray
+        The data to reduce.
+    bands : dict
+        A dictionary of frequency bands.
+    reduce_func : callable, default np.sum
+        The function to use for reduction.
+
+    Returns
+    -------
+    dict
+        A dictionary of reduced data for each frequency band.
+    """
     x_bands = dict()
     for k, lims in bands.items():
         assert isinstance(k, str)

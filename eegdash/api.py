@@ -241,6 +241,16 @@ class EEGDash:
 
         This delegates to the module-level builder used across the package and
         is exposed here for testing and convenience.
+
+        Parameters
+        ----------
+        **kwargs
+            User-friendly field filters that are converted to a MongoDB query.
+
+        Returns
+        -------
+        dict
+            A MongoDB query dictionary.
         """
         return build_query_from_kwargs(**kwargs)
 
@@ -251,6 +261,18 @@ class EEGDash:
         Supports only top-level equality (key: value) and $in (key: {"$in": [...]})
         constraints. Returns a tuple (kind, value) where kind is "eq" or "in". If the
         key is not present or uses other operators, returns None.
+
+        Parameters
+        ----------
+        query : dict
+            The query dictionary.
+        key : str
+            The key to extract the constraint for.
+
+        Returns
+        -------
+        tuple or None
+            A tuple of (kind, value) or None if not found.
         """
         if not isinstance(query, dict) or key not in query:
             return None
@@ -270,6 +292,18 @@ class EEGDash:
         We conservatively check only top-level fields with simple equality or $in
         constraints. If a field appears in both queries and constraints are mutually
         exclusive, raise an explicit error to avoid silent empty result sets.
+
+        Parameters
+        ----------
+        raw_query : dict
+            The raw query dictionary.
+        kwargs_query : dict
+            The query dictionary built from keyword arguments.
+
+        Raises
+        ------
+        ValueError
+            If conflicting constraints are found.
         """
         if not raw_query or not kwargs_query:
             return
@@ -542,11 +576,28 @@ class EEGDash:
         return f"s3://openneuro.org/{rel}"
 
     def _add_request(self, record: dict):
-        """Internal helper method to create a MongoDB insertion request for a record."""
+        """Internal helper method to create a MongoDB insertion request for a record.
+
+        Parameters
+        ----------
+        record : dict
+            The record to be inserted.
+
+        Returns
+        -------
+        InsertOne
+            A PyMongo InsertOne object.
+        """
         return InsertOne(record)
 
     def add(self, record: dict):
-        """Add a single record to the MongoDB collection."""
+        """Add a single record to the MongoDB collection.
+
+        Parameters
+        ----------
+        record : dict
+            The record to be added.
+        """
         try:
             self.__collection.insert_one(record)
         except ValueError as e:
@@ -556,7 +607,18 @@ class EEGDash:
             logger.error("Error adding record: %s ", record["data_name"])
 
     def _update_request(self, record: dict):
-        """Internal helper method to create a MongoDB update request for a record."""
+        """Internal helper method to create a MongoDB update request for a record.
+
+        Parameters
+        ----------
+        record : dict
+            The record to be updated.
+
+        Returns
+        -------
+        UpdateOne
+            A PyMongo UpdateOne object.
+        """
         return UpdateOne({"data_name": record["data_name"]}, {"$set": record})
 
     def update(self, record: dict):
@@ -607,7 +669,13 @@ class EEGDash:
 
     @property
     def collection(self):
-        """Return the MongoDB collection object."""
+        """Return the MongoDB collection object.
+
+        Returns
+        -------
+        pymongo.collection.Collection
+            The MongoDB collection object.
+        """
         return self.__collection
 
     def close(self):
@@ -974,6 +1042,18 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
 
         This makes lookups tolerant to naming differences like "p-factor" vs "p_factor".
         Returns the first match or None.
+
+        Parameters
+        ----------
+        data : Any
+            The data to search through.
+        target_key : str
+            The key to search for.
+
+        Returns
+        -------
+        Any
+            The value of the first match or None.
         """
         norm_target = normalize_key(target_key)
         if isinstance(data, dict):
@@ -1006,7 +1086,8 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
         description_fields : list[str]
             A list of fields to be extracted from the dataset records and included in
             the returned dataset description(s).
-        kwargs: additional keyword arguments to be passed to the EEGDashBaseDataset
+        base_dataset_kwargs: dict
+            additional keyword arguments to be passed to the EEGDashBaseDataset
             constructor.
 
         Returns

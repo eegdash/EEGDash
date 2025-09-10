@@ -1,3 +1,9 @@
+"""
+This module provides functions for dynamically creating dataset classes.
+
+It includes a registry function that generates dataset classes from a summary
+file, allowing for easy extension and management of datasets.
+"""
 from __future__ import annotations
 
 from pathlib import Path
@@ -14,7 +20,31 @@ def register_openneuro_datasets(
     namespace: Dict[str, Any] | None = None,
     add_to_all: bool = True,
 ) -> Dict[str, type]:
-    """Dynamically create dataset classes from a summary file."""
+    """Dynamically create dataset classes from a summary file.
+
+    This function reads a CSV summary file and creates a new class for each
+    dataset listed. These classes inherit from a specified base class and are
+    added to the given namespace.
+
+    Parameters
+    ----------
+    summary_file : str or Path
+        The path to the CSV summary file.
+    base_class : type, optional
+        The base class for the dynamically created classes. If not provided,
+        `eegdash.api.EEGDashDataset` is used.
+    namespace : dict, optional
+        The namespace to which the new classes will be added. Defaults to the
+        global namespace of the calling module.
+    add_to_all : bool, default True
+        If True, the new class names are added to the `__all__` list of the
+        namespace.
+
+    Returns
+    -------
+    dict
+        A dictionary mapping class names to the newly created classes.
+    """
     if base_class is None:
         from ..api import EEGDashDataset as base_class  # lazy import
 
@@ -91,7 +121,21 @@ def register_openneuro_datasets(
 
 
 def _markdown_table(row_series: pd.Series) -> str:
-    """Create a reStructuredText grid table from a pandas Series."""
+    """Create a reStructuredText grid table from a pandas Series.
+
+    This function takes a pandas Series and converts it into a formatted
+    reStructuredText grid table, which can be used in docstrings.
+
+    Parameters
+    ----------
+    row_series : pd.Series
+        A pandas Series containing the data for the table.
+
+    Returns
+    -------
+    str
+        A string containing the reStructuredText grid table.
+    """
     if row_series.empty:
         return ""
     dataset_id = row_series["dataset"]

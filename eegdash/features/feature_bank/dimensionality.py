@@ -1,3 +1,11 @@
+"""
+This module provides functions for calculating dimensionality-related features
+from EEG signals.
+
+It includes implementations of various fractal dimension measures and other
+methods for quantifying the complexity and self-similarity of time series
+data.
+"""
 import numba as nb
 import numpy as np
 from scipy import special
@@ -18,6 +26,22 @@ __all__ = [
 @univariate_feature
 @nb.njit(cache=True, fastmath=True)
 def dimensionality_higuchi_fractal_dim(x, k_max=10, eps=1e-7):
+    """Calculate the Higuchi Fractal Dimension (HFD).
+
+    Parameters
+    ----------
+    x : np.ndarray
+        The input time series.
+    k_max : int, default 10
+        The maximum value of `k`.
+    eps : float, default 1e-7
+        A small epsilon value to avoid division by zero.
+
+    Returns
+    -------
+    np.ndarray
+        The Higuchi Fractal Dimension for each channel.
+    """
     N = x.shape[-1]
     hfd = np.empty(x.shape[:-1])
     log_k = np.vstack((-np.log(np.arange(1, k_max + 1)), np.ones(k_max))).T
@@ -36,6 +60,18 @@ def dimensionality_higuchi_fractal_dim(x, k_max=10, eps=1e-7):
 @FeaturePredecessor(*SIGNAL_PREDECESSORS)
 @univariate_feature
 def dimensionality_petrosian_fractal_dim(x):
+    """Calculate the Petrosian Fractal Dimension (PFD).
+
+    Parameters
+    ----------
+    x : np.ndarray
+        The input time series.
+
+    Returns
+    -------
+    np.ndarray
+        The Petrosian Fractal Dimension for each channel.
+    """
     nd = signal_zero_crossings(np.diff(x, axis=-1))
     log_n = np.log(x.shape[-1])
     return log_n / (np.log(nd) + log_n)
@@ -44,6 +80,18 @@ def dimensionality_petrosian_fractal_dim(x):
 @FeaturePredecessor(*SIGNAL_PREDECESSORS)
 @univariate_feature
 def dimensionality_katz_fractal_dim(x):
+    """Calculate the Katz Fractal Dimension.
+
+    Parameters
+    ----------
+    x : np.ndarray
+        The input time series.
+
+    Returns
+    -------
+    np.ndarray
+        The Katz Fractal Dimension for each channel.
+    """
     dists = np.abs(np.diff(x, axis=-1))
     L = dists.sum(axis=-1)
     a = dists.mean(axis=-1)
@@ -54,6 +102,26 @@ def dimensionality_katz_fractal_dim(x):
 
 @nb.njit(cache=True, fastmath=True)
 def _hurst_exp(x, ns, a, gamma_ratios, log_n):
+    """Helper function to calculate the Hurst exponent.
+
+    Parameters
+    ----------
+    x : np.ndarray
+        The input time series.
+    ns : np.ndarray
+        The window sizes.
+    a : np.ndarray
+        An array of `arange(1, ns[-1])`.
+    gamma_ratios : np.ndarray
+        The ratios of gamma functions.
+    log_n : np.ndarray
+        The log of the window sizes.
+
+    Returns
+    -------
+    np.ndarray
+        The Hurst exponent for each channel.
+    """
     h = np.empty(x.shape[:-1])
     rs = np.empty((ns.shape[0], x.shape[-1] // ns[0]))
     log_rs = np.empty(ns.shape[0])
@@ -80,6 +148,18 @@ def _hurst_exp(x, ns, a, gamma_ratios, log_n):
 @FeaturePredecessor(*SIGNAL_PREDECESSORS)
 @univariate_feature
 def dimensionality_hurst_exp(x):
+    """Calculate the Hurst exponent.
+
+    Parameters
+    ----------
+    x : np.ndarray
+        The input time series.
+
+    Returns
+    -------
+    np.ndarray
+        The Hurst exponent for each channel.
+    """
     ns = np.unique(np.power(2, np.arange(2, np.log2(x.shape[-1]) - 1)).astype(int))
     idx = ns > 340
     gamma_ratios = np.empty(ns.shape[0])
@@ -95,6 +175,18 @@ def dimensionality_hurst_exp(x):
 @univariate_feature
 @nb.njit(cache=True, fastmath=True)
 def dimensionality_detrended_fluctuation_analysis(x):
+    """Calculate the Detrended Fluctuation Analysis (DFA).
+
+    Parameters
+    ----------
+    x : np.ndarray
+        The input time series.
+
+    Returns
+    -------
+    np.ndarray
+        The DFA alpha exponent for each channel.
+    """
     ns = np.unique(np.floor(np.power(2, np.arange(2, np.log2(x.shape[-1]) - 1))))
     a = np.vstack((np.arange(ns[-1]), np.ones(int(ns[-1])))).T
     log_n = np.vstack((np.log(ns), np.ones(ns.shape[0]))).T

@@ -300,7 +300,7 @@ example shows how to load data for a specific subject from the local cache.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (1 minutes 16.133 seconds)
+   **Total running time of the script:** (1 minutes 20.259 seconds)
 
 **Estimated memory usage:**  1157 MB
 

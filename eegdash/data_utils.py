@@ -13,7 +13,6 @@ import mne
 import mne_bids
 import numpy as np
 import pandas as pd
-import s3fs
 from bids import BIDSLayout
 from fsspec.callbacks import TqdmCallback
 from joblib import Parallel, delayed
@@ -24,6 +23,7 @@ from mne_bids import BIDSPath
 from braindecode.datasets import BaseDataset
 
 from .paths import get_default_cache_dir
+from . import downloader
 
 logger = logging.getLogger("eegdash")
 
@@ -98,112 +98,18 @@ class EEGDashBaseDataset(BaseDataset):
             **self.bids_kwargs,
         )
 
-        self.s3file = self._get_s3path(record["bidspath"])
+        self.s3file = downloader.get_s3path(self.s3_bucket, record["bidspath"])
         self.bids_dependencies = record["bidsdependencies"]
+        self.bids_dependencies_original = record["bidsdependencies"]
         # Temporary fix for BIDS dependencies path
         # just to release to the competition
         if not self.s3_open_neuro:
-            self.bids_dependencies_original = self.bids_dependencies
             self.bids_dependencies = [
                 dep.split("/", 1)[1] for dep in self.bids_dependencies
             ]
 
         self._raw = None
 
-    def _get_s3path(self, filepath: str) -> str:
-        """Helper to form an AWS S3 URI for the given relative filepath."""
-        return f"{self.s3_bucket}/{filepath}"
-
-    def _download_s3(self) -> None:
-        """Download function that gets the raw EEG data from S3."""
-        filesystem = s3fs.S3FileSystem(
-            anon=True, client_kwargs={"region_name": "us-east-2"}
-        )
-        if not self.s3_open_neuro:
-            self.s3file = re.sub(r"(^|/)ds\d{6}/", r"\1", self.s3file, count=1)
-            if self.s3file.endswith(".set"):
-                self.s3file = self.s3file[:-4] + ".bdf"
-                self.filecache = self.filecache.with_suffix(".bdf")
-
-        self.filecache.parent.mkdir(parents=True, exist_ok=True)
-        info = filesystem.info(self.s3file)
-        size = info.get("size") or info.get("Size")
-
-        callback = TqdmCallback(
-            size=size,
-            tqdm_kwargs=dict(
-                desc=f"Downloading {Path(self.s3file).name}",
-                unit="B",
-                unit_scale=True,
-                unit_divisor=1024,
-                dynamic_ncols=True,
-                leave=True,
-                mininterval=0.2,
-                smoothing=0.1,
-                miniters=1,
-                bar_format="{desc}: {percentage:3.0f}%|{bar}| {n_fmt}/{total_fmt} "
-                "[{elapsed}<{remaining}, {rate_fmt}]",
-            ),
-        )
-        filesystem.get(self.s3file, self.filecache, callback=callback)
-
-        self.filenames = [self.filecache]
-
-    def _download_dependencies(self) -> None:
-        """Download all BIDS dependency files (metadata files, recording sidecar files)
-        from S3 and cache them locally.
-        """
-        filesystem = s3fs.S3FileSystem(
-            anon=True, client_kwargs={"region_name": "us-east-2"}
-        )
-        for i, dep in enumerate(self.bids_dependencies):
-            if not self.s3_open_neuro:
-                # fix this when our bucket is integrated into the
-                # mongodb
-                # if the file have ".set" replace to ".bdf"
-                if dep.endswith(".set"):
-                    dep = dep[:-4] + ".bdf"
-
-            s3path = self._get_s3path(dep)
-            if not self.s3_open_neuro:
-                dep = self.bids_dependencies_original[i]
-
-            dep_path = Path(dep)
-            if dep_path.parts and dep_path.parts[0] == self.record.get("dataset"):
-                dep_local = Path(self.dataset_folder, *dep_path.parts[1:])
-            else:
-                dep_local = Path(self.dataset_folder) / dep_path
-            filepath = self.cache_dir / dep_local
-            if not self.s3_open_neuro:
-                if filepath.suffix == ".set":
-                    filepath = filepath.with_suffix(".bdf")
-                if self.filecache.suffix == ".set":
-                    self.filecache = self.filecache.with_suffix(".bdf")
-
-            # here, we download the dependency and it is fine
-            # in the case of the competition.
-            if not filepath.exists():
-                filepath.parent.mkdir(parents=True, exist_ok=True)
-                info = filesystem.info(s3path)
-                size = info.get("size") or info.get("Size")
-
-                callback = TqdmCallback(
-                    size=size,
-                    tqdm_kwargs=dict(
-                        desc=f"Downloading {Path(s3path).name}",
-                        unit="B",
-                        unit_scale=True,
-                        unit_divisor=1024,
-                        dynamic_ncols=True,
-                        leave=True,
-                        mininterval=0.2,
-                        smoothing=0.1,
-                        miniters=1,
-                        bar_format="{desc}: {percentage:3.0f}%|{bar}| {n_fmt}/{total_fmt} "
-                        "[{elapsed}<{remaining}, {rate_fmt}]",
-                    ),
-                )
-                filesystem.get(s3path, filepath, callback=callback)
 
     def _get_raw_bids_args(self) -> dict[str, Any]:
         """Helper to restrict the metadata record to the fields needed to locate a BIDS
@@ -222,8 +128,17 @@ class EEGDashBaseDataset(BaseDataset):
 
         if not os.path.exists(self.filecache):  # not preload
             if self.bids_dependencies:
-                self._download_dependencies()
-            self._download_s3()
+                downloader.download_dependencies(
+                    self.s3_bucket,
+                    self.bids_dependencies,
+                    self.bids_dependencies_original,
+                    self.cache_dir,
+                    self.dataset_folder,
+                    self.record,
+                    self.s3_open_neuro,
+                )
+            self.filecache = downloader.download_s3_file(self.s3file, self.filecache, self.s3_open_neuro)
+            self.filenames = [self.filecache]
         if self._raw is None:
             # capturing any warnings
             # to-do: remove this once is fixed on the mne-bids side.
@@ -347,6 +262,11 @@ class EEGDashBaseDataset(BaseDataset):
             X = self.transform(X)
         return X, y
 
+    def load(self):
+        if self.raw is None:
+            self.raw = self._load_data()
+        return self
+
     def __len__(self) -> int:
         """Return the number of samples in the dataset."""
         if self._raw is None:
@@ -426,13 +346,14 @@ class EEGDashBaseRaw(BaseRaw):
             ch_types.append(chtype)
         info = mne.create_info(ch_names=ch_names, sfreq=sfreq, ch_types=ch_types)
 
-        self.s3file = self._get_s3path(input_fname)
+        self.s3file = downloader.get_s3path(self._AWS_BUCKET, input_fname)
         self.cache_dir = Path(cache_dir) if cache_dir else get_default_cache_dir()
         self.filecache = self.cache_dir / input_fname
         self.bids_dependencies = bids_dependencies
 
         if preload and not os.path.exists(self.filecache):
-            self._download_s3()
+            self.filecache = downloader.download_s3_file(self.s3file, self.filecache, self.s3_open_neuro)
+            self.filenames = [self.filecache]
             preload = self.filecache
 
         super().__init__(
@@ -443,35 +364,22 @@ class EEGDashBaseRaw(BaseRaw):
             verbose=verbose,
         )
 
-    def _get_s3path(self, filepath):
-        return f"{self._AWS_BUCKET}/{filepath}"
-
-    def _download_s3(self) -> None:
-        self.filecache.parent.mkdir(parents=True, exist_ok=True)
-        filesystem = s3fs.S3FileSystem(
-            anon=True, client_kwargs={"region_name": "us-east-2"}
-        )
-        filesystem.download(self.s3file, self.filecache)
-        self.filenames = [self.filecache]
-
-    def _download_dependencies(self):
-        filesystem = s3fs.S3FileSystem(
-            anon=True, client_kwargs={"region_name": "us-east-2"}
-        )
-        for dep in self.bids_dependencies:
-            s3path = self._get_s3path(dep)
-            filepath = self.cache_dir / dep
-            if not filepath.exists():
-                filepath.parent.mkdir(parents=True, exist_ok=True)
-                filesystem.download(s3path, filepath)
-
     def _read_segment(
         self, start=0, stop=None, sel=None, data_buffer=None, *, verbose=None
     ):
         if not os.path.exists(self.filecache):  # not preload
             if self.bids_dependencies:
-                self._download_dependencies()
-            self._download_s3()
+                downloader.download_dependencies(
+                    self.s3_bucket,
+                    self.bids_dependencies,
+                    None,
+                    self.cache_dir,
+                    self.dataset_folder,
+                    self.record,
+                    self.s3_open_neuro,
+                )
+            self.filecache = downloader.download_s3_file(self.s3file, self.filecache, self.s3_open_neuro)
+            self.filenames = [self.filecache]
         else:  # not preload and file is not cached
             self.filenames = [self.filecache]
         return super()._read_segment(start, stop, sel, data_buffer, verbose=verbose)

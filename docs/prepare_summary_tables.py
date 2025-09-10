@@ -278,12 +278,21 @@ def prepare_table(df: pd.DataFrame):
             "duration_hours_total",
             "size",
             "size_bytes",
+            "Type Subject",
+            "modality of exp",
+            "type of exp",
         ]
     ]
 
     # renaming time for something small
-    df = df.rename(columns={"duration_hours_total": "duration (h)"})
-
+    df = df.rename(
+        columns={
+            "duration_hours_total": "duration (h)",
+            "modality of exp": "modality",
+            "type of exp": "type",
+            "Type Subject": "pathology",
+        }
+    )
     # number of subject are always int
     df["n_subjects"] = df["n_subjects"].astype(int)
     # number of tasks are always int
@@ -297,14 +306,16 @@ def prepare_table(df: pd.DataFrame):
     df["nchans_set"] = df["nchans_set"].apply(parse_freqs)
     # rename the nchans to channels
     # Creating the total line
+    df["duration (h)"] = df["duration (h)"].round(2)
+
     df.loc["Total"] = df.sum(numeric_only=True)
     df.loc["Total", "dataset"] = f"Total {len(df) - 1} datasets"
     df.loc["Total", "nchans_set"] = ""
     df.loc["Total", "sampling_freqs"] = ""
+    df.loc["Total", "duration (h)"] = ""
     df.loc["Total", "size"] = human_readable_size(df.loc["Total", "size_bytes"])
     df = df.drop(columns=["size_bytes"])
     # arrounding the hours
-    df["duration (h)"] = df["duration (h)"].round(2)
 
     df.index = df.index.astype(str)
 
@@ -318,7 +329,9 @@ def main(source_dir: str, target_dir: str):
     for f in files:
         target_file = target_dir / Path(f).name
         print(f"Processing {f} -> {target_file}")
-        df_raw = pd.read_csv(f, index_col=False, header=0, skipinitialspace=True)
+        df_raw = pd.read_csv(
+            f, index_col=False, header=0, skipinitialspace=True
+        )  # , sep=";")
         # Generate bubble chart from the raw data to have access to size_bytes
         # Use x-axis as number of records for better spread
         gen_datasets_bubble(

@@ -1,8 +1,6 @@
-.. meta::
-   :hide_sidebar: true
-
-:html_theme.sidebar_secondary.remove:
-:html_theme.sidebar_primary.remove:
+:hide_sidebar: true
+:html_theme.sidebar_secondary.remove: true
+:html_theme.sidebar_primary.remove: true
 
 .. _data_summary:
 

@@ -36,7 +36,7 @@ EEGDash queries return a **Pytorch Dataset** formatted to facilitate machine lea
 
 ## Data preprocessing
 
-EEGDash datasets are processed using the popular [BrainDecode](https://braindecode.org/stable/index.html) library. In fact, EEGDash datasets are BrainDecode datasets, which are themselves PyTorch datasets. This means that any preprocessing possible on BrainDecode datasets is also possible on EEGDash datasets. Refer to [BrainDecode](https://braindecode.org/stable/index.html) tutorials for guidance on preprocessing EEG data.
+EEGDash datasets are processed using the popular [braindecode](https://braindecode.org/stable/index.html) library. In fact, EEGDash datasets are braindecode datasets, which are themselves PyTorch datasets. This means that any preprocessing possible on braindecode datasets is also possible on EEGDash datasets. Refer to [braindecode](https://braindecode.org/stable/index.html) tutorials for guidance on preprocessing EEG data.
 
 ## EEG-Dash usage
 
@@ -59,7 +59,7 @@ ds_NDARDB033FW5 = EEGDashDataset(
 )
 ```
 
-This will search and download the metadata for the task **RestingState** for subject **NDARDB033FW5** in BIDS dataset **ds005514**. The actual data will not be downloaded at this stage. Following standard practice, data is only downloaded once it is processed. The **ds_NDARDB033FW5** object is a fully functional BrainDecode dataset, which is itself a PyTorch dataset. This [tutorial](https://github.com/sccn/EEGDash/blob/develop/notebooks/tutorial_eoec.ipynb) shows how to preprocess the EEG data, extracting portions of the data containing eyes-open and eyes-closed segments, then perform eyes-open vs. eyes-closed classification using a (shallow) deep-learning model. 
+This will search and download the metadata for the task **RestingState** for subject **NDARDB033FW5** in BIDS dataset **ds005514**. The actual data will not be downloaded at this stage. Following standard practice, data is only downloaded once it is processed. The **ds_NDARDB033FW5** object is a fully functional braindecode dataset, which is itself a PyTorch dataset. This [tutorial](https://github.com/sccn/EEGDash/blob/develop/notebooks/tutorial_eoec.ipynb) shows how to preprocess the EEG data, extracting portions of the data containing eyes-open and eyes-closed segments, then perform eyes-open vs. eyes-closed classification using a (shallow) deep-learning model. 
 
 To use the data from multiple subjects, enter:
 
@@ -75,7 +75,13 @@ This will search and download the metadata for the task 'RestingState' for all s
 
 ### Automatic caching
 
-EEGDash automatically caches the downloaded data in the .eegdash_cache folder of the current directory from which the script is called. This means that if you run the tutorial [scripts](https://github.com/sccn/EEGDash/tree/develop/notebooks), the data will only be downloaded the first time the script is executed.
+By default, EEGDash caches downloaded data under a single, consistent folder:
+
+- If ``EEGDASH_CACHE_DIR`` is set in your environment, that path is used.
+- Else, if MNE’s ``MNE_DATA`` config is set, that path is used to align with other EEG tooling.
+- Otherwise, ``.eegdash_cache`` in the current working directory is used.
+
+This means that if you run the tutorial [scripts](https://github.com/sccn/EEGDash/tree/develop/notebooks), the data will only be downloaded the first time the script is executed and reused thereafter.
 
 ## Education -- Coming soon...
 
@@ -86,7 +92,6 @@ We organize workshops and educational events to foster cross-cultural education 
 EEG-DaSh is a collaborative initiative between the United States and Israel, supported by the National Science Foundation (NSF). The partnership brings together experts from the Swartz Center for Computational Neuroscience (SCCN) at the University of California San Diego (UCSD) and Ben-Gurion University (BGU) in Israel. 
 
 ![Screenshot 2024-10-03 at 09 14 06](https://github.com/user-attachments/assets/327639d3-c3b4-46b1-9335-37803209b0d3)
-
 
 
 

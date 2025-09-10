@@ -7,8 +7,8 @@ from urllib.parse import urlsplit
 
 import mne
 import numpy as np
-import platformdirs
 import xarray as xr
+from docstring_inheritance import NumpyDocstringInheritanceInitMeta
 from dotenv import load_dotenv
 from joblib import Parallel, delayed
 from mne.utils import warn
@@ -18,14 +18,23 @@ from s3fs import S3FileSystem
 
 from braindecode.datasets import BaseConcatDataset
 
-from .bids_eeg_metadata import build_query_from_kwargs, load_eeg_attrs_from_bids_file
+from .bids_eeg_metadata import (
+    build_query_from_kwargs,
+    load_eeg_attrs_from_bids_file,
+    merge_participants_fields,
+    normalize_key,
+)
 from .const import (
     ALLOWED_QUERY_FIELDS,
     RELEASE_TO_OPENNEURO_DATASET_MAP,
 )
 from .const import config as data_config
-from .data_utils import EEGBIDSDataset, EEGDashBaseDataset
+from .data_utils import (
+    EEGBIDSDataset,
+    EEGDashBaseDataset,
+)
 from .mongodb import MongoConnectionManager
+from .paths import get_default_cache_dir
 
 logger = logging.getLogger("eegdash")
 
@@ -83,16 +92,13 @@ class EEGDash:
     ) -> list[Mapping[str, Any]]:
         """Find records in the MongoDB collection.
 
-        This method supports four usage patterns:
-        1. With a pre-built MongoDB query dictionary (positional argument):
-           >>> eegdash.find({"dataset": "ds002718", "subject": {"$in": ["012", "013"]}})
-        2. With user-friendly keyword arguments for simple and multi-value queries:
-           >>> eegdash.find(dataset="ds002718", subject="012")
-           >>> eegdash.find(dataset="ds002718", subject=["012", "013"])
-        3. With an explicit empty query to return all documents:
-           >>> eegdash.find({})  # fetches all records (use with care)
-        4. By combining a raw query with kwargs (merged via logical AND):
-           >>> eegdash.find({"dataset": "ds002718"}, subject=["012", "013"])  # yields {"$and":[{"dataset":"ds002718"}, {"subject":{"$in":["012","013"]}}]}
+        Examples
+        --------
+        >>> eegdash.find({"dataset": "ds002718", "subject": {"$in": ["012", "013"]}})  # pre-built query
+        >>> eegdash.find(dataset="ds002718", subject="012")  # keyword filters
+        >>> eegdash.find(dataset="ds002718", subject=["012", "013"])  # sequence -> $in
+        >>> eegdash.find({})  # fetch all (use with care)
+        >>> eegdash.find({"dataset": "ds002718"}, subject=["012", "013"])  # combine query + kwargs (AND)
 
         Parameters
         ----------
@@ -627,7 +633,73 @@ class EEGDash:
         pass
 
 
-class EEGDashDataset(BaseConcatDataset):
+class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitMeta):
+    """Create a new EEGDashDataset from a given query or local BIDS dataset directory
+    and dataset name. An EEGDashDataset is pooled collection of EEGDashBaseDataset
+    instances (individual recordings) and is a subclass of braindecode's BaseConcatDataset.
+
+    Examples
+    --------
+    # Find by single subject
+    >>> ds = EEGDashDataset(dataset="ds005505", subject="NDARCA153NKE")
+
+    # Find by a list of subjects and a specific task
+    >>> subjects = ["NDARCA153NKE", "NDARXT792GY8"]
+    >>> ds = EEGDashDataset(dataset="ds005505", subject=subjects, task="RestingState")
+
+    # Use a raw MongoDB query for advanced filtering
+    >>> raw_query = {"dataset": "ds005505", "subject": {"$in": subjects}}
+    >>> ds = EEGDashDataset(query=raw_query)
+
+    Parameters
+    ----------
+    cache_dir : str | Path
+        Directory where data are cached locally. If not specified, a default
+        cache directory under the user cache is used.
+    query : dict | None
+        Raw MongoDB query to filter records. If provided, it is merged with
+        keyword filtering arguments (see ``**kwargs``) using logical AND.
+        You must provide at least a ``dataset`` (either in ``query`` or
+        as a keyword argument). Only fields in ``ALLOWED_QUERY_FIELDS`` are
+        considered for filtering.
+    dataset : str
+        Dataset identifier (e.g., ``"ds002718"``). Required if ``query`` does
+        not already specify a dataset.
+    task : str | list[str]
+        Task name(s) to filter by (e.g., ``"RestingState"``).
+    subject : str | list[str]
+        Subject identifier(s) to filter by (e.g., ``"NDARCA153NKE"``).
+    session : str | list[str]
+        Session identifier(s) to filter by (e.g., ``"1"``).
+    run : str | list[str]
+        Run identifier(s) to filter by (e.g., ``"1"``).
+    description_fields : list[str]
+        Fields to extract from each record and include in dataset descriptions
+        (e.g., "subject", "session", "run", "task").
+    s3_bucket : str | None
+        Optional S3 bucket URI (e.g., "s3://mybucket") to use instead of the
+        default OpenNeuro bucket when downloading data files.
+    records : list[dict] | None
+        Pre-fetched metadata records. If provided, the dataset is constructed
+        directly from these records and no MongoDB query is performed.
+    download : bool, default True
+        If False, load from local BIDS files only. Local data are expected
+        under ``cache_dir / dataset``; no DB or S3 access is attempted.
+    n_jobs : int
+        Number of parallel jobs to use where applicable (-1 uses all cores).
+    eeg_dash_instance : EEGDash | None
+        Optional existing EEGDash client to reuse for DB queries. If None,
+        a new client is created on demand, not used in the case of no download.
+    **kwargs : dict
+        Additional keyword arguments serving two purposes:
+
+        - Filtering: any keys present in ``ALLOWED_QUERY_FIELDS`` are treated as
+          query filters (e.g., ``dataset``, ``subject``, ``task``, ...).
+        - Dataset options: remaining keys are forwarded to
+          ``EEGDashBaseDataset``.
+
+    """
+
     def __init__(
         self,
         cache_dir: str | Path,
@@ -648,59 +720,6 @@ class EEGDashDataset(BaseConcatDataset):
         eeg_dash_instance: EEGDash | None = None,
         **kwargs,
     ):
-        """Create a new EEGDashDataset from a given query or local BIDS dataset directory
-        and dataset name. An EEGDashDataset is pooled collection of EEGDashBaseDataset
-        instances (individual recordings) and is a subclass of braindecode's BaseConcatDataset.
-
-        Querying Examples:
-        ------------------
-        # Find by single subject
-        >>> ds = EEGDashDataset(dataset="ds005505", subject="NDARCA153NKE")
-
-        # Find by a list of subjects and a specific task
-        >>> subjects = ["NDARCA153NKE", "NDARXT792GY8"]
-        >>> ds = EEGDashDataset(dataset="ds005505", subject=subjects, task="RestingState")
-
-        # Use a raw MongoDB query for advanced filtering
-        >>> raw_query = {"dataset": "ds005505", "subject": {"$in": subjects}}
-        >>> ds = EEGDashDataset(query=raw_query)
-
-        Parameters
-        ----------
-        cache_dir : str | Path
-            Directory where data are cached locally. If not specified, a default
-            cache directory under the user cache is used.
-        query : dict | None
-            Raw MongoDB query to filter records. If provided, it is merged with
-            keyword filtering arguments (see ``**kwargs``) using logical AND.
-            You must provide at least a ``dataset`` (either in ``query`` or
-            as a keyword argument). Only fields in ``ALLOWED_QUERY_FIELDS`` are
-            considered for filtering.
-        description_fields : list[str]
-            Fields to extract from each record and include in dataset descriptions
-            (e.g., "subject", "session", "run", "task").
-        s3_bucket : str | None
-            Optional S3 bucket URI (e.g., "s3://mybucket") to use instead of the
-            default OpenNeuro bucket when downloading data files.
-        records : list[dict] | None
-            Pre-fetched metadata records. If provided, the dataset is constructed
-            directly from these records and no MongoDB query is performed.
-        download : bool, default True
-            If False, load from local BIDS files only. Local data are expected
-            under ``cache_dir / dataset``; no DB or S3 access is attempted.
-        n_jobs : int
-            Number of parallel jobs to use where applicable (-1 uses all cores).
-        eeg_dash_instance : EEGDash | None
-            Optional existing EEGDash client to reuse for DB queries. If None,
-            a new client is created on demand, not used in the case of no download.
-        **kwargs : dict
-            Additional keyword arguments serving two purposes:
-            - Filtering: any keys present in ``ALLOWED_QUERY_FIELDS`` are treated
-              as query filters (e.g., ``dataset``, ``subject``, ``task``, ...).
-            - Dataset options: remaining keys are forwarded to the
-              ``EEGDashBaseDataset`` constructor.
-
-        """
         # Parameters that don't need validation
         _suppress_comp_warning: bool = kwargs.pop("_suppress_comp_warning", False)
         self.s3_bucket = s3_bucket
@@ -709,7 +728,8 @@ class EEGDashDataset(BaseConcatDataset):
         self.n_jobs = n_jobs
         self.eeg_dash_instance = eeg_dash_instance or EEGDash()
 
-        self.cache_dir = Path(cache_dir or platformdirs.user_cache_dir("EEGDash"))
+        # Resolve a unified cache directory across code/tests/CI
+        self.cache_dir = Path(cache_dir or get_default_cache_dir())
 
         if not self.cache_dir.exists():
             warn(f"Cache directory does not exist, creating it: {self.cache_dir}")
@@ -784,20 +804,49 @@ class EEGDashDataset(BaseConcatDataset):
                     f"Offline mode is enabled, but local data_dir {self.data_dir} does not exist."
                 )
             records = self._find_local_bids_records(self.data_dir, self.query)
-            datasets = [
-                EEGDashBaseDataset(
-                    record=record,
-                    cache_dir=self.cache_dir,
-                    s3_bucket=self.s3_bucket,
-                    description={
-                        k: record.get(k)
-                        for k in description_fields
-                        if record.get(k) is not None
-                    },
-                    **base_dataset_kwargs,
+            # Try to enrich from local participants.tsv to restore requested fields
+            try:
+                bids_ds = EEGBIDSDataset(
+                    data_dir=str(self.data_dir), dataset=self.query["dataset"]
+                )  # type: ignore[index]
+            except Exception:
+                bids_ds = None
+
+            datasets = []
+            for record in records:
+                # Start with entity values from filename
+                desc: dict[str, Any] = {
+                    k: record.get(k)
+                    for k in ("subject", "session", "run", "task")
+                    if record.get(k) is not None
+                }
+
+                if bids_ds is not None:
+                    try:
+                        rel_from_dataset = Path(record["bidspath"]).relative_to(
+                            record["dataset"]
+                        )  # type: ignore[index]
+                        local_file = (self.data_dir / rel_from_dataset).as_posix()
+                        part_row = bids_ds.subject_participant_tsv(local_file)
+                        desc = merge_participants_fields(
+                            description=desc,
+                            participants_row=part_row
+                            if isinstance(part_row, dict)
+                            else None,
+                            description_fields=description_fields,
+                        )
+                    except Exception:
+                        pass
+
+                datasets.append(
+                    EEGDashBaseDataset(
+                        record=record,
+                        cache_dir=self.cache_dir,
+                        s3_bucket=self.s3_bucket,
+                        description=desc,
+                        **base_dataset_kwargs,
+                    )
                 )
-                for record in records
-            ]
         elif self.query:
             # This is the DB query path that we are improving
             datasets = self._find_datasets(
@@ -882,23 +931,16 @@ class EEGDashDataset(BaseConcatDataset):
             else:
                 matching_args[finder_key] = [entity_val]
 
-        paths = find_matching_paths(
+        matched_paths = find_matching_paths(
             root=str(dataset_root),
             datatypes=["eeg"],
             suffixes=["eeg"],
             ignore_json=True,
             **matching_args,
         )
+        records_out: list[dict] = []
 
-        records: list[dict] = []
-        seen_files: set[str] = set()
-
-        for bids_path in paths:
-            fpath = str(Path(bids_path.fpath).resolve())
-            if fpath in seen_files:
-                continue
-            seen_files.add(fpath)
-
+        for bids_path in matched_paths:
             # Build bidspath as dataset_id / relative_path_from_dataset_root (POSIX)
             rel_from_root = (
                 Path(bids_path.fpath)
@@ -915,29 +957,37 @@ class EEGDashDataset(BaseConcatDataset):
                 "session": (bids_path.session or None),
                 "task": (bids_path.task or None),
                 "run": (bids_path.run or None),
-                # minimal fields to satisfy BaseDataset
+                # minimal fields to satisfy BaseDataset from eegdash
                 "bidsdependencies": [],  # not needed to just run.
                 "modality": "eeg",
-                # this information is from eegdash schema but not available locally
-                "sampling_frequency": 1.0,
-                "nchans": 1,
-                "ntimes": 1,
+                # minimal numeric defaults for offline length calculation
+                "sampling_frequency": None,
+                "nchans": None,
+                "ntimes": None,
             }
-            records.append(rec)
+            records_out.append(rec)
 
-        return records
+        return records_out
 
     def _find_key_in_nested_dict(self, data: Any, target_key: str) -> Any:
-        """Helper to recursively search for a key in a nested dictionary structure; returns
-        the value associated with the first occurrence of the key, or None if not found.
+        """Recursively search for target_key in nested dicts/lists with normalized matching.
+
+        This makes lookups tolerant to naming differences like "p-factor" vs "p_factor".
+        Returns the first match or None.
         """
+        norm_target = normalize_key(target_key)
         if isinstance(data, dict):
-            if target_key in data:
-                return data[target_key]
-            for value in data.values():
-                result = self._find_key_in_nested_dict(value, target_key)
-                if result is not None:
-                    return result
+            for k, v in data.items():
+                if normalize_key(k) == norm_target:
+                    return v
+                res = self._find_key_in_nested_dict(v, target_key)
+                if res is not None:
+                    return res
+        elif isinstance(data, list):
+            for item in data:
+                res = self._find_key_in_nested_dict(item, target_key)
+                if res is not None:
+                    return res
         return None
 
     def _find_datasets(
@@ -969,11 +1019,20 @@ class EEGDashDataset(BaseConcatDataset):
         self.records = self.eeg_dash_instance.find(query)
 
         for record in self.records:
-            description = {}
+            description: dict[str, Any] = {}
+            # Requested fields first (normalized matching)
             for field in description_fields:
                 value = self._find_key_in_nested_dict(record, field)
                 if value is not None:
                     description[field] = value
+            # Merge all participants.tsv columns generically
+            part = self._find_key_in_nested_dict(record, "participant_tsv")
+            if isinstance(part, dict):
+                description = merge_participants_fields(
+                    description=description,
+                    participants_row=part,
+                    description_fields=description_fields,
+                )
             datasets.append(
                 EEGDashBaseDataset(
                     record,

@@ -1,0 +1,28 @@
+{# Displays the launcher badges (JupyterLite/Binder) and adds a Colab badge
+   that opens the built notebook from the gh-pages branch. #}
+{% set launcher_links = get_launcher_links() %}
+{% set download_links = get_download_links() %}
+{% if launcher_links or download_links %}
+  <div class="sphx-glr-sidebar-component">
+    {# Existing launcher badges (lite/binder) #}
+    {% for key, link_info in launcher_links.items() %}
+      {% if link_info %}
+        <div class="sphx-glr-sidebar-item {{ key }}-badge-sidebar">
+          <a href="{{ link_info.link }}">
+            <img src="{{ link_info.img_src }}" alt="{{ link_info.img_alt }}">
+          </a>
+        </div>
+      {% endif %}
+    {% endfor %}
+
+    {# New: Google Colab badge linking to the notebook hosted on gh-pages #}
+    {% if download_links and download_links.get('jupyter') %}
+      <div class="sphx-glr-sidebar-item colab-badge-sidebar">
+        <a href="https://colab.research.google.com/github/{{ github_user }}/{{ github_repo }}/blob/gh-pages/{{ download_links['jupyter'].link }}">
+          <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open in Colab">
+        </a>
+      </div>
+    {% endif %}
+  </div>
+{% endif %}
+

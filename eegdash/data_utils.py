@@ -166,19 +166,6 @@ class EEGDashBaseDataset(BaseDataset):
                 logger.error(traceback.format_exc())
                 raise e
 
-    # === BaseDataset and PyTorch Dataset interface ===
-    def __getitem__(self, index):
-        """Main function to access a sample from the dataset."""
-        X = self.raw[:, index][0]
-        y = None
-        if self.target_name is not None:
-            y = self.description[self.target_name]
-        if isinstance(y, pd.Series):
-            y = y.to_list()
-        if self.transform is not None:
-            X = self.transform(X)
-        return X, y
-
     def load(self):
         if self.raw is None:
             self.raw = self._load_data()

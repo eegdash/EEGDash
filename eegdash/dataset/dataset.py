@@ -23,8 +23,6 @@ class EEGChallengeDataset(EEGDashDataset):
     ----------
     release : str
         Release name. One of ["R1", ..., "R11"].
-    cache_dir : str
-        Local cache directory for data files.
     mini : bool, default True
         If True, restrict subjects to the challenge mini subset.
     query : dict | None

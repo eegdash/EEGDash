@@ -39,6 +39,7 @@ class _DummyBIDSDataset:
 
 # --- tests -----------------------------------------------------------------
 
+
 def test_sidecar_dependencies_filtered(tmp_path: Path):
     root = tmp_path / "ds000001"
     eeg_dir = root / "sub-01" / "ses-01" / "eeg"
@@ -59,4 +60,8 @@ def test_sidecar_dependencies_filtered(tmp_path: Path):
         bids_ds._get_relative_bidspath(vmrk),
     }
     assert expected.issubset(set(attrs["bidsdependencies"]))
-    assert not any(dep.endswith(ext) for ext in [".dat", ".raw", ".vhdr"] for dep in attrs["bidsdependencies"])
+    assert not any(
+        dep.endswith(ext)
+        for ext in [".dat", ".raw", ".vhdr"]
+        for dep in attrs["bidsdependencies"]
+    )

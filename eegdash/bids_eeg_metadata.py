@@ -150,9 +150,7 @@ def load_eeg_attrs_from_bids_file(bids_dataset, bids_file: str) -> dict[str, Any
     for ext in sidecars_map.get(bids_path.extension, []):
         sidecar = bids_path.find_matching_sidecar(extension=ext, on_error="ignore")
         if sidecar is not None:
-            bidsdependencies.append(
-                str(bids_dataset._get_relative_bidspath(sidecar))
-            )
+            bidsdependencies.append(str(bids_dataset._get_relative_bidspath(sidecar)))
 
     # Define field extraction functions with error handling
     field_extractors = {

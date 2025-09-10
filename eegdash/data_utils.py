@@ -158,7 +158,9 @@ class EEGDashBaseDataset(BaseDataset):
                 logger.error(
                     f"Error while reading BIDS file: {self.bidspath}\n"
                     "This may be due to a missing or corrupted file.\n"
-                    "Please check the file and try again."
+                    "Please check the file and try again.\n"
+                    "Usually erasing the local cache and re-downloading helps.\n"
+                    f"`rm {self.bidspath}`"
                 )
                 logger.error(f"Exception: {e}")
                 logger.error(traceback.format_exc())

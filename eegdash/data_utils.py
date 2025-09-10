@@ -4,7 +4,6 @@ import logging
 import os
 import re
 import traceback
-import warnings
 from contextlib import redirect_stderr
 from pathlib import Path
 from typing import Any
@@ -142,113 +141,111 @@ class EEGDashBaseDataset(BaseDataset):
             )
             self.filenames = [self.filecache]
         if self._raw is None:
-            # capturing any warnings
-            # to-do: remove this once is fixed on the mne-bids side.
-            with warnings.catch_warnings(record=True) as w:
-                # Ensure all warnings are captured into 'w' and not shown to users
-                warnings.simplefilter("always")
-                try:
-                    # mne-bids emits RuntimeWarnings to stderr; silence stderr during read
-                    _stderr_buffer = io.StringIO()
-                    with redirect_stderr(_stderr_buffer):
-                        self._raw = mne_bids.read_raw_bids(
-                            bids_path=self.bidspath, verbose="ERROR"
-                        )
-                    # Parse unmapped participants.tsv fields reported by mne-bids and
-                    # inject them into Raw.info and the dataset description generically.
-                    extras = self._extract_unmapped_participants_from_warnings(w)
-                    if extras:
-                        # 1) Attach to Raw.info under subject_info.participants_extras
-                        try:
-                            subject_info = self._raw.info.get("subject_info") or {}
-                            if not isinstance(subject_info, dict):
-                                subject_info = {}
-                            pe = subject_info.get("participants_extras") or {}
-                            if not isinstance(pe, dict):
-                                pe = {}
-                            # Merge without overwriting
-                            for k, v in extras.items():
-                                pe.setdefault(k, v)
-                            subject_info["participants_extras"] = pe
-                            self._raw.info["subject_info"] = subject_info
-                        except Exception:
-                            # Non-fatal; continue
-                            pass
-
-                        # 2) Also add to this dataset's description, if possible, so
-                        #    targets can be selected later without naming specifics.
-                        try:
-                            if isinstance(self.description, dict):
-                                for k, v in extras.items():
-                                    self.description.setdefault(k, v)
-                            elif isinstance(self.description, pd.Series):
-                                for k, v in extras.items():
-                                    if k not in self.description.index:
-                                        self.description.loc[k] = v
-                        except Exception:
-                            pass
-                except Exception as e:
-                    logger.error(
-                        f"Error while reading BIDS file: {self.bidspath}\n"
-                        "This may be due to a missing or corrupted file.\n"
-                        "Please check the file and try again."
+            try:
+                # mne-bids can emit noisy warnings to stderr; keep user logs clean
+                _stderr_buffer = io.StringIO()
+                with redirect_stderr(_stderr_buffer):
+                    self._raw = mne_bids.read_raw_bids(
+                        bids_path=self.bidspath, verbose="ERROR"
                     )
-                    logger.error(f"Exception: {e}")
-                    logger.error(traceback.format_exc())
-                    raise e
-                # Filter noisy mapping notices from mne-bids; surface others
-                for captured_warning in w:
+
+                # Read participants.tsv directly to attach any extra fields for this subject
+                extras = self._extract_participants_extras_from_tsv()
+                if extras:
+                    # 1) Attach to Raw.info under subject_info.participants_extras
                     try:
-                        msg = str(captured_warning.message)
+                        subject_info = self._raw.info.get("subject_info") or {}
+                        if not isinstance(subject_info, dict):
+                            subject_info = {}
+                        pe = subject_info.get("participants_extras") or {}
+                        if not isinstance(pe, dict):
+                            pe = {}
+                        for k, v in extras.items():
+                            pe.setdefault(k, v)  # Merge without overwriting
+                        subject_info["participants_extras"] = pe
+                        self._raw.info["subject_info"] = subject_info
                     except Exception:
-                        continue
-                    # Suppress verbose participants mapping messages
-                    if "Unable to map the following column" in msg and "MNE" in msg:
-                        logger.debug(
-                            "Suppressed mne-bids mapping warning while reading BIDS file: %s",
-                            msg,
-                        )
-                        continue
+                        pass  # Non-fatal
 
-    def _extract_unmapped_participants_from_warnings(
-        self, warnings_list: list[Any]
-    ) -> dict[str, Any]:
-        """Scan captured warnings from mne-bids and extract unmapped participants.tsv
-        entries in a generic way.
+                    # 2) Also add to this dataset's description, if possible
+                    try:
+                        if isinstance(self.description, dict):
+                            for k, v in extras.items():
+                                self.description.setdefault(k, v)
+                        elif isinstance(self.description, pd.Series):
+                            for k, v in extras.items():
+                                if k not in self.description.index:
+                                    self.description.loc[k] = v
+                    except Exception:
+                        pass
+            except Exception as e:
+                logger.error(
+                    f"Error while reading BIDS file: {self.bidspath}\n"
+                    "This may be due to a missing or corrupted file.\n"
+                    "Please check the file and try again."
+                )
+                logger.error(f"Exception: {e}")
+                logger.error(traceback.format_exc())
+                raise e
 
-        Optionally, the column name can carry a note in parentheses that we ignore
-        for key/value extraction. Returns a mapping of column name -> raw value.
+    def _extract_participants_extras_from_tsv(self) -> dict[str, Any]:
+        """Read participants.tsv directly and return non-standard fields for this subject.
+
+        This avoids parsing mne-bids warnings by loading the row matching the current
+        subject and returning all columns except the identifier. Values are treated as
+        strings, and empty/NA-like values are ignored.
         """
-        extras: dict[str, Any] = {}
-        header = "Unable to map the following column(s) to MNE:"
-        for wr in warnings_list:
-            try:
-                msg = str(wr.message)
-            except Exception:
-                continue
-            if header not in msg:
-                continue
-            lines = msg.splitlines()
-            # Find the header line, then parse subsequent lines as entries
-            try:
-                idx = next(i for i, ln in enumerate(lines) if header in ln)
-            except StopIteration:
-                idx = -1
-            for line in lines[idx + 1 :]:
-                line = line.strip()
-                if not line:
+        try:
+            participants_tsv = self.bids_root / "participants.tsv"
+            if not participants_tsv.exists():
+                return {}
+
+            # Load as strings to avoid type coercion surprises
+            df = pd.read_csv(participants_tsv, sep="\t", dtype=str)
+            if df.empty:
+                return {}
+
+            # Determine the participant identifier to match
+            subj = getattr(self.bidspath, "subject", None) or self.bids_kwargs.get(
+                "subject"
+            )
+            if not subj:
+                return {}
+            candidates = {subj, f"sub-{subj}"}
+
+            # Find the row for this subject
+            row = None
+            id_col = None
+            for candidate_col in ("participant_id", "participant", "subject"):
+                if candidate_col in df.columns:
+                    matched = df[df[candidate_col].isin(candidates)]
+                    if not matched.empty:
+                        row = matched.iloc[0]
+                        id_col = candidate_col
+                        break
+            if row is None:
+                return {}
+
+            # Collect extras: everything except the identifier column
+            na_like = {"", "n/a", "na", "nan", "unknown", "None", None}
+            extras: dict[str, Any] = {}
+            for col in df.columns:
+                if col == id_col:
                     continue
-                # Pattern:  <col>(optional note): <value>
-                # Examples: "gender: F", "Ethnicity: Indian", "foo (ignored): bar"
-                m = re.match(r"^([^:]+?)(?:\s*\([^)]*\))?\s*:\s*(.*)$", line)
-                if not m:
+                val = row.get(col)
+                if isinstance(val, float) and pd.isna(val):
                     continue
-                col = m.group(1).strip()
-                val = m.group(2).strip()
-                # Keep original column names as provided to stay agnostic
-                if col and col not in extras:
-                    extras[col] = val
-        return extras
+                if val is None:
+                    continue
+                sval = str(val).strip()
+                if sval.lower() in na_like:
+                    continue
+                if col not in extras:
+                    extras[col] = sval
+            return extras
+        except Exception:
+            # Don't let metadata parsing issues break data loading
+            return {}
 
     # === BaseDataset and PyTorch Dataset interface ===
     def __getitem__(self, index):

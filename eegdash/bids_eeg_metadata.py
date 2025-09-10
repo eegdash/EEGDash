@@ -3,6 +3,8 @@ import re
 from pathlib import Path
 from typing import Any
 
+from mne_bids import BIDSPath
+
 from .const import ALLOWED_QUERY_FIELDS
 from .const import config as data_config
 
@@ -72,28 +74,6 @@ def build_query_from_kwargs(**kwargs) -> dict[str, Any]:
     return query
 
 
-def _get_raw_extensions(bids_file: str, bids_dataset) -> list[str]:
-    """Helper to find paths to additional "sidecar" files that may be associated
-    with a given main data file in a BIDS dataset; paths are returned as relative to
-    the parent dataset path.
-
-    For example, if the input file is a .set file, this will return the relative path
-    to a corresponding .fdt file (if any).
-    """
-    bids_file = Path(bids_file)
-    extensions = {
-        ".set": [".set", ".fdt"],  # eeglab
-        ".edf": [".edf"],  # european
-        ".vhdr": [".eeg", ".vhdr", ".vmrk", ".dat", ".raw"],  # brainvision
-        ".bdf": [".bdf"],  # biosemi
-    }
-    return [
-        str(bids_dataset._get_relative_bidspath(bids_file.with_suffix(suffix)))
-        for suffix in extensions[bids_file.suffix]
-        if bids_file.with_suffix(suffix).exists()
-    ]
-
-
 def load_eeg_attrs_from_bids_file(bids_dataset, bids_file: str) -> dict[str, Any]:
     """Build the metadata record for a given BIDS file (single recording) in a BIDS dataset.
 
@@ -140,7 +120,7 @@ def load_eeg_attrs_from_bids_file(bids_dataset, bids_file: str) -> dict[str, Any
         eeg_json = None
 
     bids_dependencies_files = data_config["bids_dependencies_files"]
-    bidsdependencies = []
+    bidsdependencies: list[str] = []
     for extension in bids_dependencies_files:
         try:
             dep_path = bids_dataset.get_bids_metadata_files(bids_file, extension)
@@ -151,7 +131,28 @@ def load_eeg_attrs_from_bids_file(bids_dataset, bids_file: str) -> dict[str, Any
         except Exception:
             pass
 
-    bidsdependencies.extend(_get_raw_extensions(bids_file, bids_dataset))
+    bids_path = BIDSPath(
+        subject=bids_dataset.get_bids_file_attribute("subject", bids_file),
+        session=bids_dataset.get_bids_file_attribute("session", bids_file),
+        task=bids_dataset.get_bids_file_attribute("task", bids_file),
+        run=bids_dataset.get_bids_file_attribute("run", bids_file),
+        root=bids_dataset.bidsdir,
+        datatype=bids_dataset.get_bids_file_attribute("modality", bids_file),
+        suffix="eeg",
+        extension=Path(bids_file).suffix,
+        check=False,
+    )
+
+    sidecars_map = {
+        ".set": [".fdt"],
+        ".vhdr": [".eeg", ".vmrk", ".dat", ".raw"],
+    }
+    for ext in sidecars_map.get(bids_path.extension, []):
+        sidecar = bids_path.find_matching_sidecar(extension=ext, on_error="ignore")
+        if sidecar is not None:
+            bidsdependencies.append(
+                str(bids_dataset._get_relative_bidspath(sidecar))
+            )
 
     # Define field extraction functions with error handling
     field_extractors = {

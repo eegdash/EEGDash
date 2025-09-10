@@ -1,6 +1,7 @@
 """.. _challenge-1:
 
-:html_theme.sidebar_secondary.remove: true
+.. meta::
+   :html_theme.sidebar_secondary.remove: true
 
 Challenge 1: Cross-Task Transfer Learning!
 ==========================================
@@ -193,7 +194,6 @@ print(msg)
 ######################################################################
 # In the figure below, we have the timeline representation of the cognitive task:
 # .. image:: https://eeg2025.github.io/assets/img/image-2.jpg
-#    :alt: Open In Colab
 
 ######################################################################
 # Stimulus demonstration
@@ -208,7 +208,6 @@ print(msg)
 #    </div>
 #
 ######################################################################
-
 # Load the competition dataset
 # -------------------------------
 from eegdash.dataset import EEGChallengeDataset
@@ -234,12 +233,12 @@ print(
 
 # Now, we have a Pytorch Dataset object that contains the set of recordings for the task
 # `contrastChangeDetection`.
-
+#
 # This dataset object have very rich Raw object details that can help you to
 # understand better the data. The framework behind this is braindecode,
 # and if you want to understand in depth what is happening, we recommend the
 # braindecode github itself.
-
+#
 # We can also access the Raw object for visualization purposes, we will see just one object.
 raw = dataset_ccd.datasets[0].raw  # get the Raw object of the first recording
 
@@ -323,7 +322,13 @@ y_label = np.array(list(SliceDataset(single_windows, 1)))
 import plotly.express as px
 import plotly.io as pio
 
-pio.renderers.default = "notebook_connected"
+# Prefer a renderer that plays nicely with Sphinx-Gallery so docs render
+# an image instead of a raw HTML MIME bundle. Fall back to a notebook renderer
+# when Sphinx-Gallery is unavailable.
+if "sphinx_gallery" in pio.renderers:
+    pio.renderers.default = "sphinx_gallery"
+else:
+    pio.renderers.default = "notebook_connected"
 fig = px.histogram(
     y_label,
     nbins=30,

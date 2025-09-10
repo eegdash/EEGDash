@@ -1,6 +1,7 @@
 """.. _challenge-2:
 
-:html_theme.sidebar_secondary.remove: true
+.. meta::
+   :html_theme.sidebar_secondary.remove: true
 
 Challenge 2: Predicting the p-factor from EEG
 =============================================

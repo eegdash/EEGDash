@@ -84,7 +84,8 @@ docs = [
   "memory_profiler",
   "ipython",
   "lightgbm",
-  "plotly"
+  "plotly",
+  "nbformat",
 ]
 
 all = [

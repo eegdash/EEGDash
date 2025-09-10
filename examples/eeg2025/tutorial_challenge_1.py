@@ -75,6 +75,7 @@ Challenge 1: Cross-Task Transfer Learning!
 # `braindecode` and `eegdash`. The libraries will install PyTorch,
 # Pytorch Audio, Scikit-learn, MNE, MNE-BIDS, and many other packages
 # necessary for the many functions.
+#
 # Install dependencies on colab or your local machine, as eegdash
 # have braindecode as a dependency.
 # you can just run ``pip install eegdash``.
@@ -154,7 +155,9 @@ print(msg)
 # is the temporal window length/epoch size over the interval of interest.
 # Here, :math:`\theta` denotes the parameters learned by the neural network.
 #
-######################################################################
+# ------------------------------------------------------------------------------
+# Input/Output definition
+# ---------------------------
 # For the competition, the HBN-EEG (Healthy Brain Network EEG Datasets)
 # dataset has ``n_chans = 129`` with the last channels as a `reference channel <https://mne.tools/stable/auto_tutorials/preprocessing/55_setting_eeg_reference.html>`_,
 # and we define the window length as ``n_times = 200``, corresponding to 2-second windows.
@@ -208,8 +211,11 @@ print(msg)
 #    </div>
 #
 ######################################################################
-# Load the competition dataset
-# -------------------------------
+# PyTorch Dataset for the competition
+# -----------------------------------
+# Now, we have a Pytorch Dataset object that contains the set of recordings for the task
+# `contrastChangeDetection`.
+#
 from eegdash.dataset import EEGChallengeDataset
 from eegdash.hbn.windows import (
     annotate_trials_with_target,
@@ -230,9 +236,6 @@ print(f"Number of recordings in the dataset: {len(dataset_ccd.datasets)}")
 print(
     f"Number of unique subjects in the dataset: {dataset_ccd.description['subject'].nunique()}"
 )
-
-# Now, we have a Pytorch Dataset object that contains the set of recordings for the task
-# `contrastChangeDetection`.
 #
 # This dataset object have very rich Raw object details that can help you to
 # understand better the data. The framework behind this is braindecode,
@@ -241,26 +244,31 @@ print(
 #
 # We can also access the Raw object for visualization purposes, we will see just one object.
 raw = dataset_ccd.datasets[0].raw  # get the Raw object of the first recording
-
 # And to download all the data all data directly, you can do:
 raws = Parallel(n_jobs=-1)(delayed(lambda d: d.raw)(d) for d in dataset_ccd.datasets)
 
+######################################################################
+# Alternatives for Downloading the data
+# -------------------------------------
+#
 # You can also perform this operation with wget or the aws cli.
-# The solution probably will be faster, but this is the simplest way to do it.
-# Please check more details in the `HBN` data webpage [HBN-EEG](https://neuromechanist.github.io/data/hbn/).
+# These options will probably be faster!
+# Please check more details in the `HBN` data webpage `HBN-EEG <https://neuromechanist.github.io/data/hbn/>`__.
 # You need to download the 100Hz preprocessed data in BDF format.
-
-# Example of wget for release R1:
-# !wget https://sccn.ucsd.edu/download/eeg2025/R1_L100_bdf.zip -o R1_L100_bdf.zip
-# !unzip R1_L100_bdf.zip -d data/R1_L100_bdf
-# !rm R1_L100_bdf.zip
-# Example of aws cli for release R1:
-# !aws s3 sync s3://nmdatasets/NeurIPS25/R1_L100_bdf data/R1_L100_bdf --no-sign-request
+#
+# Example of wget for release R1
+#    wget https://sccn.ucsd.edu/download/eeg2025/R1_L100_bdf.zip -O R1_L100_bdf.zip
+#
+# Example of AWS CLI for release R1
+#
+#    aws s3 sync s3://nmdatasets/NeurIPS25/R1_L100_bdf data/R1_L100_bdf --no-sign-request
 
 
 ######################################################################
 # Create windows of interest
 # -----------------------------
+# So we epoch after the stimulus moment with a beginning shift of 500 ms.
+
 EPOCH_LEN_S = 2.0
 SFREQ = 100  # by definition here
 
@@ -410,9 +418,12 @@ test_loader = DataLoader(
 ######################################################################
 # Build the model
 # -----------------
-# For any braindecode model, you can initialize only inputing the signal related parameters
-# You can use any Pytorch module that you want here.
-#
+# For neural network models, **to start**, we suggest using `braindecode models <https://braindecode.org/1.2/models/models_table.html>`__ zoo.
+# We have implemented several different models for decoding the brain timeseries.
+# Your team's responsibility is to develop a PyTorch module that receives the three-dimensional (`batch`, `n_chans`, `n_times`)
+# input and outputs the contrastive response time.
+# **You can use any model you want**, as long as it follows the input/output
+# definitions above.
 model = EEGNeX(
     n_chans=129,  # 129 channels
     n_outputs=1,  # 1 output for regression
@@ -427,6 +438,10 @@ model.to(device)
 ######################################################################
 # Define training and validation functions
 # -------------------------------------------
+# The rest is our classic PyTorch/torch lighting/skorch training pipeline,
+# you can use any training framework you want.
+# We provide a simple training and validation loop below.
+#
 def train_one_epoch(
     dataloader: DataLoader,
     model: Module,

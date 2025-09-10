@@ -17,6 +17,19 @@ Challenge 2: Predicting the p-factor from EEG
 #    :target: https://colab.research.google.com/github/eeg2025/startkit/blob/main/challenge_2.ipynb
 #    :alt: Open In Colab
 
+######################################################################
+# Preliminary notes
+# -----------------
+# Before we begin, I just want to make a deal with you, ok?
+# This is a community competition with a strong open-source foundation.
+# When I say open-source, I mean volunteer work.
+#
+# So, if you see something that does not work or could be improved, first, **please be kind**, and
+# we will fix it together on GitHub, okay?
+#
+# The entire decoding community will only go further when we stop
+# solving the same problems over and over again, and it starts working together.
+
 
 ######################################################################
 # Overview
@@ -47,7 +60,6 @@ Challenge 2: Predicting the p-factor from EEG
 # `eegdash <https://eeglab.org/EEGDash/overview.html>`__
 # `examples webpage <https://eeglab.org/EEGDash/generated/auto_examples/index.html>`__.
 #
-# %% [markdown]
 # .. admonition:: Prerequisites
 #    :class: important
 #
@@ -61,7 +73,6 @@ Challenge 2: Predicting the p-factor from EEG
 #    - An appreciation for open-source work :)
 
 ######################################################################
-# %% [markdown]
 # Install dependencies on Colab
 # -----------------------------
 #
@@ -97,10 +108,6 @@ from eegdash import EEGChallengeDataset
 #    by clicking `Runtime/Change runtime type` in the top bar menu, then selecting
 #    'T4 GPU' under 'Hardware accelerator'.
 
-
-# Understanding the P-factor regression task.
-# -------------------------------------------------
-
 ######################################################################
 # Identify whether a CUDA-enabled GPU is available
 # ------------------------------------------------
@@ -118,7 +125,7 @@ print(msg)
 
 ######################################################################
 # Understanding the P-factor regression task.
-# -------------------------------------------------
+# -------------------------------------------
 #
 # The psychopathology factor (P-factor) is a widely recognized construct in mental health research, representing a common underlying dimension of psychopathology across various disorders.
 # The P-factor is thought to reflect the shared variance among different psychiatric conditions, suggesting that individuals with higher P-factor scores may be more vulnerable to a range of mental health issues.
@@ -133,14 +140,9 @@ print(msg)
 # If contestants are successful in this task, it could pave the way for more objective and efficient assessments of the P-factor in clinical settings.
 
 ######################################################################
-# Loading the data
-# -------------------
-
 # Define local path and (down)load the data
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
+# -----------------------------------------
 # In this challenge 2 example, we load the EEG 2025 release using EEG Dash.
-
 # > **Note:** in this example notebook, we load the contrast change detection task from one mini release only as an example. Naturally, you are encouraged to train your models on all complete releases, using data from all the tasks you deem relevant.
 
 ######################################################################
@@ -179,7 +181,6 @@ sub_rm = ["NDARWV769JM7"]
 ######################################################################
 # Combine the datasets into a single one
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 # Here, we combine the datasets from the different releases into a single
 # ``BaseConcatDataset`` object.
 
@@ -193,8 +194,7 @@ raws = Parallel(n_jobs=os.cpu_count())(
 
 ######################################################################
 # Inspect your data
-# ~~~~~~~~~~~~~~~~~~~~
-
+# -----------------
 # We can check what is inside the dataset consuming the
 # MNE-object inside the Braindecode dataset.
 #
@@ -213,11 +213,9 @@ print(raw.annotations)
 
 SFREQ = 100
 
-# %% [markdown]
 ######################################################################
 # Wrap the data into a PyTorch-compatible dataset
 # --------------------------------------------------
-
 # The class below defines a dataset wrapper that will extract 2-second windows,
 # uniformly sampled over the whole signal. In addition, it will add useful information
 # about the extracted windows, such as the p-factor, the subject or the task.
@@ -261,7 +259,6 @@ class DatasetWrapper(BaseDataset):
         return X, p_factor, (i_window_in_trial, i_start, i_stop), infos
 
 
-# %% [markdown]
 # We filter out certain recordings, create fixed length windows and finally make use of our `DatasetWrapper`.
 
 # %%
@@ -291,7 +288,33 @@ windows_ds = BaseConcatDataset(
 )
 
 
-# %% [markdown]
+######################################################################
+# Inspect the label distribution
+# -------------------------------
+import numpy as np
+from skorch.helper import SliceDataset
+
+y_label = np.array(list(SliceDataset(windows_ds, 1)))
+
+# Plot histogram of the response times with plotly
+import plotly.express as px
+import plotly.io as pio
+
+# Prefer a renderer that plays nicely with Sphinx-Gallery so docs render
+# an image instead of a raw HTML MIME bundle. Fall back to a notebook renderer
+# when Sphinx-Gallery is unavailable.
+if "sphinx_gallery" in pio.renderers:
+    pio.renderers.default = "sphinx_gallery"
+else:
+    pio.renderers.default = "notebook_connected"
+fig = px.histogram(
+    y_label,
+    nbins=30,
+    title="Response Time Distribution",
+    labels={"value": "Response Time (s)", "count": "Count"},
+)
+fig.show()
+
 ######################################################################
 # Define, train and save a model
 # ---------------------------------
@@ -312,12 +335,8 @@ optimizer = optim.Adamax(params=model.parameters(), lr=0.002)
 print(model)
 
 
-# %% [markdown]
 # Finally, we can train our model. Here we define a simple training loop using pure PyTorch.
-
-# > In this example, we only train for a single epoch. Feel free to increase the number of epochs.
-
-# %% [code]
+# In this example, we only train for a single epoch. Feel free to increase the number of epochs.
 # Create PyTorch Dataloader
 
 num_workers = (

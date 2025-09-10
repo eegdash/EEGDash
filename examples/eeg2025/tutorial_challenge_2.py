@@ -143,11 +143,11 @@ print(msg)
 # Define local path and (down)load the data
 # -----------------------------------------
 # In this challenge 2 example, we load the EEG 2025 release using EEG Dash.
-# > **Note:** in this example notebook, we load the contrast change detection task from one mini release only as an example. Naturally, you are encouraged to train your models on all complete releases, using data from all the tasks you deem relevant.
+# **Note:** in this example notebook, we load the contrast change detection task from one mini release only as an example. Naturally, you are encouraged to train your models on all complete releases, using data from all the tasks you deem relevant.
 
 ######################################################################
 # The first step is to define the cache folder!
-DATA_DIR = Path("~/eegdash/eeg2025_competition")
+DATA_DIR = Path("/Users/baristim/mne_data/eeg_challenge_completed")
 
 # Creating the path if it does not exist
 DATA_DIR.mkdir(parents=True, exist_ok=True)
@@ -291,29 +291,22 @@ windows_ds = BaseConcatDataset(
 ######################################################################
 # Inspect the label distribution
 # -------------------------------
+#
 import numpy as np
 from skorch.helper import SliceDataset
 
 y_label = np.array(list(SliceDataset(windows_ds, 1)))
 
-# Plot histogram of the response times with plotly
-import plotly.express as px
-import plotly.io as pio
+# Plot histogram of the response times with matplotlib
+import matplotlib.pyplot as plt
 
-# Prefer a renderer that plays nicely with Sphinx-Gallery so docs render
-# an image instead of a raw HTML MIME bundle. Fall back to a notebook renderer
-# when Sphinx-Gallery is unavailable.
-if "sphinx_gallery" in pio.renderers:
-    pio.renderers.default = "sphinx_gallery"
-else:
-    pio.renderers.default = "notebook_connected"
-fig = px.histogram(
-    y_label,
-    nbins=30,
-    title="Response Time Distribution",
-    labels={"value": "Response Time (s)", "count": "Count"},
-)
-fig.show()
+fig, ax = plt.subplots(figsize=(10, 5))
+ax.hist(y_label)
+ax.set_title("Response Time Distribution")
+ax.set_xlabel("Response Time (s)")
+ax.set_ylabel("Count")
+plt.tight_layout()
+plt.show()
 
 ######################################################################
 # Define, train and save a model
@@ -324,9 +317,9 @@ fig.show()
 # All the braindecode models expect the input to be of shape (batch_size, n_channels, n_times)
 # and have a test coverage about the behavior of the model.
 # However, you can use any pytorch model you want.
-
-# %%
+########################################################################
 # Initialize model
+# ----------------
 model = EEGNeX(n_chans=129, n_outputs=1, n_times=2 * SFREQ).to(device)
 
 # Specify optimizer

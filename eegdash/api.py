@@ -14,7 +14,6 @@ from joblib import Parallel, delayed
 from mne.utils import warn
 from mne_bids import find_matching_paths, get_bids_path_from_fname, read_raw_bids
 from pymongo import InsertOne, UpdateOne
-from s3fs import S3FileSystem
 
 from braindecode.datasets import BaseConcatDataset
 
@@ -35,6 +34,7 @@ from .data_utils import (
 )
 from .mongodb import MongoConnectionManager
 from .paths import get_default_cache_dir
+from . import downloader
 
 logger = logging.getLogger("eegdash")
 
@@ -81,10 +81,6 @@ class EEGDash:
         # Use singleton to get MongoDB client, database, and collection
         self.__client, self.__db, self.__collection = MongoConnectionManager.get_client(
             DB_CONNECTION_STRING, is_staging
-        )
-
-        self.filesystem = S3FileSystem(
-            anon=True, client_kwargs={"region_name": "us-east-2"}
         )
 
     def find(
@@ -310,83 +306,6 @@ class EEGDash:
                         f"Conflicting constraints for '{key}': disjoint sets {r_val!r} and {k_val!r}"
                     )
 
-    def load_eeg_data_from_s3(self, s3path: str) -> xr.DataArray:
-        """Load EEG data from an S3 URI into an ``xarray.DataArray``.
-
-        Preserves the original filename, downloads sidecar files when applicable
-        (e.g., ``.fdt`` for EEGLAB, ``.vmrk``/``.eeg`` for BrainVision), and uses
-        MNE's direct readers.
-
-        Parameters
-        ----------
-        s3path : str
-            An S3 URI (should start with "s3://").
-
-        Returns
-        -------
-        xr.DataArray
-            EEG data with dimensions ``("channel", "time")``.
-
-        Raises
-        ------
-        ValueError
-            If the file extension is unsupported.
-
-        """
-        # choose a temp dir so sidecars can be colocated
-        with tempfile.TemporaryDirectory() as tmpdir:
-            # Derive local filenames from the S3 key to keep base name consistent
-            s3_key = urlsplit(s3path).path  # e.g., "/dsXXXX/sub-.../..._eeg.set"
-            basename = Path(s3_key).name
-            ext = Path(basename).suffix.lower()
-            local_main = Path(tmpdir) / basename
-
-            # Download main file
-            with (
-                self.filesystem.open(s3path, mode="rb") as fsrc,
-                open(local_main, "wb") as fdst,
-            ):
-                fdst.write(fsrc.read())
-
-            # Determine and fetch any required sidecars
-            sidecars: list[str] = []
-            if ext == ".set":  # EEGLAB
-                sidecars = [".fdt"]
-            elif ext == ".vhdr":  # BrainVision
-                sidecars = [".vmrk", ".eeg", ".dat", ".raw"]
-
-            for sc_ext in sidecars:
-                sc_key = s3_key[: -len(ext)] + sc_ext
-                sc_uri = f"s3://{urlsplit(s3path).netloc}{sc_key}"
-                try:
-                    # If sidecar exists, download next to the main file
-                    info = self.filesystem.info(sc_uri)
-                    if info:
-                        sc_local = Path(tmpdir) / Path(sc_key).name
-                        with (
-                            self.filesystem.open(sc_uri, mode="rb") as fsrc,
-                            open(sc_local, "wb") as fdst,
-                        ):
-                            fdst.write(fsrc.read())
-                except Exception:
-                    # Sidecar not present; skip silently
-                    pass
-
-            # Read using appropriate MNE reader
-            raw = mne.io.read_raw(str(local_main), preload=True, verbose=False)
-
-            data = raw.get_data()
-            fs = raw.info["sfreq"]
-            max_time = data.shape[1] / fs
-            time_steps = np.linspace(0, max_time, data.shape[1]).squeeze()
-            channel_names = raw.ch_names
-
-            return xr.DataArray(
-                data=data,
-                dims=["channel", "time"],
-                coords={"time": time_steps, "channel": channel_names},
-            )
-
     def load_eeg_data_from_bids_file(self, bids_file: str) -> xr.DataArray:
         """Load EEG data from a local BIDS-formatted file.
 
@@ -508,38 +427,10 @@ class EEGDash:
             results = Parallel(
                 n_jobs=-1 if len(sessions) > 1 else 1, prefer="threads", verbose=1
             )(
-                delayed(self.load_eeg_data_from_s3)(self._get_s3path(session))
+                delayed(downloader.load_eeg_from_s3)(downloader.get_s3path("s3://openneuro.org", session["bidspath"]))
                 for session in sessions
             )
         return results
-
-    def _get_s3path(self, record: Mapping[str, Any] | str) -> str:
-        """Build an S3 URI from a DB record or a relative path.
-
-        Parameters
-        ----------
-        record : dict or str
-            Either a DB record containing a ``'bidspath'`` key, or a relative
-            path string under the OpenNeuro bucket.
-
-        Returns
-        -------
-        str
-            Fully qualified S3 URI.
-
-        Raises
-        ------
-        ValueError
-            If a mapping is provided but ``'bidspath'`` is missing.
-
-        """
-        if isinstance(record, str):
-            rel = record
-        else:
-            rel = record.get("bidspath")
-            if not rel:
-                raise ValueError("Record missing 'bidspath' for S3 path resolution")
-        return f"s3://openneuro.org/{rel}"
 
     def _add_request(self, record: dict):
         """Internal helper method to create a MongoDB insertion request for a record."""
@@ -855,9 +746,7 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
                 base_dataset_kwargs=base_dataset_kwargs,
             )
             # We only need filesystem if we need to access S3
-            self.filesystem = S3FileSystem(
-                anon=True, client_kwargs={"region_name": "us-east-2"}
-            )
+            self.filesystem = downloader.get_s3_filesystem()
         else:
             raise ValueError(
                 "You must provide either 'records', a 'data_dir', or a query/keyword arguments for filtering."

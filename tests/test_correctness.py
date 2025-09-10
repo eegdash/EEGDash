@@ -107,6 +107,8 @@ def preprocess_instance(eeg_dash_dataset):
             Preprocessor("filter", l_freq=1, h_freq=55),
         ]
 
+        for ds in eeg_dash_dataset.datasets:
+            ds.load()
         eeg_dash_dataset = preprocess(
             eeg_dash_dataset, preprocessors, n_jobs=-1, save_dir=pre_processed_dir
         )

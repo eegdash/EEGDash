@@ -1,3 +1,5 @@
+:html_theme.sidebar_secondary.remove: true
+
 .. _install_source:
 
 Installing from sources

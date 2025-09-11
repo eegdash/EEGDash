@@ -271,7 +271,7 @@ class EEGDashBaseRaw(BaseRaw):
         if not os.path.exists(self.filecache):  # not preload
             if self.bids_dependencies:
                 downloader.download_dependencies(
-                    self.s3_bucket,
+                    self._AWS_BUCKET,
                     self.bids_dependencies,
                     None,
                     self.cache_dir,

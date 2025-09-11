@@ -129,13 +129,13 @@ class EEGDashBaseDataset(BaseDataset):
         if not os.path.exists(self.filecache):  # not preload
             if self.bids_dependencies:
                 downloader.download_dependencies(
-                    self.s3_bucket,
-                    self.bids_dependencies,
-                    self.bids_dependencies_original,
-                    self.cache_dir,
-                    self.dataset_folder,
-                    self.record,
-                    self.s3_open_neuro,
+                    s3_bucket=self.s3_bucket,
+                    bids_dependencies=self.bids_dependencies,
+                    bids_dependencies_original=self.bids_dependencies_original,
+                    cache_dir=self.cache_dir,
+                    dataset_folder=self.dataset_folder,
+                    record=self.record,
+                    s3_open_neuro=self.s3_open_neuro,
                 )
             self.filecache = downloader.download_s3_file(
                 self.s3file, self.filecache, self.s3_open_neuro
@@ -269,15 +269,15 @@ class EEGDashBaseRaw(BaseRaw):
         self, start=0, stop=None, sel=None, data_buffer=None, *, verbose=None
     ):
         if not os.path.exists(self.filecache):  # not preload
-            if self.bids_dependencies:
+            if self.bids_dependencies:  # this is use only to sidecars for now
                 downloader.download_dependencies(
-                    self._AWS_BUCKET,
-                    self.bids_dependencies,
-                    None,
-                    self.cache_dir,
-                    self.dataset_folder,
-                    self.record,
-                    self.s3_open_neuro,
+                    s3_bucket=self._AWS_BUCKET,
+                    bids_dependencies=self.bids_dependencies,
+                    bids_dependencies_original=None,
+                    cache_dir=self.cache_dir,
+                    dataset_folder=self.filecache,
+                    record={},
+                    s3_open_neuro=self.s3_open_neuro,
                 )
             self.filecache = downloader.download_s3_file(
                 self.s3file, self.filecache, self.s3_open_neuro

@@ -31,7 +31,7 @@ The code below provides an example of using the *EEGDash* library in combination
 from eegdash import EEGDashDataset
 
 ds_eoec = EEGDashDataset(
-    {"dataset": "ds005514", "task": "RestingState", "subject": "NDARDB033FW5"}
+    dataset="ds005514", task="RestingState", subject="NDARDB033FW5"
 )
 
 # %% [markdown]

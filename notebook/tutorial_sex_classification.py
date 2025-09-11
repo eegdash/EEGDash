@@ -22,31 +22,30 @@ The code below provides an example of using the *EEGDash* library in combination
 #
 # First we find one resting state dataset for a collection of subject. The dataset ds005505 contains 136 subjects with both male and female participants.
 
-query = {
-    "dataset": "ds005505",
-    "task": "RestingState",
-    "subject": {
-        "$in": [
-            "NDARCA153NKE",
-            "NDARXT792GY8",
-            "NDARVU683CTN",
-            "NDARJM828PAL",
-            "NDARBX121UM9",
-            "NDARLF616PBU",
-            "NDARPL306LC6",
-            "NDARAW320CGR",
-            "NDARPX219TW0",
-            "NDARWA513WM2",
-        ]
-    },
-}
-
 # %%
 from eegdash import EEGDashDataset
 
+    # subject={
+    #     "$in": [
+    #         "NDARCA153NKE",
+    #         "NDARXT792GY8",
+    #         "NDARVU683CTN",
+    #         "NDARJM828PAL",
+    #         "NDARBX121UM9",
+    #         "NDARLF616PBU",
+    #         "NDARPL306LC6",
+    #         "NDARAW320CGR",
+    #         "NDARPX219TW0",
+    #         "NDARWA513WM2",
+    #     ]
+    # },
+    
+# cache directory should be local data directory
 ds_sexdata = EEGDashDataset(
-    query=query,
+    dataset="ds005505",
+    task="RestingState",
     target_name="sex",
+    cache_dir="data"
 )
 
 # %% [markdown]
@@ -154,7 +153,7 @@ windows_ds = load_concat_dataset(
 # The code below creates a training and test set. We first split the data using the **train_test_split** function and then create a **TensorDataset** for both sets.
 #
 # 1. **Set Random Seed** – The random seed is fixed using `torch.manual_seed(random_state)` to ensure reproducibility in dataset splitting and model training.
-# 2. **Get Balanced Indices for Male and Female Subjects** – We ensure a 50/50 split of male and female subjects in both the training and test sets. Additionally, we prevent subject leakage, meaning the same subjects do not appear in both sets. The dataset is split into training (90%) and testing (10%) subsets using `train_test_split()`, ensuring balanced stratification based on gender.
+# 2. **Get Balanced Indices for Male and Female Subjects** – We ensure a 50/50 split of male and female subjects in both the training and test sets. Additionally, we prevent subject leakage, meaning the same subjects do not appear in both sets. The dataset is split into training (80%) and testing (20%) subsets using `train_test_split()`, ensuring balanced stratification based on gender.
 # 3. **Convert Data to PyTorch Tensors** – The selected training and testing samples are converted into `FloatTensor` for input features and `LongTensor` for labels, making them compatible with PyTorch models.
 # 4. **Create DataLoaders** – The datasets are wrapped in PyTorch `DataLoader` objects with a batch size of 100, allowing efficient mini-batch training and shuffling. Although there are only 136 subjects, the dataset contains more than 10,000 2-second samples.
 #
@@ -185,7 +184,7 @@ balanced_gender = ["M"] * n_samples + ["F"] * n_samples
 train_subj, val_subj, train_gender, val_gender = train_test_split(
     balanced_subjects,
     balanced_gender,
-    train_size=0.9,
+    train_size=0.8,
     stratify=balanced_gender,
     random_state=random_state,
 )
@@ -311,7 +310,7 @@ def normalize_data(x):
 # dictionary of genders for converting sample labels to numerical values
 gender_dict = {"M": 0, "F": 1}
 
-epochs = 2
+epochs = 20
 for e in range(epochs):
     # training
     correct_train = 0
@@ -347,3 +346,5 @@ for e in range(epochs):
     print(
         f"Epoch {e}, Train accuracy: {correct_train:.2f}, Test accuracy: {correct_test:.2f}\n"
     )
+
+# %%

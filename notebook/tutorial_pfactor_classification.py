@@ -5,13 +5,16 @@
 # %%
 from eegdash import EEGDashDataset
 from eegdash.dataset.dataset import EEGChallengeDataset
+from braindecode.preprocessing import Preprocessor, create_fixed_length_windows, preprocess
+from braindecode.datasets.base import BaseConcatDataset
 from pathlib import Path
 import numpy as np
 import pandas as pd
 import os
 cache_dir = Path("/mnt/v1/arno/eeg2025")
+SFREQ = 100  # sampling frequency
 
-def run_task(release, task, target_name):
+def run_task(release, task, target_name, repeat=10, weights=None, model_freeze=False, train_epochs=20, save_weights=""):
 
     ds_sexdata = EEGChallengeDataset(
         release=release,
@@ -35,17 +38,24 @@ def run_task(release, task, target_name):
                     ds.description['sex'] = 'F'
             else:
                 num_ignore += 1
-                ds.description['sex'] = 'M'
-
+                ds.description['sex'] = 'B'
+                
     print(f"Number of subjects ignored: {num_ignore}")
+
+    sub_rm = ["NDARWV769JM7", "NDARME789TD2", "NDARUA442ZVF", "NDARJP304NK1", "NDARTY128YLU", "NDARDW550GU6", "NDARLD243KRE", "NDARUJ292JXV", "NDARBA381JGH"]
+    all_datasets = BaseConcatDataset(
+        [
+            ds
+            for ds in ds_sexdata.datasets
+            if not ds.description.subject in sub_rm
+            and ds.raw.n_times >= 4 * SFREQ
+            and len(ds.raw.ch_names) == 129
+            and ds.description['sex'] != 'B'
+        ]
+    )
 
     # %% [markdown]
     # ## Data Preprocessing Using Braindecode
-    from braindecode.preprocessing import (
-        Preprocessor,
-        create_fixed_length_windows,
-        preprocess,
-    )
 
     # Alternatively, if you want to include this as a preprocessing step in a Braindecode pipeline:
     preprocessors = [
@@ -57,12 +67,12 @@ def run_task(release, task, target_name):
         Preprocessor("filter", l_freq=1, h_freq=55),
     ]
     preprocess(
-        ds_sexdata, preprocessors, n_jobs=-1
+        all_datasets, preprocessors, n_jobs=-1
     )  # , save_dir='xxxx'' will save and set preload to false
 
     # extract windows and save to disk
     windows_ds = create_fixed_length_windows(
-        ds_sexdata,
+        all_datasets,
         start_offset_samples=0,
         stop_offset_samples=None,
         window_size_samples=256,
@@ -89,10 +99,9 @@ def run_task(release, task, target_name):
     from torch.utils.data import DataLoader
 
     # %%
-    from braindecode.datasets import BaseConcatDataset
     correct_train_list = []
     correct_test_list = []
-    for random_state in range(10):
+    for random_state in range(repeat):
         # random seed for reproducibility
         np.random.seed(random_state)
         torch.manual_seed(random_state)
@@ -146,6 +155,9 @@ def run_task(release, task, target_name):
             sfreq=128,        # sample frequency 100 Hz
         )
 
+        if weights is not None:
+            model.load_state_dict(torch.load(weights))
+
         print(model)
         # %% [markdown]
         # # Model Training and Evaluation Process
@@ -163,7 +175,6 @@ def run_task(release, task, target_name):
         )
         model.to(device=device)
 
-
         def normalize_data(x):
             x = x.reshape(x.shape[0], 24, 256)
             mean = x.mean(dim=2, keepdim=True)
@@ -176,27 +187,27 @@ def run_task(release, task, target_name):
         # dictionary of genders for converting sample labels to numerical values
         gender_dict = {"M": 0, "F": 1}
 
-        epochs = 20
-        for e in range(epochs):
+        for e in range(train_epochs):
             # training
             correct_train = 0
-            for t, (x, y, sz) in enumerate(train_loader):
-                model.train()  # put model to training mode
-                scores = model(normalize_data(x))
-                _, preds = scores.max(1)
-                y = torch.tensor(
-                    [gender_dict[gender] for gender in y], device=device, dtype=torch.long
-                )
-                correct_train += (preds == y).sum() / len(train_ds)
+            if not model_freeze:
+                for t, (x, y, sz) in enumerate(train_loader):
+                    model.train()  # put model to training mode
+                    scores = model(normalize_data(x))
+                    _, preds = scores.max(1)
+                    y = torch.tensor(
+                        [gender_dict[gender] for gender in y], device=device, dtype=torch.long
+                    )
+                    correct_train += (preds == y).sum() / len(train_ds)
 
-                # Calculates the cross-entropy loss and performs backpropagation
-                loss = F.cross_entropy(scores, y)
-                optimizer.zero_grad()
-                loss.backward()
-                optimizer.step()
+                    # Calculates the cross-entropy loss and performs backpropagation
+                    loss = F.cross_entropy(scores, y)
+                    optimizer.zero_grad()
+                    loss.backward()
+                    optimizer.step()
 
-                if t % 50 == 0:
-                    print("Epoch %d, Iteration %d, loss = %.4f" % (e, t, loss.item()))
+                    if t % 50 == 0:
+                        print("Epoch %d, Iteration %d, loss = %.4f" % (e, t, loss.item()))
 
             # validation
             correct_test = 0
@@ -213,14 +224,20 @@ def run_task(release, task, target_name):
                 f"Epoch {e}, Train accuracy: {correct_train:.2f}, Test accuracy: {correct_test:.2f}\n"
             )
         # convert values to numpy arrays
-        correct_train = float(correct_train.item())
+        try:
+            correct_train = float(correct_train.item())
+        except:
+            pass
         correct_test = float(correct_test.item())
         correct_train_list.append(correct_train)
         correct_test_list.append(correct_test)
+        
+    if save_weights is not None and save_weights != "":
+        print(f"Saving weights to {save_weights}")
+        torch.save(model.state_dict(), save_weights)
     return correct_train_list, correct_test_list
 
 # %%
-
 from pathlib import Path
 import json
 
@@ -239,22 +256,30 @@ tasks = [  'DespicableMe',
   'symbolSearch']
 
 factors = ["sex", "p_factor", "attention", "internalizing", "externalizing"]
+releases = ["R1", "R2", "R3", "R4", "R5", "R6", "R7", "R8", "R9", "R10", "R11"]
+for release in releases:
+    try:
+        run_task(release, 'contrastChangeDetection', 'sex', save_weights="weights.pth", repeat=1, train_epochs=1)
+        with open("error_log.txt", "a") as f:
+            f.write(f"{release}: success\n")
+    except Exception as e:
+        with open("error_log.txt", "a") as f:
+            f.write(f"{release}: {e}\n")
 
-# run_task("R5", tasks[0], 'p_factor')
-
-for task in tasks:
-    for factor in factors:
-        json_file = f"results/{task}_{factor}.json"
-        if os.path.exists(json_file):
-            print(f"Skipping {task}_{factor} because it already exists")
-            continue
-        try:
-            res_train, res_test = run_task("R5", task, factor)
-            with open(json_file, "w") as f:
-                json.dump({"train": res_train, "test": res_test}, f)
-            print(f"Task: {task}, Factor: {factor}, Train: {res_train}, Test: {res_test}")
-        except Exception as e:
-            # append to log file
-            with open("error_log.txt", "a") as f:
-                f.write(f"{task}_{factor}: {e}\n")
-            print(f"Error running {task}_{factor}: {e}")
+if 0:
+    for task in tasks:
+        for factor in factors:
+            json_file = f"results/{task}_{factor}.json"
+            if os.path.exists(json_file):
+                print(f"Skipping {task}_{factor} because it already exists")
+                continue
+            try:
+                res_train, res_test = run_task("R5", task, factor)
+                with open(json_file, "w") as f:
+                    json.dump({"train": res_train, "test": res_test}, f)
+                print(f"Task: {task}, Factor: {factor}, Train: {res_train}, Test: {res_test}")
+            except Exception as e:
+                # append to log file
+                with open("error_log.txt", "a") as f:
+                    f.write(f"{task}_{factor}: {e}\n")
+                print(f"Error running {task}_{factor}: {e}")

@@ -15,7 +15,7 @@ import os
 cache_dir = Path("/mnt/v1/arno/eeg2025")
 SFREQ = 100  # sampling frequency
 
-def run_task(release, task, target_name, repeat=10, weights=None, model_freeze=False, random_add=42, train_epochs=20, save_weights=""):
+def run_task(releases, task, target_name, repeat=10, weights=None, model_freeze=False, random_add=42, train_epochs=20, save_weights="", batch_size=100, lrate=0.00002):
     
     # Memory monitoring function
     def print_memory_usage():
@@ -26,17 +26,27 @@ def run_task(release, task, target_name, repeat=10, weights=None, model_freeze=F
         print(f"Current memory usage: {memory_mb:.1f} MB")
         return memory_mb
 
-
-    cached_data_folder_name = "data/hbn_" + release + "_" + task + "_" + target_name
-
-    # check if data already exists
-    if os.path.exists(cached_data_folder_name):
-        print(f"Data already exists in {cached_data_folder_name}")
+    if not isinstance(releases, list):
+        releases = [releases]
         
-    else:
-        if release != "R12":
+    all_cached = True
+    cached_data_folder_names = []
+    for release in releases:
+        cached_data_folder_name = "data/hbn_" + release + "_" + task + "_" + target_name
+        if os.path.exists(cached_data_folder_name):
+            print(f"Data already exists in {cached_data_folder_name}")
+            cached_data_folder_names.append(cached_data_folder_name)
+        else:
+            all_cached = False
+    
+    if len(releases) > 1 and not all_cached:
+        raise ValueError("You first need to run the task for each release")
+    
+    # check if data already exists
+    if not all_cached:
+        if releases[0] != "R12":
             ds_sexdata = EEGChallengeDataset(
-                release=release,
+                release=releases[0],
                 cache_dir=cache_dir,
                 task=task,
                 mini=False,
@@ -151,7 +161,16 @@ def run_task(release, task, target_name, repeat=10, weights=None, model_freeze=F
 
     print("Loading data from disk")
     from braindecode.datautil import load_concat_dataset
-    windows_ds = load_concat_dataset(path=cached_data_folder_name, preload=False)
+    
+    windows_ds = []
+    for i, cached_data_folder_name in enumerate(cached_data_folder_names):
+        windows_ds_tmp = load_concat_dataset(path=cached_data_folder_name, preload=False)
+        windows_ds.append(windows_ds_tmp)
+        print(f"Number of subjects in {releases[i]}: {len(windows_ds_tmp.datasets)}")
+        
+    windows_ds = BaseConcatDataset(windows_ds)
+    print(f"Number of subjects in all releases: {len(windows_ds.datasets)}")
+    print(f"number of samples in windows_ds: {len(windows_ds)}")
 
     # %% [markdown]
     # ## Creating a Training and Test Set
@@ -198,8 +217,8 @@ def run_task(release, task, target_name, repeat=10, weights=None, model_freeze=F
         )
 
         # Create dataloaders with smaller batch size to save memory
-        train_loader = DataLoader(train_ds, batch_size=100, shuffle=True)
-        val_loader = DataLoader(val_ds, batch_size=100, shuffle=True)
+        train_loader = DataLoader(train_ds, batch_size=batch_size, shuffle=True, prefetch_factor=4, num_workers=4)
+        val_loader = DataLoader(val_ds, batch_size=batch_size, shuffle=True, prefetch_factor=4, num_workers=4)
 
         # Check the balance of the dataset
         assert len(balanced_subjects) == len(balanced_gender)
@@ -234,7 +253,7 @@ def run_task(release, task, target_name, repeat=10, weights=None, model_freeze=F
         # %%
         from torch.nn import functional as F
 
-        optimizer = torch.optim.Adamax(model.parameters(), lr=0.00002, weight_decay=0.001)
+        optimizer = torch.optim.Adamax(model.parameters(), lr=lrate, weight_decay=0.001)
         device = torch.device(
             "cuda"
             if torch.cuda.is_available()
@@ -338,19 +357,26 @@ tasks = [  'DespicableMe',
   'surroundSupp',
   'symbolSearch']
 factors = ["sex", "p_factor", "attention", "internalizing", "externalizing"]
-releases = ["R1", "R2", "R3", "R4", "R5", "R6", "R7", "R8", "R9", "R10", "R11"]
+releases = ["R1", "R2", "R3", "R4", "R5", "R6", "R7", "R8", "R9", "R10", "R11", "R12"]
 # releases = ["R12"]
+
+import sys
+_, res_test_all = run_task(releases[:-1], 'contrastChangeDetection', 'p_factor', weights="weights" + "_all" + ".pth", repeat=1, train_epochs=100, batch_size=4000, lrate=0.00002*40)
+#_, res_test_r12 = run_task(releases[:-1], 'contrastChangeDetection', 'p_factor', weights="weights" + "_all" + ".pth", repeat=20, train_epochs=1, model_freeze=True)
+print("Performance on all releases: ", res_test_all)
+#print("Performance on R12: "         , res_test_r12)
+sys.exit()
 
 # run_task("R1", 'contrastChangeDetection', 'sex', save_weights="weights.pth", repeat=1, train_epochs=20)
 res_test = {}
 for release1 in releases:
-    run_task(release1, 'contrastChangeDetection', 'p_factor', save_weights="weights.pth", repeat=1, train_epochs=20)
+    run_task(release1, 'contrastChangeDetection', 'p_factor', save_weights="weights" + release1 + ".pth", repeat=1, train_epochs=20)
     for release2 in releases:
         filename = f"results/{release1}train_{release2}test_contrastChangeDetection_p_factor.json"
         if os.path.exists(filename):
             print(f"Skipping {filename} because it already exists")
             continue
-        _, res_test_release = run_task(release2, 'contrastChangeDetection', 'p_factor', weights="weights.pth", repeat=10, train_epochs=1, model_freeze=True)
+        _, res_test_release = run_task(release2, 'contrastChangeDetection', 'p_factor', weights="weights" + release1 + ".pth", repeat=10, train_epochs=1, model_freeze=True)
         with open(filename, "w") as f:
             json.dump({"test": res_test_release}, f)
 

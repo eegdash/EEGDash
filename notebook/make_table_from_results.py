@@ -1,4 +1,5 @@
 import json
+from re import T
 import numpy as np
 import pandas as pd
 from pathlib import Path
@@ -11,11 +12,14 @@ plot_what = "releases_releases"
 # Results directory
 if plot_what == "tasks_factors":
     results_dir = Path("results_R5")
+    title = "Classification Performance Across Tasks and Psychological Factors"
 elif plot_what == "releases_r12":
     results_dir = Path("results_R12")
+    title = "Classification Performance Across Releases and Test Sets"
 elif plot_what == "releases_releases":
-    results_dir = Path("results")
-
+    results_dir = Path("results_pfact_contrast")
+    title = "p-factor classification Performance (Contrast Change Detection) Across Releases"
+    
 # Define tasks and factors from tutorial_pfactor_classification.py
 tasks = [
     'DespicableMe',
@@ -32,6 +36,8 @@ tasks = [
 factors = ["sex", "p_factor", "attention", "internalizing", "externalizing"]
 
 releases = ["R1", "R2", "R3", "R4", "R5", "R6", "R7", "R8", "R9", "R10", "R11"]
+releases_train = ["R1train", "R2train", "R3train", "R4train", "R5train", "R6train", "R7train", "R8train", "R9train", "R10train", "R11train", "R12train"]
+releases_test  = ["R1test", "R2test", "R3test", "R4test", "R5test", "R6test", "R7test", "R8test", "R9test", "R10test", "R11test", "R12test"]
 testset = ["Internal_test_set", "R12_test_set"]
 
 
@@ -89,13 +95,13 @@ def load_and_analyze_results_releases_releases():
     ci_matrix = {}
     significant_matrix = {}
     
-    for release1 in releases:
+    for release1 in releases_train:
         results_matrix[release1] = {}
         ci_matrix[release1] = {}
         significant_matrix[release1] = {}
         
-        for release2 in releases:
-            json_file = results_dir / f"{release1}train_{release2}test_contrastChangeDetection_p_factor.json"
+        for release2 in releases_test:
+            json_file = results_dir / f"{release1[:-5]}train_{release2[:-4]}test_contrastChangeDetection_p_factor.json"
             
             if json_file.exists():
                 with open(json_file, 'r') as f:
@@ -188,35 +194,47 @@ def load_and_analyze_results_releases_r12():
 def create_latex_table(results_matrix, ci_matrix, significant_matrix, vars1, vars2):
     """Create a LaTeX table with colored cells for significant results."""
     
-    latex_content = r"""
-\documentclass{article}
-\usepackage[table]{xcolor}
-\usepackage{booktabs}
-\usepackage{geometry}
-\usepackage{graphicx}
-\geometry{a4paper, margin=1cm}
-
-\begin{document}
-
-\begin{table}[h]
-\centering
-\caption{Classification Performance Across Tasks and Psychological Factors}
-\label{tab:results}
-\resizebox{\textwidth}{!}{%
-\begin{tabular}{l|ccccc}
-\toprule
-"""
-
+    # Determine table format based on plot_what
     if plot_what == "tasks_factors":
-        latex_content += r"""
+        # 1 row label + 5 factors = 6 columns
+        table_format = "l|ccccc"
+        header = r"""
         \textbf{{Task}} & \textbf{{Sex}} & \textbf{{P-Factor}} & \textbf{{Attention}} & \textbf{{Internalizing}} & \textbf{{Externalizing}} \\
         \midrule
         """
-    elif plot_what == "releases":
-        latex_content += r"""
+    elif plot_what == "releases_r12":
+        # 1 row label + 2 test sets = 3 columns
+        table_format = "l|cc"
+        header = r"""
         \textbf{{Release}} & \textbf{{Internal test set}} & \textbf{{R12 test set}} \\
         \midrule
         """
+    elif plot_what == "releases_releases":
+        # 1 row label + 11 releases = 12 columns
+        table_format = "l|" + "c" * len(vars2)
+        header = r"""
+        \textbf{{Train Release}} & """ + " & ".join([f"\\textbf{{{var}}}" for var in vars2]) + r""" \\
+        \midrule
+        """
+    
+    latex_content = f"""
+\\documentclass{{article}}
+\\usepackage[table]{{xcolor}}
+\\usepackage{{booktabs}}
+\\usepackage{{geometry}}
+\\usepackage{{graphicx}}
+\\geometry{{a4paper, margin=1cm}}
+
+\\begin{{document}}
+
+\\begin{{table}}[h]
+\\centering
+\\caption{{{title}}}
+\\label{{tab:results}}
+\\resizebox{{\\textwidth}}{{!}}{{%
+\\begin{{tabular}}{{{table_format}}}
+\\toprule
+{header}"""
     
     for var1 in vars1:
         task_name = var1.replace('_', '\\_')
@@ -228,8 +246,8 @@ def create_latex_table(results_matrix, ci_matrix, significant_matrix, vars1, var
                 ci_lower, ci_upper = ci_matrix[var1][var2]
                 significant = significant_matrix[var1][var2]
                 
-                # Format the cell content
-                cell_content = f"{mean_score:.3f} [{ci_lower:.3f}, {ci_upper:.3f}]"
+                # Format the cell content (confidence interval only)
+                cell_content = f"[{ci_lower:.3f}, {ci_upper:.3f}]"
                 
                 # Add color if significant
                 if significant:
@@ -251,7 +269,7 @@ def create_latex_table(results_matrix, ci_matrix, significant_matrix, vars1, var
 \end{table}
 
 \vspace{1cm}
-\textbf{Note:} Cells highlighted in yellow indicate 95\% confidence intervals that do not include 50\% performance (chance level). Values shown as mean [lower CI, upper CI].
+\textbf{Note:} Cells highlighted in green/red indicate 95\% confidence intervals that do not include 50\% performance (chance level). Values shown as [lower CI, upper CI].
 
 \end{document}
 """
@@ -280,7 +298,7 @@ def main():
     elif plot_what == "releases_r12":
         latex_content = create_latex_table(results_matrix, ci_matrix, significant_matrix, releases, testset)
     elif plot_what == "releases_releases":
-        latex_content = create_latex_table(results_matrix, ci_matrix, significant_matrix, releases, releases)
+        latex_content = create_latex_table(results_matrix, ci_matrix, significant_matrix, releases_train, releases_test)
     
     # Write LaTeX file
     with open("results_table.tex", "w") as f:

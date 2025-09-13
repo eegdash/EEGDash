@@ -4,6 +4,18 @@ import pandas as pd
 from pathlib import Path
 import os
 
+plot_what = "tasks_factors"
+plot_what = "releases_r12"
+plot_what = "releases_releases"
+
+# Results directory
+if plot_what == "tasks_factors":
+    results_dir = Path("results_R5")
+elif plot_what == "releases_r12":
+    results_dir = Path("results_R12")
+elif plot_what == "releases_releases":
+    results_dir = Path("results")
+
 # Define tasks and factors from tutorial_pfactor_classification.py
 tasks = [
     'DespicableMe',
@@ -20,10 +32,8 @@ tasks = [
 factors = ["sex", "p_factor", "attention", "internalizing", "externalizing"]
 
 releases = ["R1", "R2", "R3", "R4", "R5", "R6", "R7", "R8", "R9", "R10", "R11"]
-testset = ["Internal test set", "R12 test set"]
+testset = ["Internal_test_set", "R12_test_set"]
 
-# Results directory
-results_dir = Path("results")
 
 def load_and_analyze_results_tasks_factors():
     """Load JSON files and calculate statistics for each task-factor combination."""
@@ -71,8 +81,53 @@ def load_and_analyze_results_tasks_factors():
     
     return results_matrix, ci_matrix, significant_matrix
 
+def load_and_analyze_results_releases_releases():
+    """Load JSON files and calculate statistics for each task-factor combination."""
+    
+    # Initialize results matrix
+    results_matrix = {}
+    ci_matrix = {}
+    significant_matrix = {}
+    
+    for release1 in releases:
+        results_matrix[release1] = {}
+        ci_matrix[release1] = {}
+        significant_matrix[release1] = {}
+        
+        for release2 in releases:
+            json_file = results_dir / f"{release1}train_{release2}test_contrastChangeDetection_p_factor.json"
+            
+            if json_file.exists():
+                with open(json_file, 'r') as f:
+                    data = json.load(f)
+                
+                # Extract test performance (10 runs)
+                test_scores = data['test']
+                
+                # Calculate statistics
+                mean_score = np.mean(test_scores)
+                std_error = np.std(test_scores, ddof=1) / np.sqrt(len(test_scores))
+                ci_lower = mean_score - 1.96 * std_error
+                ci_upper = mean_score + 1.96 * std_error
+                
+                # Check if 95% CI excludes 50% (0.5)
+                significant = not (ci_lower <= 0.5 <= ci_upper)
+                
+                results_matrix[release1][release2] = mean_score
+                ci_matrix[release1][release2] = (ci_lower, ci_upper)
+                significant_matrix[release1][release2] = significant
+                
+                print(f"{release1}train_{release2}test_contrastChangeDetection_p_factor: Mean={mean_score:.3f}, CI=[{ci_lower:.3f}, {ci_upper:.3f}], Significant={significant}")
+            else:
+                # Handle missing files
+                results_matrix[release1][release2] = None
+                ci_matrix[release1][release2] = None
+                significant_matrix[release1][release2] = False
+                print(f"Missing file: {json_file}")
+    
+    return results_matrix, ci_matrix, significant_matrix
 
-def load_and_analyze_results_releases():
+def load_and_analyze_results_releases_r12():
     """Load JSON files and calculate statistics for each release combination."""
     
     # Initialize results matrix
@@ -110,27 +165,27 @@ def load_and_analyze_results_releases():
             ci_upper_r12 = mean_score_r12 + 1.96 * std_error_r12
             significant_r12 = not (ci_lower_r12 <= 0.5 <= ci_upper_r12)
                         
-            results_matrix[release][0] = mean_score
-            ci_matrix[release][0] = (ci_lower, ci_upper)
-            significant_matrix[release][0] = significant
-            results_matrix[release][1] = mean_score_r12
-            ci_matrix[release][1] = (ci_lower_r12, ci_upper_r12)
-            significant_matrix[release][1] = significant_r12
+            results_matrix[release][testset[0]] = mean_score
+            ci_matrix[release][testset[0]] = (ci_lower, ci_upper)
+            significant_matrix[release][testset[0]] = significant
+            results_matrix[release][testset[1]] = mean_score_r12
+            ci_matrix[release][testset[1]] = (ci_lower_r12, ci_upper_r12)
+            significant_matrix[release][testset[1]] = significant_r12
             
             print(f"{release}_{task}_{factor}: Mean={mean_score:.3f}, CI=[{ci_lower:.3f}, {ci_upper:.3f}], Significant={significant}")
         else:
             # Handle missing files
-            results_matrix[release][0] = None
-            ci_matrix[release][0] = None
-            significant_matrix[release][0] = False
-            results_matrix[release][1] = None
-            ci_matrix[release][1] = None
-            significant_matrix[release][1] = False
+            results_matrix[release][testset[0]] = None
+            ci_matrix[release][testset[0]] = None
+            significant_matrix[release][testset[0]] = False
+            results_matrix[release][testset[1]] = None
+            ci_matrix[release][testset[1]] = None
+            significant_matrix[release][testset[1]] = False
             print(f"Missing file: {json_file}")
     
     return results_matrix, ci_matrix, significant_matrix
 
-def create_latex_table(results_matrix, ci_matrix, significant_matrix):
+def create_latex_table(results_matrix, ci_matrix, significant_matrix, vars1, vars2):
     """Create a LaTeX table with colored cells for significant results."""
     
     latex_content = r"""
@@ -150,26 +205,38 @@ def create_latex_table(results_matrix, ci_matrix, significant_matrix):
 \resizebox{\textwidth}{!}{%
 \begin{tabular}{l|ccccc}
 \toprule
-\textbf{Task} & \textbf{Sex} & \textbf{P-Factor} & \textbf{Attention} & \textbf{Internalizing} & \textbf{Externalizing} \\
-\midrule
 """
+
+    if plot_what == "tasks_factors":
+        latex_content += r"""
+        \textbf{{Task}} & \textbf{{Sex}} & \textbf{{P-Factor}} & \textbf{{Attention}} & \textbf{{Internalizing}} & \textbf{{Externalizing}} \\
+        \midrule
+        """
+    elif plot_what == "releases":
+        latex_content += r"""
+        \textbf{{Release}} & \textbf{{Internal test set}} & \textbf{{R12 test set}} \\
+        \midrule
+        """
     
-    for task in tasks:
-        task_name = task.replace('_', '\\_')
+    for var1 in vars1:
+        task_name = var1.replace('_', '\\_')
         latex_content += task_name
         
-        for factor in factors:
-            if results_matrix[task][factor] is not None:
-                mean_score = results_matrix[task][factor]
-                ci_lower, ci_upper = ci_matrix[task][factor]
-                significant = significant_matrix[task][factor]
+        for var2 in vars2:
+            if results_matrix[var1][var2] is not None:
+                mean_score = results_matrix[var1][var2]
+                ci_lower, ci_upper = ci_matrix[var1][var2]
+                significant = significant_matrix[var1][var2]
                 
                 # Format the cell content
                 cell_content = f"{mean_score:.3f} [{ci_lower:.3f}, {ci_upper:.3f}]"
                 
                 # Add color if significant
                 if significant:
-                    latex_content += f" & \\cellcolor{{yellow!50}} {cell_content}"
+                    if mean_score > 0.5:
+                        latex_content += f" & \\cellcolor{{green!50}} {cell_content}"
+                    else:
+                        latex_content += f" & \\cellcolor{{red!50}} {cell_content}"
                 else:
                     latex_content += f" & {cell_content}"
             else:
@@ -195,7 +262,12 @@ def main():
     """Main function to process results and generate LaTeX table."""
     
     print("Loading and analyzing results...")
-    results_matrix, ci_matrix, significant_matrix = load_and_analyze_results_tasks_factors()
+    if plot_what == "tasks_factors":
+        results_matrix, ci_matrix, significant_matrix = load_and_analyze_results_tasks_factors()
+    elif plot_what == "releases_r12":
+        results_matrix, ci_matrix, significant_matrix = load_and_analyze_results_releases_r12()
+    elif plot_what == "releases_releases":
+        results_matrix, ci_matrix, significant_matrix = load_and_analyze_results_releases_releases()
     
     # Create and save pandas dataframe as PNG
     df = pd.DataFrame(results_matrix).T
@@ -203,7 +275,12 @@ def main():
     print("Results matrix saved to results_matrix.csv")
     
     print("\nGenerating LaTeX table...")
-    latex_content = create_latex_table(results_matrix, ci_matrix, significant_matrix)
+    if plot_what == "tasks_factors":
+        latex_content = create_latex_table(results_matrix, ci_matrix, significant_matrix, tasks, factors)
+    elif plot_what == "releases_r12":
+        latex_content = create_latex_table(results_matrix, ci_matrix, significant_matrix, releases, testset)
+    elif plot_what == "releases_releases":
+        latex_content = create_latex_table(results_matrix, ci_matrix, significant_matrix, releases, releases)
     
     # Write LaTeX file
     with open("results_table.tex", "w") as f:

@@ -88,18 +88,37 @@ preprocess(ds_sus, preprocessors)
 # corresponding to their respective event markers).
 
 # Extract 2-second segments
-windows_ds = create_windows_from_events(
+#
+# Windowing for Contrastive Learning:
+# -----------------------------------
+# In this step, we extract two types of 2-second windows relative to each 'stim_ON' event:
+#   - **Post-stimulus windows**: 2 seconds immediately after 'stim_ON' (positive class, label=1)
+#   - **Pre-stimulus windows**: 2 seconds immediately before 'stim_ON' (negative class, label=0)
+#
+# This setup ensures that each window is labeled according to its temporal relation to the stimulus event.
+#
+# When we later sample pairs for contrastive learning, positive pairs (label=1) are drawn from windows with the same label (both pre- or both post-stimulus), 
+# while negative pairs (label=0) are drawn from windows with different labels (one pre- and one post-stimulus).
+event_df = ds_sus.datasets[0].raw.annotations.to_data_frame()
+stim_duration = list(event_df[event_df["description"] == "stim_ON"]["duration"])[0]
+windows_ds_post_stim = create_windows_from_events(
     ds_sus,
-    mapping={"stim_ON": 1,
-             "fixpoint_ON": 0},  # Map event markers to labels: stimulus=1, fixation=0
+    mapping={"stim_ON": 1},  # These will become our positive samples
     window_size_samples=int(128 * 2),  # 2 seconds at 128 Hz
-    window_stride_samples=int(128 * 2),  
-    trial_start_offset_samples=0,
-    trial_stop_offset_samples=int(128 * 2),
-    preload=True,
+    window_stride_samples=int(128 * 2),  # 2 second stride
+    trial_start_offset_samples=0, # start at stimulus onset
+    trial_stop_offset_samples=-int(128*(stim_duration-2)), # stops at 2 seconds after stimulus onset
 )
-print("Number of samples:", len(windows_ds))
-print("Classes:", np.unique(windows_ds.get_metadata().target, return_counts=True))
+windows_ds_pre_stim = create_windows_from_events(
+    ds_sus,
+    mapping={"stim_ON": 0},  # These will become our negative samples in contrastive learning
+    window_size_samples=int(128 * 2),  # 2 seconds at 128 Hz
+    window_stride_samples=int(128 * 2),  # 2 second stride
+    trial_start_offset_samples=-int(128*2), # 2 seconds before stimulus onset
+    trial_stop_offset_samples=-int(128*stim_duration), # stops at stimulus onset
+)
+windows_ds = BaseConcatDataset([windows_ds_pre_stim, windows_ds_post_stim])
+print("Classes count:", np.unique(windows_ds.get_metadata().target, return_counts=True))
 
 # %%
 # Plotting a Single Channel for One Sample
@@ -171,18 +190,9 @@ class ContrastiveSampler(RecordingSampler):
         self.n_examples = n_examples
 
     def _sample_pair(self):
-        """Sample a pair of two windows for contrastive learning.
-        
-        This method implements the core logic for creating balanced positive and negative pairs:
-        1. Randomly decides whether to create a positive pair (same class) or negative pair (different classes)
-        2. Samples two different epochs that satisfy the chosen pair type
-        3. Ensures no self-pairing (same epoch used twice)
-        
-        Returns
-        -------
-        tuple
-            (win_ind1, win_ind2, label) where label=1 for same class, label=0 for different classes
-        """
+        """Sample a pair of two windows."""
+        selected_pair_type = self.rng.binomial(1, 0.5)  # 0 for negative pair, 1 for positive
+
         # Sample first window
         win_ind1, rec_ind1 = self.sample_window()
         ts1 = self.metadata.iloc[win_ind1]["i_start_in_trial"]
@@ -194,7 +204,6 @@ class ContrastiveSampler(RecordingSampler):
         ts2_target = self.metadata.iloc[win_ind2]["target"]
 
         current_pair_type = 0 if ts1_target != ts2_target else 1
-        selected_pair_type = self.rng.binomial(1, 0.5)  # 50/50 chance for same/different type pairs
 
         # Keep sampling until we have two different windows and the right pair type
         while ts1 == ts2 or current_pair_type != selected_pair_type:
@@ -329,7 +338,6 @@ summary(encoder_model, input_size=(1, 24, 256))
 # %%
 params = list(encoder_model.parameters()) + list(classification_model.parameters())
 optimizer = torch.optim.Adamax(params, lr=0.002, weight_decay=0.001)
-scheduler = torch.optim.lr_scheduler.ExponentialLR(optimizer, gamma=1)
 
 device = torch.device(
     "cuda"
@@ -340,7 +348,7 @@ device = torch.device(
 )
 encoder_model = encoder_model.to(device=device)  # move the model parameters to CPU/GPU
 classification_model = classification_model.to(device=device)
-epochs = 2
+epochs = 100
 
 def normalize_data(x):
     """Normalize EEG data using z-score normalization across time dimension.
@@ -368,6 +376,8 @@ def normalize_data(x):
 
 encoder_model.train()  # put model to training mode
 classification_model.train()  # put model to training mode
+
+print_every = 10
 for e in range(epochs):
     # training
     epoch_loss = 0
@@ -387,7 +397,10 @@ for e in range(epochs):
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
-        scheduler.step()
+
+    if e % print_every == 0:
+        print(f"Epoch {e} average loss: {epoch_loss / len(train_dataloader):.4f}")
+
 
     print(f"Epoch {e} average loss: {epoch_loss / len(train_dataloader):.4f}")
 

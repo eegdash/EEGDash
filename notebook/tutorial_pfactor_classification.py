@@ -8,48 +8,45 @@ from eegdash.api import EEGDashDataset
 from eegdash.dataset.dataset import EEGChallengeDataset
 from braindecode.preprocessing import Preprocessor, create_fixed_length_windows, preprocess
 from braindecode.datasets.base import BaseConcatDataset
+from braindecode.datautil import load_concat_dataset
 from pathlib import Path
 import numpy as np
 import pandas as pd
+import numpy as np
+import torch
+from sklearn.model_selection import train_test_split
+from torch.utils.data import DataLoader
 import os
+from scipy.stats import bootstrap
+import gc
+
 cache_dir = Path("/mnt/v1/arno/eeg2025")
 SFREQ = 100  # sampling frequency
 
-def run_task(releases, task, target_name, repeat=10, weights=None, model_freeze=False, random_add=42, train_epochs=20, save_weights="", batch_size=100, lrate=0.00002):
+def process_data(releases, tasks, target_names):
     
-    # Memory monitoring function
-    def print_memory_usage():
-        import psutil
-        import os
-        process = psutil.Process(os.getpid())
-        memory_mb = process.memory_info().rss / 1024 / 1024
-        print(f"Current memory usage: {memory_mb:.1f} MB")
-        return memory_mb
-
-    if not isinstance(releases, list):
-        releases = [releases]
-        
-    all_cached = True
-    cached_data_folder_names = []
     for release in releases:
-        cached_data_folder_name = "data/hbn_" + release + "_" + task + "_" + target_name
-        if os.path.exists(cached_data_folder_name):
-            print(f"Data already exists in {cached_data_folder_name}")
-            cached_data_folder_names.append(cached_data_folder_name)
+        missing = []
+        for task in tasks:
+            for target_name in target_names:
+                cached_data_folder_name = "data/hbn_" + release + "_" + task + "_" + target_name
+                if not os.path.exists(cached_data_folder_name):
+                    if target_name == target_names[0]:
+                        missing.append(task)
+                    
+        if len(missing) < 3:
+            print(f"All data exists in {release} missing [{', '.join(missing)}]")
+            continue
         else:
-            all_cached = False
-    
-    if len(releases) > 1 and not all_cached:
-        raise ValueError("You first need to run the task for each release")
-    
-    # check if data already exists
-    if not all_cached:
-        if releases[0] != "R12":
+            print(f"Incomplete data in {release}: Missing [{', '.join(missing)}]")
+        
+        if release != "R12":
             ds_sexdata = EEGChallengeDataset(
-                release=releases[0],
+                release=release,
                 cache_dir=cache_dir,
-                task=task,
+                task=tasks,
                 mini=False,
+                # run="1",
                 download=False,
                 target_name="sex"
             )
@@ -57,29 +54,12 @@ def run_task(releases, task, target_name, repeat=10, weights=None, model_freeze=
             ds_sexdata = EEGDashDataset(
                 dataset="HBN-R12_L100",
                 cache_dir=cache_dir,
-                task=task,
+                task=tasks,
+                # run="1",
                 download=False,
                 target_name="sex"
             )        
-        # %%
-        num_ignore = 0
-        if target_name != "sex":
-            for ds in ds_sexdata.datasets:
-                # randomly assign gender to "M" or "F"
-                # ds.description['sex'] = np.random.choice(['M', 'F'])
-                
-                if ds.description[target_name] is not None and not pd.isna(ds.description[target_name]):
-                    if ds.description[target_name] > 0:
-                        ds.description['sex'] = 'M'
-                    else:
-                        ds.description['sex'] = 'F'
-                else:
-                    num_ignore += 1
-                    ds.description['sex'] = 'B'
-                    
-        print(f"Number of subjects ignored: {num_ignore}")
-        print_memory_usage()
-
+        
         sub_rm = ["NDARWV769JM7", "NDARME789TD2", "NDARUA442ZVF", "NDARJP304NK1", "NDARTY128YLU", "NDARDW550GU6", "NDARLD243KRE", "NDARUJ292JXV", "NDARBA381JGH"]
         all_datasets = BaseConcatDataset(
             [
@@ -88,12 +68,8 @@ def run_task(releases, task, target_name, repeat=10, weights=None, model_freeze=
                 if not ds.description.subject in sub_rm
                 and ds.raw.n_times >= 4 * SFREQ
                 and len(ds.raw.ch_names) == 129
-                and ds.description['sex'] != 'B'
             ]
         )
-
-        # %% [markdown]
-        # ## Data Preprocessing Using Braindecode
 
         # Preprocess all datasets together to avoid threading conflicts
         import copy
@@ -107,80 +83,89 @@ def run_task(releases, task, target_name, repeat=10, weights=None, model_freeze=
             Preprocessor("filter", l_freq=1, h_freq=55, picks=ch_names),
         ]
         
-        print(f"Preprocessing {len(all_datasets.datasets)} datasets...")
-        print_memory_usage()
-        
-        # Add a small delay to ensure any previous database connections are properly closed
-        import time
-        time.sleep(0.1)
-        
-        try:
-            # Preprocess all datasets at once with limited parallelism to save memory
-            preprocess(all_datasets, preprocessors, n_jobs=-1)  # Reduced from -1 to 2
-            print("Preprocessing completed successfully!")
-        except Exception as e:
-            print(f"Error during preprocessing: {e}")
-            print("Trying alternative approach with individual dataset preprocessing...")
-            # Fallback: preprocess datasets individually with error handling
-            for i, ds in enumerate(all_datasets.datasets):
-                try:
-                    ds2 = BaseConcatDataset([ds])
-                    print(f"Preprocessing dataset {i+1}/{len(all_datasets.datasets)}: {ds.description['subject']}")
-                    preprocess(ds2, preprocessors, n_jobs=1)
-                    # Small delay between individual preprocessing to avoid connection conflicts
-                    time.sleep(0.05)
-                except Exception as individual_error:
-                    print(f"Failed to preprocess dataset {ds.description['subject']}: {individual_error}")
-                    continue
+        preprocess(all_datasets, preprocessors, n_jobs=4)  # Reduced from -1 to 2
+        print("Preprocessing completed successfully!")
 
-        # extract windows and save to disk
-        windows_ds = create_fixed_length_windows(
-            all_datasets,
-            start_offset_samples=0,
-            stop_offset_samples=None,
-            window_size_samples=256,
-            window_stride_samples=256,
-            drop_last_window=True,
-            preload=False  # Keep preload=False to save memory
-        )
+        for task in tasks:
+            for target_name in target_names:
+                # %%
+                num_ignore = 0
+                if target_name != "sex":
+                    for ds in all_datasets.datasets:
+                        # randomly assign gender to "M" or "F"
+                        # ds.description['sex'] = np.random.choice(['M', 'F'])
+                        
+                        if ds.description[target_name] is not None and not pd.isna(ds.description[target_name]):
+                            if ds.description[target_name] > 0.5:
+                                ds.description['sex'] = 'M'
+                            elif ds.description[target_name] < 0.5:
+                                ds.description['sex'] = 'F'
+                            else:
+                                ds.description['sex'] = 'B'
+                        else:
+                            num_ignore += 1
+                            ds.description['sex'] = 'B'
+                
+                print(f"Number of subjects ignored: {num_ignore}")
+                ds_list = [ds for ds in all_datasets.datasets if ds.description['task'] == task and ds.description['sex'] != 'B' ]
 
-        # save to disk
-        os.makedirs(cached_data_folder_name, exist_ok=True)
-        windows_ds.save(cached_data_folder_name, overwrite=True)
+                if len(ds_list) > 0:                 
+                    all_datasets2 = BaseConcatDataset(ds_list)
+                    
+                    print(f"Preprocessing {len(all_datasets2.datasets)} datasets...")
+                    
+                    # extract windows and save to disk
+                    windows_ds = create_fixed_length_windows(
+                        all_datasets2,
+                        start_offset_samples=0,
+                        stop_offset_samples=None,
+                        window_size_samples=256,
+                        window_stride_samples=256,
+                        drop_last_window=True,
+                        preload=False  # Keep preload=False to save memory
+                    )
 
-        # Clear original datasets from memory after windowing
-        del all_datasets
-        import gc
-        gc.collect()
-        print("After windowing:")
-        print_memory_usage()
-        # os.makedirs("data/hbn_preprocessed_restingstate", exist_ok=True)
-        # windows_ds.save("data/hbn_preprocessed_restingstate", overwrite=True)
-        # # %%
-        # from braindecode.datautil import load_concat_dataset
+                    # save to disk
+                    cached_data_folder_name = "data/hbn_" + release + "_" + task + "_" + target_name
+                    os.makedirs(cached_data_folder_name, exist_ok=True)
+                    windows_ds.save(cached_data_folder_name, overwrite=True)
+                    
+                    # reload to create metadata_df.pkl
+                    windows_ds = load_concat_dataset(cached_data_folder_name, preload=False)
+                    print(f"Number of datasets in {cached_data_folder_name}: {len(windows_ds.datasets)}")
+                    print(f"number of samples in {cached_data_folder_name} : {len(windows_ds)}")
 
-    print("Loading data from disk")
-    from braindecode.datautil import load_concat_dataset
+def run_task(releases, tasks, target_name, repeat=10, weights=None, model_freeze=False, random_add=42, train_epochs=20, save_weights="", batch_size=100, lrate=0.00002, model_name = 'EEGNeX'):
+    global deep_copy_dataset
     
+    if not isinstance(releases, list):
+        releases = [releases]
+    if not isinstance(tasks, list):
+        tasks = [tasks]
+        
+    cached_data_folder_names = []
+    for release in releases:
+        for task in tasks:
+            cached_data_folder_name = "/home/arno/v1/eegdash/notebook/data/hbn_" + release + "_" + task + "_" + target_name
+            if os.path.exists(cached_data_folder_name):
+                print(f"Data already exists in {cached_data_folder_name}")
+                cached_data_folder_names.append(cached_data_folder_name)
+            else:
+                print(f"Missing DataError({cached_data_folder_name}): You first run process_data to run the task for each release")
+    
+    print("Loading data from disk")
     windows_ds = []
-    for i, cached_data_folder_name in enumerate(cached_data_folder_names):
+    for cached_data_folder_name in cached_data_folder_names:
         windows_ds_tmp = load_concat_dataset(path=cached_data_folder_name, preload=False)
-        windows_ds.append(windows_ds_tmp)
-        print(f"Number of subjects in {releases[i]}: {len(windows_ds_tmp.datasets)}")
+        windows_ds.extend([ds for ds in windows_ds_tmp.datasets])
+        print(f"Number of subjects in {cached_data_folder_name}: {len(windows_ds_tmp.datasets)}")
         
     windows_ds = BaseConcatDataset(windows_ds)
-    print(f"Number of subjects in all releases: {len(windows_ds.datasets)}")
+    print(f"Number of datasets in all releases: {len(windows_ds.datasets)}")
     print(f"number of samples in windows_ds: {len(windows_ds)}")
 
     # %% [markdown]
     # ## Creating a Training and Test Set
-
-    import numpy as np
-    import torch
-    from sklearn.model_selection import train_test_split
-    from torch.utils.data import DataLoader
-
-    # %%
     correct_train_list = []
     correct_test_list = []
     # Don't store all model weights in memory - save them individually
@@ -190,16 +175,22 @@ def run_task(releases, task, target_name, repeat=10, weights=None, model_freeze=
         np.random.seed(random_state + random_add)
         torch.manual_seed(random_state + random_add)
 
-        # Get balanced indices for male and female subjects and create a balanced dataset
-        male_subjects = windows_ds.description["subject"][windows_ds.description["sex"] == "M"]
-        female_subjects = windows_ds.description["subject"][
-            windows_ds.description["sex"] == "F"
-        ]
+        # Get unique subjects and their corresponding genders.
+        unique_subjects, unique_indices = np.unique(windows_ds.description["subject"], return_index=True)
+        unique_gender = windows_ds.description["sex"][unique_indices]
+
+        # Filter unique subjects by gender.
+        male_subjects = unique_subjects[unique_gender == "M"]
+        female_subjects = unique_subjects[unique_gender == "F"]
+
+        # Determine the number of samples to balance the groups.
         n_samples = min(len(male_subjects), len(female_subjects))
-        balanced_subjects = np.concatenate(
-            [male_subjects[:n_samples], female_subjects[:n_samples]]
-        )
+
+        # Sample from the unique subject lists.
+        balanced_subjects = np.concatenate([male_subjects[:n_samples], female_subjects[:n_samples]])
         balanced_gender = ["M"] * n_samples + ["F"] * n_samples
+
+        # Perform the stratified split on the unique, balanced subjects.
         train_subj, val_subj, train_gender, val_gender = train_test_split(
             balanced_subjects,
             balanced_gender,
@@ -207,7 +198,7 @@ def run_task(releases, task, target_name, repeat=10, weights=None, model_freeze=
             stratify=balanced_gender,
             random_state=random_state + random_add,
         )
-
+        
         # Create datasets
         train_ds = BaseConcatDataset(
             [ds for ds in windows_ds.datasets if ds.description.subject in train_subj]
@@ -230,14 +221,22 @@ def run_task(releases, task, target_name, repeat=10, weights=None, model_freeze=
         # create model
         from torch import nn
         from torchinfo import summary
-        from braindecode.models import EEGNeX
+        from braindecode.models import EEGNeX, TSception	
 
-        model = EEGNeX(
-            n_chans=24,      # 129 channels
-            n_outputs=2,      # 1 output for regression
-            n_times=256,      # 2 seconds
-            sfreq=128,        # sample frequency 100 Hz
-        )
+        if model_name == 'EEGNeX':
+            model = EEGNeX(
+                n_chans=24,      # 129 channels
+                n_outputs=2,      # 1 output for regression
+                n_times=256,      # 2 seconds
+                sfreq=128,        # sample frequency 100 Hz
+            )
+        elif model_name == 'TSception':
+            model = TSception(
+                n_chans=24,      # 129 channels
+                n_outputs=2,      # 1 output for regression
+                n_times=256,      # 2 seconds
+                sfreq=128,        # sample frequency 100 Hz
+            )
 
         if weights is not None:
             # Load individual model weights instead of loading all at once
@@ -299,6 +298,7 @@ def run_task(releases, task, target_name, repeat=10, weights=None, model_freeze=
 
             # validation
             correct_test = 0
+            all_preds = []
             for t, (x, y, sz) in enumerate(val_loader):
                 model.eval()  # put model to testing mode
                 scores = model(normalize_data(x))
@@ -307,10 +307,16 @@ def run_task(releases, task, target_name, repeat=10, weights=None, model_freeze=
                     [gender_dict[gender] for gender in y], device=device, dtype=torch.long
                 )
                 correct_test += (preds == y).sum() / len(val_ds)
-
-            print(
-                f"Iteration {random_state}, Epoch {e}, Train accuracy: {correct_train:.2f}, Test accuracy: {correct_test:.2f}\n"
-            )
+                if random_state == repeat-1:
+                    all_preds.append((preds == y).cpu().numpy())
+                
+            print(f"Iteration {random_state}, Epoch {e}, Train accuracy: {correct_train:.3f}\n")
+            # torch.save(model.state_dict(), f"weights_{random_state}_{e}.pth")
+            # print(f"Saved model {random_state} weights to weights_{random_state}_{e}.pth")
+            
+        bootstrap_result = bootstrap((np.concatenate(all_preds),), np.mean, confidence_level=0.95, n_resamples=1000, method="percentile")
+        correct_test_ci = [float(bootstrap_result.confidence_interval.low), float(bootstrap_result.confidence_interval.high)]
+        
         # convert values to numpy arrays
         try:
             correct_train = float(correct_train.item())
@@ -326,18 +332,10 @@ def run_task(releases, task, target_name, repeat=10, weights=None, model_freeze=
             print(f"Saved model {random_state} weights to {save_weights}")
         
         # Clear model and datasets from memory
-        del model, train_ds, val_ds, train_loader, val_loader
-        torch.cuda.empty_cache() if torch.cuda.is_available() else None
-        
-        # Force garbage collection
-        import gc
-        gc.collect()
+        # del model, train_ds, val_ds, train_loader, val_loader
+        # torch.cuda.empty_cache() if torch.cuda.is_available() else None
     
-    # Final memory cleanup
-    print("Final memory usage:")
-    print_memory_usage()
-    
-    return correct_train_list, correct_test_list
+    return correct_train_list, correct_test_list, correct_test_ci
 
 # %%
 from pathlib import Path
@@ -346,6 +344,13 @@ import json
 results_dir = Path("results")
 results_dir.mkdir(exist_ok=True)
 
+# releases = ["R12"]
+
+import sys
+import numpy as np
+factor = "attention"
+
+# load data to avoid errors
 tasks = [  'DespicableMe',
   'DiaryOfAWimpyKid',
   'FunwithFractals',
@@ -358,27 +363,40 @@ tasks = [  'DespicableMe',
   'symbolSearch']
 factors = ["sex", "p_factor", "attention", "internalizing", "externalizing"]
 releases = ["R1", "R2", "R3", "R4", "R5", "R6", "R7", "R8", "R9", "R10", "R11", "R12"]
-# releases = ["R12"]
 
-import sys
-_, res_test_all = run_task(releases[:-1], 'contrastChangeDetection', 'p_factor', weights="weights" + "_all" + ".pth", repeat=1, train_epochs=100, batch_size=4000, lrate=0.00002*40)
-#_, res_test_r12 = run_task(releases[:-1], 'contrastChangeDetection', 'p_factor', weights="weights" + "_all" + ".pth", repeat=20, train_epochs=1, model_freeze=True)
-print("Performance on all releases: ", res_test_all)
-#print("Performance on R12: "         , res_test_r12)
+process_data([releases[0]], [tasks[0]], factors) # just import the data to avoid errors
 sys.exit()
 
-# run_task("R1", 'contrastChangeDetection', 'sex', save_weights="weights.pth", repeat=1, train_epochs=20)
-res_test = {}
-for release1 in releases:
-    run_task(release1, 'contrastChangeDetection', 'p_factor', save_weights="weights" + release1 + ".pth", repeat=1, train_epochs=20)
-    for release2 in releases:
-        filename = f"results/{release1}train_{release2}test_contrastChangeDetection_p_factor.json"
-        if os.path.exists(filename):
-            print(f"Skipping {filename} because it already exists")
-            continue
-        _, res_test_release = run_task(release2, 'contrastChangeDetection', 'p_factor', weights="weights" + release1 + ".pth", repeat=10, train_epochs=1, model_freeze=True)
-        with open(filename, "w") as f:
-            json.dump({"test": res_test_release}, f)
+if 0:
+    # train large model
+    _, res_test_all = run_task(releases[:-1], 'contrastChangeDetection', factor, save_weights="weights_" + factor + ".pth", repeat=1, train_epochs=20, batch_size=2000, lrate=0.00002*10*4)
+    #_, res_test_r12 = run_task(releases[:-1], 'contrastChangeDetection', 'p_factor', weights="weights" + "_all" + ".pth", repeat=20, train_epochs=1, model_freeze=True)
+    print("Performance on all releases: ", res_test_all)
+    #print("Performance on R12: "         , res_test_r12)
+
+if 0:
+    # test large model
+    # _, res_test_r12 = run_task("R12", 'contrastChangeDetection', factor, weights="weights_" + factor + ".pth", repeat=20, train_epochs=1, model_freeze=True)
+    _, res_test_r12 = run_task("R12", 'contrastChangeDetection', factor, weights="weights_" + factor + ".pth", repeat=20, train_epochs=1, model_freeze=True)
+    print("Performance on R12: ", res_test_r12)
+    print("Mean performance on R12: ", np.mean(np.array(res_test_r12)))
+    print("95% confidence interval on R12: ", np.std(np.array(res_test_r12), ddof=1) / np.sqrt(len(res_test_r12)) * 1.96)
+    sys.exit()
+
+if 0:
+    # run_task("R1", 'contrastChangeDetection', 'sex', save_weights="weights.pth", repeat=1, train_epochs=20)
+    res_test = {}
+    factor = "sex"
+    for release1 in releases:
+        run_task(release1, 'contrastChangeDetection', factor, save_weights="weights" + release1 + "_" + factor + ".pth", repeat=1, train_epochs=20, batch_size=500, lrate=0.00002*10)
+        for release2 in releases:
+            filename = f"results/{release1}train_{release2}test_contrastChangeDetection_{factor}.json"
+            if os.path.exists(filename):
+                print(f"Skipping {filename} because it already exists")
+                continue
+            _, res_test_release = run_task(release2, 'contrastChangeDetection', factor, weights="weights" + release1 + "_" + factor + ".pth", repeat=10, train_epochs=1, model_freeze=True)
+            with open(filename, "w") as f:
+                json.dump({"test": res_test_release}, f)
 
 if 0:
     count = 0
@@ -398,20 +416,31 @@ if 0:
 #         with open("error_log.txt", "a") as f:
 #             f.write(f"{release}: {e}\n")
 
-if 0:
-    for task in tasks:
+new_tasks = { 'movies': ['DespicableMe', 'DiaryOfAWimpyKid', 'FunwithFractals', 'ThePresent'],
+  'restingstate': ['RestingState'],
+  'contrastChangeDetection': ['contrastChangeDetection'],
+  'seqLearning': ['seqLearning6target', 'seqLearning8target'],
+  'surroundSupp': ['surroundSupp'],
+  'symbolSearch': ['symbolSearch'],
+  'all_tasks': ['DespicableMe', 'DiaryOfAWimpyKid', 'FunwithFractals', 'RestingState', 'ThePresent', 'contrastChangeDetection', 'seqLearning6target', 'seqLearning8target', 'surroundSupp', 'symbolSearch']
+  }
+model_name = 'EEGNeX'
+
+if True:
+    for task in list(new_tasks.keys()):
         for factor in factors:
-            json_file = f"results/{task}_{factor}.json"
+            json_file = f"results/{task}_{factor}_{model_name}.json"
             if os.path.exists(json_file):
                 print(f"Skipping {task}_{factor} because it already exists")
                 continue
+            weights_file = "weights_" + task+ "_" + factor + "_" + model_name + ".pth"
             try:
-                res_train, res_test = run_task("R5", task, factor)
+                res_train, res_test, res_test_ci = run_task(releases[:-1], new_tasks[task], factor, save_weights=weights_file, repeat=1, train_epochs=20, batch_size=2000, lrate=0.00002*10*4, model_name=model_name)
                 with open(json_file, "w") as f:
-                    json.dump({"train": res_train, "test": res_test}, f)
-                print(f"Task: {task}, Factor: {factor}, Train: {res_train}, Test: {res_test}")
+                    json.dump({"train": res_train, "test": res_test, "test_ci": res_test_ci}, f)
+                print(f"Task: {task}, Factor: {factor}, Train: {res_train}, Test: {res_test_ci}")
             except Exception as e:
-                # append to log file
+                print(f"Error running {task}_{factor}: {e}")
                 with open("error_log.txt", "a") as f:
                     f.write(f"{task}_{factor}: {e}\n")
-                print(f"Error running {task}_{factor}: {e}")
+

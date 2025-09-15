@@ -6,20 +6,31 @@ from pathlib import Path
 import os
 
 plot_what = "tasks_factors"
-plot_what = "releases_r12"
-plot_what = "releases_releases"
+# plot_what = "releases_r12"
+# plot_what = "releases_releases"
 
 # Results directory
 if plot_what == "tasks_factors":
     results_dir = Path("results_R5")
+    results_dir = Path("results_tasks_factor_allRs")
     title = "Classification Performance Across Tasks and Psychological Factors"
+    ignore_diagonal = False
 elif plot_what == "releases_r12":
     results_dir = Path("results_R12")
     title = "Classification Performance Across Releases and Test Sets"
+    ignore_diagonal = False
 elif plot_what == "releases_releases":
-    results_dir = Path("results_pfact_contrast")
-    title = "p-factor classification Performance (Contrast Change Detection) Across Releases"
+    factor_name = "p_factor"
+    # factor_name = "sex"
+    results_dir = Path(f"results_{factor_name}_contrast")
+    title = f"{factor_name} classification Performance (Contrast Change Detection) Across Releases"
+    ignore_diagonal = True
     
+# check if folder exists
+if not os.path.exists(results_dir):
+    print(f"Results directory {results_dir} does not exist")
+    sys.exit()
+
 # Define tasks and factors from tutorial_pfactor_classification.py
 tasks = [
     'DespicableMe',
@@ -33,13 +44,23 @@ tasks = [
     'surroundSupp',
     'symbolSearch'
 ]
+tasks = [
+    'movies',
+    'restingstate',
+    'contrastChangeDetection',
+    'seqLearning',
+    'surroundSupp',
+    'symbolSearch',
+    'all_tasks'
+]
 factors = ["sex", "p_factor", "attention", "internalizing", "externalizing"]
 
 releases = ["R1", "R2", "R3", "R4", "R5", "R6", "R7", "R8", "R9", "R10", "R11"]
 releases_train = ["R1train", "R2train", "R3train", "R4train", "R5train", "R6train", "R7train", "R8train", "R9train", "R10train", "R11train", "R12train"]
 releases_test  = ["R1test", "R2test", "R3test", "R4test", "R5test", "R6test", "R7test", "R8test", "R9test", "R10test", "R11test", "R12test"]
 testset = ["Internal_test_set", "R12_test_set"]
-
+model_name = 'EEGNeX'
+model_name = 'TSception'
 
 def load_and_analyze_results_tasks_factors():
     """Load JSON files and calculate statistics for each task-factor combination."""
@@ -55,29 +76,35 @@ def load_and_analyze_results_tasks_factors():
         significant_matrix[task] = {}
         
         for factor in factors:
-            json_file = results_dir / f"{task}_{factor}.json"
+            json_file = results_dir / f"{task}_{factor}_{model_name}.json"
             
             if json_file.exists():
                 with open(json_file, 'r') as f:
                     data = json.load(f)
                 
-                # Extract test performance (10 runs)
-                test_scores = data['test']
                 
+                if 1:
                 # Calculate statistics
-                mean_score = np.mean(test_scores)
-                std_error = np.std(test_scores, ddof=1) / np.sqrt(len(test_scores))
-                ci_lower = mean_score - 1.96 * std_error
-                ci_upper = mean_score + 1.96 * std_error
+                    results_matrix[task][factor] = data['test'][0]
+                    ci_matrix[task][factor] = data['test_ci'] 
+                    significant_matrix[task][factor] = not (data['test_ci'][0] <= 0.5 <= data['test_ci'][1])
+                    print(f"{task}_{factor}: Mean={data['test'][0]:.3f}, CI=[{data['test_ci'][0]:.3f}, {data['test_ci'][1]:.3f}], Significant={significant_matrix[task][factor]}")
+                else:
+                    # Extract test performance (10 runs)
+                    test_scores = data['test']
+                    mean_score = np.mean(test_scores)
+                    std_error = np.std(test_scores, ddof=1) / np.sqrt(len(test_scores))
+                    ci_lower = mean_score - 1.96 * std_error
+                    ci_upper = mean_score + 1.96 * std_error
+                    
+                    # Check if 95% CI excludes 50% (0.5)
+                    significant = not (ci_lower <= 0.5 <= ci_upper)
+                    
+                    results_matrix[task][factor] = mean_score
+                    ci_matrix[task][factor] = (ci_lower, ci_upper)
+                    significant_matrix[task][factor] = significant
                 
-                # Check if 95% CI excludes 50% (0.5)
-                significant = not (ci_lower <= 0.5 <= ci_upper)
-                
-                results_matrix[task][factor] = mean_score
-                ci_matrix[task][factor] = (ci_lower, ci_upper)
-                significant_matrix[task][factor] = significant
-                
-                print(f"{task}_{factor}: Mean={mean_score:.3f}, CI=[{ci_lower:.3f}, {ci_upper:.3f}], Significant={significant}")
+                    print(f"{task}_{factor}: Mean={mean_score:.3f}, CI=[{ci_lower:.3f}, {ci_upper:.3f}], Significant={significant}")
             else:
                 # Handle missing files
                 results_matrix[task][factor] = None
@@ -101,7 +128,7 @@ def load_and_analyze_results_releases_releases():
         significant_matrix[release1] = {}
         
         for release2 in releases_test:
-            json_file = results_dir / f"{release1[:-5]}train_{release2[:-4]}test_contrastChangeDetection_p_factor.json"
+            json_file = results_dir / f"{release1[:-5]}train_{release2[:-4]}test_contrastChangeDetection_{factor_name}.json"
             
             if json_file.exists():
                 with open(json_file, 'r') as f:
@@ -236,11 +263,14 @@ def create_latex_table(results_matrix, ci_matrix, significant_matrix, vars1, var
 \\toprule
 {header}"""
     
-    for var1 in vars1:
+    for i1, var1 in enumerate(vars1):
         task_name = var1.replace('_', '\\_')
         latex_content += task_name
         
-        for var2 in vars2:
+        for i2, var2 in enumerate(vars2):
+            if ignore_diagonal and i1 == i2:
+                latex_content += " & N/A"
+                continue
             if results_matrix[var1][var2] is not None:
                 mean_score = results_matrix[var1][var2]
                 ci_lower, ci_upper = ci_matrix[var1][var2]

@@ -166,7 +166,7 @@ def run_task(releases, tasks, target_name, folds=10, weights=None, model_freeze=
     for cached_data_folder_name in cached_data_folder_names:
         windows_ds_tmp = load_concat_dataset(path=cached_data_folder_name, preload=False)
         windows_ds.extend([ds for ds in windows_ds_tmp.datasets])
-        print(f"Number of subjects in {cached_data_folder_name}: {len(windows_ds_tmp.datasets)}")
+        print(f"Number of datasets in {cached_data_folder_name}: {len(windows_ds_tmp.datasets)}")
         
     windows_ds = BaseConcatDataset(windows_ds)
     print(f"Number of datasets in all releases: {len(windows_ds.datasets)}")
@@ -179,7 +179,8 @@ def run_task(releases, tasks, target_name, folds=10, weights=None, model_freeze=
     # %% [markdown]
     # ## Creating a Training and Test Set
     correct_train_list = []
-    correct_test_list = []
+    correct_test_list  = []
+    correct_test_ci    = []
     unique_subjects, unique_indices = np.unique(windows_ds.description["subject"], return_index=True)
     unique_gender = windows_ds.description["sex"][unique_indices].values
     if folds > 1:
@@ -201,16 +202,20 @@ def run_task(releases, tasks, target_name, folds=10, weights=None, model_freeze=
         val_subj   = np.concatenate([np.random.choice(  val_subj[  val_gender == "M"],   val_n, replace=False),np.random.choice(  val_subj[  val_gender == "F"],   val_n, replace=False)])        
         
         # Create datasets
-        train_ds = BaseConcatDataset([ds for ds in windows_ds.datasets if ds.description.subject in train_subj])
-        val_ds   = BaseConcatDataset([ds for ds in windows_ds.datasets if ds.description.subject in val_subj])
+        if model_freeze: # When model_freeze=True, evaluate on all (balanced) data
+            val_ds   = BaseConcatDataset([ds for ds in windows_ds.datasets if ds.description.subject in train_subj or ds.description.subject in val_subj]) 
+            train_ds = BaseConcatDataset([ds for ds in windows_ds.datasets if ds.description.subject in train_subj])
+        else:
+            train_ds = BaseConcatDataset([ds for ds in windows_ds.datasets if ds.description.subject in train_subj])
+            val_ds   = BaseConcatDataset([ds for ds in windows_ds.datasets if ds.description.subject in val_subj])
 
         # Create dataloaders with smaller batch size to save memory
         train_loader = DataLoader(train_ds, batch_size=batch_size, shuffle=True, prefetch_factor=4, num_workers=4)
         val_loader   = DataLoader(  val_ds, batch_size=batch_size, shuffle=True, prefetch_factor=4, num_workers=4)
 
         # Check the balance of the dataset
-        print(f"Number of subjects in balanced dataset: {len(train_subj)}")
-        print(f"Gender distribution in training set M vs F = {train_n} vs {train_n} and validation set M vs F = {val_n} vs{val_n}")
+        print(f"Number of datasets in balanced set: {len(train_subj)}")
+        print(f"Class distribution in training set {train_n} of each class; validation set {val_n} of each class")
 
         # create model
         from torch import nn
@@ -289,11 +294,9 @@ def run_task(releases, tasks, target_name, folds=10, weights=None, model_freeze=
                 all_preds.append((preds == y).cpu().numpy())
                 
             print(f"Iteration {it_fold}, Epoch {e}, Train accuracy: {correct_train:.3f}, Test accuracy: {correct_test:.3f}\n")
-            # torch.save(model.state_dict(), f"weights_{random_state}_{e}.pth")
-            # print(f"Saved model {random_state} weights to weights_{random_state}_{e}.pth")
             
         bootstrap_result = bootstrap((np.concatenate(all_preds),), np.mean, confidence_level=0.95, n_resamples=1000, method="percentile")
-        correct_test_ci = [float(bootstrap_result.confidence_interval.low), float(bootstrap_result.confidence_interval.high)]
+        correct_test_ci.append([float(bootstrap_result.confidence_interval.low), float(bootstrap_result.confidence_interval.high)])
         
         # convert values to numpy arrays
         try:
@@ -306,12 +309,8 @@ def run_task(releases, tasks, target_name, folds=10, weights=None, model_freeze=
         
         # Save model weights immediately to avoid storing in memory
         if save_weights is not None and save_weights != "":
-            torch.save(model.state_dict(), save_weights)
-            print(f"Saved model {it_fold} weights to {save_weights}")
-        
-        # Clear model and datasets from memory
-        # del model, train_ds, val_ds, train_loader, val_loader
-        # torch.cuda.empty_cache() if torch.cuda.is_available() else None
+            torch.save(model.state_dict(), save_weights.replace(".pth", "") + f"_{it_fold}.pth")
+            print(f"Saved model {it_fold} weights to {save_weights.replace('.pth', '')}_{it_fold}.pth")
     
     return correct_train_list, correct_test_list, correct_test_ci
 
@@ -408,21 +407,24 @@ model_name = 'TSception'
 releases_train = releases[:-1]
 new_tasks = {'contrastChangeDetection': ['contrastChangeDetection']}
 factors = ['externalizing']
-
+folds = 2
 if True:
     for task in list(new_tasks.keys()):
         for factor in factors:
+            # train set on all releases
             json_file = f"results/{task}_{factor}_{model_name}.json"
             if os.path.exists(json_file):
                 print(f"Skipping {task}_{factor} because it already exists")
                 continue
-            weights_file = "weights_" + task+ "_" + factor + "_" + model_name + ".pth"
-            res_train, res_test, res_test_ci = run_task(releases_train, new_tasks[task], factor, save_weights=weights_file, folds=10, train_epochs=20, batch_size=2000, lrate=0.00002*10*4, model_name=model_name)
-            with open(json_file, "w") as f:
-                json.dump({"train": res_train, "test": res_test, "test_ci": res_test_ci}, f)
-            print(f"Task: {task}, Factor: {factor}, Train: {res_train}, Test: {res_test_ci}")
-            # except Exception as e:
-            #     print(f"Error running {task}_{factor}: {e}")
-            #     with open("error_log.txt", "a") as f:
-            #         f.write(f"{task}_{factor}: {e}\n")
+            weights_file_base = "weights_" + task+ "_" + factor + "_" + model_name + ".pth"
+            res_train, res_test, res_test_ci = run_task(releases_train, new_tasks[task], factor, folds=folds, train_epochs=2, batch_size=2000, save_weights=weights_file_base, lrate=0.00002*10*4, model_name=model_name)
 
+            # test set on R12
+            res_test_r12 = []
+            for fold in range(folds):
+                weights_file = weights_file_base.replace(".pth", "") + f"_{fold}.pth"
+                _, res_test_r12_tmp, _ = run_task("R12", new_tasks[task], factor, folds=1,  train_epochs=1,  batch_size=2000, weights=weights_file, model_freeze=True, model_name=model_name, random_add=fold)
+                res_test_r12.append(res_test_r12_tmp)
+            with open(json_file, "w") as f:
+                json.dump({"train": res_train, "test": res_test, "test_ci": res_test_ci, "test_r12": res_test_r12}, f)
+            print(f"Task: {task}, Factor: {factor}, Train: {res_train}, Test: {res_test_ci}")

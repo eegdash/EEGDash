@@ -4,6 +4,7 @@ import numpy as np
 import pandas as pd
 from pathlib import Path
 import os
+import sys
 
 plot_what = "tasks_factors"
 # plot_what = "releases_r12"
@@ -13,6 +14,7 @@ plot_what = "tasks_factors"
 if plot_what == "tasks_factors":
     results_dir = Path("results_R5")
     results_dir = Path("results_tasks_factor_allRs")
+    results_dir = Path("results")
     title = "Classification Performance Across Tasks and Psychological Factors"
     ignore_diagonal = False
 elif plot_what == "releases_r12":
@@ -53,7 +55,7 @@ tasks = [
     'symbolSearch',
     'all_tasks'
 ]
-factors = ["sex", "p_factor", "attention", "internalizing", "externalizing"]
+factors = ["sex", "age", "p_factor", "attention", "internalizing", "externalizing"]
 
 releases = ["R1", "R2", "R3", "R4", "R5", "R6", "R7", "R8", "R9", "R10", "R11"]
 releases_train = ["R1train", "R2train", "R3train", "R4train", "R5train", "R6train", "R7train", "R8train", "R9train", "R10train", "R11train", "R12train"]
@@ -61,6 +63,7 @@ releases_test  = ["R1test", "R2test", "R3test", "R4test", "R5test", "R6test", "R
 testset = ["Internal_test_set", "R12_test_set"]
 model_name = 'EEGNeX'
 model_name = 'TSception'
+# model_name = 'EEGConform'
 
 def load_and_analyze_results_tasks_factors():
     """Load JSON files and calculate statistics for each task-factor combination."""
@@ -223,10 +226,10 @@ def create_latex_table(results_matrix, ci_matrix, significant_matrix, vars1, var
     
     # Determine table format based on plot_what
     if plot_what == "tasks_factors":
-        # 1 row label + 5 factors = 6 columns
-        table_format = "l|ccccc"
+        # 1 row label + 6 factors = 7 columns
+        table_format = "l|cccccc"
         header = r"""
-        \textbf{{Task}} & \textbf{{Sex}} & \textbf{{P-Factor}} & \textbf{{Attention}} & \textbf{{Internalizing}} & \textbf{{Externalizing}} \\
+        \textbf{{Task}} & \textbf{{Sex}} & \textbf{{Age}} & \textbf{{P-Factor}} & \textbf{{Attention}} & \textbf{{Internalizing}} & \textbf{{Externalizing}} \\
         \midrule
         """
     elif plot_what == "releases_r12":

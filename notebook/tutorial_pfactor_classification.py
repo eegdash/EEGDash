@@ -23,6 +23,29 @@ import gc
 cache_dir = Path("/mnt/v1/arno/eeg2025")
 SFREQ = 100  # sampling frequency
 
+def early_stopping(val_score, state=None, patience=5, epsilon=0.005):
+    """
+    Early stopping based on validation score.
+    
+    val_score: current validation metric (higher is better)
+    state: dictionary holding best score and counters; pass None to initialize
+    patience: number of consecutive steps without sufficient improvement
+    epsilon: relative improvement threshold (0.005 = 0.5%)
+    
+    Returns (should_stop, state)
+    """
+    if state is None:
+        state = {"best": -float("inf"), "counter": 0}
+
+    if val_score > state["best"] * (1 + epsilon):
+        state["best"] = val_score
+        state["counter"] = 0
+    else:
+        state["counter"] += 1
+
+    should_stop = state["counter"] >= patience
+    return should_stop, state
+
 def process_data(releases, tasks, target_names):
     
     for release in releases:
@@ -83,7 +106,7 @@ def process_data(releases, tasks, target_names):
             Preprocessor("filter", l_freq=1, h_freq=55, picks=ch_names),
         ]
         
-        preprocess(all_datasets, preprocessors, n_jobs=4)  # Reduced from -1 to 2
+        preprocess(all_datasets, preprocessors, n_jobs=1)  # Reduced from -1 to 2
         print("Preprocessing completed successfully!")
 
         for task in tasks:
@@ -96,12 +119,20 @@ def process_data(releases, tasks, target_names):
                         # ds.description['sex'] = np.random.choice(['M', 'F'])
                         
                         if ds.description[target_name] is not None and not pd.isna(ds.description[target_name]):
-                            if ds.description[target_name] > 0.5:
-                                ds.description['sex'] = 'M'
-                            elif ds.description[target_name] < 0.5:
-                                ds.description['sex'] = 'F'
+                            if target_name == "age":
+                                if ds.description[target_name] > 12:
+                                    ds.description['sex'] = 'M'
+                                elif ds.description[target_name] < 8:
+                                    ds.description['sex'] = 'F'
+                                else:
+                                    ds.description['sex'] = 'B'
                             else:
-                                ds.description['sex'] = 'B'
+                                if ds.description[target_name] > 0.5:
+                                    ds.description['sex'] = 'M'
+                                elif ds.description[target_name] < 0.5:
+                                    ds.description['sex'] = 'F'
+                                else:
+                                    ds.description['sex'] = 'B'
                         else:
                             num_ignore += 1
                             ds.description['sex'] = 'B'
@@ -310,7 +341,7 @@ def run_task(releases, tasks, target_name, repeat=10, weights=None, model_freeze
                 if random_state == repeat-1:
                     all_preds.append((preds == y).cpu().numpy())
                 
-            print(f"Iteration {random_state}, Epoch {e}, Train accuracy: {correct_train:.3f}\n")
+            print(f"Iteration {random_state}, Epoch {e}, Train accuracy: {correct_train:.3f}, Test accuracy: {correct_test:.3f}\n")
             # torch.save(model.state_dict(), f"weights_{random_state}_{e}.pth")
             # print(f"Saved model {random_state} weights to weights_{random_state}_{e}.pth")
             
@@ -354,18 +385,19 @@ factor = "attention"
 tasks = [  'DespicableMe',
   'DiaryOfAWimpyKid',
   'FunwithFractals',
-  'RestingState',
   'ThePresent',
+  'RestingState',
   'contrastChangeDetection',
   'seqLearning6target',
   'seqLearning8target',
   'surroundSupp',
   'symbolSearch']
-factors = ["sex", "p_factor", "attention", "internalizing", "externalizing"]
+factors = ["sex", "age", "p_factor", "attention", "internalizing", "externalizing"]
 releases = ["R1", "R2", "R3", "R4", "R5", "R6", "R7", "R8", "R9", "R10", "R11", "R12"]
 
-process_data([releases[0]], [tasks[0]], factors) # just import the data to avoid errors
-sys.exit()
+# process_data(releases, tasks, factors) # just import the data to avoid errors
+# sys.exit()
+
 
 if 0:
     # train large model
@@ -425,6 +457,7 @@ new_tasks = { 'movies': ['DespicableMe', 'DiaryOfAWimpyKid', 'FunwithFractals', 
   'all_tasks': ['DespicableMe', 'DiaryOfAWimpyKid', 'FunwithFractals', 'RestingState', 'ThePresent', 'contrastChangeDetection', 'seqLearning6target', 'seqLearning8target', 'surroundSupp', 'symbolSearch']
   }
 model_name = 'EEGNeX'
+model_name = 'TSception'
 
 if True:
     for task in list(new_tasks.keys()):

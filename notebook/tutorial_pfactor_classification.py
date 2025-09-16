@@ -14,7 +14,8 @@ import numpy as np
 import pandas as pd
 import numpy as np
 import torch
-from sklearn.model_selection import train_test_split
+from torch.nn import functional as F
+from sklearn.model_selection import train_test_split, StratifiedKFold
 from torch.utils.data import DataLoader
 import os
 from scipy.stats import bootstrap
@@ -22,29 +23,6 @@ import gc
 
 cache_dir = Path("/mnt/v1/arno/eeg2025")
 SFREQ = 100  # sampling frequency
-
-def early_stopping(val_score, state=None, patience=5, epsilon=0.005):
-    """
-    Early stopping based on validation score.
-    
-    val_score: current validation metric (higher is better)
-    state: dictionary holding best score and counters; pass None to initialize
-    patience: number of consecutive steps without sufficient improvement
-    epsilon: relative improvement threshold (0.005 = 0.5%)
-    
-    Returns (should_stop, state)
-    """
-    if state is None:
-        state = {"best": -float("inf"), "counter": 0}
-
-    if val_score > state["best"] * (1 + epsilon):
-        state["best"] = val_score
-        state["counter"] = 0
-    else:
-        state["counter"] += 1
-
-    should_stop = state["counter"] >= patience
-    return should_stop, state
 
 def process_data(releases, tasks, target_names):
     
@@ -166,7 +144,7 @@ def process_data(releases, tasks, target_names):
                     print(f"Number of datasets in {cached_data_folder_name}: {len(windows_ds.datasets)}")
                     print(f"number of samples in {cached_data_folder_name} : {len(windows_ds)}")
 
-def run_task(releases, tasks, target_name, repeat=10, weights=None, model_freeze=False, random_add=42, train_epochs=20, save_weights="", batch_size=100, lrate=0.00002, model_name = 'EEGNeX'):
+def run_task(releases, tasks, target_name, folds=10, weights=None, model_freeze=False, random_add=42, train_epochs=20, save_weights="", batch_size=100, lrate=0.00002, model_name = 'EEGNeX'):
     global deep_copy_dataset
     
     if not isinstance(releases, list):
@@ -179,7 +157,6 @@ def run_task(releases, tasks, target_name, repeat=10, weights=None, model_freeze
         for task in tasks:
             cached_data_folder_name = "/home/arno/v1/eegdash/notebook/data/hbn_" + release + "_" + task + "_" + target_name
             if os.path.exists(cached_data_folder_name):
-                print(f"Data already exists in {cached_data_folder_name}")
                 cached_data_folder_names.append(cached_data_folder_name)
             else:
                 print(f"Missing DataError({cached_data_folder_name}): You first run process_data to run the task for each release")
@@ -195,59 +172,45 @@ def run_task(releases, tasks, target_name, repeat=10, weights=None, model_freeze
     print(f"Number of datasets in all releases: {len(windows_ds.datasets)}")
     print(f"number of samples in windows_ds: {len(windows_ds)}")
 
+    # random seed for reproducibility
+    np.random.seed(random_add)
+    torch.manual_seed(random_add)
+
     # %% [markdown]
     # ## Creating a Training and Test Set
     correct_train_list = []
     correct_test_list = []
-    # Don't store all model weights in memory - save them individually
-    # model_weights = []
-    for random_state in range(repeat):
-        # random seed for reproducibility
-        np.random.seed(random_state + random_add)
-        torch.manual_seed(random_state + random_add)
-
-        # Get unique subjects and their corresponding genders.
-        unique_subjects, unique_indices = np.unique(windows_ds.description["subject"], return_index=True)
-        unique_gender = windows_ds.description["sex"][unique_indices]
-
-        # Filter unique subjects by gender.
-        male_subjects = unique_subjects[unique_gender == "M"]
-        female_subjects = unique_subjects[unique_gender == "F"]
-
-        # Determine the number of samples to balance the groups.
-        n_samples = min(len(male_subjects), len(female_subjects))
-
-        # Sample from the unique subject lists.
-        balanced_subjects = np.concatenate([male_subjects[:n_samples], female_subjects[:n_samples]])
-        balanced_gender = ["M"] * n_samples + ["F"] * n_samples
-
-        # Perform the stratified split on the unique, balanced subjects.
-        train_subj, val_subj, train_gender, val_gender = train_test_split(
-            balanced_subjects,
-            balanced_gender,
-            train_size=0.8,
-            stratify=balanced_gender,
-            random_state=random_state + random_add,
-        )
+    unique_subjects, unique_indices = np.unique(windows_ds.description["subject"], return_index=True)
+    unique_gender = windows_ds.description["sex"][unique_indices].values
+    if folds > 1:
+        splitter = StratifiedKFold(n_splits=folds, shuffle=True, random_state=random_add)
+        splits = splitter.split(unique_subjects, unique_gender)
+    else:
+        train_idx, val_idx = train_test_split(np.arange(len(unique_subjects)),train_size=0.8,stratify=unique_gender,random_state=random_add)
+        splits = [(train_idx, val_idx)]
+        
+    for it_fold, (train_idx, val_idx) in enumerate(splits):
+        # balance the dataset so we have 50% of each class
+        train_gender = unique_gender[train_idx]
+        val_gender   = unique_gender[  val_idx]
+        train_subj   = unique_subjects[train_idx]
+        val_subj     = unique_subjects[  val_idx]
+        train_n = min((train_gender == "M").sum(), (train_gender == "F").sum()) # take the minimum number of subjects for each class to balance the dataset
+        val_n   = min((  val_gender == "M").sum(), (  val_gender == "F").sum()) # take the minimum number of subjects for each class to balance the dataset
+        train_subj = np.concatenate([np.random.choice(train_subj[train_gender == "M"], train_n, replace=False),np.random.choice(train_subj[train_gender == "F"], train_n, replace=False)])        
+        val_subj   = np.concatenate([np.random.choice(  val_subj[  val_gender == "M"],   val_n, replace=False),np.random.choice(  val_subj[  val_gender == "F"],   val_n, replace=False)])        
         
         # Create datasets
-        train_ds = BaseConcatDataset(
-            [ds for ds in windows_ds.datasets if ds.description.subject in train_subj]
-        )
-        val_ds = BaseConcatDataset(
-            [ds for ds in windows_ds.datasets if ds.description.subject in val_subj]
-        )
+        train_ds = BaseConcatDataset([ds for ds in windows_ds.datasets if ds.description.subject in train_subj])
+        val_ds   = BaseConcatDataset([ds for ds in windows_ds.datasets if ds.description.subject in val_subj])
 
         # Create dataloaders with smaller batch size to save memory
         train_loader = DataLoader(train_ds, batch_size=batch_size, shuffle=True, prefetch_factor=4, num_workers=4)
-        val_loader = DataLoader(val_ds, batch_size=batch_size, shuffle=True, prefetch_factor=4, num_workers=4)
+        val_loader   = DataLoader(  val_ds, batch_size=batch_size, shuffle=True, prefetch_factor=4, num_workers=4)
 
         # Check the balance of the dataset
-        assert len(balanced_subjects) == len(balanced_gender)
-        print(f"Number of subjects in balanced dataset: {len(balanced_subjects)}")
-        print(
-            f"Gender distribution in balanced dataset: {np.unique(balanced_gender, return_counts=True)}"
-        )
+        print(f"Number of subjects in balanced dataset: {len(train_subj)}")
+        print(f"Gender distribution in training set M vs F = {train_n} vs {train_n} and validation set M vs F = {val_n} vs{val_n}")
 
         # create model
         from torch import nn
@@ -270,27 +233,13 @@ def run_task(releases, tasks, target_name, repeat=10, weights=None, model_freeze
             )
 
         if weights is not None:
-            # Load individual model weights instead of loading all at once
-            if os.path.exists(weights):
-                model.load_state_dict(torch.load(weights))
-            else:
-                print(f"Warning: Model weights not found at {weights}")
+            model.load_state_dict(torch.load(weights))
 
         # print(model)
         # %% [markdown]
         # # Model Training and Evaluation Process
-
-        # %%
-        from torch.nn import functional as F
-
         optimizer = torch.optim.Adamax(model.parameters(), lr=lrate, weight_decay=0.001)
-        device = torch.device(
-            "cuda"
-            if torch.cuda.is_available()
-            else "mps"
-            if torch.backends.mps.is_available()
-            else "cpu"
-        )
+        device = torch.device("cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu")
         model.to(device=device)
 
         def normalize_data(x):
@@ -300,7 +249,6 @@ def run_task(releases, tasks, target_name, repeat=10, weights=None, model_freeze
             x = (x - mean) / std
             x = x.to(device=device, dtype=torch.float32)  # move to device, e.g. GPU
             return x
-
 
         # dictionary of genders for converting sample labels to numerical values
         gender_dict = {"M": 0, "F": 1}
@@ -338,10 +286,9 @@ def run_task(releases, tasks, target_name, repeat=10, weights=None, model_freeze
                     [gender_dict[gender] for gender in y], device=device, dtype=torch.long
                 )
                 correct_test += (preds == y).sum() / len(val_ds)
-                if random_state == repeat-1:
-                    all_preds.append((preds == y).cpu().numpy())
+                all_preds.append((preds == y).cpu().numpy())
                 
-            print(f"Iteration {random_state}, Epoch {e}, Train accuracy: {correct_train:.3f}, Test accuracy: {correct_test:.3f}\n")
+            print(f"Iteration {it_fold}, Epoch {e}, Train accuracy: {correct_train:.3f}, Test accuracy: {correct_test:.3f}\n")
             # torch.save(model.state_dict(), f"weights_{random_state}_{e}.pth")
             # print(f"Saved model {random_state} weights to weights_{random_state}_{e}.pth")
             
@@ -360,7 +307,7 @@ def run_task(releases, tasks, target_name, repeat=10, weights=None, model_freeze
         # Save model weights immediately to avoid storing in memory
         if save_weights is not None and save_weights != "":
             torch.save(model.state_dict(), save_weights)
-            print(f"Saved model {random_state} weights to {save_weights}")
+            print(f"Saved model {it_fold} weights to {save_weights}")
         
         # Clear model and datasets from memory
         # del model, train_ds, val_ds, train_loader, val_loader
@@ -458,6 +405,9 @@ new_tasks = { 'movies': ['DespicableMe', 'DiaryOfAWimpyKid', 'FunwithFractals', 
   }
 model_name = 'EEGNeX'
 model_name = 'TSception'
+releases_train = releases[:-1]
+new_tasks = {'contrastChangeDetection': ['contrastChangeDetection']}
+factors = ['externalizing']
 
 if True:
     for task in list(new_tasks.keys()):
@@ -467,13 +417,12 @@ if True:
                 print(f"Skipping {task}_{factor} because it already exists")
                 continue
             weights_file = "weights_" + task+ "_" + factor + "_" + model_name + ".pth"
-            try:
-                res_train, res_test, res_test_ci = run_task(releases[:-1], new_tasks[task], factor, save_weights=weights_file, repeat=1, train_epochs=20, batch_size=2000, lrate=0.00002*10*4, model_name=model_name)
-                with open(json_file, "w") as f:
-                    json.dump({"train": res_train, "test": res_test, "test_ci": res_test_ci}, f)
-                print(f"Task: {task}, Factor: {factor}, Train: {res_train}, Test: {res_test_ci}")
-            except Exception as e:
-                print(f"Error running {task}_{factor}: {e}")
-                with open("error_log.txt", "a") as f:
-                    f.write(f"{task}_{factor}: {e}\n")
+            res_train, res_test, res_test_ci = run_task(releases_train, new_tasks[task], factor, save_weights=weights_file, folds=10, train_epochs=20, batch_size=2000, lrate=0.00002*10*4, model_name=model_name)
+            with open(json_file, "w") as f:
+                json.dump({"train": res_train, "test": res_test, "test_ci": res_test_ci}, f)
+            print(f"Task: {task}, Factor: {factor}, Train: {res_train}, Test: {res_test_ci}")
+            # except Exception as e:
+            #     print(f"Error running {task}_{factor}: {e}")
+            #     with open("error_log.txt", "a") as f:
+            #         f.write(f"{task}_{factor}: {e}\n")
 

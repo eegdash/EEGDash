@@ -129,7 +129,7 @@ class EEGChallengeDataset(EEGDashDataset):
             "  [link=https://github.com/eeg2025/downsample-datasets]https://github.com/eeg2025/downsample-datasets[/link]\n\n"
             "The HBN dataset have some preprocessing applied by the HBN team:\n"
             "  • Re-reference (Cz Channel)\n\n"
-            "[bold red]IMPORTANT[/bold red]: The data accessed via `EEGChallengeDataset` is [u]NOT[/u] identical to what you get from `EEGDashDataset` directly.\n"
+            "[bold red]IMPORTANT[/bold red]: The data accessed via `EEGChallengeDataset` is [u]NOT[/u] identical to what you get from [link=https://github.com/sccn/EEGDash/blob/develop/eegdash/api.py]EEGDashDataset[/link] directly.\n"
             "If you are participating in the competition, always use `EEGChallengeDataset` to ensure consistency with the challenge data."
         )
 

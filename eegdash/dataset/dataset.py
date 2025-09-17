@@ -1,14 +1,10 @@
-import logging
 from pathlib import Path
-
-from mne.utils import warn
 
 from ..api import EEGDashDataset
 from ..bids_eeg_metadata import build_query_from_kwargs
 from ..const import RELEASE_TO_OPENNEURO_DATASET_MAP, SUBJECT_MINI_RELEASE_MAP
+from ..logging import logger
 from .registry import register_openneuro_datasets
-
-logger = logging.getLogger("eegdash")
 
 
 class EEGChallengeDataset(EEGDashDataset):
@@ -121,7 +117,7 @@ class EEGChallengeDataset(EEGDashDataset):
         else:
             s3_bucket = f"{s3_bucket}/{release}_L100_bdf"
 
-        warn(
+        logger.info(
             "\n\n"
             "[EEGChallengeDataset] EEG 2025 Competition Data Notice:\n"
             "-------------------------------------------------------\n"

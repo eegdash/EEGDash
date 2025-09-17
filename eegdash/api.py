@@ -1,4 +1,3 @@
-import logging
 import os
 from pathlib import Path
 from typing import Any, Mapping
@@ -9,7 +8,6 @@ import xarray as xr
 from docstring_inheritance import NumpyDocstringInheritanceInitMeta
 from dotenv import load_dotenv
 from joblib import Parallel, delayed
-from mne.utils import warn
 from mne_bids import find_matching_paths, get_bids_path_from_fname, read_raw_bids
 from pymongo import InsertOne, UpdateOne
 
@@ -31,10 +29,9 @@ from .data_utils import (
     EEGBIDSDataset,
     EEGDashBaseDataset,
 )
+from .logging import logger
 from .mongodb import MongoConnectionManager
 from .paths import get_default_cache_dir
-
-logger = logging.getLogger("eegdash")
 
 
 class EEGDash:
@@ -623,7 +620,9 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
         self.cache_dir = Path(cache_dir or get_default_cache_dir())
 
         if not self.cache_dir.exists():
-            warn(f"Cache directory does not exist, creating it: {self.cache_dir}")
+            logger.warning(
+                f"Cache directory does not exist, creating it: {self.cache_dir}"
+            )
             self.cache_dir.mkdir(exist_ok=True, parents=True)
 
         # Separate query kwargs from other kwargs passed to the BaseDataset constructor
@@ -663,7 +662,7 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
             not _suppress_comp_warning
             and self.query["dataset"] in RELEASE_TO_OPENNEURO_DATASET_MAP.values()
         ):
-            warn(
+            logger.warning(
                 "If you are not participating in the competition, you can ignore this warning!"
                 "\n\n"
                 "EEG 2025 Competition Data Notice:\n"

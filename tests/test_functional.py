@@ -1,24 +1,16 @@
-import shutil
 from pathlib import Path
 
 from eegdash.dataset.dataset import EEGDashDataset
 
 
-def test_progress_bar_output(capsys, tmp_path):
-    temporary = (Path.home() / "mne_data" / "temp").resolve()
-
-    if temporary.exists():
-        shutil.rmtree(temporary)
-
-    temporary.mkdir(parents=True, exist_ok=True)
-
+def test_progress_bar_output(capsys, cache_dir: Path):
     eegdash_dataset = EEGDashDataset(
         query={
             "dataset": "ds005514",
             "task": "RestingState",
             "subject": "NDARDB033FW5",
         },
-        cache_dir=temporary,
+        cache_dir=cache_dir,
     )
     _ = eegdash_dataset.datasets[0].raw
 

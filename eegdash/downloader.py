@@ -1,4 +1,3 @@
-import logging
 import re
 import tempfile
 from pathlib import Path
@@ -10,8 +9,6 @@ import numpy as np
 import s3fs
 import xarray as xr
 from fsspec.callbacks import TqdmCallback
-
-logger = logging.getLogger(__name__)
 
 
 def get_s3_filesystem():

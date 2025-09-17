@@ -117,7 +117,7 @@ class EEGChallengeDataset(EEGDashDataset):
         else:
             s3_bucket = f"{s3_bucket}/{release}_L100_bdf"
 
-        logger.info(
+        logger.warning(
             "\n\n"
             "[EEGChallengeDataset] EEG 2025 Competition Data Notice:\n"
             "-------------------------------------------------------\n"
@@ -134,8 +134,6 @@ class EEGChallengeDataset(EEGDashDataset):
             "IMPORTANT: The data accessed via `EEGChallengeDataset` is NOT identical to what you get from `EEGDashDataset` directly.\n"
             "If you are participating in the competition, always use `EEGChallengeDataset` to ensure consistency with the challenge data.\n"
             "\n",
-            UserWarning,
-            module="eegdash",
         )
 
         super().__init__(

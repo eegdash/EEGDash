@@ -2,7 +2,12 @@ import logging
 
 from rich.logging import RichHandler
 
+logging.basicConfig(
+    level="INFO",  # Set the default level for all loggers
+    format="%(message)s",
+    datefmt="[%X]",
+    handlers=[RichHandler(rich_tracebacks=True)],
+)
+logging.getLogger("eegdash").setLevel(logging.INFO)
+
 logger = logging.getLogger("eegdash")
-logger.setLevel(logging.INFO)
-logger.addHandler(RichHandler(show_path=False, rich_tracebacks=True))
-logger.addHandler(logging.NullHandler())

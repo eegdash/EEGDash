@@ -666,11 +666,14 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
             and self.query["dataset"] in RELEASE_TO_OPENNEURO_DATASET_MAP.values()
         ):
             message_text = Text.from_markup(
-                "[italic]This notice is for users who are participating in the [link=https://eeg2025.github.io/]EEG 2025 Competition[/link].[/italic]\n\n"
-                "[bold]EEG 2025 Competition Data Notice[/bold]\n"
-                "You are loading the raw dataset via `EEGDashDataset`.\n\n"
-                "[bold red]IMPORTANT[/bold red]: This data is [u]NOT[/u] identical to the official competition data, which is accessed via `EEGChallengeDataset`. The competition data has been downsampled and filtered.\n\n"
-                "[bold]If you are participating in the competition, you must use the `EEGChallengeDataset` object to ensure consistency.[/bold]"
+                "[italic]This notice is only for users who are participating in the [link=https://eeg2025.github.io/]EEG 2025 Competition[/link].[/italic]\n\n"
+                "[bold]EEG 2025 Competition Data Notice![/bold]\n"
+                "You are loading one of the datasets that is used in competition, but via `EEGDashDataset`.\n\n"
+                "[bold red]IMPORTANT[/bold red]: \n"
+                "If you download data from `EEGDashDataset`, it is [u]NOT[/u] identical to the official competition data, which is accessed via `EEGChallengeDataset`. "
+                "The competition data has been downsampled and filtered.\n\n"
+                "[bold]If you are participating in the competition, you must use the `EEGChallengeDataset` object to ensure consistency.[/bold] \n\n"
+                "If you are not participating in the competition, you can ignore this message."
             )
             warning_panel = Panel(
                 message_text,
@@ -682,25 +685,7 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
             try:
                 Console().print(warning_panel)
             except Exception:
-                warning_message = (
-                    "\n\n"
-                    "[EEGChallengeDataset] EEG 2025 Competition Data Notice:\n"
-                    "-------------------------------------------------------\n"
-                    "This object loads the HBN dataset that has been preprocessed for the EEG Challenge:\n"
-                    "  - Downsampled from 500Hz to 100Hz\n"
-                    "  - Bandpass filtered (0.5–50 Hz)\n"
-                    "\n"
-                    "For full preprocessing applied for competition details, see:\n"
-                    "  https://github.com/eeg2025/downsample-datasets\n"
-                    "\n"
-                    "The HBN dataset have some preprocessing applied by the HBN team:\n"
-                    "  - Re-reference (Cz Channel)\n"
-                    "\n"
-                    "IMPORTANT: The data accessed via `EEGChallengeDataset` is NOT identical to what you get from `EEGDashDataset` directly.\n"
-                    "If you are participating in the competition, always use `EEGChallengeDataset` to ensure consistency with the challenge data.\n"
-                )
-
-                logger.warning(warning_message)
+                logger.warning(str(message_text))
 
         if records is not None:
             self.records = records

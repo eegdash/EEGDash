@@ -144,24 +144,7 @@ class EEGChallengeDataset(EEGDashDataset):
         try:
             Console().print(warning_panel)
         except Exception:
-            warning_message = (
-                "\n\n"
-                "[EEGChallengeDataset] EEG 2025 Competition Data Notice:\n"
-                "-------------------------------------------------------\n"
-                "This object loads the HBN dataset that has been preprocessed for the EEG Challenge:\n"
-                "  - Downsampled from 500Hz to 100Hz\n"
-                "  - Bandpass filtered (0.5–50 Hz)\n"
-                "\n"
-                "For full preprocessing applied for competition details, see:\n"
-                "  https://github.com/eeg2025/downsample-datasets\n"
-                "\n"
-                "The HBN dataset have some preprocessing applied by the HBN team:\n"
-                "  - Re-reference (Cz Channel)\n"
-                "\n"
-                "IMPORTANT: The data accessed via `EEGChallengeDataset` is NOT identical to what you get from `EEGDashDataset` directly.\n"
-                "If you are participating in the competition, always use `EEGChallengeDataset` to ensure consistency with the challenge data.\n"
-            )
-
+            warning_message = str(message_text)
             logger.warning(warning_message)
 
         super().__init__(

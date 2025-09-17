@@ -62,13 +62,13 @@ def test_eeg_challenge_dataset_amount_files(release, number_files, cache_dir: Pa
 
 
 @pytest.mark.parametrize("release", RELEASES)
-def test_mongodb_load_benchmark(benchmark, warmed_mongo, release):
+def test_mongodb_load_benchmark(benchmark, warmed_mongo, release, cache_dir: Path):
     # Group makes the report nicer when comparing releases
     benchmark.group = "EEGChallengeDataset.load"
 
     result = benchmark.pedantic(
         _load_release,
-        args=(release,),
+        args=(release, cache_dir),
         iterations=1,  # I/O-bound → 1 iteration per round
         rounds=5,  # take min/median across several cold-ish runs
         warmup_rounds=1,  # do one warmup round

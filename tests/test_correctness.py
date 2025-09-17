@@ -1,6 +1,5 @@
 import logging
 import shutil
-import warnings
 from pathlib import Path
 
 import numpy as np
@@ -82,7 +81,7 @@ def preprocess_instance(eeg_dash_dataset, cache_dir: Path):
         return eeg_dash_dataset
 
     except Exception as e:
-        warnings.warn(f"Failed to load dataset creating a new instance: {e}. ")
+        logger.warning(f"Failed to load dataset creating a new instance: {e}. ")
         if pre_processed_dir.exists():
             # folder with issue, erasing and creating again
             shutil.rmtree(pre_processed_dir)

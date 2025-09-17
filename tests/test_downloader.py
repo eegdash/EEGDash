@@ -32,6 +32,18 @@ CHALLENGE_SMALL_FILES_ORIGINAL = [
 ]
 
 
+@pytest.fixture(scope="module")
+def download_dir():
+    """Provide a shared cache directory for tests that need to cache datasets."""
+    from pathlib import Path
+
+    from eegdash.paths import get_default_cache_dir
+
+    download_dir = Path(get_default_cache_dir())
+    download_dir.mkdir(parents=True, exist_ok=True)
+    return download_dir
+
+
 def _require_s3(uri: str) -> None:
     """Skip the test if the requested S3 object cannot be reached."""
     try:

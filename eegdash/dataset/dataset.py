@@ -129,9 +129,11 @@ class EEGChallengeDataset(EEGDashDataset):
             "  - Downsampled from 500Hz to 100Hz\n"
             "  - Bandpass filtered (0.5–50 Hz)\n"
             "\n"
-            "For full preprocessing details, see:\n"
+            "For full preprocessing applied for competition details, see:\n"
             "  https://github.com/eeg2025/downsample-datasets\n"
             "\n"
+            "The HBN dataset have some preprocessing applied by the HBN team:\n"
+            "  - Re-reference (Cz Channel)\n"
             "IMPORTANT: The data accessed via `EEGChallengeDataset` is NOT identical to what you get from `EEGDashDataset` directly.\n"
             "If you are participating in the competition, always use `EEGChallengeDataset` to ensure consistency with the challenge data.\n"
             "\n",

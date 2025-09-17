@@ -134,6 +134,7 @@ class EEGChallengeDataset(EEGDashDataset):
             "\n"
             "The HBN dataset have some preprocessing applied by the HBN team:\n"
             "  - Re-reference (Cz Channel)\n"
+            "\n"
             "IMPORTANT: The data accessed via `EEGChallengeDataset` is NOT identical to what you get from `EEGDashDataset` directly.\n"
             "If you are participating in the competition, always use `EEGChallengeDataset` to ensure consistency with the challenge data.\n"
             "\n",

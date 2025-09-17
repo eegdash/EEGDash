@@ -178,13 +178,18 @@ def run_task(releases, tasks, target_name, folds=10, weights=None, model_freeze=
 
     # %% [markdown]
     # ## Creating a Training and Test Set
-    correct_train_list = []
-    correct_test_list  = []
-    correct_test_ci    = []
+    correct_train_list        = []
+    correct_test_list         = []
+    correct_test_list_subject = []
     unique_subjects, unique_indices = np.unique(windows_ds.description["subject"], return_index=True)
     unique_gender = windows_ds.description["sex"][unique_indices].values
-    if folds > 1:
-        splitter = StratifiedKFold(n_splits=folds, shuffle=True, random_state=random_add)
+    
+    # Ensure we don't have more folds than the minimum class count
+    min_class_count = min((unique_gender == "M").sum(), (unique_gender == "F").sum())
+    actual_folds = min(folds, min_class_count)
+    
+    if actual_folds > 1:
+        splitter = StratifiedKFold(n_splits=actual_folds, shuffle=True, random_state=random_add)
         splits = splitter.split(unique_subjects, unique_gender)
     else:
         train_idx, val_idx = train_test_split(np.arange(len(unique_subjects)),train_size=0.8,stratify=unique_gender,random_state=random_add)
@@ -282,37 +287,38 @@ def run_task(releases, tasks, target_name, folds=10, weights=None, model_freeze=
 
             # validation
             correct_test = 0
-            all_preds = []
-            for t, (x, y, sz) in enumerate(val_loader):
-                model.eval()  # put model to testing mode
+            all_preds, all_ground_truth, all_subjects = [], [], []
+            model.eval()
+            for x, y, ss in val_loader:
                 scores = model(normalize_data(x))
                 _, preds = scores.max(1)
-                y = torch.tensor(
-                    [gender_dict[gender] for gender in y], device=device, dtype=torch.long
-                )
+                y = torch.tensor([gender_dict[gender] for gender in y], device=device, dtype=torch.long)
                 correct_test += (preds == y).sum() / len(val_ds)
-                all_preds.append((preds == y).cpu().numpy())
-                
-            print(f"Iteration {it_fold}, Epoch {e}, Train accuracy: {correct_train:.3f}, Test accuracy: {correct_test:.3f}\n")
+                all_preds.extend(preds.cpu().numpy())
+                all_ground_truth.extend(y.cpu().numpy())
+                all_subjects.extend(ss)
             
-        bootstrap_result = bootstrap((np.concatenate(all_preds),), np.mean, confidence_level=0.95, n_resamples=1000, method="percentile")
-        correct_test_ci.append([float(bootstrap_result.confidence_interval.low), float(bootstrap_result.confidence_interval.high)])
-        
+            # Subject-level voting: average predictions per subject and vote
+            subject_uniq  = np.unique(np.array(all_subjects), return_inverse=True)
+            subject_gt    = np.array([np.array(all_ground_truth)[subject_uniq == i][0] for i in range(len(subject_uniq))])
+            subject_preds = np.array([np.bincount(np.array(all_preds)[subject_uniq == i]).argmax() for i in range(len(subject_uniq))])
+            subject_level_accuracy = (subject_preds == subject_gt).mean()
+            
+            print(f"Iteration {it_fold}, Epoch {e}, Train accuracy: {correct_train:.3f}, Test accuracy: {correct_test:.3f}, Subject-level accuracy: {subject_level_accuracy:.3f}\n")
+            
         # convert values to numpy arrays
-        try:
-            correct_train = float(correct_train.item())
-        except:
-            pass
-        correct_test = float(correct_test.item())
+        correct_train = float(correct_train.item()) if hasattr(correct_train, "item") else correct_train
+        correct_test  = float(correct_test.item())
         correct_train_list.append(correct_train)
-        correct_test_list.append(correct_test)
+        correct_test_list.append(subject_level_accuracy)  # Use subject-level accuracy instead of sample-level
+        correct_test_list_subject.append(subject_level_accuracy)
         
         # Save model weights immediately to avoid storing in memory
         if save_weights is not None and save_weights != "":
             torch.save(model.state_dict(), save_weights.replace(".pth", "") + f"_{it_fold}.pth")
             print(f"Saved model {it_fold} weights to {save_weights.replace('.pth', '')}_{it_fold}.pth")
     
-    return correct_train_list, correct_test_list, correct_test_ci
+    return correct_train_list, correct_test_list, correct_test_list_subject
 
 # %%
 from pathlib import Path
@@ -417,7 +423,7 @@ if True:
                 print(f"Skipping {task}_{factor} because it already exists")
                 continue
             weights_file_base = "weights_" + task+ "_" + factor + "_" + model_name + ".pth"
-            res_train, res_test, res_test_ci = run_task(releases_train, new_tasks[task], factor, folds=folds, train_epochs=20, batch_size=2000, save_weights=weights_file_base, lrate=0.00002*10*4, model_name=model_name)
+            res_train, res_test, res_test_s = run_task(releases_train, new_tasks[task], factor, folds=folds, train_epochs=2, batch_size=2000, save_weights=weights_file_base, lrate=0.00002*10*4, model_name=model_name)
 
             # test set on R12
             res_test_r12 = []

@@ -21,6 +21,7 @@ import os
 from scipy.stats import bootstrap
 import lightning as L
 from braindecode.models import EEGNeX, TSception	
+from lightning.pytorch.tuner import Tuner
 
 cache_dir = Path("/mnt/v1/arno/eeg2025")
 SFREQ = 100  # sampling frequency
@@ -161,7 +162,7 @@ def create_model(model_name):
                     n_times=256,      # 2 seconds
                     sfreq=128,        # sample frequency 100 Hz
                 )
-            self.learning_rate = learning_rate
+            self.lr = learning_rate
 
         def normalize_data(self, x):
             x = x.reshape(x.shape[0], 24, 256)
@@ -206,7 +207,8 @@ def create_model(model_name):
             self.log('val_accuracy', np.mean(all_preds), on_epoch=True, prog_bar=True)
 
         def configure_optimizers(self):
-            return torch.optim.Adam(self.parameters(), lr=self.learning_rate or self.lr)
+            print('Learning rate:', self.lr)
+            return torch.optim.Adam(self.parameters(), lr=self.lr)
 
     return EEGModel(model_name)
 
@@ -288,6 +290,12 @@ def run_task(releases, tasks, target_name, folds=10, weights=None, model_freeze=
             model.load_state_dict(torch.load(weights))
 
         trainer = L.Trainer(max_epochs=train_epochs, accelerator="auto", devices=1 if torch.cuda.is_available() else None, logger=False, enable_checkpointing=False)
+        tuner = Tuner(trainer)
+        lr_finder = tuner.lr_find(model, train_loader, val_loader)
+        new_lr = lr_finder.suggestion()
+        model.hparams.lr = new_lr
+
+        # Fit model
         trainer.fit(model, train_loader, val_loader)
 
 
@@ -336,7 +344,7 @@ tasks = [  'DespicableMe',
   'surroundSupp',
   'symbolSearch']
 factors = ["sex", "age", "p_factor", "attention", "internalizing", "externalizing"]
-releases = ["R1", "R2", "R3"]#, "R4", "R5", "R6", "R7", "R8", "R9", "R10", "R11", "R12"]
+releases = ["R1", "R2", "R3", "R4", "R5", "R6", "R7", "R8", "R9", "R10", "R11", "R12"]
 
 # process_data(releases, tasks, factors) # just import the data to avoid errors
 # sys.exit()

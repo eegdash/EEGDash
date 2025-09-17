@@ -62,7 +62,7 @@ releases_train = ["R1train", "R2train", "R3train", "R4train", "R5train", "R6trai
 releases_test  = ["R1test", "R2test", "R3test", "R4test", "R5test", "R6test", "R7test", "R8test", "R9test", "R10test", "R11test", "R12test"]
 testset = ["Internal_test_set", "R12_test_set"]
 model_name = 'EEGNeX'
-model_name = 'TSception'
+# model_name = 'TSception'
 # model_name = 'EEGConform'
 
 def load_and_analyze_results_tasks_factors():

@@ -84,7 +84,7 @@ def process_data(releases, tasks, target_names):
             Preprocessor("filter", l_freq=1, h_freq=55, picks=ch_names),
         ]
         
-        preprocess(all_datasets, preprocessors, n_jobs=1)  # Reduced from -1 to 2
+        preprocess(all_datasets, preprocessors, n_jobs=16)  # Reduced from -1 to 2
         print("Preprocessing completed successfully!")
 
         for task in tasks:
@@ -403,11 +403,11 @@ new_tasks = { 'movies': ['DespicableMe', 'DiaryOfAWimpyKid', 'FunwithFractals', 
   'all_tasks': ['DespicableMe', 'DiaryOfAWimpyKid', 'FunwithFractals', 'RestingState', 'ThePresent', 'contrastChangeDetection', 'seqLearning6target', 'seqLearning8target', 'surroundSupp', 'symbolSearch']
   }
 model_name = 'EEGNeX'
-model_name = 'TSception'
+# model_name = 'TSception'
 releases_train = releases[:-1]
 new_tasks = {'contrastChangeDetection': ['contrastChangeDetection']}
 factors = ['externalizing']
-folds = 2
+folds = 10
 if True:
     for task in list(new_tasks.keys()):
         for factor in factors:
@@ -417,7 +417,7 @@ if True:
                 print(f"Skipping {task}_{factor} because it already exists")
                 continue
             weights_file_base = "weights_" + task+ "_" + factor + "_" + model_name + ".pth"
-            res_train, res_test, res_test_ci = run_task(releases_train, new_tasks[task], factor, folds=folds, train_epochs=2, batch_size=2000, save_weights=weights_file_base, lrate=0.00002*10*4, model_name=model_name)
+            res_train, res_test, res_test_ci = run_task(releases_train, new_tasks[task], factor, folds=folds, train_epochs=20, batch_size=2000, save_weights=weights_file_base, lrate=0.00002*10*4, model_name=model_name)
 
             # test set on R12
             res_test_r12 = []

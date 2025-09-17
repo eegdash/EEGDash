@@ -6,6 +6,18 @@ import pytest
 from eegdash.dataset.dataset import EEGChallengeDataset
 
 
+@pytest.fixture(scope="module")
+def cache_dir():
+    """Provide a shared cache directory for tests that need to cache datasets."""
+    from pathlib import Path
+
+    from eegdash.paths import get_default_cache_dir
+
+    cache_dir = Path(get_default_cache_dir())
+    cache_dir.mkdir(parents=True, exist_ok=True)
+    return cache_dir
+
+
 @pytest.fixture(scope="session")
 def warmed_mongo(cache_dir: Path):
     """Skip tests gracefully if Mongo is not reachable."""

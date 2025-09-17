@@ -18,12 +18,16 @@ def _load_release(release, cache_dir: Path):
     return ds
 
 
-@pytest.fixture(scope="session")
-def warmed_mongo():
-    try:
-        EEGDash()
-    except Exception:
-        pytest.skip("Mongo not reachable")
+@pytest.fixture(scope="module")
+def cache_dir():
+    """Provide a shared cache directory for tests that need to cache datasets."""
+    from pathlib import Path
+
+    from eegdash.paths import get_default_cache_dir
+
+    cache_dir = Path(get_default_cache_dir())
+    cache_dir.mkdir(parents=True, exist_ok=True)
+    return cache_dir
 
 
 def test_eeg_challenge_dataset_initialization(cache_dir: Path):
@@ -62,7 +66,7 @@ def test_eeg_challenge_dataset_amount_files(release, number_files, cache_dir: Pa
 
 
 @pytest.mark.parametrize("release", RELEASES)
-def test_mongodb_load_benchmark(benchmark, warmed_mongo, release, cache_dir: Path):
+def test_mongodb_load_benchmark(benchmark, release, cache_dir: Path):
     # Group makes the report nicer when comparing releases
     benchmark.group = "EEGChallengeDataset.load"
 

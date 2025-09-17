@@ -28,6 +28,18 @@ random_state = check_random_state(seed)
 
 
 @pytest.fixture(scope="module")
+def cache_dir():
+    """Provide a shared cache directory for tests that need to cache datasets."""
+    from pathlib import Path
+
+    from eegdash.paths import get_default_cache_dir
+
+    cache_dir = Path(get_default_cache_dir())
+    cache_dir.mkdir(parents=True, exist_ok=True)
+    return cache_dir
+
+
+@pytest.fixture(scope="module")
 def eeg_dash_dataset(cache_dir: Path):
     """Fixture to create an instance of EEGDashDataset."""
     return EEGDashDataset(

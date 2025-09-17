@@ -1,7 +1,21 @@
 from pathlib import Path
 
+import pytest
+
 from eegdash.const import RELEASE_TO_OPENNEURO_DATASET_MAP
 from eegdash.dataset.dataset import EEGChallengeDataset
+
+
+@pytest.fixture(scope="module")
+def cache_dir():
+    """Provide a shared cache directory for tests that need to cache datasets."""
+    from pathlib import Path
+
+    from eegdash.paths import get_default_cache_dir
+
+    cache_dir = Path(get_default_cache_dir())
+    cache_dir.mkdir(parents=True, exist_ok=True)
+    return cache_dir
 
 
 def test_offline_real_data_end_to_end(cache_dir: Path):

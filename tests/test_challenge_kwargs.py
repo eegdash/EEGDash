@@ -1,7 +1,21 @@
 from pathlib import Path
 
+import pytest
+
 from eegdash.api import EEGDashDataset
 from eegdash.dataset.dataset import EEGChallengeDataset
+
+
+@pytest.fixture(scope="module")
+def cache_dir():
+    """Provide a shared cache directory for tests that need to cache datasets."""
+    from pathlib import Path
+
+    from eegdash.paths import get_default_cache_dir
+
+    cache_dir = Path(get_default_cache_dir())
+    cache_dir.mkdir(parents=True, exist_ok=True)
+    return cache_dir
 
 
 def test_challenge_dataset_passes_task_and_dataset_filters(cache_dir: Path):

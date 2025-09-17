@@ -20,5 +20,4 @@ root_logger.setLevel(logging.INFO)
 # configuration from the root logger we just set up.
 logger = logging.getLogger("eegdash")
 
-# You can still set a specific level for your package if needed
 logger.setLevel(logging.INFO)

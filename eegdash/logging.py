@@ -2,12 +2,23 @@ import logging
 
 from rich.logging import RichHandler
 
-logging.basicConfig(
-    level="INFO",  # Set the default level for all loggers
-    format="%(message)s",
-    datefmt="[%X]",
-    handlers=[RichHandler(rich_tracebacks=True)],
-)
-logging.getLogger("eegdash").setLevel(logging.INFO)
+# Get the root logger
+root_logger = logging.getLogger()
 
+# --- This is the key part ---
+# 1. Remove any handlers that may have been added by default
+root_logger.handlers = []
+
+# 2. Add your RichHandler
+root_logger.addHandler(RichHandler(rich_tracebacks=True, markup=True))
+# ---------------------------
+
+# 3. Set the level for the root logger
+root_logger.setLevel(logging.INFO)
+
+# Now, get your package-specific logger. It will inherit the
+# configuration from the root logger we just set up.
 logger = logging.getLogger("eegdash")
+
+# You can still set a specific level for your package if needed
+logger.setLevel(logging.INFO)

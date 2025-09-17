@@ -1,4 +1,3 @@
-import logging
 import shutil
 from pathlib import Path
 
@@ -21,8 +20,7 @@ from braindecode.preprocessing import (
 from braindecode.util import set_random_seeds
 from eegdash import EEGDashDataset
 from eegdash.hbn.preprocessing import hbn_ec_ec_reannotation
-
-logger = logging.getLogger("eegdash")
+from eegdash.logging import logger
 
 seed = 42
 set_random_seeds(seed, cuda=False)

@@ -1,6 +1,5 @@
 import io
 import json
-import logging
 import os
 import re
 import traceback
@@ -22,9 +21,8 @@ from braindecode.datasets import BaseDataset
 
 from . import downloader
 from .bids_eeg_metadata import enrich_from_participants
+from .logging import logger
 from .paths import get_default_cache_dir
-
-logger = logging.getLogger("eegdash")
 
 
 class EEGDashBaseDataset(BaseDataset):

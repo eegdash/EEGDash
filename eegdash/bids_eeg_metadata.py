@@ -1,4 +1,3 @@
-import logging
 import re
 from pathlib import Path
 from typing import Any
@@ -8,8 +7,7 @@ from mne_bids import BIDSPath
 
 from .const import ALLOWED_QUERY_FIELDS
 from .const import config as data_config
-
-logger = logging.getLogger("eegdash")
+from .logging import logger
 
 __all__ = [
     "build_query_from_kwargs",

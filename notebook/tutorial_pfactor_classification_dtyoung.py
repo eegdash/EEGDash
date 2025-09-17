@@ -22,7 +22,8 @@ from scipy.stats import bootstrap
 import lightning as L
 from braindecode.models import EEGNeX, TSception	
 from lightning.pytorch.tuner import Tuner
-
+from torchmetrics import Recall, Precision, F1Score, Accuracy
+from lightning.pytorch.loggers import TensorBoardLogger
 cache_dir = Path("/mnt/v1/arno/eeg2025")
 SFREQ = 100  # sampling frequency
 
@@ -144,25 +145,36 @@ def process_data(releases, tasks, target_names):
                     print(f"Number of datasets in {cached_data_folder_name}: {len(windows_ds.datasets)}")
                     print(f"number of samples in {cached_data_folder_name} : {len(windows_ds)}")
 
-def create_model(model_name):
+def create_model(config):
     class EEGModel(L.LightningModule):
-        def __init__(self, model_name, learning_rate=0.00002):
+        def __init__(self, config):
             super(EEGModel, self).__init__()
-            if model_name == 'EEGNeX':
+            drop_prob = config.get('dropout', 0.7)
+            if config['model_name'] == 'EEGNeX':
                 self.model = EEGNeX(
-                    n_chans=24,      # 129 channels
-                    n_outputs=2,      # 1 output for regression
-                    n_times=256,      # 2 seconds
-                    sfreq=128,        # sample frequency 100 Hz
+                    n_chans=24,
+                    n_outputs=2,
+                    n_times=256,
+                    sfreq=128,
+                    drop_prob=drop_prob,
                 )
-            elif model_name == 'TSception':
+            elif config['model_name'] == 'TSception':
                 self.model = TSception(
-                    n_chans=24,      # 129 channels
-                    n_outputs=2,      # 1 output for regression
-                    n_times=256,      # 2 seconds
-                    sfreq=128,        # sample frequency 100 Hz
+                    n_chans=24,
+                    n_outputs=2,
+                    n_times=256,
+                    sfreq=128,
                 )
-            self.lr = learning_rate
+            self.lr = config['lr']
+            self.precision = Precision(task="binary")
+            self.recall = Recall(task="binary")
+            self.f1 = F1Score(task="binary")
+            self.accuracy = Accuracy(task="binary")
+            self.val_precision = Precision(task="binary")
+            self.val_recall = Recall(task="binary")
+            self.val_f1 = F1Score(task="binary")
+            self.val_accuracy = Accuracy(task="binary")
+            self.save_hyperparameters(config)
 
         def normalize_data(self, x):
             x = x.reshape(x.shape[0], 24, 256)
@@ -181,48 +193,59 @@ def create_model(model_name):
             loss = F.cross_entropy(scores, y)
             return loss, preds, y
 
-        def on_train_epoch_start(self):
-            self.train_preds = []
-
         def training_step(self, batch, batch_idx):
             loss, preds, y = self._forward(batch)
-            self.train_preds.append((preds == y).cpu().numpy())
-            self.log('train_loss', loss, on_step=True, on_epoch=True, prog_bar=True)
+            self.accuracy.update(preds, y)
+            self.precision.update(preds, y)
+            self.recall.update(preds, y)
+            self.f1.update(preds, y)
+            self.log('train/loss', loss, on_step=True, on_epoch=True, prog_bar=True)
             return loss
         
         def on_train_epoch_end(self):
-            all_preds = np.concatenate(self.train_preds)
-            self.log('train_accuracy', np.mean(all_preds), on_epoch=True, prog_bar=True)
-
-        def on_validation_epoch_start(self):
-            self.val_preds = []
+            self.log("train/recall_epoch", self.recall, on_step=False, on_epoch=True)
+            self.log("train/precision_epoch", self.precision, on_step=False, on_epoch=True)
+            self.log("train/f1_epoch", self.f1, on_step=False, on_epoch=True)
+            self.log("train/accuracy_epoch", self.accuracy, on_step=False, on_epoch=True, prog_bar=True)
 
         def validation_step(self, batch, batch_idx):
             loss, preds, y = self._forward(batch)
-            self.val_preds.append((preds == y).cpu().numpy())
-            self.log('val_loss', loss, on_step=False, on_epoch=True, prog_bar=True)
+            self.val_accuracy.update(preds, y)
+            self.val_precision.update(preds, y)
+            self.val_recall.update(preds, y)
+            self.val_f1.update(preds, y)
+            self.log('val/loss', loss, on_step=False, on_epoch=True)
         
         def on_validation_epoch_end(self):
-            all_preds = np.concatenate(self.val_preds)
-            self.log('val_accuracy', np.mean(all_preds), on_epoch=True, prog_bar=True)
+            self.log("val/recall_epoch", self.recall, on_step=False, on_epoch=True)
+            self.log("val/precision_epoch", self.val_precision, on_step=False, on_epoch=True)
+            self.log("val/f1_epoch", self.val_f1, on_step=False, on_epoch=True)
+            self.log("val/accuracy_epoch", self.val_accuracy, on_step=False, on_epoch=True, prog_bar=True)
 
         def configure_optimizers(self):
             print('Learning rate:', self.lr)
             return torch.optim.Adam(self.parameters(), lr=self.lr)
 
-    return EEGModel(model_name)
+    return EEGModel(config)
 
 def run_task(releases, tasks, target_name, folds=10, weights=None, model_freeze=False, random_add=42, train_epochs=20, save_weights="", batch_size=100, lrate=0.00002, model_name = 'EEGNeX'):
     # random seed for reproducibility
     L.seed_everything(random_add)
 
     global deep_copy_dataset
-    
+
     if not isinstance(releases, list):
         releases = [releases]
     if not isinstance(tasks, list):
         tasks = [tasks]
-        
+
+
+
+    # # Save hparams to results dir
+    # hparams_file = f"results/hparams_{'_'.join(tasks)}_{target_name}_{model_name}.json"
+    # with open(hparams_file, "w") as f:
+    #     json.dump(hparams, f, indent=2)
+
     cached_data_folder_names = []
     for release in releases:
         for task in tasks:
@@ -231,14 +254,14 @@ def run_task(releases, tasks, target_name, folds=10, weights=None, model_freeze=
                 cached_data_folder_names.append(cached_data_folder_name)
             else:
                 print(f"Missing DataError({cached_data_folder_name}): You first run process_data to run the task for each release")
-    
+
     print("Loading data from disk")
     windows_ds = []
     for cached_data_folder_name in cached_data_folder_names:
         windows_ds_tmp = load_concat_dataset(path=cached_data_folder_name, preload=False)
         windows_ds.extend([ds for ds in windows_ds_tmp.datasets])
         print(f"Number of datasets in {cached_data_folder_name}: {len(windows_ds_tmp.datasets)}")
-        
+
     windows_ds = BaseConcatDataset(windows_ds)
     print(f"Number of datasets in all releases: {len(windows_ds.datasets)}")
     print(f"number of samples in windows_ds: {len(windows_ds)}")
@@ -249,6 +272,7 @@ def run_task(releases, tasks, target_name, folds=10, weights=None, model_freeze=
     correct_test_ci    = []
     unique_subjects, unique_indices = np.unique(windows_ds.description["subject"], return_index=True)
     unique_gender = windows_ds.description["sex"][unique_indices].values
+    print(f"Class distribution in full set: {(unique_gender == 'M').sum()} male, {(unique_gender == 'F').sum()} female")
     if folds > 1:
         splitter = StratifiedKFold(n_splits=folds, shuffle=True, random_state=random_add)
         splits = splitter.split(unique_subjects, unique_gender)
@@ -266,7 +290,7 @@ def run_task(releases, tasks, target_name, folds=10, weights=None, model_freeze=
         val_n   = min((  val_gender == "M").sum(), (  val_gender == "F").sum()) # take the minimum number of subjects for each class to balance the dataset
         train_subj = np.concatenate([np.random.choice(train_subj[train_gender == "M"], train_n, replace=False),np.random.choice(train_subj[train_gender == "F"], train_n, replace=False)])        
         val_subj   = np.concatenate([np.random.choice(  val_subj[  val_gender == "M"],   val_n, replace=False),np.random.choice(  val_subj[  val_gender == "F"],   val_n, replace=False)])        
-        
+
         # Create datasets
         if model_freeze: # When model_freeze=True, evaluate on all (balanced) data
             val_ds   = BaseConcatDataset([ds for ds in windows_ds.datasets if ds.description.subject in train_subj or ds.description.subject in val_subj]) 
@@ -275,21 +299,39 @@ def run_task(releases, tasks, target_name, folds=10, weights=None, model_freeze=
             train_ds = BaseConcatDataset([ds for ds in windows_ds.datasets if ds.description.subject in train_subj])
             val_ds   = BaseConcatDataset([ds for ds in windows_ds.datasets if ds.description.subject in val_subj])
 
+        # Check the balance of the dataset
+        print(f"Number of datasets in balanced set: {len(train_ds.datasets)} train, {len(val_ds.datasets)} val")
+        print(f"Number of samples in balanced set: {len(train_ds)} train, {len(val_ds)} val")
+        # print(f"Class distribution in training set {train_n} of each class; validation set {val_n} of each class")
+
         # Create dataloaders with smaller batch size to save memory
         train_loader = DataLoader(train_ds, batch_size=batch_size, shuffle=True, prefetch_factor=4, num_workers=4)
-        val_loader   = DataLoader(  val_ds, batch_size=batch_size, shuffle=True, prefetch_factor=4, num_workers=4)
+        val_loader   = DataLoader(  val_ds, batch_size=batch_size, prefetch_factor=4, num_workers=4)
 
-        # Check the balance of the dataset
-        print(f"Number of datasets in balanced set: {len(train_subj)}")
-        print(f"Class distribution in training set {train_n} of each class; validation set {val_n} of each class")
 
-        # create model
-        model = create_model(model_name)
+        # create model and hparams dict
+        hparams = {
+            "batch_size": batch_size,
+            "dropout": 0.7,  # default, will be overwritten if passed
+            "lr": lrate,
+            "train_epochs": train_epochs,
+            "random_seed": random_add,
+            "model_name": model_name,
+            "releases_train": releases,
+            "target_name": target_name,
+            "tasks": tasks
+        }
+        if "dropout" in locals():
+            hparams["dropout"] = locals()["dropout"]
+        model = create_model(hparams)
+
+        # Set up TensorBoardLogger with hparams
+        tb_logger = TensorBoardLogger(save_dir="lightning_logs", name=f"tb_logs_{'_'.join(tasks)}_{target_name}_{model_name}")
+        tb_logger.log_hyperparams(hparams)
 
         if weights is not None:
             model.load_state_dict(torch.load(weights))
-
-        trainer = L.Trainer(max_epochs=train_epochs, accelerator="auto", devices=1 if torch.cuda.is_available() else None, logger=False, enable_checkpointing=False)
+        trainer = L.Trainer(max_epochs=train_epochs, accelerator="auto", devices=1 if torch.cuda.is_available() else None, enable_checkpointing=False, logger=tb_logger)
         tuner = Tuner(trainer)
         lr_finder = tuner.lr_find(model, train_loader, val_loader)
         new_lr = lr_finder.suggestion()
@@ -298,11 +340,9 @@ def run_task(releases, tasks, target_name, folds=10, weights=None, model_freeze=
         # Fit model
         trainer.fit(model, train_loader, val_loader)
 
+        #     bootstrap_result = bootstrap((np.concatenate(all_preds),), np.mean, confidence_level=0.95, n_resamples=1000, method="percentile")
+        #     correct_test_ci.append([float(bootstrap_result.confidence_interval.low), float(bootstrap_result.confidence_interval.high)])
 
-            
-    #     bootstrap_result = bootstrap((np.concatenate(all_preds),), np.mean, confidence_level=0.95, n_resamples=1000, method="percentile")
-    #     correct_test_ci.append([float(bootstrap_result.confidence_interval.low), float(bootstrap_result.confidence_interval.high)])
-        
         # convert values to numpy arrays
         try:
             correct_train = float(correct_train.item())
@@ -311,12 +351,12 @@ def run_task(releases, tasks, target_name, folds=10, weights=None, model_freeze=
         correct_test = float(correct_test.item())
         correct_train_list.append(correct_train)
         correct_test_list.append(correct_test)
-        
+
         # Save model weights immediately to avoid storing in memory
         if save_weights is not None and save_weights != "":
             torch.save(model.state_dict(), save_weights.replace(".pth", "") + f"_{it_fold}.pth")
             print(f"Saved model {it_fold} weights to {save_weights.replace('.pth', '')}_{it_fold}.pth")
-    
+
     return correct_train_list, correct_test_list, correct_test_ci
 
 # %%
@@ -409,10 +449,10 @@ new_tasks = { 'movies': ['DespicableMe', 'DiaryOfAWimpyKid', 'FunwithFractals', 
   }
 model_name = 'EEGNeX'
 # model_name = 'TSception'
-releases_train = releases[:-1]
+releases_train = ['R12'] #releases[:-1]
 new_tasks = {'contrastChangeDetection': ['contrastChangeDetection']}
-factors = ['externalizing']
-folds = 10
+factors = ['attention']
+folds = 1
 if True:
     for task in list(new_tasks.keys()):
         for factor in factors:
@@ -422,7 +462,7 @@ if True:
                 print(f"Skipping {task}_{factor} because it already exists")
                 continue
             weights_file_base = "weights_" + task+ "_" + factor + "_" + model_name + ".pth"
-            res_train, res_test, res_test_ci = run_task(releases_train, new_tasks[task], factor, folds=folds, train_epochs=20, batch_size=2000, save_weights=weights_file_base, lrate=0.00002*10*4, model_name=model_name)
+            res_train, res_test, res_test_ci = run_task(releases_train, new_tasks[task], factor, random_add=42, folds=folds, train_epochs=250, batch_size=128, save_weights=weights_file_base, lrate=0.00002*10*4, model_name=model_name)
 
             # test set on R12
             res_test_r12 = []

@@ -164,6 +164,7 @@ def create_model(config):
                     n_outputs=2,
                     n_times=256,
                     sfreq=128,
+                    drop_prob=drop_prob,
                 )
             self.lr = config['lr']
             self.precision = Precision(task="binary")
@@ -220,7 +221,9 @@ def create_model(config):
             self.log("val/recall_epoch", self.recall, on_step=False, on_epoch=True)
             self.log("val/precision_epoch", self.val_precision, on_step=False, on_epoch=True)
             self.log("val/f1_epoch", self.val_f1, on_step=False, on_epoch=True)
-            self.log("val/accuracy_epoch", self.val_accuracy, on_step=False, on_epoch=True, prog_bar=True)
+            val_acc = self.val_accuracy.compute()
+            self.log("val/accuracy_epoch", val_acc, on_step=False, on_epoch=True, prog_bar=True)
+            self.log("hp_metric", val_acc, on_epoch=True)
 
         def configure_optimizers(self):
             print('Learning rate:', self.lr)
@@ -228,7 +231,7 @@ def create_model(config):
 
     return EEGModel(config)
 
-def run_task(releases, tasks, target_name, folds=10, weights=None, model_freeze=False, random_add=42, train_epochs=20, save_weights="", batch_size=100, lrate=0.00002, model_name = 'EEGNeX'):
+def run_task(releases, tasks, target_name, folds=10, weights=None, model_freeze=False, random_add=42, train_epochs=20, save_weights="", batch_size=100, lrate=0.00002, model_name = 'EEGNeX', dropout=0.5):
     # random seed for reproducibility
     L.seed_everything(random_add)
 
@@ -312,50 +315,100 @@ def run_task(releases, tasks, target_name, folds=10, weights=None, model_freeze=
         # create model and hparams dict
         hparams = {
             "batch_size": batch_size,
-            "dropout": 0.7,  # default, will be overwritten if passed
+            "dropout": dropout,
             "lr": lrate,
-            "train_epochs": train_epochs,
             "random_seed": random_add,
             "model_name": model_name,
-            "releases_train": releases,
-            "target_name": target_name,
-            "tasks": tasks
         }
-        if "dropout" in locals():
-            hparams["dropout"] = locals()["dropout"]
         model = create_model(hparams)
-
-        # Set up TensorBoardLogger with hparams
-        tb_logger = TensorBoardLogger(save_dir="lightning_logs", name=f"tb_logs_{'_'.join(tasks)}_{target_name}_{model_name}")
-        tb_logger.log_hyperparams(hparams)
 
         if weights is not None:
             model.load_state_dict(torch.load(weights))
-        trainer = L.Trainer(max_epochs=train_epochs, accelerator="auto", devices=1 if torch.cuda.is_available() else None, enable_checkpointing=False, logger=tb_logger)
-        tuner = Tuner(trainer)
-        lr_finder = tuner.lr_find(model, train_loader, val_loader)
-        new_lr = lr_finder.suggestion()
-        model.hparams.lr = new_lr
+        # from lightning.pytorch.callbacks.early_stopping import EarlyStopping
+        # early_stop = EarlyStopping(
+        #     monitor="val/accuracy_epoch",
+        #     mode="max",
+        #     patience=30,
+        #     verbose=True,
+        #     min_delta=0.0
+        # )
+        # Find learning rate before logger/trainer creation
+        # trainer_tmp = L.Trainer(
+        #     max_epochs=1,
+        #     accelerator="auto",
+        #     devices=1 if torch.cuda.is_available() else None,
+        #     enable_checkpointing=False,
+        #     logger=False,
+        #     callbacks=[]
+        # )
+        # tuner = Tuner(trainer_tmp)
+        # lr_finder = tuner.lr_find(model, train_loader, val_loader)
+        # new_lr = lr_finder.suggestion()
+        # model.hparams.lr = new_lr
+        # hparams["lr_final"] = float(new_lr)
+
+
+        # Now create logger with correct hparams
+        tb_logger = TensorBoardLogger(
+            save_dir="lightning_logs",
+            name=f"experiment_{'_'.join(tasks)}_{target_name}_{model_name}_k{folds}",
+        )
+        # Log hparams 
+        tb_logger.log_hyperparams(hparams)
+        # Now create trainer with logger and early stopping
+        trainer = L.Trainer(
+            max_epochs=train_epochs,
+            accelerator="auto",
+            devices=1 if torch.cuda.is_available() else None,
+            enable_checkpointing=False,
+            logger=tb_logger,
+            # callbacks=[early_stop]
+        )
 
         # Fit model
         trainer.fit(model, train_loader, val_loader)
 
-        #     bootstrap_result = bootstrap((np.concatenate(all_preds),), np.mean, confidence_level=0.95, n_resamples=1000, method="percentile")
-        #     correct_test_ci.append([float(bootstrap_result.confidence_interval.low), float(bootstrap_result.confidence_interval.high)])
+        # Use PyTorch Lightning metrics for kfold reporting
+        train_acc = float(trainer.callback_metrics.get('train/accuracy_epoch', 0.0))
+        test_acc = float(trainer.callback_metrics.get('val/accuracy_epoch', 0.0))
+        correct_train_list.append(train_acc)
+        correct_test_list.append(test_acc)
 
-        # convert values to numpy arrays
-        try:
-            correct_train = float(correct_train.item())
-        except:
-            pass
-        correct_test = float(correct_test.item())
-        correct_train_list.append(correct_train)
-        correct_test_list.append(correct_test)
 
-        # Save model weights immediately to avoid storing in memory
-        if save_weights is not None and save_weights != "":
-            torch.save(model.state_dict(), save_weights.replace(".pth", "") + f"_{it_fold}.pth")
-            print(f"Saved model {it_fold} weights to {save_weights.replace('.pth', '')}_{it_fold}.pth")
+        # Optionally, compute bootstrap CI for test set using Lightning predictions
+        # try:
+        #     from scipy.stats import bootstrap
+        #     preds = trainer.callback_metrics.get('val/accuracy_epoch', None)
+        #     # If you want to use predictions, you can use a Lightning callback to store them for more advanced CI
+        #     # Here, just use test_acc as both bounds if not available
+        #     if preds is not None:
+        #         correct_test_ci.append([test_acc, test_acc])
+        #     else:
+        #         correct_test_ci.append([test_acc, test_acc])
+        # except Exception as e:
+        #     correct_test_ci.append([test_acc, test_acc])
+
+        # # Save model weights immediately to avoid storing in memory
+        # if save_weights is not None and save_weights != "":
+        #     torch.save(model.state_dict(), save_weights.replace(".pth", "") + f"_{it_fold}.pth")
+        #     print(f"Saved model {it_fold} weights to {save_weights.replace('.pth', '')}_{it_fold}.pth")
+
+    # Print summary statistics for kfolds
+    def ci95(arr):
+        arr = np.array(arr)
+        mean = np.mean(arr)
+        std = np.std(arr, ddof=1)
+        ci = 1.96 * std / np.sqrt(len(arr)) if len(arr) > 1 else 0.0
+        return mean, std, ci
+
+    if len(correct_train_list) > 0:
+        train_mean, train_std, train_ci = ci95(correct_train_list)
+        print(f"Train acc: mean={train_mean:.4f}, std={train_std:.4f}, 95% CI=±{train_ci:.4f}")
+    if len(correct_test_list) > 0:
+        test_mean, test_std, test_ci = ci95(correct_test_list)
+        print(f"Test acc: mean={test_mean:.4f}, std={test_std:.4f}, 95% CI=±{test_ci:.4f}")
+    if len(correct_test_ci) > 0:
+        print(f"Test bootstrap CIs: {correct_test_ci}")
 
     return correct_train_list, correct_test_list, correct_test_ci
 
@@ -452,24 +505,38 @@ model_name = 'EEGNeX'
 releases_train = ['R12'] #releases[:-1]
 new_tasks = {'contrastChangeDetection': ['contrastChangeDetection']}
 factors = ['attention']
-folds = 1
+folds = 10
+
+import random
 if True:
     for task in list(new_tasks.keys()):
         for factor in factors:
             # train set on all releases
-            json_file = f"results/{task}_{factor}_{model_name}.json"
-            if os.path.exists(json_file):
-                print(f"Skipping {task}_{factor} because it already exists")
-                continue
+            # if os.path.exists(json_file):
+            #     print(f"Skipping {task}_{factor} because it already exists")
+            #     continue
             weights_file_base = "weights_" + task+ "_" + factor + "_" + model_name + ".pth"
-            res_train, res_test, res_test_ci = run_task(releases_train, new_tasks[task], factor, random_add=42, folds=folds, train_epochs=250, batch_size=128, save_weights=weights_file_base, lrate=0.00002*10*4, model_name=model_name)
-
+            batch_sizes = [64, 128, 256, 512, 1024, 2048]
+            lrates = [0.002, 0.0002, 0.00006, 0.00002]
+            dropouts = [0.5, 0.6, 0.7, 0.8, 0.9]
+            seeds = [0, 42, 9]
+            models = ['EEGNeX', 'TSception']
+            for model_name in models: 
+                combinations = [ (batch_size, lrate, random_add, dropout) for batch_size in batch_sizes for lrate in lrates for random_add in seeds for dropout in dropouts]
+                # shuffle combinations
+                random.shuffle(combinations)
+                for batch_size, lrate, random_add, dropout in combinations:
+                    print(f"Running task {task}, factor {factor}, model {model_name}, batch_size {batch_size}, lrate {lrate}, random_add {random_add}, dropout {dropout}")
+                    res_train, res_test, res_test_ci = run_task(releases_train, task, factor, folds=folds, random_add=random_add, train_epochs=150, batch_size=batch_size, lrate=lrate, model_name=model_name, dropout=dropout, save_weights=weights_file_base)
+                    json_file = f"results/{task}_{factor}_{model_name}_bs{batch_size}_lr{lrate}_seed{random_add}_dropout{dropout}_k{folds}.json"
+                    with open(json_file, "w") as f:
+                        json.dump({"train": res_train, "test": res_test, "test_ci": res_test_ci}, f)
             # test set on R12
-            res_test_r12 = []
-            for fold in range(folds):
-                weights_file = weights_file_base.replace(".pth", "") + f"_{fold}.pth"
-                _, res_test_r12_tmp, _ = run_task("R12", new_tasks[task], factor, folds=1,  train_epochs=1,  batch_size=2000, weights=weights_file, model_freeze=True, model_name=model_name, random_add=fold)
-                res_test_r12.append(res_test_r12_tmp)
-            with open(json_file, "w") as f:
-                json.dump({"train": res_train, "test": res_test, "test_ci": res_test_ci, "test_r12": res_test_r12}, f)
-            print(f"Task: {task}, Factor: {factor}, Train: {res_train}, Test: {res_test_ci}")
+            # res_test_r12 = []
+            # for fold in range(folds):
+            #     weights_file = weights_file_base.replace(".pth", "") + f"_{fold}.pth"
+            #     _, res_test_r12_tmp, _ = run_task("R12", new_tasks[task], factor, folds=1,  train_epochs=1,  batch_size=2000, weights=weights_file, model_freeze=True, model_name=model_name, random_add=fold)
+            #     res_test_r12.append(res_test_r12_tmp)
+            # with open(json_file, "w") as f:
+            #     json.dump({"train": res_train, "test": res_test, "test_ci": res_test_ci, "test_r12": res_test_r12}, f)
+            # print(f"Task: {task}, Factor: {factor}, Train: {res_train}, Test: {res_test_ci}")

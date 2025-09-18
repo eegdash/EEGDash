@@ -1,0 +1,12 @@
+batch_size: 128
+dropout: 0.7
+lr: 0.0008
+lr_final: 3.9810717055349735e-05
+model_name: EEGNeX
+random_seed: 42
+releases_train:
+- R12
+target_name: attention
+tasks:
+- contrastChangeDetection
+train_epochs: 150

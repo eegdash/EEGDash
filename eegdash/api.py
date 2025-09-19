@@ -636,12 +636,14 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
         self.n_jobs = n_jobs
         self.eeg_dash_instance = eeg_dash_instance
 
-        self.cache_dir = Path(cache_dir)
-        if self.cache_dir == Path(""):
+        self.cache_dir = cache_dir
+        if self.cache_dir == "" or self.cache_dir is None:
             self.cache_dir = get_default_cache_dir()
             logger.warning(
                 f"Cache directory is empty, using the eegdash default path: {self.cache_dir}"
             )
+
+        self.cache_dir = Path(self.cache_dir)
 
         if not self.cache_dir.exists():
             logger.warning(

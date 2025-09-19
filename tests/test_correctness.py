@@ -1,12 +1,9 @@
-import logging
 import shutil
-import warnings
 from pathlib import Path
 
 import numpy as np
 import pytest
 import torch
-from mne import get_config, set_config
 from sklearn.model_selection import train_test_split
 from sklearn.utils import check_random_state
 from skorch.helper import SliceDataset
@@ -23,16 +20,7 @@ from braindecode.preprocessing import (
 from braindecode.util import set_random_seeds
 from eegdash import EEGDashDataset
 from eegdash.hbn.preprocessing import hbn_ec_ec_reannotation
-
-cache_folder = get_config("MNE_DATA")
-if cache_folder is None:
-    cache_folder = Path.home() / "mne_data"
-    set_config("MNE_DATA", str(cache_folder))
-else:
-    cache_folder = Path(cache_folder)
-
-
-logger = logging.getLogger("eegdash")
+from eegdash.logging import logger
 
 seed = 42
 set_random_seeds(seed, cuda=False)
@@ -40,7 +28,7 @@ random_state = check_random_state(seed)
 
 
 @pytest.fixture(scope="module")
-def eeg_dash_dataset():
+def eeg_dash_dataset(cache_dir: Path):
     """Fixture to create an instance of EEGDashDataset."""
     return EEGDashDataset(
         query={
@@ -48,12 +36,12 @@ def eeg_dash_dataset():
             "task": "RestingState",
             "subject": "NDARDB033FW5",
         },
-        cache_dir=cache_folder,
+        cache_dir=cache_dir,
     )
 
 
 @pytest.fixture(scope="module")
-def preprocess_instance(eeg_dash_dataset):
+def preprocess_instance(eeg_dash_dataset, cache_dir: Path):
     """Fixture to create an instance of EEGDashDataset with preprocessing."""
     selected_channels = [
         "E22",
@@ -81,7 +69,7 @@ def preprocess_instance(eeg_dash_dataset):
         "E70",
         "Cz",
     ]
-    pre_processed_dir = cache_folder / "preprocessed"
+    pre_processed_dir = cache_dir / "preprocessed"
     pre_processed_dir.mkdir(parents=True, exist_ok=True)
     try:
         eeg_dash_dataset = load_concat_dataset(
@@ -91,7 +79,7 @@ def preprocess_instance(eeg_dash_dataset):
         return eeg_dash_dataset
 
     except Exception as e:
-        warnings.warn(f"Failed to load dataset creating a new instance: {e}. ")
+        logger.warning(f"Failed to load dataset creating a new instance: {e}. ")
         if pre_processed_dir.exists():
             # folder with issue, erasing and creating again
             shutil.rmtree(pre_processed_dir)

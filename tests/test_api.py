@@ -4,7 +4,8 @@ import pytest
 import xarray as xr
 from mne_bids import BIDSPath, write_raw_bids
 
-from eegdash.api import EEGDash
+from eegdash.api import EEGDash, EEGDashDataset
+from eegdash.paths import get_default_cache_dir
 
 
 # Fixture to create a dummy BIDS dataset for testing
@@ -61,3 +62,29 @@ def test_load_eeg_data_from_bids_file_content(dummy_bids_dataset):
 
     # Check time values
     assert len(data.time.values) == 100
+
+
+def test_eegdashdataset_empty_cache_dir():
+    """Test that EEGDashDataset with an empty cache_dir uses the current directory."""
+    # This test is to verify the behavior of the `cache_dir` argument.
+    # The previous implementation used `get_default_cache_dir()` when an empty
+    # string was passed. The new implementation uses `Path("")`, which resolves
+    # to the current directory.
+    ds = EEGDashDataset(
+        cache_dir="",
+        records=[
+            {
+                "dataset": "ds005505",
+                "bidspath": "foo/bar.set",
+                "bidsdependencies": [],
+                "sampling_frequency": 1,
+                "ntimes": 1,
+                "subject": None,
+                "session": None,
+                "task": None,
+                "run": None,
+            }
+        ],
+        download=False,
+    )
+    assert ds.cache_dir == get_default_cache_dir()

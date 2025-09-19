@@ -32,18 +32,6 @@ CHALLENGE_SMALL_FILES_ORIGINAL = [
 ]
 
 
-@pytest.fixture(scope="module")
-def download_dir():
-    """Provide a shared cache directory for tests that need to cache datasets."""
-    from pathlib import Path
-
-    from eegdash.paths import get_default_cache_dir
-
-    download_dir = Path(get_default_cache_dir())
-    download_dir.mkdir(parents=True, exist_ok=True)
-    return download_dir
-
-
 def _require_s3(uri: str) -> None:
     """Skip the test if the requested S3 object cannot be reached."""
     try:
@@ -54,9 +42,9 @@ def _require_s3(uri: str) -> None:
 
 
 @pytest.fixture(scope="module")
-def openneuro_local_file(download_dir: Path) -> Path:
+def openneuro_local_file(cache_dir: Path) -> Path:
     _require_s3("s3://openneuro.org/ds005505/dataset_description.json")
-    destination = download_dir / Path(OPENNEURO_EEG_FILE).name
+    destination = cache_dir / Path(OPENNEURO_EEG_FILE).name
     if not destination.exists():
         downloader.download_s3_file(
             OPENNEURO_EEG_FILE,
@@ -67,15 +55,15 @@ def openneuro_local_file(download_dir: Path) -> Path:
 
 
 @pytest.fixture(scope="module")
-def challenge_local_file(download_dir: Path) -> Path:
+def challenge_local_file(cache_dir: Path) -> Path:
     _require_s3(
         "s3://nmdatasets/NeurIPS25/R5_mini_L100_bdf/ds005509/dataset_description.json"
     )
-    destination = download_dir / Path(CHALLENGE_EEG_FILE).with_suffix(".bdf").name
+    destination = cache_dir / Path(CHALLENGE_EEG_FILE).with_suffix(".bdf").name
     if not destination.exists():
         downloader.download_s3_file(
             CHALLENGE_EEG_FILE,
-            download_dir / Path(CHALLENGE_EEG_FILE).name,
+            cache_dir / Path(CHALLENGE_EEG_FILE).name,
             s3_open_neuro=False,
         )
     return destination
@@ -95,25 +83,25 @@ def test_download_s3_file_competition_dataset_converts_to_bdf(
     assert challenge_local_file.stat().st_size > 0
 
 
-def test_download_dependencies_fetches_sidecar_files(download_dir: Path):
+def test_download_dependencies_fetches_sidecar_files(cache_dir: Path):
     _require_s3("s3://openneuro.org/ds005505/dataset_description.json")
     downloader.download_dependencies(
         s3_bucket="s3://openneuro.org",
         bids_dependencies=OPENNEURO_SMALL_FILES,
         bids_dependencies_original=OPENNEURO_SMALL_FILES,
-        cache_dir=download_dir,
+        cache_dir=cache_dir,
         dataset_folder="ds005505",
         record={"dataset": "ds005505"},
         s3_open_neuro=True,
     )
 
     for rel_path in OPENNEURO_SMALL_FILES:
-        local_path = download_dir / rel_path
+        local_path = cache_dir / rel_path
         assert local_path.exists()
         assert local_path.stat().st_size > 0
 
 
-def test_download_dependencies_handles_competition_paths(download_dir: Path):
+def test_download_dependencies_handles_competition_paths(cache_dir: Path):
     _require_s3(
         "s3://nmdatasets/NeurIPS25/R5_mini_L100_bdf/ds005509/dataset_description.json"
     )
@@ -121,14 +109,14 @@ def test_download_dependencies_handles_competition_paths(download_dir: Path):
         s3_bucket="s3://nmdatasets/NeurIPS25/R5_mini_L100_bdf",
         bids_dependencies=CHALLENGE_SMALL_FILES,
         bids_dependencies_original=CHALLENGE_SMALL_FILES_ORIGINAL,
-        cache_dir=download_dir,
+        cache_dir=cache_dir,
         dataset_folder="ds005509-bdf-mini",
         record={"dataset": "ds005509"},
         s3_open_neuro=False,
     )
 
     for rel in CHALLENGE_SMALL_FILES:
-        local_path = download_dir / "ds005509-bdf-mini" / rel
+        local_path = cache_dir / "ds005509-bdf-mini" / rel
         assert local_path.exists()
         assert local_path.stat().st_size > 0
 

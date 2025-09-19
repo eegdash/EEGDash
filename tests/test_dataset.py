@@ -18,18 +18,6 @@ def _load_release(release, cache_dir: Path):
     return ds
 
 
-@pytest.fixture(scope="module")
-def cache_dir():
-    """Provide a shared cache directory for tests that need to cache datasets."""
-    from pathlib import Path
-
-    from eegdash.paths import get_default_cache_dir
-
-    cache_dir = Path(get_default_cache_dir())
-    cache_dir.mkdir(parents=True, exist_ok=True)
-    return cache_dir
-
-
 def test_eeg_challenge_dataset_initialization(cache_dir: Path):
     """Test the initialization of EEGChallengeDataset."""
     dataset = EEGChallengeDataset(release="R5", mini=False, cache_dir=cache_dir)

@@ -7,18 +7,6 @@ from mne_bids import BIDSPath, write_raw_bids
 from eegdash.api import EEGDash
 
 
-@pytest.fixture(scope="module")
-def cache_dir():
-    """Provide a shared cache directory for tests that need to cache datasets."""
-    from pathlib import Path
-
-    from eegdash.paths import get_default_cache_dir
-
-    cache_dir = Path(get_default_cache_dir())
-    cache_dir.mkdir(parents=True, exist_ok=True)
-    return cache_dir
-
-
 # Fixture to create a dummy BIDS dataset for testing
 @pytest.fixture(scope="module")
 def dummy_bids_dataset(tmpdir_factory):

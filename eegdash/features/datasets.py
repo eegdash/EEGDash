@@ -3,7 +3,6 @@ from __future__ import annotations
 import json
 import os
 import shutil
-import warnings
 from collections.abc import Callable
 from typing import Dict, List
 
@@ -16,6 +15,8 @@ from braindecode.datasets.base import (
     EEGWindowsDataset,
     _create_description,
 )
+
+from ..logging import logger
 
 
 class FeaturesDataset(EEGWindowsDataset):
@@ -283,7 +284,7 @@ class FeaturesConcatDataset(BaseConcatDataset):
             # the following will be True for all datasets preprocessed and
             # stored in parallel with braindecode.preprocessing.preprocess
             if i_ds + 1 + offset < n_sub_dirs:
-                warnings.warn(
+                logger.warning(
                     f"The number of saved datasets ({i_ds + 1 + offset}) "
                     f"does not match the number of existing "
                     f"subdirectories ({n_sub_dirs}). You may now "
@@ -294,7 +295,7 @@ class FeaturesConcatDataset(BaseConcatDataset):
         # if path contains files or directories that were not touched, raise
         # warning
         if path_contents:
-            warnings.warn(
+            logger.warning(
                 f"Chosen directory {path} contains other "
                 f"subdirectories or files {path_contents}."
             )

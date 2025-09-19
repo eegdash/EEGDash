@@ -1,14 +1,14 @@
-import logging
 from pathlib import Path
 
-from mne.utils import warn
+from rich.console import Console
+from rich.panel import Panel
+from rich.text import Text
 
 from ..api import EEGDashDataset
 from ..bids_eeg_metadata import build_query_from_kwargs
 from ..const import RELEASE_TO_OPENNEURO_DATASET_MAP, SUBJECT_MINI_RELEASE_MAP
+from ..logging import logger
 from .registry import register_openneuro_datasets
-
-logger = logging.getLogger("eegdash")
 
 
 class EEGChallengeDataset(EEGDashDataset):
@@ -23,8 +23,6 @@ class EEGChallengeDataset(EEGDashDataset):
     ----------
     release : str
         Release name. One of ["R1", ..., "R11"].
-    cache_dir : str
-        Local cache directory for data files.
     mini : bool, default True
         If True, restrict subjects to the challenge mini subset.
     query : dict | None
@@ -123,23 +121,31 @@ class EEGChallengeDataset(EEGDashDataset):
         else:
             s3_bucket = f"{s3_bucket}/{release}_L100_bdf"
 
-        warn(
-            "\n\n"
-            "[EEGChallengeDataset] EEG 2025 Competition Data Notice:\n"
-            "-------------------------------------------------------\n"
+        message_text = Text.from_markup(
             "This object loads the HBN dataset that has been preprocessed for the EEG Challenge:\n"
-            "  - Downsampled from 500Hz to 100Hz\n"
-            "  - Bandpass filtered (0.5–50 Hz)\n"
-            "\n"
-            "For full preprocessing details, see:\n"
-            "  https://github.com/eeg2025/downsample-datasets\n"
-            "\n"
-            "IMPORTANT: The data accessed via `EEGChallengeDataset` is NOT identical to what you get from `EEGDashDataset` directly.\n"
-            "If you are participating in the competition, always use `EEGChallengeDataset` to ensure consistency with the challenge data.\n"
-            "\n",
-            UserWarning,
-            module="eegdash",
+            "  • Downsampled from 500Hz to 100Hz\n"
+            "  • Bandpass filtered (0.5–50 Hz)\n\n"
+            "For full preprocessing applied for competition details, see:\n"
+            "  [link=https://github.com/eeg2025/downsample-datasets]https://github.com/eeg2025/downsample-datasets[/link]\n\n"
+            "The HBN dataset have some preprocessing applied by the HBN team:\n"
+            "  • Re-reference (Cz Channel)\n\n"
+            "[bold red]IMPORTANT[/bold red]: The data accessed via `EEGChallengeDataset` is [u]NOT[/u] identical to what you get from [link=https://github.com/sccn/EEGDash/blob/develop/eegdash/api.py]EEGDashDataset[/link] directly.\n"
+            "If you are participating in the competition, always use `EEGChallengeDataset` to ensure consistency with the challenge data."
         )
+
+        warning_panel = Panel(
+            message_text,
+            title="[yellow]EEG 2025 Competition Data Notice[/yellow]",
+            subtitle="[cyan]Source: EEGChallengeDataset[/cyan]",
+            border_style="yellow",
+        )
+
+        # Render the panel directly to the console so it displays in IPython/terminals
+        try:
+            Console().print(warning_panel)
+        except Exception:
+            warning_message = str(message_text)
+            logger.warning(warning_message)
 
         super().__init__(
             dataset=RELEASE_TO_OPENNEURO_DATASET_MAP[release],

@@ -7,8 +7,6 @@ from mne_bids import get_bids_path_from_fname
 
 from braindecode.datasets.base import BaseConcatDataset
 
-logger = logging.getLogger("eegdash")
-
 
 def build_trial_table(events_df: pd.DataFrame) -> pd.DataFrame:
     """One row per contrast trial with stimulus/response metrics."""

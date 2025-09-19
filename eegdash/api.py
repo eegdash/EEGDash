@@ -1,9 +1,6 @@
-import logging
 import os
-import tempfile
 from pathlib import Path
 from typing import Any, Mapping
-from urllib.parse import urlsplit
 
 import mne
 import numpy as np
@@ -11,13 +8,15 @@ import xarray as xr
 from docstring_inheritance import NumpyDocstringInheritanceInitMeta
 from dotenv import load_dotenv
 from joblib import Parallel, delayed
-from mne.utils import warn
 from mne_bids import find_matching_paths, get_bids_path_from_fname, read_raw_bids
 from pymongo import InsertOne, UpdateOne
-from s3fs import S3FileSystem
+from rich.console import Console
+from rich.panel import Panel
+from rich.text import Text
 
 from braindecode.datasets import BaseConcatDataset
 
+from . import downloader
 from .bids_eeg_metadata import (
     build_query_from_kwargs,
     load_eeg_attrs_from_bids_file,
@@ -33,10 +32,10 @@ from .data_utils import (
     EEGBIDSDataset,
     EEGDashBaseDataset,
 )
+from .logging import logger
 from .mongodb import MongoConnectionManager
 from .paths import get_default_cache_dir
-
-logger = logging.getLogger("eegdash")
+from .utils import _init_mongo_client
 
 
 class EEGDash:
@@ -74,17 +73,24 @@ class EEGDash:
 
         if self.is_public:
             DB_CONNECTION_STRING = mne.utils.get_config("EEGDASH_DB_URI")
+            if not DB_CONNECTION_STRING:
+                try:
+                    _init_mongo_client()
+                    DB_CONNECTION_STRING = mne.utils.get_config("EEGDASH_DB_URI")
+                except Exception:
+                    DB_CONNECTION_STRING = None
         else:
             load_dotenv()
             DB_CONNECTION_STRING = os.getenv("DB_CONNECTION_STRING")
 
         # Use singleton to get MongoDB client, database, and collection
+        if not DB_CONNECTION_STRING:
+            raise RuntimeError(
+                "No MongoDB connection string configured. Set MNE config 'EEGDASH_DB_URI' "
+                "or environment variable 'DB_CONNECTION_STRING'."
+            )
         self.__client, self.__db, self.__collection = MongoConnectionManager.get_client(
             DB_CONNECTION_STRING, is_staging
-        )
-
-        self.filesystem = S3FileSystem(
-            anon=True, client_kwargs={"region_name": "us-east-2"}
         )
 
     def find(
@@ -310,83 +316,6 @@ class EEGDash:
                         f"Conflicting constraints for '{key}': disjoint sets {r_val!r} and {k_val!r}"
                     )
 
-    def load_eeg_data_from_s3(self, s3path: str) -> xr.DataArray:
-        """Load EEG data from an S3 URI into an ``xarray.DataArray``.
-
-        Preserves the original filename, downloads sidecar files when applicable
-        (e.g., ``.fdt`` for EEGLAB, ``.vmrk``/``.eeg`` for BrainVision), and uses
-        MNE's direct readers.
-
-        Parameters
-        ----------
-        s3path : str
-            An S3 URI (should start with "s3://").
-
-        Returns
-        -------
-        xr.DataArray
-            EEG data with dimensions ``("channel", "time")``.
-
-        Raises
-        ------
-        ValueError
-            If the file extension is unsupported.
-
-        """
-        # choose a temp dir so sidecars can be colocated
-        with tempfile.TemporaryDirectory() as tmpdir:
-            # Derive local filenames from the S3 key to keep base name consistent
-            s3_key = urlsplit(s3path).path  # e.g., "/dsXXXX/sub-.../..._eeg.set"
-            basename = Path(s3_key).name
-            ext = Path(basename).suffix.lower()
-            local_main = Path(tmpdir) / basename
-
-            # Download main file
-            with (
-                self.filesystem.open(s3path, mode="rb") as fsrc,
-                open(local_main, "wb") as fdst,
-            ):
-                fdst.write(fsrc.read())
-
-            # Determine and fetch any required sidecars
-            sidecars: list[str] = []
-            if ext == ".set":  # EEGLAB
-                sidecars = [".fdt"]
-            elif ext == ".vhdr":  # BrainVision
-                sidecars = [".vmrk", ".eeg", ".dat", ".raw"]
-
-            for sc_ext in sidecars:
-                sc_key = s3_key[: -len(ext)] + sc_ext
-                sc_uri = f"s3://{urlsplit(s3path).netloc}{sc_key}"
-                try:
-                    # If sidecar exists, download next to the main file
-                    info = self.filesystem.info(sc_uri)
-                    if info:
-                        sc_local = Path(tmpdir) / Path(sc_key).name
-                        with (
-                            self.filesystem.open(sc_uri, mode="rb") as fsrc,
-                            open(sc_local, "wb") as fdst,
-                        ):
-                            fdst.write(fsrc.read())
-                except Exception:
-                    # Sidecar not present; skip silently
-                    pass
-
-            # Read using appropriate MNE reader
-            raw = mne.io.read_raw(str(local_main), preload=True, verbose=False)
-
-            data = raw.get_data()
-            fs = raw.info["sfreq"]
-            max_time = data.shape[1] / fs
-            time_steps = np.linspace(0, max_time, data.shape[1]).squeeze()
-            channel_names = raw.ch_names
-
-            return xr.DataArray(
-                data=data,
-                dims=["channel", "time"],
-                coords={"time": time_steps, "channel": channel_names},
-            )
-
     def load_eeg_data_from_bids_file(self, bids_file: str) -> xr.DataArray:
         """Load EEG data from a local BIDS-formatted file.
 
@@ -508,38 +437,12 @@ class EEGDash:
             results = Parallel(
                 n_jobs=-1 if len(sessions) > 1 else 1, prefer="threads", verbose=1
             )(
-                delayed(self.load_eeg_data_from_s3)(self._get_s3path(session))
+                delayed(downloader.load_eeg_from_s3)(
+                    downloader.get_s3path("s3://openneuro.org", session["bidspath"])
+                )
                 for session in sessions
             )
         return results
-
-    def _get_s3path(self, record: Mapping[str, Any] | str) -> str:
-        """Build an S3 URI from a DB record or a relative path.
-
-        Parameters
-        ----------
-        record : dict or str
-            Either a DB record containing a ``'bidspath'`` key, or a relative
-            path string under the OpenNeuro bucket.
-
-        Returns
-        -------
-        str
-            Fully qualified S3 URI.
-
-        Raises
-        ------
-        ValueError
-            If a mapping is provided but ``'bidspath'`` is missing.
-
-        """
-        if isinstance(record, str):
-            rel = record
-        else:
-            rel = record.get("bidspath")
-            if not rel:
-                raise ValueError("Record missing 'bidspath' for S3 path resolution")
-        return f"s3://openneuro.org/{rel}"
 
     def _add_request(self, record: dict):
         """Internal helper method to create a MongoDB insertion request for a record."""
@@ -552,8 +455,11 @@ class EEGDash:
         except ValueError as e:
             logger.error("Validation error for record: %s ", record["data_name"])
             logger.error(e)
-        except:
-            logger.error("Error adding record: %s ", record["data_name"])
+        except Exception as exc:
+            logger.error(
+                "Error adding record: %s ", record.get("data_name", "<unknown>")
+            )
+            logger.debug("Add operation failed", exc_info=exc)
 
     def _update_request(self, record: dict):
         """Internal helper method to create a MongoDB update request for a record."""
@@ -572,8 +478,11 @@ class EEGDash:
             self.__collection.update_one(
                 {"data_name": record["data_name"]}, {"$set": record}
             )
-        except:  # silent failure
-            logger.error("Error updating record: %s", record["data_name"])
+        except Exception as exc:  # log and continue
+            logger.error(
+                "Error updating record: %s", record.get("data_name", "<unknown>")
+            )
+            logger.debug("Update operation failed", exc_info=exc)
 
     def exists(self, query: dict[str, Any]) -> bool:
         """Alias for :meth:`exist` provided for API clarity."""
@@ -726,13 +635,15 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
         self.records = records
         self.download = download
         self.n_jobs = n_jobs
-        self.eeg_dash_instance = eeg_dash_instance or EEGDash()
+        self.eeg_dash_instance = eeg_dash_instance
 
         # Resolve a unified cache directory across code/tests/CI
         self.cache_dir = Path(cache_dir or get_default_cache_dir())
 
         if not self.cache_dir.exists():
-            warn(f"Cache directory does not exist, creating it: {self.cache_dir}")
+            logger.warning(
+                f"Cache directory does not exist, creating it: {self.cache_dir}"
+            )
             self.cache_dir.mkdir(exist_ok=True, parents=True)
 
         # Separate query kwargs from other kwargs passed to the BaseDataset constructor
@@ -772,21 +683,28 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
             not _suppress_comp_warning
             and self.query["dataset"] in RELEASE_TO_OPENNEURO_DATASET_MAP.values()
         ):
-            warn(
-                "If you are not participating in the competition, you can ignore this warning!"
-                "\n\n"
-                "EEG 2025 Competition Data Notice:\n"
-                "---------------------------------\n"
-                " You are loading the dataset that is used in the EEG 2025 Competition:\n"
-                "IMPORTANT: The data accessed via `EEGDashDataset` is NOT identical to what you get from `EEGChallengeDataset` object directly.\n"
-                "and it is not what you will use for the competition. Downsampling and filtering were applied to the data"
-                "to allow more people to participate.\n"
-                "\n"
-                "If you are participating in the competition, always use `EEGChallengeDataset` to ensure consistency with the challenge data.\n"
-                "\n",
-                UserWarning,
-                module="eegdash",
+            message_text = Text.from_markup(
+                "[italic]This notice is only for users who are participating in the [link=https://eeg2025.github.io/]EEG 2025 Competition[/link].[/italic]\n\n"
+                "[bold]EEG 2025 Competition Data Notice![/bold]\n"
+                "You are loading one of the datasets that is used in competition, but via `EEGDashDataset`.\n\n"
+                "[bold red]IMPORTANT[/bold red]: \n"
+                "If you download data from `EEGDashDataset`, it is [u]NOT[/u] identical to the official competition data, which is accessed via `EEGChallengeDataset`. "
+                "The competition data has been downsampled and filtered.\n\n"
+                "[bold]If you are participating in the competition, you must use the `EEGChallengeDataset` object to ensure consistency.[/bold] \n\n"
+                "If you are not participating in the competition, you can ignore this message."
             )
+            warning_panel = Panel(
+                message_text,
+                title="[yellow]EEG 2025 Competition Data Notice[/yellow]",
+                subtitle="[cyan]Source: EEGDashDataset[/cyan]",
+                border_style="yellow",
+            )
+
+            try:
+                Console().print(warning_panel)
+            except Exception:
+                logger.warning(str(message_text))
+
         if records is not None:
             self.records = records
             datasets = [
@@ -848,16 +766,15 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
                     )
                 )
         elif self.query:
-            # This is the DB query path that we are improving
+            if self.eeg_dash_instance is None:
+                self.eeg_dash_instance = EEGDash()
             datasets = self._find_datasets(
                 query=build_query_from_kwargs(**self.query),
                 description_fields=description_fields,
                 base_dataset_kwargs=base_dataset_kwargs,
             )
             # We only need filesystem if we need to access S3
-            self.filesystem = S3FileSystem(
-                anon=True, client_kwargs={"region_name": "us-east-2"}
-            )
+            self.filesystem = downloader.get_s3_filesystem()
         else:
             raise ValueError(
                 "You must provide either 'records', a 'data_dir', or a query/keyword arguments for filtering."

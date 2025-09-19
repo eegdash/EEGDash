@@ -1,11 +1,13 @@
+from pathlib import Path
+
 from eegdash.api import EEGDashDataset
 from eegdash.dataset.dataset import EEGChallengeDataset
 
 
-def test_challenge_dataset_passes_task_and_dataset_filters(tmp_path):
+def test_challenge_dataset_passes_task_and_dataset_filters(cache_dir: Path):
     ds = EEGChallengeDataset(
         release="R5",
-        cache_dir=str(tmp_path),
+        cache_dir=cache_dir,
         mini=False,
         task="RestingState",
     )
@@ -14,39 +16,39 @@ def test_challenge_dataset_passes_task_and_dataset_filters(tmp_path):
     assert ds.datasets[0].record["dataset"] == "ds005509"
 
 
-def test_eegdashdataset_ignores_empty_query_when_kwargs_present(tmp_path):
+def test_eegdashdataset_ignores_empty_query_when_kwargs_present(cache_dir: Path):
     _ = EEGDashDataset(
         query={},
-        cache_dir=str(tmp_path),
+        cache_dir=cache_dir,
         dataset="ds005509",
         task="RestingState",
     )
 
 
-def test_challenge_dataset_task_list_propagation(tmp_path):
+def test_challenge_dataset_task_list_propagation(cache_dir: Path):
     tasks = ["RestingState", "DespicableMe"]
 
     _ = EEGChallengeDataset(
         release="R5",
-        cache_dir=str(tmp_path),
+        cache_dir=cache_dir,
         mini=False,
         task=tasks,
     )
 
 
-def test_eegdashdataset_allows_raw_query_and_kwargs(tmp_path):
+def test_eegdashdataset_allows_raw_query_and_kwargs(cache_dir: Path):
     _ = EEGDashDataset(
         query={"subject": {"$in": ["NDARAU708TL8", "NDARAP785CTE"]}},
-        cache_dir=str(tmp_path),
+        cache_dir=cache_dir,
         dataset="ds005509",
         task="RestingState",
     )
 
 
-def test_challenge_dataset_mini_populates_subjects(tmp_path):
+def test_challenge_dataset_mini_populates_subjects(cache_dir: Path):
     _ = EEGChallengeDataset(
         release="R5",
-        cache_dir=str(tmp_path),
+        cache_dir=cache_dir,
         mini=True,
         task="RestingState",
     )

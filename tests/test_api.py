@@ -1,5 +1,3 @@
-from pathlib import Path
-
 import mne
 import numpy as np
 import pytest
@@ -7,6 +5,7 @@ import xarray as xr
 from mne_bids import BIDSPath, write_raw_bids
 
 from eegdash.api import EEGDash, EEGDashDataset
+from eegdash.paths import get_default_cache_dir
 
 
 # Fixture to create a dummy BIDS dataset for testing
@@ -88,4 +87,4 @@ def test_eegdashdataset_empty_cache_dir():
         ],
         download=False,
     )
-    assert ds.cache_dir == Path(".")
+    assert ds.cache_dir == get_default_cache_dir()

@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>eegdash.const module &#8212; EEG Dash</title>
+    <title>eegdash.downloader module &#8212; EEG Dash</title>
   
   
   
@@ -48,13 +48,13 @@
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/design-tabs.js?v=f930bc37"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'api/eegdash.const';</script>
-    <link rel="canonical" href="https://sccn.github.io/eegdash/api/eegdash.const.html" />
+    <script>DOCUMENTATION_OPTIONS.pagename = 'api/eegdash.downloader';</script>
+    <link rel="canonical" href="https://sccn.github.io/eegdash/api/eegdash.downloader.html" />
     <link rel="icon" href="../_static/eegdash_icon.png"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="eegdash.data_utils module" href="eegdash.data_utils.html" />
-    <link rel="prev" title="eegdash.bids_eeg_metadata module" href="eegdash.bids_eeg_metadata.html" />
+    <link rel="next" title="eegdash.logging module" href="eegdash.logging.html" />
+    <link rel="prev" title="eegdash.data_utils module" href="eegdash.data_utils.html" />
   
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -469,9 +469,9 @@
 </details></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.api.html">eegdash.api module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.bids_eeg_metadata.html">eegdash.bids_eeg_metadata module</a></li>
-<li class="toctree-l2 current active"><a class="current reference internal" href="#">eegdash.const module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.const.html">eegdash.const module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.data_utils.html">eegdash.data_utils module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.downloader.html">eegdash.downloader module</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">eegdash.downloader module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.logging.html">eegdash.logging module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.mongodb.html">eegdash.mongodb module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.paths.html">eegdash.paths module</a></li>
@@ -524,7 +524,7 @@
     
     <li class="breadcrumb-item"><a href="eegdash.html" class="nav-link">eegdash package</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">eegdash.const module</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">eegdash.downloader module</span></li>
   </ul>
 </nav>
 </div>
@@ -541,8 +541,55 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="module-eegdash.const">
-<span id="eegdash-const-module"></span><h1>eegdash.const module<a class="headerlink" href="#module-eegdash.const" title="Link to this heading">#</a></h1>
+  <section id="module-eegdash.downloader">
+<span id="eegdash-downloader-module"></span><h1>eegdash.downloader module<a class="headerlink" href="#module-eegdash.downloader" title="Link to this heading">#</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="eegdash.downloader.download_dependencies">
+<span class="sig-prename descclassname"><span class="pre">eegdash.downloader.</span></span><span class="sig-name descname"><span class="pre">download_dependencies</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s3_bucket</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bids_dependencies</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bids_dependencies_original</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cache_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dataset_folder</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">record</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s3_open_neuro</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/downloader.py#L40-L72"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.downloader.download_dependencies" title="Link to this definition">#</a></dt>
+<dd><p>Download all BIDS dependency files from S3 and cache them locally.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eegdash.downloader.download_s3_file">
+<span class="sig-prename descclassname"><span class="pre">eegdash.downloader.</span></span><span class="sig-name descname"><span class="pre">download_s3_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s3_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">local_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s3_open_neuro</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/downloader.py#L24-L37"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.downloader.download_s3_file" title="Link to this definition">#</a></dt>
+<dd><p>Download function that gets the raw EEG data from S3.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eegdash.downloader.get_s3_filesystem">
+<span class="sig-prename descclassname"><span class="pre">eegdash.downloader.</span></span><span class="sig-name descname"><span class="pre">get_s3_filesystem</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/downloader.py#L14-L16"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.downloader.get_s3_filesystem" title="Link to this definition">#</a></dt>
+<dd><p>Returns an S3FileSystem object.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eegdash.downloader.get_s3path">
+<span class="sig-prename descclassname"><span class="pre">eegdash.downloader.</span></span><span class="sig-name descname"><span class="pre">get_s3path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s3_bucket</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filepath</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/downloader.py#L19-L21"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.downloader.get_s3path" title="Link to this definition">#</a></dt>
+<dd><p>Helper to form an AWS S3 URI for the given relative filepath.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eegdash.downloader.load_eeg_from_s3">
+<span class="sig-prename descclassname"><span class="pre">eegdash.downloader.</span></span><span class="sig-name descname"><span class="pre">load_eeg_from_s3</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s3path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/downloader.py#L100-L176"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.downloader.load_eeg_from_s3" title="Link to this definition">#</a></dt>
+<dd><p>Load EEG data from an S3 URI into an <code class="docutils literal notranslate"><span class="pre">xarray.DataArray</span></code>.</p>
+<p>Preserves the original filename, downloads sidecar files when applicable
+(e.g., <code class="docutils literal notranslate"><span class="pre">.fdt</span></code> for EEGLAB, <code class="docutils literal notranslate"><span class="pre">.vmrk</span></code>/<code class="docutils literal notranslate"><span class="pre">.eeg</span></code> for BrainVision), and uses
+MNE’s direct readers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>s3path</strong> (<em>str</em>) – An S3 URI (should start with “s3://”).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>EEG data with dimensions <code class="docutils literal notranslate"><span class="pre">(&quot;channel&quot;,</span> <span class="pre">&quot;time&quot;)</span></code>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>xr.DataArray</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If the file extension is unsupported.</p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 
 
@@ -556,20 +603,20 @@
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="eegdash.bids_eeg_metadata.html"
+       href="eegdash.data_utils.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">eegdash.bids_eeg_metadata module</p>
+        <p class="prev-next-title">eegdash.data_utils module</p>
       </div>
     </a>
     <a class="right-next"
-       href="eegdash.data_utils.html"
+       href="eegdash.logging.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">eegdash.data_utils module</p>
+        <p class="prev-next-title">eegdash.logging module</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -585,10 +632,26 @@
 
 
   <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.downloader.download_dependencies"><code class="docutils literal notranslate"><span class="pre">download_dependencies()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.downloader.download_s3_file"><code class="docutils literal notranslate"><span class="pre">download_s3_file()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.downloader.get_s3_filesystem"><code class="docutils literal notranslate"><span class="pre">get_s3_filesystem()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.downloader.get_s3path"><code class="docutils literal notranslate"><span class="pre">get_s3path()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.downloader.load_eeg_from_s3"><code class="docutils literal notranslate"><span class="pre">load_eeg_from_s3()</span></code></a></li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
 
   
   <div class="tocsection editthispage">
-    <a href="https://github.com/sccn/EEGDash/edit/main/docs/source/api/eegdash.const.rst">
+    <a href="https://github.com/sccn/EEGDash/edit/main/docs/source/api/eegdash.downloader.rst">
       <i class="fa-solid fa-pencil"></i>
       
       
@@ -604,7 +667,7 @@
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
-      <li><a href="../_sources/api/eegdash.const.rst.txt"
+      <li><a href="../_sources/api/eegdash.downloader.rst.txt"
             rel="nofollow">Show Source</a></li>
     </ul>
    </div></div>

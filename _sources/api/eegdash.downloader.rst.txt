@@ -1,0 +1,7 @@
+eegdash.downloader module
+=========================
+
+.. automodule:: eegdash.downloader
+   :members:
+   :show-inheritance:
+   :undoc-members:

@@ -26,6 +26,8 @@ Submodules
    eegdash.bids_eeg_metadata
    eegdash.const
    eegdash.data_utils
+   eegdash.downloader
+   eegdash.logging
    eegdash.mongodb
    eegdash.paths
    eegdash.utils

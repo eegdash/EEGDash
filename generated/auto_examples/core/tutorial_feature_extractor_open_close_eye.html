@@ -437,13 +437,13 @@
      aria-label="Section Navigation">
   <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
   <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="tutorial_eegdash_offline.html">Working Offline with EEGDash</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorial_eoec.html">Eyes Open vs. Closed Classification</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">EEGDash Feature Extractor</a></li>
 </ul>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../eeg2025/tutorial_challenge_1.html">Challenge 1: Cross-Task Transfer Learning!</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../eeg2025/tutorial_challenge_2.html">Challenge 2: Predicting the p-factor from EEG</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../eeg2025/tutorial_eegdash_offline.html">Working Offline with EEGDash</a></li>
 </ul>
 </div>
 </nav></div>
@@ -538,18 +538,25 @@ and eyes closed data.</p>
 <span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/home/runner/work/EEGDash/EEGDash/eegdash/api.py:775: UserWarning: If you are not participating in the competition, you can ignore this warning!
-
-EEG 2025 Competition Data Notice:
----------------------------------
- You are loading the dataset that is used in the EEG 2025 Competition:
-IMPORTANT: The data accessed via `EEGDashDataset` is NOT identical to what you get from `EEGChallengeDataset` object directly.
-and it is not what you will use for the competition. Downsampling and filtering were applied to the datato allow more people to participate.
-
-If you are participating in the competition, always use `EEGChallengeDataset` to ensure consistency with the challenge data.
-
-
-  warn(
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>╭────────────────────── EEG 2025 Competition Data Notice ──────────────────────╮
+│ This notice is only for users who are participating in the EEG 2025          │
+│ Competition.                                                                 │
+│                                                                              │
+│ EEG 2025 Competition Data Notice!                                            │
+│ You are loading one of the datasets that is used in competition, but via     │
+│ `EEGDashDataset`.                                                            │
+│                                                                              │
+│ IMPORTANT:                                                                   │
+│ If you download data from `EEGDashDataset`, it is NOT identical to the       │
+│ official competition data, which is accessed via `EEGChallengeDataset`. The  │
+│ competition data has been downsampled and filtered.                          │
+│                                                                              │
+│ If you are participating in the competition, you must use the                │
+│ `EEGChallengeDataset` object to ensure consistency.                          │
+│                                                                              │
+│ If you are not participating in the competition, you can ignore this         │
+│ message.                                                                     │
+╰─────────────────────────── Source: EEGDashDataset ───────────────────────────╯
 </pre></div>
 </div>
 </section>
@@ -637,6 +644,14 @@ corresponding to their respective event markers).</p>
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Used Annotations descriptions: [np.str_(&#39;boundary&#39;), np.str_(&#39;break cnt&#39;), np.str_(&#39;instructed_toCloseEyes&#39;), np.str_(&#39;instructed_toOpenEyes&#39;), np.str_(&#39;resting_start&#39;)]
+[09/19/25 20:23:18] INFO     Original events found with ids: preprocessing.py:35
+                             {np.str_(&#39;boundary&#39;): 1,
+                             np.str_(&#39;break cnt&#39;): 2,
+                             np.str_(&#39;instructed_toCloseEyes
+                             &#39;): 3,
+                             np.str_(&#39;instructed_toOpenEyes&#39;
+                             ): 4, np.str_(&#39;resting_start&#39;):
+                             5}
 NOTE: pick_channels() is a legacy function. New code should use inst.pick(...).
 Filtering raw data in 1 contiguous segment
 Setting up band-pass filter from 1 - 55 Hz
@@ -729,8 +744,8 @@ signal is present and looks as expected.</p>
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Extracting features:   0%|          | 0/1 [00:00&lt;?, ?it/s]
-Extracting features: 100%|██████████| 1/1 [00:00&lt;00:00,  1.30it/s]
-Extracting features: 100%|██████████| 1/1 [00:00&lt;00:00,  1.30it/s]
+Extracting features: 100%|██████████| 1/1 [00:00&lt;00:00,  1.21it/s]
+Extracting features: 100%|██████████| 1/1 [00:00&lt;00:00,  1.21it/s]
 </pre></div>
 </div>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="../../../api/eegdash.features.html#eegdash.features.FeaturesConcatDataset.to_dataframe" title="eegdash.features.FeaturesConcatDataset.to_dataframe" class="sphx-glr-backref-module-eegdash-features sphx-glr-backref-type-py-method"><span class="n">features_ds</span><span class="o">.</span><span class="n">to_dataframe</span></a><span class="p">(</span><span class="n">include_crop_inds</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -756,9 +771,9 @@ Extracting features: 100%|██████████| 1/1 [00:00&lt;00:00,  
     <tr style="text-align: right;">
       <th></th>
       <th>i_dataset</th>
-      <th>i_start_in_trial</th>
-      <th>i_window_in_trial</th>
       <th>i_stop_in_trial</th>
+      <th>i_window_in_trial</th>
+      <th>i_start_in_trial</th>
       <th>sig_mean_E22</th>
       <th>sig_mean_E9</th>
       <th>sig_mean_E33</th>
@@ -842,9 +857,9 @@ Extracting features: 100%|██████████| 1/1 [00:00&lt;00:00,  
     <tr>
       <th>0</th>
       <td>0</td>
-      <td>8092</td>
-      <td>0</td>
       <td>8348</td>
+      <td>0</td>
+      <td>8092</td>
       <td>5.647381e-07</td>
       <td>-2.509246e-06</td>
       <td>8.135321e-06</td>
@@ -926,9 +941,9 @@ Extracting features: 100%|██████████| 1/1 [00:00&lt;00:00,  
     <tr>
       <th>1</th>
       <td>0</td>
-      <td>8348</td>
-      <td>0</td>
       <td>8604</td>
+      <td>0</td>
+      <td>8348</td>
       <td>1.130721e-06</td>
       <td>1.416919e-07</td>
       <td>-6.768836e-07</td>
@@ -1010,9 +1025,9 @@ Extracting features: 100%|██████████| 1/1 [00:00&lt;00:00,  
     <tr>
       <th>2</th>
       <td>0</td>
-      <td>8604</td>
-      <td>0</td>
       <td>8860</td>
+      <td>0</td>
+      <td>8604</td>
       <td>-8.737620e-07</td>
       <td>2.451451e-07</td>
       <td>3.854794e-07</td>
@@ -1094,9 +1109,9 @@ Extracting features: 100%|██████████| 1/1 [00:00&lt;00:00,  
     <tr>
       <th>3</th>
       <td>0</td>
-      <td>8860</td>
-      <td>0</td>
       <td>9116</td>
+      <td>0</td>
+      <td>8860</td>
       <td>3.482372e-07</td>
       <td>-5.419446e-07</td>
       <td>-7.257668e-08</td>
@@ -1178,9 +1193,9 @@ Extracting features: 100%|██████████| 1/1 [00:00&lt;00:00,  
     <tr>
       <th>4</th>
       <td>0</td>
-      <td>9116</td>
-      <td>0</td>
       <td>9372</td>
+      <td>0</td>
+      <td>9116</td>
       <td>1.078094e-06</td>
       <td>2.234204e-06</td>
       <td>8.322080e-07</td>
@@ -1346,9 +1361,9 @@ Extracting features: 100%|██████████| 1/1 [00:00&lt;00:00,  
     <tr>
       <th>65</th>
       <td>0</td>
-      <td>43163</td>
-      <td>0</td>
       <td>43419</td>
+      <td>0</td>
+      <td>43163</td>
       <td>2.604641e-06</td>
       <td>2.696607e-06</td>
       <td>3.207271e-07</td>
@@ -1430,9 +1445,9 @@ Extracting features: 100%|██████████| 1/1 [00:00&lt;00:00,  
     <tr>
       <th>66</th>
       <td>0</td>
-      <td>43419</td>
-      <td>0</td>
       <td>43675</td>
+      <td>0</td>
+      <td>43419</td>
       <td>-1.158709e-06</td>
       <td>-9.353611e-07</td>
       <td>6.243006e-07</td>
@@ -1514,9 +1529,9 @@ Extracting features: 100%|██████████| 1/1 [00:00&lt;00:00,  
     <tr>
       <th>67</th>
       <td>0</td>
-      <td>43675</td>
-      <td>0</td>
       <td>43931</td>
+      <td>0</td>
+      <td>43675</td>
       <td>9.350503e-07</td>
       <td>7.273056e-07</td>
       <td>-3.974258e-07</td>
@@ -1598,9 +1613,9 @@ Extracting features: 100%|██████████| 1/1 [00:00&lt;00:00,  
     <tr>
       <th>68</th>
       <td>0</td>
-      <td>43931</td>
-      <td>0</td>
       <td>44187</td>
+      <td>0</td>
+      <td>43931</td>
       <td>-1.334396e-04</td>
       <td>-4.969487e-05</td>
       <td>-2.251352e-06</td>
@@ -1682,9 +1697,9 @@ Extracting features: 100%|██████████| 1/1 [00:00&lt;00:00,  
     <tr>
       <th>69</th>
       <td>0</td>
-      <td>44187</td>
-      <td>0</td>
       <td>44443</td>
+      <td>0</td>
+      <td>44187</td>
       <td>1.370442e-04</td>
       <td>3.529626e-05</td>
       <td>3.354098e-06</td>
@@ -3061,7 +3076,7 @@ Epoch 5, Train accuracy: 0.89, Test accuracy: 0.64
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[LightGBM] [Info] Number of positive: 28, number of negative: 28
-[LightGBM] [Info] Auto-choosing col-wise multi-threading, the overhead of testing was 0.000347 seconds.
+[LightGBM] [Info] Auto-choosing col-wise multi-threading, the overhead of testing was 0.000270 seconds.
 You can set `force_col_wise=true` to remove the overhead.
 [LightGBM] [Info] Total Bins 9205
 [LightGBM] [Info] Number of data points in the train set: 56, number of used features: 460
@@ -3183,8 +3198,8 @@ Train accuracy: 1.00, Validation accuracy: 0.86
 <img src="../../../_images/sphx_glr_tutorial_feature_extractor_open_close_eye_003.png" srcset="../../../_images/sphx_glr_tutorial_feature_extractor_open_close_eye_003.png" alt="Feature importance" class = "sphx-glr-single-img"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;Axes: title={&#39;center&#39;: &#39;Feature importance&#39;}, xlabel=&#39;Feature importance&#39;, ylabel=&#39;Features&#39;&gt;
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 5.371 seconds)</p>
-<p><strong>Estimated memory usage:</strong>  1333 MB</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 5.327 seconds)</p>
+<p><strong>Estimated memory usage:</strong>  1352 MB</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-generated-auto-examples-core-tutorial-feature-extractor-open-close-eye-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../../_downloads/f3cf56a30a7c06a2eccae3b5b3d28e35/tutorial_feature_extractor_open_close_eye.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">tutorial_feature_extractor_open_close_eye.ipynb</span></code></a></p>

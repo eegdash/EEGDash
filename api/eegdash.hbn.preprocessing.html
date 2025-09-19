@@ -471,6 +471,8 @@
 <li class="toctree-l2"><a class="reference internal" href="eegdash.bids_eeg_metadata.html">eegdash.bids_eeg_metadata module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.const.html">eegdash.const module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.data_utils.html">eegdash.data_utils module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.downloader.html">eegdash.downloader module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.logging.html">eegdash.logging module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.mongodb.html">eegdash.mongodb module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.paths.html">eegdash.paths module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.utils.html">eegdash.utils module</a></li>
@@ -546,13 +548,13 @@
 <span id="eegdash-hbn-preprocessing-module"></span><h1>eegdash.hbn.preprocessing module<a class="headerlink" href="#module-eegdash.hbn.preprocessing" title="Link to this heading">#</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="eegdash.hbn.preprocessing.hbn_ec_ec_reannotation">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">eegdash.hbn.preprocessing.</span></span><span class="sig-name descname"><span class="pre">hbn_ec_ec_reannotation</span></span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/hbn/preprocessing.py#L11-L63"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.hbn.preprocessing.hbn_ec_ec_reannotation" title="Link to this definition">#</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">eegdash.hbn.preprocessing.</span></span><span class="sig-name descname"><span class="pre">hbn_ec_ec_reannotation</span></span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/hbn/preprocessing.py#L9-L61"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.hbn.preprocessing.hbn_ec_ec_reannotation" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Preprocessor</span></code></p>
 <p>Preprocessor to reannotate the raw data for eyes open and eyes closed events.</p>
 <p>This processor is designed for HBN datasets.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="eegdash.hbn.preprocessing.hbn_ec_ec_reannotation.transform">
-<span class="sig-name descname"><span class="pre">transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">raw</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/hbn/preprocessing.py#L21-L63"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.hbn.preprocessing.hbn_ec_ec_reannotation.transform" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">raw</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/hbn/preprocessing.py#L19-L61"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.hbn.preprocessing.hbn_ec_ec_reannotation.transform" title="Link to this definition">#</a></dt>
 <dd><p>Reannotate the raw data to create new events for eyes open and eyes closed</p>
 <p>This function modifies the raw MNE object by creating new events based on
 the existing annotations for “instructed_toCloseEyes” and “instructed_toOpenEyes”.

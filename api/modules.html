@@ -471,6 +471,8 @@
 <li class="toctree-l2"><a class="reference internal" href="eegdash.bids_eeg_metadata.html">eegdash.bids_eeg_metadata module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.const.html">eegdash.const module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.data_utils.html">eegdash.data_utils module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.downloader.html">eegdash.downloader module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.logging.html">eegdash.logging module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.mongodb.html">eegdash.mongodb module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.paths.html">eegdash.paths module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.utils.html">eegdash.utils module</a></li>
@@ -550,7 +552,6 @@
 <li class="toctree-l3"><a class="reference internal" href="eegdash.html#eegdash.EEGDash.find"><code class="docutils literal notranslate"><span class="pre">EEGDash.find()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="eegdash.html#eegdash.EEGDash.get"><code class="docutils literal notranslate"><span class="pre">EEGDash.get()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="eegdash.html#eegdash.EEGDash.load_eeg_data_from_bids_file"><code class="docutils literal notranslate"><span class="pre">EEGDash.load_eeg_data_from_bids_file()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="eegdash.html#eegdash.EEGDash.load_eeg_data_from_s3"><code class="docutils literal notranslate"><span class="pre">EEGDash.load_eeg_data_from_s3()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="eegdash.html#eegdash.EEGDash.remove_field"><code class="docutils literal notranslate"><span class="pre">EEGDash.remove_field()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="eegdash.html#eegdash.EEGDash.remove_field_from_db"><code class="docutils literal notranslate"><span class="pre">EEGDash.remove_field_from_db()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="eegdash.html#eegdash.EEGDash.update"><code class="docutils literal notranslate"><span class="pre">EEGDash.update()</span></code></a></li>
@@ -649,10 +650,14 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="eegdash.bids_eeg_metadata.html">eegdash.bids_eeg_metadata module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="eegdash.bids_eeg_metadata.html#eegdash.bids_eeg_metadata.attach_participants_extras"><code class="docutils literal notranslate"><span class="pre">attach_participants_extras()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="eegdash.bids_eeg_metadata.html#eegdash.bids_eeg_metadata.build_query_from_kwargs"><code class="docutils literal notranslate"><span class="pre">build_query_from_kwargs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="eegdash.bids_eeg_metadata.html#eegdash.bids_eeg_metadata.enrich_from_participants"><code class="docutils literal notranslate"><span class="pre">enrich_from_participants()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="eegdash.bids_eeg_metadata.html#eegdash.bids_eeg_metadata.load_eeg_attrs_from_bids_file"><code class="docutils literal notranslate"><span class="pre">load_eeg_attrs_from_bids_file()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="eegdash.bids_eeg_metadata.html#eegdash.bids_eeg_metadata.merge_participants_fields"><code class="docutils literal notranslate"><span class="pre">merge_participants_fields()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="eegdash.bids_eeg_metadata.html#eegdash.bids_eeg_metadata.normalize_key"><code class="docutils literal notranslate"><span class="pre">normalize_key()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="eegdash.bids_eeg_metadata.html#eegdash.bids_eeg_metadata.participants_extras_from_tsv"><code class="docutils literal notranslate"><span class="pre">participants_extras_from_tsv()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="eegdash.bids_eeg_metadata.html#eegdash.bids_eeg_metadata.participants_row_for_subject"><code class="docutils literal notranslate"><span class="pre">participants_row_for_subject()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="eegdash.const.html">eegdash.const module</a></li>
@@ -662,6 +667,15 @@
 <li class="toctree-l4"><a class="reference internal" href="eegdash.data_utils.html#eegdash.data_utils.EEGDashBaseRaw"><code class="docutils literal notranslate"><span class="pre">EEGDashBaseRaw</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="eegdash.downloader.html">eegdash.downloader module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="eegdash.downloader.html#eegdash.downloader.download_dependencies"><code class="docutils literal notranslate"><span class="pre">download_dependencies()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="eegdash.downloader.html#eegdash.downloader.download_s3_file"><code class="docutils literal notranslate"><span class="pre">download_s3_file()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="eegdash.downloader.html#eegdash.downloader.get_s3_filesystem"><code class="docutils literal notranslate"><span class="pre">get_s3_filesystem()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="eegdash.downloader.html#eegdash.downloader.get_s3path"><code class="docutils literal notranslate"><span class="pre">get_s3path()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="eegdash.downloader.html#eegdash.downloader.load_eeg_from_s3"><code class="docutils literal notranslate"><span class="pre">load_eeg_from_s3()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="eegdash.logging.html">eegdash.logging module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="eegdash.mongodb.html">eegdash.mongodb module</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="eegdash.mongodb.html#eegdash.mongodb.MongoConnectionManager"><code class="docutils literal notranslate"><span class="pre">MongoConnectionManager</span></code></a></li>
 </ul>

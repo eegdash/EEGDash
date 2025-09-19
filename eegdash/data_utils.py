@@ -1,10 +1,8 @@
 import io
 import json
-import logging
 import os
 import re
 import traceback
-import warnings
 from contextlib import redirect_stderr
 from pathlib import Path
 from typing import Any
@@ -13,9 +11,7 @@ import mne
 import mne_bids
 import numpy as np
 import pandas as pd
-import s3fs
 from bids import BIDSLayout
-from fsspec.callbacks import TqdmCallback
 from joblib import Parallel, delayed
 from mne._fiff.utils import _read_segments_file
 from mne.io import BaseRaw
@@ -23,9 +19,10 @@ from mne_bids import BIDSPath
 
 from braindecode.datasets import BaseDataset
 
+from . import downloader
+from .bids_eeg_metadata import enrich_from_participants
+from .logging import logger
 from .paths import get_default_cache_dir
-
-logger = logging.getLogger("eegdash")
 
 
 class EEGDashBaseDataset(BaseDataset):
@@ -73,6 +70,7 @@ class EEGDashBaseDataset(BaseDataset):
         # Compute a dataset folder name under cache_dir that encodes preprocessing
         # (e.g., bdf, mini) to avoid overlapping with the original dataset cache.
         self.dataset_folder = record.get("dataset", "")
+        # TODO: remove this hack when competition is over
         if s3_bucket:
             suffixes: list[str] = []
             bucket_lower = str(s3_bucket).lower()
@@ -91,6 +89,7 @@ class EEGDashBaseDataset(BaseDataset):
             rel = Path(self.dataset_folder) / rel
         self.filecache = self.cache_dir / rel
         self.bids_root = self.cache_dir / self.dataset_folder
+
         self.bidspath = BIDSPath(
             root=self.bids_root,
             datatype="eeg",
@@ -98,112 +97,17 @@ class EEGDashBaseDataset(BaseDataset):
             **self.bids_kwargs,
         )
 
-        self.s3file = self._get_s3path(record["bidspath"])
+        self.s3file = downloader.get_s3path(self.s3_bucket, record["bidspath"])
         self.bids_dependencies = record["bidsdependencies"]
-        # Temporary fix for BIDS dependencies path
-        # just to release to the competition
+        self.bids_dependencies_original = record["bidsdependencies"]
+        # TODO: removing temporary fix for BIDS dependencies path
+        # when the competition is over and dataset is digested properly
         if not self.s3_open_neuro:
-            self.bids_dependencies_original = self.bids_dependencies
             self.bids_dependencies = [
                 dep.split("/", 1)[1] for dep in self.bids_dependencies
             ]
 
         self._raw = None
-
-    def _get_s3path(self, filepath: str) -> str:
-        """Helper to form an AWS S3 URI for the given relative filepath."""
-        return f"{self.s3_bucket}/{filepath}"
-
-    def _download_s3(self) -> None:
-        """Download function that gets the raw EEG data from S3."""
-        filesystem = s3fs.S3FileSystem(
-            anon=True, client_kwargs={"region_name": "us-east-2"}
-        )
-        if not self.s3_open_neuro:
-            self.s3file = re.sub(r"(^|/)ds\d{6}/", r"\1", self.s3file, count=1)
-            if self.s3file.endswith(".set"):
-                self.s3file = self.s3file[:-4] + ".bdf"
-                self.filecache = self.filecache.with_suffix(".bdf")
-
-        self.filecache.parent.mkdir(parents=True, exist_ok=True)
-        info = filesystem.info(self.s3file)
-        size = info.get("size") or info.get("Size")
-
-        callback = TqdmCallback(
-            size=size,
-            tqdm_kwargs=dict(
-                desc=f"Downloading {Path(self.s3file).name}",
-                unit="B",
-                unit_scale=True,
-                unit_divisor=1024,
-                dynamic_ncols=True,
-                leave=True,
-                mininterval=0.2,
-                smoothing=0.1,
-                miniters=1,
-                bar_format="{desc}: {percentage:3.0f}%|{bar}| {n_fmt}/{total_fmt} "
-                "[{elapsed}<{remaining}, {rate_fmt}]",
-            ),
-        )
-        filesystem.get(self.s3file, self.filecache, callback=callback)
-
-        self.filenames = [self.filecache]
-
-    def _download_dependencies(self) -> None:
-        """Download all BIDS dependency files (metadata files, recording sidecar files)
-        from S3 and cache them locally.
-        """
-        filesystem = s3fs.S3FileSystem(
-            anon=True, client_kwargs={"region_name": "us-east-2"}
-        )
-        for i, dep in enumerate(self.bids_dependencies):
-            if not self.s3_open_neuro:
-                # fix this when our bucket is integrated into the
-                # mongodb
-                # if the file have ".set" replace to ".bdf"
-                if dep.endswith(".set"):
-                    dep = dep[:-4] + ".bdf"
-
-            s3path = self._get_s3path(dep)
-            if not self.s3_open_neuro:
-                dep = self.bids_dependencies_original[i]
-
-            dep_path = Path(dep)
-            if dep_path.parts and dep_path.parts[0] == self.record.get("dataset"):
-                dep_local = Path(self.dataset_folder, *dep_path.parts[1:])
-            else:
-                dep_local = Path(self.dataset_folder) / dep_path
-            filepath = self.cache_dir / dep_local
-            if not self.s3_open_neuro:
-                if filepath.suffix == ".set":
-                    filepath = filepath.with_suffix(".bdf")
-                if self.filecache.suffix == ".set":
-                    self.filecache = self.filecache.with_suffix(".bdf")
-
-            # here, we download the dependency and it is fine
-            # in the case of the competition.
-            if not filepath.exists():
-                filepath.parent.mkdir(parents=True, exist_ok=True)
-                info = filesystem.info(s3path)
-                size = info.get("size") or info.get("Size")
-
-                callback = TqdmCallback(
-                    size=size,
-                    tqdm_kwargs=dict(
-                        desc=f"Downloading {Path(s3path).name}",
-                        unit="B",
-                        unit_scale=True,
-                        unit_divisor=1024,
-                        dynamic_ncols=True,
-                        leave=True,
-                        mininterval=0.2,
-                        smoothing=0.1,
-                        miniters=1,
-                        bar_format="{desc}: {percentage:3.0f}%|{bar}| {n_fmt}/{total_fmt} "
-                        "[{elapsed}<{remaining}, {rate_fmt}]",
-                    ),
-                )
-                filesystem.get(s3path, filepath, callback=callback)
 
     def _get_raw_bids_args(self) -> dict[str, Any]:
         """Helper to restrict the metadata record to the fields needed to locate a BIDS
@@ -222,130 +126,43 @@ class EEGDashBaseDataset(BaseDataset):
 
         if not os.path.exists(self.filecache):  # not preload
             if self.bids_dependencies:
-                self._download_dependencies()
-            self._download_s3()
+                downloader.download_dependencies(
+                    s3_bucket=self.s3_bucket,
+                    bids_dependencies=self.bids_dependencies,
+                    bids_dependencies_original=self.bids_dependencies_original,
+                    cache_dir=self.cache_dir,
+                    dataset_folder=self.dataset_folder,
+                    record=self.record,
+                    s3_open_neuro=self.s3_open_neuro,
+                )
+            self.filecache = downloader.download_s3_file(
+                self.s3file, self.filecache, self.s3_open_neuro
+            )
+            self.filenames = [self.filecache]
         if self._raw is None:
-            # capturing any warnings
-            # to-do: remove this once is fixed on the mne-bids side.
-            with warnings.catch_warnings(record=True) as w:
-                # Ensure all warnings are captured into 'w' and not shown to users
-                warnings.simplefilter("always")
-                try:
-                    # mne-bids emits RuntimeWarnings to stderr; silence stderr during read
-                    _stderr_buffer = io.StringIO()
-                    with redirect_stderr(_stderr_buffer):
-                        self._raw = mne_bids.read_raw_bids(
-                            bids_path=self.bidspath, verbose="ERROR"
-                        )
-                    # Parse unmapped participants.tsv fields reported by mne-bids and
-                    # inject them into Raw.info and the dataset description generically.
-                    extras = self._extract_unmapped_participants_from_warnings(w)
-                    if extras:
-                        # 1) Attach to Raw.info under subject_info.participants_extras
-                        try:
-                            subject_info = self._raw.info.get("subject_info") or {}
-                            if not isinstance(subject_info, dict):
-                                subject_info = {}
-                            pe = subject_info.get("participants_extras") or {}
-                            if not isinstance(pe, dict):
-                                pe = {}
-                            # Merge without overwriting
-                            for k, v in extras.items():
-                                pe.setdefault(k, v)
-                            subject_info["participants_extras"] = pe
-                            self._raw.info["subject_info"] = subject_info
-                        except Exception:
-                            # Non-fatal; continue
-                            pass
-
-                        # 2) Also add to this dataset's description, if possible, so
-                        #    targets can be selected later without naming specifics.
-                        try:
-                            if isinstance(self.description, dict):
-                                for k, v in extras.items():
-                                    self.description.setdefault(k, v)
-                            elif isinstance(self.description, pd.Series):
-                                for k, v in extras.items():
-                                    if k not in self.description.index:
-                                        self.description.loc[k] = v
-                        except Exception:
-                            pass
-                except Exception as e:
-                    logger.error(
-                        f"Error while reading BIDS file: {self.bidspath}\n"
-                        "This may be due to a missing or corrupted file.\n"
-                        "Please check the file and try again."
+            try:
+                # mne-bids can emit noisy warnings to stderr; keep user logs clean
+                _stderr_buffer = io.StringIO()
+                with redirect_stderr(_stderr_buffer):
+                    self._raw = mne_bids.read_raw_bids(
+                        bids_path=self.bidspath, verbose="ERROR"
                     )
-                    logger.error(f"Exception: {e}")
-                    logger.error(traceback.format_exc())
-                    raise e
-                # Filter noisy mapping notices from mne-bids; surface others
-                for captured_warning in w:
-                    try:
-                        msg = str(captured_warning.message)
-                    except Exception:
-                        continue
-                    # Suppress verbose participants mapping messages
-                    if "Unable to map the following column" in msg and "MNE" in msg:
-                        logger.debug(
-                            "Suppressed mne-bids mapping warning while reading BIDS file: %s",
-                            msg,
-                        )
-                        continue
+                # Enrich Raw.info and description with participants.tsv extras
+                enrich_from_participants(
+                    self.bids_root, self.bidspath, self._raw, self.description
+                )
 
-    def _extract_unmapped_participants_from_warnings(
-        self, warnings_list: list[Any]
-    ) -> dict[str, Any]:
-        """Scan captured warnings from mne-bids and extract unmapped participants.tsv
-        entries in a generic way.
-
-        Optionally, the column name can carry a note in parentheses that we ignore
-        for key/value extraction. Returns a mapping of column name -> raw value.
-        """
-        extras: dict[str, Any] = {}
-        header = "Unable to map the following column(s) to MNE:"
-        for wr in warnings_list:
-            try:
-                msg = str(wr.message)
-            except Exception:
-                continue
-            if header not in msg:
-                continue
-            lines = msg.splitlines()
-            # Find the header line, then parse subsequent lines as entries
-            try:
-                idx = next(i for i, ln in enumerate(lines) if header in ln)
-            except StopIteration:
-                idx = -1
-            for line in lines[idx + 1 :]:
-                line = line.strip()
-                if not line:
-                    continue
-                # Pattern:  <col>(optional note): <value>
-                # Examples: "gender: F", "Ethnicity: Indian", "foo (ignored): bar"
-                m = re.match(r"^([^:]+?)(?:\s*\([^)]*\))?\s*:\s*(.*)$", line)
-                if not m:
-                    continue
-                col = m.group(1).strip()
-                val = m.group(2).strip()
-                # Keep original column names as provided to stay agnostic
-                if col and col not in extras:
-                    extras[col] = val
-        return extras
-
-    # === BaseDataset and PyTorch Dataset interface ===
-
-    def __getitem__(self, index):
-        """Main function to access a sample from the dataset."""
-        X = self.raw[:, index][0]
-        y = None
-        if self.target_name is not None:
-            y = self.description[self.target_name]
-        if isinstance(y, pd.Series):
-            y = y.to_list()
-        if self.transform is not None:
-            X = self.transform(X)
-        return X, y
+            except Exception as e:
+                logger.error(
+                    f"Error while reading BIDS file: {self.bidspath}\n"
+                    "This may be due to a missing or corrupted file.\n"
+                    "Please check the file and try again.\n"
+                    "Usually erasing the local cache and re-downloading helps.\n"
+                    f"`rm {self.bidspath}`"
+                )
+                logger.error(f"Exception: {e}")
+                logger.error(traceback.format_exc())
+                raise e
 
     def __len__(self) -> int:
         """Return the number of samples in the dataset."""
@@ -426,13 +243,16 @@ class EEGDashBaseRaw(BaseRaw):
             ch_types.append(chtype)
         info = mne.create_info(ch_names=ch_names, sfreq=sfreq, ch_types=ch_types)
 
-        self.s3file = self._get_s3path(input_fname)
+        self.s3file = downloader.get_s3path(self._AWS_BUCKET, input_fname)
         self.cache_dir = Path(cache_dir) if cache_dir else get_default_cache_dir()
         self.filecache = self.cache_dir / input_fname
         self.bids_dependencies = bids_dependencies
 
         if preload and not os.path.exists(self.filecache):
-            self._download_s3()
+            self.filecache = downloader.download_s3_file(
+                self.s3file, self.filecache, self.s3_open_neuro
+            )
+            self.filenames = [self.filecache]
             preload = self.filecache
 
         super().__init__(
@@ -443,35 +263,24 @@ class EEGDashBaseRaw(BaseRaw):
             verbose=verbose,
         )
 
-    def _get_s3path(self, filepath):
-        return f"{self._AWS_BUCKET}/{filepath}"
-
-    def _download_s3(self) -> None:
-        self.filecache.parent.mkdir(parents=True, exist_ok=True)
-        filesystem = s3fs.S3FileSystem(
-            anon=True, client_kwargs={"region_name": "us-east-2"}
-        )
-        filesystem.download(self.s3file, self.filecache)
-        self.filenames = [self.filecache]
-
-    def _download_dependencies(self):
-        filesystem = s3fs.S3FileSystem(
-            anon=True, client_kwargs={"region_name": "us-east-2"}
-        )
-        for dep in self.bids_dependencies:
-            s3path = self._get_s3path(dep)
-            filepath = self.cache_dir / dep
-            if not filepath.exists():
-                filepath.parent.mkdir(parents=True, exist_ok=True)
-                filesystem.download(s3path, filepath)
-
     def _read_segment(
         self, start=0, stop=None, sel=None, data_buffer=None, *, verbose=None
     ):
         if not os.path.exists(self.filecache):  # not preload
-            if self.bids_dependencies:
-                self._download_dependencies()
-            self._download_s3()
+            if self.bids_dependencies:  # this is use only to sidecars for now
+                downloader.download_dependencies(
+                    s3_bucket=self._AWS_BUCKET,
+                    bids_dependencies=self.bids_dependencies,
+                    bids_dependencies_original=None,
+                    cache_dir=self.cache_dir,
+                    dataset_folder=self.filecache,
+                    record={},
+                    s3_open_neuro=self.s3_open_neuro,
+                )
+            self.filecache = downloader.download_s3_file(
+                self.s3file, self.filecache, self.s3_open_neuro
+            )
+            self.filenames = [self.filecache]
         else:  # not preload and file is not cached
             self.filenames = [self.filecache]
         return super()._read_segment(start, stop, sel, data_buffer, verbose=verbose)

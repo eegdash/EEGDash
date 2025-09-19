@@ -2,7 +2,8 @@
 pip install -r requirements.txt
 
 pip uninstall eegdash -y
-python -m pip install --editable /Users/arno/Python/EEG-Dash-Data
+python -m pip install --editable .
+
 # Warning use the exact command above, pip install by itself might not work
 
 ### check if working from different folders

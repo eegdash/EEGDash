@@ -51,7 +51,30 @@ jobs:
                 output.write(f"{key}={path}\n")
     # Cache MNE Data
     # Cache key incorporates the consolidated dataset manifest so new datasets refresh automatically.
-    - name: Create/Restore EEGDash Cache (workspace)
+    - name: Restore EEGDash Cache (pull_request)
+      if: github.event_name == 'pull_request'
+      id: cache-mne_data-restore
+      uses: actions/cache@v4
+      with:
+        path: |
+          ${{ steps.cache-paths.outputs.primary }}
+          ${{ steps.cache-paths.outputs.home_dot }}
+          ${{ steps.cache-paths.outputs.workspace }}
+          ${{ steps.cache-paths.outputs.mne_data }}
+        # Cache includes dataset manifest hash so new datasets invalidate once automatically.
+        key: ${{ runner.os }}-data-${{ github.head_ref || github.ref_name }}-${{ hashFiles('consolidated/datasets_consolidated.json') }}-v2
+        restore-keys: |
+          ${{ runner.os }}-data-${{ github.base_ref || github.ref_name }}-${{ hashFiles('consolidated/datasets_consolidated.json') }}-
+          ${{ runner.os }}-data-develop-${{ hashFiles('consolidated/datasets_consolidated.json') }}-
+          ${{ runner.os }}-data-main-${{ hashFiles('consolidated/datasets_consolidated.json') }}-
+          ${{ runner.os }}-data-${{ github.base_ref || github.ref_name }}-
+          ${{ runner.os }}-data-develop-
+          ${{ runner.os }}-data-main-
+          ${{ runner.os }}-data-
+        lookup-only: true
+
+    - name: Create/Restore EEGDash Cache (push)
+      if: github.event_name != 'pull_request'
       id: cache-mne_data
       uses: actions/cache@v4
       with:
@@ -61,8 +84,14 @@ jobs:
           ${{ steps.cache-paths.outputs.workspace }}
           ${{ steps.cache-paths.outputs.mne_data }}
         # Cache includes dataset manifest hash so new datasets invalidate once automatically.
-        key: ${{ runner.os }}-data-${{ hashFiles('consolidated/datasets_consolidated.json') }}-v1
+        key: ${{ runner.os }}-data-${{ github.head_ref || github.ref_name }}-${{ hashFiles('consolidated/datasets_consolidated.json') }}-v2
         restore-keys: |
+          ${{ runner.os }}-data-${{ github.base_ref || github.ref_name }}-${{ hashFiles('consolidated/datasets_consolidated.json') }}-
+          ${{ runner.os }}-data-develop-${{ hashFiles('consolidated/datasets_consolidated.json') }}-
+          ${{ runner.os }}-data-main-${{ hashFiles('consolidated/datasets_consolidated.json') }}-
+          ${{ runner.os }}-data-${{ github.base_ref || github.ref_name }}-
+          ${{ runner.os }}-data-develop-
+          ${{ runner.os }}-data-main-
           ${{ runner.os }}-data-
 
     - name: Install uv and set the python version

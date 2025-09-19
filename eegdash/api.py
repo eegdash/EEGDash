@@ -35,6 +35,7 @@ from .data_utils import (
 from .logging import logger
 from .mongodb import MongoConnectionManager
 from .paths import get_default_cache_dir
+from .utils import _init_mongo_client
 
 
 class EEGDash:
@@ -72,11 +73,22 @@ class EEGDash:
 
         if self.is_public:
             DB_CONNECTION_STRING = mne.utils.get_config("EEGDASH_DB_URI")
+            if not DB_CONNECTION_STRING:
+                try:
+                    _init_mongo_client()
+                    DB_CONNECTION_STRING = mne.utils.get_config("EEGDASH_DB_URI")
+                except Exception:
+                    DB_CONNECTION_STRING = None
         else:
             load_dotenv()
             DB_CONNECTION_STRING = os.getenv("DB_CONNECTION_STRING")
 
         # Use singleton to get MongoDB client, database, and collection
+        if not DB_CONNECTION_STRING:
+            raise RuntimeError(
+                "No MongoDB connection string configured. Set MNE config 'EEGDASH_DB_URI' "
+                "or environment variable 'DB_CONNECTION_STRING'."
+            )
         self.__client, self.__db, self.__collection = MongoConnectionManager.get_client(
             DB_CONNECTION_STRING, is_staging
         )
@@ -443,8 +455,11 @@ class EEGDash:
         except ValueError as e:
             logger.error("Validation error for record: %s ", record["data_name"])
             logger.error(e)
-        except:
-            logger.error("Error adding record: %s ", record["data_name"])
+        except Exception as exc:
+            logger.error(
+                "Error adding record: %s ", record.get("data_name", "<unknown>")
+            )
+            logger.debug("Add operation failed", exc_info=exc)
 
     def _update_request(self, record: dict):
         """Internal helper method to create a MongoDB update request for a record."""
@@ -463,8 +478,11 @@ class EEGDash:
             self.__collection.update_one(
                 {"data_name": record["data_name"]}, {"$set": record}
             )
-        except:  # silent failure
-            logger.error("Error updating record: %s", record["data_name"])
+        except Exception as exc:  # log and continue
+            logger.error(
+                "Error updating record: %s", record.get("data_name", "<unknown>")
+            )
+            logger.debug("Update operation failed", exc_info=exc)
 
     def exists(self, query: dict[str, Any]) -> bool:
         """Alias for :meth:`exist` provided for API clarity."""
@@ -617,7 +635,7 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
         self.records = records
         self.download = download
         self.n_jobs = n_jobs
-        self.eeg_dash_instance = eeg_dash_instance or EEGDash()
+        self.eeg_dash_instance = eeg_dash_instance
 
         # Resolve a unified cache directory across code/tests/CI
         self.cache_dir = Path(cache_dir or get_default_cache_dir())
@@ -748,7 +766,8 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
                     )
                 )
         elif self.query:
-            # This is the DB query path that we are improving
+            if self.eeg_dash_instance is None:
+                self.eeg_dash_instance = EEGDash()
             datasets = self._find_datasets(
                 query=build_query_from_kwargs(**self.query),
                 description_fields=description_fields,

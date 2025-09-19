@@ -1,11 +1,9 @@
-import logging
-
 import mne
 import numpy as np
 
 from braindecode.preprocessing import Preprocessor
 
-logger = logging.getLogger("eegdash")
+from ..logging import logger
 
 
 class hbn_ec_ec_reannotation(Preprocessor):

@@ -5,35 +5,23 @@ import pytest
 
 from eegdash.dataset.dataset import EEGChallengeDataset
 
-# Shared cache directory constant for all tests in the suite.
-EEG_CHALLENGE_CACHE_DIR = (
-    Path.home() / "mne_data" / "eeg_challenge_cache" / "mini"
-).resolve()
-EEG_CHALLENGE_CACHE_DIR.mkdir(parents=True, exist_ok=True)
-
 
 @pytest.fixture(scope="session")
-def warmed_mongo():
+def warmed_mongo(cache_dir: Path):
     """Skip tests gracefully if Mongo is not reachable."""
     try:
         # Lazy import to avoid circulars; constructing EEGChallengeDataset will touch DB
-        _ = EEGChallengeDataset(
-            release="R5", mini=True, cache_dir=EEG_CHALLENGE_CACHE_DIR
-        )
+        _ = EEGChallengeDataset(release="R5", mini=True, cache_dir=cache_dir)
     except Exception:
         pytest.skip("Mongo not reachable")
 
 
-def test_minirelease_vs_full_counts_and_subjects(warmed_mongo):
+def test_minirelease_vs_full_counts_and_subjects(warmed_mongo, cache_dir: Path):
     """Mini release should have fewer files and (typically) fewer subjects than full release."""
     release = "R5"
 
-    ds_mini = EEGChallengeDataset(
-        release=release, mini=True, cache_dir=EEG_CHALLENGE_CACHE_DIR
-    )
-    ds_full = EEGChallengeDataset(
-        release=release, mini=False, cache_dir=EEG_CHALLENGE_CACHE_DIR
-    )
+    ds_mini = EEGChallengeDataset(release=release, mini=True, cache_dir=cache_dir)
+    ds_full = EEGChallengeDataset(release=release, mini=False, cache_dir=cache_dir)
 
     # File count: mini must be strictly smaller than full
     assert len(ds_mini.datasets) < len(ds_full.datasets)
@@ -45,24 +33,22 @@ def test_minirelease_vs_full_counts_and_subjects(warmed_mongo):
     assert subj_mini < subj_full
 
 
-def test_minirelease_subject_raw_equivalence(warmed_mongo):
+def test_minirelease_subject_raw_equivalence(warmed_mongo, cache_dir: Path):
     """For a subject present in the mini set, loading that subject in mini vs full yields identical raw data."""
     release = "R5"
 
     # Pick a concrete subject from the mini set to avoid guessing
-    ds_mini_all = EEGChallengeDataset(
-        release=release, mini=True, cache_dir=EEG_CHALLENGE_CACHE_DIR
-    )
+    ds_mini_all = EEGChallengeDataset(release=release, mini=True, cache_dir=cache_dir)
     assert len(ds_mini_all.datasets) > 0
     subject = ds_mini_all.description["subject"].iloc[0]
 
     ds_mini = EEGChallengeDataset(
         release=release,
         mini=True,
-        cache_dir=EEG_CHALLENGE_CACHE_DIR,
+        cache_dir=cache_dir,
     )
     ds_full = EEGChallengeDataset(
-        release=release, mini=False, cache_dir=EEG_CHALLENGE_CACHE_DIR, subject=subject
+        release=release, mini=False, cache_dir=cache_dir, subject=subject
     )
 
     assert len(ds_mini.datasets) > 0
@@ -100,12 +86,10 @@ def test_minirelease_subject_raw_equivalence(warmed_mongo):
     )
 
 
-def test_minirelease_consume_everything(warmed_mongo):
+def test_minirelease_consume_everything(warmed_mongo, cache_dir: Path):
     """Simply try to load all data in the mini release to catch any errors."""
     release = "R5"
-    ds_mini = EEGChallengeDataset(
-        release=release, mini=True, cache_dir=EEG_CHALLENGE_CACHE_DIR
-    )
+    ds_mini = EEGChallengeDataset(release=release, mini=True, cache_dir=cache_dir)
 
     for dataset in ds_mini.datasets:
         raw = dataset.raw  # noqa: F841

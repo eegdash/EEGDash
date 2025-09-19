@@ -2,10 +2,9 @@ from pathlib import Path
 
 from eegdash.const import RELEASE_TO_OPENNEURO_DATASET_MAP
 from eegdash.dataset.dataset import EEGChallengeDataset
-from eegdash.paths import get_default_cache_dir
 
 
-def test_offline_real_data_end_to_end():
+def test_offline_real_data_end_to_end(cache_dir: Path):
     """Use real data like in the tutorial: prefetch (online) then go offline.
 
     - Prefetch via EEGChallengeDataset (mini release) to the user cache
@@ -14,8 +13,6 @@ def test_offline_real_data_end_to_end():
     """
     release = "R2"
     _ = RELEASE_TO_OPENNEURO_DATASET_MAP[release]
-    cache_dir = Path(get_default_cache_dir())
-    cache_dir.mkdir(parents=True, exist_ok=True)
 
     # Online: construct challenge dataset (mini) and prefetch first subject
     # Limit to a single subject to keep the test lean
@@ -53,12 +50,10 @@ def test_offline_real_data_end_to_end():
         assert col in ds_offline.description.columns
 
 
-def test_offline_real_bidspath_and_cache_suffix():
+def test_offline_real_bidspath_and_cache_suffix(cache_dir: Path):
     """Verify bidspath root and local cache folder for real data (tutorial style)."""
     release = "R2"
     dataset_id = RELEASE_TO_OPENNEURO_DATASET_MAP[release]
-    cache_dir = Path(get_default_cache_dir())
-    cache_dir.mkdir(parents=True, exist_ok=True)
 
     subject_id = "NDARAB793GL3"
     ds_offline = EEGChallengeDataset(
@@ -77,11 +72,9 @@ def test_offline_real_bidspath_and_cache_suffix():
     assert base.bids_root == cache_dir / f"{dataset_id}-bdf-mini"
 
 
-def test_offline_real_records_description_shape():
+def test_offline_real_records_description_shape(cache_dir: Path):
     """Reconstruct from records and compare description row counts (tutorial-like)."""
     release = "R2"
-    cache_dir = Path(get_default_cache_dir())
-    cache_dir.mkdir(parents=True, exist_ok=True)
 
     subject_id = "NDARAB793GL3"
     ds_offline = EEGChallengeDataset(
@@ -102,15 +95,13 @@ def test_offline_real_records_description_shape():
     assert ds_offline.description.shape[0] == ds_from_records.description.shape[0]
 
 
-def test_online_vs_records_vs_offline_single_subject():
+def test_online_vs_records_vs_offline_single_subject(cache_dir: Path):
     """Compare online vs records-injection vs offline for a single subject.
 
     Ensures consistent row counts and identical raw data shapes across modes.
     """
     release = "R2"
     subject_id = "NDARAB793GL3"
-    cache_dir = Path(get_default_cache_dir())
-    cache_dir.mkdir(parents=True, exist_ok=True)
 
     # Online for a single subject, and prefetch raw
     ds_online = EEGChallengeDataset(

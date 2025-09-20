@@ -123,12 +123,12 @@ class EEGChallengeDataset(EEGDashDataset):
 
         message_text = Text.from_markup(
             "This object loads the HBN dataset that has been preprocessed for the EEG Challenge:\n"
-            "  • Downsampled from 500Hz to 100Hz\n"
-            "  • Bandpass filtered (0.5–50 Hz)\n\n"
+            "  * Downsampled from 500Hz to 100Hz\n"
+            "  * Bandpass filtered (0.5-50 Hz)\n\n"
             "For full preprocessing applied for competition details, see:\n"
             "  [link=https://github.com/eeg2025/downsample-datasets]https://github.com/eeg2025/downsample-datasets[/link]\n\n"
             "The HBN dataset have some preprocessing applied by the HBN team:\n"
-            "  • Re-reference (Cz Channel)\n\n"
+            "  * Re-reference (Cz Channel)\n\n"
             "[bold red]IMPORTANT[/bold red]: The data accessed via `EEGChallengeDataset` is [u]NOT[/u] identical to what you get from [link=https://github.com/sccn/EEGDash/blob/develop/eegdash/api.py]EEGDashDataset[/link] directly.\n"
             "If you are participating in the competition, always use `EEGChallengeDataset` to ensure consistency with the challenge data."
         )

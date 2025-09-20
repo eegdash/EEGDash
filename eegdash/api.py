@@ -693,9 +693,10 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
                 "[bold]EEG 2025 Competition Data Notice![/bold]\n"
                 "You are loading one of the datasets that is used in competition, but via `EEGDashDataset`.\n\n"
                 "[bold red]IMPORTANT[/bold red]: \n"
-                "If you download data from `EEGDashDataset`, it is [u]NOT[/u] identical to the official competition data, which is accessed via `EEGChallengeDataset`. "
+                "If you download data from `EEGDashDataset`, it is [u]NOT[/u] identical to the official \n"
+                "competition data, which is accessed via `EEGChallengeDataset`. "
                 "The competition data has been downsampled and filtered.\n\n"
-                "[bold]If you are participating in the competition, you must use the `EEGChallengeDataset` object to ensure consistency.[/bold] \n\n"
+                "[bold]If you are participating in the competition, \nyou must use the `EEGChallengeDataset` object to ensure consistency.[/bold] \n\n"
                 "If you are not participating in the competition, you can ignore this message."
             )
             warning_panel = Panel(

@@ -1,20 +1,24 @@
-import logging
 import re
 from pathlib import Path
 from typing import Any
+
+import pandas as pd
 
 from mne_bids import BIDSPath
 
 from .const import ALLOWED_QUERY_FIELDS
 from .const import config as data_config
-
-logger = logging.getLogger("eegdash")
+from .logging import logger
 
 __all__ = [
     "build_query_from_kwargs",
     "load_eeg_attrs_from_bids_file",
     "merge_participants_fields",
     "normalize_key",
+    "participants_row_for_subject",
+    "participants_extras_from_tsv",
+    "attach_participants_extras",
+    "enrich_from_participants",
 ]
 
 
@@ -251,3 +255,123 @@ def merge_participants_fields(
         if norm_key not in description:
             description[norm_key] = part_value
     return description
+
+
+def participants_row_for_subject(
+    bids_root: str | Path,
+    subject: str,
+    id_columns: tuple[str, ...] = ("participant_id", "participant", "subject"),
+) -> pd.Series | None:
+    """Load participants.tsv and return the row for a subject.
+
+    - Accepts either "01" or "sub-01" as the subject identifier.
+    - Returns a pandas Series for the first matching row, or None if not found.
+    """
+    try:
+        participants_tsv = Path(bids_root) / "participants.tsv"
+        if not participants_tsv.exists():
+            return None
+
+        df = pd.read_csv(
+            participants_tsv, sep="\t", dtype="string", keep_default_na=False
+        )
+        if df.empty:
+            return None
+
+        candidates = {str(subject), f"sub-{subject}"}
+        present_cols = [c for c in id_columns if c in df.columns]
+        if not present_cols:
+            return None
+
+        mask = pd.Series(False, index=df.index)
+        for col in present_cols:
+            mask |= df[col].isin(candidates)
+        match = df.loc[mask]
+        if match.empty:
+            return None
+        return match.iloc[0]
+    except Exception:
+        return None
+
+
+def participants_extras_from_tsv(
+    bids_root: str | Path,
+    subject: str,
+    *,
+    id_columns: tuple[str, ...] = ("participant_id", "participant", "subject"),
+    na_like: tuple[str, ...] = ("", "n/a", "na", "nan", "unknown", "none"),
+) -> dict[str, Any]:
+    """Return non-identifier, non-empty participants.tsv fields for a subject.
+
+    Uses vectorized pandas operations to drop id columns and NA-like values.
+    """
+    row = participants_row_for_subject(bids_root, subject, id_columns=id_columns)
+    if row is None:
+        return {}
+
+    # Drop identifier columns and clean values
+    extras = row.drop(labels=[c for c in id_columns if c in row.index], errors="ignore")
+    s = extras.astype("string").str.strip()
+    valid = ~s.isna() & ~s.str.lower().isin(na_like)
+    return s[valid].to_dict()
+
+
+def attach_participants_extras(
+    raw: Any,
+    description: Any,
+    extras: dict[str, Any],
+) -> None:
+    """Attach extras to Raw.info and dataset description without overwriting.
+
+    - Adds to ``raw.info['subject_info']['participants_extras']``.
+    - Adds to ``description`` if dict or pandas Series (only missing keys).
+    """
+    if not extras:
+        return
+
+    # Raw.info enrichment
+    try:
+        subject_info = raw.info.get("subject_info") or {}
+        if not isinstance(subject_info, dict):
+            subject_info = {}
+        pe = subject_info.get("participants_extras") or {}
+        if not isinstance(pe, dict):
+            pe = {}
+        for k, v in extras.items():
+            pe.setdefault(k, v)
+        subject_info["participants_extras"] = pe
+        raw.info["subject_info"] = subject_info
+    except Exception:
+        pass
+
+    # Description enrichment
+    try:
+        import pandas as _pd  # local import to avoid hard dependency at import time
+
+        if isinstance(description, dict):
+            for k, v in extras.items():
+                description.setdefault(k, v)
+        elif isinstance(description, _pd.Series):
+            missing = [k for k in extras.keys() if k not in description.index]
+            if missing:
+                description.loc[missing] = [extras[m] for m in missing]
+    except Exception:
+        pass
+
+
+def enrich_from_participants(
+    bids_root: str | Path,
+    bidspath: BIDSPath,
+    raw: Any,
+    description: Any,
+) -> dict[str, Any]:
+    """Convenience wrapper: read participants.tsv and attach extras for this subject.
+
+    Returns the extras dictionary for further use if needed.
+    """
+    subject = getattr(bidspath, "subject", None)
+    if not subject:
+        return {}
+    extras = participants_extras_from_tsv(bids_root, subject)
+    attach_participants_extras(raw, description, extras)
+    return extras

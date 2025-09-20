@@ -11,7 +11,9 @@ help:
 
 .PHONY: apidoc
 apidoc:
-	@python -m sphinx.ext.apidoc -o "$(APIDIR)" "../$(PKG)" -f -e -M
+	# Generate API docs using the top-level package so modules are importable
+	# as eegdash.* instead of an unimportable bare 'dataset.*'
+	@python -m sphinx.ext.apidoc -o "$(APIDIR)/dataset" "../$(PKG)" -f -e -M
 
 # Standard build runs examples
 html: apidoc

@@ -14,9 +14,6 @@ on:
 jobs:
   test:
     runs-on: ${{ matrix.os }}
-    env:
-      EEGDASH_CACHE_DIR: ${{ github.workspace }}/.eegdash_cache
-      MNE_DATA: ${{ github.workspace }}/.eegdash_cache
     strategy:
       fail-fast: false
       matrix:
@@ -26,18 +23,75 @@ jobs:
     ## Install Braindecode
     - name: Checking Out Repository
       uses: actions/checkout@v4
+    - name: Configure dataset cache paths
+      id: cache-paths
+      shell: python
+      run: |
+        import os
+        from pathlib import Path
+
+        home = Path.home()
+        workspace = Path(os.environ["GITHUB_WORKSPACE"]).resolve()
+        candidates = {
+            "primary": home / "eegdash_cache",
+            "home_dot": home / ".eegdash_cache",
+            "workspace": workspace / ".eegdash_cache",
+            "mne_data": home / "mne_data",
+        }
+
+        for path in candidates.values():
+            path.mkdir(parents=True, exist_ok=True)
+
+        with open(os.environ["GITHUB_ENV"], "a", encoding="utf-8") as env_file:
+            env_file.write(f"EEGDASH_CACHE_DIR={candidates['primary']}\n")
+            env_file.write(f"MNE_DATA={candidates['primary']}\n")
+
+        with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as output:
+            for key, path in candidates.items():
+                output.write(f"{key}={path}\n")
     # Cache MNE Data
-    # The cache key here is fixed except for os
-    # so if you download a new mne dataset in the code, best to manually increment the key below
-    - name: Create/Restore EEGDash Cache (workspace)
+    # Cache key incorporates the consolidated dataset manifest so new datasets refresh automatically.
+    - name: Restore EEGDash Cache (pull_request)
+      if: github.event_name == 'pull_request'
+      id: cache-mne_data-restore
+      uses: actions/cache@v4
+      with:
+        path: |
+          ${{ steps.cache-paths.outputs.primary }}
+          ${{ steps.cache-paths.outputs.home_dot }}
+          ${{ steps.cache-paths.outputs.workspace }}
+          ${{ steps.cache-paths.outputs.mne_data }}
+        # Cache includes dataset manifest hash so new datasets invalidate once automatically.
+        key: ${{ runner.os }}-data-${{ github.head_ref || github.ref_name }}-${{ hashFiles('consolidated/datasets_consolidated.json') }}-v2
+        restore-keys: |
+          ${{ runner.os }}-data-${{ github.base_ref || github.ref_name }}-${{ hashFiles('consolidated/datasets_consolidated.json') }}-
+          ${{ runner.os }}-data-develop-${{ hashFiles('consolidated/datasets_consolidated.json') }}-
+          ${{ runner.os }}-data-main-${{ hashFiles('consolidated/datasets_consolidated.json') }}-
+          ${{ runner.os }}-data-${{ github.base_ref || github.ref_name }}-
+          ${{ runner.os }}-data-develop-
+          ${{ runner.os }}-data-main-
+          ${{ runner.os }}-data-
+        lookup-only: true
+
+    - name: Create/Restore EEGDash Cache (push)
+      if: github.event_name != 'pull_request'
       id: cache-mne_data
       uses: actions/cache@v4
       with:
-        path: ${{ env.EEGDASH_CACHE_DIR }}
-        # Use a stable key so caches can be reused across runs.
-        # Keep in sync with docs workflow; bump suffix to invalidate.
-        key: ${{ runner.os }}-data-v1
+        path: |
+          ${{ steps.cache-paths.outputs.primary }}
+          ${{ steps.cache-paths.outputs.home_dot }}
+          ${{ steps.cache-paths.outputs.workspace }}
+          ${{ steps.cache-paths.outputs.mne_data }}
+        # Cache includes dataset manifest hash so new datasets invalidate once automatically.
+        key: ${{ runner.os }}-data-${{ github.head_ref || github.ref_name }}-${{ hashFiles('consolidated/datasets_consolidated.json') }}-v2
         restore-keys: |
+          ${{ runner.os }}-data-${{ github.base_ref || github.ref_name }}-${{ hashFiles('consolidated/datasets_consolidated.json') }}-
+          ${{ runner.os }}-data-develop-${{ hashFiles('consolidated/datasets_consolidated.json') }}-
+          ${{ runner.os }}-data-main-${{ hashFiles('consolidated/datasets_consolidated.json') }}-
+          ${{ runner.os }}-data-${{ github.base_ref || github.ref_name }}-
+          ${{ runner.os }}-data-develop-
+          ${{ runner.os }}-data-main-
           ${{ runner.os }}-data-
 
     - name: Install uv and set the python version

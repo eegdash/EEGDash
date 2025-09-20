@@ -3,7 +3,6 @@ from pathlib import Path
 from typing import Any
 
 import pandas as pd
-
 from mne_bids import BIDSPath
 
 from .const import ALLOWED_QUERY_FIELDS

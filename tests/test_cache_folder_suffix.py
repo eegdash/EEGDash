@@ -32,28 +32,28 @@ def _dummy_record(dataset: str, ext: str = ".set") -> dict:
     "release,dataset_id",
     [("R5", "ds005509")],
 )
-def test_dataset_folder_suffixes(tmp_path: Path, release: str, dataset_id: str):
+def test_dataset_folder_suffixes(cache_dir: Path, release: str, dataset_id: str):
     # Baseline EEGDashDataset should use plain dataset folder
     rec = _dummy_record(dataset_id)
-    ds_plain = EEGDashDataset(cache_dir=tmp_path, records=[rec])
+    ds_plain = EEGDashDataset(cache_dir=cache_dir, records=[rec])
     base = ds_plain.datasets[0]
-    assert base.bids_root == tmp_path / dataset_id
-    assert str(base.filecache).startswith(str((tmp_path / dataset_id).resolve()))
+    assert base.bids_root == cache_dir / dataset_id
+    assert str(base.filecache).startswith(str((cache_dir / dataset_id).resolve()))
 
     # EEGChallengeDataset mini=True should suffix with -bdf-mini
-    ds_min = EEGChallengeDataset(release=release, cache_dir=tmp_path, records=[rec])
+    ds_min = EEGChallengeDataset(release=release, cache_dir=cache_dir, records=[rec])
     base_min = ds_min.datasets[0]
-    assert base_min.bids_root == tmp_path / f"{dataset_id}-bdf-mini"
+    assert base_min.bids_root == cache_dir / f"{dataset_id}-bdf-mini"
     assert str(base_min.filecache).startswith(
-        str((tmp_path / f"{dataset_id}-bdf-mini").resolve())
+        str((cache_dir / f"{dataset_id}-bdf-mini").resolve())
     )
 
     # EEGChallengeDataset mini=False should suffix with -bdf
     ds_full = EEGChallengeDataset(
-        release=release, cache_dir=tmp_path, mini=False, records=[rec]
+        release=release, cache_dir=cache_dir, mini=False, records=[rec]
     )
     base_full = ds_full.datasets[0]
-    assert base_full.bids_root == tmp_path / f"{dataset_id}-bdf"
+    assert base_full.bids_root == cache_dir / f"{dataset_id}-bdf"
     assert str(base_full.filecache).startswith(
-        str((tmp_path / f"{dataset_id}-bdf").resolve())
+        str((cache_dir / f"{dataset_id}-bdf").resolve())
     )

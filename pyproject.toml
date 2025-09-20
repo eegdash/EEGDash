@@ -36,7 +36,7 @@ classifiers = [
 ]
 dependencies = [
   "braindecode>=1.0",
-  "mne_bids>=0.16.0",
+  "mne_bids>=0.17.0",
   "numba",
   "numpy",
   "pandas",
@@ -52,6 +52,7 @@ dependencies = [
   "eeglabio",
   "tabulate",
   "docstring_inheritance",
+  "rich",
 ]
 
 [project.urls]

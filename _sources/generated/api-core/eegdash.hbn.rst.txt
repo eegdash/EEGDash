@@ -1,0 +1,14 @@
+﻿eegdash.hbn
+===========
+
+.. automodule:: eegdash.hbn
+
+   
+.. rubric:: Modules
+
+.. autosummary::
+   :toctree:
+   :recursive:
+
+   preprocessing
+   windows

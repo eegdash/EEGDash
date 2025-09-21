@@ -1,0 +1,12 @@
+eegdash.features.serialization
+==============================
+
+.. automodule:: eegdash.features.serialization
+
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      load_features_concat_dataset
+   

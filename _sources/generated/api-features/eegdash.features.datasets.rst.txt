@@ -1,0 +1,13 @@
+eegdash.features.datasets
+=========================
+
+.. automodule:: eegdash.features.datasets
+
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      FeaturesConcatDataset
+      FeaturesDataset
+   

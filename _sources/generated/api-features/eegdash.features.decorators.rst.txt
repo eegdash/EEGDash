@@ -1,0 +1,19 @@
+eegdash.features.decorators
+===========================
+
+.. automodule:: eegdash.features.decorators
+
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      bivariate_feature
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      FeatureKind
+      FeaturePredecessor
+   

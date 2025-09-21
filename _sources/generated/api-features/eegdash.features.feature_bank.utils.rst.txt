@@ -1,0 +1,14 @@
+eegdash.features.feature\_bank.utils
+====================================
+
+.. automodule:: eegdash.features.feature_bank.utils
+
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      get_valid_freq_band
+      reduce_freq_bands
+      slice_freq_band
+   

@@ -1,0 +1,19 @@
+eegdash.features.feature\_bank
+==============================
+
+.. automodule:: eegdash.features.feature_bank
+
+   
+.. rubric:: Modules
+
+.. autosummary::
+   :toctree:
+   :recursive:
+
+   complexity
+   connectivity
+   csp
+   dimensionality
+   signal
+   spectral
+   utils

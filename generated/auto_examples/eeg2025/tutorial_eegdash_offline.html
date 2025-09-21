@@ -44,7 +44,7 @@
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../../../_static/documentation_options.js?v=65b26183"></script>
+    <script src="../../../_static/documentation_options.js?v=6c02275b"></script>
     <script src="../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
@@ -57,7 +57,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.3" />
+  <meta name="docsearch:version" content="0.4" />
   <!-- Google Tag Manager -->
   <script>
     (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -164,7 +164,7 @@
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../../api/modules.html">
+  <a class="nav-link nav-internal" href="../../../api.html">
     API
   </a>
 </li>
@@ -330,7 +330,7 @@
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../../api/modules.html">
+  <a class="nav-link nav-internal" href="../../../api.html">
     API
   </a>
 </li>
@@ -518,7 +518,7 @@ on disk.</p>
 <span class="kn">import</span><span class="w"> </span><span class="nn">platformdirs</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">eegdash.const</span><span class="w"> </span><span class="kn">import</span> <span class="n">RELEASE_TO_OPENNEURO_DATASET_MAP</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">eegdash.dataset.dataset</span><span class="w"> </span><span class="kn">import</span> <a href="../../../api/eegdash.html#eegdash.EEGChallengeDataset" title="eegdash.EEGChallengeDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class"><span class="n">EEGChallengeDataset</span></a>
+<span class="kn">from</span><span class="w"> </span><span class="nn">eegdash.dataset.dataset</span><span class="w"> </span><span class="kn">import</span> <a href="../../../api/dataset/eegdash.html#eegdash.EEGChallengeDataset" title="eegdash.EEGChallengeDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class"><span class="n">EEGChallengeDataset</span></a>
 
 
 <span class="c1"># We&#39;ll use Release R2 as an example (HBN subset). EEGChallengeDataset uses a</span>
@@ -538,7 +538,7 @@ Run this part on a machine with internet access. If the dataset is already
 on your disk at the specified <code class="docutils literal notranslate"><span class="pre">cache_dir</span></code>, you can comment out or skip
 this section.</p>
 <p>To keep this example self-contained, we prefetch the data here.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="../../../api/eegdash.html#eegdash.EEGChallengeDataset" title="eegdash.EEGChallengeDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ds_online</span></a> <span class="o">=</span> <a href="../../../api/eegdash.html#eegdash.EEGChallengeDataset" title="eegdash.EEGChallengeDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class"><span class="n">EEGChallengeDataset</span></a><span class="p">(</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="../../../api/dataset/eegdash.html#eegdash.EEGChallengeDataset" title="eegdash.EEGChallengeDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ds_online</span></a> <span class="o">=</span> <a href="../../../api/dataset/eegdash.html#eegdash.EEGChallengeDataset" title="eegdash.EEGChallengeDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class"><span class="n">EEGChallengeDataset</span></a><span class="p">(</span>
     <span class="n">release</span><span class="o">=</span><span class="n">release</span><span class="p">,</span>
     <span class="n">cache_dir</span><span class="o">=</span><span class="n">cache_dir</span><span class="p">,</span>
     <span class="n">task</span><span class="o">=</span><span class="n">task</span><span class="p">,</span>
@@ -548,20 +548,20 @@ this section.</p>
 <span class="c1"># Optional prefetch of all recordings (downloads everything to cache).</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">joblib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Parallel</span><span class="p">,</span> <span class="n">delayed</span>
 
-<span class="n">_</span> <span class="o">=</span> <span class="n">Parallel</span><span class="p">(</span><span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">)(</span><span class="n">delayed</span><span class="p">(</span><span class="k">lambda</span> <span class="n">d</span><span class="p">:</span> <span class="n">d</span><span class="o">.</span><span class="n">raw</span><span class="p">)(</span><span class="n">d</span><span class="p">)</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <a href="../../../api/eegdash.html#eegdash.EEGChallengeDataset" title="eegdash.EEGChallengeDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ds_online</span></a><span class="o">.</span><span class="n">datasets</span><span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">Parallel</span><span class="p">(</span><span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">)(</span><span class="n">delayed</span><span class="p">(</span><span class="k">lambda</span> <span class="n">d</span><span class="p">:</span> <span class="n">d</span><span class="o">.</span><span class="n">raw</span><span class="p">)(</span><span class="n">d</span><span class="p">)</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <a href="../../../api/dataset/eegdash.html#eegdash.EEGChallengeDataset" title="eegdash.EEGChallengeDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ds_online</span></a><span class="o">.</span><span class="n">datasets</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>╭────────────────────── EEG 2025 Competition Data Notice ──────────────────────╮
 │ This object loads the HBN dataset that has been preprocessed for the EEG     │
 │ Challenge:                                                                   │
-│   • Downsampled from 500Hz to 100Hz                                          │
-│   • Bandpass filtered (0.5–50 Hz)                                            │
+│   * Downsampled from 500Hz to 100Hz                                          │
+│   * Bandpass filtered (0.5-50 Hz)                                            │
 │                                                                              │
 │ For full preprocessing applied for competition details, see:                 │
 │   https://github.com/eeg2025/downsample-datasets                             │
 │                                                                              │
 │ The HBN dataset have some preprocessing applied by the HBN team:             │
-│   • Re-reference (Cz Channel)                                                │
+│   * Re-reference (Cz Channel)                                                │
 │                                                                              │
 │ IMPORTANT: The data accessed via `EEGChallengeDataset` is NOT identical to   │
 │ what you get from EEGDashDataset directly.                                   │
@@ -581,16 +581,16 @@ internet connection. The key is to instantiate your dataset object with the
 <span class="n">offline_root</span> <span class="o">=</span> <span class="n">cache_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">dataset_id</span><span class="si">}</span><span class="s2">-bdf-mini&quot;</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Local dataset folder exists: </span><span class="si">{</span><span class="n">offline_root</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span><span class="si">}</span><span class="se">\n</span><span class="si">{</span><span class="n">offline_root</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
-<a href="../../../api/eegdash.html#eegdash.EEGChallengeDataset" title="eegdash.EEGChallengeDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ds_offline</span></a> <span class="o">=</span> <a href="../../../api/eegdash.html#eegdash.EEGChallengeDataset" title="eegdash.EEGChallengeDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class"><span class="n">EEGChallengeDataset</span></a><span class="p">(</span>
+<a href="../../../api/dataset/eegdash.html#eegdash.EEGChallengeDataset" title="eegdash.EEGChallengeDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ds_offline</span></a> <span class="o">=</span> <a href="../../../api/dataset/eegdash.html#eegdash.EEGChallengeDataset" title="eegdash.EEGChallengeDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class"><span class="n">EEGChallengeDataset</span></a><span class="p">(</span>
     <span class="n">release</span><span class="o">=</span><span class="n">release</span><span class="p">,</span>
     <span class="n">cache_dir</span><span class="o">=</span><span class="n">cache_dir</span><span class="p">,</span>
     <span class="n">task</span><span class="o">=</span><span class="n">task</span><span class="p">,</span>
     <span class="n">download</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
 <span class="p">)</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Found </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><a href="../../../api/eegdash.html#eegdash.EEGChallengeDataset" title="eegdash.EEGChallengeDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ds_offline</span></a><span class="o">.</span><span class="n">datasets</span><span class="p">)</span><span class="si">}</span><span class="s2"> recording(s) offline.&quot;</span><span class="p">)</span>
-<span class="k">if</span> <a href="../../../api/eegdash.html#eegdash.EEGChallengeDataset" title="eegdash.EEGChallengeDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ds_offline</span></a><span class="o">.</span><span class="n">datasets</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;First record bidspath:&quot;</span><span class="p">,</span> <a href="../../../api/eegdash.html#eegdash.EEGChallengeDataset" title="eegdash.EEGChallengeDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ds_offline</span></a><span class="o">.</span><span class="n">datasets</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">record</span><span class="p">[</span><span class="s2">&quot;bidspath&quot;</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Found </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><a href="../../../api/dataset/eegdash.html#eegdash.EEGChallengeDataset" title="eegdash.EEGChallengeDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ds_offline</span></a><span class="o">.</span><span class="n">datasets</span><span class="p">)</span><span class="si">}</span><span class="s2"> recording(s) offline.&quot;</span><span class="p">)</span>
+<span class="k">if</span> <a href="../../../api/dataset/eegdash.html#eegdash.EEGChallengeDataset" title="eegdash.EEGChallengeDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ds_offline</span></a><span class="o">.</span><span class="n">datasets</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;First record bidspath:&quot;</span><span class="p">,</span> <a href="../../../api/dataset/eegdash.html#eegdash.EEGChallengeDataset" title="eegdash.EEGChallengeDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ds_offline</span></a><span class="o">.</span><span class="n">datasets</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">record</span><span class="p">[</span><span class="s2">&quot;bidspath&quot;</span><span class="p">])</span>
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Local dataset folder exists: True
@@ -598,14 +598,14 @@ internet connection. The key is to instantiate your dataset object with the
 ╭────────────────────── EEG 2025 Competition Data Notice ──────────────────────╮
 │ This object loads the HBN dataset that has been preprocessed for the EEG     │
 │ Challenge:                                                                   │
-│   • Downsampled from 500Hz to 100Hz                                          │
-│   • Bandpass filtered (0.5–50 Hz)                                            │
+│   * Downsampled from 500Hz to 100Hz                                          │
+│   * Bandpass filtered (0.5-50 Hz)                                            │
 │                                                                              │
 │ For full preprocessing applied for competition details, see:                 │
 │   https://github.com/eeg2025/downsample-datasets                             │
 │                                                                              │
 │ The HBN dataset have some preprocessing applied by the HBN team:             │
-│   • Re-reference (Cz Channel)                                                │
+│   * Re-reference (Cz Channel)                                                │
 │                                                                              │
 │ IMPORTANT: The data accessed via `EEGChallengeDataset` is NOT identical to   │
 │ what you get from EEGDashDataset directly.                                   │
@@ -623,19 +623,19 @@ First record bidspath: ds005506/sub-NDARAB793GL3/eeg/sub-NDARAB793GL3_task-Resti
 BIDS entities like subject, session, or task. When <code class="docutils literal notranslate"><span class="pre">download=False</span></code>, EEGDash
 uses the BIDS directory structure and filenames to apply these filters. This
 example shows how to load data for a specific subject from the local cache.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="../../../api/eegdash.html#eegdash.EEGChallengeDataset" title="eegdash.EEGChallengeDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ds_offline_sub</span></a> <span class="o">=</span> <a href="../../../api/eegdash.html#eegdash.EEGChallengeDataset" title="eegdash.EEGChallengeDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class"><span class="n">EEGChallengeDataset</span></a><span class="p">(</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="../../../api/dataset/eegdash.html#eegdash.EEGChallengeDataset" title="eegdash.EEGChallengeDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ds_offline_sub</span></a> <span class="o">=</span> <a href="../../../api/dataset/eegdash.html#eegdash.EEGChallengeDataset" title="eegdash.EEGChallengeDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class"><span class="n">EEGChallengeDataset</span></a><span class="p">(</span>
     <span class="n">cache_dir</span><span class="o">=</span><span class="n">cache_dir</span><span class="p">,</span>
     <span class="n">release</span><span class="o">=</span><span class="n">release</span><span class="p">,</span>
     <span class="n">download</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
     <span class="n">subject</span><span class="o">=</span><span class="s2">&quot;NDARAB793GL3&quot;</span><span class="p">,</span>
 <span class="p">)</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Filtered by subject=NDARAB793GL3: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><a href="../../../api/eegdash.html#eegdash.EEGChallengeDataset" title="eegdash.EEGChallengeDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ds_offline_sub</span></a><span class="o">.</span><span class="n">datasets</span><span class="p">)</span><span class="si">}</span><span class="s2"> recording(s).&quot;</span><span class="p">)</span>
-<span class="k">if</span> <a href="../../../api/eegdash.html#eegdash.EEGChallengeDataset" title="eegdash.EEGChallengeDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ds_offline_sub</span></a><span class="o">.</span><span class="n">datasets</span><span class="p">:</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Filtered by subject=NDARAB793GL3: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><a href="../../../api/dataset/eegdash.html#eegdash.EEGChallengeDataset" title="eegdash.EEGChallengeDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ds_offline_sub</span></a><span class="o">.</span><span class="n">datasets</span><span class="p">)</span><span class="si">}</span><span class="s2"> recording(s).&quot;</span><span class="p">)</span>
+<span class="k">if</span> <a href="../../../api/dataset/eegdash.html#eegdash.EEGChallengeDataset" title="eegdash.EEGChallengeDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ds_offline_sub</span></a><span class="o">.</span><span class="n">datasets</span><span class="p">:</span>
     <span class="n">keys</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;dataset&quot;</span><span class="p">,</span> <span class="s2">&quot;subject&quot;</span><span class="p">,</span> <span class="s2">&quot;task&quot;</span><span class="p">,</span> <span class="s2">&quot;run&quot;</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Records (dataset, subject, task, run):&quot;</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <a href="../../../api/eegdash.data_utils.html#eegdash.data_utils.EEGDashBaseDataset" title="eegdash.data_utils.EEGDashBaseDataset" class="sphx-glr-backref-module-eegdash-data_utils sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">base_ds</span></a> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><a href="../../../api/eegdash.html#eegdash.EEGChallengeDataset" title="eegdash.EEGChallengeDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ds_offline_sub</span></a><span class="o">.</span><span class="n">datasets</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
-        <span class="n">rec</span> <span class="o">=</span> <a href="../../../api/eegdash.data_utils.html#eegdash.data_utils.EEGDashBaseDataset" title="eegdash.data_utils.EEGDashBaseDataset" class="sphx-glr-backref-module-eegdash-data_utils sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">base_ds</span></a><span class="o">.</span><span class="n">record</span>
+    <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <a href="../../../api/dataset/eegdash.data_utils.html#eegdash.data_utils.EEGDashBaseDataset" title="eegdash.data_utils.EEGDashBaseDataset" class="sphx-glr-backref-module-eegdash-data_utils sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">base_ds</span></a> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><a href="../../../api/dataset/eegdash.html#eegdash.EEGChallengeDataset" title="eegdash.EEGChallengeDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ds_offline_sub</span></a><span class="o">.</span><span class="n">datasets</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="n">rec</span> <span class="o">=</span> <a href="../../../api/dataset/eegdash.data_utils.html#eegdash.data_utils.EEGDashBaseDataset" title="eegdash.data_utils.EEGDashBaseDataset" class="sphx-glr-backref-module-eegdash-data_utils sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">base_ds</span></a><span class="o">.</span><span class="n">record</span>
         <span class="n">summary</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">=</span><span class="si">{</span><span class="n">rec</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">k</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">idx</span><span class="si">:</span><span class="s2">03d</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">summary</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
@@ -643,14 +643,14 @@ example shows how to load data for a specific subject from the local cache.</p>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>╭────────────────────── EEG 2025 Competition Data Notice ──────────────────────╮
 │ This object loads the HBN dataset that has been preprocessed for the EEG     │
 │ Challenge:                                                                   │
-│   • Downsampled from 500Hz to 100Hz                                          │
-│   • Bandpass filtered (0.5–50 Hz)                                            │
+│   * Downsampled from 500Hz to 100Hz                                          │
+│   * Bandpass filtered (0.5-50 Hz)                                            │
 │                                                                              │
 │ For full preprocessing applied for competition details, see:                 │
 │   https://github.com/eeg2025/downsample-datasets                             │
 │                                                                              │
 │ The HBN dataset have some preprocessing applied by the HBN team:             │
-│   • Re-reference (Cz Channel)                                                │
+│   * Re-reference (Cz Channel)                                                │
 │                                                                              │
 │ IMPORTANT: The data accessed via `EEGChallengeDataset` is NOT identical to   │
 │ what you get from EEGDashDataset directly.                                   │
@@ -672,8 +672,8 @@ ensure they match. This is a good way to confirm your local cache is complete
 and correct.</p>
 <p>If you have network access, you can uncomment the block below to download and
 compare shapes.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">raw_online</span> <span class="o">=</span> <a href="../../../api/eegdash.html#eegdash.EEGChallengeDataset" title="eegdash.EEGChallengeDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ds_online</span></a><span class="o">.</span><span class="n">datasets</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">raw</span>
-<span class="n">raw_offline</span> <span class="o">=</span> <a href="../../../api/eegdash.html#eegdash.EEGChallengeDataset" title="eegdash.EEGChallengeDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ds_offline</span></a><span class="o">.</span><span class="n">datasets</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">raw</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">raw_online</span> <span class="o">=</span> <a href="../../../api/dataset/eegdash.html#eegdash.EEGChallengeDataset" title="eegdash.EEGChallengeDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ds_online</span></a><span class="o">.</span><span class="n">datasets</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">raw</span>
+<span class="n">raw_offline</span> <span class="o">=</span> <a href="../../../api/dataset/eegdash.html#eegdash.EEGChallengeDataset" title="eegdash.EEGChallengeDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ds_offline</span></a><span class="o">.</span><span class="n">datasets</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">raw</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;online shape:&quot;</span><span class="p">,</span> <span class="n">raw_online</span><span class="o">.</span><span class="n">get_data</span><span class="p">()</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;offline shape:&quot;</span><span class="p">,</span> <span class="n">raw_offline</span><span class="o">.</span><span class="n">get_data</span><span class="p">()</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;shapes equal:&quot;</span><span class="p">,</span> <span class="n">raw_online</span><span class="o">.</span><span class="n">get_data</span><span class="p">()</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="n">raw_offline</span><span class="o">.</span><span class="n">get_data</span><span class="p">()</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
@@ -689,8 +689,8 @@ shapes equal: True
 <h2>Step 4.1: Comparing Descriptions, Online vs. Offline Data<a class="headerlink" href="#step-4-1-comparing-descriptions-online-vs-offline-data" title="Link to this heading">#</a></h2>
 <p>If you have network access, you can uncomment the block below to download and
 compare shapes.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">description_online</span> <span class="o">=</span> <a href="../../../api/eegdash.html#eegdash.EEGChallengeDataset" title="eegdash.EEGChallengeDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ds_online</span></a><span class="o">.</span><span class="n">description</span>
-<span class="n">description_offline</span> <span class="o">=</span> <a href="../../../api/eegdash.html#eegdash.EEGChallengeDataset" title="eegdash.EEGChallengeDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ds_offline</span></a><span class="o">.</span><span class="n">description</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">description_online</span> <span class="o">=</span> <a href="../../../api/dataset/eegdash.html#eegdash.EEGChallengeDataset" title="eegdash.EEGChallengeDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ds_online</span></a><span class="o">.</span><span class="n">description</span>
+<span class="n">description_offline</span> <span class="o">=</span> <a href="../../../api/dataset/eegdash.html#eegdash.EEGChallengeDataset" title="eegdash.EEGChallengeDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ds_offline</span></a><span class="o">.</span><span class="n">description</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">description_offline</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">description_online</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Online description shape:&quot;</span><span class="p">,</span> <span class="n">description_online</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
@@ -758,8 +758,8 @@ structure. Some DB-only fields are unavailable; entity filters (subject,
 session, task, run) usually suffice.</p></li>
 <li><p>If you encounter issues, please open a GitHub issue so we can discuss.</p></li>
 </ul>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (1 minutes 11.179 seconds)</p>
-<p><strong>Estimated memory usage:</strong>  1028 MB</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 38.061 seconds)</p>
+<p><strong>Estimated memory usage:</strong>  1088 MB</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-generated-auto-examples-eeg2025-tutorial-eegdash-offline-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../../_downloads/5702e607758ace8a64a5cb0cf540ace7/tutorial_eegdash_offline.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">tutorial_eegdash_offline.ipynb</span></code></a></p>

@@ -1,0 +1,16 @@
+eegdash.features.feature\_bank.dimensionality
+=============================================
+
+.. automodule:: eegdash.features.feature_bank.dimensionality
+
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      dimensionality_detrended_fluctuation_analysis
+      dimensionality_higuchi_fractal_dim
+      dimensionality_hurst_exp
+      dimensionality_katz_fractal_dim
+      dimensionality_petrosian_fractal_dim
+   

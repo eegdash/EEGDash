@@ -1,0 +1,19 @@
+﻿eegdash.features
+================
+
+.. automodule:: eegdash.features
+
+   
+.. rubric:: Modules
+
+.. autosummary::
+   :toctree:
+   :recursive:
+
+   datasets
+   decorators
+   extractors
+   feature_bank
+   inspect
+   serialization
+   utils

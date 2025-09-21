@@ -1,0 +1,12 @@
+eegdash.features.feature\_bank.csp
+==================================
+
+.. automodule:: eegdash.features.feature_bank.csp
+
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      CommonSpatialPattern
+   

@@ -1,0 +1,20 @@
+eegdash.features.feature\_bank.connectivity
+===========================================
+
+.. automodule:: eegdash.features.feature_bank.connectivity
+
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      connectivity_imaginary_coherence
+      connectivity_lagged_coherence
+      connectivity_magnitude_square_coherence
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      CoherenceFeatureExtractor
+   

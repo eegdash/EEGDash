@@ -1,0 +1,28 @@
+eegdash.features.feature\_bank.spectral
+=======================================
+
+.. automodule:: eegdash.features.feature_bank.spectral
+
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      spectral_bands_power
+      spectral_edge
+      spectral_entropy
+      spectral_hjorth_activity
+      spectral_hjorth_complexity
+      spectral_hjorth_mobility
+      spectral_moment
+      spectral_root_total_power
+      spectral_slope
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      DBSpectralFeatureExtractor
+      NormalizedSpectralFeatureExtractor
+      SpectralFeatureExtractor
+   

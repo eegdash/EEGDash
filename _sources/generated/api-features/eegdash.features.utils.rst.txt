@@ -1,0 +1,13 @@
+eegdash.features.utils
+======================
+
+.. automodule:: eegdash.features.utils
+
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      extract_features
+      fit_feature_extractors
+   

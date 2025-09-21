@@ -256,14 +256,14 @@ Match tests' cache layout under ~/eegdash_cache/eeg_challenge_cache
     ╭────────────────────── EEG 2025 Competition Data Notice ──────────────────────╮
     │ This object loads the HBN dataset that has been preprocessed for the EEG     │
     │ Challenge:                                                                   │
-    │   • Downsampled from 500Hz to 100Hz                                          │
-    │   • Bandpass filtered (0.5–50 Hz)                                            │
+    │   * Downsampled from 500Hz to 100Hz                                          │
+    │   * Bandpass filtered (0.5-50 Hz)                                            │
     │                                                                              │
     │ For full preprocessing applied for competition details, see:                 │
     │   https://github.com/eeg2025/downsample-datasets                             │
     │                                                                              │
     │ The HBN dataset have some preprocessing applied by the HBN team:             │
-    │   • Re-reference (Cz Channel)                                                │
+    │   * Re-reference (Cz Channel)                                                │
     │                                                                              │
     │ IMPORTANT: The data accessed via `EEGChallengeDataset` is NOT identical to   │
     │ what you get from EEGDashDataset directly.                                   │
@@ -676,71 +676,71 @@ Define, train and save a model
     Params size (MB): 0.22
     Estimated Total Size (MB): 16.97
     ================================================================================================================================================================
-    Epoch 0 - step 0, loss: 0.6667802333831787
-    Epoch 0 - step 1, loss: 0.6722261905670166
-    Epoch 0 - step 2, loss: 0.6688371896743774
-    Epoch 0 - step 3, loss: 0.6385901570320129
-    Epoch 0 - step 4, loss: 0.6708604693412781
-    Epoch 0 - step 5, loss: 0.6414678692817688
-    Epoch 0 - step 6, loss: 0.6018812656402588
-    Epoch 0 - step 7, loss: 0.7007876634597778
-    Epoch 0 - step 8, loss: 0.7391867637634277
-    Epoch 0 - step 9, loss: 0.7111253142356873
-    Epoch 0 - step 10, loss: 0.6475989818572998
-    Epoch 0 - step 11, loss: 0.6567976474761963
-    Epoch 0 - step 12, loss: 0.6498797535896301
-    Epoch 0 - step 13, loss: 0.611933708190918
-    Epoch 0 - step 14, loss: 0.6699590086936951
-    Epoch 0 - step 15, loss: 0.64682537317276
-    Epoch 0 - step 16, loss: 0.6471065878868103
-    Epoch 0 - step 17, loss: 0.610260546207428
-    Epoch 0 - step 18, loss: 0.6518457531929016
-    Epoch 0 - step 19, loss: 0.609467089176178
-    Epoch 0 - step 20, loss: 0.6266860365867615
-    Epoch 0 - step 21, loss: 0.7024819850921631
-    Epoch 0 - step 22, loss: 0.7014097571372986
-    Epoch 0 - step 23, loss: 0.6760149598121643
-    Epoch 0 - step 24, loss: 0.641376256942749
-    Epoch 0 - step 25, loss: 0.6424275636672974
-    Epoch 0 - step 26, loss: 0.6033962965011597
-    Epoch 0 - step 27, loss: 0.6072185039520264
-    Epoch 0 - step 28, loss: 0.6381712555885315
-    Epoch 0 - step 29, loss: 0.6388083100318909
-    Epoch 0 - step 30, loss: 0.6231562495231628
-    Epoch 0 - step 31, loss: 0.5739136338233948
-    Epoch 0 - step 32, loss: 0.7018911838531494
-    Epoch 0 - step 33, loss: 0.6670516133308411
-    Epoch 0 - step 34, loss: 0.675046443939209
-    Epoch 0 - step 35, loss: 0.6842789649963379
-    Epoch 0 - step 36, loss: 0.7499204277992249
-    Epoch 0 - step 37, loss: 0.6483690738677979
-    Epoch 0 - step 38, loss: 0.6453097462654114
-    Epoch 0 - step 39, loss: 0.6636490821838379
-    Epoch 0 - step 40, loss: 0.6797488331794739
-    Epoch 0 - step 41, loss: 0.6142278909683228
-    Epoch 0 - step 42, loss: 0.6994403600692749
-    Epoch 0 - step 43, loss: 0.619147777557373
-    Epoch 0 - step 44, loss: 0.6205943822860718
-    Epoch 0 - step 45, loss: 0.6411268711090088
-    Epoch 0 - step 46, loss: 0.717474102973938
-    Epoch 0 - step 47, loss: 0.626792848110199
-    Epoch 0 - step 48, loss: 0.695758581161499
-    Epoch 0 - step 49, loss: 0.5768460035324097
-    Epoch 0 - step 50, loss: 0.6916065812110901
-    Epoch 0 - step 51, loss: 0.6827871799468994
-    Epoch 0 - step 52, loss: 0.6176518201828003
-    Epoch 0 - step 53, loss: 0.6085665822029114
-    Epoch 0 - step 54, loss: 0.6312602162361145
-    Epoch 0 - step 55, loss: 0.6168898940086365
-    Epoch 0 - step 56, loss: 0.6634052991867065
-    Epoch 0 - step 57, loss: 0.6588426828384399
-    Epoch 0 - step 58, loss: 0.659842848777771
-    Epoch 0 - step 59, loss: 0.6217883229255676
-    Epoch 0 - step 60, loss: 0.6381416916847229
-    Epoch 0 - step 61, loss: 0.6090998649597168
-    Epoch 0 - step 62, loss: 0.5714462399482727
-    Epoch 0 - step 63, loss: 0.636737585067749
-    Epoch 0 - step 64, loss: 0.6926645040512085
+    Epoch 0 - step 0, loss: 0.6483574509620667
+    Epoch 0 - step 1, loss: 0.6538093686103821
+    Epoch 0 - step 2, loss: 0.6713941693305969
+    Epoch 0 - step 3, loss: 0.6549304723739624
+    Epoch 0 - step 4, loss: 0.6679834723472595
+    Epoch 0 - step 5, loss: 0.6283752918243408
+    Epoch 0 - step 6, loss: 0.6181342601776123
+    Epoch 0 - step 7, loss: 0.6883342266082764
+    Epoch 0 - step 8, loss: 0.7345196604728699
+    Epoch 0 - step 9, loss: 0.7289171814918518
+    Epoch 0 - step 10, loss: 0.6582862138748169
+    Epoch 0 - step 11, loss: 0.6580547094345093
+    Epoch 0 - step 12, loss: 0.6397497653961182
+    Epoch 0 - step 13, loss: 0.5912674069404602
+    Epoch 0 - step 14, loss: 0.6420428156852722
+    Epoch 0 - step 15, loss: 0.6386745572090149
+    Epoch 0 - step 16, loss: 0.6473047733306885
+    Epoch 0 - step 17, loss: 0.6094072461128235
+    Epoch 0 - step 18, loss: 0.6468786597251892
+    Epoch 0 - step 19, loss: 0.5770612359046936
+    Epoch 0 - step 20, loss: 0.6336122751235962
+    Epoch 0 - step 21, loss: 0.6963357329368591
+    Epoch 0 - step 22, loss: 0.7171193957328796
+    Epoch 0 - step 23, loss: 0.6773012280464172
+    Epoch 0 - step 24, loss: 0.6749287843704224
+    Epoch 0 - step 25, loss: 0.6290866136550903
+    Epoch 0 - step 26, loss: 0.6008902192115784
+    Epoch 0 - step 27, loss: 0.5923330783843994
+    Epoch 0 - step 28, loss: 0.6423536539077759
+    Epoch 0 - step 29, loss: 0.636025071144104
+    Epoch 0 - step 30, loss: 0.6055042743682861
+    Epoch 0 - step 31, loss: 0.5764721035957336
+    Epoch 0 - step 32, loss: 0.6952417492866516
+    Epoch 0 - step 33, loss: 0.6911432147026062
+    Epoch 0 - step 34, loss: 0.6654797792434692
+    Epoch 0 - step 35, loss: 0.6870560050010681
+    Epoch 0 - step 36, loss: 0.7218255996704102
+    Epoch 0 - step 37, loss: 0.6716482043266296
+    Epoch 0 - step 38, loss: 0.6433807015419006
+    Epoch 0 - step 39, loss: 0.6902905702590942
+    Epoch 0 - step 40, loss: 0.6840685606002808
+    Epoch 0 - step 41, loss: 0.6141626238822937
+    Epoch 0 - step 42, loss: 0.708634614944458
+    Epoch 0 - step 43, loss: 0.6124047636985779
+    Epoch 0 - step 44, loss: 0.6298983693122864
+    Epoch 0 - step 45, loss: 0.6268893480300903
+    Epoch 0 - step 46, loss: 0.7109941244125366
+    Epoch 0 - step 47, loss: 0.6210460662841797
+    Epoch 0 - step 48, loss: 0.6821120977401733
+    Epoch 0 - step 49, loss: 0.5969668626785278
+    Epoch 0 - step 50, loss: 0.6923952698707581
+    Epoch 0 - step 51, loss: 0.6711761951446533
+    Epoch 0 - step 52, loss: 0.629508912563324
+    Epoch 0 - step 53, loss: 0.6209526658058167
+    Epoch 0 - step 54, loss: 0.6414941549301147
+    Epoch 0 - step 55, loss: 0.6252379417419434
+    Epoch 0 - step 56, loss: 0.6596064567565918
+    Epoch 0 - step 57, loss: 0.6710443496704102
+    Epoch 0 - step 58, loss: 0.6683221459388733
+    Epoch 0 - step 59, loss: 0.6277663111686707
+    Epoch 0 - step 60, loss: 0.6401158571243286
+    Epoch 0 - step 61, loss: 0.6195298433303833
+    Epoch 0 - step 62, loss: 0.5791935324668884
+    Epoch 0 - step 63, loss: 0.6323558688163757
+    Epoch 0 - step 64, loss: 0.6208313703536987
     Model saved as 'weights_challenge_2.pt'
 
 
@@ -749,9 +749,9 @@ Define, train and save a model
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (6 minutes 11.064 seconds)
+   **Total running time of the script:** (6 minutes 11.194 seconds)
 
-**Estimated memory usage:**  2782 MB
+**Estimated memory usage:**  2802 MB
 
 
 .. _sphx_glr_download_generated_auto_examples_eeg2025_tutorial_challenge_2.py:

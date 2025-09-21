@@ -1,0 +1,12 @@
+﻿eegdash.mongodb
+===============
+
+.. automodule:: eegdash.mongodb
+
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      MongoConnectionManager
+   

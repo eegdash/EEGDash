@@ -1,0 +1,13 @@
+﻿eegdash.api
+===========
+
+.. automodule:: eegdash.api
+
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      EEGDash
+      EEGDashDataset
+   

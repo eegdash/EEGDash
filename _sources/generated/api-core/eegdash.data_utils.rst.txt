@@ -1,0 +1,14 @@
+﻿eegdash.data\_utils
+===================
+
+.. automodule:: eegdash.data_utils
+
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      EEGBIDSDataset
+      EEGDashBaseDataset
+      EEGDashBaseRaw
+   

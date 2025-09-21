@@ -1,0 +1,12 @@
+﻿eegdash.paths
+=============
+
+.. automodule:: eegdash.paths
+
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      get_default_cache_dir
+   

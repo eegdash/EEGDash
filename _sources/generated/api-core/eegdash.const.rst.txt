@@ -1,0 +1,6 @@
+﻿eegdash.const
+=============
+
+.. automodule:: eegdash.const
+
+   

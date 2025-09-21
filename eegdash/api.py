@@ -563,8 +563,7 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
     Parameters
     ----------
     cache_dir : str | Path
-        Directory where data are cached locally. If not specified, a default
-        cache directory under the user cache is used.
+        Directory where data are cached locally.
     query : dict | None
         Raw MongoDB query to filter records. If provided, it is merged with
         keyword filtering arguments (see ``**kwargs``) using logical AND.
@@ -637,8 +636,14 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
         self.n_jobs = n_jobs
         self.eeg_dash_instance = eeg_dash_instance
 
-        # Resolve a unified cache directory across code/tests/CI
-        self.cache_dir = Path(cache_dir or get_default_cache_dir())
+        self.cache_dir = cache_dir
+        if self.cache_dir == "" or self.cache_dir is None:
+            self.cache_dir = get_default_cache_dir()
+            logger.warning(
+                f"Cache directory is empty, using the eegdash default path: {self.cache_dir}"
+            )
+
+        self.cache_dir = Path(self.cache_dir)
 
         if not self.cache_dir.exists():
             logger.warning(
@@ -688,9 +693,10 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
                 "[bold]EEG 2025 Competition Data Notice![/bold]\n"
                 "You are loading one of the datasets that is used in competition, but via `EEGDashDataset`.\n\n"
                 "[bold red]IMPORTANT[/bold red]: \n"
-                "If you download data from `EEGDashDataset`, it is [u]NOT[/u] identical to the official competition data, which is accessed via `EEGChallengeDataset`. "
+                "If you download data from `EEGDashDataset`, it is [u]NOT[/u] identical to the official \n"
+                "competition data, which is accessed via `EEGChallengeDataset`. "
                 "The competition data has been downsampled and filtered.\n\n"
-                "[bold]If you are participating in the competition, you must use the `EEGChallengeDataset` object to ensure consistency.[/bold] \n\n"
+                "[bold]If you are participating in the competition, \nyou must use the `EEGChallengeDataset` object to ensure consistency.[/bold] \n\n"
                 "If you are not participating in the competition, you can ignore this message."
             )
             warning_panel = Panel(

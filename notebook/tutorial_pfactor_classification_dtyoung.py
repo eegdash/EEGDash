@@ -20,7 +20,7 @@ from torch.utils.data import DataLoader
 import os
 from scipy.stats import bootstrap
 import lightning as L
-from braindecode.models import EEGNeX, TSception	
+from braindecode.models import EEGNeX, TSception, EEGConformer
 from lightning.pytorch.tuner import Tuner
 from torchmetrics import Recall, Precision, F1Score, Accuracy
 from lightning.pytorch.loggers import TensorBoardLogger
@@ -166,6 +166,28 @@ def create_model(config):
                     sfreq=128,
                     drop_prob=drop_prob,
                 )
+            elif config['model_name'] == 'EEGConformer':
+                self.model = EEGConformer(
+                    n_chans=24,
+                    n_outputs=2,
+                    n_times=256,
+                    sfreq=128,
+                    drop_prob=drop_prob,
+                )
+            elif config['model_name'] == 'EEGConformerSimplified':
+                self.model = EEGConformer(
+                    n_chans=24,
+                    n_outputs=2,
+                    n_times=256,
+                    sfreq=128,
+                    drop_prob=drop_prob,
+                    n_filters_time=32,        # Try 32 instead of default 40
+                    filter_time_length=20,    # Try 20
+                    att_depth=4,             # Reduce attention layers
+                    att_heads=8,             # Reduce attention heads
+                    pool_time_stride=12,     # Adjust pooling
+                    pool_time_length=64,     # Adjust pooling window
+                )
             self.lr = config['lr']
             self.precision = Precision(task="binary")
             self.recall = Recall(task="binary")
@@ -226,23 +248,84 @@ def create_model(config):
             self.log("hp_metric", val_acc, on_epoch=True)
 
         def configure_optimizers(self):
-            print('Learning rate:', self.lr)
-            return torch.optim.Adam(self.parameters(), lr=self.lr)
+            optimizer = torch.optim.AdamW(
+                self.parameters(), 
+                lr=0.001, 
+                weight_decay=1e-4
+            )
+            
+            # Reduce LR when validation accuracy plateaus
+            scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
+                optimizer, 
+                mode='max',
+                factor=0.5,
+                patience=8,
+                min_lr=1e-6,
+            )
+            
+            return {
+                "optimizer": optimizer,
+                "lr_scheduler": {
+                    "scheduler": scheduler,
+                    "monitor": "val/accuracy_epoch",
+                    "frequency": 1
+                }
+            }
 
     return EEGModel(config)
 
+# Add this analysis before training
+def analyze_fold_distribution(train_ds, val_ds, fold_idx):
+    """Analyze gender and subject distribution per fold"""
+    # For Subset, get description DataFrame
+    def get_desc(ds):
+        if hasattr(ds, 'description'):
+            return ds.description
+        elif hasattr(ds, 'dataset') and hasattr(ds.dataset, 'description'):
+            # ds is a Subset
+            return ds.dataset.description.iloc[ds.indices].reset_index(drop=True)
+        else:
+            raise ValueError("Cannot get description from dataset.")
+
+    train_desc = get_desc(train_ds)
+    val_desc = get_desc(val_ds)
+    train_subjects = train_desc["subject"]
+    val_subjects = val_desc["subject"]
+    train_gender_dist = pd.Series(train_desc["sex"]).value_counts()
+    val_gender_dist = pd.Series(val_desc["sex"]).value_counts()
+    print(f"Statistics of balanced dataset for fold {fold_idx}:")
+    print(f"Train subjects: {len(set(train_subjects))}, Val subjects: {len(set(val_subjects))}")
+    print(f"Train gender: {train_gender_dist}")
+    print(f"Val gender: {val_gender_dist}")
+    print(f"Subject overlap: {set(train_subjects) & set(val_subjects)}")
+
+def balance_windows_by_class(ds, random_seed=42):
+    """
+    Returns a torch.utils.data.Subset of ds with equal number of windows for M and F classes.
+    """
+    import numpy as np
+    desc = ds.description
+    m_indices = np.where(desc['sex'] == 'M')[0]
+    f_indices = np.where(desc['sex'] == 'F')[0]
+    n_min = min(len(m_indices), len(f_indices))
+    rng = np.random.default_rng(random_seed)
+    m_indices = rng.permutation(m_indices)[:n_min]
+    f_indices = rng.permutation(f_indices)[:n_min]
+    selected_indices = np.concatenate([m_indices, f_indices])
+    selected_indices = rng.permutation(selected_indices)
+    return Subset(ds, selected_indices)
+
 def run_task(releases, tasks, target_name, folds=10, weights=None, model_freeze=False, random_add=42, train_epochs=20, save_weights="", batch_size=100, lrate=0.00002, model_name = 'EEGNeX', dropout=0.5):
+    from torch.utils.data import Subset
+
     # random seed for reproducibility
     L.seed_everything(random_add)
-
     global deep_copy_dataset
 
     if not isinstance(releases, list):
         releases = [releases]
     if not isinstance(tasks, list):
         tasks = [tasks]
-
-
 
     # # Save hparams to results dir
     # hparams_file = f"results/hparams_{'_'.join(tasks)}_{target_name}_{model_name}.json"
@@ -271,8 +354,7 @@ def run_task(releases, tasks, target_name, folds=10, weights=None, model_freeze=
 
     # ## Creating a Training and Test Set
     correct_train_list = []
-    correct_test_list  = []
-    correct_test_ci    = []
+    correct_val_list  = []
     unique_subjects, unique_indices = np.unique(windows_ds.description["subject"], return_index=True)
     unique_gender = windows_ds.description["sex"][unique_indices].values
     print(f"Class distribution in full set: {(unique_gender == 'M').sum()} male, {(unique_gender == 'F').sum()} female")
@@ -284,28 +366,27 @@ def run_task(releases, tasks, target_name, folds=10, weights=None, model_freeze=
         splits = [(train_idx, val_idx)]
         
     for it_fold, (train_idx, val_idx) in enumerate(splits):
-        # balance the dataset so we have 50% of each class
-        train_gender = unique_gender[train_idx]
-        val_gender   = unique_gender[  val_idx]
-        train_subj   = unique_subjects[train_idx]
-        val_subj     = unique_subjects[  val_idx]
-        train_n = min((train_gender == "M").sum(), (train_gender == "F").sum()) # take the minimum number of subjects for each class to balance the dataset
-        val_n   = min((  val_gender == "M").sum(), (  val_gender == "F").sum()) # take the minimum number of subjects for each class to balance the dataset
-        train_subj = np.concatenate([np.random.choice(train_subj[train_gender == "M"], train_n, replace=False),np.random.choice(train_subj[train_gender == "F"], train_n, replace=False)])        
-        val_subj   = np.concatenate([np.random.choice(  val_subj[  val_gender == "M"],   val_n, replace=False),np.random.choice(  val_subj[  val_gender == "F"],   val_n, replace=False)])        
+        train_ds = BaseConcatDataset([ds for ds in windows_ds.datasets if ds.description.subject in unique_subjects[train_idx]])
+        val_ds   = BaseConcatDataset([ds for ds in windows_ds.datasets if ds.description.subject in unique_subjects[val_idx]])
 
-        # Create datasets
-        if model_freeze: # When model_freeze=True, evaluate on all (balanced) data
-            val_ds   = BaseConcatDataset([ds for ds in windows_ds.datasets if ds.description.subject in train_subj or ds.description.subject in val_subj]) 
-            train_ds = BaseConcatDataset([ds for ds in windows_ds.datasets if ds.description.subject in train_subj])
-        else:
-            train_ds = BaseConcatDataset([ds for ds in windows_ds.datasets if ds.description.subject in train_subj])
-            val_ds   = BaseConcatDataset([ds for ds in windows_ds.datasets if ds.description.subject in val_subj])
 
-        # Check the balance of the dataset
-        print(f"Number of datasets in balanced set: {len(train_ds.datasets)} train, {len(val_ds.datasets)} val")
-        print(f"Number of samples in balanced set: {len(train_ds)} train, {len(val_ds)} val")
-        # print(f"Class distribution in training set {train_n} of each class; validation set {val_n} of each class")
+        # Balance windows per class for train and val sets
+        train_ds = balance_windows_by_class(train_ds, random_seed=random_add)
+        val_ds = balance_windows_by_class(val_ds, random_seed=random_add)
+
+        # For Subset, get description DataFrame
+        def get_desc(ds):
+            if hasattr(ds, 'description'):
+                return ds.description
+            elif hasattr(ds, 'dataset') and hasattr(ds.dataset, 'description'):
+                return ds.dataset.description.iloc[ds.indices].reset_index(drop=True)
+            else:
+                raise ValueError("Cannot get description from dataset.")
+
+        train_desc = get_desc(train_ds)
+        val_desc = get_desc(val_ds)
+        print(f"Number of windows in balanced set: {len(train_desc)} train, {len(val_desc)} val")
+        analyze_fold_distribution(train_ds, val_ds, it_fold)
 
         # Create dataloaders with smaller batch size to save memory
         train_loader = DataLoader(train_ds, batch_size=batch_size, shuffle=True, prefetch_factor=4, num_workers=4)
@@ -319,19 +400,19 @@ def run_task(releases, tasks, target_name, folds=10, weights=None, model_freeze=
             "lr": lrate,
             "random_seed": random_add,
             "model_name": model_name,
+            "fold": it_fold,
         }
         model = create_model(hparams)
 
         if weights is not None:
             model.load_state_dict(torch.load(weights))
-        # from lightning.pytorch.callbacks.early_stopping import EarlyStopping
-        # early_stop = EarlyStopping(
-        #     monitor="val/accuracy_epoch",
-        #     mode="max",
-        #     patience=30,
-        #     verbose=True,
-        #     min_delta=0.0
-        # )
+        from lightning.pytorch.callbacks.early_stopping import EarlyStopping
+        early_stopping = EarlyStopping(
+            monitor='val/accuracy_epoch',
+            patience=15,
+            mode='max',
+            min_delta=0.01
+        )
         # Find learning rate before logger/trainer creation
         # trainer_tmp = L.Trainer(
         #     max_epochs=1,
@@ -351,7 +432,7 @@ def run_task(releases, tasks, target_name, folds=10, weights=None, model_freeze=
         # Now create logger with correct hparams
         tb_logger = TensorBoardLogger(
             save_dir="lightning_logs",
-            name=f"experiment_{'_'.join(tasks)}_{target_name}_{model_name}_k{folds}",
+            name=f"balanced_experiment_{'_'.join(tasks)}_{target_name}_{model_name}_k{folds}",
         )
         # Log hparams 
         tb_logger.log_hyperparams(hparams)
@@ -362,7 +443,7 @@ def run_task(releases, tasks, target_name, folds=10, weights=None, model_freeze=
             devices=1 if torch.cuda.is_available() else None,
             enable_checkpointing=False,
             logger=tb_logger,
-            # callbacks=[early_stop]
+            callbacks=[early_stopping]
         )
 
         # Fit model
@@ -370,28 +451,15 @@ def run_task(releases, tasks, target_name, folds=10, weights=None, model_freeze=
 
         # Use PyTorch Lightning metrics for kfold reporting
         train_acc = float(trainer.callback_metrics.get('train/accuracy_epoch', 0.0))
-        test_acc = float(trainer.callback_metrics.get('val/accuracy_epoch', 0.0))
+        val_acc = float(trainer.callback_metrics.get('val/accuracy_epoch', 0.0))
         correct_train_list.append(train_acc)
-        correct_test_list.append(test_acc)
+        correct_val_list.append(val_acc)
 
 
-        # Optionally, compute bootstrap CI for test set using Lightning predictions
-        # try:
-        #     from scipy.stats import bootstrap
-        #     preds = trainer.callback_metrics.get('val/accuracy_epoch', None)
-        #     # If you want to use predictions, you can use a Lightning callback to store them for more advanced CI
-        #     # Here, just use test_acc as both bounds if not available
-        #     if preds is not None:
-        #         correct_test_ci.append([test_acc, test_acc])
-        #     else:
-        #         correct_test_ci.append([test_acc, test_acc])
-        # except Exception as e:
-        #     correct_test_ci.append([test_acc, test_acc])
-
-        # # Save model weights immediately to avoid storing in memory
-        # if save_weights is not None and save_weights != "":
-        #     torch.save(model.state_dict(), save_weights.replace(".pth", "") + f"_{it_fold}.pth")
-        #     print(f"Saved model {it_fold} weights to {save_weights.replace('.pth', '')}_{it_fold}.pth")
+        # Save model weights 
+        if save_weights is not None and save_weights != "":
+            torch.save(model.state_dict(), save_weights.replace(".pth", f"_{it_fold}.pth"))
+            print(f"Saved model {it_fold} weights to {save_weights.replace('.pth', '')}_{it_fold}.pth")
 
     # Print summary statistics for kfolds
     def ci95(arr):
@@ -404,13 +472,41 @@ def run_task(releases, tasks, target_name, folds=10, weights=None, model_freeze=
     if len(correct_train_list) > 0:
         train_mean, train_std, train_ci = ci95(correct_train_list)
         print(f"Train acc: mean={train_mean:.4f}, std={train_std:.4f}, 95% CI=±{train_ci:.4f}")
-    if len(correct_test_list) > 0:
-        test_mean, test_std, test_ci = ci95(correct_test_list)
-        print(f"Test acc: mean={test_mean:.4f}, std={test_std:.4f}, 95% CI=±{test_ci:.4f}")
-    if len(correct_test_ci) > 0:
-        print(f"Test bootstrap CIs: {correct_test_ci}")
+    if len(correct_val_list) > 0:
+        val_mean, val_std, val_ci = ci95(correct_val_list)
+        print(f"Val acc: mean={val_mean:.4f}, std={val_std:.4f}, 95% CI=±{val_ci:.4f}")
 
-    return correct_train_list, correct_test_list, correct_test_ci
+    return correct_train_list, correct_val_list
+
+def check_experiment_exists(task, factor, model_name, folds, batch_size, lrate, random_add, dropout):
+    log_folder = Path("lightning_logs") / f"experiment_{task}_{factor}_{model_name}_k{folds}"
+    if not log_folder.exists():
+        return False
+    # check if any subfolder exists
+    subfolders = [f for f in log_folder.iterdir() if f.is_dir()]
+    if len(subfolders) == 0:
+        return False
+    # scan all hparams.yaml files in subfolders for matching hyperparameters
+    for subfolder in subfolders:
+        hparams_file = subfolder / "hparams.yaml"
+        if not hparams_file.exists():
+            continue
+        with open(hparams_file, "r") as f:
+            lines = f.readlines()
+            hparams = {}
+            for line in lines:
+                if ":" in line:
+                    key, value = line.split(":", 1)
+                    hparams[key.strip()] = value.strip()
+            # check if all hyperparameters match
+            if (hparams.get("batch_size") == str(batch_size) and
+                hparams.get("dropout") == str(dropout) and
+                hparams.get("lr") == str(lrate) and
+                hparams.get("random_seed") == str(random_add) and
+                hparams.get("model_name") == model_name):
+                print(f"Experiment already exists in {subfolder}")
+                return True
+    return False
 
 # %%
 from pathlib import Path
@@ -439,59 +535,6 @@ tasks = [  'DespicableMe',
 factors = ["sex", "age", "p_factor", "attention", "internalizing", "externalizing"]
 releases = ["R1", "R2", "R3", "R4", "R5", "R6", "R7", "R8", "R9", "R10", "R11", "R12"]
 
-# process_data(releases, tasks, factors) # just import the data to avoid errors
-# sys.exit()
-
-
-if 0:
-    # train large model
-    _, res_test_all = run_task(releases[:-1], 'contrastChangeDetection', factor, save_weights="weights_" + factor + ".pth", repeat=1, train_epochs=20, batch_size=2000, lrate=0.00002*10*4)
-    #_, res_test_r12 = run_task(releases[:-1], 'contrastChangeDetection', 'p_factor', weights="weights" + "_all" + ".pth", repeat=20, train_epochs=1, model_freeze=True)
-    print("Performance on all releases: ", res_test_all)
-    #print("Performance on R12: "         , res_test_r12)
-
-if 0:
-    # test large model
-    # _, res_test_r12 = run_task("R12", 'contrastChangeDetection', factor, weights="weights_" + factor + ".pth", repeat=20, train_epochs=1, model_freeze=True)
-    _, res_test_r12 = run_task("R12", 'contrastChangeDetection', factor, weights="weights_" + factor + ".pth", repeat=20, train_epochs=1, model_freeze=True)
-    print("Performance on R12: ", res_test_r12)
-    print("Mean performance on R12: ", np.mean(np.array(res_test_r12)))
-    print("95% confidence interval on R12: ", np.std(np.array(res_test_r12), ddof=1) / np.sqrt(len(res_test_r12)) * 1.96)
-    sys.exit()
-
-if 0:
-    # run_task("R1", 'contrastChangeDetection', 'sex', save_weights="weights.pth", repeat=1, train_epochs=20)
-    res_test = {}
-    factor = "sex"
-    for release1 in releases:
-        run_task(release1, 'contrastChangeDetection', factor, save_weights="weights" + release1 + "_" + factor + ".pth", repeat=1, train_epochs=20, batch_size=500, lrate=0.00002*10)
-        for release2 in releases:
-            filename = f"results/{release1}train_{release2}test_contrastChangeDetection_{factor}.json"
-            if os.path.exists(filename):
-                print(f"Skipping {filename} because it already exists")
-                continue
-            _, res_test_release = run_task(release2, 'contrastChangeDetection', factor, weights="weights" + release1 + "_" + factor + ".pth", repeat=10, train_epochs=1, model_freeze=True)
-            with open(filename, "w") as f:
-                json.dump({"test": res_test_release}, f)
-
-if 0:
-    count = 0
-    for release in releases[::-1]:
-        res_train, res_test = run_task(release, 'contrastChangeDetection', 'p_factor', save_weights="weights" + release + ".pth", repeat=10, train_epochs=20)
-        _, res_test_r12     = run_task("R12",   'contrastChangeDetection', 'p_factor', weights="weights" + release + ".pth", repeat=10, train_epochs=1, random_add=count, model_freeze=True)
-        count += 1
-        with open(f"results/{release}_contrastChangeDetection_p_factor.json", "w") as f:
-            json.dump({"train": res_train, "test": res_test, "test_r12": res_test_r12}, f)
-
-# for release in releases:
-#     try:
-#         run_task(release, 'contrastChangeDetection', 'sex', save_weights="weights.pth", repeat=1, train_epochs=1)
-#         with open("error_log.txt", "a") as f:
-#             f.write(f"{release}: success\n")
-#     except Exception as e:
-#         with open("error_log.txt", "a") as f:
-#             f.write(f"{release}: {e}\n")
-
 new_tasks = { 'movies': ['DespicableMe', 'DiaryOfAWimpyKid', 'FunwithFractals', 'ThePresent'],
   'restingstate': ['RestingState'],
   'contrastChangeDetection': ['contrastChangeDetection'],
@@ -500,43 +543,102 @@ new_tasks = { 'movies': ['DespicableMe', 'DiaryOfAWimpyKid', 'FunwithFractals', 
   'symbolSearch': ['symbolSearch'],
   'all_tasks': ['DespicableMe', 'DiaryOfAWimpyKid', 'FunwithFractals', 'RestingState', 'ThePresent', 'contrastChangeDetection', 'seqLearning6target', 'seqLearning8target', 'surroundSupp', 'symbolSearch']
   }
-model_name = 'EEGNeX'
-# model_name = 'TSception'
-releases_train = ['R12'] #releases[:-1]
-new_tasks = {'contrastChangeDetection': ['contrastChangeDetection']}
+releases_train = releases[:-1]
+tasks = [  
+# 'DespicableMe',
+#   'DiaryOfAWimpyKid',
+#   'FunwithFractals',
+#   'ThePresent',
+#   'RestingState',
+  'contrastChangeDetection',
+#   'seqLearning6target',
+#   'seqLearning8target',
+  'surroundSupp',
+#   'symbolSearch'
+]
 factors = ['attention']
-folds = 10
+folds = 1
 
 import random
-if True:
-    for task in list(new_tasks.keys()):
-        for factor in factors:
-            # train set on all releases
-            # if os.path.exists(json_file):
-            #     print(f"Skipping {task}_{factor} because it already exists")
+from torch.utils.data import Subset
+import numpy as np
+for factor in factors:
+    # train set on all releases
+    # if os.path.exists(json_file):
+    #     print(f"Skipping {task}_{factor} because it already exists")
+    #     continue
+    batch_sizes = [64] #[64, 128]#, 256, 512, 1024, 2048]
+    lrates = [0.0005]#[0.002, 0.0002, 0.00006, 0.00002]
+    dropouts = [0.7] #[0.6, 0.7, 0.8]
+    seeds = [15, 20, 31, 64, 77, 88, 99, 0, 42, 9]
+    # seeds = [0]
+    models = ['EEGConformerSimplified']#, 'TSception']#, 'EEGNeX']
+    for model_name in models:
+        combinations = [(batch_size, lrate, random_add, dropout) for batch_size in batch_sizes for lrate in lrates for random_add in seeds for dropout in dropouts]
+        # combinations = random.sample(combinations, min(20, len(combinations)))
+        random.shuffle(combinations)
+        # combinations = [(64, 0.002, seed, 0.6) for seed in seeds]
+        print(f"Total combinations to run: {len(combinations)}")
+        for batch_size, lrate, random_add, dropout in combinations:
+            # if check_experiment_exists(task, factor, model_name, folds, batch_size, lrate, random_add, dropout):
+            #     print(f"Skipping existing experiment for {task}, {factor}, {model_name}, {folds}, {batch_size}, {lrate}, {random_add}, {dropout}")
             #     continue
-            weights_file_base = "weights_" + task+ "_" + factor + "_" + model_name + ".pth"
-            batch_sizes = [64, 128, 256, 512, 1024, 2048]
-            lrates = [0.002, 0.0002, 0.00006, 0.00002]
-            dropouts = [0.5, 0.6, 0.7, 0.8, 0.9]
-            seeds = [0, 42, 9]
-            models = ['EEGNeX', 'TSception']
-            for model_name in models: 
-                combinations = [ (batch_size, lrate, random_add, dropout) for batch_size in batch_sizes for lrate in lrates for random_add in seeds for dropout in dropouts]
-                # shuffle combinations
-                random.shuffle(combinations)
-                for batch_size, lrate, random_add, dropout in combinations:
-                    print(f"Running task {task}, factor {factor}, model {model_name}, batch_size {batch_size}, lrate {lrate}, random_add {random_add}, dropout {dropout}")
-                    res_train, res_test, res_test_ci = run_task(releases_train, task, factor, folds=folds, random_add=random_add, train_epochs=150, batch_size=batch_size, lrate=lrate, model_name=model_name, dropout=dropout, save_weights=weights_file_base)
-                    json_file = f"results/{task}_{factor}_{model_name}_bs{batch_size}_lr{lrate}_seed{random_add}_dropout{dropout}_k{folds}.json"
-                    with open(json_file, "w") as f:
-                        json.dump({"train": res_train, "test": res_test, "test_ci": res_test_ci}, f)
+            experiment_name = f"all_releases_task_{'_'.join(tasks)}_{factor}_{model_name}_bs{batch_size}_lr{lrate}_seed{random_add}_dropout{dropout}_k{folds}"
+            print(f"Running experiment {experiment_name}")
+            weights_file_base = f"checkpoints/{experiment_name}.pth"
+            res_train, res_val = run_task(
+                releases_train, tasks, factor, folds=folds, random_add=random_add,
+                train_epochs=70, batch_size=batch_size, lrate=lrate,
+                model_name=model_name, dropout=dropout, save_weights=weights_file_base
+            )
+            json_file = f"results/{experiment_name}.json"
+            with open(json_file, "w") as f:
+                json.dump({"train": res_train, "val": res_val}, f)
+
             # test set on R12
-            # res_test_r12 = []
-            # for fold in range(folds):
-            #     weights_file = weights_file_base.replace(".pth", "") + f"_{fold}.pth"
-            #     _, res_test_r12_tmp, _ = run_task("R12", new_tasks[task], factor, folds=1,  train_epochs=1,  batch_size=2000, weights=weights_file, model_freeze=True, model_name=model_name, random_add=fold)
-            #     res_test_r12.append(res_test_r12_tmp)
-            # with open(json_file, "w") as f:
-            #     json.dump({"train": res_train, "test": res_test, "test_ci": res_test_ci, "test_r12": res_test_r12}, f)
-            # print(f"Task: {task}, Factor: {factor}, Train: {res_train}, Test: {res_test_ci}")
+            cached_data_folder_names = []
+            for task in tasks:
+                cached_data_folder_name = "/home/arno/v1/eegdash/notebook/data/hbn_R12_" + task + "_" + factor
+                if os.path.exists(cached_data_folder_name):
+                    cached_data_folder_names.append(cached_data_folder_name)
+                else:
+                    print(f"Missing DataError({cached_data_folder_name}): You first run process_data to run the task for each release")
+
+            print("Loading data from disk")
+            windows_ds = []
+            for cached_data_folder_name in cached_data_folder_names:
+                windows_ds_tmp = load_concat_dataset(path=cached_data_folder_name, preload=False)
+                windows_ds.extend([ds for ds in windows_ds_tmp.datasets])
+                print(f"Number of datasets in {cached_data_folder_name}: {len(windows_ds_tmp.datasets)}")
+
+            test_ds = BaseConcatDataset(windows_ds)
+            test_ds = BaseConcatDataset([ds for ds in test_ds.datasets if ds.description['sex'] in ['M', 'F']])
+            test_ds = balance_windows_by_class(test_ds, random_seed=random_add)
+            analyze_fold_distribution(test_ds, test_ds, 'R12')
+            test_loader = DataLoader(test_ds, batch_size=batch_size, num_workers=4)
+
+            res_test_r12 = []
+            for fold in range(folds):
+                weights_file = weights_file_base.replace(".pth", "") + f"_{fold}.pth"
+                # load model weights and run inference on R12
+                if not os.path.exists(weights_file):
+                    print(f"Missing weights file {weights_file}, skipping")
+                    continue
+                model = create_model({
+                    "batch_size": batch_size,
+                    "dropout": dropout,
+                    "lr": lrate,
+                    "random_seed": random_add,
+                    "model_name": model_name,
+                    "fold": fold,
+                })
+                model.load_state_dict(torch.load(weights_file, map_location="cpu"))
+                model.eval()
+                trainer_test = L.Trainer(accelerator="auto", devices=1 if torch.cuda.is_available() else None, logger=False, enable_checkpointing=False)
+                test_result = trainer_test.validate(model, test_loader, verbose=False)
+                test_acc = float(test_result[0].get('val/accuracy_epoch', 0.0))
+                res_test_r12.append(test_acc)
+            print(f"Test on R12 acc: {res_test_r12}")
+            
+            with open(json_file, "w") as f:
+                json.dump({"train": res_train, "val": res_val, "test": res_test_r12}, f)

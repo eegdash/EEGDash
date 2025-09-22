@@ -10,6 +10,8 @@ from braindecode.preprocessing import Preprocessor, create_fixed_length_windows,
 from braindecode.datasets.base import BaseConcatDataset
 from braindecode.datautil import load_concat_dataset
 from pathlib import Path
+from torch.utils.data import Subset
+
 import numpy as np
 import pandas as pd
 import numpy as np
@@ -23,6 +25,24 @@ import gc
 
 cache_dir = Path("/mnt/v1/arno/eeg2025")
 SFREQ = 100  # sampling frequency
+
+def balance_windows_by_class(ds, random_seed=42):
+    """
+    Returns a torch.utils.data.Subset of ds with equal number of windows for M and F classes.
+    """
+    import numpy as np
+    # Extract all labels at once for better performance
+    metadata_df = ds.get_metadata()
+    labels = np.array([metadata_df.iloc[i]['sex'] for i in range(len(ds))])
+    m_indices = np.where(labels == 'M')[0]
+    f_indices = np.where(labels == 'F')[0]
+    n_min = min(len(m_indices), len(f_indices))
+    rng = np.random.default_rng(random_seed)
+    m_indices = rng.permutation(m_indices)[:n_min]
+    f_indices = rng.permutation(f_indices)[:n_min]
+    selected_indices = np.concatenate([m_indices, f_indices])
+    selected_indices = rng.permutation(selected_indices)
+    return Subset(ds, selected_indices), len(m_indices), len(f_indices)
 
 def process_data(releases, tasks, target_names):
     
@@ -196,6 +216,7 @@ def run_task(releases, tasks, target_name, folds=10, weights=None, model_freeze=
         splits = [(train_idx, val_idx)]
         
     for it_fold, (train_idx, val_idx) in enumerate(splits):
+        
         # balance the dataset so we have 50% of each class
         train_gender = unique_gender[train_idx]
         val_gender   = unique_gender[  val_idx]
@@ -213,7 +234,17 @@ def run_task(releases, tasks, target_name, folds=10, weights=None, model_freeze=
         else:
             train_ds = BaseConcatDataset([ds for ds in windows_ds.datasets if ds.description.subject in train_subj])
             val_ds   = BaseConcatDataset([ds for ds in windows_ds.datasets if ds.description.subject in val_subj])
+            
+        # Balance windows per class for train and val sets
+        train_ds, train_male_count, train_female_count = balance_windows_by_class(train_ds, random_seed=random_add)
+        val_ds, val_male_count, val_female_count = balance_windows_by_class(val_ds, random_seed=random_add)
 
+        # show the number of sample in each class for each gender
+        print(f"Number of samples in training set for male: {train_male_count}")
+        print(f"Number of samples in training set for female: {train_female_count}")
+        print(f"Number of samples in validation set for male: {val_male_count}")
+        print(f"Number of samples in validation set for female: {val_female_count}")
+        
         # Create dataloaders with smaller batch size to save memory
         train_loader = DataLoader(train_ds, batch_size=batch_size, shuffle=True, prefetch_factor=4, num_workers=4)
         val_loader   = DataLoader(  val_ds, batch_size=batch_size, shuffle=True, prefetch_factor=4, num_workers=4)
@@ -225,7 +256,7 @@ def run_task(releases, tasks, target_name, folds=10, weights=None, model_freeze=
         # create model
         from torch import nn
         from torchinfo import summary
-        from braindecode.models import EEGNeX, TSception	
+        from braindecode.models import EEGNeX, TSception, EEGConformer	
 
         if model_name == 'EEGNeX':
             model = EEGNeX(
@@ -241,9 +272,25 @@ def run_task(releases, tasks, target_name, folds=10, weights=None, model_freeze=
                 n_times=256,      # 2 seconds
                 sfreq=128,        # sample frequency 100 Hz
             )
+        elif model_name == 'EEGConformer':
+            model = EEGConformer(
+                    n_chans=24,
+                    n_outputs=2,
+                    n_times=256,
+                    sfreq=128,
+                    drop_prob=0.7,
+                    n_filters_time=32,        # Try 32 instead of default 40
+                    filter_time_length=20,    # Try 20
+                    att_depth=4,             # Reduce attention layers
+                    att_heads=8,             # Reduce attention heads
+                    pool_time_stride=12,     # Adjust pooling
+                    pool_time_length=64,     # Adjust pooling window
+                )
 
         if weights is not None:
             model.load_state_dict(torch.load(weights))
+
+        print(summary(model, input_size=(batch_size, 24, 256)))
 
         # print(model)
         # %% [markdown]
@@ -299,9 +346,9 @@ def run_task(releases, tasks, target_name, folds=10, weights=None, model_freeze=
                 all_subjects.extend(ss)
             
             # Subject-level voting: average predictions per subject and vote
-            subject_uniq  = np.unique(np.array(all_subjects), return_inverse=True)
-            subject_gt    = np.array([np.array(all_ground_truth)[subject_uniq == i][0] for i in range(len(subject_uniq))])
-            subject_preds = np.array([np.bincount(np.array(all_preds)[subject_uniq == i]).argmax() for i in range(len(subject_uniq))])
+            subject_uniq, subject_indices = np.unique(np.array(all_subjects), return_inverse=True)
+            subject_gt    = np.array([np.array(all_ground_truth)[subject_indices == i][0] for i in range(len(subject_uniq))])
+            subject_preds = np.array([np.bincount(np.array(all_preds)[subject_indices == i]).argmax() for i in range(len(subject_uniq))])
             subject_level_accuracy = (subject_preds == subject_gt).mean()
             
             print(f"Iteration {it_fold}, Epoch {e}, Train accuracy: {correct_train:.3f}, Test accuracy: {correct_test:.3f}, Subject-level accuracy: {subject_level_accuracy:.3f}\n")
@@ -309,9 +356,12 @@ def run_task(releases, tasks, target_name, folds=10, weights=None, model_freeze=
         # convert values to numpy arrays
         correct_train = float(correct_train.item()) if hasattr(correct_train, "item") else correct_train
         correct_test  = float(correct_test.item())
-        correct_train_list.append(correct_train)
-        correct_test_list.append(subject_level_accuracy)  # Use subject-level accuracy instead of sample-level
-        correct_test_list_subject.append(subject_level_accuracy)
+        correct_train_list.extend([correct_train])
+        correct_test_list.extend([correct_test])  # Use subject-level accuracy instead of sample-level
+        correct_test_list_subject.extend([subject_level_accuracy])
+        
+        # do garbage collection
+        gc.collect()
         
         # Save model weights immediately to avoid storing in memory
         if save_weights is not None and save_weights != "":
@@ -408,11 +458,12 @@ new_tasks = { 'movies': ['DespicableMe', 'DiaryOfAWimpyKid', 'FunwithFractals', 
   'symbolSearch': ['symbolSearch'],
   'all_tasks': ['DespicableMe', 'DiaryOfAWimpyKid', 'FunwithFractals', 'RestingState', 'ThePresent', 'contrastChangeDetection', 'seqLearning6target', 'seqLearning8target', 'surroundSupp', 'symbolSearch']
   }
-model_name = 'EEGNeX'
+# model_name = 'EEGNeX'
 # model_name = 'TSception'
+model_name = 'EEGConformer'
 releases_train = releases[:-1]
-new_tasks = {'contrastChangeDetection': ['contrastChangeDetection']}
-factors = ['externalizing']
+new_tasks = {'dungcombination': ['contrastChangeDetection', 'surroundSupp']}
+factors = ['attention']
 folds = 10
 if True:
     for task in list(new_tasks.keys()):
@@ -423,14 +474,20 @@ if True:
                 print(f"Skipping {task}_{factor} because it already exists")
                 continue
             weights_file_base = "weights_" + task+ "_" + factor + "_" + model_name + ".pth"
-            res_train, res_test, res_test_s = run_task(releases_train, new_tasks[task], factor, folds=folds, train_epochs=2, batch_size=2000, save_weights=weights_file_base, lrate=0.00002*10*4, model_name=model_name)
+            res_train, res_test, res_test_s = run_task(releases_train, new_tasks[task], factor, folds=folds, train_epochs=15, batch_size=64, save_weights=weights_file_base, lrate=0.0005, model_name=model_name)
 
             # test set on R12
             res_test_r12 = []
+            res_test_r12_subject = []
             for fold in range(folds):
                 weights_file = weights_file_base.replace(".pth", "") + f"_{fold}.pth"
-                _, res_test_r12_tmp, _ = run_task("R12", new_tasks[task], factor, folds=1,  train_epochs=1,  batch_size=2000, weights=weights_file, model_freeze=True, model_name=model_name, random_add=fold)
-                res_test_r12.append(res_test_r12_tmp)
+                _, res_test_r12_tmp, res_test_r12_subject_tmp = run_task("R12", new_tasks[task], factor, folds=1,  train_epochs=1,  batch_size=1000, weights=weights_file, model_freeze=True, model_name=model_name, random_add=fold)
+                res_test_r12.extend(res_test_r12_tmp)
+                res_test_r12_subject.extend(res_test_r12_subject_tmp)
+                
+                
             with open(json_file, "w") as f:
-                json.dump({"train": res_train, "test": res_test, "test_ci": res_test_ci, "test_r12": res_test_r12}, f)
-            print(f"Task: {task}, Factor: {factor}, Train: {res_train}, Test: {res_test_ci}")
+                # make the dump pretty
+                dump_dict = {"train": res_train, "validation": res_test, "validation_subject": res_test_s, "test_r12": res_test_r12, "test_r12_subject": res_test_r12_subject}
+                print(json.dumps(dump_dict, indent=4))
+                json.dump(dump_dict, f, indent=4)

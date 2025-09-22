@@ -240,7 +240,7 @@ def create_model(config):
             self.log('val/loss', loss, on_step=False, on_epoch=True)
         
         def on_validation_epoch_end(self):
-            self.log("val/recall_epoch", self.recall, on_step=False, on_epoch=True)
+            self.log("val/recall_epoch", self.recall, on_step=False, on_epoch=True) # AI says it should be self.val_recall
             self.log("val/precision_epoch", self.val_precision, on_step=False, on_epoch=True)
             self.log("val/f1_epoch", self.val_f1, on_step=False, on_epoch=True)
             val_acc = self.val_accuracy.compute()
@@ -250,7 +250,7 @@ def create_model(config):
         def configure_optimizers(self):
             optimizer = torch.optim.AdamW(
                 self.parameters(), 
-                lr=0.001, 
+                lr=0.001, # should be self.lr
                 weight_decay=1e-4
             )
             

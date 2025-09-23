@@ -262,8 +262,8 @@ def wrap_dataset_name(name: str):
 
 
 def prepare_table(df: pd.DataFrame):
-    # drop test dataset
-    df = df[df["dataset"] != "test"]
+    # drop test dataset and create a copy to avoid SettingWithCopyWarning
+    df = df[df["dataset"] != "test"].copy()
 
     df["dataset"] = df["dataset"].apply(wrap_dataset_name)
     # changing the column order
@@ -312,7 +312,7 @@ def prepare_table(df: pd.DataFrame):
     df.loc["Total", "dataset"] = f"Total {len(df) - 1} datasets"
     df.loc["Total", "nchans_set"] = ""
     df.loc["Total", "sampling_freqs"] = ""
-    df.loc["Total", "duration (h)"] = ""
+    df.loc["Total", "duration (h)"] = None
     df.loc["Total", "size"] = human_readable_size(df.loc["Total", "size_bytes"])
     df = df.drop(columns=["size_bytes"])
     # arrounding the hours

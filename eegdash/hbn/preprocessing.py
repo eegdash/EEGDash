@@ -1,3 +1,14 @@
+# Authors: The EEGDash contributors.
+# License: GNU General Public License
+# Copyright the EEGDash contributors.
+
+"""Preprocessing utilities specific to the Healthy Brain Network dataset.
+
+This module contains preprocessing classes and functions designed specifically for
+HBN EEG data, including specialized annotation handling for eyes-open/eyes-closed
+paradigms and other HBN-specific preprocessing steps.
+"""
+
 import mne
 import numpy as np
 

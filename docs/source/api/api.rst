@@ -26,7 +26,7 @@ Datasets
 .. toctree::
    :maxdepth: 2
 
-   api/dataset/modules
+   dataset/modules
 
 .. note::
    The dataset API above is generated automatically during the build.
@@ -36,4 +36,3 @@ Datasets
 
    api_core
    api_features
-

@@ -55,7 +55,7 @@ html_js_files = []
 
 # Required for sphinx-sitemap: set the canonical base URL of the site
 # Make sure this matches the actual published docs URL and ends with '/'
-html_baseurl = "https://sccn.github.io/eegdash/"
+html_baseurl = "https://eegdash.org/"
 
 html_theme_options = {
     "icon_links_label": "External Links",  # for screen reader
@@ -91,7 +91,7 @@ html_theme_options = {
         },
         {
             "name": "Docs (Stable)",
-            "url": "https://sccn.github.io/EEGDash",
+            "url": "https://eegdash.org/EEGDash",
             "icon": "fa-solid fa-book",
             "type": "fontawesome",
         },

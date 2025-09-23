@@ -3,12 +3,9 @@ from pathlib import Path
 from typing import Any, Mapping
 
 import mne
-import numpy as np
-import xarray as xr
 from docstring_inheritance import NumpyDocstringInheritanceInitMeta
 from dotenv import load_dotenv
-from joblib import Parallel, delayed
-from mne_bids import find_matching_paths, get_bids_path_from_fname, read_raw_bids
+from mne_bids import find_matching_paths
 from pymongo import InsertOne, UpdateOne
 from rich.console import Console
 from rich.panel import Panel
@@ -316,38 +313,6 @@ class EEGDash:
                         f"Conflicting constraints for '{key}': disjoint sets {r_val!r} and {k_val!r}"
                     )
 
-    def load_eeg_data_from_bids_file(self, bids_file: str) -> xr.DataArray:
-        """Load EEG data from a local BIDS-formatted file.
-
-        Parameters
-        ----------
-        bids_file : str
-            Path to a BIDS-compliant EEG file (e.g., ``*_eeg.edf``, ``*_eeg.bdf``,
-            ``*_eeg.vhdr``, ``*_eeg.set``).
-
-        Returns
-        -------
-        xr.DataArray
-            EEG data with dimensions ``("channel", "time")``.
-
-        """
-        bids_path = get_bids_path_from_fname(bids_file, verbose=False)
-        raw_object = read_raw_bids(bids_path=bids_path, verbose=False)
-        eeg_data = raw_object.get_data()
-
-        fs = raw_object.info["sfreq"]
-        max_time = eeg_data.shape[1] / fs
-        time_steps = np.linspace(0, max_time, eeg_data.shape[1]).squeeze()  # in seconds
-
-        channel_names = raw_object.ch_names
-
-        eeg_xarray = xr.DataArray(
-            data=eeg_data,
-            dims=["channel", "time"],
-            coords={"time": time_steps, "channel": channel_names},
-        )
-        return eeg_xarray
-
     def add_bids_dataset(
         self, dataset: str, data_dir: str, overwrite: bool = True
     ) -> None:
@@ -410,39 +375,6 @@ class EEGDash:
             logger.info("Deleted: %s", result.deleted_count)
             logger.info("Upserted: %s", result.upserted_count)
             logger.info("Errors: %s ", result.bulk_api_result.get("writeErrors", []))
-
-    def get(self, query: dict[str, Any]) -> list[xr.DataArray]:
-        """Download and return EEG data arrays for records matching a query.
-
-        Parameters
-        ----------
-        query : dict
-            MongoDB query used to select records.
-
-        Returns
-        -------
-        list of xr.DataArray
-            EEG data for each matching record, with dimensions ``("channel", "time")``.
-
-        Notes
-        -----
-        Retrieval runs in parallel. Downloaded files are read and discarded
-        (no on-disk caching here).
-
-        """
-        sessions = self.find(query)
-        results = []
-        if sessions:
-            logger.info("Found %s records", len(sessions))
-            results = Parallel(
-                n_jobs=-1 if len(sessions) > 1 else 1, prefer="threads", verbose=1
-            )(
-                delayed(downloader.load_eeg_from_s3)(
-                    downloader.get_s3path("s3://openneuro.org", session["bidspath"])
-                )
-                for session in sessions
-            )
-        return results
 
     def _add_request(self, record: dict):
         """Internal helper method to create a MongoDB insertion request for a record."""

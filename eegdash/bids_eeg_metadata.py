@@ -1,3 +1,14 @@
+# Authors: The EEGDash contributors.
+# License: GNU General Public License
+# Copyright the EEGDash contributors.
+
+"""BIDS metadata processing and query building utilities.
+
+This module provides functions for processing BIDS-formatted EEG metadata, building database
+queries from user parameters, and enriching metadata records with participant information.
+It handles the translation between user-friendly query parameters and MongoDB query syntax.
+"""
+
 import re
 from pathlib import Path
 from typing import Any

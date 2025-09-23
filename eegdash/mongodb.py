@@ -1,3 +1,14 @@
+# Authors: The EEGDash contributors.
+# License: GNU General Public License
+# Copyright the EEGDash contributors.
+
+"""MongoDB connection and operations management.
+
+This module provides thread-safe MongoDB connection management and high-level database
+operations for the EEGDash metadata database. It includes methods for finding, adding,
+and updating EEG data records with proper connection pooling and error handling.
+"""
+
 import threading
 
 from pymongo import MongoClient

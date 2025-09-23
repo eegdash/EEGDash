@@ -1,8 +1,10 @@
-# Authors: The EEGDash contributors.
-# License: GNU General Public License
-# Copyright the EEGDash contributors.
-
 """High-level interface to the EEGDash metadata database.
+
+Authors: The EEGDash contributors.
+
+License: GNU General Public License
+
+mCopyright the EEGDash contributors.
 
 This module provides the main EEGDash class which serves as the primary entry point for
 interacting with the EEGDash ecosystem. It offers methods to query, insert, and update

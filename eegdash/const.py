@@ -1,3 +1,10 @@
+__all__ = [
+    "config",
+    "ALLOWED_QUERY_FIELDS",
+    "RELEASE_TO_OPENNEURO_DATASET_MAP",
+    "SUBJECT_MINI_RELEASE_MAP",
+]
+
 ALLOWED_QUERY_FIELDS = {
     "data_name",
     "dataset",

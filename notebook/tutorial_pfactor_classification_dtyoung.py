@@ -24,6 +24,7 @@ from braindecode.models import EEGNeX, TSception, EEGConformer
 from lightning.pytorch.tuner import Tuner
 from torchmetrics import Recall, Precision, F1Score, Accuracy
 from lightning.pytorch.loggers import TensorBoardLogger
+from torch.utils.data import Subset
 cache_dir = Path("/mnt/v1/arno/eeg2025")
 SFREQ = 100  # sampling frequency
 
@@ -240,7 +241,7 @@ def create_model(config):
             self.log('val/loss', loss, on_step=False, on_epoch=True)
         
         def on_validation_epoch_end(self):
-            self.log("val/recall_epoch", self.recall, on_step=False, on_epoch=True) # AI says it should be self.val_recall
+            self.log("val/recall_epoch", self.val_recall, on_step=False, on_epoch=True) # AI says it should be self.val_recall
             self.log("val/precision_epoch", self.val_precision, on_step=False, on_epoch=True)
             self.log("val/f1_epoch", self.val_f1, on_step=False, on_epoch=True)
             val_acc = self.val_accuracy.compute()
@@ -275,25 +276,16 @@ def create_model(config):
     return EEGModel(config)
 
 # Add this analysis before training
-def analyze_fold_distribution(train_ds, val_ds, fold_idx):
+def analyze_fold_distribution(train_ds: Subset, val_ds: Subset):
     """Analyze gender and subject distribution per fold"""
     # For Subset, get description DataFrame
-    def get_desc(ds):
-        if hasattr(ds, 'description'):
-            return ds.description
-        elif hasattr(ds, 'dataset') and hasattr(ds.dataset, 'description'):
-            # ds is a Subset
-            return ds.dataset.description.iloc[ds.indices].reset_index(drop=True)
-        else:
-            raise ValueError("Cannot get description from dataset.")
-
-    train_desc = get_desc(train_ds)
-    val_desc = get_desc(val_ds)
+    train_desc = train_ds.dataset.get_metadata().iloc[train_ds.indices]
+    val_desc = val_ds.dataset.get_metadata().iloc[val_ds.indices]
     train_subjects = train_desc["subject"]
     val_subjects = val_desc["subject"]
     train_gender_dist = pd.Series(train_desc["sex"]).value_counts()
     val_gender_dist = pd.Series(val_desc["sex"]).value_counts()
-    print(f"Statistics of balanced dataset for fold {fold_idx}:")
+    print(f"Statistics of balanced dataset")
     print(f"Train subjects: {len(set(train_subjects))}, Val subjects: {len(set(val_subjects))}")
     print(f"Train gender: {train_gender_dist}")
     print(f"Val gender: {val_gender_dist}")
@@ -304,7 +296,7 @@ def balance_windows_by_class(ds, random_seed=42):
     Returns a torch.utils.data.Subset of ds with equal number of windows for M and F classes.
     """
     import numpy as np
-    desc = ds.description
+    desc = ds.get_metadata()
     m_indices = np.where(desc['sex'] == 'M')[0]
     f_indices = np.where(desc['sex'] == 'F')[0]
     n_min = min(len(m_indices), len(f_indices))
@@ -316,7 +308,6 @@ def balance_windows_by_class(ds, random_seed=42):
     return Subset(ds, selected_indices)
 
 def run_task(releases, tasks, target_name, folds=10, weights=None, model_freeze=False, random_add=42, train_epochs=20, save_weights="", batch_size=100, lrate=0.00002, model_name = 'EEGNeX', dropout=0.5):
-    from torch.utils.data import Subset
 
     # random seed for reproducibility
     L.seed_everything(random_add)
@@ -357,7 +348,6 @@ def run_task(releases, tasks, target_name, folds=10, weights=None, model_freeze=
     correct_val_list  = []
     unique_subjects, unique_indices = np.unique(windows_ds.description["subject"], return_index=True)
     unique_gender = windows_ds.description["sex"][unique_indices].values
-    print(f"Class distribution in full set: {(unique_gender == 'M').sum()} male, {(unique_gender == 'F').sum()} female")
     if folds > 1:
         splitter = StratifiedKFold(n_splits=folds, shuffle=True, random_state=random_add)
         splits = splitter.split(unique_subjects, unique_gender)
@@ -369,24 +359,11 @@ def run_task(releases, tasks, target_name, folds=10, weights=None, model_freeze=
         train_ds = BaseConcatDataset([ds for ds in windows_ds.datasets if ds.description.subject in unique_subjects[train_idx]])
         val_ds   = BaseConcatDataset([ds for ds in windows_ds.datasets if ds.description.subject in unique_subjects[val_idx]])
 
-
         # Balance windows per class for train and val sets
         train_ds = balance_windows_by_class(train_ds, random_seed=random_add)
         val_ds = balance_windows_by_class(val_ds, random_seed=random_add)
 
-        # For Subset, get description DataFrame
-        def get_desc(ds):
-            if hasattr(ds, 'description'):
-                return ds.description
-            elif hasattr(ds, 'dataset') and hasattr(ds.dataset, 'description'):
-                return ds.dataset.description.iloc[ds.indices].reset_index(drop=True)
-            else:
-                raise ValueError("Cannot get description from dataset.")
-
-        train_desc = get_desc(train_ds)
-        val_desc = get_desc(val_ds)
-        print(f"Number of windows in balanced set: {len(train_desc)} train, {len(val_desc)} val")
-        analyze_fold_distribution(train_ds, val_ds, it_fold)
+        analyze_fold_distribution(train_ds, val_ds)
 
         # Create dataloaders with smaller batch size to save memory
         train_loader = DataLoader(train_ds, batch_size=batch_size, shuffle=True, prefetch_factor=4, num_workers=4)
@@ -442,7 +419,7 @@ def run_task(releases, tasks, target_name, folds=10, weights=None, model_freeze=
             accelerator="auto",
             devices=1 if torch.cuda.is_available() else None,
             enable_checkpointing=False,
-            logger=tb_logger,
+            logger=None, #tb_logger,
             callbacks=[early_stopping]
         )
 
@@ -543,7 +520,7 @@ new_tasks = { 'movies': ['DespicableMe', 'DiaryOfAWimpyKid', 'FunwithFractals', 
   'symbolSearch': ['symbolSearch'],
   'all_tasks': ['DespicableMe', 'DiaryOfAWimpyKid', 'FunwithFractals', 'RestingState', 'ThePresent', 'contrastChangeDetection', 'seqLearning6target', 'seqLearning8target', 'surroundSupp', 'symbolSearch']
   }
-releases_train = releases[:-1]
+releases_train = ['R12'] #releases[:-1]
 tasks = [  
 # 'DespicableMe',
 #   'DiaryOfAWimpyKid',
@@ -557,7 +534,7 @@ tasks = [
 #   'symbolSearch'
 ]
 factors = ['attention']
-folds = 1
+folds = 10
 
 import random
 from torch.utils.data import Subset
@@ -583,7 +560,7 @@ for factor in factors:
             # if check_experiment_exists(task, factor, model_name, folds, batch_size, lrate, random_add, dropout):
             #     print(f"Skipping existing experiment for {task}, {factor}, {model_name}, {folds}, {batch_size}, {lrate}, {random_add}, {dropout}")
             #     continue
-            experiment_name = f"all_releases_task_{'_'.join(tasks)}_{factor}_{model_name}_bs{batch_size}_lr{lrate}_seed{random_add}_dropout{dropout}_k{folds}"
+            experiment_name = f"R12_task_{'_'.join(tasks)}_{factor}_{model_name}_bs{batch_size}_lr{lrate}_seed{random_add}_dropout{dropout}_k{folds}"
             print(f"Running experiment {experiment_name}")
             weights_file_base = f"checkpoints/{experiment_name}.pth"
             res_train, res_val = run_task(
@@ -596,49 +573,49 @@ for factor in factors:
                 json.dump({"train": res_train, "val": res_val}, f)
 
             # test set on R12
-            cached_data_folder_names = []
-            for task in tasks:
-                cached_data_folder_name = "/home/arno/v1/eegdash/notebook/data/hbn_R12_" + task + "_" + factor
-                if os.path.exists(cached_data_folder_name):
-                    cached_data_folder_names.append(cached_data_folder_name)
-                else:
-                    print(f"Missing DataError({cached_data_folder_name}): You first run process_data to run the task for each release")
+            # cached_data_folder_names = []
+            # for task in tasks:
+            #     cached_data_folder_name = "/home/arno/v1/eegdash/notebook/data/hbn_R12_" + task + "_" + factor
+            #     if os.path.exists(cached_data_folder_name):
+            #         cached_data_folder_names.append(cached_data_folder_name)
+            #     else:
+            #         print(f"Missing DataError({cached_data_folder_name}): You first run process_data to run the task for each release")
 
-            print("Loading data from disk")
-            windows_ds = []
-            for cached_data_folder_name in cached_data_folder_names:
-                windows_ds_tmp = load_concat_dataset(path=cached_data_folder_name, preload=False)
-                windows_ds.extend([ds for ds in windows_ds_tmp.datasets])
-                print(f"Number of datasets in {cached_data_folder_name}: {len(windows_ds_tmp.datasets)}")
+            # print("Loading data from disk")
+            # windows_ds = []
+            # for cached_data_folder_name in cached_data_folder_names:
+            #     windows_ds_tmp = load_concat_dataset(path=cached_data_folder_name, preload=False)
+            #     windows_ds.extend([ds for ds in windows_ds_tmp.datasets])
+            #     print(f"Number of datasets in {cached_data_folder_name}: {len(windows_ds_tmp.datasets)}")
 
-            test_ds = BaseConcatDataset(windows_ds)
-            test_ds = BaseConcatDataset([ds for ds in test_ds.datasets if ds.description['sex'] in ['M', 'F']])
-            test_ds = balance_windows_by_class(test_ds, random_seed=random_add)
-            analyze_fold_distribution(test_ds, test_ds, 'R12')
-            test_loader = DataLoader(test_ds, batch_size=batch_size, num_workers=4)
+            # test_ds = BaseConcatDataset(windows_ds)
+            # test_ds = BaseConcatDataset([ds for ds in test_ds.datasets if ds.description['sex'] in ['M', 'F']])
+            # test_ds = balance_windows_by_class(test_ds, random_seed=random_add)
+            # analyze_fold_distribution(test_ds, test_ds)
+            # test_loader = DataLoader(test_ds, batch_size=batch_size, num_workers=4)
 
-            res_test_r12 = []
-            for fold in range(folds):
-                weights_file = weights_file_base.replace(".pth", "") + f"_{fold}.pth"
-                # load model weights and run inference on R12
-                if not os.path.exists(weights_file):
-                    print(f"Missing weights file {weights_file}, skipping")
-                    continue
-                model = create_model({
-                    "batch_size": batch_size,
-                    "dropout": dropout,
-                    "lr": lrate,
-                    "random_seed": random_add,
-                    "model_name": model_name,
-                    "fold": fold,
-                })
-                model.load_state_dict(torch.load(weights_file, map_location="cpu"))
-                model.eval()
-                trainer_test = L.Trainer(accelerator="auto", devices=1 if torch.cuda.is_available() else None, logger=False, enable_checkpointing=False)
-                test_result = trainer_test.validate(model, test_loader, verbose=False)
-                test_acc = float(test_result[0].get('val/accuracy_epoch', 0.0))
-                res_test_r12.append(test_acc)
-            print(f"Test on R12 acc: {res_test_r12}")
+            # res_test_r12 = []
+            # for fold in range(folds):
+            #     weights_file = weights_file_base.replace(".pth", "") + f"_{fold}.pth"
+            #     # load model weights and run inference on R12
+            #     if not os.path.exists(weights_file):
+            #         print(f"Missing weights file {weights_file}, skipping")
+            #         continue
+            #     model = create_model({
+            #         "batch_size": batch_size,
+            #         "dropout": dropout,
+            #         "lr": lrate,
+            #         "random_seed": random_add,
+            #         "model_name": model_name,
+            #         "fold": fold,
+            #     })
+            #     model.load_state_dict(torch.load(weights_file, map_location="cpu"))
+            #     model.eval()
+            #     trainer_test = L.Trainer(accelerator="auto", devices=1 if torch.cuda.is_available() else None, logger=False, enable_checkpointing=False)
+            #     test_result = trainer_test.validate(model, test_loader, verbose=False)
+            #     test_acc = float(test_result[0].get('val/accuracy_epoch', 0.0))
+            #     res_test_r12.append(test_acc)
+            # print(f"Test on R12 acc: {res_test_r12}")
             
-            with open(json_file, "w") as f:
-                json.dump({"train": res_train, "val": res_val, "test": res_test_r12}, f)
+            # with open(json_file, "w") as f:
+            #     json.dump({"train": res_train, "val": res_val, "test": res_test_r12}, f)

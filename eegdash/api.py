@@ -1,3 +1,15 @@
+# Authors: The EEGDash contributors.
+# License: GNU General Public License
+# Copyright the EEGDash contributors.
+
+"""High-level interface to the EEGDash metadata database.
+
+This module provides the main EEGDash class which serves as the primary entry point for
+interacting with the EEGDash ecosystem. It offers methods to query, insert, and update
+metadata records stored in the EEGDash MongoDB database, and includes utilities to load
+EEG data from S3 for matched records.
+"""
+
 import os
 from pathlib import Path
 from typing import Any, Mapping

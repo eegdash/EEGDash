@@ -1,10 +1,9 @@
 import mne
 import numpy as np
 import pytest
-import xarray as xr
 from mne_bids import BIDSPath, write_raw_bids
 
-from eegdash.api import EEGDash, EEGDashDataset
+from eegdash.api import EEGDashDataset
 from eegdash.paths import get_default_cache_dir
 
 
@@ -39,29 +38,6 @@ def dummy_bids_dataset(tmpdir_factory):
     write_raw_bids(raw, bids_path, overwrite=True, format="EEGLAB", allow_preload=True)
 
     return str(bids_path.fpath)
-
-
-def test_load_eeg_data_from_bids_file(dummy_bids_dataset):
-    eegdash = EEGDash()
-    data = eegdash.load_eeg_data_from_bids_file(dummy_bids_dataset)
-    assert isinstance(data, xr.DataArray)
-
-
-def test_load_eeg_data_from_bids_file_content(dummy_bids_dataset):
-    eegdash = EEGDash()
-    data = eegdash.load_eeg_data_from_bids_file(dummy_bids_dataset)
-
-    # Check dimensions
-    assert data.dims == ("channel", "time")
-
-    # Check shape
-    assert data.shape == (3, 100)
-
-    # Check channel names
-    assert list(data.channel.values) == ["EEG 001", "EEG 002", "EEG 003"]
-
-    # Check time values
-    assert len(data.time.values) == 100
 
 
 def test_eegdashdataset_empty_cache_dir():

@@ -256,8 +256,10 @@ def wrap_tags(cell: str):
 def wrap_dataset_name(name: str):
     # Remove any surrounding whitespace
     name = name.strip()
-    # Construct the URL based on the dataset name
-    url = f"api/eegdash.dataset.html#eegdash.dataset.{name.upper()}.html"
+    # Link to the package-level dataset page and the class anchor
+    # Dynamic classes are re-exported in ``eegdash.dataset`` so anchors resolve as:
+    #   api/eegdash.dataset.html#eegdash.dataset.<CLASS>
+    url = f"api/eegdash.dataset.html#eegdash.dataset.{name.upper()}"
     return f'<a href="{url}">{name.upper()}</a>'
 
 

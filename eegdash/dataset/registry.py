@@ -128,7 +128,12 @@ def _markdown_table(row_series: pd.Series) -> str:
     table = tabulate(df, headers="keys", tablefmt="rst", showindex=False)
 
     # Add a caption for the table
-    caption = f"Short overview of dataset {dataset_id} more details in the `Nemar documentation <https://nemar.org/dataexplorer/detail?dataset_id={dataset_id}>`_."
+    # Use an anonymous external link (double underscore) to avoid duplicate
+    # target warnings when this docstring is repeated across many classes.
+    caption = (
+        f"Short overview of dataset {dataset_id} more details in the "
+        f"`NeMAR documentation <https://nemar.org/dataexplorer/detail?dataset_id={dataset_id}>`__."
+    )
     # adding caption below the table
     # Indent the table to fit within the admonition block
     indented_table = "\n".join("    " + line for line in table.split("\n"))

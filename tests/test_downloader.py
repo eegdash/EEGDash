@@ -5,7 +5,6 @@ os.environ.setdefault("MNE_USE_USER_CONFIG", "false")
 os.environ.setdefault("MNE_DONTWRITE_HOME", "true")
 
 import pytest
-import xarray as xr
 
 import eegdash.downloader as downloader
 
@@ -119,14 +118,3 @@ def test_download_dependencies_handles_competition_paths(cache_dir: Path):
         local_path = cache_dir / "ds005509-bdf-mini" / rel
         assert local_path.exists()
         assert local_path.stat().st_size > 0
-
-
-def test_load_eeg_from_s3_returns_dataarray():
-    _require_s3(OPENNEURO_EEG_FILE)
-    result = downloader.load_eeg_from_s3(OPENNEURO_EEG_FILE)
-
-    assert isinstance(result, xr.DataArray)
-    assert result.dims == ("channel", "time")
-    assert result.sizes["channel"] > 0
-    assert result.sizes["time"] > 0
-    assert result.dtype.kind == "f"

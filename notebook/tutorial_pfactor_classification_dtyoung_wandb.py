@@ -11,21 +11,23 @@ from braindecode.preprocessing import Preprocessor, create_fixed_length_windows,
 from braindecode.datasets.base import BaseConcatDataset
 from braindecode.datautil import load_concat_dataset
 from pathlib import Path
-import numpy as np
 import pandas as pd
-import numpy as np
 import torch
 from torch.nn import functional as F
 from sklearn.model_selection import train_test_split, StratifiedKFold
 from torch.utils.data import DataLoader
 import os
-from scipy.stats import bootstrap
 import lightning as L
 from braindecode.models import EEGNeX, TSception, EEGConformer
-from lightning.pytorch.tuner import Tuner
 from torchmetrics import Recall, Precision, F1Score, Accuracy
 from lightning.pytorch.loggers import TensorBoardLogger, WandbLogger
 from torch.utils.data import Subset
+from pathlib import Path
+import json
+from torch.utils.data import Subset
+import numpy as np
+
+
 cache_dir = Path("/mnt/v1/arno/eeg2025")
 SFREQ = 100  # sampling frequency
 
@@ -310,67 +312,73 @@ def balance_windows_by_class(ds, random_seed=42):
 
 
 def run_task(config=None):
-    with wandb.init(config=config):
-        config = wandb.config
-        train_data_name = "R12" if "R12" in config['releases'] and len(config['releases']) == 1 else "R1-R11"
-        experiment_name = f"{train_data_name}_task_{'_'.join(config['tasks'])}_{config['target_name']}_{config['model']}_bs{config['batch_size']}_lr{config['lrate']}_seed{config['seed']}_dropout{config['dropout']}_k{config['folds']}"
+    
+    config = wandb.config
+    train_data_name = "R12" if "R12" in config['releases'] and len(config['releases']) == 1 else "R1-R11"
+    experiment_name = f"{train_data_name}_task_{'_'.join(config['tasks'])}_{config['target_name']}_{config['model']}_bs{config['batch_size']}_lr{config['lrate']}_seed{config['seed']}_dropout{config['dropout']}_k{config['folds']}"
 
-        # random seed for reproducibility
-        L.seed_everything(config['seed'])
-        global deep_copy_dataset
+    # random seed for reproducibility
+    global deep_copy_dataset
 
-        releases = config['releases']
-        if not isinstance(releases, list):
-            releases = [releases]
-        tasks = config['tasks']
-        if not isinstance(tasks, list):
-            tasks = [tasks]
+    releases = config['releases']
+    if not isinstance(releases, list):
+        releases = [releases]
+    tasks = config['tasks']
+    if not isinstance(tasks, list):
+        tasks = [tasks]
 
-        cached_data_folder_names = []
-        for release in releases:
-            for task in tasks:
-                cached_data_folder_name = "/home/arno/v1/eegdash/notebook/data/hbn_" + release + "_" + task + "_" + config['target_name']
-                if os.path.exists(cached_data_folder_name):
-                    cached_data_folder_names.append(cached_data_folder_name)
-                else:
-                    print(f"Missing DataError({cached_data_folder_name}): You first run process_data to run the task for each release")
+    cached_data_folder_names = []
+    for release in releases:
+        for task in tasks:
+            cached_data_folder_name = "/home/arno/v1/eegdash/notebook/data/hbn_" + release + "_" + task + "_" + config['target_name']
+            if os.path.exists(cached_data_folder_name):
+                cached_data_folder_names.append(cached_data_folder_name)
+            else:
+                print(f"Missing DataError({cached_data_folder_name}): You first run process_data to run the task for each release")
 
-        print("Loading data from disk")
-        windows_ds = []
-        for cached_data_folder_name in cached_data_folder_names:
-            windows_ds_tmp = load_concat_dataset(path=cached_data_folder_name, preload=False)
-            windows_ds.extend([ds for ds in windows_ds_tmp.datasets])
-            print(f"Number of datasets in {cached_data_folder_name}: {len(windows_ds_tmp.datasets)}")
+    print("Loading data from disk")
+    windows_ds = []
+    for cached_data_folder_name in cached_data_folder_names:
+        windows_ds_tmp = load_concat_dataset(path=cached_data_folder_name, preload=False)
+        windows_ds.extend([ds for ds in windows_ds_tmp.datasets])
+        print(f"Number of datasets in {cached_data_folder_name}: {len(windows_ds_tmp.datasets)}")
 
-        windows_ds = BaseConcatDataset(windows_ds)
-        print(f"Number of datasets in all releases: {len(windows_ds.datasets)}")
-        print(f"number of samples in windows_ds: {len(windows_ds)}")
+    windows_ds = BaseConcatDataset(windows_ds)
+    print(f"Number of datasets in all releases: {len(windows_ds.datasets)}")
+    print(f"number of samples in windows_ds: {len(windows_ds)}")
 
-        # ## Creating a Training and Test Set
-        correct_train_list = []
-        correct_val_list  = []
-        unique_subjects, unique_indices = np.unique(windows_ds.description["subject"], return_index=True)
-        unique_gender = windows_ds.description["sex"][unique_indices].values
-        if config['folds'] > 1:
-            splitter = StratifiedKFold(n_splits=config['folds'], shuffle=True, random_state=config['seed'])
-            splits = splitter.split(unique_subjects, unique_gender)
-        else:
-            train_idx, val_idx = train_test_split(np.arange(len(unique_subjects)),train_size=0.8,stratify=unique_gender,random_state=config['seed'])
-            splits = [(train_idx, val_idx)]
-            
-        for it_fold, (train_idx, val_idx) in enumerate(splits):
-            train_ds = BaseConcatDataset([ds for ds in windows_ds.datasets if ds.description.subject in unique_subjects[train_idx]])
-            val_ds   = BaseConcatDataset([ds for ds in windows_ds.datasets if ds.description.subject in unique_subjects[val_idx]])
+    # ## Creating a Training and Test Set
+    correct_train_list = []
+    correct_val_list  = []
+    unique_subjects, unique_indices = np.unique(windows_ds.description["subject"], return_index=True)
+    unique_gender = windows_ds.description["sex"][unique_indices].values
+    if config['folds'] > 1:
+        splitter = StratifiedKFold(n_splits=config['folds'], shuffle=True, random_state=config['data_split_seed'])
+        splits = splitter.split(unique_subjects, unique_gender)
+    else:
+        train_idx, val_idx = train_test_split(np.arange(len(unique_subjects)),train_size=0.8,stratify=unique_gender,random_state=config['data_split_seed'])
+        splits = [(train_idx, val_idx)]
+        
+    for it_fold, (train_idx, val_idx) in enumerate(splits):
+        train_ds = BaseConcatDataset([ds for ds in windows_ds.datasets if ds.description.subject in unique_subjects[train_idx]])
+        val_ds   = BaseConcatDataset([ds for ds in windows_ds.datasets if ds.description.subject in unique_subjects[val_idx]])
 
-            # Balance windows per class for train and val sets
-            train_ds = balance_windows_by_class(train_ds, random_seed=config['seed'])
-            val_ds = balance_windows_by_class(val_ds, random_seed=config['seed'])
+        # Balance windows per class for train and val sets
+        train_ds = balance_windows_by_class(train_ds, random_seed=config['data_split_seed'])
+        val_ds = balance_windows_by_class(val_ds, random_seed=config['data_split_seed'])
 
-            analyze_fold_distribution(train_ds, val_ds)
+        analyze_fold_distribution(train_ds, val_ds)
 
+        config["it_fold"] = it_fold
+
+        with wandb.init(config=config):
+            L.seed_everything(config['seed'])
             # Create dataloaders with smaller batch size to save memory
             train_loader = DataLoader(train_ds, batch_size=config['batch_size'], shuffle=True, prefetch_factor=4, num_workers=4)
             val_loader   = DataLoader(  val_ds, batch_size=config['batch_size'], prefetch_factor=4, num_workers=4)
+
+            
+            
 
             # create model and hparams dict
             hparams = {
@@ -487,40 +495,12 @@ def check_experiment_exists(task, factor, model_name, folds, batch_size, lrate, 
     return False
 
 # %%
-from pathlib import Path
-import json
-
 results_dir = Path("results")
 results_dir.mkdir(exist_ok=True)
 
-# releases = ["R12"]
-
-import sys
-import numpy as np
-factor = "attention"
-
-# load data to avoid errors
-tasks = [  'DespicableMe',
-  'DiaryOfAWimpyKid',
-  'FunwithFractals',
-  'ThePresent',
-  'RestingState',
-  'contrastChangeDetection',
-  'seqLearning6target',
-  'seqLearning8target',
-  'surroundSupp',
-  'symbolSearch']
 factors = ["sex", "age", "p_factor", "attention", "internalizing", "externalizing"]
 releases = ["R1", "R2", "R3", "R4", "R5", "R6", "R7", "R8", "R9", "R10", "R11", "R12"]
 
-new_tasks = { 'movies': ['DespicableMe', 'DiaryOfAWimpyKid', 'FunwithFractals', 'ThePresent'],
-  'restingstate': ['RestingState'],
-  'contrastChangeDetection': ['contrastChangeDetection'],
-  'seqLearning': ['seqLearning6target', 'seqLearning8target'],
-  'surroundSupp': ['surroundSupp'],
-  'symbolSearch': ['symbolSearch'],
-  'all_tasks': ['DespicableMe', 'DiaryOfAWimpyKid', 'FunwithFractals', 'RestingState', 'ThePresent', 'contrastChangeDetection', 'seqLearning6target', 'seqLearning8target', 'surroundSupp', 'symbolSearch']
-  }
 releases_train = ['R12'] #releases[:-1]
 tasks = [  
 # 'DespicableMe',
@@ -534,12 +514,9 @@ tasks = [
 #   'surroundSupp',
 #   'symbolSearch'
 ]
-folds = 1
-
-import random
-from torch.utils.data import Subset
-import numpy as np
+folds = 10
 factor = 'attention'
+
 # for factor in factors:
 sweep_config = {
     'method': 'random'
@@ -554,13 +531,17 @@ parameters_dict = {
         'values': [64, 128, 256, 512]
     },
     'lrate': {
-        'values': [0.02, 0.002, 0.0002, 0.00006, 0.00002]
+        # 'values': np.arange(0.00002, 0.00021, (0.0002-0.00002)/5).tolist(), #[0.02, 0.002, 0.0002, 0.00006, 0.00002]
+        'values': [0.00015, 0.0002],
     },
+    # 'model': {
+    #     'values': ['EEGConformer', 'TSception', 'EEGNeX'] #'EEGConformerSimplified', 
+    # },
     'model': {
-        'values': ['EEGConformer', 'TSception', 'EEGNeX'] #'EEGConformerSimplified', 
+        'value': 'EEGConformerSimplified',
     },
     'dropout': {
-        'values': [0.3, 0.4, 0.5, 0.6, 0.7]
+        'values': [0.3, 0.4, 0.5, 0.6]
     },
     'seed': {
         'values': np.random.randint(0, 100, size=20).tolist() 
@@ -580,89 +561,12 @@ parameters_dict = {
     'target_name': {
         'value': factor
     },
+    'data_split_seed': {
+        'value': 42
+    }
 }
 sweep_config['parameters'] = parameters_dict
 
 sweep_id = wandb.sweep(sweep_config, project="eegchallenge-test")
 
-wandb.agent(sweep_id, run_task, count=5)
-# train set on all releases
-# if os.path.exists(json_file):
-#     print(f"Skipping {task}_{factor} because it already exists")
-#     continue
-# batch_sizes = [64]#[64, 128, 256, 512, 1024, 2048]
-# lrates = [0.0002] #np.arange(0.02, 0.1,0.02) #[0.002, 0.0002, 0.00006, 0.00002]
-# dropouts = [0.6]#, 0.7]#[0.5, 0.6, 0.7, 0.8]
-# seeds = np.random.randint(0, 100, size=20).tolist() #[15, 20, 31, 64, 77, 88, 99, 0, 42, 9]
-# # seeds = [0]
-# models = ['EEGConformer', 'TSception', 'EEGNeX'] #'EEGConformerSimplified', 
-# for model_name in models:
-#     combinations = [(batch_size, lrate, random_add, dropout) for batch_size in batch_sizes for lrate in lrates for random_add in seeds for dropout in dropouts]
-#     # combinations = random.sample(combinations, min(20, len(combinations)))
-#     random.shuffle(combinations)
-#     # combinations = [(64, 0.002, seed, 0.6) for seed in seeds]
-#     print(f"Total combinations to run: {len(combinations)}")
-#     for batch_size, lrate, random_add, dropout in combinations:
-#         # if check_experiment_exists(task, factor, model_name, folds, batch_size, lrate, random_add, dropout):
-#         #     print(f"Skipping existing experiment for {task}, {factor}, {model_name}, {folds}, {batch_size}, {lrate}, {random_add}, {dropout}")
-#         #     continue
-#         experiment_name = f"R12_task_{'_'.join(tasks)}_{factor}_{model_name}_bs{batch_size}_lr{lrate}_seed{random_add}_dropout{dropout}_k{folds}"
-#         print(f"Running experiment {experiment_name}")
-#         weights_file_base = f"checkpoints/{experiment_name}.pth"
-#         res_train, res_val = run_task(
-#             releases_train, tasks, factor, folds=folds, random_add=random_add,
-#             train_epochs=70, batch_size=batch_size, lrate=lrate,
-#             model_name=model_name, dropout=dropout, save_weights=weights_file_base
-#         )
-
-#         # json_file = f"results/{experiment_name}.json"
-#         # with open(json_file, "w") as f:
-#         #     json.dump({"train": res_train, "val": res_val}, f)
-
-#         # test set on R12
-#         # cached_data_folder_names = []
-#         # for task in tasks:
-#         #     cached_data_folder_name = "/home/arno/v1/eegdash/notebook/data/hbn_R12_" + task + "_" + factor
-#         #     if os.path.exists(cached_data_folder_name):
-#         #         cached_data_folder_names.append(cached_data_folder_name)
-#         #     else:
-#         #         print(f"Missing DataError({cached_data_folder_name}): You first run process_data to run the task for each release")
-
-#         # print("Loading data from disk")
-#         # windows_ds = []
-#         # for cached_data_folder_name in cached_data_folder_names:
-#         #     windows_ds_tmp = load_concat_dataset(path=cached_data_folder_name, preload=False)
-#         #     windows_ds.extend([ds for ds in windows_ds_tmp.datasets])
-#         #     print(f"Number of datasets in {cached_data_folder_name}: {len(windows_ds_tmp.datasets)}")
-
-#         # test_ds = BaseConcatDataset(windows_ds)
-#         # test_ds = BaseConcatDataset([ds for ds in test_ds.datasets if ds.description['sex'] in ['M', 'F']])
-#         # test_ds = balance_windows_by_class(test_ds, random_seed=random_add)
-#         # analyze_fold_distribution(test_ds, test_ds)
-#         # test_loader = DataLoader(test_ds, batch_size=batch_size, num_workers=4)
-
-#         # res_test_r12 = []
-#         # for fold in range(folds):
-#         #     weights_file = weights_file_base.replace(".pth", "") + f"_{fold}.pth"
-#         #     # load model weights and run inference on R12
-#         #     if not os.path.exists(weights_file):
-#         #         print(f"Missing weights file {weights_file}, skipping")
-#         #         continue
-#         #     model = create_model({
-#         #         "batch_size": batch_size,
-#         #         "dropout": dropout,
-#         #         "lr": lrate,
-#         #         "random_seed": random_add,
-#         #         "model_name": model_name,
-#         #         "fold": fold,
-#         #     })
-#         #     model.load_state_dict(torch.load(weights_file, map_location="cpu"))
-#         #     model.eval()
-#         #     trainer_test = L.Trainer(accelerator="auto", devices=1 if torch.cuda.is_available() else None, logger=False, enable_checkpointing=False)
-#         #     test_result = trainer_test.validate(model, test_loader, verbose=False)
-#         #     test_acc = float(test_result[0].get('val/accuracy_epoch', 0.0))
-#         #     res_test_r12.append(test_acc)
-#         # print(f"Test on R12 acc: {res_test_r12}")
-        
-#         # with open(json_file, "w") as f:
-#         #     json.dump({"train": res_train, "val": res_val, "test": res_test_r12}, f)
+wandb.agent(sweep_id, run_task)

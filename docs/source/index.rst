@@ -1,7 +1,7 @@
 :html_theme.sidebar_secondary.remove: true
 
-EEGDASH Documentation
-=====================
+EEGDASH Homepage
+=================
 
 .. title:: EEG Dash
 

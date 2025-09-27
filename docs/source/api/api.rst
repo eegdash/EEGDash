@@ -24,14 +24,15 @@ API Reference
 
    .. grid-item-card:: Dataset
       :class-header: sd-bg-primary sd-text-white sd-font-weight-bold
-      :link: ../dataset_summary
+      :link: dataset/api_dataset
       :link-type: doc
 
-      Datasets available at EEGDash.
+      Datasets available in EEGDash with per-dataset API docs.
 
 .. toctree::
    :hidden:
 
    api_core
    api_features
+   dataset/api_dataset
    ../dataset_summary

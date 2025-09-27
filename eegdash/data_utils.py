@@ -1,3 +1,14 @@
+# Authors: The EEGDash contributors.
+# License: GNU General Public License
+# Copyright the EEGDash contributors.
+
+"""Data utilities and dataset classes for EEG data handling.
+
+This module provides core dataset classes for working with EEG data in the EEGDash ecosystem,
+including classes for individual recordings and collections of datasets. It integrates with
+braindecode for machine learning workflows and handles data loading from both local and remote sources.
+"""
+
 import io
 import json
 import os

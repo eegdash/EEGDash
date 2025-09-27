@@ -87,6 +87,7 @@ docs = [
   "lightgbm",
   "plotly",
   "nbformat",
+  "graphviz",
 ]
 
 all = [

@@ -26,13 +26,15 @@ docs/source/generated/
 docs/auto_examples/
 docs/auto_tutorials/
 docs/modules/generated/
+docs/source/api/datasets/*.rst
+docs/source/api/dataset/*.rst
+docs/source/api/generated/
 docs/sphinxext/cachedir
+docs/source/api/api_dataset.rst
 pip-log.txt
 .coverage*
 tags
 cover
-
-docs/source/api/
 
 examples/data
 #Mac files

@@ -1,0 +1,6 @@
+﻿eegdash.logging
+===============
+
+.. automodule:: eegdash.logging
+
+   

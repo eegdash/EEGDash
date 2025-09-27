@@ -1,0 +1,1071 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>DS004324 &#8212; EEG Dash</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=d2d258e8" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=235a86f3" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../../_static/documentation_options.js?v=6c02275b"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'api/datasets/ds004324';</script>
+    <link rel="canonical" href="https://eegdash.org/api/datasets/ds004324.html" />
+    <link rel="icon" href="../../_static/eegdash_icon.png"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="DS004347" href="ds004347.html" />
+    <link rel="prev" title="DS004317" href="ds004317.html" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="0.4" />
+  <!-- Google Tag Manager -->
+  <script>
+    (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-MXC3DGL6');
+  </script>
+  <!-- End Google Tag Manager -->
+
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/eegdash_long.png" class="logo__image only-light" alt="EEG Dash Logo"/>
+    <img src="../../_static/eegdash_long.png" class="logo__image only-dark pst-js-only" alt="EEG Dash Logo"/>
+  
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../overview.html">
+    Overview
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../install/install.html">
+    Install
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../api.html">
+    API
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../dataset_summary.html">
+    Dataset Summary
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../generated/auto_examples/index.html">
+    Examples
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://eeg2025.github.io/">
+    EEG2025 competition
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="External Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/sccn/EEGDash" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://pypi.org/project/eegdash/" title="PyPI" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-box fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">PyPI</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://eegdash.org/EEGDash" title="Docs (Stable)" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-book fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Docs (Stable)</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://discord.gg/8jd7nVKwsc" title="Discord" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-discord fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Discord</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../overview.html">
+    Overview
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../install/install.html">
+    Install
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../api.html">
+    API
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../dataset_summary.html">
+    Dataset Summary
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../generated/auto_examples/index.html">
+    Examples
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://eeg2025.github.io/">
+    EEG2025 competition
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="External Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/sccn/EEGDash" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://pypi.org/project/eegdash/" title="PyPI" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-box fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">PyPI</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://eegdash.org/EEGDash" title="Docs (Stable)" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-book fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Docs (Stable)</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://discord.gg/8jd7nVKwsc" title="Discord" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-discord fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Discord</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../api_core.html">Core API</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../generated/api-core/eegdash.api.html">eegdash.api</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/api-core/eegdash.bids_eeg_metadata.html">eegdash.bids_eeg_metadata</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/api-core/eegdash.const.html">eegdash.const</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/api-core/eegdash.data_utils.html">eegdash.data_utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/api-core/eegdash.logging.html">eegdash.logging</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../generated/api-core/eegdash.hbn.html">eegdash.hbn</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../generated/api-core/eegdash.hbn.preprocessing.html">eegdash.hbn.preprocessing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../generated/api-core/eegdash.hbn.windows.html">eegdash.hbn.windows</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/api-core/eegdash.mongodb.html">eegdash.mongodb</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/api-core/eegdash.paths.html">eegdash.paths</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/api-core/eegdash.utils.html">eegdash.utils</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../api_features.html">Feature API</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../generated/api-features/eegdash.features.html">eegdash.features</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../generated/api-features/eegdash.features.datasets.html">eegdash.features.datasets</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../generated/api-features/eegdash.features.decorators.html">eegdash.features.decorators</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../generated/api-features/eegdash.features.extractors.html">eegdash.features.extractors</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../generated/api-features/eegdash.features.feature_bank.html">eegdash.features.feature_bank</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../generated/api-features/eegdash.features.feature_bank.complexity.html">eegdash.features.feature_bank.complexity</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../generated/api-features/eegdash.features.feature_bank.connectivity.html">eegdash.features.feature_bank.connectivity</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../generated/api-features/eegdash.features.feature_bank.csp.html">eegdash.features.feature_bank.csp</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../generated/api-features/eegdash.features.feature_bank.dimensionality.html">eegdash.features.feature_bank.dimensionality</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../generated/api-features/eegdash.features.feature_bank.signal.html">eegdash.features.feature_bank.signal</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../generated/api-features/eegdash.features.feature_bank.spectral.html">eegdash.features.feature_bank.spectral</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../generated/api-features/eegdash.features.feature_bank.utils.html">eegdash.features.feature_bank.utils</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../generated/api-features/eegdash.features.inspect.html">eegdash.features.inspect</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../generated/api-features/eegdash.features.serialization.html">eegdash.features.serialization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../generated/api-features/eegdash.features.utils.html">eegdash.features.utils</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/api-features/eegdash.features.datasets.html">eegdash.features.datasets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/api-features/eegdash.features.decorators.html">eegdash.features.decorators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/api-features/eegdash.features.extractors.html">eegdash.features.extractors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/api-features/eegdash.features.inspect.html">eegdash.features.inspect</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/api-features/eegdash.features.serialization.html">eegdash.features.serialization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/api-features/eegdash.features.utils.html">eegdash.features.utils</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../generated/api-features/eegdash.features.feature_bank.html">eegdash.features.feature_bank</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../generated/api-features/eegdash.features.feature_bank.complexity.html">eegdash.features.feature_bank.complexity</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../generated/api-features/eegdash.features.feature_bank.connectivity.html">eegdash.features.feature_bank.connectivity</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../generated/api-features/eegdash.features.feature_bank.csp.html">eegdash.features.feature_bank.csp</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../generated/api-features/eegdash.features.feature_bank.dimensionality.html">eegdash.features.feature_bank.dimensionality</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../generated/api-features/eegdash.features.feature_bank.signal.html">eegdash.features.feature_bank.signal</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../generated/api-features/eegdash.features.feature_bank.spectral.html">eegdash.features.feature_bank.spectral</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../generated/api-features/eegdash.features.feature_bank.utils.html">eegdash.features.feature_bank.utils</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../api_dataset.html">Dataset Index</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="ds001785.html">DS001785</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds001787.html">DS001787</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds001810.html">DS001810</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds001849.html">DS001849</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds001971.html">DS001971</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds002034.html">DS002034</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds002094.html">DS002094</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds002158.html">DS002158</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds002181.html">DS002181</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds002218.html">DS002218</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds002336.html">DS002336</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds002338.html">DS002338</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds002578.html">DS002578</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds002680.html">DS002680</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds002691.html">DS002691</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds002718.html">DS002718</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds002720.html">DS002720</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds002721.html">DS002721</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds002722.html">DS002722</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds002723.html">DS002723</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds002724.html">DS002724</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds002725.html">DS002725</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds002778.html">DS002778</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds002814.html">DS002814</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds002833.html">DS002833</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds002893.html">DS002893</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds003004.html">DS003004</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds003039.html">DS003039</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds003061.html">DS003061</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds003190.html">DS003190</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds003194.html">DS003194</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds003195.html">DS003195</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds003343.html">DS003343</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds003421.html">DS003421</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds003458.html">DS003458</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds003474.html">DS003474</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds003478.html">DS003478</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds003490.html">DS003490</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds003505.html">DS003505</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds003506.html">DS003506</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds003509.html">DS003509</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds003516.html">DS003516</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds003517.html">DS003517</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds003518.html">DS003518</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds003519.html">DS003519</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds003522.html">DS003522</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds003523.html">DS003523</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds003555.html">DS003555</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds003570.html">DS003570</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds003574.html">DS003574</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds003602.html">DS003602</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds003626.html">DS003626</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds003638.html">DS003638</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds003645.html">DS003645</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds003655.html">DS003655</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds003670.html">DS003670</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds003690.html">DS003690</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds003702.html">DS003702</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds003710.html">DS003710</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds003739.html">DS003739</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds003751.html">DS003751</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds003753.html">DS003753</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds003766.html">DS003766</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds003768.html">DS003768</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds003801.html">DS003801</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds003805.html">DS003805</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds003810.html">DS003810</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds003816.html">DS003816</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds003822.html">DS003822</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds003825.html">DS003825</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds003838.html">DS003838</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds003846.html">DS003846</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds003885.html">DS003885</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds003887.html">DS003887</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds003944.html">DS003944</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds003947.html">DS003947</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds003969.html">DS003969</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds003987.html">DS003987</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds004000.html">DS004000</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds004010.html">DS004010</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds004015.html">DS004015</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds004018.html">DS004018</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds004022.html">DS004022</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds004024.html">DS004024</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds004033.html">DS004033</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds004040.html">DS004040</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds004043.html">DS004043</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds004067.html">DS004067</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds004075.html">DS004075</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds004117.html">DS004117</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds004152.html">DS004152</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds004196.html">DS004196</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds004200.html">DS004200</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds004252.html">DS004252</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds004256.html">DS004256</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds004262.html">DS004262</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds004264.html">DS004264</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds004279.html">DS004279</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds004284.html">DS004284</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds004295.html">DS004295</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds004306.html">DS004306</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds004315.html">DS004315</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds004317.html">DS004317</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">DS004324</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds004347.html">DS004347</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds004348.html">DS004348</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds004350.html">DS004350</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds004356.html">DS004356</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds004357.html">DS004357</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds004362.html">DS004362</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds004367.html">DS004367</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds004368.html">DS004368</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds004369.html">DS004369</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds004381.html">DS004381</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds004388.html">DS004388</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds004389.html">DS004389</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds004408.html">DS004408</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds004444.html">DS004444</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds004446.html">DS004446</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds004447.html">DS004447</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds004448.html">DS004448</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds004460.html">DS004460</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds004475.html">DS004475</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds004477.html">DS004477</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds004504.html">DS004504</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds004505.html">DS004505</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds004511.html">DS004511</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds004515.html">DS004515</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds004519.html">DS004519</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds004520.html">DS004520</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds004521.html">DS004521</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds004532.html">DS004532</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds004554.html">DS004554</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds004561.html">DS004561</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds004572.html">DS004572</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds004574.html">DS004574</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds004577.html">DS004577</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds004579.html">DS004579</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds004580.html">DS004580</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds004582.html">DS004582</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds004584.html">DS004584</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds004587.html">DS004587</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds004588.html">DS004588</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds004595.html">DS004595</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds004598.html">DS004598</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds004602.html">DS004602</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds004603.html">DS004603</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds004621.html">DS004621</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds004625.html">DS004625</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds004626.html">DS004626</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds004635.html">DS004635</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds004657.html">DS004657</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds004660.html">DS004660</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds004661.html">DS004661</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds004718.html">DS004718</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds004745.html">DS004745</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds004752.html">DS004752</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds004771.html">DS004771</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds004784.html">DS004784</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds004785.html">DS004785</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds004796.html">DS004796</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds004802.html">DS004802</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds004816.html">DS004816</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds004817.html">DS004817</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds004840.html">DS004840</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds004841.html">DS004841</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds004842.html">DS004842</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds004843.html">DS004843</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds004844.html">DS004844</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds004849.html">DS004849</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds004850.html">DS004850</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds004851.html">DS004851</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds004852.html">DS004852</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds004853.html">DS004853</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds004854.html">DS004854</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds004855.html">DS004855</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds004860.html">DS004860</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds004883.html">DS004883</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds004902.html">DS004902</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds004917.html">DS004917</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds004942.html">DS004942</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds004951.html">DS004951</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds004952.html">DS004952</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds004980.html">DS004980</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds004995.html">DS004995</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds005021.html">DS005021</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds005028.html">DS005028</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds005034.html">DS005034</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds005048.html">DS005048</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds005079.html">DS005079</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds005089.html">DS005089</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds005095.html">DS005095</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds005106.html">DS005106</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds005114.html">DS005114</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds005121.html">DS005121</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds005131.html">DS005131</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds005170.html">DS005170</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds005185.html">DS005185</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds005189.html">DS005189</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds005207.html">DS005207</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds005262.html">DS005262</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds005273.html">DS005273</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds005274.html">DS005274</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds005296.html">DS005296</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds005305.html">DS005305</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds005307.html">DS005307</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds005340.html">DS005340</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds005342.html">DS005342</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds005345.html">DS005345</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds005363.html">DS005363</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds005383.html">DS005383</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds005385.html">DS005385</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds005397.html">DS005397</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds005403.html">DS005403</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds005406.html">DS005406</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds005410.html">DS005410</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds005416.html">DS005416</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds005420.html">DS005420</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds005429.html">DS005429</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds005486.html">DS005486</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds005505.html">DS005505</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds005506.html">DS005506</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds005507.html">DS005507</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds005508.html">DS005508</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds005509.html">DS005509</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds005510.html">DS005510</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds005511.html">DS005511</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds005512.html">DS005512</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds005514.html">DS005514</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds005515.html">DS005515</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds005516.html">DS005516</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds005520.html">DS005520</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds005530.html">DS005530</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds005540.html">DS005540</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds005555.html">DS005555</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds005565.html">DS005565</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds005571.html">DS005571</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds005586.html">DS005586</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds005594.html">DS005594</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds005620.html">DS005620</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds005672.html">DS005672</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds005688.html">DS005688</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds005692.html">DS005692</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds005697.html">DS005697</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds005779.html">DS005779</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds005787.html">DS005787</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds005795.html">DS005795</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds005811.html">DS005811</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds005815.html">DS005815</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds005863.html">DS005863</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds005866.html">DS005866</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds005868.html">DS005868</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds005873.html">DS005873</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ds005876.html">DS005876</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../dataset/eegdash.dataset.html">eegdash.dataset package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../dataset/eegdash.dataset.dataset.html">eegdash.dataset.dataset module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../dataset/eegdash.dataset.registry.html">eegdash.dataset.registry module</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="../dataset/eegdash.downloader.html">eegdash.downloader module</a></li>
+</ul>
+</details></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../api.html" class="nav-link">API Reference</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="../api_dataset.html" class="nav-link">Dataset Index</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">DS004324</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="ds004324">
+<span id="id1"></span><h1>DS004324<a class="headerlink" href="#ds004324" title="Link to this heading">#</a></h1>
+<section id="openneuro-dataset-ds004324">
+<h2>OpenNeuro Dataset ds004324<a class="headerlink" href="#openneuro-dataset-ds004324" title="Link to this heading">#</a></h2>
+<p><strong>Multisensory</strong> | Affect | Healthy subjects</p>
+<p>This dataset contains <strong>26 subjects</strong> with <strong>26 recordings</strong> across <strong>1 tasks</strong>.
+Total duration: <strong>19.216 hours</strong>. Dataset size: <strong>2.46 GB</strong>.</p>
+</section>
+<section id="dataset-overview">
+<h2>Dataset Overview<a class="headerlink" href="#dataset-overview" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>dataset</p></th>
+<th class="head"><p>#Subj</p></th>
+<th class="head"><p>#Chan</p></th>
+<th class="head"><p>#Classes</p></th>
+<th class="head"><p>Freq(Hz)</p></th>
+<th class="head"><p>Duration(H)</p></th>
+<th class="head"><p>Size</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>ds004324</p></td>
+<td><p>26</p></td>
+<td><p>28</p></td>
+<td><p>1</p></td>
+<td><p>500</p></td>
+<td><p>19.216</p></td>
+<td><p>2.46 GB</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div></blockquote>
+<p>Short overview of dataset ds004324 more details in the <a class="reference external" href="https://nemar.org/dataexplorer/detail?dataset_id=ds004324">NeMAR documentation</a>.</p>
+</section>
+<section id="usage-examples">
+<h2>Usage Examples<a class="headerlink" href="#usage-examples" title="Link to this heading">#</a></h2>
+<p>Basic usage:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">eegdash.dataset</span><span class="w"> </span><span class="kn">import</span> <span class="n">DS004324</span>
+
+<span class="c1"># Initialize the dataset</span>
+<span class="n">dataset</span> <span class="o">=</span> <span class="n">DS004324</span><span class="p">(</span><span class="n">cache_dir</span><span class="o">=</span><span class="s2">&quot;./data&quot;</span><span class="p">)</span>
+
+<span class="c1"># Check dataset size</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Number of recordings: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">dataset</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Access first recording</span>
+<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">dataset</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+    <span class="n">recording</span> <span class="o">=</span> <span class="n">dataset</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Recording description: </span><span class="si">{</span><span class="n">recording</span><span class="o">.</span><span class="n">description</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Loading EEG Data:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Load raw EEG data</span>
+<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">dataset</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+    <span class="n">recording</span> <span class="o">=</span> <span class="n">dataset</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">raw</span> <span class="o">=</span> <span class="n">recording</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
+
+    <span class="c1"># Inspect the data</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Sampling rate: </span><span class="si">{</span><span class="n">raw</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;sfreq&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> Hz&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Number of channels: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">raw</span><span class="o">.</span><span class="n">ch_names</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Duration: </span><span class="si">{</span><span class="n">raw</span><span class="o">.</span><span class="n">times</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> seconds&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Channel names: </span><span class="si">{</span><span class="n">raw</span><span class="o">.</span><span class="n">ch_names</span><span class="p">[:</span><span class="mi">5</span><span class="p">]</span><span class="si">}</span><span class="s2">...&quot;</span><span class="p">)</span>  <span class="c1"># First 5 channels</span>
+</pre></div>
+</div>
+<p>Advanced Filtering:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Filter by specific criteria (if applicable)</span>
+<span class="n">filtered_dataset</span> <span class="o">=</span> <span class="n">DS004324</span><span class="p">(</span>
+    <span class="n">cache_dir</span><span class="o">=</span><span class="s2">&quot;./data&quot;</span><span class="p">,</span>
+    <span class="n">query</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;task&quot;</span><span class="p">:</span> <span class="s2">&quot;RestingState&quot;</span><span class="p">}</span>  <span class="c1"># Example filter</span>
+<span class="p">)</span>
+
+<span class="c1"># Combine with other datasets</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">eegdash</span><span class="w"> </span><span class="kn">import</span> <span class="n">EEGDashDataset</span>
+
+<span class="c1"># Load multiple datasets</span>
+<span class="n">combined</span> <span class="o">=</span> <span class="n">EEGDashDataset</span><span class="p">(</span>
+    <span class="n">cache_dir</span><span class="o">=</span><span class="s2">&quot;./data&quot;</span><span class="p">,</span>
+    <span class="n">dataset</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;ds004324&quot;</span><span class="p">,</span> <span class="s2">&quot;ds002718&quot;</span><span class="p">],</span>  <span class="c1"># Multiple datasets</span>
+    <span class="n">subject</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;001&quot;</span><span class="p">,</span> <span class="s2">&quot;002&quot;</span><span class="p">]</span>  <span class="c1"># Specific subjects</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="dataset-information">
+<h2>Dataset Information<a class="headerlink" href="#dataset-information" title="Link to this heading">#</a></h2>
+<p><strong>Dataset ID</strong>: ds004324</p>
+<p><strong>OpenNeuro URL</strong>: <a class="reference external" href="https://openneuro.org/datasets/ds004324">https://openneuro.org/datasets/ds004324</a></p>
+<p><strong>NeMAR URL</strong>: <a class="reference external" href="https://nemar.org/dataexplorer/detail?dataset_id=ds004324">https://nemar.org/dataexplorer/detail?dataset_id=ds004324</a></p>
+<p><strong>Key Statistics</strong>:</p>
+<ul class="simple">
+<li><p><strong>Subjects</strong>: 26</p></li>
+<li><p><strong>Recordings</strong>: 26</p></li>
+<li><p><strong>Tasks</strong>: 1</p></li>
+<li><p><strong>Duration</strong>: 19.216 hours</p></li>
+<li><p><strong>Size</strong>: 2.46 GB</p></li>
+<li><p><strong>Modality</strong>: Multisensory</p></li>
+<li><p><strong>Experiment Type</strong>: Affect</p></li>
+<li><p><strong>Subject Type</strong>: Healthy</p></li>
+</ul>
+</section>
+<section id="related-documentation">
+<h2>Related Documentation<a class="headerlink" href="#related-documentation" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><code class="xref py py-class docutils literal notranslate"><span class="pre">eegdash.api.EEGDashDataset</span></code> - Main dataset class</p></li>
+<li><p><a class="reference internal" href="../api_core.html"><span class="doc">Core API</span></a> - Core API reference</p></li>
+<li><p><a class="reference internal" href="../../overview.html#overview"><span class="std std-ref">Overview</span></a> - EEGDash overview</p></li>
+</ul>
+</section>
+<section id="see-also">
+<h2>See Also<a class="headerlink" href="#see-also" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="https://openneuro.org/datasets/ds004324">OpenNeuro dataset page</a></p></li>
+<li><p><a class="reference external" href="https://nemar.org/dataexplorer/detail?dataset_id=ds004324">NeMAR data explorer</a></p></li>
+<li><p><a class="reference internal" href="../api_dataset.html#dataset-index"><span class="std std-ref">Dataset Index</span></a> - Browse all available datasets</p></li>
+</ul>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="ds004317.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">DS004317</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="ds004347.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">DS004347</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#openneuro-dataset-ds004324">OpenNeuro Dataset ds004324</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dataset-overview">Dataset Overview</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-examples">Usage Examples</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dataset-information">Dataset Information</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#related-documentation">Related Documentation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#see-also">See Also</a></li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+
+  
+  <div class="tocsection editthispage">
+    <a href="https://github.com/sccn/EEGDash/edit/main/docs/source/api/datasets/ds004324.rst">
+      <i class="fa-solid fa-pencil"></i>
+      
+      
+        
+          Edit on GitHub
+        
+      
+    </a>
+  </div>
+</div>
+
+  <div class="sidebar-secondary-item">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/api/datasets/ds004324.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2025–2025, EEG Dash Developers.
+      <br/>
+    
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

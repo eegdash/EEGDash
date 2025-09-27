@@ -1,7 +1,0 @@
-eegdash.hbn.preprocessing module
-================================
-
-.. automodule:: eegdash.hbn.preprocessing
-   :members:
-   :show-inheritance:
-   :undoc-members:

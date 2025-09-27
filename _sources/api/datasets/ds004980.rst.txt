@@ -1,0 +1,114 @@
+.. _ds004980:
+
+DS004980
+========
+
+OpenNeuro Dataset ds004980
+------------------------------
+
+**Visual** | Perception | Healthy subjects
+
+This dataset contains **17 subjects** with **17 recordings** across **1 tasks**.
+Total duration: **36.846 hours**. Dataset size: **15.82 GB**.
+
+Dataset Overview
+----------------
+
+
+
+    =========  =======  =======  ==========  ==============================================================================================================================================================  =============  ========
+    dataset      #Subj    #Chan    #Classes  Freq(Hz)                                                                                                                                                          Duration(H)  Size
+    =========  =======  =======  ==========  ==============================================================================================================================================================  =============  ========
+    ds004980        17       64           1  499.9911824,499.9912809,499.991385,499.9914353,499.9914553,499.9915179,499.9917272,499.9917286,499.9917378,499.9919292,499.9919367,499.9923017,499.9923795,500         36.846  15.82 GB
+    =========  =======  =======  ==========  ==============================================================================================================================================================  =============  ========
+
+Short overview of dataset ds004980 more details in the `NeMAR documentation <https://nemar.org/dataexplorer/detail?dataset_id=ds004980>`__.
+
+Usage Examples
+--------------
+
+Basic usage:
+
+.. code-block:: python
+
+    from eegdash.dataset import DS004980
+
+    # Initialize the dataset
+    dataset = DS004980(cache_dir="./data")
+
+    # Check dataset size
+    print(f"Number of recordings: {len(dataset)}")
+
+    # Access first recording
+    if len(dataset) > 0:
+        recording = dataset[0]
+        print(f"Recording description: {recording.description}")
+
+Loading EEG Data:
+
+.. code-block:: python
+
+    # Load raw EEG data
+    if len(dataset) > 0:
+        recording = dataset[0]
+        raw = recording.load()
+
+        # Inspect the data
+        print(f"Sampling rate: {raw.info['sfreq']} Hz")
+        print(f"Number of channels: {len(raw.ch_names)}")
+        print(f"Duration: {raw.times[-1]:.1f} seconds")
+        print(f"Channel names: {raw.ch_names[:5]}...")  # First 5 channels
+
+Advanced Filtering:
+
+.. code-block:: python
+
+    # Filter by specific criteria (if applicable)
+    filtered_dataset = DS004980(
+        cache_dir="./data",
+        query={"task": "RestingState"}  # Example filter
+    )
+
+    # Combine with other datasets
+    from eegdash import EEGDashDataset
+
+    # Load multiple datasets
+    combined = EEGDashDataset(
+        cache_dir="./data",
+        dataset=["ds004980", "ds002718"],  # Multiple datasets
+        subject=["001", "002"]  # Specific subjects
+    )
+
+Dataset Information
+-------------------
+
+**Dataset ID**: ds004980
+
+**OpenNeuro URL**: https://openneuro.org/datasets/ds004980
+
+**NeMAR URL**: https://nemar.org/dataexplorer/detail?dataset_id=ds004980
+
+**Key Statistics**:
+
+- **Subjects**: 17
+- **Recordings**: 17
+- **Tasks**: 1
+- **Duration**: 36.846 hours
+- **Size**: 15.82 GB
+- **Modality**: Visual
+- **Experiment Type**: Perception
+- **Subject Type**: Healthy
+
+Related Documentation
+---------------------
+
+- :class:`eegdash.api.EEGDashDataset` - Main dataset class
+- :doc:`../api_core` - Core API reference
+- :ref:`overview` - EEGDash overview
+
+See Also
+--------
+
+- `OpenNeuro dataset page <https://openneuro.org/datasets/ds004980>`_
+- `NeMAR data explorer <https://nemar.org/dataexplorer/detail?dataset_id=ds004980>`_
+- :ref:`dataset_index` - Browse all available datasets

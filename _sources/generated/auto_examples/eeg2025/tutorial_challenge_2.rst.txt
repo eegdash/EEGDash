@@ -306,14 +306,14 @@ Here, we combine the datasets from the different releases into a single
     1   NDARAH793FBF    2  ...          available     available
     2   NDARAH793FBF    3  ...          available     available
     3   NDARAJ689BVN    2  ...        unavailable     available
-    4   NDARAJ689BVN    1  ...        unavailable     available
-    5   NDARAJ689BVN    3  ...        unavailable     available
+    4   NDARAJ689BVN    3  ...        unavailable     available
+    5   NDARAJ689BVN    1  ...        unavailable     available
     6   NDARAP785CTE    3  ...          available     available
     7   NDARAP785CTE    1  ...          available     available
     8   NDARAP785CTE    2  ...          available     available
     9   NDARAU708TL8    1  ...          available     available
-    10  NDARAU708TL8    3  ...          available     available
-    11  NDARAU708TL8    2  ...          available     available
+    10  NDARAU708TL8    2  ...          available     available
+    11  NDARAU708TL8    3  ...          available     available
     12  NDARBE091BGD    2  ...        unavailable     available
     13  NDARBE091BGD    3  ...        unavailable     available
     14  NDARBE091BGD    1  ...        unavailable     available
@@ -321,38 +321,38 @@ Here, we combine the datasets from the different releases into a single
     16  NDARBE103DHM    3  ...          available     available
     17  NDARBE103DHM    1  ...          available     available
     18  NDARBF851NH6    2  ...          available     available
-    19  NDARBF851NH6    1  ...          available     available
-    20  NDARBF851NH6    3  ...          available     available
-    21  NDARBH228RDW    3  ...          available     available
-    22  NDARBH228RDW    1  ...          available     available
+    19  NDARBF851NH6    3  ...          available     available
+    20  NDARBF851NH6    1  ...          available     available
+    21  NDARBH228RDW    1  ...          available     available
+    22  NDARBH228RDW    3  ...          available     available
     23  NDARBH228RDW    2  ...          available     available
     24  NDARBJ674TVU    1  ...        unavailable     available
     25  NDARBJ674TVU    2  ...        unavailable     available
     26  NDARBJ674TVU    3  ...        unavailable     available
     27  NDARBM433VER    2  ...          available     available
-    28  NDARBM433VER    3  ...          available     available
-    29  NDARBM433VER    1  ...          available     available
+    28  NDARBM433VER    1  ...          available     available
+    29  NDARBM433VER    3  ...          available     available
     30  NDARCA740UC8    2  ...          available     available
     31  NDARCA740UC8    3  ...          available     available
     32  NDARCA740UC8    1  ...          available     available
-    33  NDARCU633GCZ    3  ...          available     available
-    34  NDARCU633GCZ    1  ...          available     available
-    35  NDARCU633GCZ    2  ...          available     available
+    33  NDARCU633GCZ    2  ...          available     available
+    34  NDARCU633GCZ    3  ...          available     available
+    35  NDARCU633GCZ    1  ...          available     available
     36  NDARCU736GZ1    2  ...        unavailable     available
-    37  NDARCU736GZ1    1  ...        unavailable     available
-    38  NDARCU736GZ1    3  ...        unavailable     available
+    37  NDARCU736GZ1    3  ...        unavailable     available
+    38  NDARCU736GZ1    1  ...        unavailable     available
     39  NDARCU744XWL    1  ...          available     available
     40  NDARCU744XWL    2  ...          available     available
     41  NDARCU744XWL    3  ...          available     available
     42  NDARDC843HHM    2  ...          available     available
     43  NDARDC843HHM    1  ...          available     available
     44  NDARDC843HHM    3  ...          available     available
-    45  NDARDH086ZKK    1  ...          available     available
-    46  NDARDH086ZKK    3  ...          available     available
-    47  NDARDH086ZKK    2  ...          available     available
-    48  NDARDL305BT8    2  ...          available     available
+    45  NDARDH086ZKK    3  ...          available     available
+    46  NDARDH086ZKK    2  ...          available     available
+    47  NDARDH086ZKK    1  ...          available     available
+    48  NDARDL305BT8    3  ...          available     available
     49  NDARDL305BT8    1  ...          available     available
-    50  NDARDL305BT8    3  ...          available     available
+    50  NDARDL305BT8    2  ...          available     available
     51  NDARDU853XZ6    1  ...        unavailable     available
     52  NDARDU853XZ6    3  ...        unavailable     available
     53  NDARDU853XZ6    2  ...        unavailable     available
@@ -360,8 +360,8 @@ Here, we combine the datasets from the different releases into a single
     55  NDARDV245WJG    3  ...        unavailable     available
     56  NDARDV245WJG    1  ...        unavailable     available
     57  NDAREC480KFA    1  ...          available     available
-    58  NDAREC480KFA    2  ...          available     available
-    59  NDAREC480KFA    3  ...          available     available
+    58  NDAREC480KFA    3  ...          available     available
+    59  NDAREC480KFA    2  ...          available     available
 
     [60 rows x 26 columns]
 
@@ -676,71 +676,71 @@ Define, train and save a model
     Params size (MB): 0.22
     Estimated Total Size (MB): 16.97
     ================================================================================================================================================================
-    Epoch 0 - step 0, loss: 0.6483574509620667
-    Epoch 0 - step 1, loss: 0.6538093686103821
-    Epoch 0 - step 2, loss: 0.6713941693305969
-    Epoch 0 - step 3, loss: 0.6549304723739624
-    Epoch 0 - step 4, loss: 0.6679834723472595
-    Epoch 0 - step 5, loss: 0.6283752918243408
-    Epoch 0 - step 6, loss: 0.6181342601776123
-    Epoch 0 - step 7, loss: 0.6883342266082764
-    Epoch 0 - step 8, loss: 0.7345196604728699
-    Epoch 0 - step 9, loss: 0.7289171814918518
-    Epoch 0 - step 10, loss: 0.6582862138748169
-    Epoch 0 - step 11, loss: 0.6580547094345093
-    Epoch 0 - step 12, loss: 0.6397497653961182
-    Epoch 0 - step 13, loss: 0.5912674069404602
-    Epoch 0 - step 14, loss: 0.6420428156852722
-    Epoch 0 - step 15, loss: 0.6386745572090149
-    Epoch 0 - step 16, loss: 0.6473047733306885
-    Epoch 0 - step 17, loss: 0.6094072461128235
-    Epoch 0 - step 18, loss: 0.6468786597251892
-    Epoch 0 - step 19, loss: 0.5770612359046936
-    Epoch 0 - step 20, loss: 0.6336122751235962
-    Epoch 0 - step 21, loss: 0.6963357329368591
-    Epoch 0 - step 22, loss: 0.7171193957328796
-    Epoch 0 - step 23, loss: 0.6773012280464172
-    Epoch 0 - step 24, loss: 0.6749287843704224
-    Epoch 0 - step 25, loss: 0.6290866136550903
-    Epoch 0 - step 26, loss: 0.6008902192115784
-    Epoch 0 - step 27, loss: 0.5923330783843994
-    Epoch 0 - step 28, loss: 0.6423536539077759
-    Epoch 0 - step 29, loss: 0.636025071144104
-    Epoch 0 - step 30, loss: 0.6055042743682861
-    Epoch 0 - step 31, loss: 0.5764721035957336
-    Epoch 0 - step 32, loss: 0.6952417492866516
-    Epoch 0 - step 33, loss: 0.6911432147026062
-    Epoch 0 - step 34, loss: 0.6654797792434692
-    Epoch 0 - step 35, loss: 0.6870560050010681
-    Epoch 0 - step 36, loss: 0.7218255996704102
-    Epoch 0 - step 37, loss: 0.6716482043266296
-    Epoch 0 - step 38, loss: 0.6433807015419006
-    Epoch 0 - step 39, loss: 0.6902905702590942
-    Epoch 0 - step 40, loss: 0.6840685606002808
-    Epoch 0 - step 41, loss: 0.6141626238822937
-    Epoch 0 - step 42, loss: 0.708634614944458
-    Epoch 0 - step 43, loss: 0.6124047636985779
-    Epoch 0 - step 44, loss: 0.6298983693122864
-    Epoch 0 - step 45, loss: 0.6268893480300903
-    Epoch 0 - step 46, loss: 0.7109941244125366
-    Epoch 0 - step 47, loss: 0.6210460662841797
-    Epoch 0 - step 48, loss: 0.6821120977401733
-    Epoch 0 - step 49, loss: 0.5969668626785278
-    Epoch 0 - step 50, loss: 0.6923952698707581
-    Epoch 0 - step 51, loss: 0.6711761951446533
-    Epoch 0 - step 52, loss: 0.629508912563324
-    Epoch 0 - step 53, loss: 0.6209526658058167
-    Epoch 0 - step 54, loss: 0.6414941549301147
-    Epoch 0 - step 55, loss: 0.6252379417419434
-    Epoch 0 - step 56, loss: 0.6596064567565918
-    Epoch 0 - step 57, loss: 0.6710443496704102
-    Epoch 0 - step 58, loss: 0.6683221459388733
-    Epoch 0 - step 59, loss: 0.6277663111686707
-    Epoch 0 - step 60, loss: 0.6401158571243286
-    Epoch 0 - step 61, loss: 0.6195298433303833
-    Epoch 0 - step 62, loss: 0.5791935324668884
-    Epoch 0 - step 63, loss: 0.6323558688163757
-    Epoch 0 - step 64, loss: 0.6208313703536987
+    Epoch 0 - step 0, loss: 0.6681731939315796
+    Epoch 0 - step 1, loss: 0.656207799911499
+    Epoch 0 - step 2, loss: 0.6781172156333923
+    Epoch 0 - step 3, loss: 0.6735737323760986
+    Epoch 0 - step 4, loss: 0.6563474535942078
+    Epoch 0 - step 5, loss: 0.6279102563858032
+    Epoch 0 - step 6, loss: 0.6201093792915344
+    Epoch 0 - step 7, loss: 0.6967049837112427
+    Epoch 0 - step 8, loss: 0.7561727166175842
+    Epoch 0 - step 9, loss: 0.7227081060409546
+    Epoch 0 - step 10, loss: 0.6632996797561646
+    Epoch 0 - step 11, loss: 0.6504274606704712
+    Epoch 0 - step 12, loss: 0.630305826663971
+    Epoch 0 - step 13, loss: 0.5750848650932312
+    Epoch 0 - step 14, loss: 0.6582493782043457
+    Epoch 0 - step 15, loss: 0.6409159302711487
+    Epoch 0 - step 16, loss: 0.6445873379707336
+    Epoch 0 - step 17, loss: 0.6211078763008118
+    Epoch 0 - step 18, loss: 0.6598467230796814
+    Epoch 0 - step 19, loss: 0.5970999002456665
+    Epoch 0 - step 20, loss: 0.6472743153572083
+    Epoch 0 - step 21, loss: 0.7116712927818298
+    Epoch 0 - step 22, loss: 0.7257611751556396
+    Epoch 0 - step 23, loss: 0.6738865971565247
+    Epoch 0 - step 24, loss: 0.6686086654663086
+    Epoch 0 - step 25, loss: 0.6366347670555115
+    Epoch 0 - step 26, loss: 0.6014674305915833
+    Epoch 0 - step 27, loss: 0.5922197103500366
+    Epoch 0 - step 28, loss: 0.6474854946136475
+    Epoch 0 - step 29, loss: 0.6330244541168213
+    Epoch 0 - step 30, loss: 0.6139036417007446
+    Epoch 0 - step 31, loss: 0.5571722984313965
+    Epoch 0 - step 32, loss: 0.6870154738426208
+    Epoch 0 - step 33, loss: 0.6796714067459106
+    Epoch 0 - step 34, loss: 0.6590239405632019
+    Epoch 0 - step 35, loss: 0.6657565236091614
+    Epoch 0 - step 36, loss: 0.7139407396316528
+    Epoch 0 - step 37, loss: 0.670311450958252
+    Epoch 0 - step 38, loss: 0.6509326696395874
+    Epoch 0 - step 39, loss: 0.683610737323761
+    Epoch 0 - step 40, loss: 0.6823655962944031
+    Epoch 0 - step 41, loss: 0.6016685962677002
+    Epoch 0 - step 42, loss: 0.6910255551338196
+    Epoch 0 - step 43, loss: 0.6336276531219482
+    Epoch 0 - step 44, loss: 0.6327387094497681
+    Epoch 0 - step 45, loss: 0.6329888105392456
+    Epoch 0 - step 46, loss: 0.7009836435317993
+    Epoch 0 - step 47, loss: 0.6067795753479004
+    Epoch 0 - step 48, loss: 0.6765575408935547
+    Epoch 0 - step 49, loss: 0.5924314856529236
+    Epoch 0 - step 50, loss: 0.6668756604194641
+    Epoch 0 - step 51, loss: 0.6670825481414795
+    Epoch 0 - step 52, loss: 0.6232630014419556
+    Epoch 0 - step 53, loss: 0.6064115762710571
+    Epoch 0 - step 54, loss: 0.6452515125274658
+    Epoch 0 - step 55, loss: 0.6123392581939697
+    Epoch 0 - step 56, loss: 0.6664993166923523
+    Epoch 0 - step 57, loss: 0.6731916666030884
+    Epoch 0 - step 58, loss: 0.6671505570411682
+    Epoch 0 - step 59, loss: 0.6235125064849854
+    Epoch 0 - step 60, loss: 0.6130974292755127
+    Epoch 0 - step 61, loss: 0.6245699524879456
+    Epoch 0 - step 62, loss: 0.5828757286071777
+    Epoch 0 - step 63, loss: 0.6315191984176636
+    Epoch 0 - step 64, loss: 0.6473616361618042
     Model saved as 'weights_challenge_2.pt'
 
 
@@ -749,9 +749,9 @@ Define, train and save a model
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (6 minutes 11.194 seconds)
+   **Total running time of the script:** (6 minutes 7.283 seconds)
 
-**Estimated memory usage:**  2802 MB
+**Estimated memory usage:**  2773 MB
 
 
 .. _sphx_glr_download_generated_auto_examples_eeg2025_tutorial_challenge_2.py:

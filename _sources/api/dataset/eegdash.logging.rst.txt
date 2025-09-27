@@ -1,7 +1,0 @@
-eegdash.logging module
-======================
-
-.. automodule:: eegdash.logging
-   :members:
-   :show-inheritance:
-   :undoc-members:

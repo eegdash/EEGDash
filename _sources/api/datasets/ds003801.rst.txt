@@ -1,0 +1,114 @@
+.. _ds003801:
+
+DS003801
+========
+
+OpenNeuro Dataset ds003801
+------------------------------
+
+**Auditory** | Attention | Healthy subjects
+
+This dataset contains **20 subjects** with **20 recordings** across **1 tasks**.
+Total duration: **13.689 hours**. Dataset size: **1.15 GB**.
+
+Dataset Overview
+----------------
+
+
+
+    =========  =======  =======  ==========  ==========  =============  =======
+    dataset      #Subj    #Chan    #Classes    Freq(Hz)    Duration(H)  Size
+    =========  =======  =======  ==========  ==========  =============  =======
+    ds003801        20       24           1         250         13.689  1.15 GB
+    =========  =======  =======  ==========  ==========  =============  =======
+
+Short overview of dataset ds003801 more details in the `NeMAR documentation <https://nemar.org/dataexplorer/detail?dataset_id=ds003801>`__.
+
+Usage Examples
+--------------
+
+Basic usage:
+
+.. code-block:: python
+
+    from eegdash.dataset import DS003801
+
+    # Initialize the dataset
+    dataset = DS003801(cache_dir="./data")
+
+    # Check dataset size
+    print(f"Number of recordings: {len(dataset)}")
+
+    # Access first recording
+    if len(dataset) > 0:
+        recording = dataset[0]
+        print(f"Recording description: {recording.description}")
+
+Loading EEG Data:
+
+.. code-block:: python
+
+    # Load raw EEG data
+    if len(dataset) > 0:
+        recording = dataset[0]
+        raw = recording.load()
+
+        # Inspect the data
+        print(f"Sampling rate: {raw.info['sfreq']} Hz")
+        print(f"Number of channels: {len(raw.ch_names)}")
+        print(f"Duration: {raw.times[-1]:.1f} seconds")
+        print(f"Channel names: {raw.ch_names[:5]}...")  # First 5 channels
+
+Advanced Filtering:
+
+.. code-block:: python
+
+    # Filter by specific criteria (if applicable)
+    filtered_dataset = DS003801(
+        cache_dir="./data",
+        query={"task": "RestingState"}  # Example filter
+    )
+
+    # Combine with other datasets
+    from eegdash import EEGDashDataset
+
+    # Load multiple datasets
+    combined = EEGDashDataset(
+        cache_dir="./data",
+        dataset=["ds003801", "ds002718"],  # Multiple datasets
+        subject=["001", "002"]  # Specific subjects
+    )
+
+Dataset Information
+-------------------
+
+**Dataset ID**: ds003801
+
+**OpenNeuro URL**: https://openneuro.org/datasets/ds003801
+
+**NeMAR URL**: https://nemar.org/dataexplorer/detail?dataset_id=ds003801
+
+**Key Statistics**:
+
+- **Subjects**: 20
+- **Recordings**: 20
+- **Tasks**: 1
+- **Duration**: 13.689 hours
+- **Size**: 1.15 GB
+- **Modality**: Auditory
+- **Experiment Type**: Attention
+- **Subject Type**: Healthy
+
+Related Documentation
+---------------------
+
+- :class:`eegdash.api.EEGDashDataset` - Main dataset class
+- :doc:`../api_core` - Core API reference
+- :ref:`overview` - EEGDash overview
+
+See Also
+--------
+
+- `OpenNeuro dataset page <https://openneuro.org/datasets/ds003801>`_
+- `NeMAR data explorer <https://nemar.org/dataexplorer/detail?dataset_id=ds003801>`_
+- :ref:`dataset_index` - Browse all available datasets

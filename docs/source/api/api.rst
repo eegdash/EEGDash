@@ -1,10 +1,12 @@
+:html_theme.sidebar_primary.remove: true
+
 .. _api:
 
 API Reference
 =============
 
-.. grid:: 2
-   :gutter: 2
+.. grid:: 1
+   :gutter: 3
 
    .. grid-item-card:: Core
       :class-header: sd-bg-primary sd-text-white sd-font-weight-bold
@@ -20,20 +22,16 @@ API Reference
 
       Feature extraction and processing routines.
 
-Datasets
---------
+   .. grid-item-card:: Dataset
+      :class-header: sd-bg-primary sd-text-white sd-font-weight-bold
+      :link: api_dataset
+      :link-type: doc
 
-.. toctree::
-   :maxdepth: 2
-
-   api/dataset/modules
-
-.. note::
-   The dataset API above is generated automatically during the build.
+      Datasets available at EEGDash.
 
 .. toctree::
    :hidden:
 
    api_core
    api_features
-
+   api_dataset

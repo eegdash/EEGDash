@@ -1,3 +1,14 @@
+# Authors: The EEGDash contributors.
+# License: GNU General Public License
+# Copyright the EEGDash contributors.
+
+"""Healthy Brain Network (HBN) specific utilities and preprocessing.
+
+This module provides specialized functions for working with the Healthy Brain Network
+dataset, including preprocessing pipelines, annotation handling, and windowing utilities
+tailored for HBN EEG data analysis.
+"""
+
 from .preprocessing import hbn_ec_ec_reannotation
 from .windows import (
     add_aux_anchors,

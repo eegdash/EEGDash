@@ -57,14 +57,8 @@ def register_openneuro_datasets(
 
         init = make_init(dataset_id)
 
-        doc = f"""OpenNeuro dataset ``{dataset_id}``.
-
-        {_markdown_table(row_series)}
-
-        This class is a thin convenience wrapper for the dataset ``{dataset_id}``.
-        Constructor arguments are forwarded to :class:`{base_class.__name__}`; see the
-        base class documentation for parameter details and examples.
-        """
+        # Generate rich docstring with dataset metadata
+        doc = _generate_rich_docstring(dataset_id, row_series, base_class)
 
         # init.__doc__ = doc
 
@@ -88,6 +82,94 @@ def register_openneuro_datasets(
                 ns_all.append(class_name)
 
     return registered
+
+
+def _generate_rich_docstring(dataset_id: str, row_series: pd.Series, base_class) -> str:
+    """Generate a comprehensive docstring for a dataset class."""
+    # Extract metadata with safe defaults
+    n_subjects = row_series.get("n_subjects", "Unknown")
+    n_records = row_series.get("n_records", "Unknown")
+    n_tasks = row_series.get("n_tasks", "Unknown")
+    modality = row_series.get("modality of exp", "")
+    exp_type = row_series.get("type of exp", "")
+    subject_type = row_series.get("Type Subject", "")
+    duration = row_series.get("duration_hours_total", "Unknown")
+    size = row_series.get("size", "Unknown")
+
+    # Create description based on available metadata
+    description_parts = []
+    if modality and str(modality).strip():
+        description_parts.append(f"**Modality**: {modality}")
+    if exp_type and str(exp_type).strip():
+        description_parts.append(f"**Type**: {exp_type}")
+    if subject_type and str(subject_type).strip():
+        description_parts.append(f"**Subjects**: {subject_type}")
+
+    description = (
+        " | ".join(description_parts)
+        if description_parts
+        else "EEG dataset from OpenNeuro"
+    )
+
+    # Generate the docstring
+    docstring = f"""OpenNeuro dataset ``{dataset_id}``.
+
+{description}
+
+This dataset contains {n_subjects} subjects with {n_records} recordings across {n_tasks} tasks.
+Total duration: {duration} hours. Dataset size: {size}.
+
+{_markdown_table(row_series)}
+
+This dataset class provides convenient access to the ``{dataset_id}`` dataset through the EEGDash interface.
+It inherits all functionality from :class:`~{base_class.__module__}.{base_class.__name__}` with the dataset filter pre-configured.
+
+Parameters
+----------
+cache_dir : str
+    Directory to cache downloaded data.
+query : dict, optional
+    Additional MongoDB-style filters to AND with the dataset selection.
+    Must not contain the key ``dataset``.
+s3_bucket : str, optional
+    Base S3 bucket used to locate the data.
+**kwargs
+    Additional arguments passed to the base dataset class.
+
+Examples
+--------
+Basic usage:
+
+>>> from eegdash.dataset import {dataset_id.upper()}
+>>> dataset = {dataset_id.upper()}(cache_dir="./data")
+>>> print(f"Number of recordings: {{len(dataset)}}")
+
+Load a specific recording:
+
+>>> if len(dataset) > 0:
+...     recording = dataset[0]
+...     raw = recording.load()
+...     print(f"Sampling rate: {{raw.info['sfreq']}} Hz")
+...     print(f"Number of channels: {{len(raw.ch_names)}}")
+
+Filter by additional criteria:
+
+>>> # Get subset with specific task or subject
+>>> filtered_dataset = {dataset_id.upper()}(
+...     cache_dir="./data",
+...     query={{"task": "RestingState"}}  # if applicable
+... )
+
+Notes
+-----
+More details available in the `NEMAR documentation <https://nemar.org/dataexplorer/detail?dataset_id={dataset_id}>`__.
+
+See Also
+--------
+{base_class.__name__} : Base dataset class with full API documentation
+"""
+
+    return docstring
 
 
 def _markdown_table(row_series: pd.Series) -> str:
@@ -128,7 +210,12 @@ def _markdown_table(row_series: pd.Series) -> str:
     table = tabulate(df, headers="keys", tablefmt="rst", showindex=False)
 
     # Add a caption for the table
-    caption = f"Short overview of dataset {dataset_id} more details in the `Nemar documentation <https://nemar.org/dataexplorer/detail?dataset_id={dataset_id}>`_."
+    # Use an anonymous external link (double underscore) to avoid duplicate
+    # target warnings when this docstring is repeated across many classes.
+    caption = (
+        f"Short overview of dataset {dataset_id} more details in the "
+        f"`NeMAR documentation <https://nemar.org/dataexplorer/detail?dataset_id={dataset_id}>`__."
+    )
     # adding caption below the table
     # Indent the table to fit within the admonition block
     indented_table = "\n".join("    " + line for line in table.split("\n"))

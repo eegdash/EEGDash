@@ -11,8 +11,8 @@ Core API
    bids_eeg_metadata
    const
    data_utils
+   logging
    hbn
    mongodb
    paths
    utils
-

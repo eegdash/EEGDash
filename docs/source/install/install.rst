@@ -6,7 +6,7 @@
 Installation
 ================
 
-EEGDash is written in Python 3, specifically for version 3.8 or above.
+EEGDash is written in Python 3, specifically for version 3.10 or above.
 
 The package is distributed via Python package index (`PyPI <eegdash-pypi_>`_), and you can access the
 source code via `Github <eegdash-github_>`_ repository.

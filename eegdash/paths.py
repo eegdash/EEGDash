@@ -1,3 +1,14 @@
+# Authors: The EEGDash contributors.
+# License: GNU General Public License
+# Copyright the EEGDash contributors.
+
+"""Path utilities and cache directory management.
+
+This module provides functions for resolving consistent cache directories and path
+management throughout the EEGDash package, with integration to MNE-Python's
+configuration system.
+"""
+
 from __future__ import annotations
 
 import os

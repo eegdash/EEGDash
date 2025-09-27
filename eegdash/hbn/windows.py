@@ -1,3 +1,15 @@
+# Authors: The EEGDash contributors.
+# License: GNU General Public License
+# Copyright the EEGDash contributors.
+
+"""Windowing and trial processing utilities for HBN datasets.
+
+This module provides functions for building trial tables, adding auxiliary anchors,
+annotating trials with targets, and filtering recordings based on various criteria.
+These utilities are specifically designed for working with HBN EEG data structures
+and experimental paradigms.
+"""
+
 import logging
 
 import mne

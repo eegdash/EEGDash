@@ -1,6 +1,8 @@
-"""Convenience functions for storing and loading of features datasets.
+"""Convenience functions for storing and loading features datasets.
 
-see also: https://github.com/braindecode/braindecode//blob/master/braindecode/datautil/serialization.py#L165-L229
+See Also:
+    https://github.com/braindecode/braindecode//blob/master/braindecode/datautil/serialization.py#L165-L229
+
 """
 
 from pathlib import Path
@@ -15,7 +17,7 @@ from .datasets import FeaturesConcatDataset, FeaturesDataset
 
 
 def load_features_concat_dataset(path, ids_to_load=None, n_jobs=1):
-    """Load a stored FeaturesConcatDataset of FeaturesDatasets from files.
+    """Load a stored features dataset from files.
 
     Parameters
     ----------
@@ -28,7 +30,9 @@ def load_features_concat_dataset(path, ids_to_load=None, n_jobs=1):
 
     Returns
     -------
-    concat_dataset: FeaturesConcatDataset of FeaturesDatasets
+    concat_dataset: eegdash.features.datasets.FeaturesConcatDataset
+        A concatenation of multiple eegdash.features.datasets.FeaturesDataset
+        instances loaded from the given directory.
 
     """
     # Make sure we always work with a pathlib.Path

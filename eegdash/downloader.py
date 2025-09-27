@@ -1,3 +1,14 @@
+# Authors: The EEGDash contributors.
+# License: GNU General Public License
+# Copyright the EEGDash contributors.
+
+"""File downloading utilities for EEG data from cloud storage.
+
+This module provides functions for downloading EEG data files and BIDS dependencies from
+AWS S3 storage, with support for caching and progress tracking. It handles the communication
+between the EEGDash metadata database and the actual EEG data stored in the cloud.
+"""
+
 import re
 from pathlib import Path
 from typing import Any

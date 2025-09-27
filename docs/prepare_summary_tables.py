@@ -256,14 +256,16 @@ def wrap_tags(cell: str):
 def wrap_dataset_name(name: str):
     # Remove any surrounding whitespace
     name = name.strip()
-    # Construct the URL based on the dataset name
-    url = f"api/eegdash.dataset.html#eegdash.dataset.{name.upper()}.html"
+    # Link to the package-level dataset page and the class anchor
+    # Dynamic classes are re-exported in ``eegdash.dataset`` so anchors resolve as:
+    #   api/eegdash.dataset.html#eegdash.dataset.<CLASS>
+    url = f"api/eegdash.dataset.html#eegdash.dataset.{name.upper()}"
     return f'<a href="{url}">{name.upper()}</a>'
 
 
 def prepare_table(df: pd.DataFrame):
-    # drop test dataset
-    df = df[df["dataset"] != "test"]
+    # drop test dataset and create a copy to avoid SettingWithCopyWarning
+    df = df[df["dataset"] != "test"].copy()
 
     df["dataset"] = df["dataset"].apply(wrap_dataset_name)
     # changing the column order
@@ -312,7 +314,7 @@ def prepare_table(df: pd.DataFrame):
     df.loc["Total", "dataset"] = f"Total {len(df) - 1} datasets"
     df.loc["Total", "nchans_set"] = ""
     df.loc["Total", "sampling_freqs"] = ""
-    df.loc["Total", "duration (h)"] = ""
+    df.loc["Total", "duration (h)"] = None
     df.loc["Total", "size"] = human_readable_size(df.loc["Total", "size_bytes"])
     df = df.drop(columns=["size_bytes"])
     # arrounding the hours

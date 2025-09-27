@@ -162,7 +162,7 @@ Filter by additional criteria:
 
 Notes
 -----
-More details available in the `NEMAR documentation <https://nemar.org/dataexplorer/detail?dataset_id={dataset_id}>`_.
+More details available in the `NEMAR documentation <https://nemar.org/dataexplorer/detail?dataset_id={dataset_id}>`__.
 
 See Also
 --------

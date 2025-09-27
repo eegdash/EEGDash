@@ -145,14 +145,14 @@ Related Documentation
 
 - :class:`eegdash.api.EEGDashDataset` - Main dataset class
 - :doc:`../api_core` - Core API reference
-- :doc:`../overview` - EEGDash overview
+- :ref:`overview` - EEGDash overview
 
 See Also
 --------
 
 - `OpenNeuro dataset page <https://openneuro.org/datasets/{dataset_id}>`_
 - `NeMAR data explorer <https://nemar.org/dataexplorer/detail?dataset_id={dataset_id}>`_
-- :doc:`dataset_index` - Browse all available datasets
+- :ref:`dataset_index` - Browse all available datasets
 '''
 
     return rst_content
@@ -246,6 +246,17 @@ All Datasets (Alphabetical)
         size = row["size"]
 
         rst_content += f"- :doc:`{dataset_id} <datasets/{dataset_id}>` - {n_subjects} subjects, {n_records} recordings, {size}\n"
+
+    # Include key API module pages to satisfy toctree inclusion and avoid warnings
+    rst_content += """
+
+.. toctree::
+   :hidden:
+   :maxdepth: 1
+
+   dataset/eegdash.dataset
+   dataset/eegdash.downloader
+"""
 
     return rst_content
 

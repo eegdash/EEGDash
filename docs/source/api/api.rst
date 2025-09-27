@@ -28,3 +28,10 @@ API Reference
       :link-type: doc
 
       Datasets available at EEGDash.
+
+.. toctree::
+   :hidden:
+
+   api_core
+   api_features
+   api_dataset

@@ -19,6 +19,7 @@ apidoc:
 	@rm -f "$(APIDIR)/dataset/eegdash.bids_eeg_metadata.rst"
 	@rm -f "$(APIDIR)/dataset/eegdash.const.rst"
 	@rm -f "$(APIDIR)/dataset/eegdash.data_utils.rst"
+	@rm -f "$(APIDIR)/dataset/eegdash.logging.rst"
 	@rm -f "$(APIDIR)/dataset/eegdash.mongodb.rst"
 	@rm -f "$(APIDIR)/dataset/eegdash.paths.rst"
 	@rm -f "$(APIDIR)/dataset/eegdash.utils.rst"

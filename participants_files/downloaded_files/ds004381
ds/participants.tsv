@@ -1,0 +1,19 @@
+participant_id	age	sex	pathology	medianus_stimulation	tibialis_stimulation	erb_sep	subcortical_sep	eeg_montage
+sub-01	53	M	n/a	LR	LR	N	N	extended 10-20
+sub-02	30	F	n/a	R	R	N	N	extended 10-20
+sub-03	63	M	n/a	LR	LR	N	N	extended 10-20
+sub-04	72	M	n/a	LR	LR	N	N	extended 10-20
+sub-05	57	M	n/a	LR	LR	N	N	extended 10-20
+sub-06	29	F	n/a	LR	LR	N	N	extended 10-20
+sub-07	44	M	n/a	L	L	N	N	extended 10-20
+sub-08	66	M	n/a	LR	LR	N	N	extended 10-20
+sub-09	31	F	n/a	LR	LR	N	N	extended 10-20
+sub-10	87	M	n/a	LR	LR	N	N	extended 10-20
+sub-11	51	M	n/a	LR	LR	N	N	extended 10-20
+sub-12	60	M	n/a	LR	LR	N	N	extended 10-20
+sub-13	69	M	n/a	LR	n/a	N	N	extended 10-20
+sub-14	37	F	n/a	LR	LR	N	N	extended 10-20
+sub-15	4	M	n/a	LR	LR	N	N	extended 10-20
+sub-16	9	M	n/a	LR	LR	N	N	extended 10-20
+sub-17	14	F	n/a	LR	LR	N	N	extended 10-20
+sub-18	5	F	n/a	LR	LR	N	N	extended 10-20

@@ -1,0 +1,24 @@
+participant_id	gender	age	height	weight	Average weekly hours spent on MOBA game	Rank	Salience	Mood Modification	Tolerance	Withdrawal Symptoms	Conflict	Relapse	Total Score (IGD-20)	Motor Impulsiveness	Nonplanning Impulsiveness	Attentional Impulsiveness	Total Score (BIS-11)	Non-Acceptance of Emotional	Difficulties Engaging in Goal-Directed Behavior	Impulse Control Difficulties	Lack of Emotional Awareness	Limited Access to Emotion Regulation Strategies	Lack of Emotional Clarity	Total score (DERS)
+sub-01	2	22	172	52	2	Master	7	8	5	9	16	5	50	52.5	47.5	35	45	13	20	19	13	15	6	86
+sub-02	1	19	177	62	35	Challenger	6	9	7	4	11	9	46	17.5	70	32.5	40	10	9	6	12	16	9	62
+sub-03	2	22	152	42	14	Supreme Star	13	5	6	4	16	15	59	32.5	35	25	30.8	8	17	11	24	12	8	80
+sub-04	1	19	172	58	40	Challenger	8	11	6	6	13	8	52	20	40	27.5	29.2	9	16	8	14	16	6	69
+sub-05	2	19	168	54	3	Supreme Star	5	12	7	6	13	9	52	27.5	30	20	25.8	9	15	6	11	27	6	74
+sub-06	1	23	173	81	5	Supreme Star	4	6	3	4	6	3	26	57.5	32.5	35	41.7	12	14	11	15	17	12	81
+sub-07	2	19	175	54	14	Supreme Star	9	14	8	5	9	10	55	47.5	65	17.5	43.3	15	10	11	9	18	6	69
+sub-08	2	20	165	85	3.5	Gold	6	12	6	6	12	8	50	42.5	72.5	60	58.3	11	13	8	20	21	12	85
+sub-09	1	18	169	63	48	Challenger	8	12	5	7	14	9	55	35	52.5	35	40.8	12	14	9	15	16	12	78
+sub-10	1	20	171	70	21	Diamond	7	9	6	8	11	6	47	30	37.5	20	29.2	15	20	10	10	15	11	81
+sub-11	2	18	167	83	14	Platinum	4	12	6	3	11	3	39	65	57.5	47.5	56.7	19	16	6	6	10	5	62
+sub-12	1	21	174	69	9	Supreme Star	8	13	9	8	12	12	62	17.5	17.5	25	20	10	14	9	16	13	9	71
+sub-13	2	19	150	40	2	Diamond	6	12	6	5	11	6	46	67.5	42.5	40	50	13	17	12	17	15	9	83
+sub-14	1	20	177	66	20	Supreme Star	4	10	4	3	7	3	31	27.5	57.5	52.5	45.8	14	14	9	17	14	9	77
+sub-15	1	19	168	50	10	Platinum	9	3	5	4	11	6	38	10	20	22.5	17.5	13	10	10	10	17	7	67
+sub-16	1	20	182	90	12	Diamond	4	10	7	3	5	9	38	40	45	42.5	42.5	9	14	11	17	13	7	71
+sub-17	1	19	176	63	20	Master	7	9	9	7	14	8	54	20	50	30	33.3	13	11	7	16	13	12	72
+sub-18	2	19	170	51	14	Silver	10	11	8	5	13	6	53	35	55	35	41.7	13	15	13	15	15	11	82
+sub-19	1	20	170	70	21	Master	7	11	8	6	10	6	48	15	60	25	33.3	8	6	7	11	9	7	48
+sub-20	1	21	176	73	10	Supreme Star	6	9	9	6	13	6	49	35	55	55	48.3	6	8	7	17	14	8	60
+sub-21	1	20	169	65	4	Master	9	9	8	9	14	9	58	45	50	40	45	12	16	13	19	15	11	86
+sub-22	1	21	170	65	7	Gold	7	8	4	7	11	5	42	30	22.5	37.5	30	14	13	8	11	11	9	66
+sub-23	1	15	160	50	24	Supreme Star	8	11	6	5	8	6	44	17.5	35	32.5	28.3	8	8	7	13	14	7	57

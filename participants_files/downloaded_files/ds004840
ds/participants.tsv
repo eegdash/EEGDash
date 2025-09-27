@@ -1,0 +1,10 @@
+participant_id	sex	age	burn_type	burn_severity	medication	VAS_PRE_session1	VAS_POST_session1	VAS_PRE_session2	VAS_POST_session2	A-HADS_baseline	D-HADS_baseline	T-HADS_baseline	A-HADS_last	D-HADS_last	T-HADS_last
+sub-01	M	36	Termic	1	Oxycodone	0	0	7	4	9	7	16	4	2	6
+sub-02	M	20	Termic	1	-	3	0	4	6	9	3	12	8	2	10
+sub-03	M	65	Electric	2	Hydrocodone	0	0	0	0	2	3	5	2	0	2
+sub-04	M	29	Termic	1	Hydromorphone	2	0	8	7	7	7	14	6	1	7
+sub-05	F	18	Termic	1	Hydromorphone 	3	2	0	1	11	6	17	9	9	18
+sub-06	M	19	Termic	1	Acetaminophen	0	0	0	0	7	4	11	1	1	2
+sub-07	M	58	Electric	2	-	2	0	0	0	0	0	0	1	2	3
+sub-08	M	28	Termic	1	Acetaminophen	1	0	4	0	2	0	2	1	0	1
+sub-09	M	29	Electric	2	Acetaminophen	0	1	-	-	4	2	6	-	-	-

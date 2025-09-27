@@ -1,0 +1,51 @@
+participant_id	Original_ID	Group	sess1_Med	sess2_Med	sex	age
+sub-001	804	PD	ON	OFF	Male	75
+sub-002	805	PD	ON	OFF	Male	79
+sub-003	8060	CTL	n/a	no s2	Female	83
+sub-004	806	PD	OFF	ON	Female	79
+sub-005	8070	CTL	n/a	no s2	Female	67
+sub-006	807	PD	OFF	ON	Female	72
+sub-007	808	PD	OFF	ON	Male	68
+sub-008	809	PD	ON	OFF	Male	71
+sub-009	810	PD	ON	OFF	Male	68
+sub-010	811	PD	ON	OFF	Male	68
+sub-011	813	PD	OFF	ON	Male	83
+sub-012	814	PD	ON	OFF	Male	61
+sub-013	815	PD	ON	OFF	Male	55
+sub-014	816	PD	OFF	ON	Female	49
+sub-015	817	PD	OFF	ON	Male	71
+sub-016	818	PD	ON	OFF	Female	74
+sub-017	819	PD	OFF	ON	Male	76
+sub-018	820	PD	ON	OFF	Male	72
+sub-019	821	PD	ON	OFF	Female	49
+sub-020	822	PD	ON	OFF	Male	70
+sub-021	823	PD	OFF	ON	Female	64
+sub-022	824	PD	OFF	ON	Male	78
+sub-023	825	PD	ON	OFF	Female	77
+sub-024	826	PD	ON	OFF	Male	66
+sub-025	827	PD	OFF	ON	Male	68
+sub-026	828	PD	OFF	ON	Female	76
+sub-027	829	PD	OFF	ON	Female	73
+sub-028	890	CTL	n/a	no s2	Female	66
+sub-029	891	CTL	n/a	no s2	Male	80
+sub-030	892	CTL	n/a	no s2	Female	64
+sub-031	893	CTL	n/a	no s2	Female	64
+sub-032	895	CTL	n/a	no s2	Male	69
+sub-033	896	CTL	n/a	no s2	Male	58
+sub-034	897	CTL	n/a	no s2	Male	70
+sub-035	898	CTL	n/a	no s2	Male	64
+sub-036	899	CTL	n/a	no s2	Male	52
+sub-037	900	CTL	n/a	no s2	Male	84
+sub-038	901	CTL	n/a	no s2	Female	69
+sub-039	902	CTL	n/a	no s2	Male	83
+sub-040	903	CTL	n/a	no s2	Male	83
+sub-041	904	CTL	n/a	no s2	Male	73
+sub-042	905	CTL	n/a	no s2	Female	58
+sub-043	906	CTL	n/a	no s2	Male	77
+sub-044	907	CTL	n/a	no s2	Female	65
+sub-045	909	CTL	n/a	no s2	Male	64
+sub-046	910	CTL	n/a	no s2	Male	75
+sub-047	911	CTL	n/a	no s2	Male	73
+sub-048	912	CTL	n/a	no s2	Male	75
+sub-049	913	CTL	n/a	no s2	Male	69
+sub-050	914	CTL	n/a	no s2	Female	48

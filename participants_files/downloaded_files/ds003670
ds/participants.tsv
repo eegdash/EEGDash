@@ -1,0 +1,27 @@
+participant_id	gender	age	Height	Weight	Ethnicity	Race	Education	Handedness	Language	Prof	Exercise	Exercisehours	Stim	RepeatParticipants	ParticipantNote
+sub-001	M	43	187.9600000000	97.5200000000	Non-Hispanic/Latino	White/Caucasian	21	right	no	Native/Bilingual	no	-	yes	-	-
+sub-002	M	40	180.3300000000	79.3900000000	Non-Hispanic/Latino	Asian	30	right	yes	Native/Bilingual	yes	5	yes	-	-
+sub-003	M	31	172.7200000000	70.3000000000	Non-Hispanic/Latino	Asian	16	left	no	Advanced	yes	8	yes	-	-
+sub-004	M	33	165.1000000000	64.8600000000	Non-Hispanic/Latino	White/Caucasian	18	right	no	Intermediate	no	-	yes	-	-
+sub-005	F	32	165	63	Non-Hispanic/Latino	White/Caucasian	25	left	no	Advanced	no	-	yes	-	-
+sub-006	M	31	167.6400000000	63.5000000000	Non-Hispanic/Latino	Asian	23	right	no	Bilingual	yes	2	yes	-	-
+sub-007	F	20	154.9400000000	54.4311000000	Non-Hispanic/Latino	Asian	14	right	no	Advanced	no	-	no	-	-
+sub-008	M	22	170.1800000000	77.1100000000	Hispanic/Latino	White/Caucasian	17	left	yes	Advanced	yes	2	yes	-	-
+sub-009	F	19	154.9400000000	47.6300000000	Non-Hispanic/Latino	Asian	14	right	yes	-	no	-	no	-	-
+sub-010	M	22	187.9600000000	86.1800000000	Hispanic/Latino	-	15	right	no	Advanced	yes	6	no	-	-
+sub-011	F	21	167.6400000000	61.2400000000	Non-Hispanic/Latino	Asian	16	left	no	Native/Bilingual	no	-	yea	-	-
+sub-012	F	20	157.4800000000	68.9500000000	Non-Hispanic/Latino	Asian	15	right	no	Advanced	no	-	no	a	Matching participant num: 12,19
+sub-013	F	28	162.5600000000	56.7000000000	Hispanic/Latino	-	16	right	no	Native/Bilingual	no	-	no	-	-
+sub-014	M	36	172.7200000000	91.6300000000	Non-Hispanic/Latino	White/Caucasian	18	right	yes	-	no	-	yes	-	-
+sub-015	M	30	175.2600000000	58.9700000000	Non-Hispanic/Latino	White/Caucasian	20	right	no	Native/Bilingual	no	-	yes	b	Matching participant num: 15,18
+sub-016	F	29	167.6400000000	58.9700000000	Non-Hispanic/Latino	Other	21	right	no	Advanced	no	-	yes	-	-
+sub-017	M	35	177.8000000000	129.7300000000	Non-Hispanic/Latino	Black/African American	15	right	yes	-	yes	10	no	-	Excluded
+sub-018	M	30	175.2600000000	58.9700000000	Non-Hispanic/Latino	White/Caucasian	20	right	no	Native/Bilingual	no	-	yes	b	Matching participant num: 15,18
+sub-019	F	20	157.4800000000	68.9500000000	Non-Hispanic/Latino	Asian	15	right	no	Advanced	no	-	no	a	Matching participant num: 12,19
+sub-020	M	31	160.0200000000	70.3100000000	Hispanic/Latino	-	17	right	yes	-	yes	5	yes	-	-
+sub-021	M	30	167.6400000000	63.5000000000	Non-Hispanic/Latino	White/Caucasian	18	right	yes	-	yes	4	yes	c	Matching participant num: 21,25,26
+sub-022	M	29	182.8800000000	78.9300000000	Hispanic/Latino	White/Caucasian	18	left	yes	-	yes	6	no	d	Matching participant num: 22,23,24
+sub-023	M	29	182.8800000000	78.9300000000	Hispanic/Latino	White/Caucasian	18	left	yes	-	yes	6	no	d	Matching participant num: 22,23,24
+sub-024	M	29	182.8800000000	78.9300000000	Hispanic/Latino	White/Caucasian	18	left	yes	-	yes	6	no	d	Matching participant num: 22,23,24
+sub-025	M	30	167.6400000000	63.5000000000	Non-Hispanic/Latino	White/Caucasian	18	right	yes	-	yes	4	yes	c	Matching participant num: 21,25,26
+sub-026	M	30	167.6400000000	63.5000000000	Non-Hispanic/Latino	White/Caucasian	18	right	yes	-	yes	4	yes	c	Matching participant num: 21,25,26

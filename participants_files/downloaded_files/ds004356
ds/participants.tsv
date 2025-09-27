@@ -1,0 +1,23 @@
+participant_id	gender	age	musical_training_years	formal_musical_training_years	tonal_language_speaker	L_500	L_1000	L_2000	L_3000	L_4000	L_6000	L_8000	R_500	R_1000	R_2000	R_3000	R_4000	R_6000	R_8000	note
+sub-01	Female	37	12	11	No	15	15	15	n/a	10	10	n/a	10	10	5	n/a	10	n/a	15	n/a
+sub-02	Male	20	0	0	Yes	5	10	0	0	0	0	5	10	5	0	0	0	0	0	n/a
+sub-03	Female	20	14	6	Yes	5	10	5	n/a	10	n/a	10	10	15	10	n/a	10	n/a	5	EEG 2 runs
+sub-04	Male	19	0	0	No	15	5	0	0	0	5	10	10	5	0	0	0	0	0	n/a
+sub-05	Male	19	2	1	No	0	-5	0	n/a	0	n/a	0	0	0	-5	n/a	5	n/a	-5	n/a
+sub-06	Female	19	11	4	Yes	15	10	5	n/a	5	n/a	5	10	n/a	5	n/a	5	n/a	5	n/a
+sub-07	Female	20	7	7	No	5	5	5	0	5	10	10	5	5	0	0	0	0	10	n/a
+sub-08	Female	22	12	12	No	10	10	0	0	0	0	10	10	0	10	0	0	0	10	n/a
+sub-09	Female	20	13	12	No	10	5	0	0	10	10	10	5	10	5	0	15	5	15	n/a
+sub-10	Female	19	7	7	Yes	10	5	5	n/a	5	n/a	0	10	5	5	n/a	5	n/a	0	n/a
+sub-11	Male	35	10	7	No	5	0	5	5	10	5	15	5	5	10	5	10	5	10	n/a
+sub-12	Female	19	8	2	No	0	0	0	0	0	5	5	5	5	0	5	0	0	0	n/a
+sub-13	Male	22	12	7	No	5	5	0	-5	0	0	0	5	0	-5	-5	5	0	0	n/a
+sub-15	Male	23	3	3	No	10	10	0	0	5	5	10	10	10	0	0	0	0	10	n/a
+sub-16	Male	23	0	0	No	15	5	0	0	0	10	5	10	0	0	0	0	20	0	n/a
+sub-17	Female	25	17	11	No	0	5	-5	n/a	10	n/a	5	0	5	-5	n/a	10	n/a	5	n/a
+sub-18	Male	30	4	1	No	0	-5	5	n/a	0	n/a	0	0	0	0	n/a	-5	n/a	5	n/a
+sub-19	Female	28	14	14	No	5	10	5	0	0	15	10	10	5	0	0	5	10	15	EEG 2 runs
+sub-20	Male	20	1.5	1.5	No	5	5	10	0	20	5	0	5	5	0	0	10	0	0	n/a
+sub-22	Male	19	3	3	Yes	0	0	5	10	0	15	15	0	5	0	0	15	10	5	n/a
+sub-23	Female	20	5	2	No	0	5	0	5	0	10	5	0	0	0	0	15	0	0	n/a
+sub-24	Male	20	0	0	No	0	5	10	0	5	0	15	0	5	10	0	0	10	5	n/a

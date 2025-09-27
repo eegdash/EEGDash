@@ -1,0 +1,16 @@
+participant_id	usz_identifier	sciAdv_identifier	eLife_identifier	age	sex	pathology
+sub-01	28	  1	 7	24	f	xanthoastrocytoma WHO II
+sub-02	22	  2	 9	39	m	gliosis
+sub-03	19	  3	12	18	f	hippocampal sclerosis
+sub-04	30	  4	 6	28	m	brain contusion
+sub-05	33	  5	 8	20	f	focal cortical dysplasia
+sub-06	13	  6	 5	31	m	hippocampal sclerosis
+sub-07	23	  7	11	47	m	hippocampal sclerosis
+sub-08	29	  8	13	56	f	hippocampal sclerosis
+sub-09	16	  9	10	19	f	hippocampal sclerosis
+sub-10	42	n/a	 1	46	f	hippocampal sclerosis
+sub-11	38	n/a	 2	19	m	non-lesional
+sub-12	37	n/a	 3	20	m	focal cortical dysplasia type II
+sub-13	45	n/a	 4	29	f	unclear etiology
+sub-14	40	n/a	14	51	f	hippocampal sclerosis
+sub-15	44	n/a	15	30	m	dysembryoplastic neuroepithelial tumor

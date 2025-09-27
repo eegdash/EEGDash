@@ -1,0 +1,16 @@
+participant_id	age	gender	race	ethnicity	l_500	l_1000	l_2000	l_4000	l_8000	r_500	r_1000	r_2000	r_4000	r_8000
+sub-01	27	Female	Asian	Not Hispanic or Latino	0	10	20	5	15	15	10.0	15	5	10
+sub-02	20	Female	Asian	Not Hispanic or Latino	5	10	5	10	10	10	15.0	10	10	5
+sub-03	19	Female	Asian	Not Hispanic or Latino	10	5	5	5	0	10	5.0	5	5	0
+sub-04	19	Male	More	Not Hispanic or Latino	0	-5	0	0	0	0	0.0	-5	5	-5
+sub-05	35	Female	Asian	Not Hispanic or Latino	5	5	0	5	5	5	10.0	0	5	10
+sub-06	19	Female	Asian	Not Hispanic or Latino	15	10	5	5	5	10	n/a	5	5	5
+sub-07	25	Female	White	Not Hispanic or Latino	0	5	-5	10	5	0	5.0	-5	10	5
+sub-08	19	Male	Black or African American	Not Hispanic or Latino	15	5	0	0	10	10	5.0	0	0	0
+sub-09	34	Female	White	Not Hispanic or Latino	0	-5	10	5	5	5	5.0	5	5	15
+sub-10	22	Male	White	Not Hispanic or Latino	5	-5	0	0	0	5	0.0	-5	5	0
+sub-11	20	Female	White	Not Hispanic or Latino	5	5	5	5	10	5	5.0	0	0	10
+sub-12	35	Male	White	Not Hispanic or Latino	5	0	5	10	15	5	5.0	10	10	10
+sub-13	27	Female	White	Not Hispanic or Latino	5	0	0	0	10	10	0.0	0	0	0
+sub-14	20	Female	White	Not Hispanic or Latino	0	0	0	0	5	5	5.0	0	0	0
+sub-15	20	Male	Asian	Not Hispanic or Latino	5	10	0	0	5	10	5.0	0	0	0

@@ -1,0 +1,36 @@
+participant_id	Gender	Age	Group	MMSE
+sub-01	Male	65	Normal	28
+sub-02	Female	70	Mild AD	23
+sub-03	Male	75	Normal	27
+sub-04	Male	82	Mild AD	21
+sub-05	Male	75	Mild AD	21
+sub-06	Female	69	-	-
+sub-07	Male	89	Mild AD	19
+sub-08	Male	70	Normal	24
+sub-09	Female	57	Normal	26
+sub-10	Male	81	Normal	28
+sub-11	Female	88	Mild AD	20
+sub-12	Female	63	Normal	30
+sub-13	Male	60	-	-
+sub-14	Female	79	Mild AD	18
+sub-15	Female	77	Mild AD	19
+sub-16	Male	68	Mild AD	25
+sub-17	Male	65	MCI	25
+sub-18	Female	76	MCI	18
+sub-19	Female	82	MCI	13
+sub-20	Female	82	Mild AD	13
+sub-21	Male	78	Mild AD	30
+sub-22	Female	67	Normal	29
+sub-23	Female	75	Mild AD	14
+sub-24	Male	81	Moderate AD	23
+sub-25	Female	68	Normal	24
+sub-26	Male	54	Normal	28
+sub-27	Male	64	MCI	23
+sub-28	Male	60	MCI	26
+sub-29	Male	85	Mild AD	16
+sub-30	Male	71	Mild AD	22
+sub-31	Female	59	Normal	26
+sub-32	Female	71	MCI	21
+sub-33	Female	83	Mild AD	15
+sub-34	Female	78	Mild AD	20
+sub-35	Male	77	Mild AD	21

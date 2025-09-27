@@ -1,0 +1,17 @@
+participant_id	Date	Age	Gender	Handedness	corrected_to_normal_vision
+sub-01	11/2/2020	24	F	R	YES
+sub-02	5/3/2020	27	M	R	YES
+sub-03	5/3/2020	19	F	R	YES
+sub-04	6/3/2020	18	F	R	YES
+sub-05	6/3/2020	25	M	R	YES
+sub-06	6/3/2020	19	F	R	YES
+sub-07	29/10/2020	19	F	R	YES
+sub-08	4/11/2020	20	F	R	YES (glasses)
+sub-09	12/11/2020	20	F	R	YES
+sub-10	12/11/2020	19	M	R	YES
+sub-11	12/11/2020	19	F	R	YES
+sub-12	19/11/2020	19	F	R	YES
+sub-13	19/11/2020	19	F	R	YES
+sub-14	19/11/2020	21	M	R	YES
+sub-15	25/11/2020	19	F	L	YES
+sub-16	17/1/2021	26	M	R	YES (glasses)

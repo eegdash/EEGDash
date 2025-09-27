@@ -1,0 +1,38 @@
+participant_id	sex	age	nationality	hand	date	comments
+sub-01	Male	22	Chinese	Right	24/5/2021	N/A
+sub-02	Female	23	Maori	Right	25/5/2021	N/A
+sub-03	Male	18	Australian	Right	25/5/2021	N/A
+sub-04	Male	20	Australian	Left	25/5/2021	N/A
+sub-05	Female	19	English	Right	25/5/2021	N/A
+sub-06	Female	18	Australian	Right	26/5/2021	N/A
+sub-07	Female	20	Philippines	Right	26/5/2021	N/A
+sub-08	Female	18	Australian	Right	26/5/2021	N/A
+sub-09	Female	18	Australian	Right	26/5/2021	N/A
+sub-10	Female	18	Australian	Right	3/6/2021	N/A
+sub-11	Female	19	Chinese	Right	7/6/2021	Disk ran out of space during 8th block
+sub-12	Female	17	Australian	Right	7/6/2021	N/A
+sub-13	Female	18	Australian	Right	7/6/2021	Reportedly a bit tired
+sub-14	Female	19	Australian	Right	8/6/2021	N/A
+sub-15	Female	18	Australian	Right	8/6/2021	N/A
+sub-16	Female	18	Philippines	Right	8/6/2021	N/A
+sub-17	Female	22	Australian	Right	9/6/2021	N/A
+sub-18	Male	19	Vietnamise	Right	9/6/2021	N/A
+sub-19	Female	23	Australian	Right	9/6/2021	N/A
+sub-20	Female	18	Australian	Right	9/6/2021	N/A
+sub-21	Female	21	Australian	Right	10/6/2021	N/A
+sub-22	Female	30	Australian	Right	10/6/2021	N/A
+sub-23	Female	19	Sri Lankan	Right	10/6/2021	Wet electrode cap
+sub-24	Female	19	Australian	Right	18/8/2021	N/A
+sub-25	Female	19	Indian	Right	18/8/2021	N/A
+sub-26	Female	22	Australian	Right	25/8/2021	N/A
+sub-27	Female	19	Australian	Right	1/9/2021	Has ADHD
+sub-28	Male	21	Indian	Right	1/9/2021	N/A
+sub-29	Female	20	Australian	Right	7/9/2021	N/A
+sub-30	Female	20	Australian	Right	7/9/2021	N/A
+sub-31	Female	20	Australian	Right	7/9/2021	"Was reportedly ""seeing double"" at times"
+sub-32	Female	18	Australian	Right	8/9/2021	Quite bad signal to noise for some electrodes
+sub-33	Male	26	Australian	Right	13/9/2021	ADHD and dyselxia
+sub-34	Female	18	Malaysian	Right	14/9/2021	N/A
+sub-35	Female	27	Australian	Right	21/9/2021	N/A
+sub-36	Female	19	Australian	Right	22/9/2021	N/A
+sub-37	Male	19	United States of America	Right	22/9/2021	Reportedly a bit tired

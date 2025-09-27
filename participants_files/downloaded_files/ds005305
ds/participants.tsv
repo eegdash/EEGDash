@@ -1,0 +1,166 @@
+participant_id	Gender	Age	NativeLanguage	EducationLevel	Handedness	Inclusion	Comment
+sub-001	man	23	french	16	right-handed	1	n/a
+sub-002	woman	25	french	17	right-handed	1	n/a
+sub-003	man	22	french	15	right-handed	1	n/a
+sub-004	man	23	french	18	right-handed	1	n/a
+sub-005	woman	31	french	20	right-handed	1	n/a
+sub-006	man	24	french	18	right-handed	1	n/a
+sub-007	man	27	french	15	right-handed	1	n/a
+sub-008	man	22	french	17	right-handed	1	n/a
+sub-009	man	20	french	15	right-handed	1	n/a
+sub-010	man	31	french	17	right-handed	1	n/a
+sub-011	woman	26	french	17	right-handed	1	n/a
+sub-012	woman	23	french	17	right-handed	1	n/a
+sub-013	man	21	french	14	right-handed	1	n/a
+sub-014	man	23	french	17	right-handed	1	n/a
+sub-015	man	20	french	14	left-handed	1	n/a
+sub-016	man	21	french	16	right-handed	0	Corrected hearing loss
+sub-017	man	26	other	17	right-handed	0	Bilingual (B2 in french)
+sub-018	woman	24	french	17	right-handed	1	n/a
+sub-019	man	20	french	14	right-handed	1	n/a
+sub-020	man	20	french	15	left-handed	1	n/a
+sub-021	man	26	french	14	right-handed	1	n/a
+sub-022	man	21	french	16	right-handed	1	n/a
+sub-023	man	32	french	15	right-handed	1	n/a
+sub-024	woman	26	french	20	right-handed	1	n/a
+sub-025	man	20	french	16	right-handed	1	n/a
+sub-026	man	20	french	13	right-handed	1	n/a
+sub-027	man	23	french	15	right-handed	1	n/a
+sub-028	man	21	other	16	right-handed	0	Bilingual (B2 in french)
+sub-029	woman	26	french	15	right-handed	1	n/a
+sub-030	man	22	other	17	right-handed	1	n/a
+sub-031	man	21	french	14	left-handed	0	color-blind
+sub-032	man	27	french	14	right-handed	0	color-blind
+sub-033	man	25	french	15	left-handed	1	n/a
+sub-034	man	36	french	12	right-handed	0	difficulty to understand the tasks
+sub-035	woman	35	french	17	right-handed	1	n/a
+sub-036	man	29	french	17	right-handed	1	n/a
+sub-037	man	24	french	15	left-handed	1	n/a
+sub-038	woman	32	french	12	right-handed	1	n/a
+sub-039	woman	27	french	17	right-handed	1	n/a
+sub-040	woman	24	french	14	right-handed	1	n/a
+sub-041	man	25	french	12	right-handed	1	n/a
+sub-042	woman	32	french	12	right-handed	1	n/a
+sub-043	man	33	french	14	right-handed	1	n/a
+sub-044	woman	29	french	17	right-handed	1	n/a
+sub-045	woman	24	french	17	right-handed	1	n/a
+sub-046	woman	26	french	17	right-handed	1	n/a
+sub-047	man	31	french	12	right-handed	1	n/a
+sub-048	man	24	french	14	right-handed	0	dyslexia
+sub-049	woman	23	french	17	right-handed	1	n/a
+sub-050	man	24	french	17	right-handed	1	n/a
+sub-051	woman	25	french	16	right-handed	1	n/a
+sub-052	woman	23	french	17	right-handed	1	n/a
+sub-053	woman	23	french	12	left-handed	1	n/a
+sub-054	man	28	french	15	right-handed	1	n/a
+sub-055	man	20	french	12	right-handed	1	n/a
+sub-056	woman	28	french	17	right-handed	1	n/a
+sub-057	woman	19	french	13	right-handed	1	n/a
+sub-058	woman	24	french	16	right-handed	0	dyslexia
+sub-059	woman	29	french	17	right-handed	1	n/a
+sub-060	woman	21	french	15	right-handed	1	n/a
+sub-061	man	29	french	20	right-handed	1	n/a
+sub-062	man	21	other	16	right-handed	0	Bilingual (B2 in french)
+sub-063	woman	30	french	14	right-handed	1	n/a
+sub-064	woman	20	french	14	right-handed	1	n/a
+sub-065	man	21	french	15	right-handed	1	n/a
+sub-066	man	21	french	16	right-handed	0	under medication (antidepressant)
+sub-067	man	20	french	15	right-handed	1	n/a
+sub-068	woman	23	french	17	right-handed	1	n/a
+sub-069	woman	33	french	15	right-handed	1	n/a
+sub-070	man	22	french	14	right-handed	1	n/a
+sub-071	woman	22	french	17	right-handed	1	n/a
+sub-072	man	33	french	17	right-handed	1	n/a
+sub-073	woman	24	french	19	right-handed	1	n/a
+sub-074	woman	33	french	12	left-handed	1	n/a
+sub-075	woman	31	french	17	right-handed	1	n/a
+sub-076	woman	33	french	15	right-handed	1	n/a
+sub-077	woman	19	french	14	right-handed	1	n/a
+sub-078	woman	18	french	15	right-handed	1	n/a
+sub-079	man	22	other	17	right-handed	0	Bilingual (B2 in french)
+sub-080	man	22	french	17	right-handed	1	n/a
+sub-081	man	22	french	15	right-handed	1	n/a
+sub-082	woman	31	french	20	right-handed	1	n/a
+sub-083	man	21	french	15	right-handed	1	n/a
+sub-084	man	21	french	16	right-handed	1	n/a
+sub-085	woman	23	french	16	right-handed	1	n/a
+sub-086	woman	22	french	17	right-handed	1	n/a
+sub-087	man	26	other	17	right-handed	0	Bilingual (A2 in french)
+sub-088	woman	22	french	15	right-handed	0	dyslexia
+sub-089	man	34	french	17	right-handed	1	n/a
+sub-090	man	30	french	14	left-handed	1	n/a
+sub-091	man	35	french	17	right-handed	1	n/a
+sub-092	man	23	french	16	right-handed	1	n/a
+sub-093	woman	31	french	16	right-handed	1	n/a
+sub-094	man	20	french	14	right-handed	1	n/a
+sub-095	man	24	french	17	right-handed	1	n/a
+sub-096	man	32	french	17	right-handed	1	n/a
+sub-097	woman	32	other	19	right-handed	0	Bilingual (A2 in french)
+sub-098	man	20	french	14	right-handed	1	n/a
+sub-099	man	30	french	20	right-handed	1	n/a
+sub-100	man	30	french	20	right-handed	1	n/a
+sub-101	woman	22	french	14	right-handed	1	n/a
+sub-102	man	26	french	18	right-handed	1	n/a
+sub-103	man	27	french	17	left-handed	1	n/a
+sub-104	woman	32	french	20	right-handed	1	n/a
+sub-105	woman	26	french	15	right-handed	0	Corrected hearing loss
+sub-106	woman	22	other	17	right-handed	0	Not finished
+sub-107	man	21	french	14	right-handed	1	n/a
+sub-108	man	19	french	14	right-handed	1	n/a
+sub-109	man	23	french	18	right-handed	1	n/a
+sub-110	man	24	french	19	left-handed	1	n/a
+sub-111	woman	35	french	20	right-handed	1	n/a
+sub-112	man	21	french	17	right-handed	1	n/a
+sub-113	woman	18	french	12	right-handed	1	n/a
+sub-114	woman	35	french	15	right-handed	0	under medication (laroxyl)
+sub-115	man	20	french	13	right-handed	1	n/a
+sub-116	woman	24	other	17	right-handed	0	Bilingual (C2 in french)
+sub-117	woman	32	french	17	right-handed	1	n/a
+sub-118	man	35	french	17	right-handed	1	n/a
+sub-119	woman	27	french	12	right-handed	1	n/a
+sub-120	woman	25	french	17	right-handed	1	n/a
+sub-121	woman	23	french	16	left-handed	1	n/a
+sub-122	man	22	french	18	right-handed	1	n/a
+sub-123	man	21	french	14	right-handed	1	n/a
+sub-124	woman	21	french	16	left-handed	1	n/a
+sub-125	woman	20	french	16	right-handed	1	n/a
+sub-126	man	22	french	15	left-handed	1	n/a
+sub-127	man	20	french	15	left-handed	1	n/a
+sub-128	woman	20	french	15	right-handed	1	n/a
+sub-129	man	22	french	17	right-handed	1	n/a
+sub-130	man	23	french	17	right-handed	1	n/a
+sub-131	woman	28	french	14	right-handed	1	n/a
+sub-132	woman	25	french	14	right-handed	1	n/a
+sub-133	woman	24	french	15	right-handed	1	n/a
+sub-134	man	21	french	15	right-handed	1	n/a
+sub-135	woman	21	french	15	right-handed	1	n/a
+sub-136	man	22	other	17	right-handed	0	Bilingual (C1 in french)
+sub-137	woman	22	french	16	right-handed	1	n/a
+sub-138	man	24	other	16	right-handed	0	Bilingual (C2 in french)
+sub-139	man	20	french	15	right-handed	1	n/a
+sub-140	man	22	french	16	right-handed	1	n/a
+sub-141	woman	22	other	13	right-handed	0	Bilingual (B1 in french)
+sub-142	man	25	french	17	right-handed	1	n/a
+sub-143	woman	27	french	16	right-handed	1	n/a
+sub-144	man	22	french	16	right-handed	1	n/a
+sub-145	woman	26	french	16	right-handed	1	n/a
+sub-146	man	23	french	17	right-handed	1	n/a
+sub-147	man	22	other	15	right-handed	0	Bilingual (B2 in french)
+sub-148	man	24	french	17	right-handed	1	n/a
+sub-149	woman	26	french	19	right-handed	1	n/a
+sub-150	woman	25	french	17	right-handed	1	n/a
+sub-151	woman	22	french	16	right-handed	1	n/a
+sub-152	man	23	french	16	right-handed	1	n/a
+sub-153	man	21	french	16	right-handed	1	n/a
+sub-154	woman	22	french	17	right-handed	1	n/a
+sub-155	woman	21	french	16	right-handed	1	n/a
+sub-156	man	24	other	18	right-handed	0	Bilingual (C1 in french)
+sub-157	woman	21	french	15	right-handed	1	n/a
+sub-158	woman	22	french	17	right-handed	1	n/a
+sub-159	woman	24	other	17	right-handed	1	n/a
+sub-160	man	24	french	17	right-handed	1	n/a
+sub-161	woman	34	french	16	right-handed	0	Panic attack during rest
+sub-162	woman	20	french	15	right-handed	1	n/a
+sub-163	man	32	french	15	right-handed	1	n/a
+sub-164	man	29	french	17	right-handed	1	n/a
+sub-165	woman	28	french	16	right-handed	1	n/a

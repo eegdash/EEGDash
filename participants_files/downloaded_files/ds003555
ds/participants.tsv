@@ -1,0 +1,31 @@
+participant_id	age	sex	pathology	eeg_montage
+sub-01	5.6	f	bilateral perinatal ischemic lesions with left predominance	10-20 system
+sub-02	1.6	f	genetic: DMN1 mutation	10-20 system
+sub-03	4.8	m	(radiologic suspicion of) FCD	10-20 system
+sub-04	12.4	f	genetic	10-20 system
+sub-05	6.6	m	perinatal thalamic bleeding, hippocampal atrophy/sclerosis?	10-20 system
+sub-06	3.8	f	FCD 1a	10-20 system
+sub-07	4.9	m	mMCD	10-20 system
+sub-08	5.7	f	genetic: KMT2E mutation	10-20 system
+sub-09	2.2	m	FCD 1a	10-20 system
+sub-10	11.5	m	(radiologic suspicion of) FCD	10-20 system
+sub-11	4.7	f	MCD R frontal, corpus callosum dysgenesis	10-20 system
+sub-12	4.1	m	perinatal stroke	10-20 system
+sub-13	0.7	m	Watanabe syndrome	10-20 system
+sub-14	7.1	f	genetic: SYN1 mutation	10-20 system
+sub-15	12.1	m	unknown etiology: genetic? DD FCD	10-20 system
+sub-16	15.8	f	unknown etiology: genetic? (currently LGS, history of West syndrome)	10-20 system
+sub-17	11.6	f	unknown etiology: genetic?  DD FCD	10-20 system
+sub-18	7.8	f	Glioma, corpus callosum hypoplasia, nodular perventricular heterotopia	10-20 system
+sub-19	1.5	f	(radiologic suspicion of) FCD	10-20 system
+sub-20	17.4	m	Hemiconvulsion-hemiplegia epilepsy syndrome (HHE)	10-20 system
+sub-21	0.8	f	genetic: KCNA1 mutation	10-20 system
+sub-22	7.7	f	unknown etiology: genetic DD FCD left frontal	10-20 system
+sub-23	15.3	f	unknown etiology: genetic?  DD FCD	10-20 system
+sub-24	4.8	m	postnatal stroke (aneurysma rupture)	10-20 system
+sub-25	6.1	m	intracerebral hemorrhage, prematurity, periventricular leucomalacia (history of West syndrome)	10-20 system
+sub-26	2	f	bilateral MCD with polymicrogyria/FCD L frontal, corpus callosum agenesis, bilateral heterotopias etc.	10-20 system
+sub-27	8.9	m	(radiologic suspicion of) FCD	10-20 system
+sub-28	7.6	m	(radiologic suspicion of) low grade tumor	10-20 system
+sub-29	15.8	m	hippocampal sclerosis	10-20 system
+sub-30	15.7	f	unknown etiology: MRI negativ - genetic epilepsy?	10-20 system

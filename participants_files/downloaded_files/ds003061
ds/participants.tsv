@@ -1,0 +1,14 @@
+participant_id	gender	age	Ethnicity	Air_conditioning
+sub-001	F	44	Indian	on
+sub-002	F	32	Indian	on
+sub-003	F	28	Non_indian	off
+sub-004	M	35	Indian	off
+sub-005	F	49	Non_indian	off
+sub-006	F	27	Non_indian	off
+sub-007	M	33	Indian	on
+sub-008	M	35	Indian	off
+sub-009	F	31	Non_indian	on
+sub-010	M	24	Indian	on
+sub-011	F	58	Indian	on
+sub-012	M	27	Non_indian	on
+sub-013	M	28	Indian	on

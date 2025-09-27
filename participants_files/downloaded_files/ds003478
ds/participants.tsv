@@ -1,0 +1,123 @@
+participant_id	Original_ID	sex	age	BDI	STAI	SCID	SCID_notes	HamD
+sub-001	507	1	19	0	23	No Interview	n/a	NaN
+sub-002	508	1	18	4	47	No Interview	n/a	NaN
+sub-003	509	1	18	7	44	No Interview	n/a	NaN
+sub-004	510	1	19	1	27	No Interview	n/a	NaN
+sub-005	511	2	22	1	23	No Interview	n/a	NaN
+sub-006	512	1	18	1	26	No Interview	n/a	NaN
+sub-007	513	1	19	0	22	No Interview	n/a	NaN
+sub-008	514	2	19	5	37	No Interview	n/a	NaN
+sub-009	515	1	18	5	36	No Interview	n/a	NaN
+sub-010	516	1	18	0	28	No Interview	n/a	NaN
+sub-011	517	2	21	0	23	No Interview	n/a	NaN
+sub-012	518	1	20	1	36	No Interview	n/a	NaN
+sub-013	519	2	18	6	40	No Interview	n/a	NaN
+sub-014	520	1	18	3	28	No Interview	n/a	NaN
+sub-015	521	2	18	2	24	No Interview	n/a	NaN
+sub-016	522	1	19	0	30	No Interview	n/a	NaN
+sub-017	523	1	21	1	30	No Interview	n/a	NaN
+sub-018	524	1	18	3	38	No Interview	n/a	NaN
+sub-019	525	1	18	2	30	No Interview	n/a	NaN
+sub-020	526	1	18	0	30	No Interview	n/a	NaN
+sub-021	527	1	18	1	31	No Interview	n/a	NaN
+sub-022	528	2	18	1	33	No Interview	n/a	NaN
+sub-023	529	1	18	0	27	No Interview	n/a	NaN
+sub-024	530	2	18	1	34	No Interview	n/a	NaN
+sub-025	531	1	18	1	33	No Interview	n/a	NaN
+sub-026	532	1	19	1	42	No Interview	n/a	NaN
+sub-027	533	2	23	2	24	No Interview	n/a	NaN
+sub-028	534	2	18	5	37	No Interview	n/a	NaN
+sub-029	535	2	18	2	36	No Interview	n/a	NaN
+sub-030	536	2	19	2	37	No Interview	n/a	NaN
+sub-031	537	2	20	2	37	No Interview	n/a	NaN
+sub-032	538	2	18	0	32	No Interview	n/a	NaN
+sub-033	539	2	18	0	27	No Interview	n/a	NaN
+sub-034	540	2	18	1	38	No Interview	n/a	NaN
+sub-035	541	1	19	0	29	No Interview	n/a	NaN
+sub-036	542	2	18	0	36	No Interview	n/a	NaN
+sub-037	543	2	21	1	30	No Interview	n/a	NaN
+sub-038	544	NaN	NaN	NaN	NaN	No Interview	INVALID PARTICIPANT	NaN
+sub-039	545	2	19	0	34	No Interview	n/a	NaN
+sub-040	546	2	20	5	29	No Interview	n/a	NaN
+sub-041	547	2	19	2	29	No Interview	n/a	NaN
+sub-042	548	1	20	3	38	No Interview	n/a	NaN
+sub-043	549	2	18	2	33	No Interview	n/a	NaN
+sub-044	550	2	19	1	26	No Interview	n/a	NaN
+sub-045	551	1	19	2	27	No Interview	n/a	NaN
+sub-046	552	2	18	2	26	No Interview	n/a	NaN
+sub-047	553	2	19	4	34	No Interview	n/a	NaN
+sub-048	554	1	19	1	38	No Interview	n/a	NaN
+sub-049	555	1	18	1	29	No Interview	n/a	NaN
+sub-050	556	1	19	2	35	No Interview	n/a	NaN
+sub-051	557	2	19	3	27	No Interview	n/a	NaN
+sub-052	558	1	18	29	51	Do not meet criterion for current or past MDD	nothing	7
+sub-053	559	2	19	25	69	Current MDD	MDD (mel+)	7
+sub-054	560	1	19	0	22	No Interview	n/a	NaN
+sub-055	561	1	19	27	54	Current MDD	MDD; panic, OC(compulsions)	20
+sub-056	562	1	20	0	25	No Interview	n/a	NaN
+sub-057	563	1	18	0	27	No Interview	n/a	NaN
+sub-058	564	1	21	27	62	No Interview	n/a	NaN
+sub-059	565	1	19	24	59	Current MDD	MDD	12
+sub-060	566	1	18	18	48	No Interview	n/a	NaN
+sub-061	567	1	18	24	56	Current MDD	MDD	7
+sub-062	568	1	18	1	27	No Interview	n/a	NaN
+sub-063	569	1	19	28	50	No Interview	n/a	NaN
+sub-064	570	2	NaN	1	24	No Interview	n/a	NaN
+sub-065	571	1	21	22	38	Do not meet criterion for current or past MDD	nothing	13
+sub-066	572	1	19	18	52	Current MDD	MDD	10
+sub-067	573	1	18	2	24	No Interview	n/a	NaN
+sub-068	574	1	18	4	33	No Interview	n/a	NaN
+sub-069	575	2	18	5	38	No Interview	n/a	NaN
+sub-070	576	1	21	0	30	No Interview	n/a	NaN
+sub-071	577	2	19	2	26	No Interview	n/a	NaN
+sub-072	578	2	18	1	28	No Interview	n/a	NaN
+sub-073	579	1	21	1	31	No Interview	n/a	NaN
+sub-074	580	1	19	0	28	No Interview	n/a	NaN
+sub-075	581	2	18	4	31	No Interview	n/a	NaN
+sub-076	582	2	18	2	27	No Interview	n/a	NaN
+sub-077	583	1	20	3	36	No Interview	n/a	NaN
+sub-078	584	2	20	3	34	No Interview	n/a	NaN
+sub-079	585	1	23	3	36	No Interview	n/a	NaN
+sub-080	586	2	18	22	59	Do not meet criterion for current or past MDD	nothing	6
+sub-081	587	2	20	29	60	Current MDD	MDD: prim anhedonia	21
+sub-082	588	1	18	3	26	No Interview	n/a	NaN
+sub-083	589	2	19	0	30	No Interview	n/a	NaN
+sub-084	590	1	19	22	57	No Interview	n/a	NaN
+sub-085	591	2	19	30	65	Current MDD	MDD: Vague psychotic, sub dx anxiety	11
+sub-086	592	1	18	27	60	Past MDD	past MDD - past Manic - past Panic (not Panic D/O)	6
+sub-087	593	1	20	1	35	No Interview	n/a	NaN
+sub-088	594	1	18	19	61	Past MDD	past MDD: subst induced	9
+sub-089	595	2	19	20	50	Past MDD	past MDD - likely Narcissistic	9
+sub-090	596	1	20	0	25	No Interview	n/a	NaN
+sub-091	597	1	19	13	57	Past MDD	past MDD - GAD, social Phobia - subsyndromal / unremitted Dep	21
+sub-092	598	1	18	19	60	Do not meet criterion for current or past MDD	Spec Phobia - possibly GAD - lotsa somatic / BDD	15
+sub-093	599	2	21	1	33	No Interview	n/a	NaN
+sub-094	600	2	19	1	36	No Interview	n/a	NaN
+sub-095	601	1	19	2	27	No Interview	n/a	NaN
+sub-096	602	2	18	27	65	Do not meet criterion for current or past MDD	nothing	4
+sub-097	603	1	18	21	52	No Interview	n/a	NaN
+sub-098	604	1	18	22	57	Do not meet criterion for current or past MDD	nothing	6
+sub-099	605	1	18	20	52	Past MDD	past MDD	6
+sub-100	606	2	19	20	47	Do not meet criterion for current or past MDD	nothing	4
+sub-101	607	1	18	28	63	Past MDD	past MDD (mel+)	1
+sub-102	608	1	18	23	57	Do not meet criterion for current or past MDD	Anx: social: eat & speak	3
+sub-103	609	1	18	26	58	No Interview	n/a	NaN
+sub-104	610	1	18	15	58	Past MDD	past MDD (mel+); past eating, current alc abuse	9
+sub-105	611	1	18	15	58	No Interview	n/a	NaN
+sub-106	612	1	18	25	63	No Interview	n/a	NaN
+sub-107	613	1	20	28	58	Past MDD	past MDD	11
+sub-108	614	2	24	19	58	Past MDD	past MDD (mel+)	3
+sub-109	615	1	18	30	68	No Interview	n/a	NaN
+sub-110	616	1	18	16	48	Past MDD	past MDD (mel+)	5
+sub-111	617	1	18	18	57	No Interview	n/a	NaN
+sub-112	618	1	19	24	53	Do not meet criterion for current or past MDD	subsyndromal past MDE	3
+sub-113	619	2	18	23	50	No Interview	n/a	NaN
+sub-114	620	1	18	27	64	No Interview	n/a	NaN
+sub-115	621	1	20	17	44	No Interview	n/a	NaN
+sub-116	622	2	18	14	41	Current MDD	n/a	10
+sub-117	623	1	19	19	62	No Interview	n/a	NaN
+sub-118	624	1	20	23	60	Current MDD	n/a	21
+sub-119	625	1	19	16	60	Past MDD	subsyndromal current	4
+sub-120	626	1	18	14	41	Current MDD	n/a	10
+sub-121	627	2	19	30	47	Past MDD	n/a	3
+sub-122	628	2	18	19	56	Current MDD	dysthymic, Hx Alc curr cannabis	15

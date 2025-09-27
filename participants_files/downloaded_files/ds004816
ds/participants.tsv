@@ -1,0 +1,16 @@
+participant_id	date	age	handedness	gender	native_speaker
+sub-01	29/10	22	R	F	Y
+sub-02	8/11	20	R	F	Y
+sub-03	8/11	19	R	F	N
+sub-04	8/11	25	R	F	N
+sub-05	8/11	25	R	M	N
+sub-06	12/11	24	R	M	N
+sub-07	12/11	22	R	M	Y
+sub-08	14/11	33	R	F	N
+sub-09	14/11	38	R	F	N
+sub-10	15/11	41	R	F	N
+sub-11	15/11	20	R	M	Y
+sub-12	15/11	30	R	F	N
+sub-13	15/11	21	R	F	Y
+sub-14	19/11	21	R	M	N
+sub-15	19/11	21	R	M	N

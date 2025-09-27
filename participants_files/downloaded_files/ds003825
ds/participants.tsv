@@ -1,0 +1,51 @@
+participant_id	age	gender	native_english	language_profile	language_spoken_at_home	exclude	note_IZ
+sub-01	30	F	No	Bilingual	Chinese	1	No data for final test-images part
+sub-02	18	M	Yes	Monolingual	English	0	n/a
+sub-03	20	F	Yes	Monolingual	English	0	n/a
+sub-04	23	M	Yes	Monolingual	English	0	n/a
+sub-05	20	M	Yes	Monolingual	English	0	n/a
+sub-06	19	F	Yes	Monolingual	English	1	Did not complete exp
+sub-07	18	F	No	Trilingual	Hindi & Gugarati	0	n/a
+sub-08	28	F	No	Bilingual	Chinese	0	n/a
+sub-09	19	F	Yes	Monolingual	English	0	n/a
+sub-10	20	M	No	Bilingual	Chinese	0	n/a
+sub-11	19	F	Yes	Monolingual	English	0	n/a
+sub-12	19	F	Yes	Monolingual	English	0	n/a
+sub-13	18	F	Yes	Monolingual	English	0	n/a
+sub-14	19	F	Yes	Bilingual	Chinese	0	n/a
+sub-15	18	F	Yes	Monolingual	English	0	n/a
+sub-16	18	F	Yes	Monolingual	English	0	n/a
+sub-17	19	M	Yes	Monolingual	English	0	n/a
+sub-18	21	M	No	Bilingual	Chinese	1	"Subject had braided hair, poor signal at TP4, TP9, TP10, CP2, CP5, FC4, but did complete the experiment"
+sub-19	21	F	Yes	Monolingual	English	0	n/a
+sub-20	18	F	No	Bilingual	Chinese	0	n/a
+sub-21	19	F	Yes	Monolingual	English	0	n/a
+sub-22	20	F	No	Monolingual	Chinese	0	n/a
+sub-23	26	M	No	Monolingual	Korean	1	Monitor issues during the experiment
+sub-24	19	M	No	Bilingual	Chinese	0	n/a
+sub-25	18	M	Yes	Monolingual	English	0	n/a
+sub-26	17	M	Yes	Bilingual	Vietnamese	0	n/a
+sub-27	18	F	Yes	Bilingual	Chinese	0	n/a
+sub-28	23	M	No	Bilingual	Chinese	0	n/a
+sub-29	21	F	No	Bilingual	Korean	0	n/a
+sub-30	21	F	Yes	Monolingual	English	0	n/a
+sub-31	21	F	Yes	Monolingual	English	0	n/a
+sub-32	18	F	Yes	Monolingual	English	0	n/a
+sub-33	19	F	No	Bilingual	Chinese	0	n/a
+sub-34	23	F	Yes	Monolingual	English	0	n/a
+sub-35	18	F	Yes	Monolingual	English	0	n/a
+sub-36	20	F	No	Bilingual	Chinese	0	n/a
+sub-37	20	F	No	Bilingual	Chinese	0	n/a
+sub-38	20	F	Yes	Monolingual	English	0	n/a
+sub-39	20	F	No	Bilingual	Chinese	0	n/a
+sub-40	22	F	No	Bilingual	Chinese	0	n/a
+sub-41	22	F	No	Bilingual	Chinese	0	n/a
+sub-42	22	F	No	Bilingual	Chinese	0	n/a
+sub-43	21	M	No	Bilingual	Chinese	0	n/a
+sub-44	19	F	No	Bilingual	Chinese	0	n/a
+sub-45	20	F	No	Bilingual	Chinese	0	n/a
+sub-46	20	F	No	Bilingual	Chinese	0	n/a
+sub-47	28	M	Yes	Monolingual	English	0	n/a
+sub-48	22	M	No	Bilingual	Chinese	0	n/a
+sub-49	20	F	No	Bilingual	Chinese	0	incorrectly used 128-channel set-up, but only 64 connected
+sub-50	20	F	Yes	Bilingual	Chinese	0	incorrectly used 128-channel set-up, but only 64 connected

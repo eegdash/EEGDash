@@ -356,15 +356,13 @@ def attach_participants_extras(
 
     # Description enrichment
     try:
-        import pandas as _pd  # local import to avoid hard dependency at import time
-
         if isinstance(description, dict):
             for k, v in extras.items():
                 description.setdefault(k, v)
-        elif isinstance(description, _pd.Series):
-            missing = [k for k in extras.keys() if k not in description.index]
-            if missing:
-                description.loc[missing] = [extras[m] for m in missing]
+        elif isinstance(description, pd.Series):
+            for k, v in extras.items():
+                if k not in description.index:
+                    description.loc[k] = v
     except Exception:
         pass
 

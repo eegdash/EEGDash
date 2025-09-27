@@ -41,13 +41,14 @@ repos:
     hooks:
     -   id: codespell
         args:
-        - --ignore-words-list=carin,splitted,meaned,wil,whats,additionals,alle,alot,bund,currenty,datas,farenheit,falsy,fo,haa,hass,iif,incomfort,ines,ist,nam,nd,pres,pullrequests,resset,rime,ser,serie,te,technik,ue,unsecure,withing,zar,mane,THIRDPARTY
-        - --skip="./.*,*.csv,*.json,*.ambr,*.toml,*.tsv"
-        - --quiet-level=2
+            - --ignore-words-list=carin,splitted,meaned,wil,whats,additionals,alle,alot,bund,currenty,datas,farenheit,falsy,fo,haa,hass,iif,incomfort,ines,ist,nam,nd,pres,pullrequests,resset,rime,ser,serie,te,technik,ue,unsecure,withing,zar,mane,THIRDPARTY
+            - --skip=./.*,*.csv,*.json,*.ambr,*.toml
+            - --quiet-level=2
+        exclude: '(^|/).*participants\.tsv$'
         exclude_types:
-        - csv
-        - json
-        - svg
+            - csv
+            - json
+            - svg
 -   repo: https://github.com/asottile/blacken-docs
     rev: 1.19.1
     hooks:

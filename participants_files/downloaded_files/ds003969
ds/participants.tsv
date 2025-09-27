@@ -1,0 +1,99 @@
+participant_id	gender	age	group	ethnicity	first_session	sleep	education	years_of_practice	notes
+sub-001	m	26	htr	indian	meditation	6	0	3	n/a
+sub-002	f	62	htr	caucasian	thinking	7	6	31	n/a
+sub-003	m	22	htr	indian	meditation	n/a	n/a	3	n/a
+sub-004	f	67	htr	caucasian	thinking	5	4	50	lots of different sort of meditation
+sub-005	m	38	htr	indian	meditation	5.5	n/a	28	different sort of med
+sub-006	m	33	htr	caucasian	thinking	8	6	8	schizophrenic uncle maternal
+sub-007	m	31	htr	indian	meditation	5.5	0	15	mixed 2 meditation
+sub-008	m	56	htr	indian	thinking	6.5	n/a	16	n/a
+sub-009	m	58	htr	caucasian	meditation	6	6	40	n/a
+sub-010	m	59	htr	caucasian	thinking	n/a	n/a	40	n/a
+sub-011	m	38	htr	indian	meditation	6	6	15	cap may be a bit displaced toward the left in the back and right on the front
+sub-012	f	65	htr	caucasian	thinking	n/a	9	46	no emotion protocol, somato may not be relevant, display pb with ssvep
+sub-013	m	48	htr	caucasian	meditation	6.5	6	27	father bi polar
+sub-014	m	54	htr	caucasian	thinking	5	n/a	34	pb with oddball med: 1-10 premiers sons environs manquent, speakers pas branchs. is not a disciple of ht, just receive practice from svb 10 days before. but practiced with hindu mantra all his life
+sub-015	m	69	htr	indian	meditation	n/a	n/a	18	n/a
+sub-016	m	27	htr	indian	thinking	6.5	4	7	not ht tradition but kriya yoga which is very close
+sub-017	f	59	htr	indian	meditation	8	0	7	kriya yoga
+sub-018	f	36	htr	caucasian	thinking	6.5	0	9	3 years of pratice in kryia but otherwise 9
+sub-019	m	55	htr	asian	meditation	7.5	6	20	n/a
+sub-020	f	67	htr	caucasian	thinking	n/a	4	32	didnt answer questionnaire. said she couldnt answer the questions
+sub-021	f	66	htr	asian	meditation	6	9	22	n/a
+sub-022	m	54	htr	caucasian	thinking	7	6	25	n/a
+sub-023	m	56	htr	indian	meditation	4.5	9	56	n/a
+sub-024	m	70	htr	indian	meditation	4.5	6	n/a	n/a
+sub-025	f	25	ctr	caucasian	thinking	8	4	0	n/a
+sub-026	m	27	ctr	n/a	meditation	n/a	n/a	0	meditation sometimes
+sub-027	m	25	ctr	n/a	thinking	8	0	0	n/a
+sub-028	f	26	ctr	indian	meditation	n/a	n/a	0	n/a
+sub-029	f	54	ctr	indian	thinking	6.5	4	0	pb with biosemi during oddball_breath - lack the last 50 sounds
+sub-030	m	38	ctr	indian	meditation	n/a	n/a	0	n/a
+sub-031	m	30	ctr	indian	thinking	n/a	n/a	0	pb with exg6 (mastoide droite)
+sub-032	f	25	ctr	indian	meditation	n/a	n/a	0	po4 disconected for thiknig session
+sub-033	m	27	ctr	caucasian	thinking	n/a	6	0	n/a
+sub-034	f	30	ctr	caucasian	meditation	7	6	0	n/a
+sub-035	m	45	ctr	indian	thinking	5	0	0	n/a
+sub-036	m	50	ctr	indian	meditation	6	4	0	n/a
+sub-037	m	47	ctr	indian	thinking	6.5	9	0	think: pb p2, p4, po4, o2. breath po4
+sub-038	f	36	ctr	indian	meditation	6.5	4	0	n/a
+sub-039	m	33	ctr	indian	thinking	8	4	0	condition think: stopped emotion task in the middle
+sub-040	m	38	ctr	indian	meditation	7	9	0	chant gayatri mantra 1h/day
+sub-041	m	27	ctr	caucasian	thinking	6	6	0	pb during count lack a big part of recording
+sub-042	f	48	ctr	caucasian	meditation	8	n/a	0	n/a
+sub-043	m	57	ctr	indian	thinking	5	9	0	n/a
+sub-044	m	40	ctr	indian	meditation	7	4	0	non record emotion during thinking
+sub-045	m	46	ctr	indian	meditation	7	n/a	0	n/a
+sub-046	f	43	ctr	indian	thinking	7	0	0	n/a
+sub-047	m	60	ctr	indian	meditation	7	n/a	0	n/a
+sub-048	m	30	ctr	indian	thinking	7	4	0	n/a
+sub-049	m	53	ctr	indian	meditation	6	0	0	n/a
+sub-050	m	50	ctr	indian	thinking	7	4	0	we forgot the decimation 1/2 in think 1, 2, auditory and somato.
+sub-051	f	36	ctr	indian	meditation	7	9	0	bad brainwaves signal in count session
+sub-052	f	49	ctr	indian	thinking	6	4	0	n/a
+sub-053	f	60	ctr	indian	meditation	6	n/a	0	forget half decimation part of experiment
+sub-054	f	32	ctr	indian	thinking	4	4	0	n/a
+sub-055	m	47	ctr	n/a	meditation	n/a	n/a	0	n/a
+sub-056	m	37	tm	n/a	meditation	n/a	n/a	20	n/a
+sub-057	m	57	tm	indian	thinking	6.5	6	33	n/a
+sub-058	m	n/a	tm	n/a	meditation	n/a	n/a	35	n/a
+sub-059	m	32	tm	indian	thinking	n/a	n/a	n/a	n/a
+sub-060	f	43	vip	indian	meditation	7	4	6.5	n/a
+sub-061	f	29	vip	indian	thinking	8	6	10	n/a
+sub-062	m	41	vip	indian	meditation	6	n/a	30	not goenka vipassana, focus on breath only and starts feeling sensations every where
+sub-063	m	53	vip	caucasian	thinking	5	9	36	n/a
+sub-064	f	30	vip	caucasian	meditation	7	4	5	n/a
+sub-065	m	62	vip	indian	thinking	7	6	18	forgot the somato sensor in meditation session
+sub-066	m	50	vip	indian	meditation	6	n/a	5	some times very bad screen in count session 
+sub-067	m	55	vip	caucasian	thinking	7	4	25	n/a
+sub-068	m	39	vip	caucasian	meditation	7.5	6	10	mechine didn t work properly in med-emotional task
+sub-069	m	62	vip	indian	thinking	7	9	44	take out sensor po4,po8 &o2 because of bad singnals
+sub-070	f	55	vip	indian	meditation	7	4	12	n/a
+sub-071	m	35	vip	indian	thinking	8	0	10	didnt do emotional task well (see details in form)
+sub-072	m	40	vip	indian	meditation	7	0	10	takes antianxiety pills, had depression before, po4 wwasnt functional 
+sub-073	m	37	vip	indian	thinking	9	4	6	n/a
+sub-074	m	26	vip	indian	meditation	7	6	5	n/a
+sub-075	m	42	vip	indian	thinking	7	0	9	po4 noisy, to exclude sensor
+sub-076	m	74	vip	indian	meditation	6	0	12	quite noisy channels at first part of exp. also difficulty with affective task
+sub-077	f	72	vip	indian	thinking	6	0	9	noisy channels
+sub-078	m	71	vip	indian	meditation	6.5	4	25	note that he is a senior teacher !!!
+sub-079	m	28	sny	indian	meditation	6	4	7	take out channel po4 before the thinking
+sub-080	m	36	sny	indian	thought	6	6	25	n/a
+sub-081	f	38	sny	indian	meditation	5	4	6	 
+sub-082	m	35	sny	indian	thought	8	6	7	please note the alternation between first pics block for sny4 and 5, details are in ecxperiment form of sny4
+sub-083	m	37	sny	indian	meditation	7	4	6	very good and clean subject
+sub-084	m	58	sny	indian	thinking	6.5	4	5	ok, though blood pressure pills daily. 
+sub-085	m	35	sny	indian	meditation	6.5	4	15	lots of remarks i wrote down in commentary section, including lots of noisy channels. 
+sub-086	m	23	sny	indian	thinking	7	4	5	smart person; good signal. 
+sub-087	m	33	sny	indian	thinking	6.5	6	4	 good signal. i switched settings with sny10, so he started in thinking instead with  meditation
+sub-088	m	25	sny	indian	meditation	5.5	4	2.5	p2 noisy. also, at beginning of experiment, for about 30min, there were random disturbances, from unknown source, perhaps some external unknown source. really a mysteryé
+sub-089	m	40	sny	indian	meditation	7	2	5	 good signal. note that he smokes, also the day of the experiment, and that he takes daily medicine for the heart. 
+sub-090	m	43	sny	indian	thinking	6.5	2	8	good signal, po4 slightly noisy throughout all experiment. 
+sub-091	m	33	sny	indian	meditation	7.5	4	5.5	good signal. 
+sub-092	m	50	sny	indian	thinking	5.5	9	18	all good. 
+sub-093	m	40	sny	indian	meditation	8	2	4	first time using ten20 as conductive gel
+sub-094	m	53	sny	indian	thinking	7	2	7	n/a
+sub-095	m	35	sny	indian	meditation	7	4	8	n/a
+sub-096	m	27	sny	indian	thinking	8	2	5	n/a
+sub-097	m	39	sny	indian	meditation	6	2	3	pay close attention during analysis!!!. data were unstable due to unknown disturbance (could be the a/c).
+sub-098	f	60	sny	indian	thinking	6.5	4	4	n/a

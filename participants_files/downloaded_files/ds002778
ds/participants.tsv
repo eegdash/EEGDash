@@ -1,0 +1,32 @@
+participant_id	age	gender	hand	MMSE	NAART	disease_duration	rl_deficits	notes
+sub-hc1	54	f	r	30	48	n/a	n/a	n/a
+sub-hc2	50	f	r	30	55	n/a	n/a	n/a
+sub-pd3	52	f	r	29	44	9	R	n/a
+sub-hc4	50	f	r	30	52	n/a	n/a	n/a
+sub-pd5	67	f	r	29	48	2	No clear side, perhaps more L	n/a
+sub-pd6	62	f	r	30	42	8	L OFF meds, more R ON meds	Used preprocessed data from EEGLAB .mat file instead of raw data for pd on
+sub-hc7	54	f	r	26	48	n/a	n/a	n/a
+sub-hc8	71	f	r	29	41	n/a	n/a	n/a
+sub-pd9	55	f	r	28	50	12	R	n/a
+sub-hc10	59	f	r	29	51	n/a	n/a	n/a
+sub-pd12	74	m	r	26	53	1	n/a	n/a
+sub-pd11	71	f	r	30	52	1	R worse off	n/a
+sub-pd13	62	m	r	29	47	2	R slightly worse	n/a
+sub-pd14	63	m	r	28	35	2	R worse off	n/a
+sub-pd16	74	m	r	29	56	2	Started on left, noticed left side worse	Used preprocessed data from EEGLAB .mat file instead of raw data for pd on
+sub-pd17	55	m	r	30	40	2	started on R; Right slightly worse	n/a
+sub-hc18	57	m	r	30	57	n/a	n/a	n/a
+sub-pd19	69	f	r	29	43	6	started on Left side, left is worse	n/a
+sub-hc20	68	m	r	30	58	n/a	n/a	n/a
+sub-hc21	72	m	r	28	33	n/a	n/a	Subject was missing reading glasses
+sub-pd22	47	m	r	30	51	6	started on Left side, left is worse	n/a
+sub-pd23	66	f	r	29	34	3	started on L, left is worse	n/a
+sub-hc24	61	f	r	30	57	n/a	n/a	n/a
+sub-hc25	74	f	r	30	49	n/a	n/a	n/a
+sub-pd26	71	f	r	29	51	3	started L leg tremor, then moved to right arm tremor, but left leg stopped	n/a
+sub-pd28	61	m	r	29	46	9	started on right, but left is worse	n/a
+sub-hc29	60	f	r	29	45	n/a	n/a	Claims to have dyslexia, and history of slower reaction times
+sub-hc30	69	m	r	29	52	n/a	n/a	n/a
+sub-hc31	82	m	r	28	50	n/a	n/a	n/a
+sub-hc32	60	m	r	29	37	n/a	n/a	n/a
+sub-hc33	75	m	r	30	53	n/a	n/a	n/a

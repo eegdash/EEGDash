@@ -1,0 +1,14 @@
+participant_id	sex	age_ses-1	age_ses-2	age_ses-3	age_ses-4	group
+sub-01	M	125	133	242	355	Complete
+sub-02	M	139	140	240	350	Complete
+sub-03	F	130	138	252	427	Complete
+sub-04	F	128	134	239	373	Complete
+sub-05	F	130	134	248	387	Complete
+sub-06	M	118	124	223	355	Complete
+sub-07	M	148	155	253	365	Complete
+sub-08	M	124	126	254	364	Complete
+sub-09	M	118	124	n/a	n/a	Reliability
+sub-10	F	125	131	230	334	Complete
+sub-11	F	143	147	n/a	n/a	Reliability
+sub-12	F	134	141	253	365	Complete
+sub-13	M	120	127	219	358	Complete

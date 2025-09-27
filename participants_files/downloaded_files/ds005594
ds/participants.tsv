@@ -1,0 +1,17 @@
+participant_id	recording_restarted	recording_interrupted	age	gender	hand_index	hand	other_lang	other_lang_level	multiling_read	other_lang_read	head_circum	tired	sleep_h	caffeine	caf_drink	strategy	inner_speech
+sub-01	0	1	20	F	100	R	English;French;Spanish	C1;B1;B1	1	English	55	4	8	yes	tea	no	yes
+sub-02	0	0	25	F	100	R	English;Spanish	C2;C1	1	English	58	3	7	yes	coffee	no	no
+sub-03	0	0	26	M	100	R	English	C2	1	English	59	3	7.5	yes	coffee	inner pronounciation of letters; lightly tip on space key each trial	yes
+sub-04	0	0	24	F	100	R	English;Spanish	C1;A2	1	English	52	3	8.5	yes	coffee	inner pronounciation of letters	yes
+sub-05	1	0	21	M	100	R	English	B2	1	English	59	3	6.5	no	n/a	"blink before every letters, i.e., during the fixation"	no
+sub-06	0	0	20	F	100	R	English	B2	0	n/a	55.5	5	8.5	no	n/a	inner pronounciation of letters	yes
+sub-07	0	0	24	F	100	R	English;French	C1;A2	1	English	56	3	8.5	yes	coffee	"inner pronounciation of letters; inner pronounciation of ""jetzt"" or ""go"" at the fixation to get ready"	yes
+sub-08	0	0	26	M	100	R	English;French	C2;A2	1	English	58	5	7	yes	coffee	inner pronounciation of letters	yes
+sub-09	0	0	20	F	100	R	English;French	C1;B1	1	English	59.5	3	6.5	no	n/a	focus on thickness of the characters	yes
+sub-10	0	0	26	F	100	R	English;Spanish	C1;A1	1	English;Spanish	55	2	7.5	yes	coffee	inner pronounciation of letters	yes
+sub-11	0	0	24	F	100	R	"English,French;Italian"	C1;A2;A1	1	English	58	5	8	no	n/a	n/a	yes
+sub-12	0	0	20	F	100	R	English;Spanish	C1;A2	1	English	56.5	2	6.5	yes	coffee	n/a	no
+sub-13	0	0	20	F	100	R	Spanish;English;Italian	C1;B2;A2	0	n/a	56	4	7	yes	matcha latte	avoided blinks sometimes to recognize the characters better	yes
+sub-14	0	0	21	F	66.7	R	English;French	C1;C1	1	English	53	2	7.5	yes	coffee	tried to beat the reaction time from previous blocks	yes
+sub-15	0	0	27	F	100	R	Polish;English;French	C1;C1;B1	1	English	60	2	8	no	n/a	n/a	yes
+sub-16	0	0	25	M	100	R	English;French	C1;A1	0	n/a	62	3	6	yes	red bull; mio mate	inner pronounciation of fixation and stimulus	yes

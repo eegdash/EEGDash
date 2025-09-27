@@ -1,0 +1,61 @@
+participant_id	Gender	Age	Group	Handedness	number_in_other_study	Highest_degree	ASL_AoA	PIAT_score	PPVT_score	Andrews_score	MOTavTargetsCorrect	MOTcapacity
+sub-1	M	28	1	R	18	Master's degree	0	85	203	85	3.38	2.76
+sub-2	M	32	1	L	12	Doctorate/similar	0	87	206	83	2.46	0.92
+sub-3	M	24	1	R	n/a	n/a	n/a	71	181	47	n/a	n/a
+sub-4	F	36	1	R	22	Master's degree	0	70	190	76	2.8	1.6
+sub-5	M	36	1	R	n/a	Master's degree	0	93	202	82	2.96	1.92
+sub-6	F	33	1	R	n/a	High school diploma/GED	0	67	160	71	2.74	1.48
+sub-7	F	34	1	R	n/a	Associate's degree	6.5 years	67	167	64	2.52	1.04
+sub-8	M	33	1	R	11	Master's degree	2 years	93	184	74	3.68	3.36
+sub-9	F	28	1	R	9	Master's degree	0	99	222	87	n/a	n/a
+sub-10	F	38	1	R	13	Associate's degree	1 years	83	205	77	2.66	1.32
+sub-11	M	54	1	R	n/a	High school diploma/GED	5 years	91	210	69	2.78	1.56
+sub-12	F	20	1	R	15	High school diploma/GED	1 years	68	180	66	2.48	0.96
+sub-13	F	35	1	R	1	Doctorate/similar	2 years	79	201	74	2.74	1.48
+sub-14	M	39	1	R	8	Master's degree	0	87	207	87	3.08	2.16
+sub-15	M	41	1	R	n/a	Bachelor's degree	8 years	85	190	72	3.24	2.48
+sub-16	M	39	1	Amb	17	Master's degree	0	90	211	62	3.42	2.84
+sub-17	M	27	1	L	14	Master's degree	0	81	187	74	3.2	2.4
+sub-18	F	50	1	R	10	High school diploma/GED	3 years	88	205	72	2.8	1.6
+sub-19	M	23	1	R	n/a	Bachelor's degree	0	85	199	81	3.54	3.08
+sub-20	F	27	1	R	n/a	Bachelor's degree	0	86	210	72	3.22	2.44
+sub-21	F	24	1	R	n/a	High school diploma/GED	0	83	175	73	2.94	1.88
+sub-22	M	49	1	R	n/a	Bachelor's degree	0	n/a	187	62	2.72	1.44
+sub-23	M	29	1	R	n/a	Master's degree	0	92	210	69	3.3	2.6
+sub-24	M	46	1	R	7	High school diploma/GED	2 years	96	217	74	3.36	2.72
+sub-25	M	28	1	R	2	High school diploma/GED	4 years	41	171	51	3.08	2.16
+sub-26	F	28	1	R	4	High school diploma/GED	0	65	160	49	2.38	0.76
+sub-27	M	21	1	Amb	n/a	Associate's degree	7 years	n/a	149	60	2.64	1.28
+sub-28	M	28	1	R	3	High school diploma/GED	5.5 years	73	170	55	3.3	2.6
+sub-29	M	32	1	R	n/a	Bachelor's degree	1.4 years	97	217	73	n/a	n/a
+sub-30	M	35	1	R	n/a	Bachelor's degree	0	67	212	61	3.3	2.6
+sub-31	F	21	2	R	31	High school diploma/GED	n/a	80	205	71	2.76	1.52
+sub-32	M	24	2	R	n/a	Bachelor's degree	n/a	91	201	69	2.86	1.72
+sub-33	F	21	2	R	n/a	Associate's degree	n/a	68	195	65	2.74	1.48
+sub-34	M	25	2	R	n/a	Associate's degree	n/a	66	193	59	3.2	2.4
+sub-35	F	25	2	R	n/a	n/a	n/a	93	220	78	2.8	1.6
+sub-36	M	26	2	L	n/a	Bachelor's degree	n/a	n/a	218	n/a	n/a	n/a
+sub-37	M	24	2	R	n/a	Master's degree	n/a	96	207	79	3.9	3.8
+sub-38	F	33	2	R	25	Bachelor's degree	n/a	78	211	64	2.5	1
+sub-39	F	27	2	R	n/a	Master's degree	n/a	94	196	79	2.36	0.72
+sub-40	F	27	2	R	n/a	High school diploma/GED	n/a	n/a	219	79	2.76	1.52
+sub-41	M	22	2	R	n/a	High school diploma/GED	n/a	83	199	63	3.5	3
+sub-42	M	29	2	R	n/a	Bachelor's degree	n/a	85	191	79	3.5	3
+sub-43	F	26	2	R	n/a	Master's degree	n/a	87	202	71	2.92	1.84
+sub-44	F	40	2	R	n/a	Doctorate/similar	n/a	91	222	86	2.88	1.76
+sub-45	GQ	44	2	R	n/a	Bachelor's degree	n/a	97	225	86	3.18	2.36
+sub-46	N	35	2	R	32	Bachelor's degree	n/a	91	217	84	2.64	1.28
+sub-47	F	37	2	R	28	Associate's degree	n/a	78	209	64	3.06	2.12
+sub-48	F	38	2	R	33	Bachelor's degree	n/a	83	202	50	2.88	1.76
+sub-49	M	46	2	R	n/a	Master's degree	n/a	87	210	73	3.24	2.48
+sub-50	F	37	2	Amb	34	Master's degree	n/a	94	222	87	3.22	2.44
+sub-51	F	36	2	R	29	Bachelor's degree	n/a	99	224	85	3.2	2.4
+sub-52	F	52	2	R	40	Bachelor's degree	n/a	96	225	84	3.08	2.16
+sub-53	M	29	2	R	39	Bachelor's degree	n/a	90	209	72	3.18	2.36
+sub-54	F	23	2	R	n/a	Bachelor's degree	n/a	64	197	74	2.84	1.68
+sub-55	M	34	2	R	41	Bachelor's degree	n/a	94	203	81	3.68	3.36
+sub-56	M	25	2	R	42	Bachelor's degree	n/a	87	204	75	2.94	1.88
+sub-57	F	23	2	R	n/a	Bachelor's degree	n/a	91	212	68	n/a	n/a
+sub-58	M	26	2	L	37	High school diploma/GED	n/a	n/a	216	73	3.12	2.24
+sub-59	F	21	2	L	38	Associate's degree	n/a	87	206	70	3.02	2.04
+sub-60	M	44	2	R	n/a	Bachelor's degree	n/a	n/a	199	74	3.16	2.32

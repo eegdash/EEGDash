@@ -32,10 +32,8 @@ extensions = [
     "sphinx.ext.linkcode",
     "sphinx.ext.napoleon",
     "sphinx_design",
-    # "autoapi.extension",
     "numpydoc",
     "sphinx_gallery.gen_gallery",
-    # Generate sitemap.xml for search engines
     "sphinx_sitemap",
 ]
 
@@ -188,7 +186,7 @@ numpydoc_show_class_members = False
 # Sphinx Gallery
 EX_DIR = "../../examples"  # relative to docs/source
 sphinx_gallery_conf = {
-    "examples_dirs": [f"{EX_DIR}/core"],
+    "examples_dirs": [f"{EX_DIR}"],
     "gallery_dirs": ["generated/auto_examples"],
     "nested_sections": False,
     "backreferences_dir": "gen_modules/backreferences",
@@ -205,9 +203,6 @@ sphinx_gallery_conf = {
         "%matplotlib inline"
     ),
     "subsection_order": ExplicitOrder([f"{EX_DIR}/core", "*"]),
-    # Ignore problematic or external example sets for fast, warning-free builds
-    # Exclude EEG2025 competition notebooks from the gallery build
-    "ignore_pattern": r"eeg2025",
     "within_subsection_order": FileNameSortKey,
 }
 

@@ -162,18 +162,18 @@ def generate_dataset_index_page(df: pd.DataFrame) -> str:
     """Generate an index page listing all datasets."""
     # Group datasets by modality for better organization
     modalities = df.groupby("modality of exp").size().sort_values(ascending=False)
-
+    total_datasets = len(df)
     rst_content = """.. _dataset_index:
 
 Dataset Index
 =============
 
-EEGDash provides access to **255 EEG datasets** from OpenNeuro. Each dataset has its own dedicated documentation page with detailed metadata, usage examples, and statistics.
+EEGDash provides access to **{total_datasets} EEG datasets** from OpenNeuro. Each dataset has its own dedicated documentation page with detailed metadata, usage examples, and statistics.
 
 Quick Statistics
 ----------------
 
-- **Total Datasets**: 255
+- **Total Datasets**: {total_datasets}
 - **Total Subjects**: {total_subjects:,}
 - **Total Recordings**: {total_records:,}
 - **Total Duration**: {total_duration:.1f} hours
@@ -183,6 +183,7 @@ Browse by Modality
 ------------------
 
 """.format(
+        total_datasets=total_datasets,
         total_subjects=df["n_subjects"].sum(),
         total_records=df["n_records"].sum(),
         total_duration=df["duration_hours_total"].sum(),

@@ -1,7 +1,7 @@
 :html_theme.sidebar_secondary.remove: true
 
-EEGDASH Documentation
-=====================
+EEGDASH Homepage
+=================
 
 .. title:: EEG Dash
 
@@ -55,6 +55,6 @@ The archive is currently still in :bdg-danger:`beta testing` mode, so be kind.
 
    Overview <overview>
    Install <install/install>
-   API <api>
+   API <api/api>
    Dataset Summary <dataset_summary>
    Examples <generated/auto_examples/index>

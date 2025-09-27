@@ -11,23 +11,59 @@ help:
 
 .PHONY: apidoc
 apidoc:
-	# Generate API docs using the top-level package so modules are importable
-	# as eegdash.* instead of an unimportable bare 'dataset.*'
-	@python -m sphinx.ext.apidoc -o "$(APIDIR)/dataset" "../$(PKG)" -f -e -M
+	# Generate full API docs, then prune duplicates covered by autosummary
+	@python -m sphinx.ext.apidoc -f -e -M -o "$(APIDIR)/dataset" "../$(PKG)"
+	# Remove top-level package page and modules covered elsewhere
+	@rm -f "$(APIDIR)/dataset/eegdash.rst"
+	@rm -f "$(APIDIR)/dataset/eegdash.api.rst"
+	@rm -f "$(APIDIR)/dataset/eegdash.bids_eeg_metadata.rst"
+	@rm -f "$(APIDIR)/dataset/eegdash.const.rst"
+	@rm -f "$(APIDIR)/dataset/eegdash.data_utils.rst"
+	@rm -f "$(APIDIR)/dataset/eegdash.logging.rst"
+	@rm -f "$(APIDIR)/dataset/eegdash.mongodb.rst"
+	@rm -f "$(APIDIR)/dataset/eegdash.paths.rst"
+	@rm -f "$(APIDIR)/dataset/eegdash.utils.rst"
+	@rm -f "$(APIDIR)/dataset/eegdash.features.rst"
+	@rm -f $(APIDIR)/dataset/eegdash.features.*.rst
+	@rm -f "$(APIDIR)/dataset/eegdash.hbn.rst"
+	@rm -f $(APIDIR)/dataset/eegdash.hbn.*.rst
+	@rm -f "$(APIDIR)/dataset/modules.rst"
+
+.PHONY: dataset-pages
+dataset-pages:
+	# Generate individual dataset documentation pages
+	@python generate_dataset_pages.py
 
 # Standard build runs examples
-html: apidoc
+html: apidoc dataset-pages
 
 # Fast build: do NOT execute examples (sphinx-gallery)
 .PHONY: html-noplot
-html-noplot: apidoc
+html-noplot: apidoc dataset-pages
 	@python prepare_summary_tables.py ../eegdash/ $(BUILDDIR)
 	@$(SPHINXBUILD) -M html "$(SOURCEDIR)" "$(BUILDDIR)" \
 		$(SPHINXOPTS) -D sphinx_gallery_conf.plot_gallery=0 $(O)
+
+# Custom clean target to remove generated API docs and build files
+.PHONY: clean
+clean:
+	@echo "Removing generated API documentation..."
+	@rm -rf "$(APIDIR)/dataset"
+	@rm -rf "$(APIDIR)/generated"
+	@echo "Removing generated dataset pages..."
+	@rm -rf "$(APIDIR)/datasets"
+	@rm -f "$(APIDIR)/api_dataset.rst"
+	@echo "Removing other generated directories..."
+	@rm -rf "$(SOURCEDIR)/generated"
+	@rm -rf "$(SOURCEDIR)/gen_modules"
+	@echo "Removing build directory..."
+	@rm -rf "$(BUILDDIR)"
+	@echo "Clean completed."
 
 .PHONY: help apidoc
 Makefile: ;          
 
 %: Makefile
 	@python prepare_summary_tables.py ../eegdash/ $(BUILDDIR)
+	@python generate_dataset_pages.py
 	@$(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)

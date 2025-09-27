@@ -40,6 +40,11 @@ extensions = [
 templates_path = ["_templates"]
 exclude_patterns = ["build", "Thumbs.db", ".DS_Store"]
 
+# Autosummary: generate stub pages for documented items
+autosummary_generate = True
+# Include members that are imported into modules (e.g., re-exported dataset classes)
+autosummary_imported_members = True
+
 # Suppress benign warnings
 suppress_warnings = [
     # Sphinx-Gallery uses functions/classes in config which are not picklable

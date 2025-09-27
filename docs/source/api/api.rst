@@ -24,7 +24,7 @@ API Reference
 
    .. grid-item-card:: Dataset
       :class-header: sd-bg-primary sd-text-white sd-font-weight-bold
-      :link: api_dataset
+      :link: ../dataset_summary
       :link-type: doc
 
       Datasets available at EEGDash.
@@ -34,4 +34,4 @@ API Reference
 
    api_core
    api_features
-   api_dataset
+   ../dataset_summary

@@ -1,3 +1,21 @@
+# Authors: The EEGDash contributors.
+# License: GNU General Public License
+# Copyright the EEGDash contributors.
+
+"""Configuration constants and mappings for EEGDash.
+
+This module contains global configuration settings, allowed query fields, and mapping
+constants used throughout the EEGDash package. It defines the interface between EEGDash
+releases and OpenNeuro dataset identifiers, as well as validation rules for database queries.
+"""
+
+__all__ = [
+    "config",
+    "ALLOWED_QUERY_FIELDS",
+    "RELEASE_TO_OPENNEURO_DATASET_MAP",
+    "SUBJECT_MINI_RELEASE_MAP",
+]
+
 ALLOWED_QUERY_FIELDS = {
     "data_name",
     "dataset",

@@ -32,15 +32,19 @@ extensions = [
     "sphinx.ext.linkcode",
     "sphinx.ext.napoleon",
     "sphinx_design",
-    # "autoapi.extension",
     "numpydoc",
     "sphinx_gallery.gen_gallery",
-    # Generate sitemap.xml for search engines
     "sphinx_sitemap",
 ]
 
 templates_path = ["_templates"]
 exclude_patterns = ["build", "Thumbs.db", ".DS_Store"]
+
+# Suppress benign warnings
+suppress_warnings = [
+    # Sphinx-Gallery uses functions/classes in config which are not picklable
+    "config.cache",
+]
 
 # -- Options for HTML output -------------------------------------------------
 
@@ -55,7 +59,7 @@ html_js_files = []
 
 # Required for sphinx-sitemap: set the canonical base URL of the site
 # Make sure this matches the actual published docs URL and ends with '/'
-html_baseurl = "https://sccn.github.io/eegdash/"
+html_baseurl = "https://eegdash.org/"
 
 html_theme_options = {
     "icon_links_label": "External Links",  # for screen reader
@@ -91,7 +95,7 @@ html_theme_options = {
         },
         {
             "name": "Docs (Stable)",
-            "url": "https://sccn.github.io/EEGDash",
+            "url": "https://eegdash.org/EEGDash",
             "icon": "fa-solid fa-book",
             "type": "fontawesome",
         },
@@ -182,7 +186,7 @@ numpydoc_show_class_members = False
 # Sphinx Gallery
 EX_DIR = "../../examples"  # relative to docs/source
 sphinx_gallery_conf = {
-    "examples_dirs": [EX_DIR],
+    "examples_dirs": [f"{EX_DIR}"],
     "gallery_dirs": ["generated/auto_examples"],
     "nested_sections": False,
     "backreferences_dir": "gen_modules/backreferences",
@@ -198,13 +202,7 @@ sphinx_gallery_conf = {
         "# `pip install eegdash`\n"
         "%matplotlib inline"
     ),
-    "subsection_order": ExplicitOrder(
-        [
-            f"{EX_DIR}/core",
-            # f"{EX_DIR}/eeg2025",
-            "*",
-        ]
-    ),
+    "subsection_order": ExplicitOrder([f"{EX_DIR}/core", "*"]),
     "within_subsection_order": FileNameSortKey,
 }
 

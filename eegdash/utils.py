@@ -1,3 +1,13 @@
+# Authors: The EEGDash contributors.
+# License: GNU General Public License
+# Copyright the EEGDash contributors.
+
+"""General utility functions for EEGDash.
+
+This module contains miscellaneous utility functions used across the EEGDash package,
+including MongoDB client initialization and configuration helpers.
+"""
+
 from mne.utils import get_config, set_config, use_log_level
 
 

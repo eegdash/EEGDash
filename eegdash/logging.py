@@ -1,3 +1,13 @@
+# Authors: The EEGDash contributors.
+# License: GNU General Public License
+# Copyright the EEGDash contributors.
+
+"""Logging configuration for EEGDash.
+
+This module sets up centralized logging for the EEGDash package using Rich for enhanced
+console output formatting. It provides a consistent logging interface across all modules.
+"""
+
 import logging
 
 from rich.logging import RichHandler

@@ -1,3 +1,15 @@
+# Authors: The EEGDash contributors.
+# License: GNU General Public License
+# Copyright the EEGDash contributors.
+
+"""High-level interface to the EEGDash metadata database.
+
+This module provides the main EEGDash class which serves as the primary entry point for
+interacting with the EEGDash ecosystem. It offers methods to query, insert, and update
+metadata records stored in the EEGDash MongoDB database, and includes utilities to load
+EEG data from S3 for matched records.
+"""
+
 import os
 from pathlib import Path
 from typing import Any, Mapping
@@ -549,16 +561,54 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
 
     Examples
     --------
-    # Find by single subject
-    >>> ds = EEGDashDataset(dataset="ds005505", subject="NDARCA153NKE")
+    Basic usage with dataset and subject filtering:
 
-    # Find by a list of subjects and a specific task
-    >>> subjects = ["NDARCA153NKE", "NDARXT792GY8"]
-    >>> ds = EEGDashDataset(dataset="ds005505", subject=subjects, task="RestingState")
+    >>> from eegdash import EEGDashDataset
+    >>> dataset = EEGDashDataset(
+    ...     cache_dir="./data",
+    ...     dataset="ds002718",
+    ...     subject="012"
+    ... )
+    >>> print(f"Number of recordings: {len(dataset)}")
 
-    # Use a raw MongoDB query for advanced filtering
-    >>> raw_query = {"dataset": "ds005505", "subject": {"$in": subjects}}
-    >>> ds = EEGDashDataset(query=raw_query)
+    Filter by multiple subjects and specific task:
+
+    >>> subjects = ["012", "013", "014"]
+    >>> dataset = EEGDashDataset(
+    ...     cache_dir="./data",
+    ...     dataset="ds002718",
+    ...     subject=subjects,
+    ...     task="RestingState"
+    ... )
+
+    Load and inspect EEG data from recordings:
+
+    >>> if len(dataset) > 0:
+    ...     recording = dataset[0]
+    ...     raw = recording.load()
+    ...     print(f"Sampling rate: {raw.info['sfreq']} Hz")
+    ...     print(f"Number of channels: {len(raw.ch_names)}")
+    ...     print(f"Duration: {raw.times[-1]:.1f} seconds")
+
+    Advanced filtering with raw MongoDB queries:
+
+    >>> from eegdash import EEGDashDataset
+    >>> query = {
+    ...     "dataset": "ds002718",
+    ...     "subject": {"$in": ["012", "013"]},
+    ...     "task": "RestingState"
+    ... }
+    >>> dataset = EEGDashDataset(cache_dir="./data", query=query)
+
+    Working with dataset collections and braindecode integration:
+
+    >>> # EEGDashDataset is a braindecode BaseConcatDataset
+    >>> for i, recording in enumerate(dataset):
+    ...     if i >= 2:  # limit output
+    ...         break
+    ...     print(f"Recording {i}: {recording.description}")
+    ...     raw = recording.load()
+    ...     print(f"  Channels: {len(raw.ch_names)}, Duration: {raw.times[-1]:.1f}s")
 
     Parameters
     ----------

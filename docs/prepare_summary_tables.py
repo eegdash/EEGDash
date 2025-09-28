@@ -5,6 +5,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 import plotly.express as px
+from table_tag_utils import wrap_tags
 
 
 def _to_numeric_median_list(val) -> float | None:
@@ -246,13 +247,6 @@ def human_readable_size(num_bytes: int) -> str:
     return "0 B"
 
 
-def wrap_tags(cell: str):
-    if pd.isna(cell):
-        return ""
-    tags_cell = [f'<span class="tag">{p.strip()}</span>' for p in cell.split(", ")]
-    return " ".join(tags_cell)
-
-
 def wrap_dataset_name(name: str):
     # Remove any surrounding whitespace
     name = name.strip()
@@ -261,6 +255,44 @@ def wrap_dataset_name(name: str):
     #   api/eegdash.dataset.html#eegdash.dataset.<CLASS>
     url = f"api/eegdash.dataset.html#eegdash.dataset.{name.upper()}"
     return f'<a href="{url}">{name.upper()}</a>'
+
+
+DATASET_CANONICAL_MAP = {
+    "pathology": {
+        "healthy controls": "Healthy",
+        "healthy": "Healthy",
+        "control": "Healthy",
+        "clinical": "Clinical",
+        "patient": "Clinical",
+    },
+    "modality": {
+        "auditory": "Auditory",
+        "visual": "Visual",
+        "somatosensory": "Somatosensory",
+        "multisensory": "Multisensory",
+    },
+    "type": {
+        "perception": "Perception",
+        "decision making": "Decision-making",
+        "decision-making": "Decision-making",
+        "rest": "Rest",
+        "resting state": "Resting-state",
+        "sleep": "Sleep",
+    },
+}
+
+
+def _tag_normalizer(kind: str):
+    canonical = {k.lower(): v for k, v in DATASET_CANONICAL_MAP.get(kind, {}).items()}
+
+    def _normalise(token: str) -> str:
+        text = " ".join(token.replace("_", " ").split())
+        lowered = text.lower()
+        if lowered in canonical:
+            return canonical[lowered]
+        return text
+
+    return _normalise
 
 
 def prepare_table(df: pd.DataFrame):
@@ -306,7 +338,33 @@ def prepare_table(df: pd.DataFrame):
     df["sampling_freqs"] = df["sampling_freqs"].apply(parse_freqs)
     # from the channels set, I will follow the same logic of freq
     df["nchans_set"] = df["nchans_set"].apply(parse_freqs)
-    # rename the nchans to channels
+    # Wrap categorical columns with styled tags for downstream rendering
+    pathology_normalizer = _tag_normalizer("pathology")
+    modality_normalizer = _tag_normalizer("modality")
+    type_normalizer = _tag_normalizer("type")
+
+    df["pathology"] = df["pathology"].apply(
+        lambda value: wrap_tags(
+            value,
+            kind="dataset-pathology",
+            normalizer=pathology_normalizer,
+        )
+    )
+    df["modality"] = df["modality"].apply(
+        lambda value: wrap_tags(
+            value,
+            kind="dataset-modality",
+            normalizer=modality_normalizer,
+        )
+    )
+    df["type"] = df["type"].apply(
+        lambda value: wrap_tags(
+            value,
+            kind="dataset-type",
+            normalizer=type_normalizer,
+        )
+    )
+
     # Creating the total line
     df["duration (h)"] = df["duration (h)"].round(2)
 
@@ -315,6 +373,9 @@ def prepare_table(df: pd.DataFrame):
     df.loc["Total", "nchans_set"] = ""
     df.loc["Total", "sampling_freqs"] = ""
     df.loc["Total", "duration (h)"] = None
+    df.loc["Total", "pathology"] = ""
+    df.loc["Total", "modality"] = ""
+    df.loc["Total", "type"] = ""
     df.loc["Total", "size"] = human_readable_size(df.loc["Total", "size_bytes"])
     df = df.drop(columns=["size_bytes"])
     # arrounding the hours
@@ -364,7 +425,10 @@ def main(source_dir: str, target_dir: str):
         )
         # (If you add a 'Total' row after this, cast again or build it as Int64.)
         html_table = df.to_html(
-            classes=["sd-table", "sortable"], index=False, escape=False
+            classes=["sd-table", "sortable"],
+            index=False,
+            escape=False,
+            table_id="datasets-table",
         )
         with open(
             f"{target_dir}/dataset_summary_table.html", "+w", encoding="utf-8"

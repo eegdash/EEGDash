@@ -533,3 +533,21 @@ a.tag:hover {
   padding: 8px 10px !important;
   vertical-align: middle;
 }
+
+/* Full-width treatment for dataset summary page */
+html.dataset-summary-page .bd-main .bd-content {
+  padding-left: clamp(0.5rem, 1.75vw, 1.25rem);
+  padding-right: clamp(0.5rem, 1.75vw, 1.25rem);
+}
+
+html.dataset-summary-page .bd-main .bd-content .bd-article-container {
+  max-width: min(1760px, calc(100vw - 1.5rem)) !important;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@media (max-width: 992px) {
+  html.dataset-summary-page .bd-article-container {
+    max-width: 100%;
+  }
+}

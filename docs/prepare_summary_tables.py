@@ -247,8 +247,8 @@ def gen_datasets_bubble(
         tr.hovertemplate = hover
 
     fig.update_layout(
-        height=600,
-        width=None,  # Let it expand to container width
+        height=750,
+        width=1200,  # Set explicit width for consistent sizing
         margin=dict(l=60, r=40, t=80, b=60),
         template="plotly_white",
         legend=dict(
@@ -291,7 +291,7 @@ def gen_datasets_bubble(
             "toImageButtonOptions": {
                 "format": "png",
                 "filename": "dataset_landscape",
-                "height": 600,
+                "height": 750,
                 "width": 1200,
                 "scale": 2,
             },
@@ -303,8 +303,10 @@ def gen_datasets_bubble(
 <style>
 #dataset-bubble {{
     width: 100% !important;
-    height: 600px !important;
-    min-height: 600px;
+    max-width: 1200px;
+    height: 750px !important;
+    min-height: 750px;
+    margin: 0 auto;
 }}
 #dataset-bubble .plotly-graph-div {{
     width: 100% !important;
@@ -314,7 +316,7 @@ def gen_datasets_bubble(
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 600px;
+    height: 750px;
     font-family: Inter, system-ui, sans-serif;
     color: #6b7280;
 }}
@@ -655,8 +657,8 @@ def main(source_dir: str, target_dir: str):
 
             if fig_kde.data:
                 fig_kde.update_layout(
-                    height=max(520, 120 * len(order)),
-                    width=None,  # Let it expand to container width
+                    height=max(650, 150 * len(order)),
+                    width=1200,  # Set explicit width for consistent sizing
                     template="plotly_white",
                     xaxis=dict(
                         type="log",
@@ -692,7 +694,7 @@ def main(source_dir: str, target_dir: str):
                     autosize=True,  # Enable auto-sizing to fill container
                 )
                 # Add CSS and loading indicator for immediate proper sizing
-                kde_height = max(520, 120 * len(order))
+                kde_height = max(650, 150 * len(order))
                 html_content = fig_kde.to_html(
                     full_html=False,
                     include_plotlyjs=False,
@@ -704,7 +706,7 @@ def main(source_dir: str, target_dir: str):
                         "toImageButtonOptions": {
                             "format": "png",
                             "filename": "participant_kde",
-                            "height": 600,
+                            "height": {kde_height},
                             "width": 1200,
                             "scale": 2,
                         },
@@ -716,8 +718,10 @@ def main(source_dir: str, target_dir: str):
 <style>
 #dataset-kde-modalities {{
     width: 100% !important;
+    max-width: 1200px;
     height: {kde_height}px !important;
     min-height: {kde_height}px;
+    margin: 0 auto;
 }}
 #dataset-kde-modalities .plotly-graph-div {{
     width: 100% !important;

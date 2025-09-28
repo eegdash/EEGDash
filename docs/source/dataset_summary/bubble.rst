@@ -1,3 +1,5 @@
+.. rubric:: Dataset landscape
+
 .. raw:: html
 
    <figure class="eegdash-figure" style="margin: 0 0 1.25rem 0;">

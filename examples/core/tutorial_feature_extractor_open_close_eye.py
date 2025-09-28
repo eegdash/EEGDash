@@ -5,9 +5,9 @@ EEGDash Feature Extractor
 
 EEGDash example for eyes open vs. closed classification.
 
-The code below provides an example of using the *EEGDash* library in combination with PyTorch to develop a deep learning model for analyzing EEG data, specifically for eyes open vs. closed classification in a single subject.
+This example uses the :mod:`eegdash` library in combination with PyTorch to develop a deep learning model for analyzing EEG data, specifically for eyes open vs. closed classification in a single subject.
 
-1. **Data Retrieval Using EEGDash**: An instance of *EEGDashDataset* is created to search and retrieve an EEG dataset. At this step, only the metadata is transferred.
+1. **Data Retrieval Using EEGDash**: An instance of :class:`eegdash.api.EEGDashDataset` is created to search and retrieve an EEG dataset. At this step, only the metadata is transferred.
 
 2. **Data Preprocessing Using BrainDecode**: This process preprocesses EEG data using Braindecode by reannotating events, selecting specific channels, resampling, filtering, and extracting 2-second epochs, ensuring balanced eyes-open and eyes-closed data for analysis.
 
@@ -22,6 +22,9 @@ The code below provides an example of using the *EEGDash* library in combination
 # %%
 # Data Retrieval Using EEGDash
 # ----------------------------
+#
+# We instantiate :class:`eegdash.api.EEGDashDataset` to pull the experiment
+# metadata and build the dataset definition.
 #
 # First we find one resting state dataset. This dataset contains both eyes open
 # and eyes closed data.
@@ -55,10 +58,10 @@ ds_eoec = EEGDashDataset(
 # after the event onset. Similarly, for the eyes-open event, we extract data
 # from 5 to 19 seconds after the event onset. This ensures an equal amount of
 # data for both conditions. The event extraction is handled by the custom
-# function **hbn_ec_ec_reannotation**.
+# function :func:`eegdash.hbn.preprocessing.hbn_ec_ec_reannotation`.
 #
 # Next, we apply four preprocessing steps in Braindecode:
-# 1. **Reannotation** of event markers using `hbn_ec_ec_reannotation()`.
+# 1. **Reannotation** of event markers using :func:`eegdash.hbn.preprocessing.hbn_ec_ec_reannotation`.
 # 2. **Selection** of 24 specific EEG channels from the original 128.
 # 3. **Resampling** the EEG data to a frequency of 128 Hz.
 # 4. **Filtering** the EEG signals to retain frequencies between 1 Hz and 55 Hz.

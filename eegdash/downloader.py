@@ -101,3 +101,11 @@ def _filesystem_get(filesystem: s3fs.S3FileSystem, s3path: str, filepath: Path):
     )
     filesystem.get(s3path, str(filepath), callback=callback)
     return filepath
+
+
+__all__ = [
+    "download_s3_file",
+    "download_dependencies",
+    "get_s3path",
+    "get_s3_filesystem",
+]

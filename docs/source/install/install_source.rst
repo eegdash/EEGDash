@@ -17,7 +17,7 @@ Install preview version from PyPI
 ----------------------------------
 
 
-.. code-block:: bash
+.. code-block:: shell
 
    pip install --pre eegdash
 
@@ -29,7 +29,7 @@ Install directly from repository from GitHub
 
 Let's suppose that you want to install EEGDash from the source. The first thing you should do is clone the EEGDash repository to your computer and enter inside the repository.
 
-.. code-block:: bash
+.. code-block:: shell
 
    git clone https://github.com/sccn/EEGDash && cd EEGDash
 
@@ -43,13 +43,13 @@ work, then the recommended way to build and install is to use ``pip``
 
 For the latest development version, directly from GitHub:
 
-.. code-block:: bash
+.. code-block:: shell
 
   pip install git+https://github.com/sccn/EEGDash.git
 
 If you have a local clone of the EEGDash git repository:
 
-.. code-block:: bash
+.. code-block:: shell
 
    pip install -e .
 
@@ -58,14 +58,14 @@ directly in python.
 
 You could also install optional dependency, like to import datasets from `test` and `docs`.
 
-.. code-block:: bash
+.. code-block:: shell
 
    pip install -e .[test,docs,dev]
 
 There is also optional dependencies for unit testing and building documentation, you could install
 them if you want to contribute to EEGDash.
 
-.. code-block:: bash
+.. code-block:: shell
 
    pip install -e .[all]
 
@@ -75,7 +75,7 @@ Testing if your installation is working
 
 To verify that EEGDash is installed and running correctly, run the following command:
 
-.. code-block:: console
+.. code-block:: shell
 
    python -m "import eegdash; eegdash.__version__"
 

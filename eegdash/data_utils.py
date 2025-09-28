@@ -672,3 +672,6 @@ class EEGBIDSDataset:
         for list_field in ["name", "type", "units"]:
             channel_tsv[list_field] = list(channel_tsv[list_field].values())
         return channel_tsv
+
+
+__all__ = ["EEGDashBaseDataset", "EEGBIDSDataset", "EEGDashBaseRaw"]

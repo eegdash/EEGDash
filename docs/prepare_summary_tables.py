@@ -1,10 +1,78 @@
 import glob
 from argparse import ArgumentParser
 from pathlib import Path
+from shutil import copyfile
 
 import numpy as np
 import pandas as pd
 import plotly.express as px
+import plotly.graph_objects as go
+from scipy.stats import gaussian_kde
+from table_tag_utils import wrap_tags
+
+DOCS_DIR = Path(__file__).resolve().parent
+STATIC_DATASET_DIR = DOCS_DIR / "source" / "_static" / "dataset_generated"
+
+
+MODALITY_CANONICAL = {
+    "visual": "Visual",
+    "auditory": "Auditory",
+    "tactile": "Tactile",
+    "somatosensory": "Tactile",
+    "multisensory": "Multisensory",
+    "motor": "Motor",
+    "rest": "Resting State",
+    "resting state": "Resting State",
+    "resting-state": "Resting State",
+    "sleep": "Sleep",
+    "other": "Other",
+}
+
+MODALITY_COLOR_MAP = {
+    "Visual": "#2563eb",
+    "Auditory": "#0ea5e9",
+    "Tactile": "#10b981",
+    "Multisensory": "#ec4899",
+    "Motor": "#f59e0b",
+    "Resting State": "#6366f1",
+    "Sleep": "#7c3aed",
+    "Other": "#14b8a6",
+    "Unknown": "#94a3b8",
+}
+
+
+def _hex_to_rgba(hex_color: str, alpha: float = 0.4) -> str:
+    hex_color = hex_color.lstrip("#")
+    if len(hex_color) != 6:
+        return f"rgba(99, 102, 241, {alpha})"
+    r = int(hex_color[0:2], 16)
+    g = int(hex_color[2:4], 16)
+    b = int(hex_color[4:6], 16)
+    return f"rgba({r}, {g}, {b}, {alpha})"
+
+
+def _primary_modality(value: object) -> str:
+    if value is None:
+        return "Unknown"
+    if isinstance(value, float) and pd.isna(value):
+        return "Unknown"
+    text = str(value).strip()
+    if not text:
+        return "Unknown"
+    for sep in ("/", "|", ";"):
+        text = text.replace(sep, ",")
+    tokens = [tok.strip() for tok in text.split(",") if tok.strip()]
+    if not tokens:
+        return "Unknown"
+    raw = tokens[0].lower()
+    canonical = MODALITY_CANONICAL.get(raw)
+    if canonical:
+        return canonical
+    candidate = tokens[0].strip()
+    title_candidate = candidate.title()
+    if title_candidate in MODALITY_COLOR_MAP:
+        return title_candidate
+    return "Other"
 
 
 def _to_numeric_median_list(val) -> float | None:
@@ -56,7 +124,7 @@ def gen_datasets_bubble(
     - x: total duration (hours)
     - y: number of subjects
     - size: on-disk size (GB)
-    - color: sampling frequency band
+    - color: dataset modality
     """
     d = df.copy()
     d = d[d["dataset"].str.lower() != "test"]
@@ -72,24 +140,11 @@ def gen_datasets_bubble(
     d["sfreq"] = d["sampling_freqs"].map(_to_numeric_median_list)
     d["nchans"] = d["nchans_set"].map(_to_numeric_median_list)
 
+    d["modality_label"] = d.get("modality of exp").apply(_primary_modality)
+
     # disk size in GB for sizing
     GB = 1024**3
     d["size_gb"] = d["size_bytes"] / GB
-
-    # color bands by sampling frequency
-    def _sf_band(x):
-        if pd.isna(x):
-            return "Unknown"
-        x = float(x)
-        if x <= 250:
-            return "≤ 250 Hz"
-        if x <= 500:
-            return "251–500 Hz"
-        if x <= 1000:
-            return "501–1000 Hz"
-        return "> 1000 Hz"
-
-    d["sf_band"] = d["sfreq"].apply(_sf_band)
 
     # hover content
     def _fmt_size(bytes_):
@@ -125,6 +180,7 @@ def gen_datasets_bubble(
         "<br>Channels: %{customdata[3]}"
         "<br>Sampling: %{customdata[4]} Hz"
         "<br>Size: %{customdata[5]}"
+        "<br>Modality: %{customdata[6]}"
         "<extra></extra>"
     )
 
@@ -151,7 +207,7 @@ def gen_datasets_bubble(
         x=x_field,
         y="subjects",
         size="size_gb",
-        color="sf_band",
+        color="modality_label",
         hover_name="dataset",
         custom_data=[
             d["dataset"],
@@ -160,10 +216,23 @@ def gen_datasets_bubble(
             nchans_str,
             sfreq_str,
             d["size_bytes"].map(_fmt_size),
+            d["modality_label"],
         ],
         size_max=40,
-        labels={"subjects": "#Subjects", "sf_band": "Sampling Freq.", x_field: x_label},
+        labels={
+            "subjects": "#Subjects",
+            "modality_label": "Modality",
+            x_field: x_label,
+        },
+        color_discrete_map=MODALITY_COLOR_MAP,
         title="Dataset Landscape",
+        category_orders={
+            "modality_label": [
+                label
+                for label in MODALITY_COLOR_MAP.keys()
+                if label in d["modality_label"].unique()
+            ]
+        },
     )
 
     # tune marker sizing explicitly for better control
@@ -177,11 +246,12 @@ def gen_datasets_bubble(
         tr.hovertemplate = hover
 
     fig.update_layout(
-        height=560,
-        margin=dict(l=40, r=20, t=80, b=40),
+        height=750,
+        width=1200,  # Set explicit width for consistent sizing
+        margin=dict(l=60, r=40, t=80, b=60),
         template="plotly_white",
         legend=dict(
-            title="Sampling Freq.",
+            title="Modality",
             orientation="h",
             yanchor="bottom",
             y=1.02,
@@ -200,6 +270,7 @@ def gen_datasets_bubble(
             yanchor="top",
             pad=dict(t=10, b=8),
         ),
+        autosize=True,  # Enable auto-sizing to fill container
     )
 
     fig.update_xaxes(showgrid=True, gridcolor="rgba(0,0,0,0.12)", zeroline=False)
@@ -207,17 +278,65 @@ def gen_datasets_bubble(
 
     out_path = Path(out_html)
     out_path.parent.mkdir(parents=True, exist_ok=True)
-    fig.write_html(
-        str(out_path),
+    # Add CSS and loading indicator for immediate proper sizing
+    html_content = fig.to_html(
         full_html=False,
-        include_plotlyjs="cdn",
+        include_plotlyjs=False,
         div_id="dataset-bubble",
         config={
             "responsive": True,
             "displaylogo": False,
             "modeBarButtonsToRemove": ["lasso2d", "select2d"],
+            "toImageButtonOptions": {
+                "format": "png",
+                "filename": "dataset_landscape",
+                "height": 750,
+                "width": 1200,
+                "scale": 2,
+            },
         },
     )
+
+    # Wrap with styling to ensure proper initial sizing
+    styled_html = f"""
+<style>
+#dataset-bubble {{
+    width: 100% !important;
+    max-width: 1200px;
+    height: 750px !important;
+    min-height: 750px;
+    margin: 0 auto;
+}}
+#dataset-bubble .plotly-graph-div {{
+    width: 100% !important;
+    height: 100% !important;
+}}
+.dataset-loading {{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 750px;
+    font-family: Inter, system-ui, sans-serif;
+    color: #6b7280;
+}}
+</style>
+<div class="dataset-loading" id="dataset-loading">Loading dataset landscape...</div>
+{html_content}
+<script>
+// Hide loading indicator once plot is rendered
+document.addEventListener('DOMContentLoaded', function() {{
+    const loading = document.getElementById('dataset-loading');
+    const plot = document.getElementById('dataset-bubble');
+    if (loading && plot) {{
+        loading.style.display = 'none';
+        plot.style.display = 'block';
+    }}
+}});
+</script>
+"""
+
+    with open(str(out_path), "w", encoding="utf-8") as f:
+        f.write(styled_html)
     return str(out_path)
 
 
@@ -246,21 +365,57 @@ def human_readable_size(num_bytes: int) -> str:
     return "0 B"
 
 
-def wrap_tags(cell: str):
-    if pd.isna(cell):
-        return ""
-    tags_cell = [f'<span class="tag">{p.strip()}</span>' for p in cell.split(", ")]
-    return " ".join(tags_cell)
+def get_dataset_url(name: str) -> str:
+    """Generate dataset URL for plots (relative to dataset summary page)."""
+    name = name.strip()
+    return f"api/dataset/eegdash.dataset.{name.upper()}.html"
 
 
 def wrap_dataset_name(name: str):
     # Remove any surrounding whitespace
     name = name.strip()
-    # Link to the package-level dataset page and the class anchor
-    # Dynamic classes are re-exported in ``eegdash.dataset`` so anchors resolve as:
-    #   api/eegdash.dataset.html#eegdash.dataset.<CLASS>
-    url = f"api/eegdash.dataset.html#eegdash.dataset.{name.upper()}"
+    # Link to the individual dataset API page
+    # Updated structure: api/dataset/eegdash.dataset.<CLASS>.html
+    url = f"api/dataset/eegdash.dataset.{name.upper()}.html"
     return f'<a href="{url}">{name.upper()}</a>'
+
+
+DATASET_CANONICAL_MAP = {
+    "pathology": {
+        "healthy controls": "Healthy",
+        "healthy": "Healthy",
+        "control": "Healthy",
+        "clinical": "Clinical",
+        "patient": "Clinical",
+    },
+    "modality": {
+        "auditory": "Auditory",
+        "visual": "Visual",
+        "somatosensory": "Somatosensory",
+        "multisensory": "Multisensory",
+    },
+    "type": {
+        "perception": "Perception",
+        "decision making": "Decision-making",
+        "decision-making": "Decision-making",
+        "rest": "Rest",
+        "resting state": "Resting-state",
+        "sleep": "Sleep",
+    },
+}
+
+
+def _tag_normalizer(kind: str):
+    canonical = {k.lower(): v for k, v in DATASET_CANONICAL_MAP.get(kind, {}).items()}
+
+    def _normalise(token: str) -> str:
+        text = " ".join(token.replace("_", " ").split())
+        lowered = text.lower()
+        if lowered in canonical:
+            return canonical[lowered]
+        return text
+
+    return _normalise
 
 
 def prepare_table(df: pd.DataFrame):
@@ -277,7 +432,6 @@ def prepare_table(df: pd.DataFrame):
             "n_tasks",
             "nchans_set",
             "sampling_freqs",
-            "duration_hours_total",
             "size",
             "size_bytes",
             "Type Subject",
@@ -289,7 +443,6 @@ def prepare_table(df: pd.DataFrame):
     # renaming time for something small
     df = df.rename(
         columns={
-            "duration_hours_total": "duration (h)",
             "modality of exp": "modality",
             "type of exp": "type",
             "Type Subject": "pathology",
@@ -306,15 +459,41 @@ def prepare_table(df: pd.DataFrame):
     df["sampling_freqs"] = df["sampling_freqs"].apply(parse_freqs)
     # from the channels set, I will follow the same logic of freq
     df["nchans_set"] = df["nchans_set"].apply(parse_freqs)
-    # rename the nchans to channels
-    # Creating the total line
-    df["duration (h)"] = df["duration (h)"].round(2)
+    # Wrap categorical columns with styled tags for downstream rendering
+    pathology_normalizer = _tag_normalizer("pathology")
+    modality_normalizer = _tag_normalizer("modality")
+    type_normalizer = _tag_normalizer("type")
 
+    df["pathology"] = df["pathology"].apply(
+        lambda value: wrap_tags(
+            value,
+            kind="dataset-pathology",
+            normalizer=pathology_normalizer,
+        )
+    )
+    df["modality"] = df["modality"].apply(
+        lambda value: wrap_tags(
+            value,
+            kind="dataset-modality",
+            normalizer=modality_normalizer,
+        )
+    )
+    df["type"] = df["type"].apply(
+        lambda value: wrap_tags(
+            value,
+            kind="dataset-type",
+            normalizer=type_normalizer,
+        )
+    )
+
+    # Creating the total line
     df.loc["Total"] = df.sum(numeric_only=True)
     df.loc["Total", "dataset"] = f"Total {len(df) - 1} datasets"
     df.loc["Total", "nchans_set"] = ""
     df.loc["Total", "sampling_freqs"] = ""
-    df.loc["Total", "duration (h)"] = None
+    df.loc["Total", "pathology"] = ""
+    df.loc["Total", "modality"] = ""
+    df.loc["Total", "type"] = ""
     df.loc["Total", "size"] = human_readable_size(df.loc["Total", "size_bytes"])
     df = df.drop(columns=["size_bytes"])
     # arrounding the hours
@@ -327,6 +506,7 @@ def prepare_table(df: pd.DataFrame):
 def main(source_dir: str, target_dir: str):
     target_dir = Path(target_dir)
     target_dir.mkdir(parents=True, exist_ok=True)
+    STATIC_DATASET_DIR.mkdir(parents=True, exist_ok=True)
     files = glob.glob(str(Path(source_dir) / "dataset" / "*.csv"))
     for f in files:
         target_file = target_dir / Path(f).name
@@ -336,9 +516,9 @@ def main(source_dir: str, target_dir: str):
         )  # , sep=";")
         # Generate bubble chart from the raw data to have access to size_bytes
         # Use x-axis as number of records for better spread
-        gen_datasets_bubble(
-            df_raw, str(target_dir / "dataset_bubble.html"), x_var="records"
-        )
+        bubble_path = target_dir / "dataset_bubble.html"
+        gen_datasets_bubble(df_raw, str(bubble_path), x_var="records")
+        copyfile(bubble_path, STATIC_DATASET_DIR / bubble_path.name)
 
         df = prepare_table(df_raw)
         # preserve int values
@@ -360,16 +540,233 @@ def main(source_dir: str, target_dir: str):
                 "n_records": "# of records",
                 "n_subjects": "# of subjects",
                 "n_tasks": "# of tasks",
+                "pathology": "Pathology",
+                "modality": "Modality",
+                "type": "Type",
             }
         )
+        df = df[
+            [
+                "Dataset",
+                "Pathology",
+                "Modality",
+                "Type",
+                "# of records",
+                "# of subjects",
+                "# of tasks",
+                "# of channels",
+                "sampling (Hz)",
+                "size",
+            ]
+        ]
         # (If you add a 'Total' row after this, cast again or build it as Int64.)
         html_table = df.to_html(
-            classes=["sd-table", "sortable"], index=False, escape=False
+            classes=["sd-table", "sortable"],
+            index=False,
+            escape=False,
+            table_id="datasets-table",
         )
-        with open(
-            f"{target_dir}/dataset_summary_table.html", "+w", encoding="utf-8"
-        ) as f:
+        table_path = target_dir / "dataset_summary_table.html"
+        with open(table_path, "+w", encoding="utf-8") as f:
             f.write(html_table)
+        copyfile(table_path, STATIC_DATASET_DIR / table_path.name)
+
+        # Generate KDE ridgeline plot for modality participant distributions
+        try:
+            d_modal = df_raw[df_raw["dataset"].str.lower() != "test"].copy()
+            d_modal["modality_label"] = d_modal["modality of exp"].apply(
+                _primary_modality
+            )
+            d_modal["n_subjects"] = pd.to_numeric(
+                d_modal["n_subjects"], errors="coerce"
+            )
+            d_modal = d_modal.dropna(subset=["n_subjects"])
+
+            fig_kde = go.Figure()
+            order = [
+                label
+                for label in MODALITY_COLOR_MAP
+                if label in d_modal["modality_label"].unique()
+            ]
+            rng = np.random.default_rng(42)
+
+            for idx, label in enumerate(order):
+                subset = d_modal[d_modal["modality_label"] == label].copy()
+                vals = subset["n_subjects"].astype(float).dropna()
+                if len(vals) < 3:
+                    continue
+                # Generate URLs for datasets in this modality
+                subset["dataset_url"] = subset["dataset"].apply(get_dataset_url)
+                log_vals = np.log10(vals)
+                grid = np.linspace(log_vals.min() - 0.25, log_vals.max() + 0.25, 240)
+                kde = gaussian_kde(log_vals)
+                density = kde(grid)
+                if density.max() <= 0:
+                    continue
+                density_norm = density / density.max()
+                amplitude = 0.6
+                baseline = idx * 1.1
+                y_curve = baseline + density_norm * amplitude
+                x_curve = 10**grid
+
+                color = MODALITY_COLOR_MAP.get(label, "#6b7280")
+                fill = _hex_to_rgba(color, 0.28)
+
+                fig_kde.add_trace(
+                    go.Scatter(
+                        x=np.concatenate([x_curve, x_curve[::-1]]),
+                        y=np.concatenate([y_curve, np.full_like(y_curve, baseline)]),
+                        name=label,
+                        fill="toself",
+                        fillcolor=fill,
+                        line=dict(color="rgba(0,0,0,0)"),
+                        hoverinfo="skip",
+                        showlegend=False,
+                    )
+                )
+
+                fig_kde.add_trace(
+                    go.Scatter(
+                        x=x_curve,
+                        y=y_curve,
+                        mode="lines",
+                        name=label,
+                        line=dict(color=color, width=2),
+                        hovertemplate=f"<b>{label}</b><br>#Participants: %{{x:.0f}}<extra></extra>",
+                    )
+                )
+
+                jitter = rng.uniform(0.02, amplitude * 0.5, size=len(vals))
+                # Prepare custom data with dataset names and URLs
+                custom_data = np.column_stack(
+                    [subset["dataset"].to_numpy(), subset["dataset_url"].to_numpy()]
+                )
+                fig_kde.add_trace(
+                    go.Scatter(
+                        x=vals,
+                        y=np.full_like(vals, baseline) + jitter,
+                        mode="markers",
+                        name=label,
+                        marker=dict(color=color, size=5, opacity=0.6),
+                        customdata=custom_data,
+                        hovertemplate="<b><a href='%{customdata[1]}' target='_parent'>%{customdata[0]}</a></b><br>#Participants: %{x}<br><i>Click to view dataset details</i><extra></extra>",
+                        showlegend=False,
+                    )
+                )
+
+            if fig_kde.data:
+                fig_kde.update_layout(
+                    height=max(650, 150 * len(order)),
+                    width=1200,  # Set explicit width for consistent sizing
+                    template="plotly_white",
+                    xaxis=dict(
+                        type="log",
+                        title="#Participants",
+                        showgrid=True,
+                        gridcolor="rgba(0,0,0,0.12)",
+                        zeroline=False,
+                    ),
+                    yaxis=dict(
+                        title="Modality",
+                        tickmode="array",
+                        tickvals=[idx * 1.1 for idx in range(len(order))],
+                        ticktext=order,
+                        showgrid=False,
+                        range=[-0.3, max(0.3, (len(order) - 1) * 1.1 + 0.9)],
+                    ),
+                    legend=dict(
+                        title="Modality",
+                        orientation="h",
+                        yanchor="bottom",
+                        y=1.02,
+                        xanchor="right",
+                        x=0.99,
+                    ),
+                    margin=dict(l=120, r=40, t=80, b=80),
+                    title=dict(
+                        text="Participant Distribution by Modality",
+                        x=0.01,
+                        xanchor="left",
+                        y=0.98,
+                        yanchor="top",
+                    ),
+                    autosize=True,  # Enable auto-sizing to fill container
+                )
+                # Add CSS and loading indicator for immediate proper sizing
+                kde_height = max(650, 150 * len(order))
+                html_content = fig_kde.to_html(
+                    full_html=False,
+                    include_plotlyjs=False,
+                    div_id="dataset-kde-modalities",
+                    config={
+                        "responsive": True,
+                        "displaylogo": False,
+                        "modeBarButtonsToRemove": ["lasso2d", "select2d"],
+                        "toImageButtonOptions": {
+                            "format": "png",
+                            "filename": "participant_kde",
+                            "height": {kde_height},
+                            "width": 1200,
+                            "scale": 2,
+                        },
+                    },
+                )
+
+                # Wrap with styling to ensure proper initial sizing
+                styled_html = f"""
+<style>
+#dataset-kde-modalities {{
+    width: 100% !important;
+    max-width: 1200px;
+    height: {kde_height}px !important;
+    min-height: {kde_height}px;
+    margin: 0 auto;
+}}
+#dataset-kde-modalities .plotly-graph-div {{
+    width: 100% !important;
+    height: 100% !important;
+}}
+.kde-loading {{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: {kde_height}px;
+    font-family: Inter, system-ui, sans-serif;
+    color: #6b7280;
+}}
+</style>
+<div class="kde-loading" id="kde-loading">Loading participant distribution...</div>
+{html_content}
+<script>
+// Hide loading indicator once plot is rendered
+document.addEventListener('DOMContentLoaded', function() {{
+    const loading = document.getElementById('kde-loading');
+    const plot = document.getElementById('dataset-kde-modalities');
+    if (loading && plot) {{
+        loading.style.display = 'none';
+        plot.style.display = 'block';
+        
+        // Add click event to points for navigation
+        plot.on('plotly_click', function(data) {{
+            if (data.points && data.points[0] && data.points[0].customdata) {{
+                const url = data.points[0].customdata[1]; // dataset_url
+                if (url) {{
+                    const resolved = new URL(url, window.location.href);
+                    window.open(resolved.href, '_self');
+                }}
+            }}
+        }});
+    }}
+}});
+</script>
+"""
+
+                kde_path = Path(target_dir) / "dataset_kde_modalities.html"
+                with open(kde_path, "w", encoding="utf-8") as f:
+                    f.write(styled_html)
+                copyfile(kde_path, STATIC_DATASET_DIR / kde_path.name)
+        except Exception as exc:
+            print(f"[dataset KDE] Skipped due to error: {exc}")
 
 
 def parse_freqs(value) -> str:

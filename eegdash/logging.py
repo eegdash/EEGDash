@@ -31,3 +31,5 @@ root_logger.setLevel(logging.INFO)
 logger = logging.getLogger("eegdash")
 
 logger.setLevel(logging.INFO)
+
+__all__ = ["logger"]

@@ -4,6 +4,12 @@
 
 .. _data_summary:
 
+.. raw:: html
+
+   <script>document.documentElement.classList.add('dataset-summary-page');</script>
+
+.. rst-class:: dataset-summary-article
+
 Datasets 
 =========
 

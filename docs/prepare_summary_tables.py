@@ -1,4 +1,5 @@
 import glob
+import json
 from argparse import ArgumentParser
 from pathlib import Path
 from shutil import copyfile
@@ -7,6 +8,7 @@ import numpy as np
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
+from plotly.utils import PlotlyJSONEncoder
 from scipy.stats import gaussian_kde
 from table_tag_utils import wrap_tags
 
@@ -694,25 +696,26 @@ def main(source_dir: str, target_dir: str):
                 )
                 # Add CSS and loading indicator for immediate proper sizing
                 kde_height = max(650, 150 * len(order))
-                html_content = fig_kde.to_html(
-                    full_html=False,
-                    include_plotlyjs=False,
-                    div_id="dataset-kde-modalities",
-                    config={
-                        "responsive": True,
-                        "displaylogo": False,
-                        "modeBarButtonsToRemove": ["lasso2d", "select2d"],
-                        "toImageButtonOptions": {
-                            "format": "png",
-                            "filename": "participant_kde",
-                            "height": {kde_height},
-                            "width": 1200,
-                            "scale": 2,
-                        },
+                plot_config = {
+                    "responsive": True,
+                    "displaylogo": False,
+                    "modeBarButtonsToRemove": ["lasso2d", "select2d"],
+                    "toImageButtonOptions": {
+                        "format": "png",
+                        "filename": "participant_kde",
+                        "height": kde_height,
+                        "width": 1200,
+                        "scale": 2,
                     },
+                }
+                fig_spec = fig_kde.to_plotly_json()
+                data_json = json.dumps(fig_spec.get("data", []), cls=PlotlyJSONEncoder)
+                layout_json = json.dumps(
+                    fig_spec.get("layout", {}), cls=PlotlyJSONEncoder
                 )
+                config_json = json.dumps(plot_config, cls=PlotlyJSONEncoder)
 
-                # Wrap with styling to ensure proper initial sizing
+                # Wrap with styling to ensure proper initial sizing and defer Plotly rendering
                 styled_html = f"""
 <style>
 #dataset-kde-modalities {{
@@ -721,8 +724,9 @@ def main(source_dir: str, target_dir: str):
     height: {kde_height}px !important;
     min-height: {kde_height}px;
     margin: 0 auto;
+    display: none;
 }}
-#dataset-kde-modalities .plotly-graph-div {{
+#dataset-kde-modalities.plotly-graph-div {{
     width: 100% !important;
     height: 100% !important;
 }}
@@ -736,28 +740,60 @@ def main(source_dir: str, target_dir: str):
 }}
 </style>
 <div class="kde-loading" id="kde-loading">Loading participant distribution...</div>
-{html_content}
+<div id="dataset-kde-modalities" class="plotly-graph-div"></div>
 <script>
-// Hide loading indicator once plot is rendered
-document.addEventListener('DOMContentLoaded', function() {{
-    const loading = document.getElementById('kde-loading');
-    const plot = document.getElementById('dataset-kde-modalities');
-    if (loading && plot) {{
-        loading.style.display = 'none';
-        plot.style.display = 'block';
-        
-        // Add click event to points for navigation
-        plot.on('plotly_click', function(data) {{
-            if (data.points && data.points[0] && data.points[0].customdata) {{
-                const url = data.points[0].customdata[1]; // dataset_url
-                if (url) {{
-                    const resolved = new URL(url, window.location.href);
-                    window.open(resolved.href, '_self');
-                }}
-            }}
-        }});
+(function() {{
+  const TARGET_ID = 'dataset-kde-modalities';
+  const FIG_DATA = {data_json};
+  const FIG_LAYOUT = {layout_json};
+  const FIG_CONFIG = {config_json};
+
+  function onReady(callback) {{
+    if (document.readyState === 'loading') {{
+      document.addEventListener('DOMContentLoaded', callback, {{ once: true }});
+    }} else {{
+      callback();
     }}
-}});
+  }}
+
+  function renderPlot() {{
+    const container = document.getElementById(TARGET_ID);
+    if (!container) {{
+      return;
+    }}
+
+    const draw = () => {{
+      if (!window.Plotly) {{
+        window.requestAnimationFrame(draw);
+        return;
+      }}
+
+      window.Plotly.newPlot(TARGET_ID, FIG_DATA, FIG_LAYOUT, FIG_CONFIG).then((plot) => {{
+        const loading = document.getElementById('kde-loading');
+        if (loading) {{
+          loading.style.display = 'none';
+        }}
+        container.style.display = 'block';
+
+        plot.on('plotly_click', (event) => {{
+          const point = event.points && event.points[0];
+          if (!point || !point.customdata) {{
+            return;
+          }}
+          const url = point.customdata[1];
+          if (url) {{
+            const resolved = new URL(url, window.location.href);
+            window.open(resolved.href, '_self');
+          }}
+        }});
+      }});
+    }};
+
+    draw();
+  }}
+
+  onReady(renderPlot);
+}})();
 </script>
 """
 

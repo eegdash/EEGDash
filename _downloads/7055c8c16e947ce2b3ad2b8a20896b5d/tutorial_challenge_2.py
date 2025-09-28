@@ -51,14 +51,14 @@ Challenge 2: Predicting the p-factor from EEG
 # Contents of this start kit
 # --------------------------
 # .. note:: If you need additional explanations on the
-#    `EEGChallengeDataset <https://eeglab.org/EEGDash/api/eegdash.html#eegdash.EEGChallengeDataset>`__
-#    class, dataloading, `braindecode <https://braindecode.org/stable/models/models_table.html>`__'s
+#    :doc:`EEGChallengeDataset
+#    </api/dataset/eegdash.dataset.EEGChallengeDataset>` class, dataloading,
+#    `braindecode <https://braindecode.org/stable/models/models_table.html>`__'s
 #    deep learning models, or brain decoding in general, please refer to the
 #    start-kit of challenge 1 which delves deeper into these topics.
 #
 # More contents will be released during the competition inside the
-# `eegdash <https://eeglab.org/EEGDash/overview.html>`__
-# `examples webpage <https://eeglab.org/EEGDash/generated/auto_examples/index.html>`__.
+# :mod:`eegdash` `examples webpage <https://eeglab.org/EEGDash/generated/auto_examples/index.html>`__.
 #
 # .. admonition:: Prerequisites
 #    :class: important
@@ -142,7 +142,8 @@ print(msg)
 ######################################################################
 # Define local path and (down)load the data
 # -----------------------------------------
-# In this challenge 2 example, we load the EEG 2025 release using EEG Dash.
+# In this challenge 2 example, we load the EEG 2025 release using
+# :doc:`EEGChallengeDataset </api/dataset/eegdash.dataset.EEGChallengeDataset>`.
 # **Note:** in this example notebook, we load the contrast change detection task from one mini release only as an example. Naturally, you are encouraged to train your models on all complete releases, using data from all the tasks you deem relevant.
 
 ######################################################################

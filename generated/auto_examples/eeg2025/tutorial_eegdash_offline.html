@@ -527,8 +527,8 @@ to download the full example code.</p>
 <span id="sphx-glr-generated-auto-examples-eeg2025-tutorial-eegdash-offline-py"></span><h1>Working Offline with EEGDash<a class="headerlink" href="#working-offline-with-eegdash" title="Link to this heading">#</a></h1>
 <p>Many HPC clusters restrict or block network access. It’s common to have
 dedicated queues for internet-enabled jobs that differ from GPU queues.
-This tutorial shows how to use EEGDash offline once a dataset is present
-on disk.</p>
+This tutorial shows how to use <a class="reference internal" href="../../../api/dataset/eegdash.dataset.EEGChallengeDataset.html"><span class="doc">EEGChallengeDataset</span></a> offline once a dataset is
+present on disk.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">platformdirs</span>
 
@@ -536,8 +536,9 @@ on disk.</p>
 <span class="kn">from</span><span class="w"> </span><span class="nn">eegdash.dataset.dataset</span><span class="w"> </span><span class="kn">import</span> <span class="n">EEGChallengeDataset</span>
 
 
-<span class="c1"># We&#39;ll use Release R2 as an example (HBN subset). EEGChallengeDataset uses a</span>
-<span class="c1"># suffixed cache folder for the competition data (e.g., &quot;-bdf-mini&quot;).</span>
+<span class="c1"># We&#39;ll use Release R2 as an example (HBN subset).</span>
+<span class="c1"># :doc:`EEGChallengeDataset &lt;/api/dataset/eegdash.dataset.EEGChallengeDataset&gt;`</span>
+<span class="c1"># uses a suffixed cache folder for the competition data (e.g., &quot;-bdf-mini&quot;).</span>
 <span class="n">release</span> <span class="o">=</span> <span class="s2">&quot;R2&quot;</span>
 <span class="n">dataset_id</span> <span class="o">=</span> <span class="n">RELEASE_TO_OPENNEURO_DATASET_MAP</span><span class="p">[</span><span class="n">release</span><span class="p">]</span>
 <span class="n">task</span> <span class="o">=</span> <span class="s2">&quot;RestingState&quot;</span>
@@ -590,8 +591,9 @@ this section.</p>
 <h2>Step 2: Basic Offline Usage<a class="headerlink" href="#step-2-basic-offline-usage" title="Link to this heading">#</a></h2>
 <p>Once the data is cached locally, you can interact with it without needing an
 internet connection. The key is to instantiate your dataset object with the
-<code class="docutils literal notranslate"><span class="pre">download=False</span></code> flag. This tells EEGDash to look for data in the
-<code class="docutils literal notranslate"><span class="pre">cache_dir</span></code> instead of trying to connect to the database or S3.</p>
+<code class="docutils literal notranslate"><span class="pre">download=False</span></code> flag. This tells <a class="reference internal" href="../../../api/dataset/eegdash.dataset.EEGChallengeDataset.html"><span class="doc">EEGChallengeDataset</span></a>
+to look for data in the <code class="docutils literal notranslate"><span class="pre">cache_dir</span></code> instead of trying to connect to the
+database or S3.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Here we check that the local cache folder exists</span>
 <span class="n">offline_root</span> <span class="o">=</span> <span class="n">cache_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">dataset_id</span><span class="si">}</span><span class="s2">-bdf-mini&quot;</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Local dataset folder exists: </span><span class="si">{</span><span class="n">offline_root</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span><span class="si">}</span><span class="se">\n</span><span class="si">{</span><span class="n">offline_root</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
@@ -635,7 +637,8 @@ First record bidspath: ds005506/sub-NDARAB793GL3/eeg/sub-NDARAB793GL3_task-Resti
 <section id="step-3-filtering-entities-offline">
 <h2>Step 3: Filtering Entities Offline<a class="headerlink" href="#step-3-filtering-entities-offline" title="Link to this heading">#</a></h2>
 <p>Even without a database connection, you can still filter your dataset by
-BIDS entities like subject, session, or task. When <code class="docutils literal notranslate"><span class="pre">download=False</span></code>, EEGDash
+BIDS entities like subject, session, or task. When <code class="docutils literal notranslate"><span class="pre">download=False</span></code>,
+<a class="reference internal" href="../../../api/dataset/eegdash.dataset.EEGChallengeDataset.html"><span class="doc">EEGChallengeDataset</span></a>
 uses the BIDS directory structure and filenames to apply these filters. This
 example shows how to load data for a specific subject from the local cache.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">ds_offline_sub</span> <span class="o">=</span> <span class="n">EEGChallengeDataset</span><span class="p">(</span>
@@ -649,8 +652,8 @@ example shows how to load data for a specific subject from the local cache.</p>
 <span class="k">if</span> <span class="n">ds_offline_sub</span><span class="o">.</span><span class="n">datasets</span><span class="p">:</span>
     <span class="n">keys</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;dataset&quot;</span><span class="p">,</span> <span class="s2">&quot;subject&quot;</span><span class="p">,</span> <span class="s2">&quot;task&quot;</span><span class="p">,</span> <span class="s2">&quot;run&quot;</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Records (dataset, subject, task, run):&quot;</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">base_ds</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">ds_offline_sub</span><span class="o">.</span><span class="n">datasets</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
-        <span class="n">rec</span> <span class="o">=</span> <span class="n">base_ds</span><span class="o">.</span><span class="n">record</span>
+    <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <a href="../../../api/generated/api-core/eegdash.data_utils.html#eegdash.data_utils.EEGDashBaseDataset" title="eegdash.data_utils.EEGDashBaseDataset" class="sphx-glr-backref-module-eegdash-data_utils sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">base_ds</span></a> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">ds_offline_sub</span><span class="o">.</span><span class="n">datasets</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="n">rec</span> <span class="o">=</span> <a href="../../../api/generated/api-core/eegdash.data_utils.html#eegdash.data_utils.EEGDashBaseDataset" title="eegdash.data_utils.EEGDashBaseDataset" class="sphx-glr-backref-module-eegdash-data_utils sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">base_ds</span></a><span class="o">.</span><span class="n">record</span>
         <span class="n">summary</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">=</span><span class="si">{</span><span class="n">rec</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">k</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">idx</span><span class="si">:</span><span class="s2">03d</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">summary</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
@@ -773,8 +776,8 @@ structure. Some DB-only fields are unavailable; entity filters (subject,
 session, task, run) usually suffice.</p></li>
 <li><p>If you encounter issues, please open a GitHub issue so we can discuss.</p></li>
 </ul>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 44.884 seconds)</p>
-<p><strong>Estimated memory usage:</strong>  1058 MB</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 43.678 seconds)</p>
+<p><strong>Estimated memory usage:</strong>  1026 MB</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-generated-auto-examples-eeg2025-tutorial-eegdash-offline-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../../_downloads/5702e607758ace8a64a5cb0cf540ace7/tutorial_eegdash_offline.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">tutorial_eegdash_offline.ipynb</span></code></a></p>

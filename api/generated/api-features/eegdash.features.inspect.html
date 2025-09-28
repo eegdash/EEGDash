@@ -476,6 +476,7 @@
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../dataset/api_dataset.html">Datasets API</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.EEGChallengeDataset.html">EEGChallengeDataset</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS001785.html">eegdash.dataset.DS001785</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS001787.html">eegdash.dataset.DS001787</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS001810.html">eegdash.dataset.DS001810</a></li>
@@ -800,19 +801,19 @@
 <p class="rubric">Functions</p>
 <div class="pst-scrollable-table-container"><table class="autosummary longtable table">
 <tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_all_feature_extractors</span></code>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#eegdash.features.inspect.get_all_feature_extractors" title="eegdash.features.inspect.get_all_feature_extractors"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_all_feature_extractors</span></code></a>()</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_all_feature_kinds</span></code>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#eegdash.features.inspect.get_all_feature_kinds" title="eegdash.features.inspect.get_all_feature_kinds"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_all_feature_kinds</span></code></a>()</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_all_features</span></code>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#eegdash.features.inspect.get_all_features" title="eegdash.features.inspect.get_all_features"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_all_features</span></code></a>()</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_feature_kind</span></code>(feature)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#eegdash.features.inspect.get_feature_kind" title="eegdash.features.inspect.get_feature_kind"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_feature_kind</span></code></a>(feature)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_feature_predecessors</span></code>(feature_or_extractor)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#eegdash.features.inspect.get_feature_predecessors" title="eegdash.features.inspect.get_feature_predecessors"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_feature_predecessors</span></code></a>(feature_or_extractor)</p></td>
 <td><p></p></td>
 </tr>
 </tbody>
@@ -833,6 +834,31 @@
 </tbody>
 </table>
 </div>
+<dl class="py function">
+<dt class="sig sig-object py" id="eegdash.features.inspect.get_feature_predecessors">
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.inspect.</span></span><span class="sig-name descname"><span class="pre">get_feature_predecessors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">feature_or_extractor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/inspect.py#L8-L20"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.inspect.get_feature_predecessors" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eegdash.features.inspect.get_feature_kind">
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.inspect.</span></span><span class="sig-name descname"><span class="pre">get_feature_kind</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">feature</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/inspect.py#L23-L24"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.inspect.get_feature_kind" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eegdash.features.inspect.get_all_features">
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.inspect.</span></span><span class="sig-name descname"><span class="pre">get_all_features</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/inspect.py#L27-L31"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.inspect.get_all_features" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eegdash.features.inspect.get_all_feature_extractors">
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.inspect.</span></span><span class="sig-name descname"><span class="pre">get_all_feature_extractors</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/inspect.py#L34-L41"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.inspect.get_all_feature_extractors" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eegdash.features.inspect.get_all_feature_kinds">
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.inspect.</span></span><span class="sig-name descname"><span class="pre">get_all_feature_kinds</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/inspect.py#L44-L48"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.inspect.get_all_feature_kinds" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
 </section>
 
 
@@ -873,6 +899,22 @@
                 <dialog id="pst-secondary-sidebar-modal"></dialog>
                 <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.features.inspect.get_feature_predecessors"><code class="docutils literal notranslate"><span class="pre">get_feature_predecessors()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.features.inspect.get_feature_kind"><code class="docutils literal notranslate"><span class="pre">get_feature_kind()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.features.inspect.get_all_features"><code class="docutils literal notranslate"><span class="pre">get_all_features()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.features.inspect.get_all_feature_extractors"><code class="docutils literal notranslate"><span class="pre">get_all_feature_extractors()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.features.inspect.get_all_feature_kinds"><code class="docutils literal notranslate"><span class="pre">get_all_feature_kinds()</span></code></a></li>
+</ul>
+  </nav></div>
 
   <div class="sidebar-secondary-item">
 

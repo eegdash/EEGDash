@@ -71,14 +71,14 @@ Ensure the dataset is available locally. If not, see the
 Contents of this start kit
 --------------------------
 .. note:: If you need additional explanations on the
-   `EEGChallengeDataset <https://eeglab.org/EEGDash/api/eegdash.html#eegdash.EEGChallengeDataset>`__
-   class, dataloading, `braindecode <https://braindecode.org/stable/models/models_table.html>`__'s
+   :doc:`EEGChallengeDataset
+   </api/dataset/eegdash.dataset.EEGChallengeDataset>` class, dataloading,
+   `braindecode <https://braindecode.org/stable/models/models_table.html>`__'s
    deep learning models, or brain decoding in general, please refer to the
    start-kit of challenge 1 which delves deeper into these topics.
 
 More contents will be released during the competition inside the
-`eegdash <https://eeglab.org/EEGDash/overview.html>`__
-`examples webpage <https://eeglab.org/EEGDash/generated/auto_examples/index.html>`__.
+:mod:`eegdash` `examples webpage <https://eeglab.org/EEGDash/generated/auto_examples/index.html>`__.
 
 .. admonition:: Prerequisites
    :class: important
@@ -198,19 +198,20 @@ The solution may involve finding meaningful representations of the EEG data that
 The challenge encourages learning physiologically meaningful signal representations and discovery of reproducible biomarkers.
 If contestants are successful in this task, it could pave the way for more objective and efficient assessments of the P-factor in clinical settings.
 
-.. GENERATED FROM PYTHON SOURCE LINES 143-147
+.. GENERATED FROM PYTHON SOURCE LINES 143-148
 
 Define local path and (down)load the data
 -----------------------------------------
-In this challenge 2 example, we load the EEG 2025 release using EEG Dash.
+In this challenge 2 example, we load the EEG 2025 release using
+:doc:`EEGChallengeDataset </api/dataset/eegdash.dataset.EEGChallengeDataset>`.
 **Note:** in this example notebook, we load the contrast change detection task from one mini release only as an example. Naturally, you are encouraged to train your models on all complete releases, using data from all the tasks you deem relevant.
 
-.. GENERATED FROM PYTHON SOURCE LINES 149-151
+.. GENERATED FROM PYTHON SOURCE LINES 150-152
 
 The first step is to define the cache folder!
 Match tests' cache layout under ~/eegdash_cache/eeg_challenge_cache
 
-.. GENERATED FROM PYTHON SOURCE LINES 151-182
+.. GENERATED FROM PYTHON SOURCE LINES 152-183
 
 .. code-block:: Python
 
@@ -275,14 +276,14 @@ Match tests' cache layout under ~/eegdash_cache/eeg_challenge_cache
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 183-187
+.. GENERATED FROM PYTHON SOURCE LINES 184-188
 
 Combine the datasets into a single one
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Here, we combine the datasets from the different releases into a single
 ``BaseConcatDataset`` object.
 
-.. GENERATED FROM PYTHON SOURCE LINES 189-196
+.. GENERATED FROM PYTHON SOURCE LINES 190-197
 
 .. code-block:: Python
 
@@ -368,7 +369,7 @@ Here, we combine the datasets from the different releases into a single
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 197-205
+.. GENERATED FROM PYTHON SOURCE LINES 198-206
 
 Inspect your data
 -----------------
@@ -379,7 +380,7 @@ The following snippet, if uncommented, will show the first 10 seconds of the raw
 We can also inspect the data further by looking at the events and annotations.
 We strongly recommend you to take a look into the details and check how the events are structured.
 
-.. GENERATED FROM PYTHON SOURCE LINES 207-217
+.. GENERATED FROM PYTHON SOURCE LINES 208-218
 
 .. code-block:: Python
 
@@ -426,7 +427,7 @@ We strongly recommend you to take a look into the details and check how the even
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 218-223
+.. GENERATED FROM PYTHON SOURCE LINES 219-224
 
 Wrap the data into a PyTorch-compatible dataset
 --------------------------------------------------
@@ -434,7 +435,7 @@ The class below defines a dataset wrapper that will extract 2-second windows,
 uniformly sampled over the whole signal. In addition, it will add useful information
 about the extracted windows, such as the p-factor, the subject or the task.
 
-.. GENERATED FROM PYTHON SOURCE LINES 226-265
+.. GENERATED FROM PYTHON SOURCE LINES 227-266
 
 .. code-block:: Python
 
@@ -484,11 +485,11 @@ about the extracted windows, such as the p-factor, the subject or the task.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 266-267
+.. GENERATED FROM PYTHON SOURCE LINES 267-268
 
 Filter out recordings that are too short
 
-.. GENERATED FROM PYTHON SOURCE LINES 267-292
+.. GENERATED FROM PYTHON SOURCE LINES 268-293
 
 .. code-block:: Python
 
@@ -524,13 +525,13 @@ Filter out recordings that are too short
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 293-296
+.. GENERATED FROM PYTHON SOURCE LINES 294-297
 
 Inspect the label distribution
 -------------------------------
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 296-312
+.. GENERATED FROM PYTHON SOURCE LINES 297-313
 
 .. code-block:: Python
 
@@ -562,7 +563,7 @@ Inspect the label distribution
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 313-324
+.. GENERATED FROM PYTHON SOURCE LINES 314-325
 
 Define, train and save a model
  ---------------------------------
@@ -576,7 +577,7 @@ Define, train and save a model
  Initialize model
  ----------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 324-370
+.. GENERATED FROM PYTHON SOURCE LINES 325-371
 
 .. code-block:: Python
 
@@ -676,71 +677,71 @@ Define, train and save a model
     Params size (MB): 0.22
     Estimated Total Size (MB): 16.97
     ================================================================================================================================================================
-    Epoch 0 - step 0, loss: 0.6516181826591492
-    Epoch 0 - step 1, loss: 0.6739382147789001
-    Epoch 0 - step 2, loss: 0.6753214001655579
-    Epoch 0 - step 3, loss: 0.644891619682312
-    Epoch 0 - step 4, loss: 0.6515814065933228
-    Epoch 0 - step 5, loss: 0.6300197839736938
-    Epoch 0 - step 6, loss: 0.6207839846611023
-    Epoch 0 - step 7, loss: 0.6974747776985168
-    Epoch 0 - step 8, loss: 0.7327316999435425
-    Epoch 0 - step 9, loss: 0.702186644077301
-    Epoch 0 - step 10, loss: 0.6543700695037842
-    Epoch 0 - step 11, loss: 0.6439085602760315
-    Epoch 0 - step 12, loss: 0.6484693288803101
-    Epoch 0 - step 13, loss: 0.5989719033241272
-    Epoch 0 - step 14, loss: 0.6621933579444885
-    Epoch 0 - step 15, loss: 0.6292209625244141
-    Epoch 0 - step 16, loss: 0.6618649363517761
-    Epoch 0 - step 17, loss: 0.6184121966362
-    Epoch 0 - step 18, loss: 0.6629713177680969
-    Epoch 0 - step 19, loss: 0.5926529765129089
-    Epoch 0 - step 20, loss: 0.6401370167732239
-    Epoch 0 - step 21, loss: 0.6854920387268066
-    Epoch 0 - step 22, loss: 0.6966366171836853
-    Epoch 0 - step 23, loss: 0.6717182993888855
-    Epoch 0 - step 24, loss: 0.6793345212936401
-    Epoch 0 - step 25, loss: 0.6436673998832703
-    Epoch 0 - step 26, loss: 0.6000059843063354
-    Epoch 0 - step 27, loss: 0.6014109253883362
-    Epoch 0 - step 28, loss: 0.6664526462554932
-    Epoch 0 - step 29, loss: 0.6236861348152161
-    Epoch 0 - step 30, loss: 0.625282883644104
-    Epoch 0 - step 31, loss: 0.6022945642471313
-    Epoch 0 - step 32, loss: 0.6754221320152283
-    Epoch 0 - step 33, loss: 0.6740419864654541
-    Epoch 0 - step 34, loss: 0.6731807589530945
-    Epoch 0 - step 35, loss: 0.6877804398536682
-    Epoch 0 - step 36, loss: 0.7159335613250732
-    Epoch 0 - step 37, loss: 0.6625339984893799
-    Epoch 0 - step 38, loss: 0.6487506628036499
-    Epoch 0 - step 39, loss: 0.6703910231590271
-    Epoch 0 - step 40, loss: 0.6917022466659546
-    Epoch 0 - step 41, loss: 0.6097450852394104
-    Epoch 0 - step 42, loss: 0.6858481168746948
-    Epoch 0 - step 43, loss: 0.6122286319732666
-    Epoch 0 - step 44, loss: 0.6324355602264404
-    Epoch 0 - step 45, loss: 0.6295729279518127
-    Epoch 0 - step 46, loss: 0.7187749147415161
-    Epoch 0 - step 47, loss: 0.6338855624198914
-    Epoch 0 - step 48, loss: 0.6872661709785461
-    Epoch 0 - step 49, loss: 0.5991184115409851
-    Epoch 0 - step 50, loss: 0.6834961771965027
-    Epoch 0 - step 51, loss: 0.6801490187644958
-    Epoch 0 - step 52, loss: 0.6133056879043579
-    Epoch 0 - step 53, loss: 0.6077145338058472
-    Epoch 0 - step 54, loss: 0.6325498819351196
-    Epoch 0 - step 55, loss: 0.6212705373764038
-    Epoch 0 - step 56, loss: 0.6578575968742371
-    Epoch 0 - step 57, loss: 0.6930758953094482
-    Epoch 0 - step 58, loss: 0.6687589287757874
-    Epoch 0 - step 59, loss: 0.6282708644866943
-    Epoch 0 - step 60, loss: 0.6323423385620117
-    Epoch 0 - step 61, loss: 0.620349645614624
-    Epoch 0 - step 62, loss: 0.5699783563613892
-    Epoch 0 - step 63, loss: 0.6394991874694824
-    Epoch 0 - step 64, loss: 0.7035912275314331
+    Epoch 0 - step 0, loss: 0.6709326505661011
+    Epoch 0 - step 1, loss: 0.6642090082168579
+    Epoch 0 - step 2, loss: 0.6977351307868958
+    Epoch 0 - step 3, loss: 0.6521109938621521
+    Epoch 0 - step 4, loss: 0.6644507050514221
+    Epoch 0 - step 5, loss: 0.630898118019104
+    Epoch 0 - step 6, loss: 0.6282192468643188
+    Epoch 0 - step 7, loss: 0.673184335231781
+    Epoch 0 - step 8, loss: 0.7315203547477722
+    Epoch 0 - step 9, loss: 0.7018580436706543
+    Epoch 0 - step 10, loss: 0.6535619497299194
+    Epoch 0 - step 11, loss: 0.6562889814376831
+    Epoch 0 - step 12, loss: 0.6423693299293518
+    Epoch 0 - step 13, loss: 0.5998878479003906
+    Epoch 0 - step 14, loss: 0.6573944687843323
+    Epoch 0 - step 15, loss: 0.6122074723243713
+    Epoch 0 - step 16, loss: 0.6307826042175293
+    Epoch 0 - step 17, loss: 0.604771077632904
+    Epoch 0 - step 18, loss: 0.6631288528442383
+    Epoch 0 - step 19, loss: 0.5836570858955383
+    Epoch 0 - step 20, loss: 0.632917582988739
+    Epoch 0 - step 21, loss: 0.6988281607627869
+    Epoch 0 - step 22, loss: 0.6980960369110107
+    Epoch 0 - step 23, loss: 0.6983425617218018
+    Epoch 0 - step 24, loss: 0.6644375324249268
+    Epoch 0 - step 25, loss: 0.6334565281867981
+    Epoch 0 - step 26, loss: 0.6058604717254639
+    Epoch 0 - step 27, loss: 0.6148165464401245
+    Epoch 0 - step 28, loss: 0.6418114900588989
+    Epoch 0 - step 29, loss: 0.63897705078125
+    Epoch 0 - step 30, loss: 0.6072613000869751
+    Epoch 0 - step 31, loss: 0.5732001662254333
+    Epoch 0 - step 32, loss: 0.6844057440757751
+    Epoch 0 - step 33, loss: 0.6758961081504822
+    Epoch 0 - step 34, loss: 0.670036792755127
+    Epoch 0 - step 35, loss: 0.6741783022880554
+    Epoch 0 - step 36, loss: 0.714120626449585
+    Epoch 0 - step 37, loss: 0.659372091293335
+    Epoch 0 - step 38, loss: 0.6487736701965332
+    Epoch 0 - step 39, loss: 0.6743377447128296
+    Epoch 0 - step 40, loss: 0.6831778883934021
+    Epoch 0 - step 41, loss: 0.6038610935211182
+    Epoch 0 - step 42, loss: 0.6909850239753723
+    Epoch 0 - step 43, loss: 0.6160635352134705
+    Epoch 0 - step 44, loss: 0.631697416305542
+    Epoch 0 - step 45, loss: 0.6223537921905518
+    Epoch 0 - step 46, loss: 0.71044921875
+    Epoch 0 - step 47, loss: 0.6257899403572083
+    Epoch 0 - step 48, loss: 0.6844595670700073
+    Epoch 0 - step 49, loss: 0.5942226052284241
+    Epoch 0 - step 50, loss: 0.6724868416786194
+    Epoch 0 - step 51, loss: 0.6652864813804626
+    Epoch 0 - step 52, loss: 0.6221785545349121
+    Epoch 0 - step 53, loss: 0.5992839336395264
+    Epoch 0 - step 54, loss: 0.6195598840713501
+    Epoch 0 - step 55, loss: 0.6114451885223389
+    Epoch 0 - step 56, loss: 0.6552357077598572
+    Epoch 0 - step 57, loss: 0.6704607009887695
+    Epoch 0 - step 58, loss: 0.670920729637146
+    Epoch 0 - step 59, loss: 0.601935863494873
+    Epoch 0 - step 60, loss: 0.6237753629684448
+    Epoch 0 - step 61, loss: 0.6048508882522583
+    Epoch 0 - step 62, loss: 0.5675835609436035
+    Epoch 0 - step 63, loss: 0.6382749080657959
+    Epoch 0 - step 64, loss: 0.6743878126144409
     Model saved as 'weights_challenge_2.pt'
 
 
@@ -749,9 +750,9 @@ Define, train and save a model
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (6 minutes 7.025 seconds)
+   **Total running time of the script:** (6 minutes 8.194 seconds)
 
-**Estimated memory usage:**  2789 MB
+**Estimated memory usage:**  2782 MB
 
 
 .. _sphx_glr_download_generated_auto_examples_eeg2025_tutorial_challenge_2.py:

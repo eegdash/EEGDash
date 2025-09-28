@@ -24,9 +24,9 @@ EEGDash Feature Extractor
 
 EEGDash example for eyes open vs. closed classification.
 
-The code below provides an example of using the *EEGDash* library in combination with PyTorch to develop a deep learning model for analyzing EEG data, specifically for eyes open vs. closed classification in a single subject.
+This example uses the :mod:`eegdash` library in combination with PyTorch to develop a deep learning model for analyzing EEG data, specifically for eyes open vs. closed classification in a single subject.
 
-1. **Data Retrieval Using EEGDash**: An instance of *EEGDashDataset* is created to search and retrieve an EEG dataset. At this step, only the metadata is transferred.
+1. **Data Retrieval Using EEGDash**: An instance of :class:`eegdash.api.EEGDashDataset` is created to search and retrieve an EEG dataset. At this step, only the metadata is transferred.
 
 2. **Data Preprocessing Using BrainDecode**: This process preprocesses EEG data using Braindecode by reannotating events, selecting specific channels, resampling, filtering, and extracting 2-second epochs, ensuring balanced eyes-open and eyes-closed data for analysis.
 
@@ -36,15 +36,18 @@ The code below provides an example of using the *EEGDash* library in combination
 
 5. **Model Training and Evaluation Process**: This section trains the neural network, normalizes input data, computes cross-entropy loss, updates model parameters, and evaluates classification accuracy over six epochs.
 
-.. GENERATED FROM PYTHON SOURCE LINES 23-28
+.. GENERATED FROM PYTHON SOURCE LINES 23-31
 
 Data Retrieval Using EEGDash
 ----------------------------
 
+We instantiate :class:`eegdash.api.EEGDashDataset` to pull the experiment
+metadata and build the dataset definition.
+
 First we find one resting state dataset. This dataset contains both eyes open
 and eyes closed data.
 
-.. GENERATED FROM PYTHON SOURCE LINES 30-44
+.. GENERATED FROM PYTHON SOURCE LINES 33-47
 
 .. code-block:: Python
 
@@ -94,7 +97,7 @@ and eyes closed data.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 45-75
+.. GENERATED FROM PYTHON SOURCE LINES 48-78
 
 Data Preprocessing Using Braindecode
 ------------------------------------
@@ -109,10 +112,10 @@ For the eyes-closed event, we extract 14 seconds of data from 15 to 29 seconds
 after the event onset. Similarly, for the eyes-open event, we extract data
 from 5 to 19 seconds after the event onset. This ensures an equal amount of
 data for both conditions. The event extraction is handled by the custom
-function **hbn_ec_ec_reannotation**.
+function :func:`eegdash.hbn.preprocessing.hbn_ec_ec_reannotation`.
 
 Next, we apply four preprocessing steps in Braindecode:
-1. **Reannotation** of event markers using `hbn_ec_ec_reannotation()`.
+1. **Reannotation** of event markers using :func:`eegdash.hbn.preprocessing.hbn_ec_ec_reannotation`.
 2. **Selection** of 24 specific EEG channels from the original 128.
 3. **Resampling** the EEG data to a frequency of 128 Hz.
 4. **Filtering** the EEG signals to retain frequencies between 1 Hz and 55 Hz.
@@ -127,7 +130,7 @@ or eyes-closed). `windows_ds` is a PyTorch dataset, and when queried, it
 returns labels for eyes-open and eyes-closed (assigned as labels 0 and 1,
 corresponding to their respective event markers).
 
-.. GENERATED FROM PYTHON SOURCE LINES 75-133
+.. GENERATED FROM PYTHON SOURCE LINES 78-136
 
 .. code-block:: Python
 
@@ -198,7 +201,7 @@ corresponding to their respective event markers).
  .. code-block:: none
 
     Used Annotations descriptions: [np.str_('boundary'), np.str_('break cnt'), np.str_('instructed_toCloseEyes'), np.str_('instructed_toOpenEyes'), np.str_('resting_start')]
-    [09/28/25 19:14:07] INFO     Original events found with ids: preprocessing.py:46
+    [09/28/25 20:56:37] INFO     Original events found with ids: preprocessing.py:46
                                  {np.str_('boundary'): 1,                           
                                  np.str_('break cnt'): 2,                           
                                  np.str_('instructed_toCloseEyes                    
@@ -226,7 +229,7 @@ corresponding to their respective event markers).
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 134-140
+.. GENERATED FROM PYTHON SOURCE LINES 137-143
 
 Plotting a Single Channel for One Sample
 ----------------------------------------
@@ -235,7 +238,7 @@ It’s always a good practice to verify that the data has been properly loaded
 and processed. Here, we plot a single channel from one sample to ensure the
 signal is present and looks as expected.
 
-.. GENERATED FROM PYTHON SOURCE LINES 142-148
+.. GENERATED FROM PYTHON SOURCE LINES 145-151
 
 .. code-block:: Python
 
@@ -257,12 +260,12 @@ signal is present and looks as expected.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 149-151
+.. GENERATED FROM PYTHON SOURCE LINES 152-154
 
 Features
 --------
 
-.. GENERATED FROM PYTHON SOURCE LINES 151-208
+.. GENERATED FROM PYTHON SOURCE LINES 154-211
 
 .. code-block:: Python
 
@@ -331,12 +334,12 @@ Features
 
  .. code-block:: none
 
-    Extracting features:   0%|          | 0/1 [00:00<?, ?it/s]    Extracting features: 100%|██████████| 1/1 [00:00<00:00,  1.20it/s]    Extracting features: 100%|██████████| 1/1 [00:00<00:00,  1.20it/s]
+    Extracting features:   0%|          | 0/1 [00:00<?, ?it/s]    Extracting features: 100%|██████████| 1/1 [00:00<00:00,  1.21it/s]    Extracting features: 100%|██████████| 1/1 [00:00<00:00,  1.21it/s]
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 209-211
+.. GENERATED FROM PYTHON SOURCE LINES 212-214
 
 .. code-block:: Python
 
@@ -369,9 +372,9 @@ Features
         <tr style="text-align: right;">
           <th></th>
           <th>i_dataset</th>
+          <th>i_stop_in_trial</th>
           <th>i_start_in_trial</th>
           <th>i_window_in_trial</th>
-          <th>i_stop_in_trial</th>
           <th>sig_mean_E22</th>
           <th>sig_mean_E9</th>
           <th>sig_mean_E33</th>
@@ -455,9 +458,9 @@ Features
         <tr>
           <th>0</th>
           <td>0</td>
+          <td>8348</td>
           <td>8092</td>
           <td>0</td>
-          <td>8348</td>
           <td>5.647381e-07</td>
           <td>-2.509246e-06</td>
           <td>8.135321e-06</td>
@@ -539,9 +542,9 @@ Features
         <tr>
           <th>1</th>
           <td>0</td>
+          <td>8604</td>
           <td>8348</td>
           <td>0</td>
-          <td>8604</td>
           <td>1.130721e-06</td>
           <td>1.416919e-07</td>
           <td>-6.768836e-07</td>
@@ -623,9 +626,9 @@ Features
         <tr>
           <th>2</th>
           <td>0</td>
+          <td>8860</td>
           <td>8604</td>
           <td>0</td>
-          <td>8860</td>
           <td>-8.737620e-07</td>
           <td>2.451451e-07</td>
           <td>3.854794e-07</td>
@@ -707,9 +710,9 @@ Features
         <tr>
           <th>3</th>
           <td>0</td>
+          <td>9116</td>
           <td>8860</td>
           <td>0</td>
-          <td>9116</td>
           <td>3.482372e-07</td>
           <td>-5.419446e-07</td>
           <td>-7.257668e-08</td>
@@ -791,9 +794,9 @@ Features
         <tr>
           <th>4</th>
           <td>0</td>
+          <td>9372</td>
           <td>9116</td>
           <td>0</td>
-          <td>9372</td>
           <td>1.078094e-06</td>
           <td>2.234204e-06</td>
           <td>8.322080e-07</td>
@@ -959,9 +962,9 @@ Features
         <tr>
           <th>65</th>
           <td>0</td>
+          <td>43419</td>
           <td>43163</td>
           <td>0</td>
-          <td>43419</td>
           <td>2.604641e-06</td>
           <td>2.696607e-06</td>
           <td>3.207271e-07</td>
@@ -1043,9 +1046,9 @@ Features
         <tr>
           <th>66</th>
           <td>0</td>
+          <td>43675</td>
           <td>43419</td>
           <td>0</td>
-          <td>43675</td>
           <td>-1.158709e-06</td>
           <td>-9.353611e-07</td>
           <td>6.243006e-07</td>
@@ -1127,9 +1130,9 @@ Features
         <tr>
           <th>67</th>
           <td>0</td>
+          <td>43931</td>
           <td>43675</td>
           <td>0</td>
-          <td>43931</td>
           <td>9.350503e-07</td>
           <td>7.273056e-07</td>
           <td>-3.974258e-07</td>
@@ -1211,9 +1214,9 @@ Features
         <tr>
           <th>68</th>
           <td>0</td>
+          <td>44187</td>
           <td>43931</td>
           <td>0</td>
-          <td>44187</td>
           <td>-1.334396e-04</td>
           <td>-4.969487e-05</td>
           <td>-2.251352e-06</td>
@@ -1295,9 +1298,9 @@ Features
         <tr>
           <th>69</th>
           <td>0</td>
+          <td>44443</td>
           <td>44187</td>
           <td>0</td>
-          <td>44443</td>
           <td>1.370442e-04</td>
           <td>3.529626e-05</td>
           <td>3.354098e-06</td>
@@ -1384,7 +1387,7 @@ Features
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 212-215
+.. GENERATED FROM PYTHON SOURCE LINES 215-218
 
 .. code-block:: Python
 
@@ -1398,7 +1401,7 @@ Features
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 216-218
+.. GENERATED FROM PYTHON SOURCE LINES 219-221
 
 .. code-block:: Python
 
@@ -2446,7 +2449,7 @@ Features
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 219-242
+.. GENERATED FROM PYTHON SOURCE LINES 222-245
 
 Creating training and test sets
 -------------------------------
@@ -2472,7 +2475,7 @@ test sets.
    objects with a batch size of 10, enabling efficient mini-batch training and
    shuffling.
 
-.. GENERATED FROM PYTHON SOURCE LINES 242-286
+.. GENERATED FROM PYTHON SOURCE LINES 245-289
 
 .. code-block:: Python
 
@@ -2536,7 +2539,7 @@ test sets.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 287-294
+.. GENERATED FROM PYTHON SOURCE LINES 290-297
 
 Check labels
 ------------
@@ -2546,7 +2549,7 @@ functioning correctly. If all labels are 0s (eyes closed) or 1s (eyes open),
 it could indicate an issue with data loading or stratification, requiring
 further investigation.
 
-.. GENERATED FROM PYTHON SOURCE LINES 294-300
+.. GENERATED FROM PYTHON SOURCE LINES 297-303
 
 .. code-block:: Python
 
@@ -2569,7 +2572,7 @@ further investigation.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 301-307
+.. GENERATED FROM PYTHON SOURCE LINES 304-310
 
 Create model
 ------------
@@ -2578,7 +2581,7 @@ The model is a shallow convolutional neural network (ShallowFBCSPNet) with 24
 input channels (EEG channels), 2 output classes (eyes-open and eyes-closed),
 and an input window size of 256 samples (2 seconds of EEG data).
 
-.. GENERATED FROM PYTHON SOURCE LINES 307-324
+.. GENERATED FROM PYTHON SOURCE LINES 310-327
 
 .. code-block:: Python
 
@@ -2651,7 +2654,7 @@ and an input window size of 256 samples (2 seconds of EEG data).
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 325-349
+.. GENERATED FROM PYTHON SOURCE LINES 328-352
 
 Model Training and Evaluation Process
 -------------------------------------
@@ -2678,7 +2681,7 @@ accuracy across six epochs.
    mode on the test set. It computes predictions on normalized data and
    calculates test accuracy by comparing outputs with actual labels.
 
-.. GENERATED FROM PYTHON SOURCE LINES 349-389
+.. GENERATED FROM PYTHON SOURCE LINES 352-392
 
 .. code-block:: Python
 
@@ -2740,7 +2743,7 @@ accuracy across six epochs.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 390-411
+.. GENERATED FROM PYTHON SOURCE LINES 393-414
 
 .. code-block:: Python
 
@@ -2774,7 +2777,7 @@ accuracy across six epochs.
  .. code-block:: none
 
     [LightGBM] [Info] Number of positive: 28, number of negative: 28
-    [LightGBM] [Info] Auto-choosing col-wise multi-threading, the overhead of testing was 0.000381 seconds.
+    [LightGBM] [Info] Auto-choosing col-wise multi-threading, the overhead of testing was 0.000401 seconds.
     You can set `force_col_wise=true` to remove the overhead.
     [LightGBM] [Info] Total Bins 9205
     [LightGBM] [Info] Number of data points in the train set: 56, number of used features: 460
@@ -2885,7 +2888,7 @@ accuracy across six epochs.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 412-416
+.. GENERATED FROM PYTHON SOURCE LINES 415-419
 
 .. code-block:: Python
 
@@ -2911,7 +2914,7 @@ accuracy across six epochs.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 417-418
+.. GENERATED FROM PYTHON SOURCE LINES 420-421
 
 .. code-block:: Python
 
@@ -2937,7 +2940,7 @@ accuracy across six epochs.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 5.302 seconds)
+   **Total running time of the script:** (0 minutes 5.235 seconds)
 
 **Estimated memory usage:**  1342 MB
 

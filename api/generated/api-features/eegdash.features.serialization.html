@@ -476,6 +476,7 @@
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../dataset/api_dataset.html">Datasets API</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.EEGChallengeDataset.html">EEGChallengeDataset</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS001785.html">eegdash.dataset.DS001785</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS001787.html">eegdash.dataset.DS001787</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS001810.html">eegdash.dataset.DS001810</a></li>
@@ -808,7 +809,7 @@
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">delayed</span></code>(function)</p></td>
 <td><p>Decorator used to capture the arguments of a function.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_features_concat_dataset</span></code>(path[, ...])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#eegdash.features.serialization.load_features_concat_dataset" title="eegdash.features.serialization.load_features_concat_dataset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_features_concat_dataset</span></code></a>(path[, ...])</p></td>
 <td><p>Load a stored features dataset from files.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">read_info</span></code>(fname[, verbose])</p></td>
@@ -835,6 +836,28 @@
 </tbody>
 </table>
 </div>
+<dl class="py function">
+<dt class="sig sig-object py" id="eegdash.features.serialization.load_features_concat_dataset">
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.serialization.</span></span><span class="sig-name descname"><span class="pre">load_features_concat_dataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ids_to_load</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/serialization.py#L19-L51"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.serialization.load_features_concat_dataset" title="Link to this definition">#</a></dt>
+<dd><p>Load a stored features dataset from files.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> (<em>str</em><em> | </em><em>pathlib.Path</em>) – Path to the directory of the .fif / -epo.fif and .json files.</p></li>
+<li><p><strong>ids_to_load</strong> (<em>list</em><em> of </em><em>int</em><em> | </em><em>None</em>) – Ids of specific files to load.</p></li>
+<li><p><strong>n_jobs</strong> (<em>int</em>) – Number of jobs to be used to read files in parallel.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>concat_dataset</strong> – A concatenation of multiple eegdash.features.datasets.FeaturesDataset
+instances loaded from the given directory.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="eegdash.features.datasets.html#eegdash.features.datasets.FeaturesConcatDataset" title="eegdash.features.datasets.FeaturesConcatDataset">eegdash.features.datasets.FeaturesConcatDataset</a></p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 
 
@@ -875,6 +898,18 @@
                 <dialog id="pst-secondary-sidebar-modal"></dialog>
                 <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.features.serialization.load_features_concat_dataset"><code class="docutils literal notranslate"><span class="pre">load_features_concat_dataset()</span></code></a></li>
+</ul>
+  </nav></div>
 
   <div class="sidebar-secondary-item">
 

@@ -128,7 +128,7 @@ EEG 2025 Foundation Challenge
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="Many HPC clusters restrict or block network access. It&#x27;s common to have dedicated queues for internet-enabled jobs that differ from GPU queues. This tutorial shows how to use EEGDash offline once a dataset is present on disk.">
+    <div class="sphx-glr-thumbcontainer" tooltip="Many HPC clusters restrict or block network access. It&#x27;s common to have dedicated queues for internet-enabled jobs that differ from GPU queues. This tutorial shows how to use /api/dataset/eegdash.dataset.EEGChallengeDataset offline once a dataset is present on disk.">
 
 .. only:: html
 

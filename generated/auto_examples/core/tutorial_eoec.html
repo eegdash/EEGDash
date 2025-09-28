@@ -527,9 +527,9 @@ to download the full example code.</p>
 <section class="sphx-glr-example-title" id="eyes-open-vs-closed-classification">
 <span id="tutorial-eoec"></span><span id="sphx-glr-generated-auto-examples-core-tutorial-eoec-py"></span><h1>Eyes Open vs. Closed Classification<a class="headerlink" href="#eyes-open-vs-closed-classification" title="Link to this heading">#</a></h1>
 <p>EEGDash example for eyes open vs. closed classification.</p>
-<p>The code below provides an example of using the <em>EEGDash</em> library in combination with PyTorch to develop a deep learning model for analyzing EEG data, specifically for eyes open vs. closed classification in a single subject.</p>
+<p>This example uses the <code class="xref py py-mod docutils literal notranslate"><span class="pre">eegdash</span></code> library in combination with PyTorch to develop a deep learning model for analyzing EEG data, specifically for eyes open vs. closed classification in a single subject.</p>
 <ol class="arabic simple">
-<li><p><strong>Data Retrieval Using EEGDash</strong>: An instance of <em>EEGDashDataset</em> is created to search and retrieve an EEG dataset. At this step, only the metadata is transferred.</p></li>
+<li><p><strong>Data Retrieval Using EEGDash</strong>: An instance of <a class="reference internal" href="../../../api/generated/api-core/eegdash.api.html#eegdash.api.EEGDashDataset" title="eegdash.api.EEGDashDataset"><code class="xref py py-class docutils literal notranslate"><span class="pre">eegdash.api.EEGDashDataset</span></code></a> is created to search and retrieve an EEG dataset. At this step, only the metadata is transferred.</p></li>
 <li><p><strong>Data Preprocessing Using BrainDecode</strong>: This process preprocesses EEG data using Braindecode by reannotating events, selecting specific channels, resampling, filtering, and extracting 2-second epochs, ensuring balanced eyes-open and eyes-closed data for analysis.</p></li>
 <li><p><strong>Creating train and testing sets</strong>: The dataset is split into training (80%) and testing (20%) sets with balanced labels, converted into PyTorch tensors, and wrapped in DataLoader objects for efficient mini-batch training.</p></li>
 <li><p><strong>Model Definition</strong>: The model is a shallow convolutional neural network (ShallowFBCSPNet) with 24 input channels (EEG channels), 2 output classes (eyes-open and eyes-closed).</p></li>
@@ -537,6 +537,8 @@ to download the full example code.</p>
 </ol>
 <section id="data-retrieval-using-eegdash">
 <h2>Data Retrieval Using EEGDash<a class="headerlink" href="#data-retrieval-using-eegdash" title="Link to this heading">#</a></h2>
+<p>This section instantiates <a class="reference internal" href="../../../api/generated/api-core/eegdash.api.html#eegdash.api.EEGDashDataset" title="eegdash.api.EEGDashDataset"><code class="xref py py-class docutils literal notranslate"><span class="pre">eegdash.api.EEGDashDataset</span></code></a> to fetch
+the metadata for the experiment before requesting any recordings.</p>
 <p>First we find one resting state dataset. This dataset contains both eyes open
 and eyes closed data.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
@@ -552,7 +554,7 @@ and eyes closed data.</p>
 <span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[09/28/25 19:13:57] WARNING  Cache directory does not exist, creating api.py:631
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[09/28/25 20:56:27] WARNING  Cache directory does not exist, creating api.py:631
                              it: /home/runner/eegdash
 ╭────────────────────── EEG 2025 Competition Data Notice ──────────────────────╮
 │ This notice is only for users who are participating in the EEG 2025          │
@@ -579,7 +581,7 @@ and eyes closed data.</p>
 </section>
 <section id="data-preprocessing-using-braindecode">
 <h2>Data Preprocessing Using Braindecode<a class="headerlink" href="#data-preprocessing-using-braindecode" title="Link to this heading">#</a></h2>
-<p>[BrainDecode](<a class="reference external" href="https://braindecode.org/stable/install/install.html">https://braindecode.org/stable/install/install.html</a>) is a
+<p><a class="reference external" href="https://braindecode.org/stable/install/install.html">braindecode</a> is a
 specialized library for preprocessing EEG and MEG data. In this dataset, there
 are two key events in the continuous data: <strong>instructed_toCloseEyes</strong>, marking
 the start of a 40-second eyes-closed period, and <strong>instructed_toOpenEyes</strong>,
@@ -588,9 +590,9 @@ indicating the start of a 20-second eyes-open period.</p>
 after the event onset. Similarly, for the eyes-open event, we extract data
 from 5 to 19 seconds after the event onset. This ensures an equal amount of
 data for both conditions. The event extraction is handled by the custom
-function <strong>hbn_ec_ec_reannotation</strong>.</p>
+function <a class="reference internal" href="../../../api/generated/api-core/eegdash.hbn.html#eegdash.hbn.hbn_ec_ec_reannotation" title="eegdash.hbn.preprocessing.hbn_ec_ec_reannotation"><code class="xref py py-func docutils literal notranslate"><span class="pre">eegdash.hbn.preprocessing.hbn_ec_ec_reannotation()</span></code></a>.</p>
 <p>Next, we apply four preprocessing steps in Braindecode:
-1. <strong>Reannotation</strong> of event markers using <cite>hbn_ec_ec_reannotation()</cite>.
+1. <strong>Reannotation</strong> of event markers using <a class="reference internal" href="../../../api/generated/api-core/eegdash.hbn.html#eegdash.hbn.hbn_ec_ec_reannotation" title="eegdash.hbn.preprocessing.hbn_ec_ec_reannotation"><code class="xref py py-func docutils literal notranslate"><span class="pre">eegdash.hbn.preprocessing.hbn_ec_ec_reannotation()</span></code></a>.
 2. <strong>Selection</strong> of 24 specific EEG channels from the original 128.
 3. <strong>Resampling</strong> the EEG data to a frequency of 128 Hz.
 4. <strong>Filtering</strong> the EEG signals to retain frequencies between 1 Hz and 55 Hz.</p>
@@ -608,7 +610,7 @@ corresponding to their respective event markers).</p>
     <span class="n">create_windows_from_events</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">eegdash.hbn.preprocessing</span><span class="w"> </span><span class="kn">import</span> <span class="n">hbn_ec_ec_reannotation</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">eegdash.hbn.preprocessing</span><span class="w"> </span><span class="kn">import</span> <a href="../../../api/generated/api-core/eegdash.hbn.html#eegdash.hbn.hbn_ec_ec_reannotation" title="eegdash.hbn.hbn_ec_ec_reannotation" class="sphx-glr-backref-module-eegdash-hbn sphx-glr-backref-type-py-class"><span class="n">hbn_ec_ec_reannotation</span></a>
 <span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
 
 <span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">RuntimeWarning</span><span class="p">)</span>
@@ -616,7 +618,7 @@ corresponding to their respective event markers).</p>
 
 <span class="c1"># BrainDecode preprocessors</span>
 <span class="n">preprocessors</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="n">hbn_ec_ec_reannotation</span><span class="p">(),</span>
+    <a href="../../../api/generated/api-core/eegdash.hbn.html#eegdash.hbn.hbn_ec_ec_reannotation" title="eegdash.hbn.hbn_ec_ec_reannotation" class="sphx-glr-backref-module-eegdash-hbn sphx-glr-backref-type-py-class"><span class="n">hbn_ec_ec_reannotation</span></a><span class="p">(),</span>
     <span class="n">Preprocessor</span><span class="p">(</span>
         <span class="s2">&quot;pick_channels&quot;</span><span class="p">,</span>
         <span class="n">ch_names</span><span class="o">=</span><span class="p">[</span>
@@ -661,179 +663,179 @@ corresponding to their respective event markers).</p>
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Downloading dataset_description.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading dataset_description.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 40.5B/s]
+Downloading dataset_description.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 38.9B/s]
 
 Downloading participants.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading participants.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 33.1B/s]
+Downloading participants.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 32.2B/s]
 
 Downloading sub-NDARDB033FW5_task-RestingState_events.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARDB033FW5_task-RestingState_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 29.9B/s]
+Downloading sub-NDARDB033FW5_task-RestingState_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 38.8B/s]
 
 Downloading sub-NDARDB033FW5_task-contrastChangeDetection_run-1_events.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARDB033FW5_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 41.0B/s]
+Downloading sub-NDARDB033FW5_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 39.6B/s]
 
 Downloading sub-NDARDB033FW5_task-surroundSupp_run-2_events.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARDB033FW5_task-surroundSupp_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 45.0B/s]
+Downloading sub-NDARDB033FW5_task-surroundSupp_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 37.1B/s]
 
 Downloading sub-NDARDB033FW5_task-contrastChangeDetection_run-2_events.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARDB033FW5_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 41.9B/s]
+Downloading sub-NDARDB033FW5_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 40.7B/s]
 
 Downloading sub-NDARDB033FW5_task-DespicableMe_events.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARDB033FW5_task-DespicableMe_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 55.2B/s]
+Downloading sub-NDARDB033FW5_task-DespicableMe_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 55.7B/s]
 
 Downloading sub-NDARDB033FW5_task-seqLearning8target_events.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARDB033FW5_task-seqLearning8target_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 41.1B/s]
+Downloading sub-NDARDB033FW5_task-seqLearning8target_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 40.7B/s]
 
 Downloading sub-NDARDB033FW5_task-contrastChangeDetection_run-3_events.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARDB033FW5_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 37.3B/s]
+Downloading sub-NDARDB033FW5_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 35.9B/s]
 
 Downloading sub-NDARDB033FW5_task-DiaryOfAWimpyKid_events.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARDB033FW5_task-DiaryOfAWimpyKid_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 53.3B/s]
+Downloading sub-NDARDB033FW5_task-DiaryOfAWimpyKid_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 58.9B/s]
 
 Downloading sub-NDARDB033FW5_task-ThePresent_events.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARDB033FW5_task-ThePresent_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 57.2B/s]
+Downloading sub-NDARDB033FW5_task-ThePresent_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 55.9B/s]
 
 Downloading sub-NDARDB033FW5_task-surroundSupp_run-1_events.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARDB033FW5_task-surroundSupp_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 43.9B/s]
+Downloading sub-NDARDB033FW5_task-surroundSupp_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 41.2B/s]
 
 Downloading sub-NDARDB033FW5_task-FunwithFractals_events.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARDB033FW5_task-FunwithFractals_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 55.3B/s]
+Downloading sub-NDARDB033FW5_task-FunwithFractals_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 55.8B/s]
 
 Downloading task-seqLearning8target_events.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
 Downloading task-seqLearning8target_events.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 37.8B/s]
 
 Downloading task-RestingState_events.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading task-RestingState_events.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 42.4B/s]
+Downloading task-RestingState_events.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 38.9B/s]
 
 Downloading task-surroundSupp_events.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading task-surroundSupp_events.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 39.4B/s]
+Downloading task-surroundSupp_events.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 38.4B/s]
 
 Downloading task-FunwithFractals_events.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading task-FunwithFractals_events.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 46.7B/s]
+Downloading task-FunwithFractals_events.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 39.5B/s]
 
 Downloading task-symbolSearch_events.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading task-symbolSearch_events.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 35.7B/s]
+Downloading task-symbolSearch_events.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 31.6B/s]
 
 Downloading task-ThePresent_events.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading task-ThePresent_events.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 39.3B/s]
+Downloading task-ThePresent_events.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 39.4B/s]
 
 Downloading task-seqLearning6target_events.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading task-seqLearning6target_events.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 44.2B/s]
+Downloading task-seqLearning6target_events.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 38.9B/s]
 
 Downloading task-contrastChangeDetection_events.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading task-contrastChangeDetection_events.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 37.0B/s]
+Downloading task-contrastChangeDetection_events.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 41.0B/s]
 
 Downloading task-DespicableMe_events.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading task-DespicableMe_events.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 19.3B/s]
+Downloading task-DespicableMe_events.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 37.1B/s]
 
 Downloading task-DiaryOfAWimpyKid_events.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading task-DiaryOfAWimpyKid_events.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 41.5B/s]
+Downloading task-DiaryOfAWimpyKid_events.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 37.0B/s]
 
 Downloading sub-NDARDB033FW5_task-ThePresent_eeg.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARDB033FW5_task-ThePresent_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 38.9B/s]
+Downloading sub-NDARDB033FW5_task-ThePresent_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 41.5B/s]
 
 Downloading sub-NDARDB033FW5_task-contrastChangeDetection_run-3_eeg.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARDB033FW5_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 46.4B/s]
+Downloading sub-NDARDB033FW5_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 42.5B/s]
 
 Downloading sub-NDARDB033FW5_task-contrastChangeDetection_run-1_eeg.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARDB033FW5_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 43.9B/s]
+Downloading sub-NDARDB033FW5_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 38.7B/s]
 
 Downloading sub-NDARDB033FW5_task-contrastChangeDetection_run-2_eeg.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARDB033FW5_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 39.9B/s]
+Downloading sub-NDARDB033FW5_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 37.7B/s]
 
 Downloading sub-NDARDB033FW5_task-DiaryOfAWimpyKid_eeg.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARDB033FW5_task-DiaryOfAWimpyKid_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 45.2B/s]
+Downloading sub-NDARDB033FW5_task-DiaryOfAWimpyKid_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 40.8B/s]
 
 Downloading sub-NDARDB033FW5_task-seqLearning8target_eeg.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARDB033FW5_task-seqLearning8target_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 42.0B/s]
+Downloading sub-NDARDB033FW5_task-seqLearning8target_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 35.8B/s]
 
 Downloading sub-NDARDB033FW5_task-RestingState_eeg.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARDB033FW5_task-RestingState_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 36.4B/s]
+Downloading sub-NDARDB033FW5_task-RestingState_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 39.9B/s]
 
 Downloading sub-NDARDB033FW5_task-surroundSupp_run-1_eeg.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARDB033FW5_task-surroundSupp_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 43.9B/s]
+Downloading sub-NDARDB033FW5_task-surroundSupp_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 39.8B/s]
 
 Downloading sub-NDARDB033FW5_task-surroundSupp_run-2_eeg.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARDB033FW5_task-surroundSupp_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 42.9B/s]
+Downloading sub-NDARDB033FW5_task-surroundSupp_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 40.5B/s]
 
 Downloading sub-NDARDB033FW5_task-FunwithFractals_eeg.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARDB033FW5_task-FunwithFractals_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 21.0B/s]
+Downloading sub-NDARDB033FW5_task-FunwithFractals_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 37.8B/s]
 
 Downloading sub-NDARDB033FW5_task-DespicableMe_eeg.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARDB033FW5_task-DespicableMe_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 35.4B/s]
+Downloading sub-NDARDB033FW5_task-DespicableMe_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 38.9B/s]
 
 Downloading task-symbolSearch_eeg.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading task-symbolSearch_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 40.4B/s]
+Downloading task-symbolSearch_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 35.9B/s]
 
 Downloading task-surroundSupp_eeg.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading task-surroundSupp_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 38.6B/s]
+Downloading task-surroundSupp_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 40.1B/s]
 
 Downloading task-contrastChangeDetection_eeg.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading task-contrastChangeDetection_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 40.7B/s]
+Downloading task-contrastChangeDetection_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 37.6B/s]
 
 Downloading task-seqLearning8target_eeg.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading task-seqLearning8target_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 41.3B/s]
+Downloading task-seqLearning8target_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 42.3B/s]
 
 Downloading task-DespicableMe_eeg.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
 Downloading task-DespicableMe_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 41.6B/s]
 
 Downloading task-ThePresent_eeg.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading task-ThePresent_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 40.9B/s]
+Downloading task-ThePresent_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 38.9B/s]
 
 Downloading task-FunwithFractals_eeg.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading task-FunwithFractals_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 43.4B/s]
+Downloading task-FunwithFractals_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 39.1B/s]
 
 Downloading task-RestingState_eeg.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading task-RestingState_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 18.6B/s]
+Downloading task-RestingState_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 39.7B/s]
 
 Downloading task-seqLearning6target_eeg.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading task-seqLearning6target_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 40.0B/s]
+Downloading task-seqLearning6target_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 40.7B/s]
 
 Downloading task-DiaryOfAWimpyKid_eeg.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading task-DiaryOfAWimpyKid_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 39.8B/s]
+Downloading task-DiaryOfAWimpyKid_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 41.2B/s]
 
 Downloading sub-NDARDB033FW5_task-ThePresent_channels.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARDB033FW5_task-ThePresent_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 44.4B/s]
+Downloading sub-NDARDB033FW5_task-ThePresent_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 40.9B/s]
 
 Downloading sub-NDARDB033FW5_task-FunwithFractals_channels.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARDB033FW5_task-FunwithFractals_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 39.0B/s]
+Downloading sub-NDARDB033FW5_task-FunwithFractals_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 38.0B/s]
 
 Downloading sub-NDARDB033FW5_task-DiaryOfAWimpyKid_channels.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARDB033FW5_task-DiaryOfAWimpyKid_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 39.1B/s]
+Downloading sub-NDARDB033FW5_task-DiaryOfAWimpyKid_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 39.2B/s]
 
 Downloading sub-NDARDB033FW5_task-contrastChangeDetection_run-3_channels.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARDB033FW5_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 34.5B/s]
+Downloading sub-NDARDB033FW5_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 38.8B/s]
 
 Downloading sub-NDARDB033FW5_task-surroundSupp_run-2_channels.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARDB033FW5_task-surroundSupp_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 39.0B/s]
+Downloading sub-NDARDB033FW5_task-surroundSupp_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 41.0B/s]
 
 Downloading sub-NDARDB033FW5_task-contrastChangeDetection_run-1_channels.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARDB033FW5_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 42.4B/s]
+Downloading sub-NDARDB033FW5_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 44.0B/s]
 
 Downloading sub-NDARDB033FW5_task-RestingState_channels.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARDB033FW5_task-RestingState_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 45.4B/s]
+Downloading sub-NDARDB033FW5_task-RestingState_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 37.0B/s]
 
 Downloading sub-NDARDB033FW5_task-seqLearning8target_channels.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARDB033FW5_task-seqLearning8target_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 37.6B/s]
+Downloading sub-NDARDB033FW5_task-seqLearning8target_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 38.2B/s]
 
 Downloading sub-NDARDB033FW5_task-surroundSupp_run-1_channels.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARDB033FW5_task-surroundSupp_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 35.0B/s]
+Downloading sub-NDARDB033FW5_task-surroundSupp_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 44.5B/s]
 
 Downloading sub-NDARDB033FW5_task-contrastChangeDetection_run-2_channels.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARDB033FW5_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 39.0B/s]
+Downloading sub-NDARDB033FW5_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 43.0B/s]
 
 Downloading sub-NDARDB033FW5_task-DespicableMe_channels.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARDB033FW5_task-DespicableMe_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 39.9B/s]
+Downloading sub-NDARDB033FW5_task-DespicableMe_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 44.8B/s]
 
 Downloading sub-NDARDB033FW5_task-RestingState_eeg.set:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
 Downloading sub-NDARDB033FW5_task-RestingState_eeg.set: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 1.04B/s]
 Downloading sub-NDARDB033FW5_task-RestingState_eeg.set: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 1.04B/s]
 
 Downloading sub-NDARDB033FW5_task-RestingState_eeg.set:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARDB033FW5_task-RestingState_eeg.set: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 1.01B/s]
-Downloading sub-NDARDB033FW5_task-RestingState_eeg.set: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 1.01B/s]
+Downloading sub-NDARDB033FW5_task-RestingState_eeg.set: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 1.02B/s]
+Downloading sub-NDARDB033FW5_task-RestingState_eeg.set: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 1.02B/s]
 Used Annotations descriptions: [np.str_(&#39;boundary&#39;), np.str_(&#39;break cnt&#39;), np.str_(&#39;instructed_toCloseEyes&#39;), np.str_(&#39;instructed_toOpenEyes&#39;), np.str_(&#39;resting_start&#39;)]
-[09/28/25 19:14:05] INFO     Original events found with ids: preprocessing.py:46
+[09/28/25 20:56:35] INFO     Original events found with ids: preprocessing.py:46
                              {np.str_(&#39;boundary&#39;): 1,
                              np.str_(&#39;break cnt&#39;): 2,
                              np.str_(&#39;instructed_toCloseEyes
@@ -1122,8 +1124,8 @@ Epoch 4, Train accuracy: 0.91, Test accuracy: 0.57
 Epoch 5, Train accuracy: 0.88, Test accuracy: 0.50
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 9.265 seconds)</p>
-<p><strong>Estimated memory usage:</strong>  1372 MB</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 9.460 seconds)</p>
+<p><strong>Estimated memory usage:</strong>  1335 MB</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-generated-auto-examples-core-tutorial-eoec-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../../_downloads/2c592649a2079630923cb072bc1beaf3/tutorial_eoec.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">tutorial_eoec.ipynb</span></code></a></p>

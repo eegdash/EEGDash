@@ -476,6 +476,7 @@
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../dataset/api_dataset.html">Datasets API</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.EEGChallengeDataset.html">EEGChallengeDataset</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS001785.html">eegdash.dataset.DS001785</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS001787.html">eegdash.dataset.DS001787</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS001810.html">eegdash.dataset.DS001810</a></li>
@@ -800,7 +801,7 @@
 <p class="rubric">Functions</p>
 <div class="pst-scrollable-table-container"><table class="autosummary longtable table">
 <tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">bivariate_feature</span></code>(func[, directed])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#eegdash.features.decorators.bivariate_feature" title="eegdash.features.decorators.bivariate_feature"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bivariate_feature</span></code></a>(func[, directed])</p></td>
 <td><p></p></td>
 </tr>
 </tbody>
@@ -821,10 +822,10 @@
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">FeatureExtractor</span></code>(feature_extractors, ...)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">FeatureKind</span></code>(feature_kind)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#eegdash.features.decorators.FeatureKind" title="eegdash.features.decorators.FeatureKind"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FeatureKind</span></code></a>(feature_kind)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">FeaturePredecessor</span></code>(*parent_extractor_type)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#eegdash.features.decorators.FeaturePredecessor" title="eegdash.features.decorators.FeaturePredecessor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FeaturePredecessor</span></code></a>(*parent_extractor_type)</p></td>
 <td><p></p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">MultivariateFeature</span></code>()</p></td>
@@ -836,6 +837,23 @@
 </tbody>
 </table>
 </div>
+<dl class="py class">
+<dt class="sig sig-object py" id="eegdash.features.decorators.FeaturePredecessor">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">eegdash.features.decorators.</span></span><span class="sig-name descname"><span class="pre">FeaturePredecessor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">parent_extractor_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Type</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/decorators.py#L14-L26"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.decorators.FeaturePredecessor" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="eegdash.features.decorators.FeatureKind">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">eegdash.features.decorators.</span></span><span class="sig-name descname"><span class="pre">FeatureKind</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">feature_kind</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="eegdash.features.extractors.html#eegdash.features.extractors.MultivariateFeature" title="eegdash.features.extractors.MultivariateFeature"><span class="pre">MultivariateFeature</span></a></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/decorators.py#L29-L36"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.decorators.FeatureKind" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eegdash.features.decorators.bivariate_feature">
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.decorators.</span></span><span class="sig-name descname"><span class="pre">bivariate_feature</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/decorators.py#L43-L48"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.decorators.bivariate_feature" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
 </section>
 
 
@@ -876,6 +894,20 @@
                 <dialog id="pst-secondary-sidebar-modal"></dialog>
                 <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.features.decorators.FeaturePredecessor"><code class="docutils literal notranslate"><span class="pre">FeaturePredecessor</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.features.decorators.FeatureKind"><code class="docutils literal notranslate"><span class="pre">FeatureKind</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.features.decorators.bivariate_feature"><code class="docutils literal notranslate"><span class="pre">bivariate_feature()</span></code></a></li>
+</ul>
+  </nav></div>
 
   <div class="sidebar-secondary-item">
 

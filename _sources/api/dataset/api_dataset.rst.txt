@@ -16,6 +16,14 @@ EEGDash currently exposes **254 OpenNeuro EEG datasets** that are
 registered dynamically from mongo database. The table below summarises
 the distribution by experimental type as tracked in the summary file.
 
+Base Dataset API
+----------------
+
+.. toctree::
+   :maxdepth: 1
+
+   eegdash.dataset.EEGChallengeDataset
+
 .. list-table:: Dataset counts by experimental type
    :widths: 60 20
    :header-rows: 1

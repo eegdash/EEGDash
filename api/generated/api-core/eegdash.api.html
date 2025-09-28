@@ -476,6 +476,7 @@
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../dataset/api_dataset.html">Datasets API</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.EEGChallengeDataset.html">EEGChallengeDataset</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS001785.html">eegdash.dataset.DS001785</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS001787.html">eegdash.dataset.DS001787</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS001810.html">eegdash.dataset.DS001810</a></li>
@@ -805,15 +806,297 @@ EEG data from S3 for matched records.</p>
 <p class="rubric">Classes</p>
 <div class="pst-scrollable-table-container"><table class="autosummary longtable table">
 <tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">EEGDash</span></code>(*[, is_public, is_staging])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#eegdash.api.EEGDash" title="eegdash.api.EEGDash"><code class="xref py py-obj docutils literal notranslate"><span class="pre">EEGDash</span></code></a>(*[, is_public, is_staging])</p></td>
 <td><p>High-level interface to the EEGDash metadata database.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">EEGDashDataset</span></code>(cache_dir[, query, ...])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#eegdash.api.EEGDashDataset" title="eegdash.api.EEGDashDataset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">EEGDashDataset</span></code></a>(cache_dir[, query, ...])</p></td>
 <td><p>Create a new EEGDashDataset from a given query or local BIDS dataset directory and dataset name.</p></td>
 </tr>
 </tbody>
 </table>
 </div>
+<dl class="py class">
+<dt class="sig sig-object py" id="eegdash.api.EEGDash">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">eegdash.api.</span></span><span class="sig-name descname"><span class="pre">EEGDash</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_public</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_staging</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/api.py#L50-L486"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.api.EEGDash" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>High-level interface to the EEGDash metadata database.</p>
+<p>Provides methods to query, insert, and update metadata records stored in the
+EEGDash MongoDB database (public or private). Also includes utilities to load
+EEG data from S3 for matched records.</p>
+<p>For working with collections of
+recordings as PyTorch datasets, prefer <a class="reference internal" href="#eegdash.api.EEGDashDataset" title="eegdash.api.EEGDashDataset"><code class="xref py py-class docutils literal notranslate"><span class="pre">EEGDashDataset</span></code></a>.</p>
+<p>Create a new EEGDash client.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>is_public</strong> (<em>bool</em><em>, </em><em>default True</em>) – Connect to the public MongoDB database. If <code class="docutils literal notranslate"><span class="pre">False</span></code>, connect to a
+private database instance using the <code class="docutils literal notranslate"><span class="pre">DB_CONNECTION_STRING</span></code> environment
+variable (or value from a <code class="docutils literal notranslate"><span class="pre">.env</span></code> file).</p></li>
+<li><p><strong>is_staging</strong> (<em>bool</em><em>, </em><em>default False</em>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, use the staging database (<code class="docutils literal notranslate"><span class="pre">eegdashstaging</span></code>); otherwise
+use the production database (<code class="docutils literal notranslate"><span class="pre">eegdash</span></code>).</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">eegdash</span> <span class="o">=</span> <span class="n">EEGDash</span><span class="p">()</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="eegdash.api.EEGDash.find">
+<span class="sig-name descname"><span class="pre">find</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Mapping</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/api.py#L105-L168"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.api.EEGDash.find" title="Link to this definition">#</a></dt>
+<dd><p>Find records in the MongoDB collection.</p>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">eegdash</span><span class="o">.</span><span class="n">find</span><span class="p">({</span><span class="s2">&quot;dataset&quot;</span><span class="p">:</span> <span class="s2">&quot;ds002718&quot;</span><span class="p">,</span> <span class="s2">&quot;subject&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;$in&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;012&quot;</span><span class="p">,</span> <span class="s2">&quot;013&quot;</span><span class="p">]}})</span>  <span class="c1"># pre-built query</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">eegdash</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">dataset</span><span class="o">=</span><span class="s2">&quot;ds002718&quot;</span><span class="p">,</span> <span class="n">subject</span><span class="o">=</span><span class="s2">&quot;012&quot;</span><span class="p">)</span>  <span class="c1"># keyword filters</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">eegdash</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">dataset</span><span class="o">=</span><span class="s2">&quot;ds002718&quot;</span><span class="p">,</span> <span class="n">subject</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;012&quot;</span><span class="p">,</span> <span class="s2">&quot;013&quot;</span><span class="p">])</span>  <span class="c1"># sequence -&gt; $in</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">eegdash</span><span class="o">.</span><span class="n">find</span><span class="p">({})</span>  <span class="c1"># fetch all (use with care)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">eegdash</span><span class="o">.</span><span class="n">find</span><span class="p">({</span><span class="s2">&quot;dataset&quot;</span><span class="p">:</span> <span class="s2">&quot;ds002718&quot;</span><span class="p">},</span> <span class="n">subject</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;012&quot;</span><span class="p">,</span> <span class="s2">&quot;013&quot;</span><span class="p">])</span>  <span class="c1"># combine query + kwargs (AND)</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>query</strong> (<em>dict</em><em>, </em><em>optional</em>) – Complete MongoDB query dictionary. This is a positional-only
+argument.</p></li>
+<li><p><strong>**kwargs</strong> – User-friendly field filters that are converted to a MongoDB query.
+Values can be scalars (e.g., <code class="docutils literal notranslate"><span class="pre">&quot;sub-01&quot;</span></code>) or sequences (translated
+to <code class="docutils literal notranslate"><span class="pre">$in</span></code> queries).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>DB records that match the query.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eegdash.api.EEGDash.exist">
+<span class="sig-name descname"><span class="pre">exist</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/api.py#L170-L212"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.api.EEGDash.exist" title="Link to this definition">#</a></dt>
+<dd><p>Return True if at least one record matches the query, else False.</p>
+<p>This is a lightweight existence check that uses MongoDB’s <code class="docutils literal notranslate"><span class="pre">find_one</span></code>
+instead of fetching all matching documents (which would be wasteful in
+both time and memory for broad queries). Only a restricted set of
+fields is accepted to avoid accidental full scans caused by malformed
+or unsupported keys.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>query</strong> (<em>dict</em>) – Mapping of allowed field(s) to value(s). Allowed keys: <code class="docutils literal notranslate"><span class="pre">data_name</span></code>
+and <code class="docutils literal notranslate"><span class="pre">dataset</span></code>. The query must not be empty.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if at least one matching record exists; False otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>TypeError</strong> – If <code class="docutils literal notranslate"><span class="pre">query</span></code> is not a dict.</p></li>
+<li><p><strong>ValueError</strong> – If <code class="docutils literal notranslate"><span class="pre">query</span></code> is empty or contains unsupported field names.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eegdash.api.EEGDash.add_bids_dataset">
+<span class="sig-name descname"><span class="pre">add_bids_dataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/api.py#L328-L389"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.api.EEGDash.add_bids_dataset" title="Link to this definition">#</a></dt>
+<dd><p>Scan a local BIDS dataset and upsert records into MongoDB.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dataset</strong> (<em>str</em>) – Dataset identifier (e.g., <code class="docutils literal notranslate"><span class="pre">&quot;ds002718&quot;</span></code>).</p></li>
+<li><p><strong>data_dir</strong> (<em>str</em>) – Path to the local BIDS dataset directory.</p></li>
+<li><p><strong>overwrite</strong> (<em>bool</em><em>, </em><em>default True</em>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, update existing records when encountered; otherwise,
+skip records that already exist.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If called on a public client <code class="docutils literal notranslate"><span class="pre">(is_public=True)</span></code>.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eegdash.api.EEGDash.add">
+<span class="sig-name descname"><span class="pre">add</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">record</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/api.py#L395-L406"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.api.EEGDash.add" title="Link to this definition">#</a></dt>
+<dd><p>Add a single record to the MongoDB collection.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eegdash.api.EEGDash.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">record</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/api.py#L412-L429"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.api.EEGDash.update" title="Link to this definition">#</a></dt>
+<dd><p>Update a single record in the MongoDB collection.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>record</strong> (<em>dict</em>) – Record content to set at the matching <code class="docutils literal notranslate"><span class="pre">data_name</span></code>.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eegdash.api.EEGDash.exists">
+<span class="sig-name descname"><span class="pre">exists</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/api.py#L431-L433"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.api.EEGDash.exists" title="Link to this definition">#</a></dt>
+<dd><p>Alias for <a class="reference internal" href="#eegdash.api.EEGDash.exist" title="eegdash.api.EEGDash.exist"><code class="xref py py-meth docutils literal notranslate"><span class="pre">exist()</span></code></a> provided for API clarity.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eegdash.api.EEGDash.remove_field">
+<span class="sig-name descname"><span class="pre">remove_field</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">record</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/api.py#L435-L448"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.api.EEGDash.remove_field" title="Link to this definition">#</a></dt>
+<dd><p>Remove a specific field from a record in the MongoDB collection.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>record</strong> (<em>dict</em>) – Record identifying object with <code class="docutils literal notranslate"><span class="pre">data_name</span></code>.</p></li>
+<li><p><strong>field</strong> (<em>str</em>) – Field name to remove.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eegdash.api.EEGDash.remove_field_from_db">
+<span class="sig-name descname"><span class="pre">remove_field_from_db</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">field</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/api.py#L450-L459"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.api.EEGDash.remove_field_from_db" title="Link to this definition">#</a></dt>
+<dd><p>Remove a field from all records (destructive).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>field</strong> (<em>str</em>) – Field name to remove from every document.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="eegdash.api.EEGDash.collection">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">collection</span></span><a class="headerlink" href="#eegdash.api.EEGDash.collection" title="Link to this definition">#</a></dt>
+<dd><p>Return the MongoDB collection object.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eegdash.api.EEGDash.close">
+<span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/api.py#L466-L476"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.api.EEGDash.close" title="Link to this definition">#</a></dt>
+<dd><p>Backward-compatibility no-op; connections are managed globally.</p>
+<p class="rubric">Notes</p>
+<p>Connections are managed by <code class="xref py py-class docutils literal notranslate"><span class="pre">MongoConnectionManager</span></code>. Use
+<a class="reference internal" href="#eegdash.api.EEGDash.close_all_connections" title="eegdash.api.EEGDash.close_all_connections"><code class="xref py py-meth docutils literal notranslate"><span class="pre">close_all_connections()</span></code></a> to explicitly close all clients.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eegdash.api.EEGDash.close_all_connections">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">close_all_connections</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/api.py#L478-L481"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.api.EEGDash.close_all_connections" title="Link to this definition">#</a></dt>
+<dd><p>Close all MongoDB client connections managed by the singleton.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="eegdash.api.EEGDashDataset">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">eegdash.api.</span></span><span class="sig-name descname"><span class="pre">EEGDashDataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cache_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">query</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description_fields</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">['subject',</span> <span class="pre">'session',</span> <span class="pre">'run',</span> <span class="pre">'task',</span> <span class="pre">'age',</span> <span class="pre">'gender',</span> <span class="pre">'sex']</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s3_bucket</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">records</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">download</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">-1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eeg_dash_instance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#eegdash.api.EEGDash" title="eegdash.api.EEGDash"><span class="pre">EEGDash</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/api.py#L489-L950"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.api.EEGDashDataset" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseConcatDataset</span></code></p>
+<p>Create a new EEGDashDataset from a given query or local BIDS dataset directory
+and dataset name. An EEGDashDataset is pooled collection of EEGDashBaseDataset
+instances (individual recordings) and is a subclass of braindecode’s BaseConcatDataset.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cache_dir</strong> (<em>str</em><em> | </em><em>Path</em>) – Directory where data are cached locally.</p></li>
+<li><p><strong>query</strong> (<em>dict</em><em> | </em><em>None</em>) – Raw MongoDB query to filter records. If provided, it is merged with
+keyword filtering arguments (see <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code>) using logical AND.
+You must provide at least a <code class="docutils literal notranslate"><span class="pre">dataset</span></code> (either in <code class="docutils literal notranslate"><span class="pre">query</span></code> or
+as a keyword argument). Only fields in <code class="docutils literal notranslate"><span class="pre">ALLOWED_QUERY_FIELDS</span></code> are
+considered for filtering.</p></li>
+<li><p><strong>description_fields</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – Fields to extract from each record and include in dataset descriptions
+(e.g., “subject”, “session”, “run”, “task”).</p></li>
+<li><p><strong>s3_bucket</strong> (<em>str</em><em> | </em><em>None</em>) – Optional S3 bucket URI (e.g., “s3://mybucket”) to use instead of the
+default OpenNeuro bucket when downloading data files.</p></li>
+<li><p><strong>records</strong> (<em>list</em><em>[</em><em>dict</em><em>] </em><em>| </em><em>None</em>) – Pre-fetched metadata records. If provided, the dataset is constructed
+directly from these records and no MongoDB query is performed.</p></li>
+<li><p><strong>download</strong> (<em>bool</em><em>, </em><em>default True</em>) – If False, load from local BIDS files only. Local data are expected
+under <code class="docutils literal notranslate"><span class="pre">cache_dir</span> <span class="pre">/</span> <span class="pre">dataset</span></code>; no DB or S3 access is attempted.</p></li>
+<li><p><strong>n_jobs</strong> (<em>int</em>) – Number of parallel jobs to use where applicable (-1 uses all cores).</p></li>
+<li><p><strong>eeg_dash_instance</strong> (<a class="reference internal" href="#eegdash.api.EEGDash" title="eegdash.api.EEGDash"><em>EEGDash</em></a><em> | </em><em>None</em>) – Optional existing EEGDash client to reuse for DB queries. If None,
+a new client is created on demand, not used in the case of no download.</p></li>
+<li><p><strong>**kwargs</strong> (<em>dict</em>) – <p>Additional keyword arguments serving two purposes:</p>
+<ul>
+<li><p>Filtering: any keys present in <code class="docutils literal notranslate"><span class="pre">ALLOWED_QUERY_FIELDS</span></code> are treated as
+query filters (e.g., <code class="docutils literal notranslate"><span class="pre">dataset</span></code>, <code class="docutils literal notranslate"><span class="pre">subject</span></code>, <code class="docutils literal notranslate"><span class="pre">task</span></code>, …).</p></li>
+<li><p>Dataset options: remaining keys are forwarded to
+<code class="docutils literal notranslate"><span class="pre">EEGDashBaseDataset</span></code>.</p></li>
+</ul>
+</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<p>Basic usage with dataset and subject filtering:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">eegdash</span><span class="w"> </span><span class="kn">import</span> <span class="n">EEGDashDataset</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dataset</span> <span class="o">=</span> <span class="n">EEGDashDataset</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">cache_dir</span><span class="o">=</span><span class="s2">&quot;./data&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">dataset</span><span class="o">=</span><span class="s2">&quot;ds002718&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">subject</span><span class="o">=</span><span class="s2">&quot;012&quot;</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Number of recordings: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">dataset</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Filter by multiple subjects and specific task:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">subjects</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;012&quot;</span><span class="p">,</span> <span class="s2">&quot;013&quot;</span><span class="p">,</span> <span class="s2">&quot;014&quot;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dataset</span> <span class="o">=</span> <span class="n">EEGDashDataset</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">cache_dir</span><span class="o">=</span><span class="s2">&quot;./data&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">dataset</span><span class="o">=</span><span class="s2">&quot;ds002718&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">subject</span><span class="o">=</span><span class="n">subjects</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">task</span><span class="o">=</span><span class="s2">&quot;RestingState&quot;</span>
+<span class="gp">... </span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Load and inspect EEG data from recordings:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">dataset</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="n">recording</span> <span class="o">=</span> <span class="n">dataset</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="gp">... </span>    <span class="n">raw</span> <span class="o">=</span> <span class="n">recording</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Sampling rate: </span><span class="si">{</span><span class="n">raw</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;sfreq&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> Hz&quot;</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Number of channels: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">raw</span><span class="o">.</span><span class="n">ch_names</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Duration: </span><span class="si">{</span><span class="n">raw</span><span class="o">.</span><span class="n">times</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> seconds&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Advanced filtering with raw MongoDB queries:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">eegdash</span><span class="w"> </span><span class="kn">import</span> <span class="n">EEGDashDataset</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">query</span> <span class="o">=</span> <span class="p">{</span>
+<span class="gp">... </span>    <span class="s2">&quot;dataset&quot;</span><span class="p">:</span> <span class="s2">&quot;ds002718&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s2">&quot;subject&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;$in&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;012&quot;</span><span class="p">,</span> <span class="s2">&quot;013&quot;</span><span class="p">]},</span>
+<span class="gp">... </span>    <span class="s2">&quot;task&quot;</span><span class="p">:</span> <span class="s2">&quot;RestingState&quot;</span>
+<span class="gp">... </span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dataset</span> <span class="o">=</span> <span class="n">EEGDashDataset</span><span class="p">(</span><span class="n">cache_dir</span><span class="o">=</span><span class="s2">&quot;./data&quot;</span><span class="p">,</span> <span class="n">query</span><span class="o">=</span><span class="n">query</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Working with dataset collections and braindecode integration:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># EEGDashDataset is a braindecode BaseConcatDataset</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">recording</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">dataset</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">:</span>  <span class="c1"># limit output</span>
+<span class="gp">... </span>        <span class="k">break</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Recording </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">recording</span><span class="o">.</span><span class="n">description</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="n">raw</span> <span class="o">=</span> <span class="n">recording</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Channels: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">raw</span><span class="o">.</span><span class="n">ch_names</span><span class="p">)</span><span class="si">}</span><span class="s2">, Duration: </span><span class="si">{</span><span class="n">raw</span><span class="o">.</span><span class="n">times</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">s&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Initialize self.  See help(type(self)) for accurate signature.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cache_dir</strong> – The description is missing.</p></li>
+<li><p><strong>query</strong> – The description is missing.</p></li>
+<li><p><strong>description_fields</strong> – The description is missing.</p></li>
+<li><p><strong>s3_bucket</strong> – The description is missing.</p></li>
+<li><p><strong>records</strong> – The description is missing.</p></li>
+<li><p><strong>download</strong> – The description is missing.</p></li>
+<li><p><strong>n_jobs</strong> – The description is missing.</p></li>
+<li><p><strong>eeg_dash_instance</strong> – The description is missing.</p></li>
+<li><p><strong>**kwargs</strong> – The description is missing.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 
 
@@ -854,6 +1137,32 @@ EEG data from S3 for matched records.</p>
                 <dialog id="pst-secondary-sidebar-modal"></dialog>
                 <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.api.EEGDash"><code class="docutils literal notranslate"><span class="pre">EEGDash</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.api.EEGDash.find"><code class="docutils literal notranslate"><span class="pre">EEGDash.find()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.api.EEGDash.exist"><code class="docutils literal notranslate"><span class="pre">EEGDash.exist()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.api.EEGDash.add_bids_dataset"><code class="docutils literal notranslate"><span class="pre">EEGDash.add_bids_dataset()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.api.EEGDash.add"><code class="docutils literal notranslate"><span class="pre">EEGDash.add()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.api.EEGDash.update"><code class="docutils literal notranslate"><span class="pre">EEGDash.update()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.api.EEGDash.exists"><code class="docutils literal notranslate"><span class="pre">EEGDash.exists()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.api.EEGDash.remove_field"><code class="docutils literal notranslate"><span class="pre">EEGDash.remove_field()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.api.EEGDash.remove_field_from_db"><code class="docutils literal notranslate"><span class="pre">EEGDash.remove_field_from_db()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.api.EEGDash.collection"><code class="docutils literal notranslate"><span class="pre">EEGDash.collection</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.api.EEGDash.close"><code class="docutils literal notranslate"><span class="pre">EEGDash.close()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.api.EEGDash.close_all_connections"><code class="docutils literal notranslate"><span class="pre">EEGDash.close_all_connections()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.api.EEGDashDataset"><code class="docutils literal notranslate"><span class="pre">EEGDashDataset</span></code></a></li>
+</ul>
+  </nav></div>
 
   <div class="sidebar-secondary-item">
 

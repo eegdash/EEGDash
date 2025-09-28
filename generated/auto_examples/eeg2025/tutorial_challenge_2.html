@@ -577,14 +577,13 @@ Ensure the dataset is available locally. If not, see the
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>If you need additional explanations on the
-<a class="reference external" href="https://eeglab.org/EEGDash/api/eegdash.html#eegdash.EEGChallengeDataset">EEGChallengeDataset</a>
-class, dataloading, <a class="reference external" href="https://braindecode.org/stable/models/models_table.html">braindecode</a>’s
+<a class="reference internal" href="../../../api/dataset/eegdash.dataset.EEGChallengeDataset.html"><span class="doc">EEGChallengeDataset</span></a> class, dataloading,
+<a class="reference external" href="https://braindecode.org/stable/models/models_table.html">braindecode</a>’s
 deep learning models, or brain decoding in general, please refer to the
 start-kit of challenge 1 which delves deeper into these topics.</p>
 </div>
 <p>More contents will be released during the competition inside the
-<a class="reference external" href="https://eeglab.org/EEGDash/overview.html">eegdash</a>
-<a class="reference external" href="https://eeglab.org/EEGDash/generated/auto_examples/index.html">examples webpage</a>.</p>
+<code class="xref py py-mod docutils literal notranslate"><span class="pre">eegdash</span></code> <a class="reference external" href="https://eeglab.org/EEGDash/generated/auto_examples/index.html">examples webpage</a>.</p>
 <div class="important admonition">
 <p class="admonition-title">Prerequisites</p>
 <p>The tutorial assumes prior knowledge of:</p>
@@ -673,7 +672,8 @@ If contestants are successful in this task, it could pave the way for more objec
 </section>
 <section id="define-local-path-and-down-load-the-data">
 <h2><a class="toc-backref" href="#id8" role="doc-backlink">Define local path and (down)load the data</a><a class="headerlink" href="#define-local-path-and-down-load-the-data" title="Link to this heading">#</a></h2>
-<p>In this challenge 2 example, we load the EEG 2025 release using EEG Dash.
+<p>In this challenge 2 example, we load the EEG 2025 release using
+<a class="reference internal" href="../../../api/dataset/eegdash.dataset.EEGChallengeDataset.html"><span class="doc">EEGChallengeDataset</span></a>.
 <strong>Note:</strong> in this example notebook, we load the contrast change detection task from one mini release only as an example. Naturally, you are encouraged to train your models on all complete releases, using data from all the tasks you deem relevant.</p>
 <p>The first step is to define the cache folder!
 Match tests’ cache layout under ~/eegdash_cache/eeg_challenge_cache</p>
@@ -1034,76 +1034,76 @@ Forward/backward pass size (MB): 16.65
 Params size (MB): 0.22
 Estimated Total Size (MB): 16.97
 ================================================================================================================================================================
-Epoch 0 - step 0, loss: 0.6516181826591492
-Epoch 0 - step 1, loss: 0.6739382147789001
-Epoch 0 - step 2, loss: 0.6753214001655579
-Epoch 0 - step 3, loss: 0.644891619682312
-Epoch 0 - step 4, loss: 0.6515814065933228
-Epoch 0 - step 5, loss: 0.6300197839736938
-Epoch 0 - step 6, loss: 0.6207839846611023
-Epoch 0 - step 7, loss: 0.6974747776985168
-Epoch 0 - step 8, loss: 0.7327316999435425
-Epoch 0 - step 9, loss: 0.702186644077301
-Epoch 0 - step 10, loss: 0.6543700695037842
-Epoch 0 - step 11, loss: 0.6439085602760315
-Epoch 0 - step 12, loss: 0.6484693288803101
-Epoch 0 - step 13, loss: 0.5989719033241272
-Epoch 0 - step 14, loss: 0.6621933579444885
-Epoch 0 - step 15, loss: 0.6292209625244141
-Epoch 0 - step 16, loss: 0.6618649363517761
-Epoch 0 - step 17, loss: 0.6184121966362
-Epoch 0 - step 18, loss: 0.6629713177680969
-Epoch 0 - step 19, loss: 0.5926529765129089
-Epoch 0 - step 20, loss: 0.6401370167732239
-Epoch 0 - step 21, loss: 0.6854920387268066
-Epoch 0 - step 22, loss: 0.6966366171836853
-Epoch 0 - step 23, loss: 0.6717182993888855
-Epoch 0 - step 24, loss: 0.6793345212936401
-Epoch 0 - step 25, loss: 0.6436673998832703
-Epoch 0 - step 26, loss: 0.6000059843063354
-Epoch 0 - step 27, loss: 0.6014109253883362
-Epoch 0 - step 28, loss: 0.6664526462554932
-Epoch 0 - step 29, loss: 0.6236861348152161
-Epoch 0 - step 30, loss: 0.625282883644104
-Epoch 0 - step 31, loss: 0.6022945642471313
-Epoch 0 - step 32, loss: 0.6754221320152283
-Epoch 0 - step 33, loss: 0.6740419864654541
-Epoch 0 - step 34, loss: 0.6731807589530945
-Epoch 0 - step 35, loss: 0.6877804398536682
-Epoch 0 - step 36, loss: 0.7159335613250732
-Epoch 0 - step 37, loss: 0.6625339984893799
-Epoch 0 - step 38, loss: 0.6487506628036499
-Epoch 0 - step 39, loss: 0.6703910231590271
-Epoch 0 - step 40, loss: 0.6917022466659546
-Epoch 0 - step 41, loss: 0.6097450852394104
-Epoch 0 - step 42, loss: 0.6858481168746948
-Epoch 0 - step 43, loss: 0.6122286319732666
-Epoch 0 - step 44, loss: 0.6324355602264404
-Epoch 0 - step 45, loss: 0.6295729279518127
-Epoch 0 - step 46, loss: 0.7187749147415161
-Epoch 0 - step 47, loss: 0.6338855624198914
-Epoch 0 - step 48, loss: 0.6872661709785461
-Epoch 0 - step 49, loss: 0.5991184115409851
-Epoch 0 - step 50, loss: 0.6834961771965027
-Epoch 0 - step 51, loss: 0.6801490187644958
-Epoch 0 - step 52, loss: 0.6133056879043579
-Epoch 0 - step 53, loss: 0.6077145338058472
-Epoch 0 - step 54, loss: 0.6325498819351196
-Epoch 0 - step 55, loss: 0.6212705373764038
-Epoch 0 - step 56, loss: 0.6578575968742371
-Epoch 0 - step 57, loss: 0.6930758953094482
-Epoch 0 - step 58, loss: 0.6687589287757874
-Epoch 0 - step 59, loss: 0.6282708644866943
-Epoch 0 - step 60, loss: 0.6323423385620117
-Epoch 0 - step 61, loss: 0.620349645614624
-Epoch 0 - step 62, loss: 0.5699783563613892
-Epoch 0 - step 63, loss: 0.6394991874694824
-Epoch 0 - step 64, loss: 0.7035912275314331
+Epoch 0 - step 0, loss: 0.6709326505661011
+Epoch 0 - step 1, loss: 0.6642090082168579
+Epoch 0 - step 2, loss: 0.6977351307868958
+Epoch 0 - step 3, loss: 0.6521109938621521
+Epoch 0 - step 4, loss: 0.6644507050514221
+Epoch 0 - step 5, loss: 0.630898118019104
+Epoch 0 - step 6, loss: 0.6282192468643188
+Epoch 0 - step 7, loss: 0.673184335231781
+Epoch 0 - step 8, loss: 0.7315203547477722
+Epoch 0 - step 9, loss: 0.7018580436706543
+Epoch 0 - step 10, loss: 0.6535619497299194
+Epoch 0 - step 11, loss: 0.6562889814376831
+Epoch 0 - step 12, loss: 0.6423693299293518
+Epoch 0 - step 13, loss: 0.5998878479003906
+Epoch 0 - step 14, loss: 0.6573944687843323
+Epoch 0 - step 15, loss: 0.6122074723243713
+Epoch 0 - step 16, loss: 0.6307826042175293
+Epoch 0 - step 17, loss: 0.604771077632904
+Epoch 0 - step 18, loss: 0.6631288528442383
+Epoch 0 - step 19, loss: 0.5836570858955383
+Epoch 0 - step 20, loss: 0.632917582988739
+Epoch 0 - step 21, loss: 0.6988281607627869
+Epoch 0 - step 22, loss: 0.6980960369110107
+Epoch 0 - step 23, loss: 0.6983425617218018
+Epoch 0 - step 24, loss: 0.6644375324249268
+Epoch 0 - step 25, loss: 0.6334565281867981
+Epoch 0 - step 26, loss: 0.6058604717254639
+Epoch 0 - step 27, loss: 0.6148165464401245
+Epoch 0 - step 28, loss: 0.6418114900588989
+Epoch 0 - step 29, loss: 0.63897705078125
+Epoch 0 - step 30, loss: 0.6072613000869751
+Epoch 0 - step 31, loss: 0.5732001662254333
+Epoch 0 - step 32, loss: 0.6844057440757751
+Epoch 0 - step 33, loss: 0.6758961081504822
+Epoch 0 - step 34, loss: 0.670036792755127
+Epoch 0 - step 35, loss: 0.6741783022880554
+Epoch 0 - step 36, loss: 0.714120626449585
+Epoch 0 - step 37, loss: 0.659372091293335
+Epoch 0 - step 38, loss: 0.6487736701965332
+Epoch 0 - step 39, loss: 0.6743377447128296
+Epoch 0 - step 40, loss: 0.6831778883934021
+Epoch 0 - step 41, loss: 0.6038610935211182
+Epoch 0 - step 42, loss: 0.6909850239753723
+Epoch 0 - step 43, loss: 0.6160635352134705
+Epoch 0 - step 44, loss: 0.631697416305542
+Epoch 0 - step 45, loss: 0.6223537921905518
+Epoch 0 - step 46, loss: 0.71044921875
+Epoch 0 - step 47, loss: 0.6257899403572083
+Epoch 0 - step 48, loss: 0.6844595670700073
+Epoch 0 - step 49, loss: 0.5942226052284241
+Epoch 0 - step 50, loss: 0.6724868416786194
+Epoch 0 - step 51, loss: 0.6652864813804626
+Epoch 0 - step 52, loss: 0.6221785545349121
+Epoch 0 - step 53, loss: 0.5992839336395264
+Epoch 0 - step 54, loss: 0.6195598840713501
+Epoch 0 - step 55, loss: 0.6114451885223389
+Epoch 0 - step 56, loss: 0.6552357077598572
+Epoch 0 - step 57, loss: 0.6704607009887695
+Epoch 0 - step 58, loss: 0.670920729637146
+Epoch 0 - step 59, loss: 0.601935863494873
+Epoch 0 - step 60, loss: 0.6237753629684448
+Epoch 0 - step 61, loss: 0.6048508882522583
+Epoch 0 - step 62, loss: 0.5675835609436035
+Epoch 0 - step 63, loss: 0.6382749080657959
+Epoch 0 - step 64, loss: 0.6743878126144409
 Model saved as &#39;weights_challenge_2.pt&#39;
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (6 minutes 7.025 seconds)</p>
-<p><strong>Estimated memory usage:</strong>  2789 MB</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (6 minutes 8.194 seconds)</p>
+<p><strong>Estimated memory usage:</strong>  2782 MB</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-generated-auto-examples-eeg2025-tutorial-challenge-2-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../../_downloads/06c8d94b7e0b8be2de39fdc122dd12bb/tutorial_challenge_2.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">tutorial_challenge_2.ipynb</span></code></a></p>

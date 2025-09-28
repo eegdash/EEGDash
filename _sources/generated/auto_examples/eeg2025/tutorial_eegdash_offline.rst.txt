@@ -23,10 +23,11 @@ Working Offline with EEGDash
 
 Many HPC clusters restrict or block network access. It's common to have
 dedicated queues for internet-enabled jobs that differ from GPU queues.
-This tutorial shows how to use EEGDash offline once a dataset is present
-on disk.
+This tutorial shows how to use :doc:`EEGChallengeDataset
+</api/dataset/eegdash.dataset.EEGChallengeDataset>` offline once a dataset is
+present on disk.
 
-.. GENERATED FROM PYTHON SOURCE LINES 10-27
+.. GENERATED FROM PYTHON SOURCE LINES 11-29
 
 .. code-block:: Python
 
@@ -38,8 +39,9 @@ on disk.
     from eegdash.dataset.dataset import EEGChallengeDataset
 
 
-    # We'll use Release R2 as an example (HBN subset). EEGChallengeDataset uses a
-    # suffixed cache folder for the competition data (e.g., "-bdf-mini").
+    # We'll use Release R2 as an example (HBN subset).
+    # :doc:`EEGChallengeDataset </api/dataset/eegdash.dataset.EEGChallengeDataset>`
+    # uses a suffixed cache folder for the competition data (e.g., "-bdf-mini").
     release = "R2"
     dataset_id = RELEASE_TO_OPENNEURO_DATASET_MAP[release]
     task = "RestingState"
@@ -54,7 +56,7 @@ on disk.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 28-36
+.. GENERATED FROM PYTHON SOURCE LINES 30-38
 
 Step 1: Populate the local cache (Online)
 -----------------------------------------
@@ -65,7 +67,7 @@ this section.
 
 To keep this example self-contained, we prefetch the data here.
 
-.. GENERATED FROM PYTHON SOURCE LINES 36-50
+.. GENERATED FROM PYTHON SOURCE LINES 38-52
 
 .. code-block:: Python
 
@@ -112,16 +114,18 @@ To keep this example self-contained, we prefetch the data here.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 51-57
+.. GENERATED FROM PYTHON SOURCE LINES 53-61
 
 Step 2: Basic Offline Usage
 ---------------------------
 Once the data is cached locally, you can interact with it without needing an
 internet connection. The key is to instantiate your dataset object with the
-``download=False`` flag. This tells EEGDash to look for data in the
-``cache_dir`` instead of trying to connect to the database or S3.
+``download=False`` flag. This tells :doc:`EEGChallengeDataset
+</api/dataset/eegdash.dataset.EEGChallengeDataset>`
+to look for data in the ``cache_dir`` instead of trying to connect to the
+database or S3.
 
-.. GENERATED FROM PYTHON SOURCE LINES 57-75
+.. GENERATED FROM PYTHON SOURCE LINES 61-79
 
 .. code-block:: Python
 
@@ -176,16 +180,17 @@ internet connection. The key is to instantiate your dataset object with the
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 76-82
+.. GENERATED FROM PYTHON SOURCE LINES 80-87
 
 Step 3: Filtering Entities Offline
 ----------------------------------
 Even without a database connection, you can still filter your dataset by
-BIDS entities like subject, session, or task. When ``download=False``, EEGDash
+BIDS entities like subject, session, or task. When ``download=False``,
+:doc:`EEGChallengeDataset </api/dataset/eegdash.dataset.EEGChallengeDataset>`
 uses the BIDS directory structure and filenames to apply these filters. This
 example shows how to load data for a specific subject from the local cache.
 
-.. GENERATED FROM PYTHON SOURCE LINES 82-100
+.. GENERATED FROM PYTHON SOURCE LINES 87-105
 
 .. code-block:: Python
 
@@ -239,7 +244,7 @@ example shows how to load data for a specific subject from the local cache.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 101-111
+.. GENERATED FROM PYTHON SOURCE LINES 106-116
 
 Step 4: Comparing Online vs. Offline Data
 -----------------------------------------
@@ -252,7 +257,7 @@ and correct.
 If you have network access, you can uncomment the block below to download and
 compare shapes.
 
-.. GENERATED FROM PYTHON SOURCE LINES 111-118
+.. GENERATED FROM PYTHON SOURCE LINES 116-123
 
 .. code-block:: Python
 
@@ -278,7 +283,7 @@ compare shapes.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 119-124
+.. GENERATED FROM PYTHON SOURCE LINES 124-129
 
 Step 4.1: Comparing Descriptions, Online vs. Offline Data
 ---------------------------------------------------------
@@ -286,7 +291,7 @@ Step 4.1: Comparing Descriptions, Online vs. Offline Data
 If you have network access, you can uncomment the block below to download and
 compare shapes.
 
-.. GENERATED FROM PYTHON SOURCE LINES 124-132
+.. GENERATED FROM PYTHON SOURCE LINES 129-137
 
 .. code-block:: Python
 
@@ -359,7 +364,7 @@ compare shapes.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 133-139
+.. GENERATED FROM PYTHON SOURCE LINES 138-144
 
 Notes and troubleshooting
 -------------------------
@@ -371,9 +376,9 @@ Notes and troubleshooting
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 44.884 seconds)
+   **Total running time of the script:** (0 minutes 43.678 seconds)
 
-**Estimated memory usage:**  1058 MB
+**Estimated memory usage:**  1026 MB
 
 
 .. _sphx_glr_download_generated_auto_examples_eeg2025_tutorial_eegdash_offline.py:

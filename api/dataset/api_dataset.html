@@ -68,7 +68,7 @@
     <link rel="icon" href="../../_static/eegdash_icon.png"/>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="eegdash.dataset.DS001785" href="eegdash.dataset.DS001785.html" />
+    <link rel="next" title="EEGChallengeDataset" href="eegdash.dataset.EEGChallengeDataset.html" />
     <link rel="prev" title="eegdash.features.feature_bank" href="../generated/api-features/eegdash.features.feature_bank.html" />
   
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -476,6 +476,7 @@
 </ul>
 </details></li>
 <li class="toctree-l1 current active has-children"><a class="current reference internal" href="#">Datasets API</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.EEGChallengeDataset.html">EEGChallengeDataset</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.DS001785.html">eegdash.dataset.DS001785</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.DS001787.html">eegdash.dataset.DS001787</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.DS001810.html">eegdash.dataset.DS001810</a></li>
@@ -796,12 +797,20 @@
 <h1>Datasets API<a class="headerlink" href="#datasets-api" title="Link to this heading">#</a></h1>
 <p>The <code class="xref py py-mod docutils literal notranslate"><span class="pre">eegdash.dataset</span></code> package exposes dynamically registered dataset
 classes. See <a class="reference internal" href="eegdash.dataset.html"><span class="doc">eegdash.dataset package</span></a> for the module-level API, including
-<code class="xref py py-class docutils literal notranslate"><span class="pre">EEGChallengeDataset</span></code> and helper utilities.</p>
+<a class="reference internal" href="eegdash.dataset.EEGChallengeDataset.html#eegdash.dataset.EEGChallengeDataset" title="eegdash.dataset.EEGChallengeDataset"><code class="xref py py-class docutils literal notranslate"><span class="pre">EEGChallengeDataset</span></code></a> and helper utilities.</p>
 <section id="dataset-overview">
 <h2>Dataset Overview<a class="headerlink" href="#dataset-overview" title="Link to this heading">#</a></h2>
 <p>EEGDash currently exposes <strong>254 OpenNeuro EEG datasets</strong> that are
 registered dynamically from mongo database. The table below summarises
 the distribution by experimental type as tracked in the summary file.</p>
+</section>
+<section id="base-dataset-api">
+<h2>Base Dataset API<a class="headerlink" href="#base-dataset-api" title="Link to this heading">#</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="eegdash.dataset.EEGChallengeDataset.html">EEGChallengeDataset</a></li>
+</ul>
+</div>
 <div class="pst-scrollable-table-container"><table class="table" id="id1">
 <caption><span class="caption-text">Dataset counts by experimental type</span><a class="headerlink" href="#id1" title="Link to this table">#</a></caption>
 <colgroup>
@@ -1147,11 +1156,11 @@ the distribution by experimental type as tracked in the summary file.</p>
       </div>
     </a>
     <a class="right-next"
-       href="eegdash.dataset.DS001785.html"
+       href="eegdash.dataset.EEGChallengeDataset.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">eegdash.dataset.DS001785</p>
+        <p class="prev-next-title">EEGChallengeDataset</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -1175,6 +1184,7 @@ the distribution by experimental type as tracked in the summary file.</p>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dataset-overview">Dataset Overview</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#base-dataset-api">Base Dataset API</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#all-datasets">All Datasets</a></li>
 </ul>
   </nav></div>

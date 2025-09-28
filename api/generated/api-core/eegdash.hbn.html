@@ -476,6 +476,7 @@
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../dataset/api_dataset.html">Datasets API</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.EEGChallengeDataset.html">EEGChallengeDataset</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS001785.html">eegdash.dataset.DS001785</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS001787.html">eegdash.dataset.DS001787</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS001810.html">eegdash.dataset.DS001810</a></li>
@@ -804,19 +805,19 @@ tailored for HBN EEG data analysis.</p>
 <p class="rubric">Functions</p>
 <div class="pst-scrollable-table-container"><table class="autosummary longtable table">
 <tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">build_trial_table</span></code>(events_df)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#eegdash.hbn.build_trial_table" title="eegdash.hbn.build_trial_table"><code class="xref py py-obj docutils literal notranslate"><span class="pre">build_trial_table</span></code></a>(events_df)</p></td>
 <td><p>One row per contrast trial with stimulus/response metrics.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">annotate_trials_with_target</span></code>(raw[, ...])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#eegdash.hbn.annotate_trials_with_target" title="eegdash.hbn.annotate_trials_with_target"><code class="xref py py-obj docutils literal notranslate"><span class="pre">annotate_trials_with_target</span></code></a>(raw[, ...])</p></td>
 <td><p>Create 'contrast_trial_start' annotations with float target in extras.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_aux_anchors</span></code>(raw[, stim_desc, resp_desc])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#eegdash.hbn.add_aux_anchors" title="eegdash.hbn.add_aux_anchors"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_aux_anchors</span></code></a>(raw[, stim_desc, resp_desc])</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_extras_columns</span></code>(windows_concat_ds, ...[, ...])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#eegdash.hbn.add_extras_columns" title="eegdash.hbn.add_extras_columns"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_extras_columns</span></code></a>(windows_concat_ds, ...[, ...])</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">keep_only_recordings_with</span></code>(desc, concat_ds)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#eegdash.hbn.keep_only_recordings_with" title="eegdash.hbn.keep_only_recordings_with"><code class="xref py py-obj docutils literal notranslate"><span class="pre">keep_only_recordings_with</span></code></a>(desc, concat_ds)</p></td>
 <td><p></p></td>
 </tr>
 </tbody>
@@ -825,12 +826,62 @@ tailored for HBN EEG data analysis.</p>
 <p class="rubric">Classes</p>
 <div class="pst-scrollable-table-container"><table class="autosummary longtable table">
 <tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">hbn_ec_ec_reannotation</span></code>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#eegdash.hbn.hbn_ec_ec_reannotation" title="eegdash.hbn.hbn_ec_ec_reannotation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hbn_ec_ec_reannotation</span></code></a>()</p></td>
 <td><p>Preprocessor to reannotate the raw data for eyes open and eyes closed events.</p></td>
 </tr>
 </tbody>
 </table>
 </div>
+<dl class="py class">
+<dt class="sig sig-object py" id="eegdash.hbn.hbn_ec_ec_reannotation">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">eegdash.hbn.</span></span><span class="sig-name descname"><span class="pre">hbn_ec_ec_reannotation</span></span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/hbn/preprocessing.py#L20-L72"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.hbn.hbn_ec_ec_reannotation" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Preprocessor</span></code></p>
+<p>Preprocessor to reannotate the raw data for eyes open and eyes closed events.</p>
+<p>This processor is designed for HBN datasets.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="eegdash.hbn.hbn_ec_ec_reannotation.transform">
+<span class="sig-name descname"><span class="pre">transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">raw</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/hbn/preprocessing.py#L30-L72"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.hbn.hbn_ec_ec_reannotation.transform" title="Link to this definition">#</a></dt>
+<dd><p>Reannotate the raw data to create new events for eyes open and eyes closed</p>
+<p>This function modifies the raw MNE object by creating new events based on
+the existing annotations for “instructed_toCloseEyes” and “instructed_toOpenEyes”.
+It generates new events every 2 seconds within specified time ranges after
+the original events, and replaces the existing annotations with these new events.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>raw</strong> (<em>mne.io.Raw</em>) – The raw MNE object containing EEG data and annotations.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eegdash.hbn.build_trial_table">
+<span class="sig-prename descclassname"><span class="pre">eegdash.hbn.</span></span><span class="sig-name descname"><span class="pre">build_trial_table</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">events_df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/hbn/windows.py#L23-L92"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.hbn.build_trial_table" title="Link to this definition">#</a></dt>
+<dd><p>One row per contrast trial with stimulus/response metrics.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eegdash.hbn.annotate_trials_with_target">
+<span class="sig-prename descclassname"><span class="pre">eegdash.hbn.</span></span><span class="sig-name descname"><span class="pre">annotate_trials_with_target</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">raw</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_field</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'rt_from_stimulus'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epoch_length</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">require_stimulus</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">require_response</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/hbn/windows.py#L117-L176"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.hbn.annotate_trials_with_target" title="Link to this definition">#</a></dt>
+<dd><p>Create ‘contrast_trial_start’ annotations with float target in extras.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eegdash.hbn.add_aux_anchors">
+<span class="sig-prename descclassname"><span class="pre">eegdash.hbn.</span></span><span class="sig-name descname"><span class="pre">add_aux_anchors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">raw</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stim_desc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'stimulus_anchor'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resp_desc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'response_anchor'</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/hbn/windows.py#L179-L227"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.hbn.add_aux_anchors" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eegdash.hbn.add_extras_columns">
+<span class="sig-prename descclassname"><span class="pre">eegdash.hbn.</span></span><span class="sig-name descname"><span class="pre">add_extras_columns</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">windows_concat_ds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">original_concat_ds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">desc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'contrast_trial_start'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keys</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">('target',</span> <span class="pre">'rt_from_stimulus',</span> <span class="pre">'rt_from_trialstart',</span> <span class="pre">'stimulus_onset',</span> <span class="pre">'response_onset',</span> <span class="pre">'correct',</span> <span class="pre">'response_type')</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/hbn/windows.py#L230-L303"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.hbn.add_extras_columns" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eegdash.hbn.keep_only_recordings_with">
+<span class="sig-prename descclassname"><span class="pre">eegdash.hbn.</span></span><span class="sig-name descname"><span class="pre">keep_only_recordings_with</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">desc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">concat_ds</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/hbn/windows.py#L306-L315"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.hbn.keep_only_recordings_with" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
 </section>
 
 
@@ -871,6 +922,26 @@ tailored for HBN EEG data analysis.</p>
                 <dialog id="pst-secondary-sidebar-modal"></dialog>
                 <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.hbn.hbn_ec_ec_reannotation"><code class="docutils literal notranslate"><span class="pre">hbn_ec_ec_reannotation</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.hbn.hbn_ec_ec_reannotation.transform"><code class="docutils literal notranslate"><span class="pre">hbn_ec_ec_reannotation.transform()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.hbn.build_trial_table"><code class="docutils literal notranslate"><span class="pre">build_trial_table()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.hbn.annotate_trials_with_target"><code class="docutils literal notranslate"><span class="pre">annotate_trials_with_target()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.hbn.add_aux_anchors"><code class="docutils literal notranslate"><span class="pre">add_aux_anchors()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.hbn.add_extras_columns"><code class="docutils literal notranslate"><span class="pre">add_extras_columns()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.hbn.keep_only_recordings_with"><code class="docutils literal notranslate"><span class="pre">keep_only_recordings_with()</span></code></a></li>
+</ul>
+  </nav></div>
 
   <div class="sidebar-secondary-item">
 

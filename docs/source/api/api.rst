@@ -11,9 +11,10 @@ The EEGDash API reference curates everything you need to integrate, extend,
 and automate EEGDash—from core dataset helpers to feature extraction and rich
 dataset metadata.
 
-******************
-API Components
-******************
+The focus of EEGDash is interopinteroperability, extensibility, and ease of use.
+
+The API is organized into three main components:
+
 
 .. grid:: 1
    :gutter: 4

@@ -19,14 +19,14 @@ The archive is currently still in :bdg-danger:`beta testing` mode, so be kind.
 
 .. tab-set::
 
-   .. tab-item:: Landscape
+   .. tab-item:: Dataset Table
 
-      .. include:: dataset_summary/bubble.rst
+      .. include:: dataset_summary/table.rst
 
    .. tab-item:: Participant KDE
 
       .. include:: dataset_summary/kde.rst
 
-   .. tab-item:: Dataset Table
+   .. tab-item:: Landscape
 
-      .. include:: dataset_summary/table.rst
+      .. include:: dataset_summary/bubble.rst

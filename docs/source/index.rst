@@ -54,6 +54,7 @@ The archive is currently still in :bdg-danger:`beta testing` mode, so be kind.
    :hidden:
 
    Installing <install/install>
+   User Guide <user_guide>
    API <api/api>
    Dataset Catalog <dataset_summary>
    Examples <generated/auto_examples/index>

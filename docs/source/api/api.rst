@@ -19,7 +19,7 @@ dataset metadata.
 
       Get Started
 
-   .. button-link:: dataset/api_dataset.html
+   .. button-link:: ../dataset_summary.html
       :color: secondary
       :ref-type: doc
       :shadow:

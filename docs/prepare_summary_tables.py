@@ -10,7 +10,6 @@ import plotly.graph_objects as go
 from scipy.stats import gaussian_kde
 from table_tag_utils import wrap_tags
 
-
 DOCS_DIR = Path(__file__).resolve().parent
 STATIC_DATASET_DIR = DOCS_DIR / "source" / "_static" / "dataset_generated"
 

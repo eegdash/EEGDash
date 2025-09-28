@@ -272,7 +272,7 @@ Dataset Overview
 ----------------
 
 EEGDash currently exposes **{dataset_count} OpenNeuro EEG datasets** that are
-registered dynamically from ``dataset_summary.csv``. The table below summarises
+registered dynamically from mongo database. The table below summarises
 the distribution by experimental type as tracked in the summary file.
 
 .. list-table:: Dataset counts by experimental type

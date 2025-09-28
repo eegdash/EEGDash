@@ -227,7 +227,7 @@ def gen_datasets_bubble(
             x_field: x_label,
         },
         color_discrete_map=MODALITY_COLOR_MAP,
-        title="Dataset Landscape",
+        title="",
         category_orders={
             "modality_label": [
                 label
@@ -265,7 +265,7 @@ def gen_datasets_bubble(
             size=14,
         ),
         title=dict(
-            text="Dataset Landscape",
+            text="",
             x=0.01,
             xanchor="left",
             y=0.98,
@@ -686,7 +686,7 @@ def main(source_dir: str, target_dir: str):
                     ),
                     margin=dict(l=120, r=40, t=80, b=80),
                     title=dict(
-                        text="Participant Distribution by Modality",
+                        text="",
                         x=0.01,
                         xanchor="left",
                         y=0.98,

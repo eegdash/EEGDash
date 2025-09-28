@@ -13,6 +13,7 @@ EEGDash can be installed via pip from `PyPI <eegdash-pypi_>`_.
 Below are the installation commands for the most common use cases.
 
 .. code-block:: bash
+   :class: eegdash-snippet
 
    pip install eegdash
 

@@ -4,8 +4,9 @@ Working Offline with EEGDash
 
 Many HPC clusters restrict or block network access. It's common to have
 dedicated queues for internet-enabled jobs that differ from GPU queues.
-This tutorial shows how to use EEGDash offline once a dataset is present
-on disk.
+This tutorial shows how to use :doc:`EEGChallengeDataset
+</api/dataset/eegdash.dataset.EEGChallengeDataset>` offline once a dataset is
+present on disk.
 """
 
 from pathlib import Path
@@ -15,8 +16,9 @@ from eegdash.const import RELEASE_TO_OPENNEURO_DATASET_MAP
 from eegdash.dataset.dataset import EEGChallengeDataset
 
 
-# We'll use Release R2 as an example (HBN subset). EEGChallengeDataset uses a
-# suffixed cache folder for the competition data (e.g., "-bdf-mini").
+# We'll use Release R2 as an example (HBN subset).
+# :doc:`EEGChallengeDataset </api/dataset/eegdash.dataset.EEGChallengeDataset>`
+# uses a suffixed cache folder for the competition data (e.g., "-bdf-mini").
 release = "R2"
 dataset_id = RELEASE_TO_OPENNEURO_DATASET_MAP[release]
 task = "RestingState"
@@ -52,8 +54,10 @@ _ = Parallel(n_jobs=-1)(delayed(lambda d: d.raw)(d) for d in ds_online.datasets)
 # ---------------------------
 # Once the data is cached locally, you can interact with it without needing an
 # internet connection. The key is to instantiate your dataset object with the
-# ``download=False`` flag. This tells EEGDash to look for data in the
-# ``cache_dir`` instead of trying to connect to the database or S3.
+# ``download=False`` flag. This tells :doc:`EEGChallengeDataset
+# </api/dataset/eegdash.dataset.EEGChallengeDataset>`
+# to look for data in the ``cache_dir`` instead of trying to connect to the
+# database or S3.
 
 
 # Here we check that the local cache folder exists
@@ -76,7 +80,8 @@ if ds_offline.datasets:
 # Step 3: Filtering Entities Offline
 # ----------------------------------
 # Even without a database connection, you can still filter your dataset by
-# BIDS entities like subject, session, or task. When ``download=False``, EEGDash
+# BIDS entities like subject, session, or task. When ``download=False``,
+# :doc:`EEGChallengeDataset </api/dataset/eegdash.dataset.EEGChallengeDataset>`
 # uses the BIDS directory structure and filenames to apply these filters. This
 # example shows how to load data for a specific subject from the local cache.
 

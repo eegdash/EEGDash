@@ -80,6 +80,7 @@ docs = [
   "sphinx_rtd_theme",
   "pydata-sphinx-theme",
   "sphinx-autobuild",
+  "sphinx-copybutton",
   "sphinx-sitemap",
   "numpydoc",
   "memory_profiler",

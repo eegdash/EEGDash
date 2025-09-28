@@ -66,8 +66,22 @@ html_logo = "_static/eegdash_icon.svg"
 html_favicon = "_static/eegdash_icon.png"
 html_title = "EEG Dash"
 html_short_title = "EEG Dash"
-html_css_files = ["custom.css"]
-html_js_files = []
+html_css_files = [
+    "https://cdn.datatables.net/v/bm/dt-1.13.4/datatables.min.css",
+    "https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css",
+    "https://cdn.datatables.net/select/1.7.0/css/select.dataTables.min.css",
+    "https://cdn.datatables.net/searchpanes/2.3.1/css/searchPanes.dataTables.min.css",
+    "custom.css",
+]
+html_js_files = [
+    "https://code.jquery.com/jquery-3.7.1.min.js",
+    "https://cdn.datatables.net/v/bm/dt-1.13.4/datatables.min.js",
+    "https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js",
+    "https://cdn.datatables.net/select/1.7.0/js/dataTables.select.min.js",
+    "https://cdn.datatables.net/searchpanes/2.3.1/js/dataTables.searchPanes.min.js",
+    "js/tag-palette.js",
+    "js/datatables-init.js",
+]
 
 # Required for sphinx-sitemap: set the canonical base URL of the site
 # Make sure this matches the actual published docs URL and ends with '/'

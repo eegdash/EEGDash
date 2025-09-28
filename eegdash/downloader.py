@@ -10,15 +10,10 @@ between the EEGDash metadata database and the actual EEG data stored in the clou
 """
 
 import re
-import tempfile
 from pathlib import Path
 from typing import Any
-from urllib.parse import urlsplit
 
-import mne
-import numpy as np
 import s3fs
-import xarray as xr
 from fsspec.callbacks import TqdmCallback
 
 
@@ -106,82 +101,3 @@ def _filesystem_get(filesystem: s3fs.S3FileSystem, s3path: str, filepath: Path):
     )
     filesystem.get(s3path, str(filepath), callback=callback)
     return filepath
-
-
-def load_eeg_from_s3(s3path: str):
-    """Load EEG data from an S3 URI into an ``xarray.DataArray``.
-
-    Preserves the original filename, downloads sidecar files when applicable
-    (e.g., ``.fdt`` for EEGLAB, ``.vmrk``/``.eeg`` for BrainVision), and uses
-    MNE's direct readers.
-
-    Parameters
-    ----------
-    s3path : str
-        An S3 URI (should start with "s3://").
-
-    Returns
-    -------
-    xr.DataArray
-        EEG data with dimensions ``("channel", "time")``.
-
-    Raises
-    ------
-    ValueError
-        If the file extension is unsupported.
-
-    """
-    filesystem = get_s3_filesystem()
-    # choose a temp dir so sidecars can be colocated
-    with tempfile.TemporaryDirectory() as tmpdir:
-        # Derive local filenames from the S3 key to keep base name consistent
-        s3_key = urlsplit(s3path).path  # e.g., "/dsXXXX/sub-.../..._eeg.set"
-        basename = Path(s3_key).name
-        ext = Path(basename).suffix.lower()
-        local_main = Path(tmpdir) / basename
-
-        # Download main file
-        with (
-            filesystem.open(s3path, mode="rb") as fsrc,
-            open(local_main, "wb") as fdst,
-        ):
-            fdst.write(fsrc.read())
-
-        # Determine and fetch any required sidecars
-        sidecars: list[str] = []
-        if ext == ".set":  # EEGLAB
-            sidecars = [".fdt"]
-        elif ext == ".vhdr":  # BrainVision
-            sidecars = [".vmrk", ".eeg", ".dat", ".raw"]
-
-        for sc_ext in sidecars:
-            sc_key = s3_key[: -len(ext)] + sc_ext
-            sc_uri = f"s3://{urlsplit(s3path).netloc}{sc_key}"
-            try:
-                # If sidecar exists, download next to the main file
-                info = filesystem.info(sc_uri)
-                if info:
-                    sc_local = Path(tmpdir) / Path(sc_key).name
-                    with (
-                        filesystem.open(sc_uri, mode="rb") as fsrc,
-                        open(sc_local, "wb") as fdst,
-                    ):
-                        fdst.write(fsrc.read())
-            except Exception:
-                # Sidecar not present; skip silently
-                pass
-
-        # Read using appropriate MNE reader
-        raw = mne.io.read_raw(str(local_main), preload=True, verbose=False)
-
-        data = raw.get_data()
-        fs = raw.info["sfreq"]
-        max_time = data.shape[1] / fs
-        time_steps = np.linspace(0, max_time, data.shape[1]).squeeze()
-        channel_names = raw.ch_names
-
-        return xr.DataArray(
-            data=data,
-            dims=["channel", "time"],
-            coords={"time": time_steps, "channel": channel_names},
-        )

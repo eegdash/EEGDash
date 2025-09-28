@@ -5,7 +5,7 @@ Working Offline with EEGDash
 Many HPC clusters restrict or block network access. It's common to have
 dedicated queues for internet-enabled jobs that differ from GPU queues.
 This tutorial shows how to use :doc:`EEGChallengeDataset
-<api/dataset/eegdash.dataset.EEGChallengeDataset>` offline once a dataset is
+</api/dataset/eegdash.dataset.EEGChallengeDataset>` offline once a dataset is
 present on disk.
 """
 
@@ -17,8 +17,8 @@ from eegdash.dataset.dataset import EEGChallengeDataset
 
 
 # We'll use Release R2 as an example (HBN subset).
-# :class:`eegdash.dataset.EEGChallengeDataset` uses a suffixed cache folder for
-# the competition data (e.g., "-bdf-mini").
+# :doc:`EEGChallengeDataset </api/dataset/eegdash.dataset.EEGChallengeDataset>`
+# uses a suffixed cache folder for the competition data (e.g., "-bdf-mini").
 release = "R2"
 dataset_id = RELEASE_TO_OPENNEURO_DATASET_MAP[release]
 task = "RestingState"
@@ -54,7 +54,8 @@ _ = Parallel(n_jobs=-1)(delayed(lambda d: d.raw)(d) for d in ds_online.datasets)
 # ---------------------------
 # Once the data is cached locally, you can interact with it without needing an
 # internet connection. The key is to instantiate your dataset object with the
-# ``download=False`` flag. This tells :class:`eegdash.dataset.EEGChallengeDataset`
+# ``download=False`` flag. This tells :doc:`EEGChallengeDataset
+# </api/dataset/eegdash.dataset.EEGChallengeDataset>`
 # to look for data in the ``cache_dir`` instead of trying to connect to the
 # database or S3.
 
@@ -80,9 +81,9 @@ if ds_offline.datasets:
 # ----------------------------------
 # Even without a database connection, you can still filter your dataset by
 # BIDS entities like subject, session, or task. When ``download=False``,
-# :class:`eegdash.dataset.EEGChallengeDataset` uses the BIDS directory structure
-# and filenames to apply these filters. This example shows how to load data for
-# a specific subject from the local cache.
+# :doc:`EEGChallengeDataset </api/dataset/eegdash.dataset.EEGChallengeDataset>`
+# uses the BIDS directory structure and filenames to apply these filters. This
+# example shows how to load data for a specific subject from the local cache.
 
 ds_offline_sub = EEGChallengeDataset(
     cache_dir=cache_dir,

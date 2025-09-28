@@ -36,6 +36,7 @@ extensions = [
     "sphinx.ext.intersphinx",
     "sphinx.ext.githubpages",
     "sphinx.ext.linkcode",
+    "sphinx.ext.graphviz",
     "sphinx.ext.napoleon",
     "sphinx_design",
     "numpydoc",
@@ -51,6 +52,7 @@ exclude_patterns = ["build", "Thumbs.db", ".DS_Store"]
 autosummary_generate = True
 # Include members that are imported into modules (e.g., re-exported dataset classes)
 autosummary_imported_members = True
+autosummary_ignore_module_all = False
 
 # Suppress benign warnings
 suppress_warnings = [

@@ -41,6 +41,7 @@ extensions = [
     "numpydoc",
     "sphinx_gallery.gen_gallery",
     "sphinx_sitemap",
+    "sphinx_copybutton",
 ]
 
 templates_path = ["_templates"]
@@ -564,3 +565,7 @@ def setup(app):
 
 # Configure sitemap URL format (omit .html where possible)
 sitemap_url_scheme = "{link}"
+
+# Copy button configuration: strip common interactive prompts when copying
+copybutton_prompt_text = r">>> |\\$ |# "
+copybutton_prompt_is_regexp = True

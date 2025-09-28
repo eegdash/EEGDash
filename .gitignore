@@ -43,3 +43,5 @@ data/
 *.json
 *.isorted
 *.py.isorted
+
+examples/eeg2025/weights*

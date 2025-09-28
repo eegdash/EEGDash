@@ -45,3 +45,5 @@ data/
 *.py.isorted
 
 examples/eeg2025/weights*
+# Generated dataset visualizations
+docs/source/_static/dataset_generated/

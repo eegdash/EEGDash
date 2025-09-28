@@ -1,6 +1,7 @@
 import glob
 from argparse import ArgumentParser
 from pathlib import Path
+from shutil import copyfile
 
 import numpy as np
 import pandas as pd
@@ -8,6 +9,10 @@ import plotly.express as px
 import plotly.graph_objects as go
 from scipy.stats import gaussian_kde
 from table_tag_utils import wrap_tags
+
+
+DOCS_DIR = Path(__file__).resolve().parent
+STATIC_DATASET_DIR = DOCS_DIR / "source" / "_static" / "dataset_generated"
 
 
 MODALITY_CANONICAL = {
@@ -277,7 +282,7 @@ def gen_datasets_bubble(
     # Add CSS and loading indicator for immediate proper sizing
     html_content = fig.to_html(
         full_html=False,
-        include_plotlyjs="cdn",
+        include_plotlyjs=False,
         div_id="dataset-bubble",
         config={
             "responsive": True,
@@ -359,13 +364,18 @@ def human_readable_size(num_bytes: int) -> str:
     return "0 B"
 
 
+def get_dataset_url(name: str) -> str:
+    """Generate dataset URL for plots (relative to dataset summary page)."""
+    name = name.strip()
+    return f"api/dataset/eegdash.dataset.{name.upper()}.html"
+
+
 def wrap_dataset_name(name: str):
     # Remove any surrounding whitespace
     name = name.strip()
-    # Link to the package-level dataset page and the class anchor
-    # Dynamic classes are re-exported in ``eegdash.dataset`` so anchors resolve as:
-    #   api/eegdash.dataset.html#eegdash.dataset.<CLASS>
-    url = f"api/eegdash.dataset.html#eegdash.dataset.{name.upper()}"
+    # Link to the individual dataset API page
+    # Updated structure: api/dataset/eegdash.dataset.<CLASS>.html
+    url = f"api/dataset/eegdash.dataset.{name.upper()}.html"
     return f'<a href="{url}">{name.upper()}</a>'
 
 
@@ -495,6 +505,7 @@ def prepare_table(df: pd.DataFrame):
 def main(source_dir: str, target_dir: str):
     target_dir = Path(target_dir)
     target_dir.mkdir(parents=True, exist_ok=True)
+    STATIC_DATASET_DIR.mkdir(parents=True, exist_ok=True)
     files = glob.glob(str(Path(source_dir) / "dataset" / "*.csv"))
     for f in files:
         target_file = target_dir / Path(f).name
@@ -504,9 +515,9 @@ def main(source_dir: str, target_dir: str):
         )  # , sep=";")
         # Generate bubble chart from the raw data to have access to size_bytes
         # Use x-axis as number of records for better spread
-        gen_datasets_bubble(
-            df_raw, str(target_dir / "dataset_bubble.html"), x_var="records"
-        )
+        bubble_path = target_dir / "dataset_bubble.html"
+        gen_datasets_bubble(df_raw, str(bubble_path), x_var="records")
+        copyfile(bubble_path, STATIC_DATASET_DIR / bubble_path.name)
 
         df = prepare_table(df_raw)
         # preserve int values
@@ -554,10 +565,10 @@ def main(source_dir: str, target_dir: str):
             escape=False,
             table_id="datasets-table",
         )
-        with open(
-            f"{target_dir}/dataset_summary_table.html", "+w", encoding="utf-8"
-        ) as f:
+        table_path = target_dir / "dataset_summary_table.html"
+        with open(table_path, "+w", encoding="utf-8") as f:
             f.write(html_table)
+        copyfile(table_path, STATIC_DATASET_DIR / table_path.name)
 
         # Generate KDE ridgeline plot for modality participant distributions
         try:
@@ -579,10 +590,12 @@ def main(source_dir: str, target_dir: str):
             rng = np.random.default_rng(42)
 
             for idx, label in enumerate(order):
-                subset = d_modal[d_modal["modality_label"] == label]
+                subset = d_modal[d_modal["modality_label"] == label].copy()
                 vals = subset["n_subjects"].astype(float).dropna()
                 if len(vals) < 3:
                     continue
+                # Generate URLs for datasets in this modality
+                subset["dataset_url"] = subset["dataset"].apply(get_dataset_url)
                 log_vals = np.log10(vals)
                 grid = np.linspace(log_vals.min() - 0.25, log_vals.max() + 0.25, 240)
                 kde = gaussian_kde(log_vals)
@@ -623,6 +636,10 @@ def main(source_dir: str, target_dir: str):
                 )
 
                 jitter = rng.uniform(0.02, amplitude * 0.5, size=len(vals))
+                # Prepare custom data with dataset names and URLs
+                custom_data = np.column_stack(
+                    [subset["dataset"].to_numpy(), subset["dataset_url"].to_numpy()]
+                )
                 fig_kde.add_trace(
                     go.Scatter(
                         x=vals,
@@ -630,8 +647,8 @@ def main(source_dir: str, target_dir: str):
                         mode="markers",
                         name=label,
                         marker=dict(color=color, size=5, opacity=0.6),
-                        customdata=subset["dataset"].to_numpy(),
-                        hovertemplate="<b>%{customdata}</b><br>#Participants: %{x}<extra></extra>",
+                        customdata=custom_data,
+                        hovertemplate="<b><a href='%{customdata[1]}' target='_parent'>%{customdata[0]}</a></b><br>#Participants: %{x}<br><i>Click to view dataset details</i><extra></extra>",
                         showlegend=False,
                     )
                 )
@@ -678,7 +695,7 @@ def main(source_dir: str, target_dir: str):
                 kde_height = max(520, 120 * len(order))
                 html_content = fig_kde.to_html(
                     full_html=False,
-                    include_plotlyjs="cdn",
+                    include_plotlyjs=False,
                     div_id="dataset-kde-modalities",
                     config={
                         "responsive": True,
@@ -725,17 +742,26 @@ document.addEventListener('DOMContentLoaded', function() {{
     if (loading && plot) {{
         loading.style.display = 'none';
         plot.style.display = 'block';
+        
+        // Add click event to points for navigation
+        plot.on('plotly_click', function(data) {{
+            if (data.points && data.points[0] && data.points[0].customdata) {{
+                const url = data.points[0].customdata[1]; // dataset_url
+                if (url) {{
+                    const resolved = new URL(url, window.location.href);
+                    window.open(resolved.href, '_self');
+                }}
+            }}
+        }});
     }}
 }});
 </script>
 """
 
-                with open(
-                    str(Path(target_dir) / "dataset_kde_modalities.html"),
-                    "w",
-                    encoding="utf-8",
-                ) as f:
+                kde_path = Path(target_dir) / "dataset_kde_modalities.html"
+                with open(kde_path, "w", encoding="utf-8") as f:
                     f.write(styled_html)
+                copyfile(kde_path, STATIC_DATASET_DIR / kde_path.name)
         except Exception as exc:
             print(f"[dataset KDE] Skipped due to error: {exc}")
 

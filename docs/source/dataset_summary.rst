@@ -17,6 +17,10 @@ To leverage recent and ongoing advancements in large-scale computational methods
 
 The archive is currently still in :bdg-danger:`beta testing` mode, so be kind. 
 
+.. raw:: html
+
+   <script src="https://cdn.plot.ly/plotly-3.1.0.min.js"></script>
+
 .. tab-set::
 
    .. tab-item:: Dataset Table

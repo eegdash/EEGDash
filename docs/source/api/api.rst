@@ -38,9 +38,9 @@ dataset metadata.
          :shadow: sm
          :width: 100%
          :class-card: sd-border-0 sd-rounded-3 api-card
-         :class-title: api-card__title
+         :class-title: sd-visually-hidden
 
-         .. container:: api-card__content
+         .. container:: api-card__content api-card__content--stack
 
             .. container:: api-card__icon
 
@@ -49,7 +49,11 @@ dataset metadata.
                   <span class="fa-solid fa-microchip" aria-hidden="true"></span>
                   <span class="sd-sr-only">Core API documentation</span>
 
-            .. container:: api-card__text
+            .. container:: api-card__title
+
+               Core API
+
+            .. container:: api-card__subtitle
 
                Build, query, and manage EEGDash datasets and utilities.
 
@@ -65,9 +69,9 @@ dataset metadata.
          :shadow: sm
          :width: 100%
          :class-card: sd-border-0 sd-rounded-3 api-card
-         :class-title: api-card__title
+         :class-title: sd-visually-hidden
 
-         .. container:: api-card__content
+         .. container:: api-card__content api-card__content--stack
 
             .. container:: api-card__icon
 
@@ -76,7 +80,11 @@ dataset metadata.
                   <span class="fa-solid fa-wave-square" aria-hidden="true"></span>
                   <span class="sd-sr-only">Feature engineering documentation</span>
 
-            .. container:: api-card__text
+            .. container:: api-card__title
+
+               Feature Engineering
+
+            .. container:: api-card__subtitle
 
                Extract statistical, spectral, and machine-learning ready features.
 
@@ -92,9 +100,9 @@ dataset metadata.
          :shadow: sm
          :width: 100%
          :class-card: sd-border-0 sd-rounded-3 api-card
-         :class-title: api-card__title
+         :class-title: sd-visually-hidden
 
-         .. container:: api-card__content
+         .. container:: api-card__content api-card__content--stack
 
             .. container:: api-card__icon
 
@@ -103,7 +111,11 @@ dataset metadata.
                   <span class="fa-solid fa-database" aria-hidden="true"></span>
                   <span class="sd-sr-only">Dataset catalog documentation</span>
 
-            .. container:: api-card__text
+            .. container:: api-card__title
+
+               Dataset Catalog
+
+            .. container:: api-card__subtitle
 
                Browse dynamically generated dataset classes with rich metadata.
 

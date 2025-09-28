@@ -293,6 +293,14 @@ EEGDash currently exposes **{dataset_count} OpenNeuro EEG datasets** that are
 registered dynamically from mongo database. The table below summarises
 the distribution by experimental type as tracked in the summary file.
 
+Base Dataset API
+----------------
+
+.. toctree::
+   :maxdepth: 1
+
+   eegdash.dataset.EEGChallengeDataset
+
 .. list-table:: Dataset counts by experimental type
    :widths: 60 20
    :header-rows: 1
@@ -310,6 +318,22 @@ All Datasets
    :caption: Individual Datasets
 
 {toctree_entries}
+
+"""
+
+
+BASE_DATASET_TEMPLATE = """{notice}.. _api_eegdash_challenge_dataset:
+
+.. currentmodule:: eegdash.dataset
+
+EEGChallengeDataset
+===================
+
+.. autoclass:: eegdash.dataset.EEGChallengeDataset
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :member-order: bysource
 
 """
 
@@ -539,6 +563,11 @@ def _generate_dataset_docs(app) -> None:
     index_path = dataset_dir / "api_dataset.rst"
     if _write_if_changed(index_path, index_content):
         LOGGER.info("[dataset-docs] Updated %s", index_path.relative_to(app.srcdir))
+
+    base_content = BASE_DATASET_TEMPLATE.format(notice=AUTOGEN_NOTICE)
+    base_path = dataset_dir / "eegdash.dataset.EEGChallengeDataset.rst"
+    if _write_if_changed(base_path, base_content):
+        LOGGER.info("[dataset-docs] Updated %s", base_path.relative_to(app.srcdir))
 
     generated_paths: set[Path] = set()
     for name in dataset_names:

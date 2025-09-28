@@ -1,16 +1,21 @@
 .. _user_guide:
 
+:html_theme.sidebar_secondary.remove: true
+
+.. currentmodule:: eegdash.api
+
+
 User Guide
 ==========
 
-This guide provides a comprehensive overview of the ``eegdash`` library, focusing on its core data access object, ``EEGDashDataset``. You will learn how to use this object to find, access, and manage EEG data for your research and analysis tasks.
+This guide provides a comprehensive overview of the :mod:`eegdash` library, focusing on its core data access object, :class:`~eegdash.api.EEGDashDataset`. You will learn how to use this object to find, access, and manage EEG data for your research and analysis tasks.
 
 The EEGDash Object
 ------------------
 
-While :class:`~eegdash.EEGDashDataset` is the main tool for loading data for machine learning, the :class:`~eegdash.EEGDash` object provides a lower-level interface for directly interacting with the metadata database. It is useful for exploring the available data, performing complex queries, or managing metadata records.
+While :class:`~eegdash.api.EEGDashDataset` is the main tool for loading data for machine learning, the :class:`~eegdash.api.EEGDash` object provides a lower-level interface for directly interacting with the metadata database. It is useful for exploring the available data, performing complex queries, or managing metadata records.
 
-Initializing ``EEGDash``
+Initializing EEGDash
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 You can create a client to connect to the public database like this:
@@ -38,25 +43,25 @@ The ``find()`` method allows you to query the database for records matching spec
     records_advanced = eegdash.find(query)
     print(f"Found {len(records_advanced)} records with advanced query.")
 
-``EEGDash`` vs. ``EEGDashDataset``
+EEGDash vs. EEGDashDataset
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 It's important to understand the distinction between these two objects:
 
--   **EEGDash**: Use this for querying and managing metadata. It returns a list of dictionaries, where each dictionary is a record from the database.
--   **EEGDashDataset**: Use this when you need to load EEG data for analysis or machine learning. It returns a PyTorch-compatible dataset object where each item can load the actual EEG signal.
+-   :class:`~eegdash.api.EEGDash`: Use this for querying and managing metadata. It returns a list of dictionaries, where each dictionary is a record from the database.
+-   :class:`~eegdash.api.EEGDashDataset`: Use this when you need to load EEG data for analysis or machine learning. It returns a PyTorch-compatible dataset object where each item can load the actual EEG signal.
 
-In general, you will use ``EEGDashDataset`` for most of your data loading needs.
+In general, you will use :class:`~eegdash.api.EEGDashDataset` for most of your data loading needs.
 
 The EEGDashDataset Object
 -------------------------
 
-The :class:`~eegdash.EEGDashDataset` is the primary entry point for working with EEG recordings in ``eegdash``. It acts as a high-level interface that allows you to query a metadata database and load corresponding EEG data, either from a remote source or from a local cache.
+The :class:`~eegdash.api.EEGDashDataset` is the primary entry point for working with EEG recordings in :mod:`eegdash`. It acts as a high-level interface that allows you to query a metadata database and load corresponding EEG data, either from a remote source or from a local cache.
 
-Initializing ``EEGDashDataset``
+Initializing EEGDashDataset
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-To get started, you need to create an instance of ``EEGDashDataset``. The two most important parameters are ``cache_dir`` and ``dataset``.
+To get started, you need to create an instance of :class:`~eegdash.api.EEGDashDataset`. The two most important parameters are ``cache_dir`` and ``dataset``.
 
 - ``cache_dir``: This is the local directory where ``eegdash`` will store downloaded data.
 - ``dataset``: The identifier of the dataset you want to work with (e.g., ``"ds002718"``).
@@ -80,7 +85,7 @@ This will create a dataset object containing all recordings from ``ds002718``. T
 Querying for Specific Data
 --------------------------
 
-``EEGDashDataset`` offers powerful filtering capabilities, allowing you to select a subset of recordings based on various criteria. You can filter by task, subject, session, or run.
+:class:`~eegdash.api.EEGDashDataset` offers powerful filtering capabilities, allowing you to select a subset of recordings based on various criteria. You can filter by task, subject, session, or run.
 
 Filtering by Task
 ~~~~~~~~~~~~~~~~~
@@ -162,11 +167,11 @@ For more complex queries, you can pass a MongoDB-style query dictionary directly
 Working with Local Data (Offline Mode)
 --------------------------------------
 
-``eegdash`` also supports working with local data that you have already downloaded or manage separately. By setting ``download=False``, you can instruct ``EEGDashDataset`` to use local BIDS-compliant data instead of accessing the database or remote storage.
+:mod:`eegdash` also supports working with local data that you have already downloaded or manage separately. By setting ``download=False``, you can instruct :class:`~eegdash.api.EEGDashDataset` to use local BIDS-compliant data instead of accessing the database or remote storage.
 
 To use this feature, your data must be organized in a BIDS-like structure within your ``cache_dir``. For example, if your ``cache_dir`` is ``./eeg_data`` and your dataset is ``ds002718``, the files should be located at ``./eeg_data/ds002718/``.
 
-Here is how to use ``EEGDashDataset`` in offline mode:
+Here is how to use :class:`~eegdash.api.EEGDashDataset` in offline mode:
 
 .. code-block:: python
 
@@ -179,12 +184,12 @@ Here is how to use ``EEGDashDataset`` in offline mode:
 
     print(f"Found {len(local_dataset)} local recordings.")
 
-When ``download=False``, ``eegdash`` will scan the specified directory for EEG files and construct the dataset from the local file system. This is useful for environments without internet access or when you want to work with your own curated datasets.
+When ``download=False``, :mod:`eegdash` will scan the specified directory for EEG files and construct the dataset from the local file system. This is useful for environments without internet access or when you want to work with your own curated datasets.
 
 Accessing Data from the Dataset
 -------------------------------
 
-Once you have your ``EEGDashDataset`` object, you can access individual recordings as if it were a list. Each item in the dataset is an ``EEGDashBaseDataset`` object, which contains the metadata and methods to load the actual EEG data.
+Once you have your :class:`~eegdash.api.EEGDashDataset` object, you can access individual recordings as if it were a list. Each item in the dataset is an :class:`~eegdash.data_utils.EEGDashBaseDataset` object, which contains the metadata and methods to load the actual EEG data.
 
 .. code-block:: python
 

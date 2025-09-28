@@ -44,9 +44,10 @@ def _normalize_values(cell: object) -> Iterable[str]:
     if lowered in {"nan", "none", "null", ""}:
         return []
 
-    # Normalise separators so we can split reliably. Keep forward slash to
-    # support values like "Clinical / Research" that should remain intact.
-    for sep in (";", "|", "\n"):
+    # Normalise separators so we can split reliably. Treat both slash-delimited
+    # pairs (e.g. "Visual/Resting State") and explicit separators as
+    # independent tags.
+    for sep in ("/", ";", "|", "\n"):
         text = text.replace(sep, ",")
 
     tokens = [t.strip() for t in text.split(",") if t.strip()]

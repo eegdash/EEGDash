@@ -18,12 +18,20 @@ from mne.utils import get_config as mne_get_config
 
 
 def get_default_cache_dir() -> Path:
-    """Resolve a consistent default cache directory for EEGDash.
+    """Resolve the default cache directory for EEGDash data.
 
-    Priority order:
-    1) Environment variable ``EEGDASH_CACHE_DIR`` if set.
-    2) MNE config ``MNE_DATA`` if set (aligns with tests and ecosystem caches).
-    3) ``.eegdash_cache`` under the current working directory.
+    The function determines the cache directory based on the following
+    priority order:
+    1. The path specified by the ``EEGDASH_CACHE_DIR`` environment variable.
+    2. The path specified by the ``MNE_DATA`` configuration in the MNE-Python
+       config file.
+    3. A hidden directory named ``.eegdash_cache`` in the current working
+       directory.
+
+    Returns
+    -------
+    pathlib.Path
+        The resolved, absolute path to the default cache directory.
     """
     # 1) Explicit env var wins
     env_dir = os.environ.get("EEGDASH_CACHE_DIR")

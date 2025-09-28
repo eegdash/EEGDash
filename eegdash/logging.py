@@ -29,6 +29,25 @@ root_logger.setLevel(logging.INFO)
 # Now, get your package-specific logger. It will inherit the
 # configuration from the root logger we just set up.
 logger = logging.getLogger("eegdash")
+"""The primary logger for the EEGDash package.
+
+This logger is configured to use :class:`rich.logging.RichHandler` for
+formatted, colorful output in the console. It inherits its base configuration
+from the root logger, which is set to the ``INFO`` level.
+
+Examples
+--------
+Usage in other modules:
+
+.. code-block:: python
+
+    from .logging import logger
+
+    logger.info("This is an informational message.")
+    logger.warning("This is a warning.")
+    logger.error("This is an error.")
+"""
+
 
 logger.setLevel(logging.INFO)
 

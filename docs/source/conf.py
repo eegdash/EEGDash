@@ -322,6 +322,22 @@ All Datasets
 """
 
 
+BASE_DATASET_TEMPLATE = """{notice}.. _api_eegdash_challenge_dataset:
+
+.. currentmodule:: eegdash.dataset
+
+EEGChallengeDataset
+===================
+
+.. autoclass:: eegdash.dataset.EEGChallengeDataset
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :member-order: bysource
+
+"""
+
+
 def _write_if_changed(path: Path, content: str) -> bool:
     """Write ``content`` to ``path`` if it differs from the current file."""
     existing = path.read_text(encoding="utf-8") if path.exists() else None
@@ -547,6 +563,11 @@ def _generate_dataset_docs(app) -> None:
     index_path = dataset_dir / "api_dataset.rst"
     if _write_if_changed(index_path, index_content):
         LOGGER.info("[dataset-docs] Updated %s", index_path.relative_to(app.srcdir))
+
+    base_content = BASE_DATASET_TEMPLATE.format(notice=AUTOGEN_NOTICE)
+    base_path = dataset_dir / "eegdash.dataset.EEGChallengeDataset.rst"
+    if _write_if_changed(base_path, base_content):
+        LOGGER.info("[dataset-docs] Updated %s", base_path.relative_to(app.srcdir))
 
     generated_paths: set[Path] = set()
     for name in dataset_names:

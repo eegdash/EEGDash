@@ -86,7 +86,7 @@ dataset metadata.
 
    .. grid-item::
 
-      .. card:: Dataset Catalog
+      .. card:: Dataset Catalog API
          :link: dataset/api_dataset
          :link-type: doc
          :shadow: sm

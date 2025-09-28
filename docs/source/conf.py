@@ -260,7 +260,7 @@ See Also
 """
 
 
-DATASET_INDEX_TEMPLATE = """{notice}eegdash.dataset package
+DATASET_INDEX_TEMPLATE = """{notice}EEGDash Datasets API
 =======================
 
 The :mod:`eegdash.dataset` package exposes dynamically registered dataset

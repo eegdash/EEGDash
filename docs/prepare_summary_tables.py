@@ -242,8 +242,9 @@ def gen_datasets_bubble(
         tr.hovertemplate = hover
 
     fig.update_layout(
-        height=560,
-        margin=dict(l=40, r=20, t=80, b=40),
+        height=600,
+        width=None,  # Let it expand to container width
+        margin=dict(l=60, r=40, t=80, b=60),
         template="plotly_white",
         legend=dict(
             title="Modality",
@@ -265,6 +266,7 @@ def gen_datasets_bubble(
             yanchor="top",
             pad=dict(t=10, b=8),
         ),
+        autosize=True,  # Enable auto-sizing to fill container
     )
 
     fig.update_xaxes(showgrid=True, gridcolor="rgba(0,0,0,0.12)", zeroline=False)
@@ -281,6 +283,13 @@ def gen_datasets_bubble(
             "responsive": True,
             "displaylogo": False,
             "modeBarButtonsToRemove": ["lasso2d", "select2d"],
+            "toImageButtonOptions": {
+                "format": "png",
+                "filename": "dataset_landscape",
+                "height": 600,
+                "width": 1200,
+                "scale": 2,
+            },
         },
     )
     return str(out_path)
@@ -591,6 +600,7 @@ def main(source_dir: str, target_dir: str):
             if fig_kde.data:
                 fig_kde.update_layout(
                     height=max(520, 120 * len(order)),
+                    width=None,  # Let it expand to container width
                     template="plotly_white",
                     xaxis=dict(
                         type="log",
@@ -615,7 +625,7 @@ def main(source_dir: str, target_dir: str):
                         xanchor="right",
                         x=0.99,
                     ),
-                    margin=dict(l=100, r=30, t=80, b=80),
+                    margin=dict(l=120, r=40, t=80, b=80),
                     title=dict(
                         text="Participant Distribution by Modality",
                         x=0.01,
@@ -623,6 +633,7 @@ def main(source_dir: str, target_dir: str):
                         y=0.98,
                         yanchor="top",
                     ),
+                    autosize=True,  # Enable auto-sizing to fill container
                 )
                 fig_kde.write_html(
                     str(Path(target_dir) / "dataset_kde_modalities.html"),
@@ -633,6 +644,13 @@ def main(source_dir: str, target_dir: str):
                         "responsive": True,
                         "displaylogo": False,
                         "modeBarButtonsToRemove": ["lasso2d", "select2d"],
+                        "toImageButtonOptions": {
+                            "format": "png",
+                            "filename": "participant_kde",
+                            "height": 600,
+                            "width": 1200,
+                            "scale": 2,
+                        },
                     },
                 )
         except Exception as exc:

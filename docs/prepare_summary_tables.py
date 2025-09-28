@@ -5,7 +5,70 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 import plotly.express as px
+import plotly.graph_objects as go
+from scipy.stats import gaussian_kde
 from table_tag_utils import wrap_tags
+
+
+MODALITY_CANONICAL = {
+    "visual": "Visual",
+    "auditory": "Auditory",
+    "tactile": "Tactile",
+    "somatosensory": "Tactile",
+    "multisensory": "Multisensory",
+    "motor": "Motor",
+    "rest": "Resting State",
+    "resting state": "Resting State",
+    "resting-state": "Resting State",
+    "sleep": "Sleep",
+    "other": "Other",
+}
+
+MODALITY_COLOR_MAP = {
+    "Visual": "#2563eb",
+    "Auditory": "#0ea5e9",
+    "Tactile": "#10b981",
+    "Multisensory": "#ec4899",
+    "Motor": "#f59e0b",
+    "Resting State": "#6366f1",
+    "Sleep": "#7c3aed",
+    "Other": "#14b8a6",
+    "Unknown": "#94a3b8",
+}
+
+
+def _hex_to_rgba(hex_color: str, alpha: float = 0.4) -> str:
+    hex_color = hex_color.lstrip("#")
+    if len(hex_color) != 6:
+        return f"rgba(99, 102, 241, {alpha})"
+    r = int(hex_color[0:2], 16)
+    g = int(hex_color[2:4], 16)
+    b = int(hex_color[4:6], 16)
+    return f"rgba({r}, {g}, {b}, {alpha})"
+
+
+def _primary_modality(value: object) -> str:
+    if value is None:
+        return "Unknown"
+    if isinstance(value, float) and pd.isna(value):
+        return "Unknown"
+    text = str(value).strip()
+    if not text:
+        return "Unknown"
+    for sep in ("/", "|", ";"):
+        text = text.replace(sep, ",")
+    tokens = [tok.strip() for tok in text.split(",") if tok.strip()]
+    if not tokens:
+        return "Unknown"
+    raw = tokens[0].lower()
+    canonical = MODALITY_CANONICAL.get(raw)
+    if canonical:
+        return canonical
+    candidate = tokens[0].strip()
+    title_candidate = candidate.title()
+    if title_candidate in MODALITY_COLOR_MAP:
+        return title_candidate
+    return "Other"
 
 
 def _to_numeric_median_list(val) -> float | None:
@@ -57,7 +120,7 @@ def gen_datasets_bubble(
     - x: total duration (hours)
     - y: number of subjects
     - size: on-disk size (GB)
-    - color: sampling frequency band
+    - color: dataset modality
     """
     d = df.copy()
     d = d[d["dataset"].str.lower() != "test"]
@@ -73,24 +136,11 @@ def gen_datasets_bubble(
     d["sfreq"] = d["sampling_freqs"].map(_to_numeric_median_list)
     d["nchans"] = d["nchans_set"].map(_to_numeric_median_list)
 
+    d["modality_label"] = d.get("modality of exp").apply(_primary_modality)
+
     # disk size in GB for sizing
     GB = 1024**3
     d["size_gb"] = d["size_bytes"] / GB
-
-    # color bands by sampling frequency
-    def _sf_band(x):
-        if pd.isna(x):
-            return "Unknown"
-        x = float(x)
-        if x <= 250:
-            return "≤ 250 Hz"
-        if x <= 500:
-            return "251–500 Hz"
-        if x <= 1000:
-            return "501–1000 Hz"
-        return "> 1000 Hz"
-
-    d["sf_band"] = d["sfreq"].apply(_sf_band)
 
     # hover content
     def _fmt_size(bytes_):
@@ -126,6 +176,7 @@ def gen_datasets_bubble(
         "<br>Channels: %{customdata[3]}"
         "<br>Sampling: %{customdata[4]} Hz"
         "<br>Size: %{customdata[5]}"
+        "<br>Modality: %{customdata[6]}"
         "<extra></extra>"
     )
 
@@ -152,7 +203,7 @@ def gen_datasets_bubble(
         x=x_field,
         y="subjects",
         size="size_gb",
-        color="sf_band",
+        color="modality_label",
         hover_name="dataset",
         custom_data=[
             d["dataset"],
@@ -161,10 +212,23 @@ def gen_datasets_bubble(
             nchans_str,
             sfreq_str,
             d["size_bytes"].map(_fmt_size),
+            d["modality_label"],
         ],
         size_max=40,
-        labels={"subjects": "#Subjects", "sf_band": "Sampling Freq.", x_field: x_label},
+        labels={
+            "subjects": "#Subjects",
+            "modality_label": "Modality",
+            x_field: x_label,
+        },
+        color_discrete_map=MODALITY_COLOR_MAP,
         title="Dataset Landscape",
+        category_orders={
+            "modality_label": [
+                label
+                for label in MODALITY_COLOR_MAP.keys()
+                if label in d["modality_label"].unique()
+            ]
+        },
     )
 
     # tune marker sizing explicitly for better control
@@ -182,7 +246,7 @@ def gen_datasets_bubble(
         margin=dict(l=40, r=20, t=80, b=40),
         template="plotly_white",
         legend=dict(
-            title="Sampling Freq.",
+            title="Modality",
             orientation="h",
             yanchor="bottom",
             y=1.02,
@@ -446,6 +510,133 @@ def main(source_dir: str, target_dir: str):
             f"{target_dir}/dataset_summary_table.html", "+w", encoding="utf-8"
         ) as f:
             f.write(html_table)
+
+        # Generate KDE ridgeline plot for modality participant distributions
+        try:
+            d_modal = df_raw[df_raw["dataset"].str.lower() != "test"].copy()
+            d_modal["modality_label"] = d_modal["modality of exp"].apply(
+                _primary_modality
+            )
+            d_modal["n_subjects"] = pd.to_numeric(
+                d_modal["n_subjects"], errors="coerce"
+            )
+            d_modal = d_modal.dropna(subset=["n_subjects"])
+
+            fig_kde = go.Figure()
+            order = [
+                label
+                for label in MODALITY_COLOR_MAP
+                if label in d_modal["modality_label"].unique()
+            ]
+            rng = np.random.default_rng(42)
+
+            for idx, label in enumerate(order):
+                subset = d_modal[d_modal["modality_label"] == label]
+                vals = subset["n_subjects"].astype(float).dropna()
+                if len(vals) < 3:
+                    continue
+                log_vals = np.log10(vals)
+                grid = np.linspace(log_vals.min() - 0.25, log_vals.max() + 0.25, 240)
+                kde = gaussian_kde(log_vals)
+                density = kde(grid)
+                if density.max() <= 0:
+                    continue
+                density_norm = density / density.max()
+                amplitude = 0.6
+                baseline = idx * 1.1
+                y_curve = baseline + density_norm * amplitude
+                x_curve = 10**grid
+
+                color = MODALITY_COLOR_MAP.get(label, "#6b7280")
+                fill = _hex_to_rgba(color, 0.28)
+
+                fig_kde.add_trace(
+                    go.Scatter(
+                        x=np.concatenate([x_curve, x_curve[::-1]]),
+                        y=np.concatenate([y_curve, np.full_like(y_curve, baseline)]),
+                        name=label,
+                        fill="toself",
+                        fillcolor=fill,
+                        line=dict(color="rgba(0,0,0,0)"),
+                        hoverinfo="skip",
+                        showlegend=False,
+                    )
+                )
+
+                fig_kde.add_trace(
+                    go.Scatter(
+                        x=x_curve,
+                        y=y_curve,
+                        mode="lines",
+                        name=label,
+                        line=dict(color=color, width=2),
+                        hovertemplate=f"<b>{label}</b><br>#Participants: %{{x:.0f}}<extra></extra>",
+                    )
+                )
+
+                jitter = rng.uniform(0.02, amplitude * 0.5, size=len(vals))
+                fig_kde.add_trace(
+                    go.Scatter(
+                        x=vals,
+                        y=np.full_like(vals, baseline) + jitter,
+                        mode="markers",
+                        name=label,
+                        marker=dict(color=color, size=5, opacity=0.6),
+                        customdata=subset["dataset"].to_numpy(),
+                        hovertemplate="<b>%{customdata}</b><br>#Participants: %{x}<extra></extra>",
+                        showlegend=False,
+                    )
+                )
+
+            if fig_kde.data:
+                fig_kde.update_layout(
+                    height=max(520, 120 * len(order)),
+                    template="plotly_white",
+                    xaxis=dict(
+                        type="log",
+                        title="#Participants",
+                        showgrid=True,
+                        gridcolor="rgba(0,0,0,0.12)",
+                        zeroline=False,
+                    ),
+                    yaxis=dict(
+                        title="Modality",
+                        tickmode="array",
+                        tickvals=[idx * 1.1 for idx in range(len(order))],
+                        ticktext=order,
+                        showgrid=False,
+                        range=[-0.3, max(0.3, (len(order) - 1) * 1.1 + 0.9)],
+                    ),
+                    legend=dict(
+                        title="Modality",
+                        orientation="h",
+                        yanchor="bottom",
+                        y=1.02,
+                        xanchor="right",
+                        x=0.99,
+                    ),
+                    margin=dict(l=100, r=30, t=80, b=80),
+                    title=dict(
+                        text="Participant Distribution by Modality",
+                        x=0.01,
+                        xanchor="left",
+                        y=0.98,
+                        yanchor="top",
+                    ),
+                )
+                fig_kde.write_html(
+                    str(Path(target_dir) / "dataset_kde_modalities.html"),
+                    full_html=False,
+                    include_plotlyjs="cdn",
+                    div_id="dataset-kde-modalities",
+                    config={
+                        "responsive": True,
+                        "displaylogo": False,
+                        "modeBarButtonsToRemove": ["lasso2d", "select2d"],
+                    },
+                )
+        except Exception as exc:
+            print(f"[dataset KDE] Skipped due to error: {exc}")
 
 
 def parse_freqs(value) -> str:

@@ -28,8 +28,23 @@ The archive is currently still in :bdg-danger:`beta testing` mode, so be kind.
 
   <figcaption class="eegdash-caption">
     Figure: Dataset landscape. Each bubble represents a dataset: x-axis shows the number of records,
-    y-axis the number of subjects, bubble area encodes on-disk size, and color indicates sampling frequency band.
-    Hover for details and use the legend to highlight groups.
+    y-axis the number of subjects, bubble area encodes on-disk size, and color indicates dominant modality.
+    Hover for details and use the legend to highlight modality groups.
+  </figcaption>
+  </figure>
+
+.. raw:: html
+
+  <figure class="eegdash-figure" style="margin: 1.0rem 0 1.25rem 0;">
+
+.. raw:: html
+  :file: ../build/dataset_kde_modalities.html
+
+.. raw:: html
+
+  <figcaption class="eegdash-caption">
+    Figure: Participant distribution by modality. Kernel density estimates summarize how many participants are available for
+    each experimental modality on a logarithmic scale.
   </figcaption>
   </figure>
 

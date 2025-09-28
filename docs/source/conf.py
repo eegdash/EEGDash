@@ -43,6 +43,7 @@ extensions = [
     "sphinx_gallery.gen_gallery",
     "sphinx_sitemap",
     "sphinx_copybutton",
+    "sphinx.ext.graphviz",
 ]
 
 templates_path = ["_templates"]

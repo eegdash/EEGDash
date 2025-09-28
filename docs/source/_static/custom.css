@@ -199,17 +199,3 @@ figure.eegdash-figure figcaption.eegdash-caption {
     width: 3.25rem;
   }
 }
-
-/* -------------------------------------------------------------
-   Branded code blocks (used on install pages)
-------------------------------------------------------------- */
-.highlight.eegdash-snippet {
-  background: rgba(10, 111, 182, 0.06);
-  border-left: 4px solid var(--sd-color-primary, #0a6fb6);
-  border-radius: 10px;
-  padding: 0.9rem 1.1rem;
-}
-
-.highlight.eegdash-snippet pre {
-  color: var(--pst-color-text, #1b1f24);
-}

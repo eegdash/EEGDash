@@ -107,8 +107,7 @@ figure.eegdash-figure figcaption.eegdash-caption {
   background-color: var(--sd-color-surface, #ffffff);
 }
 
-.api-card .card-header,
-.api-card__title {
+.api-card .card-header {
   background-color: var(--sd-color-primary, #0a6fb6);
   color: #ffffff;
   font-weight: 600;
@@ -146,7 +145,7 @@ figure.eegdash-figure figcaption.eegdash-caption {
 }
 
 .api-card__icon .fa-solid {
-  font-size: 1.7rem;
+  font-size: 2.2rem;
   color: var(--sd-color-primary, #0a6fb6);
 }
 
@@ -198,4 +197,36 @@ figure.eegdash-figure figcaption.eegdash-caption {
   .api-card__icon {
     width: 3.25rem;
   }
+}
+
+/* Stacked style (SciPy-like) for API landing cards */
+.api-card__content--stack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 1rem;
+}
+
+.api-card__title {
+  font-size: 1.35rem;
+  font-weight: 700;
+  margin: .25rem 0 0;
+}
+
+.api-card__subtitle {
+  font-size: 1.06rem;
+  color: var(--pst-color-text, #1b1f24);
+  line-height: 1.6;
+  position: relative;
+  padding-bottom: .5rem;
+}
+
+.api-card__subtitle::after {
+  content: "";
+  display: block;
+  height: 1px;
+  width: 72px;
+  margin: .75rem auto 0;
+  background: rgba(10,111,182, .25);
 }

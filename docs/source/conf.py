@@ -90,7 +90,7 @@ html_theme_options = {
         "alt_text": "EEG Dash Logo",
     },
     "external_links": [
-        {"name": "EEG2025 competition", "url": "https://eeg2025.github.io/"},
+        {"name": "EEG2025", "url": "https://eeg2025.github.io/"},
     ],
     "icon_links": [
         {

@@ -242,8 +242,9 @@ def gen_datasets_bubble(
         tr.hovertemplate = hover
 
     fig.update_layout(
-        height=560,
-        margin=dict(l=40, r=20, t=80, b=40),
+        height=600,
+        width=None,  # Let it expand to container width
+        margin=dict(l=60, r=40, t=80, b=60),
         template="plotly_white",
         legend=dict(
             title="Modality",
@@ -265,6 +266,7 @@ def gen_datasets_bubble(
             yanchor="top",
             pad=dict(t=10, b=8),
         ),
+        autosize=True,  # Enable auto-sizing to fill container
     )
 
     fig.update_xaxes(showgrid=True, gridcolor="rgba(0,0,0,0.12)", zeroline=False)
@@ -272,8 +274,8 @@ def gen_datasets_bubble(
 
     out_path = Path(out_html)
     out_path.parent.mkdir(parents=True, exist_ok=True)
-    fig.write_html(
-        str(out_path),
+    # Add CSS and loading indicator for immediate proper sizing
+    html_content = fig.to_html(
         full_html=False,
         include_plotlyjs="cdn",
         div_id="dataset-bubble",
@@ -281,8 +283,54 @@ def gen_datasets_bubble(
             "responsive": True,
             "displaylogo": False,
             "modeBarButtonsToRemove": ["lasso2d", "select2d"],
+            "toImageButtonOptions": {
+                "format": "png",
+                "filename": "dataset_landscape",
+                "height": 600,
+                "width": 1200,
+                "scale": 2,
+            },
         },
     )
+
+    # Wrap with styling to ensure proper initial sizing
+    styled_html = f"""
+<style>
+#dataset-bubble {{
+    width: 100% !important;
+    height: 600px !important;
+    min-height: 600px;
+}}
+#dataset-bubble .plotly-graph-div {{
+    width: 100% !important;
+    height: 100% !important;
+}}
+.dataset-loading {{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 600px;
+    font-family: Inter, system-ui, sans-serif;
+    color: #6b7280;
+}}
+</style>
+<div class="dataset-loading" id="dataset-loading">Loading dataset landscape...</div>
+{html_content}
+<script>
+// Hide loading indicator once plot is rendered
+document.addEventListener('DOMContentLoaded', function() {{
+    const loading = document.getElementById('dataset-loading');
+    const plot = document.getElementById('dataset-bubble');
+    if (loading && plot) {{
+        loading.style.display = 'none';
+        plot.style.display = 'block';
+    }}
+}});
+</script>
+"""
+
+    with open(str(out_path), "w", encoding="utf-8") as f:
+        f.write(styled_html)
     return str(out_path)
 
 
@@ -591,6 +639,7 @@ def main(source_dir: str, target_dir: str):
             if fig_kde.data:
                 fig_kde.update_layout(
                     height=max(520, 120 * len(order)),
+                    width=None,  # Let it expand to container width
                     template="plotly_white",
                     xaxis=dict(
                         type="log",
@@ -615,7 +664,7 @@ def main(source_dir: str, target_dir: str):
                         xanchor="right",
                         x=0.99,
                     ),
-                    margin=dict(l=100, r=30, t=80, b=80),
+                    margin=dict(l=120, r=40, t=80, b=80),
                     title=dict(
                         text="Participant Distribution by Modality",
                         x=0.01,
@@ -623,9 +672,11 @@ def main(source_dir: str, target_dir: str):
                         y=0.98,
                         yanchor="top",
                     ),
+                    autosize=True,  # Enable auto-sizing to fill container
                 )
-                fig_kde.write_html(
-                    str(Path(target_dir) / "dataset_kde_modalities.html"),
+                # Add CSS and loading indicator for immediate proper sizing
+                kde_height = max(520, 120 * len(order))
+                html_content = fig_kde.to_html(
                     full_html=False,
                     include_plotlyjs="cdn",
                     div_id="dataset-kde-modalities",
@@ -633,8 +684,58 @@ def main(source_dir: str, target_dir: str):
                         "responsive": True,
                         "displaylogo": False,
                         "modeBarButtonsToRemove": ["lasso2d", "select2d"],
+                        "toImageButtonOptions": {
+                            "format": "png",
+                            "filename": "participant_kde",
+                            "height": 600,
+                            "width": 1200,
+                            "scale": 2,
+                        },
                     },
                 )
+
+                # Wrap with styling to ensure proper initial sizing
+                styled_html = f"""
+<style>
+#dataset-kde-modalities {{
+    width: 100% !important;
+    height: {kde_height}px !important;
+    min-height: {kde_height}px;
+}}
+#dataset-kde-modalities .plotly-graph-div {{
+    width: 100% !important;
+    height: 100% !important;
+}}
+.kde-loading {{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: {kde_height}px;
+    font-family: Inter, system-ui, sans-serif;
+    color: #6b7280;
+}}
+</style>
+<div class="kde-loading" id="kde-loading">Loading participant distribution...</div>
+{html_content}
+<script>
+// Hide loading indicator once plot is rendered
+document.addEventListener('DOMContentLoaded', function() {{
+    const loading = document.getElementById('kde-loading');
+    const plot = document.getElementById('dataset-kde-modalities');
+    if (loading && plot) {{
+        loading.style.display = 'none';
+        plot.style.display = 'block';
+    }}
+}});
+</script>
+"""
+
+                with open(
+                    str(Path(target_dir) / "dataset_kde_modalities.html"),
+                    "w",
+                    encoding="utf-8",
+                ) as f:
+                    f.write(styled_html)
         except Exception as exc:
             print(f"[dataset KDE] Skipped due to error: {exc}")
 

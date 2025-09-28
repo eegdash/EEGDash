@@ -28,13 +28,13 @@ There are different ways to install EEGDash, depending on your needs and:
             For Beginners
 
         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-        .. image:: /_static/eegdash_install.gif
-           :alt: EEGDash Installer with pip
-        
         .. code-block:: shell
         
            pip install eegdash
-
+        
+        .. image:: /_static/eegdash_install.gif
+           :alt: EEGDash Installer with pip
+        
         +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 

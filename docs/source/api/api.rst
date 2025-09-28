@@ -12,14 +12,14 @@ dataset metadata.
 
 .. container:: api-hero-buttons
 
-   .. button-link:: api_core
+   .. button-link:: api_core.html
       :color: primary
       :ref-type: doc
       :shadow:
 
       Get Started
 
-   .. button-link:: dataset/api_dataset
+   .. button-link:: dataset/api_dataset.html
       :color: secondary
       :ref-type: doc
       :shadow:

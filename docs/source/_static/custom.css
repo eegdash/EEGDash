@@ -102,21 +102,100 @@ figure.eegdash-figure figcaption.eegdash-caption {
    API Reference landing cards
 ------------------------------------------------------------- */
 .api-card {
-  min-height: 11rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 0.75rem;
-  padding-bottom: 1.5rem;
+  min-height: 15rem;
+  border-left: 4px solid rgba(10, 111, 182, 0.18);
+  background-color: var(--sd-color-surface, #ffffff);
+}
+
+.api-card .card-header,
+.api-card__title {
+  background-color: var(--sd-color-primary, #0a6fb6);
+  color: #ffffff;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  font-size: 1rem;
+  padding: 0.9rem 1.25rem;
+  border-bottom: none;
 }
 
 .api-card .card-body {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.75rem;
+  background-color: rgba(10, 111, 182, 0.06);
+  padding: 1.75rem;
+  border-bottom-left-radius: 0.75rem;
+  border-bottom-right-radius: 0.75rem;
 }
 
-.api-card .card-body span.fa-solid {
+.api-card__content {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 1.5rem;
+  font-size: 1.05rem;
+  line-height: 1.6;
+}
+
+.api-card__icon {
+  flex: 0 0 3.25rem;
+  height: 3.25rem;
+  border-radius: 999px;
+  background-color: rgba(10, 111, 182, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.api-card__icon .fa-solid {
+  font-size: 1.7rem;
   color: var(--sd-color-primary, #0a6fb6);
+}
+
+.api-card__text {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  color: var(--pst-color-text, #1b1f24);
+}
+
+.api-card__text p {
+  margin: 0;
+}
+
+.api-card__cta {
+  margin: 0;
+  font-weight: 600;
+}
+
+.api-card__cta a {
+  color: var(--sd-color-primary, #0a6fb6);
+  text-decoration: none;
+}
+
+.api-card__cta a:hover,
+.api-card__cta a:focus {
+  text-decoration: underline;
+}
+
+.api-hero-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin: 1.25rem 0 2.25rem;
+}
+
+.api-hero-buttons .sd-btn {
+  font-weight: 600;
+  padding: 0.75rem 1.75rem;
+}
+
+@media (max-width: 640px) {
+  .api-card__content {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .api-card__icon {
+    width: 3.25rem;
+  }
 }

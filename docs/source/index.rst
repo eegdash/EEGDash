@@ -53,8 +53,8 @@ The archive is currently still in :bdg-danger:`beta testing` mode, so be kind.
 .. toctree::
    :hidden:
 
-   Overview <overview>
-   Install <install/install>
+   Installing <install/install>
+   Getting Started <overview>
    API <api/api>
-   Dataset Summary <dataset_summary>
+   Dataset Catalog <dataset_summary>
    Examples <generated/auto_examples/index>

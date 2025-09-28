@@ -948,3 +948,6 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
                 )
             )
         return datasets
+
+
+__all__ = ["EEGDash", "EEGDashDataset"]

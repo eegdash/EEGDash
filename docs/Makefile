@@ -12,34 +12,17 @@ help:
 .PHONY: apidoc
 apidoc:
 	# Generate full API docs, then prune duplicates covered by autosummary
-	@python -m sphinx.ext.apidoc -f -e -M -o "$(APIDIR)/dataset" "../$(PKG)"
+	@SPHINX_APIDOC_OPTIONS=members,undoc-members,show-inheritance,noindex \
+		python -m sphinx.ext.apidoc -f -e -M -o "$(APIDIR)/dataset" "../$(PKG)"
 	# Remove top-level package page and modules covered elsewhere
-	@rm -f "$(APIDIR)/dataset/eegdash.rst"
-	@rm -f "$(APIDIR)/dataset/eegdash.api.rst"
-	@rm -f "$(APIDIR)/dataset/eegdash.bids_eeg_metadata.rst"
-	@rm -f "$(APIDIR)/dataset/eegdash.const.rst"
-	@rm -f "$(APIDIR)/dataset/eegdash.data_utils.rst"
-	@rm -f "$(APIDIR)/dataset/eegdash.logging.rst"
-	@rm -f "$(APIDIR)/dataset/eegdash.mongodb.rst"
-	@rm -f "$(APIDIR)/dataset/eegdash.paths.rst"
-	@rm -f "$(APIDIR)/dataset/eegdash.utils.rst"
-	@rm -f "$(APIDIR)/dataset/eegdash.features.rst"
-	@rm -f $(APIDIR)/dataset/eegdash.features.*.rst
-	@rm -f "$(APIDIR)/dataset/eegdash.hbn.rst"
-	@rm -f $(APIDIR)/dataset/eegdash.hbn.*.rst
-	@rm -f "$(APIDIR)/dataset/modules.rst"
 
-.PHONY: dataset-pages
-dataset-pages:
-	# Generate individual dataset documentation pages
-	@python generate_dataset_pages.py
 
 # Standard build runs examples
-html: apidoc dataset-pages
+html: apidoc 
 
 # Fast build: do NOT execute examples (sphinx-gallery)
 .PHONY: html-noplot
-html-noplot: apidoc dataset-pages
+html-noplot: apidoc 
 	@python prepare_summary_tables.py ../eegdash/ $(BUILDDIR)
 	@$(SPHINXBUILD) -M html "$(SOURCEDIR)" "$(BUILDDIR)" \
 		$(SPHINXOPTS) -D sphinx_gallery_conf.plot_gallery=0 $(O)
@@ -65,5 +48,4 @@ Makefile: ;
 
 %: Makefile
 	@python prepare_summary_tables.py ../eegdash/ $(BUILDDIR)
-	@python generate_dataset_pages.py
 	@$(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)

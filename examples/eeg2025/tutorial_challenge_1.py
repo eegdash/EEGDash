@@ -12,10 +12,12 @@ Challenge 1: Cross-Task Transfer Learning!
 
 """
 
+######################################################################
 # .. image:: https://colab.research.google.com/assets/colab-badge.svg
 #    :target: https://colab.research.google.com/github/eeg2025/startkit/blob/main/challenge_1.ipynb
 #    :alt: Open In Colab
 
+######################################################################
 # Preliminary notes
 # -----------------
 # Before we begin, I just want to make a deal with you, ok?
@@ -28,6 +30,7 @@ Challenge 1: Cross-Task Transfer Learning!
 # The entire decoding community will only go further when we stop
 # solving the same problems over and over again, and it starts working together.
 
+######################################################################
 # How can we use the knowledge from one EEG Decoding task into another?
 # ---------------------------------------------------------------------
 # Transfer learning is a widespread technique used in deep learning. It
@@ -58,12 +61,14 @@ Challenge 1: Cross-Task Transfer Learning!
 # and fine-tuned on data from another condition, evaluating its capacity to
 # generalize with task-specific fine-tuning.
 
+######################################################################
 # __________
 #
 # Note: For simplicity purposes, we will only show how to do the decoding
 # directly in our target task, and it is up to the teams to think about
 # how to use the passive task to perform the pre-training.
 #
+######################################################################
 # Install dependencies
 # --------------------
 # For the challenge, we will need two significant dependencies:
@@ -75,6 +80,7 @@ Challenge 1: Cross-Task Transfer Learning!
 # have braindecode as a dependency.
 # you can just run ``pip install eegdash``.
 
+######################################################################
 # Imports and setup
 # -----------------
 from pathlib import Path
@@ -96,6 +102,7 @@ from tqdm import tqdm
 import copy
 from joblib import Parallel, delayed
 
+######################################################################
 # Check GPU availability
 # ----------------------
 #
@@ -116,12 +123,14 @@ else:
     )
 print(msg)
 
+######################################################################
 # What are we decoding?
 # ---------------------
 #
 # To start to talk about what we want to analyse, the important thing
 # is to understand some basic concepts.
 #
+######################################################################
 # The brain decodes the problem
 # =============================
 #
@@ -146,6 +155,7 @@ print(msg)
 # is the temporal window length/epoch size over the interval of interest.
 # Here, :math:`\theta` denotes the parameters learned by the neural network.
 #
+# ------------------------------------------------------------------------------
 # Input/Output definition
 # ---------------------------
 # For the competition, the HBN-EEG (Healthy Brain Network EEG Datasets)
@@ -159,6 +169,7 @@ print(msg)
 # You can use any model you want, as long as it follows the input/output
 # definitions above.
 
+######################################################################
 # Understand the task: Contrast Change Detection (CCD)
 # --------------------------------------------------------
 # If you are interested to get more neuroscience insight, we recommend these two references, `HBN-EEG <https://www.biorxiv.org/content/10.1101/2024.10.03.615261v2.full.pdf>`__ and `Langer, N et al. (2017) <https://www.nature.com/articles/sdata201740#Sec2>`__.
@@ -183,15 +194,13 @@ print(msg)
 # * The **ramp onset**, the **button press**, and the **feedback** are **time-locked events** that yield ERP-like components.
 #
 # Your task (**label**) is to predict the response time for the subject during this windows.
-#
+######################################################################
 # In the figure below, we have the timeline representation of the cognitive task:
-#
 # .. image:: https://eeg2025.github.io/assets/img/image-2.jpg
-#
 
+######################################################################
 # Stimulus demonstration
 # ----------------------
-#
 # .. raw:: html
 #
 #    <div class="video-wrapper">
@@ -201,6 +210,7 @@ print(msg)
 #              allowfullscreen></iframe>
 #    </div>
 #
+######################################################################
 # PyTorch Dataset for the competition
 # -----------------------------------
 # Now, we have a Pytorch Dataset object that contains the set of recordings for the task
@@ -238,6 +248,7 @@ raw = dataset_ccd.datasets[0].raw  # get the Raw object of the first recording
 # And to download all the data all data directly, you can do:
 raws = Parallel(n_jobs=-1)(delayed(lambda d: d.raw)(d) for d in dataset_ccd.datasets)
 
+######################################################################
 # Alternatives for Downloading the data
 # -------------------------------------
 #
@@ -254,6 +265,7 @@ raws = Parallel(n_jobs=-1)(delayed(lambda d: d.raw)(d) for d in dataset_ccd.data
 #    aws s3 sync s3://nmdatasets/NeurIPS25/R1_L100_bdf data/R1_L100_bdf --no-sign-request
 
 
+######################################################################
 # Create windows of interest
 # -----------------------------
 # So we epoch after the stimulus moment with a beginning shift of 500 ms.
@@ -307,6 +319,7 @@ single_windows = add_extras_columns(
         "response_type",
     ),
 )
+######################################################################
 # Inspect the label distribution
 # -------------------------------
 import numpy as np
@@ -326,6 +339,7 @@ plt.tight_layout()
 plt.show()
 
 
+######################################################################
 # Split the data
 # ---------------
 # Extract meta information
@@ -377,6 +391,7 @@ print(f"Train:\t{len(train_set)}")
 print(f"Valid:\t{len(valid_set)}")
 print(f"Test:\t{len(test_set)}")
 
+######################################################################
 # Create dataloaders
 # -------------------
 batch_size = 128
@@ -393,6 +408,7 @@ test_loader = DataLoader(
     test_set, batch_size=batch_size, shuffle=False, num_workers=num_workers
 )
 
+######################################################################
 # Build the model
 # -----------------
 # For neural network models, **to start**, we suggest using `braindecode models <https://braindecode.org/1.2/models/models_table.html>`__ zoo.
@@ -412,6 +428,7 @@ print(model)
 model.to(device)
 
 
+######################################################################
 # Define training and validation functions
 # -------------------------------------------
 # The rest is our classic PyTorch/torch lighting/skorch training pipeline,
@@ -519,6 +536,7 @@ def valid_model(
     return avg_loss, rmse
 
 
+######################################################################
 # Train the model
 # ------------------
 lr = 1e-3
@@ -569,6 +587,7 @@ for epoch in range(1, n_epochs + 1):
 if best_state is not None:
     model.load_state_dict(best_state)
 
+######################################################################
 # Save the model
 # -----------------
 torch.save(model.state_dict(), "weights_challenge_1.pt")

@@ -212,18 +212,22 @@ class EEGDash:
         return doc is not None
 
     def _validate_input(self, record: dict[str, Any]) -> dict[str, Any]:
-        """Internal method to validate the input record against the expected schema.
+        """Validate the input record against the expected schema.
 
         Parameters
         ----------
-        record: dict
+        record : dict
             A dictionary representing the EEG data record to be validated.
 
         Returns
         -------
-        dict:
-            Returns the record itself on success, or raises a ValueError if the record is invalid.
+        dict
+            The record itself on success.
 
+        Raises
+        ------
+        ValueError
+            If the record is missing required keys or has values of the wrong type.
         """
         input_types = {
             "data_name": str,
@@ -252,20 +256,42 @@ class EEGDash:
         return record
 
     def _build_query_from_kwargs(self, **kwargs) -> dict[str, Any]:
-        """Internal helper to build a validated MongoDB query from keyword args.
+        """Build a validated MongoDB query from keyword arguments.
 
-        This delegates to the module-level builder used across the package and
-        is exposed here for testing and convenience.
+        This delegates to the module-level builder used across the package.
+
+        Parameters
+        ----------
+        **kwargs
+            Keyword arguments to convert into a MongoDB query.
+
+        Returns
+        -------
+        dict
+            A MongoDB query dictionary.
         """
         return build_query_from_kwargs(**kwargs)
 
-    # --- Query merging and conflict detection helpers ---
-    def _extract_simple_constraint(self, query: dict[str, Any], key: str):
+    def _extract_simple_constraint(
+        self, query: dict[str, Any], key: str
+    ) -> tuple[str, Any] | None:
         """Extract a simple constraint for a given key from a query dict.
 
-        Supports only top-level equality (key: value) and $in (key: {"$in": [...]})
-        constraints. Returns a tuple (kind, value) where kind is "eq" or "in". If the
-        key is not present or uses other operators, returns None.
+        Supports top-level equality (e.g., ``{'subject': '01'}``) and ``$in``
+        (e.g., ``{'subject': {'$in': ['01', '02']}}``) constraints.
+
+        Parameters
+        ----------
+        query : dict
+            The MongoDB query dictionary.
+        key : str
+            The key for which to extract the constraint.
+
+        Returns
+        -------
+        tuple or None
+            A tuple of (kind, value) where kind is "eq" or "in", or None if the
+            constraint is not present or unsupported.
         """
         if not isinstance(query, dict) or key not in query:
             return None
@@ -275,16 +301,27 @@ class EEGDash:
                 return ("in", list(val["$in"]))
             return None  # unsupported operator shape for conflict checking
         else:
-            return ("eq", val)
+            return "eq", val
 
     def _raise_if_conflicting_constraints(
         self, raw_query: dict[str, Any], kwargs_query: dict[str, Any]
     ) -> None:
-        """Raise ValueError if both query sources define incompatible constraints.
+        """Raise ValueError if query sources have incompatible constraints.
 
-        We conservatively check only top-level fields with simple equality or $in
-        constraints. If a field appears in both queries and constraints are mutually
-        exclusive, raise an explicit error to avoid silent empty result sets.
+        Checks for mutually exclusive constraints on the same field to avoid
+        silent empty results.
+
+        Parameters
+        ----------
+        raw_query : dict
+            The raw MongoDB query dictionary.
+        kwargs_query : dict
+            The query dictionary built from keyword arguments.
+
+        Raises
+        ------
+        ValueError
+            If conflicting constraints are found.
         """
         if not raw_query or not kwargs_query:
             return
@@ -388,12 +425,29 @@ class EEGDash:
             logger.info("Upserted: %s", result.upserted_count)
             logger.info("Errors: %s ", result.bulk_api_result.get("writeErrors", []))
 
-    def _add_request(self, record: dict):
-        """Internal helper method to create a MongoDB insertion request for a record."""
+    def _add_request(self, record: dict) -> InsertOne:
+        """Create a MongoDB insertion request for a record.
+
+        Parameters
+        ----------
+        record : dict
+            The record to insert.
+
+        Returns
+        -------
+        InsertOne
+            A PyMongo ``InsertOne`` object.
+        """
         return InsertOne(record)
 
-    def add(self, record: dict):
-        """Add a single record to the MongoDB collection."""
+    def add(self, record: dict) -> None:
+        """Add a single record to the MongoDB collection.
+
+        Parameters
+        ----------
+        record : dict
+            The record to add.
+        """
         try:
             self.__collection.insert_one(record)
         except ValueError as e:
@@ -405,18 +459,28 @@ class EEGDash:
             )
             logger.debug("Add operation failed", exc_info=exc)
 
-    def _update_request(self, record: dict):
-        """Internal helper method to create a MongoDB update request for a record."""
+    def _update_request(self, record: dict) -> UpdateOne:
+        """Create a MongoDB update request for a record.
+
+        Parameters
+        ----------
+        record : dict
+            The record to update.
+
+        Returns
+        -------
+        UpdateOne
+            A PyMongo ``UpdateOne`` object.
+        """
         return UpdateOne({"data_name": record["data_name"]}, {"$set": record})
 
-    def update(self, record: dict):
+    def update(self, record: dict) -> None:
         """Update a single record in the MongoDB collection.
 
         Parameters
         ----------
         record : dict
             Record content to set at the matching ``data_name``.
-
         """
         try:
             self.__collection.update_one(
@@ -429,58 +493,77 @@ class EEGDash:
             logger.debug("Update operation failed", exc_info=exc)
 
     def exists(self, query: dict[str, Any]) -> bool:
-        """Alias for :meth:`exist` provided for API clarity."""
+        """Check if at least one record matches the query.
+
+        This is an alias for :meth:`exist`.
+
+        Parameters
+        ----------
+        query : dict
+            MongoDB query to check for existence.
+
+        Returns
+        -------
+        bool
+            True if a matching record exists, False otherwise.
+        """
         return self.exist(query)
 
-    def remove_field(self, record, field):
-        """Remove a specific field from a record in the MongoDB collection.
+    def remove_field(self, record: dict, field: str) -> None:
+        """Remove a field from a specific record in the MongoDB collection.
 
         Parameters
         ----------
         record : dict
-            Record identifying object with ``data_name``.
+            Record-identifying object with a ``data_name`` key.
         field : str
-            Field name to remove.
-
+            The name of the field to remove.
         """
         self.__collection.update_one(
             {"data_name": record["data_name"]}, {"$unset": {field: 1}}
         )
 
-    def remove_field_from_db(self, field):
-        """Remove a field from all records (destructive).
+    def remove_field_from_db(self, field: str) -> None:
+        """Remove a field from all records in the database.
+
+        .. warning::
+            This is a destructive operation and cannot be undone.
 
         Parameters
         ----------
         field : str
-            Field name to remove from every document.
-
+            The name of the field to remove from all documents.
         """
         self.__collection.update_many({}, {"$unset": {field: 1}})
 
     @property
     def collection(self):
-        """Return the MongoDB collection object."""
+        """The underlying PyMongo ``Collection`` object.
+
+        Returns
+        -------
+        pymongo.collection.Collection
+            The collection object used for database interactions.
+        """
         return self.__collection
 
-    def close(self):
-        """Backward-compatibility no-op; connections are managed globally.
+    def close(self) -> None:
+        """Close the MongoDB connection.
 
-        Notes
-        -----
-        Connections are managed by :class:`MongoConnectionManager`. Use
-        :meth:`close_all_connections` to explicitly close all clients.
-
+        .. deprecated:: 0.1
+            Connections are now managed globally by :class:`MongoConnectionManager`.
+            This method is a no-op and will be removed in a future version.
+            Use :meth:`EEGDash.close_all_connections` to close all clients.
         """
         # Individual instances no longer close the shared client
         pass
 
     @classmethod
-    def close_all_connections(cls):
-        """Close all MongoDB client connections managed by the singleton."""
+    def close_all_connections(cls) -> None:
+        """Close all MongoDB client connections managed by the singleton manager."""
         MongoConnectionManager.close_all()
 
-    def __del__(self):
+    def __del__(self) -> None:
         """Destructor; no explicit action needed due to global connection manager."""
         # No longer needed since we're using singleton pattern
         pass
@@ -775,46 +858,30 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
     ) -> list[dict]:
         """Discover local BIDS EEG files and build minimal records.
 
-        This helper enumerates EEG recordings under ``dataset_root`` via
-        ``mne_bids.find_matching_paths`` and applies entity filters to produce a
-        list of records suitable for ``EEGDashBaseDataset``. No network access
-        is performed and files are not read.
+        Enumerates EEG recordings under ``dataset_root`` using
+        ``mne_bids.find_matching_paths`` and applies entity filters to produce
+        records suitable for :class:`EEGDashBaseDataset`. No network access is
+        performed, and files are not read.
 
         Parameters
         ----------
         dataset_root : Path
-            Local dataset directory. May be the plain dataset folder (e.g.,
-            ``ds005509``) or a suffixed cache variant (e.g.,
-            ``ds005509-bdf-mini``).
-        filters : dict of {str, Any}
-            Query filters. Must include ``'dataset'`` with the dataset id (without
-            local suffixes). May include BIDS entities ``'subject'``,
-            ``'session'``, ``'task'``, and ``'run'``. Each value can be a scalar
-            or a sequence of scalars.
+            Local dataset directory (e.g., ``/path/to/cache/ds005509``).
+        filters : dict
+            Query filters. Must include ``'dataset'`` and may include BIDS
+            entities like ``'subject'``, ``'session'``, etc.
 
         Returns
         -------
-        records : list of dict
-            One record per matched EEG file with at least:
-
-            - ``'data_name'``
-            - ``'dataset'`` (dataset id, without suffixes)
-            - ``'bidspath'`` (normalized to start with the dataset id)
-            - ``'subject'``, ``'session'``, ``'task'``, ``'run'`` (may be None)
-            - ``'bidsdependencies'`` (empty list)
-            - ``'modality'`` (``"eeg"``)
-            - ``'sampling_frequency'``, ``'nchans'``, ``'ntimes'`` (minimal
-              defaults for offline usage)
+        list of dict
+            A list of records, one for each matched EEG file. Each record
+            contains BIDS entities, paths, and minimal metadata for offline use.
 
         Notes
         -----
-        - Matching uses ``datatypes=['eeg']`` and ``suffixes=['eeg']``.
-        - ``bidspath`` is constructed as
-          ``<dataset_id> / <relative_path_from_dataset_root>`` to ensure the
-          first path component is the dataset id (without local cache suffixes).
-        - Minimal defaults are set for ``sampling_frequency``, ``nchans``, and
-          ``ntimes`` to satisfy dataset length requirements offline.
-
+        Matching is performed for ``datatypes=['eeg']`` and ``suffixes=['eeg']``.
+        The ``bidspath`` is normalized to ensure it starts with the dataset ID,
+        even for suffixed cache directories.
         """
         dataset_id = filters["dataset"]
         arg_map = {
@@ -875,10 +942,21 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
         return records_out
 
     def _find_key_in_nested_dict(self, data: Any, target_key: str) -> Any:
-        """Recursively search for target_key in nested dicts/lists with normalized matching.
+        """Recursively search for a key in nested dicts/lists.
 
-        This makes lookups tolerant to naming differences like "p-factor" vs "p_factor".
-        Returns the first match or None.
+        Performs a case-insensitive and underscore/hyphen-agnostic search.
+
+        Parameters
+        ----------
+        data : Any
+            The nested data structure (dicts, lists) to search.
+        target_key : str
+            The key to search for.
+
+        Returns
+        -------
+        Any
+            The value of the first matching key, or None if not found.
         """
         norm_target = normalize_key(target_key)
         if isinstance(data, dict):
@@ -901,24 +979,25 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
         description_fields: list[str],
         base_dataset_kwargs: dict,
     ) -> list[EEGDashBaseDataset]:
-        """Helper method to find datasets in the MongoDB collection that satisfy the
-        given query and return them as a list of EEGDashBaseDataset objects.
+        """Find and construct datasets from a MongoDB query.
+
+        Queries the database, then creates a list of
+        :class:`EEGDashBaseDataset` objects from the results.
 
         Parameters
         ----------
-        query : dict
-            The query object, as in EEGDash.find().
-        description_fields : list[str]
-            A list of fields to be extracted from the dataset records and included in
-            the returned dataset description(s).
-        kwargs: additional keyword arguments to be passed to the EEGDashBaseDataset
-            constructor.
+        query : dict, optional
+            The MongoDB query to execute.
+        description_fields : list of str
+            Fields to extract from each record for the dataset description.
+        base_dataset_kwargs : dict
+            Additional keyword arguments to pass to the
+            :class:`EEGDashBaseDataset` constructor.
 
         Returns
         -------
-        list :
-            A list of EEGDashBaseDataset objects that match the query.
-
+        list of EEGDashBaseDataset
+            A list of dataset objects matching the query.
         """
         datasets: list[EEGDashBaseDataset] = []
         self.records = self.eeg_dash_instance.find(query)

@@ -28,6 +28,8 @@ ALLOWED_QUERY_FIELDS = {
     "nchans",
     "ntimes",
 }
+"""set: A set of field names that are permitted in database queries constructed
+via :func:`~eegdash.api.EEGDash.find` with keyword arguments."""
 
 RELEASE_TO_OPENNEURO_DATASET_MAP = {
     "R11": "ds005516",
@@ -42,6 +44,8 @@ RELEASE_TO_OPENNEURO_DATASET_MAP = {
     "R2": "ds005506",
     "R1": "ds005505",
 }
+"""dict: A mapping from Healthy Brain Network (HBN) release identifiers (e.g., "R11")
+to their corresponding OpenNeuro dataset identifiers (e.g., "ds005516")."""
 
 SUBJECT_MINI_RELEASE_MAP = {
     "R11": [
@@ -287,6 +291,9 @@ SUBJECT_MINI_RELEASE_MAP = {
         "NDARFW972KFQ",
     ],
 }
+"""dict: A mapping from HBN release identifiers to a list of subject IDs.
+This is used to select a small, representative subset of subjects for creating
+"mini" datasets for testing and demonstration purposes."""
 
 config = {
     "required_fields": ["data_name"],
@@ -322,3 +329,21 @@ config = {
     ],
     "accepted_query_fields": ["data_name", "dataset"],
 }
+"""dict: A global configuration dictionary for the EEGDash package.
+
+Keys
+----
+required_fields : list
+    Fields that must be present in every database record.
+attributes : dict
+    A schema defining the expected primary attributes and their types for a
+    database record.
+description_fields : list
+    A list of fields considered to be descriptive metadata for a recording,
+    which can be used for filtering and display.
+bids_dependencies_files : list
+    A list of BIDS metadata filenames that are relevant for interpreting an
+    EEG recording.
+accepted_query_fields : list
+    Fields that are accepted for lightweight existence checks in the database.
+"""

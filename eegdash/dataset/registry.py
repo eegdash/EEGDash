@@ -14,7 +14,34 @@ def register_openneuro_datasets(
     namespace: Dict[str, Any] | None = None,
     add_to_all: bool = True,
 ) -> Dict[str, type]:
-    """Dynamically create dataset classes from a summary file."""
+    """Dynamically create and register dataset classes from a summary file.
+
+    This function reads a CSV file containing summaries of OpenNeuro datasets
+    and dynamically creates a Python class for each dataset. These classes
+    inherit from a specified base class and are pre-configured with the
+    dataset's ID.
+
+    Parameters
+    ----------
+    summary_file : str or pathlib.Path
+        The path to the CSV file containing the dataset summaries.
+    base_class : type, optional
+        The base class from which the new dataset classes will inherit. If not
+        provided, :class:`eegdash.api.EEGDashDataset` is used.
+    namespace : dict, optional
+        The namespace (e.g., `globals()`) into which the newly created classes
+        will be injected. Defaults to the local `globals()` of this module.
+    add_to_all : bool, default True
+        If True, the names of the newly created classes are added to the
+        `__all__` list of the target namespace, making them importable with
+        `from ... import *`.
+
+    Returns
+    -------
+    dict[str, type]
+        A dictionary mapping the names of the registered classes to the class
+        types themselves.
+    """
     if base_class is None:
         from ..api import EEGDashDataset as base_class  # lazy import
 
@@ -84,8 +111,27 @@ def register_openneuro_datasets(
     return registered
 
 
-def _generate_rich_docstring(dataset_id: str, row_series: pd.Series, base_class) -> str:
-    """Generate a comprehensive docstring for a dataset class."""
+def _generate_rich_docstring(
+    dataset_id: str, row_series: pd.Series, base_class: type
+) -> str:
+    """Generate a comprehensive, well-formatted docstring for a dataset class.
+
+    Parameters
+    ----------
+    dataset_id : str
+        The identifier of the dataset (e.g., "ds002718").
+    row_series : pandas.Series
+        A pandas Series containing the metadata for the dataset, extracted
+        from the summary CSV file.
+    base_class : type
+        The base class from which the new dataset class inherits. Used to
+        generate the "See Also" section of the docstring.
+
+    Returns
+    -------
+    str
+        A formatted docstring.
+    """
     # Extract metadata with safe defaults
     n_subjects = row_series.get("n_subjects", "Unknown")
     n_records = row_series.get("n_records", "Unknown")
@@ -173,7 +219,23 @@ See Also
 
 
 def _markdown_table(row_series: pd.Series) -> str:
-    """Create a reStructuredText grid table from a pandas Series."""
+    """Create a reStructuredText grid table from a pandas Series.
+
+    This helper function takes a pandas Series containing dataset metadata
+    and formats it into a reStructuredText grid table for inclusion in
+    docstrings.
+
+    Parameters
+    ----------
+    row_series : pandas.Series
+        A Series where each index is a metadata field and each value is the
+        corresponding metadata value.
+
+    Returns
+    -------
+    str
+        A string containing the formatted reStructuredText table.
+    """
     if row_series.empty:
         return ""
     dataset_id = row_series["dataset"]

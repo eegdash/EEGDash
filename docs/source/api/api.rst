@@ -3,128 +3,113 @@
 
 .. _api:
 
+#############
 API Reference
-=============
+#############
 
 The EEGDash API reference curates everything you need to integrate, extend,
 and automate EEGDash—from core dataset helpers to feature extraction and rich
 dataset metadata.
 
-.. container:: api-hero-buttons
-
-   .. button-link:: api_core.html
-      :color: primary
-      :ref-type: doc
-      :shadow:
-
-      Get Started
-
-   .. button-link:: ../dataset_summary.html
-      :color: secondary
-      :ref-type: doc
-      :shadow:
-
-      Dataset Catalog
+******************
+API Components
+******************
 
 .. grid:: 1
-   :gutter: 2
+   :gutter: 4
    :class-container: sd-gap-4 sd-mb-4
 
-   .. grid-item::
+   .. grid-item-card::
+      :link: api_core
+      :link-type: doc
+      :text-align: center
+      :class-card: api-grid-card
+      :class-header: api-grid-card__header
+      :class-body: api-grid-card__body
+      :class-footer: api-grid-card__footer
 
-      .. card:: Core API
-         :link: api_core
-         :link-type: doc
-         :shadow: sm
-         :width: 100%
-         :class-card: sd-border-0 sd-rounded-3 api-card
-         :class-title: sd-visually-hidden
+      .. raw:: html
 
-         .. container:: api-card__content api-card__content--stack
+         <span class="fa-solid fa-microchip api-grid-card__icon" aria-hidden="true"></span>
 
-            .. container:: api-card__icon
+      .. rst-class:: api-grid-card__title
 
-               .. raw:: html
+      **Core API**
+      ^^^
 
-                  <span class="fa-solid fa-microchip" aria-hidden="true"></span>
-                  <span class="sd-sr-only">Core API documentation</span>
+      Build, query, and manage EEGDash datasets and utilities.
 
-            .. container:: api-card__title
+      +++
 
-               Core API
+      .. button-ref:: api_core
+         :color: primary
+         :class: api-grid-card__button
+         :click-parent:
 
-            .. container:: api-card__subtitle
+         → Explore Core API
 
-               Build, query, and manage EEGDash datasets and utilities.
+   .. grid-item-card::
+      :link: api_features
+      :link-type: doc
+      :text-align: center
+      :class-card: api-grid-card
+      :class-header: api-grid-card__header
+      :class-body: api-grid-card__body
+      :class-footer: api-grid-card__footer
 
-               .. rst-class:: api-card__cta
+      .. raw:: html
 
-               :doc:`→ Explore Core API <api_core>`
+         <span class="fa-solid fa-wave-square api-grid-card__icon" aria-hidden="true"></span>
 
-   .. grid-item::
+      .. rst-class:: api-grid-card__title
 
-      .. card:: Feature Engineering
-         :link: api_features
-         :link-type: doc
-         :shadow: sm
-         :width: 100%
-         :class-card: sd-border-0 sd-rounded-3 api-card
-         :class-title: sd-visually-hidden
+      **Feature engineering**
+      ^^^
 
-         .. container:: api-card__content api-card__content--stack
+      Extract statistical, spectral, and machine-learning-ready features.
 
-            .. container:: api-card__icon
+      +++
 
-               .. raw:: html
+      .. button-ref:: api_features
+         :color: primary
+         :class: api-grid-card__button
+         :click-parent:
 
-                  <span class="fa-solid fa-wave-square" aria-hidden="true"></span>
-                  <span class="sd-sr-only">Feature engineering documentation</span>
+         → Explore Feature Engineering
 
-            .. container:: api-card__title
+   .. grid-item-card::
+      :link: dataset/api_dataset
+      :link-type: doc
+      :text-align: center
+      :class-card: api-grid-card
+      :class-header: api-grid-card__header
+      :class-body: api-grid-card__body
+      :class-footer: api-grid-card__footer
 
-               Feature Engineering
+      .. raw:: html
 
-            .. container:: api-card__subtitle
+         <span class="fa-solid fa-database api-grid-card__icon" aria-hidden="true"></span>
 
-               Extract statistical, spectral, and machine-learning ready features.
+      .. rst-class:: api-grid-card__title
 
-               .. rst-class:: api-card__cta
+      **Dataset catalog**
+      ^^^
 
-               :doc:`→ Explore Feature Engineering <api_features>`
+      Browse dynamically generated dataset classes with rich metadata.
 
-   .. grid-item::
+      +++
 
-      .. card:: Dataset Catalog API
-         :link: dataset/api_dataset
-         :link-type: doc
-         :shadow: sm
-         :width: 100%
-         :class-card: sd-border-0 sd-rounded-3 api-card
-         :class-title: sd-visually-hidden
+      .. button-ref:: dataset/api_dataset
+         :color: primary
+         :class: api-grid-card__button
+         :click-parent:
 
-         .. container:: api-card__content api-card__content--stack
+         → Explore the Dataset Catalog
+    
 
-            .. container:: api-card__icon
-
-               .. raw:: html
-
-                  <span class="fa-solid fa-database" aria-hidden="true"></span>
-                  <span class="sd-sr-only">Dataset catalog documentation</span>
-
-            .. container:: api-card__title
-
-               Dataset Catalog
-
-            .. container:: api-card__subtitle
-
-               Browse dynamically generated dataset classes with rich metadata.
-
-               .. rst-class:: api-card__cta
-
-               :doc:`→ Explore the Dataset Catalog <dataset/api_dataset>`
-
-Related guides
---------------
+******************
+Related Guides
+******************
 
 - :doc:`Tutorial gallery <../generated/auto_examples/index>`
 - :doc:`Dataset summary <../dataset_summary>`

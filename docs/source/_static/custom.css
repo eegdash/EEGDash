@@ -230,3 +230,64 @@ figure.eegdash-figure figcaption.eegdash-caption {
   margin: .75rem auto 0;
   background: rgba(10,111,182, .25);
 }
+
+/* -------------------------------------------------------------
+   SciPy-style grid cards for API landing page
+------------------------------------------------------------- */
+.api-grid-card {
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  border-radius: 0.85rem;
+  box-shadow: 0 10px 22px rgba(15, 23, 42, 0.08);
+  overflow: hidden;
+}
+
+.api-grid-card__header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 1.75rem 1.5rem 1.35rem;
+  background: var(--sd-color-surface, #ffffff);
+  border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+.api-grid-card__icon {
+  display: inline-flex;
+  width: 3.25rem;
+  height: 3.25rem;
+  border-radius: 999px;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  color: var(--sd-color-primary, #5e5ef6);
+  background: rgba(94, 94, 246, 0.12);
+}
+
+.api-grid-card__title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.api-grid-card__body {
+  padding: 1.6rem 1.85rem;
+  font-size: 1.05rem;
+  line-height: 1.65;
+  color: var(--pst-color-text, #1b1f24);
+}
+
+.api-grid-card__body p:last-child {
+  margin: 0;
+}
+
+.api-grid-card__footer {
+  padding: 1.3rem 1.6rem 1.6rem;
+  border-top: 1px solid rgba(15, 23, 42, 0.08);
+  background: var(--sd-color-surface, #ffffff);
+}
+
+.api-grid-card__button {
+  font-weight: 600;
+  font-size: 1rem;
+  padding: 0.75rem 1.75rem;
+}

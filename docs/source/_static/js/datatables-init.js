@@ -138,7 +138,7 @@
 
     ensureTotalRowInFoot($table);
 
-    const filterCols = [1, 2, 3, 4, 5, 6, 8, 9, 10];
+    const filterCols = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
     const headerCells = $table.find('thead th');
     const sizeIndex = headerCells

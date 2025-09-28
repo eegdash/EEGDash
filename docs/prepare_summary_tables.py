@@ -309,7 +309,6 @@ def prepare_table(df: pd.DataFrame):
             "n_tasks",
             "nchans_set",
             "sampling_freqs",
-            "duration_hours_total",
             "size",
             "size_bytes",
             "Type Subject",
@@ -321,7 +320,6 @@ def prepare_table(df: pd.DataFrame):
     # renaming time for something small
     df = df.rename(
         columns={
-            "duration_hours_total": "duration (h)",
             "modality of exp": "modality",
             "type of exp": "type",
             "Type Subject": "pathology",
@@ -366,13 +364,10 @@ def prepare_table(df: pd.DataFrame):
     )
 
     # Creating the total line
-    df["duration (h)"] = df["duration (h)"].round(2)
-
     df.loc["Total"] = df.sum(numeric_only=True)
     df.loc["Total", "dataset"] = f"Total {len(df) - 1} datasets"
     df.loc["Total", "nchans_set"] = ""
     df.loc["Total", "sampling_freqs"] = ""
-    df.loc["Total", "duration (h)"] = None
     df.loc["Total", "pathology"] = ""
     df.loc["Total", "modality"] = ""
     df.loc["Total", "type"] = ""
@@ -421,8 +416,25 @@ def main(source_dir: str, target_dir: str):
                 "n_records": "# of records",
                 "n_subjects": "# of subjects",
                 "n_tasks": "# of tasks",
+                "pathology": "Pathology",
+                "modality": "Modality",
+                "type": "Type",
             }
         )
+        df = df[
+            [
+                "Dataset",
+                "Pathology",
+                "Modality",
+                "Type",
+                "# of records",
+                "# of subjects",
+                "# of tasks",
+                "# of channels",
+                "sampling (Hz)",
+                "size",
+            ]
+        ]
         # (If you add a 'Total' row after this, cast again or build it as Int64.)
         html_table = df.to_html(
             classes=["sd-table", "sortable"],

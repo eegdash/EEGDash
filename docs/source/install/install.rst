@@ -11,7 +11,7 @@ EEGDash is written in Python 3, specifically for version 3.10 or above.
 The package is distributed via Python package index (`PyPI <eegdash-pypi_>`_), and you can access the
 source code via `Github <eegdash-github_>`_ repository.
 
-There are different ways to install EEGDash, depending on your needs and:
+There are different ways to install EEGDash, depending on your needs:
 
 
 .. grid:: 2

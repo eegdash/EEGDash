@@ -221,7 +221,7 @@ sphinx_gallery_conf = {
     "backreferences_dir": "gen_modules/backreferences",
     "inspect_global_variables": True,
     "show_memory": True,
-    "show_api_usage": True,
+    "show_api_usage": False,
     "doc_module": ("eegdash", "numpy", "scipy", "matplotlib"),
     "reference_url": {"eegdash": None},
     "filename_pattern": r"/(?:plot|tutorial)_(?!_).*\.py",

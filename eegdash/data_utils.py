@@ -152,16 +152,29 @@ class EEGDashBaseDataset(BaseDataset):
             self.filenames = [self.filecache]
         if self._raw is None:
             try:
-                # mne-bids can emit noisy warnings to stderr; keep user logs clean
                 _stderr_buffer = io.StringIO()
-                with redirect_stderr(_stderr_buffer):
-                    self._raw = mne_bids.read_raw_bids(
-                        bids_path=self.bidspath, verbose="ERROR"
+
+                # mne-bids can emit noisy warnings to stderr; keep user logs clean
+                try:
+                    with redirect_stderr(_stderr_buffer):
+                        self._raw = mne_bids.read_raw_bids(
+                            bids_path=self.bidspath, verbose="ERROR"
+                        )
+                    # Enrich Raw.info and description with participants.tsv extras
+                    enrich_from_participants(
+                        self.bids_root, self.bidspath, self._raw, self.description
                     )
-                # Enrich Raw.info and description with participants.tsv extras
-                enrich_from_participants(
-                    self.bids_root, self.bidspath, self._raw, self.description
-                )
+                except ValueError:
+                    with redirect_stderr(_stderr_buffer):
+                        self._raw = mne.io.read_raw(
+                            bids_path=self.bidspath, verbose="ERROR"
+                        )
+                    # Enrich Raw.info and description with participants.tsv extras
+                    enrich_from_participants(
+                        self.bids_root, self.bidspath, self._raw, self.description
+                    )
+                finally:
+                    _stderr_buffer.close()
 
             except Exception as e:
                 logger.error(

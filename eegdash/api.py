@@ -895,60 +895,59 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
                     return res
         return None
 
+    def _find_datasets(
+        self,
+        query: dict[str, Any] | None,
+        description_fields: list[str],
+        base_dataset_kwargs: dict,
+    ) -> list[EEGDashBaseDataset]:
+        """Helper method to find datasets in the MongoDB collection that satisfy the
+        given query and return them as a list of EEGDashBaseDataset objects.
 
-def _find_datasets(
-    self,
-    query: dict[str, Any] | None,
-    description_fields: list[str],
-    base_dataset_kwargs: dict,
-) -> list[EEGDashBaseDataset]:
-    """Helper method to find datasets in the MongoDB collection that satisfy the
-    given query and return them as a list of EEGDashBaseDataset objects.
+        Parameters
+        ----------
+        query : dict
+            The query object, as in EEGDash.find().
+        description_fields : list[str]
+            A list of fields to be extracted from the dataset records and included in
+            the returned dataset description(s).
+        kwargs: additional keyword arguments to be passed to the EEGDashBaseDataset
+            constructor.
 
-    Parameters
-    ----------
-    query : dict
-        The query object, as in EEGDash.find().
-    description_fields : list[str]
-        A list of fields to be extracted from the dataset records and included in
-        the returned dataset description(s).
-    kwargs: additional keyword arguments to be passed to the EEGDashBaseDataset
-        constructor.
+        Returns
+        -------
+        list :
+            A list of EEGDashBaseDataset objects that match the query.
 
-    Returns
-    -------
-    list :
-        A list of EEGDashBaseDataset objects that match the query.
+        """
+        datasets: list[EEGDashBaseDataset] = []
+        self.records = self.eeg_dash_instance.find(query)
 
-    """
-    datasets: list[EEGDashBaseDataset] = []
-    self.records = self.eeg_dash_instance.find(query)
-
-    for record in self.records:
-        description: dict[str, Any] = {}
-        # Requested fields first (normalized matching)
-        for field in description_fields:
-            value = self._find_key_in_nested_dict(record, field)
-            if value is not None:
-                description[field] = value
-        # Merge all participants.tsv columns generically
-        part = self._find_key_in_nested_dict(record, "participant_tsv")
-        if isinstance(part, dict):
-            description = merge_participants_fields(
-                description=description,
-                participants_row=part,
-                description_fields=description_fields,
+        for record in self.records:
+            description: dict[str, Any] = {}
+            # Requested fields first (normalized matching)
+            for field in description_fields:
+                value = self._find_key_in_nested_dict(record, field)
+                if value is not None:
+                    description[field] = value
+            # Merge all participants.tsv columns generically
+            part = self._find_key_in_nested_dict(record, "participant_tsv")
+            if isinstance(part, dict):
+                description = merge_participants_fields(
+                    description=description,
+                    participants_row=part,
+                    description_fields=description_fields,
+                )
+            datasets.append(
+                EEGDashBaseDataset(
+                    record,
+                    cache_dir=self.cache_dir,
+                    s3_bucket=self.s3_bucket,
+                    description=description,
+                    **base_dataset_kwargs,
+                )
             )
-        datasets.append(
-            EEGDashBaseDataset(
-                record,
-                cache_dir=self.cache_dir,
-                s3_bucket=self.s3_bucket,
-                description=description,
-                **base_dataset_kwargs,
-            )
-        )
-    return datasets
+        return datasets
 
 
 __all__ = ["EEGDash", "EEGDashDataset"]

@@ -97,3 +97,457 @@ figure.eegdash-figure figcaption.eegdash-caption {
   height: 100%;
   border: 0;
 }
+
+/* -------------------------------------------------------------
+   API Reference landing cards
+------------------------------------------------------------- */
+.api-card {
+  min-height: 15rem;
+  border-left: 4px solid rgba(10, 111, 182, 0.18);
+  background-color: var(--sd-color-surface, #ffffff);
+}
+
+.api-card .card-header {
+  background-color: var(--sd-color-primary, #0a6fb6);
+  color: #ffffff;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  font-size: 1rem;
+  padding: 0.9rem 1.25rem;
+  border-bottom: none;
+}
+
+.api-card .card-body {
+  background-color: rgba(10, 111, 182, 0.06);
+  padding: 1.75rem;
+  border-bottom-left-radius: 0.75rem;
+  border-bottom-right-radius: 0.75rem;
+}
+
+.api-card__content {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 1.5rem;
+  font-size: 1.05rem;
+  line-height: 1.6;
+}
+
+.api-card__icon {
+  flex: 0 0 3.25rem;
+  height: 3.25rem;
+  border-radius: 999px;
+  background-color: rgba(10, 111, 182, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.api-card__icon .fa-solid {
+  font-size: 2.2rem;
+  color: var(--sd-color-primary, #0a6fb6);
+}
+
+.api-card__text {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  color: var(--pst-color-text, #1b1f24);
+}
+
+.api-card__text p {
+  margin: 0;
+}
+
+.api-card__cta {
+  margin: 0;
+  font-weight: 600;
+}
+
+.api-card__cta a {
+  color: var(--sd-color-primary, #0a6fb6);
+  text-decoration: none;
+}
+
+.api-card__cta a:hover,
+.api-card__cta a:focus {
+  text-decoration: underline;
+}
+
+.api-hero-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin: 1.25rem 0 2.25rem;
+}
+
+.api-hero-buttons .sd-btn {
+  font-weight: 600;
+  padding: 0.75rem 1.75rem;
+}
+
+@media (max-width: 640px) {
+  .api-card__content {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .api-card__icon {
+    width: 3.25rem;
+  }
+}
+
+/* Stacked style (SciPy-like) for API landing cards */
+.api-card__content--stack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 1rem;
+}
+
+.api-card__title {
+  font-size: 1.35rem;
+  font-weight: 700;
+  margin: .25rem 0 0;
+}
+
+.api-card__subtitle {
+  font-size: 1.06rem;
+  color: var(--pst-color-text, #1b1f24);
+  line-height: 1.6;
+  position: relative;
+  padding-bottom: .5rem;
+}
+
+.api-card__subtitle::after {
+  content: "";
+  display: block;
+  height: 1px;
+  width: 72px;
+  margin: .75rem auto 0;
+  background: rgba(10,111,182, .25);
+}
+
+/* -------------------------------------------------------------
+   SciPy-style grid cards for API landing page
+------------------------------------------------------------- */
+.api-grid-card {
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  border-radius: 0.85rem;
+  box-shadow: 0 10px 22px rgba(15, 23, 42, 0.08);
+  overflow: hidden;
+}
+
+.api-grid-card__header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 1.75rem 1.5rem 1.35rem;
+  background: var(--sd-color-surface, #ffffff);
+  border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+.api-grid-card__icon {
+  display: inline-flex;
+  width: 3.25rem;
+  height: 3.25rem;
+  border-radius: 999px;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  color: var(--sd-color-primary, #5e5ef6);
+  background: rgba(94, 94, 246, 0.12);
+}
+
+.api-grid-card__title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.api-grid-card__body {
+  padding: 1.6rem 1.85rem;
+  font-size: 1.05rem;
+  line-height: 1.65;
+  color: var(--pst-color-text, #1b1f24);
+}
+
+.api-grid-card__body p:last-child {
+  margin: 0;
+}
+
+.api-grid-card__footer {
+  padding: 1.3rem 1.6rem 1.6rem;
+  border-top: 1px solid rgba(15, 23, 42, 0.08);
+  background: var(--sd-color-surface, #ffffff);
+}
+
+.api-grid-card__button {
+  font-weight: 600;
+  font-size: 1rem;
+  padding: 0.75rem 1.75rem;
+}
+
+/* -------------------------------------------------------------
+   Tag styling shared across models + datasets tables
+------------------------------------------------------------- */
+.tag,
+.tag:link,
+.tag:visited,
+a.tag,
+a.tag:visited {
+  display: inline-block;
+  padding: 4px 10px;
+  margin: 2px 2px 2px 0;
+  border-radius: 9999px;
+  font-size: 0.85em;
+  font-weight: 600;
+  line-height: 1;
+  text-decoration: none;
+  border: 1px solid transparent;
+  background: #eef2f7;
+  color: #334155;
+  transition: box-shadow 0.15s ease, transform 0.15s ease;
+}
+
+.tag:hover,
+a.tag:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transform: translateY(-1px);
+  text-decoration: none;
+}
+
+/* Categorization palette (models summary) */
+.tag-conv {
+  background: #22c55e !important;
+  color: #ffffff !important;
+  border-color: #16a34a !important;
+}
+
+.tag-recurrent {
+  background: #8b5cf6 !important;
+  color: #ffffff !important;
+  border-color: #7c3aed !important;
+}
+
+.tag-smallattn {
+  background: #3b82f6 !important;
+  color: #ffffff !important;
+  border-color: #2563eb !important;
+}
+
+.tag-filterbank {
+  background: #06b6d4 !important;
+  color: #073042 !important;
+  border-color: #0891b2 !important;
+}
+
+.tag-interp {
+  background: #f59e0b !important;
+  color: #1f2937 !important;
+  border-color: #d97706 !important;
+}
+
+.tag-spd {
+  background: #111827 !important;
+  color: #ffffff !important;
+  border-color: #0b1220 !important;
+}
+
+.tag-lbm {
+  background: #e11d48 !important;
+  color: #ffffff !important;
+  border-color: #be123c !important;
+}
+
+.tag-gnn {
+  background: #475569 !important;
+  color: #ffffff !important;
+  border-color: #334155 !important;
+}
+
+.tag-channel {
+  background: #64748b !important;
+  color: #ffffff !important;
+  border-color: #475569 !important;
+}
+
+/* Dataset table field palettes */
+.tag-kind-dataset-pathology {
+  background: #fee2e2;
+  color: #9f1239;
+  border-color: #fecaca;
+}
+
+.tag-pathology-generic {
+  background: #fecdd3;
+  color: #881337;
+  border-color: #fca5a5;
+}
+
+.tag-pathology-healthy {
+  background: #dcfce7;
+  color: #166534;
+  border-color: #86efac;
+}
+
+.tag-pathology-clinical {
+  background: #fee2e2;
+  color: #9f1239;
+  border-color: #fecaca;
+}
+
+.tag-pathology-neurodevelopmental {
+  background: #fae8ff;
+  color: #6b21a8;
+  border-color: #e9d5ff;
+}
+
+.tag-pathology-neurological {
+  background: #fef3c7;
+  color: #92400e;
+  border-color: #fcd34d;
+}
+
+.tag-pathology-sleep {
+  background: #ede9fe;
+  color: #4c1d95;
+  border-color: #c4b5fd;
+}
+
+.tag-kind-dataset-modality {
+  background: #e0f2fe;
+  color: #1d4ed8;
+  border-color: #93c5fd;
+}
+
+.tag-modality-generic {
+  background: #cffafe;
+  color: #0f172a;
+  border-color: #67e8f9;
+}
+
+.tag-modality-visual {
+  background: #bfdbfe;
+  color: #1e3a8a;
+  border-color: #60a5fa;
+}
+
+.tag-modality-auditory {
+  background: #bae6fd;
+  color: #0f172a;
+  border-color: #38bdf8;
+}
+
+.tag-modality-somatosensory {
+  background: #d1fae5;
+  color: #0f766e;
+  border-color: #6ee7b7;
+}
+
+.tag-modality-multisensory {
+  background: #fce7f3;
+  color: #9d174d;
+  border-color: #f9a8d4;
+}
+
+.tag-modality-motor {
+  background: #fef9c3;
+  color: #92400e;
+  border-color: #fde68a;
+}
+
+.tag-modality-rest {
+  background: #ede9fe;
+  color: #5b21b6;
+  border-color: #c4b5fd;
+}
+
+.tag-kind-dataset-type {
+  background: #f5f3ff;
+  color: #5b21b6;
+  border-color: #ddd6fe;
+}
+
+.tag-type-generic {
+  background: #ede9fe;
+  color: #5b21b6;
+  border-color: #c4b5fd;
+}
+
+.tag-type-perception {
+  background: #dbeafe;
+  color: #1d4ed8;
+  border-color: #60a5fa;
+}
+
+.tag-type-decision {
+  background: #fef3c7;
+  color: #92400e;
+  border-color: #fcd34d;
+}
+
+.tag-type-rest {
+  background: #dcfce7;
+  color: #166534;
+  border-color: #86efac;
+}
+
+.tag-type-sleep {
+  background: #ede9fe;
+  color: #4338ca;
+  border-color: #c4b5fd;
+}
+
+.tag-type-cognitive {
+  background: #e0e7ff;
+  color: #3730a3;
+  border-color: #c7d2fe;
+}
+
+.tag-type-clinical {
+  background: #fee2e2;
+  color: #991b1b;
+  border-color: #fecaca;
+}
+
+/* Dataset summary table layout tweaks */
+#datasets-table tbody td:nth-child(n + 2),
+#datasets-table tfoot td:nth-child(n + 2) {
+  text-align: right;
+}
+
+#datasets-table tbody td:first-child,
+#datasets-table tfoot td:first-child {
+  text-align: left;
+}
+
+#datasets-table tfoot td {
+  font-weight: 600;
+  border-top: 2px solid rgba(0, 0, 0, 0.2);
+  background: #f9fafb;
+  padding: 8px 10px !important;
+  vertical-align: middle;
+}
+
+/* Full-width treatment for dataset summary page */
+html.dataset-summary-page .bd-main .bd-content {
+  padding-left: clamp(0.5rem, 1.75vw, 1.25rem);
+  padding-right: clamp(0.5rem, 1.75vw, 1.25rem);
+}
+
+html.dataset-summary-page .bd-main .bd-content .bd-article-container {
+  max-width: min(1760px, calc(100vw - 1.5rem)) !important;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@media (max-width: 992px) {
+  html.dataset-summary-page .bd-article-container {
+    max-width: 100%;
+  }
+}

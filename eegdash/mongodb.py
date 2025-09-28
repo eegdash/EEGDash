@@ -75,3 +75,6 @@ class MongoConnectionManager:
                 except Exception:
                     pass
             cls._instances.clear()
+
+
+__all__ = ["MongoConnectionManager"]

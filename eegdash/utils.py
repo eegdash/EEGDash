@@ -19,3 +19,6 @@ def _init_mongo_client():
                 "mongodb+srv://eegdash-user:mdzoMjQcHWTVnKDq@cluster0.vz35p.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0",
                 set_env=True,
             )
+
+
+__all__ = ["_init_mongo_client"]

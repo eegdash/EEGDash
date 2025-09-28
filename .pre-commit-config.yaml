@@ -22,7 +22,7 @@ repos:
         - --select=E,W,F,D,NPY201
         - --ignore=E402,E501,D100,D101,D102,D103,D104,D105,D107,D205,D400,D415,D417,F403,D401,E741,E722,D419
         files: ^(eegdash|docs|notebooks|scripts|tests)/
-        exclude: \.ipynb$
+        exclude: (\.ipynb$|docs/prepare_summary_tables\.py$)
     -   id: ruff 
         name: ruff examples
         args:

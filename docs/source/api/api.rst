@@ -103,7 +103,7 @@ The API is organized into three main components:
          :class: api-grid-card__button
          :click-parent:
 
-         → Explore the Dataset Catalog
+         → Explore the Dataset API
     
 
 ******************

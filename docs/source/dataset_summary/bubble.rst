@@ -3,7 +3,7 @@
    <figure class="eegdash-figure" style="margin: 0 0 1.25rem 0;">
 
 .. raw:: html
-   :file: ../../build/dataset_bubble.html
+   :file: ../_static/dataset_generated/dataset_bubble.html
 
 .. raw:: html
 

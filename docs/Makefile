@@ -12,7 +12,8 @@ help:
 .PHONY: apidoc
 apidoc:
 	# Generate full API docs, then prune duplicates covered by autosummary
-	@python -m sphinx.ext.apidoc -f -e -M -o "$(APIDIR)/dataset" "../$(PKG)"
+	@SPHINX_APIDOC_OPTIONS=members,undoc-members,show-inheritance,noindex \
+		python -m sphinx.ext.apidoc -f -e -M -o "$(APIDIR)/dataset" "../$(PKG)"
 	# Remove top-level package page and modules covered elsewhere
 
 

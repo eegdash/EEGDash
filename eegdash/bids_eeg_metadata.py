@@ -385,3 +385,11 @@ def enrich_from_participants(
     extras = participants_extras_from_tsv(bids_root, subject)
     attach_participants_extras(raw, description, extras)
     return extras
+
+
+__all__ = [
+    "participants_row_for_subject",
+    "participants_extras_from_tsv",
+    "attach_participants_extras",
+    "enrich_from_participants",
+]

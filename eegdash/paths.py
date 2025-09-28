@@ -37,3 +37,6 @@ def get_default_cache_dir() -> Path:
 
     # 3) Default to a project-local hidden folder
     return Path.cwd() / ".eegdash_cache"
+
+
+__all__ = ["get_default_cache_dir"]

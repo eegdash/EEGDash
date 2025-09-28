@@ -1,4 +1,4 @@
-eegdash.features.utils
+﻿eegdash.features.utils
 ======================
 
 .. automodule:: eegdash.features.utils
@@ -8,6 +8,22 @@ eegdash.features.utils
 
    .. autosummary::
    
+      delayed
       extract_features
       fit_feature_extractors
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      BaseConcatDataset
+      Callable
+      DataLoader
+      EEGWindowsDataset
+      FeatureExtractor
+      FeaturesConcatDataset
+      FeaturesDataset
+      Parallel
+      WindowsDataset
+      tqdm
    

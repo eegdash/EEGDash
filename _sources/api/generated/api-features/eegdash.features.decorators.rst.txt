@@ -1,4 +1,4 @@
-eegdash.features.decorators
+﻿eegdash.features.decorators
 ===========================
 
 .. automodule:: eegdash.features.decorators
@@ -14,6 +14,12 @@ eegdash.features.decorators
 
    .. autosummary::
    
+      BivariateFeature
+      Callable
+      DirectedBivariateFeature
+      FeatureExtractor
       FeatureKind
       FeaturePredecessor
+      MultivariateFeature
+      UnivariateFeature
    

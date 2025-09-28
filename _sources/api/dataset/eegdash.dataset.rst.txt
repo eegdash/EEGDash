@@ -3,6 +3,7 @@ eegdash.dataset package
 
 .. automodule:: eegdash.dataset
    :members:
+   :noindex:
    :show-inheritance:
    :undoc-members:
 

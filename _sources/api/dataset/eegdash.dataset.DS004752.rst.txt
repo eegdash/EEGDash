@@ -1,0 +1,64 @@
+..
+   This file is auto-generated during the Sphinx build.
+   Do not edit by hand; changes will be overwritten.
+
+eegdash.dataset.DS004752
+========================
+
+.. currentmodule:: eegdash.dataset
+
+.. autoclass:: eegdash.dataset.DS004752
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :inherited-members:
+   :member-order: bysource
+
+Dataset Information
+-------------------
+
+- **Dataset ID:** ``DS004752``
+- **Summary:** Modality: Auditory | Type: Memory | Subjects: Epilepsy
+- **Number of Subjects:** 15
+- **Number of Recordings:** 136
+- **Number of Tasks:** 1
+- **Number of Channels:** 0,8,10,19,20,21,23
+- **Sampling Frequencies:** 200,2000,4000,4096
+- **Total Duration (hours):** 0.302
+- **Dataset Size:** 11.95 GB
+- **OpenNeuro:** `ds004752 <https://openneuro.org/datasets/ds004752>`__
+- **NeMAR:** `ds004752 <https://nemar.org/dataexplorer/detail?dataset_id=ds004752>`__
+
+=========  =======  ==================  ==========  ==================  =============  ========
+dataset      #Subj  #Chan                 #Classes  Freq(Hz)              Duration(H)  Size
+=========  =======  ==================  ==========  ==================  =============  ========
+ds004752        15  0,8,10,19,20,21,23           1  200,2000,4000,4096          0.302  11.95 GB
+=========  =======  ==================  ==========  ==================  =============  ========
+
+
+Usage Example
+-------------
+
+.. code-block:: python
+
+   from eegdash.dataset import DS004752
+
+   dataset = DS004752(cache_dir="./data")
+
+   print(f"Number of recordings: {len(dataset)}")
+
+   if len(dataset):
+       recording = dataset[0]
+       raw = recording.load()
+       print(f"Sampling rate: {raw.info['sfreq']} Hz")
+       print(f"Channels: {len(raw.ch_names)}")
+
+
+See Also
+--------
+
+* :class:`eegdash.dataset.EEGDashDataset`
+* :mod:`eegdash.dataset`
+* `OpenNeuro dataset page <https://openneuro.org/datasets/ds004752>`__
+* `NeMAR dataset page <https://nemar.org/dataexplorer/detail?dataset_id=ds004752>`__
+

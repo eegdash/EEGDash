@@ -31,12 +31,18 @@
 <link href="_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=4ae1632d" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="_static/sg_gallery.css?v=d2d258e8" />
     <link rel="stylesheet" type="text/css" href="_static/sg_gallery-binder.css?v=f4aeca0c" />
     <link rel="stylesheet" type="text/css" href="_static/sg_gallery-dataframe.css?v=2082cf3c" />
     <link rel="stylesheet" type="text/css" href="_static/sg_gallery-rendered-html.css?v=1277b6f3" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
-    <link rel="stylesheet" type="text/css" href="_static/custom.css?v=235a86f3" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bm/dt-1.13.4/datatables.min.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/select/1.7.0/css/select.dataTables.min.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/searchpanes/2.3.1/css/searchPanes.dataTables.min.css" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css?v=5aa56fc9" />
   
   <!-- So that users can add custom icons -->
   <script src="_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
@@ -47,8 +53,17 @@
     <script src="_static/documentation_options.js?v=6c02275b"></script>
     <script src="_static/doctools.js?v=9bcbadda"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=8c005784"></script>
     <script src="_static/design-tabs.js?v=f930bc37"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'sg_execution_times';</script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.datatables.net/v/bm/dt-1.13.4/datatables.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/select/1.7.0/js/dataTables.select.min.js"></script>
+    <script src="https://cdn.datatables.net/searchpanes/2.3.1/js/dataTables.searchPanes.min.js"></script>
+    <script src="_static/js/tag-palette.js?v=6f5eac9a"></script>
+    <script src="_static/js/datatables-init.js?v=42062302"></script>
     <link rel="canonical" href="https://eegdash.org/sg_execution_times.html" />
     <link rel="icon" href="_static/eegdash_icon.png"/>
     <link rel="index" title="Index" href="genindex.html" />
@@ -149,15 +164,15 @@
   <ul class="bd-navbar-elements navbar-nav">
     
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="overview.html">
-    Overview
+  <a class="nav-link nav-internal" href="install/install.html">
+    Installing
   </a>
 </li>
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="install/install.html">
-    Install
+  <a class="nav-link nav-internal" href="user_guide.html">
+    User Guide
   </a>
 </li>
 
@@ -171,7 +186,7 @@
 
 <li class="nav-item ">
   <a class="nav-link nav-internal" href="dataset_summary.html">
-    Dataset Summary
+    Dataset Catalog
   </a>
 </li>
 
@@ -185,7 +200,7 @@
 
 <li class="nav-item ">
   <a class="nav-link nav-external" href="https://eeg2025.github.io/">
-    EEG2025 competition
+    EEG2025
   </a>
 </li>
 
@@ -317,15 +332,15 @@
   <ul class="bd-navbar-elements navbar-nav">
     
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="overview.html">
-    Overview
+  <a class="nav-link nav-internal" href="install/install.html">
+    Installing
   </a>
 </li>
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="install/install.html">
-    Install
+  <a class="nav-link nav-internal" href="user_guide.html">
+    User Guide
   </a>
 </li>
 
@@ -339,7 +354,7 @@
 
 <li class="nav-item ">
   <a class="nav-link nav-internal" href="dataset_summary.html">
-    Dataset Summary
+    Dataset Catalog
   </a>
 </li>
 
@@ -353,7 +368,7 @@
 
 <li class="nav-item ">
   <a class="nav-link nav-external" href="https://eeg2025.github.io/">
-    EEG2025 competition
+    EEG2025
   </a>
 </li>
 
@@ -485,7 +500,7 @@
                   
   <section id="computation-times">
 <span id="sphx-glr-sg-execution-times"></span><h1>Computation times<a class="headerlink" href="#computation-times" title="Link to this heading">#</a></h1>
-<p><strong>13:17.185</strong> total execution time for 5 files <strong>from all galleries</strong>:</p>
+<p><strong>10:56.902</strong> total execution time for 5 files <strong>from all galleries</strong>:</p>
 <div class="docutils container">
 <style scoped>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet" />
@@ -507,24 +522,24 @@ $(document).ready( function () {
 </thead>
 <tbody>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/auto_examples/eeg2025/tutorial_challenge_2.html#sphx-glr-generated-auto-examples-eeg2025-tutorial-challenge-2-py"><span class="std std-ref">Challenge 2: Predicting the p-factor from EEG</span></a> (<code class="docutils literal notranslate"><span class="pre">../../examples/eeg2025/tutorial_challenge_2.py</span></code>)</p></td>
-<td><p>06:07.283</p></td>
-<td><p>2773.4</p></td>
+<td><p>06:07.025</p></td>
+<td><p>2788.9</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/auto_examples/eeg2025/tutorial_challenge_1.html#sphx-glr-generated-auto-examples-eeg2025-tutorial-challenge-1-py"><span class="std std-ref">Challenge 1: Cross-Task Transfer Learning!</span></a> (<code class="docutils literal notranslate"><span class="pre">../../examples/eeg2025/tutorial_challenge_1.py</span></code>)</p></td>
-<td><p>05:32.908</p></td>
-<td><p>2916.3</p></td>
+<td><p>03:50.426</p></td>
+<td><p>2899.8</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/auto_examples/eeg2025/tutorial_eegdash_offline.html#sphx-glr-generated-auto-examples-eeg2025-tutorial-eegdash-offline-py"><span class="std std-ref">Working Offline with EEGDash</span></a> (<code class="docutils literal notranslate"><span class="pre">../../examples/eeg2025/tutorial_eegdash_offline.py</span></code>)</p></td>
-<td><p>01:11.348</p></td>
-<td><p>1009.1</p></td>
+<td><p>00:44.884</p></td>
+<td><p>1058.5</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/auto_examples/core/tutorial_eoec.html#sphx-glr-generated-auto-examples-core-tutorial-eoec-py"><span class="std std-ref">Eyes Open vs. Closed Classification</span></a> (<code class="docutils literal notranslate"><span class="pre">../../examples/core/tutorial_eoec.py</span></code>)</p></td>
-<td><p>00:20.201</p></td>
-<td><p>1318.4</p></td>
+<td><p>00:09.265</p></td>
+<td><p>1372.1</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/auto_examples/core/tutorial_feature_extractor_open_close_eye.html#sphx-glr-generated-auto-examples-core-tutorial-feature-extractor-open-close-eye-py"><span class="std std-ref">EEGDash Feature Extractor</span></a> (<code class="docutils literal notranslate"><span class="pre">../../examples/core/tutorial_feature_extractor_open_close_eye.py</span></code>)</p></td>
-<td><p>00:05.445</p></td>
-<td><p>1325.5</p></td>
+<td><p>00:05.302</p></td>
+<td><p>1342.1</p></td>
 </tr>
 </tbody>
 </table>

@@ -31,12 +31,18 @@
 <link href="../../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery.css?v=d2d258e8" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-binder.css?v=f4aeca0c" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=235a86f3" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bm/dt-1.13.4/datatables.min.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/select/1.7.0/css/select.dataTables.min.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/searchpanes/2.3.1/css/searchPanes.dataTables.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=5aa56fc9" />
   
   <!-- So that users can add custom icons -->
   <script src="../../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
@@ -47,14 +53,23 @@
     <script src="../../../_static/documentation_options.js?v=6c02275b"></script>
     <script src="../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../_static/copybutton.js?v=8c005784"></script>
     <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'api/generated/api-features/eegdash.features.inspect';</script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.datatables.net/v/bm/dt-1.13.4/datatables.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/select/1.7.0/js/dataTables.select.min.js"></script>
+    <script src="https://cdn.datatables.net/searchpanes/2.3.1/js/dataTables.searchPanes.min.js"></script>
+    <script src="../../../_static/js/tag-palette.js?v=6f5eac9a"></script>
+    <script src="../../../_static/js/datatables-init.js?v=42062302"></script>
     <link rel="canonical" href="https://eegdash.org/api/generated/api-features/eegdash.features.inspect.html" />
     <link rel="icon" href="../../../_static/eegdash_icon.png"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
     <link rel="next" title="eegdash.features.serialization" href="eegdash.features.serialization.html" />
-    <link rel="prev" title="eegdash.features.feature_bank.utils" href="eegdash.features.feature_bank.utils.html" />
+    <link rel="prev" title="eegdash.features.extractors" href="eegdash.features.extractors.html" />
   
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -151,15 +166,15 @@
   <ul class="bd-navbar-elements navbar-nav">
     
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../../overview.html">
-    Overview
+  <a class="nav-link nav-internal" href="../../../install/install.html">
+    Installing
   </a>
 </li>
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../../install/install.html">
-    Install
+  <a class="nav-link nav-internal" href="../../../user_guide.html">
+    User Guide
   </a>
 </li>
 
@@ -173,7 +188,7 @@
 
 <li class="nav-item ">
   <a class="nav-link nav-internal" href="../../../dataset_summary.html">
-    Dataset Summary
+    Dataset Catalog
   </a>
 </li>
 
@@ -187,7 +202,7 @@
 
 <li class="nav-item ">
   <a class="nav-link nav-external" href="https://eeg2025.github.io/">
-    EEG2025 competition
+    EEG2025
   </a>
 </li>
 
@@ -317,15 +332,15 @@
   <ul class="bd-navbar-elements navbar-nav">
     
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../../overview.html">
-    Overview
+  <a class="nav-link nav-internal" href="../../../install/install.html">
+    Installing
   </a>
 </li>
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../../install/install.html">
-    Install
+  <a class="nav-link nav-internal" href="../../../user_guide.html">
+    User Guide
   </a>
 </li>
 
@@ -339,7 +354,7 @@
 
 <li class="nav-item ">
   <a class="nav-link nav-internal" href="../../../dataset_summary.html">
-    Dataset Summary
+    Dataset Catalog
   </a>
 </li>
 
@@ -353,7 +368,7 @@
 
 <li class="nav-item ">
   <a class="nav-link nav-external" href="https://eeg2025.github.io/">
-    EEG2025 competition
+    EEG2025
   </a>
 </li>
 
@@ -437,321 +452,284 @@
      aria-label="Section Navigation">
   <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
   <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../api_core.html">Core API</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../api_core.html">Core API</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../api-core/eegdash.api.html">eegdash.api</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api-core/eegdash.bids_eeg_metadata.html">eegdash.bids_eeg_metadata</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api-core/eegdash.const.html">eegdash.const</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api-core/eegdash.data_utils.html">eegdash.data_utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api-core/eegdash.logging.html">eegdash.logging</a></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../api-core/eegdash.hbn.html">eegdash.hbn</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../api-core/eegdash.hbn.preprocessing.html">eegdash.hbn.preprocessing</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api-core/eegdash.hbn.windows.html">eegdash.hbn.windows</a></li>
-</ul>
-</details></li>
+<li class="toctree-l2"><a class="reference internal" href="../api-core/eegdash.hbn.html">eegdash.hbn</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api-core/eegdash.mongodb.html">eegdash.mongodb</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api-core/eegdash.paths.html">eegdash.paths</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api-core/eegdash.utils.html">eegdash.utils</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="../../api_features.html">Feature API</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
-<li class="toctree-l2 current active has-children"><a class="reference internal" href="eegdash.features.html">eegdash.features</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="eegdash.features.datasets.html">eegdash.features.datasets</a></li>
-<li class="toctree-l3"><a class="reference internal" href="eegdash.features.decorators.html">eegdash.features.decorators</a></li>
-<li class="toctree-l3"><a class="reference internal" href="eegdash.features.extractors.html">eegdash.features.extractors</a></li>
-<li class="toctree-l3 has-children"><a class="reference internal" href="eegdash.features.feature_bank.html">eegdash.features.feature_bank</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l4"><a class="reference internal" href="eegdash.features.feature_bank.complexity.html">eegdash.features.feature_bank.complexity</a></li>
-<li class="toctree-l4"><a class="reference internal" href="eegdash.features.feature_bank.connectivity.html">eegdash.features.feature_bank.connectivity</a></li>
-<li class="toctree-l4"><a class="reference internal" href="eegdash.features.feature_bank.csp.html">eegdash.features.feature_bank.csp</a></li>
-<li class="toctree-l4"><a class="reference internal" href="eegdash.features.feature_bank.dimensionality.html">eegdash.features.feature_bank.dimensionality</a></li>
-<li class="toctree-l4"><a class="reference internal" href="eegdash.features.feature_bank.signal.html">eegdash.features.feature_bank.signal</a></li>
-<li class="toctree-l4"><a class="reference internal" href="eegdash.features.feature_bank.spectral.html">eegdash.features.feature_bank.spectral</a></li>
-<li class="toctree-l4"><a class="reference internal" href="eegdash.features.feature_bank.utils.html">eegdash.features.feature_bank.utils</a></li>
-</ul>
-</details></li>
-<li class="toctree-l3 current active"><a class="current reference internal" href="#">eegdash.features.inspect</a></li>
-<li class="toctree-l3"><a class="reference internal" href="eegdash.features.serialization.html">eegdash.features.serialization</a></li>
-<li class="toctree-l3"><a class="reference internal" href="eegdash.features.utils.html">eegdash.features.utils</a></li>
-</ul>
-</details></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.features.html">eegdash.features</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.features.datasets.html">eegdash.features.datasets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.features.decorators.html">eegdash.features.decorators</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.features.extractors.html">eegdash.features.extractors</a></li>
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">eegdash.features.inspect</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.features.serialization.html">eegdash.features.serialization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.features.utils.html">eegdash.features.utils</a></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="eegdash.features.feature_bank.html">eegdash.features.feature_bank</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="eegdash.features.feature_bank.complexity.html">eegdash.features.feature_bank.complexity</a></li>
-<li class="toctree-l3"><a class="reference internal" href="eegdash.features.feature_bank.connectivity.html">eegdash.features.feature_bank.connectivity</a></li>
-<li class="toctree-l3"><a class="reference internal" href="eegdash.features.feature_bank.csp.html">eegdash.features.feature_bank.csp</a></li>
-<li class="toctree-l3"><a class="reference internal" href="eegdash.features.feature_bank.dimensionality.html">eegdash.features.feature_bank.dimensionality</a></li>
-<li class="toctree-l3"><a class="reference internal" href="eegdash.features.feature_bank.signal.html">eegdash.features.feature_bank.signal</a></li>
-<li class="toctree-l3"><a class="reference internal" href="eegdash.features.feature_bank.spectral.html">eegdash.features.feature_bank.spectral</a></li>
-<li class="toctree-l3"><a class="reference internal" href="eegdash.features.feature_bank.utils.html">eegdash.features.feature_bank.utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.features.feature_bank.html">eegdash.features.feature_bank</a></li>
 </ul>
 </details></li>
-</ul>
-</details></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../api_dataset.html">Dataset Index</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds001785.html">DS001785</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds001787.html">DS001787</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds001810.html">DS001810</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds001849.html">DS001849</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds001971.html">DS001971</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds002034.html">DS002034</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds002094.html">DS002094</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds002158.html">DS002158</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds002181.html">DS002181</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds002218.html">DS002218</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds002336.html">DS002336</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds002338.html">DS002338</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds002578.html">DS002578</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds002680.html">DS002680</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds002691.html">DS002691</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds002718.html">DS002718</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds002720.html">DS002720</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds002721.html">DS002721</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds002722.html">DS002722</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds002723.html">DS002723</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds002724.html">DS002724</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds002725.html">DS002725</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds002778.html">DS002778</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds002814.html">DS002814</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds002833.html">DS002833</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds002893.html">DS002893</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds003004.html">DS003004</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds003039.html">DS003039</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds003061.html">DS003061</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds003190.html">DS003190</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds003194.html">DS003194</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds003195.html">DS003195</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds003343.html">DS003343</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds003421.html">DS003421</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds003458.html">DS003458</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds003474.html">DS003474</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds003478.html">DS003478</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds003490.html">DS003490</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds003505.html">DS003505</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds003506.html">DS003506</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds003509.html">DS003509</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds003516.html">DS003516</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds003517.html">DS003517</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds003518.html">DS003518</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds003519.html">DS003519</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds003522.html">DS003522</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds003523.html">DS003523</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds003555.html">DS003555</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds003570.html">DS003570</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds003574.html">DS003574</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds003602.html">DS003602</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds003626.html">DS003626</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds003638.html">DS003638</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds003645.html">DS003645</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds003655.html">DS003655</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds003670.html">DS003670</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds003690.html">DS003690</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds003702.html">DS003702</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds003710.html">DS003710</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds003739.html">DS003739</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds003751.html">DS003751</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds003753.html">DS003753</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds003766.html">DS003766</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds003768.html">DS003768</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds003801.html">DS003801</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds003805.html">DS003805</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds003810.html">DS003810</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds003816.html">DS003816</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds003822.html">DS003822</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds003825.html">DS003825</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds003838.html">DS003838</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds003846.html">DS003846</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds003885.html">DS003885</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds003887.html">DS003887</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds003944.html">DS003944</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds003947.html">DS003947</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds003969.html">DS003969</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds003987.html">DS003987</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds004000.html">DS004000</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds004010.html">DS004010</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds004015.html">DS004015</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds004018.html">DS004018</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds004022.html">DS004022</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds004024.html">DS004024</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds004033.html">DS004033</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds004040.html">DS004040</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds004043.html">DS004043</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds004067.html">DS004067</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds004075.html">DS004075</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds004117.html">DS004117</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds004152.html">DS004152</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds004196.html">DS004196</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds004200.html">DS004200</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds004252.html">DS004252</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds004256.html">DS004256</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds004262.html">DS004262</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds004264.html">DS004264</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds004279.html">DS004279</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds004284.html">DS004284</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds004295.html">DS004295</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds004306.html">DS004306</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds004315.html">DS004315</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds004317.html">DS004317</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds004324.html">DS004324</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds004347.html">DS004347</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds004348.html">DS004348</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds004350.html">DS004350</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds004356.html">DS004356</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds004357.html">DS004357</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds004362.html">DS004362</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds004367.html">DS004367</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds004368.html">DS004368</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds004369.html">DS004369</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds004381.html">DS004381</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds004388.html">DS004388</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds004389.html">DS004389</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds004408.html">DS004408</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds004444.html">DS004444</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds004446.html">DS004446</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds004447.html">DS004447</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds004448.html">DS004448</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds004460.html">DS004460</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds004475.html">DS004475</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds004477.html">DS004477</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds004504.html">DS004504</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds004505.html">DS004505</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds004511.html">DS004511</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds004515.html">DS004515</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds004519.html">DS004519</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds004520.html">DS004520</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds004521.html">DS004521</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds004532.html">DS004532</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds004554.html">DS004554</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds004561.html">DS004561</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds004572.html">DS004572</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds004574.html">DS004574</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds004577.html">DS004577</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds004579.html">DS004579</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds004580.html">DS004580</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds004582.html">DS004582</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds004584.html">DS004584</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds004587.html">DS004587</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds004588.html">DS004588</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds004595.html">DS004595</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds004598.html">DS004598</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds004602.html">DS004602</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds004603.html">DS004603</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds004621.html">DS004621</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds004625.html">DS004625</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds004626.html">DS004626</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds004635.html">DS004635</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds004657.html">DS004657</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds004660.html">DS004660</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds004661.html">DS004661</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds004718.html">DS004718</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds004745.html">DS004745</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds004752.html">DS004752</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds004771.html">DS004771</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds004784.html">DS004784</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds004785.html">DS004785</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds004796.html">DS004796</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds004802.html">DS004802</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds004816.html">DS004816</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds004817.html">DS004817</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds004840.html">DS004840</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds004841.html">DS004841</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds004842.html">DS004842</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds004843.html">DS004843</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds004844.html">DS004844</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds004849.html">DS004849</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds004850.html">DS004850</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds004851.html">DS004851</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds004852.html">DS004852</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds004853.html">DS004853</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds004854.html">DS004854</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds004855.html">DS004855</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds004860.html">DS004860</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds004883.html">DS004883</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds004902.html">DS004902</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds004917.html">DS004917</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds004942.html">DS004942</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds004951.html">DS004951</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds004952.html">DS004952</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds004980.html">DS004980</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds004995.html">DS004995</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds005021.html">DS005021</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds005028.html">DS005028</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds005034.html">DS005034</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds005048.html">DS005048</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds005079.html">DS005079</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds005089.html">DS005089</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds005095.html">DS005095</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds005106.html">DS005106</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds005114.html">DS005114</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds005121.html">DS005121</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds005131.html">DS005131</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds005170.html">DS005170</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds005185.html">DS005185</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds005189.html">DS005189</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds005207.html">DS005207</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds005262.html">DS005262</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds005273.html">DS005273</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds005274.html">DS005274</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds005296.html">DS005296</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds005305.html">DS005305</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds005307.html">DS005307</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds005340.html">DS005340</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds005342.html">DS005342</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds005345.html">DS005345</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds005363.html">DS005363</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds005383.html">DS005383</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds005385.html">DS005385</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds005397.html">DS005397</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds005403.html">DS005403</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds005406.html">DS005406</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds005410.html">DS005410</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds005416.html">DS005416</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds005420.html">DS005420</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds005429.html">DS005429</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds005486.html">DS005486</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds005505.html">DS005505</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds005506.html">DS005506</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds005507.html">DS005507</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds005508.html">DS005508</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds005509.html">DS005509</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds005510.html">DS005510</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds005511.html">DS005511</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds005512.html">DS005512</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds005514.html">DS005514</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds005515.html">DS005515</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds005516.html">DS005516</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds005520.html">DS005520</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds005530.html">DS005530</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds005540.html">DS005540</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds005555.html">DS005555</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds005565.html">DS005565</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds005571.html">DS005571</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds005586.html">DS005586</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds005594.html">DS005594</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds005620.html">DS005620</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds005672.html">DS005672</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds005688.html">DS005688</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds005692.html">DS005692</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds005697.html">DS005697</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds005779.html">DS005779</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds005787.html">DS005787</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds005795.html">DS005795</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds005811.html">DS005811</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds005815.html">DS005815</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds005863.html">DS005863</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds005866.html">DS005866</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds005868.html">DS005868</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds005873.html">DS005873</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../datasets/ds005876.html">DS005876</a></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../dataset/eegdash.dataset.html">eegdash.dataset package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../dataset/eegdash.dataset.dataset.html">eegdash.dataset.dataset module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../dataset/eegdash.dataset.registry.html">eegdash.dataset.registry module</a></li>
-</ul>
-</details></li>
-<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.downloader.html">eegdash.downloader module</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../dataset/api_dataset.html">Datasets API</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS001785.html">eegdash.dataset.DS001785</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS001787.html">eegdash.dataset.DS001787</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS001810.html">eegdash.dataset.DS001810</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS001849.html">eegdash.dataset.DS001849</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS001971.html">eegdash.dataset.DS001971</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS002034.html">eegdash.dataset.DS002034</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS002094.html">eegdash.dataset.DS002094</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS002158.html">eegdash.dataset.DS002158</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS002181.html">eegdash.dataset.DS002181</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS002218.html">eegdash.dataset.DS002218</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS002336.html">eegdash.dataset.DS002336</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS002338.html">eegdash.dataset.DS002338</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS002578.html">eegdash.dataset.DS002578</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS002680.html">eegdash.dataset.DS002680</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS002691.html">eegdash.dataset.DS002691</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS002718.html">eegdash.dataset.DS002718</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS002720.html">eegdash.dataset.DS002720</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS002721.html">eegdash.dataset.DS002721</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS002722.html">eegdash.dataset.DS002722</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS002723.html">eegdash.dataset.DS002723</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS002724.html">eegdash.dataset.DS002724</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS002725.html">eegdash.dataset.DS002725</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS002778.html">eegdash.dataset.DS002778</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS002814.html">eegdash.dataset.DS002814</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS002833.html">eegdash.dataset.DS002833</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS002893.html">eegdash.dataset.DS002893</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS003004.html">eegdash.dataset.DS003004</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS003039.html">eegdash.dataset.DS003039</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS003061.html">eegdash.dataset.DS003061</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS003190.html">eegdash.dataset.DS003190</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS003194.html">eegdash.dataset.DS003194</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS003195.html">eegdash.dataset.DS003195</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS003343.html">eegdash.dataset.DS003343</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS003421.html">eegdash.dataset.DS003421</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS003458.html">eegdash.dataset.DS003458</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS003474.html">eegdash.dataset.DS003474</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS003478.html">eegdash.dataset.DS003478</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS003490.html">eegdash.dataset.DS003490</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS003505.html">eegdash.dataset.DS003505</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS003506.html">eegdash.dataset.DS003506</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS003509.html">eegdash.dataset.DS003509</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS003516.html">eegdash.dataset.DS003516</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS003517.html">eegdash.dataset.DS003517</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS003518.html">eegdash.dataset.DS003518</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS003519.html">eegdash.dataset.DS003519</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS003522.html">eegdash.dataset.DS003522</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS003523.html">eegdash.dataset.DS003523</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS003555.html">eegdash.dataset.DS003555</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS003570.html">eegdash.dataset.DS003570</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS003574.html">eegdash.dataset.DS003574</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS003602.html">eegdash.dataset.DS003602</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS003626.html">eegdash.dataset.DS003626</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS003638.html">eegdash.dataset.DS003638</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS003645.html">eegdash.dataset.DS003645</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS003655.html">eegdash.dataset.DS003655</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS003670.html">eegdash.dataset.DS003670</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS003690.html">eegdash.dataset.DS003690</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS003702.html">eegdash.dataset.DS003702</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS003710.html">eegdash.dataset.DS003710</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS003739.html">eegdash.dataset.DS003739</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS003751.html">eegdash.dataset.DS003751</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS003753.html">eegdash.dataset.DS003753</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS003766.html">eegdash.dataset.DS003766</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS003768.html">eegdash.dataset.DS003768</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS003801.html">eegdash.dataset.DS003801</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS003805.html">eegdash.dataset.DS003805</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS003810.html">eegdash.dataset.DS003810</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS003816.html">eegdash.dataset.DS003816</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS003822.html">eegdash.dataset.DS003822</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS003825.html">eegdash.dataset.DS003825</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS003838.html">eegdash.dataset.DS003838</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS003846.html">eegdash.dataset.DS003846</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS003885.html">eegdash.dataset.DS003885</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS003887.html">eegdash.dataset.DS003887</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS003944.html">eegdash.dataset.DS003944</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS003947.html">eegdash.dataset.DS003947</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS003969.html">eegdash.dataset.DS003969</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS003987.html">eegdash.dataset.DS003987</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS004000.html">eegdash.dataset.DS004000</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS004010.html">eegdash.dataset.DS004010</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS004015.html">eegdash.dataset.DS004015</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS004018.html">eegdash.dataset.DS004018</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS004022.html">eegdash.dataset.DS004022</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS004024.html">eegdash.dataset.DS004024</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS004033.html">eegdash.dataset.DS004033</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS004040.html">eegdash.dataset.DS004040</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS004043.html">eegdash.dataset.DS004043</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS004067.html">eegdash.dataset.DS004067</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS004075.html">eegdash.dataset.DS004075</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS004117.html">eegdash.dataset.DS004117</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS004152.html">eegdash.dataset.DS004152</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS004196.html">eegdash.dataset.DS004196</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS004200.html">eegdash.dataset.DS004200</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS004252.html">eegdash.dataset.DS004252</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS004256.html">eegdash.dataset.DS004256</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS004262.html">eegdash.dataset.DS004262</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS004264.html">eegdash.dataset.DS004264</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS004279.html">eegdash.dataset.DS004279</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS004284.html">eegdash.dataset.DS004284</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS004295.html">eegdash.dataset.DS004295</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS004306.html">eegdash.dataset.DS004306</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS004315.html">eegdash.dataset.DS004315</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS004317.html">eegdash.dataset.DS004317</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS004324.html">eegdash.dataset.DS004324</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS004347.html">eegdash.dataset.DS004347</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS004348.html">eegdash.dataset.DS004348</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS004350.html">eegdash.dataset.DS004350</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS004356.html">eegdash.dataset.DS004356</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS004357.html">eegdash.dataset.DS004357</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS004362.html">eegdash.dataset.DS004362</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS004367.html">eegdash.dataset.DS004367</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS004368.html">eegdash.dataset.DS004368</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS004369.html">eegdash.dataset.DS004369</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS004381.html">eegdash.dataset.DS004381</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS004388.html">eegdash.dataset.DS004388</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS004389.html">eegdash.dataset.DS004389</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS004408.html">eegdash.dataset.DS004408</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS004444.html">eegdash.dataset.DS004444</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS004446.html">eegdash.dataset.DS004446</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS004447.html">eegdash.dataset.DS004447</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS004448.html">eegdash.dataset.DS004448</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS004460.html">eegdash.dataset.DS004460</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS004475.html">eegdash.dataset.DS004475</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS004477.html">eegdash.dataset.DS004477</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS004504.html">eegdash.dataset.DS004504</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS004505.html">eegdash.dataset.DS004505</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS004511.html">eegdash.dataset.DS004511</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS004515.html">eegdash.dataset.DS004515</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS004519.html">eegdash.dataset.DS004519</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS004520.html">eegdash.dataset.DS004520</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS004521.html">eegdash.dataset.DS004521</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS004532.html">eegdash.dataset.DS004532</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS004554.html">eegdash.dataset.DS004554</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS004561.html">eegdash.dataset.DS004561</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS004572.html">eegdash.dataset.DS004572</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS004574.html">eegdash.dataset.DS004574</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS004577.html">eegdash.dataset.DS004577</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS004579.html">eegdash.dataset.DS004579</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS004580.html">eegdash.dataset.DS004580</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS004582.html">eegdash.dataset.DS004582</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS004584.html">eegdash.dataset.DS004584</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS004587.html">eegdash.dataset.DS004587</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS004588.html">eegdash.dataset.DS004588</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS004595.html">eegdash.dataset.DS004595</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS004598.html">eegdash.dataset.DS004598</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS004602.html">eegdash.dataset.DS004602</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS004603.html">eegdash.dataset.DS004603</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS004621.html">eegdash.dataset.DS004621</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS004625.html">eegdash.dataset.DS004625</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS004626.html">eegdash.dataset.DS004626</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS004635.html">eegdash.dataset.DS004635</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS004657.html">eegdash.dataset.DS004657</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS004660.html">eegdash.dataset.DS004660</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS004661.html">eegdash.dataset.DS004661</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS004718.html">eegdash.dataset.DS004718</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS004745.html">eegdash.dataset.DS004745</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS004752.html">eegdash.dataset.DS004752</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS004771.html">eegdash.dataset.DS004771</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS004784.html">eegdash.dataset.DS004784</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS004785.html">eegdash.dataset.DS004785</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS004796.html">eegdash.dataset.DS004796</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS004802.html">eegdash.dataset.DS004802</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS004816.html">eegdash.dataset.DS004816</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS004817.html">eegdash.dataset.DS004817</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS004840.html">eegdash.dataset.DS004840</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS004841.html">eegdash.dataset.DS004841</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS004842.html">eegdash.dataset.DS004842</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS004843.html">eegdash.dataset.DS004843</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS004844.html">eegdash.dataset.DS004844</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS004849.html">eegdash.dataset.DS004849</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS004850.html">eegdash.dataset.DS004850</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS004851.html">eegdash.dataset.DS004851</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS004852.html">eegdash.dataset.DS004852</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS004853.html">eegdash.dataset.DS004853</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS004854.html">eegdash.dataset.DS004854</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS004855.html">eegdash.dataset.DS004855</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS004860.html">eegdash.dataset.DS004860</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS004883.html">eegdash.dataset.DS004883</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS004902.html">eegdash.dataset.DS004902</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS004917.html">eegdash.dataset.DS004917</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS004942.html">eegdash.dataset.DS004942</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS004951.html">eegdash.dataset.DS004951</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS004952.html">eegdash.dataset.DS004952</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS004980.html">eegdash.dataset.DS004980</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS004995.html">eegdash.dataset.DS004995</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS005021.html">eegdash.dataset.DS005021</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS005028.html">eegdash.dataset.DS005028</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS005034.html">eegdash.dataset.DS005034</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS005048.html">eegdash.dataset.DS005048</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS005079.html">eegdash.dataset.DS005079</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS005089.html">eegdash.dataset.DS005089</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS005095.html">eegdash.dataset.DS005095</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS005106.html">eegdash.dataset.DS005106</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS005114.html">eegdash.dataset.DS005114</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS005121.html">eegdash.dataset.DS005121</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS005131.html">eegdash.dataset.DS005131</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS005170.html">eegdash.dataset.DS005170</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS005185.html">eegdash.dataset.DS005185</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS005189.html">eegdash.dataset.DS005189</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS005207.html">eegdash.dataset.DS005207</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS005262.html">eegdash.dataset.DS005262</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS005273.html">eegdash.dataset.DS005273</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS005274.html">eegdash.dataset.DS005274</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS005296.html">eegdash.dataset.DS005296</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS005305.html">eegdash.dataset.DS005305</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS005307.html">eegdash.dataset.DS005307</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS005340.html">eegdash.dataset.DS005340</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS005342.html">eegdash.dataset.DS005342</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS005345.html">eegdash.dataset.DS005345</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS005363.html">eegdash.dataset.DS005363</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS005383.html">eegdash.dataset.DS005383</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS005385.html">eegdash.dataset.DS005385</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS005397.html">eegdash.dataset.DS005397</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS005403.html">eegdash.dataset.DS005403</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS005406.html">eegdash.dataset.DS005406</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS005410.html">eegdash.dataset.DS005410</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS005416.html">eegdash.dataset.DS005416</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS005420.html">eegdash.dataset.DS005420</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS005429.html">eegdash.dataset.DS005429</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS005486.html">eegdash.dataset.DS005486</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS005505.html">eegdash.dataset.DS005505</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS005506.html">eegdash.dataset.DS005506</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS005507.html">eegdash.dataset.DS005507</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS005508.html">eegdash.dataset.DS005508</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS005509.html">eegdash.dataset.DS005509</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS005510.html">eegdash.dataset.DS005510</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS005511.html">eegdash.dataset.DS005511</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS005512.html">eegdash.dataset.DS005512</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS005514.html">eegdash.dataset.DS005514</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS005515.html">eegdash.dataset.DS005515</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS005516.html">eegdash.dataset.DS005516</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS005520.html">eegdash.dataset.DS005520</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS005530.html">eegdash.dataset.DS005530</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS005540.html">eegdash.dataset.DS005540</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS005555.html">eegdash.dataset.DS005555</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS005565.html">eegdash.dataset.DS005565</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS005571.html">eegdash.dataset.DS005571</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS005586.html">eegdash.dataset.DS005586</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS005594.html">eegdash.dataset.DS005594</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS005620.html">eegdash.dataset.DS005620</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS005672.html">eegdash.dataset.DS005672</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS005688.html">eegdash.dataset.DS005688</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS005692.html">eegdash.dataset.DS005692</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS005697.html">eegdash.dataset.DS005697</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS005779.html">eegdash.dataset.DS005779</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS005787.html">eegdash.dataset.DS005787</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS005795.html">eegdash.dataset.DS005795</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS005811.html">eegdash.dataset.DS005811</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS005815.html">eegdash.dataset.DS005815</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS005863.html">eegdash.dataset.DS005863</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS005866.html">eegdash.dataset.DS005866</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS005868.html">eegdash.dataset.DS005868</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS005873.html">eegdash.dataset.DS005873</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS005876.html">eegdash.dataset.DS005876</a></li>
 </ul>
 </details></li>
 </ul>
@@ -800,9 +778,6 @@
     
     <li class="breadcrumb-item"><a href="../../api_features.html" class="nav-link">Feature API</a></li>
     
-    
-    <li class="breadcrumb-item"><a href="eegdash.features.html" class="nav-link">eegdash.features</a></li>
-    
     <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">eegdash.features.inspect</span></li>
   </ul>
 </nav>
@@ -843,6 +818,21 @@
 </tbody>
 </table>
 </div>
+<p class="rubric">Classes</p>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
+<tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">Callable</span></code>()</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">FeatureExtractor</span></code>(feature_extractors, ...)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">MultivariateFeature</span></code>()</p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</div>
 </section>
 
 
@@ -856,12 +846,12 @@
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="eegdash.features.feature_bank.utils.html"
+       href="eegdash.features.extractors.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">eegdash.features.feature_bank.utils</p>
+        <p class="prev-next-title">eegdash.features.extractors</p>
       </div>
     </a>
     <a class="right-next"

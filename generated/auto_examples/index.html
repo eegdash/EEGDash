@@ -31,12 +31,18 @@
 <link href="../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=d2d258e8" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css?v=f4aeca0c" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
     <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
-    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=235a86f3" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bm/dt-1.13.4/datatables.min.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/select/1.7.0/css/select.dataTables.min.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/searchpanes/2.3.1/css/searchPanes.dataTables.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=5aa56fc9" />
   
   <!-- So that users can add custom icons -->
   <script src="../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
@@ -47,14 +53,23 @@
     <script src="../../_static/documentation_options.js?v=6c02275b"></script>
     <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=8c005784"></script>
     <script src="../../_static/design-tabs.js?v=f930bc37"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'generated/auto_examples/index';</script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.datatables.net/v/bm/dt-1.13.4/datatables.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/select/1.7.0/js/dataTables.select.min.js"></script>
+    <script src="https://cdn.datatables.net/searchpanes/2.3.1/js/dataTables.searchPanes.min.js"></script>
+    <script src="../../_static/js/tag-palette.js?v=6f5eac9a"></script>
+    <script src="../../_static/js/datatables-init.js?v=42062302"></script>
     <link rel="canonical" href="https://eegdash.org/generated/auto_examples/index.html" />
     <link rel="icon" href="../../_static/eegdash_icon.png"/>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="Eyes Open vs. Closed Classification" href="core/tutorial_eoec.html" />
-    <link rel="prev" title="Dataset Summary" href="../../dataset_summary.html" />
+    <link rel="prev" title="Datasets" href="../../dataset_summary.html" />
   
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -151,15 +166,15 @@
   <ul class="bd-navbar-elements navbar-nav">
     
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../overview.html">
-    Overview
+  <a class="nav-link nav-internal" href="../../install/install.html">
+    Installing
   </a>
 </li>
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../install/install.html">
-    Install
+  <a class="nav-link nav-internal" href="../../user_guide.html">
+    User Guide
   </a>
 </li>
 
@@ -173,7 +188,7 @@
 
 <li class="nav-item ">
   <a class="nav-link nav-internal" href="../../dataset_summary.html">
-    Dataset Summary
+    Dataset Catalog
   </a>
 </li>
 
@@ -187,7 +202,7 @@
 
 <li class="nav-item ">
   <a class="nav-link nav-external" href="https://eeg2025.github.io/">
-    EEG2025 competition
+    EEG2025
   </a>
 </li>
 
@@ -317,15 +332,15 @@
   <ul class="bd-navbar-elements navbar-nav">
     
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../overview.html">
-    Overview
+  <a class="nav-link nav-internal" href="../../install/install.html">
+    Installing
   </a>
 </li>
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../install/install.html">
-    Install
+  <a class="nav-link nav-internal" href="../../user_guide.html">
+    User Guide
   </a>
 </li>
 
@@ -339,7 +354,7 @@
 
 <li class="nav-item ">
   <a class="nav-link nav-internal" href="../../dataset_summary.html">
-    Dataset Summary
+    Dataset Catalog
   </a>
 </li>
 
@@ -353,7 +368,7 @@
 
 <li class="nav-item ">
   <a class="nav-link nav-external" href="https://eeg2025.github.io/">
-    EEG2025 competition
+    EEG2025
   </a>
 </li>
 
@@ -561,7 +576,7 @@
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Dataset Summary</p>
+        <p class="prev-next-title">Datasets</p>
       </div>
     </a>
     <a class="right-next"

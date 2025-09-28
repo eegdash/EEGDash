@@ -8,12 +8,8 @@
 
    .. autosummary::
    
-      attach_participants_extras
-      build_query_from_kwargs
-      enrich_from_participants
-      load_eeg_attrs_from_bids_file
-      merge_participants_fields
-      normalize_key
-      participants_extras_from_tsv
       participants_row_for_subject
+      participants_extras_from_tsv
+      attach_participants_extras
+      enrich_from_participants
    

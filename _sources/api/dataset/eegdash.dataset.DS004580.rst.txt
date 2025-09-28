@@ -1,0 +1,64 @@
+..
+   This file is auto-generated during the Sphinx build.
+   Do not edit by hand; changes will be overwritten.
+
+eegdash.dataset.DS004580
+========================
+
+.. currentmodule:: eegdash.dataset
+
+.. autoclass:: eegdash.dataset.DS004580
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :inherited-members:
+   :member-order: bysource
+
+Dataset Information
+-------------------
+
+- **Dataset ID:** ``DS004580``
+- **Summary:** Modality: Visual | Type: Decision-making | Subjects: Parkinson's
+- **Number of Subjects:** 147
+- **Number of Recordings:** 147
+- **Number of Tasks:** 1
+- **Number of Channels:** 63,64,66
+- **Sampling Frequencies:** 500
+- **Total Duration (hours):** 36.514
+- **Dataset Size:** 15.84 GB
+- **OpenNeuro:** `ds004580 <https://openneuro.org/datasets/ds004580>`__
+- **NeMAR:** `ds004580 <https://nemar.org/dataexplorer/detail?dataset_id=ds004580>`__
+
+=========  =======  ========  ==========  ==========  =============  ========
+dataset      #Subj  #Chan       #Classes    Freq(Hz)    Duration(H)  Size
+=========  =======  ========  ==========  ==========  =============  ========
+ds004580       147  63,64,66           1         500         36.514  15.84 GB
+=========  =======  ========  ==========  ==========  =============  ========
+
+
+Usage Example
+-------------
+
+.. code-block:: python
+
+   from eegdash.dataset import DS004580
+
+   dataset = DS004580(cache_dir="./data")
+
+   print(f"Number of recordings: {len(dataset)}")
+
+   if len(dataset):
+       recording = dataset[0]
+       raw = recording.load()
+       print(f"Sampling rate: {raw.info['sfreq']} Hz")
+       print(f"Channels: {len(raw.ch_names)}")
+
+
+See Also
+--------
+
+* :class:`eegdash.dataset.EEGDashDataset`
+* :mod:`eegdash.dataset`
+* `OpenNeuro dataset page <https://openneuro.org/datasets/ds004580>`__
+* `NeMAR dataset page <https://nemar.org/dataexplorer/detail?dataset_id=ds004580>`__
+

@@ -32,12 +32,18 @@
 <link href="../../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery.css?v=d2d258e8" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-binder.css?v=f4aeca0c" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=235a86f3" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bm/dt-1.13.4/datatables.min.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/select/1.7.0/css/select.dataTables.min.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/searchpanes/2.3.1/css/searchPanes.dataTables.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=5aa56fc9" />
   
   <!-- So that users can add custom icons -->
   <script src="../../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
@@ -48,9 +54,18 @@
     <script src="../../../_static/documentation_options.js?v=6c02275b"></script>
     <script src="../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../_static/copybutton.js?v=8c005784"></script>
     <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
     <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'generated/auto_examples/eeg2025/tutorial_challenge_1';</script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.datatables.net/v/bm/dt-1.13.4/datatables.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/select/1.7.0/js/dataTables.select.min.js"></script>
+    <script src="https://cdn.datatables.net/searchpanes/2.3.1/js/dataTables.searchPanes.min.js"></script>
+    <script src="../../../_static/js/tag-palette.js?v=6f5eac9a"></script>
+    <script src="../../../_static/js/datatables-init.js?v=42062302"></script>
     <link rel="canonical" href="https://eegdash.org/generated/auto_examples/eeg2025/tutorial_challenge_1.html" />
     <link rel="icon" href="../../../_static/eegdash_icon.png"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -153,15 +168,15 @@
   <ul class="bd-navbar-elements navbar-nav">
     
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../../overview.html">
-    Overview
+  <a class="nav-link nav-internal" href="../../../install/install.html">
+    Installing
   </a>
 </li>
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../../install/install.html">
-    Install
+  <a class="nav-link nav-internal" href="../../../user_guide.html">
+    User Guide
   </a>
 </li>
 
@@ -175,7 +190,7 @@
 
 <li class="nav-item ">
   <a class="nav-link nav-internal" href="../../../dataset_summary.html">
-    Dataset Summary
+    Dataset Catalog
   </a>
 </li>
 
@@ -189,7 +204,7 @@
 
 <li class="nav-item ">
   <a class="nav-link nav-external" href="https://eeg2025.github.io/">
-    EEG2025 competition
+    EEG2025
   </a>
 </li>
 
@@ -319,15 +334,15 @@
   <ul class="bd-navbar-elements navbar-nav">
     
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../../overview.html">
-    Overview
+  <a class="nav-link nav-internal" href="../../../install/install.html">
+    Installing
   </a>
 </li>
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../../install/install.html">
-    Install
+  <a class="nav-link nav-internal" href="../../../user_guide.html">
+    User Guide
   </a>
 </li>
 
@@ -341,7 +356,7 @@
 
 <li class="nav-item ">
   <a class="nav-link nav-internal" href="../../../dataset_summary.html">
-    Dataset Summary
+    Dataset Catalog
   </a>
 </li>
 
@@ -355,7 +370,7 @@
 
 <li class="nav-item ">
   <a class="nav-link nav-external" href="https://eeg2025.github.io/">
-    EEG2025 competition
+    EEG2025
   </a>
 </li>
 
@@ -750,188 +765,6 @@ and <a class="reference external" href="https://en.wikipedia.org/wiki/Event-rela
 ╰──────────────────────── Source: EEGChallengeDataset ─────────────────────────╯
 Number of recordings in the dataset: 60
 Number of unique subjects in the dataset: 20
-
-Downloading dataset_description.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading dataset_description.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 12.1B/s]
-
-Downloading participants.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading participants.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 13.5B/s]
-
-Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-1_events.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 12.6B/s]
-
-Downloading sub-NDARAH793FBF_task-DiaryOfAWimpyKid_events.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAH793FBF_task-DiaryOfAWimpyKid_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 10.5B/s]
-
-Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-2_events.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 12.5B/s]
-
-Downloading sub-NDARAH793FBF_task-ThePresent_events.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAH793FBF_task-ThePresent_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 12.6B/s]
-
-Downloading sub-NDARAH793FBF_task-symbolSearch_events.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAH793FBF_task-symbolSearch_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 12.9B/s]
-
-Downloading sub-NDARAH793FBF_task-seqLearning8target_events.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAH793FBF_task-seqLearning8target_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 11.6B/s]
-
-Downloading sub-NDARAH793FBF_task-surroundSupp_run-1_events.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAH793FBF_task-surroundSupp_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 12.8B/s]
-
-Downloading sub-NDARAH793FBF_task-RestingState_events.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAH793FBF_task-RestingState_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 13.5B/s]
-
-Downloading sub-NDARAH793FBF_task-surroundSupp_run-2_events.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAH793FBF_task-surroundSupp_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 13.1B/s]
-
-Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-3_events.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 12.7B/s]
-
-Downloading sub-NDARAH793FBF_task-FunwithFractals_events.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAH793FBF_task-FunwithFractals_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 11.7B/s]
-
-Downloading sub-NDARAH793FBF_task-DespicableMe_events.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAH793FBF_task-DespicableMe_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 13.2B/s]
-
-Downloading task-seqLearning8target_events.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading task-seqLearning8target_events.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 13.2B/s]
-
-Downloading task-RestingState_events.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading task-RestingState_events.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 10.3B/s]
-
-Downloading task-surroundSupp_events.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading task-surroundSupp_events.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 13.0B/s]
-
-Downloading task-FunwithFractals_events.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading task-FunwithFractals_events.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 12.8B/s]
-
-Downloading task-symbolSearch_events.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading task-symbolSearch_events.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 13.1B/s]
-
-Downloading task-ThePresent_events.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading task-ThePresent_events.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 11.1B/s]
-
-Downloading task-seqLearning6target_events.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading task-seqLearning6target_events.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 11.3B/s]
-
-Downloading task-contrastChangeDetection_events.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading task-contrastChangeDetection_events.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 12.6B/s]
-
-Downloading task-DespicableMe_events.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading task-DespicableMe_events.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 12.6B/s]
-
-Downloading task-DiaryOfAWimpyKid_events.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading task-DiaryOfAWimpyKid_events.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 13.2B/s]
-
-Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-1_eeg.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 12.5B/s]
-
-Downloading sub-NDARAH793FBF_task-symbolSearch_eeg.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAH793FBF_task-symbolSearch_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 12.6B/s]
-
-Downloading sub-NDARAH793FBF_task-surroundSupp_run-2_eeg.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAH793FBF_task-surroundSupp_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 12.1B/s]
-
-Downloading sub-NDARAH793FBF_task-DiaryOfAWimpyKid_eeg.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAH793FBF_task-DiaryOfAWimpyKid_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 13.0B/s]
-
-Downloading sub-NDARAH793FBF_task-DespicableMe_eeg.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAH793FBF_task-DespicableMe_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 12.4B/s]
-
-Downloading sub-NDARAH793FBF_task-seqLearning8target_eeg.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAH793FBF_task-seqLearning8target_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 13.1B/s]
-
-Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-3_eeg.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 12.9B/s]
-
-Downloading sub-NDARAH793FBF_task-RestingState_eeg.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAH793FBF_task-RestingState_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 11.4B/s]
-
-Downloading sub-NDARAH793FBF_task-FunwithFractals_eeg.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAH793FBF_task-FunwithFractals_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 13.2B/s]
-
-Downloading sub-NDARAH793FBF_task-ThePresent_eeg.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAH793FBF_task-ThePresent_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 13.4B/s]
-
-Downloading sub-NDARAH793FBF_task-surroundSupp_run-1_eeg.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAH793FBF_task-surroundSupp_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 13.1B/s]
-
-Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-2_eeg.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 13.0B/s]
-
-Downloading task-symbolSearch_eeg.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading task-symbolSearch_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 12.7B/s]
-
-Downloading task-surroundSupp_eeg.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading task-surroundSupp_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 13.8B/s]
-
-Downloading task-contrastChangeDetection_eeg.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading task-contrastChangeDetection_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 12.9B/s]
-
-Downloading task-seqLearning8target_eeg.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading task-seqLearning8target_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 13.1B/s]
-
-Downloading task-DespicableMe_eeg.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading task-DespicableMe_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 13.9B/s]
-
-Downloading task-ThePresent_eeg.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading task-ThePresent_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 13.3B/s]
-
-Downloading task-FunwithFractals_eeg.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading task-FunwithFractals_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 13.4B/s]
-
-Downloading task-RestingState_eeg.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading task-RestingState_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 13.4B/s]
-
-Downloading task-seqLearning6target_eeg.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading task-seqLearning6target_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 13.2B/s]
-
-Downloading task-DiaryOfAWimpyKid_eeg.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading task-DiaryOfAWimpyKid_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 13.2B/s]
-
-Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-1_channels.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 13.2B/s]
-
-Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-2_channels.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 13.4B/s]
-
-Downloading sub-NDARAH793FBF_task-RestingState_channels.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAH793FBF_task-RestingState_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 13.1B/s]
-
-Downloading sub-NDARAH793FBF_task-surroundSupp_run-2_channels.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAH793FBF_task-surroundSupp_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 13.2B/s]
-
-Downloading sub-NDARAH793FBF_task-ThePresent_channels.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAH793FBF_task-ThePresent_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 13.6B/s]
-
-Downloading sub-NDARAH793FBF_task-surroundSupp_run-1_channels.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAH793FBF_task-surroundSupp_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 13.1B/s]
-
-Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-3_channels.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 13.0B/s]
-
-Downloading sub-NDARAH793FBF_task-DespicableMe_channels.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAH793FBF_task-DespicableMe_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 13.5B/s]
-
-Downloading sub-NDARAH793FBF_task-FunwithFractals_channels.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAH793FBF_task-FunwithFractals_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 13.3B/s]
-
-Downloading sub-NDARAH793FBF_task-seqLearning8target_channels.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAH793FBF_task-seqLearning8target_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 13.7B/s]
-
-Downloading sub-NDARAH793FBF_task-symbolSearch_channels.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAH793FBF_task-symbolSearch_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 13.0B/s]
-
-Downloading sub-NDARAH793FBF_task-DiaryOfAWimpyKid_channels.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAH793FBF_task-DiaryOfAWimpyKid_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 13.0B/s]
-
-Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-1_eeg.bdf:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 1.44B/s]
-Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 1.44B/s]
-
-Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-1_eeg.bdf:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 3.40B/s]
-Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 3.40B/s]
 </pre></div>
 </div>
 </section>
@@ -1437,22 +1270,22 @@ We provide a simple training and validation loop below.</p>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Epoch 1/5:
   0%|          | 0/8 [00:00&lt;?, ?it/s]
 Epoch 1, Batch 1/8, Loss: 2.838698, RMSE: 1.684844:   0%|          | 0/8 [00:05&lt;?, ?it/s]
-Epoch 1, Batch 1/8, Loss: 2.838698, RMSE: 1.684844:  12%|█▎        | 1/8 [00:05&lt;00:38,  5.54s/it]
-Epoch 1, Batch 2/8, Loss: 2.693015, RMSE: 1.663086:  12%|█▎        | 1/8 [00:10&lt;00:38,  5.54s/it]
-Epoch 1, Batch 2/8, Loss: 2.693015, RMSE: 1.663086:  25%|██▌       | 2/8 [00:10&lt;00:32,  5.48s/it]
-Epoch 1, Batch 3/8, Loss: 2.785443, RMSE: 1.665048:  25%|██▌       | 2/8 [00:16&lt;00:32,  5.48s/it]
-Epoch 1, Batch 3/8, Loss: 2.785443, RMSE: 1.665048:  38%|███▊      | 3/8 [00:16&lt;00:27,  5.43s/it]
-Epoch 1, Batch 4/8, Loss: 2.746054, RMSE: 1.663070:  38%|███▊      | 3/8 [00:21&lt;00:27,  5.43s/it]
-Epoch 1, Batch 4/8, Loss: 2.746054, RMSE: 1.663070:  50%|█████     | 4/8 [00:21&lt;00:21,  5.40s/it]
-Epoch 1, Batch 5/8, Loss: 2.866567, RMSE: 1.669118:  50%|█████     | 4/8 [00:27&lt;00:21,  5.40s/it]
-Epoch 1, Batch 5/8, Loss: 2.866567, RMSE: 1.669118:  62%|██████▎   | 5/8 [00:27&lt;00:16,  5.38s/it]
-Epoch 1, Batch 6/8, Loss: 2.627282, RMSE: 1.661177:  62%|██████▎   | 5/8 [00:32&lt;00:16,  5.38s/it]
-Epoch 1, Batch 6/8, Loss: 2.627282, RMSE: 1.661177:  75%|███████▌  | 6/8 [00:32&lt;00:10,  5.37s/it]
-Epoch 1, Batch 7/8, Loss: 2.536175, RMSE: 1.651546:  75%|███████▌  | 6/8 [00:37&lt;00:10,  5.37s/it]
-Epoch 1, Batch 7/8, Loss: 2.536175, RMSE: 1.651546:  88%|████████▊ | 7/8 [00:37&lt;00:05,  5.37s/it]
-Epoch 1, Batch 8/8, Loss: 2.386837, RMSE: 1.642583:  88%|████████▊ | 7/8 [00:41&lt;00:05,  5.37s/it]
-Epoch 1, Batch 8/8, Loss: 2.386837, RMSE: 1.642583: 100%|██████████| 8/8 [00:41&lt;00:00,  4.79s/it]
-Epoch 1, Batch 8/8, Loss: 2.386837, RMSE: 1.642583: 100%|██████████| 8/8 [00:41&lt;00:00,  5.16s/it]
+Epoch 1, Batch 1/8, Loss: 2.838698, RMSE: 1.684844:  12%|█▎        | 1/8 [00:05&lt;00:38,  5.55s/it]
+Epoch 1, Batch 2/8, Loss: 2.693015, RMSE: 1.663086:  12%|█▎        | 1/8 [00:10&lt;00:38,  5.55s/it]
+Epoch 1, Batch 2/8, Loss: 2.693015, RMSE: 1.663086:  25%|██▌       | 2/8 [00:10&lt;00:32,  5.46s/it]
+Epoch 1, Batch 3/8, Loss: 2.785443, RMSE: 1.665048:  25%|██▌       | 2/8 [00:16&lt;00:32,  5.46s/it]
+Epoch 1, Batch 3/8, Loss: 2.785443, RMSE: 1.665048:  38%|███▊      | 3/8 [00:16&lt;00:27,  5.42s/it]
+Epoch 1, Batch 4/8, Loss: 2.746054, RMSE: 1.663070:  38%|███▊      | 3/8 [00:21&lt;00:27,  5.42s/it]
+Epoch 1, Batch 4/8, Loss: 2.746054, RMSE: 1.663070:  50%|█████     | 4/8 [00:21&lt;00:21,  5.41s/it]
+Epoch 1, Batch 5/8, Loss: 2.866567, RMSE: 1.669118:  50%|█████     | 4/8 [00:27&lt;00:21,  5.41s/it]
+Epoch 1, Batch 5/8, Loss: 2.866567, RMSE: 1.669118:  62%|██████▎   | 5/8 [00:27&lt;00:16,  5.39s/it]
+Epoch 1, Batch 6/8, Loss: 2.627282, RMSE: 1.661177:  62%|██████▎   | 5/8 [00:32&lt;00:16,  5.39s/it]
+Epoch 1, Batch 6/8, Loss: 2.627282, RMSE: 1.661177:  75%|███████▌  | 6/8 [00:32&lt;00:10,  5.40s/it]
+Epoch 1, Batch 7/8, Loss: 2.536175, RMSE: 1.651546:  75%|███████▌  | 6/8 [00:37&lt;00:10,  5.40s/it]
+Epoch 1, Batch 7/8, Loss: 2.536175, RMSE: 1.651546:  88%|████████▊ | 7/8 [00:37&lt;00:05,  5.39s/it]
+Epoch 1, Batch 8/8, Loss: 2.386837, RMSE: 1.642583:  88%|████████▊ | 7/8 [00:41&lt;00:05,  5.39s/it]
+Epoch 1, Batch 8/8, Loss: 2.386837, RMSE: 1.642583: 100%|██████████| 8/8 [00:41&lt;00:00,  4.81s/it]
+Epoch 1, Batch 8/8, Loss: 2.386837, RMSE: 1.642583: 100%|██████████| 8/8 [00:41&lt;00:00,  5.18s/it]
 
   0%|          | 0/1 [00:00&lt;?, ?it/s]
 Val Batch 1/1, Loss: 2.766600, RMSE: 1.663310:   0%|          | 0/1 [00:00&lt;?, ?it/s]
@@ -1464,108 +1297,108 @@ Train RMSE: 1.642583, Average Train Loss: 2.685009, Val RMSE: 1.663310, Average 
 Epoch 2/5:
   0%|          | 0/8 [00:00&lt;?, ?it/s]
 Epoch 2, Batch 1/8, Loss: 2.276956, RMSE: 1.508959:   0%|          | 0/8 [00:05&lt;?, ?it/s]
-Epoch 2, Batch 1/8, Loss: 2.276956, RMSE: 1.508959:  12%|█▎        | 1/8 [00:05&lt;00:37,  5.39s/it]
-Epoch 2, Batch 2/8, Loss: 2.429497, RMSE: 1.534023:  12%|█▎        | 1/8 [00:10&lt;00:37,  5.39s/it]
-Epoch 2, Batch 2/8, Loss: 2.429497, RMSE: 1.534023:  25%|██▌       | 2/8 [00:10&lt;00:32,  5.35s/it]
-Epoch 2, Batch 3/8, Loss: 2.399875, RMSE: 1.539083:  25%|██▌       | 2/8 [00:16&lt;00:32,  5.35s/it]
-Epoch 2, Batch 3/8, Loss: 2.399875, RMSE: 1.539083:  38%|███▊      | 3/8 [00:16&lt;00:26,  5.35s/it]
-Epoch 2, Batch 4/8, Loss: 2.270662, RMSE: 1.531094:  38%|███▊      | 3/8 [00:21&lt;00:26,  5.35s/it]
-Epoch 2, Batch 4/8, Loss: 2.270662, RMSE: 1.531094:  50%|█████     | 4/8 [00:21&lt;00:21,  5.38s/it]
-Epoch 2, Batch 5/8, Loss: 2.045108, RMSE: 1.511430:  50%|█████     | 4/8 [00:26&lt;00:21,  5.38s/it]
-Epoch 2, Batch 5/8, Loss: 2.045108, RMSE: 1.511430:  62%|██████▎   | 5/8 [00:26&lt;00:16,  5.39s/it]
-Epoch 2, Batch 6/8, Loss: 2.020219, RMSE: 1.496792:  62%|██████▎   | 5/8 [00:32&lt;00:16,  5.39s/it]
-Epoch 2, Batch 6/8, Loss: 2.020219, RMSE: 1.496792:  75%|███████▌  | 6/8 [00:32&lt;00:10,  5.39s/it]
-Epoch 2, Batch 7/8, Loss: 1.876298, RMSE: 1.479315:  75%|███████▌  | 6/8 [00:37&lt;00:10,  5.39s/it]
-Epoch 2, Batch 7/8, Loss: 1.876298, RMSE: 1.479315:  88%|████████▊ | 7/8 [00:37&lt;00:05,  5.37s/it]
-Epoch 2, Batch 8/8, Loss: 1.704226, RMSE: 1.465068:  88%|████████▊ | 7/8 [00:41&lt;00:05,  5.37s/it]
-Epoch 2, Batch 8/8, Loss: 1.704226, RMSE: 1.465068: 100%|██████████| 8/8 [00:41&lt;00:00,  4.79s/it]
-Epoch 2, Batch 8/8, Loss: 1.704226, RMSE: 1.465068: 100%|██████████| 8/8 [00:41&lt;00:00,  5.14s/it]
+Epoch 2, Batch 1/8, Loss: 2.276956, RMSE: 1.508959:  12%|█▎        | 1/8 [00:05&lt;00:37,  5.42s/it]
+Epoch 2, Batch 2/8, Loss: 2.429497, RMSE: 1.534023:  12%|█▎        | 1/8 [00:10&lt;00:37,  5.42s/it]
+Epoch 2, Batch 2/8, Loss: 2.429497, RMSE: 1.534023:  25%|██▌       | 2/8 [00:10&lt;00:32,  5.41s/it]
+Epoch 2, Batch 3/8, Loss: 2.399875, RMSE: 1.539083:  25%|██▌       | 2/8 [00:16&lt;00:32,  5.41s/it]
+Epoch 2, Batch 3/8, Loss: 2.399875, RMSE: 1.539083:  38%|███▊      | 3/8 [00:16&lt;00:27,  5.41s/it]
+Epoch 2, Batch 4/8, Loss: 2.270662, RMSE: 1.531094:  38%|███▊      | 3/8 [00:21&lt;00:27,  5.41s/it]
+Epoch 2, Batch 4/8, Loss: 2.270662, RMSE: 1.531094:  50%|█████     | 4/8 [00:21&lt;00:21,  5.41s/it]
+Epoch 2, Batch 5/8, Loss: 2.045108, RMSE: 1.511430:  50%|█████     | 4/8 [00:27&lt;00:21,  5.41s/it]
+Epoch 2, Batch 5/8, Loss: 2.045108, RMSE: 1.511430:  62%|██████▎   | 5/8 [00:27&lt;00:16,  5.40s/it]
+Epoch 2, Batch 6/8, Loss: 2.020219, RMSE: 1.496792:  62%|██████▎   | 5/8 [00:32&lt;00:16,  5.40s/it]
+Epoch 2, Batch 6/8, Loss: 2.020219, RMSE: 1.496792:  75%|███████▌  | 6/8 [00:32&lt;00:10,  5.40s/it]
+Epoch 2, Batch 7/8, Loss: 1.876298, RMSE: 1.479315:  75%|███████▌  | 6/8 [00:37&lt;00:10,  5.40s/it]
+Epoch 2, Batch 7/8, Loss: 1.876298, RMSE: 1.479315:  88%|████████▊ | 7/8 [00:37&lt;00:05,  5.39s/it]
+Epoch 2, Batch 8/8, Loss: 1.704226, RMSE: 1.465068:  88%|████████▊ | 7/8 [00:41&lt;00:05,  5.39s/it]
+Epoch 2, Batch 8/8, Loss: 1.704226, RMSE: 1.465068: 100%|██████████| 8/8 [00:41&lt;00:00,  4.81s/it]
+Epoch 2, Batch 8/8, Loss: 1.704226, RMSE: 1.465068: 100%|██████████| 8/8 [00:41&lt;00:00,  5.17s/it]
 
   0%|          | 0/1 [00:00&lt;?, ?it/s]
 Val Batch 1/1, Loss: 2.395387, RMSE: 1.547704:   0%|          | 0/1 [00:00&lt;?, ?it/s]
-Val Batch 1/1, Loss: 2.395387, RMSE: 1.547704: 100%|██████████| 1/1 [00:00&lt;00:00,  1.80it/s]
-Val Batch 1/1, Loss: 2.395387, RMSE: 1.547704: 100%|██████████| 1/1 [00:00&lt;00:00,  1.80it/s]
+Val Batch 1/1, Loss: 2.395387, RMSE: 1.547704: 100%|██████████| 1/1 [00:00&lt;00:00,  1.79it/s]
+Val Batch 1/1, Loss: 2.395387, RMSE: 1.547704: 100%|██████████| 1/1 [00:00&lt;00:00,  1.79it/s]
 Val RMSE: 1.547704, Val Loss: 2.395387
 
 Train RMSE: 1.465068, Average Train Loss: 2.127855, Val RMSE: 1.547704, Average Val Loss: 2.395387
 Epoch 3/5:
   0%|          | 0/8 [00:00&lt;?, ?it/s]
 Epoch 3, Batch 1/8, Loss: 1.526827, RMSE: 1.235648:   0%|          | 0/8 [00:05&lt;?, ?it/s]
-Epoch 3, Batch 1/8, Loss: 1.526827, RMSE: 1.235648:  12%|█▎        | 1/8 [00:05&lt;00:37,  5.32s/it]
-Epoch 3, Batch 2/8, Loss: 1.024627, RMSE: 1.129481:  12%|█▎        | 1/8 [00:10&lt;00:37,  5.32s/it]
-Epoch 3, Batch 2/8, Loss: 1.024627, RMSE: 1.129481:  25%|██▌       | 2/8 [00:10&lt;00:31,  5.33s/it]
-Epoch 3, Batch 3/8, Loss: 1.170787, RMSE: 1.113888:  25%|██▌       | 2/8 [00:15&lt;00:31,  5.33s/it]
-Epoch 3, Batch 3/8, Loss: 1.170787, RMSE: 1.113888:  38%|███▊      | 3/8 [00:15&lt;00:26,  5.32s/it]
-Epoch 3, Batch 4/8, Loss: 1.147321, RMSE: 1.103354:  38%|███▊      | 3/8 [00:21&lt;00:26,  5.32s/it]
-Epoch 3, Batch 4/8, Loss: 1.147321, RMSE: 1.103354:  50%|█████     | 4/8 [00:21&lt;00:21,  5.32s/it]
-Epoch 3, Batch 5/8, Loss: 1.070738, RMSE: 1.089982:  50%|█████     | 4/8 [00:26&lt;00:21,  5.32s/it]
-Epoch 3, Batch 5/8, Loss: 1.070738, RMSE: 1.089982:  62%|██████▎   | 5/8 [00:26&lt;00:15,  5.32s/it]
-Epoch 3, Batch 6/8, Loss: 0.955001, RMSE: 1.072015:  62%|██████▎   | 5/8 [00:31&lt;00:15,  5.32s/it]
-Epoch 3, Batch 6/8, Loss: 0.955001, RMSE: 1.072015:  75%|███████▌  | 6/8 [00:31&lt;00:10,  5.32s/it]
-Epoch 3, Batch 7/8, Loss: 0.711222, RMSE: 1.042423:  75%|███████▌  | 6/8 [00:37&lt;00:10,  5.32s/it]
-Epoch 3, Batch 7/8, Loss: 0.711222, RMSE: 1.042423:  88%|████████▊ | 7/8 [00:37&lt;00:05,  5.33s/it]
-Epoch 3, Batch 8/8, Loss: 0.684565, RMSE: 1.025577:  88%|████████▊ | 7/8 [00:40&lt;00:05,  5.33s/it]
-Epoch 3, Batch 8/8, Loss: 0.684565, RMSE: 1.025577: 100%|██████████| 8/8 [00:40&lt;00:00,  4.76s/it]
-Epoch 3, Batch 8/8, Loss: 0.684565, RMSE: 1.025577: 100%|██████████| 8/8 [00:40&lt;00:00,  5.10s/it]
+Epoch 3, Batch 1/8, Loss: 1.526827, RMSE: 1.235648:  12%|█▎        | 1/8 [00:05&lt;00:37,  5.36s/it]
+Epoch 3, Batch 2/8, Loss: 1.024627, RMSE: 1.129481:  12%|█▎        | 1/8 [00:10&lt;00:37,  5.36s/it]
+Epoch 3, Batch 2/8, Loss: 1.024627, RMSE: 1.129481:  25%|██▌       | 2/8 [00:10&lt;00:32,  5.38s/it]
+Epoch 3, Batch 3/8, Loss: 1.170787, RMSE: 1.113888:  25%|██▌       | 2/8 [00:16&lt;00:32,  5.38s/it]
+Epoch 3, Batch 3/8, Loss: 1.170787, RMSE: 1.113888:  38%|███▊      | 3/8 [00:16&lt;00:26,  5.37s/it]
+Epoch 3, Batch 4/8, Loss: 1.147321, RMSE: 1.103354:  38%|███▊      | 3/8 [00:21&lt;00:26,  5.37s/it]
+Epoch 3, Batch 4/8, Loss: 1.147321, RMSE: 1.103354:  50%|█████     | 4/8 [00:21&lt;00:21,  5.36s/it]
+Epoch 3, Batch 5/8, Loss: 1.070738, RMSE: 1.089982:  50%|█████     | 4/8 [00:26&lt;00:21,  5.36s/it]
+Epoch 3, Batch 5/8, Loss: 1.070738, RMSE: 1.089982:  62%|██████▎   | 5/8 [00:26&lt;00:16,  5.36s/it]
+Epoch 3, Batch 6/8, Loss: 0.955001, RMSE: 1.072015:  62%|██████▎   | 5/8 [00:32&lt;00:16,  5.36s/it]
+Epoch 3, Batch 6/8, Loss: 0.955001, RMSE: 1.072015:  75%|███████▌  | 6/8 [00:32&lt;00:10,  5.35s/it]
+Epoch 3, Batch 7/8, Loss: 0.711222, RMSE: 1.042423:  75%|███████▌  | 6/8 [00:37&lt;00:10,  5.35s/it]
+Epoch 3, Batch 7/8, Loss: 0.711222, RMSE: 1.042423:  88%|████████▊ | 7/8 [00:37&lt;00:05,  5.38s/it]
+Epoch 3, Batch 8/8, Loss: 0.684565, RMSE: 1.025577:  88%|████████▊ | 7/8 [00:41&lt;00:05,  5.38s/it]
+Epoch 3, Batch 8/8, Loss: 0.684565, RMSE: 1.025577: 100%|██████████| 8/8 [00:41&lt;00:00,  4.82s/it]
+Epoch 3, Batch 8/8, Loss: 0.684565, RMSE: 1.025577: 100%|██████████| 8/8 [00:41&lt;00:00,  5.15s/it]
 
   0%|          | 0/1 [00:00&lt;?, ?it/s]
 Val Batch 1/1, Loss: 1.589483, RMSE: 1.260747:   0%|          | 0/1 [00:00&lt;?, ?it/s]
-Val Batch 1/1, Loss: 1.589483, RMSE: 1.260747: 100%|██████████| 1/1 [00:00&lt;00:00,  1.79it/s]
-Val Batch 1/1, Loss: 1.589483, RMSE: 1.260747: 100%|██████████| 1/1 [00:00&lt;00:00,  1.79it/s]
+Val Batch 1/1, Loss: 1.589483, RMSE: 1.260747: 100%|██████████| 1/1 [00:00&lt;00:00,  1.77it/s]
+Val Batch 1/1, Loss: 1.589483, RMSE: 1.260747: 100%|██████████| 1/1 [00:00&lt;00:00,  1.77it/s]
 Val RMSE: 1.260747, Val Loss: 1.589483
 
 Train RMSE: 1.025577, Average Train Loss: 1.036386, Val RMSE: 1.260747, Average Val Loss: 1.589483
 Epoch 4/5:
   0%|          | 0/8 [00:00&lt;?, ?it/s]
 Epoch 4, Batch 1/8, Loss: 0.620082, RMSE: 0.787453:   0%|          | 0/8 [00:05&lt;?, ?it/s]
-Epoch 4, Batch 1/8, Loss: 0.620082, RMSE: 0.787453:  12%|█▎        | 1/8 [00:05&lt;00:37,  5.38s/it]
-Epoch 4, Batch 2/8, Loss: 0.546702, RMSE: 0.763801:  12%|█▎        | 1/8 [00:10&lt;00:37,  5.38s/it]
-Epoch 4, Batch 2/8, Loss: 0.546702, RMSE: 0.763801:  25%|██▌       | 2/8 [00:10&lt;00:32,  5.35s/it]
-Epoch 4, Batch 3/8, Loss: 0.606916, RMSE: 0.768917:  25%|██▌       | 2/8 [00:16&lt;00:32,  5.35s/it]
-Epoch 4, Batch 3/8, Loss: 0.606916, RMSE: 0.768917:  38%|███▊      | 3/8 [00:16&lt;00:26,  5.34s/it]
-Epoch 4, Batch 4/8, Loss: 0.515725, RMSE: 0.756542:  38%|███▊      | 3/8 [00:21&lt;00:26,  5.34s/it]
-Epoch 4, Batch 4/8, Loss: 0.515725, RMSE: 0.756542:  50%|█████     | 4/8 [00:21&lt;00:21,  5.34s/it]
-Epoch 4, Batch 5/8, Loss: 0.634652, RMSE: 0.764732:  50%|█████     | 4/8 [00:26&lt;00:21,  5.34s/it]
-Epoch 4, Batch 5/8, Loss: 0.634652, RMSE: 0.764732:  62%|██████▎   | 5/8 [00:26&lt;00:16,  5.34s/it]
-Epoch 4, Batch 6/8, Loss: 0.627709, RMSE: 0.769392:  62%|██████▎   | 5/8 [00:32&lt;00:16,  5.34s/it]
-Epoch 4, Batch 6/8, Loss: 0.627709, RMSE: 0.769392:  75%|███████▌  | 6/8 [00:32&lt;00:10,  5.34s/it]
-Epoch 4, Batch 7/8, Loss: 0.532959, RMSE: 0.763895:  75%|███████▌  | 6/8 [00:37&lt;00:10,  5.34s/it]
-Epoch 4, Batch 7/8, Loss: 0.532959, RMSE: 0.763895:  88%|████████▊ | 7/8 [00:37&lt;00:05,  5.33s/it]
-Epoch 4, Batch 8/8, Loss: 0.447731, RMSE: 0.756154:  88%|████████▊ | 7/8 [00:40&lt;00:05,  5.33s/it]
-Epoch 4, Batch 8/8, Loss: 0.447731, RMSE: 0.756154: 100%|██████████| 8/8 [00:40&lt;00:00,  4.76s/it]
-Epoch 4, Batch 8/8, Loss: 0.447731, RMSE: 0.756154: 100%|██████████| 8/8 [00:40&lt;00:00,  5.11s/it]
+Epoch 4, Batch 1/8, Loss: 0.620082, RMSE: 0.787453:  12%|█▎        | 1/8 [00:05&lt;00:37,  5.41s/it]
+Epoch 4, Batch 2/8, Loss: 0.546702, RMSE: 0.763801:  12%|█▎        | 1/8 [00:10&lt;00:37,  5.41s/it]
+Epoch 4, Batch 2/8, Loss: 0.546702, RMSE: 0.763801:  25%|██▌       | 2/8 [00:10&lt;00:32,  5.38s/it]
+Epoch 4, Batch 3/8, Loss: 0.606916, RMSE: 0.768917:  25%|██▌       | 2/8 [00:16&lt;00:32,  5.38s/it]
+Epoch 4, Batch 3/8, Loss: 0.606916, RMSE: 0.768917:  38%|███▊      | 3/8 [00:16&lt;00:26,  5.38s/it]
+Epoch 4, Batch 4/8, Loss: 0.515725, RMSE: 0.756542:  38%|███▊      | 3/8 [00:21&lt;00:26,  5.38s/it]
+Epoch 4, Batch 4/8, Loss: 0.515725, RMSE: 0.756542:  50%|█████     | 4/8 [00:21&lt;00:21,  5.39s/it]
+Epoch 4, Batch 5/8, Loss: 0.634652, RMSE: 0.764732:  50%|█████     | 4/8 [00:26&lt;00:21,  5.39s/it]
+Epoch 4, Batch 5/8, Loss: 0.634652, RMSE: 0.764732:  62%|██████▎   | 5/8 [00:26&lt;00:16,  5.38s/it]
+Epoch 4, Batch 6/8, Loss: 0.627709, RMSE: 0.769392:  62%|██████▎   | 5/8 [00:32&lt;00:16,  5.38s/it]
+Epoch 4, Batch 6/8, Loss: 0.627709, RMSE: 0.769392:  75%|███████▌  | 6/8 [00:32&lt;00:10,  5.37s/it]
+Epoch 4, Batch 7/8, Loss: 0.532959, RMSE: 0.763895:  75%|███████▌  | 6/8 [00:37&lt;00:10,  5.37s/it]
+Epoch 4, Batch 7/8, Loss: 0.532959, RMSE: 0.763895:  88%|████████▊ | 7/8 [00:37&lt;00:05,  5.37s/it]
+Epoch 4, Batch 8/8, Loss: 0.447731, RMSE: 0.756154:  88%|████████▊ | 7/8 [00:41&lt;00:05,  5.37s/it]
+Epoch 4, Batch 8/8, Loss: 0.447731, RMSE: 0.756154: 100%|██████████| 8/8 [00:41&lt;00:00,  4.79s/it]
+Epoch 4, Batch 8/8, Loss: 0.447731, RMSE: 0.756154: 100%|██████████| 8/8 [00:41&lt;00:00,  5.15s/it]
 
   0%|          | 0/1 [00:00&lt;?, ?it/s]
 Val Batch 1/1, Loss: 1.018947, RMSE: 1.009429:   0%|          | 0/1 [00:00&lt;?, ?it/s]
-Val Batch 1/1, Loss: 1.018947, RMSE: 1.009429: 100%|██████████| 1/1 [00:00&lt;00:00,  1.80it/s]
-Val Batch 1/1, Loss: 1.018947, RMSE: 1.009429: 100%|██████████| 1/1 [00:00&lt;00:00,  1.80it/s]
+Val Batch 1/1, Loss: 1.018947, RMSE: 1.009429: 100%|██████████| 1/1 [00:00&lt;00:00,  1.81it/s]
+Val Batch 1/1, Loss: 1.018947, RMSE: 1.009429: 100%|██████████| 1/1 [00:00&lt;00:00,  1.81it/s]
 Val RMSE: 1.009429, Val Loss: 1.018947
 
 Train RMSE: 0.756154, Average Train Loss: 0.566560, Val RMSE: 1.009429, Average Val Loss: 1.018947
 Epoch 5/5:
   0%|          | 0/8 [00:00&lt;?, ?it/s]
 Epoch 5, Batch 1/8, Loss: 0.483640, RMSE: 0.695443:   0%|          | 0/8 [00:05&lt;?, ?it/s]
-Epoch 5, Batch 1/8, Loss: 0.483640, RMSE: 0.695443:  12%|█▎        | 1/8 [00:05&lt;00:37,  5.34s/it]
-Epoch 5, Batch 2/8, Loss: 0.521336, RMSE: 0.708864:  12%|█▎        | 1/8 [00:10&lt;00:37,  5.34s/it]
-Epoch 5, Batch 2/8, Loss: 0.521336, RMSE: 0.708864:  25%|██▌       | 2/8 [00:10&lt;00:32,  5.33s/it]
-Epoch 5, Batch 3/8, Loss: 0.483137, RMSE: 0.704299:  25%|██▌       | 2/8 [00:16&lt;00:32,  5.33s/it]
-Epoch 5, Batch 3/8, Loss: 0.483137, RMSE: 0.704299:  38%|███▊      | 3/8 [00:16&lt;00:26,  5.34s/it]
-Epoch 5, Batch 4/8, Loss: 0.475719, RMSE: 0.700684:  38%|███▊      | 3/8 [00:21&lt;00:26,  5.34s/it]
-Epoch 5, Batch 4/8, Loss: 0.475719, RMSE: 0.700684:  50%|█████     | 4/8 [00:21&lt;00:21,  5.35s/it]
-Epoch 5, Batch 5/8, Loss: 0.526330, RMSE: 0.705714:  50%|█████     | 4/8 [00:26&lt;00:21,  5.35s/it]
-Epoch 5, Batch 5/8, Loss: 0.526330, RMSE: 0.705714:  62%|██████▎   | 5/8 [00:26&lt;00:16,  5.35s/it]
-Epoch 5, Batch 6/8, Loss: 0.519373, RMSE: 0.708229:  62%|██████▎   | 5/8 [00:32&lt;00:16,  5.35s/it]
-Epoch 5, Batch 6/8, Loss: 0.519373, RMSE: 0.708229:  75%|███████▌  | 6/8 [00:32&lt;00:10,  5.34s/it]
-Epoch 5, Batch 7/8, Loss: 0.430840, RMSE: 0.701058:  75%|███████▌  | 6/8 [00:37&lt;00:10,  5.34s/it]
-Epoch 5, Batch 7/8, Loss: 0.430840, RMSE: 0.701058:  88%|████████▊ | 7/8 [00:37&lt;00:05,  5.33s/it]
-Epoch 5, Batch 8/8, Loss: 0.559221, RMSE: 0.705231:  88%|████████▊ | 7/8 [00:40&lt;00:05,  5.33s/it]
-Epoch 5, Batch 8/8, Loss: 0.559221, RMSE: 0.705231: 100%|██████████| 8/8 [00:40&lt;00:00,  4.76s/it]
-Epoch 5, Batch 8/8, Loss: 0.559221, RMSE: 0.705231: 100%|██████████| 8/8 [00:40&lt;00:00,  5.11s/it]
+Epoch 5, Batch 1/8, Loss: 0.483640, RMSE: 0.695443:  12%|█▎        | 1/8 [00:05&lt;00:37,  5.35s/it]
+Epoch 5, Batch 2/8, Loss: 0.521336, RMSE: 0.708864:  12%|█▎        | 1/8 [00:10&lt;00:37,  5.35s/it]
+Epoch 5, Batch 2/8, Loss: 0.521336, RMSE: 0.708864:  25%|██▌       | 2/8 [00:10&lt;00:32,  5.36s/it]
+Epoch 5, Batch 3/8, Loss: 0.483137, RMSE: 0.704299:  25%|██▌       | 2/8 [00:16&lt;00:32,  5.36s/it]
+Epoch 5, Batch 3/8, Loss: 0.483137, RMSE: 0.704299:  38%|███▊      | 3/8 [00:16&lt;00:26,  5.38s/it]
+Epoch 5, Batch 4/8, Loss: 0.475719, RMSE: 0.700684:  38%|███▊      | 3/8 [00:21&lt;00:26,  5.38s/it]
+Epoch 5, Batch 4/8, Loss: 0.475719, RMSE: 0.700684:  50%|█████     | 4/8 [00:21&lt;00:21,  5.37s/it]
+Epoch 5, Batch 5/8, Loss: 0.526330, RMSE: 0.705714:  50%|█████     | 4/8 [00:26&lt;00:21,  5.37s/it]
+Epoch 5, Batch 5/8, Loss: 0.526330, RMSE: 0.705714:  62%|██████▎   | 5/8 [00:26&lt;00:16,  5.36s/it]
+Epoch 5, Batch 6/8, Loss: 0.519373, RMSE: 0.708229:  62%|██████▎   | 5/8 [00:32&lt;00:16,  5.36s/it]
+Epoch 5, Batch 6/8, Loss: 0.519373, RMSE: 0.708229:  75%|███████▌  | 6/8 [00:32&lt;00:10,  5.36s/it]
+Epoch 5, Batch 7/8, Loss: 0.430840, RMSE: 0.701058:  75%|███████▌  | 6/8 [00:37&lt;00:10,  5.36s/it]
+Epoch 5, Batch 7/8, Loss: 0.430840, RMSE: 0.701058:  88%|████████▊ | 7/8 [00:37&lt;00:05,  5.36s/it]
+Epoch 5, Batch 8/8, Loss: 0.559221, RMSE: 0.705231:  88%|████████▊ | 7/8 [00:41&lt;00:05,  5.36s/it]
+Epoch 5, Batch 8/8, Loss: 0.559221, RMSE: 0.705231: 100%|██████████| 8/8 [00:41&lt;00:00,  4.79s/it]
+Epoch 5, Batch 8/8, Loss: 0.559221, RMSE: 0.705231: 100%|██████████| 8/8 [00:41&lt;00:00,  5.14s/it]
 
   0%|          | 0/1 [00:00&lt;?, ?it/s]
 Val Batch 1/1, Loss: 0.835890, RMSE: 0.914270:   0%|          | 0/1 [00:00&lt;?, ?it/s]
-Val Batch 1/1, Loss: 0.835890, RMSE: 0.914270: 100%|██████████| 1/1 [00:00&lt;00:00,  1.81it/s]
-Val Batch 1/1, Loss: 0.835890, RMSE: 0.914270: 100%|██████████| 1/1 [00:00&lt;00:00,  1.81it/s]
+Val Batch 1/1, Loss: 0.835890, RMSE: 0.914270: 100%|██████████| 1/1 [00:00&lt;00:00,  1.80it/s]
+Val Batch 1/1, Loss: 0.835890, RMSE: 0.914270: 100%|██████████| 1/1 [00:00&lt;00:00,  1.80it/s]
 Val RMSE: 0.914270, Val Loss: 0.835890
 
 Train RMSE: 0.705231, Average Train Loss: 0.499949, Val RMSE: 0.914270, Average Val Loss: 0.835890
@@ -1581,8 +1414,8 @@ Train RMSE: 0.705231, Average Train Loss: 0.499949, Val RMSE: 0.914270, Average 
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Model saved as &#39;weights_challenge_1.pt&#39;
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (5 minutes 32.908 seconds)</p>
-<p><strong>Estimated memory usage:</strong>  2916 MB</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (3 minutes 50.426 seconds)</p>
+<p><strong>Estimated memory usage:</strong>  2900 MB</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-generated-auto-examples-eeg2025-tutorial-challenge-1-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../../_downloads/9f4f54b7e99e554f34ea4efcf2a8337e/tutorial_challenge_1.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">tutorial_challenge_1.ipynb</span></code></a></p>

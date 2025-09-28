@@ -1,4 +1,4 @@
-eegdash.features.inspect
+﻿eegdash.features.inspect
 ========================
 
 .. automodule:: eegdash.features.inspect
@@ -13,4 +13,12 @@ eegdash.features.inspect
       get_all_features
       get_feature_kind
       get_feature_predecessors
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      Callable
+      FeatureExtractor
+      MultivariateFeature
    

@@ -1,0 +1,64 @@
+..
+   This file is auto-generated during the Sphinx build.
+   Do not edit by hand; changes will be overwritten.
+
+eegdash.dataset.DS004980
+========================
+
+.. currentmodule:: eegdash.dataset
+
+.. autoclass:: eegdash.dataset.DS004980
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :inherited-members:
+   :member-order: bysource
+
+Dataset Information
+-------------------
+
+- **Dataset ID:** ``DS004980``
+- **Summary:** Modality: Visual | Type: Perception | Subjects: Healthy
+- **Number of Subjects:** 17
+- **Number of Recordings:** 17
+- **Number of Tasks:** 1
+- **Number of Channels:** 64
+- **Sampling Frequencies:** 499.9911824,499.9912809,499.991385,499.9914353,499.9914553,499.9915179,499.9917272,499.9917286,499.9917378,499.9919292,499.9919367,499.9923017,499.9923795,500
+- **Total Duration (hours):** 36.846
+- **Dataset Size:** 15.82 GB
+- **OpenNeuro:** `ds004980 <https://openneuro.org/datasets/ds004980>`__
+- **NeMAR:** `ds004980 <https://nemar.org/dataexplorer/detail?dataset_id=ds004980>`__
+
+=========  =======  =======  ==========  ==============================================================================================================================================================  =============  ========
+dataset      #Subj    #Chan    #Classes  Freq(Hz)                                                                                                                                                          Duration(H)  Size
+=========  =======  =======  ==========  ==============================================================================================================================================================  =============  ========
+ds004980        17       64           1  499.9911824,499.9912809,499.991385,499.9914353,499.9914553,499.9915179,499.9917272,499.9917286,499.9917378,499.9919292,499.9919367,499.9923017,499.9923795,500         36.846  15.82 GB
+=========  =======  =======  ==========  ==============================================================================================================================================================  =============  ========
+
+
+Usage Example
+-------------
+
+.. code-block:: python
+
+   from eegdash.dataset import DS004980
+
+   dataset = DS004980(cache_dir="./data")
+
+   print(f"Number of recordings: {len(dataset)}")
+
+   if len(dataset):
+       recording = dataset[0]
+       raw = recording.load()
+       print(f"Sampling rate: {raw.info['sfreq']} Hz")
+       print(f"Channels: {len(raw.ch_names)}")
+
+
+See Also
+--------
+
+* :class:`eegdash.dataset.EEGDashDataset`
+* :mod:`eegdash.dataset`
+* `OpenNeuro dataset page <https://openneuro.org/datasets/ds004980>`__
+* `NeMAR dataset page <https://nemar.org/dataexplorer/detail?dataset_id=ds004980>`__
+

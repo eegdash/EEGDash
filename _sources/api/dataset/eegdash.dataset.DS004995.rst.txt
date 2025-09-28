@@ -1,0 +1,62 @@
+..
+   This file is auto-generated during the Sphinx build.
+   Do not edit by hand; changes will be overwritten.
+
+eegdash.dataset.DS004995
+========================
+
+.. currentmodule:: eegdash.dataset
+
+.. autoclass:: eegdash.dataset.DS004995
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :inherited-members:
+   :member-order: bysource
+
+Dataset Information
+-------------------
+
+- **Dataset ID:** ``DS004995``
+- **Summary:** Modality: Visual | Type: Attention
+- **Number of Subjects:** 20
+- **Number of Recordings:** 20
+- **Number of Tasks:** 1
+- **Total Duration (hours):** 0.0
+- **Dataset Size:** 27.60 GB
+- **OpenNeuro:** `ds004995 <https://openneuro.org/datasets/ds004995>`__
+- **NeMAR:** `ds004995 <https://nemar.org/dataexplorer/detail?dataset_id=ds004995>`__
+
+=========  =======  =======  ==========  ==========  =============  ========
+dataset      #Subj  #Chan      #Classes  Freq(Hz)      Duration(H)  Size
+=========  =======  =======  ==========  ==========  =============  ========
+ds004995        20                    1                          0  27.60 GB
+=========  =======  =======  ==========  ==========  =============  ========
+
+
+Usage Example
+-------------
+
+.. code-block:: python
+
+   from eegdash.dataset import DS004995
+
+   dataset = DS004995(cache_dir="./data")
+
+   print(f"Number of recordings: {len(dataset)}")
+
+   if len(dataset):
+       recording = dataset[0]
+       raw = recording.load()
+       print(f"Sampling rate: {raw.info['sfreq']} Hz")
+       print(f"Channels: {len(raw.ch_names)}")
+
+
+See Also
+--------
+
+* :class:`eegdash.dataset.EEGDashDataset`
+* :mod:`eegdash.dataset`
+* `OpenNeuro dataset page <https://openneuro.org/datasets/ds004995>`__
+* `NeMAR dataset page <https://nemar.org/dataexplorer/detail?dataset_id=ds004995>`__
+

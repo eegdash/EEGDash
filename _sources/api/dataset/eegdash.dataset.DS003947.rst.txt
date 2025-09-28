@@ -1,0 +1,64 @@
+..
+   This file is auto-generated during the Sphinx build.
+   Do not edit by hand; changes will be overwritten.
+
+eegdash.dataset.DS003947
+========================
+
+.. currentmodule:: eegdash.dataset
+
+.. autoclass:: eegdash.dataset.DS003947
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :inherited-members:
+   :member-order: bysource
+
+Dataset Information
+-------------------
+
+- **Dataset ID:** ``DS003947``
+- **Summary:** Modality: Resting State | Type: Clinical/Intervention | Subjects: Schizophrenia/Psychosis
+- **Number of Subjects:** 61
+- **Number of Recordings:** 61
+- **Number of Tasks:** 1
+- **Number of Channels:** 61
+- **Sampling Frequencies:** 1000,3000.00030000003
+- **Total Duration (hours):** 5.266
+- **Dataset Size:** 12.54 GB
+- **OpenNeuro:** `ds003947 <https://openneuro.org/datasets/ds003947>`__
+- **NeMAR:** `ds003947 <https://nemar.org/dataexplorer/detail?dataset_id=ds003947>`__
+
+=========  =======  =======  ==========  =====================  =============  ========
+dataset      #Subj    #Chan    #Classes  Freq(Hz)                 Duration(H)  Size
+=========  =======  =======  ==========  =====================  =============  ========
+ds003947        61       61           1  1000,3000.00030000003          5.266  12.54 GB
+=========  =======  =======  ==========  =====================  =============  ========
+
+
+Usage Example
+-------------
+
+.. code-block:: python
+
+   from eegdash.dataset import DS003947
+
+   dataset = DS003947(cache_dir="./data")
+
+   print(f"Number of recordings: {len(dataset)}")
+
+   if len(dataset):
+       recording = dataset[0]
+       raw = recording.load()
+       print(f"Sampling rate: {raw.info['sfreq']} Hz")
+       print(f"Channels: {len(raw.ch_names)}")
+
+
+See Also
+--------
+
+* :class:`eegdash.dataset.EEGDashDataset`
+* :mod:`eegdash.dataset`
+* `OpenNeuro dataset page <https://openneuro.org/datasets/ds003947>`__
+* `NeMAR dataset page <https://nemar.org/dataexplorer/detail?dataset_id=ds003947>`__
+

@@ -1,13 +1,23 @@
-eegdash.features.datasets
+﻿eegdash.features.datasets
 =========================
 
 .. automodule:: eegdash.features.datasets
 
    
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      delayed
+   
    .. rubric:: Classes
 
    .. autosummary::
    
+      BaseConcatDataset
+      Callable
+      EEGWindowsDataset
       FeaturesConcatDataset
       FeaturesDataset
+      Parallel
    

@@ -31,12 +31,18 @@
 <link href="../../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery.css?v=d2d258e8" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-binder.css?v=f4aeca0c" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=235a86f3" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bm/dt-1.13.4/datatables.min.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/select/1.7.0/css/select.dataTables.min.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/searchpanes/2.3.1/css/searchPanes.dataTables.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=5aa56fc9" />
   
   <!-- So that users can add custom icons -->
   <script src="../../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
@@ -47,8 +53,17 @@
     <script src="../../../_static/documentation_options.js?v=6c02275b"></script>
     <script src="../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../_static/copybutton.js?v=8c005784"></script>
     <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'generated/auto_examples/core/tutorial_feature_extractor_open_close_eye';</script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.datatables.net/v/bm/dt-1.13.4/datatables.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/select/1.7.0/js/dataTables.select.min.js"></script>
+    <script src="https://cdn.datatables.net/searchpanes/2.3.1/js/dataTables.searchPanes.min.js"></script>
+    <script src="../../../_static/js/tag-palette.js?v=6f5eac9a"></script>
+    <script src="../../../_static/js/datatables-init.js?v=42062302"></script>
     <link rel="canonical" href="https://eegdash.org/generated/auto_examples/core/tutorial_feature_extractor_open_close_eye.html" />
     <link rel="icon" href="../../../_static/eegdash_icon.png"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -151,15 +166,15 @@
   <ul class="bd-navbar-elements navbar-nav">
     
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../../overview.html">
-    Overview
+  <a class="nav-link nav-internal" href="../../../install/install.html">
+    Installing
   </a>
 </li>
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../../install/install.html">
-    Install
+  <a class="nav-link nav-internal" href="../../../user_guide.html">
+    User Guide
   </a>
 </li>
 
@@ -173,7 +188,7 @@
 
 <li class="nav-item ">
   <a class="nav-link nav-internal" href="../../../dataset_summary.html">
-    Dataset Summary
+    Dataset Catalog
   </a>
 </li>
 
@@ -187,7 +202,7 @@
 
 <li class="nav-item ">
   <a class="nav-link nav-external" href="https://eeg2025.github.io/">
-    EEG2025 competition
+    EEG2025
   </a>
 </li>
 
@@ -317,15 +332,15 @@
   <ul class="bd-navbar-elements navbar-nav">
     
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../../overview.html">
-    Overview
+  <a class="nav-link nav-internal" href="../../../install/install.html">
+    Installing
   </a>
 </li>
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../../install/install.html">
-    Install
+  <a class="nav-link nav-internal" href="../../../user_guide.html">
+    User Guide
   </a>
 </li>
 
@@ -339,7 +354,7 @@
 
 <li class="nav-item ">
   <a class="nav-link nav-internal" href="../../../dataset_summary.html">
-    Dataset Summary
+    Dataset Catalog
   </a>
 </li>
 
@@ -353,7 +368,7 @@
 
 <li class="nav-item ">
   <a class="nav-link nav-external" href="https://eeg2025.github.io/">
-    EEG2025 competition
+    EEG2025
   </a>
 </li>
 
@@ -645,7 +660,7 @@ corresponding to their respective event markers).</p>
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Used Annotations descriptions: [np.str_(&#39;boundary&#39;), np.str_(&#39;break cnt&#39;), np.str_(&#39;instructed_toCloseEyes&#39;), np.str_(&#39;instructed_toOpenEyes&#39;), np.str_(&#39;resting_start&#39;)]
-[09/27/25 19:15:50] INFO     Original events found with ids: preprocessing.py:46
+[09/28/25 19:14:07] INFO     Original events found with ids: preprocessing.py:46
                              {np.str_(&#39;boundary&#39;): 1,
                              np.str_(&#39;break cnt&#39;): 2,
                              np.str_(&#39;instructed_toCloseEyes
@@ -745,8 +760,8 @@ signal is present and looks as expected.</p>
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Extracting features:   0%|          | 0/1 [00:00&lt;?, ?it/s]
-Extracting features: 100%|██████████| 1/1 [00:00&lt;00:00,  1.19it/s]
-Extracting features: 100%|██████████| 1/1 [00:00&lt;00:00,  1.19it/s]
+Extracting features: 100%|██████████| 1/1 [00:00&lt;00:00,  1.20it/s]
+Extracting features: 100%|██████████| 1/1 [00:00&lt;00:00,  1.20it/s]
 </pre></div>
 </div>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">features_ds</span><span class="o">.</span><span class="n">to_dataframe</span><span class="p">(</span><span class="n">include_crop_inds</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -772,9 +787,9 @@ Extracting features: 100%|██████████| 1/1 [00:00&lt;00:00,  
     <tr style="text-align: right;">
       <th></th>
       <th>i_dataset</th>
+      <th>i_start_in_trial</th>
       <th>i_window_in_trial</th>
       <th>i_stop_in_trial</th>
-      <th>i_start_in_trial</th>
       <th>sig_mean_E22</th>
       <th>sig_mean_E9</th>
       <th>sig_mean_E33</th>
@@ -858,9 +873,9 @@ Extracting features: 100%|██████████| 1/1 [00:00&lt;00:00,  
     <tr>
       <th>0</th>
       <td>0</td>
+      <td>8092</td>
       <td>0</td>
       <td>8348</td>
-      <td>8092</td>
       <td>5.647381e-07</td>
       <td>-2.509246e-06</td>
       <td>8.135321e-06</td>
@@ -942,9 +957,9 @@ Extracting features: 100%|██████████| 1/1 [00:00&lt;00:00,  
     <tr>
       <th>1</th>
       <td>0</td>
+      <td>8348</td>
       <td>0</td>
       <td>8604</td>
-      <td>8348</td>
       <td>1.130721e-06</td>
       <td>1.416919e-07</td>
       <td>-6.768836e-07</td>
@@ -1026,9 +1041,9 @@ Extracting features: 100%|██████████| 1/1 [00:00&lt;00:00,  
     <tr>
       <th>2</th>
       <td>0</td>
+      <td>8604</td>
       <td>0</td>
       <td>8860</td>
-      <td>8604</td>
       <td>-8.737620e-07</td>
       <td>2.451451e-07</td>
       <td>3.854794e-07</td>
@@ -1110,9 +1125,9 @@ Extracting features: 100%|██████████| 1/1 [00:00&lt;00:00,  
     <tr>
       <th>3</th>
       <td>0</td>
+      <td>8860</td>
       <td>0</td>
       <td>9116</td>
-      <td>8860</td>
       <td>3.482372e-07</td>
       <td>-5.419446e-07</td>
       <td>-7.257668e-08</td>
@@ -1194,9 +1209,9 @@ Extracting features: 100%|██████████| 1/1 [00:00&lt;00:00,  
     <tr>
       <th>4</th>
       <td>0</td>
+      <td>9116</td>
       <td>0</td>
       <td>9372</td>
-      <td>9116</td>
       <td>1.078094e-06</td>
       <td>2.234204e-06</td>
       <td>8.322080e-07</td>
@@ -1362,9 +1377,9 @@ Extracting features: 100%|██████████| 1/1 [00:00&lt;00:00,  
     <tr>
       <th>65</th>
       <td>0</td>
+      <td>43163</td>
       <td>0</td>
       <td>43419</td>
-      <td>43163</td>
       <td>2.604641e-06</td>
       <td>2.696607e-06</td>
       <td>3.207271e-07</td>
@@ -1446,9 +1461,9 @@ Extracting features: 100%|██████████| 1/1 [00:00&lt;00:00,  
     <tr>
       <th>66</th>
       <td>0</td>
+      <td>43419</td>
       <td>0</td>
       <td>43675</td>
-      <td>43419</td>
       <td>-1.158709e-06</td>
       <td>-9.353611e-07</td>
       <td>6.243006e-07</td>
@@ -1530,9 +1545,9 @@ Extracting features: 100%|██████████| 1/1 [00:00&lt;00:00,  
     <tr>
       <th>67</th>
       <td>0</td>
+      <td>43675</td>
       <td>0</td>
       <td>43931</td>
-      <td>43675</td>
       <td>9.350503e-07</td>
       <td>7.273056e-07</td>
       <td>-3.974258e-07</td>
@@ -1614,9 +1629,9 @@ Extracting features: 100%|██████████| 1/1 [00:00&lt;00:00,  
     <tr>
       <th>68</th>
       <td>0</td>
+      <td>43931</td>
       <td>0</td>
       <td>44187</td>
-      <td>43931</td>
       <td>-1.334396e-04</td>
       <td>-4.969487e-05</td>
       <td>-2.251352e-06</td>
@@ -1698,9 +1713,9 @@ Extracting features: 100%|██████████| 1/1 [00:00&lt;00:00,  
     <tr>
       <th>69</th>
       <td>0</td>
+      <td>44187</td>
       <td>0</td>
       <td>44443</td>
-      <td>44187</td>
       <td>1.370442e-04</td>
       <td>3.529626e-05</td>
       <td>3.354098e-06</td>
@@ -3077,7 +3092,7 @@ Epoch 5, Train accuracy: 0.89, Test accuracy: 0.64
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[LightGBM] [Info] Number of positive: 28, number of negative: 28
-[LightGBM] [Info] Auto-choosing col-wise multi-threading, the overhead of testing was 0.000276 seconds.
+[LightGBM] [Info] Auto-choosing col-wise multi-threading, the overhead of testing was 0.000381 seconds.
 You can set `force_col_wise=true` to remove the overhead.
 [LightGBM] [Info] Total Bins 9205
 [LightGBM] [Info] Number of data points in the train set: 56, number of used features: 460
@@ -3199,8 +3214,8 @@ Train accuracy: 1.00, Validation accuracy: 0.86
 <img src="../../../_images/sphx_glr_tutorial_feature_extractor_open_close_eye_003.png" srcset="../../../_images/sphx_glr_tutorial_feature_extractor_open_close_eye_003.png" alt="Feature importance" class = "sphx-glr-single-img"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;Axes: title={&#39;center&#39;: &#39;Feature importance&#39;}, xlabel=&#39;Feature importance&#39;, ylabel=&#39;Features&#39;&gt;
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 5.445 seconds)</p>
-<p><strong>Estimated memory usage:</strong>  1326 MB</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 5.302 seconds)</p>
+<p><strong>Estimated memory usage:</strong>  1342 MB</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-generated-auto-examples-core-tutorial-feature-extractor-open-close-eye-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../../_downloads/f3cf56a30a7c06a2eccae3b5b3d28e35/tutorial_feature_extractor_open_close_eye.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">tutorial_feature_extractor_open_close_eye.ipynb</span></code></a></p>

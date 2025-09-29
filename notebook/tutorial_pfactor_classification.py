@@ -42,7 +42,23 @@ def balance_windows_by_class(ds, random_seed=42):
     f_indices = rng.permutation(f_indices)[:n_min]
     selected_indices = np.concatenate([m_indices, f_indices])
     selected_indices = rng.permutation(selected_indices)
-    return Subset(ds, selected_indices), len(m_indices), len(f_indices)
+    return Subset(ds, selected_indices)
+
+def balance_windows_by_class(ds, random_seed=42):
+    """
+    Returns a torch.utils.data.Subset of ds with equal number of windows for M and F classes.
+    """
+    import numpy as np
+    desc = ds.description
+    m_indices = np.where(desc['sex'] == 'M')[0]
+    f_indices = np.where(desc['sex'] == 'F')[0]
+    n_min = min(len(m_indices), len(f_indices))
+    rng = np.random.default_rng(random_seed)
+    m_indices = rng.permutation(m_indices)[:n_min]
+    f_indices = rng.permutation(f_indices)[:n_min]
+    selected_indices = np.concatenate([m_indices, f_indices])
+    selected_indices = rng.permutation(selected_indices)
+    return Subset(ds, selected_indices)
 
 def process_data(releases, tasks, target_names):
     
@@ -236,14 +252,16 @@ def run_task(releases, tasks, target_name, folds=10, weights=None, model_freeze=
             val_ds   = BaseConcatDataset([ds for ds in windows_ds.datasets if ds.description.subject in val_subj])
             
         # Balance windows per class for train and val sets
-        train_ds, train_male_count, train_female_count = balance_windows_by_class(train_ds, random_seed=random_add)
-        val_ds, val_male_count, val_female_count = balance_windows_by_class(val_ds, random_seed=random_add)
+        #train_ds, train_male_count, train_female_count = balance_windows_by_class(train_ds, random_seed=random_add)
+        #val_ds, val_male_count, val_female_count = balance_windows_by_class(val_ds, random_seed=random_add)
+        train_ds = balance_windows_by_class(train_ds, random_seed=random_add)
+        val_ds   = balance_windows_by_class(val_ds, random_seed=random_add)
 
         # show the number of sample in each class for each gender
-        print(f"Number of samples in training set for male: {train_male_count}")
-        print(f"Number of samples in training set for female: {train_female_count}")
-        print(f"Number of samples in validation set for male: {val_male_count}")
-        print(f"Number of samples in validation set for female: {val_female_count}")
+        # print(f"Number of samples in training set for male: {train_male_count}")
+        # print(f"Number of samples in training set for female: {train_female_count}")
+        # print(f"Number of samples in validation set for male: {val_male_count}")
+        # print(f"Number of samples in validation set for female: {val_female_count}")
         
         # Create dataloaders with smaller batch size to save memory
         train_loader = DataLoader(train_ds, batch_size=batch_size, shuffle=True, prefetch_factor=4, num_workers=4)
@@ -290,7 +308,7 @@ def run_task(releases, tasks, target_name, folds=10, weights=None, model_freeze=
         if weights is not None:
             model.load_state_dict(torch.load(weights))
 
-        print(summary(model, input_size=(batch_size, 24, 256)))
+        # print(summary(model, input_size=(batch_size, 24, 256)))
 
         # print(model)
         # %% [markdown]
@@ -462,9 +480,9 @@ new_tasks = { 'movies': ['DespicableMe', 'DiaryOfAWimpyKid', 'FunwithFractals', 
 # model_name = 'TSception'
 model_name = 'EEGConformer'
 releases_train = releases[:-1]
-new_tasks = {'dungcombination': ['contrastChangeDetection', 'surroundSupp']}
+new_tasks = {'contrastChangeDetection': ['contrastChangeDetection']}
 factors = ['attention']
-folds = 10
+folds = 1
 if True:
     for task in list(new_tasks.keys()):
         for factor in factors:
@@ -474,7 +492,7 @@ if True:
                 print(f"Skipping {task}_{factor} because it already exists")
                 continue
             weights_file_base = "weights_" + task+ "_" + factor + "_" + model_name + ".pth"
-            res_train, res_test, res_test_s = run_task(releases_train, new_tasks[task], factor, folds=folds, train_epochs=15, batch_size=64, save_weights=weights_file_base, lrate=0.0005, model_name=model_name)
+            res_train, res_test, res_test_s = run_task("R12", new_tasks[task], factor, folds=folds, train_epochs=20, batch_size=64, random_add=10, save_weights=weights_file_base, lrate=0.0005, model_name=model_name)
 
             # test set on R12
             res_test_r12 = []

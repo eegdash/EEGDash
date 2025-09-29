@@ -312,66 +312,63 @@ def balance_windows_by_class(ds, random_seed=42):
 
 
 def run_task(config=None):
-    
-    config = wandb.config
-    train_data_name = "R12" if "R12" in config['releases'] and len(config['releases']) == 1 else "R1-R11"
-    experiment_name = f"{train_data_name}_task_{'_'.join(config['tasks'])}_{config['target_name']}_{config['model']}_bs{config['batch_size']}_lr{config['lrate']}_seed{config['seed']}_dropout{config['dropout']}_k{config['folds']}"
+    with wandb.init(config=config):
+        config = wandb.config
+        train_data_name = "R12" if "R12" in config['releases'] and len(config['releases']) == 1 else "R1-R11"
+        experiment_name = f"{train_data_name}_task_{'_'.join(config['tasks'])}_{config['target_name']}_{config['model']}_bs{config['batch_size']}_lr{config['lrate']}_seed{config['seed']}_dropout{config['dropout']}_k{config['folds']}"
 
-    # random seed for reproducibility
-    global deep_copy_dataset
+        # random seed for reproducibility
+        global deep_copy_dataset
 
-    releases = config['releases']
-    if not isinstance(releases, list):
-        releases = [releases]
-    tasks = config['tasks']
-    if not isinstance(tasks, list):
-        tasks = [tasks]
+        releases = config['releases']
+        if not isinstance(releases, list):
+            releases = [releases]
+        tasks = config['tasks']
+        if not isinstance(tasks, list):
+            tasks = [tasks]
 
-    cached_data_folder_names = []
-    for release in releases:
-        for task in tasks:
-            cached_data_folder_name = "/home/arno/v1/eegdash/notebook/data/hbn_" + release + "_" + task + "_" + config['target_name']
-            if os.path.exists(cached_data_folder_name):
-                cached_data_folder_names.append(cached_data_folder_name)
-            else:
-                print(f"Missing DataError({cached_data_folder_name}): You first run process_data to run the task for each release")
+        cached_data_folder_names = []
+        for release in releases:
+            for task in tasks:
+                cached_data_folder_name = "/home/arno/v1/eegdash/notebook/data/hbn_" + release + "_" + task + "_" + config['target_name']
+                if os.path.exists(cached_data_folder_name):
+                    cached_data_folder_names.append(cached_data_folder_name)
+                else:
+                    print(f"Missing DataError({cached_data_folder_name}): You first run process_data to run the task for each release")
 
-    print("Loading data from disk")
-    windows_ds = []
-    for cached_data_folder_name in cached_data_folder_names:
-        windows_ds_tmp = load_concat_dataset(path=cached_data_folder_name, preload=False)
-        windows_ds.extend([ds for ds in windows_ds_tmp.datasets])
-        print(f"Number of datasets in {cached_data_folder_name}: {len(windows_ds_tmp.datasets)}")
+        print("Loading data from disk")
+        windows_ds = []
+        for cached_data_folder_name in cached_data_folder_names:
+            windows_ds_tmp = load_concat_dataset(path=cached_data_folder_name, preload=False)
+            windows_ds.extend([ds for ds in windows_ds_tmp.datasets])
+            print(f"Number of datasets in {cached_data_folder_name}: {len(windows_ds_tmp.datasets)}")
 
-    windows_ds = BaseConcatDataset(windows_ds)
-    print(f"Number of datasets in all releases: {len(windows_ds.datasets)}")
-    print(f"number of samples in windows_ds: {len(windows_ds)}")
+        windows_ds = BaseConcatDataset(windows_ds)
+        print(f"Number of datasets in all releases: {len(windows_ds.datasets)}")
+        print(f"number of samples in windows_ds: {len(windows_ds)}")
 
-    # ## Creating a Training and Test Set
-    correct_train_list = []
-    correct_val_list  = []
-    unique_subjects, unique_indices = np.unique(windows_ds.description["subject"], return_index=True)
-    unique_gender = windows_ds.description["sex"][unique_indices].values
-    if config['folds'] > 1:
-        splitter = StratifiedKFold(n_splits=config['folds'], shuffle=True, random_state=config['data_split_seed'])
-        splits = splitter.split(unique_subjects, unique_gender)
-    else:
-        train_idx, val_idx = train_test_split(np.arange(len(unique_subjects)),train_size=0.8,stratify=unique_gender,random_state=config['data_split_seed'])
-        splits = [(train_idx, val_idx)]
-        
-    for it_fold, (train_idx, val_idx) in enumerate(splits):
-        train_ds = BaseConcatDataset([ds for ds in windows_ds.datasets if ds.description.subject in unique_subjects[train_idx]])
-        val_ds   = BaseConcatDataset([ds for ds in windows_ds.datasets if ds.description.subject in unique_subjects[val_idx]])
+        # ## Creating a Training and Test Set
+        correct_train_list = []
+        correct_val_list  = []
+        unique_subjects, unique_indices = np.unique(windows_ds.description["subject"], return_index=True)
+        unique_gender = windows_ds.description["sex"][unique_indices].values
+        if config['folds'] > 1:
+            splitter = StratifiedKFold(n_splits=config['folds'], shuffle=True, random_state=config['data_split_seed'])
+            splits = splitter.split(unique_subjects, unique_gender)
+        else:
+            train_idx, val_idx = train_test_split(np.arange(len(unique_subjects)),train_size=0.6,stratify=unique_gender)#,random_state=config['data_split_seed']) # TODO is this the right approach?
+            splits = [(train_idx, val_idx)]
+            
+        for it_fold, (train_idx, val_idx) in enumerate(splits):
+            train_ds = BaseConcatDataset([ds for ds in windows_ds.datasets if ds.description.subject in unique_subjects[train_idx]])
+            val_ds   = BaseConcatDataset([ds for ds in windows_ds.datasets if ds.description.subject in unique_subjects[val_idx]])
 
-        # Balance windows per class for train and val sets
-        train_ds = balance_windows_by_class(train_ds, random_seed=config['data_split_seed'])
-        val_ds = balance_windows_by_class(val_ds, random_seed=config['data_split_seed'])
+            # Balance windows per class for train and val sets
+            train_ds = balance_windows_by_class(train_ds, random_seed=config['data_split_seed'])
+            val_ds = balance_windows_by_class(val_ds, random_seed=config['data_split_seed'])
 
-        analyze_fold_distribution(train_ds, val_ds)
+            analyze_fold_distribution(train_ds, val_ds)
 
-        config["it_fold"] = it_fold
-
-        with wandb.init(config=config):
             L.seed_everything(config['seed'])
             # Create dataloaders with smaller batch size to save memory
             train_loader = DataLoader(train_ds, batch_size=config['batch_size'], shuffle=True, prefetch_factor=4, num_workers=4)
@@ -501,7 +498,7 @@ results_dir.mkdir(exist_ok=True)
 factors = ["sex", "age", "p_factor", "attention", "internalizing", "externalizing"]
 releases = ["R1", "R2", "R3", "R4", "R5", "R6", "R7", "R8", "R9", "R10", "R11", "R12"]
 
-releases_train = ['R12'] #releases[:-1]
+releases_train = ["R12"] # releases[:-1]
 tasks = [  
 # 'DespicableMe',
 #   'DiaryOfAWimpyKid',
@@ -514,12 +511,12 @@ tasks = [
 #   'surroundSupp',
 #   'symbolSearch'
 ]
-folds = 10
+folds = 1
 factor = 'attention'
 
 # for factor in factors:
 sweep_config = {
-    'method': 'random'
+    'method': 'bayes'
 }
 metric = {
     'name': 'val/accuracy_epoch',
@@ -531,20 +528,23 @@ parameters_dict = {
         'values': [64, 128, 256, 512]
     },
     'lrate': {
-        # 'values': np.arange(0.00002, 0.00021, (0.0002-0.00002)/5).tolist(), #[0.02, 0.002, 0.0002, 0.00006, 0.00002]
-        'values': [0.00015, 0.0002],
+        'distribution': 'log_uniform_values',
+        'min': 0.00001,
+        'max': 0.1,
+        # 'values': np.arange(1e-5, 0.1, (0.005-0.00002)/5).tolist(), #[0.02, 0.002, 0.0002, 0.00006, 0.00002]
+        # 'values': [0.00015, 0.0002],
+    },
+    'model': {
+        'values': ['EEGConformer', 'TSception', 'EEGNeX', 'EEGConformerSimplified']
     },
     # 'model': {
-    #     'values': ['EEGConformer', 'TSception', 'EEGNeX'] #'EEGConformerSimplified', 
+    #     'value': 'EEGConformerSimplified',
     # },
-    'model': {
-        'value': 'EEGConformerSimplified',
-    },
     'dropout': {
-        'values': [0.3, 0.4, 0.5, 0.6]
+        'values': [0.3, 0.4, 0.5, 0.6, 0.7]
     },
     'seed': {
-        'values': np.random.randint(0, 100, size=20).tolist() 
+        'value': int(np.random.randint(0, 100, size=1)[0])
     },
     'epochs': {
         'value': 70
@@ -561,9 +561,6 @@ parameters_dict = {
     'target_name': {
         'value': factor
     },
-    'data_split_seed': {
-        'value': 42
-    }
 }
 sweep_config['parameters'] = parameters_dict
 

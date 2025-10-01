@@ -38,19 +38,33 @@ def _load_dataframe(path: Path, columns: Sequence[str]) -> pd.DataFrame:
         raise ValueError(msg)
 
     cleaned = df.copy()
+
+    # Process each column for cleaning and normalization
     for col in columns:
-        # drop rows with missing values in the specified columns
-        cleaned = cleaned.dropna(subset=[col])
+        # 1. Fill original NaN values with the string 'Unknown'
+        cleaned[col] = cleaned[col].fillna("Unknown")
 
-        # Split multi-valued cells into separate rows
-        cleaned[col] = cleaned[col].str.split("/|;|,")
+        # 2. Split multi-valued cells
+        cleaned[col] = cleaned[col].astype(str).str.split("/|;|,")
         cleaned = cleaned.explode(col)
-        cleaned[col] = cleaned[col].str.strip()
 
-        # normalize values to canonical forms
+        # 3. Clean up whitespace and any empty strings created by splitting
+        cleaned[col] = cleaned[col].str.strip()
+        cleaned[col] = cleaned[col].replace(["", "nan"], "Unknown")
+
+        # 4. Apply canonical mapping to standardize terms
         if col in CANONICAL_MAP:
             mapping = CANONICAL_MAP[col]
+            # Use .str.lower() for case-insensitive mapping
             cleaned[col] = cleaned[col].str.lower().map(mapping).fillna(cleaned[col])
+
+    # 5. Apply special rule for 'Type Subject' after all other processing
+    if "Type Subject" in columns:
+        # Identify values that are NOT 'Healthy' or 'Unknown'
+        is_healthy = cleaned["Type Subject"] == "Healthy"
+        is_unknown = cleaned["Type Subject"] == "Unknown"
+        # Set all other values to 'Clinical'
+        cleaned.loc[~is_healthy & ~is_unknown, "Type Subject"] = "Clinical"
 
     return cleaned[columns]
 
@@ -62,7 +76,16 @@ def _build_sankey_data(df: pd.DataFrame, columns: Sequence[str]):
 
     for col in columns:
         color_map = COLUMN_COLOR_MAPS.get(col, {})
-        unique_values = df[col].unique()
+
+        # Sort unique values to ensure "Unknown" appears at the bottom
+        all_unique = df[col].unique()
+        # Separate "Unknown" and sort the rest alphabetically
+        known_values = sorted([v for v in all_unique if v != "Unknown"])
+        unique_values = known_values
+        # Add "Unknown" to the end if it exists
+        if "Unknown" in all_unique:
+            unique_values.append("Unknown")
+
         for val in unique_values:
             if (col, val) not in node_index:
                 node_index[(col, val)] = len(node_labels)

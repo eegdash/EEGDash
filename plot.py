@@ -99,6 +99,7 @@ def _build_sankey_data(df: pd.DataFrame, columns: Sequence[str]):
     targets: list[int] = []
     values: list[int] = []
     link_colors: list[str] = []
+    link_hover_labels: list[str] = []
 
     for idx in range(len(columns) - 1):
         col_from, col_to = columns[idx], columns[idx + 1]
@@ -119,6 +120,7 @@ def _build_sankey_data(df: pd.DataFrame, columns: Sequence[str]):
                 sources.append(source_node_idx)
                 targets.append(target_node_idx)
                 values.append(count)
+                link_hover_labels.append(f"{source_val} → {target_val}: {count}")
 
                 # Assign color to the link based on the source node
                 source_color = source_color_map.get(source_val, "#94a3b8")
@@ -129,7 +131,27 @@ def _build_sankey_data(df: pd.DataFrame, columns: Sequence[str]):
                     source_color = source_color_map.get("Clinical", "#94a3b8")
                 link_colors.append(hex_to_rgba(source_color))
 
-    return node_labels, node_colors, sources, targets, values, link_colors
+    # Add counts and percentages to the first column labels
+    first_col_name = columns[0]
+    first_col_counts = df[first_col_name].value_counts()
+    total_count = first_col_counts.sum()
+
+    for i, label in enumerate(node_labels):
+        col, val = next((k for k, v in node_index.items() if v == i), (None, None))
+        if col == first_col_name:
+            count = first_col_counts.get(val, 0)
+            percentage = (count / total_count) * 100 if total_count > 0 else 0
+            node_labels[i] = f"{label} ({count}, {percentage:.1f}%)"
+
+    return (
+        node_labels,
+        node_colors,
+        sources,
+        targets,
+        values,
+        link_colors,
+        link_hover_labels,
+    )
 
 
 def build_sankey(df: pd.DataFrame, columns: Sequence[str]) -> go.Figure:
@@ -140,6 +162,7 @@ def build_sankey(df: pd.DataFrame, columns: Sequence[str]) -> go.Figure:
         targets,
         values,
         link_colors,
+        link_hover_labels,
     ) = _build_sankey_data(df, columns)
 
     sankey = go.Sankey(
@@ -155,6 +178,8 @@ def build_sankey(df: pd.DataFrame, columns: Sequence[str]) -> go.Figure:
             target=targets,
             value=values,
             color=link_colors,
+            hovertemplate="%{customdata}<extra></extra>",
+            customdata=link_hover_labels,
         ),
     )
 

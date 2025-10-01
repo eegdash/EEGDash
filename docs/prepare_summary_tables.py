@@ -1,4 +1,5 @@
 import glob
+import textwrap
 from argparse import ArgumentParser
 from datetime import datetime
 from pathlib import Path
@@ -52,6 +53,163 @@ DATASET_CANONICAL_MAP = {
         "sleep": "Sleep",
     },
 }
+
+DATA_TABLE_TEMPLATE = textwrap.dedent(
+    r"""
+<!-- jQuery + DataTables core -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/v/bm/dt-1.13.4/datatables.min.css"/>
+<script src="https://cdn.datatables.net/v/bm/dt-1.13.4/datatables.min.js"></script>
+
+<!-- Buttons + SearchPanes (+ Select required by SearchPanes) -->
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css">
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/select/1.7.0/css/select.dataTables.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/searchpanes/2.3.1/css/searchPanes.dataTables.min.css">
+<script src="https://cdn.datatables.net/select/1.7.0/js/dataTables.select.min.js"></script>
+<script src="https://cdn.datatables.net/searchpanes/2.3.1/js/dataTables.searchPanes.min.js"></script>
+
+<style>
+    /* Styling for the Total row (placed in tfoot) */
+    table.sd-table tfoot td {
+        font-weight: 600;
+        border-top: 2px solid rgba(0,0,0,0.2);
+        background: #f9fafb;
+        /* Match body cell padding to keep perfect alignment */
+        padding: 8px 10px !important;
+        vertical-align: middle;
+    }
+
+    /* Right-align numeric-like columns (2..8) consistently for body & footer */
+    table.sd-table tbody td:nth-child(n+2),
+    table.sd-table tfoot td:nth-child(n+2) {
+        text-align: right;
+    }
+    /* Keep first column (Dataset/Total) left-aligned */
+    table.sd-table tbody td:first-child,
+    table.sd-table tfoot td:first-child {
+        text-align: left;
+    }
+</style>
+
+<TABLE_HTML>
+
+<script>
+// Helper: robustly extract values for SearchPanes when needed
+function tagsArrayFromHtml(html) {
+    if (html == null) return [];
+    // If it's numeric or plain text, just return as a single value
+    if (typeof html === 'number') return [String(html)];
+    if (typeof html === 'string' && html.indexOf('<') === -1) return [html.trim()];
+    // Else parse any .tag elements inside HTML
+    const tmp = document.createElement('div');
+    tmp.innerHTML = html;
+    const tags = Array.from(tmp.querySelectorAll('.tag')).map(function(el){
+        return (el.textContent || '').trim();
+    });
+    return tags.length ? tags : [tmp.textContent.trim()];
+}
+
+// Helper: parse human-readable sizes like "4.31 GB" into bytes (number)
+function parseSizeToBytes(text) {
+    if (!text) return 0;
+    const s = String(text).trim();
+    const m = s.match(/([\d,.]+)\s*(TB|GB|MB|KB|B)/i);
+    if (!m) return 0;
+    const value = parseFloat(m[1].replace(/,/g, ''));
+    const unit = m[2].toUpperCase();
+    const factor = { B:1, KB:1024, MB:1024**2, GB:1024**3, TB:1024**4 }[unit] || 1;
+    return value * factor;
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+    const table = document.getElementById('datasets-table');
+    if (!table || !window.jQuery || !window.jQuery.fn || !window.jQuery.fn.DataTable) {
+        return;
+    }
+
+    const $table = window.jQuery(table);
+    if (window.jQuery.fn.DataTable.isDataTable(table)) {
+        return;
+    }
+
+    // 1) Move the "Total" row into <tfoot> so sorting/filtering never moves it
+    const $tbody = $table.find('tbody');
+    const $total = $tbody.find('tr').filter(function(){
+        return window.jQuery(this).find('td').eq(0).text().trim() === 'Total';
+    });
+    if ($total.length) {
+        let $tfoot = $table.find('tfoot');
+        if (!$tfoot.length) $tfoot = window.jQuery('<tfoot/>').appendTo($table);
+        $total.appendTo($tfoot);
+    }
+
+    // 2) Initialize DataTable with SearchPanes button
+    const FILTER_COLS = [1,2,3,4,5,6];
+    // Detect the index of the size column by header text
+    const sizeIdx = (function(){
+        let idx = -1;
+        $table.find('thead th').each(function(i){
+            const t = window.jQuery(this).text().trim().toLowerCase();
+            if (t === 'size on disk' || t === 'size') idx = i;
+        });
+        return idx;
+    })();
+
+    const dataTable = $table.DataTable({
+        dom: 'Blfrtip',
+        paging: false,
+        searching: true,
+        info: false,
+        language: {
+            search: 'Filter dataset:',
+            searchPanes: { collapse: { 0: 'Filters', _: 'Filters (%d)' } }
+        },
+        buttons: [{
+            extend: 'searchPanes',
+            text: 'Filters',
+            config: { cascadePanes: true, viewTotal: true, layout: 'columns-4', initCollapsed: false }
+        }],
+        columnDefs: (function(){
+            const defs = [
+                { searchPanes: { show: true }, targets: FILTER_COLS }
+            ];
+            if (sizeIdx !== -1) {
+                defs.push({
+                    targets: sizeIdx,
+                    render: function(data, type) {
+                        if (type === 'sort' || type === 'type') {
+                            return parseSizeToBytes(data);
+                        }
+                        return data;
+                    }
+                });
+            }
+            return defs;
+        })()
+    });
+
+    // 3) UX: click a header to open the relevant filter pane
+    $table.find('thead th').each(function (i) {
+        if ([1,2,3,4].indexOf(i) === -1) return;
+        window.jQuery(this)
+            .css('cursor','pointer')
+            .attr('title','Click to filter this column')
+            .on('click', function () {
+                dataTable.button('.buttons-searchPanes').trigger();
+                window.setTimeout(function () {
+                    const idx = [1,2,3,4].indexOf(i);
+                    const $container = window.jQuery(dataTable.searchPanes.container());
+                    const $pane = $container.find('.dtsp-pane').eq(idx);
+                    const $title = $pane.find('.dtsp-title');
+                    if ($title.length) $title.trigger('click');
+                }, 0);
+            });
+    });
+});
+</script>
+"""
+)
 
 
 def _tag_normalizer(kind: str):
@@ -226,8 +384,9 @@ def main(source_dir: str, target_dir: str):
             escape=False,
             table_id="datasets-table",
         )
+        html_table = DATA_TABLE_TEMPLATE.replace("<TABLE_HTML>", html_table)
         table_path = target_dir / "dataset_summary_table.html"
-        with open(table_path, "+w", encoding="utf-8") as f:
+        with open(table_path, "w", encoding="utf-8") as f:
             f.write(html_table)
         copyfile(table_path, STATIC_DATASET_DIR / table_path.name)
 

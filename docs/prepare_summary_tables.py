@@ -277,13 +277,52 @@ def gen_datasets_bubble(
         log_y=True,
     )
 
+    # Add a log-log regression fit line and R² annotation when data permits
+    fit_annotation_text = None
+    numeric_x = pd.to_numeric(d[x_field], errors="coerce")
+    numeric_y = pd.to_numeric(d[y_field], errors="coerce")
+    mask = (
+        np.isfinite(numeric_x)
+        & np.isfinite(numeric_y)
+        & (numeric_x > 0)
+        & (numeric_y > 0)
+    )
+
+    if mask.sum() >= 2:
+        log_x = np.log10(numeric_x[mask])
+        log_y = np.log10(numeric_y[mask])
+        ss_tot = np.sum((log_y - log_y.mean()) ** 2)
+        if np.ptp(log_x) > 0 and np.ptp(log_y) > 0 and ss_tot > 0:
+            slope, intercept = np.polyfit(log_x, log_y, 1)
+            line_log_x = np.linspace(log_x.min(), log_x.max(), 200)
+            line_x = 10**line_log_x
+            line_y = 10 ** (slope * line_log_x + intercept)
+            fig.add_trace(
+                go.Scatter(
+                    x=line_x,
+                    y=line_y,
+                    mode="lines",
+                    name="log-log fit",
+                    line=dict(color="#111827", width=2, dash="dot"),
+                    hoverinfo="skip",
+                    showlegend=False,
+                )
+            )
+            residuals = log_y - (slope * log_x + intercept)
+            r_squared = 1 - np.sum(residuals**2) / ss_tot
+            fit_annotation_text = f"log-log OLS fit R² = {r_squared:.3f}"
+
     # tune marker sizing explicitly for better control
     for tr in fig.data:
+        mode = getattr(tr, "mode", "") or ""
+        if "markers" not in mode:
+            continue
         tr.marker.update(
             sizemin=6,
             sizemode="area",
             sizeref=sizeref,
             line=dict(width=0.6, color="rgba(0,0,0,0.3)"),
+            opacity=0.75,
         )
         tr.hovertemplate = hover
 
@@ -317,6 +356,21 @@ def gen_datasets_bubble(
         ),
         autosize=True,  # Enable auto-sizing to fill container
     )
+
+    if fit_annotation_text:
+        fig.add_annotation(
+            xref="paper",
+            yref="paper",
+            x=0.02,
+            y=0.98,
+            text=fit_annotation_text,
+            showarrow=False,
+            font=dict(size=15, color="#111827"),
+            bgcolor="rgba(255,255,255,0.75)",
+            bordercolor="rgba(17,24,39,0.25)",
+            borderwidth=1,
+            borderpad=6,
+        )
 
     fig.update_xaxes(
         showgrid=True,

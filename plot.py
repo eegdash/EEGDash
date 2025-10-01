@@ -186,7 +186,37 @@ def build_sankey(df: pd.DataFrame, columns: Sequence[str]) -> go.Figure:
     fig = go.Figure(sankey)
 
     fig.update_layout(
+        title_text="Sankey diagrams of EEGDash Datasets by Population, Modality, and Cognitive Domain",
         font=dict(size=12),
+        annotations=[
+            dict(
+                x=0,
+                y=1.05,
+                xref="paper",
+                yref="paper",
+                text="Population Type",
+                showarrow=False,
+                font=dict(size=14, color="black"),
+            ),
+            dict(
+                x=0.5,
+                y=1.05,
+                xref="paper",
+                yref="paper",
+                text="Experimental Modality",
+                showarrow=False,
+                font=dict(size=14, color="black"),
+            ),
+            dict(
+                x=1,
+                y=1.05,
+                xref="paper",
+                yref="paper",
+                text="Cognitive Domain",
+                showarrow=False,
+                font=dict(size=14, color="black"),
+            ),
+        ],
     )
     return fig
 

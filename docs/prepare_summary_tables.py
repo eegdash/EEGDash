@@ -740,6 +740,8 @@ def main(source_dir: str, target_dir: str):
 
             fig_kde = go.Figure()
             rng = np.random.default_rng(42)
+            amplitude = 0.6
+            row_spacing = 0.95
 
             for idx, label in enumerate(order):
                 subset = d_modal[d_modal["modality_label"] == label].copy()
@@ -755,8 +757,7 @@ def main(source_dir: str, target_dir: str):
                 if density.max() <= 0:
                     continue
                 density_norm = density / density.max()
-                amplitude = 0.6
-                baseline = idx * 1.1
+                baseline = idx * row_spacing
                 y_curve = baseline + density_norm * amplitude
                 x_curve = 10**grid
 
@@ -824,36 +825,48 @@ def main(source_dir: str, target_dir: str):
 
             if fig_kde.data:
                 fig_kde.update_layout(
-                    height=max(650, 150 * len(order)),
+                    height=max(650, 140 * len(order)),
                     width=1200,  # Set explicit width for consistent sizing
                     template="plotly_white",
                     xaxis=dict(
                         type="log",
-                        title="Number of Participants (Log Scale)",
+                        title=dict(
+                            text="Number of Participants (Log Scale)",
+                            font=dict(size=18),
+                        ),
                         showgrid=True,
                         gridcolor="rgba(0,0,0,0.08)",
                         zeroline=False,
                         dtick=1,
                         minor=dict(showgrid=True, gridcolor="rgba(0,0,0,0.04)"),
+                        tickfont=dict(size=14),
                     ),
                     yaxis=dict(
-                        title="Modality",
+                        title=dict(text="Modality", font=dict(size=18)),
                         tickmode="array",
-                        tickvals=[idx * 1.1 for idx in range(len(order))],
+                        tickvals=[idx * row_spacing for idx in range(len(order))],
                         ticktext=order,
                         showgrid=False,
-                        range=[-0.3, max(0.3, (len(order) - 1) * 1.1 + 0.9)],
+                        range=[
+                            -0.25,
+                            max(
+                                0.35, (len(order) - 1) * row_spacing + amplitude + 0.25
+                            ),
+                        ],
+                        tickfont=dict(size=14),
                     ),
                     showlegend=False,
-                    margin=dict(l=120, r=40, t=100, b=80),
+                    margin=dict(l=120, r=40, t=108, b=80),
                     title=dict(
                         text=f"<br><sub>Based on a EEG-Dash Datasets avaliables at {datetime.now().strftime('%d/%m/%Y')}.</sub>",
                         x=0.5,
                         xanchor="center",
                         y=0.98,
                         yanchor="top",
+                        font=dict(size=20),
                     ),
                     autosize=True,  # Enable auto-sizing to fill container
+                    font=dict(size=16),
                 )
 
                 # Add annotation highlighting Visual distribution
@@ -864,7 +877,7 @@ def main(source_dir: str, target_dir: str):
                     y=0.02,
                     text="Visual studies consistently use the<br>largest sample sizes, typically 20-30 participants",
                     showarrow=False,
-                    font=dict(size=12, color="#111827"),
+                    font=dict(size=14, color="#111827"),
                     bgcolor="rgba(255,255,255,0.9)",
                     bordercolor="rgba(17,24,39,0.3)",
                     borderwidth=1,

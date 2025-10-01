@@ -24,8 +24,7 @@ In addition, EEG-DaSh will incorporate a subset of the data converted from `NEMA
    </figcaption>
    </figure>
 
-Pathology, modality, and dataset type now surface as consistent color-coded tags so you can scan the table at a glance and reuse the same visual language as the model catalog.
-
+Pathology, modality, and dataset type now surface as consistent color-coded tags so you can scan the table at a glance.
 .. raw:: html
 
   <!-- jQuery + DataTables core -->

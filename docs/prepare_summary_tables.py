@@ -162,6 +162,7 @@ def gen_datasets_bubble(
         "size_gb": "Size (GB)",
         "tasks": "#Tasks",
     }[x_field]
+    x_label = f"{x_label} (log scale)"
 
     # hover text adapts to x
     if x_field == "duration_h":
@@ -183,14 +184,32 @@ def gen_datasets_bubble(
         "<br>Sampling: %{customdata[4]} Hz"
         "<br>Size: %{customdata[5]}"
         "<br>Modality: %{customdata[6]}"
+        "<br><i>Click bubble to open dataset page</i>"
         "<extra></extra>"
     )
 
-    d = d.dropna(subset=["duration_h", "subjects", "size_gb"])  # need these
+    required_columns = {"subjects", "size_gb", x_field}
+    d = d.replace([np.inf, -np.inf], np.nan)
+    d = d.dropna(subset=list(required_columns))
+    d = d[(d["subjects"] > 0) & (d[x_field] > 0)]
+
+    d["dataset_url"] = d["dataset"].apply(get_dataset_url)
+
+    if d.empty:
+        out_path = Path(out_html)
+        out_path.parent.mkdir(parents=True, exist_ok=True)
+        no_data_html = """
+<div class="dataset-loading" id="dataset-loading">No dataset records available for plotting.</div>
+"""
+        with open(str(out_path), "w", encoding="utf-8") as f:
+            f.write(no_data_html)
+        return str(out_path)
 
     # Marker sizing: scale into a good visual range
-    max_size = max(d["size_gb"].max(), 1)
-    sizeref = (2.0 * max_size) / (40.0**2)  # target ~40px max marker
+    size_max = d["size_gb"].max()
+    if not np.isfinite(size_max) or size_max <= 0:
+        size_max = 1.0
+    sizeref = (2.0 * size_max) / (40.0**2)  # target ~40px max marker
 
     # Prepare prettified strings for hover
     def _fmt_int(v):
@@ -219,10 +238,11 @@ def gen_datasets_bubble(
             sfreq_str,
             d["size_bytes"].map(_fmt_size),
             d["modality_label"],
+            d["dataset_url"],
         ],
         size_max=40,
         labels={
-            "subjects": "#Subjects",
+            "subjects": "#Subjects (log scale)",
             "modality_label": "Modality",
             x_field: x_label,
         },
@@ -235,6 +255,8 @@ def gen_datasets_bubble(
                 if label in d["modality_label"].unique()
             ]
         },
+        log_x=True,
+        log_y=True,
     )
 
     # tune marker sizing explicitly for better control
@@ -247,9 +269,12 @@ def gen_datasets_bubble(
         )
         tr.hovertemplate = hover
 
+    plot_width = 1280
+    plot_height = 720
+
     fig.update_layout(
-        height=750,
-        width=1200,  # Set explicit width for consistent sizing
+        height=plot_height,
+        width=plot_width,  # Landscape orientation
         margin=dict(l=60, r=40, t=80, b=60),
         template="plotly_white",
         legend=dict(
@@ -275,8 +300,20 @@ def gen_datasets_bubble(
         autosize=True,  # Enable auto-sizing to fill container
     )
 
-    fig.update_xaxes(showgrid=True, gridcolor="rgba(0,0,0,0.12)", zeroline=False)
-    fig.update_yaxes(showgrid=True, gridcolor="rgba(0,0,0,0.12)", zeroline=False)
+    fig.update_xaxes(
+        showgrid=True,
+        gridcolor="rgba(0,0,0,0.12)",
+        zeroline=False,
+        type="log",
+        dtick=1,
+    )
+    fig.update_yaxes(
+        showgrid=True,
+        gridcolor="rgba(0,0,0,0.12)",
+        zeroline=False,
+        type="log",
+        dtick=1,
+    )
 
     out_path = Path(out_html)
     out_path.parent.mkdir(parents=True, exist_ok=True)
@@ -292,8 +329,8 @@ def gen_datasets_bubble(
             "toImageButtonOptions": {
                 "format": "png",
                 "filename": "dataset_landscape",
-                "height": 750,
-                "width": 1200,
+                "height": plot_height,
+                "width": plot_width,
                 "scale": 2,
             },
         },
@@ -304,9 +341,9 @@ def gen_datasets_bubble(
 <style>
 #dataset-bubble {{
     width: 100% !important;
-    max-width: 1200px;
-    height: 750px !important;
-    min-height: 750px;
+    max-width: {plot_width}px;
+    height: {plot_height}px !important;
+    min-height: {plot_height}px;
     margin: 0 auto;
 }}
 #dataset-bubble .plotly-graph-div {{
@@ -317,7 +354,7 @@ def gen_datasets_bubble(
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 750px;
+    height: {plot_height}px;
     font-family: Inter, system-ui, sans-serif;
     color: #6b7280;
 }}
@@ -325,14 +362,39 @@ def gen_datasets_bubble(
 <div class="dataset-loading" id="dataset-loading">Loading dataset landscape...</div>
 {html_content}
 <script>
-// Hide loading indicator once plot is rendered
+// Hide loading indicator once plot is rendered and make bubbles clickable
 document.addEventListener('DOMContentLoaded', function() {{
     const loading = document.getElementById('dataset-loading');
     const plot = document.getElementById('dataset-bubble');
-    if (loading && plot) {{
-        loading.style.display = 'none';
-        plot.style.display = 'block';
+
+    function showPlot() {{
+        if (loading) {{
+            loading.style.display = 'none';
+        }}
+        if (plot) {{
+            plot.style.display = 'block';
+        }}
     }}
+
+    function hookPlotlyClick(attempts) {{
+        if (!plot || typeof plot.on !== 'function') {{
+            if (attempts < 40) {{
+                window.setTimeout(function() {{ hookPlotlyClick(attempts + 1); }}, 60);
+            }}
+            return;
+        }}
+        plot.on('plotly_click', function(evt) {{
+            const point = evt && evt.points && evt.points[0];
+            const url = point && point.customdata && point.customdata[7];
+            if (url) {{
+                window.open(url, '_blank', 'noopener');
+            }}
+        }});
+        showPlot();
+    }}
+
+    hookPlotlyClick(0);
+    showPlot();
 }});
 </script>
 """
@@ -369,8 +431,12 @@ def human_readable_size(num_bytes: int) -> str:
 
 def get_dataset_url(name: str) -> str:
     """Generate dataset URL for plots (relative to dataset summary page)."""
-    name = name.strip()
-    return f"api/dataset/eegdash.dataset.{name.upper()}.html"
+    if name is None or (isinstance(name, float) and pd.isna(name)):
+        return ""
+    text = str(name).strip()
+    if not text:
+        return ""
+    return f"../../api/dataset/eegdash.dataset.{text.upper()}.html"
 
 
 def wrap_dataset_name(name: str):
@@ -378,7 +444,9 @@ def wrap_dataset_name(name: str):
     name = name.strip()
     # Link to the individual dataset API page
     # Updated structure: api/dataset/eegdash.dataset.<CLASS>.html
-    url = f"api/dataset/eegdash.dataset.{name.upper()}.html"
+    url = get_dataset_url(name)
+    if not url:
+        return name.upper()
     return f'<a href="{url}">{name.upper()}</a>'
 
 

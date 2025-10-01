@@ -1,3 +1,5 @@
+.. title:: EEG Dataset Catalogue
+
 .. rubric:: EEG Datasets Table
 
 The data in EEG-DaSh originates from a collaboration involving 25 laboratories, encompassing 27,053 participants. This extensive collection includes M-EEG data, which is a combination of EEG and MEG signals. The data is sourced from various studies conducted by these labs,

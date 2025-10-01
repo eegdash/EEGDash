@@ -15,12 +15,7 @@ from typing import Sequence
 
 import pandas as pd
 import plotly.graph_objects as go
-
-from eegdash.sankey_helpers import (
-    CANONICAL_MAP,
-    COLUMN_COLOR_MAPS,
-    hex_to_rgba,
-)
+from colours import CANONICAL_MAP, COLUMN_COLOR_MAPS, hex_to_rgba
 
 DEFAULT_COLUMNS = ["Type Subject", "modality of exp", "type of exp"]
 

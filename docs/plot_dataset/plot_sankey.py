@@ -15,7 +15,11 @@ from typing import Sequence
 
 import pandas as pd
 import plotly.graph_objects as go
-from colours import CANONICAL_MAP, COLUMN_COLOR_MAPS, hex_to_rgba
+
+try:  # Support execution as a script or as a package module
+    from .colours import CANONICAL_MAP, COLUMN_COLOR_MAPS, hex_to_rgba
+except ImportError:  # pragma: no cover - fallback for direct script execution
+    from colours import CANONICAL_MAP, COLUMN_COLOR_MAPS, hex_to_rgba
 
 DEFAULT_COLUMNS = ["Type Subject", "modality of exp", "type of exp"]
 

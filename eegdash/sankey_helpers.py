@@ -2,9 +2,9 @@
 
 # Color mappings consistent with prepare_summary_tables.py and custom.css
 PATHOLOGY_COLOR_MAP = {
-    "Healthy": "#16a34a",
-    "Clinical": "#ef4444",  # Use a red consistent with the table styles
-    "Unknown": "#94a3b8",
+    "Healthy": "#22c55e",  # green
+    "Clinical": "#f87171",  # Lighter red to match table
+    "Unknown": "#94a3b8",  # grey
 }
 
 MODALITY_COLOR_MAP = {
@@ -69,6 +69,7 @@ CANONICAL_MAP = {
         "sleep": "Sleep",
         "cognitive": "Cognitive",
         "clinical": "Clinical",
+        "other": "Other",
     },
 }
 
@@ -82,10 +83,16 @@ COLUMN_COLOR_MAPS = {
 
 def hex_to_rgba(hex_color: str, alpha: float = 0.2) -> str:
     """Convert hex color to rgba with given alpha."""
+    if not isinstance(hex_color, str) or not hex_color.startswith("#"):
+        # This is not a valid hex color, return a default color
+        return "rgba(148, 163, 184, 0.2)"  # Default grey
     hex_color = hex_color.lstrip("#")
     if len(hex_color) != 6:
-        raise ValueError("Invalid hex color format")
-    r = int(hex_color[0:2], 16)
-    g = int(hex_color[2:4], 16)
-    b = int(hex_color[4:6], 16)
+        return "rgba(148, 163, 184, 0.2)"  # Default grey for invalid length
+    try:
+        r = int(hex_color[0:2], 16)
+        g = int(hex_color[2:4], 16)
+        b = int(hex_color[4:6], 16)
+    except ValueError:
+        return "rgba(148, 163, 184, 0.2)"  # Default grey for conversion error
     return f"rgba({r}, {g}, {b}, {alpha})"

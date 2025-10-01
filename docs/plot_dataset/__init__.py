@@ -9,4 +9,5 @@ from .colours import (  # noqa: F401
     TYPE_COLOR_MAP,
     hex_to_rgba,
 )
+from .plot_sankey import generate_dataset_sankey  # noqa: F401
 from .ridgeline import generate_modality_ridgeline  # noqa: F401

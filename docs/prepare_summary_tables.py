@@ -154,44 +154,61 @@ def gen_datasets_bubble(
 
     # choose x axis field and labels
     x_field = (
-        x_var if x_var in {"records", "duration_h", "size_gb", "tasks"} else "records"
+        x_var
+        if x_var in {"records", "duration_h", "size_gb", "tasks", "subjects"}
+        else "records"
     )
-    x_label = {
+
+    axis_base_labels = {
         "records": "#Records",
         "duration_h": "Duration (hours)",
         "size_gb": "Size (GB)",
         "tasks": "#Tasks",
-    }[x_field]
-    x_label = f"{x_label} (log scale)"
+        "subjects": "#Subjects",
+    }
 
-    # hover text adapts to x
+    x_label = f"{axis_base_labels[x_field]} (log scale)"
+    y_field = "subjects"
+    if x_field == "subjects":
+        y_field = "records"
+    y_label = f"{axis_base_labels[y_field]} (log scale)"
+
+    # hover text adapts to axis choices
     if x_field == "duration_h":
-        x_hover = "Duration: %{x:.2f} h"
+        x_hover = "Duration (x): %{x:.2f} h"
     elif x_field == "size_gb":
-        x_hover = "Size: %{x:.2f} GB"
+        x_hover = "Size (x): %{x:.2f} GB"
     elif x_field == "tasks":
-        x_hover = "Tasks: %{x:,}"
+        x_hover = "Tasks (x): %{x:,}"
+    elif x_field == "subjects":
+        x_hover = "Subjects (x): %{x:,}"
     else:
         x_hover = "Records (x): %{x:,}"
 
+    if y_field == "subjects":
+        y_hover = "Subjects (y): %{y:,}"
+    else:
+        y_hover = "Records (y): %{y:,}"
+
     hover = (
         "<b>%{customdata[0]}</b>"  # dataset id
-        "<br>Subjects: %{y:,}"
         f"<br>{x_hover}"
-        "<br>Records: %{customdata[1]:,}"
-        "<br>Tasks: %{customdata[2]:,}"
-        "<br>Channels: %{customdata[3]}"
-        "<br>Sampling: %{customdata[4]} Hz"
-        "<br>Size: %{customdata[5]}"
-        "<br>Modality: %{customdata[6]}"
+        f"<br>{y_hover}"
+        "<br>Subjects (total): %{customdata[1]:,}"
+        "<br>Records (total): %{customdata[2]:,}"
+        "<br>Tasks: %{customdata[3]:,}"
+        "<br>Channels: %{customdata[4]}"
+        "<br>Sampling: %{customdata[5]} Hz"
+        "<br>Size: %{customdata[6]}"
+        "<br>Modality: %{customdata[7]}"
         "<br><i>Click bubble to open dataset page</i>"
         "<extra></extra>"
     )
 
-    required_columns = {"subjects", "size_gb", x_field}
+    required_columns = {x_field, y_field, "size_gb"}
     d = d.replace([np.inf, -np.inf], np.nan)
     d = d.dropna(subset=list(required_columns))
-    d = d[(d["subjects"] > 0) & (d[x_field] > 0)]
+    d = d[(d[x_field] > 0) & (d[y_field] > 0)]
 
     d["dataset_url"] = d["dataset"].apply(get_dataset_url)
 
@@ -226,12 +243,13 @@ def gen_datasets_bubble(
     fig = px.scatter(
         d,
         x=x_field,
-        y="subjects",
+        y=y_field,
         size="size_gb",
         color="modality_label",
         hover_name="dataset",
         custom_data=[
             d["dataset"],
+            d["subjects"],
             d["records"],
             d["tasks"],
             nchans_str,
@@ -242,7 +260,7 @@ def gen_datasets_bubble(
         ],
         size_max=40,
         labels={
-            "subjects": "#Subjects (log scale)",
+            y_field: y_label,
             "modality_label": "Modality",
             x_field: x_label,
         },
@@ -385,7 +403,7 @@ document.addEventListener('DOMContentLoaded', function() {{
         }}
         plot.on('plotly_click', function(evt) {{
             const point = evt && evt.points && evt.points[0];
-            const url = point && point.customdata && point.customdata[7];
+            const url = point && point.customdata && point.customdata[8];
             if (url) {{
                 window.open(url, '_blank', 'noopener');
             }}
@@ -585,9 +603,9 @@ def main(source_dir: str, target_dir: str):
             f, index_col=False, header=0, skipinitialspace=True
         )  # , sep=";")
         # Generate bubble chart from the raw data to have access to size_bytes
-        # Use x-axis as number of records for better spread
+        # Use x-axis as number of subjects so participant counts lead the story
         bubble_path = target_dir / "dataset_bubble.html"
-        gen_datasets_bubble(df_raw, str(bubble_path), x_var="records")
+        gen_datasets_bubble(df_raw, str(bubble_path), x_var="subjects")
         copyfile(bubble_path, STATIC_DATASET_DIR / bubble_path.name)
 
         df = prepare_table(df_raw)

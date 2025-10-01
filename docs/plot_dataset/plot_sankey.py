@@ -226,7 +226,10 @@ def build_sankey(df: pd.DataFrame, columns: Sequence[str]) -> go.Figure:
 
     fig.update_layout(
         font=dict(size=14),
-        margin=dict(b=100),  # Add bottom margin to make space for the note
+        height=900,
+        width=None,
+        autosize=True,
+        margin=dict(t=40, b=40, l=40, r=40),
         annotations=[
             dict(
                 x=0,
@@ -296,79 +299,7 @@ def generate_dataset_sankey(
         },
     )
 
-    styled_html = f"""
-<style>
-#dataset-sankey {{
-    width: min(1400px, calc(100vw - 4rem));
-    max-width: 100%;
-    height: clamp(640px, 60vw, 820px);
-    min-height: 560px;
-    margin: 0 auto;
-    display: none;
-}}
-#dataset-sankey.plotly-graph-div {{
-    width: 100% !important;
-    height: 100% !important;
-    min-height: inherit;
-}}
-.sankey-loading {{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: clamp(640px, 60vw, 820px);
-    font-family: Inter, system-ui, sans-serif;
-    color: #6b7280;
-}}
-
-@media (max-width: 768px) {{
-    #dataset-sankey {{
-        width: calc(100vw - 2rem);
-        height: 520px;
-        min-height: 520px;
-    }}
-    .sankey-loading {{
-        height: 520px;
-    }}
-}}
-</style>
-<div class="sankey-loading" id="sankey-loading">Loading dataset flow...</div>
-{html_content}
-<script>
-document.addEventListener('DOMContentLoaded', function() {{
-    const loading = document.getElementById('sankey-loading');
-    const plot = document.getElementById('dataset-sankey');
-
-    function showPlot() {{
-        if (loading) {{
-            loading.style.display = 'none';
-        }}
-        if (plot) {{
-            plot.style.display = 'block';
-        }}
-    }}
-
-    function waitForPlot(attempts) {{
-        if (!plot) {{
-            return;
-        }}
-        if (typeof plot.on === 'function') {{
-            showPlot();
-            return;
-        }}
-        if (attempts > 40) {{
-            showPlot();
-            return;
-        }}
-        window.setTimeout(function() {{ waitForPlot(attempts + 1); }}, 80);
-    }}
-
-    waitForPlot(0);
-    window.setTimeout(showPlot, 1200);
-}});
-</script>
-"""
-
-    out_path.write_text(styled_html, encoding="utf-8")
+    out_path.write_text(html_content, encoding="utf-8")
     return out_path
 
 

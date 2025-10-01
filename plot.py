@@ -60,11 +60,9 @@ def _load_dataframe(path: Path, columns: Sequence[str]) -> pd.DataFrame:
 
     # 5. Apply special rule for 'Type Subject' after all other processing
     if "Type Subject" in columns:
-        # Identify values that are NOT 'Healthy' or 'Unknown'
-        is_healthy = cleaned["Type Subject"] == "Healthy"
-        is_unknown = cleaned["Type Subject"] == "Unknown"
-        # Set all other values to 'Clinical'
-        cleaned.loc[~is_healthy & ~is_unknown, "Type Subject"] = "Clinical"
+        # The user wants to preserve original labels but color them as 'Clinical'.
+        # The relabeling to 'Clinical' is now removed. The coloring logic will handle this.
+        pass
 
     return cleaned[columns]
 
@@ -90,7 +88,12 @@ def _build_sankey_data(df: pd.DataFrame, columns: Sequence[str]):
             if (col, val) not in node_index:
                 node_index[(col, val)] = len(node_labels)
                 node_labels.append(val)
-                node_colors.append(color_map.get(val, "#94a3b8"))
+
+                # Use "Clinical" color for specific pathologies
+                node_color = color_map.get(val, "#94a3b8")
+                if col == "Type Subject" and val not in ["Healthy", "Unknown"]:
+                    node_color = color_map.get("Clinical", "#94a3b8")
+                node_colors.append(node_color)
 
     sources: list[int] = []
     targets: list[int] = []
@@ -119,6 +122,11 @@ def _build_sankey_data(df: pd.DataFrame, columns: Sequence[str]):
 
                 # Assign color to the link based on the source node
                 source_color = source_color_map.get(source_val, "#94a3b8")
+                if col_from == "Type Subject" and source_val not in [
+                    "Healthy",
+                    "Unknown",
+                ]:
+                    source_color = source_color_map.get("Clinical", "#94a3b8")
                 link_colors.append(hex_to_rgba(source_color))
 
     return node_labels, node_colors, sources, targets, values, link_colors

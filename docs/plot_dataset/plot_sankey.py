@@ -225,7 +225,6 @@ def build_sankey(df: pd.DataFrame, columns: Sequence[str]) -> go.Figure:
     fig = go.Figure(sankey)
 
     fig.update_layout(
-        title_text="Sankey diagrams of EEGDash Datasets by Population, Modality, and Cognitive Domain",
         font=dict(size=14),
         margin=dict(b=100),  # Add bottom margin to make space for the note
         annotations=[

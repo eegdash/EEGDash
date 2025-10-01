@@ -1,3 +1,5 @@
+.. title:: Participant Distribution by Modality
+
 .. rubric:: Participant Distribution by Modality
 
 .. raw:: html

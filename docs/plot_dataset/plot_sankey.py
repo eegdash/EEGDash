@@ -300,24 +300,36 @@ def generate_dataset_sankey(
     styled_html = f"""
 <style>
 #dataset-sankey {{
-    width: 100% !important;
-    max-width: 1200px;
-    height: 640px !important;
-    min-height: 640px;
+    width: min(1400px, calc(100vw - 4rem));
+    max-width: 100%;
+    height: clamp(640px, 60vw, 820px);
+    min-height: 560px;
     margin: 0 auto;
     display: none;
 }}
 #dataset-sankey.plotly-graph-div {{
     width: 100% !important;
     height: 100% !important;
+    min-height: inherit;
 }}
 .sankey-loading {{
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 640px;
+    height: clamp(640px, 60vw, 820px);
     font-family: Inter, system-ui, sans-serif;
     color: #6b7280;
+}}
+
+@media (max-width: 768px) {{
+    #dataset-sankey {{
+        width: calc(100vw - 2rem);
+        height: 520px;
+        min-height: 520px;
+    }}
+    .sankey-loading {{
+        height: 520px;
+    }}
 }}
 </style>
 <div class="sankey-loading" id="sankey-loading">Loading dataset flow...</div>

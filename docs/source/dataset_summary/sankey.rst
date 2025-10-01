@@ -1,6 +1,6 @@
 .. title:: Dataset flow
 
-.. rubric:: Dataset flow
+.. rubric:: Sankey diagrams of EEGDash Datasets by Population, Modality, and Cognitive Domain
 
 .. raw:: html
 

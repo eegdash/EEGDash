@@ -1,4 +1,4 @@
-.. title:: EEG Dataset Catalogue
+.. title:: EEG Datasets Table
 
 .. rubric:: EEG Datasets Table
 

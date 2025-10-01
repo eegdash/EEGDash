@@ -1,376 +1,22 @@
 import glob
-import json
+import textwrap
 from argparse import ArgumentParser
+from datetime import datetime
 from pathlib import Path
 from shutil import copyfile
 
 import numpy as np
 import pandas as pd
-import plotly.express as px
-import plotly.graph_objects as go
-from plotly.utils import PlotlyJSONEncoder
-from scipy.stats import gaussian_kde
+from plot_dataset import (
+    generate_dataset_bubble,
+    generate_dataset_sankey,
+    generate_modality_ridgeline,
+)
+from plot_dataset.utils import get_dataset_url, human_readable_size
 from table_tag_utils import wrap_tags
 
 DOCS_DIR = Path(__file__).resolve().parent
 STATIC_DATASET_DIR = DOCS_DIR / "source" / "_static" / "dataset_generated"
-
-
-MODALITY_CANONICAL = {
-    "visual": "Visual",
-    "auditory": "Auditory",
-    "tactile": "Tactile",
-    "somatosensory": "Tactile",
-    "multisensory": "Multisensory",
-    "motor": "Motor",
-    "rest": "Resting State",
-    "resting state": "Resting State",
-    "resting-state": "Resting State",
-    "sleep": "Sleep",
-    "other": "Other",
-}
-
-MODALITY_COLOR_MAP = {
-    "Visual": "#2563eb",
-    "Auditory": "#0ea5e9",
-    "Tactile": "#10b981",
-    "Multisensory": "#ec4899",
-    "Motor": "#f59e0b",
-    "Resting State": "#6366f1",
-    "Sleep": "#7c3aed",
-    "Other": "#14b8a6",
-    "Unknown": "#94a3b8",
-}
-
-
-def _hex_to_rgba(hex_color: str, alpha: float = 0.4) -> str:
-    hex_color = hex_color.lstrip("#")
-    if len(hex_color) != 6:
-        return f"rgba(99, 102, 241, {alpha})"
-    r = int(hex_color[0:2], 16)
-    g = int(hex_color[2:4], 16)
-    b = int(hex_color[4:6], 16)
-    return f"rgba({r}, {g}, {b}, {alpha})"
-
-
-def _primary_modality(value: object) -> str:
-    if value is None:
-        return "Unknown"
-    if isinstance(value, float) and pd.isna(value):
-        return "Unknown"
-    text = str(value).strip()
-    if not text:
-        return "Unknown"
-    for sep in ("/", "|", ";"):
-        text = text.replace(sep, ",")
-    tokens = [tok.strip() for tok in text.split(",") if tok.strip()]
-    if not tokens:
-        return "Unknown"
-    raw = tokens[0].lower()
-    canonical = MODALITY_CANONICAL.get(raw)
-    if canonical:
-        return canonical
-    candidate = tokens[0].strip()
-    title_candidate = candidate.title()
-    if title_candidate in MODALITY_COLOR_MAP:
-        return title_candidate
-    return "Other"
-
-
-def _to_numeric_median_list(val) -> float | None:
-    """Return a numeric value from possible list-like strings.
-
-    Examples
-    --------
-    - "64" -> 64
-    - "6,129" -> median -> 67.5 -> 68
-    - "128, 512" -> 320
-    - 500.0 -> 500
-
-    """
-    if pd.isna(val):
-        return None
-    try:
-        # already numeric
-        return float(val)
-    except Exception:
-        pass
-    s = str(val).strip().strip("[]")
-    if not s:
-        return None
-    try:
-        nums = [float(x) for x in s.split(",") if str(x).strip()]
-        if not nums:
-            return None
-        return float(np.median(nums))
-    except Exception:
-        return None
-
-
-def _safe_int(x, default=None):
-    try:
-        if x is None or pd.isna(x):
-            return default
-        return int(round(float(x)))
-    except Exception:
-        return default
-
-
-def gen_datasets_bubble(
-    df: pd.DataFrame,
-    out_html: str = "_static/dataset/dataset_bubble.html",
-    x_var: str = "records",  # one of: 'records', 'duration_h', 'size_gb', 'tasks'
-):
-    """Generate an interactive bubble chart for datasets.
-
-    - x: total duration (hours)
-    - y: number of subjects
-    - size: on-disk size (GB)
-    - color: dataset modality
-    """
-    d = df.copy()
-    d = d[d["dataset"].str.lower() != "test"]
-
-    # numeric columns
-    d["duration_h"] = pd.to_numeric(d.get("duration_hours_total"), errors="coerce")
-    d["subjects"] = pd.to_numeric(d.get("n_subjects"), errors="coerce")
-    d["records"] = pd.to_numeric(d.get("n_records"), errors="coerce")
-    d["tasks"] = pd.to_numeric(d.get("n_tasks"), errors="coerce")
-    d["size_bytes"] = pd.to_numeric(d.get("size_bytes"), errors="coerce")
-
-    # parse sampling and channels into representative numeric values
-    d["sfreq"] = d["sampling_freqs"].map(_to_numeric_median_list)
-    d["nchans"] = d["nchans_set"].map(_to_numeric_median_list)
-
-    d["modality_label"] = d.get("modality of exp").apply(_primary_modality)
-
-    # disk size in GB for sizing
-    GB = 1024**3
-    d["size_gb"] = d["size_bytes"] / GB
-
-    # hover content
-    def _fmt_size(bytes_):
-        return human_readable_size(_safe_int(bytes_, 0))
-
-    # choose x axis field and labels
-    x_field = (
-        x_var if x_var in {"records", "duration_h", "size_gb", "tasks"} else "records"
-    )
-    x_label = {
-        "records": "#Records",
-        "duration_h": "Duration (hours)",
-        "size_gb": "Size (GB)",
-        "tasks": "#Tasks",
-    }[x_field]
-
-    # hover text adapts to x
-    if x_field == "duration_h":
-        x_hover = "Duration: %{x:.2f} h"
-    elif x_field == "size_gb":
-        x_hover = "Size: %{x:.2f} GB"
-    elif x_field == "tasks":
-        x_hover = "Tasks: %{x:,}"
-    else:
-        x_hover = "Records (x): %{x:,}"
-
-    hover = (
-        "<b>%{customdata[0]}</b>"  # dataset id
-        "<br>Subjects: %{y:,}"
-        f"<br>{x_hover}"
-        "<br>Records: %{customdata[1]:,}"
-        "<br>Tasks: %{customdata[2]:,}"
-        "<br>Channels: %{customdata[3]}"
-        "<br>Sampling: %{customdata[4]} Hz"
-        "<br>Size: %{customdata[5]}"
-        "<br>Modality: %{customdata[6]}"
-        "<extra></extra>"
-    )
-
-    d = d.dropna(subset=["duration_h", "subjects", "size_gb"])  # need these
-
-    # Marker sizing: scale into a good visual range
-    max_size = max(d["size_gb"].max(), 1)
-    sizeref = (2.0 * max_size) / (40.0**2)  # target ~40px max marker
-
-    # Prepare prettified strings for hover
-    def _fmt_int(v):
-        if v is None or pd.isna(v):
-            return ""
-        try:
-            return str(int(round(float(v))))
-        except Exception:
-            return str(v)
-
-    sfreq_str = d["sfreq"].map(_fmt_int)
-    nchans_str = d["nchans"].map(_fmt_int)
-
-    fig = px.scatter(
-        d,
-        x=x_field,
-        y="subjects",
-        size="size_gb",
-        color="modality_label",
-        hover_name="dataset",
-        custom_data=[
-            d["dataset"],
-            d["records"],
-            d["tasks"],
-            nchans_str,
-            sfreq_str,
-            d["size_bytes"].map(_fmt_size),
-            d["modality_label"],
-        ],
-        size_max=40,
-        labels={
-            "subjects": "#Subjects",
-            "modality_label": "Modality",
-            x_field: x_label,
-        },
-        color_discrete_map=MODALITY_COLOR_MAP,
-        title="",
-        category_orders={
-            "modality_label": [
-                label
-                for label in MODALITY_COLOR_MAP.keys()
-                if label in d["modality_label"].unique()
-            ]
-        },
-    )
-
-    # tune marker sizing explicitly for better control
-    for tr in fig.data:
-        tr.marker.update(
-            sizemin=6,
-            sizemode="area",
-            sizeref=sizeref,
-            line=dict(width=0.6, color="rgba(0,0,0,0.3)"),
-        )
-        tr.hovertemplate = hover
-
-    fig.update_layout(
-        height=750,
-        width=1200,  # Set explicit width for consistent sizing
-        margin=dict(l=60, r=40, t=80, b=60),
-        template="plotly_white",
-        legend=dict(
-            title="Modality",
-            orientation="h",
-            yanchor="bottom",
-            y=1.02,
-            xanchor="right",
-            x=0.99,
-        ),
-        font=dict(
-            family="Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif",
-            size=14,
-        ),
-        title=dict(
-            text="",
-            x=0.01,
-            xanchor="left",
-            y=0.98,
-            yanchor="top",
-            pad=dict(t=10, b=8),
-        ),
-        autosize=True,  # Enable auto-sizing to fill container
-    )
-
-    fig.update_xaxes(showgrid=True, gridcolor="rgba(0,0,0,0.12)", zeroline=False)
-    fig.update_yaxes(showgrid=True, gridcolor="rgba(0,0,0,0.12)", zeroline=False)
-
-    out_path = Path(out_html)
-    out_path.parent.mkdir(parents=True, exist_ok=True)
-    # Add CSS and loading indicator for immediate proper sizing
-    html_content = fig.to_html(
-        full_html=False,
-        include_plotlyjs=False,
-        div_id="dataset-bubble",
-        config={
-            "responsive": True,
-            "displaylogo": False,
-            "modeBarButtonsToRemove": ["lasso2d", "select2d"],
-            "toImageButtonOptions": {
-                "format": "png",
-                "filename": "dataset_landscape",
-                "height": 750,
-                "width": 1200,
-                "scale": 2,
-            },
-        },
-    )
-
-    # Wrap with styling to ensure proper initial sizing
-    styled_html = f"""
-<style>
-#dataset-bubble {{
-    width: 100% !important;
-    max-width: 1200px;
-    height: 750px !important;
-    min-height: 750px;
-    margin: 0 auto;
-}}
-#dataset-bubble .plotly-graph-div {{
-    width: 100% !important;
-    height: 100% !important;
-}}
-.dataset-loading {{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 750px;
-    font-family: Inter, system-ui, sans-serif;
-    color: #6b7280;
-}}
-</style>
-<div class="dataset-loading" id="dataset-loading">Loading dataset landscape...</div>
-{html_content}
-<script>
-// Hide loading indicator once plot is rendered
-document.addEventListener('DOMContentLoaded', function() {{
-    const loading = document.getElementById('dataset-loading');
-    const plot = document.getElementById('dataset-bubble');
-    if (loading && plot) {{
-        loading.style.display = 'none';
-        plot.style.display = 'block';
-    }}
-}});
-</script>
-"""
-
-    with open(str(out_path), "w", encoding="utf-8") as f:
-        f.write(styled_html)
-    return str(out_path)
-
-
-def human_readable_size(num_bytes: int) -> str:
-    """Format bytes using the closest unit among MB, GB, TB (fallback to KB/B).
-
-    Chooses the largest unit such that the value is >= 1. Uses base 1024.
-    """
-    if num_bytes is None:
-        return "0 B"
-    size = float(num_bytes)
-    units = [
-        (1024**4, "TB"),
-        (1024**3, "GB"),
-        (1024**2, "MB"),
-        (1024**1, "KB"),
-        (1, "B"),
-    ]
-    for factor, unit in units:
-        if size >= factor:
-            value = size / factor
-            # Use no decimals for B/KB; two decimals otherwise
-            if unit in ("B", "KB"):
-                return f"{int(round(value))} {unit}"
-            return f"{value:.2f} {unit}"
-    return "0 B"
-
-
-def get_dataset_url(name: str) -> str:
-    """Generate dataset URL for plots (relative to dataset summary page)."""
-    name = name.strip()
-    return f"api/dataset/eegdash.dataset.{name.upper()}.html"
 
 
 def wrap_dataset_name(name: str):
@@ -378,7 +24,9 @@ def wrap_dataset_name(name: str):
     name = name.strip()
     # Link to the individual dataset API page
     # Updated structure: api/dataset/eegdash.dataset.<CLASS>.html
-    url = f"api/dataset/eegdash.dataset.{name.upper()}.html"
+    url = get_dataset_url(name)
+    if not url:
+        return name.upper()
     return f'<a href="{url}">{name.upper()}</a>'
 
 
@@ -405,6 +53,163 @@ DATASET_CANONICAL_MAP = {
         "sleep": "Sleep",
     },
 }
+
+DATA_TABLE_TEMPLATE = textwrap.dedent(
+    r"""
+<!-- jQuery + DataTables core -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/v/bm/dt-1.13.4/datatables.min.css"/>
+<script src="https://cdn.datatables.net/v/bm/dt-1.13.4/datatables.min.js"></script>
+
+<!-- Buttons + SearchPanes (+ Select required by SearchPanes) -->
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css">
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/select/1.7.0/css/select.dataTables.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/searchpanes/2.3.1/css/searchPanes.dataTables.min.css">
+<script src="https://cdn.datatables.net/select/1.7.0/js/dataTables.select.min.js"></script>
+<script src="https://cdn.datatables.net/searchpanes/2.3.1/js/dataTables.searchPanes.min.js"></script>
+
+<style>
+    /* Styling for the Total row (placed in tfoot) */
+    table.sd-table tfoot td {
+        font-weight: 600;
+        border-top: 2px solid rgba(0,0,0,0.2);
+        background: #f9fafb;
+        /* Match body cell padding to keep perfect alignment */
+        padding: 8px 10px !important;
+        vertical-align: middle;
+    }
+
+    /* Right-align numeric-like columns (2..8) consistently for body & footer */
+    table.sd-table tbody td:nth-child(n+2),
+    table.sd-table tfoot td:nth-child(n+2) {
+        text-align: right;
+    }
+    /* Keep first column (Dataset/Total) left-aligned */
+    table.sd-table tbody td:first-child,
+    table.sd-table tfoot td:first-child {
+        text-align: left;
+    }
+</style>
+
+<TABLE_HTML>
+
+<script>
+// Helper: robustly extract values for SearchPanes when needed
+function tagsArrayFromHtml(html) {
+    if (html == null) return [];
+    // If it's numeric or plain text, just return as a single value
+    if (typeof html === 'number') return [String(html)];
+    if (typeof html === 'string' && html.indexOf('<') === -1) return [html.trim()];
+    // Else parse any .tag elements inside HTML
+    const tmp = document.createElement('div');
+    tmp.innerHTML = html;
+    const tags = Array.from(tmp.querySelectorAll('.tag')).map(function(el){
+        return (el.textContent || '').trim();
+    });
+    return tags.length ? tags : [tmp.textContent.trim()];
+}
+
+// Helper: parse human-readable sizes like "4.31 GB" into bytes (number)
+function parseSizeToBytes(text) {
+    if (!text) return 0;
+    const s = String(text).trim();
+    const m = s.match(/([\d,.]+)\s*(TB|GB|MB|KB|B)/i);
+    if (!m) return 0;
+    const value = parseFloat(m[1].replace(/,/g, ''));
+    const unit = m[2].toUpperCase();
+    const factor = { B:1, KB:1024, MB:1024**2, GB:1024**3, TB:1024**4 }[unit] || 1;
+    return value * factor;
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+    const table = document.getElementById('datasets-table');
+    if (!table || !window.jQuery || !window.jQuery.fn || !window.jQuery.fn.DataTable) {
+        return;
+    }
+
+    const $table = window.jQuery(table);
+    if (window.jQuery.fn.DataTable.isDataTable(table)) {
+        return;
+    }
+
+    // 1) Move the "Total" row into <tfoot> so sorting/filtering never moves it
+    const $tbody = $table.find('tbody');
+    const $total = $tbody.find('tr').filter(function(){
+        return window.jQuery(this).find('td').eq(0).text().trim() === 'Total';
+    });
+    if ($total.length) {
+        let $tfoot = $table.find('tfoot');
+        if (!$tfoot.length) $tfoot = window.jQuery('<tfoot/>').appendTo($table);
+        $total.appendTo($tfoot);
+    }
+
+    // 2) Initialize DataTable with SearchPanes button
+    const FILTER_COLS = [1,2,3,4,5,6];
+    // Detect the index of the size column by header text
+    const sizeIdx = (function(){
+        let idx = -1;
+        $table.find('thead th').each(function(i){
+            const t = window.jQuery(this).text().trim().toLowerCase();
+            if (t === 'size on disk' || t === 'size') idx = i;
+        });
+        return idx;
+    })();
+
+    const dataTable = $table.DataTable({
+        dom: 'Blfrtip',
+        paging: false,
+        searching: true,
+        info: false,
+        language: {
+            search: 'Filter dataset:',
+            searchPanes: { collapse: { 0: 'Filters', _: 'Filters (%d)' } }
+        },
+        buttons: [{
+            extend: 'searchPanes',
+            text: 'Filters',
+            config: { cascadePanes: true, viewTotal: true, layout: 'columns-4', initCollapsed: false }
+        }],
+        columnDefs: (function(){
+            const defs = [
+                { searchPanes: { show: true }, targets: FILTER_COLS }
+            ];
+            if (sizeIdx !== -1) {
+                defs.push({
+                    targets: sizeIdx,
+                    render: function(data, type) {
+                        if (type === 'sort' || type === 'type') {
+                            return parseSizeToBytes(data);
+                        }
+                        return data;
+                    }
+                });
+            }
+            return defs;
+        })()
+    });
+
+    // 3) UX: click a header to open the relevant filter pane
+    $table.find('thead th').each(function (i) {
+        if ([1,2,3,4].indexOf(i) === -1) return;
+        window.jQuery(this)
+            .css('cursor','pointer')
+            .attr('title','Click to filter this column')
+            .on('click', function () {
+                dataTable.button('.buttons-searchPanes').trigger();
+                window.setTimeout(function () {
+                    const idx = [1,2,3,4].indexOf(i);
+                    const $container = window.jQuery(dataTable.searchPanes.container());
+                    const $pane = $container.find('.dtsp-pane').eq(idx);
+                    const $title = $pane.find('.dtsp-title');
+                    if ($title.length) $title.trigger('click');
+                }, 0);
+            });
+    });
+});
+</script>
+"""
+)
 
 
 def _tag_normalizer(kind: str):
@@ -517,10 +322,21 @@ def main(source_dir: str, target_dir: str):
             f, index_col=False, header=0, skipinitialspace=True
         )  # , sep=";")
         # Generate bubble chart from the raw data to have access to size_bytes
-        # Use x-axis as number of records for better spread
         bubble_path = target_dir / "dataset_bubble.html"
-        gen_datasets_bubble(df_raw, str(bubble_path), x_var="records")
-        copyfile(bubble_path, STATIC_DATASET_DIR / bubble_path.name)
+        bubble_output = generate_dataset_bubble(
+            df_raw,
+            bubble_path,
+            x_var="subjects",
+        )
+        copyfile(bubble_output, STATIC_DATASET_DIR / bubble_output.name)
+
+        # Generate Sankey diagram showing dataset flow across categories
+        try:
+            sankey_path = target_dir / "dataset_sankey.html"
+            sankey_output = generate_dataset_sankey(df_raw, sankey_path)
+            copyfile(sankey_output, STATIC_DATASET_DIR / sankey_output.name)
+        except Exception as exc:
+            print(f"[dataset Sankey] Skipped due to error: {exc}")
 
         df = prepare_table(df_raw)
         # preserve int values
@@ -568,239 +384,18 @@ def main(source_dir: str, target_dir: str):
             escape=False,
             table_id="datasets-table",
         )
+        html_table = DATA_TABLE_TEMPLATE.replace("<TABLE_HTML>", html_table)
         table_path = target_dir / "dataset_summary_table.html"
-        with open(table_path, "+w", encoding="utf-8") as f:
+        with open(table_path, "w", encoding="utf-8") as f:
             f.write(html_table)
         copyfile(table_path, STATIC_DATASET_DIR / table_path.name)
 
         # Generate KDE ridgeline plot for modality participant distributions
         try:
-            d_modal = df_raw[df_raw["dataset"].str.lower() != "test"].copy()
-            d_modal["modality_label"] = d_modal["modality of exp"].apply(
-                _primary_modality
-            )
-            d_modal["n_subjects"] = pd.to_numeric(
-                d_modal["n_subjects"], errors="coerce"
-            )
-            d_modal = d_modal.dropna(subset=["n_subjects"])
-
-            fig_kde = go.Figure()
-            order = [
-                label
-                for label in MODALITY_COLOR_MAP
-                if label in d_modal["modality_label"].unique()
-            ]
-            rng = np.random.default_rng(42)
-
-            for idx, label in enumerate(order):
-                subset = d_modal[d_modal["modality_label"] == label].copy()
-                vals = subset["n_subjects"].astype(float).dropna()
-                if len(vals) < 3:
-                    continue
-                # Generate URLs for datasets in this modality
-                subset["dataset_url"] = subset["dataset"].apply(get_dataset_url)
-                log_vals = np.log10(vals)
-                grid = np.linspace(log_vals.min() - 0.25, log_vals.max() + 0.25, 240)
-                kde = gaussian_kde(log_vals)
-                density = kde(grid)
-                if density.max() <= 0:
-                    continue
-                density_norm = density / density.max()
-                amplitude = 0.6
-                baseline = idx * 1.1
-                y_curve = baseline + density_norm * amplitude
-                x_curve = 10**grid
-
-                color = MODALITY_COLOR_MAP.get(label, "#6b7280")
-                fill = _hex_to_rgba(color, 0.28)
-
-                fig_kde.add_trace(
-                    go.Scatter(
-                        x=np.concatenate([x_curve, x_curve[::-1]]),
-                        y=np.concatenate([y_curve, np.full_like(y_curve, baseline)]),
-                        name=label,
-                        fill="toself",
-                        fillcolor=fill,
-                        line=dict(color="rgba(0,0,0,0)"),
-                        hoverinfo="skip",
-                        showlegend=False,
-                    )
-                )
-
-                fig_kde.add_trace(
-                    go.Scatter(
-                        x=x_curve,
-                        y=y_curve,
-                        mode="lines",
-                        name=label,
-                        line=dict(color=color, width=2),
-                        hovertemplate=f"<b>{label}</b><br>#Participants: %{{x:.0f}}<extra></extra>",
-                    )
-                )
-
-                jitter = rng.uniform(0.02, amplitude * 0.5, size=len(vals))
-                # Prepare custom data with dataset names and URLs
-                custom_data = np.column_stack(
-                    [subset["dataset"].to_numpy(), subset["dataset_url"].to_numpy()]
-                )
-                fig_kde.add_trace(
-                    go.Scatter(
-                        x=vals,
-                        y=np.full_like(vals, baseline) + jitter,
-                        mode="markers",
-                        name=label,
-                        marker=dict(color=color, size=5, opacity=0.6),
-                        customdata=custom_data,
-                        hovertemplate="<b><a href='%{customdata[1]}' target='_parent'>%{customdata[0]}</a></b><br>#Participants: %{x}<br><i>Click to view dataset details</i><extra></extra>",
-                        showlegend=False,
-                    )
-                )
-
-            if fig_kde.data:
-                fig_kde.update_layout(
-                    height=max(650, 150 * len(order)),
-                    width=1200,  # Set explicit width for consistent sizing
-                    template="plotly_white",
-                    xaxis=dict(
-                        type="log",
-                        title="#Participants",
-                        showgrid=True,
-                        gridcolor="rgba(0,0,0,0.12)",
-                        zeroline=False,
-                    ),
-                    yaxis=dict(
-                        title="Modality",
-                        tickmode="array",
-                        tickvals=[idx * 1.1 for idx in range(len(order))],
-                        ticktext=order,
-                        showgrid=False,
-                        range=[-0.3, max(0.3, (len(order) - 1) * 1.1 + 0.9)],
-                    ),
-                    legend=dict(
-                        title="Modality",
-                        orientation="h",
-                        yanchor="bottom",
-                        y=1.02,
-                        xanchor="right",
-                        x=0.99,
-                    ),
-                    margin=dict(l=120, r=40, t=80, b=80),
-                    title=dict(
-                        text="",
-                        x=0.01,
-                        xanchor="left",
-                        y=0.98,
-                        yanchor="top",
-                    ),
-                    autosize=True,  # Enable auto-sizing to fill container
-                )
-                # Add CSS and loading indicator for immediate proper sizing
-                kde_height = max(650, 150 * len(order))
-                plot_config = {
-                    "responsive": True,
-                    "displaylogo": False,
-                    "modeBarButtonsToRemove": ["lasso2d", "select2d"],
-                    "toImageButtonOptions": {
-                        "format": "png",
-                        "filename": "participant_kde",
-                        "height": kde_height,
-                        "width": 1200,
-                        "scale": 2,
-                    },
-                }
-                fig_spec = fig_kde.to_plotly_json()
-                data_json = json.dumps(fig_spec.get("data", []), cls=PlotlyJSONEncoder)
-                layout_json = json.dumps(
-                    fig_spec.get("layout", {}), cls=PlotlyJSONEncoder
-                )
-                config_json = json.dumps(plot_config, cls=PlotlyJSONEncoder)
-
-                # Wrap with styling to ensure proper initial sizing and defer Plotly rendering
-                styled_html = f"""
-<style>
-#dataset-kde-modalities {{
-    width: 100% !important;
-    max-width: 1200px;
-    height: {kde_height}px !important;
-    min-height: {kde_height}px;
-    margin: 0 auto;
-    display: none;
-}}
-#dataset-kde-modalities.plotly-graph-div {{
-    width: 100% !important;
-    height: 100% !important;
-}}
-.kde-loading {{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: {kde_height}px;
-    font-family: Inter, system-ui, sans-serif;
-    color: #6b7280;
-}}
-</style>
-<div class="kde-loading" id="kde-loading">Loading participant distribution...</div>
-<div id="dataset-kde-modalities" class="plotly-graph-div"></div>
-<script>
-(function() {{
-  const TARGET_ID = 'dataset-kde-modalities';
-  const FIG_DATA = {data_json};
-  const FIG_LAYOUT = {layout_json};
-  const FIG_CONFIG = {config_json};
-
-  function onReady(callback) {{
-    if (document.readyState === 'loading') {{
-      document.addEventListener('DOMContentLoaded', callback, {{ once: true }});
-    }} else {{
-      callback();
-    }}
-  }}
-
-  function renderPlot() {{
-    const container = document.getElementById(TARGET_ID);
-    if (!container) {{
-      return;
-    }}
-
-    const draw = () => {{
-      if (!window.Plotly) {{
-        window.requestAnimationFrame(draw);
-        return;
-      }}
-
-      window.Plotly.newPlot(TARGET_ID, FIG_DATA, FIG_LAYOUT, FIG_CONFIG).then((plot) => {{
-        const loading = document.getElementById('kde-loading');
-        if (loading) {{
-          loading.style.display = 'none';
-        }}
-        container.style.display = 'block';
-
-        plot.on('plotly_click', (event) => {{
-          const point = event.points && event.points[0];
-          if (!point || !point.customdata) {{
-            return;
-          }}
-          const url = point.customdata[1];
-          if (url) {{
-            const resolved = new URL(url, window.location.href);
-            window.open(resolved.href, '_self');
-          }}
-        }});
-      }});
-    }};
-
-    draw();
-  }}
-
-  onReady(renderPlot);
-}})();
-</script>
-"""
-
-                kde_path = Path(target_dir) / "dataset_kde_modalities.html"
-                with open(kde_path, "w", encoding="utf-8") as f:
-                    f.write(styled_html)
-                copyfile(kde_path, STATIC_DATASET_DIR / kde_path.name)
+            kde_path = target_dir / "dataset_kde_modalities.html"
+            kde_output = generate_modality_ridgeline(df_raw, kde_path)
+            if kde_output:
+                copyfile(kde_output, STATIC_DATASET_DIR / kde_output.name)
         except Exception as exc:
             print(f"[dataset KDE] Skipped due to error: {exc}")
 

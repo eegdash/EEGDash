@@ -789,6 +789,8 @@ def main(source_dir: str, target_dir: str):
                 )
 
                 jitter = rng.uniform(0.02, amplitude * 0.5, size=len(vals))
+                median_val = float(median_participants.get(label, np.nan))
+
                 # Prepare custom data with dataset names and URLs
                 custom_data = np.column_stack(
                     [subset["dataset"].to_numpy(), subset["dataset_url"].to_numpy()]
@@ -805,6 +807,20 @@ def main(source_dir: str, target_dir: str):
                         showlegend=False,
                     )
                 )
+
+                if np.isfinite(median_val) and median_val > 0:
+                    fig_kde.add_trace(
+                        go.Scatter(
+                            x=[median_val, median_val],
+                            y=[baseline, baseline + amplitude],
+                            mode="lines",
+                            line=dict(color=color, width=2, dash="dash"),
+                            hovertemplate=(
+                                f"<b>{label}</b><br>Median participants: {median_val:.0f}<extra></extra>"
+                            ),
+                            showlegend=False,
+                        )
+                    )
 
             if fig_kde.data:
                 fig_kde.update_layout(

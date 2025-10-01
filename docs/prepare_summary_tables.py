@@ -1,6 +1,7 @@
 import glob
 import json
 from argparse import ArgumentParser
+from datetime import datetime
 from pathlib import Path
 from shutil import copyfile
 
@@ -724,12 +725,20 @@ def main(source_dir: str, target_dir: str):
             )
             d_modal = d_modal.dropna(subset=["n_subjects"])
 
-            fig_kde = go.Figure()
+            # Filter out "Other" modality
+            d_modal = d_modal[d_modal["modality_label"] != "Other"]
+
+            # Calculate median participants per modality and reorder ascending
+            median_participants = (
+                d_modal.groupby("modality_label")["n_subjects"].median().sort_values()
+            )
             order = [
                 label
-                for label in MODALITY_COLOR_MAP
+                for label in median_participants.index
                 if label in d_modal["modality_label"].unique()
             ]
+
+            fig_kde = go.Figure()
             rng = np.random.default_rng(42)
 
             for idx, label in enumerate(order):
@@ -775,6 +784,7 @@ def main(source_dir: str, target_dir: str):
                         name=label,
                         line=dict(color=color, width=2),
                         hovertemplate=f"<b>{label}</b><br>#Participants: %{{x:.0f}}<extra></extra>",
+                        showlegend=False,
                     )
                 )
 
@@ -789,7 +799,7 @@ def main(source_dir: str, target_dir: str):
                         y=np.full_like(vals, baseline) + jitter,
                         mode="markers",
                         name=label,
-                        marker=dict(color=color, size=5, opacity=0.6),
+                        marker=dict(color=color, size=8, opacity=0.6),
                         customdata=custom_data,
                         hovertemplate="<b><a href='%{customdata[1]}' target='_parent'>%{customdata[0]}</a></b><br>#Participants: %{x}<br><i>Click to view dataset details</i><extra></extra>",
                         showlegend=False,
@@ -803,10 +813,12 @@ def main(source_dir: str, target_dir: str):
                     template="plotly_white",
                     xaxis=dict(
                         type="log",
-                        title="#Participants",
+                        title="Number of Participants (Log Scale)",
                         showgrid=True,
-                        gridcolor="rgba(0,0,0,0.12)",
+                        gridcolor="rgba(0,0,0,0.08)",
                         zeroline=False,
+                        dtick=1,
+                        minor=dict(showgrid=True, gridcolor="rgba(0,0,0,0.04)"),
                     ),
                     yaxis=dict(
                         title="Modality",
@@ -816,23 +828,33 @@ def main(source_dir: str, target_dir: str):
                         showgrid=False,
                         range=[-0.3, max(0.3, (len(order) - 1) * 1.1 + 0.9)],
                     ),
-                    legend=dict(
-                        title="Modality",
-                        orientation="h",
-                        yanchor="bottom",
-                        y=1.02,
-                        xanchor="right",
-                        x=0.99,
-                    ),
-                    margin=dict(l=120, r=40, t=80, b=80),
+                    showlegend=False,
+                    margin=dict(l=120, r=40, t=100, b=80),
                     title=dict(
-                        text="",
-                        x=0.01,
-                        xanchor="left",
+                        text=f"<br><sub>Based on a EEG-Dash Datasets avaliables at {datetime.now().strftime('%d/%m/%Y')}.</sub>",
+                        x=0.5,
+                        xanchor="center",
                         y=0.98,
                         yanchor="top",
                     ),
                     autosize=True,  # Enable auto-sizing to fill container
+                )
+
+                # Add annotation highlighting Visual distribution
+                fig_kde.add_annotation(
+                    xref="paper",
+                    yref="paper",
+                    x=0.98,
+                    y=0.02,
+                    text="Visual studies consistently use the<br>largest sample sizes, typically 20-30 participants",
+                    showarrow=False,
+                    font=dict(size=12, color="#111827"),
+                    bgcolor="rgba(255,255,255,0.9)",
+                    bordercolor="rgba(17,24,39,0.3)",
+                    borderwidth=1,
+                    borderpad=8,
+                    xanchor="right",
+                    yanchor="bottom",
                 )
                 # Add CSS and loading indicator for immediate proper sizing
                 kde_height = max(650, 150 * len(order))

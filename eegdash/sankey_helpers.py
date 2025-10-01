@@ -2,8 +2,8 @@
 
 # Color mappings consistent with prepare_summary_tables.py and custom.css
 PATHOLOGY_COLOR_MAP = {
-    "Healthy": "#16a34a",  # green (from border-color in CSS)
-    "Clinical": "#dc2626",  # red (from border-color in CSS)
+    "Healthy": "#16a34a",
+    "Clinical": "#ef4444",  # Use a red consistent with the table styles
     "Unknown": "#94a3b8",
 }
 
@@ -11,24 +11,29 @@ MODALITY_COLOR_MAP = {
     "Visual": "#2563eb",
     "Auditory": "#0ea5e9",
     "Tactile": "#10b981",
-    "Somatosensory": "#10b981",  # same as Tactile
+    "Somatosensory": "#10b981",
     "Multisensory": "#ec4899",
     "Motor": "#f59e0b",
     "Resting State": "#6366f1",
-    "Rest": "#6366f1",  # alias for Resting State
+    "Rest": "#6366f1",
     "Sleep": "#7c3aed",
     "Other": "#14b8a6",
     "Unknown": "#94a3b8",
 }
 
 TYPE_COLOR_MAP = {
-    "Perception": "#3b82f6",  # blue
-    "Decision-making": "#eab308",  # yellow
-    "Rest": "#16a34a",  # green
-    "Resting-state": "#16a34a",  # green (alias)
-    "Sleep": "#8b5cf6",  # purple
-    "Cognitive": "#6366f1",  # indigo
-    "Clinical": "#dc2626",  # red
+    "Perception": "#3b82f6",
+    "Decision-making": "#eab308",
+    "Rest": "#16a34a",
+    "Resting-state": "#16a34a",
+    "Sleep": "#8b5cf6",
+    "Cognitive": "#6366f1",
+    "Clinical": "#f87171",  # Lighter red to match table
+    "Memory": "#c4b5fd",  # Lighter purple to match table
+    "Attention": "#c4b5fd",  # Lighter purple to match table
+    "Intervention": "#c4b5fd",  # Lighter purple to match table
+    "Learning": "#c4b5fd",  # Lighter purple to match table
+    "Other": "#c4b5fd",  # Lighter purple to match table
     "Unknown": "#94a3b8",
 }
 

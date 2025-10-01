@@ -18,7 +18,7 @@ Dataset Information
 -------------------
 
 - **Dataset ID:** ``DS004951``
-- **Summary:** Modality: Tactile | Type: Learning | Subjects: ?
+- **Summary:** Modality: Tactile | Type: Learning
 - **Number of Subjects:** 11
 - **Number of Recordings:** 23
 - **Number of Tasks:** 1

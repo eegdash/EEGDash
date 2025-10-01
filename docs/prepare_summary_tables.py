@@ -6,7 +6,11 @@ from shutil import copyfile
 
 import numpy as np
 import pandas as pd
-from plot_dataset import generate_dataset_bubble, generate_modality_ridgeline
+from plot_dataset import (
+    generate_dataset_bubble,
+    generate_dataset_sankey,
+    generate_modality_ridgeline,
+)
 from plot_dataset.utils import get_dataset_url, human_readable_size
 from table_tag_utils import wrap_tags
 
@@ -167,6 +171,14 @@ def main(source_dir: str, target_dir: str):
             x_var="subjects",
         )
         copyfile(bubble_output, STATIC_DATASET_DIR / bubble_output.name)
+
+        # Generate Sankey diagram showing dataset flow across categories
+        try:
+            sankey_path = target_dir / "dataset_sankey.html"
+            sankey_output = generate_dataset_sankey(df_raw, sankey_path)
+            copyfile(sankey_output, STATIC_DATASET_DIR / sankey_output.name)
+        except Exception as exc:
+            print(f"[dataset Sankey] Skipped due to error: {exc}")
 
         df = prepare_table(df_raw)
         # preserve int values

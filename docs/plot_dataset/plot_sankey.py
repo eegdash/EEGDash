@@ -22,16 +22,10 @@ except ImportError:  # pragma: no cover - fallback for direct script execution
     from colours import CANONICAL_MAP, COLUMN_COLOR_MAPS, hex_to_rgba
 
 DEFAULT_COLUMNS = ["Type Subject", "modality of exp", "type of exp"]
+__all__ = ["generate_dataset_sankey", "build_sankey"]
 
 
-def _load_dataframe(path: Path, columns: Sequence[str]) -> pd.DataFrame:
-    df = pd.read_csv(
-        path,
-        index_col=False,
-        header=0,
-        skipinitialspace=True,
-    )
-    # Ensure n_subjects is read, as it's needed for weighting
+def _prepare_dataframe(df: pd.DataFrame, columns: Sequence[str]) -> pd.DataFrame:
     all_columns = list(columns)
     if "n_subjects" not in all_columns:
         all_columns.append("n_subjects")
@@ -55,7 +49,7 @@ def _load_dataframe(path: Path, columns: Sequence[str]) -> pd.DataFrame:
         cleaned[col] = cleaned[col].fillna("Unknown")
 
         # 2. Split multi-valued cells
-        cleaned[col] = cleaned[col].astype(str).str.split("/|;|,")
+        cleaned[col] = cleaned[col].astype(str).str.split(r"/|;|,", regex=True)
         cleaned = cleaned.explode(col)
 
         # 3. Clean up whitespace and any empty strings created by splitting
@@ -75,6 +69,16 @@ def _load_dataframe(path: Path, columns: Sequence[str]) -> pd.DataFrame:
         pass
 
     return cleaned[all_columns]
+
+
+def _load_dataframe(path: Path, columns: Sequence[str]) -> pd.DataFrame:
+    df = pd.read_csv(
+        path,
+        index_col=False,
+        header=0,
+        skipinitialspace=True,
+    )
+    return _prepare_dataframe(df, columns)
 
 
 def _build_sankey_data(df: pd.DataFrame, columns: Sequence[str]):
@@ -266,6 +270,95 @@ def build_sankey(df: pd.DataFrame, columns: Sequence[str]) -> go.Figure:
         ],
     )
     return fig
+
+
+def generate_dataset_sankey(
+    df: pd.DataFrame,
+    out_html: str | Path,
+    *,
+    columns: Sequence[str] | None = None,
+) -> Path:
+    """Generate the dataset Sankey diagram and write it to *out_html*."""
+    selected_columns = list(columns) if columns is not None else list(DEFAULT_COLUMNS)
+    prepared = _prepare_dataframe(df, selected_columns)
+    fig = build_sankey(prepared, selected_columns)
+
+    out_path = Path(out_html)
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+
+    html_content = fig.to_html(
+        full_html=False,
+        include_plotlyjs=False,
+        div_id="dataset-sankey",
+        config={
+            "responsive": True,
+            "displaylogo": False,
+            "modeBarButtonsToRemove": ["lasso2d", "select2d"],
+        },
+    )
+
+    styled_html = f"""
+<style>
+#dataset-sankey {{
+    width: 100% !important;
+    max-width: 1200px;
+    height: 640px !important;
+    min-height: 640px;
+    margin: 0 auto;
+    display: none;
+}}
+#dataset-sankey.plotly-graph-div {{
+    width: 100% !important;
+    height: 100% !important;
+}}
+.sankey-loading {{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 640px;
+    font-family: Inter, system-ui, sans-serif;
+    color: #6b7280;
+}}
+</style>
+<div class="sankey-loading" id="sankey-loading">Loading dataset flow...</div>
+{html_content}
+<script>
+document.addEventListener('DOMContentLoaded', function() {{
+    const loading = document.getElementById('sankey-loading');
+    const plot = document.getElementById('dataset-sankey');
+
+    function showPlot() {{
+        if (loading) {{
+            loading.style.display = 'none';
+        }}
+        if (plot) {{
+            plot.style.display = 'block';
+        }}
+    }}
+
+    function waitForPlot(attempts) {{
+        if (!plot) {{
+            return;
+        }}
+        if (typeof plot.on === 'function') {{
+            showPlot();
+            return;
+        }}
+        if (attempts > 40) {{
+            showPlot();
+            return;
+        }}
+        window.setTimeout(function() {{ waitForPlot(attempts + 1); }}, 80);
+    }}
+
+    waitForPlot(0);
+    window.setTimeout(showPlot, 1200);
+}});
+</script>
+"""
+
+    out_path.write_text(styled_html, encoding="utf-8")
+    return out_path
 
 
 def parse_args() -> argparse.Namespace:

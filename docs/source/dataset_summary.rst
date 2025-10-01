@@ -29,6 +29,10 @@ To leverage recent and ongoing advancements in large-scale computational methods
 
       .. include:: dataset_summary/kde.rst
 
+   .. tab-item:: Dataset Flow
+
+      .. include:: dataset_summary/sankey.rst
+
    .. tab-item:: Landscape
 
       .. include:: dataset_summary/bubble.rst

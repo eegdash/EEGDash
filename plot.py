@@ -32,12 +32,23 @@ def _load_dataframe(path: Path, columns: Sequence[str]) -> pd.DataFrame:
         header=0,
         skipinitialspace=True,
     )
-    missing = [col for col in columns if col not in df.columns]
+    # Ensure n_subjects is read, as it's needed for weighting
+    all_columns = list(columns)
+    if "n_subjects" not in all_columns:
+        all_columns.append("n_subjects")
+
+    missing = [col for col in all_columns if col not in df.columns]
     if missing:
         msg = f"Columns not found in dataframe: {missing}"
         raise ValueError(msg)
 
     cleaned = df.copy()
+
+    # Fill missing n_subjects with 1 (to count as at least one dataset)
+    # and ensure the column is numeric integer type.
+    cleaned["n_subjects"] = (
+        pd.to_numeric(cleaned["n_subjects"], errors="coerce").fillna(1).astype(int)
+    )
 
     # Process each column for cleaning and normalization
     for col in columns:
@@ -64,7 +75,7 @@ def _load_dataframe(path: Path, columns: Sequence[str]) -> pd.DataFrame:
         # The relabeling to 'Clinical' is now removed. The coloring logic will handle this.
         pass
 
-    return cleaned[columns]
+    return cleaned[all_columns]
 
 
 def _build_sankey_data(df: pd.DataFrame, columns: Sequence[str]):
@@ -107,11 +118,23 @@ def _build_sankey_data(df: pd.DataFrame, columns: Sequence[str]):
         # Use the color from the source node for the link
         source_color_map = COLUMN_COLOR_MAPS.get(col_from, {})
 
-        # Group by source and target columns and count occurrences
-        grouped = df.groupby([col_from, col_to]).size().reset_index(name="count")
+        # Group by source and target, getting both sum of subjects and count of datasets
+        grouped = (
+            df.groupby([col_from, col_to])
+            .agg(
+                subject_sum=("n_subjects", "sum"),
+                dataset_count=("n_subjects", "size"),
+            )
+            .reset_index()
+        )
 
         for _, row in grouped.iterrows():
-            source_val, target_val, count = row[col_from], row[col_to], row["count"]
+            source_val, target_val, subject_sum, dataset_count = (
+                row[col_from],
+                row[col_to],
+                row["subject_sum"],
+                row["dataset_count"],
+            )
 
             source_node_idx = node_index.get((col_from, source_val))
             target_node_idx = node_index.get((col_to, target_val))
@@ -119,8 +142,11 @@ def _build_sankey_data(df: pd.DataFrame, columns: Sequence[str]):
             if source_node_idx is not None and target_node_idx is not None:
                 sources.append(source_node_idx)
                 targets.append(target_node_idx)
-                values.append(count)
-                link_hover_labels.append(f"{source_val} → {target_val}: {count}")
+                values.append(subject_sum)  # Weight links by sum of subjects
+                link_hover_labels.append(
+                    f"{source_val} → {target_val}:<br>"
+                    f"{subject_sum} subjects in {dataset_count} datasets"
+                )
 
                 # Assign color to the link based on the source node
                 source_color = source_color_map.get(source_val, "#94a3b8")
@@ -131,17 +157,26 @@ def _build_sankey_data(df: pd.DataFrame, columns: Sequence[str]):
                     source_color = source_color_map.get("Clinical", "#94a3b8")
                 link_colors.append(hex_to_rgba(source_color))
 
-    # Add counts and percentages to the first column labels
+    # Add counts (subjects and datasets) and percentages to the first column labels
     first_col_name = columns[0]
-    first_col_counts = df[first_col_name].value_counts()
-    total_count = first_col_counts.sum()
+    first_col_stats = df.groupby(first_col_name).agg(
+        subject_sum=("n_subjects", "sum"),
+        dataset_count=("n_subjects", "size"),
+    )
+    total_subjects = first_col_stats["subject_sum"].sum()
 
     for i, label in enumerate(node_labels):
         col, val = next((k for k, v in node_index.items() if v == i), (None, None))
-        if col == first_col_name:
-            count = first_col_counts.get(val, 0)
-            percentage = (count / total_count) * 100 if total_count > 0 else 0
-            node_labels[i] = f"{label} ({count}, {percentage:.1f}%)"
+        if col == first_col_name and val in first_col_stats.index:
+            stats = first_col_stats.loc[val]
+            subject_sum = stats["subject_sum"]
+            dataset_count = stats["dataset_count"]
+            percentage = (
+                (subject_sum / total_subjects) * 100 if total_subjects > 0 else 0
+            )
+            node_labels[i] = (
+                f"{label}<br>({subject_sum} subjects, {dataset_count} datasets, {percentage:.1f}%)"
+            )
 
     return (
         node_labels,
@@ -168,7 +203,7 @@ def build_sankey(df: pd.DataFrame, columns: Sequence[str]) -> go.Figure:
     sankey = go.Sankey(
         arrangement="snap",
         node=dict(
-            pad=18,
+            pad=30,
             thickness=18,
             label=labels,
             color=colors,
@@ -187,7 +222,7 @@ def build_sankey(df: pd.DataFrame, columns: Sequence[str]) -> go.Figure:
 
     fig.update_layout(
         title_text="Sankey diagrams of EEGDash Datasets by Population, Modality, and Cognitive Domain",
-        font=dict(size=12),
+        font=dict(size=14),
         annotations=[
             dict(
                 x=0,
@@ -196,7 +231,7 @@ def build_sankey(df: pd.DataFrame, columns: Sequence[str]) -> go.Figure:
                 yref="paper",
                 text="Population Type",
                 showarrow=False,
-                font=dict(size=14, color="black"),
+                font=dict(size=16, color="black"),
             ),
             dict(
                 x=0.5,
@@ -205,7 +240,7 @@ def build_sankey(df: pd.DataFrame, columns: Sequence[str]) -> go.Figure:
                 yref="paper",
                 text="Experimental Modality",
                 showarrow=False,
-                font=dict(size=14, color="black"),
+                font=dict(size=16, color="black"),
             ),
             dict(
                 x=1,
@@ -214,7 +249,7 @@ def build_sankey(df: pd.DataFrame, columns: Sequence[str]) -> go.Figure:
                 yref="paper",
                 text="Cognitive Domain",
                 showarrow=False,
-                font=dict(size=14, color="black"),
+                font=dict(size=16, color="black"),
             ),
         ],
     )

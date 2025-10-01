@@ -99,7 +99,7 @@ def get_dataset_url(name: str) -> str:
     text = str(name).strip()
     if not text:
         return ""
-    return f"../../api/dataset/eegdash.dataset.{text.upper()}.html"
+    return f"api/dataset/eegdash.dataset.{text.upper()}.html"
 
 
 def ensure_directory(path: str | Path) -> Path:

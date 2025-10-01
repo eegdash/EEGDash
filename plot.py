@@ -207,6 +207,7 @@ def build_sankey(df: pd.DataFrame, columns: Sequence[str]) -> go.Figure:
             thickness=18,
             label=labels,
             color=colors,
+            align="left",  # Align all labels to the left of the node bars
         ),
         link=dict(
             source=sources,
@@ -223,6 +224,7 @@ def build_sankey(df: pd.DataFrame, columns: Sequence[str]) -> go.Figure:
     fig.update_layout(
         title_text="Sankey diagrams of EEGDash Datasets by Population, Modality, and Cognitive Domain",
         font=dict(size=14),
+        margin=dict(b=100),  # Add bottom margin to make space for the note
         annotations=[
             dict(
                 x=0,
@@ -250,6 +252,17 @@ def build_sankey(df: pd.DataFrame, columns: Sequence[str]) -> go.Figure:
                 text="Cognitive Domain",
                 showarrow=False,
                 font=dict(size=16, color="black"),
+            ),
+            dict(
+                x=0,
+                y=-0.15,  # Position the note below the chart
+                xref="paper",
+                yref="paper",
+                text='<b>Note on "Unknown" category:</b> This large portion represents datasets that are still pending categorization.',
+                showarrow=False,
+                align="left",
+                xanchor="left",
+                font=dict(size=12, color="dimgray"),
             ),
         ],
     )

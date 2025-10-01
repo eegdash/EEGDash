@@ -25,7 +25,7 @@ To leverage recent and ongoing advancements in large-scale computational methods
 
       .. include:: dataset_summary/table.rst
 
-   .. tab-item:: Participant KDE
+   .. tab-item:: Participant Distribution
 
       .. include:: dataset_summary/kde.rst
 
@@ -33,7 +33,7 @@ To leverage recent and ongoing advancements in large-scale computational methods
 
       .. include:: dataset_summary/sankey.rst
 
-   .. tab-item:: Landscape
+   .. tab-item:: Scatter of Sample Size vs. Recording Duration
 
       .. include:: dataset_summary/bubble.rst
 

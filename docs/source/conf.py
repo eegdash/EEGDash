@@ -12,6 +12,9 @@ from sphinx.util import logging
 from sphinx_gallery.sorting import ExplicitOrder, FileNameSortKey
 from tabulate import tabulate
 
+sys.path.insert(0, os.path.abspath(".."))
+
+import custom_gallery
 import eegdash
 
 # -- Project information -----------------------------------------------------
@@ -44,6 +47,7 @@ extensions = [
     "sphinx_sitemap",
     "sphinx_copybutton",
     "sphinx.ext.graphviz",
+    "sphinx_time_estimation",
 ]
 
 templates_path = ["_templates"]

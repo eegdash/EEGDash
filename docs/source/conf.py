@@ -14,7 +14,6 @@ from tabulate import tabulate
 
 sys.path.insert(0, os.path.abspath(".."))
 
-import custom_gallery
 import eegdash
 
 # -- Project information -----------------------------------------------------

@@ -68,7 +68,6 @@ Challenge 1: Cross-Task Transfer Learning!
 # directly in our target task, and it is up to the teams to think about
 # how to use the passive task to perform the pre-training.
 #
-######################################################################
 # Install dependencies
 # --------------------
 # For the challenge, we will need two significant dependencies:
@@ -132,7 +131,7 @@ print(msg)
 #
 ######################################################################
 # The brain decodes the problem
-# =============================
+# -----------------------------
 #
 # Broadly speaking, here *brain decoding* is the following problem:
 # given brain time-series signals :math:`X \in \mathbb{R}^{C \times T}` with
@@ -155,7 +154,6 @@ print(msg)
 # is the temporal window length/epoch size over the interval of interest.
 # Here, :math:`\theta` denotes the parameters learned by the neural network.
 #
-# ------------------------------------------------------------------------------
 # Input/Output definition
 # ---------------------------
 # For the competition, the HBN-EEG (Healthy Brain Network EEG Datasets)
@@ -194,8 +192,9 @@ print(msg)
 # * The **ramp onset**, the **button press**, and the **feedback** are **time-locked events** that yield ERP-like components.
 #
 # Your task (**label**) is to predict the response time for the subject during this windows.
-######################################################################
+#
 # In the figure below, we have the timeline representation of the cognitive task:
+#
 # .. image:: https://eeg2025.github.io/assets/img/image-2.jpg
 
 ######################################################################

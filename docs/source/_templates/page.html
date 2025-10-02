@@ -1,0 +1,10 @@
+{% extends "!page.html" %}
+
+{% block content %}
+  {% if reading_time %}
+    <div class="alert alert-info" role="alert">
+      <p class="admonition-title" style="margin-bottom: 0;">Estimated reading time: {{ reading_time }} minutes</p>
+    </div>
+  {% endif %}
+  {{ super() }}
+{% endblock %}

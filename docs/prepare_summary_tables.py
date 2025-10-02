@@ -1,21 +1,43 @@
 import glob
+import sys
 import textwrap
 from argparse import ArgumentParser
-from datetime import datetime
 from pathlib import Path
 from shutil import copyfile
 
 import numpy as np
 import pandas as pd
-from plot_dataset import (
-    generate_dataset_bubble,
-    generate_dataset_sankey,
-    generate_modality_ridgeline,
+
+from eegdash.logging import logger
+from eegdash.plotting.dataset_summary_adapter import (
+    BubbleSizeMetric,
+    SummaryBubbleConfig,
+    load_dataset_summary,
 )
-from plot_dataset.utils import get_dataset_url, human_readable_size
-from table_tag_utils import wrap_tags
+from eegdash.plotting.plotly_dataset_bubbles import generate_plotly_dataset_bubble
+
+try:
+    from plot_dataset import generate_dataset_sankey, generate_modality_ridgeline
+    from plot_dataset.utils import get_dataset_url, human_readable_size
+except ModuleNotFoundError:  # pragma: no cover - fallback for unit tests
+    from docs.plot_dataset import (  # type: ignore
+        generate_dataset_sankey,
+        generate_modality_ridgeline,
+    )
+    from docs.plot_dataset.utils import (  # type: ignore
+        get_dataset_url,
+        human_readable_size,
+    )
+
+try:
+    from table_tag_utils import wrap_tags
+except ModuleNotFoundError:  # pragma: no cover - fallback for unit tests
+    from docs.table_tag_utils import wrap_tags  # type: ignore
 
 DOCS_DIR = Path(__file__).resolve().parent
+if str(DOCS_DIR) not in sys.path:
+    sys.path.insert(0, str(DOCS_DIR))
+
 STATIC_DATASET_DIR = DOCS_DIR / "source" / "_static" / "dataset_generated"
 
 
@@ -225,6 +247,34 @@ def _tag_normalizer(kind: str):
     return _normalise
 
 
+def _copy_into_static(path: Path) -> Path:
+    destination = STATIC_DATASET_DIR / path.name
+    if path.resolve() == destination.resolve():
+        return destination
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    copyfile(path, destination)
+    return destination
+
+
+def _build_bubble_config(
+    *,
+    bubble_limit: int | None,
+    bubble_layout_seed: int | None,
+    include_type_subject_badges: bool,
+) -> SummaryBubbleConfig:
+    config_kwargs: dict[str, object] = {
+        "size_metric": BubbleSizeMetric.N_RECORDS,
+        "legend_heading": "Record volume (log scale)",
+    }
+    if bubble_limit is not None:
+        config_kwargs["limit"] = bubble_limit
+    if bubble_layout_seed is not None:
+        config_kwargs["layout_seed"] = bubble_layout_seed
+    if include_type_subject_badges:
+        config_kwargs["include_type_subject_badges"] = True
+    return SummaryBubbleConfig(**config_kwargs)
+
+
 def prepare_table(df: pd.DataFrame):
     # drop test dataset and create a copy to avoid SettingWithCopyWarning
     df = df[df["dataset"] != "test"].copy()
@@ -310,33 +360,54 @@ def prepare_table(df: pd.DataFrame):
     return df
 
 
-def main(source_dir: str, target_dir: str):
-    target_dir = Path(target_dir)
-    target_dir.mkdir(parents=True, exist_ok=True)
+def main(
+    source_dir: str,
+    target_dir: str,
+    *,
+    bubble_limit: int | None = None,
+    bubble_layout_seed: int | None = 42,
+    include_type_subject_badges: bool = False,
+) -> None:
+    target_dir_path = Path(target_dir)
+    target_dir_path.mkdir(parents=True, exist_ok=True)
     STATIC_DATASET_DIR.mkdir(parents=True, exist_ok=True)
-    files = glob.glob(str(Path(source_dir) / "dataset" / "*.csv"))
-    for f in files:
-        target_file = target_dir / Path(f).name
-        print(f"Processing {f} -> {target_file}")
-        df_raw = pd.read_csv(
-            f, index_col=False, header=0, skipinitialspace=True
-        )  # , sep=";")
-        # Generate bubble chart from the raw data to have access to size_bytes
-        bubble_path = target_dir / "dataset_bubble.html"
-        bubble_output = generate_dataset_bubble(
-            df_raw,
-            bubble_path,
-            x_var="subjects",
-        )
-        copyfile(bubble_output, STATIC_DATASET_DIR / bubble_output.name)
+
+    files = sorted(glob.glob(str(Path(source_dir) / "dataset" / "*.csv")))
+    bubble_config = _build_bubble_config(
+        bubble_limit=bubble_limit,
+        bubble_layout_seed=bubble_layout_seed,
+        include_type_subject_badges=include_type_subject_badges,
+    )
+
+    for csv_path_str in files:
+        csv_path = Path(csv_path_str)
+        logger.info("Processing dataset summary CSV %s", csv_path)
+
+        df_raw = pd.read_csv(csv_path, index_col=False, header=0, skipinitialspace=True)
+        records = load_dataset_summary(csv_path)
+        if not records:
+            logger.warning(
+                "No dataset summary records available after normalisation for %s; skipping Plotly bubble export.",
+                csv_path,
+            )
+        else:
+            bubble_path = target_dir_path / "dataset_bubble.html"
+            figure = generate_plotly_dataset_bubble(
+                records,
+                bubble_config,
+                outfile=bubble_path,
+            )
+            logger.info("Dataset bubble HTML written to %s", bubble_path)
+            _copy_into_static(bubble_path)
 
         # Generate Sankey diagram showing dataset flow across categories
         try:
-            sankey_path = target_dir / "dataset_sankey.html"
+            sankey_path = target_dir_path / "dataset_sankey.html"
             sankey_output = generate_dataset_sankey(df_raw, sankey_path)
-            copyfile(sankey_output, STATIC_DATASET_DIR / sankey_output.name)
-        except Exception as exc:
-            print(f"[dataset Sankey] Skipped due to error: {exc}")
+            if sankey_output:
+                _copy_into_static(sankey_output)
+        except Exception as exc:  # pragma: no cover - visual asset best effort
+            logger.warning("[dataset Sankey] Skipped due to error: %s", exc)
 
         df = prepare_table(df_raw)
         # preserve int values
@@ -385,19 +456,19 @@ def main(source_dir: str, target_dir: str):
             table_id="datasets-table",
         )
         html_table = DATA_TABLE_TEMPLATE.replace("<TABLE_HTML>", html_table)
-        table_path = target_dir / "dataset_summary_table.html"
+        table_path = target_dir_path / "dataset_summary_table.html"
         with open(table_path, "w", encoding="utf-8") as f:
             f.write(html_table)
-        copyfile(table_path, STATIC_DATASET_DIR / table_path.name)
+        _copy_into_static(table_path)
 
         # Generate KDE ridgeline plot for modality participant distributions
         try:
-            kde_path = target_dir / "dataset_kde_modalities.html"
+            kde_path = target_dir_path / "dataset_kde_modalities.html"
             kde_output = generate_modality_ridgeline(df_raw, kde_path)
             if kde_output:
-                copyfile(kde_output, STATIC_DATASET_DIR / kde_output.name)
-        except Exception as exc:
-            print(f"[dataset KDE] Skipped due to error: {exc}")
+                _copy_into_static(kde_output)
+        except Exception as exc:  # pragma: no cover - visual asset best effort
+            logger.warning("[dataset KDE] Skipped due to error: %s", exc)
 
 
 def parse_freqs(value) -> str:
@@ -417,6 +488,32 @@ if __name__ == "__main__":
     parser = ArgumentParser()
     parser.add_argument("source_dir", type=str)
     parser.add_argument("target_dir", type=str)
+    parser.add_argument(
+        "--bubble-limit",
+        type=int,
+        default=None,
+        help="Optional maximum number of datasets to include in the bubble chart (default: adapter configuration).",
+    )
+    parser.add_argument(
+        "--bubble-layout-seed",
+        type=int,
+        default=42,
+        help="Deterministic layout seed forwarded to grouped bubbles (use a negative value to disable).",
+    )
+    parser.add_argument(
+        "--bubble-include-type",
+        action="store_true",
+        help="Enable Type Subject badge legends in the grouped bubble output.",
+    )
     args = parser.parse_args()
-    main(args.source_dir, args.target_dir)
+    layout_seed = args.bubble_layout_seed
+    if layout_seed is not None and layout_seed < 0:
+        layout_seed = None
+    main(
+        args.source_dir,
+        args.target_dir,
+        bubble_limit=args.bubble_limit,
+        bubble_layout_seed=layout_seed,
+        include_type_subject_badges=args.bubble_include_type,
+    )
     print(args.target_dir)

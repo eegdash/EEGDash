@@ -1,0 +1,69 @@
+# Generate full API docs, then prune duplicates covered by autosummary
+# Remove top-level package page and modules covered elsewhere
+[10/02/25 15:29:57] INFO     Processing dataset    prepare_summary_tables.py:408
+                             summary CSV                                        
+                             ../eegdash/dataset/da                              
+                             taset_summary.csv                                  
+                    WARNING  Modality information dataset_summary_adapter.py:405
+                             missing for 65                                     
+                             dataset(s):                                        
+                             ds002181, ds004075,                                
+                             ds004256, ds004388,                                
+                             ds004389, …                                        
+                    WARNING  Recording duration   dataset_summary_adapter.py:411
+                             unavailable for 57                                 
+                             dataset(s); default                                
+                             trial length of 1.0s                               
+                             will be used.                                      
+                    WARNING  Modality palette     dataset_summary_adapter.py:571
+                             fallback applied to                                
+                             65 dataset(s):                                     
+                             ds002181, ds004075,                                
+                             ds004256, ds004388,                                
+                             ds004389, …                                        
+                    WARNING  Dataset ds002721     dataset_summary_adapter.py:651
+                             lacks usable                                       
+                             duration_hours_total                               
+                             ; falling back to                                  
+                             minimum bubble                                     
+                             radius 1.000.                                      
+                    WARNING  Dataset ds002720     dataset_summary_adapter.py:651
+                             lacks usable                                       
+                             duration_hours_total                               
+                             ; falling back to                                  
+                             minimum bubble                                     
+                             radius 1.000.                                      
+                    WARNING  Dataset ds002725     dataset_summary_adapter.py:651
+                             lacks usable                                       
+                             duration_hours_total                               
+                             ; falling back to                                  
+                             minimum bubble                                     
+                             radius 1.000.                                      
+                    WARNING  Dataset ds002724     dataset_summary_adapter.py:651
+                             lacks usable                                       
+                             duration_hours_total                               
+                             ; falling back to                                  
+                             minimum bubble                                     
+                             radius 1.000.                                      
+                    INFO     Dataset bubble HTML   prepare_summary_tables.py:427
+                             written to                                         
+                             build/dataset_bubble.                              
+                             html                                               
+                    WARNING  Skipping dataset      prepare_summary_tables.py:435
+                             bubble PNG export at                               
+                             build/dataset_bubble.                              
+                             png due to missing                                 
+                             optional dependency                                
+                             (plotly):                                          
+                             Image export using                                 
+                             the "kaleido" engine                               
+                             requires the Kaleido                               
+                             package,                                           
+                             which can be                                       
+                             installed using pip:                               
+                                                                                
+                                 $ pip install                                  
+                             --upgrade kaleido                                  
+                                                                                
+build
+Running Sphinx v8.2.3

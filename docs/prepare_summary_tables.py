@@ -145,7 +145,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // 2) Initialize DataTable with SearchPanes button
-    const FILTER_COLS = [1,2,3,4,5,6];
+    const FILTER_COLS = [1,2,3,4,5,6,7];
     // Detect the index of the size column by header text
     const sizeIdx = (function(){
         let idx = -1;
@@ -191,14 +191,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // 3) UX: click a header to open the relevant filter pane
     $table.find('thead th').each(function (i) {
-        if ([1,2,3,4].indexOf(i) === -1) return;
+        if ([1,2,3,4,5].indexOf(i) === -1) return;
         window.jQuery(this)
             .css('cursor','pointer')
             .attr('title','Click to filter this column')
             .on('click', function () {
                 dataTable.button('.buttons-searchPanes').trigger();
                 window.setTimeout(function () {
-                    const idx = [1,2,3,4].indexOf(i);
+                    const idx = [1,2,3,4,5].indexOf(i);
                     const $container = window.jQuery(dataTable.searchPanes.container());
                     const $pane = $container.find('.dtsp-pane').eq(idx);
                     const $title = $pane.find('.dtsp-title');

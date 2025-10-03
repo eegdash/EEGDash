@@ -234,6 +234,7 @@ def prepare_table(df: pd.DataFrame):
     df = df[
         [
             "dataset",
+            "record_modality",
             "n_records",
             "n_subjects",
             "n_tasks",
@@ -253,6 +254,7 @@ def prepare_table(df: pd.DataFrame):
             "modality of exp": "modality",
             "type of exp": "type",
             "Type Subject": "pathology",
+            "record_modality": "record modality",
         }
     )
     # number of subject are always int
@@ -270,6 +272,7 @@ def prepare_table(df: pd.DataFrame):
     pathology_normalizer = _tag_normalizer("pathology")
     modality_normalizer = _tag_normalizer("modality")
     type_normalizer = _tag_normalizer("type")
+    record_modality_normalizer = _tag_normalizer("record_modality")
 
     df["pathology"] = df["pathology"].apply(
         lambda value: wrap_tags(
@@ -292,6 +295,13 @@ def prepare_table(df: pd.DataFrame):
             normalizer=type_normalizer,
         )
     )
+    df["record modality"] = df["record modality"].apply(
+        lambda value: wrap_tags(
+            value,
+            kind="dataset-record-modality",
+            normalizer=record_modality_normalizer,
+        )
+    )
 
     # Creating the total line
     df.loc["Total"] = df.sum(numeric_only=True)
@@ -301,6 +311,7 @@ def prepare_table(df: pd.DataFrame):
     df.loc["Total", "pathology"] = ""
     df.loc["Total", "modality"] = ""
     df.loc["Total", "type"] = ""
+    df.loc["Total", "record modality"] = ""
     df.loc["Total", "size"] = human_readable_size(df.loc["Total", "size_bytes"])
     df = df.drop(columns=["size_bytes"])
     # arrounding the hours
@@ -361,11 +372,13 @@ def main(source_dir: str, target_dir: str):
                 "pathology": "Pathology",
                 "modality": "Modality",
                 "type": "Type",
+                "record modality": "Record modality",
             }
         )
         df = df[
             [
                 "Dataset",
+                "Record modality",
                 "Pathology",
                 "Modality",
                 "Type",

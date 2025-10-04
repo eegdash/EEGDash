@@ -1,4 +1,20 @@
 
+@import url("https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&display=swap");
+
+.eegdash-hero { text-align:center; margin: 0 0 1.25rem; }
+
+.eegdash-hero__title{
+  font-family:"Sora", var(--pst-font-family-base, system-ui), sans-serif;
+  font-weight:800;
+  font-size:clamp(2rem, 5vw, 3.25rem);
+  line-height:1.1;
+  margin:0 0 .65rem;  /* a touch more space above the logo */
+  color:var(--pst-color-text, #e5e7eb);
+  letter-spacing:.01em;
+}
+
+.eegdash-hero img.logo.mainlogo{ display:block; margin:0 auto; }
+
 /* Spacing + sizing for the two homepage logos */
 table.logos-row {
   border-collapse: separate !important;
@@ -51,7 +67,7 @@ table.logos-row img.logo.mainlogo {
   flex-wrap: wrap;           /* wraps on small screens */
   justify-content: center;   /* <-- centers the whole group */
   align-items: center;
-  gap: 24px;                 /* space between logos */
+  gap: 30px 24px;   /* row x column space between logos */
   margin: 12px 0 24px;
 }
 
@@ -576,4 +592,3 @@ html.dataset-summary-page .bd-main .bd-content .bd-article-container {
     max-width: 100%;
   }
 }
-

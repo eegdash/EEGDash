@@ -322,6 +322,8 @@ plt.show()
 #
 ######################################################################
 # Initialize model
+# -----------------
+
 model = EEGNeX(n_chans=129, n_outputs=1, n_times=2 * SFREQ).to(device)
 
 # Specify optimizer

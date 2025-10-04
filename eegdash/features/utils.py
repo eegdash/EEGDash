@@ -42,6 +42,7 @@ def _extract_features_from_windowsdataset(
     -------
     FeaturesDataset
         A new dataset containing the extracted features and associated metadata.
+
     """
     metadata = win_ds.metadata
     if not win_ds.targets_from == "metadata":
@@ -117,6 +118,7 @@ def extract_features(
     -------
     FeaturesConcatDataset
         A new concatenated dataset containing the extracted features.
+
     """
     if isinstance(features, list):
         features = dict(enumerate(features))
@@ -161,6 +163,7 @@ def fit_feature_extractors(
     -------
     FeatureExtractor
         The fitted feature extractor.
+
     """
     if isinstance(features, list):
         features = dict(enumerate(features))

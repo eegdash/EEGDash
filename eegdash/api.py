@@ -228,6 +228,7 @@ class EEGDash:
         ------
         ValueError
             If the record is missing required keys or has values of the wrong type.
+
         """
         input_types = {
             "data_name": str,
@@ -269,6 +270,7 @@ class EEGDash:
         -------
         dict
             A MongoDB query dictionary.
+
         """
         return build_query_from_kwargs(**kwargs)
 
@@ -292,6 +294,7 @@ class EEGDash:
         tuple or None
             A tuple of (kind, value) where kind is "eq" or "in", or None if the
             constraint is not present or unsupported.
+
         """
         if not isinstance(query, dict) or key not in query:
             return None
@@ -322,6 +325,7 @@ class EEGDash:
         ------
         ValueError
             If conflicting constraints are found.
+
         """
         if not raw_query or not kwargs_query:
             return
@@ -437,6 +441,7 @@ class EEGDash:
         -------
         InsertOne
             A PyMongo ``InsertOne`` object.
+
         """
         return InsertOne(record)
 
@@ -447,6 +452,7 @@ class EEGDash:
         ----------
         record : dict
             The record to add.
+
         """
         try:
             self.__collection.insert_one(record)
@@ -471,6 +477,7 @@ class EEGDash:
         -------
         UpdateOne
             A PyMongo ``UpdateOne`` object.
+
         """
         return UpdateOne({"data_name": record["data_name"]}, {"$set": record})
 
@@ -481,6 +488,7 @@ class EEGDash:
         ----------
         record : dict
             Record content to set at the matching ``data_name``.
+
         """
         try:
             self.__collection.update_one(
@@ -506,6 +514,7 @@ class EEGDash:
         -------
         bool
             True if a matching record exists, False otherwise.
+
         """
         return self.exist(query)
 
@@ -518,6 +527,7 @@ class EEGDash:
             Record-identifying object with a ``data_name`` key.
         field : str
             The name of the field to remove.
+
         """
         self.__collection.update_one(
             {"data_name": record["data_name"]}, {"$unset": {field: 1}}
@@ -533,6 +543,7 @@ class EEGDash:
         ----------
         field : str
             The name of the field to remove from all documents.
+
         """
         self.__collection.update_many({}, {"$unset": {field: 1}})
 
@@ -544,6 +555,7 @@ class EEGDash:
         -------
         pymongo.collection.Collection
             The collection object used for database interactions.
+
         """
         return self.__collection
 
@@ -882,6 +894,7 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
         Matching is performed for ``datatypes=['eeg']`` and ``suffixes=['eeg']``.
         The ``bidspath`` is normalized to ensure it starts with the dataset ID,
         even for suffixed cache directories.
+
         """
         dataset_id = filters["dataset"]
         arg_map = {
@@ -957,6 +970,7 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
         -------
         Any
             The value of the first matching key, or None if not found.
+
         """
         norm_target = normalize_key(target_key)
         if isinstance(data, dict):
@@ -998,6 +1012,7 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
         -------
         list of EEGDashBaseDataset
             A list of dataset objects matching the query.
+
         """
         datasets: list[EEGDashBaseDataset] = []
         self.records = self.eeg_dash_instance.find(query)

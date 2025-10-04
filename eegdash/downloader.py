@@ -27,6 +27,7 @@ def get_s3_filesystem() -> s3fs.S3FileSystem:
     -------
     s3fs.S3FileSystem
         An S3 filesystem object.
+
     """
     return s3fs.S3FileSystem(anon=True, client_kwargs={"region_name": "us-east-2"})
 
@@ -45,6 +46,7 @@ def get_s3path(s3_bucket: str, filepath: str) -> str:
     -------
     str
         The full S3 URI (e.g., "s3://my-bucket/path/to/file").
+
     """
     return f"{s3_bucket}/{filepath}"
 
@@ -69,6 +71,7 @@ def download_s3_file(s3_path: str, local_path: Path, s3_open_neuro: bool) -> Pat
     -------
     pathlib.Path
         The local path to the downloaded file.
+
     """
     filesystem = get_s3_filesystem()
     if not s3_open_neuro:
@@ -115,6 +118,7 @@ def download_dependencies(
         The metadata record for the main data file, used to resolve paths.
     s3_open_neuro : bool
         Flag for OpenNeuro-specific path handling.
+
     """
     filesystem = get_s3_filesystem()
     for i, dep in enumerate(bids_dependencies):
@@ -160,6 +164,7 @@ def _filesystem_get(filesystem: s3fs.S3FileSystem, s3path: str, filepath: Path) 
     -------
     pathlib.Path
         The local path to the downloaded file.
+
     """
     info = filesystem.info(s3path)
     size = info.get("size") or info.get("Size")

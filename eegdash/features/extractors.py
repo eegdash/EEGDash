@@ -22,6 +22,7 @@ def _get_underlying_func(func: Callable) -> Callable:
     -------
     callable
         The underlying Python function.
+
     """
     f = func
     if isinstance(f, partial):
@@ -58,6 +59,7 @@ class TrainableFeature(ABC):
             The input data for fitting.
         y : any, optional
             The target data, if required for supervised training.
+
         """
         pass
 
@@ -91,6 +93,7 @@ class FeatureExtractor(TrainableFeature):
         extraction functions or other `FeatureExtractor` instances.
     **preprocess_kwargs
         Keyword arguments to be passed to the `preprocess` method.
+
     """
 
     def __init__(
@@ -151,6 +154,7 @@ class FeatureExtractor(TrainableFeature):
         -------
         tuple
             The pre-processed data.
+
         """
         return (*x,)
 
@@ -171,6 +175,7 @@ class FeatureExtractor(TrainableFeature):
         dict
             A dictionary where keys are feature names and values are the
             computed feature values.
+
         """
         assert _batch_size is not None
         assert _ch_names is not None
@@ -243,7 +248,9 @@ class MultivariateFeature:
     names.
     """
 
-    def __call__(self, x: np.ndarray, _ch_names: list[str] | None = None) -> dict | np.ndarray:
+    def __call__(
+        self, x: np.ndarray, _ch_names: list[str] | None = None
+    ) -> dict | np.ndarray:
         """Convert a feature array to a named dictionary.
 
         Parameters
@@ -258,6 +265,7 @@ class MultivariateFeature:
         dict or numpy.ndarray
             A dictionary of named features, or the original array if feature
             channel names cannot be generated.
+
         """
         assert _ch_names is not None
         f_channels = self.feature_channel_names(_ch_names)
@@ -269,7 +277,9 @@ class MultivariateFeature:
         return self._array_to_dict(x, f_channels)
 
     @staticmethod
-    def _array_to_dict(x: np.ndarray, f_channels: list[str], name: str = "") -> dict | np.ndarray:
+    def _array_to_dict(
+        x: np.ndarray, f_channels: list[str], name: str = ""
+    ) -> dict | np.ndarray:
         """Convert a numpy array to a dictionary with named keys."""
         assert isinstance(x, np.ndarray)
         if not f_channels:
@@ -292,6 +302,7 @@ class MultivariateFeature:
         -------
         list of str
             The names for the output features.
+
         """
         return []
 
@@ -312,6 +323,7 @@ class BivariateFeature(MultivariateFeature):
     channel_pair_format : str, default="{}<>{}"
         A format string used to create feature names from pairs of
         channel names.
+
     """
 
     def __init__(self, *args, channel_pair_format: str = "{}<>{}"):

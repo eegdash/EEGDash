@@ -56,6 +56,7 @@ def build_query_from_kwargs(**kwargs) -> dict[str, Any]:
     ValueError
         If an unsupported query field is provided, or if a value is None or
         an empty string/list.
+
     """
     # 1. Validate that all provided keys are allowed for querying
     unknown_fields = set(kwargs.keys()) - ALLOWED_QUERY_FIELDS
@@ -129,6 +130,7 @@ def load_eeg_attrs_from_bids_file(bids_dataset, bids_file: str) -> dict[str, Any
     ------
     ValueError
         If ``bids_file`` is not found in the ``bids_dataset``.
+
     """
     if bids_file not in bids_dataset.files:
         raise ValueError(f"{bids_file} not in {bids_dataset.dataset}")
@@ -235,6 +237,7 @@ def normalize_key(key: str) -> str:
     -------
     str
         The normalized key.
+
     """
     return re.sub(r"[^a-z0-9]+", "_", str(key).lower()).strip("_")
 
@@ -265,6 +268,7 @@ def merge_participants_fields(
     -------
     dict
         The enriched description dictionary.
+
     """
     if not isinstance(description, dict) or not isinstance(participants_row, dict):
         return description
@@ -322,6 +326,7 @@ def participants_row_for_subject(
     -------
     pandas.Series or None
         A pandas Series containing the subject's data if found, otherwise None.
+
     """
     try:
         participants_tsv = Path(bids_root) / "participants.tsv"
@@ -378,6 +383,7 @@ def participants_extras_from_tsv(
     -------
     dict
         A dictionary of extra participant information.
+
     """
     row = participants_row_for_subject(bids_root, subject, id_columns=id_columns)
     if row is None:
@@ -409,6 +415,7 @@ def attach_participants_extras(
         The description object to be updated.
     extras : dict
         A dictionary of extra participant information to attach.
+
     """
     if not extras:
         return
@@ -470,6 +477,7 @@ def enrich_from_participants(
     -------
     dict
         The dictionary of extras that were attached.
+
     """
     subject = getattr(bidspath, "subject", None)
     if not subject:

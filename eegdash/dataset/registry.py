@@ -41,6 +41,7 @@ def register_openneuro_datasets(
     dict[str, type]
         A dictionary mapping the names of the registered classes to the class
         types themselves.
+
     """
     if base_class is None:
         from ..api import EEGDashDataset as base_class  # lazy import
@@ -131,6 +132,7 @@ def _generate_rich_docstring(
     -------
     str
         A formatted docstring.
+
     """
     # Extract metadata with safe defaults
     n_subjects = row_series.get("n_subjects", "Unknown")
@@ -235,6 +237,7 @@ def _markdown_table(row_series: pd.Series) -> str:
     -------
     str
         A string containing the formatted reStructuredText table.
+
     """
     if row_series.empty:
         return ""

@@ -32,6 +32,7 @@ def get_default_cache_dir() -> Path:
     -------
     pathlib.Path
         The resolved, absolute path to the default cache directory.
+
     """
     # 1) Explicit env var wins
     env_dir = os.environ.get("EEGDASH_CACHE_DIR")

@@ -18,7 +18,7 @@ import eegdash
 
 project = "EEG Dash"
 copyright = f"2025–{datetime.now(tz=timezone.utc).year}, {project} Developers"
-author = "Arnaud Delorme"
+author = "Bruno Aristimunha and Arnaud Delorme"
 release = eegdash.__version__
 version = ".".join(release.split(".")[:2])
 

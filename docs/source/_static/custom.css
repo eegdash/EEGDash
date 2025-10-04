@@ -26,6 +26,27 @@ html[data-theme="dark"] .eegdash-hero__title {
 
 .eegdash-hero img.logo.mainlogo{ display:block; margin:0 auto; }
 
+/* Core API title with icon */
+h1.api-section-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.85rem;
+  font-weight: 800;
+}
+
+h1.api-section-title::before {
+  content: "\f2db";
+  font-family: "Font Awesome 6 Free";
+  font-weight: 900;
+  font-size: 1.75rem;
+  line-height: 1;
+  color: var(--sd-color-primary, #0a6fb6);
+}
+
+h1.api-section-title .headerlink {
+  margin-left: 0.6rem;
+}
+
 /* Spacing + sizing for the two homepage logos */
 table.logos-row {
   border-collapse: separate !important;

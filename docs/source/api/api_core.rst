@@ -1,7 +1,5 @@
 :html_theme.sidebar_secondary.remove: true
 
-.. rst-class:: api-section-title
-
 Core API
 ========
 

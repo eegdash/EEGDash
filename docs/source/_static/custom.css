@@ -27,14 +27,14 @@ html[data-theme="dark"] .eegdash-hero__title {
 .eegdash-hero img.logo.mainlogo{ display:block; margin:0 auto; }
 
 /* Core API title with icon */
-h1.api-section-title {
+h1#core-api {
   display: inline-flex;
   align-items: center;
   gap: 0.85rem;
   font-weight: 800;
 }
 
-h1.api-section-title::before {
+h1#core-api::before {
   content: "\f2db";
   font-family: "Font Awesome 6 Free";
   font-weight: 900;
@@ -43,7 +43,7 @@ h1.api-section-title::before {
   color: var(--sd-color-primary, #0a6fb6);
 }
 
-h1.api-section-title .headerlink {
+h1#core-api .headerlink {
   margin-left: 0.6rem;
 }
 

@@ -167,7 +167,7 @@ def create_model(config):
             self.val_mae = MeanAbsoluteError()
             self.val_mse = MeanSquaredError()
             self.val_r2 = R2Score()
-            self.target_std = None  # Will store target standard deviation for normalized RMSE
+            self.target_std = config.get('target_std', None)
             self.save_hyperparameters(config)
 
         def normalize_data(self, x):
@@ -184,6 +184,8 @@ def create_model(config):
                 print(f"Target values type: {type(y[0]) if len(y) > 0 else 'empty'}")
                 print(f"Target values sample: {y[:5] if len(y) >= 5 else y}")
                 print(f"Target values unique types: {set(type(val) for val in y)}")
+                print(f"Target values unique count in batch: {len(set([float(v) if isinstance(v, (int, float, torch.Tensor)) else str(v) for v in y]))}")
+                print(f"Batch size: {len(y)}")
                 self._debug_printed = True
             
             # y is a tuple of (n_samples,) with continuous values for regression
@@ -207,9 +209,7 @@ def create_model(config):
             
             y = torch.tensor(y_processed, dtype=torch.float, device=self.device)
             
-            # Store target standard deviation for normalized RMSE computation
-            if self.target_std is None:
-                self.target_std = y.std().item()
+            # Target std is computed from the training dataset and passed in config
             
             scores = self.model(self.normalize_data(x))
             preds = scores.squeeze()                     # shape (batch_size,)
@@ -332,6 +332,7 @@ def run_task(releases, tasks, target_name, folds=10, weights=None, model_freeze=
     correct_val_list  = []
     train_norm_rmse_list = []
     val_norm_rmse_list = []
+    target_std_fold = None
     unique_subjects, unique_indices = np.unique(windows_ds.description["subject"], return_index=True)
     
     if folds > 1:
@@ -349,6 +350,40 @@ def run_task(releases, tasks, target_name, folds=10, weights=None, model_freeze=
         train_loader = DataLoader(train_ds, batch_size=batch_size, shuffle=True, prefetch_factor=4, num_workers=4)
         val_loader   = DataLoader(  val_ds, batch_size=batch_size, prefetch_factor=4, num_workers=4)
 
+        # compute dataset-wide target std on training set (from metadata/description)
+        # We take per-recording targets from description[target_name]
+        train_targets = []
+        for ds in train_ds.datasets:
+            val = None
+            try:
+                if hasattr(ds, "description") and target_name in ds.description:
+                    val = ds.description[target_name]
+            except Exception:
+                val = None
+            if val is None:
+                continue
+            try:
+                val_f = float(val)
+            except (TypeError, ValueError):
+                continue
+            if np.isfinite(val_f):
+                train_targets.append(val_f)
+
+        if len(train_targets) == 0:
+            target_std = 1.0
+        else:
+            if len(train_targets) > 1:
+                target_std = float(np.std(np.array(train_targets), ddof=1))
+            else:
+                target_std = float(np.std(np.array(train_targets)))
+            if not np.isfinite(target_std) or target_std <= 0.0:
+                target_std = 1.0
+        if target_std_fold is None:
+            target_std_fold = target_std
+
+        # Print target statistics
+        print(f"Training targets - count: {len(train_targets)}, mean: {np.mean(train_targets):.4f}, std: {target_std:.4f}, min: {np.min(train_targets):.4f}, max: {np.max(train_targets):.4f}")
+
         # create model and hparams dict
         hparams = {
             "batch_size": batch_size,
@@ -357,6 +392,7 @@ def run_task(releases, tasks, target_name, folds=10, weights=None, model_freeze=
             "random_seed": random_add,
             "model_name": model_name,
             "fold": it_fold,
+            "target_std": target_std,
         }
         model = create_model(hparams)
 
@@ -408,10 +444,11 @@ def run_task(releases, tasks, target_name, folds=10, weights=None, model_freeze=
         trainer.fit(model, train_loader, val_loader)
 
         # Use PyTorch Lightning metrics for kfold reporting
-        train_r2 = float(trainer.callback_metrics.get('train/r2_epoch', 0.0))
-        val_r2 = float(trainer.callback_metrics.get('val/r2_epoch', 0.0))
         train_norm_rmse = float(trainer.callback_metrics.get('train/normalized_rmse_epoch', 0.0))
         val_norm_rmse = float(trainer.callback_metrics.get('val/normalized_rmse_epoch', 0.0))
+        # keep R2 lists for console summary only if needed; but do not save
+        train_r2 = float(trainer.callback_metrics.get('train/r2_epoch', 0.0))
+        val_r2 = float(trainer.callback_metrics.get('val/r2_epoch', 0.0))
         correct_train_list.append(train_r2)
         correct_val_list.append(val_r2)
         train_norm_rmse_list.append(train_norm_rmse)
@@ -443,7 +480,7 @@ def run_task(releases, tasks, target_name, folds=10, weights=None, model_freeze=
         val_norm_rmse_mean, val_norm_rmse_std, val_norm_rmse_ci = ci95(val_norm_rmse_list)
         print(f"Val Normalized RMSE: mean={val_norm_rmse_mean:.4f}, std={val_norm_rmse_std:.4f}, 95% CI=±{val_norm_rmse_ci:.4f}")
 
-    return correct_train_list, correct_val_list, train_norm_rmse_list, val_norm_rmse_list, unique_subjects[val_idx]
+    return correct_train_list, correct_val_list, train_norm_rmse_list, val_norm_rmse_list, target_std_fold, unique_subjects[val_idx]
 
 def check_experiment_exists(task, factor, model_name, folds, batch_size, lrate, random_add, dropout):
     log_folder = Path("lightning_logs") / f"experiment_{task}_{factor}_{model_name}_k{folds}"
@@ -511,7 +548,7 @@ new_tasks = { 'movies': ['DespicableMe', 'DiaryOfAWimpyKid', 'FunwithFractals', 
   'all_tasks': ['DespicableMe', 'DiaryOfAWimpyKid', 'FunwithFractals', 'RestingState', 'ThePresent', 'contrastChangeDetection', 'seqLearning6target', 'seqLearning8target', 'surroundSupp', 'symbolSearch']
   }
 releases_train = releases[:-1]
-# releases_train = ["R11"] #"R11"
+releases_train = ["R11"] #"R11"
 tasks = [  
 # # 'DespicableMe',
 # #   'DiaryOfAWimpyKid',
@@ -549,6 +586,7 @@ for factor in factors:
     seeds = [77, 15, 20, 31, 64, 88, 99, 0, 42, 9]
     seeds_R11 = np.array(range(30)) + 77
     seeds = seeds_R11
+    seeds = [77]
     # seeds = [0]
     for model_name in models:
         combinations = [(batch_size, lrate, random_add, dropout) for batch_size in batch_sizes for lrate in lrates for random_add in seeds for dropout in dropouts]
@@ -567,19 +605,19 @@ for factor in factors:
             weights_file_base = f"checkpoints/{experiment_name}_bs{batch_size}_lr{lrate}_seed{random_add}_dropout{dropout}.pth"
             json_file = f"results/{experiment_name}_bs{batch_size}_lr{lrate}_seed{random_add}_dropout{dropout}.json"
             if bypass_run == False:
-                res_train, res_val, train_norm_rmse, val_norm_rmse, res_val_subject = run_task(
+                res_train, res_val, train_norm_rmse, val_norm_rmse, target_std, res_val_subject = run_task(
                     releases_train, tasks, factor, folds=folds, random_add=random_add, experiment_name=experiment_name,
-                    train_epochs=70, batch_size=batch_size, lrate=lrate,
+                    train_epochs=5, batch_size=batch_size, lrate=lrate,
                     model_name=model_name, dropout=dropout, save_weights=weights_file_base
                 )
             else:   
-                res_train, res_val, train_norm_rmse, val_norm_rmse, res_val_subject = [], [], [], [], []
+                res_train, res_val, train_norm_rmse, val_norm_rmse, target_std, res_val_subject = [], [], [], [], 1.0, []
                 print(f"Skipping run for {experiment_name} because bypass_run is True")
                 
             # test set on R12
             cached_data_folder_names = []
             for task in tasks:
-                cached_data_folder_name = "/home/arno/v1/eegdash/notebook/data/hbn_R12_" + task + "_" + factor
+                cached_data_folder_name = "/home/arno/v1/eegdash/notebook/data/hbn_reg_R12_" + task + "_" + factor
                 if os.path.exists(cached_data_folder_name):
                     cached_data_folder_names.append(cached_data_folder_name)
                 else:
@@ -605,31 +643,29 @@ for factor in factors:
                 if not os.path.exists(weights_file):
                     print(f"Missing weights file {weights_file}, skipping")
                     continue
-                model = create_model({
+            model = create_model({
                     "batch_size": batch_size,
                     "dropout": dropout,
                     "lr": lrate,
                     "random_seed": random_add,
                     "model_name": model_name,
                     "fold": fold,
+                    "target_std": target_std,
                 })
-                model.load_state_dict(torch.load(weights_file, map_location="cpu"))
-                model.eval()
-                trainer_test = L.Trainer(accelerator="auto", devices=1 if torch.cuda.is_available() else None, logger=False, enable_checkpointing=False)
-                test_result = trainer_test.validate(model, test_loader, verbose=False)
-                test_r2 = float(test_result[0].get('val/r2_epoch', 0.0))
-                test_norm_rmse = float(test_result[0].get('val/normalized_rmse_epoch', 0.0))
-                res_test_r12.append(test_r2)
-                test_norm_rmse_r12.append(test_norm_rmse)
+            model.load_state_dict(torch.load(weights_file, map_location="cpu"))
+            model.eval()
+            trainer_test = L.Trainer(accelerator="auto", devices=1 if torch.cuda.is_available() else None, logger=False, enable_checkpointing=False)
+            test_result = trainer_test.validate(model, test_loader, verbose=False)
+            test_r2 = float(test_result[0].get('val/r2_epoch', 0.0))
+            test_norm_rmse = float(test_result[0].get('val/normalized_rmse_epoch', 0.0))
+            res_test_r12.append(test_r2)
+            test_norm_rmse_r12.append(test_norm_rmse)
             print(f"Test on R12 R2: {res_test_r12}")
             print(f"Test on R12 Normalized RMSE: {test_norm_rmse_r12}")
             
             with open(json_file, "w") as f:
                 json.dump({
                     "seed": float(random_add), 
-                    "train": res_train, 
-                    "val": res_val, 
-                    "test": res_test_r12,
                     "train_norm_rmse": train_norm_rmse,
                     "val_norm_rmse": val_norm_rmse,
                     "test_norm_rmse": test_norm_rmse_r12

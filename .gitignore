@@ -1,3 +1,4 @@
+*.pth
 *.egg-info
 *.npy
 */*.npy

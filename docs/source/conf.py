@@ -103,8 +103,8 @@ html_theme_options = {
     "navbar_end": ["theme-switcher", "navbar-icon-links"],
     "footer_start": ["copyright"],
     "logo": {
-        "image_light": "_static/eegdash_long.png",
-        "image_dark": "_static/eegdash_long.png",
+        "image_light": "_static/eegdash_long_white.svg",
+        "image_dark": "_static/eegdash_long_dark.svg",
         "alt_text": "EEG Dash Logo",
     },
     "external_links": [

@@ -15,25 +15,26 @@ EEG Dash Homepage
 
 .. raw:: html
 
-   <h1 class="eegdash-hero__title">EEGDash</h1>
+   <h1 class="eegdash-hero__title">EEG Dash</h1>
 
 
 .. image:: _static/logos/eegdash.svg
     :alt: EEG Dash Logo
     :class: logo mainlogo only-dark
     :align: center
-    :scale: 75%
+    :scale: 50%
 
 .. image:: _static/logos/eegdash.svg
     :alt: EEG Dash Logo
     :class: logo mainlogo only-light
     :align: center
-    :scale: 75%
+    :scale: 50%
 
 .. rst-class:: h4 text-center font-weight-light my-4
-    The EEG-DaSh data archive will establish a data-sharing resource for MEEG (EEG, MEG) data, enabling 
-    large-scale computational advancements to preserve and share scientific data from publicly funded 
-    research for machine learning and deep learning applications.
+
+   The EEG-DaSh data archive is a data-sharing resource for MEEG (EEG, MEG) data, enabling 
+   large-scale computational advancements to preserve and share scientific data from publicly funded 
+   research for machine learning and deep learning applications.
 
 .. rst-class:: text-center
 

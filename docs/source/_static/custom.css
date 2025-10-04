@@ -4,13 +4,24 @@
 .eegdash-hero { text-align:center; margin: 0 0 1.25rem; }
 
 .eegdash-hero__title{
+  display: block;
+  text-align: center;
   font-family:"Sora", var(--pst-font-family-base, system-ui), sans-serif;
   font-weight:800;
-  font-size:clamp(2rem, 5vw, 3.25rem);
-  line-height:1.1;
-  margin:0 0 .65rem;  /* a touch more space above the logo */
-  color:var(--pst-color-text, #e5e7eb);
+  font-size:clamp(2.4rem, 6vw, 4rem);
+  line-height:1.08;
+  margin:0 0 .85rem;
+  color:var(--pst-color-text, #111827);
   letter-spacing:.01em;
+}
+
+html[data-theme="light"] .eegdash-hero__title {
+  color:#0f172a;
+}
+
+html[data-theme="dark"] .eegdash-hero__title {
+  color:#f9fafb;
+  text-shadow:0 3px 12px rgba(0,0,0,0.45);
 }
 
 .eegdash-hero img.logo.mainlogo{ display:block; margin:0 auto; }

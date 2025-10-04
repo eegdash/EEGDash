@@ -21,7 +21,25 @@ from braindecode.datasets.base import BaseConcatDataset
 
 
 def build_trial_table(events_df: pd.DataFrame) -> pd.DataFrame:
-    """One row per contrast trial with stimulus/response metrics."""
+    """Build a table of contrast trials from an events DataFrame.
+
+    This function processes a DataFrame of events (typically from a BIDS
+    `events.tsv` file) to identify contrast trials and extract relevant
+    metrics like stimulus onset, response onset, and reaction times.
+
+    Parameters
+    ----------
+    events_df : pandas.DataFrame
+        A DataFrame containing event information, with at least "onset" and
+        "value" columns.
+
+    Returns
+    -------
+    pandas.DataFrame
+        A DataFrame where each row represents a single contrast trial, with
+        columns for onsets, reaction times, and response correctness.
+
+    """
     events_df = events_df.copy()
     events_df["onset"] = pd.to_numeric(events_df["onset"], errors="raise")
     events_df = events_df.sort_values("onset", kind="mergesort").reset_index(drop=True)
@@ -92,12 +110,13 @@ def build_trial_table(events_df: pd.DataFrame) -> pd.DataFrame:
     return pd.DataFrame(rows)
 
 
-# Aux functions to inject the annot
 def _to_float_or_none(x):
+    """Safely convert a value to float or None."""
     return None if pd.isna(x) else float(x)
 
 
 def _to_int_or_none(x):
+    """Safely convert a value to int or None."""
     if pd.isna(x):
         return None
     if isinstance(x, (bool, np.bool_)):
@@ -106,22 +125,55 @@ def _to_int_or_none(x):
         return int(x)
     try:
         return int(x)
-    except Exception:
+    except (ValueError, TypeError):
         return None
 
 
 def _to_str_or_none(x):
+    """Safely convert a value to string or None."""
     return None if (x is None or (isinstance(x, float) and np.isnan(x))) else str(x)
 
 
 def annotate_trials_with_target(
-    raw,
-    target_field="rt_from_stimulus",
-    epoch_length=2.0,
-    require_stimulus=True,
-    require_response=True,
-):
-    """Create 'contrast_trial_start' annotations with float target in extras."""
+    raw: mne.io.Raw,
+    target_field: str = "rt_from_stimulus",
+    epoch_length: float = 2.0,
+    require_stimulus: bool = True,
+    require_response: bool = True,
+) -> mne.io.Raw:
+    """Create trial annotations with a specified target value.
+
+    This function reads the BIDS events file associated with the `raw` object,
+    builds a trial table, and creates new MNE annotations for each trial.
+    The annotations are labeled "contrast_trial_start" and their `extras`
+    dictionary is populated with trial metrics, including a "target" key.
+
+    Parameters
+    ----------
+    raw : mne.io.Raw
+        The raw data object. Must have a single associated file name from
+        which the BIDS path can be derived.
+    target_field : str, default "rt_from_stimulus"
+        The column from the trial table to use as the "target" value in the
+        annotation extras.
+    epoch_length : float, default 2.0
+        The duration to set for each new annotation.
+    require_stimulus : bool, default True
+        If True, only include trials that have a recorded stimulus event.
+    require_response : bool, default True
+        If True, only include trials that have a recorded response event.
+
+    Returns
+    -------
+    mne.io.Raw
+        The `raw` object with the new annotations set.
+
+    Raises
+    ------
+    KeyError
+        If `target_field` is not a valid column in the built trial table.
+
+    """
     fnames = raw.filenames
     assert len(fnames) == 1, "Expected a single filename"
     bids_path = get_bids_path_from_fname(fnames[0])
@@ -152,7 +204,6 @@ def annotate_trials_with_target(
     extras = []
     for i, v in enumerate(targets):
         row = trials.iloc[i]
-
         extras.append(
             {
                 "target": _to_float_or_none(v),
@@ -169,14 +220,39 @@ def annotate_trials_with_target(
         onset=onsets,
         duration=durations,
         description=descs,
-        orig_time=raw.info["meas_date"],
+        orig_time=raw.info.get("meas_date"),
         extras=extras,
     )
     raw.set_annotations(new_ann, verbose=False)
     return raw
 
 
-def add_aux_anchors(raw, stim_desc="stimulus_anchor", resp_desc="response_anchor"):
+def add_aux_anchors(
+    raw: mne.io.Raw,
+    stim_desc: str = "stimulus_anchor",
+    resp_desc: str = "response_anchor",
+) -> mne.io.Raw:
+    """Add auxiliary annotations for stimulus and response onsets.
+
+    This function inspects existing "contrast_trial_start" annotations and
+    adds new, zero-duration "anchor" annotations at the precise onsets of
+    stimuli and responses for each trial.
+
+    Parameters
+    ----------
+    raw : mne.io.Raw
+        The raw data object with "contrast_trial_start" annotations.
+    stim_desc : str, default "stimulus_anchor"
+        The description for the new stimulus annotations.
+    resp_desc : str, default "response_anchor"
+        The description for the new response annotations.
+
+    Returns
+    -------
+    mne.io.Raw
+        The `raw` object with the auxiliary annotations added.
+
+    """
     ann = raw.annotations
     mask = ann.description == "contrast_trial_start"
     if not np.any(mask):
@@ -189,28 +265,24 @@ def add_aux_anchors(raw, stim_desc="stimulus_anchor", resp_desc="response_anchor
         ex = ann.extras[idx] if ann.extras is not None else {}
         t0 = float(ann.onset[idx])
 
-        stim_t = ex["stimulus_onset"]
-        resp_t = ex["response_onset"]
+        stim_t = ex.get("stimulus_onset")
+        resp_t = ex.get("response_onset")
 
         if stim_t is None or (isinstance(stim_t, float) and np.isnan(stim_t)):
-            rtt = ex["rt_from_trialstart"]
-            rts = ex["rt_from_stimulus"]
+            rtt = ex.get("rt_from_trialstart")
+            rts = ex.get("rt_from_stimulus")
             if rtt is not None and rts is not None:
                 stim_t = t0 + float(rtt) - float(rts)
 
         if resp_t is None or (isinstance(resp_t, float) and np.isnan(resp_t)):
-            rtt = ex["rt_from_trialstart"]
+            rtt = ex.get("rt_from_trialstart")
             if rtt is not None:
                 resp_t = t0 + float(rtt)
 
-        if (stim_t is not None) and not (
-            isinstance(stim_t, float) and np.isnan(stim_t)
-        ):
+        if stim_t is not None and not (isinstance(stim_t, float) and np.isnan(stim_t)):
             stim_onsets.append(float(stim_t))
             stim_extras.append(dict(ex, anchor="stimulus"))
-        if (resp_t is not None) and not (
-            isinstance(resp_t, float) and np.isnan(resp_t)
-        ):
+        if resp_t is not None and not (isinstance(resp_t, float) and np.isnan(resp_t)):
             resp_onsets.append(float(resp_t))
             resp_extras.append(dict(ex, anchor="response"))
 
@@ -220,7 +292,7 @@ def add_aux_anchors(raw, stim_desc="stimulus_anchor", resp_desc="response_anchor
             onset=new_onsets,
             duration=np.zeros_like(new_onsets, dtype=float),
             description=[stim_desc] * len(stim_onsets) + [resp_desc] * len(resp_onsets),
-            orig_time=raw.info["meas_date"],
+            orig_time=raw.info.get("meas_date"),
             extras=stim_extras + resp_extras,
         )
         raw.set_annotations(ann + aux, verbose=False)
@@ -228,10 +300,10 @@ def add_aux_anchors(raw, stim_desc="stimulus_anchor", resp_desc="response_anchor
 
 
 def add_extras_columns(
-    windows_concat_ds,
-    original_concat_ds,
-    desc="contrast_trial_start",
-    keys=(
+    windows_concat_ds: BaseConcatDataset,
+    original_concat_ds: BaseConcatDataset,
+    desc: str = "contrast_trial_start",
+    keys: tuple = (
         "target",
         "rt_from_stimulus",
         "rt_from_trialstart",
@@ -240,7 +312,31 @@ def add_extras_columns(
         "correct",
         "response_type",
     ),
-):
+) -> BaseConcatDataset:
+    """Add columns from annotation extras to a windowed dataset's metadata.
+
+    This function propagates trial-level information stored in the `extras`
+    of annotations to the `metadata` DataFrame of a `WindowsDataset`.
+
+    Parameters
+    ----------
+    windows_concat_ds : BaseConcatDataset
+        The windowed dataset whose metadata will be updated.
+    original_concat_ds : BaseConcatDataset
+        The original (non-windowed) dataset containing the raw data and
+        annotations with the `extras` to be added.
+    desc : str, default "contrast_trial_start"
+        The description of the annotations to source the extras from.
+    keys : tuple, default (...)
+        The keys to extract from each annotation's `extras` dictionary and
+        add as columns to the metadata.
+
+    Returns
+    -------
+    BaseConcatDataset
+        The `windows_concat_ds` with updated metadata.
+
+    """
     float_cols = {
         "target",
         "rt_from_stimulus",
@@ -292,7 +388,6 @@ def add_extras_columns(
             else:  # response_type
                 ser = pd.Series(vals, index=md.index, dtype="string")
 
-            # Replace the whole column to avoid dtype conflicts
             md[k] = ser
 
         win_ds.metadata = md.reset_index(drop=True)
@@ -303,7 +398,25 @@ def add_extras_columns(
     return windows_concat_ds
 
 
-def keep_only_recordings_with(desc, concat_ds):
+def keep_only_recordings_with(
+    desc: str, concat_ds: BaseConcatDataset
+) -> BaseConcatDataset:
+    """Filter a concatenated dataset to keep only recordings with a specific annotation.
+
+    Parameters
+    ----------
+    desc : str
+        The description of the annotation that must be present in a recording
+        for it to be kept.
+    concat_ds : BaseConcatDataset
+        The concatenated dataset to filter.
+
+    Returns
+    -------
+    BaseConcatDataset
+        A new concatenated dataset containing only the filtered recordings.
+
+    """
     kept = []
     for ds in concat_ds.datasets:
         if np.any(ds.raw.annotations.description == desc):

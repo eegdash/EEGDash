@@ -12,26 +12,48 @@ from .registry import register_openneuro_datasets
 
 
 class EEGChallengeDataset(EEGDashDataset):
-    """EEG 2025 Challenge dataset helper.
+    """A dataset helper for the EEG 2025 Challenge.
 
-    This class provides a convenient wrapper around :class:`EEGDashDataset`
-    configured for the EEG 2025 Challenge releases. It maps a given
-    ``release`` to its corresponding OpenNeuro dataset and optionally restricts
-    to the official "mini" subject subset.
+    This class simplifies access to the EEG 2025 Challenge datasets. It is a
+    specialized version of :class:`~eegdash.api.EEGDashDataset` that is
+    pre-configured for the challenge's data releases. It automatically maps a
+    release name (e.g., "R1") to the corresponding OpenNeuro dataset and handles
+    the selection of subject subsets (e.g., "mini" release).
 
     Parameters
     ----------
     release : str
-        Release name. One of ["R1", ..., "R11"].
+        The name of the challenge release to load. Must be one of the keys in
+        :const:`~eegdash.const.RELEASE_TO_OPENNEURO_DATASET_MAP`
+        (e.g., "R1", "R2", ..., "R11").
+    cache_dir : str
+        The local directory where the dataset will be downloaded and cached.
     mini : bool, default True
-        If True, restrict subjects to the challenge mini subset.
-    query : dict | None
-        Additional MongoDB-style filters to AND with the release selection.
-        Must not contain the key ``dataset``.
-    s3_bucket : str | None, default "s3://nmdatasets/NeurIPS25"
-        Base S3 bucket used to locate the challenge data.
+        If True, the dataset is restricted to the official "mini" subset of
+        subjects for the specified release. If False, all subjects for the
+        release are included.
+    query : dict, optional
+        An additional MongoDB-style query to apply as a filter. This query is
+        combined with the release and subject filters using a logical AND.
+        The query must not contain the ``dataset`` key, as this is determined
+        by the ``release`` parameter.
+    s3_bucket : str, optional
+        The base S3 bucket URI where the challenge data is stored. Defaults to
+        the official challenge bucket.
     **kwargs
-        Passed through to :class:`EEGDashDataset`.
+        Additional keyword arguments that are passed directly to the
+        :class:`~eegdash.api.EEGDashDataset` constructor.
+
+    Raises
+    ------
+    ValueError
+        If the specified ``release`` is unknown, or if the ``query`` argument
+        contains a ``dataset`` key. Also raised if ``mini`` is True and a
+        requested subject is not part of the official mini-release subset.
+
+    See Also
+    --------
+    EEGDashDataset : The base class for creating datasets from queries.
 
     """
 

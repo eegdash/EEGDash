@@ -12,13 +12,15 @@ from sphinx.util import logging
 from sphinx_gallery.sorting import ExplicitOrder, FileNameSortKey
 from tabulate import tabulate
 
+sys.path.insert(0, os.path.abspath(".."))
+
 import eegdash
 
 # -- Project information -----------------------------------------------------
 
 project = "EEG Dash"
 copyright = f"2025–{datetime.now(tz=timezone.utc).year}, {project} Developers"
-author = "Arnaud Delorme"
+author = "Bruno Aristimunha and Arnaud Delorme"
 release = eegdash.__version__
 version = ".".join(release.split(".")[:2])
 
@@ -44,6 +46,7 @@ extensions = [
     "sphinx_sitemap",
     "sphinx_copybutton",
     "sphinx.ext.graphviz",
+    "sphinx_time_estimation",
 ]
 
 templates_path = ["_templates"]
@@ -103,8 +106,8 @@ html_theme_options = {
     "navbar_end": ["theme-switcher", "navbar-icon-links"],
     "footer_start": ["copyright"],
     "logo": {
-        "image_light": "_static/eegdash_long.png",
-        "image_dark": "_static/eegdash_long.png",
+        "image_light": "_static/eegdash_long_white.svg",
+        "image_dark": "_static/eegdash_long_dark.svg",
         "alt_text": "EEG Dash Logo",
     },
     "external_links": [

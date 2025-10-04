@@ -2,14 +2,14 @@
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 
 <svg
-   width="500mm"
-   height="300mm"
-   viewBox="0 0 500 300"
+   width="350mm"
+   height="165mm"
+   viewBox="0 0 350 165"
    version="1.1"
    id="svg1"
    xml:space="preserve"
    inkscape:version="1.4 (e7c3feb1, 2024-10-09)"
-   sodipodi:docname="eegdash_v1.svg"
+   sodipodi:docname="eegdash_v2.svg"
    inkscape:export-filename="eegdash.png"
    inkscape:export-xdpi="96"
    inkscape:export-ydpi="96"
@@ -27,18 +27,18 @@
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#d1d1d1"
      inkscape:document-units="mm"
-     inkscape:zoom="0.22701796"
-     inkscape:cx="1482.2616"
-     inkscape:cy="1145.2838"
+     inkscape:zoom="0.3809372"
+     inkscape:cx="1283.6761"
+     inkscape:cy="568.33514"
      inkscape:window-width="1512"
-     inkscape:window-height="917"
+     inkscape:window-height="822"
      inkscape:window-x="0"
-     inkscape:window-y="65"
+     inkscape:window-y="38"
      inkscape:window-maximized="0"
      inkscape:current-layer="layer1"
      showgrid="false"
      showguides="true"><sodipodi:guide
-       position="250.57672,146.15755"
+       position="250.57673,16.157551"
        orientation="1,0"
        id="guide10"
        inkscape:locked="false" /></sodipodi:namedview><defs
@@ -58,7 +58,15 @@
          width="227.16486"
          height="57.794594"
          x="0.40135136"
-         y="-3.2108109" /></clipPath></defs><g
+         y="-3.2108109" /></clipPath><clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath1-7"><rect
+         style="fill:#000000;stroke:#fffffe;stroke-width:2.00339;-inkscape-stroke:none;paint-order:stroke markers fill"
+         id="rect2-4"
+         width="295.75256"
+         height="149.92064"
+         x="-1.3629149"
+         y="0" /></clipPath></defs><g
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1"><text
@@ -71,9 +79,9 @@
          id="tspan1"
          style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:101.593px;font-family:Sora;-inkscape-font-specification:'Sora Semi-Bold';fill:#182b49;fill-opacity:1;stroke-width:1.44234"
          x="10.900804"
-         y="101.14551">EEG Dash</tspan></text><g
+         y="101.14551" /></text><g
        id="g10"
-       transform="matrix(1.2325015,0,0,1.2325015,75.787243,116.29403)"><image
+       transform="matrix(1.2325015,0,0,1.2325015,-6.9613496,-10.742542)"><image
          width="337.71616"
          height="337.71616"
          preserveAspectRatio="none"

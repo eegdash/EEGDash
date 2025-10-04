@@ -10,12 +10,10 @@
 
 .. rst-class:: dataset-summary-article
 
-Datasets 
-=========
+Datasets Catalog
+================
 
 To leverage recent and ongoing advancements in large-scale computational methods and to ensure the preservation of scientific data generated from publicly funded research, the EEG-DaSh data archive will create a data-sharing resource for MEEG (EEG, MEG) data contributed by collaborators for machine learning (ML) and deep learning (DL) applications.
-
-The archive is currently still in :bdg-danger:`beta testing` mode, so be kind. 
 
 .. raw:: html
 
@@ -27,10 +25,16 @@ The archive is currently still in :bdg-danger:`beta testing` mode, so be kind.
 
       .. include:: dataset_summary/table.rst
 
-   .. tab-item:: Participant KDE
+   .. tab-item:: Participant Distribution
 
       .. include:: dataset_summary/kde.rst
 
-   .. tab-item:: Landscape
+   .. tab-item:: Dataset Flow
+
+      .. include:: dataset_summary/sankey.rst
+
+   .. tab-item:: Scatter of Sample Size vs. Recording Duration
 
       .. include:: dataset_summary/bubble.rst
+
+The archive is currently still in :bdg-danger:`beta testing` mode, so be kind. 

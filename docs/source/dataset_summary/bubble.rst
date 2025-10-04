@@ -1,3 +1,5 @@
+.. title:: Dataset landscape
+
 .. rubric:: Dataset landscape
 
 .. raw:: html

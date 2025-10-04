@@ -624,3 +624,39 @@ html.dataset-summary-page .bd-main .bd-content .bd-article-container {
     max-width: 100%;
   }
 }
+
+/* Inline reading time badge for tutorials */
+.eegdash-reading-time {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.4rem;
+  margin: 0.5rem 0 1.25rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: 0.65rem;
+  background: var(--sd-color-surface-secondary, rgba(10, 111, 182, 0.08));
+  color: var(--pst-color-text-muted, #4b5563);
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.eegdash-reading-time__label {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--sd-color-primary, #0a6fb6);
+}
+
+.eegdash-reading-time__value {
+  font-weight: 700;
+  color: var(--pst-color-text, #111827);
+}
+
+html[data-theme="dark"] .eegdash-reading-time {
+  background: rgba(15, 118, 184, 0.22);
+  color: var(--pst-color-text-muted, #d1d5db);
+}
+
+html[data-theme="dark"] .eegdash-reading-time__value {
+  color: var(--pst-color-text, #f9fafb);
+}

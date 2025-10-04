@@ -1,22 +1,19 @@
 
 /* Spacing + sizing for the two homepage logos */
-table.logos-row td {
-  padding: 0 16px !important;   /* horizontal gap between logos */
-  vertical-align: middle;
+table.logos-row {
+  border-collapse: separate !important;
+  border-spacing: 20px 0 !important; /* horizontal gap between cells */
+}
+/* spacing between logos (table cells) */
+table.logos-row {
+  border-collapse: separate !important;
+  border-spacing: 20px 0 !important;   /* adjust gap */
+  background: transparent !important;
+  box-shadow: none !important;
+  border: 0 !important;
 }
 
-table.logos-row img.logo.mainlogo {
-  display: block;
-  margin: 0 auto;
-  width: 100%;
-  max-height: 90px;             /* adjust as needed */
-  object-fit: contain;
-}
-
-
-
-/* Remove grey/zebra background from the logos table (pydata theme tables) */
-table.logos-row,
+/* remove zebra/row styling from PyData theme */
 table.logos-row tbody tr,
 table.logos-row td,
 table.logos-row th {
@@ -24,25 +21,53 @@ table.logos-row th {
   box-shadow: none !important;
   border: 0 !important;
 }
-
-/* Also disable zebra striping specifically for this table */
 table.logos-row tbody tr:nth-child(odd) td,
 table.logos-row tbody tr:nth-child(odd) th {
   background: transparent !important;
 }
 
-/* Keep the horizontal gap and sizing */
+/* cell alignment (light padding optional now) */
 table.logos-row td {
-  padding: 0 16px !important;
+  padding: 0 8px !important;           /* optional, can be 0 */
   vertical-align: middle;
 }
 
+/* logo sizing */
 table.logos-row img.logo.mainlogo {
   display: block;
   margin: 0 auto;
   width: 100%;
   max-height: 90px;
   object-fit: contain;
+}
+
+/* small screens: shrink max-height a bit */
+@media (max-width: 640px) {
+  table.logos-row img.logo.mainlogo { max-height: 70px; }
+}
+
+.logos-flex {
+  display: flex;
+  flex-wrap: wrap;           /* wraps on small screens */
+  justify-content: center;   /* <-- centers the whole group */
+  align-items: center;
+  gap: 24px;                 /* space between logos */
+  margin: 12px 0 24px;
+}
+
+/* center each image itself */
+.logos-flex img.flex-logo {
+  display: block;
+  margin: 0 auto;            /* <-- centers each image within its slot */
+  height: auto;
+  max-height: 110px;         /* optional cap */
+}
+
+
+/* Small screens */
+@media (max-width: 640px) {
+  .logos-flex { gap: 16px; }
+  .logos-flex img.flex-logo { max-height: 80px; }
 }
 
 /* -------------------------------------------------------------
@@ -551,3 +576,4 @@ html.dataset-summary-page .bd-main .bd-content .bd-article-container {
     max-width: 100%;
   }
 }
+

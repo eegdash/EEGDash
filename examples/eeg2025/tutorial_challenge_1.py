@@ -67,7 +67,8 @@ Challenge 1: Cross-Task Transfer Learning!
 # Note: For simplicity purposes, we will only show how to do the decoding
 # directly in our target task, and it is up to the teams to think about
 # how to use the passive task to perform the pre-training.
-#
+
+#######################################################################
 # Install dependencies
 # --------------------
 # For the challenge, we will need two significant dependencies:
@@ -193,6 +194,7 @@ print(msg)
 #
 # Your task (**label**) is to predict the response time for the subject during this windows.
 #
+#######################################################################
 # In the figure below, we have the timeline representation of the cognitive task:
 #
 # .. image:: https://eeg2025.github.io/assets/img/image-2.jpg

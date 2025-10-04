@@ -1,22 +1,67 @@
 
-/* Spacing + sizing for the two homepage logos */
-table.logos-row td {
-  padding: 0 16px !important;   /* horizontal gap between logos */
-  vertical-align: middle;
-}
+@import url("https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&display=swap");
 
-table.logos-row img.logo.mainlogo {
+.eegdash-hero { text-align:center; margin: 0 0 1.25rem; }
+
+.eegdash-hero__title{
   display: block;
-  margin: 0 auto;
-  width: 100%;
-  max-height: 90px;             /* adjust as needed */
-  object-fit: contain;
+  text-align: center;
+  font-family:"Sora", var(--pst-font-family-base, system-ui), sans-serif;
+  font-weight:800;
+  font-size:clamp(3.6rem, 9vw, 5.9rem);
+  line-height:1.08;
+  margin:0 0 .85rem;
+  color:var(--pst-color-text, #111827);
+  letter-spacing:.01em;
 }
 
+html[data-theme="light"] .eegdash-hero__title {
+  color:#0f172a;
+}
 
+html[data-theme="dark"] .eegdash-hero__title {
+  color:#f9fafb;
+  text-shadow:0 3px 12px rgba(0,0,0,0.45);
+}
 
-/* Remove grey/zebra background from the logos table (pydata theme tables) */
-table.logos-row,
+.eegdash-hero img.logo.mainlogo{ display:block; margin:0 auto; }
+
+/* Core API title with icon */
+h1#core-api {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.85rem;
+  font-weight: 800;
+}
+
+h1#core-api::before {
+  content: "\f2db";
+  font-family: "Font Awesome 6 Free";
+  font-weight: 900;
+  font-size: 1.75rem;
+  line-height: 1;
+  color: var(--sd-color-primary, #0a6fb6);
+}
+
+h1#core-api .headerlink {
+  margin-left: 0.6rem;
+}
+
+/* Spacing + sizing for the two homepage logos */
+table.logos-row {
+  border-collapse: separate !important;
+  border-spacing: 20px 0 !important; /* horizontal gap between cells */
+}
+/* spacing between logos (table cells) */
+table.logos-row {
+  border-collapse: separate !important;
+  border-spacing: 20px 0 !important;   /* adjust gap */
+  background: transparent !important;
+  box-shadow: none !important;
+  border: 0 !important;
+}
+
+/* remove zebra/row styling from PyData theme */
 table.logos-row tbody tr,
 table.logos-row td,
 table.logos-row th {
@@ -24,25 +69,53 @@ table.logos-row th {
   box-shadow: none !important;
   border: 0 !important;
 }
-
-/* Also disable zebra striping specifically for this table */
 table.logos-row tbody tr:nth-child(odd) td,
 table.logos-row tbody tr:nth-child(odd) th {
   background: transparent !important;
 }
 
-/* Keep the horizontal gap and sizing */
+/* cell alignment (light padding optional now) */
 table.logos-row td {
-  padding: 0 16px !important;
+  padding: 0 8px !important;           /* optional, can be 0 */
   vertical-align: middle;
 }
 
+/* logo sizing */
 table.logos-row img.logo.mainlogo {
   display: block;
   margin: 0 auto;
   width: 100%;
   max-height: 90px;
   object-fit: contain;
+}
+
+/* small screens: shrink max-height a bit */
+@media (max-width: 640px) {
+  table.logos-row img.logo.mainlogo { max-height: 70px; }
+}
+
+.logos-flex {
+  display: flex;
+  flex-wrap: wrap;           /* wraps on small screens */
+  justify-content: center;   /* <-- centers the whole group */
+  align-items: center;
+  gap: 30px 24px;   /* row x column space between logos */
+  margin: 12px 0 24px;
+}
+
+/* center each image itself */
+.logos-flex img.flex-logo {
+  display: block;
+  margin: 0 auto;            /* <-- centers each image within its slot */
+  height: auto;
+  max-height: 110px;         /* optional cap */
+}
+
+
+/* Small screens */
+@media (max-width: 640px) {
+  .logos-flex { gap: 16px; }
+  .logos-flex img.flex-logo { max-height: 80px; }
 }
 
 /* -------------------------------------------------------------
@@ -550,4 +623,40 @@ html.dataset-summary-page .bd-main .bd-content .bd-article-container {
   html.dataset-summary-page .bd-article-container {
     max-width: 100%;
   }
+}
+
+/* Inline reading time badge for tutorials */
+.eegdash-reading-time {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.4rem;
+  margin: 0.5rem 0 1.25rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: 0.65rem;
+  background: var(--sd-color-surface-secondary, rgba(10, 111, 182, 0.08));
+  color: var(--pst-color-text-muted, #4b5563);
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.eegdash-reading-time__label {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--sd-color-primary, #0a6fb6);
+}
+
+.eegdash-reading-time__value {
+  font-weight: 700;
+  color: var(--pst-color-text, #111827);
+}
+
+html[data-theme="dark"] .eegdash-reading-time {
+  background: rgba(15, 118, 184, 0.22);
+  color: var(--pst-color-text-muted, #d1d5db);
+}
+
+html[data-theme="dark"] .eegdash-reading-time__value {
+  color: var(--pst-color-text, #f9fafb);
 }

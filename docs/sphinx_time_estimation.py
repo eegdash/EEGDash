@@ -16,16 +16,12 @@ class TextExtractor(nodes.NodeVisitor):
         raise nodes.SkipNode
 
     def unknown_visit(self, node):
-        """
-        Pass for all other nodes.
-        """
+        """Pass for all other nodes."""
         pass
 
 
 def html_page_context(app, pagename, templatename, context, doctree):
-    """
-    Add estimated reading time to the template context.
-    """
+    """Add estimated reading time to the template context."""
     if not doctree:
         return
 
@@ -42,9 +38,7 @@ def html_page_context(app, pagename, templatename, context, doctree):
 
 
 def setup(app):
-    """
-    Setup the Sphinx extension.
-    """
+    """Setup the Sphinx extension."""
     app.connect("html-page-context", html_page_context)
     return {
         "version": "0.1",

@@ -48,6 +48,7 @@ class FeaturesDataset(EEGWindowsDataset):
         Keyword arguments used for preprocessing the windowed data.
     features_kwargs : dict, optional
         Keyword arguments used for feature extraction.
+
     """
 
     def __init__(
@@ -91,6 +92,7 @@ class FeaturesDataset(EEGWindowsDataset):
         tuple
             A tuple containing the feature vector (X), the target (y), and the
             cropping indices.
+
         """
         crop_inds = self.crop_inds[index].tolist()
         X = self.features.iloc[index].to_numpy()
@@ -108,6 +110,7 @@ class FeaturesDataset(EEGWindowsDataset):
         -------
         int
             The total number of feature samples.
+
         """
         return len(self.features.index)
 
@@ -165,6 +168,7 @@ class FeaturesConcatDataset(BaseConcatDataset):
         A list of :class:`FeaturesDataset` objects to concatenate.
     target_transform : callable, optional
         A function to apply to the target values before they are returned.
+
     """
 
     def __init__(
@@ -205,6 +209,7 @@ class FeaturesConcatDataset(BaseConcatDataset):
         dict[str, FeaturesConcatDataset]
             A dictionary where keys are split names and values are the new
             :class:`FeaturesConcatDataset` subsets.
+
         """
         if isinstance(by, str):
             split_ids = {
@@ -243,6 +248,7 @@ class FeaturesConcatDataset(BaseConcatDataset):
         ------
         TypeError
             If any of the contained datasets is not a :class:`FeaturesDataset`.
+
         """
         if not all([isinstance(ds, FeaturesDataset) for ds in self.datasets]):
             raise TypeError(
@@ -294,6 +300,7 @@ class FeaturesConcatDataset(BaseConcatDataset):
             If the dataset is empty.
         FileExistsError
             If a subdirectory already exists and `overwrite` is False.
+
         """
         if len(self.datasets) == 0:
             raise ValueError("Expect at least one dataset")
@@ -402,6 +409,7 @@ class FeaturesConcatDataset(BaseConcatDataset):
         -------
         pandas.DataFrame
             A DataFrame containing the features and requested metadata.
+
         """
         if (
             not isinstance(include_metadata, bool)
@@ -468,6 +476,7 @@ class FeaturesConcatDataset(BaseConcatDataset):
         -------
         pandas.Series
             The count of non-NA cells for each column.
+
         """
         stats = Parallel(n_jobs)(
             delayed(_compute_stats)(ds, return_count=True, numeric_only=numeric_only)
@@ -491,6 +500,7 @@ class FeaturesConcatDataset(BaseConcatDataset):
         -------
         pandas.Series
             The mean of each column.
+
         """
         stats = Parallel(n_jobs)(
             delayed(_compute_stats)(
@@ -503,7 +513,9 @@ class FeaturesConcatDataset(BaseConcatDataset):
         mean = np.sum((counts / count) * means, axis=0)
         return pd.Series(mean, index=self._numeric_columns())
 
-    def var(self, ddof: int = 1, numeric_only: bool = False, n_jobs: int = 1) -> pd.Series:
+    def var(
+        self, ddof: int = 1, numeric_only: bool = False, n_jobs: int = 1
+    ) -> pd.Series:
         """Compute the variance for each feature column.
 
         Parameters
@@ -519,6 +531,7 @@ class FeaturesConcatDataset(BaseConcatDataset):
         -------
         pandas.Series
             The variance of each column.
+
         """
         stats = Parallel(n_jobs)(
             delayed(_compute_stats)(
@@ -539,7 +552,9 @@ class FeaturesConcatDataset(BaseConcatDataset):
         _, _, var = _pooled_var(counts, means, variances, ddof, ddof_in=0)
         return pd.Series(var, index=self._numeric_columns())
 
-    def std(self, ddof: int = 1, numeric_only: bool = False, eps: float = 0, n_jobs: int = 1) -> pd.Series:
+    def std(
+        self, ddof: int = 1, numeric_only: bool = False, eps: float = 0, n_jobs: int = 1
+    ) -> pd.Series:
         """Compute the standard deviation for each feature column.
 
         Parameters
@@ -558,12 +573,15 @@ class FeaturesConcatDataset(BaseConcatDataset):
         -------
         pandas.Series
             The standard deviation of each column.
+
         """
         return np.sqrt(
             self.var(ddof=ddof, numeric_only=numeric_only, n_jobs=n_jobs) + eps
         )
 
-    def zscore(self, ddof: int = 1, numeric_only: bool = False, eps: float = 0, n_jobs: int = 1) -> None:
+    def zscore(
+        self, ddof: int = 1, numeric_only: bool = False, eps: float = 0, n_jobs: int = 1
+    ) -> None:
         """Apply z-score normalization to numeric columns in-place.
 
         Parameters
@@ -576,6 +594,7 @@ class FeaturesConcatDataset(BaseConcatDataset):
             Epsilon for numerical stability.
         n_jobs : int, default 1
             Number of jobs to run in parallel for statistics computation.
+
         """
         stats = Parallel(n_jobs)(
             delayed(_compute_stats)(
@@ -650,6 +669,7 @@ class FeaturesConcatDataset(BaseConcatDataset):
             and each corresponding dataset must have the same length.
         **kwargs
             Keyword arguments to pass to :meth:`pandas.DataFrame.join`.
+
         """
         assert len(self.datasets) == len(concat_dataset.datasets)
         for ds1, ds2 in zip(self.datasets, concat_dataset.datasets):

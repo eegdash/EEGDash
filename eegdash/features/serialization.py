@@ -43,6 +43,7 @@ def load_features_concat_dataset(
     -------
     eegdash.features.datasets.FeaturesConcatDataset
         A concatenated dataset containing the loaded `FeaturesDataset` instances.
+
     """
     # Make sure we always work with a pathlib.Path
     path = Path(path)
@@ -75,6 +76,7 @@ def _load_parallel(path: Path, i: str) -> FeaturesDataset:
     -------
     eegdash.features.datasets.FeaturesDataset
         The loaded dataset instance.
+
     """
     sub_dir = path / i
 

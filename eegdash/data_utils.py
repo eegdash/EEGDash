@@ -56,6 +56,7 @@ class EEGDashBaseDataset(BaseDataset):
     **kwargs
         Additional keyword arguments passed to the
         :class:`braindecode.datasets.BaseDataset` constructor.
+
     """
 
     _AWS_BUCKET = "s3://openneuro.org"
@@ -199,6 +200,7 @@ class EEGDashBaseDataset(BaseDataset):
         -------
         mne.io.BaseRaw
             The loaded MNE Raw object.
+
         """
         if self._raw is None:
             self._ensure_raw()
@@ -235,6 +237,7 @@ class EEGDashBaseRaw(BaseRaw):
     See Also
     --------
     mne.io.Raw : The base class for Raw objects in MNE.
+
     """
 
     _AWS_BUCKET = "s3://openneuro.org"
@@ -322,6 +325,7 @@ class EEGBIDSDataset:
         The path to the local BIDS dataset directory.
     dataset : str
         A name for the dataset (e.g., "ds002718").
+
     """
 
     ALLOWED_FILE_FORMAT = ["eeglab", "brainvision", "biosemi", "european"]
@@ -371,6 +375,7 @@ class EEGBIDSDataset:
         -------
         bool
             True if the dataset's modality is EEG, False otherwise.
+
         """
         return self.get_bids_file_attribute("modality", self.files[0]).lower() == "eeg"
 
@@ -450,6 +455,7 @@ class EEGBIDSDataset:
         -------
         list of Path
             A list of paths to the matching metadata files.
+
         """
         if isinstance(filepath, str):
             filepath = Path(filepath)
@@ -520,6 +526,7 @@ class EEGBIDSDataset:
         -------
         numpy.ndarray
             The loaded and processed data as a NumPy array.
+
         """
         logger.info(f"Loading raw data from {raw_file}")
         EEG = mne.io.read_raw_eeglab(raw_file, preload=True, verbose="error")
@@ -544,6 +551,7 @@ class EEGBIDSDataset:
         -------
         list of str
             A list of file paths for all valid EEG recordings.
+
         """
         return self.files
 
@@ -560,6 +568,7 @@ class EEGBIDSDataset:
         -------
         dict
             A dictionary containing the merged JSON data.
+
         """
         if not json_files:
             raise ValueError("No JSON files provided")
@@ -585,6 +594,7 @@ class EEGBIDSDataset:
         -------
         Any
             The value of the requested attribute, or None if not found.
+
         """
         entities = self.layout.parse_file_entities(data_filepath)
         bidsfile = self.layout.get(**entities)[0]
@@ -614,6 +624,7 @@ class EEGBIDSDataset:
         -------
         list of str
             A list of channel names.
+
         """
         channels_tsv = pd.read_csv(
             self.get_bids_metadata_files(data_filepath, "channels.tsv")[0], sep="\t"
@@ -632,6 +643,7 @@ class EEGBIDSDataset:
         -------
         list of str
             A list of channel types.
+
         """
         channels_tsv = pd.read_csv(
             self.get_bids_metadata_files(data_filepath, "channels.tsv")[0], sep="\t"
@@ -652,6 +664,7 @@ class EEGBIDSDataset:
         -------
         int
             The approximate number of time points.
+
         """
         eeg_jsons = self.get_bids_metadata_files(data_filepath, "eeg.json")
         eeg_json_dict = self._merge_json_inheritance(eeg_jsons)
@@ -671,6 +684,7 @@ class EEGBIDSDataset:
         -------
         dict
             A dictionary of the subject's information from participants.tsv.
+
         """
         participants_tsv_path = self.get_bids_metadata_files(
             data_filepath, "participants.tsv"
@@ -694,6 +708,7 @@ class EEGBIDSDataset:
         -------
         dict
             The merged eeg.json metadata.
+
         """
         eeg_jsons = self.get_bids_metadata_files(data_filepath, "eeg.json")
         return self._merge_json_inheritance(eeg_jsons)
@@ -710,10 +725,11 @@ class EEGBIDSDataset:
         -------
         dict
             The channels.tsv data, with columns as keys.
+
         """
-        channels_tsv_path = self.get_bids_metadata_files(
-            data_filepath, "channels.tsv"
-        )[0]
+        channels_tsv_path = self.get_bids_metadata_files(data_filepath, "channels.tsv")[
+            0
+        ]
         channels_tsv = pd.read_csv(channels_tsv_path, sep="\t")
         channel_tsv_dict = channels_tsv.to_dict()
         for list_field in ["name", "type", "units"]:

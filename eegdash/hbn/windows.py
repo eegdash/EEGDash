@@ -38,6 +38,7 @@ def build_trial_table(events_df: pd.DataFrame) -> pd.DataFrame:
     pandas.DataFrame
         A DataFrame where each row represents a single contrast trial, with
         columns for onsets, reaction times, and response correctness.
+
     """
     events_df = events_df.copy()
     events_df["onset"] = pd.to_numeric(events_df["onset"], errors="raise")
@@ -171,6 +172,7 @@ def annotate_trials_with_target(
     ------
     KeyError
         If `target_field` is not a valid column in the built trial table.
+
     """
     fnames = raw.filenames
     assert len(fnames) == 1, "Expected a single filename"
@@ -249,6 +251,7 @@ def add_aux_anchors(
     -------
     mne.io.Raw
         The `raw` object with the auxiliary annotations added.
+
     """
     ann = raw.annotations
     mask = ann.description == "contrast_trial_start"
@@ -332,6 +335,7 @@ def add_extras_columns(
     -------
     BaseConcatDataset
         The `windows_concat_ds` with updated metadata.
+
     """
     float_cols = {
         "target",
@@ -394,7 +398,9 @@ def add_extras_columns(
     return windows_concat_ds
 
 
-def keep_only_recordings_with(desc: str, concat_ds: BaseConcatDataset) -> BaseConcatDataset:
+def keep_only_recordings_with(
+    desc: str, concat_ds: BaseConcatDataset
+) -> BaseConcatDataset:
     """Filter a concatenated dataset to keep only recordings with a specific annotation.
 
     Parameters
@@ -409,6 +415,7 @@ def keep_only_recordings_with(desc: str, concat_ds: BaseConcatDataset) -> BaseCo
     -------
     BaseConcatDataset
         A new concatenated dataset containing only the filtered recordings.
+
     """
     kept = []
     for ds in concat_ds.datasets:
@@ -418,4 +425,4 @@ def keep_only_recordings_with(desc: str, concat_ds: BaseConcatDataset) -> BaseCo
             logging.warning(
                 f"Recording {ds.raw.filenames[0]} does not contain event '{desc}'"
             )
-    return Base-ConcatDataset(kept)
+    return BaseConcatDataset(kept)

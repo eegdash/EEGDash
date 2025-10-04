@@ -31,6 +31,7 @@ class MongoConnectionManager:
         tuple.
     _lock : threading.Lock
         A lock to ensure thread-safe instantiation of clients.
+
     """
 
     _instances: dict[tuple[str, bool], tuple[MongoClient, Database, Collection]] = {}
@@ -60,6 +61,7 @@ class MongoConnectionManager:
         tuple[MongoClient, Database, Collection]
             A tuple containing the connected MongoClient instance, the Database
             object, and the Collection object for the "records" collection.
+
         """
         # Create a unique key based on connection string and staging flag
         key = (connection_string, is_staging)

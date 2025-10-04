@@ -32,6 +32,7 @@ class hbn_ec_ec_reannotation(Preprocessor):
     -----
     This class inherits from :class:`braindecode.preprocessing.Preprocessor`
     and is intended to be used within a braindecode preprocessing pipeline.
+
     """
 
     def __init__(self):
@@ -58,6 +59,7 @@ class hbn_ec_ec_reannotation(Preprocessor):
         -------
         mne.io.Raw
             The raw MNE object with the modified annotations.
+
         """
         events, event_id = mne.events_from_annotations(raw)
 

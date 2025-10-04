@@ -25,6 +25,7 @@ def _init_mongo_client() -> None:
     -----
     This is an internal helper function and is not intended for direct use
     by end-users.
+
     """
     with use_log_level("ERROR"):
         if get_config("EEGDASH_DB_URI") is None:

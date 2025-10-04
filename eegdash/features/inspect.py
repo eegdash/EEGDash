@@ -1,6 +1,5 @@
 import inspect
 from collections.abc import Callable
-from typing import List
 
 from . import extractors, feature_bank
 from .extractors import FeatureExtractor, MultivariateFeature, _get_underlying_func
@@ -25,6 +24,7 @@ def get_feature_predecessors(feature_or_extractor: Callable) -> list:
         chain, this will be a flat list from the specific feature up to the
         base `FeatureExtractor`. For multiple dependencies, it will contain
         tuples of sub-dependencies.
+
     """
     current = _get_underlying_func(feature_or_extractor)
     if current is FeatureExtractor:
@@ -55,6 +55,7 @@ def get_feature_kind(feature: Callable) -> MultivariateFeature:
     -------
     MultivariateFeature
         An instance of the feature kind (e.g., `UnivariateFeature()`).
+
     """
     return _get_underlying_func(feature).feature_kind
 
@@ -69,6 +70,7 @@ def get_all_features() -> list[tuple[str, Callable]]:
     -------
     list[tuple[str, callable]]
         A list of (name, function) tuples for all discovered features.
+
     """
 
     def isfeature(x):
@@ -88,6 +90,7 @@ def get_all_feature_extractors() -> list[tuple[str, type[FeatureExtractor]]]:
     list[tuple[str, type[FeatureExtractor]]]
         A list of (name, class) tuples for all discovered feature extractors,
         including the base `FeatureExtractor` itself.
+
     """
 
     def isfeatureextractor(x):
@@ -109,6 +112,7 @@ def get_all_feature_kinds() -> list[tuple[str, type[MultivariateFeature]]]:
     -------
     list[tuple[str, type[MultivariateFeature]]]
         A list of (name, class) tuples for all discovered feature kinds.
+
     """
 
     def isfeaturekind(x):

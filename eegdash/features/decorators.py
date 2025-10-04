@@ -24,6 +24,7 @@ class FeaturePredecessor:
         A list of feature extractor classes (subclasses of
         :class:`~eegdash.features.extractors.FeatureExtractor`) that this
         feature depends on.
+
     """
 
     def __init__(self, *parent_extractor_type: List[Type]):
@@ -47,6 +48,7 @@ class FeaturePredecessor:
         callable
             The decorated function with the `parent_extractor_type` attribute
             set.
+
         """
         f = _get_underlying_func(func)
         f.parent_extractor_type = self.parent_extractor_type
@@ -65,6 +67,7 @@ class FeatureKind:
         An instance of a feature kind class, such as
         :class:`~eegdash.features.extractors.UnivariateFeature` or
         :class:`~eegdash.features.extractors.BivariateFeature`.
+
     """
 
     def __init__(self, feature_kind: MultivariateFeature):
@@ -82,6 +85,7 @@ class FeatureKind:
         -------
         callable
             The decorated function with the `feature_kind` attribute set.
+
         """
         f = _get_underlying_func(func)
         f.feature_kind = self.feature_kind
@@ -115,6 +119,7 @@ def bivariate_feature(func: Callable, directed: bool = False) -> Callable:
     callable
         The decorated function with the appropriate bivariate feature kind
         attached.
+
     """
     if directed:
         kind = DirectedBivariateFeature()

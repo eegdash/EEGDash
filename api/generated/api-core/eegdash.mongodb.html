@@ -42,7 +42,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css" />
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/select/1.7.0/css/select.dataTables.min.css" />
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/searchpanes/2.3.1/css/searchPanes.dataTables.min.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=5aa56fc9" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=5cbbfa43" />
   
   <!-- So that users can add custom icons -->
   <script src="../../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
@@ -149,8 +149,8 @@
       
     
     
-    <img src="../../../_static/eegdash_long.png" class="logo__image only-light" alt="EEG Dash Logo"/>
-    <img src="../../../_static/eegdash_long.png" class="logo__image only-dark pst-js-only" alt="EEG Dash Logo"/>
+    <img src="../../../_static/eegdash_long_white.svg" class="logo__image only-light" alt="EEG Dash Logo"/>
+    <img src="../../../_static/eegdash_long_dark.svg" class="logo__image only-dark pst-js-only" alt="EEG Dash Logo"/>
   
   
 </a></div>
@@ -799,47 +799,82 @@
   <section id="module-eegdash.mongodb">
 <span id="eegdash-mongodb"></span><h1>eegdash.mongodb<a class="headerlink" href="#module-eegdash.mongodb" title="Link to this heading">#</a></h1>
 <p>MongoDB connection and operations management.</p>
-<p>This module provides thread-safe MongoDB connection management and high-level database
-operations for the EEGDash metadata database. It includes methods for finding, adding,
-and updating EEG data records with proper connection pooling and error handling.</p>
+<p>This module provides a thread-safe singleton manager for MongoDB connections,
+ensuring that connections to the database are handled efficiently and consistently
+across the application.</p>
 <p class="rubric">Classes</p>
 <div class="pst-scrollable-table-container"><table class="autosummary longtable table">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#eegdash.mongodb.MongoConnectionManager" title="eegdash.mongodb.MongoConnectionManager"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MongoConnectionManager</span></code></a>()</p></td>
-<td><p>Singleton class to manage MongoDB client connections.</p></td>
+<td><p>A thread-safe singleton to manage MongoDB client connections.</p></td>
 </tr>
 </tbody>
 </table>
 </div>
 <dl class="py class">
 <dt class="sig sig-object py" id="eegdash.mongodb.MongoConnectionManager">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">eegdash.mongodb.</span></span><span class="sig-name descname"><span class="pre">MongoConnectionManager</span></span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/mongodb.py#L30-L77"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.mongodb.MongoConnectionManager" title="Link to this definition">#</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">eegdash.mongodb.</span></span><span class="sig-name descname"><span class="pre">MongoConnectionManager</span></span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/mongodb.py#L19-L94"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.mongodb.MongoConnectionManager" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Singleton class to manage MongoDB client connections.</p>
+<p>A thread-safe singleton to manage MongoDB client connections.</p>
+<p>This class ensures that only one connection instance is created for each
+unique combination of a connection string and staging flag. It provides
+class methods to get a client and to close all active connections.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="eegdash.mongodb.MongoConnectionManager._instances">
+<span class="sig-name descname"><span class="pre">_instances</span></span><a class="headerlink" href="#eegdash.mongodb.MongoConnectionManager._instances" title="Link to this definition">#</a></dt>
+<dd><p>A dictionary to store singleton instances, mapping a
+(connection_string, is_staging) tuple to a (client, db, collection)
+tuple.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="eegdash.mongodb.MongoConnectionManager._lock">
+<span class="sig-name descname"><span class="pre">_lock</span></span><a class="headerlink" href="#eegdash.mongodb.MongoConnectionManager._lock" title="Link to this definition">#</a></dt>
+<dd><p>A lock to ensure thread-safe instantiation of clients.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>threading.Lock</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="eegdash.mongodb.MongoConnectionManager.get_client">
-<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_client</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">connection_string</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_staging</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/mongodb.py#L36-L66"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.mongodb.MongoConnectionManager.get_client" title="Link to this definition">#</a></dt>
-<dd><p>Get or create a MongoDB client for the given connection string and staging flag.</p>
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_client</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">connection_string</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_staging</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">MongoClient</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Database</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Collection</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/mongodb.py#L40-L79"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.mongodb.MongoConnectionManager.get_client" title="Link to this definition">#</a></dt>
+<dd><p>Get or create a MongoDB client for the given connection parameters.</p>
+<p>This method returns a cached client if one already exists for the given
+connection string and staging flag. Otherwise, it creates a new client,
+connects to the appropriate database (“eegdash” or “eegdashstaging”),
+and returns the client, database, and “records” collection.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>connection_string</strong> (<em>str</em>) – The MongoDB connection string</p></li>
-<li><p><strong>is_staging</strong> (<em>bool</em>) – Whether to use staging database</p></li>
+<li><p><strong>connection_string</strong> (<em>str</em>) – The MongoDB connection string.</p></li>
+<li><p><strong>is_staging</strong> (<em>bool</em><em>, </em><em>default False</em>) – If True, connect to the staging database (“eegdashstaging”).
+Otherwise, connect to the production database (“eegdash”).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>A tuple of (client, database, collection)</p>
+<dd class="field-even"><p>A tuple containing the connected MongoClient instance, the Database
+object, and the Collection object for the “records” collection.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>tuple</p>
+<dd class="field-odd"><p>tuple[MongoClient, Database, Collection]</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="eegdash.mongodb.MongoConnectionManager.close_all">
-<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">close_all</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/mongodb.py#L68-L77"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.mongodb.MongoConnectionManager.close_all" title="Link to this definition">#</a></dt>
-<dd><p>Close all MongoDB client connections.</p>
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">close_all</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/mongodb.py#L81-L94"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.mongodb.MongoConnectionManager.close_all" title="Link to this definition">#</a></dt>
+<dd><p>Close all managed MongoDB client connections.</p>
+<p>This method iterates through all cached client instances and closes
+their connections. It also clears the instance cache.</p>
 </dd></dl>
 
 </dd></dl>
@@ -894,6 +929,8 @@ and updating EEG data records with proper connection pooling and error handling.
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.mongodb.MongoConnectionManager"><code class="docutils literal notranslate"><span class="pre">MongoConnectionManager</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.mongodb.MongoConnectionManager._instances"><code class="docutils literal notranslate"><span class="pre">MongoConnectionManager._instances</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.mongodb.MongoConnectionManager._lock"><code class="docutils literal notranslate"><span class="pre">MongoConnectionManager._lock</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.mongodb.MongoConnectionManager.get_client"><code class="docutils literal notranslate"><span class="pre">MongoConnectionManager.get_client()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.mongodb.MongoConnectionManager.close_all"><code class="docutils literal notranslate"><span class="pre">MongoConnectionManager.close_all()</span></code></a></li>
 </ul>

@@ -42,7 +42,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css" />
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/select/1.7.0/css/select.dataTables.min.css" />
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/searchpanes/2.3.1/css/searchPanes.dataTables.min.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=5aa56fc9" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=5cbbfa43" />
   
   <!-- So that users can add custom icons -->
   <script src="../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
@@ -147,8 +147,8 @@
       
     
     
-    <img src="../../_static/eegdash_long.png" class="logo__image only-light" alt="EEG Dash Logo"/>
-    <img src="../../_static/eegdash_long.png" class="logo__image only-dark pst-js-only" alt="EEG Dash Logo"/>
+    <img src="../../_static/eegdash_long_white.svg" class="logo__image only-light" alt="EEG Dash Logo"/>
+    <img src="../../_static/eegdash_long_dark.svg" class="logo__image only-dark pst-js-only" alt="EEG Dash Logo"/>
   
   
 </a></div>
@@ -555,26 +555,84 @@ AWS S3 storage, with support for caching and progress tracking. It handles the c
 between the EEGDash metadata database and the actual EEG data stored in the cloud.</p>
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">eegdash.downloader.</span></span><span class="sig-name descname"><span class="pre">download_dependencies</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s3_bucket</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bids_dependencies</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bids_dependencies_original</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cache_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dataset_folder</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">record</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s3_open_neuro</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/downloader.py#L46-L78"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Download all BIDS dependency files from S3 and cache them locally.</p>
+<span class="sig-prename descclassname"><span class="pre">eegdash.downloader.</span></span><span class="sig-name descname"><span class="pre">download_dependencies</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s3_bucket</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bids_dependencies</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bids_dependencies_original</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cache_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dataset_folder</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">record</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s3_open_neuro</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/downloader.py#L90-L145"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Download all BIDS dependency files from S3.</p>
+<p>Iterates through a list of BIDS dependency files, downloads each from the
+specified S3 bucket, and caches them in the appropriate local directory
+structure.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>s3_bucket</strong> (<em>str</em>) – The S3 bucket to download from.</p></li>
+<li><p><strong>bids_dependencies</strong> (<em>list</em><em> of </em><em>str</em>) – A list of dependency file paths relative to the S3 bucket root.</p></li>
+<li><p><strong>bids_dependencies_original</strong> (<em>list</em><em> of </em><em>str</em>) – The original dependency paths, used for resolving local cache paths.</p></li>
+<li><p><strong>cache_dir</strong> (<em>pathlib.Path</em>) – The root directory for caching.</p></li>
+<li><p><strong>dataset_folder</strong> (<em>pathlib.Path</em>) – The specific folder for the dataset within the cache directory.</p></li>
+<li><p><strong>record</strong> (<em>dict</em>) – The metadata record for the main data file, used to resolve paths.</p></li>
+<li><p><strong>s3_open_neuro</strong> (<em>bool</em>) – Flag for OpenNeuro-specific path handling.</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">eegdash.downloader.</span></span><span class="sig-name descname"><span class="pre">download_s3_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s3_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">local_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s3_open_neuro</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/downloader.py#L30-L43"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Download function that gets the raw EEG data from S3.</p>
+<span class="sig-prename descclassname"><span class="pre">eegdash.downloader.</span></span><span class="sig-name descname"><span class="pre">download_s3_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s3_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">local_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s3_open_neuro</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Path</span></span></span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/downloader.py#L54-L87"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Download a single file from S3 to a local path.</p>
+<p>Handles the download of a raw EEG data file from an S3 bucket, caching it
+at the specified local path. Creates parent directories if they do not exist.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>s3_path</strong> (<em>str</em>) – The full S3 URI of the file to download.</p></li>
+<li><p><strong>local_path</strong> (<em>pathlib.Path</em>) – The local file path where the downloaded file will be saved.</p></li>
+<li><p><strong>s3_open_neuro</strong> (<em>bool</em>) – A flag indicating if the S3 bucket is the OpenNeuro main bucket, which
+may affect path handling.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The local path to the downloaded file.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pathlib.Path</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">eegdash.downloader.</span></span><span class="sig-name descname"><span class="pre">get_s3_filesystem</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/downloader.py#L20-L22"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Returns an S3FileSystem object.</p>
+<span class="sig-prename descclassname"><span class="pre">eegdash.downloader.</span></span><span class="sig-name descname"><span class="pre">get_s3_filesystem</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">S3FileSystem</span></span></span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/downloader.py#L20-L32"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Get an anonymous S3 filesystem object.</p>
+<p>Initializes and returns an <code class="docutils literal notranslate"><span class="pre">s3fs.S3FileSystem</span></code> for anonymous access
+to public S3 buckets, configured for the ‘us-east-2’ region.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>An S3 filesystem object.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>s3fs.S3FileSystem</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">eegdash.downloader.</span></span><span class="sig-name descname"><span class="pre">get_s3path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s3_bucket</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filepath</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/downloader.py#L25-L27"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Helper to form an AWS S3 URI for the given relative filepath.</p>
+<span class="sig-prename descclassname"><span class="pre">eegdash.downloader.</span></span><span class="sig-name descname"><span class="pre">get_s3path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s3_bucket</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filepath</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/downloader.py#L35-L51"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Construct an S3 URI from a bucket and file path.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>s3_bucket</strong> (<em>str</em>) – The S3 bucket name (e.g., “s3://my-bucket”).</p></li>
+<li><p><strong>filepath</strong> (<em>str</em>) – The path to the file within the bucket.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The full S3 URI (e.g., “s3://my-bucket/path/to/file”).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
 </dd></dl>
 
 </section>

@@ -42,7 +42,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css" />
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/select/1.7.0/css/select.dataTables.min.css" />
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/searchpanes/2.3.1/css/searchPanes.dataTables.min.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=5aa56fc9" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=5cbbfa43" />
   
   <!-- So that users can add custom icons -->
   <script src="../../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
@@ -149,8 +149,8 @@
       
     
     
-    <img src="../../../_static/eegdash_long.png" class="logo__image only-light" alt="EEG Dash Logo"/>
-    <img src="../../../_static/eegdash_long.png" class="logo__image only-dark pst-js-only" alt="EEG Dash Logo"/>
+    <img src="../../../_static/eegdash_long_white.svg" class="logo__image only-light" alt="EEG Dash Logo"/>
+    <img src="../../../_static/eegdash_long_dark.svg" class="logo__image only-dark pst-js-only" alt="EEG Dash Logo"/>
   
   
 </a></div>
@@ -802,6 +802,67 @@
 <p>This module contains global configuration settings, allowed query fields, and mapping
 constants used throughout the EEGDash package. It defines the interface between EEGDash
 releases and OpenNeuro dataset identifiers, as well as validation rules for database queries.</p>
+<p class="rubric">Module Attributes</p>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#eegdash.const.ALLOWED_QUERY_FIELDS" title="eegdash.const.ALLOWED_QUERY_FIELDS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ALLOWED_QUERY_FIELDS</span></code></a></p></td>
+<td><p>A set of field names that are permitted in database queries constructed via <a class="reference internal" href="eegdash.api.html#eegdash.api.EEGDash.find" title="eegdash.api.EEGDash.find"><code class="xref py py-func docutils literal notranslate"><span class="pre">find()</span></code></a> with keyword arguments.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#eegdash.const.RELEASE_TO_OPENNEURO_DATASET_MAP" title="eegdash.const.RELEASE_TO_OPENNEURO_DATASET_MAP"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RELEASE_TO_OPENNEURO_DATASET_MAP</span></code></a></p></td>
+<td><p>A mapping from Healthy Brain Network (HBN) release identifiers (e.g., &quot;R11&quot;) to their corresponding OpenNeuro dataset identifiers (e.g., &quot;ds005516&quot;).</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#eegdash.const.SUBJECT_MINI_RELEASE_MAP" title="eegdash.const.SUBJECT_MINI_RELEASE_MAP"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SUBJECT_MINI_RELEASE_MAP</span></code></a></p></td>
+<td><p>A mapping from HBN release identifiers to a list of subject IDs.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#eegdash.const.config" title="eegdash.const.config"><code class="xref py py-obj docutils literal notranslate"><span class="pre">config</span></code></a></p></td>
+<td><p>A global configuration dictionary for the EEGDash package.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<dl class="py data">
+<dt class="sig sig-object py" id="eegdash.const.config">
+<span class="sig-prename descclassname"><span class="pre">eegdash.const.</span></span><span class="sig-name descname"><span class="pre">config</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'accepted_query_fields':</span> <span class="pre">['data_name',</span> <span class="pre">'dataset'],</span> <span class="pre">'attributes':</span> <span class="pre">{'bidspath':</span> <span class="pre">'str',</span> <span class="pre">'data_name':</span> <span class="pre">'str',</span> <span class="pre">'dataset':</span> <span class="pre">'str',</span> <span class="pre">'modality':</span> <span class="pre">'str',</span> <span class="pre">'nchans':</span> <span class="pre">'int',</span> <span class="pre">'ntimes':</span> <span class="pre">'int',</span> <span class="pre">'run':</span> <span class="pre">'str',</span> <span class="pre">'sampling_frequency':</span> <span class="pre">'float',</span> <span class="pre">'session':</span> <span class="pre">'str',</span> <span class="pre">'subject':</span> <span class="pre">'str',</span> <span class="pre">'task':</span> <span class="pre">'str'},</span> <span class="pre">'bids_dependencies_files':</span> <span class="pre">['dataset_description.json',</span> <span class="pre">'participants.tsv',</span> <span class="pre">'events.tsv',</span> <span class="pre">'events.json',</span> <span class="pre">'eeg.json',</span> <span class="pre">'electrodes.tsv',</span> <span class="pre">'channels.tsv',</span> <span class="pre">'coordsystem.json'],</span> <span class="pre">'description_fields':</span> <span class="pre">['subject',</span> <span class="pre">'session',</span> <span class="pre">'run',</span> <span class="pre">'task',</span> <span class="pre">'age',</span> <span class="pre">'gender',</span> <span class="pre">'sex'],</span> <span class="pre">'required_fields':</span> <span class="pre">['data_name']}</span></em><a class="headerlink" href="#eegdash.const.config" title="Link to this definition">#</a></dt>
+<dd><p>A global configuration dictionary for the EEGDash package.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="eegdash.const.ALLOWED_QUERY_FIELDS">
+<span class="sig-prename descclassname"><span class="pre">eegdash.const.</span></span><span class="sig-name descname"><span class="pre">ALLOWED_QUERY_FIELDS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'data_name',</span> <span class="pre">'dataset',</span> <span class="pre">'modality',</span> <span class="pre">'nchans',</span> <span class="pre">'ntimes',</span> <span class="pre">'run',</span> <span class="pre">'sampling_frequency',</span> <span class="pre">'session',</span> <span class="pre">'subject',</span> <span class="pre">'task'}</span></em><a class="headerlink" href="#eegdash.const.ALLOWED_QUERY_FIELDS" title="Link to this definition">#</a></dt>
+<dd><p>A set of field names that are permitted in database queries constructed
+via <a class="reference internal" href="eegdash.api.html#eegdash.api.EEGDash.find" title="eegdash.api.EEGDash.find"><code class="xref py py-func docutils literal notranslate"><span class="pre">find()</span></code></a> with keyword arguments.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>set</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="eegdash.const.RELEASE_TO_OPENNEURO_DATASET_MAP">
+<span class="sig-prename descclassname"><span class="pre">eegdash.const.</span></span><span class="sig-name descname"><span class="pre">RELEASE_TO_OPENNEURO_DATASET_MAP</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'R1':</span> <span class="pre">'ds005505',</span> <span class="pre">'R10':</span> <span class="pre">'ds005515',</span> <span class="pre">'R11':</span> <span class="pre">'ds005516',</span> <span class="pre">'R2':</span> <span class="pre">'ds005506',</span> <span class="pre">'R3':</span> <span class="pre">'ds005507',</span> <span class="pre">'R4':</span> <span class="pre">'ds005508',</span> <span class="pre">'R5':</span> <span class="pre">'ds005509',</span> <span class="pre">'R6':</span> <span class="pre">'ds005510',</span> <span class="pre">'R7':</span> <span class="pre">'ds005511',</span> <span class="pre">'R8':</span> <span class="pre">'ds005512',</span> <span class="pre">'R9':</span> <span class="pre">'ds005514'}</span></em><a class="headerlink" href="#eegdash.const.RELEASE_TO_OPENNEURO_DATASET_MAP" title="Link to this definition">#</a></dt>
+<dd><p>A mapping from Healthy Brain Network (HBN) release identifiers (e.g., “R11”)
+to their corresponding OpenNeuro dataset identifiers (e.g., “ds005516”).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="eegdash.const.SUBJECT_MINI_RELEASE_MAP">
+<span class="sig-prename descclassname"><span class="pre">eegdash.const.</span></span><span class="sig-name descname"><span class="pre">SUBJECT_MINI_RELEASE_MAP</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'R1':</span> <span class="pre">['NDARAC904DMU',</span> <span class="pre">'NDARAM704GKZ',</span> <span class="pre">'NDARAP359UM6',</span> <span class="pre">'NDARBD879MBX',</span> <span class="pre">'NDARBH024NH2',</span> <span class="pre">'NDARBK082PDD',</span> <span class="pre">'NDARCA153NKE',</span> <span class="pre">'NDARCE721YB5',</span> <span class="pre">'NDARCJ594BWQ',</span> <span class="pre">'NDARCN669XPR',</span> <span class="pre">'NDARCW094JCG',</span> <span class="pre">'NDARCZ947WU5',</span> <span class="pre">'NDARDH670PXH',</span> <span class="pre">'NDARDL511UND',</span> <span class="pre">'NDARDU986RBM',</span> <span class="pre">'NDAREM731BYM',</span> <span class="pre">'NDAREN519BLJ',</span> <span class="pre">'NDARFK610GY5',</span> <span class="pre">'NDARFT581ZW5',</span> <span class="pre">'NDARFW972KFQ'],</span> <span class="pre">'R10':</span> <span class="pre">['NDARAR935TGZ',</span> <span class="pre">'NDARAV474ADJ',</span> <span class="pre">'NDARCB869VM8',</span> <span class="pre">'NDARCJ667UPL',</span> <span class="pre">'NDARCM677TC1',</span> <span class="pre">'NDARET671FTC',</span> <span class="pre">'NDARKM061NHZ',</span> <span class="pre">'NDARLD501HDK',</span> <span class="pre">'NDARLL176DJR',</span> <span class="pre">'NDARMT791WDH',</span> <span class="pre">'NDARMW299ZAB',</span> <span class="pre">'NDARNC405WJA',</span> <span class="pre">'NDARNP962TJK',</span> <span class="pre">'NDARPB967KU7',</span> <span class="pre">'NDARRU560AGK',</span> <span class="pre">'NDARTB173LY2',</span> <span class="pre">'NDARUW377KAE',</span> <span class="pre">'NDARVH565FX9',</span> <span class="pre">'NDARVP799KGY',</span> <span class="pre">'NDARVY962GB5'],</span> <span class="pre">'R11':</span> <span class="pre">['NDARAB678VYW',</span> <span class="pre">'NDARAG788YV9',</span> <span class="pre">'NDARAM946HJE',</span> <span class="pre">'NDARAY977BZT',</span> <span class="pre">'NDARAZ532KK0',</span> <span class="pre">'NDARCE912ZXW',</span> <span class="pre">'NDARCM214WFE',</span> <span class="pre">'NDARDL033XRG',</span> <span class="pre">'NDARDT889RT9',</span> <span class="pre">'NDARDZ794ZVP',</span> <span class="pre">'NDAREV869CPW',</span> <span class="pre">'NDARFN221WW5',</span> <span class="pre">'NDARFV289RKB',</span> <span class="pre">'NDARFY623ZTE',</span> <span class="pre">'NDARGA890MKA',</span> <span class="pre">'NDARHN206XY3',</span> <span class="pre">'NDARHP518FUR',</span> <span class="pre">'NDARJL292RYV',</span> <span class="pre">'NDARKM199DXW',</span> <span class="pre">'NDARKW236TN7'],</span> <span class="pre">'R2':</span> <span class="pre">['NDARAB793GL3',</span> <span class="pre">'NDARAM675UR8',</span> <span class="pre">'NDARBM839WR5',</span> <span class="pre">'NDARBU730PN8',</span> <span class="pre">'NDARCT974NAJ',</span> <span class="pre">'NDARCW933FD5',</span> <span class="pre">'NDARCZ770BRG',</span> <span class="pre">'NDARDW741HCF',</span> <span class="pre">'NDARDZ058NZN',</span> <span class="pre">'NDAREC377AU2',</span> <span class="pre">'NDAREM500WWH',</span> <span class="pre">'NDAREV527ZRF',</span> <span class="pre">'NDAREV601CE7',</span> <span class="pre">'NDARFF070XHV',</span> <span class="pre">'NDARFR108JNB',</span> <span class="pre">'NDARFT305CG1',</span> <span class="pre">'NDARGA056TMW',</span> <span class="pre">'NDARGH775KF5',</span> <span class="pre">'NDARGJ878ZP4',</span> <span class="pre">'NDARHA387FPM'],</span> <span class="pre">'R3':</span> <span class="pre">['NDARAA948VFH',</span> <span class="pre">'NDARAD774HAZ',</span> <span class="pre">'NDARAE828CML',</span> <span class="pre">'NDARAG340ERT',</span> <span class="pre">'NDARBA839HLG',</span> <span class="pre">'NDARBE641DGZ',</span> <span class="pre">'NDARBG574KF4',</span> <span class="pre">'NDARBM642JFT',</span> <span class="pre">'NDARCL016NHB',</span> <span class="pre">'NDARCV944JA6',</span> <span class="pre">'NDARCY178KJP',</span> <span class="pre">'NDARDY150ZP9',</span> <span class="pre">'NDAREC542MH3',</span> <span class="pre">'NDAREK549XUQ',</span> <span class="pre">'NDAREM887YY8',</span> <span class="pre">'NDARFA815FXE',</span> <span class="pre">'NDARFF644ZGD',</span> <span class="pre">'NDARFV557XAA',</span> <span class="pre">'NDARFV780ABD',</span> <span class="pre">'NDARGB102NWJ'],</span> <span class="pre">'R4':</span> <span class="pre">['NDARAC350BZ0',</span> <span class="pre">'NDARAD615WLJ',</span> <span class="pre">'NDARAG584XLU',</span> <span class="pre">'NDARAH503YG1',</span> <span class="pre">'NDARAX272ZJL',</span> <span class="pre">'NDARAY461TZZ',</span> <span class="pre">'NDARBC734UVY',</span> <span class="pre">'NDARBL444FBA',</span> <span class="pre">'NDARBT640EBN',</span> <span class="pre">'NDARBU098PJT',</span> <span class="pre">'NDARBU928LV0',</span> <span class="pre">'NDARBV059CGE',</span> <span class="pre">'NDARCG037CX4',</span> <span class="pre">'NDARCG947ZC0',</span> <span class="pre">'NDARCH001CN2',</span> <span class="pre">'NDARCU001ZN7',</span> <span class="pre">'NDARCW497XW2',</span> <span class="pre">'NDARCX053GU5',</span> <span class="pre">'NDARDF568GL5',</span> <span class="pre">'NDARDJ092YKH'],</span> <span class="pre">'R5':</span> <span class="pre">['NDARAH793FBF',</span> <span class="pre">'NDARAJ689BVN',</span> <span class="pre">'NDARAP785CTE',</span> <span class="pre">'NDARAU708TL8',</span> <span class="pre">'NDARBE091BGD',</span> <span class="pre">'NDARBE103DHM',</span> <span class="pre">'NDARBF851NH6',</span> <span class="pre">'NDARBH228RDW',</span> <span class="pre">'NDARBJ674TVU',</span> <span class="pre">'NDARBM433VER',</span> <span class="pre">'NDARCA740UC8',</span> <span class="pre">'NDARCU633GCZ',</span> <span class="pre">'NDARCU736GZ1',</span> <span class="pre">'NDARCU744XWL',</span> <span class="pre">'NDARDC843HHM',</span> <span class="pre">'NDARDH086ZKK',</span> <span class="pre">'NDARDL305BT8',</span> <span class="pre">'NDARDU853XZ6',</span> <span class="pre">'NDARDV245WJG',</span> <span class="pre">'NDAREC480KFA'],</span> <span class="pre">'R6':</span> <span class="pre">['NDARAD224CRB',</span> <span class="pre">'NDARAE301XTM',</span> <span class="pre">'NDARAT680GJA',</span> <span class="pre">'NDARCA578CEB',</span> <span class="pre">'NDARDZ147ETZ',</span> <span class="pre">'NDARFL793LDE',</span> <span class="pre">'NDARFX710UZA',</span> <span class="pre">'NDARGE994BMX',</span> <span class="pre">'NDARGP191YHN',</span> <span class="pre">'NDARGV436PFT',</span> <span class="pre">'NDARHF545HFW',</span> <span class="pre">'NDARHP039DBU',</span> <span class="pre">'NDARHT774ZK1',</span> <span class="pre">'NDARJA830BYV',</span> <span class="pre">'NDARKB614KGY',</span> <span class="pre">'NDARKM250ET5',</span> <span class="pre">'NDARKZ085UKQ',</span> <span class="pre">'NDARLB581AXF',</span> <span class="pre">'NDARNJ899HW7',</span> <span class="pre">'NDARRZ606EDP'],</span> <span class="pre">'R7':</span> <span class="pre">['NDARAY475AKD',</span> <span class="pre">'NDARBW026UGE',</span> <span class="pre">'NDARCK162REX',</span> <span class="pre">'NDARCK481KRH',</span> <span class="pre">'NDARCV378MMX',</span> <span class="pre">'NDARCX462NVA',</span> <span class="pre">'NDARDJ970ELG',</span> <span class="pre">'NDARDU617ZW1',</span> <span class="pre">'NDAREM609ZXW',</span> <span class="pre">'NDAREW074ZM2',</span> <span class="pre">'NDARFE555KXB',</span> <span class="pre">'NDARFT176NJP',</span> <span class="pre">'NDARGK442YHH',</span> <span class="pre">'NDARGM439FZD',</span> <span class="pre">'NDARGT634DUJ',</span> <span class="pre">'NDARHE283KZN',</span> <span class="pre">'NDARHG260BM9',</span> <span class="pre">'NDARHL684WYU',</span> <span class="pre">'NDARHN224TPA',</span> <span class="pre">'NDARHP841RMR'],</span> <span class="pre">'R8':</span> <span class="pre">['NDARAB514MAJ',</span> <span class="pre">'NDARAD571FLB',</span> <span class="pre">'NDARAF003VCL',</span> <span class="pre">'NDARAG191AE8',</span> <span class="pre">'NDARAJ977PRJ',</span> <span class="pre">'NDARAP912JK3',</span> <span class="pre">'NDARAV454VF0',</span> <span class="pre">'NDARAY298THW',</span> <span class="pre">'NDARBJ375VP4',</span> <span class="pre">'NDARBT436PMT',</span> <span class="pre">'NDARBV630BK6',</span> <span class="pre">'NDARCB627KDN',</span> <span class="pre">'NDARCC059WTH',</span> <span class="pre">'NDARCM953HKD',</span> <span class="pre">'NDARCN681CXW',</span> <span class="pre">'NDARCT889DMB',</span> <span class="pre">'NDARDJ204EPU',</span> <span class="pre">'NDARDJ544BU5',</span> <span class="pre">'NDARDP292DVC',</span> <span class="pre">'NDARDW178AC6'],</span> <span class="pre">'R9':</span> <span class="pre">['NDARAC589YMB',</span> <span class="pre">'NDARAC853CR6',</span> <span class="pre">'NDARAH239PGG',</span> <span class="pre">'NDARAL897CYV',</span> <span class="pre">'NDARAN160GUF',</span> <span class="pre">'NDARAP049KXJ',</span> <span class="pre">'NDARAP457WB5',</span> <span class="pre">'NDARAW216PM7',</span> <span class="pre">'NDARBA004KBT',</span> <span class="pre">'NDARBD328NUQ',</span> <span class="pre">'NDARBF042LDM',</span> <span class="pre">'NDARBH019KPD',</span> <span class="pre">'NDARBH728DFK',</span> <span class="pre">'NDARBM370JCB',</span> <span class="pre">'NDARBU183TDJ',</span> <span class="pre">'NDARBW971DCW',</span> <span class="pre">'NDARBZ444ZHK',</span> <span class="pre">'NDARCC620ZFT',</span> <span class="pre">'NDARCD182XT1',</span> <span class="pre">'NDARCK113CJM']}</span></em><a class="headerlink" href="#eegdash.const.SUBJECT_MINI_RELEASE_MAP" title="Link to this definition">#</a></dt>
+<dd><p>A mapping from HBN release identifiers to a list of subject IDs.
+This is used to select a small, representative subset of subjects for creating
+“mini” datasets for testing and demonstration purposes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 
 
@@ -842,6 +903,21 @@ releases and OpenNeuro dataset identifiers, as well as validation rules for data
                 <dialog id="pst-secondary-sidebar-modal"></dialog>
                 <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.const.config"><code class="docutils literal notranslate"><span class="pre">config</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.const.ALLOWED_QUERY_FIELDS"><code class="docutils literal notranslate"><span class="pre">ALLOWED_QUERY_FIELDS</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.const.RELEASE_TO_OPENNEURO_DATASET_MAP"><code class="docutils literal notranslate"><span class="pre">RELEASE_TO_OPENNEURO_DATASET_MAP</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.const.SUBJECT_MINI_RELEASE_MAP"><code class="docutils literal notranslate"><span class="pre">SUBJECT_MINI_RELEASE_MAP</span></code></a></li>
+</ul>
+  </nav></div>
 
   <div class="sidebar-secondary-item">
 

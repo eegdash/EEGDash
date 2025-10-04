@@ -8,3 +8,9 @@
    :member-order: bysource
 
    
+   .. rubric:: Module Attributes
+
+   .. autosummary::
+   
+      logger
+   

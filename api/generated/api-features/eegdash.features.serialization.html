@@ -42,7 +42,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css" />
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/select/1.7.0/css/select.dataTables.min.css" />
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/searchpanes/2.3.1/css/searchPanes.dataTables.min.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=5aa56fc9" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=5cbbfa43" />
   
   <!-- So that users can add custom icons -->
   <script src="../../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
@@ -149,8 +149,8 @@
       
     
     
-    <img src="../../../_static/eegdash_long.png" class="logo__image only-light" alt="EEG Dash Logo"/>
-    <img src="../../../_static/eegdash_long.png" class="logo__image only-dark pst-js-only" alt="EEG Dash Logo"/>
+    <img src="../../../_static/eegdash_long_white.svg" class="logo__image only-light" alt="EEG Dash Logo"/>
+    <img src="../../../_static/eegdash_long_dark.svg" class="logo__image only-dark pst-js-only" alt="EEG Dash Logo"/>
   
   
 </a></div>
@@ -801,7 +801,10 @@
 <p>Convenience functions for storing and loading features datasets.</p>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
-<p><a class="github reference external" href="https://github.com/braindecode/braindecode//blob/master/braindecode/datautil/serialization.py#L165-L229">braindecode/braindecode</a></p>
+<dl class="simple">
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">https</span></code></dt><dd><p>//github.com/braindecode/braindecode//blob/master/braindecode/datautil/serialization.py#L165-L229</p>
+</dd>
+</dl>
 </div>
 <p class="rubric">Functions</p>
 <div class="pst-scrollable-table-container"><table class="autosummary longtable table">
@@ -810,7 +813,7 @@
 <td><p>Decorator used to capture the arguments of a function.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#eegdash.features.serialization.load_features_concat_dataset" title="eegdash.features.serialization.load_features_concat_dataset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_features_concat_dataset</span></code></a>(path[, ...])</p></td>
-<td><p>Load a stored features dataset from files.</p></td>
+<td><p>Load a stored <cite>FeaturesConcatDataset</cite> from a directory.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">read_info</span></code>(fname[, verbose])</p></td>
 <td><p>Read measurement info from a file.</p></td>
@@ -822,10 +825,10 @@
 <div class="pst-scrollable-table-container"><table class="autosummary longtable table">
 <tbody>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">FeaturesConcatDataset</span></code>([list_of_ds, ...])</p></td>
-<td><p>A base class for concatenated datasets.</p></td>
+<td><p>A concatenated dataset of <cite>FeaturesDataset</cite> objects.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">FeaturesDataset</span></code>(features[, metadata, ...])</p></td>
-<td><p>Returns samples from a pandas DataFrame object along with a target.</p></td>
+<td><p>A dataset of features extracted from EEG windows.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">Parallel</span></code>([n_jobs, backend, return_as, ...])</p></td>
 <td><p>Helper class for readable parallel mapping.</p></td>
@@ -838,19 +841,25 @@
 </div>
 <dl class="py function">
 <dt class="sig sig-object py" id="eegdash.features.serialization.load_features_concat_dataset">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.serialization.</span></span><span class="sig-name descname"><span class="pre">load_features_concat_dataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ids_to_load</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/serialization.py#L19-L51"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.serialization.load_features_concat_dataset" title="Link to this definition">#</a></dt>
-<dd><p>Load a stored features dataset from files.</p>
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.serialization.</span></span><span class="sig-name descname"><span class="pre">load_features_concat_dataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ids_to_load</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="eegdash.features.datasets.html#eegdash.features.datasets.FeaturesConcatDataset" title="eegdash.features.datasets.FeaturesConcatDataset"><span class="pre">FeaturesConcatDataset</span></a></span></span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/serialization.py#L20-L58"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.serialization.load_features_concat_dataset" title="Link to this definition">#</a></dt>
+<dd><p>Load a stored <cite>FeaturesConcatDataset</cite> from a directory.</p>
+<p>This function reconstructs a <code class="xref py py-class docutils literal notranslate"><span class="pre">FeaturesConcatDataset</span></code> by loading
+individual <code class="xref py py-class docutils literal notranslate"><span class="pre">FeaturesDataset</span></code> instances from subdirectories within
+the given path. It uses joblib for parallel loading.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>path</strong> (<em>str</em><em> | </em><em>pathlib.Path</em>) – Path to the directory of the .fif / -epo.fif and .json files.</p></li>
-<li><p><strong>ids_to_load</strong> (<em>list</em><em> of </em><em>int</em><em> | </em><em>None</em>) – Ids of specific files to load.</p></li>
-<li><p><strong>n_jobs</strong> (<em>int</em>) – Number of jobs to be used to read files in parallel.</p></li>
+<li><p><strong>path</strong> (<em>str</em><em> or </em><em>pathlib.Path</em>) – The path to the directory where the dataset was saved. This directory
+should contain subdirectories (e.g., “0”, “1”, “2”, …) for each
+individual dataset.</p></li>
+<li><p><strong>ids_to_load</strong> (<em>list</em><em> of </em><em>int</em><em>, </em><em>optional</em>) – A list of specific dataset IDs (subdirectory names) to load. If None,
+all subdirectories in the path will be loaded.</p></li>
+<li><p><strong>n_jobs</strong> (<em>int</em><em>, </em><em>default 1</em>) – The number of jobs to use for parallel loading. -1 means using all
+processors.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>concat_dataset</strong> – A concatenation of multiple eegdash.features.datasets.FeaturesDataset
-instances loaded from the given directory.</p>
+<dd class="field-even"><p>A concatenated dataset containing the loaded <cite>FeaturesDataset</cite> instances.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="eegdash.features.datasets.html#eegdash.features.datasets.FeaturesConcatDataset" title="eegdash.features.datasets.FeaturesConcatDataset">eegdash.features.datasets.FeaturesConcatDataset</a></p>

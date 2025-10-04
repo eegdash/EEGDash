@@ -42,7 +42,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css" />
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/select/1.7.0/css/select.dataTables.min.css" />
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/searchpanes/2.3.1/css/searchPanes.dataTables.min.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=5aa56fc9" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=5cbbfa43" />
   
   <!-- So that users can add custom icons -->
   <script src="../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
@@ -147,8 +147,8 @@
       
     
     
-    <img src="../../_static/eegdash_long.png" class="logo__image only-light" alt="EEG Dash Logo"/>
-    <img src="../../_static/eegdash_long.png" class="logo__image only-dark pst-js-only" alt="EEG Dash Logo"/>
+    <img src="../../_static/eegdash_long_white.svg" class="logo__image only-light" alt="EEG Dash Logo"/>
+    <img src="../../_static/eegdash_long_dark.svg" class="logo__image only-dark pst-js-only" alt="EEG Dash Logo"/>
   
   
 </a></div>
@@ -552,6 +552,24 @@
 <p>Logging configuration for EEGDash.</p>
 <p>This module sets up centralized logging for the EEGDash package using Rich for enhanced
 console output formatting. It provides a consistent logging interface across all modules.</p>
+<dl class="py data">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">eegdash.logging.</span></span><span class="sig-name descname"><span class="pre">logger</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;Logger</span> <span class="pre">eegdash</span> <span class="pre">(INFO)&gt;</span></em></dt>
+<dd><p>The primary logger for the EEGDash package.</p>
+<p>This logger is configured to use <code class="xref py py-class docutils literal notranslate"><span class="pre">rich.logging.RichHandler</span></code> for
+formatted, colorful output in the console. It inherits its base configuration
+from the root logger, which is set to the <code class="docutils literal notranslate"><span class="pre">INFO</span></code> level.</p>
+<p class="rubric">Examples</p>
+<p>Usage in other modules:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">.logging</span><span class="w"> </span><span class="kn">import</span> <span class="n">logger</span>
+
+<span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;This is an informational message.&quot;</span><span class="p">)</span>
+<span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;This is a warning.&quot;</span><span class="p">)</span>
+<span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;This is an error.&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
 </section>
 
 

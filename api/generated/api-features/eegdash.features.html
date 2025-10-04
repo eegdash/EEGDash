@@ -42,7 +42,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css" />
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/select/1.7.0/css/select.dataTables.min.css" />
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/searchpanes/2.3.1/css/searchPanes.dataTables.min.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=5aa56fc9" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=5cbbfa43" />
   
   <!-- So that users can add custom icons -->
   <script src="../../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
@@ -149,8 +149,8 @@
       
     
     
-    <img src="../../../_static/eegdash_long.png" class="logo__image only-light" alt="EEG Dash Logo"/>
-    <img src="../../../_static/eegdash_long.png" class="logo__image only-dark pst-js-only" alt="EEG Dash Logo"/>
+    <img src="../../../_static/eegdash_long_white.svg" class="logo__image only-light" alt="EEG Dash Logo"/>
+    <img src="../../../_static/eegdash_long_dark.svg" class="logo__image only-dark pst-js-only" alt="EEG Dash Logo"/>
   
   
 </a></div>
@@ -802,31 +802,31 @@
 <div class="pst-scrollable-table-container"><table class="autosummary longtable table">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#eegdash.features.bivariate_feature" title="eegdash.features.bivariate_feature"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bivariate_feature</span></code></a>(func[, directed])</p></td>
-<td><p></p></td>
+<td><p>Decorator to mark a feature as bivariate.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#eegdash.features.get_all_feature_extractors" title="eegdash.features.get_all_feature_extractors"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_all_feature_extractors</span></code></a>()</p></td>
-<td><p></p></td>
+<td><p>Get a list of all available <cite>FeatureExtractor</cite> classes.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#eegdash.features.get_all_feature_kinds" title="eegdash.features.get_all_feature_kinds"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_all_feature_kinds</span></code></a>()</p></td>
-<td><p></p></td>
+<td><p>Get a list of all available feature 'kind' classes.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#eegdash.features.get_all_features" title="eegdash.features.get_all_features"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_all_features</span></code></a>()</p></td>
-<td><p></p></td>
+<td><p>Get a list of all available feature functions.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#eegdash.features.get_feature_kind" title="eegdash.features.get_feature_kind"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_feature_kind</span></code></a>(feature)</p></td>
-<td><p></p></td>
+<td><p>Get the 'kind' of a feature function.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#eegdash.features.get_feature_predecessors" title="eegdash.features.get_feature_predecessors"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_feature_predecessors</span></code></a>(feature_or_extractor)</p></td>
-<td><p></p></td>
+<td><p>Get the dependency hierarchy for a feature or feature extractor.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#eegdash.features.load_features_concat_dataset" title="eegdash.features.load_features_concat_dataset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_features_concat_dataset</span></code></a>(path[, ...])</p></td>
-<td><p>Load a stored features dataset from files.</p></td>
+<td><p>Load a stored <cite>FeaturesConcatDataset</cite> from a directory.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#eegdash.features.extract_features" title="eegdash.features.extract_features"><code class="xref py py-obj docutils literal notranslate"><span class="pre">extract_features</span></code></a>(concat_dataset, features, *)</p></td>
-<td><p></p></td>
+<td><p>Extract features from a concatenated dataset of windows.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#eegdash.features.fit_feature_extractors" title="eegdash.features.fit_feature_extractors"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit_feature_extractors</span></code></a>(concat_dataset, features)</p></td>
-<td><p></p></td>
+<td><p>Fit trainable feature extractors on a dataset.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#eegdash.features.complexity_approx_entropy" title="eegdash.features.complexity_approx_entropy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">complexity_approx_entropy</span></code></a>(counts_m, counts_mp1)</p></td>
 <td><p></p></td>
@@ -940,34 +940,34 @@
 <div class="pst-scrollable-table-container"><table class="autosummary longtable table">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#eegdash.features.FeaturesConcatDataset" title="eegdash.features.FeaturesConcatDataset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FeaturesConcatDataset</span></code></a>([list_of_ds, ...])</p></td>
-<td><p>A base class for concatenated datasets.</p></td>
+<td><p>A concatenated dataset of <cite>FeaturesDataset</cite> objects.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#eegdash.features.FeaturesDataset" title="eegdash.features.FeaturesDataset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FeaturesDataset</span></code></a>(features[, metadata, ...])</p></td>
-<td><p>Returns samples from a pandas DataFrame object along with a target.</p></td>
+<td><p>A dataset of features extracted from EEG windows.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#eegdash.features.FeatureKind" title="eegdash.features.FeatureKind"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FeatureKind</span></code></a>(feature_kind)</p></td>
-<td><p></p></td>
+<td><p>A decorator to specify the kind of a feature.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#eegdash.features.FeaturePredecessor" title="eegdash.features.FeaturePredecessor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FeaturePredecessor</span></code></a>(*parent_extractor_type)</p></td>
-<td><p></p></td>
+<td><p>A decorator to specify parent extractors for a feature function.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#eegdash.features.BivariateFeature" title="eegdash.features.BivariateFeature"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BivariateFeature</span></code></a>(*args[, channel_pair_format])</p></td>
-<td><p></p></td>
+<td><p>A feature kind for operations on pairs of channels.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#eegdash.features.DirectedBivariateFeature" title="eegdash.features.DirectedBivariateFeature"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DirectedBivariateFeature</span></code></a>(*args[, ...])</p></td>
-<td><p></p></td>
+<td><p>A feature kind for directed operations on pairs of channels.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#eegdash.features.FeatureExtractor" title="eegdash.features.FeatureExtractor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FeatureExtractor</span></code></a>(feature_extractors, ...)</p></td>
-<td><p></p></td>
+<td><p>A composite feature extractor that applies multiple feature functions.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#eegdash.features.MultivariateFeature" title="eegdash.features.MultivariateFeature"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MultivariateFeature</span></code></a>()</p></td>
-<td><p></p></td>
+<td><p>A mixin for features that operate on multiple channels.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#eegdash.features.TrainableFeature" title="eegdash.features.TrainableFeature"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TrainableFeature</span></code></a>()</p></td>
-<td><p></p></td>
+<td><p>Abstract base class for features that require training.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#eegdash.features.UnivariateFeature" title="eegdash.features.UnivariateFeature"><code class="xref py py-obj docutils literal notranslate"><span class="pre">UnivariateFeature</span></code></a>()</p></td>
-<td><p></p></td>
+<td><p>A feature kind for operations applied to each channel independently.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#eegdash.features.EntropyFeatureExtractor" title="eegdash.features.EntropyFeatureExtractor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">EntropyFeatureExtractor</span></code></a>(feature_extractors, ...)</p></td>
 <td><p></p></td>
@@ -995,116 +995,157 @@
 </div>
 <dl class="py class">
 <dt class="sig sig-object py" id="eegdash.features.FeaturesConcatDataset">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">eegdash.features.</span></span><span class="sig-name descname"><span class="pre">FeaturesConcatDataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">list_of_ds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="eegdash.features.datasets.html#eegdash.features.datasets.FeaturesDataset" title="eegdash.features.datasets.FeaturesDataset"><span class="pre">FeaturesDataset</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_transform</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/datasets.py#L112-L493"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.FeaturesConcatDataset" title="Link to this definition">#</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">eegdash.features.</span></span><span class="sig-name descname"><span class="pre">FeaturesConcatDataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">list_of_ds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="eegdash.features.datasets.html#eegdash.features.datasets.FeaturesDataset" title="eegdash.features.datasets.FeaturesDataset"><span class="pre">FeaturesDataset</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_transform</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/datasets.py#L156-L677"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.FeaturesConcatDataset" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseConcatDataset</span></code></p>
-<p>A base class for concatenated datasets.</p>
-<p>Holds either mne.Raw or mne.Epoch in self.datasets and has
-a pandas DataFrame with additional description.</p>
+<p>A concatenated dataset of <cite>FeaturesDataset</cite> objects.</p>
+<p>This class holds a list of <a class="reference internal" href="#eegdash.features.FeaturesDataset" title="eegdash.features.FeaturesDataset"><code class="xref py py-class docutils literal notranslate"><span class="pre">FeaturesDataset</span></code></a> instances and allows
+them to be treated as a single, larger dataset. It provides methods for</p>
+<p>splitting, saving, and performing DataFrame-like operations (e.g., <cite>mean</cite>,
+<cite>var</cite>, <cite>fillna</cite>) across all contained datasets.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>list_of_ds</strong> (<em>list</em>) – list of BaseDataset, BaseConcatDataset or WindowsDataset</p></li>
-<li><p><strong>target_transform</strong> (<em>callable</em><em> | </em><em>None</em>) – Optional function to call on targets before returning them.</p></li>
+<li><p><strong>list_of_ds</strong> (<em>list</em><em> of </em><a class="reference internal" href="#eegdash.features.FeaturesDataset" title="eegdash.features.FeaturesDataset"><em>FeaturesDataset</em></a>) – A list of <a class="reference internal" href="#eegdash.features.FeaturesDataset" title="eegdash.features.FeaturesDataset"><code class="xref py py-class docutils literal notranslate"><span class="pre">FeaturesDataset</span></code></a> objects to concatenate.</p></li>
+<li><p><strong>target_transform</strong> (<em>callable</em><em>, </em><em>optional</em>) – A function to apply to the target values before they are returned.</p></li>
 </ul>
 </dd>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="eegdash.features.FeaturesConcatDataset.count">
-<span class="sig-name descname"><span class="pre">count</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">numeric_only</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/datasets.py#L387-L394"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.FeaturesConcatDataset.count" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<span class="sig-name descname"><span class="pre">count</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">numeric_only</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Series</span></span></span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/datasets.py#L465-L487"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.FeaturesConcatDataset.count" title="Link to this definition">#</a></dt>
+<dd><p>Count non-NA cells for each feature column.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>numeric_only</strong> (<em>bool</em><em>, </em><em>default False</em>) – Include only float, int, boolean columns.</p></li>
+<li><p><strong>n_jobs</strong> (<em>int</em><em>, </em><em>default 1</em>) – Number of jobs to run in parallel.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The count of non-NA cells for each column.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pandas.Series</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="eegdash.features.FeaturesConcatDataset.drop">
-<span class="sig-name descname"><span class="pre">drop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/datasets.py#L484-L487"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.FeaturesConcatDataset.drop" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<span class="sig-name descname"><span class="pre">drop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/datasets.py#L656-L660"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.FeaturesConcatDataset.drop" title="Link to this definition">#</a></dt>
+<dd><p>Drop specified labels from rows or columns in-place. See <code class="xref py py-meth docutils literal notranslate"><span class="pre">pandas.DataFrame.drop()</span></code>.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="eegdash.features.FeaturesConcatDataset.dropna">
-<span class="sig-name descname"><span class="pre">dropna</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/datasets.py#L479-L482"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.FeaturesConcatDataset.dropna" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<span class="sig-name descname"><span class="pre">dropna</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/datasets.py#L650-L654"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.FeaturesConcatDataset.dropna" title="Link to this definition">#</a></dt>
+<dd><p>Remove missing values in-place. See <code class="xref py py-meth docutils literal notranslate"><span class="pre">pandas.DataFrame.dropna()</span></code>.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="eegdash.features.FeaturesConcatDataset.fillna">
-<span class="sig-name descname"><span class="pre">fillna</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/datasets.py#L464-L467"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.FeaturesConcatDataset.fillna" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<span class="sig-name descname"><span class="pre">fillna</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/datasets.py#L632-L636"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.FeaturesConcatDataset.fillna" title="Link to this definition">#</a></dt>
+<dd><p>Fill NA/NaN values in-place. See <code class="xref py py-meth docutils literal notranslate"><span class="pre">pandas.DataFrame.fillna()</span></code>.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="eegdash.features.FeaturesConcatDataset.get_metadata">
-<span class="sig-name descname"><span class="pre">get_metadata</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/datasets.py#L186-L210"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.FeaturesConcatDataset.get_metadata" title="Link to this definition">#</a></dt>
-<dd><p>Concatenate the metadata and description of the wrapped Epochs.</p>
+<span class="sig-name descname"><span class="pre">get_metadata</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/datasets.py#L235-L266"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.FeaturesConcatDataset.get_metadata" title="Link to this definition">#</a></dt>
+<dd><p>Get the metadata of all datasets as a single DataFrame.</p>
+<p>Concatenates the metadata from all contained datasets and adds columns
+from their <cite>description</cite> attributes.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>metadata</strong> – DataFrame containing as many rows as there are windows in the
-BaseConcatDataset, with the metadata and description information
-for each window.</p>
+<dd class="field-odd"><p>A DataFrame containing the metadata for every sample in the
+concatenated dataset.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>pd.DataFrame</p>
+<dd class="field-even"><p>pandas.DataFrame</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>TypeError</strong> – If any of the contained datasets is not a <a class="reference internal" href="#eegdash.features.FeaturesDataset" title="eegdash.features.FeaturesDataset"><code class="xref py py-class docutils literal notranslate"><span class="pre">FeaturesDataset</span></code></a>.</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="eegdash.features.FeaturesConcatDataset.interpolate">
-<span class="sig-name descname"><span class="pre">interpolate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/datasets.py#L474-L477"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.FeaturesConcatDataset.interpolate" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<span class="sig-name descname"><span class="pre">interpolate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/datasets.py#L644-L648"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.FeaturesConcatDataset.interpolate" title="Link to this definition">#</a></dt>
+<dd><p>Interpolate values in-place. See <code class="xref py py-meth docutils literal notranslate"><span class="pre">pandas.DataFrame.interpolate()</span></code>.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="eegdash.features.FeaturesConcatDataset.join">
-<span class="sig-name descname"><span class="pre">join</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">concat_dataset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="eegdash.features.datasets.html#eegdash.features.datasets.FeaturesConcatDataset" title="eegdash.features.datasets.FeaturesConcatDataset"><span class="pre">FeaturesConcatDataset</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/datasets.py#L489-L493"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.FeaturesConcatDataset.join" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="eegdash.features.FeaturesConcatDataset.mean">
-<span class="sig-name descname"><span class="pre">mean</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">numeric_only</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/datasets.py#L396-L406"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.FeaturesConcatDataset.mean" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="eegdash.features.FeaturesConcatDataset.replace">
-<span class="sig-name descname"><span class="pre">replace</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/datasets.py#L469-L472"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.FeaturesConcatDataset.replace" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="eegdash.features.FeaturesConcatDataset.save">
-<span class="sig-name descname"><span class="pre">save</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">offset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/datasets.py#L212-L301"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.FeaturesConcatDataset.save" title="Link to this definition">#</a></dt>
-<dd><p>Save datasets to files by creating one subdirectory for each dataset:
-path/</p>
-<blockquote>
-<div><dl class="simple">
-<dt>0/</dt><dd><p>0-feat.parquet
-metadata_df.pkl
-description.json
-raw-info.fif (if raw info was saved)
-raw_preproc_kwargs.json (if raws were preprocessed)
-window_kwargs.json (if this is a windowed dataset)
-window_preproc_kwargs.json  (if windows were preprocessed)
-features_kwargs.json</p>
-</dd>
-<dt>1/</dt><dd><p>1-feat.parquet
-metadata_df.pkl
-description.json
-raw-info.fif (if raw info was saved)
-raw_preproc_kwargs.json (if raws were preprocessed)
-window_kwargs.json (if this is a windowed dataset)
-window_preproc_kwargs.json  (if windows were preprocessed)
-features_kwargs.json</p>
-</dd>
-</dl>
-</div></blockquote>
+<span class="sig-name descname"><span class="pre">join</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">concat_dataset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="eegdash.features.datasets.html#eegdash.features.datasets.FeaturesConcatDataset" title="eegdash.features.datasets.FeaturesConcatDataset"><span class="pre">FeaturesConcatDataset</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/datasets.py#L662-L677"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.FeaturesConcatDataset.join" title="Link to this definition">#</a></dt>
+<dd><p>Join columns with other FeaturesConcatDataset in-place.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>path</strong> (<em>str</em>) – <dl class="simple">
-<dt>Directory in which subdirectories are created to store</dt><dd><p>-feat.parquet and .json files to.</p>
+<li><p><strong>concat_dataset</strong> (<a class="reference internal" href="#eegdash.features.FeaturesConcatDataset" title="eegdash.features.FeaturesConcatDataset"><em>FeaturesConcatDataset</em></a>) – The dataset to join with. Must have the same number of datasets,
+and each corresponding dataset must have the same length.</p></li>
+<li><p><strong>**kwargs</strong> – Keyword arguments to pass to <code class="xref py py-meth docutils literal notranslate"><span class="pre">pandas.DataFrame.join()</span></code>.</p></li>
+</ul>
 </dd>
 </dl>
-</p></li>
-<li><p><strong>overwrite</strong> (<em>bool</em>) – Whether to delete old subdirectories that will be saved to in this
-call.</p></li>
-<li><p><strong>offset</strong> (<em>int</em>) – If provided, the integer is added to the id of the dataset in the
-concat. This is useful in the setting of very large datasets, where
-one dataset has to be processed and saved at a time to account for
-its original position.</p></li>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eegdash.features.FeaturesConcatDataset.mean">
+<span class="sig-name descname"><span class="pre">mean</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">numeric_only</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Series</span></span></span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/datasets.py#L489-L514"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.FeaturesConcatDataset.mean" title="Link to this definition">#</a></dt>
+<dd><p>Compute the mean for each feature column.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>numeric_only</strong> (<em>bool</em><em>, </em><em>default False</em>) – Include only float, int, boolean columns.</p></li>
+<li><p><strong>n_jobs</strong> (<em>int</em><em>, </em><em>default 1</em>) – Number of jobs to run in parallel.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The mean of each column.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pandas.Series</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eegdash.features.FeaturesConcatDataset.replace">
+<span class="sig-name descname"><span class="pre">replace</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/datasets.py#L638-L642"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.FeaturesConcatDataset.replace" title="Link to this definition">#</a></dt>
+<dd><p>Replace values in-place. See <code class="xref py py-meth docutils literal notranslate"><span class="pre">pandas.DataFrame.replace()</span></code>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eegdash.features.FeaturesConcatDataset.save">
+<span class="sig-name descname"><span class="pre">save</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">offset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/datasets.py#L268-L342"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.FeaturesConcatDataset.save" title="Link to this definition">#</a></dt>
+<dd><p>Save the concatenated dataset to a directory.</p>
+<p>Creates a directory structure where each contained dataset is saved in
+its own numbered subdirectory.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">path</span><span class="o">/</span>
+    <span class="mi">0</span><span class="o">/</span>
+        <span class="mi">0</span><span class="o">-</span><span class="n">feat</span><span class="o">.</span><span class="n">parquet</span>
+        <span class="n">metadata_df</span><span class="o">.</span><span class="n">pkl</span>
+        <span class="n">description</span><span class="o">.</span><span class="n">json</span>
+        <span class="o">...</span>
+    <span class="mi">1</span><span class="o">/</span>
+        <span class="mi">1</span><span class="o">-</span><span class="n">feat</span><span class="o">.</span><span class="n">parquet</span>
+        <span class="o">...</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> (<em>str</em>) – The directory where the dataset will be saved.</p></li>
+<li><p><strong>overwrite</strong> (<em>bool</em><em>, </em><em>default False</em>) – If True, any existing subdirectories that conflict with the new
+ones will be removed.</p></li>
+<li><p><strong>offset</strong> (<em>int</em><em>, </em><em>default 0</em>) – An integer to add to the subdirectory names. Useful for saving
+datasets in chunks.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError</strong> – If the dataset is empty.</p></li>
+<li><p><strong>FileExistsError</strong> – If a subdirectory already exists and <cite>overwrite</cite> is False.</p></li>
 </ul>
 </dd>
 </dl>
@@ -1112,65 +1153,140 @@ its original position.</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="eegdash.features.FeaturesConcatDataset.split">
-<span class="sig-name descname"><span class="pre">split</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">by</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="eegdash.features.datasets.html#eegdash.features.datasets.FeaturesConcatDataset" title="eegdash.features.datasets.FeaturesConcatDataset"><span class="pre">FeaturesConcatDataset</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/datasets.py#L139-L184"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.FeaturesConcatDataset.split" title="Link to this definition">#</a></dt>
-<dd><p>Split the dataset based on information listed in its description.</p>
-<p>The format could be based on a DataFrame or based on indices.</p>
+<span class="sig-name descname"><span class="pre">split</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">by</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="eegdash.features.datasets.html#eegdash.features.datasets.FeaturesConcatDataset" title="eegdash.features.datasets.FeaturesConcatDataset"><span class="pre">FeaturesConcatDataset</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/datasets.py#L186-L233"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.FeaturesConcatDataset.split" title="Link to this definition">#</a></dt>
+<dd><p>Split the dataset into subsets.</p>
+<p>The splitting can be done based on a column in the description
+DataFrame or by providing explicit indices for each split.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>by</strong> (<em>str</em><em> | </em><em>list</em><em> | </em><em>dict</em>) – If <code class="docutils literal notranslate"><span class="pre">by</span></code> is a string, splitting is performed based on the
-description DataFrame column with this name.
-If <code class="docutils literal notranslate"><span class="pre">by</span></code> is a (list of) list of integers, the position in the first
-list corresponds to the split id and the integers to the
-datapoints of that split.
-If a dict then each key will be used in the returned
-splits dict and each value should be a list of int.</p>
+<dd class="field-odd"><p><strong>by</strong> (<em>str</em><em> or </em><em>list</em><em> or </em><em>dict</em>) – <ul class="simple">
+<li><p>If a string, splits are created for each unique value in the
+description column <cite>by</cite>.</p></li>
+<li><p>If a list of integers, a single split is created containing the
+datasets at the specified indices.</p></li>
+<li><p>If a list of lists of integers, multiple splits are created, one
+for each sublist of indices.</p></li>
+<li><p>If a dictionary, keys are used as split names and values are
+lists of dataset indices.</p></li>
+</ul>
+</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>splits</strong> – A dictionary with the name of the split (a string) as key and the
-dataset as value.</p>
+<dd class="field-even"><p>A dictionary where keys are split names and values are the new
+<a class="reference internal" href="#eegdash.features.FeaturesConcatDataset" title="eegdash.features.FeaturesConcatDataset"><code class="xref py py-class docutils literal notranslate"><span class="pre">FeaturesConcatDataset</span></code></a> subsets.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>dict</p>
+<dd class="field-odd"><p>dict[str, <a class="reference internal" href="#eegdash.features.FeaturesConcatDataset" title="eegdash.features.FeaturesConcatDataset">FeaturesConcatDataset</a>]</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="eegdash.features.FeaturesConcatDataset.std">
-<span class="sig-name descname"><span class="pre">std</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ddof</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">numeric_only</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/datasets.py#L428-L431"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.FeaturesConcatDataset.std" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<span class="sig-name descname"><span class="pre">std</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ddof</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">numeric_only</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Series</span></span></span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/datasets.py#L555-L580"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.FeaturesConcatDataset.std" title="Link to this definition">#</a></dt>
+<dd><p>Compute the standard deviation for each feature column.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ddof</strong> (<em>int</em><em>, </em><em>default 1</em>) – Delta Degrees of Freedom.</p></li>
+<li><p><strong>numeric_only</strong> (<em>bool</em><em>, </em><em>default False</em>) – Include only float, int, boolean columns.</p></li>
+<li><p><strong>eps</strong> (<em>float</em><em>, </em><em>default 0</em>) – A small epsilon value to add to the variance before taking the
+square root to avoid numerical instability.</p></li>
+<li><p><strong>n_jobs</strong> (<em>int</em><em>, </em><em>default 1</em>) – Number of jobs to run in parallel.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The standard deviation of each column.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pandas.Series</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="eegdash.features.FeaturesConcatDataset.to_dataframe">
-<span class="sig-name descname"><span class="pre">to_dataframe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">include_metadata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_target</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_crop_inds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/datasets.py#L332-L382"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.FeaturesConcatDataset.to_dataframe" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<span class="sig-name descname"><span class="pre">to_dataframe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">include_metadata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_target</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_crop_inds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/datasets.py#L390-L459"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.FeaturesConcatDataset.to_dataframe" title="Link to this definition">#</a></dt>
+<dd><p>Convert the dataset to a single pandas DataFrame.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>include_metadata</strong> (<em>bool</em><em> or </em><em>str</em><em> or </em><em>list</em><em> of </em><em>str</em><em>, </em><em>default False</em>) – If True, include all metadata columns. If a string or list of
+strings, include only the specified metadata columns.</p></li>
+<li><p><strong>include_target</strong> (<em>bool</em><em>, </em><em>default False</em>) – If True, include the ‘target’ column.</p></li>
+<li><p><strong>include_crop_inds</strong> (<em>bool</em><em>, </em><em>default False</em>) – If True, include window cropping index columns.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A DataFrame containing the features and requested metadata.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pandas.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="eegdash.features.FeaturesConcatDataset.var">
-<span class="sig-name descname"><span class="pre">var</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ddof</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">numeric_only</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/datasets.py#L408-L426"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.FeaturesConcatDataset.var" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<span class="sig-name descname"><span class="pre">var</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ddof</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">numeric_only</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Series</span></span></span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/datasets.py#L516-L553"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.FeaturesConcatDataset.var" title="Link to this definition">#</a></dt>
+<dd><p>Compute the variance for each feature column.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ddof</strong> (<em>int</em><em>, </em><em>default 1</em>) – Delta Degrees of Freedom. The divisor used in calculations is N - ddof.</p></li>
+<li><p><strong>numeric_only</strong> (<em>bool</em><em>, </em><em>default False</em>) – Include only float, int, boolean columns.</p></li>
+<li><p><strong>n_jobs</strong> (<em>int</em><em>, </em><em>default 1</em>) – Number of jobs to run in parallel.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The variance of each column.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pandas.Series</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="eegdash.features.FeaturesConcatDataset.zscore">
-<span class="sig-name descname"><span class="pre">zscore</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ddof</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">numeric_only</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/datasets.py#L433-L453"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.FeaturesConcatDataset.zscore" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<span class="sig-name descname"><span class="pre">zscore</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ddof</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">numeric_only</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/datasets.py#L582-L620"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.FeaturesConcatDataset.zscore" title="Link to this definition">#</a></dt>
+<dd><p>Apply z-score normalization to numeric columns in-place.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ddof</strong> (<em>int</em><em>, </em><em>default 1</em>) – Delta Degrees of Freedom for variance calculation.</p></li>
+<li><p><strong>numeric_only</strong> (<em>bool</em><em>, </em><em>default False</em>) – Include only float, int, boolean columns.</p></li>
+<li><p><strong>eps</strong> (<em>float</em><em>, </em><em>default 0</em>) – Epsilon for numerical stability.</p></li>
+<li><p><strong>n_jobs</strong> (<em>int</em><em>, </em><em>default 1</em>) – Number of jobs to run in parallel for statistics computation.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="eegdash.features.FeaturesDataset">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">eegdash.features.</span></span><span class="sig-name descname"><span class="pre">FeaturesDataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">features</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Series</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transform</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raw_info</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raw_preproc_kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">window_kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">window_preproc_kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">features_kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/datasets.py#L22-L79"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.FeaturesDataset" title="Link to this definition">#</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">eegdash.features.</span></span><span class="sig-name descname"><span class="pre">FeaturesDataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">features</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Series</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transform</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raw_info</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raw_preproc_kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">window_kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">window_preproc_kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">features_kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/datasets.py#L22-L115"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.FeaturesDataset" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">EEGWindowsDataset</span></code></p>
-<p>Returns samples from a pandas DataFrame object along with a target.</p>
-<p>Dataset which serves samples from a pandas DataFrame object along with a
-target. The target is unique for the dataset, and is obtained through the
-<cite>description</cite> attribute.</p>
+<p>A dataset of features extracted from EEG windows.</p>
+<p>This class holds features in a pandas DataFrame and provides an interface
+compatible with braindecode’s dataset structure. Each row in the feature
+DataFrame corresponds to a single sample (e.g., an EEG window).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>features</strong> (<em>a pandas DataFrame</em>) – Tabular data.</p></li>
-<li><p><strong>description</strong> (<em>dict</em><em> | </em><em>pandas.Series</em><em> | </em><em>None</em>) – Holds additional description about the continuous signal / subject.</p></li>
-<li><p><strong>transform</strong> (<em>callable</em><em> | </em><em>None</em>) – On-the-fly transform applied to the example before it is returned.</p></li>
+<li><p><strong>features</strong> (<em>pandas.DataFrame</em>) – A DataFrame where each row is a sample and each column is a feature.</p></li>
+<li><p><strong>metadata</strong> (<em>pandas.DataFrame</em><em>, </em><em>optional</em>) – A DataFrame containing metadata for each sample, indexed consistently
+with <cite>features</cite>. Must include columns ‘i_window_in_trial’,
+‘i_start_in_trial’, ‘i_stop_in_trial’, and ‘target’.</p></li>
+<li><p><strong>description</strong> (<em>dict</em><em> or </em><em>pandas.Series</em><em>, </em><em>optional</em>) – Additional high-level information about the dataset (e.g., subject ID).</p></li>
+<li><p><strong>transform</strong> (<em>callable</em><em>, </em><em>optional</em>) – A function or transform to apply to the feature data on-the-fly.</p></li>
+<li><p><strong>raw_info</strong> (<em>dict</em><em>, </em><em>optional</em>) – Information about the original raw recording, for provenance.</p></li>
+<li><p><strong>raw_preproc_kwargs</strong> (<em>dict</em><em>, </em><em>optional</em>) – Keyword arguments used for preprocessing the raw data.</p></li>
+<li><p><strong>window_kwargs</strong> (<em>dict</em><em>, </em><em>optional</em>) – Keyword arguments used for windowing the data.</p></li>
+<li><p><strong>window_preproc_kwargs</strong> (<em>dict</em><em>, </em><em>optional</em>) – Keyword arguments used for preprocessing the windowed data.</p></li>
+<li><p><strong>features_kwargs</strong> (<em>dict</em><em>, </em><em>optional</em>) – Keyword arguments used for feature extraction.</p></li>
 </ul>
 </dd>
 </dl>
@@ -1178,157 +1294,345 @@ target. The target is unique for the dataset, and is obtained through the
 
 <dl class="py class">
 <dt class="sig sig-object py" id="eegdash.features.FeatureKind">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">eegdash.features.</span></span><span class="sig-name descname"><span class="pre">FeatureKind</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">feature_kind</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="eegdash.features.extractors.html#eegdash.features.extractors.MultivariateFeature" title="eegdash.features.extractors.MultivariateFeature"><span class="pre">MultivariateFeature</span></a></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/decorators.py#L29-L36"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.FeatureKind" title="Link to this definition">#</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">eegdash.features.</span></span><span class="sig-name descname"><span class="pre">FeatureKind</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">feature_kind</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="eegdash.features.extractors.html#eegdash.features.extractors.MultivariateFeature" title="eegdash.features.extractors.MultivariateFeature"><span class="pre">MultivariateFeature</span></a></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/decorators.py#L58-L92"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.FeatureKind" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A decorator to specify the kind of a feature.</p>
+<p>This decorator attaches a “feature kind” (e.g., univariate, bivariate)
+to a feature extraction function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>feature_kind</strong> (<a class="reference internal" href="#eegdash.features.MultivariateFeature" title="eegdash.features.MultivariateFeature"><em>MultivariateFeature</em></a>) – An instance of a feature kind class, such as
+<a class="reference internal" href="eegdash.features.extractors.html#eegdash.features.extractors.UnivariateFeature" title="eegdash.features.extractors.UnivariateFeature"><code class="xref py py-class docutils literal notranslate"><span class="pre">UnivariateFeature</span></code></a> or
+<a class="reference internal" href="eegdash.features.extractors.html#eegdash.features.extractors.BivariateFeature" title="eegdash.features.extractors.BivariateFeature"><code class="xref py py-class docutils literal notranslate"><span class="pre">BivariateFeature</span></code></a>.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="eegdash.features.FeaturePredecessor">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">eegdash.features.</span></span><span class="sig-name descname"><span class="pre">FeaturePredecessor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">parent_extractor_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Type</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/decorators.py#L14-L26"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.FeaturePredecessor" title="Link to this definition">#</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">eegdash.features.</span></span><span class="sig-name descname"><span class="pre">FeaturePredecessor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">parent_extractor_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Type</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/decorators.py#L14-L55"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.FeaturePredecessor" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A decorator to specify parent extractors for a feature function.</p>
+<p>This decorator attaches a list of parent extractor types to a feature
+extraction function. This information can be used to build a dependency
+graph of features.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>*parent_extractor_type</strong> (<em>list</em><em> of </em><em>Type</em>) – A list of feature extractor classes (subclasses of
+<a class="reference internal" href="eegdash.features.extractors.html#eegdash.features.extractors.FeatureExtractor" title="eegdash.features.extractors.FeatureExtractor"><code class="xref py py-class docutils literal notranslate"><span class="pre">FeatureExtractor</span></code></a>) that this
+feature depends on.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="eegdash.features.bivariate_feature">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.</span></span><span class="sig-name descname"><span class="pre">bivariate_feature</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/decorators.py#L43-L48"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.bivariate_feature" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.</span></span><span class="sig-name descname"><span class="pre">bivariate_feature</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Callable</span></span></span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/decorators.py#L104-L128"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.bivariate_feature" title="Link to this definition">#</a></dt>
+<dd><p>Decorator to mark a feature as bivariate.</p>
+<p>This decorator specifies that the feature operates on pairs of channels.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>func</strong> (<em>callable</em>) – The feature extraction function to decorate.</p></li>
+<li><p><strong>directed</strong> (<em>bool</em><em>, </em><em>default False</em>) – If True, the feature is directed (e.g., connectivity from channel A
+to B is different from B to A). If False, the feature is undirected.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The decorated function with the appropriate bivariate feature kind
+attached.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>callable</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="eegdash.features.BivariateFeature">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">eegdash.features.</span></span><span class="sig-name descname"><span class="pre">BivariateFeature</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel_pair_format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'{}&lt;&gt;{}'</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/extractors.py#L187-L200"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.BivariateFeature" title="Link to this definition">#</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">eegdash.features.</span></span><span class="sig-name descname"><span class="pre">BivariateFeature</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel_pair_format</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'{}&lt;&gt;{}'</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/extractors.py#L318-L343"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.BivariateFeature" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="eegdash.features.extractors.html#eegdash.features.extractors.MultivariateFeature" title="eegdash.features.extractors.MultivariateFeature"><code class="xref py py-class docutils literal notranslate"><span class="pre">MultivariateFeature</span></code></a></p>
+<p>A feature kind for operations on pairs of channels.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>channel_pair_format</strong> (<em>str</em><em>, </em><em>default=&quot;{}&lt;&gt;{}&quot;</em>) – A format string used to create feature names from pairs of
+channel names.</p>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="eegdash.features.BivariateFeature.feature_channel_names">
-<span class="sig-name descname"><span class="pre">feature_channel_names</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ch_names</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/extractors.py#L196-L200"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.BivariateFeature.feature_channel_names" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<span class="sig-name descname"><span class="pre">feature_channel_names</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ch_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/extractors.py#L338-L343"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.BivariateFeature.feature_channel_names" title="Link to this definition">#</a></dt>
+<dd><p>Generate feature names for each pair of channels.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="eegdash.features.BivariateFeature.get_pair_iterators">
-<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_pair_iterators</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/extractors.py#L192-L194"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.BivariateFeature.get_pair_iterators" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_pair_iterators</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/extractors.py#L333-L336"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.BivariateFeature.get_pair_iterators" title="Link to this definition">#</a></dt>
+<dd><p>Get indices for unique, unordered pairs of channels.</p>
+</dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="eegdash.features.DirectedBivariateFeature">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">eegdash.features.</span></span><span class="sig-name descname"><span class="pre">DirectedBivariateFeature</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel_pair_format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'{}&lt;&gt;{}'</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/extractors.py#L203-L209"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.DirectedBivariateFeature" title="Link to this definition">#</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">eegdash.features.</span></span><span class="sig-name descname"><span class="pre">DirectedBivariateFeature</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel_pair_format</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'{}&lt;&gt;{}'</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/extractors.py#L346-L355"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.DirectedBivariateFeature" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="eegdash.features.extractors.html#eegdash.features.extractors.BivariateFeature" title="eegdash.features.extractors.BivariateFeature"><code class="xref py py-class docutils literal notranslate"><span class="pre">BivariateFeature</span></code></a></p>
+<p>A feature kind for directed operations on pairs of channels.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="eegdash.features.DirectedBivariateFeature.get_pair_iterators">
-<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_pair_iterators</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/extractors.py#L204-L209"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.DirectedBivariateFeature.get_pair_iterators" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_pair_iterators</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/extractors.py#L349-L355"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.DirectedBivariateFeature.get_pair_iterators" title="Link to this definition">#</a></dt>
+<dd><p>Get indices for all ordered pairs of channels (excluding self-pairs).</p>
+</dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="eegdash.features.FeatureExtractor">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">eegdash.features.</span></span><span class="sig-name descname"><span class="pre">FeatureExtractor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">feature_extractors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Callable</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">preprocess_kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/extractors.py#L42-L151"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.FeatureExtractor" title="Link to this definition">#</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">eegdash.features.</span></span><span class="sig-name descname"><span class="pre">FeatureExtractor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">feature_extractors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Callable</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">preprocess_kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/extractors.py#L82-L240"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.FeatureExtractor" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="eegdash.features.extractors.html#eegdash.features.extractors.TrainableFeature" title="eegdash.features.extractors.TrainableFeature"><code class="xref py py-class docutils literal notranslate"><span class="pre">TrainableFeature</span></code></a></p>
+<p>A composite feature extractor that applies multiple feature functions.</p>
+<p>This class orchestrates the application of a dictionary of feature
+extraction functions to input data. It can handle nested extractors,
+pre-processing, and trainable features.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>feature_extractors</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>callable</em><em>]</em>) – A dictionary where keys are feature names and values are the feature
+extraction functions or other <cite>FeatureExtractor</cite> instances.</p></li>
+<li><p><strong>**preprocess_kwargs</strong> – Keyword arguments to be passed to the <cite>preprocess</cite> method.</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="eegdash.features.FeatureExtractor.clear">
-<span class="sig-name descname"><span class="pre">clear</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/extractors.py#L127-L133"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.FeatureExtractor.clear" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<span class="sig-name descname"><span class="pre">clear</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/extractors.py#L214-L220"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.FeatureExtractor.clear" title="Link to this definition">#</a></dt>
+<dd><p>Clear the state of all trainable sub-features.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="eegdash.features.FeatureExtractor.fit">
-<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/extractors.py#L144-L151"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.FeatureExtractor.fit" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/extractors.py#L233-L240"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.FeatureExtractor.fit" title="Link to this definition">#</a></dt>
+<dd><p>Fit all trainable sub-features.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="eegdash.features.FeatureExtractor.partial_fit">
-<span class="sig-name descname"><span class="pre">partial_fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/extractors.py#L135-L142"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.FeatureExtractor.partial_fit" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<span class="sig-name descname"><span class="pre">partial_fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/extractors.py#L222-L231"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.FeatureExtractor.partial_fit" title="Link to this definition">#</a></dt>
+<dd><p>Partially fit all trainable sub-features.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="eegdash.features.FeatureExtractor.preprocess">
-<span class="sig-name descname"><span class="pre">preprocess</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/extractors.py#L86-L87"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.FeatureExtractor.preprocess" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<span class="sig-name descname"><span class="pre">preprocess</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/extractors.py#L143-L159"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.FeatureExtractor.preprocess" title="Link to this definition">#</a></dt>
+<dd><p>Apply pre-processing to the input data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>*x</strong> (<em>tuple</em>) – Input data.</p></li>
+<li><p><strong>**kwargs</strong> – Additional keyword arguments.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The pre-processed data.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="eegdash.features.MultivariateFeature">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">eegdash.features.</span></span><span class="sig-name descname"><span class="pre">MultivariateFeature</span></span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/extractors.py#L154-L179"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.MultivariateFeature" title="Link to this definition">#</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">eegdash.features.</span></span><span class="sig-name descname"><span class="pre">MultivariateFeature</span></span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/extractors.py#L243-L307"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.MultivariateFeature" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A mixin for features that operate on multiple channels.</p>
+<p>This class provides a <cite>__call__</cite> method that converts a feature array into
+a dictionary with named features, where names are derived from channel
+names.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="eegdash.features.MultivariateFeature.feature_channel_names">
-<span class="sig-name descname"><span class="pre">feature_channel_names</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ch_names</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/extractors.py#L178-L179"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.MultivariateFeature.feature_channel_names" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<span class="sig-name descname"><span class="pre">feature_channel_names</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ch_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/extractors.py#L293-L307"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.MultivariateFeature.feature_channel_names" title="Link to this definition">#</a></dt>
+<dd><p>Generate feature names based on channel names.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ch_names</strong> (<em>list</em><em> of </em><em>str</em>) – The names of the input channels.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The names for the output features.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of str</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="eegdash.features.TrainableFeature">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">eegdash.features.</span></span><span class="sig-name descname"><span class="pre">TrainableFeature</span></span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/extractors.py#L19-L39"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.TrainableFeature" title="Link to this definition">#</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">eegdash.features.</span></span><span class="sig-name descname"><span class="pre">TrainableFeature</span></span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/extractors.py#L35-L79"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.TrainableFeature" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></p>
+<p>Abstract base class for features that require training.</p>
+<p>This ABC defines the interface for feature extractors that need to be
+fitted on data before they can be used. It includes methods for fitting
+the feature extractor and for resetting its state.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="eegdash.features.TrainableFeature.clear">
-<em class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">clear</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/extractors.py#L24-L26"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.TrainableFeature.clear" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<em class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">clear</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/extractors.py#L47-L50"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.TrainableFeature.clear" title="Link to this definition">#</a></dt>
+<dd><p>Reset the internal state of the feature extractor.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="eegdash.features.TrainableFeature.fit">
-<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/extractors.py#L32-L33"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.TrainableFeature.fit" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/extractors.py#L66-L72"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.TrainableFeature.fit" title="Link to this definition">#</a></dt>
+<dd><p>Finalize the training of the feature extractor.</p>
+<p>This method should be called after all data has been seen via
+<cite>partial_fit</cite>. It marks the feature as fitted.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="eegdash.features.TrainableFeature.partial_fit">
-<em class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">partial_fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/extractors.py#L28-L30"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.TrainableFeature.partial_fit" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<em class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">partial_fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/extractors.py#L52-L64"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.TrainableFeature.partial_fit" title="Link to this definition">#</a></dt>
+<dd><p>Update the feature extractor’s state with a batch of data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>*x</strong> (<em>tuple</em>) – The input data for fitting.</p></li>
+<li><p><strong>y</strong> (<em>any</em><em>, </em><em>optional</em>) – The target data, if required for supervised training.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="eegdash.features.UnivariateFeature">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">eegdash.features.</span></span><span class="sig-name descname"><span class="pre">UnivariateFeature</span></span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/extractors.py#L182-L184"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.UnivariateFeature" title="Link to this definition">#</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">eegdash.features.</span></span><span class="sig-name descname"><span class="pre">UnivariateFeature</span></span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/extractors.py#L310-L315"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.UnivariateFeature" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="eegdash.features.extractors.html#eegdash.features.extractors.MultivariateFeature" title="eegdash.features.extractors.MultivariateFeature"><code class="xref py py-class docutils literal notranslate"><span class="pre">MultivariateFeature</span></code></a></p>
+<p>A feature kind for operations applied to each channel independently.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="eegdash.features.UnivariateFeature.feature_channel_names">
-<span class="sig-name descname"><span class="pre">feature_channel_names</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ch_names</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/extractors.py#L183-L184"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.UnivariateFeature.feature_channel_names" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<span class="sig-name descname"><span class="pre">feature_channel_names</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ch_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/extractors.py#L313-L315"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.UnivariateFeature.feature_channel_names" title="Link to this definition">#</a></dt>
+<dd><p>Return the channel names themselves as feature names.</p>
+</dd></dl>
 
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="eegdash.features.get_all_feature_extractors">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.</span></span><span class="sig-name descname"><span class="pre">get_all_feature_extractors</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/inspect.py#L34-L41"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.get_all_feature_extractors" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.</span></span><span class="sig-name descname"><span class="pre">get_all_feature_extractors</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">type</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="eegdash.features.extractors.html#eegdash.features.extractors.FeatureExtractor" title="eegdash.features.extractors.FeatureExtractor"><span class="pre">FeatureExtractor</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/inspect.py#L82-L102"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.get_all_feature_extractors" title="Link to this definition">#</a></dt>
+<dd><p>Get a list of all available <cite>FeatureExtractor</cite> classes.</p>
+<p>Scans the <cite>eegdash.features.feature_bank</cite> module for all classes that
+subclass <a class="reference internal" href="eegdash.features.extractors.html#eegdash.features.extractors.FeatureExtractor" title="eegdash.features.extractors.FeatureExtractor"><code class="xref py py-class docutils literal notranslate"><span class="pre">FeatureExtractor</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A list of (name, class) tuples for all discovered feature extractors,
+including the base <cite>FeatureExtractor</cite> itself.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list[tuple[str, type[<a class="reference internal" href="#eegdash.features.FeatureExtractor" title="eegdash.features.FeatureExtractor">FeatureExtractor</a>]]]</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="eegdash.features.get_all_feature_kinds">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.</span></span><span class="sig-name descname"><span class="pre">get_all_feature_kinds</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/inspect.py#L44-L48"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.get_all_feature_kinds" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.</span></span><span class="sig-name descname"><span class="pre">get_all_feature_kinds</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">type</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="eegdash.features.extractors.html#eegdash.features.extractors.MultivariateFeature" title="eegdash.features.extractors.MultivariateFeature"><span class="pre">MultivariateFeature</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/inspect.py#L105-L121"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.get_all_feature_kinds" title="Link to this definition">#</a></dt>
+<dd><p>Get a list of all available feature ‘kind’ classes.</p>
+<p>Scans the <cite>eegdash.features.extractors</cite> module for all classes that
+subclass <a class="reference internal" href="eegdash.features.extractors.html#eegdash.features.extractors.MultivariateFeature" title="eegdash.features.extractors.MultivariateFeature"><code class="xref py py-class docutils literal notranslate"><span class="pre">MultivariateFeature</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A list of (name, class) tuples for all discovered feature kinds.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list[tuple[str, type[<a class="reference internal" href="#eegdash.features.MultivariateFeature" title="eegdash.features.MultivariateFeature">MultivariateFeature</a>]]]</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="eegdash.features.get_all_features">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.</span></span><span class="sig-name descname"><span class="pre">get_all_features</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/inspect.py#L27-L31"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.get_all_features" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.</span></span><span class="sig-name descname"><span class="pre">get_all_features</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Callable</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/inspect.py#L63-L79"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.get_all_features" title="Link to this definition">#</a></dt>
+<dd><p>Get a list of all available feature functions.</p>
+<p>Scans the <cite>eegdash.features.feature_bank</cite> module for functions that have
+been decorated to have a <cite>feature_kind</cite> attribute.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A list of (name, function) tuples for all discovered features.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list[tuple[str, callable]]</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="eegdash.features.get_feature_kind">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.</span></span><span class="sig-name descname"><span class="pre">get_feature_kind</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">feature</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/inspect.py#L23-L24"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.get_feature_kind" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.</span></span><span class="sig-name descname"><span class="pre">get_feature_kind</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">feature</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="eegdash.features.extractors.html#eegdash.features.extractors.MultivariateFeature" title="eegdash.features.extractors.MultivariateFeature"><span class="pre">MultivariateFeature</span></a></span></span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/inspect.py#L43-L60"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.get_feature_kind" title="Link to this definition">#</a></dt>
+<dd><p>Get the ‘kind’ of a feature function.</p>
+<p>The feature kind (e.g., univariate, bivariate) is typically attached by a
+decorator.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>feature</strong> (<em>callable</em>) – The feature function to inspect.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>An instance of the feature kind (e.g., <cite>UnivariateFeature()</cite>).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#eegdash.features.MultivariateFeature" title="eegdash.features.MultivariateFeature">MultivariateFeature</a></p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="eegdash.features.get_feature_predecessors">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.</span></span><span class="sig-name descname"><span class="pre">get_feature_predecessors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">feature_or_extractor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/inspect.py#L8-L20"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.get_feature_predecessors" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.</span></span><span class="sig-name descname"><span class="pre">get_feature_predecessors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">feature_or_extractor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/inspect.py#L8-L40"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.get_feature_predecessors" title="Link to this definition">#</a></dt>
+<dd><p>Get the dependency hierarchy for a feature or feature extractor.</p>
+<p>This function recursively traverses the <cite>parent_extractor_type</cite> attribute
+of a feature or extractor to build a list representing its dependency
+lineage.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>feature_or_extractor</strong> (<em>callable</em>) – The feature function or <a class="reference internal" href="#eegdash.features.FeatureExtractor" title="eegdash.features.FeatureExtractor"><code class="xref py py-class docutils literal notranslate"><span class="pre">FeatureExtractor</span></code></a> class to inspect.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A nested list representing the dependency tree. For a simple linear
+chain, this will be a flat list from the specific feature up to the
+base <cite>FeatureExtractor</cite>. For multiple dependencies, it will contain
+tuples of sub-dependencies.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="eegdash.features.load_features_concat_dataset">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.</span></span><span class="sig-name descname"><span class="pre">load_features_concat_dataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ids_to_load</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/serialization.py#L19-L51"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.load_features_concat_dataset" title="Link to this definition">#</a></dt>
-<dd><p>Load a stored features dataset from files.</p>
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.</span></span><span class="sig-name descname"><span class="pre">load_features_concat_dataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ids_to_load</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="eegdash.features.datasets.html#eegdash.features.datasets.FeaturesConcatDataset" title="eegdash.features.datasets.FeaturesConcatDataset"><span class="pre">FeaturesConcatDataset</span></a></span></span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/serialization.py#L20-L58"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.load_features_concat_dataset" title="Link to this definition">#</a></dt>
+<dd><p>Load a stored <cite>FeaturesConcatDataset</cite> from a directory.</p>
+<p>This function reconstructs a <a class="reference internal" href="#eegdash.features.FeaturesConcatDataset" title="eegdash.features.FeaturesConcatDataset"><code class="xref py py-class docutils literal notranslate"><span class="pre">FeaturesConcatDataset</span></code></a> by loading
+individual <a class="reference internal" href="#eegdash.features.FeaturesDataset" title="eegdash.features.FeaturesDataset"><code class="xref py py-class docutils literal notranslate"><span class="pre">FeaturesDataset</span></code></a> instances from subdirectories within
+the given path. It uses joblib for parallel loading.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>path</strong> (<em>str</em><em> | </em><em>pathlib.Path</em>) – Path to the directory of the .fif / -epo.fif and .json files.</p></li>
-<li><p><strong>ids_to_load</strong> (<em>list</em><em> of </em><em>int</em><em> | </em><em>None</em>) – Ids of specific files to load.</p></li>
-<li><p><strong>n_jobs</strong> (<em>int</em>) – Number of jobs to be used to read files in parallel.</p></li>
+<li><p><strong>path</strong> (<em>str</em><em> or </em><em>pathlib.Path</em>) – The path to the directory where the dataset was saved. This directory
+should contain subdirectories (e.g., “0”, “1”, “2”, …) for each
+individual dataset.</p></li>
+<li><p><strong>ids_to_load</strong> (<em>list</em><em> of </em><em>int</em><em>, </em><em>optional</em>) – A list of specific dataset IDs (subdirectory names) to load. If None,
+all subdirectories in the path will be loaded.</p></li>
+<li><p><strong>n_jobs</strong> (<em>int</em><em>, </em><em>default 1</em>) – The number of jobs to use for parallel loading. -1 means using all
+processors.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>concat_dataset</strong> – A concatenation of multiple eegdash.features.datasets.FeaturesDataset
-instances loaded from the given directory.</p>
+<dd class="field-even"><p>A concatenated dataset containing the loaded <cite>FeaturesDataset</cite> instances.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="eegdash.features.datasets.html#eegdash.features.datasets.FeaturesConcatDataset" title="eegdash.features.datasets.FeaturesConcatDataset">eegdash.features.datasets.FeaturesConcatDataset</a></p>
@@ -1338,13 +1642,56 @@ instances loaded from the given directory.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="eegdash.features.extract_features">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.</span></span><span class="sig-name descname"><span class="pre">extract_features</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">concat_dataset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">BaseConcatDataset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">features</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="eegdash.features.extractors.html#eegdash.features.extractors.FeatureExtractor" title="eegdash.features.extractors.FeatureExtractor"><span class="pre">FeatureExtractor</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Callable</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Callable</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">512</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/utils.py#L70-L93"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.extract_features" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.</span></span><span class="sig-name descname"><span class="pre">extract_features</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">concat_dataset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">BaseConcatDataset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">features</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="eegdash.features.extractors.html#eegdash.features.extractors.FeatureExtractor" title="eegdash.features.extractors.FeatureExtractor"><span class="pre">FeatureExtractor</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Callable</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Callable</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">512</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="eegdash.features.datasets.html#eegdash.features.datasets.FeaturesConcatDataset" title="eegdash.features.datasets.FeaturesConcatDataset"><span class="pre">FeaturesConcatDataset</span></a></span></span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/utils.py#L89-L139"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.extract_features" title="Link to this definition">#</a></dt>
+<dd><p>Extract features from a concatenated dataset of windows.</p>
+<p>This function applies a feature extractor to each <cite>WindowsDataset</cite> within a
+<cite>BaseConcatDataset</cite> in parallel and returns a <cite>FeaturesConcatDataset</cite>
+with the results.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>concat_dataset</strong> (<em>BaseConcatDataset</em>) – A concatenated dataset of <cite>WindowsDataset</cite> or <cite>EEGWindowsDataset</cite>
+instances.</p></li>
+<li><p><strong>features</strong> (<a class="reference internal" href="#eegdash.features.FeatureExtractor" title="eegdash.features.FeatureExtractor"><em>FeatureExtractor</em></a><em> or </em><em>dict</em><em> or </em><em>list</em>) – The feature extractor(s) to apply. Can be a <cite>FeatureExtractor</cite>
+instance, a dictionary of named feature functions, or a list of
+feature functions.</p></li>
+<li><p><strong>batch_size</strong> (<em>int</em><em>, </em><em>default 512</em>) – The size of batches to use for feature extraction.</p></li>
+<li><p><strong>n_jobs</strong> (<em>int</em><em>, </em><em>default 1</em>) – The number of parallel jobs to use for extracting features from the
+datasets.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A new concatenated dataset containing the extracted features.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#eegdash.features.FeaturesConcatDataset" title="eegdash.features.FeaturesConcatDataset">FeaturesConcatDataset</a></p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="eegdash.features.fit_feature_extractors">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.</span></span><span class="sig-name descname"><span class="pre">fit_feature_extractors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">concat_dataset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">BaseConcatDataset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">features</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="eegdash.features.extractors.html#eegdash.features.extractors.FeatureExtractor" title="eegdash.features.extractors.FeatureExtractor"><span class="pre">FeatureExtractor</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Callable</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Callable</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">8192</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/utils.py#L96-L116"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.fit_feature_extractors" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.</span></span><span class="sig-name descname"><span class="pre">fit_feature_extractors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">concat_dataset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">BaseConcatDataset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">features</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="eegdash.features.extractors.html#eegdash.features.extractors.FeatureExtractor" title="eegdash.features.extractors.FeatureExtractor"><span class="pre">FeatureExtractor</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Callable</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Callable</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">8192</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="eegdash.features.extractors.html#eegdash.features.extractors.FeatureExtractor" title="eegdash.features.extractors.FeatureExtractor"><span class="pre">FeatureExtractor</span></a></span></span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/utils.py#L142-L183"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.fit_feature_extractors" title="Link to this definition">#</a></dt>
+<dd><p>Fit trainable feature extractors on a dataset.</p>
+<p>If the provided feature extractor (or any of its sub-extractors) is
+trainable (i.e., subclasses <cite>TrainableFeature</cite>), this function iterates
+through the dataset to fit it.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>concat_dataset</strong> (<em>BaseConcatDataset</em>) – The dataset to use for fitting the feature extractors.</p></li>
+<li><p><strong>features</strong> (<a class="reference internal" href="#eegdash.features.FeatureExtractor" title="eegdash.features.FeatureExtractor"><em>FeatureExtractor</em></a><em> or </em><em>dict</em><em> or </em><em>list</em>) – The feature extractor(s) to fit.</p></li>
+<li><p><strong>batch_size</strong> (<em>int</em><em>, </em><em>default 8192</em>) – The batch size to use when iterating through the dataset for fitting.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The fitted feature extractor.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#eegdash.features.FeatureExtractor" title="eegdash.features.FeatureExtractor">FeatureExtractor</a></p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="eegdash.features.EntropyFeatureExtractor">
@@ -1358,7 +1705,22 @@ instances loaded from the given directory.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="eegdash.features.EntropyFeatureExtractor.preprocess">
 <span class="sig-name descname"><span class="pre">preprocess</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">m</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">l</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/feature_bank/complexity.py#L34-L41"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.EntropyFeatureExtractor.preprocess" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Apply pre-processing to the input data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>*x</strong> (<em>tuple</em>) – Input data.</p></li>
+<li><p><strong>**kwargs</strong> – Additional keyword arguments.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The pre-processed data.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
@@ -1389,7 +1751,22 @@ instances loaded from the given directory.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="eegdash.features.CoherenceFeatureExtractor.preprocess">
 <span class="sig-name descname"><span class="pre">preprocess</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/feature_bank/connectivity.py#L19-L35"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.CoherenceFeatureExtractor.preprocess" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Apply pre-processing to the input data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>*x</strong> (<em>tuple</em>) – Input data.</p></li>
+<li><p><strong>**kwargs</strong> – Additional keyword arguments.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The pre-processed data.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
@@ -1415,7 +1792,8 @@ instances loaded from the given directory.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="eegdash.features.CommonSpatialPattern.clear">
 <span class="sig-name descname"><span class="pre">clear</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/feature_bank/csp.py#L29-L36"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.CommonSpatialPattern.clear" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Reset the internal state of the feature extractor.</p>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="eegdash.features.CommonSpatialPattern.feature_kind">
@@ -1425,12 +1803,24 @@ instances loaded from the given directory.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="eegdash.features.CommonSpatialPattern.fit">
 <span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/feature_bank/csp.py#L72-L84"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.CommonSpatialPattern.fit" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Finalize the training of the feature extractor.</p>
+<p>This method should be called after all data has been seen via
+<cite>partial_fit</cite>. It marks the feature as fitted.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="eegdash.features.CommonSpatialPattern.partial_fit">
 <span class="sig-name descname"><span class="pre">partial_fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/feature_bank/csp.py#L60-L66"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.CommonSpatialPattern.partial_fit" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Update the feature extractor’s state with a batch of data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>*x</strong> (<em>tuple</em>) – The input data for fitting.</p></li>
+<li><p><strong>y</strong> (<em>any</em><em>, </em><em>optional</em>) – The target data, if required for supervised training.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="eegdash.features.CommonSpatialPattern.transform_input">
@@ -1476,7 +1866,22 @@ instances loaded from the given directory.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="eegdash.features.HilbertFeatureExtractor.preprocess">
 <span class="sig-name descname"><span class="pre">preprocess</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/feature_bank/signal.py#L30-L31"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.HilbertFeatureExtractor.preprocess" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Apply pre-processing to the input data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>*x</strong> (<em>tuple</em>) – Input data.</p></li>
+<li><p><strong>**kwargs</strong> – Additional keyword arguments.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The pre-processed data.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
@@ -1557,7 +1962,22 @@ instances loaded from the given directory.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="eegdash.features.SpectralFeatureExtractor.preprocess">
 <span class="sig-name descname"><span class="pre">preprocess</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/feature_bank/spectral.py#L26-L36"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.SpectralFeatureExtractor.preprocess" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Apply pre-processing to the input data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>*x</strong> (<em>tuple</em>) – Input data.</p></li>
+<li><p><strong>**kwargs</strong> – Additional keyword arguments.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The pre-processed data.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
@@ -1573,7 +1993,22 @@ instances loaded from the given directory.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="eegdash.features.NormalizedSpectralFeatureExtractor.preprocess">
 <span class="sig-name descname"><span class="pre">preprocess</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/feature_bank/spectral.py#L41-L42"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.NormalizedSpectralFeatureExtractor.preprocess" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Apply pre-processing to the input data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>*x</strong> (<em>tuple</em>) – Input data.</p></li>
+<li><p><strong>**kwargs</strong> – Additional keyword arguments.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The pre-processed data.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
@@ -1589,7 +2024,22 @@ instances loaded from the given directory.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="eegdash.features.DBSpectralFeatureExtractor.preprocess">
 <span class="sig-name descname"><span class="pre">preprocess</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-15</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/feature_bank/spectral.py#L47-L48"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.DBSpectralFeatureExtractor.preprocess" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Apply pre-processing to the input data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>*x</strong> (<em>tuple</em>) – Input data.</p></li>
+<li><p><strong>**kwargs</strong> – Additional keyword arguments.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The pre-processed data.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 

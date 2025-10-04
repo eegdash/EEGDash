@@ -42,7 +42,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css" />
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/select/1.7.0/css/select.dataTables.min.css" />
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/searchpanes/2.3.1/css/searchPanes.dataTables.min.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=5aa56fc9" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=5cbbfa43" />
   
   <!-- So that users can add custom icons -->
   <script src="../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
@@ -147,8 +147,8 @@
       
     
     
-    <img src="../../_static/eegdash_long.png" class="logo__image only-light" alt="EEG Dash Logo"/>
-    <img src="../../_static/eegdash_long.png" class="logo__image only-dark pst-js-only" alt="EEG Dash Logo"/>
+    <img src="../../_static/eegdash_long_white.svg" class="logo__image only-light" alt="EEG Dash Logo"/>
+    <img src="../../_static/eegdash_long_dark.svg" class="logo__image only-dark pst-js-only" alt="EEG Dash Logo"/>
   
   
 </a></div>
@@ -23920,26 +23920,47 @@ Must not contain the key <code class="docutils literal notranslate"><span class=
 
 <dl class="py class">
 <dt class="sig sig-object py">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">eegdash.dataset.</span></span><span class="sig-name descname"><span class="pre">EEGChallengeDataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">release</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cache_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mini</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">query</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s3_bucket</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'s3://nmdatasets/NeurIPS25'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/dataset/dataset.py#L14-L157"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">eegdash.dataset.</span></span><span class="sig-name descname"><span class="pre">EEGChallengeDataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">release</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cache_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mini</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">query</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s3_bucket</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'s3://nmdatasets/NeurIPS25'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/dataset/dataset.py#L14-L179"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Bases: <a class="reference internal" href="../generated/api-core/eegdash.api.html#eegdash.api.EEGDashDataset" title="eegdash.api.EEGDashDataset"><code class="xref py py-class docutils literal notranslate"><span class="pre">EEGDashDataset</span></code></a></p>
-<p>EEG 2025 Challenge dataset helper.</p>
-<p>This class provides a convenient wrapper around <code class="xref py py-class docutils literal notranslate"><span class="pre">EEGDashDataset</span></code>
-configured for the EEG 2025 Challenge releases. It maps a given
-<code class="docutils literal notranslate"><span class="pre">release</span></code> to its corresponding OpenNeuro dataset and optionally restricts
-to the official “mini” subject subset.</p>
+<p>A dataset helper for the EEG 2025 Challenge.</p>
+<p>This class simplifies access to the EEG 2025 Challenge datasets. It is a
+specialized version of <a class="reference internal" href="../generated/api-core/eegdash.api.html#eegdash.api.EEGDashDataset" title="eegdash.api.EEGDashDataset"><code class="xref py py-class docutils literal notranslate"><span class="pre">EEGDashDataset</span></code></a> that is
+pre-configured for the challenge’s data releases. It automatically maps a
+release name (e.g., “R1”) to the corresponding OpenNeuro dataset and handles
+the selection of subject subsets (e.g., “mini” release).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>release</strong> (<em>str</em>) – Release name. One of [“R1”, …, “R11”].</p></li>
-<li><p><strong>cache_dir</strong> (<em>str</em><em> | </em><em>Path</em>) – Directory where data are cached locally.</p></li>
-<li><p><strong>mini</strong> (<em>bool</em><em>, </em><em>default True</em>) – If True, restrict subjects to the challenge mini subset.</p></li>
-<li><p><strong>query</strong> (<em>dict</em><em> | </em><em>None</em>) – Additional MongoDB-style filters to AND with the release selection.
-Must not contain the key <code class="docutils literal notranslate"><span class="pre">dataset</span></code>.</p></li>
-<li><p><strong>s3_bucket</strong> (<em>str</em><em> | </em><em>None</em><em>, </em><em>default &quot;s3://nmdatasets/NeurIPS25&quot;</em>) – Base S3 bucket used to locate the challenge data.</p></li>
-<li><p><strong>**kwargs</strong> – Passed through to <code class="xref py py-class docutils literal notranslate"><span class="pre">EEGDashDataset</span></code>.</p></li>
+<li><p><strong>release</strong> (<em>str</em>) – The name of the challenge release to load. Must be one of the keys in
+<a class="reference internal" href="../generated/api-core/eegdash.const.html#eegdash.const.RELEASE_TO_OPENNEURO_DATASET_MAP" title="eegdash.const.RELEASE_TO_OPENNEURO_DATASET_MAP"><code class="xref py py-const docutils literal notranslate"><span class="pre">RELEASE_TO_OPENNEURO_DATASET_MAP</span></code></a>
+(e.g., “R1”, “R2”, …, “R11”).</p></li>
+<li><p><strong>cache_dir</strong> (<em>str</em>) – The local directory where the dataset will be downloaded and cached.</p></li>
+<li><p><strong>mini</strong> (<em>bool</em><em>, </em><em>default True</em>) – If True, the dataset is restricted to the official “mini” subset of
+subjects for the specified release. If False, all subjects for the
+release are included.</p></li>
+<li><p><strong>query</strong> (<em>dict</em><em>, </em><em>optional</em>) – An additional MongoDB-style query to apply as a filter. This query is
+combined with the release and subject filters using a logical AND.
+The query must not contain the <code class="docutils literal notranslate"><span class="pre">dataset</span></code> key, as this is determined
+by the <code class="docutils literal notranslate"><span class="pre">release</span></code> parameter.</p></li>
+<li><p><strong>s3_bucket</strong> (<em>str</em><em>, </em><em>optional</em>) – The base S3 bucket URI where the challenge data is stored. Defaults to
+the official challenge bucket.</p></li>
+<li><p><strong>**kwargs</strong> – Additional keyword arguments that are passed directly to the
+<a class="reference internal" href="../generated/api-core/eegdash.api.html#eegdash.api.EEGDashDataset" title="eegdash.api.EEGDashDataset"><code class="xref py py-class docutils literal notranslate"><span class="pre">EEGDashDataset</span></code></a> constructor.</p></li>
 </ul>
 </dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If the specified <code class="docutils literal notranslate"><span class="pre">release</span></code> is unknown, or if the <code class="docutils literal notranslate"><span class="pre">query</span></code> argument
+contains a <code class="docutils literal notranslate"><span class="pre">dataset</span></code> key. Also raised if <code class="docutils literal notranslate"><span class="pre">mini</span></code> is True and a
+requested subject is not part of the official mini-release subset.</p>
+</dd>
 </dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">EEGDashDataset</span></code></dt><dd><p>The base class for creating datasets from queries.</p>
+</dd>
+</dl>
+</div>
 <p class="rubric">Examples</p>
 <p>Basic usage with dataset and subject filtering:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">eegdash</span><span class="w"> </span><span class="kn">import</span> <span class="n">EEGDashDataset</span>
@@ -24007,8 +24028,33 @@ Must not contain the key <code class="docutils literal notranslate"><span class=
 
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">eegdash.dataset.</span></span><span class="sig-name descname"><span class="pre">register_openneuro_datasets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">summary_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_class</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">namespace</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_to_all</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">type</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/dataset/registry.py#L10-L84"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Dynamically create dataset classes from a summary file.</p>
+<span class="sig-prename descclassname"><span class="pre">eegdash.dataset.</span></span><span class="sig-name descname"><span class="pre">register_openneuro_datasets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">summary_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_class</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">namespace</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_to_all</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">type</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/dataset/registry.py#L10-L112"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Dynamically create and register dataset classes from a summary file.</p>
+<p>This function reads a CSV file containing summaries of OpenNeuro datasets
+and dynamically creates a Python class for each dataset. These classes
+inherit from a specified base class and are pre-configured with the
+dataset’s ID.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>summary_file</strong> (<em>str</em><em> or </em><em>pathlib.Path</em>) – The path to the CSV file containing the dataset summaries.</p></li>
+<li><p><strong>base_class</strong> (<em>type</em><em>, </em><em>optional</em>) – The base class from which the new dataset classes will inherit. If not
+provided, <a class="reference internal" href="../generated/api-core/eegdash.api.html#eegdash.api.EEGDashDataset" title="eegdash.api.EEGDashDataset"><code class="xref py py-class docutils literal notranslate"><span class="pre">eegdash.api.EEGDashDataset</span></code></a> is used.</p></li>
+<li><p><strong>namespace</strong> (<em>dict</em><em>, </em><em>optional</em>) – The namespace (e.g., <cite>globals()</cite>) into which the newly created classes
+will be injected. Defaults to the local <cite>globals()</cite> of this module.</p></li>
+<li><p><strong>add_to_all</strong> (<em>bool</em><em>, </em><em>default True</em>) – If True, the names of the newly created classes are added to the
+<cite>__all__</cite> list of the target namespace, making them importable with
+<cite>from … import *</cite>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A dictionary mapping the names of the registered classes to the class
+types themselves.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict[str, type]</p>
+</dd>
+</dl>
 </dd></dl>
 
 <section id="submodules">

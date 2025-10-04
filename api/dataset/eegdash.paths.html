@@ -42,7 +42,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css" />
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/select/1.7.0/css/select.dataTables.min.css" />
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/searchpanes/2.3.1/css/searchPanes.dataTables.min.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=5aa56fc9" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=5cbbfa43" />
   
   <!-- So that users can add custom icons -->
   <script src="../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
@@ -147,8 +147,8 @@
       
     
     
-    <img src="../../_static/eegdash_long.png" class="logo__image only-light" alt="EEG Dash Logo"/>
-    <img src="../../_static/eegdash_long.png" class="logo__image only-dark pst-js-only" alt="EEG Dash Logo"/>
+    <img src="../../_static/eegdash_long_white.svg" class="logo__image only-light" alt="EEG Dash Logo"/>
+    <img src="../../_static/eegdash_long_dark.svg" class="logo__image only-dark pst-js-only" alt="EEG Dash Logo"/>
   
   
 </a></div>
@@ -555,12 +555,27 @@ management throughout the EEGDash package, with integration to MNE-Python’s
 configuration system.</p>
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">eegdash.paths.</span></span><span class="sig-name descname"><span class="pre">get_default_cache_dir</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Path</span></span></span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/paths.py#L20-L39"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Resolve a consistent default cache directory for EEGDash.</p>
-<p>Priority order:
-1) Environment variable <code class="docutils literal notranslate"><span class="pre">EEGDASH_CACHE_DIR</span></code> if set.
-2) MNE config <code class="docutils literal notranslate"><span class="pre">MNE_DATA</span></code> if set (aligns with tests and ecosystem caches).
-3) <code class="docutils literal notranslate"><span class="pre">.eegdash_cache</span></code> under the current working directory.</p>
+<span class="sig-prename descclassname"><span class="pre">eegdash.paths.</span></span><span class="sig-name descname"><span class="pre">get_default_cache_dir</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Path</span></span></span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/paths.py#L20-L48"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Resolve the default cache directory for EEGDash data.</p>
+<p>The function determines the cache directory based on the following
+priority order:
+1. The path specified by the <code class="docutils literal notranslate"><span class="pre">EEGDASH_CACHE_DIR</span></code> environment variable.
+2. The path specified by the <code class="docutils literal notranslate"><span class="pre">MNE_DATA</span></code> configuration in the MNE-Python</p>
+<blockquote>
+<div><p>config file.</p>
+</div></blockquote>
+<ol class="arabic simple" start="3">
+<li><p>A hidden directory named <code class="docutils literal notranslate"><span class="pre">.eegdash_cache</span></code> in the current working
+directory.</p></li>
+</ol>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The resolved, absolute path to the default cache directory.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>pathlib.Path</p>
+</dd>
+</dl>
 </dd></dl>
 
 </section>

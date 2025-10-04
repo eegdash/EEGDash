@@ -42,7 +42,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css" />
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/select/1.7.0/css/select.dataTables.min.css" />
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/searchpanes/2.3.1/css/searchPanes.dataTables.min.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=5aa56fc9" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=5cbbfa43" />
   
   <!-- So that users can add custom icons -->
   <script src="../../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
@@ -148,8 +148,8 @@
       
     
     
-    <img src="../../../_static/eegdash_long.png" class="logo__image only-light" alt="EEG Dash Logo"/>
-    <img src="../../../_static/eegdash_long.png" class="logo__image only-dark pst-js-only" alt="EEG Dash Logo"/>
+    <img src="../../../_static/eegdash_long_white.svg" class="logo__image only-light" alt="EEG Dash Logo"/>
+    <img src="../../../_static/eegdash_long_dark.svg" class="logo__image only-dark pst-js-only" alt="EEG Dash Logo"/>
   
   
 </a></div>
@@ -524,7 +524,7 @@
 to download the full example code.</p>
 </div>
 <section class="sphx-glr-example-title" id="working-offline-with-eegdash">
-<span id="sphx-glr-generated-auto-examples-eeg2025-tutorial-eegdash-offline-py"></span><h1>Working Offline with EEGDash<a class="headerlink" href="#working-offline-with-eegdash" title="Link to this heading">#</a></h1>
+<span id="sphx-glr-generated-auto-examples-eeg2025-tutorial-eegdash-offline-py"></span><h1>Working Offline with EEGDash<a class="headerlink" href="#working-offline-with-eegdash" title="Link to this heading">#</a></h1><div class="eegdash-reading-time" role="note"><span class="eegdash-reading-time__label">Estimated reading time:</span><span class="eegdash-reading-time__value">3 minutes</span></div>
 <p>Many HPC clusters restrict or block network access. It’s common to have
 dedicated queues for internet-enabled jobs that differ from GPU queues.
 This tutorial shows how to use <a class="reference internal" href="../../../api/dataset/eegdash.dataset.EEGChallengeDataset.html"><span class="doc">EEGChallengeDataset</span></a> offline once a dataset is
@@ -532,7 +532,7 @@ present on disk.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">platformdirs</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">eegdash.const</span><span class="w"> </span><span class="kn">import</span> <span class="n">RELEASE_TO_OPENNEURO_DATASET_MAP</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">eegdash.const</span><span class="w"> </span><span class="kn">import</span> <a href="../../../api/generated/api-core/eegdash.const.html#eegdash.const.RELEASE_TO_OPENNEURO_DATASET_MAP" title="eegdash.const.RELEASE_TO_OPENNEURO_DATASET_MAP" class="sphx-glr-backref-module-eegdash-const sphx-glr-backref-type-py-data"><span class="n">RELEASE_TO_OPENNEURO_DATASET_MAP</span></a>
 <span class="kn">from</span><span class="w"> </span><span class="nn">eegdash.dataset.dataset</span><span class="w"> </span><span class="kn">import</span> <span class="n">EEGChallengeDataset</span>
 
 
@@ -540,7 +540,7 @@ present on disk.</p>
 <span class="c1"># :doc:`EEGChallengeDataset &lt;/api/dataset/eegdash.dataset.EEGChallengeDataset&gt;`</span>
 <span class="c1"># uses a suffixed cache folder for the competition data (e.g., &quot;-bdf-mini&quot;).</span>
 <span class="n">release</span> <span class="o">=</span> <span class="s2">&quot;R2&quot;</span>
-<span class="n">dataset_id</span> <span class="o">=</span> <span class="n">RELEASE_TO_OPENNEURO_DATASET_MAP</span><span class="p">[</span><span class="n">release</span><span class="p">]</span>
+<span class="n">dataset_id</span> <span class="o">=</span> <a href="../../../api/generated/api-core/eegdash.const.html#eegdash.const.RELEASE_TO_OPENNEURO_DATASET_MAP" title="eegdash.const.RELEASE_TO_OPENNEURO_DATASET_MAP" class="sphx-glr-backref-module-eegdash-const sphx-glr-backref-type-py-data"><span class="n">RELEASE_TO_OPENNEURO_DATASET_MAP</span></a><span class="p">[</span><span class="n">release</span><span class="p">]</span>
 <span class="n">task</span> <span class="o">=</span> <span class="s2">&quot;RestingState&quot;</span>
 <span class="c1"># Choose a cache directory. This should be on a fast local filesystem.</span>
 <span class="n">cache_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">platformdirs</span><span class="o">.</span><span class="n">user_cache_dir</span><span class="p">(</span><span class="s2">&quot;EEGDash&quot;</span><span class="p">))</span>
@@ -776,7 +776,7 @@ structure. Some DB-only fields are unavailable; entity filters (subject,
 session, task, run) usually suffice.</p></li>
 <li><p>If you encounter issues, please open a GitHub issue so we can discuss.</p></li>
 </ul>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 48.123 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (1 minutes 10.974 seconds)</p>
 <p><strong>Estimated memory usage:</strong>  1027 MB</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-generated-auto-examples-eeg2025-tutorial-eegdash-offline-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">

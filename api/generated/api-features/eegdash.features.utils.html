@@ -42,7 +42,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css" />
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/select/1.7.0/css/select.dataTables.min.css" />
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/searchpanes/2.3.1/css/searchPanes.dataTables.min.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=5aa56fc9" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=5cbbfa43" />
   
   <!-- So that users can add custom icons -->
   <script src="../../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
@@ -149,8 +149,8 @@
       
     
     
-    <img src="../../../_static/eegdash_long.png" class="logo__image only-light" alt="EEG Dash Logo"/>
-    <img src="../../../_static/eegdash_long.png" class="logo__image only-dark pst-js-only" alt="EEG Dash Logo"/>
+    <img src="../../../_static/eegdash_long_white.svg" class="logo__image only-light" alt="EEG Dash Logo"/>
+    <img src="../../../_static/eegdash_long_dark.svg" class="logo__image only-dark pst-js-only" alt="EEG Dash Logo"/>
   
   
 </a></div>
@@ -805,10 +805,10 @@
 <td><p>Decorator used to capture the arguments of a function.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#eegdash.features.utils.extract_features" title="eegdash.features.utils.extract_features"><code class="xref py py-obj docutils literal notranslate"><span class="pre">extract_features</span></code></a>(concat_dataset, features, *)</p></td>
-<td><p></p></td>
+<td><p>Extract features from a concatenated dataset of windows.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#eegdash.features.utils.fit_feature_extractors" title="eegdash.features.utils.fit_feature_extractors"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit_feature_extractors</span></code></a>(concat_dataset, features)</p></td>
-<td><p></p></td>
+<td><p>Fit trainable feature extractors on a dataset.</p></td>
 </tr>
 </tbody>
 </table>
@@ -829,13 +829,13 @@
 <td><p>Returns windows from an mne.Raw object, its window indices, along with a target.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">FeatureExtractor</span></code>(feature_extractors, ...)</p></td>
-<td><p></p></td>
+<td><p>A composite feature extractor that applies multiple feature functions.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">FeaturesConcatDataset</span></code>([list_of_ds, ...])</p></td>
-<td><p>A base class for concatenated datasets.</p></td>
+<td><p>A concatenated dataset of <cite>FeaturesDataset</cite> objects.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">FeaturesDataset</span></code>(features[, metadata, ...])</p></td>
-<td><p>Returns samples from a pandas DataFrame object along with a target.</p></td>
+<td><p>A dataset of features extracted from EEG windows.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">Parallel</span></code>([n_jobs, backend, return_as, ...])</p></td>
 <td><p>Helper class for readable parallel mapping.</p></td>
@@ -851,13 +851,56 @@
 </div>
 <dl class="py function">
 <dt class="sig sig-object py" id="eegdash.features.utils.extract_features">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.utils.</span></span><span class="sig-name descname"><span class="pre">extract_features</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">concat_dataset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">BaseConcatDataset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">features</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="eegdash.features.extractors.html#eegdash.features.extractors.FeatureExtractor" title="eegdash.features.extractors.FeatureExtractor"><span class="pre">FeatureExtractor</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Callable</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Callable</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">512</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/utils.py#L70-L93"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.utils.extract_features" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.utils.</span></span><span class="sig-name descname"><span class="pre">extract_features</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">concat_dataset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">BaseConcatDataset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">features</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="eegdash.features.extractors.html#eegdash.features.extractors.FeatureExtractor" title="eegdash.features.extractors.FeatureExtractor"><span class="pre">FeatureExtractor</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Callable</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Callable</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">512</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="eegdash.features.datasets.html#eegdash.features.datasets.FeaturesConcatDataset" title="eegdash.features.datasets.FeaturesConcatDataset"><span class="pre">FeaturesConcatDataset</span></a></span></span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/utils.py#L89-L139"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.utils.extract_features" title="Link to this definition">#</a></dt>
+<dd><p>Extract features from a concatenated dataset of windows.</p>
+<p>This function applies a feature extractor to each <cite>WindowsDataset</cite> within a
+<cite>BaseConcatDataset</cite> in parallel and returns a <cite>FeaturesConcatDataset</cite>
+with the results.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>concat_dataset</strong> (<em>BaseConcatDataset</em>) – A concatenated dataset of <cite>WindowsDataset</cite> or <cite>EEGWindowsDataset</cite>
+instances.</p></li>
+<li><p><strong>features</strong> (<a class="reference internal" href="eegdash.features.html#eegdash.features.FeatureExtractor" title="eegdash.features.FeatureExtractor"><em>FeatureExtractor</em></a><em> or </em><em>dict</em><em> or </em><em>list</em>) – The feature extractor(s) to apply. Can be a <cite>FeatureExtractor</cite>
+instance, a dictionary of named feature functions, or a list of
+feature functions.</p></li>
+<li><p><strong>batch_size</strong> (<em>int</em><em>, </em><em>default 512</em>) – The size of batches to use for feature extraction.</p></li>
+<li><p><strong>n_jobs</strong> (<em>int</em><em>, </em><em>default 1</em>) – The number of parallel jobs to use for extracting features from the
+datasets.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A new concatenated dataset containing the extracted features.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="eegdash.features.html#eegdash.features.FeaturesConcatDataset" title="eegdash.features.FeaturesConcatDataset">FeaturesConcatDataset</a></p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="eegdash.features.utils.fit_feature_extractors">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.utils.</span></span><span class="sig-name descname"><span class="pre">fit_feature_extractors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">concat_dataset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">BaseConcatDataset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">features</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="eegdash.features.extractors.html#eegdash.features.extractors.FeatureExtractor" title="eegdash.features.extractors.FeatureExtractor"><span class="pre">FeatureExtractor</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Callable</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Callable</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">8192</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/utils.py#L96-L116"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.utils.fit_feature_extractors" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.utils.</span></span><span class="sig-name descname"><span class="pre">fit_feature_extractors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">concat_dataset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">BaseConcatDataset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">features</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="eegdash.features.extractors.html#eegdash.features.extractors.FeatureExtractor" title="eegdash.features.extractors.FeatureExtractor"><span class="pre">FeatureExtractor</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Callable</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Callable</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">8192</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="eegdash.features.extractors.html#eegdash.features.extractors.FeatureExtractor" title="eegdash.features.extractors.FeatureExtractor"><span class="pre">FeatureExtractor</span></a></span></span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/utils.py#L142-L183"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.utils.fit_feature_extractors" title="Link to this definition">#</a></dt>
+<dd><p>Fit trainable feature extractors on a dataset.</p>
+<p>If the provided feature extractor (or any of its sub-extractors) is
+trainable (i.e., subclasses <cite>TrainableFeature</cite>), this function iterates
+through the dataset to fit it.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>concat_dataset</strong> (<em>BaseConcatDataset</em>) – The dataset to use for fitting the feature extractors.</p></li>
+<li><p><strong>features</strong> (<a class="reference internal" href="eegdash.features.html#eegdash.features.FeatureExtractor" title="eegdash.features.FeatureExtractor"><em>FeatureExtractor</em></a><em> or </em><em>dict</em><em> or </em><em>list</em>) – The feature extractor(s) to fit.</p></li>
+<li><p><strong>batch_size</strong> (<em>int</em><em>, </em><em>default 8192</em>) – The batch size to use when iterating through the dataset for fitting.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The fitted feature extractor.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="eegdash.features.html#eegdash.features.FeatureExtractor" title="eegdash.features.FeatureExtractor">FeatureExtractor</a></p>
+</dd>
+</dl>
+</dd></dl>
 
 </section>
 

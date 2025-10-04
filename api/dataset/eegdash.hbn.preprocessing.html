@@ -42,7 +42,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css" />
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/select/1.7.0/css/select.dataTables.min.css" />
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/searchpanes/2.3.1/css/searchPanes.dataTables.min.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=5aa56fc9" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=5cbbfa43" />
   
   <!-- So that users can add custom icons -->
   <script src="../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
@@ -147,8 +147,8 @@
       
     
     
-    <img src="../../_static/eegdash_long.png" class="logo__image only-light" alt="EEG Dash Logo"/>
-    <img src="../../_static/eegdash_long.png" class="logo__image only-dark pst-js-only" alt="EEG Dash Logo"/>
+    <img src="../../_static/eegdash_long_white.svg" class="logo__image only-light" alt="EEG Dash Logo"/>
+    <img src="../../_static/eegdash_long_dark.svg" class="logo__image only-dark pst-js-only" alt="EEG Dash Logo"/>
   
   
 </a></div>
@@ -555,21 +555,38 @@ HBN EEG data, including specialized annotation handling for eyes-open/eyes-close
 paradigms and other HBN-specific preprocessing steps.</p>
 <dl class="py class">
 <dt class="sig sig-object py">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">eegdash.hbn.preprocessing.</span></span><span class="sig-name descname"><span class="pre">hbn_ec_ec_reannotation</span></span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/hbn/preprocessing.py#L20-L72"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">eegdash.hbn.preprocessing.</span></span><span class="sig-name descname"><span class="pre">hbn_ec_ec_reannotation</span></span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/hbn/preprocessing.py#L20-L105"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Preprocessor</span></code></p>
-<p>Preprocessor to reannotate the raw data for eyes open and eyes closed events.</p>
-<p>This processor is designed for HBN datasets.</p>
+<p>Preprocessor to reannotate HBN data for eyes-open/eyes-closed events.</p>
+<p>This preprocessor is specifically designed for Healthy Brain Network (HBN)
+datasets. It identifies existing annotations for “instructed_toCloseEyes”
+and “instructed_toOpenEyes” and creates new, regularly spaced annotations
+for “eyes_closed” and “eyes_open” segments, respectively.</p>
+<p>This is useful for creating windowed datasets based on these new, more
+precise event markers.</p>
+<p class="rubric">Notes</p>
+<p>This class inherits from <code class="xref py py-class docutils literal notranslate"><span class="pre">braindecode.preprocessing.Preprocessor</span></code>
+and is intended to be used within a braindecode preprocessing pipeline.</p>
 <dl class="py method">
 <dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">raw</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/hbn/preprocessing.py#L30-L72"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Reannotate the raw data to create new events for eyes open and eyes closed</p>
-<p>This function modifies the raw MNE object by creating new events based on
-the existing annotations for “instructed_toCloseEyes” and “instructed_toOpenEyes”.
-It generates new events every 2 seconds within specified time ranges after
-the original events, and replaces the existing annotations with these new events.</p>
+<span class="sig-name descname"><span class="pre">transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">raw</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Raw</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Raw</span></span></span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/hbn/preprocessing.py#L41-L105"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Create new annotations for eyes-open and eyes-closed periods.</p>
+<p>This function finds the original “instructed_to…” annotations and
+generates new annotations every 2 seconds within specific time ranges
+relative to the original markers:
+- “eyes_closed”: 15s to 29s after “instructed_toCloseEyes”
+- “eyes_open”: 5s to 19s after “instructed_toOpenEyes”</p>
+<p>The original annotations in the <cite>mne.io.Raw</cite> object are replaced by
+this new set of annotations.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>raw</strong> (<em>mne.io.Raw</em>) – The raw MNE object containing EEG data and annotations.</p>
+<dd class="field-odd"><p><strong>raw</strong> (<em>mne.io.Raw</em>) – The raw MNE object containing the HBN data and original annotations.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The raw MNE object with the modified annotations.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>mne.io.Raw</p>
 </dd>
 </dl>
 </dd></dl>

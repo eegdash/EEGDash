@@ -8,6 +8,13 @@
    :member-order: bysource
 
    
+   .. rubric:: Module Attributes
+
+   .. autosummary::
+   
+      univariate_feature
+      multivariate_feature
+   
    .. rubric:: Functions
 
    .. autosummary::

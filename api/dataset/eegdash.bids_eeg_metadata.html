@@ -42,7 +42,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css" />
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/select/1.7.0/css/select.dataTables.min.css" />
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/searchpanes/2.3.1/css/searchPanes.dataTables.min.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=5aa56fc9" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=5cbbfa43" />
   
   <!-- So that users can add custom icons -->
   <script src="../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
@@ -147,8 +147,8 @@
       
     
     
-    <img src="../../_static/eegdash_long.png" class="logo__image only-light" alt="EEG Dash Logo"/>
-    <img src="../../_static/eegdash_long.png" class="logo__image only-dark pst-js-only" alt="EEG Dash Logo"/>
+    <img src="../../_static/eegdash_long_white.svg" class="logo__image only-light" alt="EEG Dash Logo"/>
+    <img src="../../_static/eegdash_long_dark.svg" class="logo__image only-dark pst-js-only" alt="EEG Dash Logo"/>
   
   
 </a></div>
@@ -555,36 +555,94 @@ queries from user parameters, and enriching metadata records with participant in
 It handles the translation between user-friendly query parameters and MongoDB query syntax.</p>
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">eegdash.bids_eeg_metadata.</span></span><span class="sig-name descname"><span class="pre">attach_participants_extras</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">raw</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extras</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/bids_eeg_metadata.py#L329-L369"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Attach extras to Raw.info and dataset description without overwriting.</p>
-<ul class="simple">
-<li><p>Adds to <code class="docutils literal notranslate"><span class="pre">raw.info['subject_info']['participants_extras']</span></code>.</p></li>
-<li><p>Adds to <code class="docutils literal notranslate"><span class="pre">description</span></code> if dict or pandas Series (only missing keys).</p></li>
+<span class="sig-prename descclassname"><span class="pre">eegdash.bids_eeg_metadata.</span></span><span class="sig-name descname"><span class="pre">attach_participants_extras</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">raw</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extras</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/bids_eeg_metadata.py#L399-L450"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Attach extra participant data to a raw object and its description.</p>
+<p>Updates the <code class="docutils literal notranslate"><span class="pre">raw.info['subject_info']</span></code> and the description object
+(dict or pandas Series) with extra data from <code class="docutils literal notranslate"><span class="pre">participants.tsv</span></code>.
+It does not overwrite existing keys.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>raw</strong> (<em>mne.io.Raw</em>) – The MNE Raw object to be updated.</p></li>
+<li><p><strong>description</strong> (<em>dict</em><em> or </em><em>pandas.Series</em>) – The description object to be updated.</p></li>
+<li><p><strong>extras</strong> (<em>dict</em>) – A dictionary of extra participant information to attach.</p></li>
 </ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">eegdash.bids_eeg_metadata.</span></span><span class="sig-name descname"><span class="pre">enrich_from_participants</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bids_root</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bidspath</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">BIDSPath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raw</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/bids_eeg_metadata.py#L372-L387"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Convenience wrapper: read participants.tsv and attach extras for this subject.</p>
-<p>Returns the extras dictionary for further use if needed.</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">eegdash.bids_eeg_metadata.</span></span><span class="sig-name descname"><span class="pre">participants_extras_from_tsv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bids_root</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subject</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">id_columns</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">('participant_id',</span> <span class="pre">'participant',</span> <span class="pre">'subject')</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">na_like</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">('',</span> <span class="pre">'n/a',</span> <span class="pre">'na',</span> <span class="pre">'nan',</span> <span class="pre">'unknown',</span> <span class="pre">'none')</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/bids_eeg_metadata.py#L307-L326"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Return non-identifier, non-empty participants.tsv fields for a subject.</p>
-<p>Uses vectorized pandas operations to drop id columns and NA-like values.</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">eegdash.bids_eeg_metadata.</span></span><span class="sig-name descname"><span class="pre">participants_row_for_subject</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bids_root</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subject</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">id_columns</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">('participant_id',</span> <span class="pre">'participant',</span> <span class="pre">'subject')</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Series</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/bids_eeg_metadata.py#L270-L304"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Load participants.tsv and return the row for a subject.</p>
-<ul class="simple">
-<li><p>Accepts either “01” or “sub-01” as the subject identifier.</p></li>
-<li><p>Returns a pandas Series for the first matching row, or None if not found.</p></li>
+<span class="sig-prename descclassname"><span class="pre">eegdash.bids_eeg_metadata.</span></span><span class="sig-name descname"><span class="pre">enrich_from_participants</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bids_root</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bidspath</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">BIDSPath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raw</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/bids_eeg_metadata.py#L453-L487"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Read participants.tsv and attach extra info for the subject.</p>
+<p>This is a convenience function that finds the subject from the
+<code class="docutils literal notranslate"><span class="pre">bidspath</span></code>, retrieves extra information from <code class="docutils literal notranslate"><span class="pre">participants.tsv</span></code>,
+and attaches it to the raw object and its description.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bids_root</strong> (<em>str</em><em> or </em><em>Path</em>) – The root directory of the BIDS dataset.</p></li>
+<li><p><strong>bidspath</strong> (<em>mne_bids.BIDSPath</em>) – The BIDSPath object for the current data file.</p></li>
+<li><p><strong>raw</strong> (<em>mne.io.Raw</em>) – The MNE Raw object to be updated.</p></li>
+<li><p><strong>description</strong> (<em>dict</em><em> or </em><em>pandas.Series</em>) – The description object to be updated.</p></li>
 </ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The dictionary of extras that were attached.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">eegdash.bids_eeg_metadata.</span></span><span class="sig-name descname"><span class="pre">participants_extras_from_tsv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bids_root</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subject</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">id_columns</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">('participant_id',</span> <span class="pre">'participant',</span> <span class="pre">'subject')</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">na_like</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">('',</span> <span class="pre">'n/a',</span> <span class="pre">'na',</span> <span class="pre">'nan',</span> <span class="pre">'unknown',</span> <span class="pre">'none')</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/bids_eeg_metadata.py#L358-L396"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Extract additional participant information from participants.tsv.</p>
+<p>Retrieves all non-identifier and non-empty fields for a subject from
+the <code class="docutils literal notranslate"><span class="pre">participants.tsv</span></code> file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bids_root</strong> (<em>str</em><em> or </em><em>Path</em>) – The root directory of the BIDS dataset.</p></li>
+<li><p><strong>subject</strong> (<em>str</em>) – The subject identifier.</p></li>
+<li><p><strong>id_columns</strong> (<em>tuple</em><em> of </em><em>str</em><em>, </em><em>default</em><em> (</em><em>&quot;participant_id&quot;</em><em>, </em><em>&quot;participant&quot;</em><em>, </em><em>&quot;subject&quot;</em><em>)</em>) – Column names to be treated as identifiers and excluded from the
+output.</p></li>
+<li><p><strong>na_like</strong> (<em>tuple</em><em> of </em><em>str</em><em>, </em><em>default</em><em> (</em><em>&quot;&quot;</em><em>, </em><em>&quot;n/a&quot;</em><em>, </em><em>&quot;na&quot;</em><em>, </em><em>&quot;nan&quot;</em><em>, </em><em>&quot;unknown&quot;</em><em>, </em><em>&quot;none&quot;</em><em>)</em>) – Values to be considered as “Not Available” and excluded.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A dictionary of extra participant information.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">eegdash.bids_eeg_metadata.</span></span><span class="sig-name descname"><span class="pre">participants_row_for_subject</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bids_root</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subject</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">id_columns</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">('participant_id',</span> <span class="pre">'participant',</span> <span class="pre">'subject')</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Series</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/bids_eeg_metadata.py#L305-L355"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Load participants.tsv and return the row for a specific subject.</p>
+<p>Searches for a subject’s data in the <code class="docutils literal notranslate"><span class="pre">participants.tsv</span></code> file within a
+BIDS dataset. It can identify the subject with or without the “sub-”
+prefix.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bids_root</strong> (<em>str</em><em> or </em><em>Path</em>) – The root directory of the BIDS dataset.</p></li>
+<li><p><strong>subject</strong> (<em>str</em>) – The subject identifier (e.g., “01” or “sub-01”).</p></li>
+<li><p><strong>id_columns</strong> (<em>tuple</em><em> of </em><em>str</em><em>, </em><em>default</em><em> (</em><em>&quot;participant_id&quot;</em><em>, </em><em>&quot;participant&quot;</em><em>, </em><em>&quot;subject&quot;</em><em>)</em>) – A tuple of column names to search for the subject identifier.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A pandas Series containing the subject’s data if found, otherwise None.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pandas.Series or None</p>
+</dd>
+</dl>
 </dd></dl>
 
 </section>

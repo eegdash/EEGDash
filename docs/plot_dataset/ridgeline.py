@@ -138,7 +138,8 @@ def generate_modality_ridgeline(
     date_stamp = datetime.now().strftime("%d/%m/%Y")
     fig.update_layout(
         height=kde_height,
-        width=1200,
+        width=None,
+        autosize=True,
         template="plotly_white",
         xaxis=dict(
             type="log",
@@ -169,7 +170,6 @@ def generate_modality_ridgeline(
             yanchor="top",
             font=dict(size=20),
         ),
-        autosize=True,
         font=dict(size=16),
     )
 

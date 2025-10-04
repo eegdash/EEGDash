@@ -7,7 +7,7 @@ from eegdash import EEGDashDataset
 from eegdash.api import EEGDashDataset
 from eegdash.dataset.dataset import EEGChallengeDataset
 from braindecode.preprocessing import Preprocessor, create_fixed_length_windows, preprocess
-from braindecode.datasets.base import BaseConcatDataset
+from braindecode.datasets.base import BaseConcatDataset, EEGWindowsDataset, BaseDataset
 from braindecode.datautil import load_concat_dataset
 from pathlib import Path
 import numpy as np
@@ -25,6 +25,7 @@ from lightning.pytorch.tuner import Tuner
 from torchmetrics import Recall, Precision, F1Score, Accuracy
 from lightning.pytorch.loggers import TensorBoardLogger
 from torch.utils.data import Subset
+from typing import Dict
 cache_dir = Path("/mnt/v1/arno/eeg2025")
 SFREQ = 100  # sampling frequency
 
@@ -146,11 +147,53 @@ def process_data(releases, tasks, target_names):
                     print(f"Number of datasets in {cached_data_folder_name}: {len(windows_ds.datasets)}")
                     print(f"number of samples in {cached_data_folder_name} : {len(windows_ds)}")
 
+class RelabelWindowsDatasetWrapper(BaseDataset):
+    def __init__(self, dataset: EEGWindowsDataset, factor="attention", positive_threshold=0.5, negative_threshold=-0.5):
+        """
+        Wrapper for EEGWindowsDataset to relabel windows based on a specific factor.
+        """
+        self.dataset = dataset
+        self._description = dataset.description
+        self.factor = factor
+        self.positive_threshold = positive_threshold
+        self.negative_threshold = negative_threshold
+
+    @property
+    def description(self):
+        return self._description
+
+    def __len__(self):
+        return len(self.dataset)
+
+    def _get_recording_metadata(self) -> Dict:
+        return self._description
+
+    def __getitem__(self, index):
+        X, _, subject = self.dataset[index]
+
+        subject_metadata = self._get_recording_metadata()
+        factor_score = subject_metadata[self.factor]
+
+        if factor_score >= self.positive_threshold:
+            label = 'Positive'
+        elif factor_score <= self.negative_threshold:
+            label = 'Negative'
+        else:
+            label = 'Neutral'
+
+        return X, label, subject
+
+def is_dataset_within_threshold_class_by_factor(ds, factor="attention", positive_threshold=0.5, negative_threshold=-0.5):
+    '''Check if a dataset has a factor score within the positive or negative threshold'''
+    factor_score = ds.description[factor]
+    return factor_score < negative_threshold or factor_score > positive_threshold
+
 def create_model(config):
     class EEGModel(L.LightningModule):
         def __init__(self, config):
             super(EEGModel, self).__init__()
             drop_prob = config.get('dropout', 0.7)
+            print(f"Using model {config['model_name']} with dropout {drop_prob}")
             if config['model_name'] == 'EEGNeX':
                 self.model = EEGNeX(
                     n_chans=24,
@@ -166,6 +209,14 @@ def create_model(config):
                     n_times=256,
                     sfreq=128,
                     drop_prob=drop_prob,
+                )
+            elif config['model_name'] == 'FBCNet':
+                from braindecode.models import FBCNet
+                self.model = FBCNet(
+                    n_chans=24,
+                    n_outputs=2,
+                    n_times=256,
+                    sfreq=128,
                 )
             elif config['model_name'] == 'EEGConformer':
                 self.model = EEGConformer(
@@ -198,6 +249,10 @@ def create_model(config):
             self.val_recall = Recall(task="binary")
             self.val_f1 = F1Score(task="binary")
             self.val_accuracy = Accuracy(task="binary")
+            self.test_precision = Precision(task="binary")
+            self.test_recall = Recall(task="binary")
+            self.test_f1 = F1Score(task="binary")
+            self.test_accuracy = Accuracy(task="binary")
             self.save_hyperparameters(config)
 
         def normalize_data(self, x):
@@ -209,9 +264,9 @@ def create_model(config):
 
         def _forward(self, batch):
             x, y, subjects = batch
-            gender_mapping = {"M": 0, "F": 1}
-            # y is a tuple of (n_samples,) with values "M" or "F"
-            y = torch.tensor([gender_mapping[gender] for gender in y], dtype=torch.long, device=self.device)
+            label_mapping = {"Negative": 0, "Positive": 1}
+            # y is a tuple of (n_samples,) with values "Negative" or "Positive"
+            y = torch.tensor([label_mapping[label] for label in y], dtype=torch.long, device=self.device)
             scores = self.model(self.normalize_data(x))
             _, preds = scores.max(1)
             loss = F.cross_entropy(scores, y)
@@ -248,10 +303,26 @@ def create_model(config):
             self.log("val/accuracy_epoch", val_acc, on_step=False, on_epoch=True, prog_bar=True)
             self.log("hp_metric", val_acc, on_epoch=True)
 
+        def test_step(self, batch, batch_idx):
+            loss, preds, y = self._forward(batch)
+            self.test_accuracy.update(preds, y)
+            self.test_precision.update(preds, y)
+            self.test_recall.update(preds, y)
+            self.test_f1.update(preds, y)
+            self.log('test/loss', loss, on_step=False, on_epoch=True)
+
+        def on_test_epoch_end(self):
+            self.log("test/recall_epoch", self.test_recall, on_step=False, on_epoch=True)
+            self.log("test/precision_epoch", self.test_precision, on_step=False, on_epoch=True)
+            self.log("test/f1_epoch", self.test_f1, on_step=False, on_epoch=True)
+            test_acc = self.test_accuracy.compute()
+            self.log("test/accuracy_epoch", test_acc, on_step=False, on_epoch=True, prog_bar=True)
+            self.log("hp_metric", test_acc, on_epoch=True)
+
         def configure_optimizers(self):
             optimizer = torch.optim.AdamW(
                 self.parameters(), 
-                lr=0.001, # should be self.lr
+                lr=self.lr,
                 weight_decay=1e-4
             )
             
@@ -276,41 +347,39 @@ def create_model(config):
     return EEGModel(config)
 
 # Add this analysis before training
-def analyze_fold_distribution(train_ds: Subset, val_ds: Subset):
+def analyze_fold_distribution(train_ds, val_ds):
     """Analyze gender and subject distribution per fold"""
     # For Subset, get description DataFrame
-    train_desc = train_ds.dataset.get_metadata().iloc[train_ds.indices]
-    val_desc = val_ds.dataset.get_metadata().iloc[val_ds.indices]
-    train_subjects = train_desc["subject"]
-    val_subjects = val_desc["subject"]
-    train_gender_dist = pd.Series(train_desc["sex"]).value_counts()
-    val_gender_dist = pd.Series(val_desc["sex"]).value_counts()
+    # Use list comprehensions for efficiency, but if datasets are large, consider vectorized access if possible.
+    train_labels, train_subjects = zip(*[(label, subject) for _, label, subject in train_ds])
+    val_labels, val_subjects = zip(*[(label, subject) for _, label, subject in val_ds])
+    train_label_dist = pd.Series(train_labels).value_counts()
+    val_label_dist = pd.Series(val_labels).value_counts()
     print(f"Statistics of balanced dataset")
     print(f"Train subjects: {len(set(train_subjects))}, Val subjects: {len(set(val_subjects))}")
-    print(f"Train gender: {train_gender_dist}")
-    print(f"Val gender: {val_gender_dist}")
+    print(f"Train labels: {train_label_dist}")
+    print(f"Val labels: {val_label_dist}")
     print(f"Subject overlap: {set(train_subjects) & set(val_subjects)}")
 
-def balance_windows_by_class(ds, random_seed=42):
+def balance_windows_by_class(ds, labels, random_seed=42):
     """
     Returns a torch.utils.data.Subset of ds with equal number of windows for M and F classes.
     """
     import numpy as np
-    desc = ds.get_metadata()
-    m_indices = np.where(desc['sex'] == 'M')[0]
-    f_indices = np.where(desc['sex'] == 'F')[0]
-    n_min = min(len(m_indices), len(f_indices))
+    labels = np.array(labels)
+    positive_indices = np.where(labels == 'Positive')[0]
+    negative_indices = np.where(labels == 'Negative')[0]
+    n_min = min(len(positive_indices), len(negative_indices))
     rng = np.random.default_rng(random_seed)
-    m_indices = rng.permutation(m_indices)[:n_min]
-    f_indices = rng.permutation(f_indices)[:n_min]
-    selected_indices = np.concatenate([m_indices, f_indices])
+    positive_indices = rng.permutation(positive_indices)[:n_min]
+    negative_indices = rng.permutation(negative_indices)[:n_min]
+    selected_indices = np.concatenate([positive_indices, negative_indices])
     selected_indices = rng.permutation(selected_indices)
     return Subset(ds, selected_indices)
 
-def run_task(releases, tasks, target_name, folds=10, weights=None, model_freeze=False, random_add=42, train_epochs=20, save_weights="", batch_size=100, lrate=0.00002, model_name = 'EEGNeX', dropout=0.5):
+def run_task(releases, tasks, target_name, folds=10, weights=None, model_freeze=False, random_add=42, train_epochs=20, save_weights="", batch_size=100, lrate=0.00002, model_name = 'EEGNeX', dropout=0.5, data_split_seed=42, test_release=None, experiment_name=""):
 
     # random seed for reproducibility
-    L.seed_everything(random_add)
     global deep_copy_dataset
 
     if not isinstance(releases, list):
@@ -343,32 +412,82 @@ def run_task(releases, tasks, target_name, folds=10, weights=None, model_freeze=
     print(f"Number of datasets in all releases: {len(windows_ds.datasets)}")
     print(f"number of samples in windows_ds: {len(windows_ds)}")
 
+    # Filter out subjects with neutral labels based on factor
+    windows_ds = BaseConcatDataset([ds for ds in windows_ds.datasets 
+                                    if is_dataset_within_threshold_class_by_factor(
+                                        ds, 
+                                        factor=target_name, 
+                                        positive_threshold=0.5, 
+                                        negative_threshold=-0.5
+                                    )
+    ])
+    # Relabel windows based on factor
+    relabled_windows_ds = BaseConcatDataset([RelabelWindowsDatasetWrapper(ds, factor=target_name, positive_threshold=0.5, negative_threshold=-0.5) for ds in windows_ds.datasets])
+    # Efficiently extract subjects and labels using list comprehensions over datasets, not windows
+    unique_subjects = []
+    unique_subjects_labels = []
+    for ds in relabled_windows_ds.datasets:
+        subject = ds.description.subject
+        # All windows in ds have the same subject and label
+        # Get label for the first window only
+        _, label, _ = ds[0]
+        unique_subjects.append(subject)
+        unique_subjects_labels.append(label)
+    unique_subjects = np.array(unique_subjects)
+    unique_subjects_labels = np.array(unique_subjects_labels)
+    # subjects_labels = dict(zip(subjects, subjects_labels))
+    unique_labels, unique_label_counts = np.unique(unique_subjects_labels, return_counts=True)
+    assert len(unique_labels) == 2, f"Expected 2 classes since it should already been filtered, got {len(unique_labels)} classes: {unique_labels}"
+    print(f"Labels distribution: {unique_label_counts}")
+    # unique_subjects = np.unique(subjects)
+    # unique_subjects_labels = [subjects_labels[subj] for subj in unique_subjects]
+    assert(len(unique_subjects) == len(unique_subjects_labels))
+
     # ## Creating a Training and Test Set
     correct_train_list = []
     correct_val_list  = []
-    unique_subjects, unique_indices = np.unique(windows_ds.description["subject"], return_index=True)
-    unique_gender = windows_ds.description["sex"][unique_indices].values
+    # unique_subjects, unique_indices = np.unique(windows_ds.description["subject"], return_index=True)
+    # unique_gender = windows_ds.description["sex"][unique_indices].values
     if folds > 1:
-        splitter = StratifiedKFold(n_splits=folds, shuffle=True, random_state=random_add)
-        splits = splitter.split(unique_subjects, unique_gender)
+        splitter = StratifiedKFold(n_splits=folds, shuffle=True, random_state=data_split_seed)
+        splits = splitter.split(unique_subjects, unique_subjects_labels)
     else:
-        train_idx, val_idx = train_test_split(np.arange(len(unique_subjects)),train_size=0.8,stratify=unique_gender,random_state=random_add)
+        train_idx, val_idx = train_test_split(np.arange(len(unique_subjects)),train_size=0.8,stratify=unique_subjects_labels,random_state=data_split_seed)
         splits = [(train_idx, val_idx)]
         
     for it_fold, (train_idx, val_idx) in enumerate(splits):
-        train_ds = BaseConcatDataset([ds for ds in windows_ds.datasets if ds.description.subject in unique_subjects[train_idx]])
-        val_ds   = BaseConcatDataset([ds for ds in windows_ds.datasets if ds.description.subject in unique_subjects[val_idx]])
+        train_ds = BaseConcatDataset([ds for ds in relabled_windows_ds.datasets if ds.description.subject in unique_subjects[train_idx]])
+        val_ds   = BaseConcatDataset([ds for ds in relabled_windows_ds.datasets if ds.description.subject in unique_subjects[val_idx]])
 
         # Balance windows per class for train and val sets
-        train_ds = balance_windows_by_class(train_ds, random_seed=random_add)
-        val_ds = balance_windows_by_class(val_ds, random_seed=random_add)
+        train_labels = [label for _, label, _ in train_ds]
+        val_labels = [label for _, label, _ in val_ds]
+        train_ds = balance_windows_by_class(train_ds, train_labels, random_seed=data_split_seed)
+        val_ds = balance_windows_by_class(val_ds, val_labels, random_seed=data_split_seed)
 
         analyze_fold_distribution(train_ds, val_ds)
+
+        L.seed_everything(random_add)
 
         # Create dataloaders with smaller batch size to save memory
         train_loader = DataLoader(train_ds, batch_size=batch_size, shuffle=True, prefetch_factor=4, num_workers=4)
         val_loader   = DataLoader(  val_ds, batch_size=batch_size, prefetch_factor=4, num_workers=4)
 
+
+        # Load test data
+        test_cached_data_folder_name = "/home/arno/v1/eegdash/notebook/data/hbn_" + test_release + "_" + tasks[0] + "_" + target_name
+        test_windows_ds = load_concat_dataset(path=test_cached_data_folder_name, preload=False)
+        test_windows_ds = BaseConcatDataset([ds for ds in test_windows_ds.datasets
+                                        if is_dataset_within_threshold_class_by_factor(
+                                            ds, 
+                                            factor=target_name, 
+                                            positive_threshold=0.5, 
+                                            negative_threshold=-0.5
+                                        )
+        ])
+        # Relabel windows based on factor
+        test_relabled_windows_ds = BaseConcatDataset([RelabelWindowsDatasetWrapper(ds, factor=target_name, positive_threshold=0.5, negative_threshold=-0.5) for ds in test_windows_ds.datasets])
+        test_loader = DataLoader(test_relabled_windows_ds, batch_size=batch_size, prefetch_factor=4, num_workers=4)
 
         # create model and hparams dict
         hparams = {
@@ -386,9 +505,9 @@ def run_task(releases, tasks, target_name, folds=10, weights=None, model_freeze=
         from lightning.pytorch.callbacks.early_stopping import EarlyStopping
         early_stopping = EarlyStopping(
             monitor='val/accuracy_epoch',
-            patience=15,
+            patience=5,
             mode='max',
-            min_delta=0.01
+            min_delta=0.001
         )
         # Find learning rate before logger/trainer creation
         # trainer_tmp = L.Trainer(
@@ -407,19 +526,25 @@ def run_task(releases, tasks, target_name, folds=10, weights=None, model_freeze=
 
 
         # Now create logger with correct hparams
-        tb_logger = TensorBoardLogger(
-            save_dir="lightning_logs",
-            name=f"balanced_experiment_{'_'.join(tasks)}_{target_name}_{model_name}_k{folds}",
+        # tb_logger = TensorBoardLogger(
+        #     save_dir="lightning_logs",
+        #     name=f"balanced_experiment_{'_'.join(tasks)}_{target_name}_{model_name}_k{folds}",
+        # )
+        from lightning.pytorch.loggers import WandbLogger
+        wandb_logger = WandbLogger(
+            project="eegchallenge-test",
+            name=experiment_name,
+            config=hparams
         )
-        # Log hparams 
-        tb_logger.log_hyperparams(hparams)
+        # Log hparams
+        # tb_logger.log_hyperparams(hparams)
         # Now create trainer with logger and early stopping
         trainer = L.Trainer(
             max_epochs=train_epochs,
             accelerator="auto",
             devices=1 if torch.cuda.is_available() else None,
             enable_checkpointing=False,
-            logger=None, #tb_logger,
+            logger=wandb_logger, #tb_logger,
             callbacks=[early_stopping]
         )
 
@@ -431,6 +556,12 @@ def run_task(releases, tasks, target_name, folds=10, weights=None, model_freeze=
         val_acc = float(trainer.callback_metrics.get('val/accuracy_epoch', 0.0))
         correct_train_list.append(train_acc)
         correct_val_list.append(val_acc)
+        print('correct_train_list:', correct_train_list)
+        print('correct_val_list:', correct_val_list)
+
+        # Test model
+        test_results = trainer.test(model, test_loader)
+        print(f"Test results: {test_results}")
 
 
         # Save model weights 
@@ -520,7 +651,7 @@ new_tasks = { 'movies': ['DespicableMe', 'DiaryOfAWimpyKid', 'FunwithFractals', 
   'symbolSearch': ['symbolSearch'],
   'all_tasks': ['DespicableMe', 'DiaryOfAWimpyKid', 'FunwithFractals', 'RestingState', 'ThePresent', 'contrastChangeDetection', 'seqLearning6target', 'seqLearning8target', 'surroundSupp', 'symbolSearch']
   }
-releases_train = ['R12'] #releases[:-1]
+releases_train = releases[:-1]
 tasks = [  
 # 'DespicableMe',
 #   'DiaryOfAWimpyKid',
@@ -530,92 +661,102 @@ tasks = [
   'contrastChangeDetection',
 #   'seqLearning6target',
 #   'seqLearning8target',
-  'surroundSupp',
+#   'surroundSupp',
 #   'symbolSearch'
 ]
 factors = ['attention']
-folds = 10
+folds = 1
 
 import random
 from torch.utils.data import Subset
 import numpy as np
-for factor in factors:
-    # train set on all releases
-    # if os.path.exists(json_file):
-    #     print(f"Skipping {task}_{factor} because it already exists")
-    #     continue
-    batch_sizes = [64] #[64, 128]#, 256, 512, 1024, 2048]
-    lrates = [0.0005]#[0.002, 0.0002, 0.00006, 0.00002]
-    dropouts = [0.7] #[0.6, 0.7, 0.8]
-    seeds = [15, 20, 31, 64, 77, 88, 99, 0, 42, 9]
-    # seeds = [0]
-    models = ['EEGConformerSimplified']#, 'TSception']#, 'EEGNeX']
-    for model_name in models:
-        combinations = [(batch_size, lrate, random_add, dropout) for batch_size in batch_sizes for lrate in lrates for random_add in seeds for dropout in dropouts]
-        # combinations = random.sample(combinations, min(20, len(combinations)))
-        random.shuffle(combinations)
-        # combinations = [(64, 0.002, seed, 0.6) for seed in seeds]
-        print(f"Total combinations to run: {len(combinations)}")
-        for batch_size, lrate, random_add, dropout in combinations:
-            # if check_experiment_exists(task, factor, model_name, folds, batch_size, lrate, random_add, dropout):
-            #     print(f"Skipping existing experiment for {task}, {factor}, {model_name}, {folds}, {batch_size}, {lrate}, {random_add}, {dropout}")
-            #     continue
-            experiment_name = f"R12_task_{'_'.join(tasks)}_{factor}_{model_name}_bs{batch_size}_lr{lrate}_seed{random_add}_dropout{dropout}_k{folds}"
-            print(f"Running experiment {experiment_name}")
-            weights_file_base = f"checkpoints/{experiment_name}.pth"
-            res_train, res_val = run_task(
-                releases_train, tasks, factor, folds=folds, random_add=random_add,
-                train_epochs=70, batch_size=batch_size, lrate=lrate,
-                model_name=model_name, dropout=dropout, save_weights=weights_file_base
-            )
-            json_file = f"results/{experiment_name}.json"
-            with open(json_file, "w") as f:
-                json.dump({"train": res_train, "val": res_val}, f)
+for release in releases[:-1]:
+    releases_train = [release]
+    for factor in factors:
+        # train set on all releases
+        # if os.path.exists(json_file):
+        #     print(f"Skipping {task}_{factor} because it already exists")
+        #     continue
+        batch_sizes = [256] #[64, 128]#, 256, 512, 1024, 2048]
+        lrates = [0.0005]#[0.002, 0.0002, 0.00006, 0.00002]
+        dropouts = [0.5] #[0.6, 0.7, 0.8]
+        seeds = [1390] #[15, 20, 31, 64, 77, 88, 99, 0, 42, 9]
+        data_split_seed = 1925
+        epochs = 10
+        # seeds = [0]
+        models = ['EEGConformer']#, 'TSception']#, 'EEGNeX']
+        for model_name in models:
+            combinations = [(batch_size, lrate, random_add, dropout) for batch_size in batch_sizes for lrate in lrates for random_add in seeds for dropout in dropouts]
+            # combinations = random.sample(combinations, min(20, len(combinations)))
+            random.shuffle(combinations)
+            # combinations = [(64, 0.002, seed, 0.6) for seed in seeds]
+            print(f"Total combinations to run: {len(combinations)}")
+            for batch_size, lrate, random_add, dropout in combinations:
+                # if check_experiment_exists(task, factor, model_name, folds, batch_size, lrate, random_add, dropout):
+                #     print(f"Skipping existing experiment for {task}, {factor}, {model_name}, {folds}, {batch_size}, {lrate}, {random_add}, {dropout}")
+                #     continue
+                releases_str = f"R{releases_train[0].replace('R','')}-{releases_train[-1].replace('R','')}" if len(releases_train) > 1 else releases_train[0]
+                experiment_name = f"{releases_str}_task_{'_'.join(tasks)}_{factor}_{model_name}_bs{batch_size}_lr{lrate}_seed{random_add}_dropout{dropout}_k{folds}_datasplit{data_split_seed}_epochs{epochs}"
+                print(f"Running experiment {experiment_name}")
+                weights_file_base = f"checkpoints/{experiment_name}.pth"
+                res_train, res_val = run_task(
+                    releases_train, tasks, factor, folds=folds, random_add=random_add,
+                    train_epochs=epochs, batch_size=batch_size, lrate=lrate,
+                    model_name=model_name, dropout=dropout, save_weights=weights_file_base,
+                    data_split_seed=data_split_seed, test_release="R12", experiment_name=experiment_name
+                )
+                json_file = f"results/{experiment_name}.json"
+                with open(json_file, "w") as f:
+                    json.dump({"train": res_train, "val": res_val}, f)
 
-            # test set on R12
-            # cached_data_folder_names = []
-            # for task in tasks:
-            #     cached_data_folder_name = "/home/arno/v1/eegdash/notebook/data/hbn_R12_" + task + "_" + factor
-            #     if os.path.exists(cached_data_folder_name):
-            #         cached_data_folder_names.append(cached_data_folder_name)
-            #     else:
-            #         print(f"Missing DataError({cached_data_folder_name}): You first run process_data to run the task for each release")
+                # test set on R12
+                cached_data_folder_names = []
+                for task in tasks:
+                    cached_data_folder_name = "/home/arno/v1/eegdash/notebook/data/hbn_R12_" + task + "_" + factor
+                    if os.path.exists(cached_data_folder_name):
+                        cached_data_folder_names.append(cached_data_folder_name)
+                    else:
+                        print(f"Missing DataError({cached_data_folder_name}): You first run process_data to run the task for each release")
 
-            # print("Loading data from disk")
-            # windows_ds = []
-            # for cached_data_folder_name in cached_data_folder_names:
-            #     windows_ds_tmp = load_concat_dataset(path=cached_data_folder_name, preload=False)
-            #     windows_ds.extend([ds for ds in windows_ds_tmp.datasets])
-            #     print(f"Number of datasets in {cached_data_folder_name}: {len(windows_ds_tmp.datasets)}")
+                test_cached_data_folder_name = "/home/arno/v1/eegdash/notebook/data/hbn_R12_" + tasks[0] + "_" + factor
+                test_windows_ds = load_concat_dataset(path=test_cached_data_folder_name, preload=False)
+                test_windows_ds = BaseConcatDataset([ds for ds in test_windows_ds.datasets
+                                                if is_dataset_within_threshold_class_by_factor(
+                                                    ds, 
+                                                    factor=factor, 
+                                                    positive_threshold=0.5, 
+                                                    negative_threshold=-0.5
+                                                )
+                ])
+                # Relabel windows based on factor
+                test_relabled_windows_ds = BaseConcatDataset([RelabelWindowsDatasetWrapper(ds, factor=factor, positive_threshold=0.5, negative_threshold=-0.5) for ds in test_windows_ds.datasets])
+                test_labels = [label for _, label, _ in test_relabled_windows_ds]
+                test_ds = balance_windows_by_class(test_relabled_windows_ds, test_labels, random_seed=data_split_seed)
+                analyze_fold_distribution(test_ds, test_ds)
 
-            # test_ds = BaseConcatDataset(windows_ds)
-            # test_ds = BaseConcatDataset([ds for ds in test_ds.datasets if ds.description['sex'] in ['M', 'F']])
-            # test_ds = balance_windows_by_class(test_ds, random_seed=random_add)
-            # analyze_fold_distribution(test_ds, test_ds)
-            # test_loader = DataLoader(test_ds, batch_size=batch_size, num_workers=4)
+                test_loader = DataLoader(test_ds, batch_size=batch_size, prefetch_factor=4, num_workers=4)
 
-            # res_test_r12 = []
-            # for fold in range(folds):
-            #     weights_file = weights_file_base.replace(".pth", "") + f"_{fold}.pth"
-            #     # load model weights and run inference on R12
-            #     if not os.path.exists(weights_file):
-            #         print(f"Missing weights file {weights_file}, skipping")
-            #         continue
-            #     model = create_model({
-            #         "batch_size": batch_size,
-            #         "dropout": dropout,
-            #         "lr": lrate,
-            #         "random_seed": random_add,
-            #         "model_name": model_name,
-            #         "fold": fold,
-            #     })
-            #     model.load_state_dict(torch.load(weights_file, map_location="cpu"))
-            #     model.eval()
-            #     trainer_test = L.Trainer(accelerator="auto", devices=1 if torch.cuda.is_available() else None, logger=False, enable_checkpointing=False)
-            #     test_result = trainer_test.validate(model, test_loader, verbose=False)
-            #     test_acc = float(test_result[0].get('val/accuracy_epoch', 0.0))
-            #     res_test_r12.append(test_acc)
-            # print(f"Test on R12 acc: {res_test_r12}")
-            
-            # with open(json_file, "w") as f:
-            #     json.dump({"train": res_train, "val": res_val, "test": res_test_r12}, f)
+                res_test_r12 = []
+                for fold in range(folds):
+                    weights_file = weights_file_base.replace(".pth", "") + f"_{fold}.pth"
+                    # load model weights and run inference on R12
+                    if not os.path.exists(weights_file):
+                        print(f"Missing weights file {weights_file}, skipping")
+                        continue
+                    model = create_model({
+                        "batch_size": batch_size,
+                        "dropout": dropout,
+                        "lr": lrate,
+                        "random_seed": random_add,
+                        "model_name": model_name,
+                    })
+                    model.load_state_dict(torch.load(weights_file, map_location="cpu"))
+                    model.eval()
+                    trainer_test = L.Trainer(accelerator="auto", devices=1 if torch.cuda.is_available() else None, logger=False, enable_checkpointing=False)
+                    test_result = trainer_test.test(model, test_loader)
+                    res_test_r12.append(float(trainer_test.callback_metrics.get('test/accuracy_epoch', 0.0)))
+                    print(test_result)
+                print(f"Test on R12 acc: {res_test_r12}")
+                
+                with open(json_file, "w") as f:
+                    json.dump({"train": res_train, "val": res_val, "test": res_test_r12}, f)

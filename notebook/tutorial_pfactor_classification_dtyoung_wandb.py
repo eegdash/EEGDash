@@ -178,6 +178,14 @@ def create_model(config):
                     sfreq=128,
                     drop_prob=drop_prob,
                 )
+            elif config['model_name'] == 'FBCNet':
+                from braindecode.models import FBCNet
+                self.model = FBCNet(
+                    n_chans=24,
+                    n_outputs=2,
+                    n_times=256,
+                    sfreq=128,
+                )
             elif config['model_name'] == 'EEGConformerSimplified':
                 self.model = EEGConformer(
                     n_chans=24,
@@ -356,7 +364,7 @@ def run_task(config=None):
             splitter = StratifiedKFold(n_splits=config['folds'], shuffle=True, random_state=config['data_split_seed'])
             splits = splitter.split(unique_subjects, unique_gender)
         else:
-            train_idx, val_idx = train_test_split(np.arange(len(unique_subjects)),train_size=0.6,stratify=unique_gender)#,random_state=config['data_split_seed']) # TODO is this the right approach?
+            train_idx, val_idx = train_test_split(np.arange(len(unique_subjects)),train_size=0.8,stratify=unique_gender)#,random_state=config['data_split_seed']) # TODO is this the right approach?
             splits = [(train_idx, val_idx)]
             
         for it_fold, (train_idx, val_idx) in enumerate(splits):
@@ -375,8 +383,6 @@ def run_task(config=None):
             val_loader   = DataLoader(  val_ds, batch_size=config['batch_size'], prefetch_factor=4, num_workers=4)
 
             
-            
-
             # create model and hparams dict
             hparams = {
                 "batch_size": config['batch_size'],
@@ -391,9 +397,9 @@ def run_task(config=None):
             from lightning.pytorch.callbacks.early_stopping import EarlyStopping
             early_stopping = EarlyStopping(
                 monitor='val/accuracy_epoch',
-                patience=15,
+                patience=5,
                 mode='max',
-                min_delta=0.01
+                min_delta=0.001
             )
 
             # --- WandbLogger integration for sweeps ---
@@ -446,20 +452,6 @@ def run_task(config=None):
         with open(json_file, "w") as f:
             json.dump({"train": correct_train_list, "val": correct_val_list}, f)
         return correct_train_list, correct_val_list
-            #     max_epochs=1,
-            #     accelerator="auto",
-            #     devices=1 if torch.cuda.is_available() else None,
-            #     enable_checkpointing=False,
-            #     logger=False,
-            #     callbacks=[]
-            # )
-            # tuner = Tuner(trainer_tmp)
-            # lr_finder = tuner.lr_find(model, train_loader, val_loader)
-            # new_lr = lr_finder.suggestion()
-            # model.hparams.lr = new_lr
-            # hparams["lr_final"] = float(new_lr)
-
-            # (block replaced above)
 
 def check_experiment_exists(task, factor, model_name, folds, batch_size, lrate, random_add, dropout):
     log_folder = Path("lightning_logs") / f"experiment_{task}_{factor}_{model_name}_k{folds}"
@@ -498,7 +490,7 @@ results_dir.mkdir(exist_ok=True)
 factors = ["sex", "age", "p_factor", "attention", "internalizing", "externalizing"]
 releases = ["R1", "R2", "R3", "R4", "R5", "R6", "R7", "R8", "R9", "R10", "R11", "R12"]
 
-releases_train = ["R12"] # releases[:-1]
+releases_train = releases[:-1]
 tasks = [  
 # 'DespicableMe',
 #   'DiaryOfAWimpyKid',
@@ -516,7 +508,7 @@ factor = 'attention'
 
 # for factor in factors:
 sweep_config = {
-    'method': 'bayes'
+    'method': 'random'
 }
 metric = {
     'name': 'val/accuracy_epoch',
@@ -535,16 +527,19 @@ parameters_dict = {
         # 'values': [0.00015, 0.0002],
     },
     'model': {
-        'values': ['EEGConformer', 'TSception', 'EEGNeX', 'EEGConformerSimplified']
+        'values': ['FBCNet', 'EEGConformer', 'TSception', 'EEGNeX']
     },
     # 'model': {
     #     'value': 'EEGConformerSimplified',
     # },
     'dropout': {
-        'values': [0.3, 0.4, 0.5, 0.6, 0.7]
+        'values': [0.5, 0.6, 0.7]
     },
     'seed': {
-        'value': int(np.random.randint(0, 100, size=1)[0])
+        'values': [int(np.random.randint(2000)) for _ in range(20)]
+    },
+    'data_split_seed': {
+        'values': [int(np.random.randint(2000)) for _ in range(10)]
     },
     'epochs': {
         'value': 70

@@ -3,6 +3,7 @@
 #
 # First we find one resting state dataset for a collection of subject. The dataset ds005505 contains 136 subjects with both male and female participants.
 # %%
+import wandb
 from eegdash import EEGDashDataset
 from eegdash.api import EEGDashDataset
 from eegdash.dataset.dataset import EEGChallengeDataset
@@ -10,68 +11,41 @@ from braindecode.preprocessing import Preprocessor, create_fixed_length_windows,
 from braindecode.datasets.base import BaseConcatDataset
 from braindecode.datautil import load_concat_dataset
 from pathlib import Path
-import numpy as np
 import pandas as pd
-import numpy as np
 import torch
 from torch.nn import functional as F
 from sklearn.model_selection import train_test_split, StratifiedKFold
 from torch.utils.data import DataLoader
 import os
-from scipy.stats import bootstrap
 import lightning as L
 from braindecode.models import EEGNeX, TSception, EEGConformer
-from lightning.pytorch.tuner import Tuner
-from torchmetrics import Recall, Precision, F1Score, Accuracy
-from lightning.pytorch.loggers import TensorBoardLogger
+from torchmetrics import MeanAbsoluteError, MeanSquaredError, R2Score
+from lightning.pytorch.loggers import TensorBoardLogger, WandbLogger
+from torch.utils.data import Subset
+from pathlib import Path
+import json
+from torch.utils.data import Subset
+import numpy as np
+
+
 cache_dir = Path("/mnt/v1/arno/eeg2025")
 SFREQ = 100  # sampling frequency
-badR12subjects = ['NDARDN464KAR', 'NDARHU274MFC', 'NDARRK924TXM', 'NDARZW883MRK', 'NDARCU334XGH', 'NDARDL605EPP', 'NDARGE263FL2', 'NDARUJ393MLB', 'NDARBT041ZVD', 'NDARBV702GXD', 'NDARLY404AT0', 'NDARKA137FMR', 'NDARRU798JJE', 'NDARLB355NBE', 'NDARHX810LFM', 'NDARWW255YVV', 'NDARYF940LPC', 'NDARWU220LTU', 'NDARGH998HWT', 'NDARXU991EN2', 'NDARPA588ELA', 'NDARXJ276RAB', 'NDARHU667LFJ', 'NDARCP003NM8', 'NDARXT395LXA', 'NDARPA837BMM', 'NDARRC913TGF', 'NDARNG792YGE', 'NDARCH706VKG', 'NDARBK887DTY', 'NDARMX705VWY', 'NDARXX473KC4', 'NDARYW598LYE', 'NDARHF049TYW', 'NDARTP360FA8', 'NDARCD303NCU', 'NDARAY581YVJ', 'NDARAX700TR4', 'NDARTP117MFZ', 'NDARLU018MNV', 'NDARNK157VFZ', 'NDARAP654FVP', 'NDARXD533AD2', 'NDARKV002ABE', 'NDARZM596RDP', 'NDARYD337YKP', 'NDARAA408JMA', 'NDARCL431HGF', 'NDARMD968NG6', 'NDARJH611URF', 'NDAREL747HU0', 'NDARDU912NH6', 'NDARYE572ZCA', 'NDARAX310KGP', 'NDARJT898XFP', 'NDARUZ436LDE', 'NDARDV402HAG', 'NDARCL936UBX', 'NDAREN375UL1', 'NDARYM328NWA', 'NDARXH781ECX', 'NDARDT501GJR', 'NDARVF993JYD', 'NDARJN021ACG', 'NDARWH621NPQ', 'NDARGN677GZA', 'NDARFG948LTC', 'NDARMC098RWA', 'NDARYL950DBT', 'NDARFD818MHL', 'NDARVL005LNC', 'NDARJT708PRT', 'NDARLA605AUE', 'NDARTN385XB2', 'NDARME353RCF', 'NDARCX563TDZ', 'NDAREK856CL2', 'NDARAH276NPP', 'NDAREX063EMH', 'NDARFA106HC3', 'NDARVV405XEK']
-
-from scipy.linalg import fractional_matrix_power
-
-# def euclidean_alignment(win_ds):
-#     """
-#     Euclidean Alignment for EEG.
-    
-#     Parameters
-#     ----------
-#     trials : list or array of shape (n_trials, n_channels, n_times)
-#         Multichannel time series.
-    
-#     Returns
-#     -------
-#     aligned : np.ndarray
-#         Aligned trials, same shape as input.
-#     """
-#     # Compute covariance of each trial
-#     covs = [np.cov(X[0]) for X in win_ds]  # X shape: (channels, time)
-    
-#     # Mean covariance
-#     mean_cov = np.mean(covs, axis=0)
-    
-#     # Whitening transform
-#     mean_cov_inv_sqrt = fractional_matrix_power(mean_cov, -0.5)
-    
-#     # Apply alignment
-#     aligned = [(mean_cov_inv_sqrt @ X[0],X[1],X[2]) for X in win_ds]
-#     return np.array(aligned)
 
 def process_data(releases, tasks, target_names):
     for release in releases:
         missing = []
         for task in tasks:
             for target_name in target_names:
-                cached_data_folder_name = "data/hbn_" + release + "_" + task + "_" + target_name
+                cached_data_folder_name = "data/hbn_reg_" + release + "_" + task + "_" + target_name
                 if not os.path.exists(cached_data_folder_name):
                     if target_name == target_names[0]:
                         missing.append(task)
                     
-        if len(missing) < 3:
-            print(f"All data exists in {release} missing [{', '.join(missing)}]")
-            continue
-        else:
-            print(f"Incomplete data in {release}: Missing [{', '.join(missing)}]")
+        # if len(missing) < 3:
+        #     print(f"All data exists in {release} missing [{', '.join(missing)}]")
+        #     continue
+        # else:
+        #     print(f"Incomplete data in {release}: Missing [{', '.join(missing)}]")
         
         if release != "R12":
             ds_sexdata = EEGChallengeDataset(
@@ -81,7 +55,7 @@ def process_data(releases, tasks, target_names):
                 mini=False,
                 # run="1",
                 download=False,
-                target_name="sex"
+                target_name=target_names[0]
             )
         else:
             ds_sexdata = EEGDashDataset(
@@ -90,7 +64,7 @@ def process_data(releases, tasks, target_names):
                 task=tasks,
                 # run="1",
                 download=False,
-                target_name="sex"
+                target_name=target_names[0]
             )        
         
         sub_rm = ["NDARWV769JM7", "NDARME789TD2", "NDARUA442ZVF", "NDARJP304NK1", "NDARTY128YLU", "NDARDW550GU6", "NDARLD243KRE", "NDARUJ292JXV", "NDARBA381JGH"]
@@ -119,61 +93,29 @@ def process_data(releases, tasks, target_names):
         print("Preprocessing completed successfully!")
 
         for task in tasks:
-            for target_name in target_names:
-                # %%
-                num_ignore = 0
-                if target_name != "sex":
-                    for ds in all_datasets.datasets:
-                        # randomly assign gender to "M" or "F"
-                        # ds.description['sex'] = np.random.choice(['M', 'F'])
-                        
-                        if ds.description[target_name] is not None and not pd.isna(ds.description[target_name]):
-                            if target_name == "age":
-                                if ds.description[target_name] > 12:
-                                    ds.description['sex'] = 'M'
-                                elif ds.description[target_name] < 8:
-                                    ds.description['sex'] = 'F'
-                                else:
-                                    ds.description['sex'] = 'B'
-                            else:
-                                if ds.description[target_name] > 0.5:
-                                    ds.description['sex'] = 'M'
-                                elif ds.description[target_name] < -0.5:
-                                    ds.description['sex'] = 'F'
-                                else:
-                                    ds.description['sex'] = 'B'
-                        else:
-                            num_ignore += 1
-                            ds.description['sex'] = 'B'
+            if len(all_datasets) > 0:                                 
+                print(f"Preprocessing {len(all_datasets.datasets)} datasets...")
                 
-                print(f"Number of subjects ignored: {num_ignore}")
-                ds_list = [ds for ds in all_datasets.datasets if ds.description['task'] == task and ds.description['sex'] != 'B' ]
+                # extract windows and save to disk
+                windows_ds = create_fixed_length_windows(
+                    all_datasets,
+                    start_offset_samples=0,
+                    stop_offset_samples=None,
+                    window_size_samples=256,
+                    window_stride_samples=256,
+                    drop_last_window=True,
+                    preload=False  # Keep preload=False to save memory
+                )
 
-                if len(ds_list) > 0:                 
-                    all_datasets2 = BaseConcatDataset(ds_list)
-                    
-                    print(f"Preprocessing {len(all_datasets2.datasets)} datasets...")
-                    
-                    # extract windows and save to disk
-                    windows_ds = create_fixed_length_windows(
-                        all_datasets2,
-                        start_offset_samples=0,
-                        stop_offset_samples=None,
-                        window_size_samples=256,
-                        window_stride_samples=256,
-                        drop_last_window=True,
-                        preload=False  # Keep preload=False to save memory
-                    )
-
-                    # save to disk
-                    cached_data_folder_name = "data/hbn_" + release + "_" + task + "_" + target_name
-                    os.makedirs(cached_data_folder_name, exist_ok=True)
-                    windows_ds.save(cached_data_folder_name, overwrite=True)
-                    
-                    # reload to create metadata_df.pkl
-                    windows_ds = load_concat_dataset(cached_data_folder_name, preload=False)
-                    print(f"Number of datasets in {cached_data_folder_name}: {len(windows_ds.datasets)}")
-                    print(f"number of samples in {cached_data_folder_name} : {len(windows_ds)}")
+                # save to disk
+                cached_data_folder_name = "data/hbn_reg_" + release + "_" + task + "_" + target_name
+                os.makedirs(cached_data_folder_name, exist_ok=True)
+                windows_ds.save(cached_data_folder_name, overwrite=True)
+                
+                # reload to create metadata_df.pkl
+                windows_ds = load_concat_dataset(cached_data_folder_name, preload=False)
+                print(f"Number of datasets in {cached_data_folder_name}: {len(windows_ds.datasets)}")
+                print(f"number of samples in {cached_data_folder_name} : {len(windows_ds)}")
 
 def create_model(config):
     class EEGModel(L.LightningModule):
@@ -183,7 +125,7 @@ def create_model(config):
             if config['model_name'] == 'EEGNeX':
                 self.model = EEGNeX(
                     n_chans=24,
-                    n_outputs=2,
+                    n_outputs=1,
                     n_times=256,
                     sfreq=128,
                     drop_prob=drop_prob,
@@ -191,7 +133,7 @@ def create_model(config):
             elif config['model_name'] == 'TSception':
                 self.model = TSception(
                     n_chans=24,
-                    n_outputs=2,
+                    n_outputs=1,
                     n_times=256,
                     sfreq=128,
                     drop_prob=drop_prob,
@@ -199,7 +141,7 @@ def create_model(config):
             elif config['model_name'] == 'EEGConformer':
                 self.model = EEGConformer(
                     n_chans=24,
-                    n_outputs=2,
+                    n_outputs=1,
                     n_times=256,
                     sfreq=128,
                     drop_prob=drop_prob,
@@ -207,7 +149,7 @@ def create_model(config):
             elif config['model_name'] == 'EEGConformerSimplified':
                 self.model = EEGConformer(
                     n_chans=24,
-                    n_outputs=2,
+                    n_outputs=1,
                     n_times=256,
                     sfreq=128,
                     drop_prob=drop_prob,
@@ -219,14 +161,13 @@ def create_model(config):
                     pool_time_length=64,     # Adjust pooling window
                 )
             self.lr = config['lr']
-            self.precision = Precision(task="binary")
-            self.recall = Recall(task="binary")
-            self.f1 = F1Score(task="binary")
-            self.accuracy = Accuracy(task="binary")
-            self.val_precision = Precision(task="binary")
-            self.val_recall = Recall(task="binary")
-            self.val_f1 = F1Score(task="binary")
-            self.val_accuracy = Accuracy(task="binary")
+            self.mae = MeanAbsoluteError()
+            self.mse = MeanSquaredError()
+            self.r2 = R2Score()
+            self.val_mae = MeanAbsoluteError()
+            self.val_mse = MeanSquaredError()
+            self.val_r2 = R2Score()
+            self.target_std = None  # Will store target standard deviation for normalized RMSE
             self.save_hyperparameters(config)
 
         def normalize_data(self, x):
@@ -238,35 +179,73 @@ def create_model(config):
 
         def _forward(self, batch):
             x, y, subjects = batch
-            gender_mapping = {"M": 0, "F": 1}
-            # y is a tuple of (n_samples,) with values "M" or "F"
-            y = torch.tensor([gender_mapping[gender] for gender in y], dtype=torch.long, device=self.device)
+            # Debug: print information about target values
+            if hasattr(self, '_debug_printed') == False:
+                print(f"Target values type: {type(y[0]) if len(y) > 0 else 'empty'}")
+                print(f"Target values sample: {y[:5] if len(y) >= 5 else y}")
+                print(f"Target values unique types: {set(type(val) for val in y)}")
+                self._debug_printed = True
+            
+            # y is a tuple of (n_samples,) with continuous values for regression
+            # Handle various data quality issues
+            y_processed = []
+            for val in y:
+                if val is None:
+                    y_processed.append(0.0)
+                elif isinstance(val, str):
+                    try:
+                        y_processed.append(float(val))
+                    except ValueError:
+                        y_processed.append(0.0)
+                elif isinstance(val, (int, float)):
+                    if torch.isnan(torch.tensor(val)):
+                        y_processed.append(0.0)
+                    else:
+                        y_processed.append(float(val))
+                else:
+                    y_processed.append(0.0)
+            
+            y = torch.tensor(y_processed, dtype=torch.float, device=self.device)
+            
+            # Store target standard deviation for normalized RMSE computation
+            if self.target_std is None:
+                self.target_std = y.std().item()
+            
             scores = self.model(self.normalize_data(x))
-            _, preds = scores.max(1)
-            loss = F.cross_entropy(scores, y)
+            preds = scores.squeeze()                     # shape (batch_size,)
+            loss = F.mse_loss(preds, y)
             return loss, preds, y
 
         def training_step(self, batch, batch_idx):
             loss, preds, y = self._forward(batch)
-            self.accuracy.update(preds, y)
-            self.precision.update(preds, y)
-            self.recall.update(preds, y)
-            self.f1.update(preds, y)
+            self.mae.update(preds, y)
+            self.mse.update(preds, y)
+            self.r2.update(preds, y)
+            
+            # Compute normalized RMSE (RMSE / std)
+            normalized_rmse = torch.sqrt(F.mse_loss(preds, y)) / (self.target_std + 1e-8)
+            self.log('train/normalized_rmse', normalized_rmse, on_step=True, on_epoch=True)
             self.log('train/loss', loss, on_step=True, on_epoch=True, prog_bar=True)
             return loss
         
         def on_train_epoch_end(self):
-            self.log("train/recall_epoch", self.recall, on_step=False, on_epoch=True)
-            self.log("train/precision_epoch", self.precision, on_step=False, on_epoch=True)
-            self.log("train/f1_epoch", self.f1, on_step=False, on_epoch=True)
-            self.log("train/accuracy_epoch", self.accuracy, on_step=False, on_epoch=True, prog_bar=True)
+            self.log("train/mae_epoch", self.mae, on_step=False, on_epoch=True)
+            self.log("train/mse_epoch", self.mse, on_step=False, on_epoch=True)
+            self.log("train/r2_epoch", self.r2, on_step=False, on_epoch=True, prog_bar=True)
+            
+            # Compute normalized RMSE for epoch
+            train_normalized_rmse = torch.sqrt(self.mse.compute()) / (self.target_std + 1e-8)
+            self.log("train/normalized_rmse_epoch", train_normalized_rmse, on_step=False, on_epoch=True)
 
         def validation_step(self, batch, batch_idx):
             loss, preds, y = self._forward(batch)
-            self.val_accuracy.update(preds, y)
-            self.val_precision.update(preds, y)
-            self.val_recall.update(preds, y)
-            self.val_f1.update(preds, y)
+            self.val_mae.update(preds, y)
+            self.val_mse.update(preds, y)
+            self.val_r2.update(preds, y)
+            
+            # Compute normalized RMSE (RMSE / std)
+            val_normalized_rmse = torch.sqrt(F.mse_loss(preds, y)) / (self.target_std + 1e-8)
+            self.log('val/normalized_rmse', val_normalized_rmse, on_step=False, on_epoch=True)
             self.log('val/loss', loss, on_step=False, on_epoch=True)
         
         def on_train_start(self):
@@ -274,12 +253,15 @@ def create_model(config):
             self.log("hp_metric", 0.5, on_epoch=True)
 
         def on_validation_epoch_end(self):
-            self.log("val/recall_epoch", self.val_recall, on_step=False, on_epoch=True) # AI says it should be self.val_recall
-            self.log("val/precision_epoch", self.val_precision, on_step=False, on_epoch=True)
-            self.log("val/f1_epoch", self.val_f1, on_step=False, on_epoch=True)
-            val_acc = self.val_accuracy.compute()
-            self.log("val/accuracy_epoch", val_acc, on_step=False, on_epoch=True, prog_bar=True)
-            self.log("hp_metric", val_acc, on_epoch=True)
+            self.log("val/mae_epoch", self.val_mae, on_step=False, on_epoch=True)
+            self.log("val/mse_epoch", self.val_mse, on_step=False, on_epoch=True)
+            val_r2 = self.val_r2.compute()
+            self.log("val/r2_epoch", val_r2, on_step=False, on_epoch=True, prog_bar=True)
+            
+            # Compute normalized RMSE for epoch
+            val_normalized_rmse = torch.sqrt(self.val_mse.compute()) / (self.target_std + 1e-8)
+            self.log("val/normalized_rmse_epoch", val_normalized_rmse, on_step=False, on_epoch=True)
+            self.log("hp_metric", val_r2, on_epoch=True)
 
         def configure_optimizers(self):
             optimizer = torch.optim.AdamW(
@@ -301,56 +283,12 @@ def create_model(config):
                 "optimizer": optimizer,
                 "lr_scheduler": {
                     "scheduler": scheduler,
-                    "monitor": "val/accuracy_epoch",
+                    "monitor": "val/r2_epoch",
                     "frequency": 1
                 }
             }
 
     return EEGModel(config)
-
-# Add this analysis before training
-def analyze_fold_distribution(train_ds, val_ds, fold_idx):
-    """Analyze gender and subject distribution per fold"""
-    # For Subset, get description DataFrame
-    def get_desc(ds):
-        if hasattr(ds, 'description'):
-            return ds.description
-        elif hasattr(ds, 'dataset') and hasattr(ds.dataset, 'description'):
-            # ds is a Subset
-            return ds.dataset.description.iloc[ds.indices].reset_index(drop=True)
-        else:
-            raise ValueError("Cannot get description from dataset.")
-
-    train_desc = get_desc(train_ds)
-    val_desc = get_desc(val_ds)
-    train_subjects = train_desc["subject"]
-    val_subjects = val_desc["subject"]
-    train_gender_dist = pd.Series(train_desc["sex"]).value_counts()
-    val_gender_dist = pd.Series(val_desc["sex"]).value_counts()
-    print(f"Statistics of balanced dataset for fold {fold_idx}:")
-    print(f"Train subjects: {len(set(train_subjects))}, Val subjects: {len(set(val_subjects))}")
-    print(f"Train gender: {train_gender_dist}")
-    print(f"Val gender: {val_gender_dist}")
-    print(f"Subject overlap: {set(train_subjects) & set(val_subjects)}")
-
-def balance_windows_by_class(ds, random_seed=42):
-    """
-    Returns a torch.utils.data.Subset of ds with equal number of windows for M and F classes.
-    """
-    import numpy as np
-    # Extract all labels at once for better performance
-    metadata_df = ds.get_metadata()
-    labels =np.array(metadata_df['sex'])
-    # labels = np.array([metadata_df.iloc[i]['sex'] for i in range(len(ds))])
-    m_indices = np.where(labels == 'M')[0]
-    f_indices = np.where(labels == 'F')[0]
-    n_min = min(len(m_indices), len(f_indices))
-    rng = np.random.default_rng(random_seed)
-    m_indices = rng.permutation(m_indices)[:n_min]
-    f_indices = rng.permutation(f_indices)[:n_min]
-    selected_indices = np.concatenate([m_indices, f_indices])
-    selected_indices = rng.permutation(selected_indices)
-    return Subset(ds, selected_indices)
 
 def run_task(releases, tasks, target_name, folds=10, weights=None, model_freeze=False, experiment_name=None, random_add=42, train_epochs=20, save_weights="", batch_size=100, lrate=0.00002, model_name = 'EEGNeX', dropout=0.5):
     from torch.utils.data import Subset
@@ -372,7 +310,7 @@ def run_task(releases, tasks, target_name, folds=10, weights=None, model_freeze=
     cached_data_folder_names = []
     for release in releases:
         for task in tasks:
-            cached_data_folder_name = "/home/arno/v1/eegdash/notebook/data/hbn_" + release + "_" + task + "_" + target_name
+            cached_data_folder_name = "/home/arno/v1/eegdash/notebook/data/hbn_reg_" + release + "_" + task + "_" + target_name
             if os.path.exists(cached_data_folder_name):
                 cached_data_folder_names.append(cached_data_folder_name)
             else:
@@ -392,39 +330,21 @@ def run_task(releases, tasks, target_name, folds=10, weights=None, model_freeze=
     # ## Creating a Training and Test Set
     correct_train_list = []
     correct_val_list  = []
+    train_norm_rmse_list = []
+    val_norm_rmse_list = []
     unique_subjects, unique_indices = np.unique(windows_ds.description["subject"], return_index=True)
-    unique_gender = windows_ds.description["sex"][unique_indices].values
-    print(f"Class distribution in full set: {(unique_gender == 'M').sum()} male, {(unique_gender == 'F').sum()} female")
     
     if folds > 1:
         splitter = StratifiedKFold(n_splits=folds, shuffle=True, random_state=random_add)
-        splits = splitter.split(unique_subjects, unique_gender)
+        splits = splitter.split(unique_subjects)
     else:
-        train_idx, val_idx = train_test_split(np.arange(len(unique_subjects)),train_size=0.8,stratify=unique_gender,random_state=random_add)
+        train_idx, val_idx = train_test_split(np.arange(len(unique_subjects)),train_size=0.8,random_state=random_add)
         splits = [(train_idx, val_idx)]
         
     for it_fold, (train_idx, val_idx) in enumerate(splits):
         train_ds = BaseConcatDataset([ds for ds in windows_ds.datasets if ds.description.subject in unique_subjects[train_idx]])
         val_ds   = BaseConcatDataset([ds for ds in windows_ds.datasets if ds.description.subject in unique_subjects[val_idx]])
-
-        # Balance windows per class for train and val sets
-        train_ds = balance_windows_by_class(train_ds, random_seed=random_add)
-        val_ds = balance_windows_by_class(val_ds, random_seed=random_add)
-
-        # For Subset, get description DataFrame
-        # def get_desc(ds):
-        #     if hasattr(ds, 'description'):
-        #         return ds.description
-        #     elif hasattr(ds, 'dataset') and hasattr(ds.dataset, 'description'):
-        #         return ds.dataset.description.iloc[ds.indices].reset_index(drop=True)
-        #     else:
-        #         raise ValueError("Cannot get description from dataset.")
-
-        # train_desc = get_desc(train_ds)
-        # val_desc = get_desc(val_ds)
-        # print(f"Number of windows in balanced set: {len(train_desc)} train, {len(val_desc)} val")
-        # analyze_fold_distribution(train_ds, val_ds, it_fold)
-
+        
         # Create dataloaders with smaller batch size to save memory
         train_loader = DataLoader(train_ds, batch_size=batch_size, shuffle=True, prefetch_factor=4, num_workers=4)
         val_loader   = DataLoader(  val_ds, batch_size=batch_size, prefetch_factor=4, num_workers=4)
@@ -444,7 +364,7 @@ def run_task(releases, tasks, target_name, folds=10, weights=None, model_freeze=
             model.load_state_dict(torch.load(weights))
         from lightning.pytorch.callbacks.early_stopping import EarlyStopping
         early_stopping = EarlyStopping(
-            monitor='val/accuracy_epoch',
+            monitor='val/r2_epoch',
             patience=15,
             mode='max',
             min_delta=0.01
@@ -488,10 +408,14 @@ def run_task(releases, tasks, target_name, folds=10, weights=None, model_freeze=
         trainer.fit(model, train_loader, val_loader)
 
         # Use PyTorch Lightning metrics for kfold reporting
-        train_acc = float(trainer.callback_metrics.get('train/accuracy_epoch', 0.0))
-        val_acc = float(trainer.callback_metrics.get('val/accuracy_epoch', 0.0))
-        correct_train_list.append(train_acc)
-        correct_val_list.append(val_acc)
+        train_r2 = float(trainer.callback_metrics.get('train/r2_epoch', 0.0))
+        val_r2 = float(trainer.callback_metrics.get('val/r2_epoch', 0.0))
+        train_norm_rmse = float(trainer.callback_metrics.get('train/normalized_rmse_epoch', 0.0))
+        val_norm_rmse = float(trainer.callback_metrics.get('val/normalized_rmse_epoch', 0.0))
+        correct_train_list.append(train_r2)
+        correct_val_list.append(val_r2)
+        train_norm_rmse_list.append(train_norm_rmse)
+        val_norm_rmse_list.append(val_norm_rmse)
 
         # Save model weights 
         if save_weights is not None and save_weights != "":
@@ -508,12 +432,18 @@ def run_task(releases, tasks, target_name, folds=10, weights=None, model_freeze=
 
     if len(correct_train_list) > 0:
         train_mean, train_std, train_ci = ci95(correct_train_list)
-        print(f"Train acc: mean={train_mean:.4f}, std={train_std:.4f}, 95% CI=±{train_ci:.4f}")
+        print(f"Train R2: mean={train_mean:.4f}, std={train_std:.4f}, 95% CI=±{train_ci:.4f}")
     if len(correct_val_list) > 0:
         val_mean, val_std, val_ci = ci95(correct_val_list)
-        print(f"Val acc: mean={val_mean:.4f}, std={val_std:.4f}, 95% CI=±{val_ci:.4f}")
+        print(f"Val R2: mean={val_mean:.4f}, std={val_std:.4f}, 95% CI=±{val_ci:.4f}")
+    if len(train_norm_rmse_list) > 0:
+        train_norm_rmse_mean, train_norm_rmse_std, train_norm_rmse_ci = ci95(train_norm_rmse_list)
+        print(f"Train Normalized RMSE: mean={train_norm_rmse_mean:.4f}, std={train_norm_rmse_std:.4f}, 95% CI=±{train_norm_rmse_ci:.4f}")
+    if len(val_norm_rmse_list) > 0:
+        val_norm_rmse_mean, val_norm_rmse_std, val_norm_rmse_ci = ci95(val_norm_rmse_list)
+        print(f"Val Normalized RMSE: mean={val_norm_rmse_mean:.4f}, std={val_norm_rmse_std:.4f}, 95% CI=±{val_norm_rmse_ci:.4f}")
 
-    return correct_train_list, correct_val_list, unique_subjects[val_idx]
+    return correct_train_list, correct_val_list, train_norm_rmse_list, val_norm_rmse_list, unique_subjects[val_idx]
 
 def check_experiment_exists(task, factor, model_name, folds, batch_size, lrate, random_add, dropout):
     log_folder = Path("lightning_logs") / f"experiment_{task}_{factor}_{model_name}_k{folds}"
@@ -594,7 +524,11 @@ tasks = [
 # #   'surroundSupp',
 # #   'symbolSearch'
 ]
+#process_data(releases, tasks, ['externalizing'])
+#sys.exit()
+
 factors = ['externalizing']
+
 models = ['EEGConformerSimplified']#, 'TSception']#, 'EEGNeX']
 folds = 1
 bypass_run = False
@@ -628,18 +562,18 @@ for factor in factors:
             #     continue
             task_str = '_'.join(tasks) if len(tasks) < 3 else 'alltasks'
             release_str = '_'.join(releases_train) if len(releases_train) < 3 else 'allreleases'
-            experiment_name = f"_{release_str}_{task_str}_{factor}_{model_name}_k{folds}"
+            experiment_name = f"__regression_{release_str}_{task_str}_{factor}_{model_name}_k{folds}"
             print(f"Running experiment {experiment_name} with hyperparams: bs={batch_size}, lr={lrate}, seed={random_add}, dropout={dropout}")
             weights_file_base = f"checkpoints/{experiment_name}_bs{batch_size}_lr{lrate}_seed{random_add}_dropout{dropout}.pth"
             json_file = f"results/{experiment_name}_bs{batch_size}_lr{lrate}_seed{random_add}_dropout{dropout}.json"
             if bypass_run == False:
-                res_train, res_val, res_val_subject = run_task(
+                res_train, res_val, train_norm_rmse, val_norm_rmse, res_val_subject = run_task(
                     releases_train, tasks, factor, folds=folds, random_add=random_add, experiment_name=experiment_name,
                     train_epochs=70, batch_size=batch_size, lrate=lrate,
                     model_name=model_name, dropout=dropout, save_weights=weights_file_base
                 )
             else:   
-                res_train, res_val, res_val_subject = [], [], []
+                res_train, res_val, train_norm_rmse, val_norm_rmse, res_val_subject = [], [], [], [], []
                 print(f"Skipping run for {experiment_name} because bypass_run is True")
                 
             # test set on R12
@@ -659,12 +593,12 @@ for factor in factors:
                 print(f"Number of datasets in {cached_data_folder_name}: {len(windows_ds_tmp.datasets)}")
 
             test_ds = BaseConcatDataset(windows_ds)
-            test_ds = BaseConcatDataset([ds for ds in test_ds.datasets if ds.description['sex'] in ['M', 'F'] and ds.description['subject'] not in badR12subjects])
-            test_ds = balance_windows_by_class(test_ds, random_seed=random_add)
+            test_ds = BaseConcatDataset([ds for ds in test_ds.datasets if ds.description['sex'] in ['M', 'F']])
             # analyze_fold_distribution(test_ds, test_ds, 'R12')
             test_loader = DataLoader(test_ds, batch_size=batch_size, num_workers=4)
 
             res_test_r12 = []
+            test_norm_rmse_r12 = []
             for fold in range(folds):
                 weights_file = weights_file_base.replace(".pth", "") + f"_{fold}.pth"
                 # load model weights and run inference on R12
@@ -683,12 +617,23 @@ for factor in factors:
                 model.eval()
                 trainer_test = L.Trainer(accelerator="auto", devices=1 if torch.cuda.is_available() else None, logger=False, enable_checkpointing=False)
                 test_result = trainer_test.validate(model, test_loader, verbose=False)
-                test_acc = float(test_result[0].get('val/accuracy_epoch', 0.0))
-                res_test_r12.append(test_acc)
-            print(f"Test on R12 acc: {res_test_r12}")
+                test_r2 = float(test_result[0].get('val/r2_epoch', 0.0))
+                test_norm_rmse = float(test_result[0].get('val/normalized_rmse_epoch', 0.0))
+                res_test_r12.append(test_r2)
+                test_norm_rmse_r12.append(test_norm_rmse)
+            print(f"Test on R12 R2: {res_test_r12}")
+            print(f"Test on R12 Normalized RMSE: {test_norm_rmse_r12}")
             
             with open(json_file, "w") as f:
-                json.dump({"seed": float(random_add), "train": res_train, "val": res_val, "test": res_test_r12}, f)
+                json.dump({
+                    "seed": float(random_add), 
+                    "train": res_train, 
+                    "val": res_val, 
+                    "test": res_test_r12,
+                    "train_norm_rmse": train_norm_rmse,
+                    "val_norm_rmse": val_norm_rmse,
+                    "test_norm_rmse": test_norm_rmse_r12
+                }, f)
                 
             # radon_add an res_val are single values but res_val_subject is a list, so we need to duplicate the values for each subject
             random_add_dup = [random_add] * len(res_val_subject)
@@ -698,4 +643,4 @@ for factor in factors:
             df = pd.concat([df, new_row], ignore_index=True)
 
 # save pandas dataframe to csv with 5 decimal places
-df.to_csv(f"results/R12_res_val_{models[0]}.csv", index=False, float_format='%.5f')
+df.to_csv(f"results/R12_regression_val_{models[0]}.csv", index=False, float_format='%.5f')

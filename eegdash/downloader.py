@@ -17,18 +17,62 @@ import s3fs
 from fsspec.callbacks import TqdmCallback
 
 
-def get_s3_filesystem():
-    """Returns an S3FileSystem object."""
+def get_s3_filesystem() -> s3fs.S3FileSystem:
+    """Get an anonymous S3 filesystem object.
+
+    Initializes and returns an ``s3fs.S3FileSystem`` for anonymous access
+    to public S3 buckets, configured for the 'us-east-2' region.
+
+    Returns
+    -------
+    s3fs.S3FileSystem
+        An S3 filesystem object.
+
+    """
     return s3fs.S3FileSystem(anon=True, client_kwargs={"region_name": "us-east-2"})
 
 
 def get_s3path(s3_bucket: str, filepath: str) -> str:
-    """Helper to form an AWS S3 URI for the given relative filepath."""
+    """Construct an S3 URI from a bucket and file path.
+
+    Parameters
+    ----------
+    s3_bucket : str
+        The S3 bucket name (e.g., "s3://my-bucket").
+    filepath : str
+        The path to the file within the bucket.
+
+    Returns
+    -------
+    str
+        The full S3 URI (e.g., "s3://my-bucket/path/to/file").
+
+    """
     return f"{s3_bucket}/{filepath}"
 
 
-def download_s3_file(s3_path: str, local_path: Path, s3_open_neuro: bool):
-    """Download function that gets the raw EEG data from S3."""
+def download_s3_file(s3_path: str, local_path: Path, s3_open_neuro: bool) -> Path:
+    """Download a single file from S3 to a local path.
+
+    Handles the download of a raw EEG data file from an S3 bucket, caching it
+    at the specified local path. Creates parent directories if they do not exist.
+
+    Parameters
+    ----------
+    s3_path : str
+        The full S3 URI of the file to download.
+    local_path : pathlib.Path
+        The local file path where the downloaded file will be saved.
+    s3_open_neuro : bool
+        A flag indicating if the S3 bucket is the OpenNeuro main bucket, which
+        may affect path handling.
+
+    Returns
+    -------
+    pathlib.Path
+        The local path to the downloaded file.
+
+    """
     filesystem = get_s3_filesystem()
     if not s3_open_neuro:
         s3_path = re.sub(r"(^|/)ds\d{6}/", r"\1", s3_path, count=1)
@@ -51,8 +95,31 @@ def download_dependencies(
     dataset_folder: Path,
     record: dict[str, Any],
     s3_open_neuro: bool,
-):
-    """Download all BIDS dependency files from S3 and cache them locally."""
+) -> None:
+    """Download all BIDS dependency files from S3.
+
+    Iterates through a list of BIDS dependency files, downloads each from the
+    specified S3 bucket, and caches them in the appropriate local directory
+    structure.
+
+    Parameters
+    ----------
+    s3_bucket : str
+        The S3 bucket to download from.
+    bids_dependencies : list of str
+        A list of dependency file paths relative to the S3 bucket root.
+    bids_dependencies_original : list of str
+        The original dependency paths, used for resolving local cache paths.
+    cache_dir : pathlib.Path
+        The root directory for caching.
+    dataset_folder : pathlib.Path
+        The specific folder for the dataset within the cache directory.
+    record : dict
+        The metadata record for the main data file, used to resolve paths.
+    s3_open_neuro : bool
+        Flag for OpenNeuro-specific path handling.
+
+    """
     filesystem = get_s3_filesystem()
     for i, dep in enumerate(bids_dependencies):
         if not s3_open_neuro:
@@ -78,8 +145,27 @@ def download_dependencies(
             _filesystem_get(filesystem=filesystem, s3path=s3path, filepath=filepath)
 
 
-def _filesystem_get(filesystem: s3fs.S3FileSystem, s3path: str, filepath: Path):
-    """Helper to download a file from S3 with a progress bar."""
+def _filesystem_get(filesystem: s3fs.S3FileSystem, s3path: str, filepath: Path) -> Path:
+    """Perform the file download using fsspec with a progress bar.
+
+    Internal helper function that wraps the ``filesystem.get`` call to include
+    a TQDM progress bar.
+
+    Parameters
+    ----------
+    filesystem : s3fs.S3FileSystem
+        The filesystem object to use for the download.
+    s3path : str
+        The full S3 URI of the source file.
+    filepath : pathlib.Path
+        The local destination path.
+
+    Returns
+    -------
+    pathlib.Path
+        The local path to the downloaded file.
+
+    """
     info = filesystem.info(s3path)
     size = info.get("size") or info.get("Size")
 

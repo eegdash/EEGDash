@@ -33,12 +33,30 @@ __all__ = [
 
 
 def build_query_from_kwargs(**kwargs) -> dict[str, Any]:
-    """Build and validate a MongoDB query from user-friendly keyword arguments.
+    """Build and validate a MongoDB query from keyword arguments.
 
-    Improvements:
-    - Reject None values and empty/whitespace-only strings
-    - For list/tuple/set values: strip strings, drop None/empties, deduplicate, and use `$in`
-    - Preserve scalars as exact matches
+    This function converts user-friendly keyword arguments into a valid
+    MongoDB query dictionary. It handles scalar values as exact matches and
+    list-like values as ``$in`` queries. It also performs validation to
+    reject unsupported fields and empty values.
+
+    Parameters
+    ----------
+    **kwargs
+        Keyword arguments representing query filters. Allowed keys are defined
+        in ``eegdash.const.ALLOWED_QUERY_FIELDS``.
+
+    Returns
+    -------
+    dict
+        A MongoDB query dictionary.
+
+    Raises
+    ------
+    ValueError
+        If an unsupported query field is provided, or if a value is None or
+        an empty string/list.
+
     """
     # 1. Validate that all provided keys are allowed for querying
     unknown_fields = set(kwargs.keys()) - ALLOWED_QUERY_FIELDS
@@ -89,24 +107,29 @@ def build_query_from_kwargs(**kwargs) -> dict[str, Any]:
 
 
 def load_eeg_attrs_from_bids_file(bids_dataset, bids_file: str) -> dict[str, Any]:
-    """Build the metadata record for a given BIDS file (single recording) in a BIDS dataset.
+    """Build a metadata record for a BIDS file.
 
-    Attributes are at least the ones defined in data_config attributes (set to None if missing),
-    but are typically a superset, and include, among others, the paths to relevant
-    meta-data files needed to load and interpret the file in question.
+    Extracts metadata attributes from a single BIDS EEG file within a given
+    BIDS dataset. The extracted attributes include BIDS entities, file paths,
+    and technical metadata required for database indexing.
 
     Parameters
     ----------
     bids_dataset : EEGBIDSDataset
         The BIDS dataset object containing the file.
     bids_file : str
-        The path to the BIDS file within the dataset.
+        The path to the BIDS file to process.
 
     Returns
     -------
-    dict:
-        A dictionary representing the metadata record for the given file. This is the
-        same format as the records stored in the database.
+    dict
+        A dictionary of metadata attributes for the file, suitable for
+        insertion into the database.
+
+    Raises
+    ------
+    ValueError
+        If ``bids_file`` is not found in the ``bids_dataset``.
 
     """
     if bids_file not in bids_dataset.files:
@@ -198,11 +221,23 @@ def load_eeg_attrs_from_bids_file(bids_dataset, bids_file: str) -> dict[str, Any
 
 
 def normalize_key(key: str) -> str:
-    """Normalize a metadata key for robust matching.
+    """Normalize a string key for robust matching.
 
-    Lowercase and replace non-alphanumeric characters with underscores, then strip
-    leading/trailing underscores. This allows tolerant matching such as
-    "p-factor" ≈ "p_factor" ≈ "P Factor".
+    Converts the key to lowercase, replaces non-alphanumeric characters with
+    underscores, and removes leading/trailing underscores. This allows for
+    tolerant matching of keys that may have different capitalization or
+    separators (e.g., "p-factor" becomes "p_factor").
+
+    Parameters
+    ----------
+    key : str
+        The key to normalize.
+
+    Returns
+    -------
+    str
+        The normalized key.
+
     """
     return re.sub(r"[^a-z0-9]+", "_", str(key).lower()).strip("_")
 
@@ -212,27 +247,27 @@ def merge_participants_fields(
     participants_row: dict[str, Any] | None,
     description_fields: list[str] | None = None,
 ) -> dict[str, Any]:
-    """Merge participants.tsv fields into a dataset description dictionary.
+    """Merge fields from a participants.tsv row into a description dict.
 
-    - Preserves existing entries in ``description`` (no overwrites).
-    - Fills requested ``description_fields`` first, preserving their original names.
-    - Adds all remaining participants columns generically using normalized keys
-      unless a matching requested field already captured them.
+    Enriches a description dictionary with data from a subject's row in
+    ``participants.tsv``. It avoids overwriting existing keys in the
+    description.
 
     Parameters
     ----------
     description : dict
-        Current description to be enriched in-place and returned.
-    participants_row : dict | None
-        A mapping of participants.tsv columns for the current subject.
-    description_fields : list[str] | None
-        Optional list of requested description fields. When provided, matching is
-        performed by normalized names; the original requested field names are kept.
+        The description dictionary to enrich.
+    participants_row : dict or None
+        A dictionary representing a row from ``participants.tsv``. If None,
+        the original description is returned unchanged.
+    description_fields : list of str, optional
+        A list of specific fields to include in the description. Matching is
+        done using normalized keys.
 
     Returns
     -------
     dict
-        The enriched description (same object as input for convenience).
+        The enriched description dictionary.
 
     """
     if not isinstance(description, dict) or not isinstance(participants_row, dict):
@@ -272,10 +307,26 @@ def participants_row_for_subject(
     subject: str,
     id_columns: tuple[str, ...] = ("participant_id", "participant", "subject"),
 ) -> pd.Series | None:
-    """Load participants.tsv and return the row for a subject.
+    """Load participants.tsv and return the row for a specific subject.
 
-    - Accepts either "01" or "sub-01" as the subject identifier.
-    - Returns a pandas Series for the first matching row, or None if not found.
+    Searches for a subject's data in the ``participants.tsv`` file within a
+    BIDS dataset. It can identify the subject with or without the "sub-"
+    prefix.
+
+    Parameters
+    ----------
+    bids_root : str or Path
+        The root directory of the BIDS dataset.
+    subject : str
+        The subject identifier (e.g., "01" or "sub-01").
+    id_columns : tuple of str, default ("participant_id", "participant", "subject")
+        A tuple of column names to search for the subject identifier.
+
+    Returns
+    -------
+    pandas.Series or None
+        A pandas Series containing the subject's data if found, otherwise None.
+
     """
     try:
         participants_tsv = Path(bids_root) / "participants.tsv"
@@ -311,9 +362,28 @@ def participants_extras_from_tsv(
     id_columns: tuple[str, ...] = ("participant_id", "participant", "subject"),
     na_like: tuple[str, ...] = ("", "n/a", "na", "nan", "unknown", "none"),
 ) -> dict[str, Any]:
-    """Return non-identifier, non-empty participants.tsv fields for a subject.
+    """Extract additional participant information from participants.tsv.
 
-    Uses vectorized pandas operations to drop id columns and NA-like values.
+    Retrieves all non-identifier and non-empty fields for a subject from
+    the ``participants.tsv`` file.
+
+    Parameters
+    ----------
+    bids_root : str or Path
+        The root directory of the BIDS dataset.
+    subject : str
+        The subject identifier.
+    id_columns : tuple of str, default ("participant_id", "participant", "subject")
+        Column names to be treated as identifiers and excluded from the
+        output.
+    na_like : tuple of str, default ("", "n/a", "na", "nan", "unknown", "none")
+        Values to be considered as "Not Available" and excluded.
+
+    Returns
+    -------
+    dict
+        A dictionary of extra participant information.
+
     """
     row = participants_row_for_subject(bids_root, subject, id_columns=id_columns)
     if row is None:
@@ -331,10 +401,21 @@ def attach_participants_extras(
     description: Any,
     extras: dict[str, Any],
 ) -> None:
-    """Attach extras to Raw.info and dataset description without overwriting.
+    """Attach extra participant data to a raw object and its description.
 
-    - Adds to ``raw.info['subject_info']['participants_extras']``.
-    - Adds to ``description`` if dict or pandas Series (only missing keys).
+    Updates the ``raw.info['subject_info']`` and the description object
+    (dict or pandas Series) with extra data from ``participants.tsv``.
+    It does not overwrite existing keys.
+
+    Parameters
+    ----------
+    raw : mne.io.Raw
+        The MNE Raw object to be updated.
+    description : dict or pandas.Series
+        The description object to be updated.
+    extras : dict
+        A dictionary of extra participant information to attach.
+
     """
     if not extras:
         return
@@ -375,9 +456,28 @@ def enrich_from_participants(
     raw: Any,
     description: Any,
 ) -> dict[str, Any]:
-    """Convenience wrapper: read participants.tsv and attach extras for this subject.
+    """Read participants.tsv and attach extra info for the subject.
 
-    Returns the extras dictionary for further use if needed.
+    This is a convenience function that finds the subject from the
+    ``bidspath``, retrieves extra information from ``participants.tsv``,
+    and attaches it to the raw object and its description.
+
+    Parameters
+    ----------
+    bids_root : str or Path
+        The root directory of the BIDS dataset.
+    bidspath : mne_bids.BIDSPath
+        The BIDSPath object for the current data file.
+    raw : mne.io.Raw
+        The MNE Raw object to be updated.
+    description : dict or pandas.Series
+        The description object to be updated.
+
+    Returns
+    -------
+    dict
+        The dictionary of extras that were attached.
+
     """
     subject = getattr(bidspath, "subject", None)
     if not subject:

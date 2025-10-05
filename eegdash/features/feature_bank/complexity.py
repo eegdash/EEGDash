@@ -36,8 +36,12 @@ class EntropyFeatureExtractor(FeatureExtractor):
         counts_m = np.empty((*x.shape[:-1], (x.shape[-1] - m + 1) // l))
         counts_mp1 = np.empty((*x.shape[:-1], (x.shape[-1] - m) // l))
         for i in np.ndindex(x.shape[:-1]):
-            counts_m[i + (slice(None),)] = _channel_app_samp_entropy_counts(x[i], m, rr[i], l)
-            counts_mp1[i + (slice(None),)] = _channel_app_samp_entropy_counts(x[i], m + 1, rr[i], l)
+            counts_m[i + (slice(None),)] = _channel_app_samp_entropy_counts(
+                x[i], m, rr[i], l
+            )
+            counts_mp1[i + (slice(None),)] = _channel_app_samp_entropy_counts(
+                x[i], m + 1, rr[i], l
+            )
         return counts_m, counts_mp1
 
 

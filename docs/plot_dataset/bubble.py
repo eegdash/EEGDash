@@ -286,7 +286,7 @@ def generate_dataset_bubble(
 
     fig.update_layout(
         height=height,
-        width=max_width,
+        width=None,
         margin=dict(l=60, r=40, t=80, b=60),
         template="plotly_white",
         legend=dict(

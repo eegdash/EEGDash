@@ -3,7 +3,6 @@
 #
 # First we find one resting state dataset for a collection of subject. The dataset ds005505 contains 136 subjects with both male and female participants.
 # %%
-import wandb
 from eegdash import EEGDashDataset
 from eegdash.api import EEGDashDataset
 from eegdash.dataset.dataset import EEGChallengeDataset
@@ -161,6 +160,7 @@ def create_model(config):
                     pool_time_length=64,     # Adjust pooling window
                 )
             self.lr = config['lr']
+            self.weight_decay = config['weight_decay']
             self.mae = MeanAbsoluteError()
             self.mse = MeanSquaredError()
             self.r2 = R2Score()
@@ -168,6 +168,9 @@ def create_model(config):
             self.val_mse = MeanSquaredError()
             self.val_r2 = R2Score()
             self.target_std = config.get('target_std', None)
+            self.model_freeze = bool(config.get('model_freeze', False))
+            if self.model_freeze:
+                self.automatic_optimization = False
             self.save_hyperparameters(config)
 
         def normalize_data(self, x):
@@ -188,54 +191,49 @@ def create_model(config):
                 print(f"Batch size: {len(y)}")
                 self._debug_printed = True
             
-            # y is a tuple of (n_samples,) with continuous values for regression
-            # Handle various data quality issues
-            y_processed = []
-            for val in y:
-                if val is None:
-                    y_processed.append(0.0)
-                elif isinstance(val, str):
-                    try:
-                        y_processed.append(float(val))
-                    except ValueError:
-                        y_processed.append(0.0)
-                elif isinstance(val, (int, float)):
-                    if torch.isnan(torch.tensor(val)):
-                        y_processed.append(0.0)
-                    else:
-                        y_processed.append(float(val))
-                else:
-                    y_processed.append(0.0)
-            
-            y = torch.tensor(y_processed, dtype=torch.float, device=self.device)
-            
-            # Target std is computed from the training dataset and passed in config
-            
+            # Ensure float32 types for model inputs and targets
+            x = x.float()
+            # Accept list/array/tuple of floats from dataset; convert to float32 tensor on device
+            if not torch.is_tensor(y):
+                y = torch.as_tensor(y, dtype=torch.float32, device=self.device)
+            else:
+                y = y.to(self.device, dtype=torch.float32)
             scores = self.model(self.normalize_data(x))
-            preds = scores.squeeze()                     # shape (batch_size,)
+            preds = scores.squeeze().to(dtype=torch.float32)
             loss = F.mse_loss(preds, y)
             return loss, preds, y
 
         def training_step(self, batch, batch_idx):
-            loss, preds, y = self._forward(batch)
+            if self.model_freeze:
+                with torch.no_grad():
+                    loss, preds, y = self._forward(batch)
+            else:
+                loss, preds, y = self._forward(batch)
+
             self.mae.update(preds, y)
             self.mse.update(preds, y)
             self.r2.update(preds, y)
-            
-            # Compute normalized RMSE (RMSE / std)
+
             normalized_rmse = torch.sqrt(F.mse_loss(preds, y)) / (self.target_std + 1e-8)
             self.log('train/normalized_rmse', normalized_rmse, on_step=True, on_epoch=True)
             self.log('train/loss', loss, on_step=True, on_epoch=True, prog_bar=True)
             return loss
         
         def on_train_epoch_end(self):
-            self.log("train/mae_epoch", self.mae, on_step=False, on_epoch=True)
-            self.log("train/mse_epoch", self.mse, on_step=False, on_epoch=True)
-            self.log("train/r2_epoch", self.r2, on_step=False, on_epoch=True, prog_bar=True)
-            
-            # Compute normalized RMSE for epoch
-            train_normalized_rmse = torch.sqrt(self.mse.compute()) / (self.target_std + 1e-8)
+            # 1) read scalar values BEFORE any logging of metric objects
+            train_mse_value = self.mse.compute()
+            train_mae_value = self.mae.compute()
+            train_r2_value  = self.r2.compute()
+            train_normalized_rmse = torch.sqrt(train_mse_value) / (self.target_std + 1e-8)
+
+            # 2) log scalars (not metric objects) to avoid implicit resets mid-function
+            self.log("train/mse_epoch", train_mse_value, on_step=False, on_epoch=True)
+            self.log("train/mae_epoch", train_mae_value, on_step=False, on_epoch=True)
+            self.log("train/r2_epoch",  train_r2_value,  on_step=False, on_epoch=True, prog_bar=True)
             self.log("train/normalized_rmse_epoch", train_normalized_rmse, on_step=False, on_epoch=True)
+
+            # 3) now reset explicitly
+            self.mse.reset(); self.mae.reset(); self.r2.reset()
 
         def validation_step(self, batch, batch_idx):
             loss, preds, y = self._forward(batch)
@@ -253,24 +251,29 @@ def create_model(config):
             self.log("hp_metric", 0.5, on_epoch=True)
 
         def on_validation_epoch_end(self):
-            self.log("val/mae_epoch", self.val_mae, on_step=False, on_epoch=True)
-            self.log("val/mse_epoch", self.val_mse, on_step=False, on_epoch=True)
-            val_r2 = self.val_r2.compute()
-            self.log("val/r2_epoch", val_r2, on_step=False, on_epoch=True, prog_bar=True)
-            
-            # Compute normalized RMSE for epoch
-            val_normalized_rmse = torch.sqrt(self.val_mse.compute()) / (self.target_std + 1e-8)
+            val_mse_value = self.val_mse.compute()
+            val_mae_value = self.val_mae.compute()
+            val_r2_value  = self.val_r2.compute()
+            val_normalized_rmse = torch.sqrt(val_mse_value) / (self.target_std + 1e-8)
+
+            self.log("val/mse_epoch", val_mse_value, on_step=False, on_epoch=True)
+            self.log("val/mae_epoch", val_mae_value, on_step=False, on_epoch=True)
+            self.log("val/r2_epoch",  val_r2_value,  on_step=False, on_epoch=True, prog_bar=True)
             self.log("val/normalized_rmse_epoch", val_normalized_rmse, on_step=False, on_epoch=True)
-            self.log("hp_metric", val_r2, on_epoch=True)
+            self.log("hp_metric", val_r2_value, on_epoch=True)
+
+            self.val_mse.reset(); self.val_mae.reset(); self.val_r2.reset()
 
         def configure_optimizers(self):
+            if self.model_freeze:
+                return None
+
             optimizer = torch.optim.AdamW(
                 self.parameters(), 
-                lr=self.lr, # should be self.lr
-                weight_decay=1e-4
+                lr=self.lr,
+                weight_decay=self.weight_decay
             )
-            
-            # Reduce LR when validation accuracy plateaus
+
             scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
                 optimizer, 
                 mode='max',
@@ -278,7 +281,7 @@ def create_model(config):
                 patience=8,
                 min_lr=1e-6,
             )
-            
+
             return {
                 "optimizer": optimizer,
                 "lr_scheduler": {
@@ -290,7 +293,7 @@ def create_model(config):
 
     return EEGModel(config)
 
-def run_task(releases, tasks, target_name, folds=10, weights=None, model_freeze=False, experiment_name=None, random_add=42, train_epochs=20, save_weights="", batch_size=100, lrate=0.00002, model_name = 'EEGNeX', dropout=0.5):
+def run_task(releases, tasks, target_name, folds=10, weights=None, model_freeze=False, experiment_name=None, random_add=42, train_epochs=20, save_weights="", batch_size=100, weight_decay=1e-4, lrate=0.00002, model_name = 'EEGNeX', dropout=0.5):
     from torch.utils.data import Subset
 
     # random seed for reproducibility
@@ -343,9 +346,13 @@ def run_task(releases, tasks, target_name, folds=10, weights=None, model_freeze=
         splits = [(train_idx, val_idx)]
         
     for it_fold, (train_idx, val_idx) in enumerate(splits):
-        train_ds = BaseConcatDataset([ds for ds in windows_ds.datasets if ds.description.subject in unique_subjects[train_idx]])
-        val_ds   = BaseConcatDataset([ds for ds in windows_ds.datasets if ds.description.subject in unique_subjects[val_idx]])
-        
+        train_ds = BaseConcatDataset([ds for ds in windows_ds.datasets if ds.description.subject in unique_subjects[train_idx] \
+            and ds.description[target_name] != np.nan and ds.description[target_name] != None and not isinstance(ds.description[target_name], str) \
+            and (ds.description[target_name] < -0.5 or ds.description[target_name] > 0.5)])
+        val_ds   = BaseConcatDataset([ds for ds in windows_ds.datasets if ds.description.subject in unique_subjects[val_idx]   \
+            and ds.description[target_name] != np.nan and ds.description[target_name] != None and not isinstance(ds.description[target_name], str) \
+            and (ds.description[target_name] < -0.5 or ds.description[target_name] > 0.5)])
+
         # Create dataloaders with smaller batch size to save memory
         train_loader = DataLoader(train_ds, batch_size=batch_size, shuffle=True, prefetch_factor=4, num_workers=4)
         val_loader   = DataLoader(  val_ds, batch_size=batch_size, prefetch_factor=4, num_workers=4)
@@ -389,15 +396,21 @@ def run_task(releases, tasks, target_name, folds=10, weights=None, model_freeze=
             "batch_size": batch_size,
             "dropout": dropout,
             "lr": lrate,
+            "weight_decay": weight_decay,
             "random_seed": random_add,
             "model_name": model_name,
             "fold": it_fold,
             "target_std": target_std,
+            "model_freeze": bool(model_freeze),
         }
         model = create_model(hparams)
 
         if weights is not None:
             model.load_state_dict(torch.load(weights))
+        # Optionally freeze all model parameters (no training)
+        if model_freeze:
+            for p in model.parameters():
+                p.requires_grad = False
         from lightning.pytorch.callbacks.early_stopping import EarlyStopping
         early_stopping = EarlyStopping(
             monitor='val/r2_epoch',
@@ -548,7 +561,7 @@ new_tasks = { 'movies': ['DespicableMe', 'DiaryOfAWimpyKid', 'FunwithFractals', 
   'all_tasks': ['DespicableMe', 'DiaryOfAWimpyKid', 'FunwithFractals', 'RestingState', 'ThePresent', 'contrastChangeDetection', 'seqLearning6target', 'seqLearning8target', 'surroundSupp', 'symbolSearch']
   }
 releases_train = releases[:-1]
-releases_train = ["R11"] #"R11"
+# releases_train = ["R12"] #"R11"
 tasks = [  
 # # 'DespicableMe',
 # #   'DiaryOfAWimpyKid',
@@ -561,8 +574,8 @@ tasks = [
 # #   'surroundSupp',
 # #   'symbolSearch'
 ]
-#process_data(releases, tasks, ['externalizing'])
-#sys.exit()
+# process_data(releases, tasks, ['age'])
+# sys.exit()
 
 factors = ['externalizing']
 
@@ -581,12 +594,12 @@ for factor in factors:
     #     print(f"Skipping {task}_{factor} because it already exists")
     #     continue
     batch_sizes = [128] #[64, 128]#, 256, 512, 1024, 2048]
-    lrates = [0.0002]#[0.002, 0.0002, 0.00006, 0.00002]
+    lrates = [0.00002]#[0.002, 0.0002, 0.00006, 0.00002]
     dropouts = [0.7] #[0.6, 0.7, 0.8]
     seeds = [77, 15, 20, 31, 64, 88, 99, 0, 42, 9]
     seeds_R11 = np.array(range(30)) + 77
-    seeds = seeds_R11
-    seeds = [77]
+    #seeds = seeds_R11
+    #seeds = [77]
     # seeds = [0]
     for model_name in models:
         combinations = [(batch_size, lrate, random_add, dropout) for batch_size in batch_sizes for lrate in lrates for random_add in seeds for dropout in dropouts]
@@ -607,7 +620,7 @@ for factor in factors:
             if bypass_run == False:
                 res_train, res_val, train_norm_rmse, val_norm_rmse, target_std, res_val_subject = run_task(
                     releases_train, tasks, factor, folds=folds, random_add=random_add, experiment_name=experiment_name,
-                    train_epochs=5, batch_size=batch_size, lrate=lrate,
+                    train_epochs=50, batch_size=batch_size, lrate=lrate, model_freeze=False, weight_decay=1e-2,
                     model_name=model_name, dropout=dropout, save_weights=weights_file_base
                 )
             else:   
@@ -631,7 +644,12 @@ for factor in factors:
                 print(f"Number of datasets in {cached_data_folder_name}: {len(windows_ds_tmp.datasets)}")
 
             test_ds = BaseConcatDataset(windows_ds)
-            test_ds = BaseConcatDataset([ds for ds in test_ds.datasets if ds.description['sex'] in ['M', 'F']])
+            
+            # filter None, string, and NaN
+            test_ds = BaseConcatDataset([ds for ds in test_ds.datasets if ds.description[factor] != np.nan \
+                and ds.description[factor] != None and not isinstance(ds.description[factor], str) \
+                and ds.description[factor] != np.nan and (ds.description[factor] < -0.5 or ds.description[factor] > 0.5)])
+            
             # analyze_fold_distribution(test_ds, test_ds, 'R12')
             test_loader = DataLoader(test_ds, batch_size=batch_size, num_workers=4)
 

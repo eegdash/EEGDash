@@ -15,7 +15,7 @@ import pandas as pd
 import numpy as np
 import torch
 from torch.nn import functional as F
-from sklearn.model_selection import train_test_split, StratifiedKFold
+from sklearn.model_selection import train_test_split, StratifiedKFold, StratifiedGroupKFold, GroupShuffleSplit
 from torch.utils.data import DataLoader
 import os
 from scipy.stats import bootstrap
@@ -352,14 +352,17 @@ def analyze_fold_distribution(train_ds, val_ds):
     # For Subset, get description DataFrame
     # Use list comprehensions for efficiency, but if datasets are large, consider vectorized access if possible.
     train_labels, train_subjects = zip(*[(label, subject) for _, label, subject in train_ds])
-    val_labels, val_subjects = zip(*[(label, subject) for _, label, subject in val_ds])
     train_label_dist = pd.Series(train_labels).value_counts()
-    val_label_dist = pd.Series(val_labels).value_counts()
     print(f"Statistics of balanced dataset")
-    print(f"Train subjects: {len(set(train_subjects))}, Val subjects: {len(set(val_subjects))}")
-    print(f"Train labels: {train_label_dist}")
-    print(f"Val labels: {val_label_dist}")
-    print(f"Subject overlap: {set(train_subjects) & set(val_subjects)}")
+    print(f"Train subjects: {len(set(train_subjects))}, Train labels: {train_label_dist}")
+    if val_ds is not None:
+        val_labels, val_subjects = zip(*[(label, subject) for _, label, subject in val_ds])
+        val_label_dist = pd.Series(val_labels).value_counts()
+        subject_overlap = set(train_subjects) & set(val_subjects)
+        if len(subject_overlap) > 0:
+            raise ValueError(f"Subject overlap between train and val sets: {subject_overlap}")
+        print(f"Val subjects: {len(set(val_subjects))}, Val labels: {val_label_dist}")
+        print(f"Subject overlap: {subject_overlap}")
 
 def balance_windows_by_class(ds, labels, random_seed=42):
     """
@@ -409,9 +412,6 @@ def run_task(releases, tasks, target_name, folds=10, weights=None, model_freeze=
         print(f"Number of datasets in {cached_data_folder_name}: {len(windows_ds_tmp.datasets)}")
 
     windows_ds = BaseConcatDataset(windows_ds)
-    print(f"Number of datasets in all releases: {len(windows_ds.datasets)}")
-    print(f"number of samples in windows_ds: {len(windows_ds)}")
-
     # Filter out subjects with neutral labels based on factor
     windows_ds = BaseConcatDataset([ds for ds in windows_ds.datasets 
                                     if is_dataset_within_threshold_class_by_factor(
@@ -423,41 +423,40 @@ def run_task(releases, tasks, target_name, folds=10, weights=None, model_freeze=
     ])
     # Relabel windows based on factor
     relabled_windows_ds = BaseConcatDataset([RelabelWindowsDatasetWrapper(ds, factor=target_name, positive_threshold=0.5, negative_threshold=-0.5) for ds in windows_ds.datasets])
+    print(f"Number of samples in relabeled_windows_ds: {len(relabled_windows_ds)}")
+
     # Efficiently extract subjects and labels using list comprehensions over datasets, not windows
-    unique_subjects = []
-    unique_subjects_labels = []
-    for ds in relabled_windows_ds.datasets:
-        subject = ds.description.subject
-        # All windows in ds have the same subject and label
-        # Get label for the first window only
-        _, label, _ = ds[0]
-        unique_subjects.append(subject)
-        unique_subjects_labels.append(label)
-    unique_subjects = np.array(unique_subjects)
-    unique_subjects_labels = np.array(unique_subjects_labels)
-    # subjects_labels = dict(zip(subjects, subjects_labels))
-    unique_labels, unique_label_counts = np.unique(unique_subjects_labels, return_counts=True)
-    assert len(unique_labels) == 2, f"Expected 2 classes since it should already been filtered, got {len(unique_labels)} classes: {unique_labels}"
-    print(f"Labels distribution: {unique_label_counts}")
-    # unique_subjects = np.unique(subjects)
-    # unique_subjects_labels = [subjects_labels[subj] for subj in unique_subjects]
-    assert(len(unique_subjects) == len(unique_subjects_labels))
+    subjects = []
+    labels = []
+    for _, label, subj in relabled_windows_ds:
+        labels.append(label)
+        subjects.append(subj)
+    subjects = np.array(subjects)
+    labels = np.array(labels)
 
     # ## Creating a Training and Test Set
-    correct_train_list = []
-    correct_val_list  = []
     # unique_subjects, unique_indices = np.unique(windows_ds.description["subject"], return_index=True)
     # unique_gender = windows_ds.description["sex"][unique_indices].values
     if folds > 1:
-        splitter = StratifiedKFold(n_splits=folds, shuffle=True, random_state=data_split_seed)
-        splits = splitter.split(unique_subjects, unique_subjects_labels)
+        # TODO double check
+        # splitter = StratifiedKFold(n_splits=folds, shuffle=True, random_state=data_split_seed)
+        # splits = splitter.split(subjects, labels)
+        sgkf = StratifiedGroupKFold(n_splits=folds, shuffle=True, random_state=data_split_seed)
+        dummy_X = np.zeros_like(subjects) # Dummy features
+        splits = sgkf.split(X=dummy_X, y=labels, groups=subjects)
     else:
-        train_idx, val_idx = train_test_split(np.arange(len(unique_subjects)),train_size=0.8,stratify=unique_subjects_labels,random_state=data_split_seed)
-        splits = [(train_idx, val_idx)]
-        
+        # train_idx, val_idx = train_test_split(np.arange(len(unique_subjects)),train_size=0.8,stratify=unique_subjects_labels,random_state=data_split_seed)
+        # splits = [(train_idx, val_idx)]
+        gss = GroupShuffleSplit(n_splits=1, train_size=0.8, random_state=data_split_seed)
+        splits = gss.split(X=np.zeros_like(subjects), y=labels, groups=subjects)
+
+    correct_train_list = []
+    correct_val_list  = []
     for it_fold, (train_idx, val_idx) in enumerate(splits):
-        train_ds = BaseConcatDataset([ds for ds in relabled_windows_ds.datasets if ds.description.subject in unique_subjects[train_idx]])
-        val_ds   = BaseConcatDataset([ds for ds in relabled_windows_ds.datasets if ds.description.subject in unique_subjects[val_idx]])
+        # train_ds = BaseConcatDataset([ds for ds in relabled_windows_ds.datasets if ds.description.subject in unique_subjects[train_idx]])
+        # val_ds   = BaseConcatDataset([ds for ds in relabled_windows_ds.datasets if ds.description.subject in unique_subjects[val_idx]])
+        train_ds = Subset(relabled_windows_ds, train_idx)
+        val_ds   = Subset(relabled_windows_ds, val_idx)
 
         # Balance windows per class for train and val sets
         train_labels = [label for _, label, _ in train_ds]
@@ -475,19 +474,19 @@ def run_task(releases, tasks, target_name, folds=10, weights=None, model_freeze=
 
 
         # Load test data
-        test_cached_data_folder_name = "/home/arno/v1/eegdash/notebook/data/hbn_" + test_release + "_" + tasks[0] + "_" + target_name
-        test_windows_ds = load_concat_dataset(path=test_cached_data_folder_name, preload=False)
-        test_windows_ds = BaseConcatDataset([ds for ds in test_windows_ds.datasets
-                                        if is_dataset_within_threshold_class_by_factor(
-                                            ds, 
-                                            factor=target_name, 
-                                            positive_threshold=0.5, 
-                                            negative_threshold=-0.5
-                                        )
-        ])
-        # Relabel windows based on factor
-        test_relabled_windows_ds = BaseConcatDataset([RelabelWindowsDatasetWrapper(ds, factor=target_name, positive_threshold=0.5, negative_threshold=-0.5) for ds in test_windows_ds.datasets])
-        test_loader = DataLoader(test_relabled_windows_ds, batch_size=batch_size, prefetch_factor=4, num_workers=4)
+        # test_cached_data_folder_name = "/home/arno/v1/eegdash/notebook/data/hbn_" + test_release + "_" + tasks[0] + "_" + target_name
+        # test_windows_ds = load_concat_dataset(path=test_cached_data_folder_name, preload=False)
+        # test_windows_ds = BaseConcatDataset([ds for ds in test_windows_ds.datasets
+        #                                 if is_dataset_within_threshold_class_by_factor(
+        #                                     ds, 
+        #                                     factor=target_name, 
+        #                                     positive_threshold=0.5, 
+        #                                     negative_threshold=-0.5
+        #                                 )
+        # ])
+        # # Relabel windows based on factor
+        # test_relabled_windows_ds = BaseConcatDataset([RelabelWindowsDatasetWrapper(ds, factor=target_name, positive_threshold=0.5, negative_threshold=-0.5) for ds in test_windows_ds.datasets])
+        # test_loader = DataLoader(test_relabled_windows_ds, batch_size=batch_size, prefetch_factor=4, num_workers=4)
 
         # create model and hparams dict
         hparams = {
@@ -505,7 +504,7 @@ def run_task(releases, tasks, target_name, folds=10, weights=None, model_freeze=
         from lightning.pytorch.callbacks.early_stopping import EarlyStopping
         early_stopping = EarlyStopping(
             monitor='val/accuracy_epoch',
-            patience=5,
+            patience=10,
             mode='max',
             min_delta=0.001
         )
@@ -544,7 +543,7 @@ def run_task(releases, tasks, target_name, folds=10, weights=None, model_freeze=
             accelerator="auto",
             devices=1 if torch.cuda.is_available() else None,
             enable_checkpointing=False,
-            logger=wandb_logger, #tb_logger,
+            logger=None,# wandb_logger, #tb_logger,
             callbacks=[early_stopping]
         )
 
@@ -560,8 +559,8 @@ def run_task(releases, tasks, target_name, folds=10, weights=None, model_freeze=
         print('correct_val_list:', correct_val_list)
 
         # Test model
-        test_results = trainer.test(model, test_loader)
-        print(f"Test results: {test_results}")
+        # test_results = trainer.test(model, test_loader)
+        # print(f"Test results: {test_results}")
 
 
         # Save model weights 
@@ -684,7 +683,7 @@ for release in releases[:-1]:
         data_split_seed = 1925
         epochs = 10
         # seeds = [0]
-        models = ['EEGConformer']#, 'TSception']#, 'EEGNeX']
+        models = ['FBCNet'] #['EEGConformer']#, 'TSception']#, 'EEGNeX']
         for model_name in models:
             combinations = [(batch_size, lrate, random_add, dropout) for batch_size in batch_sizes for lrate in lrates for random_add in seeds for dropout in dropouts]
             # combinations = random.sample(combinations, min(20, len(combinations)))
@@ -730,13 +729,15 @@ for release in releases[:-1]:
                 ])
                 # Relabel windows based on factor
                 test_relabled_windows_ds = BaseConcatDataset([RelabelWindowsDatasetWrapper(ds, factor=factor, positive_threshold=0.5, negative_threshold=-0.5) for ds in test_windows_ds.datasets])
-                test_labels = [label for _, label, _ in test_relabled_windows_ds]
-                test_ds = balance_windows_by_class(test_relabled_windows_ds, test_labels, random_seed=data_split_seed)
-                analyze_fold_distribution(test_ds, test_ds)
+                test_loader = DataLoader(test_relabled_windows_ds, batch_size=batch_size, prefetch_factor=4, num_workers=4)
 
-                test_loader = DataLoader(test_ds, batch_size=batch_size, prefetch_factor=4, num_workers=4)
+                test_labels = [label for _, label, _ in test_relabled_windows_ds]
+                test_balanced_ds = balance_windows_by_class(test_relabled_windows_ds, test_labels, random_seed=data_split_seed)
+                analyze_fold_distribution(test_balanced_ds, None)
+                test_balanced_loader = DataLoader(test_balanced_ds, batch_size=batch_size, prefetch_factor=4, num_workers=4)
 
                 res_test_r12 = []
+                res_test_balanced_r12 = []
                 for fold in range(folds):
                     weights_file = weights_file_base.replace(".pth", "") + f"_{fold}.pth"
                     # load model weights and run inference on R12
@@ -753,10 +754,12 @@ for release in releases[:-1]:
                     model.load_state_dict(torch.load(weights_file, map_location="cpu"))
                     model.eval()
                     trainer_test = L.Trainer(accelerator="auto", devices=1 if torch.cuda.is_available() else None, logger=False, enable_checkpointing=False)
+
                     test_result = trainer_test.test(model, test_loader)
                     res_test_r12.append(float(trainer_test.callback_metrics.get('test/accuracy_epoch', 0.0)))
-                    print(test_result)
-                print(f"Test on R12 acc: {res_test_r12}")
+                    test_balanced_result = trainer_test.test(model, test_balanced_loader)
+                    res_test_balanced_r12.append(float(trainer_test.callback_metrics.get('test/accuracy_epoch', 0.0)))
+                print(f"Test on R12 acc: {res_test_r12}, balanced acc: {res_test_balanced_r12}")
                 
                 with open(json_file, "w") as f:
-                    json.dump({"train": res_train, "val": res_val, "test": res_test_r12}, f)
+                    json.dump({"train": res_train, "val": res_val, "test": res_test_r12, "test_balanced": res_test_balanced_r12}, f)

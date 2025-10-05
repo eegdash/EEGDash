@@ -36,8 +36,12 @@ class EntropyFeatureExtractor(FeatureExtractor):
         counts_m = np.empty((*x.shape[:-1], (x.shape[-1] - m + 1) // l))
         counts_mp1 = np.empty((*x.shape[:-1], (x.shape[-1] - m) // l))
         for i in np.ndindex(x.shape[:-1]):
-            counts_m[*i, :] = _channel_app_samp_entropy_counts(x[i], m, rr[i], l)
-            counts_mp1[*i, :] = _channel_app_samp_entropy_counts(x[i], m + 1, rr[i], l)
+            counts_m[i + (slice(None),)] = _channel_app_samp_entropy_counts(
+                x[i], m, rr[i], l
+            )
+            counts_mp1[i + (slice(None),)] = _channel_app_samp_entropy_counts(
+                x[i], m + 1, rr[i], l
+            )
         return counts_m, counts_mp1
 
 
@@ -62,7 +66,7 @@ def complexity_sample_entropy(counts_m, counts_mp1):
 def complexity_svd_entropy(x, m=10, tau=1):
     x_emb = np.empty((*x.shape[:-1], (x.shape[-1] - m + 1) // tau, m))
     for i in np.ndindex(x.shape[:-1]):
-        x_emb[*i, :, :] = _create_embedding(x[i], m, tau)
+        x_emb[i + (slice(None), slice(None))] = _create_embedding(x[i], m, tau)
     s = np.linalg.svdvals(x_emb)
     s /= s.sum(axis=-1, keepdims=True)
     return -np.sum(s * np.log(s), axis=-1)

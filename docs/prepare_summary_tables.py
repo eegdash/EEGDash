@@ -145,7 +145,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // 2) Initialize DataTable with SearchPanes button
-    const FILTER_COLS = [1,2,3,4,5,6];
+    const FILTER_COLS = [1,2,3,4,5,6,7];
     // Detect the index of the size column by header text
     const sizeIdx = (function(){
         let idx = -1;
@@ -191,14 +191,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // 3) UX: click a header to open the relevant filter pane
     $table.find('thead th').each(function (i) {
-        if ([1,2,3,4].indexOf(i) === -1) return;
+        if ([1,2,3,4,5].indexOf(i) === -1) return;
         window.jQuery(this)
             .css('cursor','pointer')
             .attr('title','Click to filter this column')
             .on('click', function () {
                 dataTable.button('.buttons-searchPanes').trigger();
                 window.setTimeout(function () {
-                    const idx = [1,2,3,4].indexOf(i);
+                    const idx = [1,2,3,4,5].indexOf(i);
                     const $container = window.jQuery(dataTable.searchPanes.container());
                     const $pane = $container.find('.dtsp-pane').eq(idx);
                     const $title = $pane.find('.dtsp-title');
@@ -234,6 +234,7 @@ def prepare_table(df: pd.DataFrame):
     df = df[
         [
             "dataset",
+            "record_modality",
             "n_records",
             "n_subjects",
             "n_tasks",
@@ -253,6 +254,7 @@ def prepare_table(df: pd.DataFrame):
             "modality of exp": "modality",
             "type of exp": "type",
             "Type Subject": "pathology",
+            "record_modality": "record modality",
         }
     )
     # number of subject are always int
@@ -270,6 +272,7 @@ def prepare_table(df: pd.DataFrame):
     pathology_normalizer = _tag_normalizer("pathology")
     modality_normalizer = _tag_normalizer("modality")
     type_normalizer = _tag_normalizer("type")
+    record_modality_normalizer = _tag_normalizer("record_modality")
 
     df["pathology"] = df["pathology"].apply(
         lambda value: wrap_tags(
@@ -292,6 +295,13 @@ def prepare_table(df: pd.DataFrame):
             normalizer=type_normalizer,
         )
     )
+    df["record modality"] = df["record modality"].apply(
+        lambda value: wrap_tags(
+            value,
+            kind="dataset-record-modality",
+            normalizer=record_modality_normalizer,
+        )
+    )
 
     # Creating the total line
     df.loc["Total"] = df.sum(numeric_only=True)
@@ -301,6 +311,7 @@ def prepare_table(df: pd.DataFrame):
     df.loc["Total", "pathology"] = ""
     df.loc["Total", "modality"] = ""
     df.loc["Total", "type"] = ""
+    df.loc["Total", "record modality"] = ""
     df.loc["Total", "size"] = human_readable_size(df.loc["Total", "size_bytes"])
     df = df.drop(columns=["size_bytes"])
     # arrounding the hours
@@ -361,11 +372,13 @@ def main(source_dir: str, target_dir: str):
                 "pathology": "Pathology",
                 "modality": "Modality",
                 "type": "Type",
+                "record modality": "Record modality",
             }
         )
         df = df[
             [
                 "Dataset",
+                "Record modality",
                 "Pathology",
                 "Modality",
                 "Type",

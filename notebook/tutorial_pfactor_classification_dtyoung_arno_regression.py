@@ -594,7 +594,7 @@ for factor in factors:
     #     print(f"Skipping {task}_{factor} because it already exists")
     #     continue
     batch_sizes = [128] #[64, 128]#, 256, 512, 1024, 2048]
-    lrates = [0.00002]#[0.002, 0.0002, 0.00006, 0.00002]
+    lrates = [0.0002]#[0.002, 0.0002, 0.00006, 0.00002]
     dropouts = [0.7] #[0.6, 0.7, 0.8]
     seeds = [77, 15, 20, 31, 64, 88, 99, 0, 42, 9]
     seeds_R11 = np.array(range(30)) + 77
@@ -620,7 +620,7 @@ for factor in factors:
             if bypass_run == False:
                 res_train, res_val, train_norm_rmse, val_norm_rmse, target_std, res_val_subject = run_task(
                     releases_train, tasks, factor, folds=folds, random_add=random_add, experiment_name=experiment_name,
-                    train_epochs=50, batch_size=batch_size, lrate=lrate, model_freeze=False, weight_decay=1e-2,
+                    train_epochs=50, batch_size=batch_size, lrate=lrate, model_freeze=False, weight_decay=1e-4,
                     model_name=model_name, dropout=dropout, save_weights=weights_file_base
                 )
             else:   

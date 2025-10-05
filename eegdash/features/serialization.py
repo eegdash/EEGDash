@@ -1,7 +1,8 @@
 """Convenience functions for storing and loading features datasets.
 
-See Also:
-    https://github.com/braindecode/braindecode//blob/master/braindecode/datautil/serialization.py#L165-L229
+See Also
+--------
+https://github.com/braindecode/braindecode//blob/master/braindecode/datautil/serialization.py#L165-L229
 
 """
 
@@ -16,34 +17,40 @@ from braindecode.datautil.serialization import _load_kwargs_json
 from .datasets import FeaturesConcatDataset, FeaturesDataset
 
 
-def load_features_concat_dataset(path, ids_to_load=None, n_jobs=1):
-    """Load a stored features dataset from files.
+def load_features_concat_dataset(
+    path: str | Path, ids_to_load: list[int] | None = None, n_jobs: int = 1
+) -> FeaturesConcatDataset:
+    """Load a stored `FeaturesConcatDataset` from a directory.
+
+    This function reconstructs a :class:`FeaturesConcatDataset` by loading
+    individual :class:`FeaturesDataset` instances from subdirectories within
+    the given path. It uses joblib for parallel loading.
 
     Parameters
     ----------
-    path: str | pathlib.Path
-        Path to the directory of the .fif / -epo.fif and .json files.
-    ids_to_load: list of int | None
-        Ids of specific files to load.
-    n_jobs: int
-        Number of jobs to be used to read files in parallel.
+    path : str or pathlib.Path
+        The path to the directory where the dataset was saved. This directory
+        should contain subdirectories (e.g., "0", "1", "2", ...) for each
+        individual dataset.
+    ids_to_load : list of int, optional
+        A list of specific dataset IDs (subdirectory names) to load. If None,
+        all subdirectories in the path will be loaded.
+    n_jobs : int, default 1
+        The number of jobs to use for parallel loading. -1 means using all
+        processors.
 
     Returns
     -------
-    concat_dataset: eegdash.features.datasets.FeaturesConcatDataset
-        A concatenation of multiple eegdash.features.datasets.FeaturesDataset
-        instances loaded from the given directory.
+    eegdash.features.datasets.FeaturesConcatDataset
+        A concatenated dataset containing the loaded `FeaturesDataset` instances.
 
     """
     # Make sure we always work with a pathlib.Path
     path = Path(path)
 
-    # else we have a dataset saved in the new way with subdirectories in path
-    # for every dataset with description.json and -feat.parquet,
-    # target_name.json, raw_preproc_kwargs.json, window_kwargs.json,
-    # window_preproc_kwargs.json, features_kwargs.json
     if ids_to_load is None:
-        ids_to_load = [p.name for p in path.iterdir()]
+        # Get all subdirectories and sort them numerically
+        ids_to_load = [p.name for p in path.iterdir() if p.is_dir()]
         ids_to_load = sorted(ids_to_load, key=lambda i: int(i))
     ids_to_load = [str(i) for i in ids_to_load]
 
@@ -51,7 +58,26 @@ def load_features_concat_dataset(path, ids_to_load=None, n_jobs=1):
     return FeaturesConcatDataset(datasets)
 
 
-def _load_parallel(path, i):
+def _load_parallel(path: Path, i: str) -> FeaturesDataset:
+    """Load a single `FeaturesDataset` from its subdirectory.
+
+    This is a helper function for `load_features_concat_dataset` that handles
+    the loading of one dataset's files (features, metadata, descriptions, etc.).
+
+    Parameters
+    ----------
+    path : pathlib.Path
+        The root directory of the saved `FeaturesConcatDataset`.
+    i : str
+        The identifier of the dataset to load, corresponding to its
+        subdirectory name.
+
+    Returns
+    -------
+    eegdash.features.datasets.FeaturesDataset
+        The loaded dataset instance.
+
+    """
     sub_dir = path / i
 
     parquet_name_pattern = "{}-feat.parquet"

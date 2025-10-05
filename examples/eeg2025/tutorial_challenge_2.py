@@ -319,9 +319,11 @@ plt.show()
 # All the braindecode models expect the input to be of shape (batch_size, n_channels, n_times)
 # and have a test coverage about the behavior of the model.
 # However, you can use any pytorch model you want.
-########################################################################
+#
+######################################################################
 # Initialize model
-# ----------------
+# -----------------
+
 model = EEGNeX(n_chans=129, n_outputs=1, n_times=2 * SFREQ).to(device)
 
 # Specify optimizer

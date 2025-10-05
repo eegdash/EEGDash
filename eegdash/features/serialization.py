@@ -6,6 +6,8 @@ https://github.com/braindecode/braindecode//blob/master/braindecode/datautil/ser
 
 """
 
+from __future__ import annotations
+
 from pathlib import Path
 
 import pandas as pd

@@ -26,7 +26,7 @@ def dimensionality_higuchi_fractal_dim(x, k_max=10, eps=1e-7):
     for i in np.ndindex(x.shape[:-1]):
         for k in range(1, k_max + 1):
             for m in range(k):
-                L_km[m] = np.mean(np.abs(np.diff(x[*i, m:], n=k)))
+                L_km[m] = np.mean(np.abs(np.diff(x[i + (slice(m, None),)], n=k)))
             L_k[k - 1] = (N - 1) * np.sum(L_km[:k]) / (k**3)
         L_k = np.maximum(L_k, eps)
         hfd[i] = np.linalg.lstsq(log_k, np.log(L_k))[0][0]

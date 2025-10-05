@@ -1,4 +1,4 @@
-Unnamed: 0,dataset,n_records,n_subjects,n_tasks,nchans_set,sampling_freqs,duration_hours_total,size,size_bytes,s3_item_count,DatasetID,Type Subject,10-20 system,modality of exp,type of exp,record_modality
+,dataset,n_records,n_subjects,n_tasks,nchans_set,sampling_freqs,duration_hours_total,size,size_bytes,s3_item_count,DatasetID,Type Subject,10-20 system,modality of exp,type of exp,record_modality
 0,ds002718,18,18,1,74,250,14.844,4.31 GB,4624315408,0,ds002718,Healthy,other,Visual,Perception,"EEG, MRI"
 1,ds005505,1342,136,10,129,500,125.366,103.11 GB,110708824369,0,,,,,,EEG
 2,ds004745,6,6,1,,1000,0.0,242.08 MB,253839725,0,,,,,,EEG

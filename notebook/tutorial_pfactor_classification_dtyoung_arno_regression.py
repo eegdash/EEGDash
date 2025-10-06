@@ -237,7 +237,7 @@ def create_model(config):
             self.log("train/r2_epoch",  train_r2_value,  on_step=False, on_epoch=True, prog_bar=True)
             self.log("train/normalized_rmse_epoch", train_normalized_rmse, on_step=False, on_epoch=True)
             # S = 1 - MAE(model)/MAE(baseline median)
-            s_train = 1.0 - float(train_mae_value) / (self.train_baseline_mae + 1e-8)
+            s_train = float(train_mae_value) / (self.train_baseline_mae + 1e-8)
             self.log("train/S_epoch", s_train, on_step=False, on_epoch=True)
 
             # 3) now reset explicitly
@@ -273,7 +273,7 @@ def create_model(config):
             self.log("val/normalized_rmse_epoch", val_normalized_rmse, on_step=False, on_epoch=True)
             self.log("hp_metric", val_r2_value, on_epoch=True)
             # S = 1 - MAE(model)/MAE(baseline median)
-            s_val = 1.0 - float(val_mae_value) / (self.train_baseline_mae + 1e-8)
+            s_val = float(val_mae_value) / (self.train_baseline_mae + 1e-8)
             self.log("val/S_epoch", s_val, on_step=False, on_epoch=True)
 
             self.val_mse.reset(); self.val_mae.reset(); self.val_r2.reset()
@@ -574,10 +574,10 @@ tasks = [
 # #   'surroundSupp',
 # #   'symbolSearch'
 ]
-# process_data(releases, tasks, ['age'])
+# process_data(releases, tasks, ['attention'])
 # sys.exit()
 
-factors = ['externalizing']
+factors = ['attention']
 
 models = ['EEGConformerSimplified']#, 'TSception']#, 'EEGNeX']
 folds = 1

@@ -168,6 +168,8 @@ def create_model(config):
             self.val_mse = MeanSquaredError()
             self.val_r2 = R2Score()
             self.target_std = config.get('target_std', None)
+            # Baseline MAE (median-based) passed from run_task for S metric
+            self.train_baseline_mae = float(config.get('train_baseline_mae', 1.0))
             self.model_freeze = bool(config.get('model_freeze', False))
             if self.model_freeze:
                 self.automatic_optimization = False
@@ -215,7 +217,8 @@ def create_model(config):
             self.mse.update(preds, y)
             self.r2.update(preds, y)
 
-            normalized_rmse = torch.sqrt(F.mse_loss(preds, y)) / (self.target_std + 1e-8)
+            denom = (self.target_std if self.target_std is not None else 1.0) + 1e-8
+            normalized_rmse = torch.sqrt(F.mse_loss(preds, y)) / denom
             self.log('train/normalized_rmse', normalized_rmse, on_step=True, on_epoch=True)
             self.log('train/loss', loss, on_step=True, on_epoch=True, prog_bar=True)
             return loss
@@ -225,13 +228,17 @@ def create_model(config):
             train_mse_value = self.mse.compute()
             train_mae_value = self.mae.compute()
             train_r2_value  = self.r2.compute()
-            train_normalized_rmse = torch.sqrt(train_mse_value) / (self.target_std + 1e-8)
+            denom = (self.target_std if self.target_std is not None else 1.0) + 1e-8
+            train_normalized_rmse = torch.sqrt(train_mse_value) / denom
 
             # 2) log scalars (not metric objects) to avoid implicit resets mid-function
             self.log("train/mse_epoch", train_mse_value, on_step=False, on_epoch=True)
             self.log("train/mae_epoch", train_mae_value, on_step=False, on_epoch=True)
             self.log("train/r2_epoch",  train_r2_value,  on_step=False, on_epoch=True, prog_bar=True)
             self.log("train/normalized_rmse_epoch", train_normalized_rmse, on_step=False, on_epoch=True)
+            # S = 1 - MAE(model)/MAE(baseline median)
+            s_train = 1.0 - float(train_mae_value) / (self.train_baseline_mae + 1e-8)
+            self.log("train/S_epoch", s_train, on_step=False, on_epoch=True)
 
             # 3) now reset explicitly
             self.mse.reset(); self.mae.reset(); self.r2.reset()
@@ -243,7 +250,9 @@ def create_model(config):
             self.val_r2.update(preds, y)
             
             # Compute normalized RMSE (RMSE / std)
-            val_normalized_rmse = torch.sqrt(F.mse_loss(preds, y)) / (self.target_std + 1e-8)
+            # Guard against None target_std
+            denom = (self.target_std if self.target_std is not None else 1.0) + 1e-8
+            val_normalized_rmse = torch.sqrt(F.mse_loss(preds, y)) / denom
             self.log('val/normalized_rmse', val_normalized_rmse, on_step=False, on_epoch=True)
             self.log('val/loss', loss, on_step=False, on_epoch=True)
         
@@ -255,13 +264,17 @@ def create_model(config):
             val_mse_value = self.val_mse.compute()
             val_mae_value = self.val_mae.compute()
             val_r2_value  = self.val_r2.compute()
-            val_normalized_rmse = torch.sqrt(val_mse_value) / (self.target_std + 1e-8)
+            denom = (self.target_std if self.target_std is not None else 1.0) + 1e-8
+            val_normalized_rmse = torch.sqrt(val_mse_value) / denom
 
             self.log("val/mse_epoch", val_mse_value, on_step=False, on_epoch=True)
             self.log("val/mae_epoch", val_mae_value, on_step=False, on_epoch=True)
             self.log("val/r2_epoch",  val_r2_value,  on_step=False, on_epoch=True, prog_bar=True)
             self.log("val/normalized_rmse_epoch", val_normalized_rmse, on_step=False, on_epoch=True)
             self.log("hp_metric", val_r2_value, on_epoch=True)
+            # S = 1 - MAE(model)/MAE(baseline median)
+            s_val = 1.0 - float(val_mae_value) / (self.train_baseline_mae + 1e-8)
+            self.log("val/S_epoch", s_val, on_step=False, on_epoch=True)
 
             self.val_mse.reset(); self.val_mae.reset(); self.val_r2.reset()
 
@@ -336,6 +349,8 @@ def run_task(releases, tasks, target_name, folds=10, weights=None, model_freeze=
     correct_val_list  = []
     train_norm_rmse_list = []
     val_norm_rmse_list = []
+    train_norm_mae_list = []
+    val_norm_mae_list = []
     target_std_fold = None
     unique_subjects, unique_indices = np.unique(windows_ds.description["subject"], return_index=True)
     
@@ -360,37 +375,31 @@ def run_task(releases, tasks, target_name, folds=10, weights=None, model_freeze=
 
         # compute dataset-wide target std on training set (from metadata/description)
         # We take per-recording targets from description[target_name]
-        train_targets = []
+        raw_targets = []
         for ds in train_ds.datasets:
-            val = None
+            v = ds.description.get(target_name, None)
             try:
-                if hasattr(ds, "description") and target_name in ds.description:
-                    val = ds.description[target_name]
-            except Exception:
-                val = None
-            if val is None:
-                continue
-            try:
-                val_f = float(val)
+                v = float(v)
             except (TypeError, ValueError):
                 continue
-            if np.isfinite(val_f):
-                train_targets.append(val_f)
-
-        if len(train_targets) == 0:
+            if np.isfinite(v):
+                raw_targets.append(v)
+        targets_np = np.array(raw_targets, dtype=np.float32)
+        if targets_np.size == 0:
             target_std = 1.0
+            train_baseline_mae = 1.0
         else:
-            if len(train_targets) > 1:
-                target_std = float(np.std(np.array(train_targets), ddof=1))
-            else:
-                target_std = float(np.std(np.array(train_targets)))
-            if not np.isfinite(target_std) or target_std <= 0.0:
+            dd = 1 if targets_np.size > 1 else 0
+            target_std = float(np.std(targets_np, ddof=dd))
+            med = float(np.median(targets_np))
+            train_baseline_mae = float(np.mean(np.abs(targets_np - med)))
+            if not np.isfinite(target_std) or target_std <= 0:
                 target_std = 1.0
-        if target_std_fold is None:
-            target_std_fold = target_std
+            if not np.isfinite(train_baseline_mae) or train_baseline_mae <= 0:
+                train_baseline_mae = 1.0
 
         # Print target statistics
-        print(f"Training targets - count: {len(train_targets)}, mean: {np.mean(train_targets):.4f}, std: {target_std:.4f}, min: {np.min(train_targets):.4f}, max: {np.max(train_targets):.4f}")
+        print(f"Training targets - count: {targets_np.size}, mean: {targets_np.mean() if targets_np.size else 0:.4f}, std: {target_std:.4f}, mae: {train_baseline_mae:.4f}, min: {targets_np.min() if targets_np.size else 0:.4f}, max: {targets_np.max() if targets_np.size else 0:.4f}")
 
         # create model and hparams dict
         hparams = {
@@ -403,6 +412,7 @@ def run_task(releases, tasks, target_name, folds=10, weights=None, model_freeze=
             "fold": it_fold,
             "target_std": target_std,
             "model_freeze": bool(model_freeze),
+            "train_baseline_mae": train_baseline_mae,
         }
         model = create_model(hparams)
 
@@ -419,21 +429,6 @@ def run_task(releases, tasks, target_name, folds=10, weights=None, model_freeze=
             mode='max',
             min_delta=0.001
         )
-        # Find learning rate before logger/trainer creation
-        # trainer_tmp = L.Trainer(
-        #     max_epochs=1,
-        #     accelerator="auto",
-        #     devices=1 if torch.cuda.is_available() else None,
-        #     enable_checkpointing=False,
-        #     logger=False,
-        #     callbacks=[]
-        # )
-        # tuner = Tuner(trainer_tmp)
-        # lr_finder = tuner.lr_find(model, train_loader, val_loader)
-        # new_lr = lr_finder.suggestion()
-        # model.hparams.lr = new_lr
-        # hparams["lr_final"] = float(new_lr)
-
 
         # Now create logger with correct hparams
         if experiment_name is None or experiment_name == "":
@@ -463,10 +458,14 @@ def run_task(releases, tasks, target_name, folds=10, weights=None, model_freeze=
         # keep R2 lists for console summary only if needed; but do not save
         train_r2 = float(trainer.callback_metrics.get('train/r2_epoch', 0.0))
         val_r2 = float(trainer.callback_metrics.get('val/r2_epoch', 0.0))
+        train_norm_mae = float(trainer.callback_metrics.get('train/S_epoch', 0.0))
+        val_norm_mae = float(trainer.callback_metrics.get('val/S_epoch', 0.0))
         correct_train_list.append(train_r2)
         correct_val_list.append(val_r2)
         train_norm_rmse_list.append(train_norm_rmse)
         val_norm_rmse_list.append(val_norm_rmse)
+        train_norm_mae_list.append(train_norm_mae)
+        val_norm_mae_list.append(val_norm_mae)
 
         # Save model weights 
         if save_weights is not None and save_weights != "":
@@ -494,7 +493,7 @@ def run_task(releases, tasks, target_name, folds=10, weights=None, model_freeze=
         val_norm_rmse_mean, val_norm_rmse_std, val_norm_rmse_ci = ci95(val_norm_rmse_list)
         print(f"Val Normalized RMSE: mean={val_norm_rmse_mean:.4f}, std={val_norm_rmse_std:.4f}, 95% CI=±{val_norm_rmse_ci:.4f}")
 
-    return correct_train_list, correct_val_list, train_norm_rmse_list, val_norm_rmse_list, target_std_fold, unique_subjects[val_idx]
+    return correct_train_list, correct_val_list, train_norm_rmse_list, val_norm_rmse_list, train_norm_mae_list, val_norm_mae_list, target_std_fold, train_baseline_mae, unique_subjects[val_idx]
 
 def check_experiment_exists(task, factor, model_name, folds, batch_size, lrate, random_add, dropout):
     log_folder = Path("lightning_logs") / f"experiment_{task}_{factor}_{model_name}_k{folds}"
@@ -608,7 +607,7 @@ for factor in factors:
         # random.shuffle(combinations)
         # combinations = [(64, 0.002, seed, 0.6) for seed in seeds]
         print(f"Total combinations to run: {len(combinations)}")
-        for batch_size, lrate, random_add, dropout in combinations:
+        for iter_comb, (batch_size, lrate, random_add, dropout) in enumerate(combinations):
             # if check_experiment_exists(task, factor, model_name, folds, batch_size, lrate, random_add, dropout):
             #     print(f"Skipping existing experiment for {task}, {factor}, {model_name}, {folds}, {batch_size}, {lrate}, {random_add}, {dropout}")
             #     continue
@@ -619,7 +618,7 @@ for factor in factors:
             weights_file_base = f"checkpoints/{experiment_name}_bs{batch_size}_lr{lrate}_seed{random_add}_dropout{dropout}.pth"
             json_file = f"results/{experiment_name}_bs{batch_size}_lr{lrate}_seed{random_add}_dropout{dropout}.json"
             if bypass_run == False:
-                res_train, res_val, train_norm_rmse, val_norm_rmse, target_std, res_val_subject = run_task(
+                res_train, res_val, train_norm_rmse, val_norm_rmse, train_norm_mae, val_norm_mae, target_std, train_baseline_mae, res_val_subject = run_task(
                     releases_train, tasks, factor, folds=folds, random_add=random_add, experiment_name=experiment_name,
                     train_epochs=100, batch_size=batch_size, lrate=lrate, model_freeze=False, weight_decay=1e-2,
                     model_name=model_name, dropout=dropout, save_weights=weights_file_base
@@ -656,13 +655,14 @@ for factor in factors:
 
             res_test_r12 = []
             test_norm_rmse_r12 = []
+            test_norm_mae_r12 = []
             for fold in range(folds):
                 weights_file = weights_file_base.replace(".pth", "") + f"_{fold}.pth"
                 # load model weights and run inference on R12
                 if not os.path.exists(weights_file):
                     print(f"Missing weights file {weights_file}, skipping")
                     continue
-            model = create_model({
+                model = create_model({
                     "batch_size": batch_size,
                     "dropout": dropout,
                     "lr": lrate,
@@ -670,25 +670,32 @@ for factor in factors:
                     "model_name": model_name,
                     "fold": fold,
                     "target_std": target_std,
+                    "train_baseline_mae": train_baseline_mae,
                     "weight_decay": 1e-2,
                 })
-            model.load_state_dict(torch.load(weights_file, map_location="cpu"))
-            model.eval()
-            trainer_test = L.Trainer(accelerator="auto", devices=1 if torch.cuda.is_available() else None, logger=False, enable_checkpointing=False)
-            test_result = trainer_test.validate(model, test_loader, verbose=False)
-            test_r2 = float(test_result[0].get('val/r2_epoch', 0.0))
-            test_norm_rmse = float(test_result[0].get('val/normalized_rmse_epoch', 0.0))
-            res_test_r12.append(test_r2)
-            test_norm_rmse_r12.append(test_norm_rmse)
+                model.load_state_dict(torch.load(weights_file, map_location="cpu"))
+                model.eval()
+                trainer_test = L.Trainer(accelerator="auto", devices=1 if torch.cuda.is_available() else None, logger=False, enable_checkpointing=False)
+                test_result = trainer_test.validate(model, test_loader, verbose=False)
+                test_r2 = float(test_result[0].get('val/r2_epoch', 0.0))
+                test_norm_rmse = float(test_result[0].get('val/normalized_rmse_epoch', 0.0))
+                test_norm_mae  = float(test_result[0].get('val/S_epoch', 0.0))
+                res_test_r12.append(test_r2)
+                test_norm_rmse_r12.append(test_norm_rmse)
+                test_norm_mae_r12.append(test_norm_mae)
             print(f"Test on R12 R2: {res_test_r12}")
             print(f"Test on R12 Normalized RMSE: {test_norm_rmse_r12}")
             
             with open(json_file, "w") as f:
                 json.dump({
+                    "version": iter_comb,
                     "seed": float(random_add), 
                     "train_norm_rmse": train_norm_rmse,
                     "val_norm_rmse": val_norm_rmse,
-                    "test_norm_rmse": test_norm_rmse_r12
+                    "test_norm_rmse": test_norm_rmse_r12,
+                    "train_norm_mae": train_norm_mae,
+                    "val_norm_mae": val_norm_mae,
+                    "test_norm_mae": test_norm_mae_r12
                 }, f)
                 
             # radon_add an res_val are single values but res_val_subject is a list, so we need to duplicate the values for each subject

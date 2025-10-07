@@ -14,11 +14,14 @@ on:
 jobs:
   test:
     runs-on: ${{ matrix.os }}
+    # TODO: This is a temporary measure to reduce costs.
+    # The matrix should be expanded back to multiple OS and Python versions
+    # once the cost issue is resolved.
     strategy:
       fail-fast: false
       matrix:
-        os: [ "ubuntu-latest", "macos-latest", "windows-latest" ]
-        python-version: ["3.10", "3.12"] # first and last supported Python version
+        os: [ "ubuntu-latest" ]
+        python-version: ["3.12"]
     steps:
     ## Install Braindecode
     - name: Checking Out Repository

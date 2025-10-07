@@ -424,9 +424,9 @@ def run_task(releases, tasks, target_name, folds=10, weights=None, model_freeze=
                 p.requires_grad = False
         from lightning.pytorch.callbacks.early_stopping import EarlyStopping
         early_stopping = EarlyStopping(
-            monitor='val/r2_epoch',
+            monitor='val/r2_epoch', # normalized mae
             patience=15,
-            mode='max',
+            mode='max', # min because we are monitoring a loss
             min_delta=0.001
         )
 

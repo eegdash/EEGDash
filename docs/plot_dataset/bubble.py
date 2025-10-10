@@ -176,6 +176,7 @@ def generate_dataset_bubble(
         log_y=True,
     )
 
+    # ---------- Reference line, OLS fit, and arrow (all robust in log space)
     numeric_x = pd.to_numeric(data[x_field], errors="coerce")
     numeric_y = pd.to_numeric(data[y_field], errors="coerce")
     mask = (
@@ -190,9 +191,29 @@ def generate_dataset_bubble(
         log_x = np.log10(numeric_x[mask])
         log_y = np.log10(numeric_y[mask])
         ss_tot = np.sum((log_y - log_y.mean()) ** 2)
+
+        # Draw 1:1 line as an underlying shape, clipped to 10^0..10^4 and data bounds
+        lx_min = max(log_x.min(), log_y.min(), 0.0)  # >= 10^0
+        lx_max = min(log_x.max(), log_y.max(), 4.0)  # <= 10^4
+        if lx_min < lx_max:
+            x0 = 10**lx_min
+            x1 = 10**lx_max
+            fig.add_shape(
+                type="line",
+                x0=x0,
+                y0=x0,
+                x1=x1,
+                y1=x1,
+                xref="x",
+                yref="y",
+                layer="below",
+                line=dict(color="#9ca3af", width=1.5, dash="dash"),
+            )
+
+        # Red dotted OLS line (computed in log space), clipped to same bounds
         if np.ptp(log_x) > 0 and np.ptp(log_y) > 0 and ss_tot > 0:
             slope, intercept = np.polyfit(log_x, log_y, 1)
-            line_log_x = np.linspace(log_x.min(), log_x.max(), 200)
+            line_log_x = np.linspace(max(log_x.min(), 0.0), min(log_x.max(), 4.0), 200)
             line_x = 10**line_log_x
             line_y = 10 ** (slope * line_log_x + intercept)
             fig.add_trace(
@@ -201,15 +222,40 @@ def generate_dataset_bubble(
                     y=line_y,
                     mode="lines",
                     name="log-log fit",
-                    line=dict(color="#111827", width=2, dash="dot"),
+                    line=dict(color="#dc2626", width=2, dash="dot"),
                     hoverinfo="skip",
                     showlegend=False,
+                    opacity=0.35,
                 )
             )
             residuals = log_y - (slope * log_x + intercept)
             r_squared = 1 - np.sum(residuals**2) / ss_tot
-            fit_annotation_text = f"log-log OLS fit R² = {r_squared:.3f}"
+            fit_annotation_text = f"<span style='color:#dc2626'>Red dotted line: log-log OLS fit R² = {r_squared:.3f}</span>"
 
+        # Arrow label ~60% along the 1:1 segment for stable placement
+        if lx_min < lx_max:
+            t = 0.82  # control the position along the line
+            annot_log = (1 - t) * lx_min + t * lx_max
+            annot_xy = np.log10(10**annot_log)
+            fig.add_annotation(
+                x=annot_xy,
+                y=annot_xy,
+                text="One record per subject",
+                showarrow=True,
+                arrowhead=3,
+                arrowsize=2,
+                arrowwidth=2,
+                arrowcolor="#6b7280",
+                ax=110,
+                ay=90,
+                axref="pixel",
+                ayref="pixel",
+                font=dict(size=20, color="#374151"),
+                align="left",
+            )
+
+    # ---------- Hover and styling ----------
+    x_hover, y_hover = _build_hover_template(x_field, y_field)
     hover_template = (
         "<b>%{customdata[0]}</b>"
         f"<br>{x_hover}"
@@ -244,12 +290,14 @@ def generate_dataset_bubble(
         margin=dict(l=60, r=40, t=80, b=60),
         template="plotly_white",
         legend=dict(
-            title="Modality",
+            title="Modality 🖱️ (click to toggle)",
             orientation="h",
             yanchor="bottom",
             y=1.02,
             xanchor="right",
             x=0.99,
+            itemclick="toggle",
+            itemdoubleclick="toggleothers",
         ),
         font=dict(
             family="Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif",

@@ -201,7 +201,7 @@ corresponding to their respective event markers).
  .. code-block:: none
 
     Used Annotations descriptions: [np.str_('boundary'), np.str_('break cnt'), np.str_('instructed_toCloseEyes'), np.str_('instructed_toOpenEyes'), np.str_('resting_start')]
-    [10/04/25 23:23:45] INFO     Original events found with ids: preprocessing.py:66
+    [10/10/25 16:07:26] INFO     Original events found with ids: preprocessing.py:66
                                  {np.str_('boundary'): 1,                           
                                  np.str_('break cnt'): 2,                           
                                  np.str_('instructed_toCloseEyes                    
@@ -334,7 +334,7 @@ Features
 
  .. code-block:: none
 
-    Extracting features:   0%|          | 0/1 [00:00<?, ?it/s]    Extracting features: 100%|██████████| 1/1 [00:00<00:00,  1.30it/s]    Extracting features: 100%|██████████| 1/1 [00:00<00:00,  1.30it/s]
+    Extracting features:   0%|          | 0/1 [00:00<?, ?it/s]    Extracting features: 100%|██████████| 1/1 [00:00<00:00,  1.29it/s]    Extracting features: 100%|██████████| 1/1 [00:00<00:00,  1.29it/s]
 
 
 
@@ -372,9 +372,9 @@ Features
         <tr style="text-align: right;">
           <th></th>
           <th>i_dataset</th>
+          <th>i_window_in_trial</th>
           <th>i_start_in_trial</th>
           <th>i_stop_in_trial</th>
-          <th>i_window_in_trial</th>
           <th>sig_mean_E22</th>
           <th>sig_mean_E9</th>
           <th>sig_mean_E33</th>
@@ -458,9 +458,9 @@ Features
         <tr>
           <th>0</th>
           <td>0</td>
+          <td>0</td>
           <td>8092</td>
           <td>8348</td>
-          <td>0</td>
           <td>5.647381e-07</td>
           <td>-2.509246e-06</td>
           <td>8.135321e-06</td>
@@ -542,9 +542,9 @@ Features
         <tr>
           <th>1</th>
           <td>0</td>
+          <td>0</td>
           <td>8348</td>
           <td>8604</td>
-          <td>0</td>
           <td>1.130721e-06</td>
           <td>1.416919e-07</td>
           <td>-6.768836e-07</td>
@@ -626,9 +626,9 @@ Features
         <tr>
           <th>2</th>
           <td>0</td>
+          <td>0</td>
           <td>8604</td>
           <td>8860</td>
-          <td>0</td>
           <td>-8.737620e-07</td>
           <td>2.451451e-07</td>
           <td>3.854794e-07</td>
@@ -710,9 +710,9 @@ Features
         <tr>
           <th>3</th>
           <td>0</td>
+          <td>0</td>
           <td>8860</td>
           <td>9116</td>
-          <td>0</td>
           <td>3.482372e-07</td>
           <td>-5.419446e-07</td>
           <td>-7.257668e-08</td>
@@ -794,9 +794,9 @@ Features
         <tr>
           <th>4</th>
           <td>0</td>
+          <td>0</td>
           <td>9116</td>
           <td>9372</td>
-          <td>0</td>
           <td>1.078094e-06</td>
           <td>2.234204e-06</td>
           <td>8.322080e-07</td>
@@ -962,9 +962,9 @@ Features
         <tr>
           <th>65</th>
           <td>0</td>
+          <td>0</td>
           <td>43163</td>
           <td>43419</td>
-          <td>0</td>
           <td>2.604641e-06</td>
           <td>2.696607e-06</td>
           <td>3.207271e-07</td>
@@ -1046,9 +1046,9 @@ Features
         <tr>
           <th>66</th>
           <td>0</td>
+          <td>0</td>
           <td>43419</td>
           <td>43675</td>
-          <td>0</td>
           <td>-1.158709e-06</td>
           <td>-9.353611e-07</td>
           <td>6.243006e-07</td>
@@ -1130,9 +1130,9 @@ Features
         <tr>
           <th>67</th>
           <td>0</td>
+          <td>0</td>
           <td>43675</td>
           <td>43931</td>
-          <td>0</td>
           <td>9.350503e-07</td>
           <td>7.273056e-07</td>
           <td>-3.974258e-07</td>
@@ -1214,9 +1214,9 @@ Features
         <tr>
           <th>68</th>
           <td>0</td>
+          <td>0</td>
           <td>43931</td>
           <td>44187</td>
-          <td>0</td>
           <td>-1.334396e-04</td>
           <td>-4.969487e-05</td>
           <td>-2.251352e-06</td>
@@ -1298,9 +1298,9 @@ Features
         <tr>
           <th>69</th>
           <td>0</td>
+          <td>0</td>
           <td>44187</td>
           <td>44443</td>
-          <td>0</td>
           <td>1.370442e-04</td>
           <td>3.529626e-05</td>
           <td>3.354098e-06</td>
@@ -8634,7 +8634,7 @@ accuracy across six epochs.
  .. code-block:: none
 
     [LightGBM] [Info] Number of positive: 28, number of negative: 28
-    [LightGBM] [Info] Auto-choosing col-wise multi-threading, the overhead of testing was 0.000295 seconds.
+    [LightGBM] [Info] Auto-choosing col-wise multi-threading, the overhead of testing was 0.000314 seconds.
     You can set `force_col_wise=true` to remove the overhead.
     [LightGBM] [Info] Total Bins 9205
     [LightGBM] [Info] Number of data points in the train set: 56, number of used features: 460
@@ -8797,7 +8797,7 @@ accuracy across six epochs.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 5.516 seconds)
+   **Total running time of the script:** (0 minutes 5.549 seconds)
 
 **Estimated memory usage:**  1344 MB
 

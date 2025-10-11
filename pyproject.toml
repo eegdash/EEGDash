@@ -61,6 +61,7 @@ Issues   = "https://github.com/sccn/EEG-Dash-Data/issues"
 tests = [
     'pytest',
     'pytest-cov',
+    'pytest-sugar',
     'codecov',
     'pytest_cases',
     'pytest-benchmark',

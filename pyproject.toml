@@ -40,11 +40,9 @@ dependencies = [
   "numba",
   "numpy",
   "pandas",
-  "pybids",
   "pymongo",
   "python-dotenv",
   "s3fs",
-  "scipy",
   "tqdm",
   "h5io >= 0.2.4",
   "pymatreader",
@@ -63,6 +61,7 @@ Issues   = "https://github.com/sccn/EEG-Dash-Data/issues"
 tests = [
     'pytest',
     'pytest-cov',
+    'pytest-sugar',
     'codecov',
     'pytest_cases',
     'pytest-benchmark',
@@ -90,10 +89,15 @@ docs = [
   "graphviz",
 ]
 
+digestion = [
+  "pybids",
+]
+
 all = [
   "eegdash[docs]",
   "eegdash[dev]",
   "eegdash[tests]",
+  "eegdash[digestion]",
 ]
 
 [tool.setuptools]

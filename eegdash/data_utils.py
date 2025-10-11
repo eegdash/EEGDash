@@ -22,10 +22,10 @@ import mne
 import mne_bids
 import numpy as np
 import pandas as pd
-from bids import BIDSLayout
 from joblib import Parallel, delayed
 from mne._fiff.utils import _read_segments_file
 from mne.io import BaseRaw
+from mne.utils.check import _soft_import
 from mne_bids import BIDSPath
 
 from braindecode.datasets import BaseDataset
@@ -348,6 +348,14 @@ class EEGBIDSDataset:
         data_dir=None,  # location of bids dataset
         dataset="",  # dataset name
     ):
+        bids_lib = _soft_import("bids", purpose="digestion of datasets", strict=False)
+
+        if bids_lib is None:
+            raise ImportError(
+                "The 'pybids' package is required to use EEGBIDSDataset. "
+                "Please install it via 'pip install eegdash[digestion]'."
+            )
+
         if data_dir is None or not os.path.exists(data_dir):
             raise ValueError("data_dir must be specified and must exist")
         self.bidsdir = Path(data_dir)
@@ -359,7 +367,7 @@ class EEGBIDSDataset:
             raise AssertionError(
                 f"BIDS directory '{dir_name}' does not correspond to dataset '{self.dataset}'"
             )
-        self.layout = BIDSLayout(data_dir)
+        self.layout = bids_lib.BIDSLayout(data_dir)
 
         # get all recording files in the bids directory
         self.files = self._get_recordings(self.layout)
@@ -379,7 +387,7 @@ class EEGBIDSDataset:
         """
         return self.get_bids_file_attribute("modality", self.files[0]).lower() == "eeg"
 
-    def _get_recordings(self, layout: BIDSLayout) -> list[str]:
+    def _get_recordings(self, layout) -> list[str]:
         """Get a list of all EEG recording files in the BIDS layout."""
         files = []
         for ext, exts in self.RAW_EXTENSIONS.items():

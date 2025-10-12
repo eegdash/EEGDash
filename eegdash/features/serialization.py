@@ -19,6 +19,11 @@ from braindecode.datautil.serialization import _load_kwargs_json
 from .datasets import FeaturesConcatDataset, FeaturesDataset
 
 
+__all__ = [
+    "load_features_concat_dataset",
+]
+
+
 def load_features_concat_dataset(
     path: str | Path, ids_to_load: list[int] | None = None, n_jobs: int = 1
 ) -> FeaturesConcatDataset:

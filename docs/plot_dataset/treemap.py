@@ -10,9 +10,19 @@ import pandas as pd
 import plotly.graph_objects as go
 
 try:  # Allow import both as a package and as a script
-    from .colours import CANONICAL_MAP, MODALITY_COLOR_MAP, PATHOLOGY_COLOR_MAP
+    from .colours import (
+        CANONICAL_MAP,
+        MODALITY_COLOR_MAP,
+        PATHOLOGY_COLOR_MAP,
+        hex_to_rgba,
+    )
 except ImportError:  # pragma: no cover - fallback for direct script execution
-    from colours import CANONICAL_MAP, MODALITY_COLOR_MAP, PATHOLOGY_COLOR_MAP  # type: ignore
+    from colours import (  # type: ignore
+        CANONICAL_MAP,
+        MODALITY_COLOR_MAP,
+        PATHOLOGY_COLOR_MAP,
+        hex_to_rgba,
+    )
 
 __all__ = ["generate_dataset_treemap"]
 
@@ -25,6 +35,18 @@ _DATASET_COLUMN = "dataset"
 _DATASET_ALIAS = "dataset_name"
 _SEPARATORS = ("/", "|", ";", ",")
 _DEFAULT_COLOR = "#94a3b8"
+
+MODALITY_EMOJI = {
+    "Visual": "👁️",
+    "Auditory": "👂",
+    "Sleep": "🌙",
+    "Multisensory": "🧩",
+    "Tactile": "✋",
+    "Motor": "🏃",
+    "Resting State": "🧘",
+    "Rest": "🧘",
+    "Other": "🧭",
+}
 
 
 def _tokenise_cell(value: object, column_key: str) -> list[str]:
@@ -152,26 +174,34 @@ def _abbreviate(value: float | int) -> str:
 
 
 def _filter_zero_nodes(df: pd.DataFrame, column: str) -> pd.DataFrame:
-    mask = (df["hours"] > 0) | (df[column] == "Unknown")
+    mask = (df["subjects"] > 0) | (df[column] == "Unknown")
     return df.loc[mask].copy()
 
 
 def _format_label(
     name: str,
+    subjects: float | int,
     hours: float | int,
     records: float | int,
     hours_from_records: float | int,
+    *,
+    font_px: int = 13,
 ) -> str:
-    area_value = float(hours) if pd.notna(hours) else 0.0
+    subjects_value = float(subjects) if pd.notna(subjects) else 0.0
+    hours_value = float(hours) if pd.notna(hours) else 0.0
     records_value = float(records) if pd.notna(records) else 0.0
     fallback_value = float(hours_from_records) if pd.notna(hours_from_records) else 0.0
 
-    unit = " record" if math.isclose(area_value, fallback_value, rel_tol=1e-6) else ""
-    area_text = f"{area_value:.0f}"
-    records_text = _abbreviate(records_value)
+    subjects_text = _abbreviate(subjects_value)
+    if hours_value > 0:
+        secondary_text = f"{hours_value:.0f} h"
+    elif fallback_value > 0:
+        secondary_text = f"{_abbreviate(records_value)} rec"
+    else:
+        secondary_text = "0 h"
     return (
-        f"{name}<br><span style='font-size:11px;'>{area_text}{unit}"
-        f" | {records_text} rec</span>"
+        f"{name}<br><span style='font-size:{font_px}px;'>{subjects_text} subj"
+        f" | {secondary_text}</span>"
     )
 
 
@@ -199,16 +229,20 @@ def _build_nodes(dataset_level: pd.DataFrame) -> list[dict[str, object]]:
     level1 = _filter_zero_nodes(level1, "population_type")
 
     nodes: list[dict[str, object]] = []
+    level1_meta: list[dict[str, str]] = []
 
+    total_subjects = level1["subjects"].sum()
     total_hours = level1["hours"].sum()
     total_records = level1["records"].sum()
     total_from_records = level1["hours_from_records"].sum()
 
     root_label = _format_label(
         "EEG Dash Datasets",
+        total_subjects,
         total_hours,
         total_records,
         total_from_records,
+        font_px=18,
     )
     nodes.append(
         {
@@ -216,7 +250,7 @@ def _build_nodes(dataset_level: pd.DataFrame) -> list[dict[str, object]]:
             "parent": "",
             "name": "EEG Dash datasets",
             "text": root_label,
-            "value": float(total_hours),
+            "value": float(total_subjects),
             "color": "white",
             "hover": root_label,
         }
@@ -227,18 +261,24 @@ def _build_nodes(dataset_level: pd.DataFrame) -> list[dict[str, object]]:
         node_id = name
         label = _format_label(
             name,
+            row["subjects"],
             row["hours"],
             row["records"],
             row["hours_from_records"],
+            font_px=16,
         )
-        color = PATHOLOGY_COLOR_MAP.get(name, _DEFAULT_COLOR)
+        base_color = PATHOLOGY_COLOR_MAP.get(name)
+        if not base_color:
+            base_color = PATHOLOGY_COLOR_MAP.get("Clinical", _DEFAULT_COLOR)
+        color = hex_to_rgba(base_color, alpha=0.75)
+        level1_meta.append({"name": name, "color": base_color})
         nodes.append(
             {
                 "id": node_id,
                 "parent": "EEG Dash datasets",
                 "name": name,
                 "text": label,
-                "value": float(row["hours"]),
+                "value": float(row["subjects"]),
                 "color": color,
                 "hover": label,
             }
@@ -248,20 +288,26 @@ def _build_nodes(dataset_level: pd.DataFrame) -> list[dict[str, object]]:
         modality = row["experimental_modality"] or "Unknown"
         parent = row["population_type"] or "Unknown"
         node_id = f"{parent} / {modality}"
+        modality_label = modality
+        emoji = MODALITY_EMOJI.get(modality)
+        if emoji:
+            modality_label = f"{emoji} {modality}"
         label = _format_label(
-            modality,
+            modality_label,
+            row["subjects"],
             row["hours"],
             row["records"],
             row["hours_from_records"],
+            font_px=16,
         )
         color = MODALITY_COLOR_MAP.get(modality, _DEFAULT_COLOR)
         nodes.append(
             {
                 "id": node_id,
                 "parent": parent,
-                "name": modality,
+                "name": modality_label,
                 "text": label,
-                "value": float(row["hours"]),
+                "value": float(row["subjects"]),
                 "color": color,
                 "hover": label,
             }
@@ -275,32 +321,41 @@ def _build_nodes(dataset_level: pd.DataFrame) -> list[dict[str, object]]:
         node_id = f"{parent} / {dataset_name}"
         label = _format_label(
             dataset_name,
+            row["subjects"],
             row["hours"],
             row["records"],
             row["hours_from_records"],
+            font_px=16,
         )
-        color = MODALITY_COLOR_MAP.get(modality, _DEFAULT_COLOR)
+        _ = row["population_type"] or "Unknown"
+        if dataset_name == "Unknown":
+            color = _DEFAULT_COLOR
+        else:
+            color = MODALITY_COLOR_MAP.get(modality, _DEFAULT_COLOR)
         nodes.append(
             {
                 "id": node_id,
                 "parent": parent,
                 "name": dataset_name,
                 "text": label,
-                "value": float(row["hours"]),
+                "value": float(row["subjects"]),
                 "color": color,
                 "hover": label,
             }
         )
 
-    return nodes
+    return nodes, level1_meta
 
 
-def _build_figure(nodes: Iterable[dict[str, object]]) -> go.Figure:
+def _build_figure(
+    nodes: Iterable[dict[str, object]],
+    legend_entries: Iterable[dict[str, str]],
+) -> go.Figure:
     node_list = list(nodes)
     if not node_list:
         raise ValueError("No data available to render the treemap.")
 
-    return go.Figure(
+    fig = go.Figure(
         go.Treemap(
             ids=[node["id"] for node in node_list],
             labels=[node["name"] for node in node_list],
@@ -311,13 +366,45 @@ def _build_figure(nodes: Iterable[dict[str, object]]) -> go.Figure:
             branchvalues="total",
             marker=dict(
                 colors=[node["color"] for node in node_list],
-                line=dict(color="white", width=2),
+                line=dict(color="white", width=1),
+                pad=dict(t=6, r=6, b=6, l=6),
             ),
             textinfo="text",
             hovertemplate="%{customdata[0]}<extra></extra>",
-            pathbar=dict(visible=True, edgeshape="/"),
+            pathbar=dict(visible=True, edgeshape="/", thickness=34),
+            textfont=dict(size=24),
+            insidetextfont=dict(size=24),
+            tiling=dict(pad=6, packing="squarify"),
+            root=dict(color="rgba(255,255,255,0.95)"),
         )
     )
+
+    for entry in legend_entries:
+        fig.add_trace(
+            go.Scatter(
+                x=[None],
+                y=[None],
+                mode="markers",
+                marker=dict(size=14, symbol="square", color=entry["color"]),
+                name=entry["name"],
+                showlegend=True,
+                hoverinfo="skip",
+            )
+        )
+
+    fig.update_layout(
+        legend=dict(
+            orientation="h",
+            yanchor="bottom",
+            y=1.08,
+            xanchor="left",
+            x=0.0,
+            font=dict(size=14),
+            itemwidth=80,
+        )
+    )
+
+    return fig
 
 
 def generate_dataset_treemap(
@@ -338,11 +425,12 @@ def generate_dataset_treemap(
     )
 
     aggregated = _filter_zero_nodes(aggregated, "dataset_name")
-    nodes = _build_nodes(aggregated)
-    fig = _build_figure(nodes)
+    nodes, legend_entries = _build_nodes(aggregated)
+    fig = _build_figure(nodes, legend_entries)
     fig.update_layout(
-        uniformtext=dict(minsize=10, mode="hide"),
-        margin=dict(t=20, l=10, r=10, b=10),
+        uniformtext=dict(minsize=18, mode="hide"),
+        margin=dict(t=140, l=24, r=24, b=16),
+        hoverlabel=dict(font_size=16),
     )
 
     out_path = Path(out_html)

@@ -1,6 +1,5 @@
 import numpy as np
 
-
 __all__ = [
     "DEFAULT_FREQ_BANDS",
     "get_valid_freq_band",

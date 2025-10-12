@@ -1,5 +1,14 @@
 import numpy as np
 
+
+__all__ = [
+    "DEFAULT_FREQ_BANDS",
+    "get_valid_freq_band",
+    "reduce_freq_bands",
+    "slice_freq_band",
+]
+
+
 DEFAULT_FREQ_BANDS = {
     "delta": (1, 4.5),
     "theta": (4.5, 8),

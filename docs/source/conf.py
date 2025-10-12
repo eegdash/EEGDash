@@ -3,6 +3,7 @@ import importlib
 import inspect
 import os
 import sys
+import shutil
 from collections import Counter
 from datetime import datetime, timezone
 from pathlib import Path
@@ -78,6 +79,7 @@ html_css_files = [
     "https://cdn.datatables.net/select/1.7.0/css/select.dataTables.min.css",
     "https://cdn.datatables.net/searchpanes/2.3.1/css/searchPanes.dataTables.min.css",
     "custom.css",
+    "css/treemap.css",
 ]
 html_js_files = [
     "https://code.jquery.com/jquery-3.7.1.min.js",
@@ -602,6 +604,106 @@ def _generate_dataset_docs(app) -> None:
             continue
 
 
+def _split_tokens(value: str | None) -> set[str]:
+    tokens: set[str] = set()
+    if not value:
+        return tokens
+    for part in value.split(","):
+        cleaned = part.strip()
+        if cleaned:
+            tokens.add(cleaned)
+    return tokens
+
+
+def _compute_dataset_counter_defaults() -> dict[str, int]:
+    csv_path = Path(importlib.import_module("eegdash.dataset").__file__).with_name(
+        "dataset_summary.csv"
+    )
+    if not csv_path.exists():
+        return {}
+
+    dataset_ids: set[str] = set()
+    modalities: set[str] = set()
+    cognitive: set[str] = set()
+    subject_total = 0
+
+    with csv_path.open(encoding="utf-8") as handle:
+        filtered = (
+            line
+            for line in handle
+            if line.strip() and not line.lstrip().startswith("#")
+        )
+        reader = csv.DictReader(filtered)
+        for row in reader:
+            dataset = (row.get("dataset") or row.get("Dataset") or "").strip()
+            if dataset:
+                dataset_ids.add(dataset)
+
+            try:
+                subject_total += int(float(row.get("n_subjects", "0") or 0))
+            except (TypeError, ValueError):
+                pass
+
+            modalities.update(_split_tokens(row.get("record_modality")))
+            cognitive.update(_split_tokens(row.get("type of exp")))
+
+    return {
+        "datasets": len(dataset_ids),
+        "subjects": subject_total,
+        "modalities": len(modalities),
+        "cognitive": len(cognitive),
+    }
+
+
+_DATASET_COUNTER_DEFAULTS = _compute_dataset_counter_defaults()
+
+
+def _format_counter(key: str) -> str:
+    value = _DATASET_COUNTER_DEFAULTS.get(key, 0)
+    if isinstance(value, (int, float)):
+        if isinstance(value, float) and not value.is_integer():
+            return f"{value:,.2f}"
+        return f"{int(value):,}"
+    return str(value)
+
+
+_DATASET_COUNTER_PLACEHOLDERS = {
+    "|datasets_total|": _format_counter("datasets"),
+    "|subjects_total|": _format_counter("subjects"),
+    "|modalities_total|": _format_counter("modalities"),
+    "|cognitive_total|": _format_counter("cognitive"),
+}
+
+
+def _copy_dataset_summary(app, exception) -> None:
+    if exception is not None or not getattr(app, "builder", None):
+        return
+
+    csv_path = Path(importlib.import_module("eegdash.dataset").__file__).with_name(
+        "dataset_summary.csv"
+    )
+    if not csv_path.exists():
+        LOGGER.warning("dataset_summary.csv not found; skipping counter data copy.")
+        return
+
+    static_dir = Path(app.outdir) / "_static"
+    try:
+        static_dir.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(csv_path, static_dir / "dataset_summary.csv")
+    except OSError as exc:
+        LOGGER.warning("Unable to copy dataset_summary.csv to _static: %s", exc)
+
+
+def _inject_counter_values(app, docname, source) -> None:
+    if docname != "dataset_summary":
+        return
+
+    text = source[0]
+    for token, value in _DATASET_COUNTER_PLACEHOLDERS.items():
+        text = text.replace(token, value)
+    source[0] = text
+
+
 def setup(app):
     """Create the back-references directory if it doesn't exist."""
     backreferences_dir = os.path.join(
@@ -611,6 +713,8 @@ def setup(app):
         os.makedirs(backreferences_dir)
 
     app.connect("builder-inited", _generate_dataset_docs)
+    app.connect("build-finished", _copy_dataset_summary)
+    app.connect("source-read", _inject_counter_values)
 
 
 # Configure sitemap URL format (omit .html where possible)

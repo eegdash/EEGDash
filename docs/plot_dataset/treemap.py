@@ -14,6 +14,8 @@ try:  # Allow import both as a package and as a script
         CANONICAL_MAP,
         MODALITY_COLOR_MAP,
         PATHOLOGY_COLOR_MAP,
+        PATHOLOGY_PASTEL_OVERRIDES,
+        MODALITY_EMOJI,
         hex_to_rgba,
     )
 except ImportError:  # pragma: no cover - fallback for direct script execution
@@ -21,6 +23,8 @@ except ImportError:  # pragma: no cover - fallback for direct script execution
         CANONICAL_MAP,
         MODALITY_COLOR_MAP,
         PATHOLOGY_COLOR_MAP,
+        PATHOLOGY_PASTEL_OVERRIDES,
+        MODALITY_EMOJI,
         hex_to_rgba,
     )
 
@@ -35,18 +39,6 @@ _DATASET_COLUMN = "dataset"
 _DATASET_ALIAS = "dataset_name"
 _SEPARATORS = ("/", "|", ";", ",")
 _DEFAULT_COLOR = "#94a3b8"
-
-MODALITY_EMOJI = {
-    "Visual": "👁️",
-    "Auditory": "👂",
-    "Sleep": "🌙",
-    "Multisensory": "🧩",
-    "Tactile": "✋",
-    "Motor": "🏃",
-    "Resting State": "🧘",
-    "Rest": "🧘",
-    "Other": "🧭",
-}
 
 
 def _tokenise_cell(value: object, column_key: str) -> list[str]:
@@ -160,6 +152,12 @@ def _abbreviate(value: float | int) -> str:
     if num == 0:
         return "0"
 
+    if abs(num) < 1000:
+        rounded = round(num / 10.0) * 10.0
+        if rounded == 0 and num > 0:
+            rounded = 10.0
+        return f"{int(rounded):,}"
+
     thresholds = [
         (1_000_000_000, "B"),
         (1_000_000, "M"),
@@ -168,9 +166,48 @@ def _abbreviate(value: float | int) -> str:
     for divisor, suffix in thresholds:
         if abs(num) >= divisor:
             scaled = num / divisor
+            scaled = round(scaled, 1)
             text = f"{scaled:.1f}".rstrip("0").rstrip(".")
             return f"{text}{suffix}"
     return f"{num:.0f}"
+
+
+def _lighten_hex(hex_color: str, factor: float = 0.55) -> str:
+    if not isinstance(hex_color, str) or not hex_color.startswith("#"):
+        return _DEFAULT_COLOR
+    hex_color = hex_color.lstrip("#")
+    if len(hex_color) != 6:
+        return _DEFAULT_COLOR
+    try:
+        r = int(hex_color[0:2], 16)
+        g = int(hex_color[2:4], 16)
+        b = int(hex_color[4:6], 16)
+    except ValueError:
+        return _DEFAULT_COLOR
+    r = int(r + (255 - r) * factor)
+    g = int(g + (255 - g) * factor)
+    b = int(b + (255 - b) * factor)
+    return f"#{r:02x}{g:02x}{b:02x}"
+
+
+def _pathology_colors(name: str) -> tuple[str, str, str]:
+    """Return (fill_rgba, legend_hex, group_key)."""
+    base_hex = PATHOLOGY_PASTEL_OVERRIDES.get(name)
+    if not base_hex:
+        fallback = PATHOLOGY_COLOR_MAP.get(name)
+        if fallback:
+            base_hex = _lighten_hex(fallback, 0.6)
+        else:
+            base_hex = PATHOLOGY_PASTEL_OVERRIDES.get("Clinical", _DEFAULT_COLOR)
+
+    fill = hex_to_rgba(base_hex, alpha=0.65)
+    if name == "Healthy":
+        group = "healthy"
+    elif name == "Unknown":
+        group = "unknown"
+    else:
+        group = "clinical"
+    return fill, base_hex, group
 
 
 def _filter_zero_nodes(df: pd.DataFrame, column: str) -> pd.DataFrame:
@@ -198,14 +235,16 @@ def _format_label(
     elif fallback_value > 0:
         secondary_text = f"{_abbreviate(records_value)} rec"
     else:
-        secondary_text = "0 h"
+        secondary_text = "records unavailable"
     return (
         f"{name}<br><span style='font-size:{font_px}px;'>{subjects_text} subj"
         f" | {secondary_text}</span>"
     )
 
 
-def _build_nodes(dataset_level: pd.DataFrame) -> list[dict[str, object]]:
+def _build_nodes(
+    dataset_level: pd.DataFrame,
+) -> tuple[list[dict[str, object]], list[dict[str, str]]]:
     dataset_level = dataset_level.sort_values(
         ["population_type", "experimental_modality", "dataset_name"]
     ).reset_index(drop=True)
@@ -229,7 +268,12 @@ def _build_nodes(dataset_level: pd.DataFrame) -> list[dict[str, object]]:
     level1 = _filter_zero_nodes(level1, "population_type")
 
     nodes: list[dict[str, object]] = []
-    level1_meta: list[dict[str, str]] = []
+    legend_entries: list[dict[str, str]] = []
+    seen_groups: set[str] = set()
+    modality_meta: dict[str, dict[str, str]] = {}
+    modality_priority = {
+        name: idx for idx, name in enumerate(MODALITY_COLOR_MAP.keys())
+    }
 
     total_subjects = level1["subjects"].sum()
     total_hours = level1["hours"].sum()
@@ -267,11 +311,8 @@ def _build_nodes(dataset_level: pd.DataFrame) -> list[dict[str, object]]:
             row["hours_from_records"],
             font_px=16,
         )
-        base_color = PATHOLOGY_COLOR_MAP.get(name)
-        if not base_color:
-            base_color = PATHOLOGY_COLOR_MAP.get("Clinical", _DEFAULT_COLOR)
-        color = hex_to_rgba(base_color, alpha=0.75)
-        level1_meta.append({"name": name, "color": base_color})
+        fill_color, _, group = _pathology_colors(name)
+        seen_groups.add(group)
         nodes.append(
             {
                 "id": node_id,
@@ -279,7 +320,7 @@ def _build_nodes(dataset_level: pd.DataFrame) -> list[dict[str, object]]:
                 "name": name,
                 "text": label,
                 "value": float(row["subjects"]),
-                "color": color,
+                "color": fill_color,
                 "hover": label,
             }
         )
@@ -288,10 +329,10 @@ def _build_nodes(dataset_level: pd.DataFrame) -> list[dict[str, object]]:
         modality = row["experimental_modality"] or "Unknown"
         parent = row["population_type"] or "Unknown"
         node_id = f"{parent} / {modality}"
+        emoji_symbol = MODALITY_EMOJI.get(modality)
         modality_label = modality
-        emoji = MODALITY_EMOJI.get(modality)
-        if emoji:
-            modality_label = f"{emoji} {modality}"
+        if emoji_symbol and row["subjects"] >= 120:
+            modality_label = f"{emoji_symbol} {modality}"
         label = _format_label(
             modality_label,
             row["subjects"],
@@ -301,6 +342,18 @@ def _build_nodes(dataset_level: pd.DataFrame) -> list[dict[str, object]]:
             font_px=16,
         )
         color = MODALITY_COLOR_MAP.get(modality, _DEFAULT_COLOR)
+        legend_label = (
+            f"{(emoji_symbol + ' ') if emoji_symbol else ''}{modality}".strip()
+        )
+        if modality not in modality_meta:
+            order = modality_priority.get(modality, len(modality_priority))
+            modality_meta[modality] = {
+                "name": legend_label,
+                "color": color,
+                "group": "level2",
+                "order": 100 + order,
+                "legendgroup": "modalities",
+            }
         nodes.append(
             {
                 "id": node_id,
@@ -327,7 +380,6 @@ def _build_nodes(dataset_level: pd.DataFrame) -> list[dict[str, object]]:
             row["hours_from_records"],
             font_px=16,
         )
-        _ = row["population_type"] or "Unknown"
         if dataset_name == "Unknown":
             color = _DEFAULT_COLOR
         else:
@@ -344,7 +396,41 @@ def _build_nodes(dataset_level: pd.DataFrame) -> list[dict[str, object]]:
             }
         )
 
-    return nodes, level1_meta
+    group_config = {
+        "healthy": {
+            "name": "Healthy",
+            "color": PATHOLOGY_PASTEL_OVERRIDES.get("Healthy", "#bbf7d0"),
+            "order": 0,
+        },
+        "clinical": {
+            "name": "Clinical",
+            "color": PATHOLOGY_PASTEL_OVERRIDES.get("Clinical", "#f8d0d0"),
+            "order": 1,
+        },
+        "unknown": {
+            "name": "To be Categorised",
+            "color": PATHOLOGY_PASTEL_OVERRIDES.get("Unknown", "#d0d7df"),
+            "order": 2,
+        },
+    }
+
+    for key, cfg in group_config.items():
+        if key in seen_groups:
+            legend_entries.append(
+                {
+                    "name": cfg["name"],
+                    "color": cfg["color"],
+                    "group": "level1",
+                    "order": cfg["order"],
+                    "legendgroup": "populations",
+                }
+            )
+
+    legend_entries.extend(
+        sorted(modality_meta.values(), key=lambda item: item["order"])
+    )
+
+    return nodes, legend_entries
 
 
 def _build_figure(
@@ -354,6 +440,17 @@ def _build_figure(
     node_list = list(nodes)
     if not node_list:
         raise ValueError("No data available to render the treemap.")
+
+    legend_list = list(legend_entries)
+    seen: set[str] = set()
+    deduped: list[dict[str, str]] = []
+    for entry in legend_list:
+        if entry["name"] in seen:
+            continue
+        seen.add(entry["name"])
+        deduped.append(entry)
+
+    deduped.sort(key=lambda item: item.get("order", 999))
 
     fig = go.Figure(
         go.Treemap(
@@ -367,41 +464,58 @@ def _build_figure(
             marker=dict(
                 colors=[node["color"] for node in node_list],
                 line=dict(color="white", width=1),
-                pad=dict(t=6, r=6, b=6, l=6),
+                pad=dict(t=10, r=10, b=10, l=10),
             ),
             textinfo="text",
             hovertemplate="%{customdata[0]}<extra></extra>",
-            pathbar=dict(visible=True, edgeshape="/", thickness=34),
+            pathbar=dict(
+                visible=True, edgeshape="/", thickness=34, textfont=dict(size=14)
+            ),
             textfont=dict(size=24),
             insidetextfont=dict(size=24),
-            tiling=dict(pad=6, packing="squarify"),
+            tiling=dict(pad=10, packing="squarify"),
             root=dict(color="rgba(255,255,255,0.95)"),
         )
     )
 
-    for entry in legend_entries:
+    for entry in deduped:
         fig.add_trace(
             go.Scatter(
-                x=[None],
-                y=[None],
+                x=[0],
+                y=[0],
                 mode="markers",
-                marker=dict(size=14, symbol="square", color=entry["color"]),
+                marker=dict(size=12, symbol="square", color=entry["color"]),
                 name=entry["name"],
                 showlegend=True,
                 hoverinfo="skip",
+                xaxis="x2",
+                yaxis="y2",
+                legendgroup=entry.get("legendgroup"),
             )
         )
 
     fig.update_layout(
         legend=dict(
             orientation="h",
-            yanchor="bottom",
+            yanchor="top",
             y=1.08,
-            xanchor="left",
-            x=0.0,
+            xanchor="center",
+            x=0.5,
             font=dict(size=14),
-            itemwidth=80,
-        )
+            itemsizing="constant",
+            traceorder="normal",
+            itemclick=False,
+            itemdoubleclick=False,
+            bgcolor="rgba(255,255,255,0)",
+            bordercolor="rgba(0,0,0,0)",
+            borderwidth=0,
+        ),
+        legend_traceorder="normal",
+    )
+
+    fig.update_layout(
+        xaxis2=dict(visible=False),
+        yaxis2=dict(visible=False),
     )
 
     return fig
@@ -429,8 +543,9 @@ def generate_dataset_treemap(
     fig = _build_figure(nodes, legend_entries)
     fig.update_layout(
         uniformtext=dict(minsize=18, mode="hide"),
-        margin=dict(t=140, l=24, r=24, b=16),
-        hoverlabel=dict(font_size=16),
+        margin=dict(t=60, l=32, r=220, b=40),
+        hoverlabel=dict(font=dict(size=16), align="left"),
+        height=860,
     )
 
     out_path = Path(out_html)

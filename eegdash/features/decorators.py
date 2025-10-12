@@ -11,6 +11,15 @@ from .extractors import (
 )
 
 
+__all__ = [
+    "bivariate_feature",
+    "FeatureKind",
+    "FeaturePredecessor",
+    "multivariate_feature",
+    "univariate_feature",
+]
+
+
 class FeaturePredecessor:
     """A decorator to specify parent extractors for a feature function.
 

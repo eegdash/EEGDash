@@ -8,7 +8,6 @@ from typing import Dict
 import numpy as np
 from numba.core.dispatcher import Dispatcher
 
-
 __all__ = [
     "BivariateFeature",
     "DirectedBivariateFeature",

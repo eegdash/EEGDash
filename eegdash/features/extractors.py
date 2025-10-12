@@ -9,6 +9,16 @@ import numpy as np
 from numba.core.dispatcher import Dispatcher
 
 
+__all__ = [
+    "BivariateFeature",
+    "DirectedBivariateFeature",
+    "FeatureExtractor",
+    "MultivariateFeature",
+    "TrainableFeature",
+    "UnivariateFeature",
+]
+
+
 def _get_underlying_func(func: Callable) -> Callable:
     """Get the underlying function from a potential wrapper.
 

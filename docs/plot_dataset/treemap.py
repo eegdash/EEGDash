@@ -553,10 +553,11 @@ def generate_dataset_treemap(
     fig = _build_figure(nodes, legend_entries)
     # Tune text sizes and margins so the increased padding doesn't cause
     # labels to overflow. Keeping uniformtext minsize slightly lower ensures
-    # smaller tiles don't get crowded.
+    # smaller tiles don't get crowded, and the larger top margin prevents
+    # the custom legend from overlapping the pathbar.
     fig.update_layout(
         uniformtext=dict(minsize=20, mode="hide"),
-        margin=dict(t=56, l=28, r=28, b=36),
+        margin=dict(t=96, l=28, r=28, b=36),
         hoverlabel=dict(font=dict(size=14), align="left"),
         height=880,
     )

@@ -10,7 +10,6 @@ from .extractors import (
     _get_underlying_func,
 )
 
-
 __all__ = [
     "bivariate_feature",
     "FeatureKind",

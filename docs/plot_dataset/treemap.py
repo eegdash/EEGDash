@@ -2,10 +2,10 @@ from __future__ import annotations
 
 """Utilities to generate the EEG Dash dataset treemap."""
 
+import math
 from pathlib import Path
 from typing import Iterable
 
-import math
 import pandas as pd
 import plotly.graph_objects as go
 
@@ -13,18 +13,18 @@ try:  # Allow import both as a package and as a script
     from .colours import (
         CANONICAL_MAP,
         MODALITY_COLOR_MAP,
+        MODALITY_EMOJI,
         PATHOLOGY_COLOR_MAP,
         PATHOLOGY_PASTEL_OVERRIDES,
-        MODALITY_EMOJI,
         hex_to_rgba,
     )
 except ImportError:  # pragma: no cover - fallback for direct script execution
     from colours import (  # type: ignore
         CANONICAL_MAP,
         MODALITY_COLOR_MAP,
+        MODALITY_EMOJI,
         PATHOLOGY_COLOR_MAP,
         PATHOLOGY_PASTEL_OVERRIDES,
-        MODALITY_EMOJI,
         hex_to_rgba,
     )
 

@@ -6,7 +6,6 @@ from collections.abc import Callable
 from . import extractors, feature_bank
 from .extractors import FeatureExtractor, MultivariateFeature, _get_underlying_func
 
-
 __all__ = [
     "get_all_feature_extractors",
     "get_all_feature_kinds",

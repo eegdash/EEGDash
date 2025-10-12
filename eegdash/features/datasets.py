@@ -18,7 +18,6 @@ from braindecode.datasets.base import (
 
 from ..logging import logger
 
-
 __all__ = [
     "FeaturesDataset",
     "FeaturesConcatDataset",

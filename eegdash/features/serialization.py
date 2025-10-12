@@ -2,7 +2,7 @@
 
 See Also
 --------
-https://github.com/braindecode/braindecode//blob/master/braindecode/datautil/serialization.py#L165-L229
+https://github.com/braindecode/braindecode/blob/master/braindecode/datautil/serialization.py#L165-L229
 
 """
 

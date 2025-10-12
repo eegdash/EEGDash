@@ -464,7 +464,7 @@ def _build_figure(
             marker=dict(
                 colors=[node["color"] for node in node_list],
                 line=dict(color="white", width=1),
-                pad=dict(t=10, r=10, b=10, l=10),
+                pad=dict(t=15, r=15, b=15, l=15),
             ),
             textinfo="text",
             hovertemplate="%{customdata[0]}<extra></extra>",
@@ -473,18 +473,28 @@ def _build_figure(
             ),
             textfont=dict(size=24),
             insidetextfont=dict(size=24),
-            tiling=dict(pad=10, packing="squarify"),
-            root=dict(color="rgba(255,255,255,0.95)"),
+            # Increase pad to create more visual separation between tiles,
+            # especially the top-level (population_type) nodes.
+            tiling=dict(pad=8, packing="squarify"),
+            # Slightly more transparent root to avoid harsh borders
+            root=dict(color="rgba(255,255,255,0.98)"),
         )
     )
 
+    # Add legend swatches. increase marker size and use a thin white border so
+    # legend squares visually separate from adjacent tiles when exported.
     for entry in deduped:
         fig.add_trace(
             go.Scatter(
                 x=[0],
                 y=[0],
                 mode="markers",
-                marker=dict(size=12, symbol="square", color=entry["color"]),
+                marker=dict(
+                    size=14,
+                    symbol="square",
+                    color=entry["color"],
+                    line=dict(color="white", width=1.5),
+                ),
                 name=entry["name"],
                 showlegend=True,
                 hoverinfo="skip",
@@ -541,11 +551,14 @@ def generate_dataset_treemap(
     aggregated = _filter_zero_nodes(aggregated, "dataset_name")
     nodes, legend_entries = _build_nodes(aggregated)
     fig = _build_figure(nodes, legend_entries)
+    # Tune text sizes and margins so the increased padding doesn't cause
+    # labels to overflow. Keeping uniformtext minsize slightly lower ensures
+    # smaller tiles don't get crowded.
     fig.update_layout(
-        uniformtext=dict(minsize=18, mode="hide"),
-        margin=dict(t=60, l=32, r=220, b=40),
-        hoverlabel=dict(font=dict(size=16), align="left"),
-        height=860,
+        uniformtext=dict(minsize=20, mode="hide"),
+        margin=dict(t=56, l=28, r=28, b=36),
+        hoverlabel=dict(font=dict(size=14), align="left"),
+        height=880,
     )
 
     out_path = Path(out_html)

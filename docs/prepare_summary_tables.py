@@ -10,6 +10,7 @@ import pandas as pd
 from plot_dataset import (
     generate_dataset_bubble,
     generate_dataset_sankey,
+    generate_dataset_treemap,
     generate_modality_ridgeline,
 )
 from plot_dataset.utils import get_dataset_url, human_readable_size
@@ -348,6 +349,13 @@ def main(source_dir: str, target_dir: str):
             copyfile(sankey_output, STATIC_DATASET_DIR / sankey_output.name)
         except Exception as exc:
             print(f"[dataset Sankey] Skipped due to error: {exc}")
+
+        try:
+            treemap_path = target_dir / "dataset_treemap.html"
+            treemap_output = generate_dataset_treemap(df_raw, treemap_path)
+            copyfile(treemap_output, STATIC_DATASET_DIR / treemap_output.name)
+        except Exception as exc:
+            print(f"[dataset Treemap] Skipped due to error: {exc}")
 
         df = prepare_table(df_raw)
         # preserve int values

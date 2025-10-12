@@ -14,7 +14,6 @@
    <figcaption class="eegdash-caption">
      Figure: Treemap of EEG Dash datasets. The top level groups population type,
      the second level breaks down experimental modality, and leaves list individual datasets.
-     Hover to view aggregated hours (or records when unavailable) and record counts.
+     Tile area encodes the total number of subjects; hover to view aggregated hours (or records when unavailable).
    </figcaption>
    </figure>
-

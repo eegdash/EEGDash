@@ -33,6 +33,10 @@ To leverage recent and ongoing advancements in large-scale computational methods
 
       .. include:: dataset_summary/sankey.rst
 
+   .. tab-item:: Dataset Treemap
+
+      .. include:: dataset_summary/treemap.rst
+
    .. tab-item:: Scatter of Sample Size vs. Recording Duration
 
       .. include:: dataset_summary/bubble.rst

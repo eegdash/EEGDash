@@ -8,20 +8,11 @@
    :member-order: bysource
 
    
-   .. rubric:: Functions
-
-   .. autosummary::
-   
-      delayed
-   
    .. rubric:: Classes
 
    .. autosummary::
    
-      BaseConcatDataset
-      Callable
-      EEGWindowsDataset
-      FeaturesConcatDataset
       FeaturesDataset
-      Parallel
+      FeaturesConcatDataset
    
+

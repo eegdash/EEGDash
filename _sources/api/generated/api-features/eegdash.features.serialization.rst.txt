@@ -12,16 +12,6 @@
 
    .. autosummary::
    
-      delayed
       load_features_concat_dataset
-      read_info
    
-   .. rubric:: Classes
 
-   .. autosummary::
-   
-      FeaturesConcatDataset
-      FeaturesDataset
-      Parallel
-      Path
-   

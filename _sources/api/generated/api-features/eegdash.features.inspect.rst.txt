@@ -18,11 +18,4 @@
       get_feature_kind
       get_feature_predecessors
    
-   .. rubric:: Classes
 
-   .. autosummary::
-   
-      Callable
-      FeatureExtractor
-      MultivariateFeature
-   

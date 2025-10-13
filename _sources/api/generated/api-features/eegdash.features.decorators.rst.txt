@@ -25,12 +25,7 @@
 
    .. autosummary::
    
-      BivariateFeature
-      Callable
-      DirectedBivariateFeature
-      FeatureExtractor
       FeatureKind
       FeaturePredecessor
-      MultivariateFeature
-      UnivariateFeature
    
+

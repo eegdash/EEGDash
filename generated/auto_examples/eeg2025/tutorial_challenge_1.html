@@ -43,7 +43,8 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css" />
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/select/1.7.0/css/select.dataTables.min.css" />
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/searchpanes/2.3.1/css/searchPanes.dataTables.min.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=5cbbfa43" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=f247e792" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/treemap.css?v=7131b20f" />
   
   <!-- So that users can add custom icons -->
   <script src="../../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
@@ -524,7 +525,7 @@
   <div class="sphx-glr-download-link-note admonition note">
 <p class="admonition-title">Note</p>
 <p><a class="reference internal" href="#sphx-glr-download-generated-auto-examples-eeg2025-tutorial-challenge-1-py"><span class="std std-ref">Go to the end</span></a>
-to download the full example code.</p>
+to download the full example code. or to run this example in your browser via Binder</p>
 </div>
 <section class="sphx-glr-example-title" id="challenge-1-cross-task-transfer-learning">
 <span id="challenge-1"></span><span id="sphx-glr-generated-auto-examples-eeg2025-tutorial-challenge-1-py"></span><h1>Challenge 1: Cross-Task Transfer Learning!<a class="headerlink" href="#challenge-1-cross-task-transfer-learning" title="Link to this heading">#</a></h1><div class="eegdash-reading-time" role="note"><span class="eegdash-reading-time__label">Estimated reading time:</span><span class="eegdash-reading-time__value">8 minutes</span></div>
@@ -1272,104 +1273,104 @@ We provide a simple training and validation loop below.</p>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Epoch 1/5:
   0%|          | 0/8 [00:00&lt;?, ?it/s]
-Epoch 1, Batch 1/8, Loss: 2.804945, RMSE: 1.674797:   0%|          | 0/8 [00:06&lt;?, ?it/s]
-Epoch 1, Batch 1/8, Loss: 2.804945, RMSE: 1.674797:  12%|█▎        | 1/8 [00:06&lt;00:42,  6.04s/it]
-Epoch 1, Batch 2/8, Loss: 2.720049, RMSE: 1.662076:  12%|█▎        | 1/8 [00:11&lt;00:42,  6.04s/it]
-Epoch 1, Batch 2/8, Loss: 2.720049, RMSE: 1.662076:  25%|██▌       | 2/8 [00:11&lt;00:34,  5.79s/it]
-Epoch 1, Batch 3/8, Loss: 2.714117, RMSE: 1.657218:  25%|██▌       | 2/8 [00:17&lt;00:34,  5.79s/it]
-Epoch 1, Batch 3/8, Loss: 2.714117, RMSE: 1.657218:  38%|███▊      | 3/8 [00:17&lt;00:28,  5.66s/it]
-Epoch 1, Batch 4/8, Loss: 2.829088, RMSE: 1.663445:  38%|███▊      | 3/8 [00:22&lt;00:28,  5.66s/it]
-Epoch 1, Batch 4/8, Loss: 2.829088, RMSE: 1.663445:  50%|█████     | 4/8 [00:22&lt;00:22,  5.59s/it]
-Epoch 1, Batch 5/8, Loss: 2.743809, RMSE: 1.662047:  50%|█████     | 4/8 [00:28&lt;00:22,  5.59s/it]
-Epoch 1, Batch 5/8, Loss: 2.743809, RMSE: 1.662047:  62%|██████▎   | 5/8 [00:28&lt;00:16,  5.55s/it]
-Epoch 1, Batch 6/8, Loss: 2.678480, RMSE: 1.657834:  62%|██████▎   | 5/8 [00:33&lt;00:16,  5.55s/it]
-Epoch 1, Batch 6/8, Loss: 2.678480, RMSE: 1.657834:  75%|███████▌  | 6/8 [00:33&lt;00:11,  5.53s/it]
-Epoch 1, Batch 7/8, Loss: 2.581510, RMSE: 1.650628:  75%|███████▌  | 6/8 [00:39&lt;00:11,  5.53s/it]
-Epoch 1, Batch 7/8, Loss: 2.581510, RMSE: 1.650628:  88%|████████▊ | 7/8 [00:39&lt;00:05,  5.50s/it]
-Epoch 1, Batch 8/8, Loss: 2.433732, RMSE: 1.642976:  88%|████████▊ | 7/8 [00:42&lt;00:05,  5.50s/it]
-Epoch 1, Batch 8/8, Loss: 2.433732, RMSE: 1.642976: 100%|██████████| 8/8 [00:42&lt;00:00,  4.88s/it]
-Epoch 1, Batch 8/8, Loss: 2.433732, RMSE: 1.642976: 100%|██████████| 8/8 [00:42&lt;00:00,  5.33s/it]
+Epoch 1, Batch 1/8, Loss: 2.804945, RMSE: 1.674797:   0%|          | 0/8 [00:05&lt;?, ?it/s]
+Epoch 1, Batch 1/8, Loss: 2.804945, RMSE: 1.674797:  12%|█▎        | 1/8 [00:05&lt;00:41,  5.95s/it]
+Epoch 1, Batch 2/8, Loss: 2.720049, RMSE: 1.662076:  12%|█▎        | 1/8 [00:11&lt;00:41,  5.95s/it]
+Epoch 1, Batch 2/8, Loss: 2.720049, RMSE: 1.662076:  25%|██▌       | 2/8 [00:11&lt;00:34,  5.74s/it]
+Epoch 1, Batch 3/8, Loss: 2.714117, RMSE: 1.657218:  25%|██▌       | 2/8 [00:17&lt;00:34,  5.74s/it]
+Epoch 1, Batch 3/8, Loss: 2.714117, RMSE: 1.657218:  38%|███▊      | 3/8 [00:17&lt;00:28,  5.67s/it]
+Epoch 1, Batch 4/8, Loss: 2.829088, RMSE: 1.663445:  38%|███▊      | 3/8 [00:22&lt;00:28,  5.67s/it]
+Epoch 1, Batch 4/8, Loss: 2.829088, RMSE: 1.663445:  50%|█████     | 4/8 [00:22&lt;00:22,  5.65s/it]
+Epoch 1, Batch 5/8, Loss: 2.743809, RMSE: 1.662047:  50%|█████     | 4/8 [00:28&lt;00:22,  5.65s/it]
+Epoch 1, Batch 5/8, Loss: 2.743809, RMSE: 1.662047:  62%|██████▎   | 5/8 [00:28&lt;00:16,  5.62s/it]
+Epoch 1, Batch 6/8, Loss: 2.678480, RMSE: 1.657834:  62%|██████▎   | 5/8 [00:33&lt;00:16,  5.62s/it]
+Epoch 1, Batch 6/8, Loss: 2.678480, RMSE: 1.657834:  75%|███████▌  | 6/8 [00:33&lt;00:11,  5.60s/it]
+Epoch 1, Batch 7/8, Loss: 2.581510, RMSE: 1.650628:  75%|███████▌  | 6/8 [00:39&lt;00:11,  5.60s/it]
+Epoch 1, Batch 7/8, Loss: 2.581510, RMSE: 1.650628:  88%|████████▊ | 7/8 [00:39&lt;00:05,  5.60s/it]
+Epoch 1, Batch 8/8, Loss: 2.433732, RMSE: 1.642976:  88%|████████▊ | 7/8 [00:43&lt;00:05,  5.60s/it]
+Epoch 1, Batch 8/8, Loss: 2.433732, RMSE: 1.642976: 100%|██████████| 8/8 [00:43&lt;00:00,  4.97s/it]
+Epoch 1, Batch 8/8, Loss: 2.433732, RMSE: 1.642976: 100%|██████████| 8/8 [00:43&lt;00:00,  5.39s/it]
 
   0%|          | 0/1 [00:00&lt;?, ?it/s]
 Val Batch 1/1, Loss: 2.774135, RMSE: 1.665573:   0%|          | 0/1 [00:00&lt;?, ?it/s]
-Val Batch 1/1, Loss: 2.774135, RMSE: 1.665573: 100%|██████████| 1/1 [00:00&lt;00:00,  1.79it/s]
-Val Batch 1/1, Loss: 2.774135, RMSE: 1.665573: 100%|██████████| 1/1 [00:00&lt;00:00,  1.79it/s]
+Val Batch 1/1, Loss: 2.774135, RMSE: 1.665573: 100%|██████████| 1/1 [00:00&lt;00:00,  1.81it/s]
+Val Batch 1/1, Loss: 2.774135, RMSE: 1.665573: 100%|██████████| 1/1 [00:00&lt;00:00,  1.80it/s]
 Val RMSE: 1.665573, Val Loss: 2.774135
 
 Train RMSE: 1.642976, Average Train Loss: 2.688216, Val RMSE: 1.665573, Average Val Loss: 2.774135
 Epoch 2/5:
   0%|          | 0/8 [00:00&lt;?, ?it/s]
 Epoch 2, Batch 1/8, Loss: 2.361676, RMSE: 1.536775:   0%|          | 0/8 [00:05&lt;?, ?it/s]
-Epoch 2, Batch 1/8, Loss: 2.361676, RMSE: 1.536775:  12%|█▎        | 1/8 [00:05&lt;00:38,  5.43s/it]
-Epoch 2, Batch 2/8, Loss: 2.387175, RMSE: 1.540917:  12%|█▎        | 1/8 [00:10&lt;00:38,  5.43s/it]
-Epoch 2, Batch 2/8, Loss: 2.387175, RMSE: 1.540917:  25%|██▌       | 2/8 [00:10&lt;00:32,  5.44s/it]
-Epoch 2, Batch 3/8, Loss: 2.414732, RMSE: 1.545271:  25%|██▌       | 2/8 [00:16&lt;00:32,  5.44s/it]
-Epoch 2, Batch 3/8, Loss: 2.414732, RMSE: 1.545271:  38%|███▊      | 3/8 [00:16&lt;00:27,  5.46s/it]
-Epoch 2, Batch 4/8, Loss: 2.129933, RMSE: 1.524264:  38%|███▊      | 3/8 [00:21&lt;00:27,  5.46s/it]
-Epoch 2, Batch 4/8, Loss: 2.129933, RMSE: 1.524264:  50%|█████     | 4/8 [00:21&lt;00:21,  5.46s/it]
-Epoch 2, Batch 5/8, Loss: 1.931249, RMSE: 1.498317:  50%|█████     | 4/8 [00:27&lt;00:21,  5.46s/it]
-Epoch 2, Batch 5/8, Loss: 1.931249, RMSE: 1.498317:  62%|██████▎   | 5/8 [00:27&lt;00:16,  5.45s/it]
-Epoch 2, Batch 6/8, Loss: 1.940712, RMSE: 1.481299:  62%|██████▎   | 5/8 [00:32&lt;00:16,  5.45s/it]
-Epoch 2, Batch 6/8, Loss: 1.940712, RMSE: 1.481299:  75%|███████▌  | 6/8 [00:32&lt;00:10,  5.43s/it]
-Epoch 2, Batch 7/8, Loss: 1.732118, RMSE: 1.458845:  75%|███████▌  | 6/8 [00:38&lt;00:10,  5.43s/it]
-Epoch 2, Batch 7/8, Loss: 1.732118, RMSE: 1.458845:  88%|████████▊ | 7/8 [00:38&lt;00:05,  5.42s/it]
-Epoch 2, Batch 8/8, Loss: 1.507685, RMSE: 1.440299:  88%|████████▊ | 7/8 [00:41&lt;00:05,  5.42s/it]
-Epoch 2, Batch 8/8, Loss: 1.507685, RMSE: 1.440299: 100%|██████████| 8/8 [00:41&lt;00:00,  4.83s/it]
-Epoch 2, Batch 8/8, Loss: 1.507685, RMSE: 1.440299: 100%|██████████| 8/8 [00:41&lt;00:00,  5.20s/it]
+Epoch 2, Batch 1/8, Loss: 2.361676, RMSE: 1.536775:  12%|█▎        | 1/8 [00:05&lt;00:38,  5.54s/it]
+Epoch 2, Batch 2/8, Loss: 2.387175, RMSE: 1.540917:  12%|█▎        | 1/8 [00:11&lt;00:38,  5.54s/it]
+Epoch 2, Batch 2/8, Loss: 2.387175, RMSE: 1.540917:  25%|██▌       | 2/8 [00:11&lt;00:33,  5.52s/it]
+Epoch 2, Batch 3/8, Loss: 2.414732, RMSE: 1.545271:  25%|██▌       | 2/8 [00:16&lt;00:33,  5.52s/it]
+Epoch 2, Batch 3/8, Loss: 2.414732, RMSE: 1.545271:  38%|███▊      | 3/8 [00:16&lt;00:27,  5.51s/it]
+Epoch 2, Batch 4/8, Loss: 2.129933, RMSE: 1.524264:  38%|███▊      | 3/8 [00:22&lt;00:27,  5.51s/it]
+Epoch 2, Batch 4/8, Loss: 2.129933, RMSE: 1.524264:  50%|█████     | 4/8 [00:22&lt;00:22,  5.51s/it]
+Epoch 2, Batch 5/8, Loss: 1.931249, RMSE: 1.498317:  50%|█████     | 4/8 [00:27&lt;00:22,  5.51s/it]
+Epoch 2, Batch 5/8, Loss: 1.931249, RMSE: 1.498317:  62%|██████▎   | 5/8 [00:27&lt;00:16,  5.51s/it]
+Epoch 2, Batch 6/8, Loss: 1.940712, RMSE: 1.481299:  62%|██████▎   | 5/8 [00:33&lt;00:16,  5.51s/it]
+Epoch 2, Batch 6/8, Loss: 1.940712, RMSE: 1.481299:  75%|███████▌  | 6/8 [00:33&lt;00:11,  5.52s/it]
+Epoch 2, Batch 7/8, Loss: 1.732118, RMSE: 1.458845:  75%|███████▌  | 6/8 [00:38&lt;00:11,  5.52s/it]
+Epoch 2, Batch 7/8, Loss: 1.732118, RMSE: 1.458845:  88%|████████▊ | 7/8 [00:38&lt;00:05,  5.52s/it]
+Epoch 2, Batch 8/8, Loss: 1.507685, RMSE: 1.440299:  88%|████████▊ | 7/8 [00:42&lt;00:05,  5.52s/it]
+Epoch 2, Batch 8/8, Loss: 1.507685, RMSE: 1.440299: 100%|██████████| 8/8 [00:42&lt;00:00,  4.90s/it]
+Epoch 2, Batch 8/8, Loss: 1.507685, RMSE: 1.440299: 100%|██████████| 8/8 [00:42&lt;00:00,  5.27s/it]
 
   0%|          | 0/1 [00:00&lt;?, ?it/s]
 Val Batch 1/1, Loss: 2.367503, RMSE: 1.538669:   0%|          | 0/1 [00:00&lt;?, ?it/s]
-Val Batch 1/1, Loss: 2.367503, RMSE: 1.538669: 100%|██████████| 1/1 [00:00&lt;00:00,  1.79it/s]
-Val Batch 1/1, Loss: 2.367503, RMSE: 1.538669: 100%|██████████| 1/1 [00:00&lt;00:00,  1.79it/s]
+Val Batch 1/1, Loss: 2.367503, RMSE: 1.538669: 100%|██████████| 1/1 [00:00&lt;00:00,  1.77it/s]
+Val Batch 1/1, Loss: 2.367503, RMSE: 1.538669: 100%|██████████| 1/1 [00:00&lt;00:00,  1.77it/s]
 Val RMSE: 1.538669, Val Loss: 2.367503
 
 Train RMSE: 1.440299, Average Train Loss: 2.050660, Val RMSE: 1.538669, Average Val Loss: 2.367503
 Epoch 3/5:
   0%|          | 0/8 [00:00&lt;?, ?it/s]
 Epoch 3, Batch 1/8, Loss: 1.254147, RMSE: 1.119887:   0%|          | 0/8 [00:05&lt;?, ?it/s]
-Epoch 3, Batch 1/8, Loss: 1.254147, RMSE: 1.119887:  12%|█▎        | 1/8 [00:05&lt;00:37,  5.39s/it]
-Epoch 3, Batch 2/8, Loss: 0.936626, RMSE: 1.046607:  12%|█▎        | 1/8 [00:10&lt;00:37,  5.39s/it]
-Epoch 3, Batch 2/8, Loss: 0.936626, RMSE: 1.046607:  25%|██▌       | 2/8 [00:10&lt;00:32,  5.39s/it]
-Epoch 3, Batch 3/8, Loss: 0.992308, RMSE: 1.030062:  25%|██▌       | 2/8 [00:16&lt;00:32,  5.39s/it]
-Epoch 3, Batch 3/8, Loss: 0.992308, RMSE: 1.030062:  38%|███▊      | 3/8 [00:16&lt;00:26,  5.38s/it]
-Epoch 3, Batch 4/8, Loss: 0.982872, RMSE: 1.020533:  38%|███▊      | 3/8 [00:21&lt;00:26,  5.38s/it]
-Epoch 3, Batch 4/8, Loss: 0.982872, RMSE: 1.020533:  50%|█████     | 4/8 [00:21&lt;00:21,  5.38s/it]
-Epoch 3, Batch 5/8, Loss: 0.905061, RMSE: 1.007076:  50%|█████     | 4/8 [00:26&lt;00:21,  5.38s/it]
-Epoch 3, Batch 5/8, Loss: 0.905061, RMSE: 1.007076:  62%|██████▎   | 5/8 [00:26&lt;00:16,  5.40s/it]
-Epoch 3, Batch 6/8, Loss: 0.914558, RMSE: 0.998797:  62%|██████▎   | 5/8 [00:32&lt;00:16,  5.40s/it]
-Epoch 3, Batch 6/8, Loss: 0.914558, RMSE: 0.998797:  75%|███████▌  | 6/8 [00:32&lt;00:10,  5.39s/it]
-Epoch 3, Batch 7/8, Loss: 0.659756, RMSE: 0.974337:  75%|███████▌  | 6/8 [00:37&lt;00:10,  5.39s/it]
-Epoch 3, Batch 7/8, Loss: 0.659756, RMSE: 0.974337:  88%|████████▊ | 7/8 [00:37&lt;00:05,  5.39s/it]
-Epoch 3, Batch 8/8, Loss: 0.557627, RMSE: 0.956762:  88%|████████▊ | 7/8 [00:41&lt;00:05,  5.39s/it]
-Epoch 3, Batch 8/8, Loss: 0.557627, RMSE: 0.956762: 100%|██████████| 8/8 [00:41&lt;00:00,  4.80s/it]
-Epoch 3, Batch 8/8, Loss: 0.557627, RMSE: 0.956762: 100%|██████████| 8/8 [00:41&lt;00:00,  5.16s/it]
+Epoch 3, Batch 1/8, Loss: 1.254147, RMSE: 1.119887:  12%|█▎        | 1/8 [00:05&lt;00:38,  5.51s/it]
+Epoch 3, Batch 2/8, Loss: 0.936626, RMSE: 1.046607:  12%|█▎        | 1/8 [00:11&lt;00:38,  5.51s/it]
+Epoch 3, Batch 2/8, Loss: 0.936626, RMSE: 1.046607:  25%|██▌       | 2/8 [00:11&lt;00:33,  5.52s/it]
+Epoch 3, Batch 3/8, Loss: 0.992308, RMSE: 1.030062:  25%|██▌       | 2/8 [00:16&lt;00:33,  5.52s/it]
+Epoch 3, Batch 3/8, Loss: 0.992308, RMSE: 1.030062:  38%|███▊      | 3/8 [00:16&lt;00:27,  5.51s/it]
+Epoch 3, Batch 4/8, Loss: 0.982872, RMSE: 1.020533:  38%|███▊      | 3/8 [00:22&lt;00:27,  5.51s/it]
+Epoch 3, Batch 4/8, Loss: 0.982872, RMSE: 1.020533:  50%|█████     | 4/8 [00:22&lt;00:22,  5.51s/it]
+Epoch 3, Batch 5/8, Loss: 0.905061, RMSE: 1.007076:  50%|█████     | 4/8 [00:27&lt;00:22,  5.51s/it]
+Epoch 3, Batch 5/8, Loss: 0.905061, RMSE: 1.007076:  62%|██████▎   | 5/8 [00:27&lt;00:16,  5.50s/it]
+Epoch 3, Batch 6/8, Loss: 0.914558, RMSE: 0.998797:  62%|██████▎   | 5/8 [00:33&lt;00:16,  5.50s/it]
+Epoch 3, Batch 6/8, Loss: 0.914558, RMSE: 0.998797:  75%|███████▌  | 6/8 [00:33&lt;00:11,  5.50s/it]
+Epoch 3, Batch 7/8, Loss: 0.659756, RMSE: 0.974337:  75%|███████▌  | 6/8 [00:38&lt;00:11,  5.50s/it]
+Epoch 3, Batch 7/8, Loss: 0.659756, RMSE: 0.974337:  88%|████████▊ | 7/8 [00:38&lt;00:05,  5.49s/it]
+Epoch 3, Batch 8/8, Loss: 0.557627, RMSE: 0.956762:  88%|████████▊ | 7/8 [00:42&lt;00:05,  5.49s/it]
+Epoch 3, Batch 8/8, Loss: 0.557627, RMSE: 0.956762: 100%|██████████| 8/8 [00:42&lt;00:00,  4.88s/it]
+Epoch 3, Batch 8/8, Loss: 0.557627, RMSE: 0.956762: 100%|██████████| 8/8 [00:42&lt;00:00,  5.26s/it]
 
   0%|          | 0/1 [00:00&lt;?, ?it/s]
 Val Batch 1/1, Loss: 1.447026, RMSE: 1.202924:   0%|          | 0/1 [00:00&lt;?, ?it/s]
-Val Batch 1/1, Loss: 1.447026, RMSE: 1.202924: 100%|██████████| 1/1 [00:00&lt;00:00,  1.79it/s]
-Val Batch 1/1, Loss: 1.447026, RMSE: 1.202924: 100%|██████████| 1/1 [00:00&lt;00:00,  1.79it/s]
+Val Batch 1/1, Loss: 1.447026, RMSE: 1.202924: 100%|██████████| 1/1 [00:00&lt;00:00,  1.80it/s]
+Val Batch 1/1, Loss: 1.447026, RMSE: 1.202924: 100%|██████████| 1/1 [00:00&lt;00:00,  1.80it/s]
 Val RMSE: 1.202924, Val Loss: 1.447026
 
 Train RMSE: 0.956762, Average Train Loss: 0.900369, Val RMSE: 1.202924, Average Val Loss: 1.447026
 Epoch 4/5:
   0%|          | 0/8 [00:00&lt;?, ?it/s]
 Epoch 4, Batch 1/8, Loss: 0.557235, RMSE: 0.746482:   0%|          | 0/8 [00:05&lt;?, ?it/s]
-Epoch 4, Batch 1/8, Loss: 0.557235, RMSE: 0.746482:  12%|█▎        | 1/8 [00:05&lt;00:38,  5.44s/it]
-Epoch 4, Batch 2/8, Loss: 0.434160, RMSE: 0.704058:  12%|█▎        | 1/8 [00:10&lt;00:38,  5.44s/it]
-Epoch 4, Batch 2/8, Loss: 0.434160, RMSE: 0.704058:  25%|██▌       | 2/8 [00:10&lt;00:32,  5.40s/it]
-Epoch 4, Batch 3/8, Loss: 0.528061, RMSE: 0.711678:  25%|██▌       | 2/8 [00:16&lt;00:32,  5.40s/it]
-Epoch 4, Batch 3/8, Loss: 0.528061, RMSE: 0.711678:  38%|███▊      | 3/8 [00:16&lt;00:26,  5.39s/it]
-Epoch 4, Batch 4/8, Loss: 0.485393, RMSE: 0.707963:  38%|███▊      | 3/8 [00:21&lt;00:26,  5.39s/it]
-Epoch 4, Batch 4/8, Loss: 0.485393, RMSE: 0.707963:  50%|█████     | 4/8 [00:21&lt;00:21,  5.41s/it]
-Epoch 4, Batch 5/8, Loss: 0.586323, RMSE: 0.719885:  50%|█████     | 4/8 [00:27&lt;00:21,  5.41s/it]
-Epoch 4, Batch 5/8, Loss: 0.586323, RMSE: 0.719885:  62%|██████▎   | 5/8 [00:27&lt;00:16,  5.42s/it]
-Epoch 4, Batch 6/8, Loss: 0.550922, RMSE: 0.723659:  62%|██████▎   | 5/8 [00:32&lt;00:16,  5.42s/it]
-Epoch 4, Batch 6/8, Loss: 0.550922, RMSE: 0.723659:  75%|███████▌  | 6/8 [00:32&lt;00:10,  5.41s/it]
-Epoch 4, Batch 7/8, Loss: 0.496363, RMSE: 0.720957:  75%|███████▌  | 6/8 [00:37&lt;00:10,  5.41s/it]
-Epoch 4, Batch 7/8, Loss: 0.496363, RMSE: 0.720957:  88%|████████▊ | 7/8 [00:37&lt;00:05,  5.40s/it]
-Epoch 4, Batch 8/8, Loss: 0.431091, RMSE: 0.715608:  88%|████████▊ | 7/8 [00:41&lt;00:05,  5.40s/it]
-Epoch 4, Batch 8/8, Loss: 0.431091, RMSE: 0.715608: 100%|██████████| 8/8 [00:41&lt;00:00,  4.80s/it]
-Epoch 4, Batch 8/8, Loss: 0.431091, RMSE: 0.715608: 100%|██████████| 8/8 [00:41&lt;00:00,  5.17s/it]
+Epoch 4, Batch 1/8, Loss: 0.557235, RMSE: 0.746482:  12%|█▎        | 1/8 [00:05&lt;00:38,  5.47s/it]
+Epoch 4, Batch 2/8, Loss: 0.434160, RMSE: 0.704058:  12%|█▎        | 1/8 [00:10&lt;00:38,  5.47s/it]
+Epoch 4, Batch 2/8, Loss: 0.434160, RMSE: 0.704058:  25%|██▌       | 2/8 [00:10&lt;00:32,  5.47s/it]
+Epoch 4, Batch 3/8, Loss: 0.528061, RMSE: 0.711678:  25%|██▌       | 2/8 [00:16&lt;00:32,  5.47s/it]
+Epoch 4, Batch 3/8, Loss: 0.528061, RMSE: 0.711678:  38%|███▊      | 3/8 [00:16&lt;00:27,  5.46s/it]
+Epoch 4, Batch 4/8, Loss: 0.485393, RMSE: 0.707963:  38%|███▊      | 3/8 [00:21&lt;00:27,  5.46s/it]
+Epoch 4, Batch 4/8, Loss: 0.485393, RMSE: 0.707963:  50%|█████     | 4/8 [00:21&lt;00:21,  5.48s/it]
+Epoch 4, Batch 5/8, Loss: 0.586323, RMSE: 0.719885:  50%|█████     | 4/8 [00:27&lt;00:21,  5.48s/it]
+Epoch 4, Batch 5/8, Loss: 0.586323, RMSE: 0.719885:  62%|██████▎   | 5/8 [00:27&lt;00:16,  5.48s/it]
+Epoch 4, Batch 6/8, Loss: 0.550922, RMSE: 0.723659:  62%|██████▎   | 5/8 [00:32&lt;00:16,  5.48s/it]
+Epoch 4, Batch 6/8, Loss: 0.550922, RMSE: 0.723659:  75%|███████▌  | 6/8 [00:32&lt;00:10,  5.49s/it]
+Epoch 4, Batch 7/8, Loss: 0.496363, RMSE: 0.720957:  75%|███████▌  | 6/8 [00:38&lt;00:10,  5.49s/it]
+Epoch 4, Batch 7/8, Loss: 0.496363, RMSE: 0.720957:  88%|████████▊ | 7/8 [00:38&lt;00:05,  5.48s/it]
+Epoch 4, Batch 8/8, Loss: 0.431091, RMSE: 0.715608:  88%|████████▊ | 7/8 [00:41&lt;00:05,  5.48s/it]
+Epoch 4, Batch 8/8, Loss: 0.431091, RMSE: 0.715608: 100%|██████████| 8/8 [00:41&lt;00:00,  4.87s/it]
+Epoch 4, Batch 8/8, Loss: 0.431091, RMSE: 0.715608: 100%|██████████| 8/8 [00:41&lt;00:00,  5.24s/it]
 
   0%|          | 0/1 [00:00&lt;?, ?it/s]
 Val Batch 1/1, Loss: 0.943596, RMSE: 0.971389:   0%|          | 0/1 [00:00&lt;?, ?it/s]
@@ -1381,26 +1382,26 @@ Train RMSE: 0.715608, Average Train Loss: 0.508693, Val RMSE: 0.971389, Average 
 Epoch 5/5:
   0%|          | 0/8 [00:00&lt;?, ?it/s]
 Epoch 5, Batch 1/8, Loss: 0.461542, RMSE: 0.679369:   0%|          | 0/8 [00:05&lt;?, ?it/s]
-Epoch 5, Batch 1/8, Loss: 0.461542, RMSE: 0.679369:  12%|█▎        | 1/8 [00:05&lt;00:37,  5.38s/it]
-Epoch 5, Batch 2/8, Loss: 0.416909, RMSE: 0.662741:  12%|█▎        | 1/8 [00:10&lt;00:37,  5.38s/it]
-Epoch 5, Batch 2/8, Loss: 0.416909, RMSE: 0.662741:  25%|██▌       | 2/8 [00:10&lt;00:32,  5.40s/it]
-Epoch 5, Batch 3/8, Loss: 0.458665, RMSE: 0.667612:  25%|██▌       | 2/8 [00:16&lt;00:32,  5.40s/it]
-Epoch 5, Batch 3/8, Loss: 0.458665, RMSE: 0.667612:  38%|███▊      | 3/8 [00:16&lt;00:26,  5.39s/it]
-Epoch 5, Batch 4/8, Loss: 0.449484, RMSE: 0.668319:  38%|███▊      | 3/8 [00:21&lt;00:26,  5.39s/it]
-Epoch 5, Batch 4/8, Loss: 0.449484, RMSE: 0.668319:  50%|█████     | 4/8 [00:21&lt;00:21,  5.38s/it]
-Epoch 5, Batch 5/8, Loss: 0.490168, RMSE: 0.674799:  50%|█████     | 4/8 [00:26&lt;00:21,  5.38s/it]
-Epoch 5, Batch 5/8, Loss: 0.490168, RMSE: 0.674799:  62%|██████▎   | 5/8 [00:26&lt;00:16,  5.38s/it]
-Epoch 5, Batch 6/8, Loss: 0.475042, RMSE: 0.677226:  62%|██████▎   | 5/8 [00:32&lt;00:16,  5.38s/it]
-Epoch 5, Batch 6/8, Loss: 0.475042, RMSE: 0.677226:  75%|███████▌  | 6/8 [00:32&lt;00:10,  5.37s/it]
-Epoch 5, Batch 7/8, Loss: 0.414124, RMSE: 0.672515:  75%|███████▌  | 6/8 [00:37&lt;00:10,  5.37s/it]
-Epoch 5, Batch 7/8, Loss: 0.414124, RMSE: 0.672515:  88%|████████▊ | 7/8 [00:37&lt;00:05,  5.39s/it]
-Epoch 5, Batch 8/8, Loss: 0.550227, RMSE: 0.678796:  88%|████████▊ | 7/8 [00:41&lt;00:05,  5.39s/it]
-Epoch 5, Batch 8/8, Loss: 0.550227, RMSE: 0.678796: 100%|██████████| 8/8 [00:41&lt;00:00,  4.80s/it]
-Epoch 5, Batch 8/8, Loss: 0.550227, RMSE: 0.678796: 100%|██████████| 8/8 [00:41&lt;00:00,  5.15s/it]
+Epoch 5, Batch 1/8, Loss: 0.461542, RMSE: 0.679369:  12%|█▎        | 1/8 [00:05&lt;00:38,  5.44s/it]
+Epoch 5, Batch 2/8, Loss: 0.416909, RMSE: 0.662741:  12%|█▎        | 1/8 [00:10&lt;00:38,  5.44s/it]
+Epoch 5, Batch 2/8, Loss: 0.416909, RMSE: 0.662741:  25%|██▌       | 2/8 [00:10&lt;00:32,  5.42s/it]
+Epoch 5, Batch 3/8, Loss: 0.458665, RMSE: 0.667612:  25%|██▌       | 2/8 [00:16&lt;00:32,  5.42s/it]
+Epoch 5, Batch 3/8, Loss: 0.458665, RMSE: 0.667612:  38%|███▊      | 3/8 [00:16&lt;00:27,  5.43s/it]
+Epoch 5, Batch 4/8, Loss: 0.449484, RMSE: 0.668319:  38%|███▊      | 3/8 [00:21&lt;00:27,  5.43s/it]
+Epoch 5, Batch 4/8, Loss: 0.449484, RMSE: 0.668319:  50%|█████     | 4/8 [00:21&lt;00:21,  5.42s/it]
+Epoch 5, Batch 5/8, Loss: 0.490168, RMSE: 0.674799:  50%|█████     | 4/8 [00:27&lt;00:21,  5.42s/it]
+Epoch 5, Batch 5/8, Loss: 0.490168, RMSE: 0.674799:  62%|██████▎   | 5/8 [00:27&lt;00:16,  5.42s/it]
+Epoch 5, Batch 6/8, Loss: 0.475042, RMSE: 0.677226:  62%|██████▎   | 5/8 [00:32&lt;00:16,  5.42s/it]
+Epoch 5, Batch 6/8, Loss: 0.475042, RMSE: 0.677226:  75%|███████▌  | 6/8 [00:32&lt;00:10,  5.41s/it]
+Epoch 5, Batch 7/8, Loss: 0.414124, RMSE: 0.672515:  75%|███████▌  | 6/8 [00:37&lt;00:10,  5.41s/it]
+Epoch 5, Batch 7/8, Loss: 0.414124, RMSE: 0.672515:  88%|████████▊ | 7/8 [00:37&lt;00:05,  5.41s/it]
+Epoch 5, Batch 8/8, Loss: 0.550227, RMSE: 0.678796:  88%|████████▊ | 7/8 [00:41&lt;00:05,  5.41s/it]
+Epoch 5, Batch 8/8, Loss: 0.550227, RMSE: 0.678796: 100%|██████████| 8/8 [00:41&lt;00:00,  4.83s/it]
+Epoch 5, Batch 8/8, Loss: 0.550227, RMSE: 0.678796: 100%|██████████| 8/8 [00:41&lt;00:00,  5.19s/it]
 
   0%|          | 0/1 [00:00&lt;?, ?it/s]
 Val Batch 1/1, Loss: 0.793600, RMSE: 0.890842:   0%|          | 0/1 [00:00&lt;?, ?it/s]
-Val Batch 1/1, Loss: 0.793600, RMSE: 0.890842: 100%|██████████| 1/1 [00:00&lt;00:00,  1.80it/s]
+Val Batch 1/1, Loss: 0.793600, RMSE: 0.890842: 100%|██████████| 1/1 [00:00&lt;00:00,  1.81it/s]
 Val Batch 1/1, Loss: 0.793600, RMSE: 0.890842: 100%|██████████| 1/1 [00:00&lt;00:00,  1.80it/s]
 Val RMSE: 0.890842, Val Loss: 0.793600
 
@@ -1417,9 +1418,13 @@ Train RMSE: 0.678796, Average Train Loss: 0.464520, Val RMSE: 0.890842, Average 
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Model saved as &#39;weights_challenge_1.pt&#39;
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (3 minutes 52.170 seconds)</p>
-<p><strong>Estimated memory usage:</strong>  2893 MB</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (3 minutes 55.740 seconds)</p>
+<p><strong>Estimated memory usage:</strong>  2886 MB</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-generated-auto-examples-eeg2025-tutorial-challenge-1-py">
+<div class="binder-badge docutils container">
+<a class="reference external image-reference" href="https://mybinder.org/v2/gh/sccn/EEGDash/main?urlpath=lab/tree/notebooks/generated/auto_examples/eeg2025/tutorial_challenge_1.ipynb"><img alt="Launch binder" src="../../../_images/binder_badge_logo1.svg" style="width: 150px;" />
+</a>
+</div>
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../../_downloads/9f4f54b7e99e554f34ea4efcf2a8337e/tutorial_challenge_1.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">tutorial_challenge_1.ipynb</span></code></a></p>
 </div>

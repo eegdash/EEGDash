@@ -8,20 +8,21 @@ from ..extractors import FeatureExtractor
 
 __all__ = [
     "HilbertFeatureExtractor",
-    "signal_mean",
-    "signal_variance",
-    "signal_skewness",
+    "SIGNAL_PREDECESSORS",
+    "signal_decorrelation_time",
+    "signal_hjorth_activity",
+    "signal_hjorth_complexity",
+    "signal_hjorth_mobility",
     "signal_kurtosis",
-    "signal_std",
-    "signal_root_mean_square",
+    "signal_line_length",
+    "signal_mean",
     "signal_peak_to_peak",
     "signal_quantile",
+    "signal_root_mean_square",
+    "signal_skewness",
+    "signal_std",
+    "signal_variance",
     "signal_zero_crossings",
-    "signal_line_length",
-    "signal_hjorth_activity",
-    "signal_hjorth_mobility",
-    "signal_hjorth_complexity",
-    "signal_decorrelation_time",
 ]
 
 

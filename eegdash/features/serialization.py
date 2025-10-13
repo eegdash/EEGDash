@@ -2,7 +2,7 @@
 
 See Also
 --------
-https://github.com/braindecode/braindecode//blob/master/braindecode/datautil/serialization.py#L165-L229
+https://github.com/braindecode/braindecode/blob/master/braindecode/datautil/serialization.py#L165-L229
 
 """
 
@@ -17,6 +17,10 @@ from mne.io import read_info
 from braindecode.datautil.serialization import _load_kwargs_json
 
 from .datasets import FeaturesConcatDataset, FeaturesDataset
+
+__all__ = [
+    "load_features_concat_dataset",
+]
 
 
 def load_features_concat_dataset(

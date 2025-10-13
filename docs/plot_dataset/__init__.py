@@ -11,3 +11,4 @@ from .colours import (  # noqa: F401
 )
 from .plot_sankey import generate_dataset_sankey  # noqa: F401
 from .ridgeline import generate_modality_ridgeline  # noqa: F401
+from .treemap import generate_dataset_treemap  # noqa: F401

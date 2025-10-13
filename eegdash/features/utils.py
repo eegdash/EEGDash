@@ -17,6 +17,11 @@ from braindecode.datasets.base import (
 from .datasets import FeaturesConcatDataset, FeaturesDataset
 from .extractors import FeatureExtractor
 
+__all__ = [
+    "extract_features",
+    "fit_feature_extractors",
+]
+
 
 def _extract_features_from_windowsdataset(
     win_ds: EEGWindowsDataset | WindowsDataset,

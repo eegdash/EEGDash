@@ -63,3 +63,19 @@
 {% endif %}
 {%- endblock %}
 
+{% if sg_api_usage %}
+.. _sg_api_{{ fullname }}:
+
+API Usage
+---------
+
+.. raw:: html
+
+    <div class="sg-api-usage">
+
+{{ sg_api_usage }}
+
+.. raw:: html
+
+    </div>
+{% endif %}

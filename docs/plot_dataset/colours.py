@@ -21,6 +21,34 @@ MODALITY_COLOR_MAP = {
     "Unknown": "#94a3b8",
 }
 
+MODALITY_EMOJI = {
+    "Visual": "👁️",
+    "Auditory": "👂",
+    "Sleep": "🌙",
+    "Multisensory": "🧩",
+    "Tactile": "✋",
+    "Motor": "🏃",
+    "Resting State": "🧘",
+    "Rest": "🧘",
+    "Other": "🧭",
+    "Unknown": "❔",
+}
+
+PATHOLOGY_PASTEL_OVERRIDES = {
+    "Healthy": "#bbf7d0",
+    "Unknown": "#d0d7df",
+    "Dementia": "#fcd4d4",
+    "Schizophrenia": "#f9d0e7",
+    "Psychosis": "#f9d0e7",
+    "Epilepsy": "#f9d7c4",
+    "Parkinson's": "#f8c8c8",
+    "TBI": "#f9cabd",
+    "Surgery": "#f7d9b8",
+    "Other": "#f8cbdc",
+    "Clinical": "#f8d0d0",
+}
+
+
 TYPE_COLOR_MAP = {
     "Perception": "#3b82f6",
     "Decision-making": "#eab308",

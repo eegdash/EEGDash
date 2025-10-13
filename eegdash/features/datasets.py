@@ -18,6 +18,11 @@ from braindecode.datasets.base import (
 
 from ..logging import logger
 
+__all__ = [
+    "FeaturesDataset",
+    "FeaturesConcatDataset",
+]
+
 
 class FeaturesDataset(EEGWindowsDataset):
     """A dataset of features extracted from EEG windows.

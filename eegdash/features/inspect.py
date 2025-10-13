@@ -6,6 +6,14 @@ from collections.abc import Callable
 from . import extractors, feature_bank
 from .extractors import FeatureExtractor, MultivariateFeature, _get_underlying_func
 
+__all__ = [
+    "get_all_feature_extractors",
+    "get_all_feature_kinds",
+    "get_all_features",
+    "get_feature_kind",
+    "get_feature_predecessors",
+]
+
 
 def get_feature_predecessors(feature_or_extractor: Callable) -> list:
     """Get the dependency hierarchy for a feature or feature extractor.

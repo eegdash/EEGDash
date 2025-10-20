@@ -34,7 +34,7 @@ pip-log.txt
 .coverage*
 tags
 cover
-
+release11/
 examples/data
 #Mac files
 .DS_Store

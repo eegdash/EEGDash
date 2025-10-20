@@ -12,7 +12,6 @@ braindecode for machine learning workflows and handles data loading from both lo
 import io
 import json
 import os
-import platform
 import re
 import traceback
 from contextlib import redirect_stderr
@@ -21,9 +20,7 @@ from typing import Any
 
 import mne
 import mne_bids
-import numpy as np
 import pandas as pd
-from joblib import Parallel, delayed
 from mne._fiff.utils import _read_segments_file
 from mne.io import BaseRaw
 from mne_bids import BIDSPath, find_matching_paths
@@ -483,14 +480,6 @@ class EEGBIDSDataset:
 
         return json_dict
 
-    def _get_property_from_filename(self, property: str, filename: str) -> str:
-        """Parse a BIDS entity from a filename."""
-        if platform.system() == "Windows":
-            lookup = re.search(rf"{property}-(.*?)[_\\]", filename)
-        else:
-            lookup = re.search(rf"{property}-(.*?)[_\/]", filename)
-        return lookup.group(1) if lookup else ""
-
     def _merge_json_inheritance(self, json_files: list[str | Path]) -> dict:
         """Merge a list of JSON files according to BIDS inheritance."""
         json_files.reverse()
@@ -556,82 +545,6 @@ class EEGBIDSDataset:
         )
         return meta_files
 
-    def _scan_directory(self, directory: str, extension: str) -> list[Path]:
-        """Scan a directory for files with a given extension."""
-        result_files = []
-        directory_to_ignore = [".git", ".datalad", "derivatives", "code"]
-        with os.scandir(directory) as entries:
-            for entry in entries:
-                if entry.is_file() and entry.name.endswith(extension):
-                    result_files.append(Path(entry.path))
-                elif entry.is_dir() and not any(
-                    name in entry.name for name in directory_to_ignore
-                ):
-                    result_files.append(Path(entry.path))
-        return result_files
-
-    def _get_files_with_extension_parallel(
-        self, directory: str, extension: str = ".set", max_workers: int = -1
-    ) -> list[Path]:
-        """Scan a directory tree in parallel for files with a given extension."""
-        result_files = []
-        dirs_to_scan = [directory]
-
-        while dirs_to_scan:
-            logger.info(
-                f"Directories to scan: {len(dirs_to_scan)}, files: {dirs_to_scan}"
-            )
-            results = Parallel(n_jobs=max_workers, prefer="threads", verbose=1)(
-                delayed(self._scan_directory)(d, extension) for d in dirs_to_scan
-            )
-
-            dirs_to_scan = []
-            for res in results:
-                for path in res:
-                    if os.path.isdir(path):
-                        dirs_to_scan.append(path)
-                    else:
-                        result_files.append(path)
-            logger.info(f"Found {len(result_files)} files.")
-
-        return result_files
-
-    def load_and_preprocess_raw(
-        self, raw_file: str, preprocess: bool = False
-    ) -> np.ndarray:
-        """Load and optionally preprocess a raw data file.
-
-        This is a utility function for testing or debugging, not for general use.
-
-        Parameters
-        ----------
-        raw_file : str
-            Path to the raw EEGLAB file (.set).
-        preprocess : bool, default False
-            If True, apply a high-pass filter, notch filter, and resample the data.
-
-        Returns
-        -------
-        numpy.ndarray
-            The loaded and processed data as a NumPy array.
-
-        """
-        logger.info(f"Loading raw data from {raw_file}")
-        EEG = mne.io.read_raw_eeglab(raw_file, preload=True, verbose="error")
-
-        if preprocess:
-            EEG = EEG.filter(l_freq=0.25, h_freq=25, verbose=False)
-            EEG = EEG.notch_filter(freqs=(60), verbose=False)
-            sfreq = 128
-            if EEG.info["sfreq"] != sfreq:
-                EEG = EEG.resample(sfreq)
-
-        mat_data = EEG.get_data()
-
-        if len(mat_data.shape) > 2:
-            raise ValueError("Expect raw data to be CxT dimension")
-        return mat_data
-
     def get_files(self) -> list[str]:
         """Get all EEG recording file paths in the BIDS dataset.
 
@@ -642,31 +555,6 @@ class EEGBIDSDataset:
 
         """
         return self.files
-
-    def resolve_bids_json(self, json_files: list[str]) -> dict:
-        """Resolve BIDS JSON inheritance and merge files.
-
-        Parameters
-        ----------
-        json_files : list of str
-            A list of JSON file paths, ordered from the lowest (most specific)
-            to highest level of the BIDS hierarchy.
-
-        Returns
-        -------
-        dict
-            A dictionary containing the merged JSON data.
-
-        """
-        if not json_files:
-            raise ValueError("No JSON files provided")
-        json_files.reverse()
-
-        json_dict = {}
-        for json_file in json_files:
-            with open(json_file) as f:
-                json_dict.update(json.load(f))
-        return json_dict
 
     def get_bids_file_attribute(self, attribute: str, data_filepath: str) -> Any:
         """Retrieve a specific attribute from BIDS metadata.
@@ -844,49 +732,6 @@ class EEGBIDSDataset:
 
         """
         return self._get_json_with_inheritance(data_filepath, "eeg.json")
-
-    def channel_tsv(self, data_filepath: str) -> dict[str, Any]:
-        """Get the channels.tsv metadata as a dictionary.
-
-        Parameters
-        ----------
-        data_filepath : str
-            The path to the data file.
-
-        Returns
-        -------
-        dict
-            The channels.tsv data, with columns as keys.
-
-        """
-        # Find channels.tsv in the same directory as the data file
-        # It can be named either "channels.tsv" or "*_channels.tsv"
-        filepath = Path(data_filepath)
-        parent_dir = filepath.parent
-
-        # Try the standard channels.tsv first
-        channels_tsv_path = parent_dir / "channels.tsv"
-        if not channels_tsv_path.exists():
-            # Try to find *_channels.tsv matching the filename prefix
-            base_name = filepath.stem  # filename without extension
-            for tsv_file in parent_dir.glob("*_channels.tsv"):
-                # Check if it matches by looking at task/run components
-                tsv_name = tsv_file.stem.replace("_channels", "")
-                if base_name.startswith(tsv_name):
-                    channels_tsv_path = tsv_file
-                    break
-
-        if not channels_tsv_path.exists():
-            raise FileNotFoundError(f"No channels.tsv found for {data_filepath}")
-
-        channels_tsv = pd.read_csv(channels_tsv_path, sep="\t")
-        channel_tsv_dict = channels_tsv.to_dict()
-        for list_field in ["name", "type", "units"]:
-            if list_field in channel_tsv_dict:
-                channel_tsv_dict[list_field] = list(
-                    channel_tsv_dict[list_field].values()
-                )
-        return channel_tsv_dict
 
 
 __all__ = ["EEGDashBaseDataset", "EEGBIDSDataset", "EEGDashBaseRaw"]

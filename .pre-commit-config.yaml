@@ -19,11 +19,11 @@ repos:
         - --show-fixes
         # Selects all rules from your original config (E,W,F,I,D) and enables import sorting (I)
         # and unused import removal (F401 is part of 'F' and is no longer ignored).
-        - --select=E,W,F,D,NPY201
+        - --select=E,W,F,D,I,NPY201
         - --ignore=E402,E501,D100,D101,D102,D103,D104,D105,D107,D205,D400,D415,D417,F403,D401,E741,E722,D419
         files: ^(eegdash|docs|notebooks|scripts|tests)/
         exclude: (\.ipynb$|docs/prepare_summary_tables\.py$)
-    -   id: ruff 
+    -   id: ruff
         name: ruff examples
         args:
         - --fix
@@ -53,13 +53,3 @@ repos:
     hooks:
     -   id: blacken-docs
         exclude: ^.github|CONTRIBUTING.md|README.md|docs/|examples/|notebooks/|scripts/|tests/
--   repo: https://github.com/PyCQA/isort
-    rev: 6.0.1
-    hooks:
-    -   id: isort
-        name: isort (python)
-        args:
-        - --profile=black
-        - --filter-files
-        # Ignore tutorials (examples/) and the .gitignore sentinel
-        exclude: ^(examples/|\.gitignore)

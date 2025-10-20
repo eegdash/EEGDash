@@ -20,13 +20,10 @@ from typing import Any
 
 import mne
 import mne_bids
-import numpy as np
 import pandas as pd
-from joblib import Parallel, delayed
 from mne._fiff.utils import _read_segments_file
 from mne.io import BaseRaw
-from mne.utils.check import _soft_import
-from mne_bids import BIDSPath
+from mne_bids import BIDSPath, find_matching_paths
 
 from braindecode.datasets import BaseDataset
 
@@ -348,18 +345,13 @@ class EEGBIDSDataset:
         data_dir=None,  # location of bids dataset
         dataset="",  # dataset name
     ):
-        bids_lib = _soft_import("bids", purpose="digestion of datasets", strict=False)
-
-        if bids_lib is None:
-            raise ImportError(
-                "The 'pybids' package is required to use EEGBIDSDataset. "
-                "Please install it via 'pip install eegdash[digestion]'."
-            )
-
         if data_dir is None or not os.path.exists(data_dir):
             raise ValueError("data_dir must be specified and must exist")
+
         self.bidsdir = Path(data_dir)
         self.dataset = dataset
+        self.data_dir = data_dir
+
         # Accept exact dataset folder or a variant with informative suffixes
         # (e.g., dsXXXXX-bdf, dsXXXXX-bdf-mini) to avoid collisions.
         dir_name = self.bidsdir.name
@@ -367,10 +359,11 @@ class EEGBIDSDataset:
             raise AssertionError(
                 f"BIDS directory '{dir_name}' does not correspond to dataset '{self.dataset}'"
             )
-        self.layout = bids_lib.BIDSLayout(data_dir)
+
+        # Initialize BIDS paths using fast mne_bids approach instead of pybids
+        self._init_bids_paths()
 
         # get all recording files in the bids directory
-        self.files = self._get_recordings(self.layout)
         assert len(self.files) > 0, ValueError(
             "Unable to construct EEG dataset. No EEG recordings found."
         )
@@ -387,29 +380,103 @@ class EEGBIDSDataset:
         """
         return self.get_bids_file_attribute("modality", self.files[0]).lower() == "eeg"
 
-    def _get_recordings(self, layout) -> list[str]:
-        """Get a list of all EEG recording files in the BIDS layout."""
-        files = []
-        for ext, exts in self.RAW_EXTENSIONS.items():
-            files = layout.get(extension=ext, return_type="filename")
-            if files:
+    def _init_bids_paths(self) -> None:
+        """Initialize BIDS file paths using mne_bids for fast discovery.
+
+        Uses mne_bids.find_matching_paths() for efficient pattern-based file
+        discovery instead of heavy pybids BIDSLayout indexing.
+        """
+        # Initialize cache for BIDSPath objects
+        self._bids_path_cache = {}
+
+        # Find all EEG recordings using pattern matching (fast!)
+        self.files = []
+        for ext in self.RAW_EXTENSIONS.keys():
+            # find_matching_paths returns BIDSPath objects
+            paths = find_matching_paths(self.bidsdir, datatypes="eeg", extensions=ext)
+            if paths:
+                # Convert BIDSPath objects to filename strings
+                self.files = [str(p.fpath) for p in paths]
                 break
-        return files
 
-    def _get_relative_bidspath(self, filename: str) -> str:
-        """Make a file path relative to the BIDS parent directory."""
-        bids_parent_dir = self.bidsdir.parent.absolute()
-        return str(Path(filename).relative_to(bids_parent_dir))
+    def _get_bids_path_from_file(self, data_filepath: str):
+        """Get a BIDSPath object for a data file with caching.
 
-    def _get_property_from_filename(self, property: str, filename: str) -> str:
-        """Parse a BIDS entity from a filename."""
-        import platform
+        Parameters
+        ----------
+        data_filepath : str
+            The path to the data file.
 
-        if platform.system() == "Windows":
-            lookup = re.search(rf"{property}-(.*?)[_\\]", filename)
-        else:
-            lookup = re.search(rf"{property}-(.*?)[_\/]", filename)
-        return lookup.group(1) if lookup else ""
+        Returns
+        -------
+        BIDSPath
+            The BIDSPath object for the file.
+
+        """
+        if data_filepath not in self._bids_path_cache:
+            # Parse the filename to extract BIDS entities
+            filepath = Path(data_filepath)
+            filename = filepath.name
+
+            # Extract entities from filename using BIDS pattern
+            # Expected format: sub-<label>[_ses-<label>][_task-<label>][_run-<label>]_eeg.<ext>
+            subject = re.search(r"sub-([^_]*)", filename)
+            session = re.search(r"ses-([^_]*)", filename)
+            task = re.search(r"task-([^_]*)", filename)
+            run = re.search(r"run-([^_]*)", filename)
+
+            bids_path = BIDSPath(
+                subject=subject.group(1) if subject else None,
+                session=session.group(1) if session else None,
+                task=task.group(1) if task else None,
+                run=int(run.group(1)) if run else None,
+                datatype="eeg",
+                extension=filepath.suffix,
+                root=self.bidsdir,
+            )
+            self._bids_path_cache[data_filepath] = bids_path
+
+        return self._bids_path_cache[data_filepath]
+
+    def _get_json_with_inheritance(
+        self, data_filepath: str, json_filename: str
+    ) -> dict:
+        """Get JSON metadata with BIDS inheritance handling.
+
+        Walks up the directory tree to find and merge JSON files following
+        BIDS inheritance principles.
+
+        Parameters
+        ----------
+        data_filepath : str
+            The path to the data file.
+        json_filename : str
+            The name of the JSON file to find (e.g., "eeg.json").
+
+        Returns
+        -------
+        dict
+            The merged JSON metadata.
+
+        """
+        json_dict = {}
+        current_dir = Path(data_filepath).parent
+        root_dir = self.bidsdir
+
+        # Walk up from file directory to root, collecting JSON files
+        while current_dir >= root_dir:
+            json_path = current_dir / json_filename
+            if json_path.exists():
+                with open(json_path) as f:
+                    json_dict.update(json.load(f))
+
+            # Stop at BIDS root (contains dataset_description.json)
+            if (current_dir / "dataset_description.json").exists():
+                break
+
+            current_dir = current_dir.parent
+
+        return json_dict
 
     def _merge_json_inheritance(self, json_files: list[str | Path]) -> dict:
         """Merge a list of JSON files according to BIDS inheritance."""
@@ -476,82 +543,6 @@ class EEGBIDSDataset:
         )
         return meta_files
 
-    def _scan_directory(self, directory: str, extension: str) -> list[Path]:
-        """Scan a directory for files with a given extension."""
-        result_files = []
-        directory_to_ignore = [".git", ".datalad", "derivatives", "code"]
-        with os.scandir(directory) as entries:
-            for entry in entries:
-                if entry.is_file() and entry.name.endswith(extension):
-                    result_files.append(Path(entry.path))
-                elif entry.is_dir() and not any(
-                    name in entry.name for name in directory_to_ignore
-                ):
-                    result_files.append(Path(entry.path))
-        return result_files
-
-    def _get_files_with_extension_parallel(
-        self, directory: str, extension: str = ".set", max_workers: int = -1
-    ) -> list[Path]:
-        """Scan a directory tree in parallel for files with a given extension."""
-        result_files = []
-        dirs_to_scan = [directory]
-
-        while dirs_to_scan:
-            logger.info(
-                f"Directories to scan: {len(dirs_to_scan)}, files: {dirs_to_scan}"
-            )
-            results = Parallel(n_jobs=max_workers, prefer="threads", verbose=1)(
-                delayed(self._scan_directory)(d, extension) for d in dirs_to_scan
-            )
-
-            dirs_to_scan = []
-            for res in results:
-                for path in res:
-                    if os.path.isdir(path):
-                        dirs_to_scan.append(path)
-                    else:
-                        result_files.append(path)
-            logger.info(f"Found {len(result_files)} files.")
-
-        return result_files
-
-    def load_and_preprocess_raw(
-        self, raw_file: str, preprocess: bool = False
-    ) -> np.ndarray:
-        """Load and optionally preprocess a raw data file.
-
-        This is a utility function for testing or debugging, not for general use.
-
-        Parameters
-        ----------
-        raw_file : str
-            Path to the raw EEGLAB file (.set).
-        preprocess : bool, default False
-            If True, apply a high-pass filter, notch filter, and resample the data.
-
-        Returns
-        -------
-        numpy.ndarray
-            The loaded and processed data as a NumPy array.
-
-        """
-        logger.info(f"Loading raw data from {raw_file}")
-        EEG = mne.io.read_raw_eeglab(raw_file, preload=True, verbose="error")
-
-        if preprocess:
-            EEG = EEG.filter(l_freq=0.25, h_freq=25, verbose=False)
-            EEG = EEG.notch_filter(freqs=(60), verbose=False)
-            sfreq = 128
-            if EEG.info["sfreq"] != sfreq:
-                EEG = EEG.resample(sfreq)
-
-        mat_data = EEG.get_data()
-
-        if len(mat_data.shape) > 2:
-            raise ValueError("Expect raw data to be CxT dimension")
-        return mat_data
-
     def get_files(self) -> list[str]:
         """Get all EEG recording file paths in the BIDS dataset.
 
@@ -562,31 +553,6 @@ class EEGBIDSDataset:
 
         """
         return self.files
-
-    def resolve_bids_json(self, json_files: list[str]) -> dict:
-        """Resolve BIDS JSON inheritance and merge files.
-
-        Parameters
-        ----------
-        json_files : list of str
-            A list of JSON file paths, ordered from the lowest (most specific)
-            to highest level of the BIDS hierarchy.
-
-        Returns
-        -------
-        dict
-            A dictionary containing the merged JSON data.
-
-        """
-        if not json_files:
-            raise ValueError("No JSON files provided")
-        json_files.reverse()
-
-        json_dict = {}
-        for json_file in json_files:
-            with open(json_file) as f:
-                json_dict.update(json.load(f))
-        return json_dict
 
     def get_bids_file_attribute(self, attribute: str, data_filepath: str) -> Any:
         """Retrieve a specific attribute from BIDS metadata.
@@ -604,21 +570,29 @@ class EEGBIDSDataset:
             The value of the requested attribute, or None if not found.
 
         """
-        entities = self.layout.parse_file_entities(data_filepath)
-        bidsfile = self.layout.get(**entities)[0]
-        attributes = bidsfile.get_entities(metadata="all")
-        attribute_mapping = {
-            "sfreq": "SamplingFrequency",
-            "modality": "datatype",
-            "task": "task",
-            "session": "session",
-            "run": "run",
-            "subject": "subject",
-            "ntimes": "RecordingDuration",
-            "nchans": "EEGChannelCount",
+        bids_path = self._get_bids_path_from_file(data_filepath)
+
+        # Direct BIDSPath properties for entities
+        direct_attrs = {
+            "subject": bids_path.subject,
+            "session": bids_path.session,
+            "task": bids_path.task,
+            "run": bids_path.run,
+            "modality": bids_path.datatype,
         }
-        attribute_value = attributes.get(attribute_mapping.get(attribute), None)
-        return attribute_value
+
+        if attribute in direct_attrs:
+            return direct_attrs[attribute]
+
+        # For JSON-based attributes, read and cache eeg.json
+        eeg_json = self._get_json_with_inheritance(data_filepath, "eeg.json")
+        json_attrs = {
+            "sfreq": eeg_json.get("SamplingFrequency"),
+            "ntimes": eeg_json.get("RecordingDuration"),
+            "nchans": eeg_json.get("EEGChannelCount"),
+        }
+
+        return json_attrs.get(attribute)
 
     def channel_labels(self, data_filepath: str) -> list[str]:
         """Get a list of channel labels from channels.tsv.
@@ -634,9 +608,27 @@ class EEGBIDSDataset:
             A list of channel names.
 
         """
-        channels_tsv = pd.read_csv(
-            self.get_bids_metadata_files(data_filepath, "channels.tsv")[0], sep="\t"
-        )
+        # Find channels.tsv in the same directory as the data file
+        # It can be named either "channels.tsv" or "*_channels.tsv"
+        filepath = Path(data_filepath)
+        parent_dir = filepath.parent
+
+        # Try the standard channels.tsv first
+        channels_tsv_path = parent_dir / "channels.tsv"
+        if not channels_tsv_path.exists():
+            # Try to find *_channels.tsv matching the filename prefix
+            base_name = filepath.stem  # filename without extension
+            for tsv_file in parent_dir.glob("*_channels.tsv"):
+                # Check if it matches by looking at task/run components
+                tsv_name = tsv_file.stem.replace("_channels", "")
+                if base_name.startswith(tsv_name):
+                    channels_tsv_path = tsv_file
+                    break
+
+        if not channels_tsv_path.exists():
+            raise FileNotFoundError(f"No channels.tsv found for {data_filepath}")
+
+        channels_tsv = pd.read_csv(channels_tsv_path, sep="\t")
         return channels_tsv["name"].tolist()
 
     def channel_types(self, data_filepath: str) -> list[str]:
@@ -653,9 +645,27 @@ class EEGBIDSDataset:
             A list of channel types.
 
         """
-        channels_tsv = pd.read_csv(
-            self.get_bids_metadata_files(data_filepath, "channels.tsv")[0], sep="\t"
-        )
+        # Find channels.tsv in the same directory as the data file
+        # It can be named either "channels.tsv" or "*_channels.tsv"
+        filepath = Path(data_filepath)
+        parent_dir = filepath.parent
+
+        # Try the standard channels.tsv first
+        channels_tsv_path = parent_dir / "channels.tsv"
+        if not channels_tsv_path.exists():
+            # Try to find *_channels.tsv matching the filename prefix
+            base_name = filepath.stem  # filename without extension
+            for tsv_file in parent_dir.glob("*_channels.tsv"):
+                # Check if it matches by looking at task/run components
+                tsv_name = tsv_file.stem.replace("_channels", "")
+                if base_name.startswith(tsv_name):
+                    channels_tsv_path = tsv_file
+                    break
+
+        if not channels_tsv_path.exists():
+            raise FileNotFoundError(f"No channels.tsv found for {data_filepath}")
+
+        channels_tsv = pd.read_csv(channels_tsv_path, sep="\t")
         return channels_tsv["type"].tolist()
 
     def num_times(self, data_filepath: str) -> int:
@@ -674,10 +684,10 @@ class EEGBIDSDataset:
             The approximate number of time points.
 
         """
-        eeg_jsons = self.get_bids_metadata_files(data_filepath, "eeg.json")
-        eeg_json_dict = self._merge_json_inheritance(eeg_jsons)
+        eeg_json_dict = self._get_json_with_inheritance(data_filepath, "eeg.json")
         return int(
-            eeg_json_dict["SamplingFrequency"] * eeg_json_dict["RecordingDuration"]
+            eeg_json_dict.get("SamplingFrequency", 0)
+            * eeg_json_dict.get("RecordingDuration", 0)
         )
 
     def subject_participant_tsv(self, data_filepath: str) -> dict[str, Any]:
@@ -718,34 +728,7 @@ class EEGBIDSDataset:
             The merged eeg.json metadata.
 
         """
-        eeg_jsons = self.get_bids_metadata_files(data_filepath, "eeg.json")
-        return self._merge_json_inheritance(eeg_jsons)
-
-    def channel_tsv(self, data_filepath: str) -> dict[str, Any]:
-        """Get the channels.tsv metadata as a dictionary.
-
-        Parameters
-        ----------
-        data_filepath : str
-            The path to the data file.
-
-        Returns
-        -------
-        dict
-            The channels.tsv data, with columns as keys.
-
-        """
-        channels_tsv_path = self.get_bids_metadata_files(data_filepath, "channels.tsv")[
-            0
-        ]
-        channels_tsv = pd.read_csv(channels_tsv_path, sep="\t")
-        channel_tsv_dict = channels_tsv.to_dict()
-        for list_field in ["name", "type", "units"]:
-            if list_field in channel_tsv_dict:
-                channel_tsv_dict[list_field] = list(
-                    channel_tsv_dict[list_field].values()
-                )
-        return channel_tsv_dict
+        return self._get_json_with_inheritance(data_filepath, "eeg.json")
 
 
 __all__ = ["EEGDashBaseDataset", "EEGBIDSDataset", "EEGDashBaseRaw"]

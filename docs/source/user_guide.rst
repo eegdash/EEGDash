@@ -204,4 +204,4 @@ Once you have your :class:`~eegdash.api.EEGDashDataset` object, you can access i
         print(f"Sampling frequency: {raw.info['sfreq']} Hz")
         print(f"Number of channels: {len(raw.ch_names)}")
 
-This provides a powerful and flexible way to integrate ``eegdash`` into your data analysis pipelines, whether you are working with remote or local data.
+This provides a powerful and flexible way to integrate ``eegdash`` into your data analysis pipelines, whether you are working with remote or local data. For contributor resources, see :doc:`Developer Notes </developer_notes>`.

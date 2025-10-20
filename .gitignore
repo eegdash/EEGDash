@@ -34,7 +34,6 @@ pip-log.txt
 .coverage*
 tags
 cover
-ds005516-bdf/
 examples/data
 #Mac files
 .DS_Store

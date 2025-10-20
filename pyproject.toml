@@ -38,13 +38,9 @@ dependencies = [
   "braindecode>=1.0",
   "mne_bids>=0.17.0",
   "numba",
-  "numpy",
-  "pandas",
   "pymongo",
-  "python-dotenv",
   "s3fs",
   "tqdm",
-  "h5io >= 0.2.4",
   "pymatreader",
   "eeglabio",
   "tabulate",
@@ -91,6 +87,7 @@ docs = [
 
 digestion = [
   "pybids",
+  "python-dotenv",
 ]
 
 all = [

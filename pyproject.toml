@@ -117,19 +117,20 @@ namespaces = false
 eegdash = ["dataset_summary.csv"]
 
 [tool.ruff]
-lint.ignore-init-module-imports = true
 line-length = 88
 target-version = "py311"
 
-[tool.isort]
-skip                   = [".gitignore"]
-# Format examples too; pre-commit selects files, no need for skip_glob
-py_version             = 312
-profile                = "black"
-sections               = ["FUTURE", "STDLIB", "THIRDPARTY", "FIRSTPARTY", "LOCALFOLDER"]
-known_first_party      = ["eegdash", "braindecode"]
-lines_between_sections = 1
-atomic                 = false
+[tool.ruff.lint]
+ignore-init-module-imports = true
+select = ["E", "W", "F", "D", "I", "NPY201"]
+ignore = ["E402", "E501", "D100", "D101", "D102", "D103", "D104", "D105", "D107", "D205", "D400", "D415", "D417", "F403", "D401", "E741", "E722", "D419"]
+
+[tool.ruff.lint.per-file-ignores]
+"examples/*" = ["I"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["eegdash", "braindecode"]
+section-order = ["future", "standard-library", "third-party", "first-party", "local-folder"]
 
 [pytest]
 testpaths        = ["tests"]

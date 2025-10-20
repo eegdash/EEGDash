@@ -44,7 +44,6 @@ dependencies = [
   "pymatreader",
   "eeglabio",
   "tabulate",
-  "docstring_inheritance",
   "rich",
 ]
 

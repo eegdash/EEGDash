@@ -16,7 +16,7 @@ from typing import Any, Mapping
 
 import mne
 from docstring_inheritance import NumpyDocstringInheritanceInitMeta
-from dotenv import load_dotenv
+from mne.utils import _soft_import
 from mne_bids import find_matching_paths
 from pymongo import InsertOne, UpdateOne
 from rich.console import Console
@@ -89,7 +89,8 @@ class EEGDash:
                 except Exception:
                     DB_CONNECTION_STRING = None
         else:
-            load_dotenv()
+            dotenv = _soft_import("dotenv", "eegdash[full] is necessary.")
+            dotenv.load_dotenv()
             DB_CONNECTION_STRING = os.getenv("DB_CONNECTION_STRING")
 
         # Use singleton to get MongoDB client, database, and collection

@@ -413,8 +413,6 @@ class EEGBIDSDataset:
             The BIDSPath object for the file.
 
         """
-        from mne_bids import BIDSPath
-
         if data_filepath not in self._bids_path_cache:
             # Parse the filename to extract BIDS entities
             filepath = Path(data_filepath)
@@ -588,7 +586,6 @@ class EEGBIDSDataset:
 
         # For JSON-based attributes, read and cache eeg.json
         eeg_json = self._get_json_with_inheritance(data_filepath, "eeg.json")
-
         json_attrs = {
             "sfreq": eeg_json.get("SamplingFrequency"),
             "ntimes": eeg_json.get("RecordingDuration"),

@@ -7,6 +7,8 @@ Installing from sources
 
 If you want to test features under development or contribute to the library, or if you want to test the new tools that have been tested in EEGDash and not released yet, this is the right tutorial for you!
 
+For an overview of contributor workflows and project internals, see :doc:`Developer Notes </developer_notes>`.
+
 .. note::
 
    If you are only trying to install EEGDash, we recommend the :doc:`Installing from PyPI </install/install_pip>` section for details on that.

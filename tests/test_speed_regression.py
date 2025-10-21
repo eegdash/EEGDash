@@ -15,7 +15,7 @@ import time
 
 import pytest
 
-from eegdash.data_utils import EEGBIDSDataset
+from eegdash.dataset.bids_dataset import EEGBIDSDataset
 from eegdash.paths import get_default_cache_dir
 
 # Performance thresholds (in seconds)

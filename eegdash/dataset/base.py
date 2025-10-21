@@ -243,7 +243,7 @@ class EEGDashBaseRaw(BaseRaw):
         preload: bool = False,
         *,
         cache_dir: str | None = None,
-        bids_dependencies: list[str] = [],
+        bids_dependencies: list[str] | None = None,
         verbose: Any = None,
     ):
         # Create a simple RawArray
@@ -261,6 +261,8 @@ class EEGDashBaseRaw(BaseRaw):
         self.s3file = downloader.get_s3path(self._AWS_BUCKET, input_fname)
         self.cache_dir = Path(cache_dir) if cache_dir else get_default_cache_dir()
         self.filecache = self.cache_dir / input_fname
+        if bids_dependencies is None:
+            bids_dependencies = []
         self.bids_dependencies = bids_dependencies
 
         if preload and not os.path.exists(self.filecache):

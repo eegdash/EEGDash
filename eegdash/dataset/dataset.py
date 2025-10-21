@@ -135,15 +135,7 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
         self,
         cache_dir: str | Path,
         query: dict[str, Any] = None,
-        description_fields: list[str] = [
-            "subject",
-            "session",
-            "run",
-            "task",
-            "age",
-            "gender",
-            "sex",
-        ],
+        description_fields: list[str] | None = None,
         s3_bucket: str | None = None,
         records: list[dict] | None = None,
         download: bool = True,
@@ -158,6 +150,17 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
         self.download = download
         self.n_jobs = n_jobs
         self.eeg_dash_instance = eeg_dash_instance
+
+        if description_fields is None:
+            description_fields = [
+                "subject",
+                "session",
+                "run",
+                "task",
+                "age",
+                "gender",
+                "sex",
+            ]
 
         self.cache_dir = cache_dir
         if self.cache_dir == "" or self.cache_dir is None:

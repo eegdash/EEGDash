@@ -4,7 +4,7 @@ import inspect
 from collections.abc import Callable
 
 from . import extractors, feature_bank
-from .extractors import FeatureExtractor, MultivariateFeature, _get_underlying_func
+from .extractors import _get_underlying_func
 
 __all__ = [
     "get_all_feature_extractors",
@@ -38,9 +38,11 @@ def get_feature_predecessors(feature_or_extractor: Callable) -> list:
 
     """
     current = _get_underlying_func(feature_or_extractor)
-    if current is FeatureExtractor:
+    if current is extractors.FeatureExtractor:
         return [current]
-    predecessor = getattr(current, "parent_extractor_type", [FeatureExtractor])
+    predecessor = getattr(
+        current, "parent_extractor_type", [extractors.FeatureExtractor]
+    )
     if len(predecessor) == 1:
         return [current, *get_feature_predecessors(predecessor[0])]
     else:
@@ -51,7 +53,7 @@ def get_feature_predecessors(feature_or_extractor: Callable) -> list:
         return [current, tuple(predecessors)]
 
 
-def get_feature_kind(feature: Callable) -> MultivariateFeature:
+def get_feature_kind(feature: Callable) -> extractors.MultivariateFeature:
     """Get the 'kind' of a feature function.
 
     The feature kind (e.g., univariate, bivariate) is typically attached by a
@@ -90,7 +92,7 @@ def get_all_features() -> list[tuple[str, Callable]]:
     return inspect.getmembers(feature_bank, isfeature)
 
 
-def get_all_feature_extractors() -> list[tuple[str, type[FeatureExtractor]]]:
+def get_all_feature_extractors() -> list[tuple[str, type[extractors.FeatureExtractor]]]:
     """Get a list of all available :class:`~eegdash.features.extractors.FeatureExtractor` classes.
 
     Scans the `eegdash.features.feature_bank` module for all classes that
@@ -98,23 +100,22 @@ def get_all_feature_extractors() -> list[tuple[str, type[FeatureExtractor]]]:
 
     Returns
     -------
-    list[tuple[str, type[FeatureExtractor]]]
+    list[tuple[str, type[eegdash.features.extractors.FeatureExtractor]]]
         A list of (name, class) tuples for all discovered feature extractors,
-        including the base :class:`~eegdash.features.extractors.FeatureExtractor`
-        itself.
+        including the base :class:`~eegdash.features.extractors.FeatureExtractor` itself.
 
     """
 
     def isfeatureextractor(x):
-        return inspect.isclass(x) and issubclass(x, FeatureExtractor)
+        return inspect.isclass(x) and issubclass(x, extractors.FeatureExtractor)
 
     return [
-        ("FeatureExtractor", FeatureExtractor),
+        ("FeatureExtractor", extractors.FeatureExtractor),
         *inspect.getmembers(feature_bank, isfeatureextractor),
     ]
 
 
-def get_all_feature_kinds() -> list[tuple[str, type[MultivariateFeature]]]:
+def get_all_feature_kinds() -> list[tuple[str, type[extractors.MultivariateFeature]]]:
     """Get a list of all available feature 'kind' classes.
 
     Scans the `eegdash.features.extractors` module for all classes that
@@ -122,12 +123,12 @@ def get_all_feature_kinds() -> list[tuple[str, type[MultivariateFeature]]]:
 
     Returns
     -------
-    list[tuple[str, type[MultivariateFeature]]]
+    list[tuple[str, type[eegdash.features.extractors.MultivariateFeature]]]
         A list of (name, class) tuples for all discovered feature kinds.
 
     """
 
     def isfeaturekind(x):
-        return inspect.isclass(x) and issubclass(x, MultivariateFeature)
+        return inspect.isclass(x) and issubclass(x, extractors.MultivariateFeature)
 
     return inspect.getmembers(extractors, isfeaturekind)

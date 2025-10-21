@@ -54,7 +54,6 @@ The API is organized into focused modules that handle specific aspects of EEG da
 * :mod:`~eegdash.api` - Main interface for data access and manipulation
 * :mod:`~eegdash.const` - Constants and enumerations used throughout the package
 * :mod:`~eegdash.bids_eeg_metadata` - BIDS-compliant metadata handling  
-* :mod:`~eegdash.data_utils` - Data preprocessing and transformation utilities
 * :mod:`~eegdash.mongodb` - Database connection and query operations
 * :mod:`~eegdash.paths` - File system and storage path management
 * :mod:`~eegdash.utils` - General utility functions and helpers
@@ -71,7 +70,6 @@ API Reference
    api
    bids_eeg_metadata
    const
-   data_utils
    logging
    hbn
    mongodb

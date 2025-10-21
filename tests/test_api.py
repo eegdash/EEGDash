@@ -3,7 +3,7 @@ import numpy as np
 import pytest
 from mne_bids import BIDSPath, write_raw_bids
 
-from eegdash.api import EEGDashDataset
+from eegdash.dataset import EEGDashDataset
 from eegdash.paths import get_default_cache_dir
 
 

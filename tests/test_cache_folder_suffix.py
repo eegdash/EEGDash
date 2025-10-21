@@ -2,8 +2,7 @@ from pathlib import Path
 
 import pytest
 
-from eegdash.api import EEGDashDataset
-from eegdash.dataset.dataset import EEGChallengeDataset
+from eegdash.dataset import EEGChallengeDataset, EEGDashDataset
 
 
 def _dummy_record(dataset: str, ext: str = ".set") -> dict:

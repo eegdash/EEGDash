@@ -233,6 +233,8 @@ EX_DIR = "../../examples"  # relative to docs/source
 sphinx_gallery_conf = {
     "examples_dirs": [f"{EX_DIR}"],
     "gallery_dirs": ["generated/auto_examples"],
+    # Disable plotting during doc builds; matches `html-noplot` behaviour.
+    "plot_gallery": False,
     "binder": {
         "org": "sccn",
         "repo": "EEGDash",
@@ -326,6 +328,7 @@ Base Dataset API
 .. toctree::
    :maxdepth: 1
 
+   eegdash.EEGDashDataset
    eegdash.dataset.EEGChallengeDataset
 
 .. list-table:: Dataset counts by experimental type
@@ -361,6 +364,39 @@ EEGChallengeDataset
    :undoc-members:
    :show-inheritance:
    :member-order: bysource
+
+"""
+
+
+PRIMARY_DATASET_TEMPLATE = """{notice}.. _api_eegdash_dataset:
+
+.. currentmodule:: eegdash
+
+EEGDashDataset
+==============
+
+.. autoclass:: eegdash.EEGDashDataset
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :inherited-members:
+   :member-order: bysource
+
+Usage Example
+-------------
+
+.. code-block:: python
+
+   from eegdash import EEGDashDataset
+
+   dataset = EEGDashDataset(cache_dir="./data", dataset="ds002718")
+   print(f"Number of recordings: {{len(dataset)}}")
+
+See Also
+--------
+
+* :mod:`eegdash.dataset`
+* :class:`eegdash.dataset.EEGChallengeDataset`
 
 """
 
@@ -595,6 +631,11 @@ def _generate_dataset_docs(app) -> None:
     base_path = dataset_dir / "eegdash.dataset.EEGChallengeDataset.rst"
     if _write_if_changed(base_path, base_content):
         LOGGER.info("[dataset-docs] Updated %s", base_path.relative_to(app.srcdir))
+
+    primary_content = PRIMARY_DATASET_TEMPLATE.format(notice=AUTOGEN_NOTICE)
+    primary_path = dataset_dir / "eegdash.EEGDashDataset.rst"
+    if _write_if_changed(primary_path, primary_content):
+        LOGGER.info("[dataset-docs] Updated %s", primary_path.relative_to(app.srcdir))
 
     generated_paths: set[Path] = set()
     for name in dataset_names:

@@ -1,7 +1,6 @@
 from pathlib import Path
 
-from eegdash.api import EEGDashDataset
-from eegdash.dataset.dataset import EEGChallengeDataset
+from eegdash.dataset import EEGChallengeDataset, EEGDashDataset
 
 
 def test_challenge_dataset_passes_task_and_dataset_filters(cache_dir: Path):

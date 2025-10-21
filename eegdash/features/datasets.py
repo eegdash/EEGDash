@@ -128,7 +128,7 @@ def _compute_stats(
     ddof: int = 1,
     numeric_only: bool = False,
 ) -> tuple:
-    """Compute statistics for a single FeaturesDataset."""
+    """Compute statistics for a single :class:`~eegdash.features.datasets.FeaturesDataset`."""
     res = []
     if return_count:
         res.append(ds.features.count(numeric_only=numeric_only))
@@ -159,9 +159,9 @@ def _pooled_var(
 
 
 class FeaturesConcatDataset(BaseConcatDataset):
-    """A concatenated dataset of `FeaturesDataset` objects.
+    """A concatenated dataset of :class:`~eegdash.features.datasets.FeaturesDataset` objects.
 
-    This class holds a list of :class:`FeaturesDataset` instances and allows
+    This class holds a list of :class:`~eegdash.features.datasets.FeaturesDataset` instances and allows
     them to be treated as a single, larger dataset. It provides methods for
 
     splitting, saving, and performing DataFrame-like operations (e.g., `mean`,
@@ -169,8 +169,8 @@ class FeaturesConcatDataset(BaseConcatDataset):
 
     Parameters
     ----------
-    list_of_ds : list of FeaturesDataset
-        A list of :class:`FeaturesDataset` objects to concatenate.
+    list_of_ds : list of ~eegdash.features.datasets.FeaturesDataset
+        A list of :class:`~eegdash.features.datasets.FeaturesDataset` objects to concatenate.
     target_transform : callable, optional
         A function to apply to the target values before they are returned.
 
@@ -211,9 +211,9 @@ class FeaturesConcatDataset(BaseConcatDataset):
 
         Returns
         -------
-        dict[str, FeaturesConcatDataset]
+        dict[str, ~eegdash.features.datasets.FeaturesConcatDataset]
             A dictionary where keys are split names and values are the new
-            :class:`FeaturesConcatDataset` subsets.
+            :class:`~eegdash.features.datasets.FeaturesConcatDataset` subsets.
 
         """
         if isinstance(by, str):
@@ -252,7 +252,8 @@ class FeaturesConcatDataset(BaseConcatDataset):
         Raises
         ------
         TypeError
-            If any of the contained datasets is not a :class:`FeaturesDataset`.
+            If any of the contained datasets is not a
+            :class:`~eegdash.features.datasets.FeaturesDataset`.
 
         """
         if not all([isinstance(ds, FeaturesDataset) for ds in self.datasets]):

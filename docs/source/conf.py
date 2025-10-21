@@ -65,6 +65,16 @@ suppress_warnings = [
     "config.cache",
 ]
 
+autodoc_type_aliases = {
+    "FeatureExtractor": "eegdash.features.extractors.FeatureExtractor",
+    "MultivariateFeature": "eegdash.features.extractors.MultivariateFeature",
+    "FeaturesConcatDataset": "eegdash.features.datasets.FeaturesConcatDataset",
+    "FeaturesDataset": "eegdash.features.datasets.FeaturesDataset",
+    "TrainableFeature": "eegdash.features.extractors.TrainableFeature",
+}
+
+python_use_unqualified_type_names = False
+
 # -- Options for HTML output -------------------------------------------------
 
 html_theme = "pydata_sphinx_theme"

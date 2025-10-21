@@ -71,7 +71,7 @@ class FeatureKind:
 
     Parameters
     ----------
-    feature_kind : MultivariateFeature
+    feature_kind : ~eegdash.features.extractors.MultivariateFeature
         An instance of a feature kind class, such as
         :class:`~eegdash.features.extractors.UnivariateFeature` or
         :class:`~eegdash.features.extractors.BivariateFeature`.
@@ -104,7 +104,7 @@ class FeatureKind:
 univariate_feature = FeatureKind(UnivariateFeature())
 """Decorator to mark a feature as univariate.
 
-This is a convenience instance of :class:`FeatureKind` pre-configured for
+This is a convenience instance of :class:`~eegdash.features.decorators.FeatureKind` pre-configured for
 univariate features.
 """
 
@@ -139,6 +139,6 @@ def bivariate_feature(func: Callable, directed: bool = False) -> Callable:
 multivariate_feature = FeatureKind(MultivariateFeature())
 """Decorator to mark a feature as multivariate.
 
-This is a convenience instance of :class:`FeatureKind` pre-configured for
+This is a convenience instance of :class:`~eegdash.features.decorators.FeatureKind` pre-configured for
 multivariate features, which operate on all channels simultaneously.
 """

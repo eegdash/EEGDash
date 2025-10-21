@@ -14,8 +14,8 @@ from braindecode.datasets.base import (
     WindowsDataset,
 )
 
+from . import extractors
 from .datasets import FeaturesConcatDataset, FeaturesDataset
-from .extractors import FeatureExtractor
 
 __all__ = [
     "extract_features",
@@ -25,7 +25,7 @@ __all__ = [
 
 def _extract_features_from_windowsdataset(
     win_ds: EEGWindowsDataset | WindowsDataset,
-    feature_extractor: FeatureExtractor,
+    feature_extractor: extractors.FeatureExtractor,
     batch_size: int = 512,
 ) -> FeaturesDataset:
     """Extract features from a single `WindowsDataset`.
@@ -38,14 +38,14 @@ def _extract_features_from_windowsdataset(
     ----------
     win_ds : EEGWindowsDataset or WindowsDataset
         The windowed dataset to extract features from.
-    feature_extractor : FeatureExtractor
+    feature_extractor : ~eegdash.features.extractors.FeatureExtractor
         The feature extractor instance to apply.
     batch_size : int, default 512
         The number of windows to process in each batch.
 
     Returns
     -------
-    FeaturesDataset
+    ~eegdash.features.datasets.FeaturesDataset
         A new dataset containing the extracted features and associated metadata.
 
     """
@@ -93,7 +93,7 @@ def _extract_features_from_windowsdataset(
 
 def extract_features(
     concat_dataset: BaseConcatDataset,
-    features: FeatureExtractor | Dict[str, Callable] | List[Callable],
+    features: extractors.FeatureExtractor | Dict[str, Callable] | List[Callable],
     *,
     batch_size: int = 512,
     n_jobs: int = 1,
@@ -109,8 +109,9 @@ def extract_features(
     concat_dataset : BaseConcatDataset
         A concatenated dataset of `WindowsDataset` or `EEGWindowsDataset`
         instances.
-    features : FeatureExtractor or dict or list
-        The feature extractor(s) to apply. Can be a `FeatureExtractor`
+    features : ~eegdash.features.extractors.FeatureExtractor or dict or list
+        The feature extractor(s) to apply. Can be a
+        :class:`~eegdash.features.extractors.FeatureExtractor`
         instance, a dictionary of named feature functions, or a list of
         feature functions.
     batch_size : int, default 512
@@ -121,14 +122,14 @@ def extract_features(
 
     Returns
     -------
-    FeaturesConcatDataset
+    ~eegdash.features.datasets.FeaturesConcatDataset
         A new concatenated dataset containing the extracted features.
 
     """
     if isinstance(features, list):
         features = dict(enumerate(features))
-    if not isinstance(features, FeatureExtractor):
-        features = FeatureExtractor(features)
+    if not isinstance(features, extractors.FeatureExtractor):
+        features = extractors.FeatureExtractor(features)
     feature_ds_list = list(
         tqdm(
             Parallel(n_jobs=n_jobs, return_as="generator")(
@@ -146,34 +147,35 @@ def extract_features(
 
 def fit_feature_extractors(
     concat_dataset: BaseConcatDataset,
-    features: FeatureExtractor | Dict[str, Callable] | List[Callable],
+    features: extractors.FeatureExtractor | Dict[str, Callable] | List[Callable],
     batch_size: int = 8192,
-) -> FeatureExtractor:
+) -> extractors.FeatureExtractor:
     """Fit trainable feature extractors on a dataset.
 
     If the provided feature extractor (or any of its sub-extractors) is
-    trainable (i.e., subclasses `TrainableFeature`), this function iterates
-    through the dataset to fit it.
+    trainable (i.e., subclasses
+    :class:`~eegdash.features.extractors.TrainableFeature`), this function
+    iterates through the dataset to fit it.
 
     Parameters
     ----------
     concat_dataset : BaseConcatDataset
         The dataset to use for fitting the feature extractors.
-    features : FeatureExtractor or dict or list
+    features : ~eegdash.features.extractors.FeatureExtractor or dict or list
         The feature extractor(s) to fit.
     batch_size : int, default 8192
         The batch size to use when iterating through the dataset for fitting.
 
     Returns
     -------
-    FeatureExtractor
+    ~eegdash.features.extractors.FeatureExtractor
         The fitted feature extractor.
 
     """
     if isinstance(features, list):
         features = dict(enumerate(features))
-    if not isinstance(features, FeatureExtractor):
-        features = FeatureExtractor(features)
+    if not isinstance(features, extractors.FeatureExtractor):
+        features = extractors.FeatureExtractor(features)
     if not features._is_trainable:
         return features
     features.clear()

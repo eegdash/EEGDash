@@ -26,11 +26,13 @@ __all__ = [
 def load_features_concat_dataset(
     path: str | Path, ids_to_load: list[int] | None = None, n_jobs: int = 1
 ) -> FeaturesConcatDataset:
-    """Load a stored `FeaturesConcatDataset` from a directory.
+    """Load a stored :class:`~eegdash.features.datasets.FeaturesConcatDataset` from a directory.
 
-    This function reconstructs a :class:`FeaturesConcatDataset` by loading
-    individual :class:`FeaturesDataset` instances from subdirectories within
-    the given path. It uses joblib for parallel loading.
+    This function reconstructs a
+    :class:`~eegdash.features.datasets.FeaturesConcatDataset` by loading
+    individual :class:`~eegdash.features.datasets.FeaturesDataset` instances
+    from subdirectories within the given path. It uses joblib for parallel
+    loading.
 
     Parameters
     ----------
@@ -48,7 +50,8 @@ def load_features_concat_dataset(
     Returns
     -------
     eegdash.features.datasets.FeaturesConcatDataset
-        A concatenated dataset containing the loaded `FeaturesDataset` instances.
+        A concatenated dataset containing the loaded
+        :class:`~eegdash.features.datasets.FeaturesDataset` instances.
 
     """
     # Make sure we always work with a pathlib.Path
@@ -65,15 +68,17 @@ def load_features_concat_dataset(
 
 
 def _load_parallel(path: Path, i: str) -> FeaturesDataset:
-    """Load a single `FeaturesDataset` from its subdirectory.
+    """Load a single :class:`~eegdash.features.datasets.FeaturesDataset` from its subdirectory.
 
-    This is a helper function for `load_features_concat_dataset` that handles
-    the loading of one dataset's files (features, metadata, descriptions, etc.).
+    This is a helper function for
+    :func:`~eegdash.features.serialization.load_features_concat_dataset` that
+    handles the loading of one dataset's files (features, metadata, descriptions, etc.).
 
     Parameters
     ----------
     path : pathlib.Path
-        The root directory of the saved `FeaturesConcatDataset`.
+        The root directory of the saved
+        :class:`~eegdash.features.datasets.FeaturesConcatDataset`.
     i : str
         The identifier of the dataset to load, corresponding to its
         subdirectory name.

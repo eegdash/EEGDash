@@ -49,6 +49,8 @@
 .. _tqdm: https://tqdm.github.io/
 .. _pooch: https://www.fatiando.org/pooch/latest/
 
+.. |api-base-url| replace:: https://data.eegdash.org
+
 .. git stuff
 
 .. _git: https://git-scm.com/

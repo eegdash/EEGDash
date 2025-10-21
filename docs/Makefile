@@ -12,9 +12,9 @@ help:
 .PHONY: apidoc
 apidoc:
 	# Generate full API docs, then prune duplicates covered by autosummary
+	@rm -f "$(APIDIR)"/dataset/eegdash.features*
 	@SPHINX_APIDOC_OPTIONS=members,undoc-members,show-inheritance,noindex \
-		python -m sphinx.ext.apidoc -f -e -M -o "$(APIDIR)/dataset" "../$(PKG)"
-	# Remove top-level package page and modules covered elsewhere
+		python -m sphinx.ext.apidoc -f -e -T -o "$(APIDIR)/dataset" "../$(PKG)" "../$(PKG)/features"
 
 
 # Standard build runs examples

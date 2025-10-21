@@ -51,7 +51,7 @@
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../../../_static/documentation_options.js?v=6c02275b"></script>
+    <script src="../../../_static/documentation_options.js?v=c87aa342"></script>
     <script src="../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -457,7 +457,6 @@
 <li class="toctree-l2"><a class="reference internal" href="../api-core/eegdash.api.html">eegdash.api</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api-core/eegdash.bids_eeg_metadata.html">eegdash.bids_eeg_metadata</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api-core/eegdash.const.html">eegdash.const</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api-core/eegdash.data_utils.html">eegdash.data_utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api-core/eegdash.logging.html">eegdash.logging</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api-core/eegdash.hbn.html">eegdash.hbn</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api-core/eegdash.mongodb.html">eegdash.mongodb</a></li>
@@ -466,17 +465,24 @@
 </ul>
 </details></li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="../../api_features.html">Feature API</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="eegdash.features.html">eegdash.features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../features_overview.html">Feature Package Overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.features.datasets.html">eegdash.features.datasets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.features.decorators.html">eegdash.features.decorators</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.features.extractors.html">eegdash.features.extractors</a></li>
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">eegdash.features.inspect</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.features.serialization.html">eegdash.features.serialization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.features.utils.html">eegdash.features.utils</a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.features.feature_bank.html">eegdash.features.feature_bank</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.features.feature_bank.complexity.html">eegdash.features.feature_bank.complexity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.features.feature_bank.connectivity.html">eegdash.features.feature_bank.connectivity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.features.feature_bank.csp.html">eegdash.features.feature_bank.csp</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.features.feature_bank.dimensionality.html">eegdash.features.feature_bank.dimensionality</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.features.feature_bank.signal.html">eegdash.features.feature_bank.signal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.features.feature_bank.spectral.html">eegdash.features.feature_bank.spectral</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.features.feature_bank.utils.html">eegdash.features.feature_bank.utils</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../dataset/api_dataset.html">Datasets API</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.EEGDashDataset.html">EEGDashDataset</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.EEGChallengeDataset.html">EEGChallengeDataset</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS001785.html">eegdash.dataset.DS001785</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../dataset/eegdash.dataset.DS001787.html">eegdash.dataset.DS001787</a></li>
@@ -803,7 +809,7 @@
 <div class="pst-scrollable-table-container"><table class="autosummary longtable table">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#eegdash.features.inspect.get_all_feature_extractors" title="eegdash.features.inspect.get_all_feature_extractors"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_all_feature_extractors</span></code></a>()</p></td>
-<td><p>Get a list of all available <cite>FeatureExtractor</cite> classes.</p></td>
+<td><p>Get a list of all available <a class="reference internal" href="eegdash.features.extractors.html#eegdash.features.extractors.FeatureExtractor" title="eegdash.features.extractors.FeatureExtractor"><code class="xref py py-class docutils literal notranslate"><span class="pre">FeatureExtractor</span></code></a> classes.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#eegdash.features.inspect.get_all_feature_kinds" title="eegdash.features.inspect.get_all_feature_kinds"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_all_feature_kinds</span></code></a>()</p></td>
 <td><p>Get a list of all available feature 'kind' classes.</p></td>
@@ -822,24 +828,24 @@
 </div>
 <dl class="py function">
 <dt class="sig sig-object py" id="eegdash.features.inspect.get_all_feature_extractors">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.inspect.</span></span><span class="sig-name descname"><span class="pre">get_all_feature_extractors</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">type</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="eegdash.features.extractors.html#eegdash.features.extractors.FeatureExtractor" title="eegdash.features.extractors.FeatureExtractor"><span class="pre">FeatureExtractor</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/inspect.py#L92-L112"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.inspect.get_all_feature_extractors" title="Link to this definition">#</a></dt>
-<dd><p>Get a list of all available <cite>FeatureExtractor</cite> classes.</p>
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.inspect.</span></span><span class="sig-name descname"><span class="pre">get_all_feature_extractors</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">type</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="eegdash.features.extractors.html#eegdash.features.extractors.FeatureExtractor" title="eegdash.features.extractors.FeatureExtractor"><span class="pre">FeatureExtractor</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/inspect.py#L95-L115"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.inspect.get_all_feature_extractors" title="Link to this definition">#</a></dt>
+<dd><p>Get a list of all available <a class="reference internal" href="eegdash.features.extractors.html#eegdash.features.extractors.FeatureExtractor" title="eegdash.features.extractors.FeatureExtractor"><code class="xref py py-class docutils literal notranslate"><span class="pre">FeatureExtractor</span></code></a> classes.</p>
 <p>Scans the <cite>eegdash.features.feature_bank</cite> module for all classes that
 subclass <a class="reference internal" href="eegdash.features.extractors.html#eegdash.features.extractors.FeatureExtractor" title="eegdash.features.extractors.FeatureExtractor"><code class="xref py py-class docutils literal notranslate"><span class="pre">FeatureExtractor</span></code></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>A list of (name, class) tuples for all discovered feature extractors,
-including the base <cite>FeatureExtractor</cite> itself.</p>
+including the base <a class="reference internal" href="eegdash.features.extractors.html#eegdash.features.extractors.FeatureExtractor" title="eegdash.features.extractors.FeatureExtractor"><code class="xref py py-class docutils literal notranslate"><span class="pre">FeatureExtractor</span></code></a> itself.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>list[tuple[str, type[<a class="reference internal" href="eegdash.features.html#eegdash.features.FeatureExtractor" title="eegdash.features.FeatureExtractor">FeatureExtractor</a>]]]</p>
+<dd class="field-even"><p>list[tuple[str, type[<a class="reference internal" href="eegdash.features.extractors.html#eegdash.features.extractors.FeatureExtractor" title="eegdash.features.extractors.FeatureExtractor">eegdash.features.extractors.FeatureExtractor</a>]]]</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="eegdash.features.inspect.get_all_feature_kinds">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.inspect.</span></span><span class="sig-name descname"><span class="pre">get_all_feature_kinds</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">type</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="eegdash.features.extractors.html#eegdash.features.extractors.MultivariateFeature" title="eegdash.features.extractors.MultivariateFeature"><span class="pre">MultivariateFeature</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/inspect.py#L115-L131"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.inspect.get_all_feature_kinds" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.inspect.</span></span><span class="sig-name descname"><span class="pre">get_all_feature_kinds</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">type</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="eegdash.features.extractors.html#eegdash.features.extractors.MultivariateFeature" title="eegdash.features.extractors.MultivariateFeature"><span class="pre">MultivariateFeature</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/inspect.py#L118-L134"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.inspect.get_all_feature_kinds" title="Link to this definition">#</a></dt>
 <dd><p>Get a list of all available feature ‘kind’ classes.</p>
 <p>Scans the <cite>eegdash.features.extractors</cite> module for all classes that
 subclass <a class="reference internal" href="eegdash.features.extractors.html#eegdash.features.extractors.MultivariateFeature" title="eegdash.features.extractors.MultivariateFeature"><code class="xref py py-class docutils literal notranslate"><span class="pre">MultivariateFeature</span></code></a>.</p>
@@ -848,14 +854,14 @@ subclass <a class="reference internal" href="eegdash.features.extractors.html#ee
 <dd class="field-odd"><p>A list of (name, class) tuples for all discovered feature kinds.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>list[tuple[str, type[<a class="reference internal" href="eegdash.features.html#eegdash.features.MultivariateFeature" title="eegdash.features.MultivariateFeature">MultivariateFeature</a>]]]</p>
+<dd class="field-even"><p>list[tuple[str, type[<a class="reference internal" href="eegdash.features.extractors.html#eegdash.features.extractors.MultivariateFeature" title="eegdash.features.extractors.MultivariateFeature">eegdash.features.extractors.MultivariateFeature</a>]]]</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="eegdash.features.inspect.get_all_features">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.inspect.</span></span><span class="sig-name descname"><span class="pre">get_all_features</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Callable</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/inspect.py#L73-L89"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.inspect.get_all_features" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.inspect.</span></span><span class="sig-name descname"><span class="pre">get_all_features</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Callable</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/inspect.py#L76-L92"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.inspect.get_all_features" title="Link to this definition">#</a></dt>
 <dd><p>Get a list of all available feature functions.</p>
 <p>Scans the <cite>eegdash.features.feature_bank</cite> module for functions that have
 been decorated to have a <cite>feature_kind</cite> attribute.</p>
@@ -871,7 +877,7 @@ been decorated to have a <cite>feature_kind</cite> attribute.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="eegdash.features.inspect.get_feature_kind">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.inspect.</span></span><span class="sig-name descname"><span class="pre">get_feature_kind</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">feature</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="eegdash.features.extractors.html#eegdash.features.extractors.MultivariateFeature" title="eegdash.features.extractors.MultivariateFeature"><span class="pre">MultivariateFeature</span></a></span></span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/inspect.py#L53-L70"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.inspect.get_feature_kind" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.inspect.</span></span><span class="sig-name descname"><span class="pre">get_feature_kind</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">feature</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="eegdash.features.extractors.html#eegdash.features.extractors.MultivariateFeature" title="eegdash.features.extractors.MultivariateFeature"><span class="pre">MultivariateFeature</span></a></span></span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/inspect.py#L56-L73"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.inspect.get_feature_kind" title="Link to this definition">#</a></dt>
 <dd><p>Get the ‘kind’ of a feature function.</p>
 <p>The feature kind (e.g., univariate, bivariate) is typically attached by a
 decorator.</p>
@@ -880,30 +886,31 @@ decorator.</p>
 <dd class="field-odd"><p><strong>feature</strong> (<em>callable</em>) – The feature function to inspect.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>An instance of the feature kind (e.g., <cite>UnivariateFeature()</cite>).</p>
+<dd class="field-even"><p>An instance of the feature kind (e.g., <code class="docutils literal notranslate"><span class="pre">UnivariateFeature()</span></code>).</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="eegdash.features.html#eegdash.features.MultivariateFeature" title="eegdash.features.MultivariateFeature">MultivariateFeature</a></p>
+<dd class="field-odd"><p><a class="reference internal" href="eegdash.features.extractors.html#eegdash.features.extractors.MultivariateFeature" title="eegdash.features.extractors.MultivariateFeature"><code class="xref py py-class docutils literal notranslate"><span class="pre">MultivariateFeature</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="eegdash.features.inspect.get_feature_predecessors">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.inspect.</span></span><span class="sig-name descname"><span class="pre">get_feature_predecessors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">feature_or_extractor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/inspect.py#L18-L50"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.inspect.get_feature_predecessors" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.inspect.</span></span><span class="sig-name descname"><span class="pre">get_feature_predecessors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">feature_or_extractor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/features/inspect.py#L18-L53"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.inspect.get_feature_predecessors" title="Link to this definition">#</a></dt>
 <dd><p>Get the dependency hierarchy for a feature or feature extractor.</p>
 <p>This function recursively traverses the <cite>parent_extractor_type</cite> attribute
 of a feature or extractor to build a list representing its dependency
 lineage.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>feature_or_extractor</strong> (<em>callable</em>) – The feature function or <code class="xref py py-class docutils literal notranslate"><span class="pre">FeatureExtractor</span></code> class to inspect.</p>
+<dd class="field-odd"><p><strong>feature_or_extractor</strong> (<em>callable</em>) – The feature function or <a class="reference internal" href="eegdash.features.extractors.html#eegdash.features.extractors.FeatureExtractor" title="eegdash.features.extractors.FeatureExtractor"><code class="xref py py-class docutils literal notranslate"><span class="pre">FeatureExtractor</span></code></a>
+class to inspect.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>A nested list representing the dependency tree. For a simple linear
 chain, this will be a flat list from the specific feature up to the
-base <cite>FeatureExtractor</cite>. For multiple dependencies, it will contain
-tuples of sub-dependencies.</p>
+base <a class="reference internal" href="eegdash.features.extractors.html#eegdash.features.extractors.FeatureExtractor" title="eegdash.features.extractors.FeatureExtractor"><code class="xref py py-class docutils literal notranslate"><span class="pre">FeatureExtractor</span></code></a>. For
+multiple dependencies, it will contain tuples of sub-dependencies.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>list</p>

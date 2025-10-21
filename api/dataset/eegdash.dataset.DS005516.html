@@ -51,7 +51,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../../_static/documentation_options.js?v=6c02275b"></script>
+    <script src="../../_static/documentation_options.js?v=c87aa342"></script>
     <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -457,7 +457,6 @@
 <li class="toctree-l2"><a class="reference internal" href="../generated/api-core/eegdash.api.html">eegdash.api</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/api-core/eegdash.bids_eeg_metadata.html">eegdash.bids_eeg_metadata</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/api-core/eegdash.const.html">eegdash.const</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../generated/api-core/eegdash.data_utils.html">eegdash.data_utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/api-core/eegdash.logging.html">eegdash.logging</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/api-core/eegdash.hbn.html">eegdash.hbn</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/api-core/eegdash.mongodb.html">eegdash.mongodb</a></li>
@@ -466,17 +465,24 @@
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../api_features.html">Feature API</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="../generated/api-features/eegdash.features.html">eegdash.features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../features_overview.html">Feature Package Overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/api-features/eegdash.features.datasets.html">eegdash.features.datasets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/api-features/eegdash.features.decorators.html">eegdash.features.decorators</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/api-features/eegdash.features.extractors.html">eegdash.features.extractors</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/api-features/eegdash.features.inspect.html">eegdash.features.inspect</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/api-features/eegdash.features.serialization.html">eegdash.features.serialization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/api-features/eegdash.features.utils.html">eegdash.features.utils</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../generated/api-features/eegdash.features.feature_bank.html">eegdash.features.feature_bank</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/api-features/eegdash.features.feature_bank.complexity.html">eegdash.features.feature_bank.complexity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/api-features/eegdash.features.feature_bank.connectivity.html">eegdash.features.feature_bank.connectivity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/api-features/eegdash.features.feature_bank.csp.html">eegdash.features.feature_bank.csp</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/api-features/eegdash.features.feature_bank.dimensionality.html">eegdash.features.feature_bank.dimensionality</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/api-features/eegdash.features.feature_bank.signal.html">eegdash.features.feature_bank.signal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/api-features/eegdash.features.feature_bank.spectral.html">eegdash.features.feature_bank.spectral</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/api-features/eegdash.features.feature_bank.utils.html">eegdash.features.feature_bank.utils</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="api_dataset.html">Datasets API</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="eegdash.EEGDashDataset.html">EEGDashDataset</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.EEGChallengeDataset.html">EEGChallengeDataset</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.DS001785.html">eegdash.dataset.DS001785</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.DS001787.html">eegdash.dataset.DS001787</a></li>
@@ -802,7 +808,7 @@
 <dl class="py class">
 <dt class="sig sig-object py" id="eegdash.dataset.DS005516">
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">eegdash.dataset.</span></span><span class="sig-name descname"><span class="pre">DS005516</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cache_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">query</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s3_bucket</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/dataset/dataset.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.dataset.DS005516" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <a class="reference internal" href="../generated/api-core/eegdash.api.html#eegdash.api.EEGDashDataset" title="eegdash.api.EEGDashDataset"><code class="xref py py-class docutils literal notranslate"><span class="pre">EEGDashDataset</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="eegdash.EEGDashDataset.html#eegdash.EEGDashDataset" title="eegdash.dataset.dataset.EEGDashDataset"><code class="xref py py-class docutils literal notranslate"><span class="pre">EEGDashDataset</span></code></a></p>
 <p>OpenNeuro dataset <code class="docutils literal notranslate"><span class="pre">ds005516</span></code>.</p>
 <p><strong>Modality</strong>: nan | <strong>Type</strong>: nan | <strong>Subjects</strong>: nan</p>
 <p>This dataset contains 430 subjects with 3397 recordings across 8 tasks.
@@ -834,7 +840,7 @@ Total duration: 256.932 hours. Dataset size: 219.39 GB.</p>
 </div></blockquote>
 <p>Short overview of dataset ds005516 more details in the <a class="reference external" href="https://nemar.org/dataexplorer/detail?dataset_id=ds005516">NeMAR documentation</a>.</p>
 <p>This dataset class provides convenient access to the <code class="docutils literal notranslate"><span class="pre">ds005516</span></code> dataset through the EEGDash interface.
-It inherits all functionality from <a class="reference internal" href="../generated/api-core/eegdash.api.html#eegdash.api.EEGDashDataset" title="eegdash.api.EEGDashDataset"><code class="xref py py-class docutils literal notranslate"><span class="pre">EEGDashDataset</span></code></a> with the dataset filter pre-configured.</p>
+It inherits all functionality from <a class="reference internal" href="eegdash.EEGDashDataset.html#eegdash.EEGDashDataset" title="eegdash.dataset.dataset.EEGDashDataset"><code class="xref py py-class docutils literal notranslate"><span class="pre">EEGDashDataset</span></code></a> with the dataset filter pre-configured.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -922,42 +928,17 @@ for each window.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="eegdash.dataset.DS005516.save">
-<span class="sig-name descname"><span class="pre">save</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">offset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/.venv/lib/python3.11/site-packages/braindecode/datasets/base.py#L705-L792"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.dataset.DS005516.save" title="Link to this definition">#</a></dt>
-<dd><p>Save datasets to files by creating one subdirectory for each dataset:
-path/</p>
-<blockquote>
-<div><dl class="simple">
-<dt>0/</dt><dd><p>0-raw.fif | 0-epo.fif
-description.json
-raw_preproc_kwargs.json (if raws were preprocessed)
-window_kwargs.json (if this is a windowed dataset)
-window_preproc_kwargs.json  (if windows were preprocessed)
-target_name.json (if target_name is not None and dataset is raw)</p>
-</dd>
-<dt>1/</dt><dd><p>1-raw.fif | 1-epo.fif
-description.json
-raw_preproc_kwargs.json (if raws were preprocessed)
-window_kwargs.json (if this is a windowed dataset)
-window_preproc_kwargs.json  (if windows were preprocessed)
-target_name.json (if target_name is not None and dataset is raw)</p>
-</dd>
-</dl>
-</div></blockquote>
+<span class="sig-name descname"><span class="pre">save</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/sccn/EEGDash/blob/main/eegdash/dataset/dataset.py#L499-L514"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.dataset.DS005516.save" title="Link to this definition">#</a></dt>
+<dd><p>Save the dataset to disk.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>path</strong> (<em>str</em>) – <dl class="simple">
-<dt>Directory in which subdirectories are created to store</dt><dd><p>-raw.fif | -epo.fif and .json files to.</p>
-</dd>
-</dl>
-</p></li>
-<li><p><strong>overwrite</strong> (<em>bool</em>) – Whether to delete old subdirectories that will be saved to in this
-call.</p></li>
-<li><p><strong>offset</strong> (<em>int</em>) – If provided, the integer is added to the id of the dataset in the
-concat. This is useful in the setting of very large datasets, where
-one dataset has to be processed and saved at a time to account for
-its original position.</p></li>
+<li><p><strong>path</strong> (<em>str</em><em> or </em><em>Path</em>) – Destination file path.</p></li>
+<li><p><strong>overwrite</strong> (<em>bool</em><em>, </em><em>default False</em>) – If True, overwrite existing file.</p></li>
 </ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
 </dd>
 </dl>
 </dd></dl>

@@ -131,12 +131,6 @@ Imports and setup
     from joblib import Parallel, delayed
 
 
-
-
-
-
-
-
 .. GENERATED FROM PYTHON SOURCE LINES 106-114
 
 Check GPU availability
@@ -163,22 +157,6 @@ This can be done by navigating to `Runtime` > `Change runtime type` and selectin
             "selecting 'T4 GPU'\nunder 'Hardware accelerator'."
         )
     print(msg)
-
-
-
-
-
-.. rst-class:: sphx-glr-script-out
-
- .. code-block:: none
-
-    No GPU found. Training will be carried out on CPU, which might be slower.
-
-    If running on Google Colab, you can request a GPU runtime by clicking
-    `Runtime/Change runtime type` in the top bar menu, then selecting 'T4 GPU'
-    under 'Hardware accelerator'.
-
-
 
 
 .. GENERATED FROM PYTHON SOURCE LINES 127-170
@@ -316,36 +294,6 @@ Stimulus demonstration
     raws = Parallel(n_jobs=-1)(delayed(lambda d: d.raw)(d) for d in dataset_ccd.datasets)
 
 
-
-
-
-.. rst-class:: sphx-glr-script-out
-
- .. code-block:: none
-
-    ╭────────────────────── EEG 2025 Competition Data Notice ──────────────────────╮
-    │ This object loads the HBN dataset that has been preprocessed for the EEG     │
-    │ Challenge:                                                                   │
-    │   * Downsampled from 500Hz to 100Hz                                          │
-    │   * Bandpass filtered (0.5-50 Hz)                                            │
-    │                                                                              │
-    │ For full preprocessing applied for competition details, see:                 │
-    │   https://github.com/eeg2025/downsample-datasets                             │
-    │                                                                              │
-    │ The HBN dataset have some preprocessing applied by the HBN team:             │
-    │   * Re-reference (Cz Channel)                                                │
-    │                                                                              │
-    │ IMPORTANT: The data accessed via `EEGChallengeDataset` is NOT identical to   │
-    │ what you get from EEGDashDataset directly.                                   │
-    │ If you are participating in the competition, always use                      │
-    │ `EEGChallengeDataset` to ensure consistency with the challenge data.         │
-    ╰──────────────────────── Source: EEGChallengeDataset ─────────────────────────╯
-    Number of recordings in the dataset: 60
-    Number of unique subjects in the dataset: 20
-
-
-
-
 .. GENERATED FROM PYTHON SOURCE LINES 253-267
 
 Alternatives for Downloading the data
@@ -424,77 +372,6 @@ So we epoch after the stimulus moment with a beginning shift of 500 ms.
         ),
     )
 
-
-
-
-.. rst-class:: sphx-glr-script-out
-
- .. code-block:: none
-
-    Used Annotations descriptions: [np.str_('stimulus_anchor')]
-    Used Annotations descriptions: [np.str_('stimulus_anchor')]
-    Used Annotations descriptions: [np.str_('stimulus_anchor')]
-    Used Annotations descriptions: [np.str_('stimulus_anchor')]
-    Used Annotations descriptions: [np.str_('stimulus_anchor')]
-    Used Annotations descriptions: [np.str_('stimulus_anchor')]
-    Used Annotations descriptions: [np.str_('stimulus_anchor')]
-    Used Annotations descriptions: [np.str_('stimulus_anchor')]
-    Used Annotations descriptions: [np.str_('stimulus_anchor')]
-    Used Annotations descriptions: [np.str_('stimulus_anchor')]
-    Used Annotations descriptions: [np.str_('stimulus_anchor')]
-    Used Annotations descriptions: [np.str_('stimulus_anchor')]
-    Used Annotations descriptions: [np.str_('stimulus_anchor')]
-    Used Annotations descriptions: [np.str_('stimulus_anchor')]
-    Used Annotations descriptions: [np.str_('stimulus_anchor')]
-    Used Annotations descriptions: [np.str_('stimulus_anchor')]
-    Used Annotations descriptions: [np.str_('stimulus_anchor')]
-    Used Annotations descriptions: [np.str_('stimulus_anchor')]
-    Used Annotations descriptions: [np.str_('stimulus_anchor')]
-    Used Annotations descriptions: [np.str_('stimulus_anchor')]
-    Used Annotations descriptions: [np.str_('stimulus_anchor')]
-    Used Annotations descriptions: [np.str_('stimulus_anchor')]
-    Used Annotations descriptions: [np.str_('stimulus_anchor')]
-    Used Annotations descriptions: [np.str_('stimulus_anchor')]
-    Used Annotations descriptions: [np.str_('stimulus_anchor')]
-    Used Annotations descriptions: [np.str_('stimulus_anchor')]
-    Used Annotations descriptions: [np.str_('stimulus_anchor')]
-    Used Annotations descriptions: [np.str_('stimulus_anchor')]
-    Used Annotations descriptions: [np.str_('stimulus_anchor')]
-    Used Annotations descriptions: [np.str_('stimulus_anchor')]
-    Used Annotations descriptions: [np.str_('stimulus_anchor')]
-    Used Annotations descriptions: [np.str_('stimulus_anchor')]
-    Used Annotations descriptions: [np.str_('stimulus_anchor')]
-    Used Annotations descriptions: [np.str_('stimulus_anchor')]
-    Used Annotations descriptions: [np.str_('stimulus_anchor')]
-    Used Annotations descriptions: [np.str_('stimulus_anchor')]
-    Used Annotations descriptions: [np.str_('stimulus_anchor')]
-    Used Annotations descriptions: [np.str_('stimulus_anchor')]
-    Used Annotations descriptions: [np.str_('stimulus_anchor')]
-    Used Annotations descriptions: [np.str_('stimulus_anchor')]
-    Used Annotations descriptions: [np.str_('stimulus_anchor')]
-    Used Annotations descriptions: [np.str_('stimulus_anchor')]
-    Used Annotations descriptions: [np.str_('stimulus_anchor')]
-    Used Annotations descriptions: [np.str_('stimulus_anchor')]
-    Used Annotations descriptions: [np.str_('stimulus_anchor')]
-    Used Annotations descriptions: [np.str_('stimulus_anchor')]
-    Used Annotations descriptions: [np.str_('stimulus_anchor')]
-    Used Annotations descriptions: [np.str_('stimulus_anchor')]
-    Used Annotations descriptions: [np.str_('stimulus_anchor')]
-    Used Annotations descriptions: [np.str_('stimulus_anchor')]
-    Used Annotations descriptions: [np.str_('stimulus_anchor')]
-    Used Annotations descriptions: [np.str_('stimulus_anchor')]
-    Used Annotations descriptions: [np.str_('stimulus_anchor')]
-    Used Annotations descriptions: [np.str_('stimulus_anchor')]
-    Used Annotations descriptions: [np.str_('stimulus_anchor')]
-    Used Annotations descriptions: [np.str_('stimulus_anchor')]
-    Used Annotations descriptions: [np.str_('stimulus_anchor')]
-    Used Annotations descriptions: [np.str_('stimulus_anchor')]
-    Used Annotations descriptions: [np.str_('stimulus_anchor')]
-    Used Annotations descriptions: [np.str_('stimulus_anchor')]
-
-
-
-
 .. GENERATED FROM PYTHON SOURCE LINES 324-326
 
 Inspect the label distribution
@@ -519,17 +396,6 @@ Inspect the label distribution
     ax.set_ylabel("Count")
     plt.tight_layout()
     plt.show()
-
-
-
-
-
-.. image-sg:: /generated/auto_examples/eeg2025/images/sphx_glr_tutorial_challenge_1_001.png
-   :alt: Response Time Distribution
-   :srcset: /generated/auto_examples/eeg2025/images/sphx_glr_tutorial_challenge_1_001.png
-   :class: sphx-glr-single-img
-
-
 
 
 
@@ -592,21 +458,6 @@ Extract meta information
     print(f"Test:\t{len(test_set)}")
 
 
-
-
-
-.. rst-class:: sphx-glr-script-out
-
- .. code-block:: none
-
-    Number of examples in each split in the minirelease
-    Train:  981
-    Valid:  183
-    Test:   50
-
-
-
-
 .. GENERATED FROM PYTHON SOURCE LINES 396-398
 
 Create dataloaders
@@ -629,12 +480,6 @@ Create dataloaders
     test_loader = DataLoader(
         test_set, batch_size=batch_size, shuffle=False, num_workers=num_workers
     )
-
-
-
-
-
-
 
 
 .. GENERATED FROM PYTHON SOURCE LINES 413-421
@@ -661,106 +506,6 @@ definitions above.
 
     print(model)
     model.to(device)
-
-
-
-
-
-
-.. rst-class:: sphx-glr-script-out
-
- .. code-block:: none
-
-    /home/runner/work/EEGDash/EEGDash/.venv/lib/python3.11/site-packages/torch/nn/modules/conv.py:543: UserWarning: Using padding='same' with even kernel lengths and odd dilation may require a zero-padded copy of the input be created (Triggered internally at /pytorch/aten/src/ATen/native/Convolution.cpp:1027.)
-      return F.conv2d(
-    ================================================================================================================================================================
-    Layer (type (var_name):depth-idx)                            Input Shape               Output Shape              Param #                   Kernel Shape
-    ================================================================================================================================================================
-    EEGNeX (EEGNeX)                                              [1, 129, 200]             [1, 1]                    --                        --
-    ├─Sequential (block_1): 1-1                                  [1, 129, 200]             [1, 8, 129, 200]          --                        --
-    │    └─Rearrange (0): 2-1                                    [1, 129, 200]             [1, 1, 129, 200]          --                        --
-    │    └─Conv2d (1): 2-2                                       [1, 1, 129, 200]          [1, 8, 129, 200]          512                       [1, 64]
-    │    └─BatchNorm2d (2): 2-3                                  [1, 8, 129, 200]          [1, 8, 129, 200]          16                        --
-    ├─Sequential (block_2): 1-2                                  [1, 8, 129, 200]          [1, 32, 129, 200]         --                        --
-    │    └─Conv2d (0): 2-4                                       [1, 8, 129, 200]          [1, 32, 129, 200]         16,384                    [1, 64]
-    │    └─BatchNorm2d (1): 2-5                                  [1, 32, 129, 200]         [1, 32, 129, 200]         64                        --
-    ├─Sequential (block_3): 1-3                                  [1, 32, 129, 200]         [1, 64, 1, 50]            --                        --
-    │    └─ParametrizedConv2dWithConstraint (0): 2-6             [1, 32, 129, 200]         [1, 64, 1, 200]           --                        [129, 1]
-    │    │    └─ModuleDict (parametrizations): 3-1               --                        --                        8,256                     --
-    │    └─BatchNorm2d (1): 2-7                                  [1, 64, 1, 200]           [1, 64, 1, 200]           128                       --
-    │    └─ELU (2): 2-8                                          [1, 64, 1, 200]           [1, 64, 1, 200]           --                        --
-    │    └─AvgPool2d (3): 2-9                                    [1, 64, 1, 200]           [1, 64, 1, 50]            --                        [1, 4]
-    │    └─Dropout (4): 2-10                                     [1, 64, 1, 50]            [1, 64, 1, 50]            --                        --
-    ├─Sequential (block_4): 1-4                                  [1, 64, 1, 50]            [1, 32, 1, 50]            --                        --
-    │    └─Conv2d (0): 2-11                                      [1, 64, 1, 50]            [1, 32, 1, 50]            32,768                    [1, 16]
-    │    └─BatchNorm2d (1): 2-12                                 [1, 32, 1, 50]            [1, 32, 1, 50]            64                        --
-    ├─Sequential (block_5): 1-5                                  [1, 32, 1, 50]            [1, 48]                   --                        --
-    │    └─Conv2d (0): 2-13                                      [1, 32, 1, 50]            [1, 8, 1, 50]             4,096                     [1, 16]
-    │    └─BatchNorm2d (1): 2-14                                 [1, 8, 1, 50]             [1, 8, 1, 50]             16                        --
-    │    └─ELU (2): 2-15                                         [1, 8, 1, 50]             [1, 8, 1, 50]             --                        --
-    │    └─AvgPool2d (3): 2-16                                   [1, 8, 1, 50]             [1, 8, 1, 6]              --                        [1, 8]
-    │    └─Dropout (4): 2-17                                     [1, 8, 1, 6]              [1, 8, 1, 6]              --                        --
-    │    └─Flatten (5): 2-18                                     [1, 8, 1, 6]              [1, 48]                   --                        --
-    ├─ParametrizedLinearWithConstraint (final_layer): 1-6        [1, 48]                   [1, 1]                    1                         --
-    │    └─ModuleDict (parametrizations): 2-19                   --                        --                        --                        --
-    │    │    └─ParametrizationList (weight): 3-2                --                        [1, 48]                   48                        --
-    ================================================================================================================================================================
-    Total params: 62,353
-    Trainable params: 62,353
-    Non-trainable params: 0
-    Total mult-adds (Units.MEGABYTES): 437.76
-    ================================================================================================================================================================
-    Input size (MB): 0.10
-    Forward/backward pass size (MB): 16.65
-    Params size (MB): 0.22
-    Estimated Total Size (MB): 16.97
-    ================================================================================================================================================================
-
-    EEGNeX(
-      (block_1): Sequential(
-        (0): Rearrange('batch ch time -> batch 1 ch time')
-        (1): Conv2d(1, 8, kernel_size=(1, 64), stride=(1, 1), padding=same, bias=False)
-        (2): BatchNorm2d(8, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-      )
-      (block_2): Sequential(
-        (0): Conv2d(8, 32, kernel_size=(1, 64), stride=(1, 1), padding=same, bias=False)
-        (1): BatchNorm2d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-      )
-      (block_3): Sequential(
-        (0): ParametrizedConv2dWithConstraint(
-          32, 64, kernel_size=(129, 1), stride=(1, 1), groups=32, bias=False
-          (parametrizations): ModuleDict(
-            (weight): ParametrizationList(
-              (0): MaxNormParametrize()
-            )
-          )
-        )
-        (1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-        (2): ELU(alpha=1.0)
-        (3): AvgPool2d(kernel_size=(1, 4), stride=(1, 4), padding=(0, 1))
-        (4): Dropout(p=0.5, inplace=False)
-      )
-      (block_4): Sequential(
-        (0): Conv2d(64, 32, kernel_size=(1, 16), stride=(1, 1), padding=same, dilation=(1, 2), bias=False)
-        (1): BatchNorm2d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-      )
-      (block_5): Sequential(
-        (0): Conv2d(32, 8, kernel_size=(1, 16), stride=(1, 1), padding=same, dilation=(1, 4), bias=False)
-        (1): BatchNorm2d(8, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-        (2): ELU(alpha=1.0)
-        (3): AvgPool2d(kernel_size=(1, 8), stride=(1, 8), padding=(0, 1))
-        (4): Dropout(p=0.5, inplace=False)
-        (5): Flatten(start_dim=1, end_dim=-1)
-      )
-      (final_layer): ParametrizedLinearWithConstraint(
-        in_features=48, out_features=1, bias=True
-        (parametrizations): ModuleDict(
-          (weight): ParametrizationList(
-            (0): MaxNormParametrize()
-          )
-        )
-      )
-    )
 
 
 
@@ -879,12 +624,6 @@ We provide a simple training and validation loop below.
 
 
 
-
-
-
-
-
-
 .. GENERATED FROM PYTHON SOURCE LINES 541-543
 
 Train the model
@@ -943,42 +682,6 @@ Train the model
         model.load_state_dict(best_state)
 
 
-
-
-
-.. rst-class:: sphx-glr-script-out
-
- .. code-block:: none
-
-    Epoch 1/5:       0%|          | 0/8 [00:00<?, ?it/s]    Epoch 1, Batch 1/8, Loss: 2.804945, RMSE: 1.674797:   0%|          | 0/8 [00:05<?, ?it/s]    Epoch 1, Batch 1/8, Loss: 2.804945, RMSE: 1.674797:  12%|█▎        | 1/8 [00:05<00:41,  5.95s/it]    Epoch 1, Batch 2/8, Loss: 2.720049, RMSE: 1.662076:  12%|█▎        | 1/8 [00:11<00:41,  5.95s/it]    Epoch 1, Batch 2/8, Loss: 2.720049, RMSE: 1.662076:  25%|██▌       | 2/8 [00:11<00:34,  5.74s/it]    Epoch 1, Batch 3/8, Loss: 2.714117, RMSE: 1.657218:  25%|██▌       | 2/8 [00:17<00:34,  5.74s/it]    Epoch 1, Batch 3/8, Loss: 2.714117, RMSE: 1.657218:  38%|███▊      | 3/8 [00:17<00:28,  5.67s/it]    Epoch 1, Batch 4/8, Loss: 2.829088, RMSE: 1.663445:  38%|███▊      | 3/8 [00:22<00:28,  5.67s/it]    Epoch 1, Batch 4/8, Loss: 2.829088, RMSE: 1.663445:  50%|█████     | 4/8 [00:22<00:22,  5.65s/it]    Epoch 1, Batch 5/8, Loss: 2.743809, RMSE: 1.662047:  50%|█████     | 4/8 [00:28<00:22,  5.65s/it]    Epoch 1, Batch 5/8, Loss: 2.743809, RMSE: 1.662047:  62%|██████▎   | 5/8 [00:28<00:16,  5.62s/it]    Epoch 1, Batch 6/8, Loss: 2.678480, RMSE: 1.657834:  62%|██████▎   | 5/8 [00:33<00:16,  5.62s/it]    Epoch 1, Batch 6/8, Loss: 2.678480, RMSE: 1.657834:  75%|███████▌  | 6/8 [00:33<00:11,  5.60s/it]    Epoch 1, Batch 7/8, Loss: 2.581510, RMSE: 1.650628:  75%|███████▌  | 6/8 [00:39<00:11,  5.60s/it]    Epoch 1, Batch 7/8, Loss: 2.581510, RMSE: 1.650628:  88%|████████▊ | 7/8 [00:39<00:05,  5.60s/it]    Epoch 1, Batch 8/8, Loss: 2.433732, RMSE: 1.642976:  88%|████████▊ | 7/8 [00:43<00:05,  5.60s/it]    Epoch 1, Batch 8/8, Loss: 2.433732, RMSE: 1.642976: 100%|██████████| 8/8 [00:43<00:00,  4.97s/it]    Epoch 1, Batch 8/8, Loss: 2.433732, RMSE: 1.642976: 100%|██████████| 8/8 [00:43<00:00,  5.39s/it]
-      0%|          | 0/1 [00:00<?, ?it/s]    Val Batch 1/1, Loss: 2.774135, RMSE: 1.665573:   0%|          | 0/1 [00:00<?, ?it/s]    Val Batch 1/1, Loss: 2.774135, RMSE: 1.665573: 100%|██████████| 1/1 [00:00<00:00,  1.81it/s]    Val Batch 1/1, Loss: 2.774135, RMSE: 1.665573: 100%|██████████| 1/1 [00:00<00:00,  1.80it/s]
-    Val RMSE: 1.665573, Val Loss: 2.774135
-
-    Train RMSE: 1.642976, Average Train Loss: 2.688216, Val RMSE: 1.665573, Average Val Loss: 2.774135
-    Epoch 2/5:       0%|          | 0/8 [00:00<?, ?it/s]    Epoch 2, Batch 1/8, Loss: 2.361676, RMSE: 1.536775:   0%|          | 0/8 [00:05<?, ?it/s]    Epoch 2, Batch 1/8, Loss: 2.361676, RMSE: 1.536775:  12%|█▎        | 1/8 [00:05<00:38,  5.54s/it]    Epoch 2, Batch 2/8, Loss: 2.387175, RMSE: 1.540917:  12%|█▎        | 1/8 [00:11<00:38,  5.54s/it]    Epoch 2, Batch 2/8, Loss: 2.387175, RMSE: 1.540917:  25%|██▌       | 2/8 [00:11<00:33,  5.52s/it]    Epoch 2, Batch 3/8, Loss: 2.414732, RMSE: 1.545271:  25%|██▌       | 2/8 [00:16<00:33,  5.52s/it]    Epoch 2, Batch 3/8, Loss: 2.414732, RMSE: 1.545271:  38%|███▊      | 3/8 [00:16<00:27,  5.51s/it]    Epoch 2, Batch 4/8, Loss: 2.129933, RMSE: 1.524264:  38%|███▊      | 3/8 [00:22<00:27,  5.51s/it]    Epoch 2, Batch 4/8, Loss: 2.129933, RMSE: 1.524264:  50%|█████     | 4/8 [00:22<00:22,  5.51s/it]    Epoch 2, Batch 5/8, Loss: 1.931249, RMSE: 1.498317:  50%|█████     | 4/8 [00:27<00:22,  5.51s/it]    Epoch 2, Batch 5/8, Loss: 1.931249, RMSE: 1.498317:  62%|██████▎   | 5/8 [00:27<00:16,  5.51s/it]    Epoch 2, Batch 6/8, Loss: 1.940712, RMSE: 1.481299:  62%|██████▎   | 5/8 [00:33<00:16,  5.51s/it]    Epoch 2, Batch 6/8, Loss: 1.940712, RMSE: 1.481299:  75%|███████▌  | 6/8 [00:33<00:11,  5.52s/it]    Epoch 2, Batch 7/8, Loss: 1.732118, RMSE: 1.458845:  75%|███████▌  | 6/8 [00:38<00:11,  5.52s/it]    Epoch 2, Batch 7/8, Loss: 1.732118, RMSE: 1.458845:  88%|████████▊ | 7/8 [00:38<00:05,  5.52s/it]    Epoch 2, Batch 8/8, Loss: 1.507685, RMSE: 1.440299:  88%|████████▊ | 7/8 [00:42<00:05,  5.52s/it]    Epoch 2, Batch 8/8, Loss: 1.507685, RMSE: 1.440299: 100%|██████████| 8/8 [00:42<00:00,  4.90s/it]    Epoch 2, Batch 8/8, Loss: 1.507685, RMSE: 1.440299: 100%|██████████| 8/8 [00:42<00:00,  5.27s/it]
-      0%|          | 0/1 [00:00<?, ?it/s]    Val Batch 1/1, Loss: 2.367503, RMSE: 1.538669:   0%|          | 0/1 [00:00<?, ?it/s]    Val Batch 1/1, Loss: 2.367503, RMSE: 1.538669: 100%|██████████| 1/1 [00:00<00:00,  1.77it/s]    Val Batch 1/1, Loss: 2.367503, RMSE: 1.538669: 100%|██████████| 1/1 [00:00<00:00,  1.77it/s]
-    Val RMSE: 1.538669, Val Loss: 2.367503
-
-    Train RMSE: 1.440299, Average Train Loss: 2.050660, Val RMSE: 1.538669, Average Val Loss: 2.367503
-    Epoch 3/5:       0%|          | 0/8 [00:00<?, ?it/s]    Epoch 3, Batch 1/8, Loss: 1.254147, RMSE: 1.119887:   0%|          | 0/8 [00:05<?, ?it/s]    Epoch 3, Batch 1/8, Loss: 1.254147, RMSE: 1.119887:  12%|█▎        | 1/8 [00:05<00:38,  5.51s/it]    Epoch 3, Batch 2/8, Loss: 0.936626, RMSE: 1.046607:  12%|█▎        | 1/8 [00:11<00:38,  5.51s/it]    Epoch 3, Batch 2/8, Loss: 0.936626, RMSE: 1.046607:  25%|██▌       | 2/8 [00:11<00:33,  5.52s/it]    Epoch 3, Batch 3/8, Loss: 0.992308, RMSE: 1.030062:  25%|██▌       | 2/8 [00:16<00:33,  5.52s/it]    Epoch 3, Batch 3/8, Loss: 0.992308, RMSE: 1.030062:  38%|███▊      | 3/8 [00:16<00:27,  5.51s/it]    Epoch 3, Batch 4/8, Loss: 0.982872, RMSE: 1.020533:  38%|███▊      | 3/8 [00:22<00:27,  5.51s/it]    Epoch 3, Batch 4/8, Loss: 0.982872, RMSE: 1.020533:  50%|█████     | 4/8 [00:22<00:22,  5.51s/it]    Epoch 3, Batch 5/8, Loss: 0.905061, RMSE: 1.007076:  50%|█████     | 4/8 [00:27<00:22,  5.51s/it]    Epoch 3, Batch 5/8, Loss: 0.905061, RMSE: 1.007076:  62%|██████▎   | 5/8 [00:27<00:16,  5.50s/it]    Epoch 3, Batch 6/8, Loss: 0.914558, RMSE: 0.998797:  62%|██████▎   | 5/8 [00:33<00:16,  5.50s/it]    Epoch 3, Batch 6/8, Loss: 0.914558, RMSE: 0.998797:  75%|███████▌  | 6/8 [00:33<00:11,  5.50s/it]    Epoch 3, Batch 7/8, Loss: 0.659756, RMSE: 0.974337:  75%|███████▌  | 6/8 [00:38<00:11,  5.50s/it]    Epoch 3, Batch 7/8, Loss: 0.659756, RMSE: 0.974337:  88%|████████▊ | 7/8 [00:38<00:05,  5.49s/it]    Epoch 3, Batch 8/8, Loss: 0.557627, RMSE: 0.956762:  88%|████████▊ | 7/8 [00:42<00:05,  5.49s/it]    Epoch 3, Batch 8/8, Loss: 0.557627, RMSE: 0.956762: 100%|██████████| 8/8 [00:42<00:00,  4.88s/it]    Epoch 3, Batch 8/8, Loss: 0.557627, RMSE: 0.956762: 100%|██████████| 8/8 [00:42<00:00,  5.26s/it]
-      0%|          | 0/1 [00:00<?, ?it/s]    Val Batch 1/1, Loss: 1.447026, RMSE: 1.202924:   0%|          | 0/1 [00:00<?, ?it/s]    Val Batch 1/1, Loss: 1.447026, RMSE: 1.202924: 100%|██████████| 1/1 [00:00<00:00,  1.80it/s]    Val Batch 1/1, Loss: 1.447026, RMSE: 1.202924: 100%|██████████| 1/1 [00:00<00:00,  1.80it/s]
-    Val RMSE: 1.202924, Val Loss: 1.447026
-
-    Train RMSE: 0.956762, Average Train Loss: 0.900369, Val RMSE: 1.202924, Average Val Loss: 1.447026
-    Epoch 4/5:       0%|          | 0/8 [00:00<?, ?it/s]    Epoch 4, Batch 1/8, Loss: 0.557235, RMSE: 0.746482:   0%|          | 0/8 [00:05<?, ?it/s]    Epoch 4, Batch 1/8, Loss: 0.557235, RMSE: 0.746482:  12%|█▎        | 1/8 [00:05<00:38,  5.47s/it]    Epoch 4, Batch 2/8, Loss: 0.434160, RMSE: 0.704058:  12%|█▎        | 1/8 [00:10<00:38,  5.47s/it]    Epoch 4, Batch 2/8, Loss: 0.434160, RMSE: 0.704058:  25%|██▌       | 2/8 [00:10<00:32,  5.47s/it]    Epoch 4, Batch 3/8, Loss: 0.528061, RMSE: 0.711678:  25%|██▌       | 2/8 [00:16<00:32,  5.47s/it]    Epoch 4, Batch 3/8, Loss: 0.528061, RMSE: 0.711678:  38%|███▊      | 3/8 [00:16<00:27,  5.46s/it]    Epoch 4, Batch 4/8, Loss: 0.485393, RMSE: 0.707963:  38%|███▊      | 3/8 [00:21<00:27,  5.46s/it]    Epoch 4, Batch 4/8, Loss: 0.485393, RMSE: 0.707963:  50%|█████     | 4/8 [00:21<00:21,  5.48s/it]    Epoch 4, Batch 5/8, Loss: 0.586323, RMSE: 0.719885:  50%|█████     | 4/8 [00:27<00:21,  5.48s/it]    Epoch 4, Batch 5/8, Loss: 0.586323, RMSE: 0.719885:  62%|██████▎   | 5/8 [00:27<00:16,  5.48s/it]    Epoch 4, Batch 6/8, Loss: 0.550922, RMSE: 0.723659:  62%|██████▎   | 5/8 [00:32<00:16,  5.48s/it]    Epoch 4, Batch 6/8, Loss: 0.550922, RMSE: 0.723659:  75%|███████▌  | 6/8 [00:32<00:10,  5.49s/it]    Epoch 4, Batch 7/8, Loss: 0.496363, RMSE: 0.720957:  75%|███████▌  | 6/8 [00:38<00:10,  5.49s/it]    Epoch 4, Batch 7/8, Loss: 0.496363, RMSE: 0.720957:  88%|████████▊ | 7/8 [00:38<00:05,  5.48s/it]    Epoch 4, Batch 8/8, Loss: 0.431091, RMSE: 0.715608:  88%|████████▊ | 7/8 [00:41<00:05,  5.48s/it]    Epoch 4, Batch 8/8, Loss: 0.431091, RMSE: 0.715608: 100%|██████████| 8/8 [00:41<00:00,  4.87s/it]    Epoch 4, Batch 8/8, Loss: 0.431091, RMSE: 0.715608: 100%|██████████| 8/8 [00:41<00:00,  5.24s/it]
-      0%|          | 0/1 [00:00<?, ?it/s]    Val Batch 1/1, Loss: 0.943596, RMSE: 0.971389:   0%|          | 0/1 [00:00<?, ?it/s]    Val Batch 1/1, Loss: 0.943596, RMSE: 0.971389: 100%|██████████| 1/1 [00:00<00:00,  1.79it/s]    Val Batch 1/1, Loss: 0.943596, RMSE: 0.971389: 100%|██████████| 1/1 [00:00<00:00,  1.79it/s]
-    Val RMSE: 0.971389, Val Loss: 0.943596
-
-    Train RMSE: 0.715608, Average Train Loss: 0.508693, Val RMSE: 0.971389, Average Val Loss: 0.943596
-    Epoch 5/5:       0%|          | 0/8 [00:00<?, ?it/s]    Epoch 5, Batch 1/8, Loss: 0.461542, RMSE: 0.679369:   0%|          | 0/8 [00:05<?, ?it/s]    Epoch 5, Batch 1/8, Loss: 0.461542, RMSE: 0.679369:  12%|█▎        | 1/8 [00:05<00:38,  5.44s/it]    Epoch 5, Batch 2/8, Loss: 0.416909, RMSE: 0.662741:  12%|█▎        | 1/8 [00:10<00:38,  5.44s/it]    Epoch 5, Batch 2/8, Loss: 0.416909, RMSE: 0.662741:  25%|██▌       | 2/8 [00:10<00:32,  5.42s/it]    Epoch 5, Batch 3/8, Loss: 0.458665, RMSE: 0.667612:  25%|██▌       | 2/8 [00:16<00:32,  5.42s/it]    Epoch 5, Batch 3/8, Loss: 0.458665, RMSE: 0.667612:  38%|███▊      | 3/8 [00:16<00:27,  5.43s/it]    Epoch 5, Batch 4/8, Loss: 0.449484, RMSE: 0.668319:  38%|███▊      | 3/8 [00:21<00:27,  5.43s/it]    Epoch 5, Batch 4/8, Loss: 0.449484, RMSE: 0.668319:  50%|█████     | 4/8 [00:21<00:21,  5.42s/it]    Epoch 5, Batch 5/8, Loss: 0.490168, RMSE: 0.674799:  50%|█████     | 4/8 [00:27<00:21,  5.42s/it]    Epoch 5, Batch 5/8, Loss: 0.490168, RMSE: 0.674799:  62%|██████▎   | 5/8 [00:27<00:16,  5.42s/it]    Epoch 5, Batch 6/8, Loss: 0.475042, RMSE: 0.677226:  62%|██████▎   | 5/8 [00:32<00:16,  5.42s/it]    Epoch 5, Batch 6/8, Loss: 0.475042, RMSE: 0.677226:  75%|███████▌  | 6/8 [00:32<00:10,  5.41s/it]    Epoch 5, Batch 7/8, Loss: 0.414124, RMSE: 0.672515:  75%|███████▌  | 6/8 [00:37<00:10,  5.41s/it]    Epoch 5, Batch 7/8, Loss: 0.414124, RMSE: 0.672515:  88%|████████▊ | 7/8 [00:37<00:05,  5.41s/it]    Epoch 5, Batch 8/8, Loss: 0.550227, RMSE: 0.678796:  88%|████████▊ | 7/8 [00:41<00:05,  5.41s/it]    Epoch 5, Batch 8/8, Loss: 0.550227, RMSE: 0.678796: 100%|██████████| 8/8 [00:41<00:00,  4.83s/it]    Epoch 5, Batch 8/8, Loss: 0.550227, RMSE: 0.678796: 100%|██████████| 8/8 [00:41<00:00,  5.19s/it]
-      0%|          | 0/1 [00:00<?, ?it/s]    Val Batch 1/1, Loss: 0.793600, RMSE: 0.890842:   0%|          | 0/1 [00:00<?, ?it/s]    Val Batch 1/1, Loss: 0.793600, RMSE: 0.890842: 100%|██████████| 1/1 [00:00<00:00,  1.81it/s]    Val Batch 1/1, Loss: 0.793600, RMSE: 0.890842: 100%|██████████| 1/1 [00:00<00:00,  1.80it/s]
-    Val RMSE: 0.890842, Val Loss: 0.793600
-
-    Train RMSE: 0.678796, Average Train Loss: 0.464520, Val RMSE: 0.890842, Average Val Loss: 0.793600
-
-
-
-
 .. GENERATED FROM PYTHON SOURCE LINES 592-594
 
 Save the model
@@ -991,24 +694,7 @@ Save the model
     torch.save(model.state_dict(), "weights_challenge_1.pt")
     print("Model saved as 'weights_challenge_1.pt'")
 
-
-
-
-.. rst-class:: sphx-glr-script-out
-
- .. code-block:: none
-
-    Model saved as 'weights_challenge_1.pt'
-
-
-
-
-
-.. rst-class:: sphx-glr-timing
-
-   **Total running time of the script:** (3 minutes 55.740 seconds)
-
-**Estimated memory usage:**  2886 MB
+**Estimated memory usage:**  0 MB
 
 
 .. _sphx_glr_download_generated_auto_examples_eeg2025_tutorial_challenge_1.py:

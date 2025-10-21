@@ -1,12 +1,6 @@
 eegdash.hbn package
 ===================
 
-.. automodule:: eegdash.hbn
-   :members:
-   :noindex:
-   :show-inheritance:
-   :undoc-members:
-
 Submodules
 ----------
 
@@ -15,3 +9,12 @@ Submodules
 
    eegdash.hbn.preprocessing
    eegdash.hbn.windows
+
+Module contents
+---------------
+
+.. automodule:: eegdash.hbn
+   :members:
+   :noindex:
+   :show-inheritance:
+   :undoc-members:

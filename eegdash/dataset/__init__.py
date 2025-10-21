@@ -1,7 +1,8 @@
 """Public API for dataset helpers and dynamically generated datasets."""
 
 from . import dataset as _dataset_mod  # triggers dynamic class registration
-from .dataset import EEGChallengeDataset
+from .bids_dataset import EEGBIDSDataset
+from .dataset import EEGChallengeDataset, EEGDashDataset
 from .registry import register_openneuro_datasets
 
 # Re-export dynamically generated dataset classes at the package level so that
@@ -17,6 +18,11 @@ for _name in getattr(_dataset_mod, "__all__", []):
         globals()[_name] = _obj
         _dyn_names.append(_name)
 
-__all__ = ["EEGChallengeDataset", "register_openneuro_datasets"] + _dyn_names
+__all__ = [
+    "EEGBIDSDataset",
+    "EEGDashDataset",
+    "EEGChallengeDataset",
+    "register_openneuro_datasets",
+] + _dyn_names
 
 del _dataset_mod, _name, _obj, _dyn_names

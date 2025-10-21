@@ -38,14 +38,14 @@ def _extract_features_from_windowsdataset(
     ----------
     win_ds : EEGWindowsDataset or WindowsDataset
         The windowed dataset to extract features from.
-    feature_extractor : FeatureExtractor
+    feature_extractor : ~eegdash.features.extractors.FeatureExtractor
         The feature extractor instance to apply.
     batch_size : int, default 512
         The number of windows to process in each batch.
 
     Returns
     -------
-    FeaturesDataset
+    ~eegdash.features.datasets.FeaturesDataset
         A new dataset containing the extracted features and associated metadata.
 
     """
@@ -109,8 +109,9 @@ def extract_features(
     concat_dataset : BaseConcatDataset
         A concatenated dataset of `WindowsDataset` or `EEGWindowsDataset`
         instances.
-    features : FeatureExtractor or dict or list
-        The feature extractor(s) to apply. Can be a `FeatureExtractor`
+    features : ~eegdash.features.extractors.FeatureExtractor or dict or list
+        The feature extractor(s) to apply. Can be a
+        :class:`~eegdash.features.extractors.FeatureExtractor`
         instance, a dictionary of named feature functions, or a list of
         feature functions.
     batch_size : int, default 512
@@ -121,7 +122,7 @@ def extract_features(
 
     Returns
     -------
-    FeaturesConcatDataset
+    ~eegdash.features.datasets.FeaturesConcatDataset
         A new concatenated dataset containing the extracted features.
 
     """
@@ -152,21 +153,22 @@ def fit_feature_extractors(
     """Fit trainable feature extractors on a dataset.
 
     If the provided feature extractor (or any of its sub-extractors) is
-    trainable (i.e., subclasses `TrainableFeature`), this function iterates
-    through the dataset to fit it.
+    trainable (i.e., subclasses
+    :class:`~eegdash.features.extractors.TrainableFeature`), this function
+    iterates through the dataset to fit it.
 
     Parameters
     ----------
     concat_dataset : BaseConcatDataset
         The dataset to use for fitting the feature extractors.
-    features : FeatureExtractor or dict or list
+    features : ~eegdash.features.extractors.FeatureExtractor or dict or list
         The feature extractor(s) to fit.
     batch_size : int, default 8192
         The batch size to use when iterating through the dataset for fitting.
 
     Returns
     -------
-    FeatureExtractor
+    ~eegdash.features.extractors.FeatureExtractor
         The fitted feature extractor.
 
     """

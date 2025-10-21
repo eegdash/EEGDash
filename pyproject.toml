@@ -82,6 +82,7 @@ docs = [
   "plotly",
   "nbformat",
   "graphviz",
+  "neato",
 ]
 
 digestion = [

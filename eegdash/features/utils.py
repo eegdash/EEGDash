@@ -14,8 +14,8 @@ from braindecode.datasets.base import (
     WindowsDataset,
 )
 
+from . import extractors
 from .datasets import FeaturesConcatDataset, FeaturesDataset
-from .extractors import FeatureExtractor
 
 __all__ = [
     "extract_features",
@@ -25,7 +25,7 @@ __all__ = [
 
 def _extract_features_from_windowsdataset(
     win_ds: EEGWindowsDataset | WindowsDataset,
-    feature_extractor: FeatureExtractor,
+    feature_extractor: extractors.FeatureExtractor,
     batch_size: int = 512,
 ) -> FeaturesDataset:
     """Extract features from a single `WindowsDataset`.
@@ -93,7 +93,7 @@ def _extract_features_from_windowsdataset(
 
 def extract_features(
     concat_dataset: BaseConcatDataset,
-    features: FeatureExtractor | Dict[str, Callable] | List[Callable],
+    features: extractors.FeatureExtractor | Dict[str, Callable] | List[Callable],
     *,
     batch_size: int = 512,
     n_jobs: int = 1,
@@ -128,8 +128,8 @@ def extract_features(
     """
     if isinstance(features, list):
         features = dict(enumerate(features))
-    if not isinstance(features, FeatureExtractor):
-        features = FeatureExtractor(features)
+    if not isinstance(features, extractors.FeatureExtractor):
+        features = extractors.FeatureExtractor(features)
     feature_ds_list = list(
         tqdm(
             Parallel(n_jobs=n_jobs, return_as="generator")(
@@ -147,9 +147,9 @@ def extract_features(
 
 def fit_feature_extractors(
     concat_dataset: BaseConcatDataset,
-    features: FeatureExtractor | Dict[str, Callable] | List[Callable],
+    features: extractors.FeatureExtractor | Dict[str, Callable] | List[Callable],
     batch_size: int = 8192,
-) -> FeatureExtractor:
+) -> extractors.FeatureExtractor:
     """Fit trainable feature extractors on a dataset.
 
     If the provided feature extractor (or any of its sub-extractors) is
@@ -174,8 +174,8 @@ def fit_feature_extractors(
     """
     if isinstance(features, list):
         features = dict(enumerate(features))
-    if not isinstance(features, FeatureExtractor):
-        features = FeatureExtractor(features)
+    if not isinstance(features, extractors.FeatureExtractor):
+        features = extractors.FeatureExtractor(features)
     if not features._is_trainable:
         return features
     features.clear()

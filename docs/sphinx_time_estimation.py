@@ -32,7 +32,7 @@ class TextExtractor(nodes.NodeVisitor):
         raise nodes.SkipNode
 
     def visit_container(self, node):
-        classes = set(node.get("classes", ()))
+        classes = set(node.get("classes", []))
         if classes & SKIP_CONTAINER_CLASSES:
             raise nodes.SkipNode
 

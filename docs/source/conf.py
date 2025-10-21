@@ -1,22 +1,3 @@
-# -- Patch docstring for braindecode BaseConcatDataset.save -------------------
-def patch_save_docstring(app, what, name, obj, options, lines):
-    if name.endswith("BaseConcatDataset.save"):
-        lines[:] = [
-            "Save the dataset to disk.",
-            "",
-            "Parameters",
-            "----------",
-            "path : str",
-            "    Path to save the dataset.",
-            "overwrite : bool, default False",
-            "    Whether to overwrite an existing file.",
-            "",
-            "Returns",
-            "-------",
-            "None",
-        ]
-
-
 import csv
 import importlib
 import inspect
@@ -323,7 +304,9 @@ See Also
 """
 
 
-DATASET_INDEX_TEMPLATE = """{notice}Datasets API
+DATASET_INDEX_TEMPLATE = """{notice}.. _api/dataset/api_dataset:
+
+Datasets API
 =======================
 
 The :mod:`eegdash.dataset` package exposes dynamically registered dataset
@@ -751,7 +734,6 @@ def setup(app):
     if not os.path.exists(backreferences_dir):
         os.makedirs(backreferences_dir)
 
-    app.connect("autodoc-process-docstring", patch_save_docstring)
     app.connect("builder-inited", _generate_dataset_docs)
     app.connect("build-finished", _copy_dataset_summary)
     app.connect("source-read", _inject_counter_values)

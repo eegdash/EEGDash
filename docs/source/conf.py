@@ -1,3 +1,22 @@
+# -- Patch docstring for braindecode BaseConcatDataset.save -------------------
+def patch_save_docstring(app, what, name, obj, options, lines):
+    if name.endswith("BaseConcatDataset.save"):
+        lines[:] = [
+            "Save the dataset to disk.",
+            "",
+            "Parameters",
+            "----------",
+            "path : str",
+            "    Path to save the dataset.",
+            "overwrite : bool, default False",
+            "    Whether to overwrite an existing file.",
+            "",
+            "Returns",
+            "-------",
+            "None",
+        ]
+
+
 import csv
 import importlib
 import inspect
@@ -725,13 +744,14 @@ def _inject_counter_values(app, docname, source) -> None:
 
 
 def setup(app):
-    """Create the back-references directory if it doesn't exist."""
+    """Create the back-references directory and setup Sphinx events."""
     backreferences_dir = os.path.join(
         app.srcdir, sphinx_gallery_conf["backreferences_dir"]
     )
     if not os.path.exists(backreferences_dir):
         os.makedirs(backreferences_dir)
 
+    app.connect("autodoc-process-docstring", patch_save_docstring)
     app.connect("builder-inited", _generate_dataset_docs)
     app.connect("build-finished", _copy_dataset_summary)
     app.connect("source-read", _inject_counter_values)

@@ -106,6 +106,15 @@ Metadata & Database Management
 
      python scripts/data_ingest.py
 
+API Gateway Endpoint
+--------------------
+
+The public HTTP gateway that fronts the MongoDB metadata service lives at
+``|api-base-url|``. Point external tooling, health probes, and API examples at
+that hostname instead of the raw server IP so future migrations only require
+updating the ``|api-base-url|`` substitution in ``docs/source/links.inc``.
+
+
 Remote Storage Mounting
 -----------------------
 

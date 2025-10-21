@@ -10,7 +10,6 @@ from rich.text import Text
 from braindecode.datasets import BaseConcatDataset
 
 from .. import downloader
-from ..api import EEGDash
 from ..bids_eeg_metadata import (
     build_query_from_kwargs,
     merge_participants_fields,
@@ -297,6 +296,9 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
                 )
         elif self.query:
             if self.eeg_dash_instance is None:
+                # to avoid circular import
+                from ..api import EEGDash
+
                 self.eeg_dash_instance = EEGDash()
             datasets = self._find_datasets(
                 query=build_query_from_kwargs(**self.query),

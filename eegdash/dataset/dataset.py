@@ -495,6 +495,24 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
             )
         return datasets
 
+    # just to fix the docstring inheritance until we solved it in braindecode.
+    def save(self, path, overwrite=False):
+        """Save the dataset to disk.
+
+        Parameters
+        ----------
+        path : str or Path
+            Destination file path.
+        overwrite : bool, default False
+            If True, overwrite existing file.
+
+        Returns
+        -------
+        None
+
+        """
+        return super().save(path, overwrite=overwrite)
+
 
 class EEGChallengeDataset(EEGDashDataset):
     """A dataset helper for the EEG 2025 Challenge.

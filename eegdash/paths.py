@@ -22,6 +22,7 @@ def get_default_cache_dir() -> Path:
 
     The function determines the cache directory based on the following
     priority order:
+
     1. The path specified by the ``EEGDASH_CACHE_DIR`` environment variable.
     2. The path specified by the ``MNE_DATA`` configuration in the MNE-Python
        config file.

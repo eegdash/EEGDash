@@ -9,8 +9,8 @@ EEG datasets. It integrates with cloud storage, MongoDB databases, and machine l
 frameworks to streamline EEG research workflows.
 """
 
-from .api import EEGDash, EEGDashDataset
-from .dataset import EEGChallengeDataset
+from .api import EEGDash
+from .dataset import EEGChallengeDataset, EEGDashDataset
 from .hbn import preprocessing
 from .utils import _init_mongo_client
 

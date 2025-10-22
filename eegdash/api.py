@@ -545,26 +545,10 @@ class EEGDash:
         """
         return self.__collection
 
-    def close(self) -> None:
-        """Close the MongoDB connection.
-
-        .. deprecated:: 0.1
-            Connections are now managed globally by :class:`MongoConnectionManager`.
-            This method is a no-op and will be removed in a future version.
-            Use :meth:`EEGDash.close_all_connections` to close all clients.
-        """
-        # Individual instances no longer close the shared client
-        pass
-
     @classmethod
     def close_all_connections(cls) -> None:
         """Close all MongoDB client connections managed by the singleton manager."""
         MongoConnectionManager.close_all()
-
-    def __del__(self) -> None:
-        """Destructor; no explicit action needed due to global connection manager."""
-        # No longer needed since we're using singleton pattern
-        pass
 
 
 __all__ = ["EEGDash"]

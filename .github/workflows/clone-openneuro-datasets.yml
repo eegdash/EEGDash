@@ -1,0 +1,98 @@
+name: Clone OpenNeuro Datasets
+
+on:
+  schedule:
+    # Run weekly on Monday at 02:00 UTC (after fetch completes)
+    - cron: '0 2 * * 1'
+  workflow_dispatch:  # Allow manual triggering
+  # TODO: Add other triggers here as needed
+
+jobs:
+  clone-datasets:
+    runs-on: ubuntu-latest
+    timeout-minutes: 720  # 12 hours max for all clones
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Verify Python script and dataset listings
+        run: |
+          if [ ! -f scripts/ingestions/clone_openneuro_datasets.py ]; then
+            echo "Error: clone_openneuro_datasets.py not found"
+            exit 1
+          fi
+          if [ ! -f consolidated/openneuro_datasets.json ]; then
+            echo "Error: consolidated/openneuro_datasets.json not found"
+            exit 1
+          fi
+          DATASET_COUNT=$(jq 'length' consolidated/openneuro_datasets.json)
+          echo "Found $DATASET_COUNT dataset entries"
+
+      - name: Create test_diggestion directory
+        run: mkdir -p test_diggestion
+
+      - name: Clone OpenNeuro datasets
+        run: |
+          python scripts/ingestions/clone_openneuro_datasets.py \
+            --output-dir test_diggestion \
+            --timeout 300 \
+            --datasets-file consolidated/openneuro_datasets.json
+        continue-on-error: true  # Don't fail workflow if some clones fail
+
+      - name: Generate clone report
+        if: always()
+        run: |
+          if [ -f test_diggestion/clone_results.json ]; then
+            echo "## Clone Results" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            jq -r '"- Success: \(.success | length)\n- Failed: \(.failed | length)\n- Timeout: \(.timeout | length)\n- Skipped: \(.skip | length)\n- Errors: \(.error | length)"' test_diggestion/clone_results.json >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - name: Upload clone results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: clone-results
+          path: |
+            test_diggestion/clone_results.json
+            test_diggestion/retry.json
+          retention-days: 30
+
+      - name: Create issue if clones failed
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            if (fs.existsSync('test_diggestion/clone_results.json')) {
+              const results = JSON.parse(fs.readFileSync('test_diggestion/clone_results.json'));
+              const failedCount = (results.failed || []).length + (results.timeout || []).length;
+              if (failedCount > 0) {
+                github.rest.issues.create({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  title: `⚠️ Dataset Cloning: ${failedCount} datasets failed`,
+                  body: `Failed/timeout clones detected.\n\nSee artifacts for details: ${context.runId}`,
+                  labels: ['ci', 'datasets']
+                });
+              }
+            }
+
+      - name: Commit cloned datasets (optional)
+        if: success()
+        run: |
+          cd test_diggestion
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add .
+          git commit -m "chore: update cloned OpenNeuro datasets" || echo "Nothing to commit"
+          git push
+        continue-on-error: true

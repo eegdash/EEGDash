@@ -1,9 +1,8 @@
-"""Fetch OpenNeuro dataset IDs for one or more modalities using gql."""
+"""Fetch OpenNeuro dataset IDs with metadata using gql."""
 
 import argparse
 import json
-import os
-from collections.abc import Iterable
+from collections.abc import Iterator
 from pathlib import Path
 
 from gql import Client, gql
@@ -13,14 +12,16 @@ GRAPHQL_URL = "https://openneuro.org/crn/graphql"
 
 DATASETS_QUERY = gql(
     """
-    query ($first: Int!, $after: String) {
-      datasets(first: $first, after: $after) {
+    query ($modality: String!, $first: Int!, $after: String) {
+      datasets(modality: $modality, first: $first, after: $after) {
         pageInfo { hasNextPage endCursor }
         edges {
           node {
             id
-            modalities
-            modified
+            created
+            latestSnapshot {
+              created
+            }
           }
         }
       }
@@ -29,110 +30,99 @@ DATASETS_QUERY = gql(
 )
 
 
-def _iter_dataset_info(
-    session: Client,
-    *,
-    page_size: int,
-) -> Iterable[dict]:
-    """Iterate over all datasets with id, modalities, and modified date."""
-    cursor: str | None = None
-    while True:
-        variables = {
-            "first": page_size,
-            "after": cursor,
-        }
-        result = session.execute(DATASETS_QUERY, variable_values=variables)
-        page = result["datasets"]
-        if not page:
-            return
-        for edge in page["edges"]:
-            node = edge["node"]
-            dataset_id = node["id"]
-            modalities = node.get("modalities", [])
-            modified = node.get("modified")
-
-            # Yield one entry per modality
-            for modality in modalities:
-                yield {
-                    "dataset_id": dataset_id,
-                    "modality": modality,
-                    "last_update": modified,
-                }
-
-        if not page["pageInfo"]["hasNextPage"]:
-            break
-        cursor = page["pageInfo"]["endCursor"]
-
-
-def _build_client(token: str | None, timeout: float, retries: int) -> Client:
-    headers = {"Authorization": f"Bearer {token}"} if token else {}
+def fetch_datasets(
+    page_size: int = 100,
+    timeout: float = 30.0,
+    retries: int = 5,
+) -> Iterator[dict]:
+    """Fetch all OpenNeuro datasets with id and modality."""
     transport = RequestsHTTPTransport(
         url=GRAPHQL_URL,
         timeout=timeout,
         retries=retries,
         verify=True,
-        headers=headers,
     )
-    return Client(transport=transport, fetch_schema_from_transport=False)
+    client = Client(transport=transport, fetch_schema_from_transport=False)
+
+    modalities = ["eeg", "ieeg", "meg"]
+
+    for modality in modalities:
+        cursor: str | None = None
+        while True:
+            try:
+                result = client.execute(
+                    DATASETS_QUERY,
+                    variable_values={
+                        "modality": modality,
+                        "first": page_size,
+                        "after": cursor,
+                    },
+                )
+            except Exception as e:
+                # If we hit an error on a specific dataset, skip to next page
+                print(
+                    f"  Warning: Error fetching {modality} datasets at cursor {cursor}: {e}"
+                )
+                if page_size > 10:
+                    page_size = max(10, page_size // 2)  # Reduce page size
+                    continue
+                break
+
+            page = result["datasets"]
+            if not page:
+                break
+
+            for edge in page["edges"]:
+                node = edge.get("node")
+                if not node:
+                    continue
+
+                # Get creation and last update dates
+                created = node.get("created")
+                latest_snapshot = node.get("latestSnapshot")
+                modified = latest_snapshot.get("created") if latest_snapshot else None
+
+                yield {
+                    "dataset_id": node.get("id"),
+                    "modality": modality,
+                    "created": created,
+                    "modified": modified,
+                }
+
+            if not page["pageInfo"]["hasNextPage"]:
+                break
+            cursor = page["pageInfo"]["endCursor"]
 
 
-def parse_args() -> argparse.Namespace:
+def main() -> None:
     parser = argparse.ArgumentParser(
-        description="Fetch all OpenNeuro datasets with metadata (id, modality, last update date)."
-    )
-    parser.add_argument(
-        "--page-size",
-        type=int,
-        default=100,
-        help="GraphQL page size.",
-    )
-    parser.add_argument(
-        "--timeout",
-        type=float,
-        default=30.0,
-        help="GraphQL request timeout in seconds.",
-    )
-    parser.add_argument(
-        "--retries",
-        type=int,
-        default=5,
-        help="Number of automatic retries for 5xx/429 responses.",
+        description="Fetch all OpenNeuro datasets with metadata."
     )
     parser.add_argument(
         "--output",
         type=Path,
         default=Path("consolidated/openneuro_datasets.json"),
-        help="Path to save results as JSON (default: consolidated/openneuro_datasets.json).",
+        help="Output JSON file (default: consolidated/openneuro_datasets.json).",
     )
-    return parser.parse_args()
+    parser.add_argument("--page-size", type=int, default=100)
+    parser.add_argument("--timeout", type=float, default=30.0)
+    parser.add_argument("--retries", type=int, default=5)
+    args = parser.parse_args()
 
+    # Fetch and save
+    datasets = list(
+        fetch_datasets(
+            page_size=args.page_size,
+            timeout=args.timeout,
+            retries=args.retries,
+        )
+    )
 
-def _write_results(results: list[dict], output: Path) -> None:
-    output = output.expanduser()
-    output.parent.mkdir(parents=True, exist_ok=True)
-    with output.open("w", encoding="utf-8") as fh:
-        json.dump(results, fh, indent=2)
+    args.output.parent.mkdir(parents=True, exist_ok=True)
+    with args.output.open("w", encoding="utf-8") as fh:
+        json.dump(datasets, fh, indent=2)
 
-
-def main() -> None:
-    args = parse_args()
-
-    token = os.getenv("OPENNEURO_TOKEN")
-
-    client = _build_client(token, args.timeout, args.retries)
-
-    with client as session:
-        datasets = list(_iter_dataset_info(session, page_size=args.page_size))
-        print(f"Fetched {len(datasets)} dataset entries")
-        for entry in datasets[:5]:  # Show first 5 as preview
-            print(
-                f"  {entry['dataset_id']} ({entry['modality']}) - Updated: {entry['last_update']}"
-            )
-        if len(datasets) > 5:
-            print(f"  ... and {len(datasets) - 5} more")
-
-    _write_results(datasets, args.output)
-    print(f"\nSaved {len(datasets)} datasets to {args.output}")
+    print(f"Saved {len(datasets)} dataset entries to {args.output}")
 
 
 if __name__ == "__main__":

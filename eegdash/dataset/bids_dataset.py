@@ -31,6 +31,10 @@ class EEGBIDSDataset:
         The path to the local BIDS dataset directory.
     dataset : str
         A name for the dataset (e.g., "ds002718").
+    allow_symlinks : bool, default False
+        If True, accept broken symlinks (e.g., git-annex) for metadata extraction.
+        If False, require actual readable files for data loading.
+        Set to True when doing metadata digestion without loading raw data.
 
     """
 
@@ -53,6 +57,7 @@ class EEGBIDSDataset:
         self,
         data_dir=None,  # location of bids dataset
         dataset="",  # dataset name
+        allow_symlinks=False,  # allow broken symlinks for digestion
     ):
         if data_dir is None or not os.path.exists(data_dir):
             raise ValueError("data_dir must be specified and must exist")
@@ -60,6 +65,7 @@ class EEGBIDSDataset:
         self.bidsdir = Path(data_dir)
         self.dataset = dataset
         self.data_dir = data_dir
+        self.allow_symlinks = allow_symlinks
 
         # Accept exact dataset folder or a variant with informative suffixes
         # (e.g., dsXXXXX-bdf, dsXXXXX-bdf-mini) to avoid collisions.
@@ -93,19 +99,22 @@ class EEGBIDSDataset:
         """Initialize BIDS file paths using mne_bids for fast discovery.
 
         Uses mne_bids.find_matching_paths() for efficient pattern-based file
-        discovery instead of heavy pybids BIDSLayout indexing.
+        discovery. Falls back to manual glob search if needed.
+
+        When allow_symlinks=True, includes broken symlinks (e.g., git-annex)
+        for metadata extraction without requiring actual data files.
         """
         # Initialize cache for BIDSPath objects
         self._bids_path_cache = {}
 
-        # Find all EEG recordings using pattern matching (fast!)
+        # Find all EEG recordings
         self.files = []
         for ext in self.RAW_EXTENSIONS.keys():
-            # find_matching_paths returns BIDSPath objects
-            paths = find_matching_paths(self.bidsdir, datatypes="eeg", extensions=ext)
-            if paths:
-                # Convert BIDSPath objects to filename strings
-                self.files = [str(p.fpath) for p in paths]
+            found_files = _find_eeg_files(
+                self.bidsdir, ext, allow_symlinks=self.allow_symlinks
+            )
+            if found_files:
+                self.files = found_files
                 break
 
     def _get_bids_path_from_file(self, data_filepath: str):
@@ -174,10 +183,23 @@ class EEGBIDSDataset:
 
         # Walk up from file directory to root, collecting JSON files
         while current_dir >= root_dir:
+            # Try exact match first (e.g., "eeg.json" at root level)
             json_path = current_dir / json_filename
             if json_path.exists():
                 with open(json_path) as f:
                     json_dict.update(json.load(f))
+            else:
+                # Look for BIDS-specific JSON files (e.g., "sub-001_task-rest_eeg.json")
+                # Match files ending with the json_filename pattern
+                for json_file in current_dir.glob(f"*_{json_filename}"):
+                    # Check if this JSON corresponds to the data file
+                    data_basename = Path(data_filepath).stem
+                    json_basename = json_file.stem
+                    # They should share the same BIDS entities prefix
+                    if data_basename.split("_eeg")[0] == json_basename.split("_eeg")[0]:
+                        with open(json_file) as f:
+                            json_dict.update(json.load(f))
+                        break
 
             # Stop at BIDS root (contains dataset_description.json)
             if (current_dir / "dataset_description.json").exists():
@@ -243,8 +265,14 @@ class EEGBIDSDataset:
         """
         if isinstance(filepath, str):
             filepath = Path(filepath)
-        if not filepath.exists():
-            raise ValueError(f"filepath {filepath} does not exist")
+
+        # Validate file based on current mode
+        if not _is_valid_eeg_file(filepath, allow_symlinks=self.allow_symlinks):
+            raise ValueError(
+                f"filepath {filepath} does not exist. "
+                f"If doing metadata extraction from git-annex, set allow_symlinks=True"
+            )
+
         path, filename = os.path.split(filepath)
         basename = filename[: filename.rfind("_")]
         meta_files = self._get_bids_file_inheritance(
@@ -438,6 +466,69 @@ class EEGBIDSDataset:
 
         """
         return self._get_json_with_inheritance(data_filepath, "eeg.json")
+
+
+def _is_valid_eeg_file(filepath: Path, allow_symlinks: bool = False) -> bool:
+    """Check if a file path is valid for EEG processing.
+
+    Parameters
+    ----------
+    filepath : Path
+        The file path to check.
+    allow_symlinks : bool, default False
+        If True, accept broken symlinks (e.g., git-annex pointers).
+        If False, only accept files that actually exist and can be read.
+
+    Returns
+    -------
+    bool
+        True if the file is valid for the current mode.
+
+    """
+    if filepath.exists():
+        return True
+    if allow_symlinks and filepath.is_symlink():
+        return True
+    return False
+
+
+def _find_eeg_files(
+    bidsdir: Path, extension: str, allow_symlinks: bool = False
+) -> list[str]:
+    """Find EEG files in a BIDS directory.
+
+    Parameters
+    ----------
+    bidsdir : Path
+        The BIDS dataset root directory.
+    extension : str
+        File extension to search for (e.g., '.set', '.bdf').
+    allow_symlinks : bool, default False
+        If True, include broken symlinks in results (for metadata extraction).
+        If False, only return files that can be read (for data loading).
+
+    Returns
+    -------
+    list of str
+        List of file paths found.
+
+    """
+    # First try mne_bids (fast, but skips broken symlinks)
+    if not allow_symlinks:
+        paths = find_matching_paths(bidsdir, datatypes="eeg", extensions=extension)
+        if paths:
+            return [str(p.fpath) for p in paths]
+
+    # Fallback: manual glob search (finds symlinks too)
+    pattern = f"**/eeg/*{extension}"
+    found = list(bidsdir.glob(pattern))
+
+    # Filter based on validation mode
+    valid_files = [
+        str(f) for f in found if _is_valid_eeg_file(f, allow_symlinks=allow_symlinks)
+    ]
+
+    return valid_files
 
 
 __all__ = ["EEGBIDSDataset"]

@@ -152,7 +152,7 @@ else:
     eegprep_preprocessors = [
         RemoveDCOffset(),
         # note: to preserve non-EEG channels, you would need to use the MNE variant atm:
-        Resample(128),  # OR Preprocessor("resample", sfreq=128), for the MNE variant
+        Resampling(128),  # OR Preprocessor("resample", sfreq=128), for the MNE variant
         RemoveFlatChannels(),
         RemoveDrifts((0.5, 1.0)),
         RemoveBadChannels(),  # OR RemoveBadChannelsNoLocs() if chn locations missing

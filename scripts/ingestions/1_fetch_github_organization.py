@@ -80,8 +80,14 @@ def fetch_repositories(
                     return
 
                 for repo in repos:
+                    repo_name = repo.get("name")
+
+                    # Skip special GitHub repositories
+                    if repo_name in [".github", ".gitignore"]:
+                        continue
+
                     yield {
-                        "dataset_id": repo.get("name"),
+                        "dataset_id": repo_name,
                         "full_name": repo.get("full_name"),
                         "description": repo.get("description"),
                         "url": repo.get("html_url"),

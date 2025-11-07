@@ -1,4 +1,4 @@
-name: Fetch OpenNeuro Datasets
+name: Fetch OpenNeuro & NEMAR Datasets
 
 on:
   schedule:
@@ -27,23 +27,39 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install gql[requests]
+          pip install gql[requests] requests
 
       - name: Fetch OpenNeuro datasets
-        env:
-          OPENNEURO_TOKEN: ${{ secrets.OPENNEURO_TOKEN }}
         run: |
-          python scripts/ingestions/fetch_openneuro_datasets.py \
+          python scripts/ingestions/1_fetch_openneuro_datasets.py \
             --page-size 100 \
             --output consolidated/openneuro_datasets.json
 
-      - name: Verify output
+      - name: Fetch NEMAR GitHub repositories
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python scripts/ingestions/1_fetch_github_organization.py \
+            --organization nemardatasets \
+            --output consolidated/nemardatasets_repos.json
+
+      - name: Verify OpenNeuro output
         run: |
           if [ -f consolidated/openneuro_datasets.json ]; then
-            echo "✓ Dataset file created successfully"
+            echo "✓ OpenNeuro dataset file created successfully"
             python -c "import json; data = json.load(open('consolidated/openneuro_datasets.json')); print(f'Total entries: {len(data)}'); modalities = set(d['modality'] for d in data); print(f'Modalities: {sorted(modalities)}')"
           else
-            echo "✗ Dataset file not created"
+            echo "✗ OpenNeuro dataset file not created"
+            exit 1
+          fi
+
+      - name: Verify NEMAR output
+        run: |
+          if [ -f consolidated/nemardatasets_repos.json ]; then
+            echo "✓ NEMAR repositories file created successfully"
+            python -c "import json; data = json.load(open('consolidated/nemardatasets_repos.json')); print(f'Total repositories: {len(data)}'); topics = set(); [topics.update(d.get('topics', [])) for d in data]; print(f'Topics: {sorted(topics) if topics else \"None\"}')"
+          else
+            echo "✗ NEMAR repositories file not created"
             exit 1
           fi
 
@@ -51,8 +67,10 @@ jobs:
         uses: EndBug/add-and-commit@v9
         with:
           default_author: github_actions
-          message: 'chore: update OpenNeuro dataset listings'
-          add: 'consolidated/openneuro_datasets.json'
+          message: 'chore: update OpenNeuro & NEMAR dataset listings'
+          add: |
+            consolidated/openneuro_datasets.json
+            consolidated/nemardatasets_repos.json
           pull: '--rebase --autostash'
           push: true
         if: always()
@@ -60,6 +78,8 @@ jobs:
       - name: Upload artifacts for downstream jobs
         uses: actions/upload-artifact@v4
         with:
-          name: openneuro-datasets
-          path: consolidated/openneuro_datasets.json
+          name: dataset-listings
+          path: |
+            consolidated/openneuro_datasets.json
+            consolidated/nemardatasets_repos.json
           retention-days: 7

@@ -1,9 +1,12 @@
 name: Fetch OpenNeuro & NEMAR Datasets
 
 on:
-  schedule:
-    # Run weekly on Monday at 00:00 UTC
-    - cron: '0 0 * * 1'
+  pull_request:
+    branches:
+      - '**'
+  # schedule:
+  #   # Run weekly on Monday at 00:00 UTC
+  #   - cron: '0 0 * * 1'
   workflow_dispatch:  # Allow manual triggering
 
 jobs:

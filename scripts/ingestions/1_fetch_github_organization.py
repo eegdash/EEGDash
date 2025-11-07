@@ -4,7 +4,6 @@ import argparse
 import json
 from collections.abc import Iterator
 from pathlib import Path
-from typing import Optional
 
 import requests
 
@@ -16,7 +15,6 @@ def fetch_repositories(
     page_size: int = 100,
     timeout: float = 30.0,
     retries: int = 5,
-    github_token: Optional[str] = None,
 ) -> Iterator[dict]:
     """Fetch all repositories from a GitHub organization.
 
@@ -25,7 +23,6 @@ def fetch_repositories(
         page_size: Number of repositories per page (max 100)
         timeout: Request timeout in seconds
         retries: Number of retry attempts
-        github_token: Optional GitHub personal access token for higher rate limits
 
     Yields:
         Repository metadata dictionaries
@@ -34,10 +31,6 @@ def fetch_repositories(
     headers = {
         "Accept": "application/vnd.github.v3+json",
     }
-
-    # Add authentication if token provided (increases rate limit from 60 to 5000/hour)
-    if github_token:
-        headers["Authorization"] = f"token {github_token}"
 
     page = 1
 
@@ -159,23 +152,17 @@ def main() -> None:
         default=5,
         help="Number of retry attempts (default: 5)",
     )
-    parser.add_argument(
-        "--github-token",
-        type=str,
-        default=None,
-        help="GitHub personal access token (optional, increases rate limit)",
-    )
     args = parser.parse_args()
 
     # Fetch and save
     print(f"Fetching repositories from GitHub organization: {args.organization}")
+
     repositories = list(
         fetch_repositories(
             organization=args.organization,
             page_size=args.page_size,
             timeout=args.timeout,
             retries=args.retries,
-            github_token=args.github_token,
         )
     )
 

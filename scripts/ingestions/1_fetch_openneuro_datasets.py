@@ -33,7 +33,8 @@ DATASETS_QUERY = gql(
 def fetch_datasets(
     page_size: int = 100,
     timeout: float = 30.0,
-    retries: int = 5,
+    retries: int = 3,
+    max_consecutive_errors: int = 3,
 ) -> Iterator[dict]:
     """Fetch all OpenNeuro datasets with id and modality."""
     transport = RequestsHTTPTransport(
@@ -48,6 +49,9 @@ def fetch_datasets(
 
     for modality in modalities:
         cursor: str | None = None
+        consecutive_errors = 0
+        error_cursors = set()  # Track cursors that caused errors
+
         while True:
             try:
                 result = client.execute(
@@ -58,21 +62,55 @@ def fetch_datasets(
                         "after": cursor,
                     },
                 )
-            except Exception as e:
-                # If we hit an error on a specific dataset, skip to next page
-                print(
-                    f"  Warning: Error fetching {modality} datasets at cursor {cursor}: {e}"
-                )
-                if page_size > 10:
-                    page_size = max(10, page_size // 2)  # Reduce page size
-                    continue
-                break
+                # Reset error counter on successful fetch
+                consecutive_errors = 0
 
-            page = result["datasets"]
+            except Exception as e:
+                consecutive_errors += 1
+                error_msg = str(e)
+
+                # Check if it's a server-side 404 error for specific datasets
+                if "'Not Found'" in error_msg and cursor not in error_cursors:
+                    print(
+                        f"  Warning: Skipping {modality} page at cursor {cursor} due to server error (attempt {consecutive_errors}/{max_consecutive_errors})"
+                    )
+                    error_cursors.add(cursor)
+
+                    # Try to skip this problematic cursor by moving forward
+                    if consecutive_errors < max_consecutive_errors:
+                        # Try smaller page size to isolate the problematic dataset
+                        if page_size > 10:
+                            page_size = max(10, page_size // 2)
+                            print(
+                                f"  Reducing page size to {page_size} to skip problematic dataset"
+                            )
+                            continue
+
+                    # If we've tried multiple times, skip to next modality
+                    print(
+                        f"  Skipping remaining {modality} datasets after {consecutive_errors} consecutive errors"
+                    )
+                    break
+                else:
+                    # For other errors, log and retry with exponential backoff
+                    print(f"  Error fetching {modality} datasets: {error_msg[:200]}")
+                    if consecutive_errors >= max_consecutive_errors:
+                        print(
+                            f"  Too many consecutive errors ({consecutive_errors}), moving to next modality"
+                        )
+                        break
+                    continue
+
+            page = result.get("datasets")
             if not page:
                 break
 
-            for edge in page["edges"]:
+            edges = page.get("edges", [])
+            if not edges:
+                break
+
+            # Process each dataset in the page
+            for edge in edges:
                 node = edge.get("node")
                 if not node:
                     continue
@@ -89,9 +127,11 @@ def fetch_datasets(
                     "modified": modified,
                 }
 
-            if not page["pageInfo"]["hasNextPage"]:
+            # Check if there are more pages
+            page_info = page.get("pageInfo", {})
+            if not page_info.get("hasNextPage"):
                 break
-            cursor = page["pageInfo"]["endCursor"]
+            cursor = page_info.get("endCursor")
 
 
 def main() -> None:

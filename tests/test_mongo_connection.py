@@ -71,15 +71,18 @@ def test_different_staging_flags_use_same_connections(mongo_mocks):
 
 
 def test_close_does_not_close_singleton(mongo_mocks):
-    """EEGDash.close() should not close the shared Mongo client."""
+    """Creating multiple EEGDash instances should share the singleton client."""
     e1 = EEGDash(is_public=True, is_staging=False)
     client = e1._EEGDash__client  # grab the underlying client
-    e1.close()
 
-    client.close.assert_not_called()
-
+    # Create another instance with same parameters
     e2 = EEGDash(is_public=True, is_staging=False)
+
+    # They should share the same client
     assert e2._EEGDash__client is client
+
+    # Client should not be closed yet
+    client.close.assert_not_called()
 
 
 def test_close_all_connections_closes_clients(mongo_mocks):

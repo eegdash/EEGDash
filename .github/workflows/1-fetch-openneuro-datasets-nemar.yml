@@ -20,6 +20,8 @@ jobs:
         uses: actions/checkout@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -64,17 +66,24 @@ jobs:
             exit 1
           fi
 
-      - name: Commit changes if datasets updated
-        uses: EndBug/add-and-commit@v9
-        with:
-          default_author: github_actions
-          message: 'chore: update OpenNeuro & NEMAR dataset listings'
-          add: |
-            consolidated/openneuro_datasets.json
-            consolidated/nemardatasets_repos.json
-          pull: '--rebase --autostash'
-          push: true
-        if: always()
+      - name: Commit and push changes if datasets updated
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          
+          # Add files to staging to check for actual changes
+          git add consolidated/openneuro_datasets.json
+          git add consolidated/nemardatasets_repos.json
+          
+          # Check if there are actual changes (not just timestamp differences)
+          if git diff --cached --quiet; then
+            echo "No changes detected in dataset files, skipping commit"
+          else
+            echo "Changes detected, committing..."
+            git commit -m "chore: update OpenNeuro & NEMAR dataset listings"
+            git push origin HEAD:${{ github.head_ref }}
+            echo "✓ Changes committed and pushed"
+          fi
 
       - name: Upload artifacts for downstream jobs
         uses: actions/upload-artifact@v4

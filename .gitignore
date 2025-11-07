@@ -39,7 +39,6 @@ examples/data
 .DS_Store
 
 data/
-*.json
 *.isorted
 *.py.isorted
 

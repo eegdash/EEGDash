@@ -39,8 +39,6 @@ jobs:
             --output consolidated/openneuro_datasets.json
 
       - name: Fetch NEMAR GitHub repositories
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           python scripts/ingestions/1_fetch_github_organization.py \
             --organization nemardatasets \

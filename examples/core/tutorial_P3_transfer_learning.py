@@ -4,7 +4,7 @@ EEG P3 Transfer Learning with AS-MMD
 ====================================
 
 
-This tutorial's corresponding paper: Chen, W., Delorme, A. (2025). Adaptive Split-MMD Training for Small-Sample Cross-Dataset P300 EEG Classification. arXiv: [2510.21969](https://arxiv.org/abs/2510.21969).
+This tutorial's corresponding method/paper: Chen, W., Delorme, A. (2025). Adaptive Split-MMD Training for Small-Sample Cross-Dataset P300 EEG Classification. arXiv: [2510.21969](https://arxiv.org/abs/2510.21969).
 
 Overview
 --------
@@ -91,7 +91,6 @@ class ManualWindowsDataset:
 # ----------------------
 #
 # Functions for loading raw EEG data and extracting subject information from
-# both P3 and AVO datasets.
 
 import mne
 mne.set_log_level('ERROR')
@@ -128,6 +127,22 @@ def process_subject_data(subject_id, preprocessor, dataset_type='P3'):
         raws = [recording.raw for recording in subject_recordings]
         for r in raws:
             r.load_data()
+ 
+        if len(raws) > 1:
+            common_chs = set(raws[0].ch_names)
+            for r in raws[1:]:
+                common_chs = common_chs.intersection(set(r.ch_names))
+            common_chs = sorted(list(common_chs))
+            
+            if not common_chs:
+                return None, None
+
+            target_sfreq = raws[0].info['sfreq']
+            for i, r in enumerate(raws):
+                raws[i].pick_channels(common_chs)
+                if raws[i].info['sfreq'] != target_sfreq:
+                    raws[i].resample(target_sfreq)
+        
         raw = mne.concatenate_raws(raws) if len(raws) > 1 else raws[0]
 
     windows = preprocessor.transform(raw)
@@ -460,6 +475,21 @@ class OddballPreprocessor(Preprocessor):
         
         return ManualWindowsDataset(windows_data, windows_labels)
 
+
+# %%
+# Plot Sample Trials
+# ==================
+#
+# Visualize sample oddball trials from both datasets.
+#
+# .. image:: /_static/p3_avo_sample_trials.png
+#    :alt: Sample trials from P3 and AVO datasets
+#    :align: center
+#    :width: 800px
+#
+# The figure above shows example oddball trials from both P3 and AVO datasets,
+# displaying the ERP responses across common channels (Fz, Pz, P3, P4, Oz).
+# The stimulus onset occurs at t=0s.
 
 # %%
 # Positional Encoding Utility

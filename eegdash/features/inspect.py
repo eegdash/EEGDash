@@ -7,7 +7,7 @@ from . import extractors, feature_bank
 from .extractors import _get_underlying_func
 
 __all__ = [
-    "get_all_feature_extractors",
+    "get_all_feature_preprocessors",
     "get_all_feature_kinds",
     "get_all_features",
     "get_feature_kind",
@@ -107,14 +107,16 @@ def get_all_feature_preprocessors() -> list[tuple[str, Callable]]:
 
     def isfeatureextractor(x):
         y = _get_underlying_func(x)
-        return (callable(y) and not hasattr(y, "feature_kind")
-                and hasattr(y, "parent_extractor_type"))
+        return (
+            callable(y)
+            and not hasattr(y, "feature_kind")
+            and hasattr(y, "parent_extractor_type")
+        )
 
     return inspect.getmembers(feature_bank, isfeatureextractor)
 
 
-def get_all_feature_kinds(
-) -> list[tuple[str, type[extractors.MultivariateFeature]]]:
+def get_all_feature_kinds() -> list[tuple[str, type[extractors.MultivariateFeature]]]:
     """Get a list of all available feature 'kind' classes.
 
     Scans the `eegdash.features.extractors` module for all classes that
@@ -128,7 +130,6 @@ def get_all_feature_kinds(
     """
 
     def isfeaturekind(x):
-        return inspect.isclass(x) and issubclass(
-            x, extractors.MultivariateFeature)
+        return inspect.isclass(x) and issubclass(x, extractors.MultivariateFeature)
 
     return inspect.getmembers(extractors, isfeaturekind)

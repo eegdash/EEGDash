@@ -15,7 +15,7 @@ __all__ = [
 ]
 
 
-def get_feature_predecessors(feature_or_extractor: Callable) -> list:
+def get_feature_predecessors(feature_or_extractor: Callable | None) -> list:
     """Get the dependency hierarchy for a feature or feature extractor.
 
     This function recursively traverses the `parent_extractor_type` attribute
@@ -37,12 +37,13 @@ def get_feature_predecessors(feature_or_extractor: Callable) -> list:
         multiple dependencies, it will contain tuples of sub-dependencies.
 
     """
+    current = feature_or_extractor
+    if current is None:
+        return [None]
+    if isinstance(current, extractors.FeatureExtractor):
+        current = current.preprocessor
     current = _get_underlying_func(feature_or_extractor)
-    if current is extractors.FeatureExtractor:
-        return [current]
-    predecessor = getattr(
-        current, "parent_extractor_type", [extractors.FeatureExtractor]
-    )
+    predecessor = getattr(current, "parent_extractor_type", [None])
     if len(predecessor) == 1:
         return [current, *get_feature_predecessors(predecessor[0])]
     else:
@@ -92,30 +93,28 @@ def get_all_features() -> list[tuple[str, Callable]]:
     return inspect.getmembers(feature_bank, isfeature)
 
 
-def get_all_feature_extractors() -> list[tuple[str, type[extractors.FeatureExtractor]]]:
-    """Get a list of all available :class:`~eegdash.features.extractors.FeatureExtractor` classes.
+def get_all_feature_preprocessors() -> list[tuple[str, Callable]]:
+    """Get a list of all available preprocessor functions.
 
-    Scans the `eegdash.features.feature_bank` module for all classes that
-    subclass :class:`~eegdash.features.extractors.FeatureExtractor`.
+    Scans the `eegdash.features.feature_bank` module for all preprocessor functions.
 
     Returns
     -------
-    list[tuple[str, type[eegdash.features.extractors.FeatureExtractor]]]
-        A list of (name, class) tuples for all discovered feature extractors,
-        including the base :class:`~eegdash.features.extractors.FeatureExtractor` itself.
+    list[tuple[str, Callable]]
+        A list of (name, function) tuples for all discovered feature preprocessors.
 
     """
 
     def isfeatureextractor(x):
-        return inspect.isclass(x) and issubclass(x, extractors.FeatureExtractor)
+        y = _get_underlying_func(x)
+        return (callable(y) and not hasattr(y, "feature_kind")
+                and hasattr(y, "parent_extractor_type"))
 
-    return [
-        ("FeatureExtractor", extractors.FeatureExtractor),
-        *inspect.getmembers(feature_bank, isfeatureextractor),
-    ]
+    return inspect.getmembers(feature_bank, isfeatureextractor)
 
 
-def get_all_feature_kinds() -> list[tuple[str, type[extractors.MultivariateFeature]]]:
+def get_all_feature_kinds(
+) -> list[tuple[str, type[extractors.MultivariateFeature]]]:
     """Get a list of all available feature 'kind' classes.
 
     Scans the `eegdash.features.extractors` module for all classes that
@@ -129,6 +128,7 @@ def get_all_feature_kinds() -> list[tuple[str, type[extractors.MultivariateFeatu
     """
 
     def isfeaturekind(x):
-        return inspect.isclass(x) and issubclass(x, extractors.MultivariateFeature)
+        return inspect.isclass(x) and issubclass(
+            x, extractors.MultivariateFeature)
 
     return inspect.getmembers(extractors, isfeaturekind)

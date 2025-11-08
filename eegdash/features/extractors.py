@@ -102,28 +102,29 @@ class FeatureExtractor(TrainableFeature):
     feature_extractors : dict[str, callable]
         A dictionary where keys are feature names and values are the feature
         extraction functions or other `FeatureExtractor` instances.
-    **preprocess_kwargs
-        Keyword arguments to be passed to the `preprocess` method.
+    preprocessor
+        A shared preprocessing function for all child feature extraction functions.
 
     """
 
     def __init__(
-        self, feature_extractors: Dict[str, Callable], **preprocess_kwargs: Dict
+        self,
+        feature_extractors: Dict[str, Callable],
+        preprocessor: Callable | None = None,
     ):
-        self.feature_extractors_dict = self._validate_execution_tree(feature_extractors)
+        self.preprocessor = preprocessor
+        self.feature_extractors_dict = self._validate_execution_tree(
+            feature_extractors)
         self._is_trainable = self._check_is_trainable(feature_extractors)
         super().__init__()
 
         # bypassing FeaturePredecessor to avoid circular import
         if not hasattr(self, "parent_extractor_type"):
-            self.parent_extractor_type = [FeatureExtractor]
+            self.parent_extractor_type = [None]
 
-        self.preprocess_kwargs = preprocess_kwargs
-        if self.preprocess_kwargs is None:
-            self.preprocess_kwargs = dict()
-        self.features_kwargs = {
-            "preprocess_kwargs": preprocess_kwargs,
-        }
+        self.features_kwargs = dict()
+        if preprocessor is not None and isinstance(preprocessor, partial):
+            self.features_kwargs["preprocess_kwargs"] = preprocessor.args
         for fn, fe in feature_extractors.items():
             if isinstance(fe, FeatureExtractor):
                 self.features_kwargs[fn] = fe.features_kwargs
@@ -132,12 +133,18 @@ class FeatureExtractor(TrainableFeature):
 
     def _validate_execution_tree(self, feature_extractors: dict) -> dict:
         """Validate the feature dependency graph."""
+        preprocessor = (None if self.preprocessor is None else
+                        _get_underlying_func(self.preprocessor))
         for fname, f in feature_extractors.items():
+            if isinstance(f, FeatureExtractor):
+                f = f.preprocessor
             f = _get_underlying_func(f)
-            pe_type = getattr(f, "parent_extractor_type", [FeatureExtractor])
-            if type(self) not in pe_type:
+            pe_type = getattr(f, "parent_extractor_type", [None])
+            if preprocessor not in pe_type:
+                parent = getattr(preprocessor, "__name__", preprocessor)
+                child = getattr(f, "__name__", f)
                 raise TypeError(
-                    f"Feature '{fname}' cannot be a child of {type(self).__name__}"
+                    f"Feature '{fname}: {child}' cannot be a child of {parent}"
                 )
         return feature_extractors
 
@@ -151,15 +158,13 @@ class FeatureExtractor(TrainableFeature):
                 return True
         return False
 
-    def preprocess(self, *x, **kwargs):
+    def preprocess(self, *x):
         """Apply pre-processing to the input data.
 
         Parameters
         ----------
         *x : tuple
             Input data.
-        **kwargs
-            Additional keyword arguments.
 
         Returns
         -------
@@ -167,7 +172,10 @@ class FeatureExtractor(TrainableFeature):
             The pre-processed data.
 
         """
-        return (*x,)
+        if self.preprocessor is None:
+            return (*x, )
+        else:
+            return self.preprocessor(*x)
 
     def __call__(self, *x, _batch_size=None, _ch_names=None) -> dict:
         """Apply all feature extractors to the input data.
@@ -193,9 +201,9 @@ class FeatureExtractor(TrainableFeature):
         if self._is_trainable:
             super().__call__()
         results_dict = dict()
-        z = self.preprocess(*x, **self.preprocess_kwargs)
+        z = self.preprocess(*x)
         if not isinstance(z, tuple):
-            z = (z,)
+            z = (z, )
         for fname, f in self.feature_extractors_dict.items():
             if isinstance(f, FeatureExtractor):
                 r = f(*z, _batch_size=_batch_size, _ch_names=_ch_names)
@@ -209,14 +217,14 @@ class FeatureExtractor(TrainableFeature):
             if isinstance(r, dict):
                 prefix = f"{fname}_" if fname else ""
                 for k, v in r.items():
-                    self._add_feature_to_dict(results_dict, prefix + k, v, _batch_size)
+                    self._add_feature_to_dict(results_dict, prefix + k, v,
+                                              _batch_size)
             else:
                 self._add_feature_to_dict(results_dict, fname, r, _batch_size)
         return results_dict
 
-    def _add_feature_to_dict(
-        self, results_dict: dict, name: str, value: any, batch_size: int
-    ):
+    def _add_feature_to_dict(self, results_dict: dict, name: str, value: any,
+                             batch_size: int):
         """Add a computed feature to the results dictionary."""
         if isinstance(value, np.ndarray):
             assert value.shape[0] == batch_size
@@ -227,26 +235,29 @@ class FeatureExtractor(TrainableFeature):
         if not self._is_trainable:
             return
         for f in self.feature_extractors_dict.values():
-            if isinstance(_get_underlying_func(f), TrainableFeature):
-                _get_underlying_func(f).clear()
+            f = _get_underlying_func(f)
+            if isinstance(f, TrainableFeature):
+                f.clear()
 
     def partial_fit(self, *x, y=None):
         """Partially fit all trainable sub-features."""
         if not self._is_trainable:
             return
-        z = self.preprocess(*x, **self.preprocess_kwargs)
+        z = self.preprocess(*x)
         if not isinstance(z, tuple):
-            z = (z,)
+            z = (z, )
         for f in self.feature_extractors_dict.values():
-            if isinstance(_get_underlying_func(f), TrainableFeature):
-                _get_underlying_func(f).partial_fit(*z, y=y)
+            f = _get_underlying_func(f)
+            if isinstance(f, TrainableFeature):
+                f.partial_fit(*z, y=y)
 
     def fit(self):
         """Fit all trainable sub-features."""
         if not self._is_trainable:
             return
         for f in self.feature_extractors_dict.values():
-            if isinstance(_get_underlying_func(f), TrainableFeature):
+            f = _get_underlying_func(f)
+            if isinstance(f, TrainableFeature):
                 f.fit()
         super().fit()
 
@@ -259,9 +270,9 @@ class MultivariateFeature:
     names.
     """
 
-    def __call__(
-        self, x: np.ndarray, _ch_names: list[str] | None = None
-    ) -> dict | np.ndarray:
+    def __call__(self,
+                 x: np.ndarray,
+                 _ch_names: list[str] | None = None) -> dict | np.ndarray:
         """Convert a feature array to a named dictionary.
 
         Parameters
@@ -288,14 +299,15 @@ class MultivariateFeature:
         return self._array_to_dict(x, f_channels)
 
     @staticmethod
-    def _array_to_dict(
-        x: np.ndarray, f_channels: list[str], name: str = ""
-    ) -> dict | np.ndarray:
+    def _array_to_dict(x: np.ndarray,
+                       f_channels: list[str],
+                       name: str = "") -> dict | np.ndarray:
         """Convert a numpy array to a dictionary with named keys."""
         assert isinstance(x, np.ndarray)
         if not f_channels:
             return {name: x} if name else x
-        assert x.shape[1] == len(f_channels), f"{x.shape[1]} != {len(f_channels)}"
+        assert x.shape[1] == len(
+            f_channels), f"{x.shape[1]} != {len(f_channels)}"
         x = x.swapaxes(0, 1)
         prefix = f"{name}_" if name else ""
         names = [f"{prefix}{ch}" for ch in f_channels]

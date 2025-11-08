@@ -113,8 +113,7 @@ class FeatureExtractor(TrainableFeature):
         preprocessor: Callable | None = None,
     ):
         self.preprocessor = preprocessor
-        self.feature_extractors_dict = self._validate_execution_tree(
-            feature_extractors)
+        self.feature_extractors_dict = self._validate_execution_tree(feature_extractors)
         self._is_trainable = self._check_is_trainable(feature_extractors)
         super().__init__()
 
@@ -133,8 +132,11 @@ class FeatureExtractor(TrainableFeature):
 
     def _validate_execution_tree(self, feature_extractors: dict) -> dict:
         """Validate the feature dependency graph."""
-        preprocessor = (None if self.preprocessor is None else
-                        _get_underlying_func(self.preprocessor))
+        preprocessor = (
+            None
+            if self.preprocessor is None
+            else _get_underlying_func(self.preprocessor)
+        )
         for fname, f in feature_extractors.items():
             if isinstance(f, FeatureExtractor):
                 f = f.preprocessor
@@ -173,7 +175,7 @@ class FeatureExtractor(TrainableFeature):
 
         """
         if self.preprocessor is None:
-            return (*x, )
+            return (*x,)
         else:
             return self.preprocessor(*x)
 
@@ -203,7 +205,7 @@ class FeatureExtractor(TrainableFeature):
         results_dict = dict()
         z = self.preprocess(*x)
         if not isinstance(z, tuple):
-            z = (z, )
+            z = (z,)
         for fname, f in self.feature_extractors_dict.items():
             if isinstance(f, FeatureExtractor):
                 r = f(*z, _batch_size=_batch_size, _ch_names=_ch_names)
@@ -217,14 +219,14 @@ class FeatureExtractor(TrainableFeature):
             if isinstance(r, dict):
                 prefix = f"{fname}_" if fname else ""
                 for k, v in r.items():
-                    self._add_feature_to_dict(results_dict, prefix + k, v,
-                                              _batch_size)
+                    self._add_feature_to_dict(results_dict, prefix + k, v, _batch_size)
             else:
                 self._add_feature_to_dict(results_dict, fname, r, _batch_size)
         return results_dict
 
-    def _add_feature_to_dict(self, results_dict: dict, name: str, value: any,
-                             batch_size: int):
+    def _add_feature_to_dict(
+        self, results_dict: dict, name: str, value: any, batch_size: int
+    ):
         """Add a computed feature to the results dictionary."""
         if isinstance(value, np.ndarray):
             assert value.shape[0] == batch_size
@@ -245,7 +247,7 @@ class FeatureExtractor(TrainableFeature):
             return
         z = self.preprocess(*x)
         if not isinstance(z, tuple):
-            z = (z, )
+            z = (z,)
         for f in self.feature_extractors_dict.values():
             f = _get_underlying_func(f)
             if isinstance(f, TrainableFeature):
@@ -270,9 +272,9 @@ class MultivariateFeature:
     names.
     """
 
-    def __call__(self,
-                 x: np.ndarray,
-                 _ch_names: list[str] | None = None) -> dict | np.ndarray:
+    def __call__(
+        self, x: np.ndarray, _ch_names: list[str] | None = None
+    ) -> dict | np.ndarray:
         """Convert a feature array to a named dictionary.
 
         Parameters
@@ -299,15 +301,14 @@ class MultivariateFeature:
         return self._array_to_dict(x, f_channels)
 
     @staticmethod
-    def _array_to_dict(x: np.ndarray,
-                       f_channels: list[str],
-                       name: str = "") -> dict | np.ndarray:
+    def _array_to_dict(
+        x: np.ndarray, f_channels: list[str], name: str = ""
+    ) -> dict | np.ndarray:
         """Convert a numpy array to a dictionary with named keys."""
         assert isinstance(x, np.ndarray)
         if not f_channels:
             return {name: x} if name else x
-        assert x.shape[1] == len(
-            f_channels), f"{x.shape[1]} != {len(f_channels)}"
+        assert x.shape[1] == len(f_channels), f"{x.shape[1]} != {len(f_channels)}"
         x = x.swapaxes(0, 1)
         prefix = f"{name}_" if name else ""
         names = [f"{prefix}{ch}" for ch in f_channels]

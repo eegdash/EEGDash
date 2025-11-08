@@ -9,7 +9,7 @@ from . import utils
 from .signal import SIGNAL_PREDECESSORS
 
 __all__ = [
-    "connectivity_coherency_predecessor",
+    "connectivity_coherency_preprocessor",
     "connectivity_magnitude_square_coherence",
     "connectivity_imaginary_coherence",
     "connectivity_lagged_coherence",

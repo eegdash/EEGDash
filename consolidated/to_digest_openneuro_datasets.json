@@ -576,6 +576,12 @@
     "modified": "2025-10-29T23:48:25.000Z"
   },
   {
+    "dataset_id": "ds006923",
+    "modality": "eeg",
+    "created": "2025-11-11T00:27:28.823Z",
+    "modified": "2025-11-11T04:35:58.000Z"
+  },
+  {
     "dataset_id": "ds002799",
     "modality": "ieeg",
     "created": "2020-05-16T00:33:07.233Z",

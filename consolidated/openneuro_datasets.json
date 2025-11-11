@@ -93,7 +93,7 @@
     "dataset_id": "ds002718",
     "modality": "eeg",
     "created": "2020-04-21T20:15:53.277Z",
-    "modified": "2021-08-03T22:26:22.000Z"
+    "modified": "2025-11-08T05:07:40.000Z"
   },
   {
     "dataset_id": "ds002720",
@@ -1503,7 +1503,7 @@
     "dataset_id": "ds005397",
     "modality": "eeg",
     "created": "2024-08-01T12:27:38.523Z",
-    "modified": "2024-12-02T08:31:42.000Z"
+    "modified": "2025-11-10T12:51:56.000Z"
   },
   {
     "dataset_id": "ds005403",
@@ -2086,6 +2086,12 @@
     "modality": "eeg",
     "created": "2025-10-29T19:00:26.774Z",
     "modified": "2025-10-29T23:48:25.000Z"
+  },
+  {
+    "dataset_id": "ds006923",
+    "modality": "eeg",
+    "created": "2025-11-11T00:27:28.823Z",
+    "modified": "2025-11-11T04:35:58.000Z"
   },
   {
     "dataset_id": "ds002799",

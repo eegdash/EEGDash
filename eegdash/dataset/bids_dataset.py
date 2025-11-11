@@ -599,7 +599,7 @@ def _find_bids_files(
 
     """
     if modalities is None:
-        modalities = ["eeg", "meg", "ieeg"]
+        modalities = EPHY_ALLOWED_DATATYPES
 
     all_files = []
 

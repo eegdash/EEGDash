@@ -1,8 +1,16 @@
-"""Fetch EEG BIDS datasets from Zenodo.
+"""Fetch neuroimaging datasets from Zenodo.
 
-This script searches Zenodo for datasets containing both "EEG" and "BIDS" keywords
-using the Zenodo REST API. It retrieves comprehensive metadata including DOIs,
-descriptions, file information, and download URLs.
+This script searches Zenodo for datasets combining neuroimaging modalities
+(EEG, MEG, iEEG, ECoG, SEEG, EMG) with BIDS standards using the Zenodo REST API.
+It retrieves comprehensive metadata including DOIs, descriptions, file information,
+and download URLs.
+
+Search Strategy:
+- Modalities: EEG, electroencephalography, MEG, magnetoencephalography, iEEG,
+              intracranial EEG, ECoG, electrocorticography, SEEG, stereo EEG,
+              EMG, electromyography
+- Standards: BIDS, Brain Imaging Data Structure, neuroimaging
+- Logic: AND operator for balanced recall and precision
 
 Output: consolidated/zenodo_datasets.json
 """
@@ -398,11 +406,11 @@ def main() -> None:
     parser.add_argument(
         "--query",
         type=str,
-        default="EEG BIDS",
+        default='(EEG OR electroencephalography OR MEG OR magnetoencephalography OR iEEG OR "intracranial EEG" OR ECoG OR electrocorticography OR SEEG OR "stereo EEG" OR EMG OR electromyography) AND (BIDS OR "Brain Imaging Data Structure" OR neuroimaging)',
         help=(
-            'Search query (default: "EEG BIDS" for broad matching). '
-            "Note: Using explicit AND/OR operators reduces results significantly due to stricter matching. "
-            "The default query naturally includes EEG/MEG/iEEG/ECoG variants through fuzzy matching."
+            "Search query (default: comprehensive neuroimaging + BIDS for balanced recall and precision). "
+            "Searches across all modalities (EEG, MEG, iEEG, ECoG, SEEG, EMG) combined with BIDS standards. "
+            "Use quotes for multi-word terms. Example: '\"intracranial EEG\" AND BIDS'"
         ),
     )
     parser.add_argument(

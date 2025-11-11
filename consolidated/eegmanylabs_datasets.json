@@ -1,0 +1,54 @@
+[
+  {
+    "dataset_id": "EEGManyLabs_Replication_ClarkHillyard1996_Raw",
+    "full_name": "EEGManyLabs/EEGManyLabs_Replication_ClarkHillyard1996_Raw",
+    "description": "",
+    "url": "https://gin.g-node.org/EEGManyLabs/EEGManyLabs_Replication_ClarkHillyard1996_Raw",
+    "clone_url": "https://gin.g-node.org/EEGManyLabs/EEGManyLabs_Replication_ClarkHillyard1996_Raw.git",
+    "ssh_url": "git@gin.g-node.org:EEGManyLabs/EEGManyLabs_Replication_ClarkHillyard1996_Raw.git",
+    "stars": 0,
+    "forks": 0,
+    "updated": "",
+    "source": "gin",
+    "organization": "EEGManyLabs"
+  },
+  {
+    "dataset_id": "EEGManyLabs_Replication_Eimer1996_Processed",
+    "full_name": "EEGManyLabs/EEGManyLabs_Replication_Eimer1996_Processed",
+    "description": "",
+    "url": "https://gin.g-node.org/EEGManyLabs/EEGManyLabs_Replication_Eimer1996_Processed",
+    "clone_url": "https://gin.g-node.org/EEGManyLabs/EEGManyLabs_Replication_Eimer1996_Processed.git",
+    "ssh_url": "git@gin.g-node.org:EEGManyLabs/EEGManyLabs_Replication_Eimer1996_Processed.git",
+    "stars": 0,
+    "forks": 0,
+    "updated": "",
+    "source": "gin",
+    "organization": "EEGManyLabs"
+  },
+  {
+    "dataset_id": "EEGManyLabs_Replication_HajcakHolroyd2005",
+    "full_name": "EEGManyLabs/EEGManyLabs_Replication_HajcakHolroyd2005",
+    "description": "",
+    "url": "https://gin.g-node.org/EEGManyLabs/EEGManyLabs_Replication_HajcakHolroyd2005",
+    "clone_url": "https://gin.g-node.org/EEGManyLabs/EEGManyLabs_Replication_HajcakHolroyd2005.git",
+    "ssh_url": "git@gin.g-node.org:EEGManyLabs/EEGManyLabs_Replication_HajcakHolroyd2005.git",
+    "stars": 0,
+    "forks": 0,
+    "updated": "",
+    "source": "gin",
+    "organization": "EEGManyLabs"
+  },
+  {
+    "dataset_id": "EEGManyLabs_Replication_Eimer1996_Raw",
+    "full_name": "EEGManyLabs/EEGManyLabs_Replication_Eimer1996_Raw",
+    "description": "",
+    "url": "https://gin.g-node.org/EEGManyLabs/EEGManyLabs_Replication_Eimer1996_Raw",
+    "clone_url": "https://gin.g-node.org/EEGManyLabs/EEGManyLabs_Replication_Eimer1996_Raw.git",
+    "ssh_url": "git@gin.g-node.org:EEGManyLabs/EEGManyLabs_Replication_Eimer1996_Raw.git",
+    "stars": 0,
+    "forks": 0,
+    "updated": "",
+    "source": "gin",
+    "organization": "EEGManyLabs"
+  }
+]

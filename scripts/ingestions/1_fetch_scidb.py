@@ -4,17 +4,40 @@ This script searches SciDB for public datasets containing both "EEG" and "BIDS" 
 using the SciDB query service API. It retrieves comprehensive metadata including DOIs,
 CSTR identifiers, descriptions, authors, and file information.
 
+Supports simple queries and advanced boolean queries using AND, OR, NOT operators.
+
 Output: consolidated/scidb_datasets.json
 """
 
 import argparse
 import json
 import sys
-import time
 from pathlib import Path
 from typing import Any
 
 import requests
+
+# Predefined query templates for neuroimaging research
+QUERY_TEMPLATES = {
+    "eeg_bids": "EEG BIDS",
+    "neuroimaging": ("(EEG OR MEG OR iEEG OR ECoG OR EMG) AND (BIDS OR neuroimaging)"),
+    # TODO: Revisit query structure - SciDB may require different query syntax
+    # Current structure may not correctly combine boolean operators
+    # See: SCIDB_QUERY_TEMPLATES.md for details and testing notes
+    # "comprehensive": (
+    #     '(("EEG" OR "electroencephalography" OR "MEG" OR "magnetoencephalography" '
+    #     'OR "iEEG" OR "intracranial EEG" OR "ECoG" OR "electrocorticography" '
+    #     'OR "SEEG" OR "stereo EEG" OR "EMG" OR "electromyography") '
+    #     'AND '
+    #     '("BIDS" OR "Brain Imaging Data Structure" OR "BIDS-EEG" OR "BIDS-MEG" '
+    #     'OR "BIDS-iEEG" OR "BIDS specification" OR "BIDS extension" '
+    #     'OR "BIDS derivatives" OR "BIDS apps" OR "BIDS validator" OR "BIDS converter")) '
+    #     'OR '
+    #     '(("EEG-BIDS" OR "MEG-BIDS" OR "iEEG-BIDS" OR "EMG-BIDS") '
+    #     'AND '
+    #     '("data sharing" OR "open data" OR "FAIR principles" OR "neuroimaging standardization"))'
+    # ),
+}
 
 
 def search_scidb(
@@ -122,8 +145,11 @@ def search_scidb(
 
         page += 1
 
-        # Be nice to the API
-        time.sleep(0.5)
+    # Return all if size is 0 or negative, otherwise trim to size
+    if size <= 0:
+        return all_datasets
+    else:
+        return all_datasets[:size]
 
     print(f"\nTotal datasets fetched: {len(all_datasets)}")
     return all_datasets[:size]  # Trim to exact size
@@ -245,13 +271,25 @@ def extract_dataset_info(record: dict) -> dict[str, Any]:
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="Fetch EEG BIDS datasets from SciDB (Science Data Bank)."
+        description="Fetch EEG BIDS datasets from SciDB (Science Data Bank).",
+        epilog="Query templates: eeg_bids, neuroimaging | TODO: Add comprehensive template after query syntax validation",
     )
     parser.add_argument(
         "--query",
         type=str,
-        default="EEG BIDS",
-        help='Search query (default: "EEG BIDS").',
+        default="eeg_bids",
+        help=(
+            'Search query or template name (default: "eeg_bids"). '
+            "Available templates: eeg_bids, neuroimaging. "
+            "Use --list-queries to see all templates. "
+            "Or provide a custom query with boolean operators (AND, OR, NOT). "
+            "TODO: comprehensive template syntax may need adjustment for SciDB API."
+        ),
+    )
+    parser.add_argument(
+        "--list-queries",
+        action="store_true",
+        help="List all available query templates and exit.",
     )
     parser.add_argument(
         "--output",
@@ -279,9 +317,20 @@ def main() -> None:
 
     args = parser.parse_args()
 
+    # Handle list-queries
+    if args.list_queries:
+        print("Available query templates:\n")
+        for name, query in QUERY_TEMPLATES.items():
+            print(f"  {name}:")
+            print(f"    {query}\n")
+        sys.exit(0)
+
+    # Resolve query template or use custom query
+    query = QUERY_TEMPLATES.get(args.query, args.query)
+
     # Search SciDB
     records = search_scidb(
-        query=args.query,
+        query=query,
         size=args.size,
         page_size=args.page_size,
         public_only=not args.include_restricted,

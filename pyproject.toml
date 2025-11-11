@@ -87,7 +87,8 @@ docs = [
 
 digestion = [
   "pybids",
-  "gql",
+  "gql[requests]",
+  "requests_toolbelt",
 ]
 
 all = [

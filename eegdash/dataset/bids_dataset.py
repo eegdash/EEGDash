@@ -16,7 +16,7 @@ from typing import Any
 
 import pandas as pd
 from mne_bids import BIDSPath, find_matching_paths
-from mne_bids.config import ALLOWED_DATATYPE_EXTENSIONS, reader
+from mne_bids.config import ALLOWED_DATATYPE_EXTENSIONS, EPHY_ALLOWED_DATATYPES, reader
 
 # Known companion/sidecar files for specific formats (BIDS spec requirement)
 # These files must be downloaded together with the primary file
@@ -55,17 +55,6 @@ class EEGBIDSDataset:
         ext: [ext] + _COMPANION_FILES.get(ext, []) for ext in reader.keys()
     }
 
-    # BIDS metadata file extensions (modality-specific + common)
-    METADATA_FILE_EXTENSIONS = [
-        "eeg.json",
-        "meg.json",
-        "ieeg.json",
-        "channels.tsv",
-        "electrodes.tsv",
-        "events.tsv",
-        "events.json",
-    ]
-
     def __init__(
         self,
         data_dir=None,  # location of bids dataset
@@ -81,9 +70,9 @@ class EEGBIDSDataset:
         self.data_dir = data_dir
         self.allow_symlinks = allow_symlinks
 
-        # Set modalities to search for (default: eeg, meg, ieeg for backward compatibility)
+        # Set modalities to search for (default: all electrophysiology modalities from MNE-BIDS)
         if modalities is None:
-            self.modalities = ["eeg", "meg", "ieeg"]
+            self.modalities = EPHY_ALLOWED_DATATYPES  # ['meg', 'eeg', 'ieeg', 'nirs']
         else:
             self.modalities = (
                 modalities if isinstance(modalities, list) else [modalities]
@@ -557,7 +546,7 @@ def _find_bids_files(
         File extension to search for (e.g., '.set', '.bdf', '.fif').
     modalities : list of str, optional
         List of modalities to search (e.g., ["eeg", "meg", "ieeg"]).
-        If None, defaults to ["eeg", "meg", "ieeg"].
+        If None, defaults to EPHY_ALLOWED_DATATYPES from mne_bids.config.
     allow_symlinks : bool, default False
         If True, include broken symlinks in results (for metadata extraction).
         If False, only return files that can be read (for data loading).

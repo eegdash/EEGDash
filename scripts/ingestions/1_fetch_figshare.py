@@ -78,8 +78,8 @@ def search_figshare(
         print(f"Got {len(articles)} articles")
         all_articles.extend(articles)
 
-        # Check if we've reached the requested size
-        if len(all_articles) >= size:
+        # Check if we've reached the requested size (only if size > 0)
+        if size > 0 and len(all_articles) >= size:
             print(f"Reached limit ({len(all_articles)} articles)")
             break
 
@@ -94,7 +94,8 @@ def search_figshare(
         time.sleep(0.5)
 
     print(f"\nTotal articles fetched: {len(all_articles)}")
-    return all_articles[:size]  # Trim to exact size
+    # Return all articles if size=0, otherwise trim to exact size
+    return all_articles if size <= 0 else all_articles[:size]
 
 
 def get_article_details(article_id: int) -> dict[str, Any]:

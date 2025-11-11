@@ -96,7 +96,7 @@ def preprocess_instance(eeg_dash_dataset, cache_dir: Path):
         ]
 
         eeg_dash_dataset = preprocess(
-            eeg_dash_dataset, preprocessors, n_jobs=1, save_dir=pre_processed_dir
+            eeg_dash_dataset, preprocessors, n_jobs=20, save_dir=pre_processed_dir
         )
 
         return eeg_dash_dataset

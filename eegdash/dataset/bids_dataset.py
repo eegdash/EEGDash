@@ -27,11 +27,15 @@ _COMPANION_FILES = {
 
 
 class EEGBIDSDataset:
-    """An interface to a local BIDS dataset containing EEG recordings.
+    """An interface to a local BIDS dataset containing electrophysiology recordings.
 
     This class centralizes interactions with a BIDS dataset on the local
     filesystem, providing methods to parse metadata, find files, and
-    retrieve BIDS-related information.
+    retrieve BIDS-related information. Supports multiple modalities including
+    EEG, MEG, iEEG, and NIRS.
+
+    The class uses MNE-BIDS constants to stay synchronized with the BIDS
+    specification and automatically supports all file formats recognized by MNE.
 
     Parameters
     ----------
@@ -43,6 +47,43 @@ class EEGBIDSDataset:
         If True, accept broken symlinks (e.g., git-annex) for metadata extraction.
         If False, require actual readable files for data loading.
         Set to True when doing metadata digestion without loading raw data.
+    modalities : list of str or None, default None
+        List of modalities to search for (e.g., ["eeg", "meg"]).
+        If None, defaults to all electrophysiology modalities from MNE-BIDS:
+        ['meg', 'eeg', 'ieeg', 'nirs'].
+
+    Attributes
+    ----------
+    RAW_EXTENSIONS : dict
+        Mapping of file extensions to their companion files, dynamically
+        built from mne_bids.config.reader.
+    files : list of str
+        List of all recording file paths found in the dataset.
+    detected_modality : str
+        The modality of the first file found (e.g., 'eeg', 'meg').
+
+    Examples
+    --------
+    >>> # Load EEG-only dataset
+    >>> dataset = EEGBIDSDataset(
+    ...     data_dir="/path/to/ds002718",
+    ...     dataset="ds002718",
+    ...     modalities=["eeg"]
+    ... )
+
+    >>> # Load dataset with multiple modalities
+    >>> dataset = EEGBIDSDataset(
+    ...     data_dir="/path/to/ds005810",
+    ...     dataset="ds005810",
+    ...     modalities=["meg", "eeg"]
+    ... )
+
+    >>> # Metadata extraction from git-annex (symlinks)
+    >>> dataset = EEGBIDSDataset(
+    ...     data_dir="/path/to/dataset",
+    ...     dataset="ds000001",
+    ...     allow_symlinks=True
+    ... )
 
     """
 

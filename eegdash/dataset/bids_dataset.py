@@ -16,6 +16,14 @@ from typing import Any
 
 import pandas as pd
 from mne_bids import BIDSPath, find_matching_paths
+from mne_bids.config import ALLOWED_DATATYPE_EXTENSIONS, reader
+
+# Known companion/sidecar files for specific formats (BIDS spec requirement)
+# These files must be downloaded together with the primary file
+_COMPANION_FILES = {
+    ".set": [".fdt"],  # EEGLAB: data file
+    ".vhdr": [".eeg", ".vmrk"],  # BrainVision: data + marker files
+}
 
 
 class EEGBIDSDataset:
@@ -38,15 +46,20 @@ class EEGBIDSDataset:
 
     """
 
-    ALLOWED_FILE_FORMAT = ["eeglab", "brainvision", "biosemi", "european"]
+    # Dynamically build from MNE-BIDS constants (mne_bids.config.reader)
+    # reader dict maps file extensions to MNE read functions
+    # This ensures compatibility with the latest BIDS specification
+
+    # Primary extension + companions = files that must be downloaded together
     RAW_EXTENSIONS = {
-        ".set": [".set", ".fdt"],  # eeglab
-        ".edf": [".edf"],  # european
-        ".vhdr": [".eeg", ".vhdr", ".vmrk", ".dat", ".raw"],  # brainvision
-        ".bdf": [".bdf"],  # biosemi
+        ext: [ext] + _COMPANION_FILES.get(ext, []) for ext in reader.keys()
     }
+
+    # BIDS metadata file extensions (modality-specific + common)
     METADATA_FILE_EXTENSIONS = [
         "eeg.json",
+        "meg.json",
+        "ieeg.json",
         "channels.tsv",
         "electrodes.tsv",
         "events.tsv",
@@ -58,6 +71,7 @@ class EEGBIDSDataset:
         data_dir=None,  # location of bids dataset
         dataset="",  # dataset name
         allow_symlinks=False,  # allow broken symlinks for digestion
+        modalities=None,  # list of modalities to search for (e.g., ["eeg", "meg", "ieeg"])
     ):
         if data_dir is None or not os.path.exists(data_dir):
             raise ValueError("data_dir must be specified and must exist")
@@ -66,6 +80,14 @@ class EEGBIDSDataset:
         self.dataset = dataset
         self.data_dir = data_dir
         self.allow_symlinks = allow_symlinks
+
+        # Set modalities to search for (default: eeg, meg, ieeg for backward compatibility)
+        if modalities is None:
+            self.modalities = ["eeg", "meg", "ieeg"]
+        else:
+            self.modalities = (
+                modalities if isinstance(modalities, list) else [modalities]
+            )
 
         # Accept exact dataset folder or a variant with informative suffixes
         # (e.g., dsXXXXX-bdf, dsXXXXX-bdf-mini) to avoid collisions.
@@ -80,9 +102,12 @@ class EEGBIDSDataset:
 
         # get all recording files in the bids directory
         assert len(self.files) > 0, ValueError(
-            "Unable to construct EEG dataset. No EEG recordings found."
+            f"Unable to construct dataset. No recordings found for modalities: {self.modalities}"
         )
-        assert self.check_eeg_dataset(), ValueError("Dataset is not an EEG dataset.")
+        # Store the detected modality for later use
+        self.detected_modality = self.get_bids_file_attribute(
+            "modality", self.files[0]
+        ).lower()
 
     def check_eeg_dataset(self) -> bool:
         """Check if the BIDS dataset contains EEG data.
@@ -93,7 +118,7 @@ class EEGBIDSDataset:
             True if the dataset's modality is EEG, False otherwise.
 
         """
-        return self.get_bids_file_attribute("modality", self.files[0]).lower() == "eeg"
+        return self.detected_modality == "eeg"
 
     def _init_bids_paths(self) -> None:
         """Initialize BIDS file paths using mne_bids for fast discovery.
@@ -103,18 +128,27 @@ class EEGBIDSDataset:
 
         When allow_symlinks=True, includes broken symlinks (e.g., git-annex)
         for metadata extraction without requiring actual data files.
+
+        Searches across multiple modalities (eeg, meg, ieeg) based on self.modalities.
         """
         # Initialize cache for BIDSPath objects
         self._bids_path_cache = {}
 
-        # Find all EEG recordings
+        # Find all recordings across specified modalities
+        # Use MNE-BIDS constants to get valid extensions per modality
         self.files = []
-        for ext in self.RAW_EXTENSIONS.keys():
-            found_files = _find_eeg_files(
-                self.bidsdir, ext, allow_symlinks=self.allow_symlinks
-            )
-            if found_files:
-                self.files = found_files
+        for modality in self.modalities:
+            for ext in ALLOWED_DATATYPE_EXTENSIONS.get(modality, []):
+                found_files = _find_bids_files(
+                    self.bidsdir,
+                    ext,
+                    modalities=[modality],
+                    allow_symlinks=self.allow_symlinks,
+                )
+                if found_files:
+                    self.files = found_files
+                    break
+            if self.files:
                 break
 
     def _get_bids_path_from_file(self, data_filepath: str):
@@ -136,8 +170,17 @@ class EEGBIDSDataset:
             filepath = Path(data_filepath)
             filename = filepath.name
 
+            # Detect modality from the directory path
+            # BIDS structure: .../sub-XX/[ses-YY/]<modality>/sub-XX_...
+            path_parts = filepath.parts
+            modality = "eeg"  # default
+            for part in path_parts:
+                if part in ["eeg", "meg", "ieeg", "emg"]:
+                    modality = part
+                    break
+
             # Extract entities from filename using BIDS pattern
-            # Expected format: sub-<label>[_ses-<label>][_task-<label>][_run-<label>]_eeg.<ext>
+            # Expected format: sub-<label>[_ses-<label>][_task-<label>][_run-<label>]_<modality>.<ext>
             subject = re.search(r"sub-([^_]*)", filename)
             session = re.search(r"ses-([^_]*)", filename)
             task = re.search(r"task-([^_]*)", filename)
@@ -148,7 +191,7 @@ class EEGBIDSDataset:
                 session=session.group(1) if session else None,
                 task=task.group(1) if task else None,
                 run=int(run.group(1)) if run else None,
-                datatype="eeg",
+                datatype=modality,
                 extension=filepath.suffix,
                 root=self.bidsdir,
             )
@@ -321,12 +364,18 @@ class EEGBIDSDataset:
         if attribute in direct_attrs:
             return direct_attrs[attribute]
 
-        # For JSON-based attributes, read and cache eeg.json
-        eeg_json = self._get_json_with_inheritance(data_filepath, "eeg.json")
+        # For JSON-based attributes, read the modality-specific JSON file
+        # (eeg.json for EEG, meg.json for MEG, ieeg.json for iEEG)
+        modality = bids_path.datatype or "eeg"
+        json_filename = f"{modality}.json"
+        modality_json = self._get_json_with_inheritance(data_filepath, json_filename)
+
         json_attrs = {
-            "sfreq": eeg_json.get("SamplingFrequency"),
-            "ntimes": eeg_json.get("RecordingDuration"),
-            "nchans": eeg_json.get("EEGChannelCount"),
+            "sfreq": modality_json.get("SamplingFrequency"),
+            "ntimes": modality_json.get("RecordingDuration"),
+            "nchans": modality_json.get("EEGChannelCount")
+            or modality_json.get("MEGChannelCount")
+            or modality_json.get("iEEGChannelCount"),
         }
 
         return json_attrs.get(attribute)
@@ -492,17 +541,23 @@ def _is_valid_eeg_file(filepath: Path, allow_symlinks: bool = False) -> bool:
     return False
 
 
-def _find_eeg_files(
-    bidsdir: Path, extension: str, allow_symlinks: bool = False
+def _find_bids_files(
+    bidsdir: Path,
+    extension: str,
+    modalities: list[str] = None,
+    allow_symlinks: bool = False,
 ) -> list[str]:
-    """Find EEG files in a BIDS directory.
+    """Find BIDS files in a BIDS directory across multiple modalities.
 
     Parameters
     ----------
     bidsdir : Path
         The BIDS dataset root directory.
     extension : str
-        File extension to search for (e.g., '.set', '.bdf').
+        File extension to search for (e.g., '.set', '.bdf', '.fif').
+    modalities : list of str, optional
+        List of modalities to search (e.g., ["eeg", "meg", "ieeg"]).
+        If None, defaults to ["eeg", "meg", "ieeg"].
     allow_symlinks : bool, default False
         If True, include broken symlinks in results (for metadata extraction).
         If False, only return files that can be read (for data loading).
@@ -513,22 +568,44 @@ def _find_eeg_files(
         List of file paths found.
 
     """
-    # First try mne_bids (fast, but skips broken symlinks)
-    if not allow_symlinks:
-        paths = find_matching_paths(bidsdir, datatypes="eeg", extensions=extension)
-        if paths:
-            return [str(p.fpath) for p in paths]
+    if modalities is None:
+        modalities = ["eeg", "meg", "ieeg"]
 
-    # Fallback: manual glob search (finds symlinks too)
-    pattern = f"**/eeg/*{extension}"
-    found = list(bidsdir.glob(pattern))
+    all_files = []
 
-    # Filter based on validation mode
-    valid_files = [
-        str(f) for f in found if _is_valid_eeg_file(f, allow_symlinks=allow_symlinks)
-    ]
+    for modality in modalities:
+        # First try mne_bids (fast, but skips broken symlinks)
+        if not allow_symlinks:
+            try:
+                paths = find_matching_paths(
+                    bidsdir, datatypes=modality, extensions=extension
+                )
+                if paths:
+                    all_files.extend([str(p.fpath) for p in paths])
+            except Exception:
+                pass  # Continue to fallback search
 
-    return valid_files
+        # Fallback: manual glob search (finds symlinks too)
+        pattern = f"**/{modality}/*{extension}"
+        found = list(bidsdir.glob(pattern))
+
+        # Filter based on validation mode
+        valid_files = [
+            str(f)
+            for f in found
+            if _is_valid_eeg_file(f, allow_symlinks=allow_symlinks)
+        ]
+        all_files.extend(valid_files)
+
+    # Remove duplicates while preserving order
+    seen = set()
+    unique_files = []
+    for f in all_files:
+        if f not in seen:
+            seen.add(f)
+            unique_files.append(f)
+
+    return unique_files
 
 
 __all__ = ["EEGBIDSDataset"]

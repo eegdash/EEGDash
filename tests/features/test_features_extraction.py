@@ -76,24 +76,25 @@ def feature_extractor(feature_dict):
     return feats
 
 
-def test_feature_extraction(windows_ds, feature_extractor, batch_size=128, n_jobs=2):
-    """Test the feature extraction function."""
-    features = extract_features(
-        windows_ds, feature_extractor, batch_size=batch_size, n_jobs=n_jobs
+def test_feature_extraction_benchmark(
+    benchmark, windows_ds, feature_extractor, batch_size=512, n_jobs=1
+):
+    """Benchmark feature extraction function."""
+    feats = benchmark(
+        extract_features,
+        windows_ds,
+        feature_extractor,
+        batch_size=batch_size,
+        n_jobs=n_jobs,
     )
-    assert isinstance(features, FeaturesConcatDataset)
-    assert len(windows_ds.datasets) == len(features.datasets)
+    assert isinstance(feats, FeaturesConcatDataset)
+    assert len(windows_ds.datasets) == len(feats.datasets)
 
 
 @pytest.fixture(scope="module")
 def features_ds(windows_ds, feature_extractor, batch_size=512, n_jobs=1):
     """Fixture to create a features dataset."""
-    features = extract_features(
+    feats = extract_features(
         windows_ds, feature_extractor, batch_size=batch_size, n_jobs=n_jobs
     )
-    return features
-
-
-def benchmark_extract_features(benchmark, batch_size=512, n_jobs=1):
-    """Benchmark feature extraction function."""
-    benchmark(test_feature_extraction, batch_size=batch_size, n_jobs=n_jobs)
+    return feats

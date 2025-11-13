@@ -179,14 +179,13 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on how to contribute to th
 ## Authors and Contributors
 
 ### Core Team
-- **Young Truong** (dt.young112@gmail.com)
+- **Bruno Aristimunha** (b.aristimunha@gmail.com)
 - **Arnaud Delorme** (adelorme@gmail.com) - Swartz Center for Computational Neuroscience, UCSD
+- **Young Truong** (dt.young112@gmail.com)
 - **Aviv Dotan** (avivd220@gmail.com) - Ben-Gurion University
 - **Oren Shriki** (oren70@gmail.com) - Ben-Gurion University
-- **Bruno Aristimunha** (b.aristimunha@gmail.com)
 
 ### Contributors
-- Dung Truong
 - Pierre Guetschel
 - Vivian Chen
 - Christian Kothe

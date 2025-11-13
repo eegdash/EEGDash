@@ -213,6 +213,3 @@ This project is licensed under the GNU General Public License v3.0 - see the [LI
 | 0.2.0 | 2025-xx-xx | NeurIPS challenge support, braindecode 1.0+ compatibility |
 | 0.1.x | 2024-2025 | Initial release with core functionality |
 
----
-
-*This changelog is automatically maintained based on commit history. For more detailed information about specific changes, please refer to the [commit history](https://github.com/sccn/EEG-Dash-Data/commits/main).*

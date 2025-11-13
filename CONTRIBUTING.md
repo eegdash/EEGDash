@@ -84,125 +84,6 @@ pytest tests/ -v
 python -c "from eegdash import EEGDash; print('Setup successful!')"
 ```
 
-## How to Contribute
-
-### Branch Naming Convention
-
-Use descriptive branch names following this pattern:
-
-- `feat/<feature-name>` - New features
-- `fix/<bug-description>` - Bug fixes
-- `docs/<doc-change>` - Documentation updates
-- `refactor/<refactor-description>` - Code refactoring
-- `test/<test-description>` - Test additions or fixes
-- `exp/<researcher-name>/<experiment>` - Experimental/research branches
-
-**Examples:**
-```bash
-git checkout -b feat/wavelet-feature-extractor
-git checkout -b fix/s3-download-timeout
-git checkout -b docs/add-offline-mode-tutorial
-git checkout -b exp/alice/csp-optimization
-```
-
-### Creating a Branch
-
-```bash
-# Update your local develop branch
-git checkout develop
-git pull upstream develop
-
-# Create a new branch
-git checkout -b feat/your-feature-name
-```
-
-## Commit Message Conventions
-
-We follow the [Conventional Commits](https://www.conventionalcommits.org/) specification. This enables automatic changelog generation and makes the git history more readable.
-
-### Format
-
-```
-<type>(<scope>): <subject>
-
-<body>
-
-<footer>
-```
-
-### Types
-
-- `feat`: A new feature
-- `fix`: A bug fix
-- `docs`: Documentation only changes
-- `style`: Code style changes (formatting, missing semicolons, etc.)
-- `refactor`: Code change that neither fixes a bug nor adds a feature
-- `perf`: Performance improvement
-- `test`: Adding or updating tests
-- `chore`: Changes to build process, dependencies, or tooling
-- `ci`: Changes to CI/CD configuration
-
-### Scopes
-
-Common scopes for this project:
-
-- `api` - Changes to `eegdash/api.py`
-- `dataset` - Changes to `eegdash/dataset/`
-- `features` - Changes to `eegdash/features/`
-- `downloader` - Changes to `eegdash/downloader.py`
-- `mongodb` - Changes to `eegdash/mongodb.py`
-- `docs` - Documentation changes
-- `tests` - Test suite changes
-- `ci` - CI/CD changes
-
-### Examples
-
-```bash
-# Good commit messages
-feat(features): add wavelet transform feature extractor
-fix(dataset): resolve S3 download timeout for large files
-docs(readme): add offline mode usage examples
-test(downloader): add retry logic tests
-perf(features): optimize spectral calculations with numba
-refactor(mongodb): extract connection pooling to singleton
-
-# Bad commit messages (avoid these)
-updating
-fixes
-more changes
-finishing
-bye warnings
-```
-
-### Detailed Example
-
-```
-feat(features): add wavelet transform feature extractor
-
-- Implement CWT-based feature extraction
-- Add support for Morlet, Mexican hat, and Gaussian wavelets
-- Include unit tests and documentation
-- Performance: ~50ms per channel on 1000 samples
-
-Closes #123
-```
-
-### Using Commitizen (Recommended)
-
-For easier adherence to commit conventions, consider using commitizen:
-
-```bash
-# Install commitizen
-pip install commitizen
-
-# Use it to create commits
-cz commit
-# or
-git cz
-```
-
-This will interactively guide you through creating a properly formatted commit message.
-
 ## Coding Standards
 
 ### Python Style
@@ -233,23 +114,6 @@ pre-commit run ruff --all-files
 
 # Format code
 ruff format eegdash/
-```
-
-### Type Hints
-
-Use type hints for better code clarity and IDE support:
-
-```python
-from pathlib import Path
-from typing import Any
-
-def load_dataset(
-    cache_dir: str | Path,
-    dataset: str,
-    subject: str | list[str] | None = None
-) -> list[dict[str, Any]]:
-    """Load dataset with optional subject filtering."""
-    ...
 ```
 
 ### Docstrings
@@ -325,36 +189,6 @@ def test_feature_description():
     assert len(result) > 0
 ```
 
-**Test fixtures:**
-
-Use fixtures for common test data:
-
-```python
-@pytest.fixture
-def sample_dataset():
-    """Create a sample dataset for testing."""
-    return EEGDashDataset(
-        cache_dir="./test_cache",
-        records=[...],
-        download=False
-    )
-
-def test_with_fixture(sample_dataset):
-    """Test using the fixture."""
-    assert len(sample_dataset) > 0
-```
-
-### Performance Tests
-
-Use `pytest-benchmark` for performance-critical code:
-
-```python
-def test_feature_extraction_performance(benchmark):
-    """Ensure feature extraction completes within acceptable time."""
-    result = benchmark(extract_spectral_features, sample_data)
-    assert result is not None
-```
-
 ## Documentation
 
 ### Building Documentation Locally
@@ -380,15 +214,6 @@ xdg-open build/html/index.html  # Linux
 - Update API documentation for new modules/classes
 
 ## Pull Request Process
-
-### Before Submitting
-
-- [ ] **Code quality**: All pre-commit checks pass
-- [ ] **Tests**: All tests pass (`pytest tests/`)
-- [ ] **Coverage**: New code is covered by tests
-- [ ] **Documentation**: Docstrings and docs are updated
-- [ ] **Commits**: Follow conventional commit format
-- [ ] **Branch**: Based on latest `develop` branch
 
 ### Submitting a Pull Request
 
@@ -460,15 +285,9 @@ We follow [Semantic Versioning](https://semver.org/):
    ```
 5. **PyPI publishing** happens automatically via GitHub Actions
 
-## Getting Help
-
-- **Questions**: Open a [GitHub Discussion](https://github.com/sccn/EEG-Dash-Data/discussions)
-- **Bugs**: Open an [Issue](https://github.com/sccn/EEG-Dash-Data/issues)
-- **Email**: Subscribe to [EEGLABNEWS](https://sccn.ucsd.edu/mailman/listinfo/eeglabnews) mailing list
-
 ## License
 
-By contributing, you agree that your contributions will be licensed under the GNU General Public License v3.0.
+By contributing, you agree that your contributions will be licensed under the open source project license.
 
 ## Acknowledgments
 

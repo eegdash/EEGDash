@@ -199,7 +199,7 @@ EEG-DaSh is a collaborative initiative between the United States and Israel, sup
 
 ## License
 
-This project is licensed under the GNU General Public License v3.0 - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the BSD 3-Clause License - see the [LICENSE](LICENSE) file for details.
 
 ---
 

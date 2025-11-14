@@ -1,5 +1,5 @@
 # Authors: The EEGDash contributors.
-# License: GNU General Public License
+# License: BSD-3-Clause
 # Copyright the EEGDash contributors.
 
 """Windowing and trial processing utilities for HBN datasets.

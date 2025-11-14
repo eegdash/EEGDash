@@ -66,90 +66,106 @@ print(f"P3 Dataset: {len(ds_p3)} recordings loaded")
 print(f"AVO Dataset: {len(ds_avo)} recordings loaded")
 
 # %%
-# Windowed Dataset Wrapper
-# ------------------------
+# Event Renaming Function
+# -----------------------
 #
-# Wrapper for windowed EEG data.
-
-from braindecode.preprocessing import Preprocessor
-
-class ManualWindowsDataset:
-    """Custom dataset that ensures one window per event."""
-    
-    def __init__(self, data, labels):
-        self.data = data
-        self.labels = labels
-    
-    def __len__(self):
-        return len(self.data)
-    
-    def __getitem__(self, idx):
-        return self.data[idx], self.labels[idx]
-
-# %%
-# Data Loading Utilities
-# ----------------------
-#
-# Functions for loading raw EEG data and extracting subject information from
+# Simple function to rename oddball events for preprocessing
 
 import mne
+import numpy as np
 mne.set_log_level('ERROR')
 
-def get_dataset_subjects(dataset_type):
-    """Get list of subjects from dataset using EEGDashDataset."""
-    dataset = ds_p3 if dataset_type == 'P3' else ds_avo
-    return sorted(list(set([rec.description['subject'] for rec in dataset.datasets])))
-
-
-def process_subject_data(subject_id, preprocessor, dataset_type='P3'):
-    """Process a single subject's data using EEGDashDataset.
+def rename_oddball_events(raw, dataset_type='P3'):
+    """Rename events for oddball paradigm.
     
-    This function:
-    1. Loads the raw EEG file(s) for the subject using EEGDashDataset
-    2. Applies the preprocessing pipeline
-    3. Returns the windowed data and labels
+    Parameters
+    ----------
+    raw : mne.io.Raw
+        Raw EEG data
+    dataset_type : str
+        Either 'P3' or 'AVO'
+        
+    Returns
+    -------
+    mne.io.Raw
+        Raw object with renamed events (oddball=1, standard=0)
     """
-    if dataset_type == 'P3':
-        subject_recordings = [rec for rec in ds_p3.datasets if rec.description['subject'] == subject_id]
+    events, event_id = mne.events_from_annotations(raw)
+    
+    if len(events) == 0:
+        return raw
+    
+    if dataset_type == 'AVO':
+        oddball_codes = [11, 22, 33, 44, 55]
+        response_codes = [201, 202]
         
-        if len(subject_recordings) == 0:
-            return None, None
+        def get_codes_from_descriptions(event_id, descriptions):
+            codes = []
+            for desc, code in event_id.items():
+                if any(pattern in desc for pattern in descriptions):
+                    codes.append(code)
+            return codes
         
-        raw = subject_recordings[0].raw
-        raw.load_data()
+        oddball_codes = get_codes_from_descriptions(event_id, ['11', '22', '33', '44', '55'])
+        response_codes = get_codes_from_descriptions(event_id, ['201', '202'])
+    else:  # P3
+        oddball_codes = [1, 9, 15, 21, 27]
+        response_codes = [6, 7, 201, 202]
+    
+    response_mask = np.isin(events[:, 2], response_codes)
+    events = events[~response_mask]
+    
+    if len(events) == 0:
+        return raw
+    
+    unique_samples, unique_indices = np.unique(events[:, 0], return_index=True)
+    events = events[np.sort(unique_indices)]
+    
+    trial_start_offset_samples = int(TRIAL_START_OFFSET * raw.info["sfreq"])
+    trial_stop_offset_samples = int((TRIAL_START_OFFSET + TRIAL_DURATION) * raw.info["sfreq"])
+    recording_length = raw.n_times
+    
+    min_gap_samples = int(abs(TRIAL_START_OFFSET) * raw.info["sfreq"]) + int(TRIAL_DURATION * raw.info["sfreq"])
+    filtered_events = []
+    last_kept_sample = None
+    
+    for event in events:
+        event_sample = event[0]
+        window_start = event_sample + trial_start_offset_samples
+        window_stop = event_sample + trial_stop_offset_samples
         
-    else:   
-        subject_recordings = [rec for rec in ds_avo.datasets if rec.description['subject'] == subject_id]
+        if window_start < 0 or window_stop > recording_length:
+            continue
         
-        if len(subject_recordings) == 0:
-            return None, None
-        
-        raws = [recording.raw for recording in subject_recordings]
-        for r in raws:
-            r.load_data()
- 
-        if len(raws) > 1:
-            common_chs = set(raws[0].ch_names)
-            for r in raws[1:]:
-                common_chs = common_chs.intersection(set(r.ch_names))
-            common_chs = sorted(list(common_chs))
-            
-            if not common_chs:
-                return None, None
+        if last_kept_sample is None or (event_sample - last_kept_sample) >= min_gap_samples:
+            filtered_events.append(event)
+            last_kept_sample = event_sample
+    
+    if len(filtered_events) == 0:
+        return raw
+    
+    events = np.array(filtered_events)
+    
+    oddball_mask = np.isin(events[:, 2], oddball_codes)
+    new_events = events.copy()
+    new_events[oddball_mask, 2] = 1
+    new_events[~oddball_mask, 2] = 0
+    
+    annot_from_events = mne.annotations_from_events(
+        events=new_events,
+        event_desc={0: "standard", 1: "oddball"},
+        sfreq=raw.info["sfreq"],
+    )
+    raw.set_annotations(annot_from_events)
+    return raw
 
-            target_sfreq = raws[0].info['sfreq']
-            for i, r in enumerate(raws):
-                raws[i].pick_channels(common_chs)
-                if raws[i].info['sfreq'] != target_sfreq:
-                    raws[i].resample(target_sfreq)
-        
-        raw = mne.concatenate_raws(raws) if len(raws) > 1 else raws[0]
 
-    windows = preprocessor.transform(raw)
-    data = windows.data
-    labels = windows.labels
-
-    return data, labels
+# Preprocessing parameters
+LOW_FREQ = 0.5
+HIGH_FREQ = 30
+RESAMPLE_FREQ = 128
+TRIAL_START_OFFSET = -0.1  # seconds before stimulus
+TRIAL_DURATION = 1.1  # seconds total window
 
 # %%
 # Data Normalization and Augmentation
@@ -200,280 +216,49 @@ def augment_data(x, noise_std=NOISE_STD, time_shift=TIME_SHIFT_RANGE):
 
 
 # %%
-# Preprocessing Overview
-# ----------------------
-#
-# The preprocessing pipeline implements the 7-step harmonized approach from the
-# AS-MMD paper. We'll break it down into modular components for clarity.
-
-# %%
-# Step 1: Preprocessor Initialization
+# Braindecode Preprocessing Pipeline
 # -----------------------------------
 #
-# The `OddballPreprocessor` class manages configuration for both P3 and AVO datasets.
-# It handles event codes, trial budgets, and timing parameters specific to each dataset.
+# Create preprocessors for both datasets using braindecode
 
-# Preprocessing parameters
-LOW_FREQ = 0.5
-HIGH_FREQ = 30
-RESAMPLE_FREQ = 128
-TRIAL_START_OFFSET = -0.1  # seconds before stimulus
-TRIAL_DURATION = 1.1  # seconds total window
+from braindecode.preprocessing import preprocess, Preprocessor, create_windows_from_events
 
-# Artifact removal and filtering
-REMOVE_ARTIFACTS = True  # ICA for eye/muscle artifacts
-APPLY_NOTCH_FILTER = True  # Remove power line interference
-BASELINE_CORRECT = True  # Baseline correction using pre-stimulus interval
-NOTCH_FREQS = [50, 60]  # Power line frequencies (Hz)
-
-
-RESPONSE_EVENTS_P3 = [6, 7, 201, 202]
-RESPONSE_EVENTS_AVO = [201, 202]  
-
-ODDBALL_EVENTS_P3 = [1, 9, 15, 21, 27]
-ODDBALL_EVENTS_AVO = [11, 22, 33, 44, 55]
-
-
-STANDARD_EVENTS_AVO = None  # Auto-detect as non-oddball events 
-
-# Trials per subject
-TRIALS_PER_SUBJECT_P3 = 80 
-TRIALS_PER_SUBJECT_AVO = 10  
-
-class OddballPreprocessor(Preprocessor):
-    """Preprocessor for oddball paradigm EEG data with balanced sampling."""
-
-    def __init__(self, eeg_channels, dataset_type='P3', random_seed=42):
-        """Initialize preprocessor with dataset-specific parameters.
+def create_preprocessors(eeg_channels, dataset_type='P3'):
+    """Create preprocessing pipeline for oddball datasets.
+    
+    Parameters
+    ----------
+    eeg_channels : list
+        List of EEG channel names to use
+    dataset_type : str
+        Either 'P3' or 'AVO'
         
-        Parameters
-        ----------
-        eeg_channels : list
-            List of EEG channel names to use (e.g., ['Fz', 'Pz', 'P3', 'P4', 'Oz'])
-        dataset_type : str
-            Either 'P3' or 'AVO' to select appropriate event codes
-        random_seed : int
-            Random seed for reproducible sampling
-        """
-        super().__init__(fn=self.transform, apply_on_array=False)
-        self.eeg_channels = [ch.lower() for ch in eeg_channels]
-        self.dataset_type = dataset_type
-        self.random_seed = random_seed
-        
-        self.trial_start_offset_samples = int(TRIAL_START_OFFSET * RESAMPLE_FREQ)
-        self.trial_stop_offset_samples = int(TRIAL_DURATION * RESAMPLE_FREQ)
-        
-        if dataset_type == 'AVO':
-            self.response_events = RESPONSE_EVENTS_AVO
-            self.oddball_events = ODDBALL_EVENTS_AVO
-            self.standard_events = STANDARD_EVENTS_AVO  # None for auto-detect
-            self.trials_per_class = TRIALS_PER_SUBJECT_AVO
-        else:  # P3
-            self.response_events = RESPONSE_EVENTS_P3
-            self.oddball_events = ODDBALL_EVENTS_P3
-            self.standard_events = None  # Auto-detect for P3
-            self.trials_per_class = TRIALS_PER_SUBJECT_P3
-
-# %%
-# Step 2: ICA Artifact Removal Method
-# -----------------------------------
-#
-# ICA (Independent Component Analysis) identifies and removes artifacts from EEG:
-# - Eye movements (EOG)
-# - Muscle activity
-# - Other non-brain signals
-#
-# This step is critical for clean ERP analysis and follows the paper's methodology.
-
-    def remove_artifacts_ica(self, raw_full):
-        """Remove eye movement and muscle artifacts using ICA.
-        
-        The process:
-        1. High-pass filter at 1 Hz (recommended for ICA stability)
-        2. Fit ICA to decompose signals into independent components
-        3. Automatically detect artifact components using frontal channels
-        4. Remove bad components and back-project to get clean data
-        """
-        if not REMOVE_ARTIFACTS:
-            return raw_full
-        
-        raw_ica = raw_full.copy()
-        raw_ica.filter(l_freq=1.0, h_freq=None)
-        
-        n_components = min(15, len(raw_ica.ch_names) - 1)
-        
-        if n_components < 2:
-            return raw_full
-        
-        ica = mne.preprocessing.ICA(
-            n_components=n_components,
-            random_state=self.random_seed,
-            method='fastica',
-            max_iter=500
-        )
-        
-        ica.fit(raw_ica)
-        
-        frontal_channels = [ch for ch in raw_full.ch_names 
-                          if any(front in ch.lower() 
-                               for front in ['fp1', 'fp2', 'af3', 'af4', 'f3', 'f4', 'fz', 'fpz'])]
-        
-        eog_indices = []
-        if frontal_channels:
-            for ch in frontal_channels[:2]:
-                indices, scores = ica.find_bads_eog(raw_ica, ch_name=ch, threshold=3.0)
-                eog_indices.extend(indices)
-        
-        eog_indices = list(set(eog_indices))
-        
-        if eog_indices:
-            ica.exclude = eog_indices
-            raw_clean = ica.apply(raw_full.copy())
-            return raw_clean
-        
-        return raw_full
-
-# %%
-# Step 3: Main Transform Pipeline - Initial Setup
-# -----------------------------------------------
-#
-# The `transform` method orchestrates all preprocessing steps in sequence.
-# First, we prepare the data: standardize channel names, set reference, and convert units.
-
-    def transform(self, raw):
-        """Transform raw EEG data into balanced windowed dataset.
-        
-        This method applies all 7 preprocessing steps in sequence.
-        """
+    Returns
+    -------
+    list
+        List of Preprocessor objects
+    """
+    def rename_events_fn(raw):
+        return rename_oddball_events(raw, dataset_type=dataset_type)
+    
+    def rename_channels_fn(raw):
         raw.rename_channels({ch: ch.lower() for ch in raw.ch_names})
-        raw.set_eeg_reference('average', projection=True)
-        raw_data = raw.get_data()
-        if np.std(raw_data) < 1e-6 and np.std(raw_data) > 0:
-            raw._data *= 1e6
+        return raw
+    
+    preprocessors = [
+        Preprocessor(rename_events_fn, apply_on_array=False),
+        Preprocessor(rename_channels_fn, apply_on_array=False),
+        Preprocessor("set_eeg_reference", ref_channels='average', projection=True),
+        Preprocessor("resample", sfreq=RESAMPLE_FREQ),
+        Preprocessor("filter", l_freq=LOW_FREQ, h_freq=HIGH_FREQ),
+        Preprocessor("pick_channels", ch_names=[ch.lower() for ch in eeg_channels], ordered=False),
+    ]
+    
+    return preprocessors
 
-# %%
-# Step 4: Resampling and Filtering
-# --------------------------------
-#
-# Apply temporal filtering to remove unwanted frequencies:
-# - Resample to 128 Hz (computational efficiency + sufficient for ERPs)
-# - Notch filter at 50/60 Hz (remove power line interference)
-# - Band-pass filter 0.5-30 Hz (retain ERP-relevant frequencies)
-        
-        raw.resample(RESAMPLE_FREQ)
-        
-        if APPLY_NOTCH_FILTER:
-            for freq in NOTCH_FREQS:
-                raw.notch_filter(freq, verbose=False)
-        
-        raw.filter(l_freq=LOW_FREQ, h_freq=HIGH_FREQ)
-
-# %%
-# Step 5: Artifact Removal and Channel Selection
-# ----------------------------------------------
-#
-# Now we clean the data with ICA (on all channels), then select our target channels.
-# ICA works best on full-channel data, so we do it before channel selection.
-        
-        raw = self.remove_artifacts_ica(raw)
-        
-        available_channels = [ch for ch in self.eeg_channels if ch in raw.ch_names]
-        if not available_channels:
-            raise ValueError(f"No requested channels found. Available: {raw.ch_names}")
-        raw.pick_channels(available_channels)
-
-# %%
-# Step 6: Event Extraction and Balanced Sampling
-# ----------------------------------------------
-#
-# Extract stimulus events and create balanced datasets:
-# - Remove response events (button presses)
-# - Separate oddball (rare) from standard (frequent) stimuli
-# - Sample equal numbers of each class to prevent bias
-
-        events, event_id = mne.events_from_annotations(raw)
-        if len(events) == 0:
-            raise ValueError("No events found")
-        
-        def get_codes_from_descriptions(event_id, descriptions):
-            """Get event codes that match any of the description patterns."""
-            codes = []
-            for desc, code in event_id.items():
-                if any(pattern in desc for pattern in descriptions):
-                    codes.append(code)
-            return codes
-        
-        if self.dataset_type == 'AVO':
-            oddball_codes = get_codes_from_descriptions(event_id, ['11', '22', '33', '44', '55'])
-            response_codes = get_codes_from_descriptions(event_id, ['201', '202'])
-        else:
-            oddball_codes = self.oddball_events
-            response_codes = self.response_events
-        
-        response_mask = np.isin(events[:, 2], response_codes)
-        events = events[~response_mask]
-        
-        if len(events) > 0:
-            events = events[:-1]
-        
-        oddball_mask = np.isin(events[:, 2], oddball_codes)
-        oddball_events = events[oddball_mask]
-        standard_events = events[~oddball_mask]
-        
-        if len(oddball_events) == 0 or len(standard_events) == 0:
-            raise ValueError(f"Missing events: oddball={len(oddball_events)}, standard={len(standard_events)}")
-        
-        np.random.seed(self.random_seed)
-        n_trials = min(len(oddball_events), len(standard_events), self.trials_per_class)
-        
-        oddball_indices = np.random.choice(len(oddball_events), size=n_trials, replace=False)
-        standard_indices = np.random.choice(len(standard_events), size=n_trials, replace=False)
-        
-        selected_oddball = oddball_events[oddball_indices]
-        selected_standard = standard_events[standard_indices]
-        
-        selected_events = np.vstack([selected_oddball, selected_standard])
-        labels = np.concatenate([np.ones(n_trials), np.zeros(n_trials)]).astype(int)
-
-# %%
-# Step 7: Epoching (Windowing)
-# ----------------------------
-#
-# Extract time-locked windows around each stimulus:
-# - Window: -100ms to +1000ms relative to stimulus onset
-# - Pre-stimulus interval will be used for baseline correction
-
-        raw_data = raw.get_data()
-        windows_data = []
-        windows_labels = []
-        
-        for i, (event_sample, _, _) in enumerate(selected_events):
-            start_sample = event_sample + self.trial_start_offset_samples
-            end_sample = event_sample + self.trial_stop_offset_samples
-            
-            if start_sample >= 0 and end_sample <= raw_data.shape[1]:
-                window_data = raw_data[:, start_sample:end_sample]
-                windows_data.append(window_data)
-                windows_labels.append(labels[i])
-        
-        windows_data = np.array(windows_data)
-        windows_labels = np.array(windows_labels)
-
-# %%
-# Step 8: Baseline Correction
-# ---------------------------
-#
-# Subtract the pre-stimulus baseline (-100ms to 0ms) from each trial.
-# This removes slow drifts and ensures we're measuring stimulus-evoked responses.
-        
-        if BASELINE_CORRECT:
-            baseline_end_idx = abs(self.trial_start_offset_samples) if self.trial_start_offset_samples < 0 else 0
-            
-            if baseline_end_idx > 0:
-                baseline_mean = np.mean(windows_data[:, :, :baseline_end_idx], axis=2, keepdims=True)
-                windows_data = windows_data - baseline_mean
-        
-        return ManualWindowsDataset(windows_data, windows_labels)
+# Trials per subject for sampling
+TRIALS_PER_SUBJECT_P3 = 80 
+TRIALS_PER_SUBJECT_AVO = 10
 
 
 # %%
@@ -492,129 +277,33 @@ class OddballPreprocessor(Preprocessor):
 # The stimulus onset occurs at t=0s.
 
 # %%
-# Positional Encoding Utility
-# ---------------------------
+# Deep Learning Model: EEGConformer from Braindecode
+# ---------------------------------------------------
 #
-# Sine-cosine positional encodings added to the token sequence before entering
-# the Transformer, enabling the model to represent temporal order.
+# Import the EEGConformer model from braindecode library
 
-import math
 import torch
 import torch.nn as nn
+import torch.nn.functional as F
 
 COMMON_CHANNELS = ['Fz', 'Pz', 'P3', 'P4', 'Oz']
 
-class PositionalEncoding(nn.Module):
-    """Positional encoding for transformer layers."""
-    
-    def __init__(self, d_model, max_len=5000):
-        super().__init__()
-        pe = torch.zeros(max_len, d_model)
-        position = torch.arange(0, max_len).unsqueeze(1).float()
-        
-        div_term = torch.exp(torch.arange(0, d_model, 2).float() *
-                           -(math.log(10000.0) / d_model))
-        
-        pe[:, 0::2] = torch.sin(position * div_term)
-        pe[:, 1::2] = torch.cos(position * div_term)
-        pe = pe.unsqueeze(0)
-        
-        self.register_buffer('pe', pe)
-    
-    def forward(self, x):
-        return x + self.pe[:, :x.size(1)]
-
-# %%
-# Deep Learning Model: EEGConformer
-# ----------------------------------
-#
-# Combines CNN layers (temporal + spatial) with a Transformer encoder and a
-# lightweight classification head for ERP decoding.
-
-import torch.nn.functional as F
-
-CONFORMER_CONV_SPATIAL_DIM = 68
-CONFORMER_CONV_TEMPORAL_DIM = 44
-CONFORMER_EMBEDDING_DIM = 68
-CONFORMER_NUM_HEADS = 4
-CONFORMER_NUM_LAYERS = 5
-DROPOUT_RATE = 0.18
-
-class EEGConformer(nn.Module):
-    """EEGConformer: CNN + Transformer for EEG classification."""
-    
-    def __init__(self, n_chans, n_outputs, n_times, 
-                 conv_spatial_dim=40, conv_temporal_dim=25,
-                 embedding_dim=40, num_heads=10, num_layers=3,
-                 dropout=0.5, activation='gelu'):
-        super().__init__()
-        self.n_chans = n_chans
-        self.n_outputs = n_outputs
-        self.n_times = n_times
-        self.embedding_dim = embedding_dim
-        
-        self.temporal_conv = nn.Conv2d(1, conv_temporal_dim, (1, 25), padding=(0, 12))
-        self.temporal_bn = nn.BatchNorm2d(conv_temporal_dim)
-        
-        self.spatial_conv = nn.Conv2d(conv_temporal_dim, conv_spatial_dim, (n_chans, 1))
-        self.spatial_bn = nn.BatchNorm2d(conv_spatial_dim)
-        
-        self.avg_pool = nn.AvgPool2d((1, 4), (1, 4))
-        self.dropout = nn.Dropout(dropout)
-        
-        seq_length = n_times // 4
-        
-        self.projection = nn.Linear(conv_spatial_dim, embedding_dim)
-        self.pos_encoding = PositionalEncoding(embedding_dim, max_len=seq_length)
-        
-        encoder_layer = nn.TransformerEncoderLayer(
-            d_model=embedding_dim,
-            nhead=num_heads,
-            dim_feedforward=embedding_dim * 4,
-            dropout=dropout,
-            activation=activation,
-            batch_first=True
-        )
-        self.transformer = nn.TransformerEncoder(encoder_layer, num_layers=num_layers)
-        
-        self.classifier = nn.Sequential(
-            nn.AdaptiveAvgPool1d(1),
-            nn.Flatten(),
-            nn.Linear(embedding_dim, n_outputs)
-        )
-    
-    def forward(self, x):
-        x = x.unsqueeze(1)  # (batch, 1, n_chans, n_times)
-        x = self.temporal_conv(x)
-        x = self.temporal_bn(x)
-        x = F.elu(x)
-        x = self.spatial_conv(x)
-        x = self.spatial_bn(x)
-        x = F.elu(x)
-        x = self.dropout(x)
-        x = self.avg_pool(x)
-        x = x.squeeze(2).transpose(1, 2)  # (batch, seq_len, conv_spatial_dim)
-        x = self.projection(x)
-        x = self.pos_encoding(x)
-        x = self.transformer(x)
-        x = x.transpose(1, 2)  # (batch, embedding_dim, seq_len)
-        x = self.classifier(x)
-        return x
-
+from braindecode.models import EEGConformer
 
 def create_model(n_channels, n_times):
-    """Create EEGConformer model with configured hyperparameters."""
+    """Create EEGConformer model from braindecode."""
     return EEGConformer(
         n_chans=n_channels,
         n_outputs=2,
         n_times=n_times,
-        conv_spatial_dim=CONFORMER_CONV_SPATIAL_DIM,
-        conv_temporal_dim=CONFORMER_CONV_TEMPORAL_DIM,
-        embedding_dim=CONFORMER_EMBEDDING_DIM,
-        num_heads=CONFORMER_NUM_HEADS,
-        num_layers=CONFORMER_NUM_LAYERS,
-        dropout=DROPOUT_RATE,
-        activation='gelu'
+        n_filters_time=40,
+        filter_time_length=25,
+        pool_time_length=75,
+        pool_time_stride=15,
+        drop_prob=0.5,
+        att_depth=3,
+        att_heads=4,
+        att_drop_prob=0.5,
     )
 
 
@@ -802,57 +491,56 @@ def stratified_sample_trials(data, labels, n_trials, random_seed):
 # Combined Loaders (P3 + AVO)
 # ---------------------------
 #
-# Load both datasets, apply stratified sampling per subject, and combine.
-
-
+# Load both datasets using braindecode preprocessing on each raw recording.
 
 def load_combined_arrays(channels):
-    """Load and combine P3 and AVO datasets with stratified sampling using EEGDashDataset."""
+    """Load and combine P3 and AVO datasets using braindecode preprocessing."""
     X_list = []
     y_list = []
     src_list = []
 
     for dataset_name in ['P3', 'AVO']:
         print(f"\nProcessing {dataset_name} dataset...")
-        if dataset_name == 'P3':
-            subjects = get_dataset_subjects('P3')
-            n_trials_ps = TRIALS_PER_SUBJECT_P3
-        else:
-            subjects = get_dataset_subjects('AVO')
-            n_trials_ps = TRIALS_PER_SUBJECT_AVO
-
-        print(f"Found {len(subjects)} subjects: {subjects[:5]}..." if len(subjects) > 5 else f"Found {len(subjects)} subjects: {subjects}")
-        preproc = OddballPreprocessor(channels, dataset_type=dataset_name)
-
-        successful_subjects = 0
-        for s in subjects:
-            data, labels = process_subject_data(s, preproc, dataset_type=dataset_name)
-            if data is None or labels is None or len(data) == 0:
-                continue
-            
-            successful_subjects += 1
-            if len(data) > n_trials_ps:
-                data, labels = stratified_sample_trials(data, labels, n_trials_ps, SEEDS[0])
-            
-            X_list.append(data)
-            y_list.append(labels)
-            src_list.append(np.array([dataset_name] * len(labels)))
+        dataset = ds_p3 if dataset_name == 'P3' else ds_avo
         
-        print(f"Successfully loaded {successful_subjects}/{len(subjects)} subjects from {dataset_name}")
-        if successful_subjects > 0:
-            total_trials = sum(len(src) for src in src_list if src[0] == dataset_name)
-            print(f"Total trials from {dataset_name}: {total_trials}")
+        preprocessors = create_preprocessors(channels, dataset_type=dataset_name)
+        
+        print(f"Applying preprocessing to {len(dataset.datasets)} recordings...")
+        preprocess(dataset, preprocessors)
+        
+        trial_start_offset_samples = int(TRIAL_START_OFFSET * RESAMPLE_FREQ)
+        trial_stop_offset_samples = int((TRIAL_START_OFFSET + TRIAL_DURATION) * RESAMPLE_FREQ)
+        
+        windows_ds = create_windows_from_events(
+            dataset,
+            trial_start_offset_samples=trial_start_offset_samples,
+            trial_stop_offset_samples=trial_stop_offset_samples,
+            window_size_samples=None,
+            window_stride_samples=None,
+            preload=True,
+            drop_bad_windows=True,
+        )
+        
+        for i in range(len(windows_ds)):
+            window_data, window_label, *_ = windows_ds[i]
+            X_list.append(window_data)
+            y_list.append(window_label)
+            src_list.append(dataset_name)
+        
+        print(f"Extracted {len([s for s in src_list if s == dataset_name])} windows from {dataset_name}")
 
     if not X_list:
         raise RuntimeError("No valid data loaded")
 
-    X_all = np.concatenate(X_list, axis=0)
-    y_all = np.concatenate(y_list, axis=0)
-    src_all = np.concatenate(src_list, axis=0)
+    X_all = np.array(X_list)
+    y_all = np.array(y_list)
+    src_all = np.array(src_list)
 
     print(f"\nFinal dataset: {len(X_all)} total trials")
     print(f"  P3: {np.sum(src_all=='P3')} trials")
     print(f"  AVO: {np.sum(src_all=='AVO')} trials")
+    if len(X_all) > 0:
+        print(f"  Data shape: {X_all.shape} (n_trials, n_chans, n_times)")
 
     return X_all, y_all, src_all
 
@@ -1005,7 +693,6 @@ def evaluate_with_metrics(model, loader, device):
     
     all_preds, all_targets, all_probs = map(np.array, [all_preds, all_targets, all_probs])
     
-    # Calculate metrics
     cm = confusion_matrix(all_targets, all_preds)
     if cm.shape == (2, 2):
         tn, fp, fn, tp = cm.ravel()

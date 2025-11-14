@@ -76,20 +76,6 @@ import numpy as np
 mne.set_log_level('ERROR')
 
 def rename_oddball_events(raw, dataset_type='P3'):
-    """Rename events for oddball paradigm.
-    
-    Parameters
-    ----------
-    raw : mne.io.Raw
-        Raw EEG data
-    dataset_type : str
-        Either 'P3' or 'AVO'
-        
-    Returns
-    -------
-    mne.io.Raw
-        Raw object with renamed events (oddball=1, standard=0)
-    """
     events, event_id = mne.events_from_annotations(raw)
     
     if len(events) == 0:
@@ -160,13 +146,6 @@ def rename_oddball_events(raw, dataset_type='P3'):
     return raw
 
 
-# Preprocessing parameters
-LOW_FREQ = 0.5
-HIGH_FREQ = 30
-RESAMPLE_FREQ = 128
-TRIAL_START_OFFSET = -0.1  # seconds before stimulus
-TRIAL_DURATION = 1.1  # seconds total window
-
 # %%
 # Data Normalization and Augmentation
 # -----------------------------------
@@ -222,6 +201,13 @@ def augment_data(x, noise_std=NOISE_STD, time_shift=TIME_SHIFT_RANGE):
 # Create preprocessors for both datasets using braindecode
 
 from braindecode.preprocessing import preprocess, Preprocessor, create_windows_from_events
+
+# Preprocessing parameters
+LOW_FREQ = 0.5
+HIGH_FREQ = 30
+RESAMPLE_FREQ = 128
+TRIAL_START_OFFSET = -0.1  # seconds before stimulus
+TRIAL_DURATION = 1.1  # seconds total window
 
 def create_preprocessors(eeg_channels, dataset_type='P3'):
     """Create preprocessing pipeline for oddball datasets.

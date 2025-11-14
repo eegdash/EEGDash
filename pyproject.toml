@@ -14,7 +14,7 @@ authors = [
 ]
 description     = "EEG data for machine learning"
 readme          = "README.md"
-license         = "GPL-3.0-only"
+license         = "BSD-3-Clause"
 requires-python = ">=3.10"
 
 classifiers = [

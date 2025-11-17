@@ -17,7 +17,6 @@ tests/data/
 .vscode/
 build/
 
-
 dist/
 docs/build/
 docs/source/gen_modules/
@@ -39,6 +38,7 @@ examples/data
 .DS_Store
 
 data/
+*.json
 *.isorted
 *.py.isorted
 

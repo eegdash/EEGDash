@@ -242,7 +242,7 @@ def main() -> None:
 
     # Save to JSON
     with args.output.open("w") as fh:
-        json.dump(projects, fh, indent=2)
+        json.dump(projects, fh, indent=2, sort_keys=True)
 
     # Print summary statistics
     print(f"\n{'=' * 60}")

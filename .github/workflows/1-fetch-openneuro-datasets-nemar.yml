@@ -80,19 +80,12 @@ jobs:
             --page-size 100 \
             --output eegdash-dataset-listings/consolidated/openneuro_datasets.json
 
-      - name: Filter new datasets
-        run: |
-          python eegdash/scripts/ingestions/2_filter_new_datasets.py \
-            eegdash-dataset-listings/consolidated/openneuro_datasets.json
-
       - name: Verify and report
         run: |
           echo "### 📊 OpenNeuro Results" >> $GITHUB_STEP_SUMMARY
           if [ -f eegdash-dataset-listings/consolidated/openneuro_datasets.json ]; then
             TOTAL=$(python -c "import json; print(len(json.load(open('eegdash-dataset-listings/consolidated/openneuro_datasets.json'))))")
-            TO_DIGEST=$(python -c "import json; print(len(json.load(open('eegdash-dataset-listings/consolidated/to_digest_openneuro_datasets.json'))))" 2>/dev/null || echo "0")
             echo "- Total datasets: $TOTAL" >> $GITHUB_STEP_SUMMARY
-            echo "- New to digest: $TO_DIGEST" >> $GITHUB_STEP_SUMMARY
           fi
 
       - name: Commit and push
@@ -100,7 +93,7 @@ jobs:
           cd eegdash-dataset-listings
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add consolidated/openneuro_datasets.json consolidated/to_digest_openneuro_datasets.json
+          git add consolidated/openneuro_datasets.json
           if ! git diff --cached --quiet; then
             git commit -m "chore: update OpenNeuro listings [$(date -u +%Y-%m-%d)]"
             git push
@@ -153,19 +146,12 @@ jobs:
             --organization nemardatasets \
             --output eegdash-dataset-listings/consolidated/nemardatasets_repos.json
 
-      - name: Filter new datasets
-        run: |
-          python eegdash/scripts/ingestions/2_filter_new_datasets.py \
-            eegdash-dataset-listings/consolidated/nemardatasets_repos.json
-
       - name: Verify and report
         run: |
           echo "### 📊 NEMAR Results" >> $GITHUB_STEP_SUMMARY
           if [ -f eegdash-dataset-listings/consolidated/nemardatasets_repos.json ]; then
             TOTAL=$(python -c "import json; print(len(json.load(open('eegdash-dataset-listings/consolidated/nemardatasets_repos.json'))))")
-            TO_DIGEST=$(python -c "import json; print(len(json.load(open('eegdash-dataset-listings/consolidated/to_digest_nemardatasets_repos.json'))))" 2>/dev/null || echo "0")
             echo "- Total repositories: $TOTAL" >> $GITHUB_STEP_SUMMARY
-            echo "- New to digest: $TO_DIGEST" >> $GITHUB_STEP_SUMMARY
           fi
 
       - name: Commit and push
@@ -173,7 +159,7 @@ jobs:
           cd eegdash-dataset-listings
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add consolidated/nemardatasets_repos.json consolidated/to_digest_nemardatasets_repos.json
+          git add consolidated/nemardatasets_repos.json
           if ! git diff --cached --quiet; then
             git commit -m "chore: update NEMAR listings [$(date -u +%Y-%m-%d)]"
             git push
@@ -226,23 +212,13 @@ jobs:
           python eegdash/scripts/ingestions/1_fetch_eegmanylabs.py \
             --output eegdash-dataset-listings/consolidated/eegmanylabs_datasets.json
 
-      - name: Filter new datasets
-        if: success()
-        run: |
-          if [ -f eegdash-dataset-listings/consolidated/eegmanylabs_datasets.json ]; then
-            python eegdash/scripts/ingestions/2_filter_new_datasets.py \
-              eegdash-dataset-listings/consolidated/eegmanylabs_datasets.json
-          fi
-
       - name: Verify and report
         if: success()
         run: |
           echo "### 📊 EEGManyLabs Results" >> $GITHUB_STEP_SUMMARY
           if [ -f eegdash-dataset-listings/consolidated/eegmanylabs_datasets.json ]; then
             TOTAL=$(python -c "import json; print(len(json.load(open('eegdash-dataset-listings/consolidated/eegmanylabs_datasets.json'))))")
-            TO_DIGEST=$(python -c "import json; print(len(json.load(open('eegdash-dataset-listings/consolidated/to_digest_eegmanylabs_datasets.json'))))" 2>/dev/null || echo "0")
             echo "- Total datasets: $TOTAL" >> $GITHUB_STEP_SUMMARY
-            echo "- New to digest: $TO_DIGEST" >> $GITHUB_STEP_SUMMARY
           fi
 
       - name: Commit and push
@@ -251,7 +227,7 @@ jobs:
           cd eegdash-dataset-listings
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add consolidated/eegmanylabs_datasets.json consolidated/to_digest_eegmanylabs_datasets.json || true
+          git add consolidated/eegmanylabs_datasets.json || true
           if ! git diff --cached --quiet; then
             git commit -m "chore: update EEGManyLabs listings [$(date -u +%Y-%m-%d)]"
             git push
@@ -304,23 +280,13 @@ jobs:
           python eegdash/scripts/ingestions/1_fetch_zenodo.py \
             --output eegdash-dataset-listings/consolidated/zenodo_datasets.json
 
-      - name: Filter new datasets
-        if: success()
-        run: |
-          if [ -f eegdash-dataset-listings/consolidated/zenodo_datasets.json ]; then
-            python eegdash/scripts/ingestions/2_filter_new_datasets.py \
-              eegdash-dataset-listings/consolidated/zenodo_datasets.json
-          fi
-
       - name: Verify and report
         if: success()
         run: |
           echo "### 📊 Zenodo Results" >> $GITHUB_STEP_SUMMARY
           if [ -f eegdash-dataset-listings/consolidated/zenodo_datasets.json ]; then
             TOTAL=$(python -c "import json; print(len(json.load(open('eegdash-dataset-listings/consolidated/zenodo_datasets.json'))))")
-            TO_DIGEST=$(python -c "import json; print(len(json.load(open('eegdash-dataset-listings/consolidated/to_digest_zenodo_datasets.json'))))" 2>/dev/null || echo "0")
             echo "- Total datasets: $TOTAL" >> $GITHUB_STEP_SUMMARY
-            echo "- New to digest: $TO_DIGEST" >> $GITHUB_STEP_SUMMARY
           fi
 
       - name: Commit and push
@@ -329,7 +295,7 @@ jobs:
           cd eegdash-dataset-listings
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add consolidated/zenodo_datasets.json consolidated/to_digest_zenodo_datasets.json || true
+          git add consolidated/zenodo_datasets.json || true
           if ! git diff --cached --quiet; then
             git commit -m "chore: update Zenodo listings [$(date -u +%Y-%m-%d)]"
             git push
@@ -382,23 +348,13 @@ jobs:
           python eegdash/scripts/ingestions/1_fetch_figshare.py \
             --output eegdash-dataset-listings/consolidated/figshare_datasets.json
 
-      - name: Filter new datasets
-        if: success()
-        run: |
-          if [ -f eegdash-dataset-listings/consolidated/figshare_datasets.json ]; then
-            python eegdash/scripts/ingestions/2_filter_new_datasets.py \
-              eegdash-dataset-listings/consolidated/figshare_datasets.json
-          fi
-
       - name: Verify and report
         if: success()
         run: |
           echo "### 📊 Figshare Results" >> $GITHUB_STEP_SUMMARY
           if [ -f eegdash-dataset-listings/consolidated/figshare_datasets.json ]; then
             TOTAL=$(python -c "import json; print(len(json.load(open('eegdash-dataset-listings/consolidated/figshare_datasets.json'))))")
-            TO_DIGEST=$(python -c "import json; print(len(json.load(open('eegdash-dataset-listings/consolidated/to_digest_figshare_datasets.json'))))" 2>/dev/null || echo "0")
             echo "- Total datasets: $TOTAL" >> $GITHUB_STEP_SUMMARY
-            echo "- New to digest: $TO_DIGEST" >> $GITHUB_STEP_SUMMARY
           fi
 
       - name: Commit and push
@@ -407,7 +363,7 @@ jobs:
           cd eegdash-dataset-listings
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add consolidated/figshare_datasets.json consolidated/to_digest_figshare_datasets.json || true
+          git add consolidated/figshare_datasets.json || true
           if ! git diff --cached --quiet; then
             git commit -m "chore: update Figshare listings [$(date -u +%Y-%m-%d)]"
             git push
@@ -460,23 +416,13 @@ jobs:
           python eegdash/scripts/ingestions/1_fetch_osf.py \
             --output eegdash-dataset-listings/consolidated/osf_datasets.json
 
-      - name: Filter new datasets
-        if: success()
-        run: |
-          if [ -f eegdash-dataset-listings/consolidated/osf_datasets.json ]; then
-            python eegdash/scripts/ingestions/2_filter_new_datasets.py \
-              eegdash-dataset-listings/consolidated/osf_datasets.json
-          fi
-
       - name: Verify and report
         if: success()
         run: |
           echo "### 📊 OSF Results" >> $GITHUB_STEP_SUMMARY
           if [ -f eegdash-dataset-listings/consolidated/osf_datasets.json ]; then
             TOTAL=$(python -c "import json; print(len(json.load(open('eegdash-dataset-listings/consolidated/osf_datasets.json'))))")
-            TO_DIGEST=$(python -c "import json; print(len(json.load(open('eegdash-dataset-listings/consolidated/to_digest_osf_datasets.json'))))" 2>/dev/null || echo "0")
             echo "- Total datasets: $TOTAL" >> $GITHUB_STEP_SUMMARY
-            echo "- New to digest: $TO_DIGEST" >> $GITHUB_STEP_SUMMARY
           fi
 
       - name: Commit and push
@@ -485,7 +431,7 @@ jobs:
           cd eegdash-dataset-listings
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add consolidated/osf_datasets.json consolidated/to_digest_osf_datasets.json || true
+          git add consolidated/osf_datasets.json || true
           if ! git diff --cached --quiet; then
             git commit -m "chore: update OSF listings [$(date -u +%Y-%m-%d)]"
             git push

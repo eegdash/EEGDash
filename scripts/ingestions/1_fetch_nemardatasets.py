@@ -168,7 +168,7 @@ def main() -> None:
 
     args.output.parent.mkdir(parents=True, exist_ok=True)
     with args.output.open("w", encoding="utf-8") as fh:
-        json.dump(repositories, fh, indent=2)
+        json.dump(repositories, fh, indent=2, sort_keys=True)
 
     print(f"Saved {len(repositories)} repository entries to {args.output}")
 

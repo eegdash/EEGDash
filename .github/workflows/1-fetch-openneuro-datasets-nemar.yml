@@ -97,6 +97,7 @@ jobs:
           git add consolidated/openneuro_datasets.json
           if ! git diff --cached --quiet; then
             git commit -m "chore: update OpenNeuro listings [$(date -u +%Y-%m-%d)]"
+            git pull --rebase origin main
             git push
           fi
 
@@ -164,6 +165,7 @@ jobs:
           git add consolidated/nemardatasets_repos.json
           if ! git diff --cached --quiet; then
             git commit -m "chore: update NEMAR listings [$(date -u +%Y-%m-%d)]"
+            git pull --rebase origin main
             git push
           fi
 
@@ -233,6 +235,7 @@ jobs:
           git add consolidated/eegmanylabs_datasets.json || true
           if ! git diff --cached --quiet; then
             git commit -m "chore: update EEGManyLabs listings [$(date -u +%Y-%m-%d)]"
+            git pull --rebase origin main
             git push
           fi
 
@@ -302,6 +305,7 @@ jobs:
           git add consolidated/zenodo_datasets.json || true
           if ! git diff --cached --quiet; then
             git commit -m "chore: update Zenodo listings [$(date -u +%Y-%m-%d)]"
+            git pull --rebase origin main
             git push
           fi
 
@@ -371,6 +375,7 @@ jobs:
           git add consolidated/figshare_datasets.json || true
           if ! git diff --cached --quiet; then
             git commit -m "chore: update Figshare listings [$(date -u +%Y-%m-%d)]"
+            git pull --rebase origin main
             git push
           fi
 
@@ -440,5 +445,6 @@ jobs:
           git add consolidated/osf_datasets.json || true
           if ! git diff --cached --quiet; then
             git commit -m "chore: update OSF listings [$(date -u +%Y-%m-%d)]"
+            git pull --rebase origin main
             git push
           fi

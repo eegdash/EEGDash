@@ -7,14 +7,14 @@ dynamic = ["version"]
 name = "eegdash"
 authors = [
   { name = "Young Truong",    email = "dt.young112@gmail.com" },
-  { name = "Arnaud Delorme",  email = "adelorme@gmail.com" },
-  { name = "Aviv Dotan",  email = "avivd220@gmail.com" },
-  { name = "Oren Shriki",  email = "oren70@gmail.com" },
+  { name = "Arnaud Delorme",  email = "adelorme@ucsd.edu" },
+  { name = "Aviv Dotan",  email = "avivdot@bgu.post.ac.il" },
+  { name = "Oren Shriki",  email = "shrikio@bgu.ac.il" },
   { name = "Bruno Aristimunha", email = "b.aristimunha@gmail.com"}
 ]
 description     = "EEG data for machine learning"
 readme          = "README.md"
-license         = "GPL-3.0-only"
+license         = "BSD-3-Clause"
 requires-python = ">=3.10"
 
 classifiers = [

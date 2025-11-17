@@ -42,6 +42,11 @@ data/
 *.isorted
 *.py.isorted
 
+# Exclude cloned dataset directories
+test_diggestion/
+eegdash-datasets/
+digestion_output/
+
 examples/eeg2025/weights*
 # Generated dataset visualizations
 docs/source/_static/dataset_generated/

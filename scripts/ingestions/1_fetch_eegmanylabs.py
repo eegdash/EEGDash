@@ -162,7 +162,7 @@ def main() -> None:
 
     # Save to JSON
     with args.output.open("w") as fh:
-        json.dump(datasets, fh, indent=2)
+        json.dump(datasets, fh, indent=2, sort_keys=True)
 
     print(f"\n{'=' * 60}")
     print(f"Successfully saved {len(datasets)} datasets to {args.output}")

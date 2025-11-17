@@ -1,4 +1,4 @@
 # Authors: EEG DaSh team
 #
 # License:
-# General Public License (GPL) v3.0§
+# BSD 3-Clause License

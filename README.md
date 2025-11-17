@@ -3,7 +3,7 @@
 [![PyPI version](https://img.shields.io/pypi/v/eegdash)](https://pypi.org/project/eegdash/)
 [![Docs](https://img.shields.io/badge/docs-stable-brightgreen.svg)](https://sccn.github.io/eegdash)
 
-[![License: GPL-2.0-or-later](https://img.shields.io/badge/License-GPL--2.0--or--later-blue.svg)](LICENSE)
+[![License: BSD-3-Clause](https://img.shields.io/badge/License-BSD--3--Clause-blue.svg)](LICENSE)
 [![Python versions](https://img.shields.io/pypi/pyversions/eegdash.svg)](https://pypi.org/project/eegdash/)
 [![Downloads](https://pepy.tech/badge/eegdash)](https://pepy.tech/project/eegdash)
 <!-- [![Coverage](https://img.shields.io/codecov/c/github/sccn/eegdash)](https://codecov.io/gh/sccn/eegdash) -->

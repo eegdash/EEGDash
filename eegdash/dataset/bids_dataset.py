@@ -101,7 +101,7 @@ class EEGBIDSDataset:
         data_dir=None,  # location of bids dataset
         dataset="",  # dataset name
         allow_symlinks=False,  # allow broken symlinks for digestion
-        modalities=None,  # list of modalities to search for (e.g., ["eeg", "meg", "ieeg"])
+        modalities=None,  
     ):
         if data_dir is None or not os.path.exists(data_dir):
             raise ValueError("data_dir must be specified and must exist")

@@ -1,27 +1,62 @@
-name: Fetch OpenNeuro & NEMAR Datasets
+name: Fetch Dataset Listings from All Sources
 
 on:
   pull_request:
     branches:
       - '**'
-  # schedule:
-  #   # Run weekly on Monday at 00:00 UTC
-  #   - cron: '0 0 * * 1'
+  schedule:
+    # Run weekly on Monday at 00:00 UTC
+    - cron: '0 0 * * 1'
   workflow_dispatch:  # Allow manual triggering
+    inputs:
+      sources:
+        description: 'Sources to fetch (comma-separated: openneuro,nemar,eegmanylabs,zenodo,figshare,osf or "all")'
+        required: false
+        default: 'all'
 
 jobs:
-  fetch-datasets:
+  setup:
+    name: Setup repositories
     runs-on: ubuntu-latest
     permissions:
       contents: write
-      
+    outputs:
+      sources: ${{ steps.determine-sources.outputs.sources }}
+    
     steps:
-      - name: Checkout repository
+      - name: Determine sources to fetch
+        id: determine-sources
+        run: |
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ] && [ "${{ github.event.inputs.sources }}" != "all" ]; then
+            echo "sources=${{ github.event.inputs.sources }}" >> $GITHUB_OUTPUT
+          else
+            echo "sources=openneuro,nemar,eegmanylabs,zenodo,figshare,osf" >> $GITHUB_OUTPUT
+          fi
+
+  fetch-openneuro:
+    name: Fetch OpenNeuro
+    needs: setup
+    if: contains(needs.setup.outputs.sources, 'openneuro')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    
+    steps:
+      - name: Checkout repositories
         uses: actions/checkout@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           ref: ${{ github.head_ref }}
           fetch-depth: 0
+          path: eegdash
+
+      - name: Checkout dataset listings repository
+        uses: actions/checkout@v4
+        with:
+          repository: eegdash/eegdash-dataset-listings
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 1
+          path: eegdash-dataset-listings
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -31,100 +66,427 @@ jobs:
 
       - name: Install dependencies
         run: |
+          cd eegdash
           python -m pip install --upgrade pip
           pip install gql[requests] requests
           pip install -e .
 
-      - name: Fetch OpenNeuro datasets
+      - name: Create consolidated directory
+        run: mkdir -p eegdash-dataset-listings/consolidated
+
+      - name: Fetch datasets
         run: |
-          python scripts/ingestions/1_fetch_openneuro_datasets.py \
+          python eegdash/scripts/ingestions/1_fetch_openneuro_datasets.py \
             --page-size 100 \
-            --output consolidated/openneuro_datasets.json
+            --output eegdash-dataset-listings/consolidated/openneuro_datasets.json
 
-      - name: Fetch NEMAR GitHub repositories
+      - name: Filter new datasets
         run: |
-          python scripts/ingestions/1_fetch_github_organization.py \
-            --organization nemardatasets \
-            --output consolidated/nemardatasets_repos.json
+          python eegdash/scripts/ingestions/2_filter_new_datasets.py \
+            eegdash-dataset-listings/consolidated/openneuro_datasets.json
 
-      - name: Verify OpenNeuro output
+      - name: Verify and report
         run: |
-          if [ -f consolidated/openneuro_datasets.json ]; then
-            echo "✓ OpenNeuro dataset file created successfully"
-            python -c "import json; data = json.load(open('consolidated/openneuro_datasets.json')); print(f'Total entries: {len(data)}'); modalities = set(d['modality'] for d in data); print(f'Modalities: {sorted(modalities)}')"
-          else
-            echo "✗ OpenNeuro dataset file not created"
-            exit 1
+          echo "### 📊 OpenNeuro Results" >> $GITHUB_STEP_SUMMARY
+          if [ -f eegdash-dataset-listings/consolidated/openneuro_datasets.json ]; then
+            TOTAL=$(python -c "import json; print(len(json.load(open('eegdash-dataset-listings/consolidated/openneuro_datasets.json'))))")
+            TO_DIGEST=$(python -c "import json; print(len(json.load(open('eegdash-dataset-listings/consolidated/to_digest_openneuro_datasets.json'))))" 2>/dev/null || echo "0")
+            echo "- Total datasets: $TOTAL" >> $GITHUB_STEP_SUMMARY
+            echo "- New to digest: $TO_DIGEST" >> $GITHUB_STEP_SUMMARY
           fi
 
-      - name: Verify NEMAR output
+      - name: Commit and push
         run: |
-          if [ -f consolidated/nemardatasets_repos.json ]; then
-            echo "✓ NEMAR repositories file created successfully"
-            python -c "import json; data = json.load(open('consolidated/nemardatasets_repos.json')); print(f'Total repositories: {len(data)}'); topics = set(); [topics.update(d.get('topics', [])) for d in data]; print(f'Topics: {sorted(topics) if topics else \"None\"}')"
-          else
-            echo "✗ NEMAR repositories file not created"
-            exit 1
-          fi
-
-      - name: Filter new OpenNeuro datasets
-        run: |
-          python scripts/ingestions/2_filter_new_datasets.py \
-            consolidated/openneuro_datasets.json
-
-      - name: Filter new NEMAR datasets
-        run: |
-          python scripts/ingestions/2_filter_new_datasets.py \
-            consolidated/nemardatasets_repos.json
-
-      - name: Verify filtered outputs
-        run: |
-          echo "📊 Filtering Results:"
-          echo ""
-          if [ -f consolidated/to_digest_openneuro_datasets.json ]; then
-            echo "✓ OpenNeuro filtered datasets created"
-            python -c "import json; data = json.load(open('consolidated/to_digest_openneuro_datasets.json')); print(f'  Datasets to digest: {len(data)}')"
-          else
-            echo "✗ OpenNeuro filtered datasets not created"
-            exit 1
-          fi
-          echo ""
-          if [ -f consolidated/to_digest_nemardatasets_repos.json ]; then
-            echo "✓ NEMAR filtered datasets created"
-            python -c "import json; data = json.load(open('consolidated/to_digest_nemardatasets_repos.json')); print(f'  Datasets to digest: {len(data)}')"
-          else
-            echo "✗ NEMAR filtered datasets not created"
-            exit 1
-          fi
-
-      - name: Commit and push changes if datasets updated
-        run: |
+          cd eegdash-dataset-listings
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          
-          # Add all dataset files to staging
-          git add consolidated/openneuro_datasets.json
-          git add consolidated/nemardatasets_repos.json
-          git add consolidated/to_digest_openneuro_datasets.json
-          git add consolidated/to_digest_nemardatasets_repos.json
-          
-          # Check if there are actual changes (not just timestamp differences)
-          if git diff --cached --quiet; then
-            echo "No changes detected in dataset files, skipping commit"
-          else
-            echo "Changes detected, committing..."
-            git commit -m "chore: update OpenNeuro & NEMAR dataset listings and filtered to_digest files"
-            git push origin HEAD:${{ github.head_ref }}
-            echo "✓ Changes committed and pushed"
+          git add consolidated/openneuro_datasets.json consolidated/to_digest_openneuro_datasets.json
+          if ! git diff --cached --quiet; then
+            git commit -m "chore: update OpenNeuro listings [$(date -u +%Y-%m-%d)]"
+            git push
           fi
 
-      - name: Upload artifacts for downstream jobs
-        uses: actions/upload-artifact@v4
+  fetch-nemar:
+    name: Fetch NEMAR
+    needs: setup
+    if: contains(needs.setup.outputs.sources, 'nemar')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    
+    steps:
+      - name: Checkout repositories
+        uses: actions/checkout@v4
         with:
-          name: dataset-listings
-          path: |
-            consolidated/openneuro_datasets.json
-            consolidated/nemardatasets_repos.json
-            consolidated/to_digest_openneuro_datasets.json
-            consolidated/to_digest_nemardatasets_repos.json
-          retention-days: 7
+          token: ${{ secrets.GITHUB_TOKEN }}
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
+          path: eegdash
+
+      - name: Checkout dataset listings repository
+        uses: actions/checkout@v4
+        with:
+          repository: eegdash/eegdash-dataset-listings
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 1
+          path: eegdash-dataset-listings
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          cd eegdash
+          python -m pip install --upgrade pip
+          pip install requests
+          pip install -e .
+
+      - name: Create consolidated directory
+        run: mkdir -p eegdash-dataset-listings/consolidated
+
+      - name: Fetch datasets
+        run: |
+          python eegdash/scripts/ingestions/1_fetch_github_organization.py \
+            --organization nemardatasets \
+            --output eegdash-dataset-listings/consolidated/nemardatasets_repos.json
+
+      - name: Filter new datasets
+        run: |
+          python eegdash/scripts/ingestions/2_filter_new_datasets.py \
+            eegdash-dataset-listings/consolidated/nemardatasets_repos.json
+
+      - name: Verify and report
+        run: |
+          echo "### 📊 NEMAR Results" >> $GITHUB_STEP_SUMMARY
+          if [ -f eegdash-dataset-listings/consolidated/nemardatasets_repos.json ]; then
+            TOTAL=$(python -c "import json; print(len(json.load(open('eegdash-dataset-listings/consolidated/nemardatasets_repos.json'))))")
+            TO_DIGEST=$(python -c "import json; print(len(json.load(open('eegdash-dataset-listings/consolidated/to_digest_nemardatasets_repos.json'))))" 2>/dev/null || echo "0")
+            echo "- Total repositories: $TOTAL" >> $GITHUB_STEP_SUMMARY
+            echo "- New to digest: $TO_DIGEST" >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - name: Commit and push
+        run: |
+          cd eegdash-dataset-listings
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add consolidated/nemardatasets_repos.json consolidated/to_digest_nemardatasets_repos.json
+          if ! git diff --cached --quiet; then
+            git commit -m "chore: update NEMAR listings [$(date -u +%Y-%m-%d)]"
+            git push
+          fi
+
+  fetch-eegmanylabs:
+    name: Fetch EEGManyLabs
+    needs: setup
+    if: contains(needs.setup.outputs.sources, 'eegmanylabs')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    continue-on-error: true
+    
+    steps:
+      - name: Checkout repositories
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
+          path: eegdash
+
+      - name: Checkout dataset listings repository
+        uses: actions/checkout@v4
+        with:
+          repository: eegdash/eegdash-dataset-listings
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 1
+          path: eegdash-dataset-listings
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          cd eegdash
+          python -m pip install --upgrade pip
+          pip install requests
+          pip install -e .
+
+      - name: Create consolidated directory
+        run: mkdir -p eegdash-dataset-listings/consolidated
+
+      - name: Fetch datasets
+        run: |
+          python eegdash/scripts/ingestions/1_fetch_eegmanylabs.py \
+            --output eegdash-dataset-listings/consolidated/eegmanylabs_datasets.json
+
+      - name: Filter new datasets
+        if: success()
+        run: |
+          if [ -f eegdash-dataset-listings/consolidated/eegmanylabs_datasets.json ]; then
+            python eegdash/scripts/ingestions/2_filter_new_datasets.py \
+              eegdash-dataset-listings/consolidated/eegmanylabs_datasets.json
+          fi
+
+      - name: Verify and report
+        if: success()
+        run: |
+          echo "### 📊 EEGManyLabs Results" >> $GITHUB_STEP_SUMMARY
+          if [ -f eegdash-dataset-listings/consolidated/eegmanylabs_datasets.json ]; then
+            TOTAL=$(python -c "import json; print(len(json.load(open('eegdash-dataset-listings/consolidated/eegmanylabs_datasets.json'))))")
+            TO_DIGEST=$(python -c "import json; print(len(json.load(open('eegdash-dataset-listings/consolidated/to_digest_eegmanylabs_datasets.json'))))" 2>/dev/null || echo "0")
+            echo "- Total datasets: $TOTAL" >> $GITHUB_STEP_SUMMARY
+            echo "- New to digest: $TO_DIGEST" >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - name: Commit and push
+        if: success()
+        run: |
+          cd eegdash-dataset-listings
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add consolidated/eegmanylabs_datasets.json consolidated/to_digest_eegmanylabs_datasets.json || true
+          if ! git diff --cached --quiet; then
+            git commit -m "chore: update EEGManyLabs listings [$(date -u +%Y-%m-%d)]"
+            git push
+          fi
+
+  fetch-zenodo:
+    name: Fetch Zenodo
+    needs: setup
+    if: contains(needs.setup.outputs.sources, 'zenodo')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    continue-on-error: true
+    
+    steps:
+      - name: Checkout repositories
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
+          path: eegdash
+
+      - name: Checkout dataset listings repository
+        uses: actions/checkout@v4
+        with:
+          repository: eegdash/eegdash-dataset-listings
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 1
+          path: eegdash-dataset-listings
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          cd eegdash
+          python -m pip install --upgrade pip
+          pip install requests
+          pip install -e .
+
+      - name: Create consolidated directory
+        run: mkdir -p eegdash-dataset-listings/consolidated
+
+      - name: Fetch datasets
+        run: |
+          python eegdash/scripts/ingestions/1_fetch_zenodo.py \
+            --output eegdash-dataset-listings/consolidated/zenodo_datasets.json
+
+      - name: Filter new datasets
+        if: success()
+        run: |
+          if [ -f eegdash-dataset-listings/consolidated/zenodo_datasets.json ]; then
+            python eegdash/scripts/ingestions/2_filter_new_datasets.py \
+              eegdash-dataset-listings/consolidated/zenodo_datasets.json
+          fi
+
+      - name: Verify and report
+        if: success()
+        run: |
+          echo "### 📊 Zenodo Results" >> $GITHUB_STEP_SUMMARY
+          if [ -f eegdash-dataset-listings/consolidated/zenodo_datasets.json ]; then
+            TOTAL=$(python -c "import json; print(len(json.load(open('eegdash-dataset-listings/consolidated/zenodo_datasets.json'))))")
+            TO_DIGEST=$(python -c "import json; print(len(json.load(open('eegdash-dataset-listings/consolidated/to_digest_zenodo_datasets.json'))))" 2>/dev/null || echo "0")
+            echo "- Total datasets: $TOTAL" >> $GITHUB_STEP_SUMMARY
+            echo "- New to digest: $TO_DIGEST" >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - name: Commit and push
+        if: success()
+        run: |
+          cd eegdash-dataset-listings
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add consolidated/zenodo_datasets.json consolidated/to_digest_zenodo_datasets.json || true
+          if ! git diff --cached --quiet; then
+            git commit -m "chore: update Zenodo listings [$(date -u +%Y-%m-%d)]"
+            git push
+          fi
+
+  fetch-figshare:
+    name: Fetch Figshare
+    needs: setup
+    if: contains(needs.setup.outputs.sources, 'figshare')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    continue-on-error: true
+    
+    steps:
+      - name: Checkout repositories
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
+          path: eegdash
+
+      - name: Checkout dataset listings repository
+        uses: actions/checkout@v4
+        with:
+          repository: eegdash/eegdash-dataset-listings
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 1
+          path: eegdash-dataset-listings
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          cd eegdash
+          python -m pip install --upgrade pip
+          pip install requests
+          pip install -e .
+
+      - name: Create consolidated directory
+        run: mkdir -p eegdash-dataset-listings/consolidated
+
+      - name: Fetch datasets
+        run: |
+          python eegdash/scripts/ingestions/1_fetch_figshare.py \
+            --output eegdash-dataset-listings/consolidated/figshare_datasets.json
+
+      - name: Filter new datasets
+        if: success()
+        run: |
+          if [ -f eegdash-dataset-listings/consolidated/figshare_datasets.json ]; then
+            python eegdash/scripts/ingestions/2_filter_new_datasets.py \
+              eegdash-dataset-listings/consolidated/figshare_datasets.json
+          fi
+
+      - name: Verify and report
+        if: success()
+        run: |
+          echo "### 📊 Figshare Results" >> $GITHUB_STEP_SUMMARY
+          if [ -f eegdash-dataset-listings/consolidated/figshare_datasets.json ]; then
+            TOTAL=$(python -c "import json; print(len(json.load(open('eegdash-dataset-listings/consolidated/figshare_datasets.json'))))")
+            TO_DIGEST=$(python -c "import json; print(len(json.load(open('eegdash-dataset-listings/consolidated/to_digest_figshare_datasets.json'))))" 2>/dev/null || echo "0")
+            echo "- Total datasets: $TOTAL" >> $GITHUB_STEP_SUMMARY
+            echo "- New to digest: $TO_DIGEST" >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - name: Commit and push
+        if: success()
+        run: |
+          cd eegdash-dataset-listings
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add consolidated/figshare_datasets.json consolidated/to_digest_figshare_datasets.json || true
+          if ! git diff --cached --quiet; then
+            git commit -m "chore: update Figshare listings [$(date -u +%Y-%m-%d)]"
+            git push
+          fi
+
+  fetch-osf:
+    name: Fetch OSF
+    needs: setup
+    if: contains(needs.setup.outputs.sources, 'osf')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    continue-on-error: true
+    
+    steps:
+      - name: Checkout repositories
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
+          path: eegdash
+
+      - name: Checkout dataset listings repository
+        uses: actions/checkout@v4
+        with:
+          repository: eegdash/eegdash-dataset-listings
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 1
+          path: eegdash-dataset-listings
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          cd eegdash
+          python -m pip install --upgrade pip
+          pip install requests
+          pip install -e .
+
+      - name: Create consolidated directory
+        run: mkdir -p eegdash-dataset-listings/consolidated
+
+      - name: Fetch datasets
+        run: |
+          python eegdash/scripts/ingestions/1_fetch_osf.py \
+            --output eegdash-dataset-listings/consolidated/osf_datasets.json
+
+      - name: Filter new datasets
+        if: success()
+        run: |
+          if [ -f eegdash-dataset-listings/consolidated/osf_datasets.json ]; then
+            python eegdash/scripts/ingestions/2_filter_new_datasets.py \
+              eegdash-dataset-listings/consolidated/osf_datasets.json
+          fi
+
+      - name: Verify and report
+        if: success()
+        run: |
+          echo "### 📊 OSF Results" >> $GITHUB_STEP_SUMMARY
+          if [ -f eegdash-dataset-listings/consolidated/osf_datasets.json ]; then
+            TOTAL=$(python -c "import json; print(len(json.load(open('eegdash-dataset-listings/consolidated/osf_datasets.json'))))")
+            TO_DIGEST=$(python -c "import json; print(len(json.load(open('eegdash-dataset-listings/consolidated/to_digest_osf_datasets.json'))))" 2>/dev/null || echo "0")
+            echo "- Total datasets: $TOTAL" >> $GITHUB_STEP_SUMMARY
+            echo "- New to digest: $TO_DIGEST" >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - name: Commit and push
+        if: success()
+        run: |
+          cd eegdash-dataset-listings
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add consolidated/osf_datasets.json consolidated/to_digest_osf_datasets.json || true
+          if ! git diff --cached --quiet; then
+            git commit -m "chore: update OSF listings [$(date -u +%Y-%m-%d)]"
+            git push
+          fi

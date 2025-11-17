@@ -89,6 +89,7 @@ digestion = [
   "pybids",
   "gql[requests]",
   "requests_toolbelt",
+  "beautifulsoup4",
 ]
 
 all = [

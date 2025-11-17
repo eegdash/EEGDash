@@ -60,10 +60,11 @@ jobs:
           path: eegdash-dataset-listings
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: '3.11'
           cache: 'pip'
+          cache-dependency-path: 'eegdash/pyproject.toml'
 
       - name: Install dependencies
         run: |
@@ -126,10 +127,11 @@ jobs:
           path: eegdash-dataset-listings
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: '3.11'
           cache: 'pip'
+          cache-dependency-path: 'eegdash/pyproject.toml'
 
       - name: Install dependencies
         run: |
@@ -193,10 +195,11 @@ jobs:
           path: eegdash-dataset-listings
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: '3.11'
           cache: 'pip'
+          cache-dependency-path: 'eegdash/pyproject.toml'
 
       - name: Install dependencies
         run: |
@@ -261,10 +264,11 @@ jobs:
           path: eegdash-dataset-listings
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: '3.11'
           cache: 'pip'
+          cache-dependency-path: 'eegdash/pyproject.toml'
 
       - name: Install dependencies
         run: |
@@ -329,10 +333,11 @@ jobs:
           path: eegdash-dataset-listings
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: '3.11'
           cache: 'pip'
+          cache-dependency-path: 'eegdash/pyproject.toml'
 
       - name: Install dependencies
         run: |
@@ -397,10 +402,11 @@ jobs:
           path: eegdash-dataset-listings
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: '3.11'
           cache: 'pip'
+          cache-dependency-path: 'eegdash/pyproject.toml'
 
       - name: Install dependencies
         run: |

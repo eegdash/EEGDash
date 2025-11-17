@@ -69,8 +69,7 @@ jobs:
         run: |
           cd eegdash
           python -m pip install --upgrade pip
-          pip install gql[requests] requests
-          pip install -e .
+          pip install -e .[digestion]
 
       - name: Create consolidated directory
         run: mkdir -p eegdash-dataset-listings/consolidated
@@ -136,8 +135,7 @@ jobs:
         run: |
           cd eegdash
           python -m pip install --upgrade pip
-          pip install requests
-          pip install -e .
+          pip install -e .[digestion]
 
       - name: Create consolidated directory
         run: mkdir -p eegdash-dataset-listings/consolidated
@@ -204,8 +202,7 @@ jobs:
         run: |
           cd eegdash
           python -m pip install --upgrade pip
-          pip install requests
-          pip install -e .
+          pip install -e .[digestion]
 
       - name: Create consolidated directory
         run: mkdir -p eegdash-dataset-listings/consolidated
@@ -273,8 +270,7 @@ jobs:
         run: |
           cd eegdash
           python -m pip install --upgrade pip
-          pip install requests
-          pip install -e .
+          pip install -e .[digestion]
 
       - name: Create consolidated directory
         run: mkdir -p eegdash-dataset-listings/consolidated
@@ -342,8 +338,7 @@ jobs:
         run: |
           cd eegdash
           python -m pip install --upgrade pip
-          pip install requests
-          pip install -e .
+          pip install -e .[digestion]
 
       - name: Create consolidated directory
         run: mkdir -p eegdash-dataset-listings/consolidated
@@ -411,8 +406,7 @@ jobs:
         run: |
           cd eegdash
           python -m pip install --upgrade pip
-          pip install requests
-          pip install -e .
+          pip install -e .[digestion]
 
       - name: Create consolidated directory
         run: mkdir -p eegdash-dataset-listings/consolidated

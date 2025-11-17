@@ -55,6 +55,7 @@ jobs:
         with:
           repository: eegdash/eegdash-dataset-listings
           token: ${{ secrets.DATASET_LISTINGS_TOKEN }}
+          persist-credentials: true
           fetch-depth: 1
           path: eegdash-dataset-listings
 
@@ -121,6 +122,7 @@ jobs:
         with:
           repository: eegdash/eegdash-dataset-listings
           token: ${{ secrets.DATASET_LISTINGS_TOKEN }}
+          persist-credentials: true
           fetch-depth: 1
           path: eegdash-dataset-listings
 
@@ -188,6 +190,7 @@ jobs:
         with:
           repository: eegdash/eegdash-dataset-listings
           token: ${{ secrets.DATASET_LISTINGS_TOKEN }}
+          persist-credentials: true
           fetch-depth: 1
           path: eegdash-dataset-listings
 
@@ -256,6 +259,7 @@ jobs:
         with:
           repository: eegdash/eegdash-dataset-listings
           token: ${{ secrets.DATASET_LISTINGS_TOKEN }}
+          persist-credentials: true
           fetch-depth: 1
           path: eegdash-dataset-listings
 
@@ -324,6 +328,7 @@ jobs:
         with:
           repository: eegdash/eegdash-dataset-listings
           token: ${{ secrets.DATASET_LISTINGS_TOKEN }}
+          persist-credentials: true
           fetch-depth: 1
           path: eegdash-dataset-listings
 
@@ -392,6 +397,7 @@ jobs:
         with:
           repository: eegdash/eegdash-dataset-listings
           token: ${{ secrets.DATASET_LISTINGS_TOKEN }}
+          persist-credentials: true
           fetch-depth: 1
           path: eegdash-dataset-listings
 

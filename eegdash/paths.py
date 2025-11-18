@@ -1,5 +1,5 @@
 # Authors: The EEGDash contributors.
-# License: GNU General Public License
+# License: BSD-3-Clause
 # Copyright the EEGDash contributors.
 
 """Path utilities and cache directory management.

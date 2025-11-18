@@ -1,5 +1,5 @@
 # Authors: The EEGDash contributors.
-# License: GNU General Public License
+# License: BSD-3-Clause
 # Copyright the EEGDash contributors.
 
 """High-level interface to the EEGDash metadata database.
@@ -10,13 +10,15 @@ metadata records stored in the EEGDash MongoDB database, and includes utilities 
 EEG data from S3 for matched records.
 """
 
+import json
 import os
 from pathlib import Path
 from typing import Any, Mapping
 
 import mne
+import numpy as np
+import pandas as pd
 from mne.utils import _soft_import
-from pymongo import InsertOne, UpdateOne
 
 from .bids_eeg_metadata import (
     build_query_from_kwargs,
@@ -353,9 +355,18 @@ class EEGDash:
                     )
 
     def add_bids_dataset(
-        self, dataset: str, data_dir: str, overwrite: bool = True
-    ) -> None:
-        """Scan a local BIDS dataset and upsert records into MongoDB.
+        self,
+        dataset: str,
+        data_dir: str,
+        overwrite: bool = True,
+        output_path: str | Path | None = None,
+    ) -> dict[str, Any]:
+        """Collect metadata for a local BIDS dataset as JSON-ready records.
+
+        Instead of inserting records directly into MongoDB, this method scans
+        ``data_dir`` and returns a JSON-serializable manifest describing every
+        EEG recording that was discovered. The manifest can be written to disk
+        or forwarded to the EEGDash ingestion API for persistence.
 
         Parameters
         ----------
@@ -364,127 +375,91 @@ class EEGDash:
         data_dir : str
             Path to the local BIDS dataset directory.
         overwrite : bool, default True
-            If ``True``, update existing records when encountered; otherwise,
-            skip records that already exist.
+            If ``False``, skip records that already exist in the database based
+            on ``data_name`` lookups.
+        output_path : str | Path | None, optional
+            If provided, the manifest is written to the given JSON file.
 
-        Raises
-        ------
-        ValueError
-            If called on a public client ``(is_public=True)``.
+        Returns
+        -------
+        dict
+            A manifest with keys ``dataset``, ``source``, ``records`` and, when
+            applicable, ``skipped`` or ``errors``.
 
         """
-        if self.is_public:
-            raise ValueError("This operation is not allowed for public users")
-
-        if not overwrite and self.exist({"dataset": dataset}):
-            logger.info("Dataset %s already exists in the database", dataset)
-            return
+        source_dir = Path(data_dir).expanduser()
         try:
             bids_dataset = EEGBIDSDataset(
-                data_dir=data_dir,
+                data_dir=str(source_dir),
                 dataset=dataset,
             )
-        except Exception as e:
-            logger.error("Error creating bids dataset %s: %s", dataset, str(e))
-            raise e
-        requests = []
-        for bids_file in bids_dataset.get_files():
-            try:
-                data_id = f"{dataset}_{Path(bids_file).name}"
-
-                if self.exist({"data_name": data_id}):
-                    if overwrite:
-                        eeg_attrs = load_eeg_attrs_from_bids_file(
-                            bids_dataset, bids_file
-                        )
-                        requests.append(self._update_request(eeg_attrs))
-                else:
-                    eeg_attrs = load_eeg_attrs_from_bids_file(bids_dataset, bids_file)
-                    requests.append(self._add_request(eeg_attrs))
-            except Exception as e:
-                logger.error("Error adding record %s", bids_file)
-                logger.error(str(e))
-
-        logger.info("Number of requests: %s", len(requests))
-
-        if requests:
-            result = self.__collection.bulk_write(requests, ordered=False)
-            logger.info("Inserted: %s ", result.inserted_count)
-            logger.info("Modified: %s ", result.modified_count)
-            logger.info("Deleted: %s", result.deleted_count)
-            logger.info("Upserted: %s", result.upserted_count)
-            logger.info("Errors: %s ", result.bulk_api_result.get("writeErrors", []))
-
-    def _add_request(self, record: dict) -> InsertOne:
-        """Create a MongoDB insertion request for a record.
-
-        Parameters
-        ----------
-        record : dict
-            The record to insert.
-
-        Returns
-        -------
-        InsertOne
-            A PyMongo ``InsertOne`` object.
-
-        """
-        return InsertOne(record)
-
-    def add(self, record: dict) -> None:
-        """Add a single record to the MongoDB collection.
-
-        Parameters
-        ----------
-        record : dict
-            The record to add.
-
-        """
-        try:
-            self.__collection.insert_one(record)
-        except ValueError as e:
-            logger.error("Validation error for record: %s ", record["data_name"])
-            logger.error(e)
         except Exception as exc:
-            logger.error(
-                "Error adding record: %s ", record.get("data_name", "<unknown>")
+            logger.error("Error creating BIDS dataset %s: %s", dataset, exc)
+            raise exc
+
+        records: list[dict[str, Any]] = []
+        skipped: list[str] = []
+        errors: list[dict[str, str]] = []
+
+        for bids_file in bids_dataset.get_files():
+            data_id = f"{dataset}_{Path(bids_file).name}"
+            if not overwrite:
+                try:
+                    if self.exist({"data_name": data_id}):
+                        skipped.append(data_id)
+                        continue
+                except Exception as exc:
+                    logger.warning(
+                        "Could not verify existing record %s due to: %s",
+                        data_id,
+                        exc,
+                    )
+
+            try:
+                eeg_attrs = load_eeg_attrs_from_bids_file(bids_dataset, bids_file)
+                records.append(eeg_attrs)
+            except Exception as exc:  # log and continue collecting
+                logger.error("Error extracting metadata for %s", bids_file)
+                logger.error(str(exc))
+                errors.append({"file": str(bids_file), "error": str(exc)})
+
+        manifest: dict[str, Any] = {
+            "dataset": dataset,
+            "source": str(source_dir.resolve()),
+            "record_count": len(records),
+            "records": records,
+        }
+        if skipped:
+            manifest["skipped"] = skipped
+        if errors:
+            manifest["errors"] = errors
+
+        if output_path is not None:
+            output_path = Path(output_path)
+            output_path.parent.mkdir(parents=True, exist_ok=True)
+            with output_path.open("w", encoding="utf-8") as fh:
+                json.dump(
+                    manifest,
+                    fh,
+                    indent=2,
+                    sort_keys=True,
+                    default=_json_default,
+                )
+            logger.info(
+                "Wrote EEGDash ingestion manifest for %s to %s",
+                dataset,
+                output_path,
             )
-            logger.debug("Add operation failed", exc_info=exc)
 
-    def _update_request(self, record: dict) -> UpdateOne:
-        """Create a MongoDB update request for a record.
+        logger.info(
+            "Prepared %s records for dataset %s (skipped=%s, errors=%s)",
+            len(records),
+            dataset,
+            len(skipped),
+            len(errors),
+        )
 
-        Parameters
-        ----------
-        record : dict
-            The record to update.
-
-        Returns
-        -------
-        UpdateOne
-            A PyMongo ``UpdateOne`` object.
-
-        """
-        return UpdateOne({"data_name": record["data_name"]}, {"$set": record})
-
-    def update(self, record: dict) -> None:
-        """Update a single record in the MongoDB collection.
-
-        Parameters
-        ----------
-        record : dict
-            Record content to set at the matching ``data_name``.
-
-        """
-        try:
-            self.__collection.update_one(
-                {"data_name": record["data_name"]}, {"$set": record}
-            )
-        except Exception as exc:  # log and continue
-            logger.error(
-                "Error updating record: %s", record.get("data_name", "<unknown>")
-            )
-            logger.debug("Update operation failed", exc_info=exc)
+        return manifest
 
     def exists(self, query: dict[str, Any]) -> bool:
         """Check if at least one record matches the query.
@@ -504,35 +479,6 @@ class EEGDash:
         """
         return self.exist(query)
 
-    def remove_field(self, record: dict, field: str) -> None:
-        """Remove a field from a specific record in the MongoDB collection.
-
-        Parameters
-        ----------
-        record : dict
-            Record-identifying object with a ``data_name`` key.
-        field : str
-            The name of the field to remove.
-
-        """
-        self.__collection.update_one(
-            {"data_name": record["data_name"]}, {"$unset": {field: 1}}
-        )
-
-    def remove_field_from_db(self, field: str) -> None:
-        """Remove a field from all records in the database.
-
-        .. warning::
-            This is a destructive operation and cannot be undone.
-
-        Parameters
-        ----------
-        field : str
-            The name of the field to remove from all documents.
-
-        """
-        self.__collection.update_many({}, {"$unset": {field: 1}})
-
     @property
     def collection(self):
         """The underlying PyMongo ``Collection`` object.
@@ -545,26 +491,38 @@ class EEGDash:
         """
         return self.__collection
 
-    def close(self) -> None:
-        """Close the MongoDB connection.
-
-        .. deprecated:: 0.1
-            Connections are now managed globally by :class:`MongoConnectionManager`.
-            This method is a no-op and will be removed in a future version.
-            Use :meth:`EEGDash.close_all_connections` to close all clients.
-        """
-        # Individual instances no longer close the shared client
-        pass
-
     @classmethod
     def close_all_connections(cls) -> None:
         """Close all MongoDB client connections managed by the singleton manager."""
         MongoConnectionManager.close_all()
 
-    def __del__(self) -> None:
-        """Destructor; no explicit action needed due to global connection manager."""
-        # No longer needed since we're using singleton pattern
+
+def _json_default(value: Any) -> Any:
+    """Fallback serializer for complex objects when exporting ingestion JSON."""
+    try:
+        if isinstance(value, (np.generic,)):
+            return value.item()
+        if isinstance(value, np.ndarray):
+            return value.tolist()
+    except Exception:
         pass
+
+    try:
+        if value is pd.NA:
+            return None
+        if isinstance(value, (pd.Timestamp, pd.Timedelta)):
+            return value.isoformat()
+        if isinstance(value, pd.Series):
+            return value.to_dict()
+    except Exception:
+        pass
+
+    if isinstance(value, Path):
+        return value.as_posix()
+    if isinstance(value, set):
+        return sorted(value)
+
+    raise TypeError(f"Object of type {type(value).__name__} is not JSON serializable")
 
 
 __all__ = ["EEGDash"]

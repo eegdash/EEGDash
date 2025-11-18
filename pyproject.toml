@@ -87,7 +87,9 @@ docs = [
 
 digestion = [
   "pybids",
-  "python-dotenv",
+  "gql[requests]",
+  "requests_toolbelt",
+  "beautifulsoup4",
 ]
 
 all = [

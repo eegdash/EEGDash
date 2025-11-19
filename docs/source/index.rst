@@ -9,14 +9,6 @@ EEGDASH Homepage
 EEG Dash Homepage
 ==================
 
-.. raw:: html
-
-   <style type="text/css">h1 {display:none;}</style>
-
-.. raw:: html
-
-   <h1 class="eegdash-hero__title">EEG Dash</h1>
-
 
 .. image:: _static/logos/eegdash.svg
     :alt: EEG Dash Logo
@@ -40,7 +32,7 @@ EEG Dash Homepage
 
     The "DaSh" in EEG-DaSh stands for **Data Share**.
 
-    The EEG-DaSh data archive is a collaborative effort led by the University of California, San Diego (UCSD) and Ben-Gurion University of the Negev (BGU) and partially funded by the National Science Foundation (NSF). All are welcome to contribute to the https://github.com/sccn/EEGDash project.
+    The EEG-DaSh data archive is a collaborative effort led by the University of California, San Diego (UCSD) and Ben-Gurion University of the Negev (BGU) and partially funded by the National Science Foundation (NSF). All are welcome to contribute to the https://github.com/eegdash/EEGDash project.
 
     The archive is currently still in :bdg-danger:`beta testing` mode, so be kind. 
 

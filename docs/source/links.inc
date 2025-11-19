@@ -11,7 +11,7 @@
 .. braindecode
 
 .. _eegdash: https://eeglab.org/EEGDash/
-.. _eegdash-github: https://github.com/sccn/eegdash
+.. _eegdash-github: https://github.com/eegdash/eegdash
 .. _eegdash-pypi: https://pypi.org/project/eegdash
 .. _braindecode-contribution-guide: https://github.com/braindecode/braindecode/blob/master/CONTRIBUTING.md
 .. _braindecode-chat: https://gitter.im/braindecodechat/community

@@ -3,8 +3,9 @@ import numpy as np
 import scipy
 import scipy.linalg
 
-from ..decorators import multivariate_feature
+from ..decorators import FeaturePredecessor, multivariate_feature
 from ..extractors import TrainableFeature
+from .signal import SIGNAL_PREDECESSORS
 
 __all__ = [
     "CommonSpatialPattern",
@@ -21,6 +22,7 @@ def _update_mean_cov(count, mean, cov, x_count, x_mean, x_cov):
     cov[:] -= np.outer(mean, mean)
 
 
+@FeaturePredecessor(*SIGNAL_PREDECESSORS)
 @multivariate_feature
 class CommonSpatialPattern(TrainableFeature):
     def __init__(self):

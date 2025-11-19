@@ -45,6 +45,7 @@ dependencies = [
   "eeglabio",
   "tabulate",
   "rich",
+  "pyarrow",
 ]
 
 [project.urls]

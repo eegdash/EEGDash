@@ -1,26 +1,16 @@
 :html_theme.sidebar_secondary.remove: true
 
-EEGDASH Homepage
-=================
+.. title:: EEGDash - data-sharing resource for M/EEG (EEG, MEG)
 
-.. title:: EEG Dash
-
-
-EEG Dash Homepage
-==================
-
-
-.. image:: _static/logos/eegdash.svg
+.. image:: _static/eegdash.svg
     :alt: EEG Dash Logo
     :class: logo mainlogo only-dark
     :align: center
-    :scale: 50%
 
-.. image:: _static/logos/eegdash.svg
+.. image:: _static/eegdash.svg
     :alt: EEG Dash Logo
     :class: logo mainlogo only-light
     :align: center
-    :scale: 50%
 
 .. rst-class:: h4 text-center font-weight-light my-4
 

@@ -79,7 +79,7 @@ python_use_unqualified_type_names = False
 
 html_theme = "pydata_sphinx_theme"
 html_static_path = ["_static"]
-html_logo = "_static/eegdash_icon.svg"
+html_logo = "_static/eegdash_image_only.svg"
 html_favicon = "_static/favicon.ico"
 html_title = "EEG Dash"
 html_short_title = "EEG Dash"
@@ -118,8 +118,8 @@ html_theme_options = {
     "navbar_end": ["theme-switcher", "navbar-icon-links"],
     "footer_start": ["copyright"],
     "logo": {
-        "image_light": "_static/eegdash_long_white.svg",
-        "image_dark": "_static/eegdash_long_dark.svg",
+        "image_light": "_static/eegdash_long.svg",
+        "image_dark": "_static/eegdash_long.svg",
         "alt_text": "EEG Dash Logo",
     },
     "external_links": [
@@ -168,6 +168,7 @@ html_context = {
     "github_version": "main",
     # Path to the documentation root within the repo
     "doc_path": "docs/source",
+    "default_mode": "light",
 }
 
 

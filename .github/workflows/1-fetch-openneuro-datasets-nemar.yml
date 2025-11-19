@@ -1,9 +1,6 @@
 name: Fetch Dataset Listings from All Sources
 
 on:
-  pull_request:
-    branches:
-      - '**'
   schedule:
     # Run weekly on Monday at 00:00 UTC
     - cron: '0 0 * * 1'

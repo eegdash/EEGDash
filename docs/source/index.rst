@@ -1,6 +1,6 @@
 :html_theme.sidebar_secondary.remove: true
 
-.. title:: EEGDash - data-sharing resource for M/EEG (EEG, MEG)
+.. title:: EEGDash - data-sharing resource for M/EEG (EEG, MEG, iEEG, MEG)
 
 .. image:: _static/eegdash.svg
     :alt: EEG Dash Logo

@@ -80,7 +80,7 @@ python_use_unqualified_type_names = False
 html_theme = "pydata_sphinx_theme"
 html_static_path = ["_static"]
 html_logo = "_static/eegdash_icon.svg"
-html_favicon = "_static/eegdash_icon.png"
+html_favicon = "_static/favicon.ico"
 html_title = "EEG Dash"
 html_short_title = "EEG Dash"
 html_css_files = [
@@ -128,7 +128,7 @@ html_theme_options = {
     "icon_links": [
         {
             "name": "GitHub",
-            "url": "https://github.com/sccn/EEGDash",
+            "url": "https://github.com/eegdash/EEGDash",
             "icon": "fa-brands fa-github",
             "type": "fontawesome",
         },
@@ -162,7 +162,7 @@ html_extra_path = ["_extra"]
 # (e.g., Sphinx-Gallery "Open in Colab") know where the source lives.
 # These values should match the repository and docs location.
 html_context = {
-    "github_user": "sccn",
+    "github_user": "eegdash",
     "github_repo": "EEGDash",
     # Branch used to build and host the docs
     "github_version": "main",
@@ -236,7 +236,7 @@ sphinx_gallery_conf = {
     # Disable plotting during doc builds; matches `html-noplot` behaviour.
     "plot_gallery": False,
     "binder": {
-        "org": "sccn",
+        "org": "eegdash",
         "repo": "EEGDash",
         "branch": "main",
         "binderhub_url": "https://mybinder.org",

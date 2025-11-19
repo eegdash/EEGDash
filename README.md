@@ -6,7 +6,7 @@
 [![License: BSD-3-Clause](https://img.shields.io/badge/License-BSD--3--Clause-blue.svg)](LICENSE)
 [![Python versions](https://img.shields.io/pypi/pyversions/eegdash.svg)](https://pypi.org/project/eegdash/)
 [![Downloads](https://pepy.tech/badge/eegdash)](https://pepy.tech/project/eegdash)
-<!-- [![Coverage](https://img.shields.io/codecov/c/github/sccn/eegdash)](https://codecov.io/gh/sccn/eegdash) -->
+<!-- [![Coverage](https://img.shields.io/codecov/c/github/eegdash/eegdash)](https://codecov.io/gh/eegdash/eegdash) -->
 
 To leverage recent and ongoing advancements in large-scale computational methods and to ensure the preservation of scientific data generated from publicly funded research, the EEG-DaSh data archive will create a data-sharing resource for MEEG (EEG, MEG) data contributed by collaborators for machine learning (ML) and deep learning (DL) applications. 
 

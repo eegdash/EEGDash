@@ -12,6 +12,9 @@
 
    .. autosummary::
    
+      spectral_preprocessor
+      spectral_normalized_preprocessor
+      spectral_db_preprocessor
       spectral_root_total_power
       spectral_moment
       spectral_entropy
@@ -21,13 +24,5 @@
       spectral_hjorth_activity
       spectral_hjorth_mobility
       spectral_hjorth_complexity
-   
-   .. rubric:: Classes
-
-   .. autosummary::
-   
-      SpectralFeatureExtractor
-      NormalizedSpectralFeatureExtractor
-      DBSpectralFeatureExtractor
    
 

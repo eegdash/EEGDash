@@ -399,7 +399,7 @@ accuracy across six epochs.
     .. container:: binder-badge
 
       .. image:: images/binder_badge_logo.svg
-        :target: https://mybinder.org/v2/gh/sccn/EEGDash/main?urlpath=lab/tree/notebooks/generated/auto_examples/core/tutorial_eoec.ipynb
+        :target: https://mybinder.org/v2/gh/eegdash/EEGDash/main?urlpath=lab/tree/notebooks/generated/auto_examples/core/tutorial_eoec.ipynb
         :alt: Launch binder
         :width: 150 px
 

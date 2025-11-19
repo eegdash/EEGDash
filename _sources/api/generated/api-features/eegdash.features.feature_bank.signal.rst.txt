@@ -12,6 +12,7 @@
 
    .. autosummary::
    
+      signal_hilbert_preprocessor
       signal_decorrelation_time
       signal_hjorth_activity
       signal_hjorth_complexity
@@ -26,11 +27,5 @@
       signal_std
       signal_variance
       signal_zero_crossings
-   
-   .. rubric:: Classes
-
-   .. autosummary::
-   
-      HilbertFeatureExtractor
    
 

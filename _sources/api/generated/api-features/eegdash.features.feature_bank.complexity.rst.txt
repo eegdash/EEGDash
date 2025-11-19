@@ -12,15 +12,10 @@
 
    .. autosummary::
    
+      complexity_entropy_preprocessor
       complexity_approx_entropy
       complexity_sample_entropy
       complexity_svd_entropy
       complexity_lempel_ziv
-   
-   .. rubric:: Classes
-
-   .. autosummary::
-   
-      EntropyFeatureExtractor
    
 

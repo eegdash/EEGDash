@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 
 
-<html lang="en" data-content_root="./" >
+<html lang="en" data-content_root="./" data-theme="light">
 
   <head>
     <meta charset="utf-8" />
@@ -12,8 +12,8 @@
   
   
   <script data-cfasync="false">
-    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
-    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "light";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
   </script>
   <!--
     this give us a css class that will be invisible only if js is disabled
@@ -41,7 +41,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css" />
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/select/1.7.0/css/select.dataTables.min.css" />
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/searchpanes/2.3.1/css/searchPanes.dataTables.min.css" />
-    <link rel="stylesheet" type="text/css" href="_static/custom.css?v=f247e792" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css?v=1449feac" />
     <link rel="stylesheet" type="text/css" href="_static/css/treemap.css?v=7131b20f" />
   
   <!-- So that users can add custom icons -->
@@ -50,7 +50,7 @@
   <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="_static/documentation_options.js?v=c87aa342"></script>
+    <script src="_static/documentation_options.js?v=1dd76d02"></script>
     <script src="_static/doctools.js?v=9bcbadda"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/clipboard.min.js?v=a7894cd8"></script>
@@ -65,13 +65,13 @@
     <script src="_static/js/tag-palette.js?v=6f5eac9a"></script>
     <script src="_static/js/datatables-init.js?v=42062302"></script>
     <link rel="canonical" href="https://eegdash.org/genindex.html" />
-    <link rel="icon" href="_static/eegdash_icon.png"/>
+    <link rel="icon" href="_static/favicon.ico"/>
     <link rel="index" title="Index" href="#" />
     <link rel="search" title="Search" href="search.html" />
   
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.4" />
+  <meta name="docsearch:version" content="0.5" />
   <!-- Google Tag Manager -->
   <script>
     (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -85,7 +85,7 @@
   </head>
   
   
-  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="light">
 
   
   
@@ -144,11 +144,9 @@
   
     
     
-      
     
-    
-    <img src="_static/eegdash_long_white.svg" class="logo__image only-light" alt="EEG Dash Logo"/>
-    <img src="_static/eegdash_long_dark.svg" class="logo__image only-dark pst-js-only" alt="EEG Dash Logo"/>
+    <img src="_static/eegdash_long.svg" class="logo__image only-light" alt="EEG Dash Logo"/>
+    <img src="_static/eegdash_long.svg" class="logo__image only-dark pst-js-only" alt="EEG Dash Logo"/>
   
   
 </a></div>
@@ -242,7 +240,7 @@
           
           
           
-          <a href="https://github.com/sccn/EEGDash" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
+          <a href="https://github.com/eegdash/EEGDash" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
             <span class="sr-only">GitHub</span></a>
         </li>
         <li class="nav-item">
@@ -397,7 +395,7 @@
           
           
           
-          <a href="https://github.com/sccn/EEGDash" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
+          <a href="https://github.com/eegdash/EEGDash" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
             <span class="sr-only">GitHub</span></a>
         </li>
         <li class="nav-item">
@@ -488,7 +486,6 @@
  | <a href="#K"><strong>K</strong></a>
  | <a href="#L"><strong>L</strong></a>
  | <a href="#M"><strong>M</strong></a>
- | <a href="#N"><strong>N</strong></a>
  | <a href="#P"><strong>P</strong></a>
  | <a href="#R"><strong>R</strong></a>
  | <a href="#S"><strong>S</strong></a>
@@ -513,16 +510,14 @@
 <h2 id="A">A</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/generated/api-core/eegdash.api.html#eegdash.api.EEGDash.add">add() (eegdash.api.EEGDash method)</a>
-</li>
       <li><a href="api/generated/api-core/eegdash.hbn.html#eegdash.hbn.add_aux_anchors">add_aux_anchors() (in module eegdash.hbn)</a>
 </li>
       <li><a href="api/generated/api-core/eegdash.api.html#eegdash.api.EEGDash.add_bids_dataset">add_bids_dataset() (eegdash.api.EEGDash method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/generated/api-core/eegdash.hbn.html#eegdash.hbn.add_extras_columns">add_extras_columns() (in module eegdash.hbn)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/generated/api-core/eegdash.const.html#eegdash.const.ALLOWED_QUERY_FIELDS">ALLOWED_QUERY_FIELDS (in module eegdash.const)</a>
 </li>
       <li><a href="api/generated/api-core/eegdash.hbn.html#eegdash.hbn.annotate_trials_with_target">annotate_trials_with_target() (in module eegdash.hbn)</a>
@@ -557,19 +552,17 @@
         <li><a href="api/generated/api-features/eegdash.features.feature_bank.csp.html#eegdash.features.feature_bank.csp.CommonSpatialPattern.clear">(eegdash.features.feature_bank.csp.CommonSpatialPattern method)</a>
 </li>
       </ul></li>
-      <li><a href="api/generated/api-core/eegdash.api.html#eegdash.api.EEGDash.close">close() (eegdash.api.EEGDash method)</a>
-</li>
       <li><a href="api/generated/api-core/eegdash.mongodb.html#eegdash.mongodb.MongoConnectionManager.close_all">close_all() (eegdash.mongodb.MongoConnectionManager class method)</a>
 </li>
       <li><a href="api/generated/api-core/eegdash.api.html#eegdash.api.EEGDash.close_all_connections">close_all_connections() (eegdash.api.EEGDash class method)</a>
-</li>
-      <li><a href="api/generated/api-features/eegdash.features.feature_bank.connectivity.html#eegdash.features.feature_bank.connectivity.CoherenceFeatureExtractor">CoherenceFeatureExtractor (class in eegdash.features.feature_bank.connectivity)</a>
 </li>
       <li><a href="api/generated/api-core/eegdash.api.html#eegdash.api.EEGDash.collection">collection (eegdash.api.EEGDash property)</a>
 </li>
       <li><a href="api/generated/api-features/eegdash.features.feature_bank.csp.html#eegdash.features.feature_bank.csp.CommonSpatialPattern">CommonSpatialPattern (class in eegdash.features.feature_bank.csp)</a>
 </li>
       <li><a href="api/generated/api-features/eegdash.features.feature_bank.complexity.html#eegdash.features.feature_bank.complexity.complexity_approx_entropy">complexity_approx_entropy() (in module eegdash.features.feature_bank.complexity)</a>
+</li>
+      <li><a href="api/generated/api-features/eegdash.features.feature_bank.complexity.html#eegdash.features.feature_bank.complexity.complexity_entropy_preprocessor">complexity_entropy_preprocessor() (in module eegdash.features.feature_bank.complexity)</a>
 </li>
       <li><a href="api/generated/api-features/eegdash.features.feature_bank.complexity.html#eegdash.features.feature_bank.complexity.complexity_lempel_ziv">complexity_lempel_ziv() (in module eegdash.features.feature_bank.complexity)</a>
 </li>
@@ -578,6 +571,8 @@
       <li><a href="api/generated/api-features/eegdash.features.feature_bank.complexity.html#eegdash.features.feature_bank.complexity.complexity_svd_entropy">complexity_svd_entropy() (in module eegdash.features.feature_bank.complexity)</a>
 </li>
       <li><a href="api/generated/api-core/eegdash.const.html#eegdash.const.config">config (in module eegdash.const)</a>
+</li>
+      <li><a href="api/generated/api-features/eegdash.features.feature_bank.connectivity.html#eegdash.features.feature_bank.connectivity.connectivity_coherency_preprocessor">connectivity_coherency_preprocessor() (in module eegdash.features.feature_bank.connectivity)</a>
 </li>
       <li><a href="api/generated/api-features/eegdash.features.feature_bank.connectivity.html#eegdash.features.feature_bank.connectivity.connectivity_imaginary_coherence">connectivity_imaginary_coherence() (in module eegdash.features.feature_bank.connectivity)</a>
 </li>
@@ -2643,8 +2638,6 @@
         <li><a href="api/dataset/eegdash.EEGDashDataset.html#eegdash.EEGDashDataset.datasets">(eegdash.EEGDashDataset attribute)</a>
 </li>
       </ul></li>
-      <li><a href="api/generated/api-features/eegdash.features.feature_bank.spectral.html#eegdash.features.feature_bank.spectral.DBSpectralFeatureExtractor">DBSpectralFeatureExtractor (class in eegdash.features.feature_bank.spectral)</a>
-</li>
       <li><a href="api/dataset/eegdash.dataset.DS001785.html#eegdash.dataset.DS001785.description">description (eegdash.dataset.DS001785 property)</a>
 
       <ul>
@@ -3846,8 +3839,6 @@
 </li>
       <li><a href="api/generated/api-core/eegdash.bids_eeg_metadata.html#eegdash.bids_eeg_metadata.enrich_from_participants">enrich_from_participants() (in module eegdash.bids_eeg_metadata)</a>
 </li>
-      <li><a href="api/generated/api-features/eegdash.features.feature_bank.complexity.html#eegdash.features.feature_bank.complexity.EntropyFeatureExtractor">EntropyFeatureExtractor (class in eegdash.features.feature_bank.complexity)</a>
-</li>
       <li><a href="api/generated/api-core/eegdash.api.html#eegdash.api.EEGDash.exist">exist() (eegdash.api.EEGDash method)</a>
 </li>
       <li><a href="api/generated/api-core/eegdash.api.html#eegdash.api.EEGDash.exists">exists() (eegdash.api.EEGDash method)</a>
@@ -3910,18 +3901,14 @@
 <h2 id="G">G</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/features_overview.html#eegdash.features.get_all_feature_extractors">get_all_feature_extractors() (in module eegdash.features)</a>
-
-      <ul>
-        <li><a href="api/generated/api-features/eegdash.features.inspect.html#eegdash.features.inspect.get_all_feature_extractors">(in module eegdash.features.inspect)</a>
-</li>
-      </ul></li>
       <li><a href="api/features_overview.html#eegdash.features.get_all_feature_kinds">get_all_feature_kinds() (in module eegdash.features)</a>
 
       <ul>
         <li><a href="api/generated/api-features/eegdash.features.inspect.html#eegdash.features.inspect.get_all_feature_kinds">(in module eegdash.features.inspect)</a>
 </li>
       </ul></li>
+      <li><a href="api/generated/api-features/eegdash.features.inspect.html#eegdash.features.inspect.get_all_feature_preprocessors">get_all_feature_preprocessors() (in module eegdash.features.inspect)</a>
+</li>
       <li><a href="api/features_overview.html#eegdash.features.get_all_features">get_all_features() (in module eegdash.features)</a>
 
       <ul>
@@ -4477,10 +4464,6 @@
       <li><a href="api/generated/api-core/eegdash.hbn.html#eegdash.hbn.hbn_ec_ec_reannotation">hbn_ec_ec_reannotation (class in eegdash.hbn)</a>
 </li>
   </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/generated/api-features/eegdash.features.feature_bank.signal.html#eegdash.features.feature_bank.signal.HilbertFeatureExtractor">HilbertFeatureExtractor (class in eegdash.features.feature_bank.signal)</a>
-</li>
-  </ul></td>
 </tr></table>
 
 <h2 id="I">I</h2>
@@ -4586,27 +4569,11 @@
   </ul></td>
 </tr></table>
 
-<h2 id="N">N</h2>
-<table style="width: 100%" class="indextable genindextable"><tr>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/generated/api-features/eegdash.features.feature_bank.spectral.html#eegdash.features.feature_bank.spectral.NormalizedSpectralFeatureExtractor">NormalizedSpectralFeatureExtractor (class in eegdash.features.feature_bank.spectral)</a>
-</li>
-  </ul></td>
-</tr></table>
-
 <h2 id="P">P</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/generated/api-features/eegdash.features.feature_bank.complexity.html#eegdash.features.feature_bank.complexity.EntropyFeatureExtractor.parent_extractor_type">parent_extractor_type (eegdash.features.feature_bank.complexity.EntropyFeatureExtractor attribute)</a>
-
-      <ul>
-        <li><a href="api/generated/api-features/eegdash.features.feature_bank.signal.html#eegdash.features.feature_bank.signal.HilbertFeatureExtractor.parent_extractor_type">(eegdash.features.feature_bank.signal.HilbertFeatureExtractor attribute)</a>
+      <li><a href="api/generated/api-features/eegdash.features.feature_bank.csp.html#eegdash.features.feature_bank.csp.CommonSpatialPattern.parent_extractor_type">parent_extractor_type (eegdash.features.feature_bank.csp.CommonSpatialPattern attribute)</a>
 </li>
-        <li><a href="api/generated/api-features/eegdash.features.feature_bank.spectral.html#eegdash.features.feature_bank.spectral.DBSpectralFeatureExtractor.parent_extractor_type">(eegdash.features.feature_bank.spectral.DBSpectralFeatureExtractor attribute)</a>
-</li>
-        <li><a href="api/generated/api-features/eegdash.features.feature_bank.spectral.html#eegdash.features.feature_bank.spectral.NormalizedSpectralFeatureExtractor.parent_extractor_type">(eegdash.features.feature_bank.spectral.NormalizedSpectralFeatureExtractor attribute)</a>
-</li>
-      </ul></li>
       <li><a href="api/generated/api-features/eegdash.features.extractors.html#eegdash.features.extractors.FeatureExtractor.partial_fit">partial_fit() (eegdash.features.extractors.FeatureExtractor method)</a>
 
       <ul>
@@ -4615,28 +4582,14 @@
         <li><a href="api/generated/api-features/eegdash.features.feature_bank.csp.html#eegdash.features.feature_bank.csp.CommonSpatialPattern.partial_fit">(eegdash.features.feature_bank.csp.CommonSpatialPattern method)</a>
 </li>
       </ul></li>
-      <li><a href="api/generated/api-core/eegdash.bids_eeg_metadata.html#eegdash.bids_eeg_metadata.participants_extras_from_tsv">participants_extras_from_tsv() (in module eegdash.bids_eeg_metadata)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/generated/api-core/eegdash.bids_eeg_metadata.html#eegdash.bids_eeg_metadata.participants_extras_from_tsv">participants_extras_from_tsv() (in module eegdash.bids_eeg_metadata)</a>
+</li>
       <li><a href="api/generated/api-core/eegdash.bids_eeg_metadata.html#eegdash.bids_eeg_metadata.participants_row_for_subject">participants_row_for_subject() (in module eegdash.bids_eeg_metadata)</a>
 </li>
       <li><a href="api/generated/api-features/eegdash.features.extractors.html#eegdash.features.extractors.FeatureExtractor.preprocess">preprocess() (eegdash.features.extractors.FeatureExtractor method)</a>
-
-      <ul>
-        <li><a href="api/generated/api-features/eegdash.features.feature_bank.complexity.html#eegdash.features.feature_bank.complexity.EntropyFeatureExtractor.preprocess">(eegdash.features.feature_bank.complexity.EntropyFeatureExtractor method)</a>
 </li>
-        <li><a href="api/generated/api-features/eegdash.features.feature_bank.connectivity.html#eegdash.features.feature_bank.connectivity.CoherenceFeatureExtractor.preprocess">(eegdash.features.feature_bank.connectivity.CoherenceFeatureExtractor method)</a>
-</li>
-        <li><a href="api/generated/api-features/eegdash.features.feature_bank.signal.html#eegdash.features.feature_bank.signal.HilbertFeatureExtractor.preprocess">(eegdash.features.feature_bank.signal.HilbertFeatureExtractor method)</a>
-</li>
-        <li><a href="api/generated/api-features/eegdash.features.feature_bank.spectral.html#eegdash.features.feature_bank.spectral.DBSpectralFeatureExtractor.preprocess">(eegdash.features.feature_bank.spectral.DBSpectralFeatureExtractor method)</a>
-</li>
-        <li><a href="api/generated/api-features/eegdash.features.feature_bank.spectral.html#eegdash.features.feature_bank.spectral.NormalizedSpectralFeatureExtractor.preprocess">(eegdash.features.feature_bank.spectral.NormalizedSpectralFeatureExtractor method)</a>
-</li>
-        <li><a href="api/generated/api-features/eegdash.features.feature_bank.spectral.html#eegdash.features.feature_bank.spectral.SpectralFeatureExtractor.preprocess">(eegdash.features.feature_bank.spectral.SpectralFeatureExtractor method)</a>
-</li>
-      </ul></li>
   </ul></td>
 </tr></table>
 
@@ -4645,13 +4598,9 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/generated/api-features/eegdash.features.feature_bank.utils.html#eegdash.features.feature_bank.utils.reduce_freq_bands">reduce_freq_bands() (in module eegdash.features.feature_bank.utils)</a>
 </li>
-      <li><a href="api/generated/api-core/eegdash.const.html#eegdash.const.RELEASE_TO_OPENNEURO_DATASET_MAP">RELEASE_TO_OPENNEURO_DATASET_MAP (in module eegdash.const)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/generated/api-core/eegdash.api.html#eegdash.api.EEGDash.remove_field">remove_field() (eegdash.api.EEGDash method)</a>
-</li>
-      <li><a href="api/generated/api-core/eegdash.api.html#eegdash.api.EEGDash.remove_field_from_db">remove_field_from_db() (eegdash.api.EEGDash method)</a>
+      <li><a href="api/generated/api-core/eegdash.const.html#eegdash.const.RELEASE_TO_OPENNEURO_DATASET_MAP">RELEASE_TO_OPENNEURO_DATASET_MAP (in module eegdash.const)</a>
 </li>
       <li><a href="api/generated/api-features/eegdash.features.datasets.html#eegdash.features.datasets.FeaturesConcatDataset.replace">replace() (eegdash.features.datasets.FeaturesConcatDataset method)</a>
 </li>
@@ -5691,6 +5640,8 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/generated/api-features/eegdash.features.feature_bank.signal.html#eegdash.features.feature_bank.signal.signal_decorrelation_time">signal_decorrelation_time() (in module eegdash.features.feature_bank.signal)</a>
 </li>
+      <li><a href="api/generated/api-features/eegdash.features.feature_bank.signal.html#eegdash.features.feature_bank.signal.signal_hilbert_preprocessor">signal_hilbert_preprocessor() (in module eegdash.features.feature_bank.signal)</a>
+</li>
       <li><a href="api/generated/api-features/eegdash.features.feature_bank.signal.html#eegdash.features.feature_bank.signal.signal_hjorth_activity">signal_hjorth_activity() (in module eegdash.features.feature_bank.signal)</a>
 </li>
       <li><a href="api/generated/api-features/eegdash.features.feature_bank.signal.html#eegdash.features.feature_bank.signal.signal_hjorth_complexity">signal_hjorth_complexity() (in module eegdash.features.feature_bank.signal)</a>
@@ -5721,6 +5672,8 @@
 </li>
       <li><a href="api/generated/api-features/eegdash.features.feature_bank.spectral.html#eegdash.features.feature_bank.spectral.spectral_bands_power">spectral_bands_power() (in module eegdash.features.feature_bank.spectral)</a>
 </li>
+      <li><a href="api/generated/api-features/eegdash.features.feature_bank.spectral.html#eegdash.features.feature_bank.spectral.spectral_db_preprocessor">spectral_db_preprocessor() (in module eegdash.features.feature_bank.spectral)</a>
+</li>
       <li><a href="api/generated/api-features/eegdash.features.feature_bank.spectral.html#eegdash.features.feature_bank.spectral.spectral_edge">spectral_edge() (in module eegdash.features.feature_bank.spectral)</a>
 </li>
       <li><a href="api/generated/api-features/eegdash.features.feature_bank.spectral.html#eegdash.features.feature_bank.spectral.spectral_entropy">spectral_entropy() (in module eegdash.features.feature_bank.spectral)</a>
@@ -5733,11 +5686,13 @@
 </li>
       <li><a href="api/generated/api-features/eegdash.features.feature_bank.spectral.html#eegdash.features.feature_bank.spectral.spectral_moment">spectral_moment() (in module eegdash.features.feature_bank.spectral)</a>
 </li>
+      <li><a href="api/generated/api-features/eegdash.features.feature_bank.spectral.html#eegdash.features.feature_bank.spectral.spectral_normalized_preprocessor">spectral_normalized_preprocessor() (in module eegdash.features.feature_bank.spectral)</a>
+</li>
+      <li><a href="api/generated/api-features/eegdash.features.feature_bank.spectral.html#eegdash.features.feature_bank.spectral.spectral_preprocessor">spectral_preprocessor() (in module eegdash.features.feature_bank.spectral)</a>
+</li>
       <li><a href="api/generated/api-features/eegdash.features.feature_bank.spectral.html#eegdash.features.feature_bank.spectral.spectral_root_total_power">spectral_root_total_power() (in module eegdash.features.feature_bank.spectral)</a>
 </li>
       <li><a href="api/generated/api-features/eegdash.features.feature_bank.spectral.html#eegdash.features.feature_bank.spectral.spectral_slope">spectral_slope() (in module eegdash.features.feature_bank.spectral)</a>
-</li>
-      <li><a href="api/generated/api-features/eegdash.features.feature_bank.spectral.html#eegdash.features.feature_bank.spectral.SpectralFeatureExtractor">SpectralFeatureExtractor (class in eegdash.features.feature_bank.spectral)</a>
 </li>
       <li><a href="api/dataset/eegdash.dataset.DS001785.html#eegdash.dataset.DS001785.split">split() (eegdash.dataset.DS001785 method)</a>
 
@@ -7308,8 +7263,6 @@
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/generated/api-features/eegdash.features.extractors.html#eegdash.features.extractors.UnivariateFeature">UnivariateFeature (class in eegdash.features.extractors)</a>
-</li>
-      <li><a href="api/generated/api-core/eegdash.api.html#eegdash.api.EEGDash.update">update() (eegdash.api.EEGDash method)</a>
 </li>
   </ul></td>
 </tr></table>

@@ -1,34 +1,16 @@
 :html_theme.sidebar_secondary.remove: true
 
-EEGDASH Homepage
-=================
+.. title:: EEGDash - data-sharing resource for M/EEG (EEG, MEG, iEEG, MEG)
 
-.. title:: EEG Dash
-
-
-EEG Dash Homepage
-==================
-
-.. raw:: html
-
-   <style type="text/css">h1 {display:none;}</style>
-
-.. raw:: html
-
-   <h1 class="eegdash-hero__title">EEG Dash</h1>
-
-
-.. image:: _static/logos/eegdash.svg
+.. image:: _static/eegdash.svg
     :alt: EEG Dash Logo
     :class: logo mainlogo only-dark
     :align: center
-    :scale: 50%
 
-.. image:: _static/logos/eegdash.svg
+.. image:: _static/eegdash.svg
     :alt: EEG Dash Logo
     :class: logo mainlogo only-light
     :align: center
-    :scale: 50%
 
 .. rst-class:: h4 text-center font-weight-light my-4
 
@@ -40,7 +22,7 @@ EEG Dash Homepage
 
     The "DaSh" in EEG-DaSh stands for **Data Share**.
 
-    The EEG-DaSh data archive is a collaborative effort led by the University of California, San Diego (UCSD) and Ben-Gurion University of the Negev (BGU) and partially funded by the National Science Foundation (NSF). All are welcome to contribute to the https://github.com/sccn/EEGDash project.
+    The EEG-DaSh data archive is a collaborative effort led by the University of California, San Diego (UCSD) and Ben-Gurion University of the Negev (BGU) and partially funded by the National Science Foundation (NSF). All are welcome to contribute to the https://github.com/eegdash/EEGDash project.
 
     The archive is currently still in :bdg-danger:`beta testing` mode, so be kind. 
 

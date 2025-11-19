@@ -12,14 +12,9 @@
 
    .. autosummary::
    
+      connectivity_coherency_preprocessor
       connectivity_magnitude_square_coherence
       connectivity_imaginary_coherence
       connectivity_lagged_coherence
-   
-   .. rubric:: Classes
-
-   .. autosummary::
-   
-      CoherenceFeatureExtractor
    
 

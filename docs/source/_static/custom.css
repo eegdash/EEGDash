@@ -49,38 +49,29 @@ html[data-theme="dark"] .eegdash-hero__title {
 .eegdash-hero img.logo.mainlogo{ display:block; margin:0 auto; }
 
 /* Footer logo styling */
+/* Footer styling */
 .pst-footer-custom {
   position: relative;
 }
 
 .pst-footer-wrapper {
   display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  gap: 2rem;
-}
-
-.pst-footer-logo {
-  flex: 0 0 auto;
-  display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
 }
 
 .footer-brand-logo {
-  height: 40px;
+  height: 24px;
   width: auto;
-  opacity: 0.6;
+  opacity: 0.7;
   transition: opacity 0.3s ease;
 }
 
-.pst-footer:hover .footer-brand-logo,
-.pst-footer-logo:hover .footer-brand-logo {
+.pst-footer-wrapper:hover .footer-brand-logo,
+.footer-brand-logo:hover {
   opacity: 1;
-}
-
-.pst-footer {
-  position: relative;
 }
 
 /* Core API title with icon */

@@ -1,5 +1,5 @@
 # Authors: The EEGDash contributors.
-# License: GNU General Public License
+# License: BSD-3-Clause
 # Copyright the EEGDash contributors.
 
 """EEGDash: A comprehensive platform for EEG data management and analysis.
@@ -18,4 +18,4 @@ _init_mongo_client()
 
 __all__ = ["EEGDash", "EEGDashDataset", "EEGChallengeDataset", "preprocessing"]
 
-__version__ = "0.4.1"
+__version__ = "0.5.0"

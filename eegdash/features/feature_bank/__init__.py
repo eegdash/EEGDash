@@ -6,14 +6,14 @@ functions so users can import them directly from
 """
 
 from .complexity import (
-    EntropyFeatureExtractor,
     complexity_approx_entropy,
+    complexity_entropy_preprocessor,
     complexity_lempel_ziv,
     complexity_sample_entropy,
     complexity_svd_entropy,
 )
 from .connectivity import (
-    CoherenceFeatureExtractor,
+    connectivity_coherency_preprocessor,
     connectivity_imaginary_coherence,
     connectivity_lagged_coherence,
     connectivity_magnitude_square_coherence,
@@ -27,8 +27,8 @@ from .dimensionality import (
     dimensionality_petrosian_fractal_dim,
 )
 from .signal import (
-    HilbertFeatureExtractor,
     signal_decorrelation_time,
+    signal_hilbert_preprocessor,
     signal_hjorth_activity,
     signal_hjorth_complexity,
     signal_hjorth_mobility,
@@ -44,29 +44,29 @@ from .signal import (
     signal_zero_crossings,
 )
 from .spectral import (
-    DBSpectralFeatureExtractor,
-    NormalizedSpectralFeatureExtractor,
-    SpectralFeatureExtractor,
     spectral_bands_power,
+    spectral_db_preprocessor,
     spectral_edge,
     spectral_entropy,
     spectral_hjorth_activity,
     spectral_hjorth_complexity,
     spectral_hjorth_mobility,
     spectral_moment,
+    spectral_normalized_preprocessor,
+    spectral_preprocessor,
     spectral_root_total_power,
     spectral_slope,
 )
 
 __all__ = [
     # Complexity
-    "EntropyFeatureExtractor",
+    "complexity_entropy_preprocessor",
     "complexity_approx_entropy",
     "complexity_sample_entropy",
     "complexity_svd_entropy",
     "complexity_lempel_ziv",
     # Connectivity
-    "CoherenceFeatureExtractor",
+    "connectivity_coherency_preprocessor",
     "connectivity_magnitude_square_coherence",
     "connectivity_imaginary_coherence",
     "connectivity_lagged_coherence",
@@ -79,7 +79,7 @@ __all__ = [
     "dimensionality_hurst_exp",
     "dimensionality_detrended_fluctuation_analysis",
     # Signal
-    "HilbertFeatureExtractor",
+    "signal_hilbert_preprocessor",
     "signal_mean",
     "signal_variance",
     "signal_skewness",
@@ -95,9 +95,9 @@ __all__ = [
     "signal_hjorth_complexity",
     "signal_decorrelation_time",
     # Spectral
-    "SpectralFeatureExtractor",
-    "NormalizedSpectralFeatureExtractor",
-    "DBSpectralFeatureExtractor",
+    "spectral_preprocessor",
+    "spectral_normalized_preprocessor",
+    "spectral_db_preprocessor",
     "spectral_root_total_power",
     "spectral_moment",
     "spectral_entropy",

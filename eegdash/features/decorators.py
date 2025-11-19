@@ -1,10 +1,9 @@
 from collections.abc import Callable
-from typing import List, Type
+from typing import List
 
 from .extractors import (
     BivariateFeature,
     DirectedBivariateFeature,
-    FeatureExtractor,
     MultivariateFeature,
     UnivariateFeature,
     _get_underlying_func,
@@ -22,26 +21,26 @@ __all__ = [
 class FeaturePredecessor:
     """A decorator to specify parent extractors for a feature function.
 
-    This decorator attaches a list of parent extractor types to a feature
-    extraction function. This information can be used to build a dependency
-    graph of features.
+    This decorator attaches a list of immediate parent preprocessing steps to a feature
+    extraction function. This information can be used to build a dependency graph of
+    features.
 
     Parameters
     ----------
     *parent_extractor_type : list of Type
-        A list of feature extractor classes (subclasses of
-        :class:`~eegdash.features.extractors.FeatureExtractor`) that this
-        feature depends on.
+        A list of preprocessing functions (subclasses of
+        :class:`~collections.abc.Callable` or None) that this feature immediately depends
+        on.
 
     """
 
-    def __init__(self, *parent_extractor_type: List[Type]):
-        parent_cls = parent_extractor_type
-        if not parent_cls:
-            parent_cls = [FeatureExtractor]
-        for p_cls in parent_cls:
-            assert issubclass(p_cls, FeatureExtractor)
-        self.parent_extractor_type = parent_cls
+    def __init__(self, *parent_extractor_type: List[Callable | None]):
+        parent_func = parent_extractor_type
+        if not parent_func:
+            parent_func = [None]
+        for p_func in parent_func:
+            assert p_func is None or callable(p_func)
+        self.parent_extractor_type = parent_func
 
     def __call__(self, func: Callable) -> Callable:
         """Apply the decorator to a function.

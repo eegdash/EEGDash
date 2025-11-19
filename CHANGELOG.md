@@ -10,13 +10,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - CNAME configuration for custom domain support
 - Documentation improvements for API reference
+- New EEGDash logo and branding assets
+- Favicon configuration for documentation
 
 ### Fixed
 - Sphinx documentation build warnings
 - Import path resolution in documentation generation
+- Image path warnings in documentation
 
 ### Changed
-- Updated repository organization and structure
+- Updated repository organization to eegdash/EEGDash
+- Updated color theme to match new logo (primary blue: #003D82, accent orange: #FF8000)
+- Updated GitHub references to new organization
+- Enhanced footer with logo branding
+- Improved documentation styling and visual hierarchy
+- Added hidden page title for SEO
 
 ## [0.4.1] - 2025-10-21
 

@@ -33,7 +33,7 @@ Let's suppose that you want to install EEGDash from the source. The first thing 
 
 .. code-block:: shell
 
-   git clone https://github.com/sccn/EEGDash && cd EEGDash
+   git clone https://github.com/eegdash/EEGDash && cd EEGDash
 
 You should now be in the root directory of the EEGDash repository.
 
@@ -47,7 +47,7 @@ For the latest development version, directly from GitHub:
 
 .. code-block:: shell
 
-  pip install git+https://github.com/sccn/EEGDash.git
+  pip install git+https://github.com/eegdash/EEGDash.git
 
 If you have a local clone of the EEGDash git repository:
 

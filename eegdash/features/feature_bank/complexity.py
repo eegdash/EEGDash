@@ -3,11 +3,10 @@ import numpy as np
 from sklearn.neighbors import KDTree
 
 from ..decorators import FeaturePredecessor, univariate_feature
-from ..extractors import FeatureExtractor
 from .signal import SIGNAL_PREDECESSORS
 
 __all__ = [
-    "EntropyFeatureExtractor",
+    "complexity_entropy_preprocessor",
     "complexity_approx_entropy",
     "complexity_sample_entropy",
     "complexity_svd_entropy",
@@ -30,32 +29,31 @@ def _channel_app_samp_entropy_counts(x, m, r, l):
 
 
 @FeaturePredecessor(*SIGNAL_PREDECESSORS)
-class EntropyFeatureExtractor(FeatureExtractor):
-    def preprocess(self, x, m=2, r=0.2, l=1):
-        rr = r * x.std(axis=-1)
-        counts_m = np.empty((*x.shape[:-1], (x.shape[-1] - m + 1) // l))
-        counts_mp1 = np.empty((*x.shape[:-1], (x.shape[-1] - m) // l))
-        for i in np.ndindex(x.shape[:-1]):
-            counts_m[i + (slice(None),)] = _channel_app_samp_entropy_counts(
-                x[i], m, rr[i], l
-            )
-            counts_mp1[i + (slice(None),)] = _channel_app_samp_entropy_counts(
-                x[i], m + 1, rr[i], l
-            )
-        return counts_m, counts_mp1
+def complexity_entropy_preprocessor(x, /, m=2, r=0.2, l=1):
+    rr = r * x.std(axis=-1)
+    counts_m = np.empty((*x.shape[:-1], (x.shape[-1] - m + 1) // l))
+    counts_mp1 = np.empty((*x.shape[:-1], (x.shape[-1] - m) // l))
+    for i in np.ndindex(x.shape[:-1]):
+        counts_m[i + (slice(None),)] = _channel_app_samp_entropy_counts(
+            x[i], m, rr[i], l
+        )
+        counts_mp1[i + (slice(None),)] = _channel_app_samp_entropy_counts(
+            x[i], m + 1, rr[i], l
+        )
+    return counts_m, counts_mp1
 
 
-@FeaturePredecessor(EntropyFeatureExtractor)
+@FeaturePredecessor(complexity_entropy_preprocessor)
 @univariate_feature
-def complexity_approx_entropy(counts_m, counts_mp1):
+def complexity_approx_entropy(counts_m, counts_mp1, /):
     phi_m = np.log(counts_m / counts_m.shape[-1]).mean(axis=-1)
     phi_mp1 = np.log(counts_mp1 / counts_mp1.shape[-1]).mean(axis=-1)
     return phi_m - phi_mp1
 
 
-@FeaturePredecessor(EntropyFeatureExtractor)
+@FeaturePredecessor(complexity_entropy_preprocessor)
 @univariate_feature
-def complexity_sample_entropy(counts_m, counts_mp1):
+def complexity_sample_entropy(counts_m, counts_mp1, /):
     A = np.sum(counts_mp1 - 1, axis=-1)
     B = np.sum(counts_m - 1, axis=-1)
     return -np.log(A / B)
@@ -63,7 +61,7 @@ def complexity_sample_entropy(counts_m, counts_mp1):
 
 @FeaturePredecessor(*SIGNAL_PREDECESSORS)
 @univariate_feature
-def complexity_svd_entropy(x, m=10, tau=1):
+def complexity_svd_entropy(x, /, m=10, tau=1):
     x_emb = np.empty((*x.shape[:-1], (x.shape[-1] - m + 1) // tau, m))
     for i in np.ndindex(x.shape[:-1]):
         x_emb[i + (slice(None), slice(None))] = _create_embedding(x[i], m, tau)
@@ -75,7 +73,7 @@ def complexity_svd_entropy(x, m=10, tau=1):
 @FeaturePredecessor(*SIGNAL_PREDECESSORS)
 @univariate_feature
 @nb.njit(cache=True, fastmath=True)
-def complexity_lempel_ziv(x, threshold=None, normalize=True):
+def complexity_lempel_ziv(x, /, threshold=None, normalize=True):
     lzc = np.empty(x.shape[:-1])
     for i in np.ndindex(x.shape[:-1]):
         t = np.median(x[i]) if threshold is None else threshold

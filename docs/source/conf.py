@@ -234,8 +234,8 @@ EX_DIR = "../../examples"  # relative to docs/source
 sphinx_gallery_conf = {
     "examples_dirs": [f"{EX_DIR}"],
     "gallery_dirs": ["generated/auto_examples"],
-    # Disable plotting during doc builds; matches `html-noplot` behaviour.
-    "plot_gallery": False,
+    # Execute examples by default for CI builds; use html-noplot target for local fast builds
+    "plot_gallery": True,
     "binder": {
         "org": "eegdash",
         "repo": "EEGDash",

@@ -18,6 +18,7 @@ Dataset Information
 -------------------
 
 - **Dataset ID:** ``DS005571``
+- **Summary:** Type: Attention | Subjects: Healthy
 - **Number of Subjects:** 24
 - **Number of Recordings:** 45
 - **Number of Tasks:** 2

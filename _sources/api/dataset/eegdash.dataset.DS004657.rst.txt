@@ -18,7 +18,7 @@ Dataset Information
 -------------------
 
 - **Dataset ID:** ``DS004657``
-- **Summary:** Modality: Motor | Type: Decision-making
+- **Summary:** Modality: Motor | Type: Decision-making | Subjects: Other
 - **Number of Subjects:** 24
 - **Number of Recordings:** 119
 - **Number of Tasks:** 1

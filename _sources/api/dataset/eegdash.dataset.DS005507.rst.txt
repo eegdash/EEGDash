@@ -18,6 +18,7 @@ Dataset Information
 -------------------
 
 - **Dataset ID:** ``DS005507``
+- **Summary:** Modality: Resting State | Type: Resting state | Subjects: Other
 - **Number of Subjects:** 184
 - **Number of Recordings:** 1812
 - **Number of Tasks:** 10

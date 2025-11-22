@@ -18,7 +18,7 @@ Dataset Information
 -------------------
 
 - **Dataset ID:** ``DS004520``
-- **Summary:** Modality: Visual | Type: Memory
+- **Summary:** Modality: Visual | Type: Memory | Subjects: Other
 - **Number of Subjects:** 33
 - **Number of Recordings:** 33
 - **Number of Tasks:** 1

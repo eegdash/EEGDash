@@ -18,6 +18,7 @@ Dataset Information
 -------------------
 
 - **Dataset ID:** ``DS004256``
+- **Summary:** Modality: Auditory | Type: Memory | Subjects: Healthy
 - **Number of Subjects:** 53
 - **Number of Recordings:** 53
 - **Number of Tasks:** 2

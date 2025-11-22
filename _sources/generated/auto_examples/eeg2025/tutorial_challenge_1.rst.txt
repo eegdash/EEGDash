@@ -29,88 +29,152 @@ Challenge 1: Cross-Task Transfer Learning!
    :local:
    :depth: 2
 
-.. GENERATED FROM PYTHON SOURCE LINES 16-19
-
-.. image:: https://colab.research.google.com/assets/colab-badge.svg
-   :target: https://colab.research.google.com/github/eeg2025/startkit/blob/main/challenge_1.ipynb
-   :alt: Open In Colab
-
-.. GENERATED FROM PYTHON SOURCE LINES 21-32
-
-Preliminary notes
------------------
-Before we begin, I just want to make a deal with you, ok?
-This is a community competition with a strong open-source foundation.
-When I say open-source, I mean volunteer work.
-
-So, if you see something that does not work or could be improved, first, **please be kind**, and
-we will fix it together on GitHub, okay?
-
-The entire decoding community will only go further when we stop
-solving the same problems over and over again, and it starts working together.
-
-.. GENERATED FROM PYTHON SOURCE LINES 34-63
-
-How can we use the knowledge from one EEG Decoding task into another?
----------------------------------------------------------------------
-Transfer learning is a widespread technique used in deep learning. It
-uses knowledge learned from one source task/domain in another target
-task/domain. It has been studied in depth in computer vision, natural
-language processing, and speech, but what about EEG brain decoding?
-
-The cross-task transfer learning scenario in EEG decoding is remarkably
-underexplored compared to the development of new models,
-`Aristimunha et al. (2023) <https://arxiv.org/abs/2308.02408>`__, even
-though it can be much more useful for real applications, see
-`Wimpff et al. (2025) <https://arxiv.org/abs/2502.06828>`__,
-`Wu et al. (2025) <https://arxiv.org/abs/2507.09882>`__.
-
-Our Challenge 1 addresses a key goal in neurotechnology: decoding
-cognitive function from EEG using the pre-trained knowledge from another.
-In other words, developing models that can effectively
-transfer/adapt/adjust/fine-tune knowledge from passive EEG tasks to
-active tasks.
-
-The ability to generalize and transfer is something critical that we
-believe should be focused on. To go beyond just comparing metrics numbers
-that are often not comparable, given the specificities of EEG, such as
-pre-processing, inter-subject variability, and many other unique
-components of this type of data.
-
-This means your submitted model might be trained on a subset of tasks
-and fine-tuned on data from another condition, evaluating its capacity to
-generalize with task-specific fine-tuning.
-
-.. GENERATED FROM PYTHON SOURCE LINES 65-70
-
-__________
-
-Note: For simplicity purposes, we will only show how to do the decoding
-directly in our target task, and it is up to the teams to think about
-how to use the passive task to perform the pre-training.
-
-.. GENERATED FROM PYTHON SOURCE LINES 72-82
-
-Install dependencies
---------------------
-For the challenge, we will need two significant dependencies:
-`braindecode` and `eegdash`. The libraries will install PyTorch,
-Pytorch Audio, Scikit-learn, MNE, MNE-BIDS, and many other packages
-necessary for the many functions.
-
-Install dependencies on colab or your local machine, as eegdash
-have braindecode as a dependency.
-you can just run ``pip install eegdash``.
-
-.. GENERATED FROM PYTHON SOURCE LINES 84-86
-
-Imports and setup
------------------
-
-.. GENERATED FROM PYTHON SOURCE LINES 86-105
+.. GENERATED FROM PYTHON SOURCE LINES 16-21
 
 .. code-block:: Python
 
+
+    # .. image:: https://colab.research.google.com/assets/colab-badge.svg
+    #    :target: https://colab.research.google.com/github/eeg2025/startkit/blob/main/challenge_1.ipynb
+    #    :alt: Open In Colab
+
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 22-39
+
+.. code-block:: Python
+
+
+    # Preliminary notes
+    # -----------------
+    # Before we begin, I just want to make a deal with you, ok?
+    # This is a community competition with a strong open-source foundation.
+    # When I say open-source, I mean volunteer work.
+
+    #
+
+    # So, if you see something that does not work or could be improved, first, **please be kind**, and
+    # we will fix it together on GitHub, okay?
+
+    #
+
+    # The entire decoding community will only go further when we stop
+    # solving the same problems over and over again, and it starts working together.
+
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 40-79
+
+.. code-block:: Python
+
+
+    # How can we use the knowledge from one EEG Decoding task into another?
+    # ---------------------------------------------------------------------
+    # Transfer learning is a widespread technique used in deep learning. It
+    # uses knowledge learned from one source task/domain in another target
+    # task/domain. It has been studied in depth in computer vision, natural
+    # language processing, and speech, but what about EEG brain decoding?
+
+    #
+
+    # The cross-task transfer learning scenario in EEG decoding is remarkably
+    # underexplored compared to the development of new models,
+    # `Aristimunha et al. (2023) <https://arxiv.org/abs/2308.02408>`__, even
+    # though it can be much more useful for real applications, see
+    # `Wimpff et al. (2025) <https://arxiv.org/abs/2502.06828>`__,
+    # `Wu et al. (2025) <https://arxiv.org/abs/2507.09882>`__.
+
+    #
+
+    # Our Challenge 1 addresses a key goal in neurotechnology: decoding
+    # cognitive function from EEG using the pre-trained knowledge from another.
+    # In other words, developing models that can effectively
+    # transfer/adapt/adjust/fine-tune knowledge from passive EEG tasks to
+    # active tasks.
+
+    #
+
+    # The ability to generalize and transfer is something critical that we
+    # believe should be focused on. To go beyond just comparing metrics numbers
+    # that are often not comparable, given the specificities of EEG, such as
+    # pre-processing, inter-subject variability, and many other unique
+    # components of this type of data.
+
+    #
+
+    # This means your submitted model might be trained on a subset of tasks
+    # and fine-tuned on data from another condition, evaluating its capacity to
+    # generalize with task-specific fine-tuning.
+
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 80-89
+
+.. code-block:: Python
+
+
+    # __________
+
+    #
+
+    # Note: For simplicity purposes, we will only show how to do the decoding
+    # directly in our target task, and it is up to the teams to think about
+    # how to use the passive task to perform the pre-training.
+
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 90-104
+
+.. code-block:: Python
+
+
+    # Install dependencies
+    # --------------------
+    # For the challenge, we will need two significant dependencies:
+    # `braindecode` and `eegdash`. The libraries will install PyTorch,
+    # Pytorch Audio, Scikit-learn, MNE, MNE-BIDS, and many other packages
+    # necessary for the many functions.
+
+    #
+
+    # Install dependencies on colab or your local machine, as eegdash
+    # have braindecode as a dependency.
+    # you can just run ``pip install eegdash``.
+
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 105-127
+
+.. code-block:: Python
+
+
+    # Imports and setup
+    # -----------------
     from pathlib import Path
     import torch
     from braindecode.datasets import BaseConcatDataset
@@ -131,21 +195,27 @@ Imports and setup
     from joblib import Parallel, delayed
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 106-114
 
-Check GPU availability
-----------------------
 
-Identify whether a CUDA-enabled GPU is available
-and set the device accordingly.
-If using Google Colab, ensure that the runtime is set to use a GPU.
-This can be done by navigating to `Runtime` > `Change runtime type` and selecting
-`GPU` as the hardware accelerator.
 
-.. GENERATED FROM PYTHON SOURCE LINES 114-126
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 128-151
 
 .. code-block:: Python
 
+
+    # Check GPU availability
+    # ----------------------
+
+    #
+
+    # Identify whether a CUDA-enabled GPU is available
+    # and set the device accordingly.
+    # If using Google Colab, ensure that the runtime is set to use a GPU.
+    # This can be done by navigating to `Runtime` > `Change runtime type` and selecting
+    # `GPU` as the hardware accelerator.
     device = "cuda" if torch.cuda.is_available() else "cpu"
     if device == "cuda":
         msg = "CUDA-enabled GPU found. Training should be faster."
@@ -159,107 +229,220 @@ This can be done by navigating to `Runtime` > `Change runtime type` and selectin
     print(msg)
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 127-170
-
-What are we decoding?
- ---------------------
-
- To start to talk about what we want to analyse, the important thing
- is to understand some basic concepts.
-
-#####################################################################
- The brain decodes the problem
- -----------------------------
-
- Broadly speaking, here *brain decoding* is the following problem:
- given brain time-series signals :math:`X \in \mathbb{R}^{C \times T}` with
- labels :math:`y \in \mathcal{Y}`, we implement a neural network :math:`f` that
- **decodes/translates** brain activity into the target label.
-
- We aim to translate recorded brain activity into its originating
- stimulus, behavior, or mental state, `King, J-R. et al. (2020) <https://lauragwilliams.github.io/d/m/CognitionAlgorithm.pdf>`__.
-
- The neural network :math:`f` applies a series of transformation layers
- (e.g., ``torch.nn.Conv2d``, ``torch.nn.Linear``, ``torch.nn.ELU``, ``torch.nn.BatchNorm2d``)
- to the data to filter, extract features, and learn embeddings
- relevant to the optimization objective—in other words:
-
- .. math::
-
-    f_{\theta}: X \to y,
-
- where :math:`C` (``n_chans``) is the number of channels/electrodes and :math:`T` (``n_times``)
- is the temporal window length/epoch size over the interval of interest.
- Here, :math:`\theta` denotes the parameters learned by the neural network.
-
- Input/Output definition
- ---------------------------
- For the competition, the HBN-EEG (Healthy Brain Network EEG Datasets)
- dataset has ``n_chans = 129`` with the last channels as a `reference channel <https://mne.tools/stable/auto_tutorials/preprocessing/55_setting_eeg_reference.html>`_,
- and we define the window length as ``n_times = 200``, corresponding to 2-second windows.
-
- Your model should follow this definition exactly; any specific selection of channels,
- filtering, or domain-adaptation technique must be performed **within the layers of the neural network model**.
-
- In this tutorial, we will use the ``EEGNeX`` model from ``braindecode`` as an example.
- You can use any model you want, as long as it follows the input/output
- definitions above.
-
-.. GENERATED FROM PYTHON SOURCE LINES 172-201
-
-Understand the task: Contrast Change Detection (CCD)
- --------------------------------------------------------
- If you are interested to get more neuroscience insight, we recommend these two references, `HBN-EEG <https://www.biorxiv.org/content/10.1101/2024.10.03.615261v2.full.pdf>`__ and `Langer, N et al. (2017) <https://www.nature.com/articles/sdata201740#Sec2>`__.
- Your task (**label**) is to predict the response time for the subject during this windows.
-
- In the Video, we have an example of recording cognitive activity:
-
- The Contrast Change Detection (CCD) task relates to
- `Steady-State Visual Evoked Potentials (SSVEP) <https://en.wikipedia.org/wiki/Steady-state_visually_evoked_potential>`__
- and `Event-Related Potentials (ERP) <https://en.wikipedia.org/wiki/Event-related_potential>`__.
-
- Algorithmically, what the subject sees during recording is:
-
- * Two flickering striped discs: one tilted left, one tilted right.
- * After a variable delay, **one disc's contrast gradually increases** **while the other decreases**.
- * They **press left or right** to indicate which disc got stronger.
- * They receive **feedback** (🙂 correct / 🙁 incorrect).
-
- **The task parallels SSVEP and ERP:**
-
- * The continuous flicker **tags the EEG at fixed frequencies (and harmonics)** → SSVEP-like signals.
- * The **ramp onset**, the **button press**, and the **feedback** are **time-locked events** that yield ERP-like components.
-
- Your task (**label**) is to predict the response time for the subject during this windows.
-
-######################################################################
- In the figure below, we have the timeline representation of the cognitive task:
-
- .. image:: https://eeg2025.github.io/assets/img/image-2.jpg
-
-.. GENERATED FROM PYTHON SOURCE LINES 203-220
-
-Stimulus demonstration
- ----------------------
- .. raw:: html
-
-    <div class="video-wrapper">
-      <iframe src="https://www.youtube.com/embed/tOW2Vu2zHoU?start=1630"
-              title="Contrast Change Detection (CCD) task demo"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              allowfullscreen></iframe>
-    </div>
-
-#####################################################################
- PyTorch Dataset for the competition
- -----------------------------------
- Now, we have a Pytorch Dataset object that contains the set of recordings for the task
- `contrastChangeDetection`.
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 220-252
+
+.. rst-class:: sphx-glr-script-out
+
+ .. code-block:: none
+
+    No GPU found. Training will be carried out on CPU, which might be slower.
+
+    If running on Google Colab, you can request a GPU runtime by clicking
+    `Runtime/Change runtime type` in the top bar menu, then selecting 'T4 GPU'
+    under 'Hardware accelerator'.
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 152-163
 
 .. code-block:: Python
+
+
+    # What are we decoding?
+    # ---------------------
+
+    #
+
+    # To start to talk about what we want to analyse, the important thing
+    # is to understand some basic concepts.
+
+    #
+
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 164-220
+
+.. code-block:: Python
+
+
+    # The brain decodes the problem
+    # -----------------------------
+
+    #
+
+    # Broadly speaking, here *brain decoding* is the following problem:
+    # given brain time-series signals :math:`X \in \mathbb{R}^{C \times T}` with
+    # labels :math:`y \in \mathcal{Y}`, we implement a neural network :math:`f` that
+    # **decodes/translates** brain activity into the target label.
+
+    #
+
+    # We aim to translate recorded brain activity into its originating
+    # stimulus, behavior, or mental state, `King, J-R. et al. (2020) <https://lauragwilliams.github.io/d/m/CognitionAlgorithm.pdf>`__.
+
+    #
+
+    # The neural network :math:`f` applies a series of transformation layers
+    # (e.g., ``torch.nn.Conv2d``, ``torch.nn.Linear``, ``torch.nn.ELU``, ``torch.nn.BatchNorm2d``)
+    # to the data to filter, extract features, and learn embeddings
+    # relevant to the optimization objective—in other words:
+
+    #
+
+    # .. math::
+
+    #
+
+    #    f_{\theta}: X \to y,
+
+    #
+
+    # where :math:`C` (``n_chans``) is the number of channels/electrodes and :math:`T` (``n_times``)
+    # is the temporal window length/epoch size over the interval of interest.
+    # Here, :math:`\theta` denotes the parameters learned by the neural network.
+
+    #
+
+    # Input/Output definition
+    # ---------------------------
+    # For the competition, the HBN-EEG (Healthy Brain Network EEG Datasets)
+    # dataset has ``n_chans = 129`` with the last channels as a `reference channel <https://mne.tools/stable/auto_tutorials/preprocessing/55_setting_eeg_reference.html>`_,
+    # and we define the window length as ``n_times = 200``, corresponding to 2-second windows.
+
+    #
+
+    # Your model should follow this definition exactly; any specific selection of channels,
+    # filtering, or domain-adaptation technique must be performed **within the layers of the neural network model**.
+
+    #
+
+    # In this tutorial, we will use the ``EEGNeX`` model from ``braindecode`` as an example.
+    # You can use any model you want, as long as it follows the input/output
+    # definitions above.
+
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 221-263
+
+.. code-block:: Python
+
+
+    # Understand the task: Contrast Change Detection (CCD)
+    # --------------------------------------------------------
+    # If you are interested to get more neuroscience insight, we recommend these two references, `HBN-EEG <https://www.biorxiv.org/content/10.1101/2024.10.03.615261v2.full.pdf>`__ and `Langer, N et al. (2017) <https://www.nature.com/articles/sdata201740#Sec2>`__.
+    # Your task (**label**) is to predict the response time for the subject during this windows.
+
+    #
+
+    # In the Video, we have an example of recording cognitive activity:
+
+    #
+
+    # The Contrast Change Detection (CCD) task relates to
+    # `Steady-State Visual Evoked Potentials (SSVEP) <https://en.wikipedia.org/wiki/Steady-state_visually_evoked_potential>`__
+    # and `Event-Related Potentials (ERP) <https://en.wikipedia.org/wiki/Event-related_potential>`__.
+
+    #
+
+    # Algorithmically, what the subject sees during recording is:
+
+    #
+
+    # * Two flickering striped discs: one tilted left, one tilted right.
+    # * After a variable delay, **one disc's contrast gradually increases** **while the other decreases**.
+    # * They **press left or right** to indicate which disc got stronger.
+    # * They receive **feedback** (🙂 correct / 🙁 incorrect).
+
+    #
+
+    # **The task parallels SSVEP and ERP:**
+
+    #
+
+    # * The continuous flicker **tags the EEG at fixed frequencies (and harmonics)** → SSVEP-like signals.
+    # * The **ramp onset**, the **button press**, and the **feedback** are **time-locked events** that yield ERP-like components.
+
+    #
+
+    # Your task (**label**) is to predict the response time for the subject during this windows.
+
+    #
+
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 264-271
+
+.. code-block:: Python
+
+
+    # In the figure below, we have the timeline representation of the cognitive task:
+
+    #
+
+    # .. image:: https://eeg2025.github.io/assets/img/image-2.jpg
+
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 272-288
+
+.. code-block:: Python
+
+
+    # Stimulus demonstration
+    # ----------------------
+    # .. raw:: html
+
+    #
+
+    #    <div class="video-wrapper">
+    #      <iframe src="https://www.youtube.com/embed/tOW2Vu2zHoU?start=1630"
+    #              title="Contrast Change Detection (CCD) task demo"
+    #              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+    #              allowfullscreen></iframe>
+    #    </div>
+
+    #
+
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 289-333
+
+.. code-block:: Python
+
+
+    # PyTorch Dataset for the competition
+    # -----------------------------------
+    # Now, we have a Pytorch Dataset object that contains the set of recordings for the task
+    # `contrastChangeDetection`.
+
+    #
 
     from eegdash.dataset import EEGChallengeDataset
     from eegdash.hbn.windows import (
@@ -282,45 +465,156 @@ Stimulus demonstration
     print(
         f"Number of unique subjects in the dataset: {dataset_ccd.description['subject'].nunique()}"
     )
+
     #
+
     # This dataset object have very rich Raw object details that can help you to
     # understand better the data. The framework behind this is braindecode,
     # and if you want to understand in depth what is happening, we recommend the
     # braindecode github itself.
+
     #
+
     # We can also access the Raw object for visualization purposes, we will see just one object.
     raw = dataset_ccd.datasets[0].raw  # get the Raw object of the first recording
     # And to download all the data all data directly, you can do:
     raws = Parallel(n_jobs=-1)(delayed(lambda d: d.raw)(d) for d in dataset_ccd.datasets)
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 253-267
 
-Alternatives for Downloading the data
--------------------------------------
 
-You can also perform this operation with wget or the aws cli.
-These options will probably be faster!
-Please check more details in the `HBN` data webpage `HBN-EEG <https://neuromechanist.github.io/data/hbn/>`__.
-You need to download the 100Hz preprocessed data in BDF format.
 
-Example of wget for release R1
-   wget https://sccn.ucsd.edu/download/eeg2025/R1_L100_bdf.zip -O R1_L100_bdf.zip
+.. rst-class:: sphx-glr-script-out
 
-Example of AWS CLI for release R1
+ .. code-block:: none
 
-   aws s3 sync s3://nmdatasets/NeurIPS25/R1_L100_bdf data/R1_L100_bdf --no-sign-request
+    ╭────────────────────── EEG 2025 Competition Data Notice ──────────────────────╮
+    │ This object loads the HBN dataset that has been preprocessed for the EEG     │
+    │ Challenge:                                                                   │
+    │   * Downsampled from 500Hz to 100Hz                                          │
+    │   * Bandpass filtered (0.5-50 Hz)                                            │
+    │                                                                              │
+    │ For full preprocessing applied for competition details, see:                 │
+    │   https://github.com/eeg2025/downsample-datasets                             │
+    │                                                                              │
+    │ The HBN dataset have some preprocessing applied by the HBN team:             │
+    │   * Re-reference (Cz Channel)                                                │
+    │                                                                              │
+    │ IMPORTANT: The data accessed via `EEGChallengeDataset` is NOT identical to   │
+    │ what you get from EEGDashDataset directly.                                   │
+    │ If you are participating in the competition, always use                      │
+    │ `EEGChallengeDataset` to ensure consistency with the challenge data.         │
+    ╰──────────────────────── Source: EEGChallengeDataset ─────────────────────────╯
+    Number of recordings in the dataset: 60
+    Number of unique subjects in the dataset: 20
+    Downloading dataset_description.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading dataset_description.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 18.3B/s]
+    Downloading participants.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading participants.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 21.6B/s]
+    Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-1_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 15.4B/s]
+    Downloading sub-NDARAH793FBF_task-DiaryOfAWimpyKid_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAH793FBF_task-DiaryOfAWimpyKid_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 12.4B/s]
+    Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-2_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 23.6B/s]
+    Downloading sub-NDARAH793FBF_task-ThePresent_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAH793FBF_task-ThePresent_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 27.8B/s]
+    Downloading sub-NDARAH793FBF_task-symbolSearch_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAH793FBF_task-symbolSearch_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 24.3B/s]
+    Downloading sub-NDARAH793FBF_task-seqLearning8target_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAH793FBF_task-seqLearning8target_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 23.5B/s]
+    Downloading sub-NDARAH793FBF_task-surroundSupp_run-1_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAH793FBF_task-surroundSupp_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 21.0B/s]
+    Downloading sub-NDARAH793FBF_task-RestingState_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAH793FBF_task-RestingState_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 14.4B/s]
+    Downloading sub-NDARAH793FBF_task-surroundSupp_run-2_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAH793FBF_task-surroundSupp_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 16.9B/s]
+    Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-3_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 22.2B/s]
+    Downloading sub-NDARAH793FBF_task-FunwithFractals_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAH793FBF_task-FunwithFractals_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 24.5B/s]
+    Downloading sub-NDARAH793FBF_task-DespicableMe_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAH793FBF_task-DespicableMe_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 24.7B/s]
+    Downloading task-seqLearning8target_events.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading task-seqLearning8target_events.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 21.0B/s]
+    Downloading task-RestingState_events.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading task-RestingState_events.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 24.2B/s]
+    Downloading task-surroundSupp_events.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading task-surroundSupp_events.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 21.3B/s]
+    Downloading task-FunwithFractals_events.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading task-FunwithFractals_events.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 19.5B/s]
+    Downloading task-symbolSearch_events.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading task-symbolSearch_events.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 22.1B/s]
+    Downloading task-ThePresent_events.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading task-ThePresent_events.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 22.9B/s]
+    Downloading task-seqLearning6target_events.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading task-seqLearning6target_events.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 22.2B/s]
+    Downloading task-contrastChangeDetection_events.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading task-contrastChangeDetection_events.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 21.4B/s]
+    Downloading task-DespicableMe_events.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading task-DespicableMe_events.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 19.6B/s]
+    Downloading task-DiaryOfAWimpyKid_events.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading task-DiaryOfAWimpyKid_events.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 21.0B/s]
+    Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-1_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 25.0B/s]
+    Downloading sub-NDARAH793FBF_task-symbolSearch_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAH793FBF_task-symbolSearch_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 23.0B/s]
+    Downloading sub-NDARAH793FBF_task-surroundSupp_run-2_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAH793FBF_task-surroundSupp_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 19.2B/s]
+    Downloading sub-NDARAH793FBF_task-DiaryOfAWimpyKid_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAH793FBF_task-DiaryOfAWimpyKid_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 20.4B/s]
+    Downloading sub-NDARAH793FBF_task-DespicableMe_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAH793FBF_task-DespicableMe_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 21.8B/s]
+    Downloading sub-NDARAH793FBF_task-seqLearning8target_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAH793FBF_task-seqLearning8target_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 20.1B/s]
+    Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-3_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 21.8B/s]
+    Downloading sub-NDARAH793FBF_task-RestingState_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAH793FBF_task-RestingState_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 19.8B/s]
+    Downloading sub-NDARAH793FBF_task-FunwithFractals_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAH793FBF_task-FunwithFractals_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 23.8B/s]
+    Downloading sub-NDARAH793FBF_task-ThePresent_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAH793FBF_task-ThePresent_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 19.0B/s]
+    Downloading sub-NDARAH793FBF_task-surroundSupp_run-1_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAH793FBF_task-surroundSupp_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 19.5B/s]
+    Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-2_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 23.6B/s]
+    Downloading task-symbolSearch_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading task-symbolSearch_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 23.3B/s]
+    Downloading task-surroundSupp_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading task-surroundSupp_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 23.2B/s]
+    Downloading task-contrastChangeDetection_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading task-contrastChangeDetection_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 19.8B/s]
+    Downloading task-seqLearning8target_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading task-seqLearning8target_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 23.1B/s]
+    Downloading task-DespicableMe_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading task-DespicableMe_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 16.2B/s]
+    Downloading task-ThePresent_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading task-ThePresent_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 23.1B/s]
+    Downloading task-FunwithFractals_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading task-FunwithFractals_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 23.5B/s]
+    Downloading task-RestingState_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading task-RestingState_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 14.3B/s]
+    Downloading task-seqLearning6target_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading task-seqLearning6target_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 13.0B/s]
+    Downloading task-DiaryOfAWimpyKid_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading task-DiaryOfAWimpyKid_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 19.8B/s]
+    Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-1_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 18.6B/s]
+    Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-2_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 24.1B/s]
+    Downloading sub-NDARAH793FBF_task-RestingState_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAH793FBF_task-RestingState_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 23.1B/s]
+    Downloading sub-NDARAH793FBF_task-surroundSupp_run-2_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAH793FBF_task-surroundSupp_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 18.4B/s]
+    Downloading sub-NDARAH793FBF_task-ThePresent_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAH793FBF_task-ThePresent_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 22.8B/s]
+    Downloading sub-NDARAH793FBF_task-surroundSupp_run-1_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAH793FBF_task-surroundSupp_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 12.2B/s]
+    Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-3_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 17.8B/s]
+    Downloading sub-NDARAH793FBF_task-DespicableMe_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAH793FBF_task-DespicableMe_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 18.1B/s]
+    Downloading sub-NDARAH793FBF_task-FunwithFractals_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAH793FBF_task-FunwithFractals_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 18.2B/s]
+    Downloading sub-NDARAH793FBF_task-seqLearning8target_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAH793FBF_task-seqLearning8target_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 23.1B/s]
+    Downloading sub-NDARAH793FBF_task-symbolSearch_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAH793FBF_task-symbolSearch_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 20.0B/s]
+    Downloading sub-NDARAH793FBF_task-DiaryOfAWimpyKid_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAH793FBF_task-DiaryOfAWimpyKid_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 21.2B/s]
+    Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-1_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.09B/s]    Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.09B/s]
+    Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-1_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 6.14B/s]
 
-.. GENERATED FROM PYTHON SOURCE LINES 270-273
 
-Create windows of interest
------------------------------
-So we epoch after the stimulus moment with a beginning shift of 500 ms.
 
-.. GENERATED FROM PYTHON SOURCE LINES 273-323
+
+.. GENERATED FROM PYTHON SOURCE LINES 334-359
 
 .. code-block:: Python
 
+
+    # Alternatives for Downloading the data
+    # -------------------------------------
+
+    #
+
+    # You can also perform this operation with wget or the aws cli.
+    # These options will probably be faster!
+    # Please check more details in the `HBN` data webpage `HBN-EEG <https://neuromechanist.github.io/data/hbn/>`__.
+    # You need to download the 100Hz preprocessed data in BDF format.
+
+    #
+
+    # Example of wget for release R1
+    #    wget https://sccn.ucsd.edu/download/eeg2025/R1_L100_bdf.zip -O R1_L100_bdf.zip
+
+    #
+
+    # Example of AWS CLI for release R1
+
+    #
+
+    #    aws s3 sync s3://nmdatasets/NeurIPS25/R1_L100_bdf data/R1_L100_bdf --no-sign-request
+
+
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 360-415
+
+.. code-block:: Python
+
+
+    # Create windows of interest
+    # -----------------------------
+    # So we epoch after the stimulus moment with a beginning shift of 500 ms.
 
     EPOCH_LEN_S = 2.0
     SFREQ = 100  # by definition here
@@ -372,15 +666,85 @@ So we epoch after the stimulus moment with a beginning shift of 500 ms.
         ),
     )
 
-.. GENERATED FROM PYTHON SOURCE LINES 324-326
 
-Inspect the label distribution
--------------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 326-343
+
+
+.. rst-class:: sphx-glr-script-out
+
+ .. code-block:: none
+
+    Used Annotations descriptions: [np.str_('stimulus_anchor')]
+    Used Annotations descriptions: [np.str_('stimulus_anchor')]
+    Used Annotations descriptions: [np.str_('stimulus_anchor')]
+    Used Annotations descriptions: [np.str_('stimulus_anchor')]
+    Used Annotations descriptions: [np.str_('stimulus_anchor')]
+    Used Annotations descriptions: [np.str_('stimulus_anchor')]
+    Used Annotations descriptions: [np.str_('stimulus_anchor')]
+    Used Annotations descriptions: [np.str_('stimulus_anchor')]
+    Used Annotations descriptions: [np.str_('stimulus_anchor')]
+    Used Annotations descriptions: [np.str_('stimulus_anchor')]
+    Used Annotations descriptions: [np.str_('stimulus_anchor')]
+    Used Annotations descriptions: [np.str_('stimulus_anchor')]
+    Used Annotations descriptions: [np.str_('stimulus_anchor')]
+    Used Annotations descriptions: [np.str_('stimulus_anchor')]
+    Used Annotations descriptions: [np.str_('stimulus_anchor')]
+    Used Annotations descriptions: [np.str_('stimulus_anchor')]
+    Used Annotations descriptions: [np.str_('stimulus_anchor')]
+    Used Annotations descriptions: [np.str_('stimulus_anchor')]
+    Used Annotations descriptions: [np.str_('stimulus_anchor')]
+    Used Annotations descriptions: [np.str_('stimulus_anchor')]
+    Used Annotations descriptions: [np.str_('stimulus_anchor')]
+    Used Annotations descriptions: [np.str_('stimulus_anchor')]
+    Used Annotations descriptions: [np.str_('stimulus_anchor')]
+    Used Annotations descriptions: [np.str_('stimulus_anchor')]
+    Used Annotations descriptions: [np.str_('stimulus_anchor')]
+    Used Annotations descriptions: [np.str_('stimulus_anchor')]
+    Used Annotations descriptions: [np.str_('stimulus_anchor')]
+    Used Annotations descriptions: [np.str_('stimulus_anchor')]
+    Used Annotations descriptions: [np.str_('stimulus_anchor')]
+    Used Annotations descriptions: [np.str_('stimulus_anchor')]
+    Used Annotations descriptions: [np.str_('stimulus_anchor')]
+    Used Annotations descriptions: [np.str_('stimulus_anchor')]
+    Used Annotations descriptions: [np.str_('stimulus_anchor')]
+    Used Annotations descriptions: [np.str_('stimulus_anchor')]
+    Used Annotations descriptions: [np.str_('stimulus_anchor')]
+    Used Annotations descriptions: [np.str_('stimulus_anchor')]
+    Used Annotations descriptions: [np.str_('stimulus_anchor')]
+    Used Annotations descriptions: [np.str_('stimulus_anchor')]
+    Used Annotations descriptions: [np.str_('stimulus_anchor')]
+    Used Annotations descriptions: [np.str_('stimulus_anchor')]
+    Used Annotations descriptions: [np.str_('stimulus_anchor')]
+    Used Annotations descriptions: [np.str_('stimulus_anchor')]
+    Used Annotations descriptions: [np.str_('stimulus_anchor')]
+    Used Annotations descriptions: [np.str_('stimulus_anchor')]
+    Used Annotations descriptions: [np.str_('stimulus_anchor')]
+    Used Annotations descriptions: [np.str_('stimulus_anchor')]
+    Used Annotations descriptions: [np.str_('stimulus_anchor')]
+    Used Annotations descriptions: [np.str_('stimulus_anchor')]
+    Used Annotations descriptions: [np.str_('stimulus_anchor')]
+    Used Annotations descriptions: [np.str_('stimulus_anchor')]
+    Used Annotations descriptions: [np.str_('stimulus_anchor')]
+    Used Annotations descriptions: [np.str_('stimulus_anchor')]
+    Used Annotations descriptions: [np.str_('stimulus_anchor')]
+    Used Annotations descriptions: [np.str_('stimulus_anchor')]
+    Used Annotations descriptions: [np.str_('stimulus_anchor')]
+    Used Annotations descriptions: [np.str_('stimulus_anchor')]
+    Used Annotations descriptions: [np.str_('stimulus_anchor')]
+    Used Annotations descriptions: [np.str_('stimulus_anchor')]
+    Used Annotations descriptions: [np.str_('stimulus_anchor')]
+    Used Annotations descriptions: [np.str_('stimulus_anchor')]
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 416-436
 
 .. code-block:: Python
 
+
+    # Inspect the label distribution
+    # -------------------------------
     import numpy as np
     from skorch.helper import SliceDataset
 
@@ -399,16 +763,25 @@ Inspect the label distribution
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 344-347
 
-Split the data
----------------
-Extract meta information
 
-.. GENERATED FROM PYTHON SOURCE LINES 347-395
+.. image-sg:: /generated/auto_examples/eeg2025/images/sphx_glr_tutorial_challenge_1_001.png
+   :alt: Response Time Distribution
+   :srcset: /generated/auto_examples/eeg2025/images/sphx_glr_tutorial_challenge_1_001.png
+   :class: sphx-glr-single-img
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 437-489
 
 .. code-block:: Python
 
+
+    # Split the data
+    # ---------------
+    # Extract meta information
     meta_information = single_windows.get_metadata()
 
     valid_frac = 0.1
@@ -458,15 +831,28 @@ Extract meta information
     print(f"Test:\t{len(test_set)}")
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 396-398
 
-Create dataloaders
--------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 398-412
+
+.. rst-class:: sphx-glr-script-out
+
+ .. code-block:: none
+
+    Number of examples in each split in the minirelease
+    Train:  981
+    Valid:  183
+    Test:   50
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 490-507
 
 .. code-block:: Python
 
+
+    # Create dataloaders
+    # -------------------
     batch_size = 128
     # Set num_workers to 0 to avoid multiprocessing issues in notebooks/tutorials
     num_workers = 0
@@ -482,21 +868,25 @@ Create dataloaders
     )
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 413-421
 
-Build the model
------------------
-For neural network models, **to start**, we suggest using `braindecode models <https://braindecode.org/1.2/models/models_table.html>`__ zoo.
-We have implemented several different models for decoding the brain timeseries.
-Your team's responsibility is to develop a PyTorch module that receives the three-dimensional (`batch`, `n_chans`, `n_times`)
-input and outputs the contrastive response time.
-**You can use any model you want**, as long as it follows the input/output
-definitions above.
 
-.. GENERATED FROM PYTHON SOURCE LINES 421-432
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 508-528
 
 .. code-block:: Python
 
+
+    # Build the model
+    # -----------------
+    # For neural network models, **to start**, we suggest using `braindecode models <https://braindecode.org/1.2/models/models_table.html>`__ zoo.
+    # We have implemented several different models for decoding the brain timeseries.
+    # Your team's responsibility is to develop a PyTorch module that receives the three-dimensional (`batch`, `n_chans`, `n_times`)
+    # input and outputs the contrastive response time.
+    # **You can use any model you want**, as long as it follows the input/output
+    # definitions above.
     model = EEGNeX(
         n_chans=129,  # 129 channels
         n_outputs=1,  # 1 output for regression
@@ -509,18 +899,119 @@ definitions above.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 433-439
-
-Define training and validation functions
--------------------------------------------
-The rest is our classic PyTorch/torch lighting/skorch training pipeline,
-you can use any training framework you want.
-We provide a simple training and validation loop below.
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 439-540
+
+.. rst-class:: sphx-glr-script-out
+
+ .. code-block:: none
+
+    /home/runner/work/EEGDash/EEGDash/.venv/lib/python3.11/site-packages/torch/nn/modules/conv.py:543: UserWarning: Using padding='same' with even kernel lengths and odd dilation may require a zero-padded copy of the input be created (Triggered internally at /pytorch/aten/src/ATen/native/Convolution.cpp:1031.)
+      return F.conv2d(
+    ================================================================================================================================================================
+    Layer (type (var_name):depth-idx)                            Input Shape               Output Shape              Param #                   Kernel Shape
+    ================================================================================================================================================================
+    EEGNeX (EEGNeX)                                              [1, 129, 200]             [1, 1]                    --                        --
+    ├─Sequential (block_1): 1-1                                  [1, 129, 200]             [1, 8, 129, 200]          --                        --
+    │    └─Rearrange (0): 2-1                                    [1, 129, 200]             [1, 1, 129, 200]          --                        --
+    │    └─Conv2d (1): 2-2                                       [1, 1, 129, 200]          [1, 8, 129, 200]          512                       [1, 64]
+    │    └─BatchNorm2d (2): 2-3                                  [1, 8, 129, 200]          [1, 8, 129, 200]          16                        --
+    ├─Sequential (block_2): 1-2                                  [1, 8, 129, 200]          [1, 32, 129, 200]         --                        --
+    │    └─Conv2d (0): 2-4                                       [1, 8, 129, 200]          [1, 32, 129, 200]         16,384                    [1, 64]
+    │    └─BatchNorm2d (1): 2-5                                  [1, 32, 129, 200]         [1, 32, 129, 200]         64                        --
+    ├─Sequential (block_3): 1-3                                  [1, 32, 129, 200]         [1, 64, 1, 50]            --                        --
+    │    └─ParametrizedConv2dWithConstraint (0): 2-6             [1, 32, 129, 200]         [1, 64, 1, 200]           --                        [129, 1]
+    │    │    └─ModuleDict (parametrizations): 3-1               --                        --                        8,256                     --
+    │    └─BatchNorm2d (1): 2-7                                  [1, 64, 1, 200]           [1, 64, 1, 200]           128                       --
+    │    └─ELU (2): 2-8                                          [1, 64, 1, 200]           [1, 64, 1, 200]           --                        --
+    │    └─AvgPool2d (3): 2-9                                    [1, 64, 1, 200]           [1, 64, 1, 50]            --                        [1, 4]
+    │    └─Dropout (4): 2-10                                     [1, 64, 1, 50]            [1, 64, 1, 50]            --                        --
+    ├─Sequential (block_4): 1-4                                  [1, 64, 1, 50]            [1, 32, 1, 50]            --                        --
+    │    └─Conv2d (0): 2-11                                      [1, 64, 1, 50]            [1, 32, 1, 50]            32,768                    [1, 16]
+    │    └─BatchNorm2d (1): 2-12                                 [1, 32, 1, 50]            [1, 32, 1, 50]            64                        --
+    ├─Sequential (block_5): 1-5                                  [1, 32, 1, 50]            [1, 48]                   --                        --
+    │    └─Conv2d (0): 2-13                                      [1, 32, 1, 50]            [1, 8, 1, 50]             4,096                     [1, 16]
+    │    └─BatchNorm2d (1): 2-14                                 [1, 8, 1, 50]             [1, 8, 1, 50]             16                        --
+    │    └─ELU (2): 2-15                                         [1, 8, 1, 50]             [1, 8, 1, 50]             --                        --
+    │    └─AvgPool2d (3): 2-16                                   [1, 8, 1, 50]             [1, 8, 1, 6]              --                        [1, 8]
+    │    └─Dropout (4): 2-17                                     [1, 8, 1, 6]              [1, 8, 1, 6]              --                        --
+    │    └─Flatten (5): 2-18                                     [1, 8, 1, 6]              [1, 48]                   --                        --
+    ├─ParametrizedLinearWithConstraint (final_layer): 1-6        [1, 48]                   [1, 1]                    1                         --
+    │    └─ModuleDict (parametrizations): 2-19                   --                        --                        --                        --
+    │    │    └─ParametrizationList (weight): 3-2                --                        [1, 48]                   48                        --
+    ================================================================================================================================================================
+    Total params: 62,353
+    Trainable params: 62,353
+    Non-trainable params: 0
+    Total mult-adds (Units.MEGABYTES): 437.76
+    ================================================================================================================================================================
+    Input size (MB): 0.10
+    Forward/backward pass size (MB): 16.65
+    Params size (MB): 0.22
+    Estimated Total Size (MB): 16.97
+    ================================================================================================================================================================
+
+    EEGNeX(
+      (block_1): Sequential(
+        (0): Rearrange('batch ch time -> batch 1 ch time')
+        (1): Conv2d(1, 8, kernel_size=(1, 64), stride=(1, 1), padding=same, bias=False)
+        (2): BatchNorm2d(8, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      )
+      (block_2): Sequential(
+        (0): Conv2d(8, 32, kernel_size=(1, 64), stride=(1, 1), padding=same, bias=False)
+        (1): BatchNorm2d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      )
+      (block_3): Sequential(
+        (0): ParametrizedConv2dWithConstraint(
+          32, 64, kernel_size=(129, 1), stride=(1, 1), groups=32, bias=False
+          (parametrizations): ModuleDict(
+            (weight): ParametrizationList(
+              (0): MaxNormParametrize()
+            )
+          )
+        )
+        (1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (2): ELU(alpha=1.0)
+        (3): AvgPool2d(kernel_size=(1, 4), stride=(1, 4), padding=(0, 1))
+        (4): Dropout(p=0.5, inplace=False)
+      )
+      (block_4): Sequential(
+        (0): Conv2d(64, 32, kernel_size=(1, 16), stride=(1, 1), padding=same, dilation=(1, 2), bias=False)
+        (1): BatchNorm2d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      )
+      (block_5): Sequential(
+        (0): Conv2d(32, 8, kernel_size=(1, 16), stride=(1, 1), padding=same, dilation=(1, 4), bias=False)
+        (1): BatchNorm2d(8, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (2): ELU(alpha=1.0)
+        (3): AvgPool2d(kernel_size=(1, 8), stride=(1, 8), padding=(0, 1))
+        (4): Dropout(p=0.5, inplace=False)
+        (5): Flatten(start_dim=1, end_dim=-1)
+      )
+      (final_layer): ParametrizedLinearWithConstraint(
+        in_features=48, out_features=1, bias=True
+        (parametrizations): ModuleDict(
+          (weight): ParametrizationList(
+            (0): MaxNormParametrize()
+          )
+        )
+      )
+    )
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 529-640
 
 .. code-block:: Python
+
+
+    # Define training and validation functions
+    # -------------------------------------------
+    # The rest is our classic PyTorch/torch lighting/skorch training pipeline,
+    # you can use any training framework you want.
+    # We provide a simple training and validation loop below.
+
+    #
+
 
     def train_one_epoch(
         dataloader: DataLoader,
@@ -624,15 +1115,19 @@ We provide a simple training and validation loop below.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 541-543
 
-Train the model
-------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 543-591
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 641-692
 
 .. code-block:: Python
 
+
+    # Train the model
+    # ------------------
     lr = 1e-3
     weight_decay = 1e-5
     n_epochs = (
@@ -682,19 +1177,70 @@ Train the model
         model.load_state_dict(best_state)
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 592-594
 
-Save the model
------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 594-596
+
+.. rst-class:: sphx-glr-script-out
+
+ .. code-block:: none
+
+    Epoch 1/5:       0%|          | 0/8 [00:00<?, ?it/s]    Epoch 1, Batch 1/8, Loss: 2.838698, RMSE: 1.684844:   0%|          | 0/8 [00:06<?, ?it/s]    Epoch 1, Batch 1/8, Loss: 2.838698, RMSE: 1.684844:  12%|█▎        | 1/8 [00:06<00:43,  6.28s/it]    Epoch 1, Batch 2/8, Loss: 2.693015, RMSE: 1.663086:  12%|█▎        | 1/8 [00:12<00:43,  6.28s/it]    Epoch 1, Batch 2/8, Loss: 2.693015, RMSE: 1.663086:  25%|██▌       | 2/8 [00:12<00:35,  5.96s/it]    Epoch 1, Batch 3/8, Loss: 2.785443, RMSE: 1.665048:  25%|██▌       | 2/8 [00:17<00:35,  5.96s/it]    Epoch 1, Batch 3/8, Loss: 2.785443, RMSE: 1.665048:  38%|███▊      | 3/8 [00:17<00:29,  5.85s/it]    Epoch 1, Batch 4/8, Loss: 2.746054, RMSE: 1.663070:  38%|███▊      | 3/8 [00:23<00:29,  5.85s/it]    Epoch 1, Batch 4/8, Loss: 2.746054, RMSE: 1.663070:  50%|█████     | 4/8 [00:23<00:23,  5.79s/it]    Epoch 1, Batch 5/8, Loss: 2.866567, RMSE: 1.669118:  50%|█████     | 4/8 [00:29<00:23,  5.79s/it]    Epoch 1, Batch 5/8, Loss: 2.866567, RMSE: 1.669118:  62%|██████▎   | 5/8 [00:29<00:17,  5.74s/it]    Epoch 1, Batch 6/8, Loss: 2.627282, RMSE: 1.661177:  62%|██████▎   | 5/8 [00:34<00:17,  5.74s/it]    Epoch 1, Batch 6/8, Loss: 2.627282, RMSE: 1.661177:  75%|███████▌  | 6/8 [00:34<00:11,  5.72s/it]    Epoch 1, Batch 7/8, Loss: 2.536175, RMSE: 1.651546:  75%|███████▌  | 6/8 [00:40<00:11,  5.72s/it]    Epoch 1, Batch 7/8, Loss: 2.536175, RMSE: 1.651546:  88%|████████▊ | 7/8 [00:40<00:05,  5.69s/it]    Epoch 1, Batch 8/8, Loss: 2.386837, RMSE: 1.642583:  88%|████████▊ | 7/8 [00:44<00:05,  5.69s/it]    Epoch 1, Batch 8/8, Loss: 2.386837, RMSE: 1.642583: 100%|██████████| 8/8 [00:44<00:00,  5.07s/it]    Epoch 1, Batch 8/8, Loss: 2.386837, RMSE: 1.642583: 100%|██████████| 8/8 [00:44<00:00,  5.52s/it]
+      0%|          | 0/1 [00:00<?, ?it/s]    Val Batch 1/1, Loss: 2.766600, RMSE: 1.663310:   0%|          | 0/1 [00:00<?, ?it/s]    Val Batch 1/1, Loss: 2.766600, RMSE: 1.663310: 100%|██████████| 1/1 [00:00<00:00,  1.81it/s]    Val Batch 1/1, Loss: 2.766600, RMSE: 1.663310: 100%|██████████| 1/1 [00:00<00:00,  1.81it/s]
+    Val RMSE: 1.663310, Val Loss: 2.766600
+
+    Train RMSE: 1.642583, Average Train Loss: 2.685009, Val RMSE: 1.663310, Average Val Loss: 2.766600
+    Epoch 2/5:       0%|          | 0/8 [00:00<?, ?it/s]    Epoch 2, Batch 1/8, Loss: 2.276956, RMSE: 1.508959:   0%|          | 0/8 [00:05<?, ?it/s]    Epoch 2, Batch 1/8, Loss: 2.276956, RMSE: 1.508959:  12%|█▎        | 1/8 [00:05<00:39,  5.63s/it]    Epoch 2, Batch 2/8, Loss: 2.429497, RMSE: 1.534023:  12%|█▎        | 1/8 [00:11<00:39,  5.63s/it]    Epoch 2, Batch 2/8, Loss: 2.429497, RMSE: 1.534023:  25%|██▌       | 2/8 [00:11<00:33,  5.64s/it]    Epoch 2, Batch 3/8, Loss: 2.399875, RMSE: 1.539083:  25%|██▌       | 2/8 [00:16<00:33,  5.64s/it]    Epoch 2, Batch 3/8, Loss: 2.399875, RMSE: 1.539083:  38%|███▊      | 3/8 [00:16<00:28,  5.65s/it]    Epoch 2, Batch 4/8, Loss: 2.270662, RMSE: 1.531094:  38%|███▊      | 3/8 [00:22<00:28,  5.65s/it]    Epoch 2, Batch 4/8, Loss: 2.270662, RMSE: 1.531094:  50%|█████     | 4/8 [00:22<00:22,  5.65s/it]    Epoch 2, Batch 5/8, Loss: 2.045108, RMSE: 1.511430:  50%|█████     | 4/8 [00:28<00:22,  5.65s/it]    Epoch 2, Batch 5/8, Loss: 2.045108, RMSE: 1.511430:  62%|██████▎   | 5/8 [00:28<00:16,  5.66s/it]    Epoch 2, Batch 6/8, Loss: 2.020219, RMSE: 1.496792:  62%|██████▎   | 5/8 [00:33<00:16,  5.66s/it]    Epoch 2, Batch 6/8, Loss: 2.020219, RMSE: 1.496792:  75%|███████▌  | 6/8 [00:33<00:11,  5.65s/it]    Epoch 2, Batch 7/8, Loss: 1.876298, RMSE: 1.479315:  75%|███████▌  | 6/8 [00:39<00:11,  5.65s/it]    Epoch 2, Batch 7/8, Loss: 1.876298, RMSE: 1.479315:  88%|████████▊ | 7/8 [00:39<00:05,  5.65s/it]    Epoch 2, Batch 8/8, Loss: 1.704226, RMSE: 1.465068:  88%|████████▊ | 7/8 [00:43<00:05,  5.65s/it]    Epoch 2, Batch 8/8, Loss: 1.704226, RMSE: 1.465068: 100%|██████████| 8/8 [00:43<00:00,  5.03s/it]    Epoch 2, Batch 8/8, Loss: 1.704226, RMSE: 1.465068: 100%|██████████| 8/8 [00:43<00:00,  5.41s/it]
+      0%|          | 0/1 [00:00<?, ?it/s]    Val Batch 1/1, Loss: 2.395387, RMSE: 1.547704:   0%|          | 0/1 [00:00<?, ?it/s]    Val Batch 1/1, Loss: 2.395387, RMSE: 1.547704: 100%|██████████| 1/1 [00:00<00:00,  1.79it/s]    Val Batch 1/1, Loss: 2.395387, RMSE: 1.547704: 100%|██████████| 1/1 [00:00<00:00,  1.79it/s]
+    Val RMSE: 1.547704, Val Loss: 2.395387
+
+    Train RMSE: 1.465068, Average Train Loss: 2.127855, Val RMSE: 1.547704, Average Val Loss: 2.395387
+    Epoch 3/5:       0%|          | 0/8 [00:00<?, ?it/s]    Epoch 3, Batch 1/8, Loss: 1.526827, RMSE: 1.235648:   0%|          | 0/8 [00:05<?, ?it/s]    Epoch 3, Batch 1/8, Loss: 1.526827, RMSE: 1.235648:  12%|█▎        | 1/8 [00:05<00:39,  5.66s/it]    Epoch 3, Batch 2/8, Loss: 1.024627, RMSE: 1.129481:  12%|█▎        | 1/8 [00:11<00:39,  5.66s/it]    Epoch 3, Batch 2/8, Loss: 1.024627, RMSE: 1.129481:  25%|██▌       | 2/8 [00:11<00:33,  5.64s/it]    Epoch 3, Batch 3/8, Loss: 1.170787, RMSE: 1.113888:  25%|██▌       | 2/8 [00:16<00:33,  5.64s/it]    Epoch 3, Batch 3/8, Loss: 1.170787, RMSE: 1.113888:  38%|███▊      | 3/8 [00:16<00:28,  5.63s/it]    Epoch 3, Batch 4/8, Loss: 1.147321, RMSE: 1.103354:  38%|███▊      | 3/8 [00:22<00:28,  5.63s/it]    Epoch 3, Batch 4/8, Loss: 1.147321, RMSE: 1.103354:  50%|█████     | 4/8 [00:22<00:22,  5.63s/it]    Epoch 3, Batch 5/8, Loss: 1.070738, RMSE: 1.089982:  50%|█████     | 4/8 [00:28<00:22,  5.63s/it]    Epoch 3, Batch 5/8, Loss: 1.070738, RMSE: 1.089982:  62%|██████▎   | 5/8 [00:28<00:16,  5.63s/it]    Epoch 3, Batch 6/8, Loss: 0.955001, RMSE: 1.072015:  62%|██████▎   | 5/8 [00:33<00:16,  5.63s/it]    Epoch 3, Batch 6/8, Loss: 0.955001, RMSE: 1.072015:  75%|███████▌  | 6/8 [00:33<00:11,  5.63s/it]    Epoch 3, Batch 7/8, Loss: 0.711222, RMSE: 1.042423:  75%|███████▌  | 6/8 [00:39<00:11,  5.63s/it]    Epoch 3, Batch 7/8, Loss: 0.711222, RMSE: 1.042423:  88%|████████▊ | 7/8 [00:39<00:05,  5.63s/it]    Epoch 3, Batch 8/8, Loss: 0.684565, RMSE: 1.025577:  88%|████████▊ | 7/8 [00:43<00:05,  5.63s/it]    Epoch 3, Batch 8/8, Loss: 0.684565, RMSE: 1.025577: 100%|██████████| 8/8 [00:43<00:00,  5.02s/it]    Epoch 3, Batch 8/8, Loss: 0.684565, RMSE: 1.025577: 100%|██████████| 8/8 [00:43<00:00,  5.39s/it]
+      0%|          | 0/1 [00:00<?, ?it/s]    Val Batch 1/1, Loss: 1.589483, RMSE: 1.260747:   0%|          | 0/1 [00:00<?, ?it/s]    Val Batch 1/1, Loss: 1.589483, RMSE: 1.260747: 100%|██████████| 1/1 [00:00<00:00,  1.81it/s]    Val Batch 1/1, Loss: 1.589483, RMSE: 1.260747: 100%|██████████| 1/1 [00:00<00:00,  1.81it/s]
+    Val RMSE: 1.260747, Val Loss: 1.589483
+
+    Train RMSE: 1.025577, Average Train Loss: 1.036386, Val RMSE: 1.260747, Average Val Loss: 1.589483
+    Epoch 4/5:       0%|          | 0/8 [00:00<?, ?it/s]    Epoch 4, Batch 1/8, Loss: 0.620082, RMSE: 0.787453:   0%|          | 0/8 [00:05<?, ?it/s]    Epoch 4, Batch 1/8, Loss: 0.620082, RMSE: 0.787453:  12%|█▎        | 1/8 [00:05<00:39,  5.62s/it]    Epoch 4, Batch 2/8, Loss: 0.546702, RMSE: 0.763801:  12%|█▎        | 1/8 [00:11<00:39,  5.62s/it]    Epoch 4, Batch 2/8, Loss: 0.546702, RMSE: 0.763801:  25%|██▌       | 2/8 [00:11<00:33,  5.64s/it]    Epoch 4, Batch 3/8, Loss: 0.606916, RMSE: 0.768917:  25%|██▌       | 2/8 [00:16<00:33,  5.64s/it]    Epoch 4, Batch 3/8, Loss: 0.606916, RMSE: 0.768917:  38%|███▊      | 3/8 [00:16<00:28,  5.63s/it]    Epoch 4, Batch 4/8, Loss: 0.515725, RMSE: 0.756542:  38%|███▊      | 3/8 [00:22<00:28,  5.63s/it]    Epoch 4, Batch 4/8, Loss: 0.515725, RMSE: 0.756542:  50%|█████     | 4/8 [00:22<00:22,  5.63s/it]    Epoch 4, Batch 5/8, Loss: 0.634652, RMSE: 0.764732:  50%|█████     | 4/8 [00:28<00:22,  5.63s/it]    Epoch 4, Batch 5/8, Loss: 0.634652, RMSE: 0.764732:  62%|██████▎   | 5/8 [00:28<00:16,  5.63s/it]    Epoch 4, Batch 6/8, Loss: 0.627709, RMSE: 0.769392:  62%|██████▎   | 5/8 [00:33<00:16,  5.63s/it]    Epoch 4, Batch 6/8, Loss: 0.627709, RMSE: 0.769392:  75%|███████▌  | 6/8 [00:33<00:11,  5.64s/it]    Epoch 4, Batch 7/8, Loss: 0.532959, RMSE: 0.763895:  75%|███████▌  | 6/8 [00:39<00:11,  5.64s/it]    Epoch 4, Batch 7/8, Loss: 0.532959, RMSE: 0.763895:  88%|████████▊ | 7/8 [00:39<00:05,  5.64s/it]    Epoch 4, Batch 8/8, Loss: 0.447731, RMSE: 0.756154:  88%|████████▊ | 7/8 [00:43<00:05,  5.64s/it]    Epoch 4, Batch 8/8, Loss: 0.447731, RMSE: 0.756154: 100%|██████████| 8/8 [00:43<00:00,  5.03s/it]    Epoch 4, Batch 8/8, Loss: 0.447731, RMSE: 0.756154: 100%|██████████| 8/8 [00:43<00:00,  5.40s/it]
+      0%|          | 0/1 [00:00<?, ?it/s]    Val Batch 1/1, Loss: 1.018947, RMSE: 1.009429:   0%|          | 0/1 [00:00<?, ?it/s]    Val Batch 1/1, Loss: 1.018947, RMSE: 1.009429: 100%|██████████| 1/1 [00:00<00:00,  1.81it/s]    Val Batch 1/1, Loss: 1.018947, RMSE: 1.009429: 100%|██████████| 1/1 [00:00<00:00,  1.81it/s]
+    Val RMSE: 1.009429, Val Loss: 1.018947
+
+    Train RMSE: 0.756154, Average Train Loss: 0.566560, Val RMSE: 1.009429, Average Val Loss: 1.018947
+    Epoch 5/5:       0%|          | 0/8 [00:00<?, ?it/s]    Epoch 5, Batch 1/8, Loss: 0.483640, RMSE: 0.695443:   0%|          | 0/8 [00:05<?, ?it/s]    Epoch 5, Batch 1/8, Loss: 0.483640, RMSE: 0.695443:  12%|█▎        | 1/8 [00:05<00:39,  5.68s/it]    Epoch 5, Batch 2/8, Loss: 0.521336, RMSE: 0.708864:  12%|█▎        | 1/8 [00:11<00:39,  5.68s/it]    Epoch 5, Batch 2/8, Loss: 0.521336, RMSE: 0.708864:  25%|██▌       | 2/8 [00:11<00:33,  5.65s/it]    Epoch 5, Batch 3/8, Loss: 0.483137, RMSE: 0.704299:  25%|██▌       | 2/8 [00:16<00:33,  5.65s/it]    Epoch 5, Batch 3/8, Loss: 0.483137, RMSE: 0.704299:  38%|███▊      | 3/8 [00:16<00:28,  5.64s/it]    Epoch 5, Batch 4/8, Loss: 0.475719, RMSE: 0.700684:  38%|███▊      | 3/8 [00:22<00:28,  5.64s/it]    Epoch 5, Batch 4/8, Loss: 0.475719, RMSE: 0.700684:  50%|█████     | 4/8 [00:22<00:22,  5.64s/it]    Epoch 5, Batch 5/8, Loss: 0.526330, RMSE: 0.705714:  50%|█████     | 4/8 [00:28<00:22,  5.64s/it]    Epoch 5, Batch 5/8, Loss: 0.526330, RMSE: 0.705714:  62%|██████▎   | 5/8 [00:28<00:16,  5.64s/it]    Epoch 5, Batch 6/8, Loss: 0.519373, RMSE: 0.708229:  62%|██████▎   | 5/8 [00:33<00:16,  5.64s/it]    Epoch 5, Batch 6/8, Loss: 0.519373, RMSE: 0.708229:  75%|███████▌  | 6/8 [00:33<00:11,  5.63s/it]    Epoch 5, Batch 7/8, Loss: 0.430840, RMSE: 0.701058:  75%|███████▌  | 6/8 [00:39<00:11,  5.63s/it]    Epoch 5, Batch 7/8, Loss: 0.430840, RMSE: 0.701058:  88%|████████▊ | 7/8 [00:39<00:05,  5.65s/it]    Epoch 5, Batch 8/8, Loss: 0.559221, RMSE: 0.705231:  88%|████████▊ | 7/8 [00:43<00:05,  5.65s/it]    Epoch 5, Batch 8/8, Loss: 0.559221, RMSE: 0.705231: 100%|██████████| 8/8 [00:43<00:00,  5.03s/it]    Epoch 5, Batch 8/8, Loss: 0.559221, RMSE: 0.705231: 100%|██████████| 8/8 [00:43<00:00,  5.40s/it]
+      0%|          | 0/1 [00:00<?, ?it/s]    Val Batch 1/1, Loss: 0.835890, RMSE: 0.914270:   0%|          | 0/1 [00:00<?, ?it/s]    Val Batch 1/1, Loss: 0.835890, RMSE: 0.914270: 100%|██████████| 1/1 [00:00<00:00,  1.82it/s]    Val Batch 1/1, Loss: 0.835890, RMSE: 0.914270: 100%|██████████| 1/1 [00:00<00:00,  1.82it/s]
+    Val RMSE: 0.914270, Val Loss: 0.835890
+
+    Train RMSE: 0.705231, Average Train Loss: 0.499949, Val RMSE: 0.914270, Average Val Loss: 0.835890
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 693-698
 
 .. code-block:: Python
 
+
+    # Save the model
+    # -----------------
     torch.save(model.state_dict(), "weights_challenge_1.pt")
     print("Model saved as 'weights_challenge_1.pt'")
 
-**Estimated memory usage:**  0 MB
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ .. code-block:: none
+
+    Model saved as 'weights_challenge_1.pt'
+
+
+
+
+
+.. rst-class:: sphx-glr-timing
+
+   **Total running time of the script:** (4 minutes 58.769 seconds)
+
+**Estimated memory usage:**  2927 MB
 
 
 .. _sphx_glr_download_generated_auto_examples_eeg2025_tutorial_challenge_1.py:

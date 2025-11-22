@@ -18,6 +18,7 @@ Dataset Information
 -------------------
 
 - **Dataset ID:** ``DS005416``
+- **Summary:** Modality: Visual | Type: Resting state | Subjects: Other
 - **Number of Subjects:** 23
 - **Number of Recordings:** 23
 - **Number of Tasks:** 1

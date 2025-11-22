@@ -532,7 +532,7 @@ present on disk.</p>
 <span class="kn">import</span><span class="w"> </span><span class="nn">platformdirs</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">eegdash.const</span><span class="w"> </span><span class="kn">import</span> <a href="../../../api/generated/api-core/eegdash.const.html#eegdash.const.RELEASE_TO_OPENNEURO_DATASET_MAP" title="eegdash.const.RELEASE_TO_OPENNEURO_DATASET_MAP" class="sphx-glr-backref-module-eegdash-const sphx-glr-backref-type-py-data"><span class="n">RELEASE_TO_OPENNEURO_DATASET_MAP</span></a>
-<span class="kn">from</span><span class="w"> </span><span class="nn">eegdash.dataset.dataset</span><span class="w"> </span><span class="kn">import</span> <span class="n">EEGChallengeDataset</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">eegdash.dataset.dataset</span><span class="w"> </span><span class="kn">import</span> <a href="../../../api/dataset/eegdash.EEGDashDataset.html#eegdash.EEGDashDataset" title="eegdash.EEGDashDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class"><span class="n">EEGChallengeDataset</span></a>
 
 
 <span class="c1"># We&#39;ll use Release R2 as an example (HBN subset).</span>
@@ -553,7 +553,7 @@ Run this part on a machine with internet access. If the dataset is already
 on your disk at the specified <code class="docutils literal notranslate"><span class="pre">cache_dir</span></code>, you can comment out or skip
 this section.</p>
 <p>To keep this example self-contained, we prefetch the data here.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">ds_online</span> <span class="o">=</span> <span class="n">EEGChallengeDataset</span><span class="p">(</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">ds_online</span> <span class="o">=</span> <a href="../../../api/dataset/eegdash.EEGDashDataset.html#eegdash.EEGDashDataset" title="eegdash.EEGDashDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class"><span class="n">EEGChallengeDataset</span></a><span class="p">(</span>
     <span class="n">release</span><span class="o">=</span><span class="n">release</span><span class="p">,</span>
     <span class="n">cache_dir</span><span class="o">=</span><span class="n">cache_dir</span><span class="p">,</span>
     <span class="n">task</span><span class="o">=</span><span class="n">task</span><span class="p">,</span>
@@ -564,6 +564,25 @@ this section.</p>
 <span class="kn">from</span><span class="w"> </span><span class="nn">joblib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Parallel</span><span class="p">,</span> <span class="n">delayed</span>
 
 <span class="n">_</span> <span class="o">=</span> <span class="n">Parallel</span><span class="p">(</span><span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">)(</span><span class="n">delayed</span><span class="p">(</span><span class="k">lambda</span> <span class="n">d</span><span class="p">:</span> <span class="n">d</span><span class="o">.</span><span class="n">raw</span><span class="p">)(</span><span class="n">d</span><span class="p">)</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">ds_online</span><span class="o">.</span><span class="n">datasets</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>╭────────────────────── EEG 2025 Competition Data Notice ──────────────────────╮
+│ This object loads the HBN dataset that has been preprocessed for the EEG     │
+│ Challenge:                                                                   │
+│   * Downsampled from 500Hz to 100Hz                                          │
+│   * Bandpass filtered (0.5-50 Hz)                                            │
+│                                                                              │
+│ For full preprocessing applied for competition details, see:                 │
+│   https://github.com/eeg2025/downsample-datasets                             │
+│                                                                              │
+│ The HBN dataset have some preprocessing applied by the HBN team:             │
+│   * Re-reference (Cz Channel)                                                │
+│                                                                              │
+│ IMPORTANT: The data accessed via `EEGChallengeDataset` is NOT identical to   │
+│ what you get from EEGDashDataset directly.                                   │
+│ If you are participating in the competition, always use                      │
+│ `EEGChallengeDataset` to ensure consistency with the challenge data.         │
+╰──────────────────────── Source: EEGChallengeDataset ─────────────────────────╯
 </pre></div>
 </div>
 </section>
@@ -578,7 +597,7 @@ database or S3.</p>
 <span class="n">offline_root</span> <span class="o">=</span> <span class="n">cache_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">dataset_id</span><span class="si">}</span><span class="s2">-bdf-mini&quot;</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Local dataset folder exists: </span><span class="si">{</span><span class="n">offline_root</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span><span class="si">}</span><span class="se">\n</span><span class="si">{</span><span class="n">offline_root</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
-<span class="n">ds_offline</span> <span class="o">=</span> <span class="n">EEGChallengeDataset</span><span class="p">(</span>
+<span class="n">ds_offline</span> <span class="o">=</span> <a href="../../../api/dataset/eegdash.EEGDashDataset.html#eegdash.EEGDashDataset" title="eegdash.EEGDashDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class"><span class="n">EEGChallengeDataset</span></a><span class="p">(</span>
     <span class="n">release</span><span class="o">=</span><span class="n">release</span><span class="p">,</span>
     <span class="n">cache_dir</span><span class="o">=</span><span class="n">cache_dir</span><span class="p">,</span>
     <span class="n">task</span><span class="o">=</span><span class="n">task</span><span class="p">,</span>
@@ -590,6 +609,29 @@ database or S3.</p>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;First record bidspath:&quot;</span><span class="p">,</span> <span class="n">ds_offline</span><span class="o">.</span><span class="n">datasets</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">record</span><span class="p">[</span><span class="s2">&quot;bidspath&quot;</span><span class="p">])</span>
 </pre></div>
 </div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Local dataset folder exists: True
+/home/runner/.cache/EEGDash/ds005506-bdf-mini
+╭────────────────────── EEG 2025 Competition Data Notice ──────────────────────╮
+│ This object loads the HBN dataset that has been preprocessed for the EEG     │
+│ Challenge:                                                                   │
+│   * Downsampled from 500Hz to 100Hz                                          │
+│   * Bandpass filtered (0.5-50 Hz)                                            │
+│                                                                              │
+│ For full preprocessing applied for competition details, see:                 │
+│   https://github.com/eeg2025/downsample-datasets                             │
+│                                                                              │
+│ The HBN dataset have some preprocessing applied by the HBN team:             │
+│   * Re-reference (Cz Channel)                                                │
+│                                                                              │
+│ IMPORTANT: The data accessed via `EEGChallengeDataset` is NOT identical to   │
+│ what you get from EEGDashDataset directly.                                   │
+│ If you are participating in the competition, always use                      │
+│ `EEGChallengeDataset` to ensure consistency with the challenge data.         │
+╰──────────────────────── Source: EEGChallengeDataset ─────────────────────────╯
+Found 20 recording(s) offline.
+First record bidspath: ds005506/sub-NDARAB793GL3/eeg/sub-NDARAB793GL3_task-RestingState_eeg.bdf
+</pre></div>
+</div>
 </section>
 <section id="step-3-filtering-entities-offline">
 <h2>Step 3: Filtering Entities Offline<a class="headerlink" href="#step-3-filtering-entities-offline" title="Link to this heading">#</a></h2>
@@ -598,7 +640,7 @@ BIDS entities like subject, session, or task. When <code class="docutils literal
 <a class="reference internal" href="../../../api/dataset/eegdash.dataset.EEGChallengeDataset.html"><span class="doc">EEGChallengeDataset</span></a>
 uses the BIDS directory structure and filenames to apply these filters. This
 example shows how to load data for a specific subject from the local cache.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">ds_offline_sub</span> <span class="o">=</span> <span class="n">EEGChallengeDataset</span><span class="p">(</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">ds_offline_sub</span> <span class="o">=</span> <a href="../../../api/dataset/eegdash.EEGDashDataset.html#eegdash.EEGDashDataset" title="eegdash.EEGDashDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class"><span class="n">EEGChallengeDataset</span></a><span class="p">(</span>
     <span class="n">cache_dir</span><span class="o">=</span><span class="n">cache_dir</span><span class="p">,</span>
     <span class="n">release</span><span class="o">=</span><span class="n">release</span><span class="p">,</span>
     <span class="n">download</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
@@ -613,6 +655,28 @@ example shows how to load data for a specific subject from the local cache.</p>
         <span class="n">rec</span> <span class="o">=</span> <span class="n">base_ds</span><span class="o">.</span><span class="n">record</span>
         <span class="n">summary</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">=</span><span class="si">{</span><span class="n">rec</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">k</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">idx</span><span class="si">:</span><span class="s2">03d</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">summary</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>╭────────────────────── EEG 2025 Competition Data Notice ──────────────────────╮
+│ This object loads the HBN dataset that has been preprocessed for the EEG     │
+│ Challenge:                                                                   │
+│   * Downsampled from 500Hz to 100Hz                                          │
+│   * Bandpass filtered (0.5-50 Hz)                                            │
+│                                                                              │
+│ For full preprocessing applied for competition details, see:                 │
+│   https://github.com/eeg2025/downsample-datasets                             │
+│                                                                              │
+│ The HBN dataset have some preprocessing applied by the HBN team:             │
+│   * Re-reference (Cz Channel)                                                │
+│                                                                              │
+│ IMPORTANT: The data accessed via `EEGChallengeDataset` is NOT identical to   │
+│ what you get from EEGDashDataset directly.                                   │
+│ If you are participating in the competition, always use                      │
+│ `EEGChallengeDataset` to ensure consistency with the challenge data.         │
+╰──────────────────────── Source: EEGChallengeDataset ─────────────────────────╯
+Filtered by subject=NDARAB793GL3: 1 recording(s).
+Records (dataset, subject, task, run):
+  001: dataset=ds005506, subject=NDARAB793GL3, task=RestingState, run=None
 </pre></div>
 </div>
 </section>
@@ -632,18 +696,74 @@ compare shapes.</p>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;shapes equal:&quot;</span><span class="p">,</span> <span class="n">raw_online</span><span class="o">.</span><span class="n">get_data</span><span class="p">()</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="n">raw_offline</span><span class="o">.</span><span class="n">get_data</span><span class="p">()</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
 </pre></div>
 </div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>online shape: (129, 40800)
+offline shape: (129, 40800)
+shapes equal: True
+</pre></div>
+</div>
 </section>
 <section id="step-4-1-comparing-descriptions-online-vs-offline-data">
 <h2>Step 4.1: Comparing Descriptions, Online vs. Offline Data<a class="headerlink" href="#step-4-1-comparing-descriptions-online-vs-offline-data" title="Link to this heading">#</a></h2>
 <p>If you have network access, you can uncomment the block below to download and
 compare shapes.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">description_online</span> <span class="o">=</span> <span class="n">ds_online</span><span class="o">.</span><span class="n">description</span>
-<span class="n">description_offline</span> <span class="o">=</span> <span class="n">ds_offline</span><span class="o">.</span><span class="n">description</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">description_online</span> <span class="o">=</span> <a href="../../../api/dataset/eegdash.EEGDashDataset.html#eegdash.EEGDashDataset.description" title="eegdash.EEGDashDataset.description" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-property"><span class="n">ds_online</span><span class="o">.</span><span class="n">description</span></a>
+<span class="n">description_offline</span> <span class="o">=</span> <a href="../../../api/dataset/eegdash.EEGDashDataset.html#eegdash.EEGDashDataset.description" title="eegdash.EEGDashDataset.description" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-property"><span class="n">ds_offline</span><span class="o">.</span><span class="n">description</span></a>
 <span class="nb">print</span><span class="p">(</span><span class="n">description_offline</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">description_online</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Online description shape:&quot;</span><span class="p">,</span> <span class="n">description_online</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Offline description shape:&quot;</span><span class="p">,</span> <span class="n">description_offline</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Descriptions equal:&quot;</span><span class="p">,</span> <span class="n">description_online</span><span class="o">.</span><span class="n">equals</span><span class="p">(</span><span class="n">description_offline</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>         subject          task  ...  seqlearning8target symbolsearch
+0   NDARAB793GL3  RestingState  ...           available    available
+1   NDARAM675UR8  RestingState  ...         unavailable    available
+2   NDARBM839WR5  RestingState  ...           available    available
+3   NDARBU730PN8  RestingState  ...           available    available
+4   NDARCT974NAJ  RestingState  ...           available    available
+5   NDARCW933FD5  RestingState  ...           available    available
+6   NDARCZ770BRG  RestingState  ...           available    available
+7   NDARDW741HCF  RestingState  ...         unavailable    available
+8   NDARDZ058NZN  RestingState  ...         unavailable    available
+9   NDAREC377AU2  RestingState  ...           available    available
+10  NDAREM500WWH  RestingState  ...         unavailable    available
+11  NDAREV527ZRF  RestingState  ...           available    available
+12  NDAREV601CE7  RestingState  ...           available    available
+13  NDARFF070XHV  RestingState  ...           available    available
+14  NDARFR108JNB  RestingState  ...         unavailable    available
+15  NDARFT305CG1  RestingState  ...         unavailable    available
+16  NDARGA056TMW  RestingState  ...           available    available
+17  NDARGH775KF5  RestingState  ...           available    available
+18  NDARGJ878ZP4  RestingState  ...         unavailable    available
+19  NDARHA387FPM  RestingState  ...           available    available
+
+[20 rows x 25 columns]
+         subject          task  ...  seqlearning8target symbolsearch
+0   NDARAB793GL3  RestingState  ...           available    available
+1   NDARAM675UR8  RestingState  ...         unavailable    available
+2   NDARBM839WR5  RestingState  ...           available    available
+3   NDARBU730PN8  RestingState  ...           available    available
+4   NDARCT974NAJ  RestingState  ...           available    available
+5   NDARCW933FD5  RestingState  ...           available    available
+6   NDARCZ770BRG  RestingState  ...           available    available
+7   NDARDW741HCF  RestingState  ...         unavailable    available
+8   NDARDZ058NZN  RestingState  ...         unavailable    available
+9   NDAREC377AU2  RestingState  ...           available    available
+10  NDAREM500WWH  RestingState  ...         unavailable    available
+11  NDAREV527ZRF  RestingState  ...           available    available
+12  NDAREV601CE7  RestingState  ...           available    available
+13  NDARFF070XHV  RestingState  ...           available    available
+14  NDARFR108JNB  RestingState  ...         unavailable    available
+15  NDARFT305CG1  RestingState  ...         unavailable    available
+16  NDARGA056TMW  RestingState  ...           available    available
+17  NDARGH775KF5  RestingState  ...           available    available
+18  NDARGJ878ZP4  RestingState  ...         unavailable    available
+19  NDARHA387FPM  RestingState  ...           available    available
+
+[20 rows x 25 columns]
+Online description shape: (20, 25)
+Offline description shape: (20, 25)
+Descriptions equal: True
 </pre></div>
 </div>
 </section>
@@ -655,7 +775,8 @@ structure. Some DB-only fields are unavailable; entity filters (subject,
 session, task, run) usually suffice.</p></li>
 <li><p>If you encounter issues, please open a GitHub issue so we can discuss.</p></li>
 </ul>
-<p><strong>Estimated memory usage:</strong>  0 MB</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 42.079 seconds)</p>
+<p><strong>Estimated memory usage:</strong>  1071 MB</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-generated-auto-examples-eeg2025-tutorial-eegdash-offline-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/eegdash/EEGDash/main?urlpath=lab/tree/notebooks/generated/auto_examples/eeg2025/tutorial_eegdash_offline.ipynb"><img alt="Launch binder" src="../../../_images/binder_badge_logo1.svg" style="width: 150px;" />

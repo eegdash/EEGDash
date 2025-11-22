@@ -18,6 +18,7 @@ Dataset Information
 -------------------
 
 - **Dataset ID:** ``DS005403``
+- **Summary:** Modality: Auditory | Type: Other | Subjects: Other
 - **Number of Subjects:** 32
 - **Number of Recordings:** 32
 - **Number of Tasks:** 1

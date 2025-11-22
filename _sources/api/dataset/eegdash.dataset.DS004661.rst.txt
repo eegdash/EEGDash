@@ -18,7 +18,7 @@ Dataset Information
 -------------------
 
 - **Dataset ID:** ``DS004661``
-- **Summary:** Modality: Multisensory | Type: Memory
+- **Summary:** Modality: Multisensory | Type: Memory | Subjects: Other
 - **Number of Subjects:** 17
 - **Number of Recordings:** 17
 - **Number of Tasks:** 1

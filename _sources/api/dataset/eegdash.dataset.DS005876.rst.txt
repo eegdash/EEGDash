@@ -18,6 +18,7 @@ Dataset Information
 -------------------
 
 - **Dataset ID:** ``DS005876``
+- **Summary:** Modality: Visual | Type: Decision-making | Subjects: Healthy
 - **Number of Subjects:** 29
 - **Number of Recordings:** 29
 - **Number of Tasks:** 1

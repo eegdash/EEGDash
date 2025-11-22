@@ -18,7 +18,7 @@ Dataset Information
 -------------------
 
 - **Dataset ID:** ``DS004841``
-- **Summary:** Modality: Multisensory | Type: Attention
+- **Summary:** Modality: Multisensory | Type: Attention | Subjects: Other
 - **Number of Subjects:** 20
 - **Number of Recordings:** 147
 - **Number of Tasks:** 1

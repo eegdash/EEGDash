@@ -12,6 +12,7 @@
 
    .. autosummary::
    
+      get_all_feature_extractors
       get_all_feature_preprocessors
       get_all_feature_kinds
       get_all_features

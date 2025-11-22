@@ -18,6 +18,7 @@ Dataset Information
 -------------------
 
 - **Dataset ID:** ``DS005397``
+- **Summary:** Modality: Motor | Type: Motor | Subjects: Other
 - **Number of Subjects:** 26
 - **Number of Recordings:** 26
 - **Number of Tasks:** 1

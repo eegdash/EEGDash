@@ -18,7 +18,7 @@ Dataset Information
 -------------------
 
 - **Dataset ID:** ``DS005170``
-- **Summary:** Modality: Visual | Type: other
+- **Summary:** Modality: Visual | Type: other | Subjects: Other
 - **Number of Subjects:** 5
 - **Number of Recordings:** 225
 - **Number of Tasks:** 1

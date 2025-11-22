@@ -18,6 +18,7 @@ Dataset Information
 -------------------
 
 - **Dataset ID:** ``DS005185``
+- **Summary:** Modality: Sleep | Type: Sleep | Subjects: Other
 - **Number of Subjects:** 20
 - **Number of Recordings:** 356
 - **Number of Tasks:** 3

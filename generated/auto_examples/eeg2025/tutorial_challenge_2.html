@@ -525,91 +525,102 @@
 to download the full example code. or to run this example in your browser via Binder</p>
 </div>
 <section class="sphx-glr-example-title" id="challenge-2-predicting-the-p-factor-from-eeg">
-<span id="challenge-2"></span><span id="sphx-glr-generated-auto-examples-eeg2025-tutorial-challenge-2-py"></span><h1>Challenge 2: Predicting the p-factor from EEG<a class="headerlink" href="#challenge-2-predicting-the-p-factor-from-eeg" title="Link to this heading">#</a></h1><div class="eegdash-reading-time" role="note"><span class="eegdash-reading-time__label">Estimated reading time:</span><span class="eegdash-reading-time__value">7 minutes</span></div>
-<nav class="contents local" id="this-example-covers">
-<p class="topic-title">This example covers:</p>
-<ul class="simple">
-<li><p><a class="reference internal" href="#preliminary-notes" id="id1">Preliminary notes</a></p></li>
-<li><p><a class="reference internal" href="#overview" id="id2">Overview</a></p></li>
-<li><p><a class="reference internal" href="#contents-of-this-start-kit" id="id3">Contents of this start kit</a></p></li>
-<li><p><a class="reference internal" href="#install-dependencies-on-colab" id="id4">Install dependencies on Colab</a></p></li>
-<li><p><a class="reference internal" href="#imports" id="id5">Imports</a></p></li>
-<li><p><a class="reference internal" href="#identify-whether-a-cuda-enabled-gpu-is-available" id="id6">Identify whether a CUDA-enabled GPU is available</a></p></li>
-<li><p><a class="reference internal" href="#understanding-the-p-factor-regression-task" id="id7">Understanding the P-factor regression task.</a></p></li>
-<li><p><a class="reference internal" href="#define-local-path-and-down-load-the-data" id="id8">Define local path and (down)load the data</a></p>
-<ul>
-<li><p><a class="reference internal" href="#combine-the-datasets-into-a-single-one" id="id9">Combine the datasets into a single one</a></p></li>
-</ul>
-</li>
-<li><p><a class="reference internal" href="#inspect-your-data" id="id10">Inspect your data</a></p></li>
-<li><p><a class="reference internal" href="#wrap-the-data-into-a-pytorch-compatible-dataset" id="id11">Wrap the data into a PyTorch-compatible dataset</a></p></li>
-<li><p><a class="reference internal" href="#inspect-the-label-distribution" id="id12">Inspect the label distribution</a></p></li>
-</ul>
-</nav>
-<a class="reference external image-reference" href="https://colab.research.google.com/github/eeg2025/startkit/blob/main/challenge_2.ipynb"><img alt="Open In Colab" src="https://colab.research.google.com/assets/colab-badge.svg" />
-</a>
-<section id="preliminary-notes">
-<h2><a class="toc-backref" href="#id1" role="doc-backlink">Preliminary notes</a><a class="headerlink" href="#preliminary-notes" title="Link to this heading">#</a></h2>
-<p>Before we begin, I just want to make a deal with you, ok?
-This is a community competition with a strong open-source foundation.
-When I say open-source, I mean volunteer work.</p>
-<p>So, if you see something that does not work or could be improved, first, <strong>please be kind</strong>, and
-we will fix it together on GitHub, okay?</p>
-<p>The entire decoding community will only go further when we stop
-solving the same problems over and over again, and it starts working together.</p>
-</section>
-<section id="overview">
-<h2><a class="toc-backref" href="#id2" role="doc-backlink">Overview</a><a class="headerlink" href="#overview" title="Link to this heading">#</a></h2>
-<p>The psychopathology factor (P-factor) is a widely recognized construct in mental health research, representing a common underlying dimension of psychopathology across various disorders.
-Currently, the P-factor is often assessed using self-report questionnaires or clinician ratings, which can be subjective, prone to bias, and time-consuming.
-<strong>The Challenge 2</strong> consists of developing a model to predict the P-factor from EEG recordings.</p>
-<p>The challenge encourages learning physiologically meaningful signal representations and discovery of reproducible biomarkers.
-Models of any size should emphasize robust, interpretable features that generalize across subjects,
-sessions, and acquisition sites.</p>
-<p>Unlike a standard in-distribution classification task, this regression problem stresses out-of-distribution robustness
-and extrapolation. The goal is not only to minimize error on seen subjects, but also to transfer effectively to unseen data.
-Ensure the dataset is available locally. If not, see the
-<a class="reference external" href="https://eeg2025.github.io/data/#downloading-the-data">dataset download guide</a>.</p>
-</section>
-<section id="contents-of-this-start-kit">
-<h2><a class="toc-backref" href="#id3" role="doc-backlink">Contents of this start kit</a><a class="headerlink" href="#contents-of-this-start-kit" title="Link to this heading">#</a></h2>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>If you need additional explanations on the
-<a class="reference internal" href="../../../api/dataset/eegdash.dataset.EEGChallengeDataset.html"><span class="doc">EEGChallengeDataset</span></a> class, dataloading,
-<a class="reference external" href="https://braindecode.org/stable/models/models_table.html">braindecode</a>’s
-deep learning models, or brain decoding in general, please refer to the
-start-kit of challenge 1 which delves deeper into these topics.</p>
-</div>
-<p>More contents will be released during the competition inside the
-<code class="xref py py-mod docutils literal notranslate"><span class="pre">eegdash</span></code> <a class="reference external" href="https://eeglab.org/EEGDash/generated/auto_examples/index.html">examples webpage</a>.</p>
-<div class="important admonition">
-<p class="admonition-title">Prerequisites</p>
-<p>The tutorial assumes prior knowledge of:</p>
-<ul class="simple">
-<li><p>Standard neural network architectures (e.g., CNNs)</p></li>
-<li><p>Optimization by batch gradient descent and backpropagation</p></li>
-<li><p>Overfitting, early stopping, and regularization</p></li>
-<li><p>Some knowledge of PyTorch</p></li>
-<li><p>Basic familiarity with EEG and preprocessing</p></li>
-<li><p>An appreciation for open-source work :)</p></li>
-</ul>
-</div>
-</section>
-<section id="install-dependencies-on-colab">
-<h2><a class="toc-backref" href="#id4" role="doc-backlink">Install dependencies on Colab</a><a class="headerlink" href="#install-dependencies-on-colab" title="Link to this heading">#</a></h2>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>These installs are optional; skip on local environments
-where you already have the dependencies installed.</p>
-</div>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>eegdash
+<span id="challenge-2"></span><span id="sphx-glr-generated-auto-examples-eeg2025-tutorial-challenge-2-py"></span><h1>Challenge 2: Predicting the p-factor from EEG<a class="headerlink" href="#challenge-2-predicting-the-p-factor-from-eeg" title="Link to this heading">#</a></h1><div class="eegdash-reading-time" role="note"><span class="eegdash-reading-time__label">Estimated reading time:</span><span class="eegdash-reading-time__value">2 minutes</span></div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># .. image:: https://colab.research.google.com/assets/colab-badge.svg</span>
+<span class="c1">#    :target: https://colab.research.google.com/github/eeg2025/startkit/blob/main/challenge_2.ipynb</span>
+<span class="c1">#    :alt: Open In Colab</span>
 </pre></div>
 </div>
-</section>
-<section id="imports">
-<h2><a class="toc-backref" href="#id5" role="doc-backlink">Imports</a><a class="headerlink" href="#imports" title="Link to this heading">#</a></h2>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Preliminary notes</span>
+<span class="c1"># -----------------</span>
+<span class="c1"># Before we begin, I just want to make a deal with you, ok?</span>
+<span class="c1"># This is a community competition with a strong open-source foundation.</span>
+<span class="c1"># When I say open-source, I mean volunteer work.</span>
+
+<span class="c1">#</span>
+
+<span class="c1"># So, if you see something that does not work or could be improved, first, **please be kind**, and</span>
+<span class="c1"># we will fix it together on GitHub, okay?</span>
+
+<span class="c1">#</span>
+
+<span class="c1"># The entire decoding community will only go further when we stop</span>
+<span class="c1"># solving the same problems over and over again, and it starts working together.</span>
+</pre></div>
+</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Overview</span>
+<span class="c1"># --------</span>
+<span class="c1"># The psychopathology factor (P-factor) is a widely recognized construct in mental health research, representing a common underlying dimension of psychopathology across various disorders.</span>
+<span class="c1"># Currently, the P-factor is often assessed using self-report questionnaires or clinician ratings, which can be subjective, prone to bias, and time-consuming.</span>
+<span class="c1"># **The Challenge 2** consists of developing a model to predict the P-factor from EEG recordings.</span>
+
+<span class="c1">#</span>
+
+<span class="c1"># The challenge encourages learning physiologically meaningful signal representations and discovery of reproducible biomarkers.</span>
+<span class="c1"># Models of any size should emphasize robust, interpretable features that generalize across subjects,</span>
+<span class="c1"># sessions, and acquisition sites.</span>
+
+<span class="c1">#</span>
+
+<span class="c1"># Unlike a standard in-distribution classification task, this regression problem stresses out-of-distribution robustness</span>
+<span class="c1"># and extrapolation. The goal is not only to minimize error on seen subjects, but also to transfer effectively to unseen data.</span>
+<span class="c1"># Ensure the dataset is available locally. If not, see the</span>
+<span class="c1"># `dataset download guide &lt;https://eeg2025.github.io/data/#downloading-the-data&gt;`__.</span>
+</pre></div>
+</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Contents of this start kit</span>
+<span class="c1"># --------------------------</span>
+<span class="c1"># .. note:: If you need additional explanations on the</span>
+<span class="c1">#    :doc:`EEGChallengeDataset</span>
+<span class="c1">#    &lt;/api/dataset/eegdash.dataset.EEGChallengeDataset&gt;` class, dataloading,</span>
+<span class="c1">#    `braindecode &lt;https://braindecode.org/stable/models/models_table.html&gt;`__&#39;s</span>
+<span class="c1">#    deep learning models, or brain decoding in general, please refer to the</span>
+<span class="c1">#    start-kit of challenge 1 which delves deeper into these topics.</span>
+
+<span class="c1">#</span>
+
+<span class="c1"># More contents will be released during the competition inside the</span>
+<span class="c1"># :mod:`eegdash` `examples webpage &lt;https://eeglab.org/EEGDash/generated/auto_examples/index.html&gt;`__.</span>
+
+<span class="c1">#</span>
+
+<span class="c1"># .. admonition:: Prerequisites</span>
+<span class="c1">#    :class: important</span>
+
+<span class="c1">#</span>
+
+<span class="c1">#    The tutorial assumes prior knowledge of:</span>
+
+<span class="c1">#</span>
+
+<span class="c1">#    - Standard neural network architectures (e.g., CNNs)</span>
+<span class="c1">#    - Optimization by batch gradient descent and backpropagation</span>
+<span class="c1">#    - Overfitting, early stopping, and regularization</span>
+<span class="c1">#    - Some knowledge of PyTorch</span>
+<span class="c1">#    - Basic familiarity with EEG and preprocessing</span>
+<span class="c1">#    - An appreciation for open-source work :)</span>
+</pre></div>
+</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Install dependencies on Colab</span>
+<span class="c1"># -----------------------------</span>
+
+<span class="c1">#</span>
+
+<span class="c1"># .. note:: These installs are optional; skip on local environments</span>
+<span class="c1">#    where you already have the dependencies installed.</span>
+
+<span class="c1">#</span>
+
+<span class="c1"># .. code-block:: bash</span>
+
+<span class="c1">#</span>
+
+<span class="c1">#    pip install eegdash</span>
+</pre></div>
+</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Imports</span>
+<span class="c1"># -------</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
@@ -622,20 +633,19 @@ where you already have the dependencies installed.</p>
 <span class="kn">from</span><span class="w"> </span><span class="nn">braindecode.preprocessing</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_fixed_length_windows</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">braindecode.datasets.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">EEGWindowsDataset</span><span class="p">,</span> <span class="n">BaseConcatDataset</span><span class="p">,</span> <span class="n">BaseDataset</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">braindecode.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">EEGNeX</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">eegdash</span><span class="w"> </span><span class="kn">import</span> <span class="n">EEGChallengeDataset</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">eegdash</span><span class="w"> </span><span class="kn">import</span> <a href="../../../api/dataset/eegdash.EEGDashDataset.html#eegdash.EEGDashDataset" title="eegdash.EEGDashDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class"><span class="n">EEGChallengeDataset</span></a>
 </pre></div>
 </div>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>In case of Colab, before starting, make sure you’re on a GPU instance
-for faster training! If running on Google Colab, please request a GPU runtime
-by clicking <cite>Runtime/Change runtime type</cite> in the top bar menu, then selecting
-‘T4 GPU’ under ‘Hardware accelerator’.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># .. warning::</span>
+<span class="c1">#    In case of Colab, before starting, make sure you&#39;re on a GPU instance</span>
+<span class="c1">#    for faster training! If running on Google Colab, please request a GPU runtime</span>
+<span class="c1">#    by clicking `Runtime/Change runtime type` in the top bar menu, then selecting</span>
+<span class="c1">#    &#39;T4 GPU&#39; under &#39;Hardware accelerator&#39;.</span>
+</pre></div>
 </div>
-</section>
-<section id="identify-whether-a-cuda-enabled-gpu-is-available">
-<h2><a class="toc-backref" href="#id6" role="doc-backlink">Identify whether a CUDA-enabled GPU is available</a><a class="headerlink" href="#identify-whether-a-cuda-enabled-gpu-is-available" title="Link to this heading">#</a></h2>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">device</span> <span class="o">=</span> <span class="s2">&quot;cuda&quot;</span> <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="k">else</span> <span class="s2">&quot;cpu&quot;</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Identify whether a CUDA-enabled GPU is available</span>
+<span class="c1"># ------------------------------------------------</span>
+<span class="n">device</span> <span class="o">=</span> <span class="s2">&quot;cuda&quot;</span> <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="k">else</span> <span class="s2">&quot;cpu&quot;</span>
 <span class="k">if</span> <span class="n">device</span> <span class="o">==</span> <span class="s2">&quot;cuda&quot;</span><span class="p">:</span>
     <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;CUDA-enabled GPU found. Training should be faster.&quot;</span>
 <span class="k">else</span><span class="p">:</span>
@@ -648,28 +658,43 @@ by clicking <cite>Runtime/Change runtime type</cite> in the top bar menu, then s
 <span class="nb">print</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
 </pre></div>
 </div>
-</section>
-<section id="understanding-the-p-factor-regression-task">
-<h2><a class="toc-backref" href="#id7" role="doc-backlink">Understanding the P-factor regression task.</a><a class="headerlink" href="#understanding-the-p-factor-regression-task" title="Link to this heading">#</a></h2>
-<p>The psychopathology factor (P-factor) is a widely recognized construct in mental health research, representing a common underlying dimension of psychopathology across various disorders.
-The P-factor is thought to reflect the shared variance among different psychiatric conditions, suggesting that individuals with higher P-factor scores may be more vulnerable to a range of mental health issues.
-Currently, the P-factor is often assessed using self-report questionnaires or clinician ratings, which can be subjective, prone to bias, and time-consuming.
-In the dataset of this challenge, the P-factor was assessed using the Child
-Behavior Checklist (CBCL) <a class="reference external" href="https://doi.org/10.1111/jcpp.12849">McElroy et al., (2017)</a>.</p>
-<p>The goal of Challenge 2 is to develop a model to predict the P-factor from EEG recordings.
-<strong>The feasibility of using EEG data for this purpose is still an open question</strong>.
-The solution may involve finding meaningful representations of the EEG data that correlate with the P-factor scores.
-The challenge encourages learning physiologically meaningful signal representations and discovery of reproducible biomarkers.
-If contestants are successful in this task, it could pave the way for more objective and efficient assessments of the P-factor in clinical settings.</p>
-</section>
-<section id="define-local-path-and-down-load-the-data">
-<h2><a class="toc-backref" href="#id8" role="doc-backlink">Define local path and (down)load the data</a><a class="headerlink" href="#define-local-path-and-down-load-the-data" title="Link to this heading">#</a></h2>
-<p>In this challenge 2 example, we load the EEG 2025 release using
-<a class="reference internal" href="../../../api/dataset/eegdash.dataset.EEGChallengeDataset.html"><span class="doc">EEGChallengeDataset</span></a>.
-<strong>Note:</strong> in this example notebook, we load the contrast change detection task from one mini release only as an example. Naturally, you are encouraged to train your models on all complete releases, using data from all the tasks you deem relevant.</p>
-<p>The first step is to define the cache folder!
-Match tests’ cache layout under ~/eegdash_cache/eeg_challenge_cache</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">DATA_DIR</span> <span class="o">=</span> <span class="p">(</span><span class="n">Path</span><span class="o">.</span><span class="n">home</span><span class="p">()</span> <span class="o">/</span> <span class="s2">&quot;eegdash_cache&quot;</span> <span class="o">/</span> <span class="s2">&quot;eeg_challenge_cache&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>No GPU found. Training will be carried out on CPU, which might be slower.
+
+If running on Google Colab, you can request a GPU runtime by clicking
+`Runtime/Change runtime type` in the top bar menu, then selecting &#39;T4 GPU&#39;
+under &#39;Hardware accelerator&#39;.
+</pre></div>
+</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Understanding the P-factor regression task.</span>
+<span class="c1"># -------------------------------------------</span>
+
+<span class="c1">#</span>
+
+<span class="c1"># The psychopathology factor (P-factor) is a widely recognized construct in mental health research, representing a common underlying dimension of psychopathology across various disorders.</span>
+<span class="c1"># The P-factor is thought to reflect the shared variance among different psychiatric conditions, suggesting that individuals with higher P-factor scores may be more vulnerable to a range of mental health issues.</span>
+<span class="c1"># Currently, the P-factor is often assessed using self-report questionnaires or clinician ratings, which can be subjective, prone to bias, and time-consuming.</span>
+<span class="c1"># In the dataset of this challenge, the P-factor was assessed using the Child</span>
+<span class="c1"># Behavior Checklist (CBCL) `McElroy et al., (2017) &lt;https://doi.org/10.1111/jcpp.12849&gt;`__.</span>
+
+<span class="c1">#</span>
+
+<span class="c1"># The goal of Challenge 2 is to develop a model to predict the P-factor from EEG recordings.</span>
+<span class="c1"># **The feasibility of using EEG data for this purpose is still an open question**.</span>
+<span class="c1"># The solution may involve finding meaningful representations of the EEG data that correlate with the P-factor scores.</span>
+<span class="c1"># The challenge encourages learning physiologically meaningful signal representations and discovery of reproducible biomarkers.</span>
+<span class="c1"># If contestants are successful in this task, it could pave the way for more objective and efficient assessments of the P-factor in clinical settings.</span>
+</pre></div>
+</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define local path and (down)load the data</span>
+<span class="c1"># -----------------------------------------</span>
+<span class="c1"># In this challenge 2 example, we load the EEG 2025 release using</span>
+<span class="c1"># :doc:`EEGChallengeDataset &lt;/api/dataset/eegdash.dataset.EEGChallengeDataset&gt;`.</span>
+<span class="c1"># **Note:** in this example notebook, we load the contrast change detection task from one mini release only as an example. Naturally, you are encouraged to train your models on all complete releases, using data from all the tasks you deem relevant.</span>
+</pre></div>
+</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># The first step is to define the cache folder!</span>
+<span class="c1"># Match tests&#39; cache layout under ~/eegdash_cache/eeg_challenge_cache</span>
+<span class="n">DATA_DIR</span> <span class="o">=</span> <span class="p">(</span><span class="n">Path</span><span class="o">.</span><span class="n">home</span><span class="p">()</span> <span class="o">/</span> <span class="s2">&quot;eegdash_cache&quot;</span> <span class="o">/</span> <span class="s2">&quot;eeg_challenge_cache&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
 
 <span class="c1"># Creating the path if it does not exist</span>
 <span class="n">DATA_DIR</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -679,7 +704,7 @@ Match tests’ cache layout under ~/eegdash_cache/eeg_challenge_cache</p>
 <span class="n">release_list</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;R5&quot;</span><span class="p">]</span>
 
 <span class="n">all_datasets_list</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="n">EEGChallengeDataset</span><span class="p">(</span>
+    <a href="../../../api/dataset/eegdash.EEGDashDataset.html#eegdash.EEGDashDataset" title="eegdash.EEGDashDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class"><span class="n">EEGChallengeDataset</span></a><span class="p">(</span>
         <span class="n">release</span><span class="o">=</span><span class="n">release</span><span class="p">,</span>
         <span class="n">task</span><span class="o">=</span><span class="s2">&quot;contrastChangeDetection&quot;</span><span class="p">,</span>
         <span class="n">mini</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
@@ -701,10 +726,32 @@ Match tests’ cache layout under ~/eegdash_cache/eeg_challenge_cache</p>
 <span class="n">sub_rm</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;NDARWV769JM7&quot;</span><span class="p">]</span>
 </pre></div>
 </div>
-<section id="combine-the-datasets-into-a-single-one">
-<h3><a class="toc-backref" href="#id9" role="doc-backlink">Combine the datasets into a single one</a><a class="headerlink" href="#combine-the-datasets-into-a-single-one" title="Link to this heading">#</a></h3>
-<p>Here, we combine the datasets from the different releases into a single
-<code class="docutils literal notranslate"><span class="pre">BaseConcatDataset</span></code> object.</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>╭────────────────────── EEG 2025 Competition Data Notice ──────────────────────╮
+│ This object loads the HBN dataset that has been preprocessed for the EEG     │
+│ Challenge:                                                                   │
+│   * Downsampled from 500Hz to 100Hz                                          │
+│   * Bandpass filtered (0.5-50 Hz)                                            │
+│                                                                              │
+│ For full preprocessing applied for competition details, see:                 │
+│   https://github.com/eeg2025/downsample-datasets                             │
+│                                                                              │
+│ The HBN dataset have some preprocessing applied by the HBN team:             │
+│   * Re-reference (Cz Channel)                                                │
+│                                                                              │
+│ IMPORTANT: The data accessed via `EEGChallengeDataset` is NOT identical to   │
+│ what you get from EEGDashDataset directly.                                   │
+│ If you are participating in the competition, always use                      │
+│ `EEGChallengeDataset` to ensure consistency with the challenge data.         │
+╰──────────────────────── Source: EEGChallengeDataset ─────────────────────────╯
+Datasets loaded
+</pre></div>
+</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Combine the datasets into a single one</span>
+<span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+<span class="c1"># Here, we combine the datasets from the different releases into a single</span>
+<span class="c1"># ``BaseConcatDataset`` object.</span>
+</pre></div>
+</div>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">all_datasets</span> <span class="o">=</span> <span class="n">BaseConcatDataset</span><span class="p">(</span><span class="n">all_datasets_list</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">all_datasets</span><span class="o">.</span><span class="n">description</span><span class="p">)</span>
 
@@ -713,15 +760,83 @@ Match tests’ cache layout under ~/eegdash_cache/eeg_challenge_cache</p>
 <span class="p">)</span>
 </pre></div>
 </div>
-</section>
-</section>
-<section id="inspect-your-data">
-<h2><a class="toc-backref" href="#id10" role="doc-backlink">Inspect your data</a><a class="headerlink" href="#inspect-your-data" title="Link to this heading">#</a></h2>
-<p>We can check what is inside the dataset consuming the
-MNE-object inside the Braindecode dataset.</p>
-<p>The following snippet, if uncommented, will show the first 10 seconds of the raw EEG signal.
-We can also inspect the data further by looking at the events and annotations.
-We strongly recommend you to take a look into the details and check how the events are structured.</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>         subject  run  ... seqlearning8target  symbolsearch
+0   NDARAH793FBF    1  ...          available     available
+1   NDARAH793FBF    2  ...          available     available
+2   NDARAH793FBF    3  ...          available     available
+3   NDARAJ689BVN    2  ...        unavailable     available
+4   NDARAJ689BVN    3  ...        unavailable     available
+5   NDARAJ689BVN    1  ...        unavailable     available
+6   NDARAP785CTE    3  ...          available     available
+7   NDARAP785CTE    1  ...          available     available
+8   NDARAP785CTE    2  ...          available     available
+9   NDARAU708TL8    1  ...          available     available
+10  NDARAU708TL8    2  ...          available     available
+11  NDARAU708TL8    3  ...          available     available
+12  NDARBE091BGD    2  ...        unavailable     available
+13  NDARBE091BGD    3  ...        unavailable     available
+14  NDARBE091BGD    1  ...        unavailable     available
+15  NDARBE103DHM    2  ...          available     available
+16  NDARBE103DHM    3  ...          available     available
+17  NDARBE103DHM    1  ...          available     available
+18  NDARBF851NH6    2  ...          available     available
+19  NDARBF851NH6    3  ...          available     available
+20  NDARBF851NH6    1  ...          available     available
+21  NDARBH228RDW    1  ...          available     available
+22  NDARBH228RDW    3  ...          available     available
+23  NDARBH228RDW    2  ...          available     available
+24  NDARBJ674TVU    1  ...        unavailable     available
+25  NDARBJ674TVU    2  ...        unavailable     available
+26  NDARBJ674TVU    3  ...        unavailable     available
+27  NDARBM433VER    2  ...          available     available
+28  NDARBM433VER    1  ...          available     available
+29  NDARBM433VER    3  ...          available     available
+30  NDARCA740UC8    2  ...          available     available
+31  NDARCA740UC8    3  ...          available     available
+32  NDARCA740UC8    1  ...          available     available
+33  NDARCU633GCZ    2  ...          available     available
+34  NDARCU633GCZ    3  ...          available     available
+35  NDARCU633GCZ    1  ...          available     available
+36  NDARCU736GZ1    2  ...        unavailable     available
+37  NDARCU736GZ1    3  ...        unavailable     available
+38  NDARCU736GZ1    1  ...        unavailable     available
+39  NDARCU744XWL    1  ...          available     available
+40  NDARCU744XWL    2  ...          available     available
+41  NDARCU744XWL    3  ...          available     available
+42  NDARDC843HHM    2  ...          available     available
+43  NDARDC843HHM    1  ...          available     available
+44  NDARDC843HHM    3  ...          available     available
+45  NDARDH086ZKK    3  ...          available     available
+46  NDARDH086ZKK    2  ...          available     available
+47  NDARDH086ZKK    1  ...          available     available
+48  NDARDL305BT8    3  ...          available     available
+49  NDARDL305BT8    1  ...          available     available
+50  NDARDL305BT8    2  ...          available     available
+51  NDARDU853XZ6    1  ...        unavailable     available
+52  NDARDU853XZ6    3  ...        unavailable     available
+53  NDARDU853XZ6    2  ...        unavailable     available
+54  NDARDV245WJG    2  ...        unavailable     available
+55  NDARDV245WJG    3  ...        unavailable     available
+56  NDARDV245WJG    1  ...        unavailable     available
+57  NDAREC480KFA    1  ...          available     available
+58  NDAREC480KFA    3  ...          available     available
+59  NDAREC480KFA    2  ...          available     available
+
+[60 rows x 26 columns]
+</pre></div>
+</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Inspect your data</span>
+<span class="c1"># -----------------</span>
+<span class="c1"># We can check what is inside the dataset consuming the</span>
+<span class="c1"># MNE-object inside the Braindecode dataset.</span>
+
+<span class="c1">#</span>
+
+<span class="c1"># The following snippet, if uncommented, will show the first 10 seconds of the raw EEG signal.</span>
+<span class="c1"># We can also inspect the data further by looking at the events and annotations.</span>
+<span class="c1"># We strongly recommend you to take a look into the details and check how the events are structured.</span>
+</pre></div>
+</div>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">raw</span> <span class="o">=</span> <span class="n">all_datasets</span><span class="o">.</span><span class="n">datasets</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">raw</span>  <span class="c1"># mne.io.Raw object</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="n">raw</span><span class="o">.</span><span class="n">info</span><span class="p">)</span>
@@ -733,12 +848,31 @@ We strongly recommend you to take a look into the details and check how the even
 <span class="n">SFREQ</span> <span class="o">=</span> <span class="mi">100</span>
 </pre></div>
 </div>
-</section>
-<section id="wrap-the-data-into-a-pytorch-compatible-dataset">
-<h2><a class="toc-backref" href="#id11" role="doc-backlink">Wrap the data into a PyTorch-compatible dataset</a><a class="headerlink" href="#wrap-the-data-into-a-pytorch-compatible-dataset" title="Link to this heading">#</a></h2>
-<p>The class below defines a dataset wrapper that will extract 2-second windows,
-uniformly sampled over the whole signal. In addition, it will add useful information
-about the extracted windows, such as the p-factor, the subject or the task.</p>
+<img src="../../../_images/sphx_glr_tutorial_challenge_2_001.png" srcset="../../../_images/sphx_glr_tutorial_challenge_2_001.png" alt="tutorial challenge 2" class = "sphx-glr-single-img"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;Info | 9 non-empty values
+ bads: []
+ ch_names: E1, E2, E3, E4, E5, E6, E7, E8, E9, E10, E11, E12, E13, E14, ...
+ chs: 129 EEG
+ custom_ref_applied: False
+ highpass: 0.0 Hz
+ line_freq: 60.0
+ lowpass: 50.0 Hz
+ meas_date: 2025-08-19 00:06:17 UTC
+ nchan: 129
+ projs: []
+ sfreq: 100.0 Hz
+ subject_info: &lt;subject_info | his_id: sub-NDARAH793FBF, sex: 1, birthday: 2016-04-15&gt;
+&gt;
+Using matplotlib as 2D backend.
+&lt;Annotations | 75 segments: 9999 (1), break cnt (2), ...&gt;
+</pre></div>
+</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Wrap the data into a PyTorch-compatible dataset</span>
+<span class="c1"># --------------------------------------------------</span>
+<span class="c1"># The class below defines a dataset wrapper that will extract 2-second windows,</span>
+<span class="c1"># uniformly sampled over the whole signal. In addition, it will add useful information</span>
+<span class="c1"># about the extracted windows, such as the p-factor, the subject or the task.</span>
+</pre></div>
+</div>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">DatasetWrapper</span><span class="p">(</span><span class="n">BaseDataset</span><span class="p">):</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset</span><span class="p">:</span> <span class="n">EEGWindowsDataset</span><span class="p">,</span> <span class="n">crop_size_samples</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">dataset</span> <span class="o">=</span> <span class="n">dataset</span>
@@ -805,10 +939,12 @@ about the extracted windows, such as the p-factor, the subject or the task.</p>
 <span class="p">)</span>
 </pre></div>
 </div>
-</section>
-<section id="inspect-the-label-distribution">
-<h2><a class="toc-backref" href="#id12" role="doc-backlink">Inspect the label distribution</a><a class="headerlink" href="#inspect-the-label-distribution" title="Link to this heading">#</a></h2>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Inspect the label distribution</span>
+<span class="c1"># -------------------------------</span>
+
+<span class="c1">#</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">skorch.helper</span><span class="w"> </span><span class="kn">import</span> <span class="n">SliceDataset</span>
 
 <span class="n">y_label</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">SliceDataset</span><span class="p">(</span><span class="n">windows_ds</span><span class="p">,</span> <span class="mi">1</span><span class="p">)))</span>
@@ -825,15 +961,24 @@ about the extracted windows, such as the p-factor, the subject or the task.</p>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<dl>
-<dt>Define, train and save a model</dt><dd><p>Now we have our pytorch dataset necessary for the training!</p>
-<p>Below, we define a simple EEGNeX model from Braindecode.
-All the braindecode models expect the input to be of shape (batch_size, n_channels, n_times)
-and have a test coverage about the behavior of the model.
-However, you can use any pytorch model you want.</p>
-</dd>
-</dl>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">EEGNeX</span><span class="p">(</span><span class="n">n_chans</span><span class="o">=</span><span class="mi">129</span><span class="p">,</span> <span class="n">n_outputs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_times</span><span class="o">=</span><span class="mi">2</span> <span class="o">*</span> <span class="n">SFREQ</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+<img src="../../../_images/sphx_glr_tutorial_challenge_2_002.png" srcset="../../../_images/sphx_glr_tutorial_challenge_2_002.png" alt="Response Time Distribution" class = "sphx-glr-single-img"/><div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define, train and save a model</span>
+<span class="c1"># ---------------------------------</span>
+<span class="c1"># Now we have our pytorch dataset necessary for the training!</span>
+
+<span class="c1">#</span>
+
+<span class="c1"># Below, we define a simple EEGNeX model from Braindecode.</span>
+<span class="c1"># All the braindecode models expect the input to be of shape (batch_size, n_channels, n_times)</span>
+<span class="c1"># and have a test coverage about the behavior of the model.</span>
+<span class="c1"># However, you can use any pytorch model you want.</span>
+
+<span class="c1">#</span>
+</pre></div>
+</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Initialize model</span>
+<span class="c1"># -----------------</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">EEGNeX</span><span class="p">(</span><span class="n">n_chans</span><span class="o">=</span><span class="mi">129</span><span class="p">,</span> <span class="n">n_outputs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_times</span><span class="o">=</span><span class="mi">2</span> <span class="o">*</span> <span class="n">SFREQ</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
 
 <span class="c1"># Specify optimizer</span>
 <span class="n">optimizer</span> <span class="o">=</span> <span class="n">optim</span><span class="o">.</span><span class="n">Adamax</span><span class="p">(</span><span class="n">params</span><span class="o">=</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="mf">0.002</span><span class="p">)</span>
@@ -881,7 +1026,118 @@ However, you can use any pytorch model you want.</p>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Model saved as &#39;weights_challenge_2.pt&#39;&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p><strong>Estimated memory usage:</strong>  0 MB</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>================================================================================================================================================================
+Layer (type (var_name):depth-idx)                            Input Shape               Output Shape              Param #                   Kernel Shape
+================================================================================================================================================================
+EEGNeX (EEGNeX)                                              [1, 129, 200]             [1, 1]                    --                        --
+├─Sequential (block_1): 1-1                                  [1, 129, 200]             [1, 8, 129, 200]          --                        --
+│    └─Rearrange (0): 2-1                                    [1, 129, 200]             [1, 1, 129, 200]          --                        --
+│    └─Conv2d (1): 2-2                                       [1, 1, 129, 200]          [1, 8, 129, 200]          512                       [1, 64]
+│    └─BatchNorm2d (2): 2-3                                  [1, 8, 129, 200]          [1, 8, 129, 200]          16                        --
+├─Sequential (block_2): 1-2                                  [1, 8, 129, 200]          [1, 32, 129, 200]         --                        --
+│    └─Conv2d (0): 2-4                                       [1, 8, 129, 200]          [1, 32, 129, 200]         16,384                    [1, 64]
+│    └─BatchNorm2d (1): 2-5                                  [1, 32, 129, 200]         [1, 32, 129, 200]         64                        --
+├─Sequential (block_3): 1-3                                  [1, 32, 129, 200]         [1, 64, 1, 50]            --                        --
+│    └─ParametrizedConv2dWithConstraint (0): 2-6             [1, 32, 129, 200]         [1, 64, 1, 200]           --                        [129, 1]
+│    │    └─ModuleDict (parametrizations): 3-1               --                        --                        8,256                     --
+│    └─BatchNorm2d (1): 2-7                                  [1, 64, 1, 200]           [1, 64, 1, 200]           128                       --
+│    └─ELU (2): 2-8                                          [1, 64, 1, 200]           [1, 64, 1, 200]           --                        --
+│    └─AvgPool2d (3): 2-9                                    [1, 64, 1, 200]           [1, 64, 1, 50]            --                        [1, 4]
+│    └─Dropout (4): 2-10                                     [1, 64, 1, 50]            [1, 64, 1, 50]            --                        --
+├─Sequential (block_4): 1-4                                  [1, 64, 1, 50]            [1, 32, 1, 50]            --                        --
+│    └─Conv2d (0): 2-11                                      [1, 64, 1, 50]            [1, 32, 1, 50]            32,768                    [1, 16]
+│    └─BatchNorm2d (1): 2-12                                 [1, 32, 1, 50]            [1, 32, 1, 50]            64                        --
+├─Sequential (block_5): 1-5                                  [1, 32, 1, 50]            [1, 48]                   --                        --
+│    └─Conv2d (0): 2-13                                      [1, 32, 1, 50]            [1, 8, 1, 50]             4,096                     [1, 16]
+│    └─BatchNorm2d (1): 2-14                                 [1, 8, 1, 50]             [1, 8, 1, 50]             16                        --
+│    └─ELU (2): 2-15                                         [1, 8, 1, 50]             [1, 8, 1, 50]             --                        --
+│    └─AvgPool2d (3): 2-16                                   [1, 8, 1, 50]             [1, 8, 1, 6]              --                        [1, 8]
+│    └─Dropout (4): 2-17                                     [1, 8, 1, 6]              [1, 8, 1, 6]              --                        --
+│    └─Flatten (5): 2-18                                     [1, 8, 1, 6]              [1, 48]                   --                        --
+├─ParametrizedLinearWithConstraint (final_layer): 1-6        [1, 48]                   [1, 1]                    1                         --
+│    └─ModuleDict (parametrizations): 2-19                   --                        --                        --                        --
+│    │    └─ParametrizationList (weight): 3-2                --                        [1, 48]                   48                        --
+================================================================================================================================================================
+Total params: 62,353
+Trainable params: 62,353
+Non-trainable params: 0
+Total mult-adds (Units.MEGABYTES): 437.76
+================================================================================================================================================================
+Input size (MB): 0.10
+Forward/backward pass size (MB): 16.65
+Params size (MB): 0.22
+Estimated Total Size (MB): 16.97
+================================================================================================================================================================
+Epoch 0 - step 0, loss: 0.659279465675354
+Epoch 0 - step 1, loss: 0.6675701141357422
+Epoch 0 - step 2, loss: 0.6821210980415344
+Epoch 0 - step 3, loss: 0.674625039100647
+Epoch 0 - step 4, loss: 0.6477381587028503
+Epoch 0 - step 5, loss: 0.6291757822036743
+Epoch 0 - step 6, loss: 0.6278492212295532
+Epoch 0 - step 7, loss: 0.6784912943840027
+Epoch 0 - step 8, loss: 0.7311429381370544
+Epoch 0 - step 9, loss: 0.7228069305419922
+Epoch 0 - step 10, loss: 0.6654070019721985
+Epoch 0 - step 11, loss: 0.6499800682067871
+Epoch 0 - step 12, loss: 0.6404024958610535
+Epoch 0 - step 13, loss: 0.6021918654441833
+Epoch 0 - step 14, loss: 0.638771116733551
+Epoch 0 - step 15, loss: 0.6147957444190979
+Epoch 0 - step 16, loss: 0.6347836852073669
+Epoch 0 - step 17, loss: 0.6106484532356262
+Epoch 0 - step 18, loss: 0.659015953540802
+Epoch 0 - step 19, loss: 0.5854973793029785
+Epoch 0 - step 20, loss: 0.6410841345787048
+Epoch 0 - step 21, loss: 0.705108106136322
+Epoch 0 - step 22, loss: 0.7028020620346069
+Epoch 0 - step 23, loss: 0.6805058717727661
+Epoch 0 - step 24, loss: 0.6694855690002441
+Epoch 0 - step 25, loss: 0.6250617504119873
+Epoch 0 - step 26, loss: 0.5891352891921997
+Epoch 0 - step 27, loss: 0.6153055429458618
+Epoch 0 - step 28, loss: 0.6416266560554504
+Epoch 0 - step 29, loss: 0.6333718299865723
+Epoch 0 - step 30, loss: 0.6252666115760803
+Epoch 0 - step 31, loss: 0.5815070271492004
+Epoch 0 - step 32, loss: 0.6909588575363159
+Epoch 0 - step 33, loss: 0.6733686923980713
+Epoch 0 - step 34, loss: 0.6750341653823853
+Epoch 0 - step 35, loss: 0.6794658899307251
+Epoch 0 - step 36, loss: 0.7051953077316284
+Epoch 0 - step 37, loss: 0.6707321405410767
+Epoch 0 - step 38, loss: 0.6508278846740723
+Epoch 0 - step 39, loss: 0.6732834577560425
+Epoch 0 - step 40, loss: 0.6875199675559998
+Epoch 0 - step 41, loss: 0.6246315240859985
+Epoch 0 - step 42, loss: 0.6770897507667542
+Epoch 0 - step 43, loss: 0.6216508746147156
+Epoch 0 - step 44, loss: 0.6228910684585571
+Epoch 0 - step 45, loss: 0.6279448866844177
+Epoch 0 - step 46, loss: 0.7094692587852478
+Epoch 0 - step 47, loss: 0.6254937052726746
+Epoch 0 - step 48, loss: 0.6769282221794128
+Epoch 0 - step 49, loss: 0.5985110402107239
+Epoch 0 - step 50, loss: 0.6811140775680542
+Epoch 0 - step 51, loss: 0.6631884574890137
+Epoch 0 - step 52, loss: 0.6172837018966675
+Epoch 0 - step 53, loss: 0.6130010485649109
+Epoch 0 - step 54, loss: 0.6316426992416382
+Epoch 0 - step 55, loss: 0.6065350770950317
+Epoch 0 - step 56, loss: 0.6594858169555664
+Epoch 0 - step 57, loss: 0.6639052629470825
+Epoch 0 - step 58, loss: 0.665655791759491
+Epoch 0 - step 59, loss: 0.6212437748908997
+Epoch 0 - step 60, loss: 0.6159087419509888
+Epoch 0 - step 61, loss: 0.6148924231529236
+Epoch 0 - step 62, loss: 0.5698207020759583
+Epoch 0 - step 63, loss: 0.6309657096862793
+Epoch 0 - step 64, loss: 0.7134867310523987
+Model saved as &#39;weights_challenge_2.pt&#39;
+</pre></div>
+</div>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (6 minutes 27.747 seconds)</p>
+<p><strong>Estimated memory usage:</strong>  2825 MB</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-generated-auto-examples-eeg2025-tutorial-challenge-2-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/eegdash/EEGDash/main?urlpath=lab/tree/notebooks/generated/auto_examples/eeg2025/tutorial_challenge_2.ipynb"><img alt="Launch binder" src="../../../_images/binder_badge_logo1.svg" style="width: 150px;" />
@@ -898,7 +1154,6 @@ However, you can use any pytorch model you want.</p>
 </div>
 </div>
 <p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
-</section>
 </section>
 
 
@@ -939,31 +1194,6 @@ However, you can use any pytorch model you want.</p>
                 <dialog id="pst-secondary-sidebar-modal"></dialog>
                 <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
-
-  <div class="sidebar-secondary-item">
-<div
-    id="pst-page-navigation-heading-2"
-    class="page-toc tocsection onthispage">
-    <i class="fa-solid fa-list"></i> On this page
-  </div>
-  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
-    <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#preliminary-notes">Preliminary notes</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#contents-of-this-start-kit">Contents of this start kit</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#install-dependencies-on-colab">Install dependencies on Colab</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#imports">Imports</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#identify-whether-a-cuda-enabled-gpu-is-available">Identify whether a CUDA-enabled GPU is available</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#understanding-the-p-factor-regression-task">Understanding the P-factor regression task.</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#define-local-path-and-down-load-the-data">Define local path and (down)load the data</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#combine-the-datasets-into-a-single-one">Combine the datasets into a single one</a></li>
-</ul>
-</li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#inspect-your-data">Inspect your data</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#wrap-the-data-into-a-pytorch-compatible-dataset">Wrap the data into a PyTorch-compatible dataset</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#inspect-the-label-distribution">Inspect the label distribution</a></li>
-</ul>
-  </nav></div>
 
   <div class="sidebar-secondary-item">
 

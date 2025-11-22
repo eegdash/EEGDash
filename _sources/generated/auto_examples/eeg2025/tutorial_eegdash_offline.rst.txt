@@ -50,6 +50,12 @@ present on disk.
     cache_dir.mkdir(parents=True, exist_ok=True)
 
 
+
+
+
+
+
+
 .. GENERATED FROM PYTHON SOURCE LINES 30-38
 
 Step 1: Populate the local cache (Online)
@@ -77,6 +83,34 @@ To keep this example self-contained, we prefetch the data here.
     from joblib import Parallel, delayed
 
     _ = Parallel(n_jobs=-1)(delayed(lambda d: d.raw)(d) for d in ds_online.datasets)
+
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ .. code-block:: none
+
+    ╭────────────────────── EEG 2025 Competition Data Notice ──────────────────────╮
+    │ This object loads the HBN dataset that has been preprocessed for the EEG     │
+    │ Challenge:                                                                   │
+    │   * Downsampled from 500Hz to 100Hz                                          │
+    │   * Bandpass filtered (0.5-50 Hz)                                            │
+    │                                                                              │
+    │ For full preprocessing applied for competition details, see:                 │
+    │   https://github.com/eeg2025/downsample-datasets                             │
+    │                                                                              │
+    │ The HBN dataset have some preprocessing applied by the HBN team:             │
+    │   * Re-reference (Cz Channel)                                                │
+    │                                                                              │
+    │ IMPORTANT: The data accessed via `EEGChallengeDataset` is NOT identical to   │
+    │ what you get from EEGDashDataset directly.                                   │
+    │ If you are participating in the competition, always use                      │
+    │ `EEGChallengeDataset` to ensure consistency with the challenge data.         │
+    ╰──────────────────────── Source: EEGChallengeDataset ─────────────────────────╯
+
 
 
 
@@ -114,6 +148,38 @@ database or S3.
 
 
 
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ .. code-block:: none
+
+    Local dataset folder exists: True
+    /home/runner/.cache/EEGDash/ds005506-bdf-mini
+    ╭────────────────────── EEG 2025 Competition Data Notice ──────────────────────╮
+    │ This object loads the HBN dataset that has been preprocessed for the EEG     │
+    │ Challenge:                                                                   │
+    │   * Downsampled from 500Hz to 100Hz                                          │
+    │   * Bandpass filtered (0.5-50 Hz)                                            │
+    │                                                                              │
+    │ For full preprocessing applied for competition details, see:                 │
+    │   https://github.com/eeg2025/downsample-datasets                             │
+    │                                                                              │
+    │ The HBN dataset have some preprocessing applied by the HBN team:             │
+    │   * Re-reference (Cz Channel)                                                │
+    │                                                                              │
+    │ IMPORTANT: The data accessed via `EEGChallengeDataset` is NOT identical to   │
+    │ what you get from EEGDashDataset directly.                                   │
+    │ If you are participating in the competition, always use                      │
+    │ `EEGChallengeDataset` to ensure consistency with the challenge data.         │
+    ╰──────────────────────── Source: EEGChallengeDataset ─────────────────────────╯
+    Found 20 recording(s) offline.
+    First record bidspath: ds005506/sub-NDARAB793GL3/eeg/sub-NDARAB793GL3_task-RestingState_eeg.bdf
+
+
+
+
 .. GENERATED FROM PYTHON SOURCE LINES 80-87
 
 Step 3: Filtering Entities Offline
@@ -147,6 +213,37 @@ example shows how to load data for a specific subject from the local cache.
 
 
 
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ .. code-block:: none
+
+    ╭────────────────────── EEG 2025 Competition Data Notice ──────────────────────╮
+    │ This object loads the HBN dataset that has been preprocessed for the EEG     │
+    │ Challenge:                                                                   │
+    │   * Downsampled from 500Hz to 100Hz                                          │
+    │   * Bandpass filtered (0.5-50 Hz)                                            │
+    │                                                                              │
+    │ For full preprocessing applied for competition details, see:                 │
+    │   https://github.com/eeg2025/downsample-datasets                             │
+    │                                                                              │
+    │ The HBN dataset have some preprocessing applied by the HBN team:             │
+    │   * Re-reference (Cz Channel)                                                │
+    │                                                                              │
+    │ IMPORTANT: The data accessed via `EEGChallengeDataset` is NOT identical to   │
+    │ what you get from EEGDashDataset directly.                                   │
+    │ If you are participating in the competition, always use                      │
+    │ `EEGChallengeDataset` to ensure consistency with the challenge data.         │
+    ╰──────────────────────── Source: EEGChallengeDataset ─────────────────────────╯
+    Filtered by subject=NDARAB793GL3: 1 recording(s).
+    Records (dataset, subject, task, run):
+      001: dataset=ds005506, subject=NDARAB793GL3, task=RestingState, run=None
+
+
+
+
 .. GENERATED FROM PYTHON SOURCE LINES 106-116
 
 Step 4: Comparing Online vs. Offline Data
@@ -172,6 +269,20 @@ compare shapes.
     print("shapes equal:", raw_online.get_data().shape == raw_offline.get_data().shape)
 
 
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ .. code-block:: none
+
+    online shape: (129, 40800)
+    offline shape: (129, 40800)
+    shapes equal: True
+
+
+
+
 .. GENERATED FROM PYTHON SOURCE LINES 124-129
 
 Step 4.1: Comparing Descriptions, Online vs. Offline Data
@@ -193,6 +304,66 @@ compare shapes.
     print("Descriptions equal:", description_online.equals(description_offline))
 
 
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ .. code-block:: none
+
+             subject          task  ...  seqlearning8target symbolsearch
+    0   NDARAB793GL3  RestingState  ...           available    available
+    1   NDARAM675UR8  RestingState  ...         unavailable    available
+    2   NDARBM839WR5  RestingState  ...           available    available
+    3   NDARBU730PN8  RestingState  ...           available    available
+    4   NDARCT974NAJ  RestingState  ...           available    available
+    5   NDARCW933FD5  RestingState  ...           available    available
+    6   NDARCZ770BRG  RestingState  ...           available    available
+    7   NDARDW741HCF  RestingState  ...         unavailable    available
+    8   NDARDZ058NZN  RestingState  ...         unavailable    available
+    9   NDAREC377AU2  RestingState  ...           available    available
+    10  NDAREM500WWH  RestingState  ...         unavailable    available
+    11  NDAREV527ZRF  RestingState  ...           available    available
+    12  NDAREV601CE7  RestingState  ...           available    available
+    13  NDARFF070XHV  RestingState  ...           available    available
+    14  NDARFR108JNB  RestingState  ...         unavailable    available
+    15  NDARFT305CG1  RestingState  ...         unavailable    available
+    16  NDARGA056TMW  RestingState  ...           available    available
+    17  NDARGH775KF5  RestingState  ...           available    available
+    18  NDARGJ878ZP4  RestingState  ...         unavailable    available
+    19  NDARHA387FPM  RestingState  ...           available    available
+
+    [20 rows x 25 columns]
+             subject          task  ...  seqlearning8target symbolsearch
+    0   NDARAB793GL3  RestingState  ...           available    available
+    1   NDARAM675UR8  RestingState  ...         unavailable    available
+    2   NDARBM839WR5  RestingState  ...           available    available
+    3   NDARBU730PN8  RestingState  ...           available    available
+    4   NDARCT974NAJ  RestingState  ...           available    available
+    5   NDARCW933FD5  RestingState  ...           available    available
+    6   NDARCZ770BRG  RestingState  ...           available    available
+    7   NDARDW741HCF  RestingState  ...         unavailable    available
+    8   NDARDZ058NZN  RestingState  ...         unavailable    available
+    9   NDAREC377AU2  RestingState  ...           available    available
+    10  NDAREM500WWH  RestingState  ...         unavailable    available
+    11  NDAREV527ZRF  RestingState  ...           available    available
+    12  NDAREV601CE7  RestingState  ...           available    available
+    13  NDARFF070XHV  RestingState  ...           available    available
+    14  NDARFR108JNB  RestingState  ...         unavailable    available
+    15  NDARFT305CG1  RestingState  ...         unavailable    available
+    16  NDARGA056TMW  RestingState  ...           available    available
+    17  NDARGH775KF5  RestingState  ...           available    available
+    18  NDARGJ878ZP4  RestingState  ...         unavailable    available
+    19  NDARHA387FPM  RestingState  ...           available    available
+
+    [20 rows x 25 columns]
+    Online description shape: (20, 25)
+    Offline description shape: (20, 25)
+    Descriptions equal: True
+
+
+
+
 .. GENERATED FROM PYTHON SOURCE LINES 138-144
 
 Notes and troubleshooting
@@ -202,7 +373,12 @@ Notes and troubleshooting
   session, task, run) usually suffice.
 - If you encounter issues, please open a GitHub issue so we can discuss.
 
-**Estimated memory usage:**  0 MB
+
+.. rst-class:: sphx-glr-timing
+
+   **Total running time of the script:** (0 minutes 42.079 seconds)
+
+**Estimated memory usage:**  1071 MB
 
 
 .. _sphx_glr_download_generated_auto_examples_eeg2025_tutorial_eegdash_offline.py:

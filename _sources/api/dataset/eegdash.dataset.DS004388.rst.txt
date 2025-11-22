@@ -18,6 +18,7 @@ Dataset Information
 -------------------
 
 - **Dataset ID:** ``DS004388``
+- **Summary:** Modality: Tactile | Type: Perception | Subjects: Other
 - **Number of Subjects:** 40
 - **Number of Recordings:** 399
 - **Number of Tasks:** 3

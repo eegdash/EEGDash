@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Sphinx documentation build warnings
 - Import path resolution in documentation generation
 - Image path warnings in documentation
+- Fill the table that it is missed
 
 ### Changed
 - Updated repository organization to eegdash/EEGDash

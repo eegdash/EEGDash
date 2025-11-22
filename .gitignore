@@ -17,7 +17,6 @@ tests/data/
 .vscode/
 build/
 
-
 dist/
 docs/build/
 docs/source/gen_modules/
@@ -42,6 +41,13 @@ data/
 *.json
 *.isorted
 *.py.isorted
+
+# Exclude cloned dataset directories and JSON listings
+test_diggestion/
+eegdash-datasets/
+eegdash-dataset-listings/
+digestion_output/
+consolidated/
 
 examples/eeg2025/weights*
 # Generated dataset visualizations

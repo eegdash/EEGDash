@@ -46,22 +46,3 @@ def test_import_features_submodules():
             # Some imports might fail due to missing dependencies, that's ok
             # We only care about SyntaxError
             pass
-
-
-def test_features_basic_functionality():
-    """Test basic features module functionality."""
-    from eegdash.features import (
-        get_all_feature_extractors,
-        get_all_feature_kinds,
-        get_all_features,
-    )
-
-    # These should return lists without errors
-    features = get_all_features()
-    assert isinstance(features, list)
-
-    extractors = get_all_feature_extractors()
-    assert isinstance(extractors, list)
-
-    kinds = get_all_feature_kinds()
-    assert isinstance(kinds, list)

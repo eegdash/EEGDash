@@ -22,7 +22,7 @@ from mne._fiff.utils import _read_segments_file
 from mne.io import BaseRaw
 from mne_bids import BIDSPath
 
-from braindecode.datasets import BaseDataset
+from braindecode.datasets.base import BaseDataset
 
 from .. import downloader
 from ..bids_eeg_metadata import enrich_from_participants

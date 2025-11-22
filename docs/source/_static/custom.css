@@ -1,6 +1,28 @@
 
 @import url("https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&display=swap");
 
+/* EEGDash Color Theme - Override PyData Theme */
+:root {
+  --eegdash-primary: #006ca3;  /* New blue */
+  --eegdash-accent: #f7941d;   /* Orange */
+  
+  /* Override PyData theme colors */
+  --pst-color-primary: #006ca3;
+  --pst-color-accent: #f7941d;
+  --sd-color-primary: #006ca3;
+  --sd-color-primary-highlight: #004a76;
+}
+
+html[data-theme="light"] {
+  --pst-color-primary: #006ca3;
+  --sd-color-primary: #006ca3;
+}
+
+html[data-theme="dark"] {
+  --pst-color-primary: #006ca3;
+  --sd-color-primary: #006ca3;
+}
+
 .eegdash-hero { text-align:center; margin: 0 0 1.25rem; }
 
 .eegdash-hero__title{
@@ -26,6 +48,32 @@ html[data-theme="dark"] .eegdash-hero__title {
 
 .eegdash-hero img.logo.mainlogo{ display:block; margin:0 auto; }
 
+/* Footer logo styling */
+/* Footer styling */
+.pst-footer-custom {
+  position: relative;
+}
+
+.pst-footer-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.footer-brand-logo {
+  height: 24px;
+  width: auto;
+  opacity: 0.7;
+  transition: opacity 0.3s ease;
+}
+
+.pst-footer-wrapper:hover .footer-brand-logo,
+.footer-brand-logo:hover {
+  opacity: 1;
+}
+
 /* Core API title with icon */
 h1#core-api {
   display: inline-flex;
@@ -40,7 +88,7 @@ h1#core-api::before {
   font-weight: 900;
   font-size: 1.75rem;
   line-height: 1;
-  color: var(--sd-color-primary, #0a6fb6);
+  color: var(--sd-color-primary, #006ca3);
 }
 
 h1#core-api .headerlink {
@@ -204,8 +252,8 @@ html[data-theme="dark"] .dataset-counter-value {
 }
 
 .dataset-counter-card:nth-child(1) .dataset-counter-icon {
-  background: rgba(10, 111, 182, 0.12);
-  color: #0a6fb6;
+  background: rgba(0, 108, 163, 0.12);
+  color: #006ca3;
 }
 
 .dataset-counter-card:nth-child(2) .dataset-counter-icon {
@@ -224,7 +272,7 @@ html[data-theme="dark"] .dataset-counter-value {
 }
 
 html[data-theme="dark"] .dataset-counter-card:nth-child(1) .dataset-counter-icon {
-  background: rgba(10, 111, 182, 0.28);
+  background: rgba(0, 108, 163, 0.28);
 }
 
 html[data-theme="dark"] .dataset-counter-card:nth-child(2) .dataset-counter-icon {
@@ -292,12 +340,12 @@ html[data-theme="dark"] .dataset-counter-card:nth-child(4) .dataset-counter-icon
 ------------------------------------------------------------- */
 .api-card {
   min-height: 15rem;
-  border-left: 4px solid rgba(10, 111, 182, 0.18);
+  border-left: 4px solid rgba(0, 108, 163, 0.18);
   background-color: var(--sd-color-surface, #ffffff);
 }
 
 .api-card .card-header {
-  background-color: var(--sd-color-primary, #0a6fb6);
+  background-color: var(--sd-color-primary, #006ca3);
   color: #ffffff;
   font-weight: 600;
   letter-spacing: 0.04em;
@@ -308,7 +356,7 @@ html[data-theme="dark"] .dataset-counter-card:nth-child(4) .dataset-counter-icon
 }
 
 .api-card .card-body {
-  background-color: rgba(10, 111, 182, 0.06);
+  background-color: rgba(0, 108, 163, 0.06);
   padding: 1.75rem;
   border-bottom-left-radius: 0.75rem;
   border-bottom-right-radius: 0.75rem;
@@ -327,7 +375,7 @@ html[data-theme="dark"] .dataset-counter-card:nth-child(4) .dataset-counter-icon
   flex: 0 0 3.25rem;
   height: 3.25rem;
   border-radius: 999px;
-  background-color: rgba(10, 111, 182, 0.15);
+  background-color: rgba(0, 108, 163, 0.15);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -335,7 +383,7 @@ html[data-theme="dark"] .dataset-counter-card:nth-child(4) .dataset-counter-icon
 
 .api-card__icon .fa-solid {
   font-size: 2.2rem;
-  color: var(--sd-color-primary, #0a6fb6);
+  color: var(--sd-color-primary, #006ca3);
 }
 
 .api-card__text {
@@ -356,7 +404,7 @@ html[data-theme="dark"] .dataset-counter-card:nth-child(4) .dataset-counter-icon
 }
 
 .api-card__cta a {
-  color: var(--sd-color-primary, #0a6fb6);
+  color: var(--sd-color-primary, #006ca3);
   text-decoration: none;
 }
 
@@ -417,7 +465,7 @@ html[data-theme="dark"] .dataset-counter-card:nth-child(4) .dataset-counter-icon
   height: 1px;
   width: 72px;
   margin: .75rem auto 0;
-  background: rgba(10,111,182, .25);
+  background: rgba(0, 108, 163, .25);
 }
 
 /* -------------------------------------------------------------
@@ -749,7 +797,7 @@ html.dataset-summary-page .bd-main .bd-content .bd-article-container {
   margin: 0.5rem 0 1.25rem;
   padding: 0.35rem 0.75rem;
   border-radius: 0.65rem;
-  background: var(--sd-color-surface-secondary, rgba(10, 111, 182, 0.08));
+  background: var(--sd-color-surface-secondary, rgba(0, 108, 163, 0.08));
   color: var(--pst-color-text-muted, #4b5563);
   font-size: 0.95rem;
   font-weight: 500;
@@ -760,7 +808,7 @@ html.dataset-summary-page .bd-main .bd-content .bd-article-container {
   letter-spacing: 0.08em;
   font-size: 0.75rem;
   font-weight: 600;
-  color: var(--sd-color-primary, #0a6fb6);
+  color: var(--sd-color-primary, #006ca3);
 }
 
 .eegdash-reading-time__value {

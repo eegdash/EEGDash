@@ -13,74 +13,96 @@ Challenge 1: Cross-Task Transfer Learning!
 """
 
 ######################################################################
+
 # .. image:: https://colab.research.google.com/assets/colab-badge.svg
 #    :target: https://colab.research.google.com/github/eeg2025/startkit/blob/main/challenge_1.ipynb
 #    :alt: Open In Colab
 
 ######################################################################
+
 # Preliminary notes
 # -----------------
 # Before we begin, I just want to make a deal with you, ok?
 # This is a community competition with a strong open-source foundation.
 # When I say open-source, I mean volunteer work.
+
 #
+
 # So, if you see something that does not work or could be improved, first, **please be kind**, and
 # we will fix it together on GitHub, okay?
+
 #
+
 # The entire decoding community will only go further when we stop
 # solving the same problems over and over again, and it starts working together.
 
 ######################################################################
+
 # How can we use the knowledge from one EEG Decoding task into another?
 # ---------------------------------------------------------------------
 # Transfer learning is a widespread technique used in deep learning. It
 # uses knowledge learned from one source task/domain in another target
 # task/domain. It has been studied in depth in computer vision, natural
 # language processing, and speech, but what about EEG brain decoding?
+
 #
+
 # The cross-task transfer learning scenario in EEG decoding is remarkably
 # underexplored compared to the development of new models,
 # `Aristimunha et al. (2023) <https://arxiv.org/abs/2308.02408>`__, even
 # though it can be much more useful for real applications, see
 # `Wimpff et al. (2025) <https://arxiv.org/abs/2502.06828>`__,
 # `Wu et al. (2025) <https://arxiv.org/abs/2507.09882>`__.
+
 #
+
 # Our Challenge 1 addresses a key goal in neurotechnology: decoding
 # cognitive function from EEG using the pre-trained knowledge from another.
 # In other words, developing models that can effectively
 # transfer/adapt/adjust/fine-tune knowledge from passive EEG tasks to
 # active tasks.
+
 #
+
 # The ability to generalize and transfer is something critical that we
 # believe should be focused on. To go beyond just comparing metrics numbers
 # that are often not comparable, given the specificities of EEG, such as
 # pre-processing, inter-subject variability, and many other unique
 # components of this type of data.
+
 #
+
 # This means your submitted model might be trained on a subset of tasks
 # and fine-tuned on data from another condition, evaluating its capacity to
 # generalize with task-specific fine-tuning.
 
 ######################################################################
+
 # __________
+
 #
+
 # Note: For simplicity purposes, we will only show how to do the decoding
 # directly in our target task, and it is up to the teams to think about
 # how to use the passive task to perform the pre-training.
 
 #######################################################################
+
 # Install dependencies
 # --------------------
 # For the challenge, we will need two significant dependencies:
 # `braindecode` and `eegdash`. The libraries will install PyTorch,
 # Pytorch Audio, Scikit-learn, MNE, MNE-BIDS, and many other packages
 # necessary for the many functions.
+
 #
+
 # Install dependencies on colab or your local machine, as eegdash
 # have braindecode as a dependency.
 # you can just run ``pip install eegdash``.
 
 ######################################################################
+
 # Imports and setup
 # -----------------
 from pathlib import Path
@@ -103,9 +125,12 @@ import copy
 from joblib import Parallel, delayed
 
 ######################################################################
+
 # Check GPU availability
 # ----------------------
+
 #
+
 # Identify whether a CUDA-enabled GPU is available
 # and set the device accordingly.
 # If using Google Colab, ensure that the runtime is set to use a GPU.
@@ -124,99 +149,151 @@ else:
 print(msg)
 
 ######################################################################
+
 # What are we decoding?
 # ---------------------
+
 #
+
 # To start to talk about what we want to analyse, the important thing
 # is to understand some basic concepts.
+
 #
+
 ######################################################################
+
 # The brain decodes the problem
 # -----------------------------
+
 #
+
 # Broadly speaking, here *brain decoding* is the following problem:
 # given brain time-series signals :math:`X \in \mathbb{R}^{C \times T}` with
 # labels :math:`y \in \mathcal{Y}`, we implement a neural network :math:`f` that
 # **decodes/translates** brain activity into the target label.
+
 #
+
 # We aim to translate recorded brain activity into its originating
 # stimulus, behavior, or mental state, `King, J-R. et al. (2020) <https://lauragwilliams.github.io/d/m/CognitionAlgorithm.pdf>`__.
+
 #
+
 # The neural network :math:`f` applies a series of transformation layers
 # (e.g., ``torch.nn.Conv2d``, ``torch.nn.Linear``, ``torch.nn.ELU``, ``torch.nn.BatchNorm2d``)
 # to the data to filter, extract features, and learn embeddings
 # relevant to the optimization objective—in other words:
+
 #
+
 # .. math::
+
 #
+
 #    f_{\theta}: X \to y,
+
 #
+
 # where :math:`C` (``n_chans``) is the number of channels/electrodes and :math:`T` (``n_times``)
 # is the temporal window length/epoch size over the interval of interest.
 # Here, :math:`\theta` denotes the parameters learned by the neural network.
+
 #
+
 # Input/Output definition
 # ---------------------------
 # For the competition, the HBN-EEG (Healthy Brain Network EEG Datasets)
 # dataset has ``n_chans = 129`` with the last channels as a `reference channel <https://mne.tools/stable/auto_tutorials/preprocessing/55_setting_eeg_reference.html>`_,
 # and we define the window length as ``n_times = 200``, corresponding to 2-second windows.
+
 #
+
 # Your model should follow this definition exactly; any specific selection of channels,
 # filtering, or domain-adaptation technique must be performed **within the layers of the neural network model**.
+
 #
+
 # In this tutorial, we will use the ``EEGNeX`` model from ``braindecode`` as an example.
 # You can use any model you want, as long as it follows the input/output
 # definitions above.
 
 ######################################################################
+
 # Understand the task: Contrast Change Detection (CCD)
 # --------------------------------------------------------
 # If you are interested to get more neuroscience insight, we recommend these two references, `HBN-EEG <https://www.biorxiv.org/content/10.1101/2024.10.03.615261v2.full.pdf>`__ and `Langer, N et al. (2017) <https://www.nature.com/articles/sdata201740#Sec2>`__.
 # Your task (**label**) is to predict the response time for the subject during this windows.
+
 #
+
 # In the Video, we have an example of recording cognitive activity:
+
 #
+
 # The Contrast Change Detection (CCD) task relates to
 # `Steady-State Visual Evoked Potentials (SSVEP) <https://en.wikipedia.org/wiki/Steady-state_visually_evoked_potential>`__
 # and `Event-Related Potentials (ERP) <https://en.wikipedia.org/wiki/Event-related_potential>`__.
+
 #
+
 # Algorithmically, what the subject sees during recording is:
+
 #
+
 # * Two flickering striped discs: one tilted left, one tilted right.
 # * After a variable delay, **one disc's contrast gradually increases** **while the other decreases**.
 # * They **press left or right** to indicate which disc got stronger.
 # * They receive **feedback** (🙂 correct / 🙁 incorrect).
+
 #
+
 # **The task parallels SSVEP and ERP:**
+
 #
+
 # * The continuous flicker **tags the EEG at fixed frequencies (and harmonics)** → SSVEP-like signals.
 # * The **ramp onset**, the **button press**, and the **feedback** are **time-locked events** that yield ERP-like components.
+
 #
+
 # Your task (**label**) is to predict the response time for the subject during this windows.
+
 #
+
 #######################################################################
+
 # In the figure below, we have the timeline representation of the cognitive task:
+
 #
+
 # .. image:: https://eeg2025.github.io/assets/img/image-2.jpg
 
 ######################################################################
+
 # Stimulus demonstration
 # ----------------------
 # .. raw:: html
+
 #
+
 #    <div class="video-wrapper">
 #      <iframe src="https://www.youtube.com/embed/tOW2Vu2zHoU?start=1630"
 #              title="Contrast Change Detection (CCD) task demo"
 #              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
 #              allowfullscreen></iframe>
 #    </div>
+
 #
+
 ######################################################################
+
 # PyTorch Dataset for the competition
 # -----------------------------------
 # Now, we have a Pytorch Dataset object that contains the set of recordings for the task
 # `contrastChangeDetection`.
+
 #
+
 from eegdash.dataset import EEGChallengeDataset
 from eegdash.hbn.windows import (
     annotate_trials_with_target,
@@ -238,35 +315,49 @@ print(f"Number of recordings in the dataset: {len(dataset_ccd.datasets)}")
 print(
     f"Number of unique subjects in the dataset: {dataset_ccd.description['subject'].nunique()}"
 )
+
 #
+
 # This dataset object have very rich Raw object details that can help you to
 # understand better the data. The framework behind this is braindecode,
 # and if you want to understand in depth what is happening, we recommend the
 # braindecode github itself.
+
 #
+
 # We can also access the Raw object for visualization purposes, we will see just one object.
 raw = dataset_ccd.datasets[0].raw  # get the Raw object of the first recording
 # And to download all the data all data directly, you can do:
 raws = Parallel(n_jobs=-1)(delayed(lambda d: d.raw)(d) for d in dataset_ccd.datasets)
 
 ######################################################################
+
 # Alternatives for Downloading the data
 # -------------------------------------
+
 #
+
 # You can also perform this operation with wget or the aws cli.
 # These options will probably be faster!
 # Please check more details in the `HBN` data webpage `HBN-EEG <https://neuromechanist.github.io/data/hbn/>`__.
 # You need to download the 100Hz preprocessed data in BDF format.
+
 #
+
 # Example of wget for release R1
 #    wget https://sccn.ucsd.edu/download/eeg2025/R1_L100_bdf.zip -O R1_L100_bdf.zip
+
 #
+
 # Example of AWS CLI for release R1
+
 #
+
 #    aws s3 sync s3://nmdatasets/NeurIPS25/R1_L100_bdf data/R1_L100_bdf --no-sign-request
 
 
 ######################################################################
+
 # Create windows of interest
 # -----------------------------
 # So we epoch after the stimulus moment with a beginning shift of 500 ms.
@@ -320,7 +411,9 @@ single_windows = add_extras_columns(
         "response_type",
     ),
 )
+
 ######################################################################
+
 # Inspect the label distribution
 # -------------------------------
 import numpy as np
@@ -341,6 +434,7 @@ plt.show()
 
 
 ######################################################################
+
 # Split the data
 # ---------------
 # Extract meta information
@@ -393,6 +487,7 @@ print(f"Valid:\t{len(valid_set)}")
 print(f"Test:\t{len(test_set)}")
 
 ######################################################################
+
 # Create dataloaders
 # -------------------
 batch_size = 128
@@ -410,6 +505,7 @@ test_loader = DataLoader(
 )
 
 ######################################################################
+
 # Build the model
 # -----------------
 # For neural network models, **to start**, we suggest using `braindecode models <https://braindecode.org/1.2/models/models_table.html>`__ zoo.
@@ -430,12 +526,16 @@ model.to(device)
 
 
 ######################################################################
+
 # Define training and validation functions
 # -------------------------------------------
 # The rest is our classic PyTorch/torch lighting/skorch training pipeline,
 # you can use any training framework you want.
 # We provide a simple training and validation loop below.
+
 #
+
+
 def train_one_epoch(
     dataloader: DataLoader,
     model: Module,
@@ -538,6 +638,7 @@ def valid_model(
 
 
 ######################################################################
+
 # Train the model
 # ------------------
 lr = 1e-3
@@ -589,6 +690,7 @@ if best_state is not None:
     model.load_state_dict(best_state)
 
 ######################################################################
+
 # Save the model
 # -----------------
 torch.save(model.state_dict(), "weights_challenge_1.pt")

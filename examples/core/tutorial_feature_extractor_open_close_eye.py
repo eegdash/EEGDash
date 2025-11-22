@@ -174,8 +174,16 @@ features_dict = {
             "zero_x": features.signal_zero_crossings,
         },
     ),
-    "spec": features.SpectralFeatureExtractor(
-        {
+    "spec": features.FeatureExtractor(
+        preprocessor=partial(
+            features.spectral_preprocessor,
+            fs=sfreq,
+            f_min=filter_freqs["l_freq"],
+            f_max=filter_freqs["h_freq"],
+            nperseg=2 * sfreq,
+            noverlap=int(1.5 * sfreq),
+        ),
+        feature_extractors={
             "rtot_power": features.spectral_root_total_power,
             "band_power": partial(
                 features.spectral_bands_power,
@@ -185,24 +193,21 @@ features_dict = {
                     "beta": (12, 30),
                 },
             ),
-            0: features.NormalizedSpectralFeatureExtractor(
-                {
+            0: features.FeatureExtractor(
+                preprocessor=features.spectral_normalized_preprocessor,
+                feature_extractors={
                     "moment": features.spectral_moment,
                     "entropy": features.spectral_entropy,
                     "edge": partial(features.spectral_edge, edge=0.9),
                 },
             ),
-            1: features.DBSpectralFeatureExtractor(
-                {
+            1: features.FeatureExtractor(
+                preprocessor=features.spectral_db_preprocessor,
+                feature_extractors={
                     "slope": features.spectral_slope,
                 },
             ),
         },
-        fs=sfreq,
-        f_min=filter_freqs["l_freq"],
-        f_max=filter_freqs["h_freq"],
-        nperseg=2 * sfreq,
-        noverlap=int(1.5 * sfreq),
     ),
 }
 

@@ -1,8 +1,9 @@
-""".. _challenge-1:
+"""Challenge 1: Cross-Task Transfer Learning!
+==========================================
+
+.. _challenge-1:
 .. meta::
    :html_theme.sidebar_secondary.remove: true
-Challenge 1: Cross-Task Transfer Learning!
-==========================================
 .. contents:: This example covers:
    :local:
    :depth: 2

@@ -67,7 +67,7 @@ ds_p3 = MOABBDataset(
 ds_avo = DS005863(
     cache_dir=cache_folder,
     task="visualoddball",
-    subjects=[f"{i:03d}" for i in range(1, 3)],
+    subject=[f"{i:03d}" for i in range(1, 3)],
     download=True,
 )
 

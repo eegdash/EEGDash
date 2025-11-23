@@ -44,7 +44,7 @@ By the end, you'll understand how to:
 # These datasets differ in equipment, recording sites, and participant demographics,
 # making them ideal for testing domain adaptation.
 from pathlib import Path
-from eegdash import EEGDashDataset
+from eegdash.dataset import DS005863
 from braindecode.datasets import MOABBDataset
 # Here, we are using an dataset that it in osf and other in openneuro.
 # We are conveniently using EEGDashDataset and MOABBDataset to load them.
@@ -64,13 +64,10 @@ ds_p3 = MOABBDataset(
 )
 
 
-ds_avo = EEGDashDataset(
-    dataset="ds005863",
+ds_avo = DS005863(
     cache_dir=cache_folder,
     task="visualoddball",
-    subjects=[
-        f"{i:03d}" for i in range(1, 3)
-    ],  # here, we are using only 2 subjects for quick demo
+    subjects=[f"{i:03d}" for i in range(1, 3)],
     download=True,
 )
 

@@ -84,6 +84,7 @@ docs = [
   "nbformat",
   "graphviz",
   "neato",
+  "moabb", # remove when all the moabb datasets are digested
 ]
 
 digestion = [

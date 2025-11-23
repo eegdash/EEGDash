@@ -7,6 +7,7 @@ from . import extractors, feature_bank
 from .extractors import _get_underlying_func
 
 __all__ = [
+    "get_all_feature_extractors",
     "get_all_feature_preprocessors",
     "get_all_feature_kinds",
     "get_all_features",
@@ -91,6 +92,29 @@ def get_all_features() -> list[tuple[str, Callable]]:
         return hasattr(_get_underlying_func(x), "feature_kind")
 
     return inspect.getmembers(feature_bank, isfeature)
+
+
+def get_all_feature_extractors() -> list[tuple[str, Callable]]:
+    """Get a list of all available feature extractor callables.
+
+    A feature extractor is any callable in the feature bank that participates
+    in the feature graph, meaning it declares a ``parent_extractor_type``
+    via :class:`~eegdash.features.decorators.FeaturePredecessor`. This
+    includes both preprocessors and the final feature functions.
+
+    Returns
+    -------
+    list[tuple[str, callable]]
+        A list of (name, callable) tuples for all discovered feature
+        extractors.
+
+    """
+
+    def isfeatureextractor(x):
+        y = _get_underlying_func(x)
+        return callable(y) and hasattr(y, "parent_extractor_type")
+
+    return inspect.getmembers(feature_bank, isfeatureextractor)
 
 
 def get_all_feature_preprocessors() -> list[tuple[str, Callable]]:

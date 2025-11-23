@@ -51,6 +51,7 @@ from braindecode.datasets import MOABBDataset
 # but you can directly download from osf and use only EEGDashDataset if you prefer.
 
 cache_folder = Path.home() / "eegdash"
+cache_folder.mkdir(parents=True, exist_ok=True)
 cache_config = dict(
     use=True,
     save_raw=True,

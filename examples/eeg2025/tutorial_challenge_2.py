@@ -1,8 +1,9 @@
-""".. _challenge-2:
+"""Challenge 2: Predicting the p-factor from EEG
+=============================================
+
+.. _challenge-2:
 .. meta::
    :html_theme.sidebar_secondary.remove: true
-Challenge 2: Predicting the p-factor from EEG
-=============================================
 .. contents:: This example covers:
    :local:
    :depth: 2

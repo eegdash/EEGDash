@@ -29,6 +29,7 @@ from .const import (
 )
 from .const import config as data_config
 from .dataset.bids_dataset import EEGBIDSDataset
+from .dataset.dataset import EEGDashDataset
 from .logging import logger
 from .mongodb import MongoConnectionManager
 from .utils import _init_mongo_client
@@ -525,4 +526,4 @@ def _json_default(value: Any) -> Any:
     raise TypeError(f"Object of type {type(value).__name__} is not JSON serializable")
 
 
-__all__ = ["EEGDash"]
+__all__ = ["EEGDash", "EEGDashDataset"]

@@ -176,7 +176,16 @@ class EEGDashBaseDataset(BaseDataset):
                 self.record["ntimes"] is None
                 or self.record["sampling_frequency"] is None
             ):
-                self._ensure_raw()
+                try:
+                    self._ensure_raw()
+                except Exception as e:
+                    # If we can't load the raw data (corrupted file, etc.),
+                    # return 0 to mark this dataset as invalid
+                    logger.warning(
+                        f"Could not load raw data for {self.bidspath}, "
+                        f"marking as invalid (length=0). Error: {e}"
+                    )
+                    return 0
             else:
                 # FIXME: this is a bit strange and should definitely not change as a side effect
                 #  of accessing the data (which it will, since ntimes is the actual length but rounded down)

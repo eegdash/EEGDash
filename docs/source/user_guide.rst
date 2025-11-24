@@ -8,65 +8,117 @@
 User Guide
 ==========
 
-This guide provides a comprehensive overview of the :mod:`eegdash` library, focusing on its core data access object, :class:`~eegdash.api.EEGDashDataset`. You will learn how to use this object to find, access, and manage EEG data for your research and analysis tasks.
+Welcome to the EEGDash User Guide! This comprehensive tutorial will help you get started with the :mod:`eegdash` library and learn how to effectively use it for your EEG research and analysis.
 
-The EEGDash Object
-------------------
+**What is EEGDash?**
 
-While :class:`~eegdash.api.EEGDashDataset` is the main tool for loading data for machine learning, the :class:`~eegdash.api.EEGDash` object provides a lower-level interface for directly interacting with the metadata database. It is useful for exploring the available data, performing complex queries, or managing metadata records.
+EEGDash is a data-sharing resource that provides easy access to large-scale EEG datasets for machine learning and deep learning applications. It offers a simple Python API to query, download, and load EEG data from multiple publicly available datasets in a standardized format.
 
-Initializing EEGDash
-~~~~~~~~~~~~~~~~~~~~~~~~
+**Who should use this guide?**
 
-You can create a client to connect to the public database like this:
+This guide is designed for researchers, data scientists, and students who want to:
+
+- Access large-scale EEG datasets for machine learning
+- Perform meta-analyses across multiple EEG studies
+- Develop and benchmark deep learning models on standardized data
+- Explore available EEG data before committing to downloads
+
+**Guide Overview**
+
+.. contents:: **Contents**
+   :local:
+   :depth: 2
+
+Getting Started
+---------------
+
+If you're new to EEGDash, start here! This section will get you up and running quickly.
+
+Quick Start
+~~~~~~~~~~~
+
+The fastest way to get started is to load a dataset and access EEG recordings:
+
+.. code-block:: python
+
+    from eegdash import EEGDashDataset
+
+    # Load a dataset
+    dataset = EEGDashDataset(
+        cache_dir="./eeg_data",
+        dataset="ds002718",
+        task="RestingState"
+    )
+
+    # Access the first recording
+    recording = dataset[0]
+    raw = recording.load()  # Returns an MNE Raw object
+    
+    print(f"Loaded {len(raw.ch_names)} channels at {raw.info['sfreq']} Hz")
+
+That's it! You've just loaded your first EEG recording. The data is automatically downloaded and cached for future use.
+
+**Next Steps:**
+
+- Learn about :ref:`core-concepts` to understand the library architecture
+- Explore :ref:`tutorials-examples` for complete workflows
+- Check out the :doc:`Dataset Catalog </dataset_summary>` to browse available datasets
+
+.. _core-concepts:
+
+Core Concepts
+-------------
+
+EEGDash provides two main interfaces for working with EEG data. Understanding when to use each one is key to using the library effectively.
+
+EEGDashDataset vs EEGDash
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+EEGDash provides two complementary interfaces:
+
+.. list-table::
+   :widths: 30 70
+   :header-rows: 1
+
+   * - Interface
+     - When to Use
+   * - :class:`~eegdash.api.EEGDashDataset`
+     - **Most common use case.** Use this when you need to load EEG data for analysis or machine learning. It returns a PyTorch-compatible dataset where each item can load the actual EEG signal as an MNE Raw object.
+   * - :class:`~eegdash.api.EEGDash`
+     - Use this for querying and exploring metadata only. It returns a list of dictionaries describing available recordings, without loading any signal data. Useful for browsing what's available before committing to downloads.
+
+**Recommendation:** Start with :class:`~eegdash.api.EEGDashDataset` for most workflows. Only use :class:`~eegdash.api.EEGDash` if you need to explore metadata without loading data.
+
+Example: Querying Metadata Only
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+If you just want to explore what data is available without downloading anything:
 
 .. code-block:: python
 
     from eegdash import EEGDash
 
-    # Connect to the public database
+    # Connect to the metadata database
     eegdash = EEGDash()
 
-Finding Records
-~~~~~~~~~~~~~~~
-
-The ``find()`` method allows you to query the database for records matching specific criteria. You can pass keyword arguments for simple filters or a full MongoDB query dictionary for more advanced searches.
-
-.. code-block:: python
-
-    # Find records for a specific dataset and subject
+    # Find records for a specific dataset
     records = eegdash.find(dataset="ds002718", subject="012")
-    print(f"Found {len(records)} records.")
+    print(f"Found {len(records)} recordings")
+    
+    # Each record is a dictionary with metadata
+    print(records[0].keys())  # Shows available metadata fields
 
-    # You can also use more complex queries
-    query = {"dataset": "ds002718", "subject": {"$in": ["012", "013"]}}
-    records_advanced = eegdash.find(query)
-    print(f"Found {len(records_advanced)} records with advanced query.")
+This is useful for exploration but doesn't provide data loading capabilities.
 
-EEGDash vs. EEGDashDataset
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Working with EEGDashDataset
+----------------------------
 
-It's important to understand the distinction between these two objects:
+The :class:`~eegdash.api.EEGDashDataset` is your primary tool for loading EEG data. It handles querying, downloading, caching, and loading recordings seamlessly.
 
--   :class:`~eegdash.api.EEGDash`: Use this for querying and managing metadata. It returns a list of dictionaries, where each dictionary is a record from the database.
--   :class:`~eegdash.api.EEGDashDataset`: Use this when you need to load EEG data for analysis or machine learning. It returns a PyTorch-compatible dataset object where each item can load the actual EEG signal.
+Basic Usage
+~~~~~~~~~~~
 
-In general, you will use :class:`~eegdash.api.EEGDashDataset` for most of your data loading needs.
-
-The EEGDashDataset Object
--------------------------
-
-The :class:`~eegdash.api.EEGDashDataset` is the primary entry point for working with EEG recordings in :mod:`eegdash`. It acts as a high-level interface that allows you to query a metadata database and load corresponding EEG data, either from a remote source or from a local cache.
-
-Initializing EEGDashDataset
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-To get started, you need to create an instance of :class:`~eegdash.api.EEGDashDataset`. The two most important parameters are ``cache_dir`` and ``dataset``.
-
-- ``cache_dir``: This is the local directory where ``eegdash`` will store downloaded data.
-- ``dataset``: The identifier of the dataset you want to work with (e.g., ``"ds002718"``).
-
-Here's a basic example of how to initialize the dataset:
+The most basic usage requires only a cache directory and dataset identifier:
 
 .. code-block:: python
 
@@ -78,82 +130,85 @@ Here's a basic example of how to initialize the dataset:
         dataset="ds002718",
     )
 
-    print(f"Found {len(dataset)} recordings in the dataset.")
+    print(f"Dataset contains {len(dataset)} recordings")
 
-This will create a dataset object containing all recordings from ``ds002718``. The data files will be downloaded to the ``./eeg_data/ds002718/`` directory when accessed.
+This creates a dataset object containing all recordings from ``ds002718``. The data files will be downloaded to ``./eeg_data/ds002718/`` when you access them.
 
-Querying for Specific Data
---------------------------
+**Key Parameters:**
 
-:class:`~eegdash.api.EEGDashDataset` offers powerful filtering capabilities, allowing you to select a subset of recordings based on various criteria. You can filter by task, subject, session, or run.
+- ``cache_dir``: Local directory where data will be stored
+- ``dataset``: Dataset identifier (e.g., ``"ds002718"``)
 
-Filtering by Task
-~~~~~~~~~~~~~~~~~
+Filtering and Querying
+~~~~~~~~~~~~~~~~~~~~~~
 
-You can easily select recordings associated with a specific experimental task. For example, to get all resting-state recordings:
+EEGDashDataset offers powerful filtering to select specific recordings based on experimental parameters.
+
+Filter by Task
+^^^^^^^^^^^^^^
+
+Select recordings from specific experimental paradigms:
 
 .. code-block:: python
 
-    # Filter by a single task
-    resting_state_dataset = EEGDashDataset(
+    # Get all resting-state recordings
+    resting_dataset = EEGDashDataset(
         cache_dir="./eeg_data",
         dataset="ds002718",
         task="RestingState"
     )
 
-    print(f"Found {len(resting_state_dataset)} resting-state recordings.")
+    print(f"Found {len(resting_dataset)} resting-state recordings")
 
-Filtering by Subject
-~~~~~~~~~~~~~~~~~~~~
+Filter by Subject
+^^^^^^^^^^^^^^^^^
 
-You can also filter the data to get recordings from one or more subjects.
+Select data from one or more subjects:
 
 .. code-block:: python
 
-    # Filter by a single subject
+    # Single subject
     subject_dataset = EEGDashDataset(
         cache_dir="./eeg_data",
         dataset="ds002718",
         subject="012"
     )
 
-    print(f"Found {len(subject_dataset)} recordings for subject 012.")
-
-    # Filter by a list of subjects
+    # Multiple subjects
     multi_subject_dataset = EEGDashDataset(
         cache_dir="./eeg_data",
         dataset="ds002718",
         subject=["012", "013", "014"]
     )
 
-    print(f"Found {len(multi_subject_dataset)} recordings for subjects 012, 013, and 014.")
+    print(f"Single subject: {len(subject_dataset)} recordings")
+    print(f"Multiple subjects: {len(multi_subject_dataset)} recordings")
 
+Combine Multiple Filters
+^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Combining Filters
-~~~~~~~~~~~~~~~~~
-
-You can combine multiple filters to create more specific queries. For instance, to get the resting-state recordings for a specific set of subjects:
+Create specific queries by combining multiple filter criteria:
 
 .. code-block:: python
 
-    # Combine subject and task filters
-    combined_filter_dataset = EEGDashDataset(
+    # Resting-state recordings from specific subjects
+    filtered_dataset = EEGDashDataset(
         cache_dir="./eeg_data",
         dataset="ds002718",
         subject=["012", "013"],
         task="RestingState"
     )
 
-    print(f"Found {len(combined_filter_dataset)} recordings matching the criteria.")
+    print(f"Found {len(filtered_dataset)} recordings matching criteria")
 
-Advanced Querying with MongoDB Syntax
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Advanced MongoDB Queries
+^^^^^^^^^^^^^^^^^^^^^^^^
 
-For more complex queries, you can pass a MongoDB-style query dictionary directly using the ``query`` parameter. This allows for advanced filtering, such as using operators like ``$in``.
+For complex queries, use MongoDB-style syntax with the ``query`` parameter:
 
 .. code-block:: python
 
-    # Use a MongoDB-style query
+    # Complex query with MongoDB operators
     query = {
         "dataset": "ds002718",
         "subject": {"$in": ["012", "013"]},
@@ -161,52 +216,156 @@ For more complex queries, you can pass a MongoDB-style query dictionary directly
     }
     advanced_dataset = EEGDashDataset(cache_dir="./eeg_data", query=query)
 
-    print(f"Found {len(advanced_dataset)} recordings using an advanced query.")
+    print(f"Found {len(advanced_dataset)} recordings with advanced query")
 
+Loading and Accessing Data
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Working with Local Data (Offline Mode)
---------------------------------------
-
-:mod:`eegdash` also supports working with local data that you have already downloaded or manage separately. By setting ``download=False``, you can instruct :class:`~eegdash.api.EEGDashDataset` to use local BIDS-compliant data instead of accessing the database or remote storage.
-
-To use this feature, your data must be organized in a BIDS-like structure within your ``cache_dir``. For example, if your ``cache_dir`` is ``./eeg_data`` and your dataset is ``ds002718``, the files should be located at ``./eeg_data/ds002718/``.
-
-Here is how to use :class:`~eegdash.api.EEGDashDataset` in offline mode:
+Once you have your dataset, access individual recordings like a list:
 
 .. code-block:: python
 
-    # Initialize in offline mode
+    # Get the first recording
+    recording = dataset[0]
+
+    # Load the EEG data as an MNE Raw object
+    raw = recording.load()
+
+    # Access metadata
+    print(f"Subject: {recording.description['subject']}")
+    print(f"Task: {recording.description['task']}")
+    print(f"Sampling rate: {raw.info['sfreq']} Hz")
+    print(f"Channels: {len(raw.ch_names)}")
+
+    # Iterate over multiple recordings
+    for recording in dataset[:3]:
+        raw = recording.load()
+        print(f"Loaded recording: {recording.description['run']}")
+
+Advanced Topics
+---------------
+
+Offline Mode (Local Data)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Work with local BIDS-formatted data without internet access:
+
+.. code-block:: python
+
+    # Use local BIDS data without querying the database
     local_dataset = EEGDashDataset(
         cache_dir="./eeg_data",
         dataset="ds002718",
         download=False
     )
 
-    print(f"Found {len(local_dataset)} local recordings.")
+    print(f"Found {len(local_dataset)} local recordings")
 
-When ``download=False``, :mod:`eegdash` will scan the specified directory for EEG files and construct the dataset from the local file system. This is useful for environments without internet access or when you want to work with your own curated datasets.
+**Requirements:**
 
-Accessing Data from the Dataset
--------------------------------
+- Data must be organized in BIDS structure: ``cache_dir/dataset/``
+- No internet connection required
+- Useful for offline analysis or custom datasets
 
-Once you have your :class:`~eegdash.api.EEGDashDataset` object, you can access individual recordings as if it were a list. Each item in the dataset is an :class:`~eegdash.data_utils.EEGDashBaseDataset` object, which contains the metadata and methods to load the actual EEG data.
+.. _tutorials-examples:
+
+Tutorials and Examples
+----------------------
+
+Ready to dive deeper? Check out our comprehensive tutorials and examples:
+
+**Beginner Tutorials**
+
+.. toctree::
+   :maxdepth: 1
+
+   generated/auto_examples/core/tutorial_eoec
+   generated/auto_examples/eeg2025/tutorial_eegdash_offline
+
+**Advanced Examples**
+
+.. toctree::
+   :maxdepth: 1
+
+   generated/auto_examples/core/tutorial_feature_extractor_open_close_eye
+   generated/auto_examples/core/p300_transfer_learning
+
+**Browse All Examples**
+
+Visit the :doc:`Examples Gallery </generated/auto_examples/index>` to see all available tutorials with code, visualizations, and downloadable notebooks.
+
+Common Workflows
+----------------
+
+Here are some common use cases to help you get started quickly:
+
+**Workflow 1: Explore Available Data**
 
 .. code-block:: python
 
-    if len(dataset) > 0:
-        # Get the first recording
-        recording = dataset[0]
+    from eegdash import EEGDash
 
-        # Load the EEG data as a raw MNE object
-        raw = recording.load()
+    # Query metadata to see what's available
+    eegdash = EEGDash()
+    records = eegdash.find(dataset="ds002718")
+    
+    # Check unique tasks and subjects
+    tasks = set(r['task'] for r in records)
+    subjects = set(r['subject'] for r in records)
+    print(f"Available tasks: {tasks}")
+    print(f"Available subjects: {len(subjects)} subjects")
 
-        print(f"Loaded recording for subject: {recording.description['subject']}")
-        print(f"Sampling frequency: {raw.info['sfreq']} Hz")
-        print(f"Number of channels: {len(raw.ch_names)}")
+**Workflow 2: Load Data for Machine Learning**
 
-This provides a powerful and flexible way to integrate ``eegdash`` into your data analysis pipelines, whether you are working with remote or local data. For contributor resources, see :doc:`Developer Notes </developer_notes>`.
+.. code-block:: python
 
+    from eegdash import EEGDashDataset
+    from torch.utils.data import DataLoader
 
-.. seealso::
+    # Load a specific subset
+    dataset = EEGDashDataset(
+        cache_dir="./eeg_data",
+        dataset="ds002718",
+        task="RestingState",
+        subject=["012", "013"]
+    )
 
-   :doc:`developer_notes` captures contributor workflows for the core package.
+    # Create a DataLoader for batching
+    dataloader = DataLoader(dataset, batch_size=4, shuffle=True)
+    
+    # Use in your training loop
+    for batch in dataloader:
+        # Your training code here
+        pass
+
+**Workflow 3: Multi-Dataset Analysis**
+
+.. code-block:: python
+
+    from eegdash import EEGDashDataset
+
+    # Load multiple datasets
+    datasets = [
+        EEGDashDataset(cache_dir="./eeg_data", dataset="ds002718"),
+        EEGDashDataset(cache_dir="./eeg_data", dataset="ds002718"),
+    ]
+
+    # Combine for meta-analysis
+    all_recordings = []
+    for dataset in datasets:
+        all_recordings.extend([rec for rec in dataset])
+    
+    print(f"Total recordings: {len(all_recordings)}")
+
+Additional Resources
+--------------------
+
+- **Dataset Catalog**: Browse all available datasets in the :doc:`Dataset Catalog </dataset_summary>`
+- **API Reference**: Detailed API documentation in :doc:`API Reference </api/api>`
+- **Developer Guide**: Contributing to EEGDash? See :doc:`Developer Notes </developer_notes>`
+
+**Need Help?**
+
+- Join our `Discord community <https://discord.gg/8jd7nVKwsc>`_
+- Report issues on `GitHub <https://github.com/eegdash/EEGDash/issues>`_
+- Check out the `EEG2025 Competition <https://eeg2025.github.io/>`_ for real-world applications

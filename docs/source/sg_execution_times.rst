@@ -6,7 +6,7 @@
 
 Computation times
 =================
-**03:33.228** total execution time for 6 files **from all galleries**:
+**02:32.877** total execution time for 6 files **from all galleries**:
 
 .. container::
 
@@ -32,10 +32,21 @@ Computation times
    * - Example
      - Time
      - Mem (MB)
+   * - :ref:`sphx_glr_generated_auto_examples_eeg2025_tutorial_eegdash_offline.py` (``../../examples/eeg2025/tutorial_eegdash_offline.py``)
+     - 00:30.722
+     - 2012.3
+   * - :ref:`sphx_glr_generated_auto_examples_eeg2025_tutorial_challenge_2.py` (``../../examples/eeg2025/tutorial_challenge_2.py``)
+     - 00:30.713
+     - 2012.3
+   * - :ref:`sphx_glr_generated_auto_examples_eeg2025_tutorial_challenge_1.py` (``../../examples/eeg2025/tutorial_challenge_1.py``)
+     - 00:30.710
+     - 2011.8
    * - :ref:`sphx_glr_generated_auto_examples_core_tutorial_eoec.py` (``../../examples/core/tutorial_eoec.py``)
-     - 00:00.000
-     - 0.0
+     - 00:30.509
+     - 2008.5
    * - :ref:`sphx_glr_generated_auto_examples_core_tutorial_feature_extractor_open_close_eye.py` (``../../examples/core/tutorial_feature_extractor_open_close_eye.py``)
+     - 00:30.224
+     - 2011.1
+   * - :ref:`sphx_glr_generated_auto_examples_core_p300_transfer_learning.py` (``../../examples/core/p300_transfer_learning.py``)
      - 00:00.000
      - 0.0
-   

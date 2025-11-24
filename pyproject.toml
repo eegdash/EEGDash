@@ -64,7 +64,11 @@ tests = [
 ]
 dev = [
   "pre-commit",
-  "ipykernel"
+  "ipykernel",
+  "lightning>=2.0",
+  "torchmetrics>=0.7",
+  "scikit-learn",
+  "tensorboard"
 ]
 
 docs = [

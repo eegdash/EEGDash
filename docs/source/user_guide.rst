@@ -347,7 +347,7 @@ Here are some common use cases to help you get started quickly:
     # Load multiple datasets
     datasets = [
         EEGDashDataset(cache_dir="./eeg_data", dataset="ds002718"),
-        EEGDashDataset(cache_dir="./eeg_data", dataset="ds002718"),
+        EEGDashDataset(cache_dir="./eeg_data", dataset="ds003775"),
     ]
 
     # Combine for meta-analysis

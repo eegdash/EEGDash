@@ -66,8 +66,19 @@ def compare_records(
                 continue
             if key == "participant_tsv":
                 if isinstance(gt_val, dict) and isinstance(gen_val, dict):
+                    # Map GT keys to normalized keys (gender->sex, handedness->hand)
+                    gt_normalized = {}
+                    for k, v in gt_val.items():
+                        k_lower = k.lower().strip()
+                        if k_lower in ("gender", "sex"):
+                            gt_normalized["sex"] = v
+                        elif k_lower in ("handedness", "hand"):
+                            gt_normalized["hand"] = v
+                        elif k_lower == "age":
+                            gt_normalized["age"] = v
+
                     for pkey in ("age", "sex", "hand"):
-                        gtv = gt_val.get(pkey)
+                        gtv = gt_normalized.get(pkey)
                         gnv = gen_val.get(pkey)
                         try:
                             gnvn = (

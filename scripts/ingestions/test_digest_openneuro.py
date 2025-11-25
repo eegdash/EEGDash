@@ -23,53 +23,67 @@ except Exception:
     _HAVE_EEGDASH = False
     load_eeg_attrs_from_bids_file = None
     EEGBIDSDataset = None
-    import csv
-    import json as _json
 
 
 def process_dataset(dataset_id: str, dataset_dir: Path) -> List[Dict[str, Any]]:
+    # Try eegdash library first, fall back to manual parsing if it fails
     if _HAVE_EEGDASH and EEGBIDSDataset is not None:
-        bids_dataset = EEGBIDSDataset(
-            data_dir=str(dataset_dir), dataset=dataset_id, allow_symlinks=True
-        )
-        files = bids_dataset.get_files()
-        records = []
-        for bids_file in files:
-            try:
-                record = load_eeg_attrs_from_bids_file(bids_dataset, bids_file)
-                # Try to compute deterministic sidecars for the record using our helper
+        try:
+            bids_dataset = EEGBIDSDataset(
+                data_dir=str(dataset_dir), dataset=dataset_id, allow_symlinks=True
+            )
+            files = bids_dataset.get_files()
+            records = []
+            for bids_file in files:
                 try:
-                    # bids_file might be an absolute or relative path; compute an on-disk Path
-                    ppath = Path(bids_file)
-                    if not ppath.is_absolute():
-                        # If the string already contains the dataset_dir, just use it as-is
-                        if str(dataset_dir) in str(ppath):
-                            ppath = Path(str(ppath))
-                        else:
-                            ppath = dataset_dir / ppath
-                    if ppath.exists() or ppath.is_symlink():
-                        sd = get_sidecar_dependencies(ppath, dataset_dir, dataset_id)
-                        # Only replace if sd has something deterministic
-                        if sd:
-                            # ensure dataset-level canonical files are included
-                            ds_files = ["dataset_description.json", "participants.tsv"]
-                            ds_deps = [
-                                f"{dataset_id}/{f}"
-                                for f in ds_files
-                                if (dataset_dir / f).exists()
-                                or (dataset_dir / f).is_symlink()
-                            ]
-                            record["bidsdependencies"] = ds_deps + sd
-                except Exception:
-                    pass
-                try:
-                    record = normalize_record(record, dataset_dir)
-                except Exception:
-                    pass
-                records.append(record)
-            except Exception as exc:
-                print(f"Error processing {bids_file}: {exc}")
-        return records
+                    record = load_eeg_attrs_from_bids_file(bids_dataset, bids_file)
+                    # Try to compute deterministic sidecars for the record using our helper
+                    try:
+                        # bids_file might be an absolute or relative path; compute an on-disk Path
+                        ppath = Path(bids_file)
+                        if not ppath.is_absolute():
+                            # If the string already contains the dataset_dir, just use it as-is
+                            if str(dataset_dir) in str(ppath):
+                                ppath = Path(str(ppath))
+                            else:
+                                ppath = dataset_dir / ppath
+                        if ppath.exists() or ppath.is_symlink():
+                            sd = get_sidecar_dependencies(
+                                ppath, dataset_dir, dataset_id
+                            )
+                            # Only replace if sd has something deterministic
+                            if sd:
+                                # ensure dataset-level canonical files are included
+                                ds_files = [
+                                    "dataset_description.json",
+                                    "participants.tsv",
+                                ]
+                                ds_deps = [
+                                    f"{dataset_id}/{f}"
+                                    for f in ds_files
+                                    if (dataset_dir / f).exists()
+                                    or (dataset_dir / f).is_symlink()
+                                ]
+                                record["bidsdependencies"] = ds_deps + sd
+                    except Exception:
+                        pass
+                    try:
+                        record = normalize_record(record, dataset_dir)
+                    except Exception:
+                        pass
+                    records.append(record)
+                except Exception as exc:
+                    print(f"Error processing {bids_file}: {exc}")
+            if records:
+                return records
+            # If no records from eegdash, fall through to manual parsing
+        except Exception as exc:
+            print(
+                f"EEGBIDSDataset failed for {dataset_id}, falling back to manual parsing: {exc}"
+            )
+
+    # Fallback: manual parsing
+    return _process_dataset_manual(dataset_id, dataset_dir)
 
 
 def get_sidecar_dependencies(p: Path, dataset_dir: Path, dataset_id: str) -> List[str]:
@@ -210,16 +224,23 @@ def get_sidecar_dependencies(p: Path, dataset_dir: Path, dataset_id: str) -> Lis
             except Exception:
                 continue
 
-    # Include task-level event json at root
+    # Include task-level files at dataset root (events.json, eeg.json, channels.tsv, events.tsv)
     if task:
-        task_events_file = dataset_dir / f"task-{task}_events.json"
-        if task_events_file.exists() or task_events_file.is_symlink():
-            try:
-                deps.append(
-                    f"{dataset_id}/{task_events_file.relative_to(dataset_dir).as_posix()}"
-                )
-            except Exception:
-                deps.append(f"{dataset_id}/{task_events_file.name}")
+        task_level_patterns = [
+            f"task-{task}_events.json",
+            f"task-{task}_eeg.json",
+            f"task-{task}_channels.tsv",
+            f"task-{task}_events.tsv",
+        ]
+        for pattern in task_level_patterns:
+            task_file = dataset_dir / pattern
+            if task_file.exists() or task_file.is_symlink():
+                try:
+                    deps.append(
+                        f"{dataset_id}/{task_file.relative_to(dataset_dir).as_posix()}"
+                    )
+                except Exception:
+                    deps.append(f"{dataset_id}/{task_file.name}")
 
     # merge deps and same_sub_task_deps
     deps.extend(same_sub_task_deps)
@@ -227,9 +248,14 @@ def get_sidecar_dependencies(p: Path, dataset_dir: Path, dataset_id: str) -> Lis
     unique = sorted({str(x) for x in deps})
     return unique
 
-    # Fallback parsing: read sidecar JSONs and participants.tsv directly
+
+def _process_dataset_manual(dataset_id: str, dataset_dir: Path) -> List[Dict[str, Any]]:
+    """Fallback manual parsing when eegdash library fails or is unavailable."""
+    import csv
+    import json as _json
+
     records = []
-    # Find audio/eeg files inside dataset_dir recursively
+    # Find EEG files inside dataset_dir recursively
     eeg_extensions = [".bdf", ".edf", ".vhdr", ".set", ".fif", ".cnt", ".eeg"]
     # collect files grouped by stem (canonical BIDS basename without ext)
     file_groups = {}
@@ -248,15 +274,18 @@ def get_sidecar_dependencies(p: Path, dataset_dir: Path, dataset_id: str) -> Lis
     chosen_files = []
     for stem, files in file_groups.items():
         # pick best candidate per ext priority
-        _ = None
+        chosen = None
         for ext in ext_priority:
             for f in files:
                 if f.suffix.lower() == ext:
-                    _ = f
+                    chosen = f
                     break
+            if chosen:
+                break
+        if chosen:
+            chosen_files.append(chosen)
 
     for p in chosen_files:
-        _ = str(p)
         file_name = p.name
         # find sidecar JSON
         json_path = p.with_suffix(p.suffix + ".json") if p.suffix else None
@@ -275,7 +304,10 @@ def get_sidecar_dependencies(p: Path, dataset_dir: Path, dataset_id: str) -> Lis
 
         # Build record
         # openneuro path: dataset_id + relative path from dataset_dir
-        rel = p.relative_to(dataset_dir)
+        try:
+            rel = p.relative_to(dataset_dir)
+        except ValueError:
+            rel = Path(p.name)
         openneuro_path = f"{dataset_id}/{rel.as_posix()}"
 
         # parse BIDS entities from path segments
@@ -717,11 +749,19 @@ def compare_records(
                         except Exception:
                             gnvn = gnv
                         try:
-                            gtvn = (
-                                int(gtv)
-                                if gtv is not None and str(gtv).strip() != ""
-                                else gtv
-                            )
+                            # Handle MongoDB {"$numberDouble": "NaN"} format
+                            if isinstance(gtv, dict) and "$numberDouble" in gtv:
+                                v = gtv["$numberDouble"]
+                                try:
+                                    gtvn = int(float(v))
+                                except Exception:
+                                    gtvn = None
+                            else:
+                                gtvn = (
+                                    int(gtv)
+                                    if gtv is not None and str(gtv).strip() != ""
+                                    else None
+                                )
                         except Exception:
                             gtvn = gtv
                         if gtvn != gnvn:

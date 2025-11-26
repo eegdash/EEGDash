@@ -1,5 +1,5 @@
-Unnamed: 0,dataset,n_records,n_subjects,n_tasks,nchans_set,sampling_freqs,duration_hours_total,size,size_bytes,s3_item_count,DatasetID,Type Subject,10-20 system,modality of exp,type of exp,record_modality
-0,ds002718,18,18,1,74,250,14.844,4.31 GB,4624315408,0,,Healthy,other,Visual,Perception,"EEG, MRI"
+,dataset,n_records,n_subjects,n_tasks,nchans_set,sampling_freqs,duration_hours_total,size,size_bytes,s3_item_count,DatasetID,Type Subject,10-20 system,modality of exp,type of exp,record_modality
+0,ds002718,18,18,1,74,250,14.844,4.31 GB,4624315408,0,ds002718,Healthy,other,Visual,Perception,"EEG, MRI"
 1,ds005505,1342,136,10,129,500,125.366,103.11 GB,110708824369,0,,,,,,EEG
 2,ds004745,6,6,1,,1000,0.0,242.08 MB,253839725,0,,,,,,EEG
 3,ds005514,2885,295,10,129,500,213.008,185.03 GB,198677728665,0,,,,,,EEG
@@ -133,7 +133,7 @@ Unnamed: 0,dataset,n_records,n_subjects,n_tasks,nchans_set,sampling_freqs,durati
 132,ds004917,24,24,1,,,0.0,36.47 GB,39162637090,0,ds004917,Healthy,other,Multisensory,Decision-making,"MRI, EEG"
 133,ds004357,16,16,1,63,1000,0.0,69.56 GB,74685825960,0,ds004357,Healthy,10-20,Visual,Perception,EEG
 134,ds005397,26,26,1,64,500,27.923,12.10 GB,12993735747,0,,,,,,EEG
-135,ds003846,60,19,1,64,500,24.574,11.36 GB,12193814091,0,ds003846,Healthy,other,Multisensory,Decision-making,
+135,ds003846,60,19,1,64,500,24.574,11.36 GB,12193814091,0,ds003846,Healthy,other,Multisensory,Decision-making,EEG
 136,ds004024,497,13,3,64,20000,55.503,1021.22 GB,1096522006089,0,ds004024,Healthy,10-20,Visual,Clinical/Intervention,"EEG, MRI"
 137,ds005815,137,26,4,30,"1000,500",38.618,9.91 GB,10642000219,0,,,,,,EEG
 138,ds005429,61,15,3,64,"2500,5000",14.474,16.47 GB,17685373747,0,,,,,,EEG
@@ -177,7 +177,7 @@ Unnamed: 0,dataset,n_records,n_subjects,n_tasks,nchans_set,sampling_freqs,durati
 176,ds003944,82,82,1,61,"1000,3000.00030000003",6.999,6.15 GB,6606397067,0,ds003944,Schizophrenia/Psychosis,10-20,Resting State,Clinical/Intervention,EEG
 177,ds004279,60,56,1,64,1000,53.729,25.22 GB,27082275780,0,ds004279,Healthy,10-20,Auditory,Perception,EEG
 178,ds005876,29,29,1,32,1000,16.017,7.61 GB,8170007441,0,,,,,,"EEG, BEH"
-179,ds003816,1077,48,8,127,1000,159.313,53.97 GB,57953346429,0,ds003816,Healthy,10-20,Other,Affect,
+179,ds003816,1077,48,8,127,1000,159.313,53.97 GB,57953346429,0,ds003816,Healthy,10-20,Other,Affect,EEG
 180,ds005385,3264,608,2,64,1000,169.62,74.07 GB,79529430923,0,,,,,,EEG
 181,ds004572,516,52,10,58,1000,52.624,43.56 GB,46777273840,0,ds004572,,10-20,Auditory,Perception,EEG
 182,ds005095,48,48,1,63,1000,16.901,14.28 GB,15336165645,0,ds005095,Healthy,,Visual,Memory,EEG
@@ -217,7 +217,7 @@ Unnamed: 0,dataset,n_records,n_subjects,n_tasks,nchans_set,sampling_freqs,durati
 216,ds005555,256,128,1,"2,8,9,11,12,13",256,2002.592,33.45 GB,35921410419,0,,,,,,EEG
 217,ds004477,9,9,1,79,2048,13.557,22.34 GB,23990303639,0,ds004477,Healthy,10-20,Multisensory,Decision-making,EEG
 218,ds005688,89,20,5,4,"10000,20000",2.502,8.42 GB,9036021093,0,,,,,,EEG
-219,ds003766,124,31,4,129,1000,39.973,152.77 GB,164033759919,0,ds003766,Healthy,other,Visual,Decision-making,
+219,ds003766,124,31,4,129,1000,39.973,152.77 GB,164033759919,0,ds003766,Healthy,other,Visual,Decision-making,EEG
 220,ds005540,103,59,1,64,"1200,600",0.0,70.40 GB,75594345013,0,,,,,,"EEG, BEH"
 221,ds004152,21,21,1,31,1000,0.0,4.77 GB,5118976537,0,ds004152,Healthy,10-20,Multisensory,Learning,EEG
 222,ds003626,30,10,1,,,0.0,24.99 GB,26828585815,0,ds003626,Healthy,10-20,Visual,Motor,EEG

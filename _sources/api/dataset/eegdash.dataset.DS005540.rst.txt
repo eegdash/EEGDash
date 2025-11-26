@@ -18,7 +18,6 @@ Dataset Information
 -------------------
 
 - **Dataset ID:** ``DS005540``
-- **Summary:** Modality: Visual | Type: Affect | Subjects: Other
 - **Number of Subjects:** 59
 - **Number of Recordings:** 103
 - **Number of Tasks:** 1

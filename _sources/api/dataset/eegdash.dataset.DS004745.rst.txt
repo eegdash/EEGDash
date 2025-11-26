@@ -18,7 +18,6 @@ Dataset Information
 -------------------
 
 - **Dataset ID:** ``DS004745``
-- **Summary:** Modality: Visual | Type: Perception | Subjects: Healthy
 - **Number of Subjects:** 6
 - **Number of Recordings:** 6
 - **Number of Tasks:** 1

@@ -33,28 +33,30 @@ Base Dataset API
 
    * - Experimental Type
      - Datasets
-   * - Perception
-     - 42
+   * - Unspecified
+     - 65
    * - Attention
-     - 40
+     - 34
    * - Decision-making
-     - 32
+     - 30
+   * - Perception
+     - 29
    * - Affect
-     - 23
-   * - Memory
-     - 23
+     - 21
    * - Motor
-     - 20
-   * - Clinical/Intervention
      - 19
-   * - Resting state
-     - 18
-   * - Learning
+   * - Clinical/Intervention
+     - 16
+   * - Memory
      - 14
+   * - Learning
+     - 12
+   * - Resting state
+     - 4
    * - Other
-     - 13
+     - 3
    * - Sleep
-     - 6
+     - 3
    * - other
      - 2
    * - Attention/Memory

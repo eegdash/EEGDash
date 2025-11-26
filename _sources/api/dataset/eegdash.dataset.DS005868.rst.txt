@@ -18,7 +18,6 @@ Dataset Information
 -------------------
 
 - **Dataset ID:** ``DS005868``
-- **Summary:** Type: Attention | Subjects: Other
 - **Number of Subjects:** 48
 - **Number of Recordings:** 48
 - **Number of Tasks:** 1

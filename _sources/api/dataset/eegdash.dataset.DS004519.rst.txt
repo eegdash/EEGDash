@@ -18,7 +18,7 @@ Dataset Information
 -------------------
 
 - **Dataset ID:** ``DS004519``
-- **Summary:** Modality: Visual | Type: Attention | Subjects: Other
+- **Summary:** Modality: Visual | Type: Attention
 - **Number of Subjects:** 40
 - **Number of Recordings:** 40
 - **Number of Tasks:** 1

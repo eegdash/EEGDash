@@ -18,7 +18,7 @@ Dataset Information
 -------------------
 
 - **Dataset ID:** ``DS002833``
-- **Summary:** Modality: Auditory | Type: Decision-making | Subjects: Healthy
+- **Summary:** Modality: Auditory | Type: Decision-making
 - **Number of Subjects:** 20
 - **Number of Recordings:** 80
 - **Number of Tasks:** 1

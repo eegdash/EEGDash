@@ -18,7 +18,7 @@ Dataset Information
 -------------------
 
 - **Dataset ID:** ``DS003670``
-- **Summary:** Modality: Visual | Type: Attention | Subjects: Healthy
+- **Summary:** Modality: Visual | Type: Attention
 - **Number of Subjects:** 25
 - **Number of Recordings:** 62
 - **Number of Tasks:** 1

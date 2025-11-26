@@ -18,7 +18,6 @@ Dataset Information
 -------------------
 
 - **Dataset ID:** ``DS005420``
-- **Summary:** Modality: Resting State | Type: Resting state | Subjects: Healthy
 - **Number of Subjects:** 37
 - **Number of Recordings:** 72
 - **Number of Tasks:** 2

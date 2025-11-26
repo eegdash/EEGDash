@@ -18,7 +18,7 @@ Dataset Information
 -------------------
 
 - **Dataset ID:** ``DS004033``
-- **Summary:** Modality: Motor | Type: Motor | Subjects: Healthy
+- **Summary:** Modality: Motor | Type: Motor
 - **Number of Subjects:** 18
 - **Number of Recordings:** 36
 - **Number of Tasks:** 2

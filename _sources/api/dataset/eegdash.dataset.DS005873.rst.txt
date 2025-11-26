@@ -18,7 +18,6 @@ Dataset Information
 -------------------
 
 - **Dataset ID:** ``DS005873``
-- **Summary:** Type: Other | Subjects: Epilepsy
 - **Number of Subjects:** 125
 - **Number of Recordings:** 2850
 - **Number of Tasks:** 1

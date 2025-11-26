@@ -18,7 +18,6 @@ Dataset Information
 -------------------
 
 - **Dataset ID:** ``DS005688``
-- **Summary:** Modality: Multisensory | Type: Clinical/Intervention | Subjects: Surgery
 - **Number of Subjects:** 20
 - **Number of Recordings:** 89
 - **Number of Tasks:** 5

@@ -18,7 +18,6 @@ Dataset Information
 -------------------
 
 - **Dataset ID:** ``DS005363``
-- **Summary:** Modality: Visual | Type: Memory | Subjects: Other
 - **Number of Subjects:** 43
 - **Number of Recordings:** 43
 - **Number of Tasks:** 1

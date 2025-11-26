@@ -18,7 +18,6 @@ Dataset Information
 -------------------
 
 - **Dataset ID:** ``DS004851``
-- **Summary:** Type: Other | Subjects: Healthy
 - **Number of Subjects:** 1
 - **Number of Recordings:** 1
 - **Number of Tasks:** 1

@@ -18,7 +18,6 @@ Dataset Information
 -------------------
 
 - **Dataset ID:** ``DS005383``
-- **Summary:** Type: Perception | Subjects: Healthy
 - **Number of Subjects:** 30
 - **Number of Recordings:** 240
 - **Number of Tasks:** 1

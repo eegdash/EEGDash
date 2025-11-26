@@ -18,7 +18,7 @@ Dataset Information
 -------------------
 
 - **Dataset ID:** ``DS004844``
-- **Summary:** Modality: Multisensory | Type: Decision-making | Subjects: Other
+- **Summary:** Modality: Multisensory | Type: Decision-making
 - **Number of Subjects:** 17
 - **Number of Recordings:** 68
 - **Number of Tasks:** 1

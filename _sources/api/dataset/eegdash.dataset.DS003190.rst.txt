@@ -18,7 +18,7 @@ Dataset Information
 -------------------
 
 - **Dataset ID:** ``DS003190``
-- **Summary:** Modality: Visual | Type: Perception | Subjects: Other
+- **Summary:** Modality: Visual | Type: Perception
 - **Number of Subjects:** 19
 - **Number of Recordings:** 280
 - **Number of Tasks:** 1

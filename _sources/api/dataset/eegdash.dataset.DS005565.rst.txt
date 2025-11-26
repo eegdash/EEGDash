@@ -18,7 +18,6 @@ Dataset Information
 -------------------
 
 - **Dataset ID:** ``DS005565``
-- **Summary:** Type: Perception | Subjects: Other
 - **Number of Subjects:** 24
 - **Number of Recordings:** 24
 - **Number of Tasks:** 1

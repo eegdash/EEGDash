@@ -18,7 +18,6 @@ Dataset Information
 -------------------
 
 - **Dataset ID:** ``DS005406``
-- **Summary:** Type: Other | Subjects: Other
 - **Number of Subjects:** 29
 - **Number of Recordings:** 29
 - **Number of Tasks:** 1

@@ -26,4 +26,4 @@ __all__ = [
     "datasets_dict",
 ] + list(datasets_dict.keys())
 
-del _dataset_mod, _name, _obj, _dyn_names
+del _dataset_mod, _name, _obj

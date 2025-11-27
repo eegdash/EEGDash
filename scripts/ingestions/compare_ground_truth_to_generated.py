@@ -33,7 +33,9 @@ def compare_records(
 
     - Skip _id
     - Ignore ntimes being missing
-    - Compare bidsdependencies as sets
+    - Compare bidsdependencies as sets (ignoring primary data file)
+    - Compare session/run as string/int equivalent
+    - Compare modality case-insensitively
     - Compare participant_tsv by age/sex/hand (normalize age)
     """
     gen_index = {r.get("data_name"): r for r in gen_records}
@@ -53,8 +55,19 @@ def compare_records(
             if key == "_id":
                 continue
             gen_val = gen.get(key)
+
             if key == "bidsdependencies":
-                if set(gt_val or []) != set(gen_val or []):
+                # Compare as sets, ignoring primary data file difference
+                gt_set = set(gt_val or [])
+                gen_set = set(gen_val or [])
+
+                # The library doesn't include the primary data file in bidsdependencies,
+                # but some GT records do. Tolerate this difference.
+                bidspath = gt.get("bidspath", "")
+                gt_set.discard(bidspath)
+                gen_set.discard(bidspath)
+
+                if gt_set != gen_set:
                     mismatches.append(
                         {
                             "data_name": name,
@@ -64,6 +77,63 @@ def compare_records(
                         }
                     )
                 continue
+
+            if key == "session":
+                # Treat empty string and None as equivalent
+                if gt_val in (None, "") and gen_val in (None, ""):
+                    continue
+                if str(gt_val) == str(gen_val):
+                    continue
+                mismatches.append(
+                    {
+                        "data_name": name,
+                        "field": key,
+                        "ground_truth": gt_val,
+                        "generated": gen_val,
+                    }
+                )
+                continue
+
+            if key == "run":
+                # Compare as integers (handle string vs int)
+                try:
+                    gt_int = int(gt_val) if gt_val is not None else None
+                    gen_int = int(gen_val) if gen_val is not None else None
+                    if gt_int == gen_int:
+                        continue
+                except (ValueError, TypeError):
+                    if str(gt_val) == str(gen_val):
+                        continue
+                mismatches.append(
+                    {
+                        "data_name": name,
+                        "field": key,
+                        "ground_truth": gt_val,
+                        "generated": gen_val,
+                    }
+                )
+                continue
+
+            if key == "modality":
+                # Compare case-insensitively
+                if (
+                    isinstance(gt_val, str)
+                    and isinstance(gen_val, str)
+                    and gt_val.lower() == gen_val.lower()
+                ):
+                    continue
+                if gt_val == gen_val:
+                    continue
+                mismatches.append(
+                    {
+                        "data_name": name,
+                        "field": key,
+                        "ground_truth": gt_val,
+                        "generated": gen_val,
+                    }
+                )
+                continue
+
             if key == "participant_tsv":
                 if isinstance(gt_val, dict) and isinstance(gen_val, dict):
                     # Map GT keys to normalized keys (gender->sex, handedness->hand)

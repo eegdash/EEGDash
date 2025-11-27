@@ -364,6 +364,45 @@ class EEGBIDSDataset:
         """
         return self.files
 
+    def get_relative_bidspath(self, filepath: str | Path) -> str:
+        """Get the dataset-relative path for a file.
+
+        Parameters
+        ----------
+        filepath : str or Path
+            The absolute or relative path to a file in the BIDS dataset.
+
+        Returns
+        -------
+        str
+            The path relative to the dataset root, prefixed with the dataset name.
+            e.g., "ds004477/sub-001/eeg/sub-001_task-PES_eeg.json"
+
+        """
+        return self._get_relative_bidspath(filepath)
+
+    def _get_relative_bidspath(self, filepath: str | Path) -> str:
+        """Internal method to get the dataset-relative path for a file.
+
+        Parameters
+        ----------
+        filepath : str or Path
+            The absolute or relative path to a file in the BIDS dataset.
+
+        Returns
+        -------
+        str
+            The path relative to the dataset root, prefixed with the dataset name.
+
+        """
+        filepath = Path(filepath)
+        try:
+            rel_path = filepath.relative_to(self.bidsdir)
+        except ValueError:
+            # If filepath is not under bidsdir, just use the filename
+            rel_path = Path(filepath.name)
+        return f"{self.dataset}/{rel_path.as_posix()}"
+
     def get_bids_file_attribute(self, attribute: str, data_filepath: str) -> Any:
         """Retrieve a specific attribute from BIDS metadata.
 

@@ -6,8 +6,8 @@
 
 This module provides the main EEGDash class which serves as the primary entry point for
 interacting with the EEGDash ecosystem. It offers methods to query, insert, and update
-metadata records stored in the EEGDash MongoDB database, and includes utilities to load
-EEG data from S3 for matched records.
+metadata records stored in the EEGDash database via REST API or direct MongoDB connection,
+and includes utilities to load EEG data from S3 for matched records.
 """
 
 import json
@@ -30,8 +30,8 @@ from .const import (
 from .const import config as data_config
 from .dataset.bids_dataset import EEGBIDSDataset
 from .dataset.dataset import EEGDashDataset
+from .http_api_client import HTTPAPIConnectionManager
 from .logging import logger
-from .mongodb import MongoConnectionManager
 from .utils import _init_mongo_client
 
 
@@ -39,22 +39,25 @@ class EEGDash:
     """High-level interface to the EEGDash metadata database.
 
     Provides methods to query, insert, and update metadata records stored in the
-    EEGDash MongoDB database (public or private). Also includes utilities to load
-    EEG data from S3 for matched records.
+    EEGDash database via REST API gateway.
 
-    For working with collections of
-    recordings as PyTorch datasets, prefer :class:`EEGDashDataset`.
+    For working with collections of recordings as PyTorch datasets, prefer
+    :class:`EEGDashDataset`.
     """
 
-    def __init__(self, *, is_public: bool = True, is_staging: bool = False) -> None:
+    def __init__(
+        self,
+        *,
+        is_public: bool = True,
+        is_staging: bool = False,
+    ) -> None:
         """Create a new EEGDash client.
 
         Parameters
         ----------
         is_public : bool, default True
-            Connect to the public MongoDB database. If ``False``, connect to a
-            private database instance using the ``DB_CONNECTION_STRING`` environment
-            variable (or value from a ``.env`` file).
+            Connect to the public database. If ``False``, connect to a
+            private database instance using environment variables.
         is_staging : bool, default False
             If ``True``, use the staging database (``eegdashstaging``); otherwise
             use the production database (``eegdash``).
@@ -62,39 +65,53 @@ class EEGDash:
         Examples
         --------
         >>> eegdash = EEGDash()
+        >>> records = eegdash.find({"dataset": "ds002718"})
 
         """
         self.config = data_config
         self.is_public = is_public
         self.is_staging = is_staging
+        self._init_api_client()
 
+    def _init_api_client(self) -> None:
+        """Initialize HTTP API client connection."""
         if self.is_public:
-            DB_CONNECTION_STRING = mne.utils.get_config("EEGDASH_DB_URI")
-            if not DB_CONNECTION_STRING:
+            API_URL = mne.utils.get_config("EEGDASH_API_URL")
+            API_TOKEN = mne.utils.get_config("EEGDASH_API_TOKEN")
+            
+            if not API_URL or not API_TOKEN:
                 try:
                     _init_mongo_client()
-                    DB_CONNECTION_STRING = mne.utils.get_config("EEGDASH_DB_URI")
+                    API_URL = mne.utils.get_config("EEGDASH_API_URL")
+                    API_TOKEN = mne.utils.get_config("EEGDASH_API_TOKEN")
                 except Exception:
-                    DB_CONNECTION_STRING = None
+                    pass
+            
+            if not API_URL or not API_TOKEN:
+                raise RuntimeError(
+                    "No API configuration found. Set MNE config 'EEGDASH_API_URL' "
+                    "and 'EEGDASH_API_TOKEN' or run _init_mongo_client()."
+                )
         else:
             dotenv = _soft_import("dotenv", "eegdash[full] is necessary.")
             dotenv.load_dotenv()
-            DB_CONNECTION_STRING = os.getenv("DB_CONNECTION_STRING")
+            API_URL = os.getenv("EEGDASH_API_URL", "http://137.110.244.65:3000")
+            API_TOKEN = os.getenv("EEGDASH_API_TOKEN")
+            
+            if not API_TOKEN:
+                raise RuntimeError(
+                    "No API token found. Set environment variable 'EEGDASH_API_TOKEN'."
+                )
 
-        # Use singleton to get MongoDB client, database, and collection
-        if not DB_CONNECTION_STRING:
-            raise RuntimeError(
-                "No MongoDB connection string configured. Set MNE config 'EEGDASH_DB_URI' "
-                "or environment variable 'DB_CONNECTION_STRING'."
-            )
-        self.__client, self.__db, self.__collection = MongoConnectionManager.get_client(
-            DB_CONNECTION_STRING, is_staging
+        # Use singleton to get HTTP API client, database, and collection
+        self.__client, self.__db, self.__collection = HTTPAPIConnectionManager.get_client(
+            API_URL, API_TOKEN, self.is_staging
         )
 
     def find(
         self, query: dict[str, Any] = None, /, **kwargs
     ) -> list[Mapping[str, Any]]:
-        """Find records in the MongoDB collection.
+        """Find records in the collection.
 
         Examples
         --------
@@ -112,7 +129,8 @@ class EEGDash:
         **kwargs
             User-friendly field filters that are converted to a MongoDB query.
             Values can be scalars (e.g., ``"sub-01"``) or sequences (translated
-            to ``$in`` queries).
+            to ``$in`` queries). Special parameters: ``limit`` (int) and ``skip`` (int)
+            for pagination.
 
         Returns
         -------
@@ -120,6 +138,10 @@ class EEGDash:
             DB records that match the query.
 
         """
+        # Extract pagination parameters before building query
+        limit = kwargs.pop('limit', None)
+        skip = kwargs.pop('skip', None)
+        
         final_query: dict[str, Any] | None = None
 
         # Accept explicit empty dict {} to mean "match all"
@@ -152,7 +174,14 @@ class EEGDash:
                 "To find all documents, use find({})."
             )
 
-        results = self.__collection.find(final_query)
+        # Pass limit and skip to the collection's find method
+        find_kwargs = {}
+        if limit is not None:
+            find_kwargs['limit'] = limit
+        if skip is not None:
+            find_kwargs['skip'] = skip
+            
+        results = self.__collection.find(final_query, **find_kwargs)
 
         return list(results)
 
@@ -199,6 +228,58 @@ class EEGDash:
 
         doc = self.__collection.find_one(query, projection={"_id": 1})
         return doc is not None
+
+    def count(self, query: dict[str, Any] = None, /, **kwargs) -> int:
+        """Count documents matching the query.
+
+        Parameters
+        ----------
+        query : dict, optional
+            Complete query dictionary. This is a positional-only argument.
+        **kwargs
+            User-friendly field filters (same as find()).
+
+        Returns
+        -------
+        int
+            Number of matching documents.
+
+        Examples
+        --------
+        >>> eeg = EEGDash()
+        >>> count = eeg.count({})  # count all
+        >>> count = eeg.count(dataset="ds002718")  # count by dataset
+
+        """
+        # Extract limit/skip if present (not used for count but kept for consistency)
+        kwargs.pop('limit', None)
+        kwargs.pop('skip', None)
+        
+        final_query: dict[str, Any] | None = None
+
+        # Accept explicit empty dict {} to mean "match all"
+        raw_query = query if isinstance(query, dict) else None
+        kwargs_query = build_query_from_kwargs(**kwargs) if kwargs else None
+
+        # Determine presence, treating {} as a valid raw query
+        has_raw = isinstance(raw_query, dict)
+        has_kwargs = kwargs_query is not None
+
+        if has_raw and has_kwargs:
+            self._raise_if_conflicting_constraints(raw_query, kwargs_query)
+            if raw_query:
+                final_query = {"$and": [raw_query, kwargs_query]}
+            else:
+                final_query = kwargs_query
+        elif has_raw:
+            final_query = raw_query
+        elif has_kwargs:
+            final_query = kwargs_query
+        else:
+            # For count, empty query is acceptable (count all)
+            final_query = {}
+
+        return self.__collection.count_documents(final_query)
 
     def _validate_input(self, record: dict[str, Any]) -> dict[str, Any]:
         """Validate the input record against the expected schema.

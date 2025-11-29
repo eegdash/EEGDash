@@ -39,6 +39,7 @@ dependencies = [
   "mne_bids>=0.17.0",
   "numba",
   "pymongo",
+  "requests>=2.25.0",
   "s3fs",
   "tqdm",
   "pymatreader",

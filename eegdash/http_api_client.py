@@ -11,7 +11,7 @@ MongoConnectionManager for backward compatibility.
 
 import json
 import threading
-from typing import Any, Mapping, Optional
+from typing import Any, Optional
 
 import requests
 from requests.adapters import HTTPAdapter
@@ -138,9 +138,7 @@ class HTTPAPICollection:
         results = self.find(query, limit=1)
         return results[0] if results else None
 
-    def count_documents(
-        self, query: dict[str, Any] = None, **kwargs
-    ) -> int:
+    def count_documents(self, query: dict[str, Any] = None, **kwargs) -> int:
         """Count documents matching the query.
 
         Parameters
@@ -301,9 +299,7 @@ class HTTPAPIDatabase:
 
     """
 
-    def __init__(
-        self, api_url: str, database: str, auth_token: str = None
-    ) -> None:
+    def __init__(self, api_url: str, database: str, auth_token: str = None) -> None:
         self.api_url = api_url
         self.database = database
         self.auth_token = auth_token
@@ -348,9 +344,7 @@ class HTTPAPIClient:
 
     """
 
-    def __init__(
-        self, api_url: str, auth_token: str = None
-    ) -> None:
+    def __init__(self, api_url: str, auth_token: str = None) -> None:
         self.api_url = api_url.rstrip("/")
         self.auth_token = auth_token
         self._databases = {}
@@ -406,7 +400,9 @@ class HTTPAPIConnectionManager:
 
     """
 
-    _instances: dict[tuple[str, bool], tuple[HTTPAPIClient, HTTPAPIDatabase, HTTPAPICollection]] = {}
+    _instances: dict[
+        tuple[str, bool], tuple[HTTPAPIClient, HTTPAPIDatabase, HTTPAPICollection]
+    ] = {}
     _lock = threading.Lock()
 
     @classmethod

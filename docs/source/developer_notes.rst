@@ -16,10 +16,10 @@ Library Overview
 EEG Dash ships a Python package named :mod:`eegdash` that provides several
 layers of abstraction:
 
-* ``EEGDash`` (:mod:`eegdash.api`) is the primary client for querying MongoDB
-  metadata, coordinating S3 downloads, and performing bulk updates. It handles
-  connection management via :class:`~eegdash.mongodb.MongoConnectionManager`
-  and reads default settings from ``mne`` config values or ``.env`` files.
+* ``EEGDash`` (:mod:`eegdash.api`) is the primary client for querying EEGDash
+  metadata via REST API, coordinating S3 downloads, and performing bulk updates.
+  It handles connection management via :class:`~eegdash.http_api_client.HTTPAPIConnectionManager`
+  and communicates with the EEGDash API gateway at ``https://data.eegdash.org``.
 * ``EEGDashDataset`` (:mod:`eegdash.data_utils`) wraps query results as a
   :class:`braindecode.datasets.BaseConcatDataset`, making it straightforward to
   integrate curated EEG collections into deep-learning pipelines.
@@ -31,10 +31,10 @@ layers of abstraction:
   feature extraction, summary reporting, and visualizations that appear in the
   documentation gallery.
 
-Configuration defaults live in :mod:`eegdash.const`. The MongoDB bootstrap logic
-is centralised in :func:`eegdash.utils._init_mongo_client`, which stores the
-resolved connection string in the ``mne`` config directory. When troubleshooting
-database access, confirm that the ``EEGDASH_DB_URI`` value is populated.
+Configuration defaults live in :mod:`eegdash.const`. The API URL can be
+overridden via the ``EEGDASH_API_URL`` environment variable. For admin write
+operations, set the ``EEGDASH_API_TOKEN`` environment variable with a valid
+authentication token.
 
 Local Development Workflow
 --------------------------

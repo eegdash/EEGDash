@@ -82,13 +82,13 @@ class EEGDash:
         """Initialize HTTP API client connection."""
         # Determine API URL: parameter > environment variable > default
         url = self._api_url or os.getenv("EEGDASH_API_URL", EEGDASH_API_URL)
-        
+
         # Auth token is optional for public reads, only needed for admin writes
         token = self._auth_token or os.getenv("EEGDASH_API_TOKEN")
 
         # Use singleton to get HTTP API client, database, and collection
-        self.__client, self.__db, self.__collection = HTTPAPIConnectionManager.get_client(
-            url, self.is_staging, token
+        self.__client, self.__db, self.__collection = (
+            HTTPAPIConnectionManager.get_client(url, self.is_staging, token)
         )
 
     def find(
@@ -122,9 +122,9 @@ class EEGDash:
 
         """
         # Extract pagination parameters before building query
-        limit = kwargs.pop('limit', None)
-        skip = kwargs.pop('skip', None)
-        
+        limit = kwargs.pop("limit", None)
+        skip = kwargs.pop("skip", None)
+
         final_query: dict[str, Any] | None = None
 
         # Accept explicit empty dict {} to mean "match all"
@@ -160,10 +160,10 @@ class EEGDash:
         # Pass limit and skip to the collection's find method
         find_kwargs = {}
         if limit is not None:
-            find_kwargs['limit'] = limit
+            find_kwargs["limit"] = limit
         if skip is not None:
-            find_kwargs['skip'] = skip
-            
+            find_kwargs["skip"] = skip
+
         results = self.__collection.find(final_query, **find_kwargs)
 
         return list(results)
@@ -235,9 +235,9 @@ class EEGDash:
 
         """
         # Extract limit/skip if present (not used for count but kept for consistency)
-        kwargs.pop('limit', None)
-        kwargs.pop('skip', None)
-        
+        kwargs.pop("limit", None)
+        kwargs.pop("skip", None)
+
         final_query: dict[str, Any] | None = None
 
         # Accept explicit empty dict {} to mean "match all"
@@ -546,20 +546,20 @@ class EEGDash:
 
     @property
     def collection(self):
-        """The underlying PyMongo ``Collection`` object.
+        """The underlying collection interface.
 
         Returns
         -------
-        pymongo.collection.Collection
-            The collection object used for database interactions.
+        HTTPAPICollection
+            The collection object used for database interactions via REST API.
 
         """
         return self.__collection
 
     @classmethod
     def close_all_connections(cls) -> None:
-        """Close all MongoDB client connections managed by the singleton manager."""
-        MongoConnectionManager.close_all()
+        """Close all HTTP API client connections managed by the singleton manager."""
+        HTTPAPIConnectionManager.close_all()
 
 
 def _json_default(value: Any) -> Any:

@@ -6,8 +6,8 @@
 
 This module provides the main EEGDash class which serves as the primary entry point for
 interacting with the EEGDash ecosystem. It offers methods to query, insert, and update
-metadata records stored in the EEGDash database via REST API or direct MongoDB connection,
-and includes utilities to load EEG data from S3 for matched records.
+metadata records stored in the EEGDash database via REST API, and includes utilities to
+load EEG data from S3 for matched records.
 """
 
 import json
@@ -15,10 +15,8 @@ import os
 from pathlib import Path
 from typing import Any, Mapping
 
-import mne
 import numpy as np
 import pandas as pd
-from mne.utils import _soft_import
 
 from .bids_eeg_metadata import (
     build_query_from_kwargs,
@@ -32,7 +30,9 @@ from .dataset.bids_dataset import EEGBIDSDataset
 from .dataset.dataset import EEGDashDataset
 from .http_api_client import HTTPAPIConnectionManager
 from .logging import logger
-from .utils import _init_mongo_client
+
+# Default public API endpoint
+EEGDASH_API_URL = "https://data.eegdash.org"
 
 
 class EEGDash:
@@ -48,19 +48,23 @@ class EEGDash:
     def __init__(
         self,
         *,
-        is_public: bool = True,
         is_staging: bool = False,
+        api_url: str | None = None,
+        auth_token: str | None = None,
     ) -> None:
         """Create a new EEGDash client.
 
         Parameters
         ----------
-        is_public : bool, default True
-            Connect to the public database. If ``False``, connect to a
-            private database instance using environment variables.
         is_staging : bool, default False
             If ``True``, use the staging database (``eegdashstaging``); otherwise
             use the production database (``eegdash``).
+        api_url : str, optional
+            Override the default API URL. If not provided, uses the default
+            public endpoint or the ``EEGDASH_API_URL`` environment variable.
+        auth_token : str, optional
+            Authentication token for admin write operations. Not required for
+            public read operations.
 
         Examples
         --------
@@ -69,43 +73,22 @@ class EEGDash:
 
         """
         self.config = data_config
-        self.is_public = is_public
         self.is_staging = is_staging
+        self._api_url = api_url
+        self._auth_token = auth_token
         self._init_api_client()
 
     def _init_api_client(self) -> None:
         """Initialize HTTP API client connection."""
-        if self.is_public:
-            API_URL = mne.utils.get_config("EEGDASH_API_URL")
-            API_TOKEN = mne.utils.get_config("EEGDASH_API_TOKEN")
-            
-            if not API_URL or not API_TOKEN:
-                try:
-                    _init_mongo_client()
-                    API_URL = mne.utils.get_config("EEGDASH_API_URL")
-                    API_TOKEN = mne.utils.get_config("EEGDASH_API_TOKEN")
-                except Exception:
-                    pass
-            
-            if not API_URL or not API_TOKEN:
-                raise RuntimeError(
-                    "No API configuration found. Set MNE config 'EEGDASH_API_URL' "
-                    "and 'EEGDASH_API_TOKEN' or run _init_mongo_client()."
-                )
-        else:
-            dotenv = _soft_import("dotenv", "eegdash[full] is necessary.")
-            dotenv.load_dotenv()
-            API_URL = os.getenv("EEGDASH_API_URL", "http://137.110.244.65:3000")
-            API_TOKEN = os.getenv("EEGDASH_API_TOKEN")
-            
-            if not API_TOKEN:
-                raise RuntimeError(
-                    "No API token found. Set environment variable 'EEGDASH_API_TOKEN'."
-                )
+        # Determine API URL: parameter > environment variable > default
+        url = self._api_url or os.getenv("EEGDASH_API_URL", EEGDASH_API_URL)
+        
+        # Auth token is optional for public reads, only needed for admin writes
+        token = self._auth_token or os.getenv("EEGDASH_API_TOKEN")
 
         # Use singleton to get HTTP API client, database, and collection
         self.__client, self.__db, self.__collection = HTTPAPIConnectionManager.get_client(
-            API_URL, API_TOKEN, self.is_staging
+            url, self.is_staging, token
         )
 
     def find(

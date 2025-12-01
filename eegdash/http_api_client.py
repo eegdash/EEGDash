@@ -32,10 +32,10 @@ class HTTPAPICollection:
         Name of the database (e.g., "eegdash" or "eegdashstaging").
     collection : str
         Name of the collection (typically "records").
-    auth_token : str
-        Authentication token for API access.
+    auth_token : str, optional
+        Authentication token for API access. Not required for public read access.
     is_admin : bool, default False
-        If True, use admin endpoints with write access.
+        If True, use admin endpoints with write access (requires auth_token).
 
     """
 
@@ -44,7 +44,7 @@ class HTTPAPICollection:
         api_url: str,
         database: str,
         collection: str,
-        auth_token: str,
+        auth_token: str = None,
         is_admin: bool = False,
     ) -> None:
         self.api_url = api_url.rstrip("/")
@@ -64,8 +64,9 @@ class HTTPAPICollection:
         self.session.mount("http://", adapter)
         self.session.mount("https://", adapter)
 
-        # Set authentication header
-        self.session.headers.update({"Authorization": f"Bearer {auth_token}"})
+        # Only add auth header if token is provided (for admin operations)
+        if auth_token:
+            self.session.headers.update({"Authorization": f"Bearer {auth_token}"})
 
     def find(self, query: dict[str, Any] = None, **kwargs) -> list[dict[str, Any]]:
         """Query records from the API.
@@ -203,9 +204,17 @@ class HTTPAPICollection:
         InsertOneResult-like object
             Contains the insertedId.
 
+        Raises
+        ------
+        PermissionError
+            If no auth token is configured for admin operations.
+
         """
-        if not self.is_admin:
-            raise PermissionError("Insert operations require admin authentication")
+        if not self.auth_token:
+            raise PermissionError(
+                "Insert operations require admin authentication. "
+                "Provide auth_token when creating the client."
+            )
 
         url = f"{self.api_url}/admin/{self.database}/records"
 
@@ -240,9 +249,17 @@ class HTTPAPICollection:
         InsertManyResult-like object
             Contains insertedIds.
 
+        Raises
+        ------
+        PermissionError
+            If no auth token is configured for admin operations.
+
         """
-        if not self.is_admin:
-            raise PermissionError("Insert operations require admin authentication")
+        if not self.auth_token:
+            raise PermissionError(
+                "Insert operations require admin authentication. "
+                "Provide auth_token when creating the client."
+            )
 
         url = f"{self.api_url}/admin/{self.database}/records/bulk"
 
@@ -279,20 +296,17 @@ class HTTPAPIDatabase:
         Base URL of the API.
     database : str
         Name of the database.
-    auth_token : str
-        Authentication token for API access.
-    is_admin : bool, default False
-        If True, use admin endpoints with write access.
+    auth_token : str, optional
+        Authentication token for API access. Not required for public reads.
 
     """
 
     def __init__(
-        self, api_url: str, database: str, auth_token: str, is_admin: bool = False
+        self, api_url: str, database: str, auth_token: str = None
     ) -> None:
         self.api_url = api_url
         self.database = database
         self.auth_token = auth_token
-        self.is_admin = is_admin
         self._collections = {}
 
     def __getitem__(self, collection_name: str) -> HTTPAPICollection:
@@ -315,7 +329,6 @@ class HTTPAPIDatabase:
                 self.database,
                 collection_name,
                 self.auth_token,
-                self.is_admin,
             )
         return self._collections[collection_name]
 
@@ -330,19 +343,16 @@ class HTTPAPIClient:
     ----------
     api_url : str
         Base URL of the API (e.g., "https://data.eegdash.org").
-    auth_token : str
-        Authentication token for API access.
-    is_admin : bool, default False
-        If True, use admin token for write operations.
+    auth_token : str, optional
+        Authentication token for admin operations. Not required for public reads.
 
     """
 
     def __init__(
-        self, api_url: str, auth_token: str, is_admin: bool = False
+        self, api_url: str, auth_token: str = None
     ) -> None:
         self.api_url = api_url.rstrip("/")
         self.auth_token = auth_token
-        self.is_admin = is_admin
         self._databases = {}
 
     def __getitem__(self, database_name: str) -> HTTPAPIDatabase:
@@ -361,7 +371,7 @@ class HTTPAPIClient:
         """
         if database_name not in self._databases:
             self._databases[database_name] = HTTPAPIDatabase(
-                self.api_url, database_name, self.auth_token, self.is_admin
+                self.api_url, database_name, self.auth_token
             )
         return self._databases[database_name]
 
@@ -396,12 +406,12 @@ class HTTPAPIConnectionManager:
 
     """
 
-    _instances: dict[tuple[str, str, bool], tuple[HTTPAPIClient, HTTPAPIDatabase, HTTPAPICollection]] = {}
+    _instances: dict[tuple[str, bool], tuple[HTTPAPIClient, HTTPAPIDatabase, HTTPAPICollection]] = {}
     _lock = threading.Lock()
 
     @classmethod
     def get_client(
-        cls, api_url: str, auth_token: str, is_staging: bool = False
+        cls, api_url: str, is_staging: bool = False, auth_token: str = None
     ) -> tuple[HTTPAPIClient, HTTPAPIDatabase, HTTPAPICollection]:
         """Get or create an HTTP API client for the given parameters.
 
@@ -409,11 +419,11 @@ class HTTPAPIConnectionManager:
         ----------
         api_url : str
             Base URL of the API (e.g., "https://data.eegdash.org").
-        auth_token : str
-            Authentication token for API access.
         is_staging : bool, default False
             If True, connect to the staging database ("eegdashstaging").
             Otherwise, connect to the production database ("eegdash").
+        auth_token : str, optional
+            Authentication token for admin operations. Not required for reads.
 
         Returns
         -------
@@ -422,8 +432,8 @@ class HTTPAPIConnectionManager:
             collection interface for the "records" collection.
 
         """
-        # Create a unique key based on API URL, token, and staging flag
-        key = (api_url, auth_token, is_staging)
+        # Create a unique key based on API URL and staging flag
+        key = (api_url, is_staging)
 
         if key not in cls._instances:
             with cls._lock:

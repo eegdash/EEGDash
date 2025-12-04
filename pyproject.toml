@@ -46,6 +46,7 @@ dependencies = [
   "tabulate",
   "rich",
   "pyarrow",
+  "pandas>=2.0",
 ]
 
 [project.urls]

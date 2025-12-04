@@ -18,6 +18,7 @@ Dataset Information
 -------------------
 
 - **Dataset ID:** ``DS005863``
+- **Summary:** Modality: Visual | Subjects: Other
 - **Number of Subjects:** 127
 - **Number of Recordings:** 357
 - **Number of Tasks:** 4

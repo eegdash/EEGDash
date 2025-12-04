@@ -18,6 +18,7 @@ Dataset Information
 -------------------
 
 - **Dataset ID:** ``DS005868``
+- **Summary:** Modality: Visual | Subjects: Healthy
 - **Number of Subjects:** 48
 - **Number of Recordings:** 48
 - **Number of Tasks:** 1

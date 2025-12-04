@@ -18,7 +18,7 @@ Dataset Information
 -------------------
 
 - **Dataset ID:** ``DS004995``
-- **Summary:** Modality: Visual | Type: Attention
+- **Summary:** Modality: Visual | Type: Attention | Subjects: Healthy
 - **Number of Subjects:** 20
 - **Number of Recordings:** 20
 - **Number of Tasks:** 1

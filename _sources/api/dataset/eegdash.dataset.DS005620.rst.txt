@@ -18,6 +18,7 @@ Dataset Information
 -------------------
 
 - **Dataset ID:** ``DS005620``
+- **Summary:** Modality: Sleep | Subjects: Healthy
 - **Number of Subjects:** 21
 - **Number of Recordings:** 202
 - **Number of Tasks:** 3

@@ -18,6 +18,7 @@ Dataset Information
 -------------------
 
 - **Dataset ID:** ``DS005815``
+- **Summary:** Modality: Multi sensory | Subjects: Healthy
 - **Number of Subjects:** 26
 - **Number of Recordings:** 137
 - **Number of Tasks:** 4

@@ -18,7 +18,7 @@ Dataset Information
 -------------------
 
 - **Dataset ID:** ``DS004521``
-- **Summary:** Modality: Visual | Type: Motor
+- **Summary:** Modality: Visual | Type: Motor | Subjects: Healthy
 - **Number of Subjects:** 34
 - **Number of Recordings:** 34
 - **Number of Tasks:** 1

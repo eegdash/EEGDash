@@ -18,7 +18,7 @@ Dataset Information
 -------------------
 
 - **Dataset ID:** ``DS003061``
-- **Summary:** Modality: Auditory | Type: Perception
+- **Summary:** Modality: Auditory | Type: Perception | Subjects: Healthy
 - **Number of Subjects:** 13
 - **Number of Recordings:** 39
 - **Number of Tasks:** 1

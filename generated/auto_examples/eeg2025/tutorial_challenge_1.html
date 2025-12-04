@@ -58,6 +58,7 @@
     <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../../../_static/copybutton.js?v=8c005784"></script>
     <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'generated/auto_examples/eeg2025/tutorial_challenge_1';</script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.datatables.net/v/bm/dt-1.13.4/datatables.min.js"></script>
@@ -452,6 +453,13 @@
      aria-label="Section Navigation">
   <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
   <div class="bd-toc-item navbar-nav"><ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../core/p300_transfer_learning.html">EEG P3 Transfer Learning with AS-MMD</a></li>
+
+
+
+
+
+
 <li class="toctree-l1"><a class="reference internal" href="../core/tutorial_eoec.html">Eyes Open vs. Closed Classification</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../core/tutorial_feature_extractor_open_close_eye.html">EEGDash Feature Extractor</a></li>
 </ul>
@@ -522,97 +530,76 @@
   <div class="sphx-glr-download-link-note admonition note">
 <p class="admonition-title">Note</p>
 <p><a class="reference internal" href="#sphx-glr-download-generated-auto-examples-eeg2025-tutorial-challenge-1-py"><span class="std std-ref">Go to the end</span></a>
-to download the full example code. or to run this example in your browser via Binder</p>
+to download the full example code or to run this example in your browser via Binder.</p>
 </div>
 <section class="sphx-glr-example-title" id="challenge-1-cross-task-transfer-learning">
-<span id="challenge-1"></span><span id="sphx-glr-generated-auto-examples-eeg2025-tutorial-challenge-1-py"></span><h1>Challenge 1: Cross-Task Transfer Learning!<a class="headerlink" href="#challenge-1-cross-task-transfer-learning" title="Link to this heading">#</a></h1><div class="eegdash-reading-time" role="note"><span class="eegdash-reading-time__label">Estimated reading time:</span><span class="eegdash-reading-time__value">2 minutes</span></div>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># .. image:: https://colab.research.google.com/assets/colab-badge.svg</span>
-<span class="c1">#    :target: https://colab.research.google.com/github/eeg2025/startkit/blob/main/challenge_1.ipynb</span>
-<span class="c1">#    :alt: Open In Colab</span>
-</pre></div>
-</div>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Preliminary notes</span>
-<span class="c1"># -----------------</span>
-<span class="c1"># Before we begin, I just want to make a deal with you, ok?</span>
-<span class="c1"># This is a community competition with a strong open-source foundation.</span>
-<span class="c1"># When I say open-source, I mean volunteer work.</span>
-
-<span class="c1">#</span>
-
-<span class="c1"># So, if you see something that does not work or could be improved, first, **please be kind**, and</span>
-<span class="c1"># we will fix it together on GitHub, okay?</span>
-
-<span class="c1">#</span>
-
-<span class="c1"># The entire decoding community will only go further when we stop</span>
-<span class="c1"># solving the same problems over and over again, and it starts working together.</span>
-</pre></div>
-</div>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># How can we use the knowledge from one EEG Decoding task into another?</span>
-<span class="c1"># ---------------------------------------------------------------------</span>
-<span class="c1"># Transfer learning is a widespread technique used in deep learning. It</span>
-<span class="c1"># uses knowledge learned from one source task/domain in another target</span>
-<span class="c1"># task/domain. It has been studied in depth in computer vision, natural</span>
-<span class="c1"># language processing, and speech, but what about EEG brain decoding?</span>
-
-<span class="c1">#</span>
-
-<span class="c1"># The cross-task transfer learning scenario in EEG decoding is remarkably</span>
-<span class="c1"># underexplored compared to the development of new models,</span>
-<span class="c1"># `Aristimunha et al. (2023) &lt;https://arxiv.org/abs/2308.02408&gt;`__, even</span>
-<span class="c1"># though it can be much more useful for real applications, see</span>
-<span class="c1"># `Wimpff et al. (2025) &lt;https://arxiv.org/abs/2502.06828&gt;`__,</span>
-<span class="c1"># `Wu et al. (2025) &lt;https://arxiv.org/abs/2507.09882&gt;`__.</span>
-
-<span class="c1">#</span>
-
-<span class="c1"># Our Challenge 1 addresses a key goal in neurotechnology: decoding</span>
-<span class="c1"># cognitive function from EEG using the pre-trained knowledge from another.</span>
-<span class="c1"># In other words, developing models that can effectively</span>
-<span class="c1"># transfer/adapt/adjust/fine-tune knowledge from passive EEG tasks to</span>
-<span class="c1"># active tasks.</span>
-
-<span class="c1">#</span>
-
-<span class="c1"># The ability to generalize and transfer is something critical that we</span>
-<span class="c1"># believe should be focused on. To go beyond just comparing metrics numbers</span>
-<span class="c1"># that are often not comparable, given the specificities of EEG, such as</span>
-<span class="c1"># pre-processing, inter-subject variability, and many other unique</span>
-<span class="c1"># components of this type of data.</span>
-
-<span class="c1">#</span>
-
-<span class="c1"># This means your submitted model might be trained on a subset of tasks</span>
-<span class="c1"># and fine-tuned on data from another condition, evaluating its capacity to</span>
-<span class="c1"># generalize with task-specific fine-tuning.</span>
-</pre></div>
-</div>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># __________</span>
-
-<span class="c1">#</span>
-
-<span class="c1"># Note: For simplicity purposes, we will only show how to do the decoding</span>
-<span class="c1"># directly in our target task, and it is up to the teams to think about</span>
-<span class="c1"># how to use the passive task to perform the pre-training.</span>
-</pre></div>
-</div>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Install dependencies</span>
-<span class="c1"># --------------------</span>
-<span class="c1"># For the challenge, we will need two significant dependencies:</span>
-<span class="c1"># `braindecode` and `eegdash`. The libraries will install PyTorch,</span>
-<span class="c1"># Pytorch Audio, Scikit-learn, MNE, MNE-BIDS, and many other packages</span>
-<span class="c1"># necessary for the many functions.</span>
-
-<span class="c1">#</span>
-
-<span class="c1"># Install dependencies on colab or your local machine, as eegdash</span>
-<span class="c1"># have braindecode as a dependency.</span>
-<span class="c1"># you can just run ``pip install eegdash``.</span>
-</pre></div>
-</div>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Imports and setup</span>
-<span class="c1"># -----------------</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span id="sphx-glr-generated-auto-examples-eeg2025-tutorial-challenge-1-py"></span><h1>Challenge 1: Cross-Task Transfer Learning!<a class="headerlink" href="#challenge-1-cross-task-transfer-learning" title="Link to this heading">#</a></h1><div class="eegdash-reading-time" role="note"><span class="eegdash-reading-time__label">Estimated reading time:</span><span class="eegdash-reading-time__value">8 minutes</span></div>
+<nav class="contents local" id="this-example-covers">
+<span id="challenge-1"></span><p class="topic-title">This example covers:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#check-gpu-availability" id="id1">Check GPU availability</a></p></li>
+<li><p><a class="reference internal" href="#alternatives-for-downloading-the-data" id="id2">Alternatives for Downloading the data</a></p></li>
+<li><p><a class="reference internal" href="#create-windows-of-interest" id="id3">Create windows of interest</a></p></li>
+<li><p><a class="reference internal" href="#inspect-the-label-distribution" id="id4">Inspect the label distribution</a></p></li>
+<li><p><a class="reference internal" href="#split-the-data" id="id5">Split the data</a></p></li>
+<li><p><a class="reference internal" href="#create-dataloaders" id="id6">Create dataloaders</a></p></li>
+<li><p><a class="reference internal" href="#build-the-model" id="id7">Build the model</a></p></li>
+<li><p><a class="reference internal" href="#define-training-and-validation-functions" id="id8">Define training and validation functions</a></p></li>
+<li><p><a class="reference internal" href="#train-the-model" id="id9">Train the model</a></p></li>
+<li><p><a class="reference internal" href="#save-the-model" id="id10">Save the model</a></p></li>
+</ul>
+</nav>
+<a class="reference external image-reference" href="https://colab.research.google.com/github/eeg2025/startkit/blob/main/challenge_1.ipynb"><img alt="Open In Colab" src="https://colab.research.google.com/assets/colab-badge.svg" />
+</a>
+<blockquote>
+<div><p>Before we begin, I just want to make a deal with you, ok?
+This is a community competition with a strong open-source foundation.
+When I say open-source, I mean volunteer work.</p>
+<p>So, if you see something that does not work or could be improved, first, <strong>please be kind</strong>, and
+we will fix it together on GitHub, okay?</p>
+<p>The entire decoding community will only go further when we stop
+solving the same problems over and over again, and it starts working together.</p>
+</div></blockquote>
+<blockquote>
+<div><p>Transfer learning is a widespread technique used in deep learning. It
+uses knowledge learned from one source task/domain in another target
+task/domain. It has been studied in depth in computer vision, natural
+language processing, and speech, but what about EEG brain decoding?</p>
+<p>The cross-task transfer learning scenario in EEG decoding is remarkably
+underexplored compared to the development of new models,
+<a class="reference external" href="https://arxiv.org/abs/2308.02408">Aristimunha et al. (2023)</a>, even
+though it can be much more useful for real applications, see
+<a class="reference external" href="https://arxiv.org/abs/2502.06828">Wimpff et al. (2025)</a>,
+<a class="reference external" href="https://arxiv.org/abs/2507.09882">Wu et al. (2025)</a>.</p>
+<p>Our Challenge 1 addresses a key goal in neurotechnology: decoding
+cognitive function from EEG using the pre-trained knowledge from another.
+In other words, developing models that can effectively
+transfer/adapt/adjust/fine-tune knowledge from passive EEG tasks to
+active tasks.</p>
+<p>The ability to generalize and transfer is something critical that we
+believe should be focused on. To go beyond just comparing metrics numbers
+that are often not comparable, given the specificities of EEG, such as
+pre-processing, inter-subject variability, and many other unique
+components of this type of data.</p>
+<p>This means your submitted model might be trained on a subset of tasks
+and fine-tuned on data from another condition, evaluating its capacity to
+generalize with task-specific fine-tuning.</p>
+</div></blockquote>
+<blockquote>
+<div><p>Note: For simplicity purposes, we will only show how to do the decoding
+directly in our target task, and it is up to the teams to think about
+how to use the passive task to perform the pre-training.</p>
+</div></blockquote>
+<blockquote>
+<div><p>For the challenge, we will need two significant dependencies:
+<cite>braindecode</cite> and <cite>eegdash</cite>. The libraries will install PyTorch,
+Pytorch Audio, Scikit-learn, MNE, MNE-BIDS, and many other packages
+necessary for the many functions.</p>
+<p>Install dependencies on colab or your local machine, as eegdash
+have braindecode as a dependency.
+you can just run <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">eegdash</span></code>.</p>
+</div></blockquote>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">braindecode.datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseConcatDataset</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">braindecode.preprocessing</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
@@ -632,17 +619,14 @@ to download the full example code. or to run this example in your browser via Bi
 <span class="kn">from</span><span class="w"> </span><span class="nn">joblib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Parallel</span><span class="p">,</span> <span class="n">delayed</span>
 </pre></div>
 </div>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Check GPU availability</span>
-<span class="c1"># ----------------------</span>
-
-<span class="c1">#</span>
-
-<span class="c1"># Identify whether a CUDA-enabled GPU is available</span>
-<span class="c1"># and set the device accordingly.</span>
-<span class="c1"># If using Google Colab, ensure that the runtime is set to use a GPU.</span>
-<span class="c1"># This can be done by navigating to `Runtime` &gt; `Change runtime type` and selecting</span>
-<span class="c1"># `GPU` as the hardware accelerator.</span>
-<span class="n">device</span> <span class="o">=</span> <span class="s2">&quot;cuda&quot;</span> <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="k">else</span> <span class="s2">&quot;cpu&quot;</span>
+<section id="check-gpu-availability">
+<h2><a class="toc-backref" href="#id1" role="doc-backlink">Check GPU availability</a><a class="headerlink" href="#check-gpu-availability" title="Link to this heading">#</a></h2>
+<p>Identify whether a CUDA-enabled GPU is available
+and set the device accordingly.
+If using Google Colab, ensure that the runtime is set to use a GPU.
+This can be done by navigating to <cite>Runtime</cite> &gt; <cite>Change runtime type</cite> and selecting
+<cite>GPU</cite> as the hardware accelerator.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">device</span> <span class="o">=</span> <span class="s2">&quot;cuda&quot;</span> <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="k">else</span> <span class="s2">&quot;cpu&quot;</span>
 <span class="k">if</span> <span class="n">device</span> <span class="o">==</span> <span class="s2">&quot;cuda&quot;</span><span class="p">:</span>
     <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;CUDA-enabled GPU found. Training should be faster.&quot;</span>
 <span class="k">else</span><span class="p">:</span>
@@ -662,146 +646,72 @@ If running on Google Colab, you can request a GPU runtime by clicking
 under &#39;Hardware accelerator&#39;.
 </pre></div>
 </div>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># What are we decoding?</span>
-<span class="c1"># ---------------------</span>
-
-<span class="c1">#</span>
-
-<span class="c1"># To start to talk about what we want to analyse, the important thing</span>
-<span class="c1"># is to understand some basic concepts.</span>
-
-<span class="c1">#</span>
-</pre></div>
-</div>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># The brain decodes the problem</span>
-<span class="c1"># -----------------------------</span>
-
-<span class="c1">#</span>
-
-<span class="c1"># Broadly speaking, here *brain decoding* is the following problem:</span>
-<span class="c1"># given brain time-series signals :math:`X \in \mathbb{R}^{C \times T}` with</span>
-<span class="c1"># labels :math:`y \in \mathcal{Y}`, we implement a neural network :math:`f` that</span>
-<span class="c1"># **decodes/translates** brain activity into the target label.</span>
-
-<span class="c1">#</span>
-
-<span class="c1"># We aim to translate recorded brain activity into its originating</span>
-<span class="c1"># stimulus, behavior, or mental state, `King, J-R. et al. (2020) &lt;https://lauragwilliams.github.io/d/m/CognitionAlgorithm.pdf&gt;`__.</span>
-
-<span class="c1">#</span>
-
-<span class="c1"># The neural network :math:`f` applies a series of transformation layers</span>
-<span class="c1"># (e.g., ``torch.nn.Conv2d``, ``torch.nn.Linear``, ``torch.nn.ELU``, ``torch.nn.BatchNorm2d``)</span>
-<span class="c1"># to the data to filter, extract features, and learn embeddings</span>
-<span class="c1"># relevant to the optimization objective—in other words:</span>
-
-<span class="c1">#</span>
-
-<span class="c1"># .. math::</span>
-
-<span class="c1">#</span>
-
-<span class="c1">#    f_{\theta}: X \to y,</span>
-
-<span class="c1">#</span>
-
-<span class="c1"># where :math:`C` (``n_chans``) is the number of channels/electrodes and :math:`T` (``n_times``)</span>
-<span class="c1"># is the temporal window length/epoch size over the interval of interest.</span>
-<span class="c1"># Here, :math:`\theta` denotes the parameters learned by the neural network.</span>
-
-<span class="c1">#</span>
-
-<span class="c1"># Input/Output definition</span>
-<span class="c1"># ---------------------------</span>
-<span class="c1"># For the competition, the HBN-EEG (Healthy Brain Network EEG Datasets)</span>
-<span class="c1"># dataset has ``n_chans = 129`` with the last channels as a `reference channel &lt;https://mne.tools/stable/auto_tutorials/preprocessing/55_setting_eeg_reference.html&gt;`_,</span>
-<span class="c1"># and we define the window length as ``n_times = 200``, corresponding to 2-second windows.</span>
-
-<span class="c1">#</span>
-
-<span class="c1"># Your model should follow this definition exactly; any specific selection of channels,</span>
-<span class="c1"># filtering, or domain-adaptation technique must be performed **within the layers of the neural network model**.</span>
-
-<span class="c1">#</span>
-
-<span class="c1"># In this tutorial, we will use the ``EEGNeX`` model from ``braindecode`` as an example.</span>
-<span class="c1"># You can use any model you want, as long as it follows the input/output</span>
-<span class="c1"># definitions above.</span>
-</pre></div>
-</div>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Understand the task: Contrast Change Detection (CCD)</span>
-<span class="c1"># --------------------------------------------------------</span>
-<span class="c1"># If you are interested to get more neuroscience insight, we recommend these two references, `HBN-EEG &lt;https://www.biorxiv.org/content/10.1101/2024.10.03.615261v2.full.pdf&gt;`__ and `Langer, N et al. (2017) &lt;https://www.nature.com/articles/sdata201740#Sec2&gt;`__.</span>
-<span class="c1"># Your task (**label**) is to predict the response time for the subject during this windows.</span>
-
-<span class="c1">#</span>
-
-<span class="c1"># In the Video, we have an example of recording cognitive activity:</span>
-
-<span class="c1">#</span>
-
-<span class="c1"># The Contrast Change Detection (CCD) task relates to</span>
-<span class="c1"># `Steady-State Visual Evoked Potentials (SSVEP) &lt;https://en.wikipedia.org/wiki/Steady-state_visually_evoked_potential&gt;`__</span>
-<span class="c1"># and `Event-Related Potentials (ERP) &lt;https://en.wikipedia.org/wiki/Event-related_potential&gt;`__.</span>
-
-<span class="c1">#</span>
-
-<span class="c1"># Algorithmically, what the subject sees during recording is:</span>
-
-<span class="c1">#</span>
-
-<span class="c1"># * Two flickering striped discs: one tilted left, one tilted right.</span>
-<span class="c1"># * After a variable delay, **one disc&#39;s contrast gradually increases** **while the other decreases**.</span>
-<span class="c1"># * They **press left or right** to indicate which disc got stronger.</span>
-<span class="c1"># * They receive **feedback** (🙂 correct / 🙁 incorrect).</span>
-
-<span class="c1">#</span>
-
-<span class="c1"># **The task parallels SSVEP and ERP:**</span>
-
-<span class="c1">#</span>
-
-<span class="c1"># * The continuous flicker **tags the EEG at fixed frequencies (and harmonics)** → SSVEP-like signals.</span>
-<span class="c1"># * The **ramp onset**, the **button press**, and the **feedback** are **time-locked events** that yield ERP-like components.</span>
-
-<span class="c1">#</span>
-
-<span class="c1"># Your task (**label**) is to predict the response time for the subject during this windows.</span>
-
-<span class="c1">#</span>
-</pre></div>
-</div>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># In the figure below, we have the timeline representation of the cognitive task:</span>
-
-<span class="c1">#</span>
-
-<span class="c1"># .. image:: https://eeg2025.github.io/assets/img/image-2.jpg</span>
-</pre></div>
-</div>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Stimulus demonstration</span>
-<span class="c1"># ----------------------</span>
-<span class="c1"># .. raw:: html</span>
-
-<span class="c1">#</span>
-
-<span class="c1">#    &lt;div class=&quot;video-wrapper&quot;&gt;</span>
-<span class="c1">#      &lt;iframe src=&quot;https://www.youtube.com/embed/tOW2Vu2zHoU?start=1630&quot;</span>
-<span class="c1">#              title=&quot;Contrast Change Detection (CCD) task demo&quot;</span>
-<span class="c1">#              allow=&quot;accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share&quot;</span>
-<span class="c1">#              allowfullscreen&gt;&lt;/iframe&gt;</span>
-<span class="c1">#    &lt;/div&gt;</span>
-
-<span class="c1">#</span>
-</pre></div>
-</div>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># PyTorch Dataset for the competition</span>
-<span class="c1"># -----------------------------------</span>
-<span class="c1"># Now, we have a Pytorch Dataset object that contains the set of recordings for the task</span>
-<span class="c1"># `contrastChangeDetection`.</span>
-
-<span class="c1">#</span>
-
-<span class="kn">from</span><span class="w"> </span><span class="nn">eegdash.dataset</span><span class="w"> </span><span class="kn">import</span> <a href="../../../api/dataset/eegdash.EEGDashDataset.html#eegdash.EEGDashDataset" title="eegdash.EEGDashDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class"><span class="n">EEGChallengeDataset</span></a>
+<dl class="simple">
+<dt>What are we decoding?</dt><dd><p>To start to talk about what we want to analyse, the important thing
+is to understand some basic concepts.</p>
+</dd>
+</dl>
+<blockquote>
+<div><p>Broadly speaking, here <em>brain decoding</em> is the following problem:
+given brain time-series signals <span class="math notranslate nohighlight">\(X \in \mathbb{R}^{C \times T}\)</span> with
+labels <span class="math notranslate nohighlight">\(y \in \mathcal{Y}\)</span>, we implement a neural network <span class="math notranslate nohighlight">\(f\)</span> that
+<strong>decodes/translates</strong> brain activity into the target label.</p>
+<p>We aim to translate recorded brain activity into its originating
+stimulus, behavior, or mental state, <a class="reference external" href="https://lauragwilliams.github.io/d/m/CognitionAlgorithm.pdf">King, J-R. et al. (2020)</a>.</p>
+<p>The neural network <span class="math notranslate nohighlight">\(f\)</span> applies a series of transformation layers
+(e.g., <code class="docutils literal notranslate"><span class="pre">torch.nn.Conv2d</span></code>, <code class="docutils literal notranslate"><span class="pre">torch.nn.Linear</span></code>, <code class="docutils literal notranslate"><span class="pre">torch.nn.ELU</span></code>, <code class="docutils literal notranslate"><span class="pre">torch.nn.BatchNorm2d</span></code>)
+to the data to filter, extract features, and learn embeddings
+relevant to the optimization objective—in other words:</p>
+<div class="math notranslate nohighlight">
+\[f_{\theta}: X \to y,\]</div>
+<p>where <span class="math notranslate nohighlight">\(C\)</span> (<code class="docutils literal notranslate"><span class="pre">n_chans</span></code>) is the number of channels/electrodes and <span class="math notranslate nohighlight">\(T\)</span> (<code class="docutils literal notranslate"><span class="pre">n_times</span></code>)
+is the temporal window length/epoch size over the interval of interest.
+Here, <span class="math notranslate nohighlight">\(\theta\)</span> denotes the parameters learned by the neural network.</p>
+<p>For the competition, the HBN-EEG (Healthy Brain Network EEG Datasets)
+dataset has <code class="docutils literal notranslate"><span class="pre">n_chans</span> <span class="pre">=</span> <span class="pre">129</span></code> with the last channels as a <a class="reference external" href="https://mne.tools/stable/auto_tutorials/preprocessing/55_setting_eeg_reference.html">reference channel</a>,
+and we define the window length as <code class="docutils literal notranslate"><span class="pre">n_times</span> <span class="pre">=</span> <span class="pre">200</span></code>, corresponding to 2-second windows.</p>
+<p>Your model should follow this definition exactly; any specific selection of channels,
+filtering, or domain-adaptation technique must be performed <strong>within the layers of the neural network model</strong>.</p>
+<p>In this tutorial, we will use the <code class="docutils literal notranslate"><span class="pre">EEGNeX</span></code> model from <code class="docutils literal notranslate"><span class="pre">braindecode</span></code> as an example.
+You can use any model you want, as long as it follows the input/output
+definitions above.</p>
+</div></blockquote>
+<blockquote>
+<div><p>If you are interested to get more neuroscience insight, we recommend these two references, <a class="reference external" href="https://www.biorxiv.org/content/10.1101/2024.10.03.615261v2.full.pdf">HBN-EEG</a> and <a class="reference external" href="https://www.nature.com/articles/sdata201740#Sec2">Langer, N et al. (2017)</a>.
+Your task (<strong>label</strong>) is to predict the response time for the subject during this windows.</p>
+<p>In the Video, we have an example of recording cognitive activity:</p>
+<p>The Contrast Change Detection (CCD) task relates to
+<a class="reference external" href="https://en.wikipedia.org/wiki/Steady-state_visually_evoked_potential">Steady-State Visual Evoked Potentials (SSVEP)</a>
+and <a class="reference external" href="https://en.wikipedia.org/wiki/Event-related_potential">Event-Related Potentials (ERP)</a>.</p>
+<p>Algorithmically, what the subject sees during recording is:</p>
+<ul class="simple">
+<li><p>Two flickering striped discs: one tilted left, one tilted right.</p></li>
+<li><p>After a variable delay, <strong>one disc’s contrast gradually increases</strong> <strong>while the other decreases</strong>.</p></li>
+<li><p>They <strong>press left or right</strong> to indicate which disc got stronger.</p></li>
+<li><p>They receive <strong>feedback</strong> (🙂 correct / 🙁 incorrect).</p></li>
+</ul>
+<p><strong>The task parallels SSVEP and ERP:</strong></p>
+<ul class="simple">
+<li><p>The continuous flicker <strong>tags the EEG at fixed frequencies (and harmonics)</strong> → SSVEP-like signals.</p></li>
+<li><p>The <strong>ramp onset</strong>, the <strong>button press</strong>, and the <strong>feedback</strong> are <strong>time-locked events</strong> that yield ERP-like components.</p></li>
+</ul>
+<p>Your task (<strong>label</strong>) is to predict the response time for the subject during this windows.</p>
+</div></blockquote>
+<blockquote>
+<div><img alt="https://eeg2025.github.io/assets/img/image-2.jpg" src="https://eeg2025.github.io/assets/img/image-2.jpg" />
+</div></blockquote>
+<blockquote>
+<div><div class="video-wrapper">
+  <iframe src="https://www.youtube.com/embed/tOW2Vu2zHoU?start=1630"
+          title="Contrast Change Detection (CCD) task demo"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowfullscreen></iframe>
+</div></div></blockquote>
+<blockquote>
+<div><p>Now, we have a Pytorch Dataset object that contains the set of recordings for the task
+<cite>contrastChangeDetection</cite>.</p>
+</div></blockquote>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">eegdash.dataset</span><span class="w"> </span><span class="kn">import</span> <a href="../../../api/dataset/eegdash.EEGDashDataset.html#eegdash.EEGDashDataset" title="eegdash.EEGDashDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class"><span class="n">EEGChallengeDataset</span></a>
 <span class="kn">from</span><span class="w"> </span><span class="nn">eegdash.hbn.windows</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <a href="../../../api/generated/api-core/eegdash.hbn.html#eegdash.hbn.annotate_trials_with_target" title="eegdash.hbn.annotate_trials_with_target" class="sphx-glr-backref-module-eegdash-hbn sphx-glr-backref-type-py-function"><span class="n">annotate_trials_with_target</span></a><span class="p">,</span>
     <a href="../../../api/generated/api-core/eegdash.hbn.html#eegdash.hbn.add_aux_anchors" title="eegdash.hbn.add_aux_anchors" class="sphx-glr-backref-module-eegdash-hbn sphx-glr-backref-type-py-function"><span class="n">add_aux_anchors</span></a><span class="p">,</span>
@@ -812,7 +722,6 @@ under &#39;Hardware accelerator&#39;.
 <span class="c1"># Match tests&#39; cache layout under ~/eegdash_cache/eeg_challenge_cache</span>
 <span class="n">DATA_DIR</span> <span class="o">=</span> <span class="p">(</span><span class="n">Path</span><span class="o">.</span><span class="n">home</span><span class="p">()</span> <span class="o">/</span> <span class="s2">&quot;eegdash_cache&quot;</span> <span class="o">/</span> <span class="s2">&quot;eeg_challenge_cache&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
 <span class="n">DATA_DIR</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
 <span class="n">dataset_ccd</span> <span class="o">=</span> <a href="../../../api/dataset/eegdash.EEGDashDataset.html#eegdash.EEGDashDataset" title="eegdash.EEGDashDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class"><span class="n">EEGChallengeDataset</span></a><span class="p">(</span>
     <span class="n">task</span><span class="o">=</span><span class="s2">&quot;contrastChangeDetection&quot;</span><span class="p">,</span> <span class="n">release</span><span class="o">=</span><span class="s2">&quot;R5&quot;</span><span class="p">,</span> <span class="n">cache_dir</span><span class="o">=</span><span class="n">DATA_DIR</span><span class="p">,</span> <span class="n">mini</span><span class="o">=</span><span class="kc">True</span>
 <span class="p">)</span>
@@ -822,16 +731,12 @@ under &#39;Hardware accelerator&#39;.
 <span class="nb">print</span><span class="p">(</span>
     <span class="sa">f</span><span class="s2">&quot;Number of unique subjects in the dataset: </span><span class="si">{</span><a href="../../../api/dataset/eegdash.EEGDashDataset.html#eegdash.EEGDashDataset.description" title="eegdash.EEGDashDataset.description" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-property"><span class="n">dataset_ccd</span><span class="o">.</span><span class="n">description</span></a><span class="p">[</span><span class="s1">&#39;subject&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">nunique</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span>
 <span class="p">)</span>
-
 <span class="c1">#</span>
-
 <span class="c1"># This dataset object have very rich Raw object details that can help you to</span>
 <span class="c1"># understand better the data. The framework behind this is braindecode,</span>
 <span class="c1"># and if you want to understand in depth what is happening, we recommend the</span>
 <span class="c1"># braindecode github itself.</span>
-
 <span class="c1">#</span>
-
 <span class="c1"># We can also access the Raw object for visualization purposes, we will see just one object.</span>
 <span class="n">raw</span> <span class="o">=</span> <span class="n">dataset_ccd</span><span class="o">.</span><span class="n">datasets</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">raw</span>  <span class="c1"># get the Raw object of the first recording</span>
 <span class="c1"># And to download all the data all data directly, you can do:</span>
@@ -859,218 +764,209 @@ Number of recordings in the dataset: 60
 Number of unique subjects in the dataset: 20
 
 Downloading dataset_description.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading dataset_description.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 37.6B/s]
+Downloading dataset_description.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 12.5B/s]
 
 Downloading participants.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading participants.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 27.2B/s]
+Downloading participants.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 9.84B/s]
 
 Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-1_events.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 26.0B/s]
+Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 13.3B/s]
 
 Downloading sub-NDARAH793FBF_task-DiaryOfAWimpyKid_events.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAH793FBF_task-DiaryOfAWimpyKid_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 33.3B/s]
+Downloading sub-NDARAH793FBF_task-DiaryOfAWimpyKid_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 12.8B/s]
 
 Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-2_events.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 18.8B/s]
+Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 11.2B/s]
 
 Downloading sub-NDARAH793FBF_task-ThePresent_events.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAH793FBF_task-ThePresent_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 48.8B/s]
+Downloading sub-NDARAH793FBF_task-ThePresent_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 14.1B/s]
 
 Downloading sub-NDARAH793FBF_task-symbolSearch_events.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAH793FBF_task-symbolSearch_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 37.1B/s]
+Downloading sub-NDARAH793FBF_task-symbolSearch_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 12.8B/s]
 
 Downloading sub-NDARAH793FBF_task-seqLearning8target_events.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAH793FBF_task-seqLearning8target_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 14.0B/s]
+Downloading sub-NDARAH793FBF_task-seqLearning8target_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 12.7B/s]
 
 Downloading sub-NDARAH793FBF_task-surroundSupp_run-1_events.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAH793FBF_task-surroundSupp_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 24.9B/s]
+Downloading sub-NDARAH793FBF_task-surroundSupp_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 12.7B/s]
 
 Downloading sub-NDARAH793FBF_task-RestingState_events.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAH793FBF_task-RestingState_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 28.6B/s]
+Downloading sub-NDARAH793FBF_task-RestingState_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 13.3B/s]
 
 Downloading sub-NDARAH793FBF_task-surroundSupp_run-2_events.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAH793FBF_task-surroundSupp_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 21.5B/s]
+Downloading sub-NDARAH793FBF_task-surroundSupp_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 12.6B/s]
 
 Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-3_events.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 19.6B/s]
+Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 12.6B/s]
 
 Downloading sub-NDARAH793FBF_task-FunwithFractals_events.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAH793FBF_task-FunwithFractals_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 39.0B/s]
+Downloading sub-NDARAH793FBF_task-FunwithFractals_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 12.6B/s]
 
 Downloading sub-NDARAH793FBF_task-DespicableMe_events.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAH793FBF_task-DespicableMe_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 33.2B/s]
+Downloading sub-NDARAH793FBF_task-DespicableMe_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 11.2B/s]
 
 Downloading task-seqLearning8target_events.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading task-seqLearning8target_events.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 33.8B/s]
+Downloading task-seqLearning8target_events.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 11.5B/s]
 
 Downloading task-RestingState_events.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading task-RestingState_events.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 32.8B/s]
+Downloading task-RestingState_events.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 12.8B/s]
 
 Downloading task-surroundSupp_events.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading task-surroundSupp_events.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 28.1B/s]
+Downloading task-surroundSupp_events.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 12.5B/s]
 
 Downloading task-FunwithFractals_events.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading task-FunwithFractals_events.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 33.9B/s]
+Downloading task-FunwithFractals_events.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 13.0B/s]
 
 Downloading task-symbolSearch_events.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading task-symbolSearch_events.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 26.3B/s]
+Downloading task-symbolSearch_events.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 11.2B/s]
 
 Downloading task-ThePresent_events.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading task-ThePresent_events.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 34.7B/s]
+Downloading task-ThePresent_events.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 12.6B/s]
 
 Downloading task-seqLearning6target_events.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading task-seqLearning6target_events.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 20.9B/s]
+Downloading task-seqLearning6target_events.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 13.1B/s]
 
 Downloading task-contrastChangeDetection_events.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading task-contrastChangeDetection_events.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 35.7B/s]
+Downloading task-contrastChangeDetection_events.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 13.4B/s]
 
 Downloading task-DespicableMe_events.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading task-DespicableMe_events.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 34.2B/s]
+Downloading task-DespicableMe_events.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 13.2B/s]
 
 Downloading task-DiaryOfAWimpyKid_events.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading task-DiaryOfAWimpyKid_events.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 26.3B/s]
+Downloading task-DiaryOfAWimpyKid_events.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 12.7B/s]
 
 Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-1_eeg.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 20.9B/s]
+Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 12.7B/s]
 
 Downloading sub-NDARAH793FBF_task-symbolSearch_eeg.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAH793FBF_task-symbolSearch_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 35.2B/s]
+Downloading sub-NDARAH793FBF_task-symbolSearch_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 11.4B/s]
 
 Downloading sub-NDARAH793FBF_task-surroundSupp_run-2_eeg.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAH793FBF_task-surroundSupp_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 26.9B/s]
+Downloading sub-NDARAH793FBF_task-surroundSupp_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 13.1B/s]
 
 Downloading sub-NDARAH793FBF_task-DiaryOfAWimpyKid_eeg.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAH793FBF_task-DiaryOfAWimpyKid_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 38.7B/s]
+Downloading sub-NDARAH793FBF_task-DiaryOfAWimpyKid_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 11.5B/s]
 
 Downloading sub-NDARAH793FBF_task-DespicableMe_eeg.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAH793FBF_task-DespicableMe_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 33.3B/s]
+Downloading sub-NDARAH793FBF_task-DespicableMe_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 12.8B/s]
 
 Downloading sub-NDARAH793FBF_task-seqLearning8target_eeg.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAH793FBF_task-seqLearning8target_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 24.4B/s]
+Downloading sub-NDARAH793FBF_task-seqLearning8target_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 12.4B/s]
 
 Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-3_eeg.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 36.8B/s]
+Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 12.9B/s]
 
 Downloading sub-NDARAH793FBF_task-RestingState_eeg.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAH793FBF_task-RestingState_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 25.9B/s]
+Downloading sub-NDARAH793FBF_task-RestingState_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 11.6B/s]
 
 Downloading sub-NDARAH793FBF_task-FunwithFractals_eeg.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAH793FBF_task-FunwithFractals_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 33.7B/s]
+Downloading sub-NDARAH793FBF_task-FunwithFractals_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 12.4B/s]
 
 Downloading sub-NDARAH793FBF_task-ThePresent_eeg.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAH793FBF_task-ThePresent_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 20.6B/s]
+Downloading sub-NDARAH793FBF_task-ThePresent_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 12.4B/s]
 
 Downloading sub-NDARAH793FBF_task-surroundSupp_run-1_eeg.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAH793FBF_task-surroundSupp_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 32.4B/s]
+Downloading sub-NDARAH793FBF_task-surroundSupp_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 13.1B/s]
 
 Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-2_eeg.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 34.8B/s]
+Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 12.8B/s]
 
 Downloading task-symbolSearch_eeg.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading task-symbolSearch_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 35.0B/s]
+Downloading task-symbolSearch_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 12.8B/s]
 
 Downloading task-surroundSupp_eeg.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading task-surroundSupp_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 36.6B/s]
+Downloading task-surroundSupp_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 12.7B/s]
 
 Downloading task-contrastChangeDetection_eeg.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading task-contrastChangeDetection_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 35.4B/s]
+Downloading task-contrastChangeDetection_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 12.7B/s]
 
 Downloading task-seqLearning8target_eeg.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading task-seqLearning8target_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 40.0B/s]
+Downloading task-seqLearning8target_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 12.8B/s]
 
 Downloading task-DespicableMe_eeg.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading task-DespicableMe_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 33.7B/s]
+Downloading task-DespicableMe_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 12.8B/s]
 
 Downloading task-ThePresent_eeg.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading task-ThePresent_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 35.5B/s]
+Downloading task-ThePresent_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 12.7B/s]
 
 Downloading task-FunwithFractals_eeg.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading task-FunwithFractals_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 23.9B/s]
+Downloading task-FunwithFractals_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 13.0B/s]
 
 Downloading task-RestingState_eeg.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading task-RestingState_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 33.2B/s]
+Downloading task-RestingState_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 12.4B/s]
 
 Downloading task-seqLearning6target_eeg.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading task-seqLearning6target_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 38.7B/s]
+Downloading task-seqLearning6target_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 12.9B/s]
 
 Downloading task-DiaryOfAWimpyKid_eeg.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading task-DiaryOfAWimpyKid_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 34.4B/s]
+Downloading task-DiaryOfAWimpyKid_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 13.1B/s]
 
 Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-1_channels.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 31.8B/s]
+Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 13.4B/s]
 
 Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-2_channels.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 24.5B/s]
+Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 11.9B/s]
 
 Downloading sub-NDARAH793FBF_task-RestingState_channels.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAH793FBF_task-RestingState_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 16.7B/s]
+Downloading sub-NDARAH793FBF_task-RestingState_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 12.8B/s]
 
 Downloading sub-NDARAH793FBF_task-surroundSupp_run-2_channels.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAH793FBF_task-surroundSupp_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 36.0B/s]
+Downloading sub-NDARAH793FBF_task-surroundSupp_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 12.6B/s]
 
 Downloading sub-NDARAH793FBF_task-ThePresent_channels.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAH793FBF_task-ThePresent_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 13.7B/s]
+Downloading sub-NDARAH793FBF_task-ThePresent_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 12.7B/s]
 
 Downloading sub-NDARAH793FBF_task-surroundSupp_run-1_channels.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAH793FBF_task-surroundSupp_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 16.1B/s]
+Downloading sub-NDARAH793FBF_task-surroundSupp_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 12.7B/s]
 
 Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-3_channels.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 37.8B/s]
+Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 13.1B/s]
 
 Downloading sub-NDARAH793FBF_task-DespicableMe_channels.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAH793FBF_task-DespicableMe_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 36.4B/s]
+Downloading sub-NDARAH793FBF_task-DespicableMe_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 12.8B/s]
 
 Downloading sub-NDARAH793FBF_task-FunwithFractals_channels.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAH793FBF_task-FunwithFractals_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 35.5B/s]
+Downloading sub-NDARAH793FBF_task-FunwithFractals_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 12.7B/s]
 
 Downloading sub-NDARAH793FBF_task-seqLearning8target_channels.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAH793FBF_task-seqLearning8target_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 19.7B/s]
+Downloading sub-NDARAH793FBF_task-seqLearning8target_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 13.2B/s]
 
 Downloading sub-NDARAH793FBF_task-symbolSearch_channels.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAH793FBF_task-symbolSearch_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 34.2B/s]
+Downloading sub-NDARAH793FBF_task-symbolSearch_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 13.2B/s]
 
 Downloading sub-NDARAH793FBF_task-DiaryOfAWimpyKid_channels.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAH793FBF_task-DiaryOfAWimpyKid_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 32.0B/s]
+Downloading sub-NDARAH793FBF_task-DiaryOfAWimpyKid_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 12.5B/s]
 
 Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-1_eeg.bdf:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 4.83B/s]
-Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 4.82B/s]
+Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 1.62B/s]
+Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 1.62B/s]
 
 Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-1_eeg.bdf:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 6.71B/s]
+Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 3.42B/s]
+Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 3.41B/s]
 </pre></div>
 </div>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Alternatives for Downloading the data</span>
-<span class="c1"># -------------------------------------</span>
-
-<span class="c1">#</span>
-
-<span class="c1"># You can also perform this operation with wget or the aws cli.</span>
-<span class="c1"># These options will probably be faster!</span>
-<span class="c1"># Please check more details in the `HBN` data webpage `HBN-EEG &lt;https://neuromechanist.github.io/data/hbn/&gt;`__.</span>
-<span class="c1"># You need to download the 100Hz preprocessed data in BDF format.</span>
-
-<span class="c1">#</span>
-
-<span class="c1"># Example of wget for release R1</span>
-<span class="c1">#    wget https://sccn.ucsd.edu/download/eeg2025/R1_L100_bdf.zip -O R1_L100_bdf.zip</span>
-
-<span class="c1">#</span>
-
-<span class="c1"># Example of AWS CLI for release R1</span>
-
-<span class="c1">#</span>
-
-<span class="c1">#    aws s3 sync s3://nmdatasets/NeurIPS25/R1_L100_bdf data/R1_L100_bdf --no-sign-request</span>
-</pre></div>
-</div>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create windows of interest</span>
-<span class="c1"># -----------------------------</span>
-<span class="c1"># So we epoch after the stimulus moment with a beginning shift of 500 ms.</span>
-
-<span class="n">EPOCH_LEN_S</span> <span class="o">=</span> <span class="mf">2.0</span>
+</section>
+<section id="alternatives-for-downloading-the-data">
+<h2><a class="toc-backref" href="#id2" role="doc-backlink">Alternatives for Downloading the data</a><a class="headerlink" href="#alternatives-for-downloading-the-data" title="Link to this heading">#</a></h2>
+<p>You can also perform this operation with wget or the aws cli.
+These options will probably be faster!
+Please check more details in the <cite>HBN</cite> data webpage <a class="reference external" href="https://neuromechanist.github.io/data/hbn/">HBN-EEG</a>.
+You need to download the 100Hz preprocessed data in BDF format.</p>
+<dl class="simple">
+<dt>Example of wget for release R1</dt><dd><p>wget <a class="reference external" href="https://sccn.ucsd.edu/download/eeg2025/R1_L100_bdf.zip">https://sccn.ucsd.edu/download/eeg2025/R1_L100_bdf.zip</a> -O R1_L100_bdf.zip</p>
+</dd>
+</dl>
+<p>Example of AWS CLI for release R1</p>
+<blockquote>
+<div><p>aws s3 sync s3://nmdatasets/NeurIPS25/R1_L100_bdf data/R1_L100_bdf –no-sign-request</p>
+</div></blockquote>
+</section>
+<section id="create-windows-of-interest">
+<h2><a class="toc-backref" href="#id3" role="doc-backlink">Create windows of interest</a><a class="headerlink" href="#create-windows-of-interest" title="Link to this heading">#</a></h2>
+<p>So we epoch after the stimulus moment with a beginning shift of 500 ms.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">EPOCH_LEN_S</span> <span class="o">=</span> <span class="mf">2.0</span>
 <span class="n">SFREQ</span> <span class="o">=</span> <span class="mi">100</span>  <span class="c1"># by definition here</span>
-
 <span class="n">transformation_offline</span> <span class="o">=</span> <span class="p">[</span>
     <span class="n">Preprocessor</span><span class="p">(</span>
         <a href="../../../api/generated/api-core/eegdash.hbn.html#eegdash.hbn.annotate_trials_with_target" title="eegdash.hbn.annotate_trials_with_target" class="sphx-glr-backref-module-eegdash-hbn sphx-glr-backref-type-py-function"><span class="n">annotate_trials_with_target</span></a><span class="p">,</span>
@@ -1083,14 +979,11 @@ Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-1_eeg.bdf: 100%|�
     <span class="n">Preprocessor</span><span class="p">(</span><a href="../../../api/generated/api-core/eegdash.hbn.html#eegdash.hbn.add_aux_anchors" title="eegdash.hbn.add_aux_anchors" class="sphx-glr-backref-module-eegdash-hbn sphx-glr-backref-type-py-function"><span class="n">add_aux_anchors</span></a><span class="p">,</span> <span class="n">apply_on_array</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
 <span class="p">]</span>
 <span class="n">preprocess</span><span class="p">(</span><span class="n">dataset_ccd</span><span class="p">,</span> <span class="n">transformation_offline</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-
 <span class="n">ANCHOR</span> <span class="o">=</span> <span class="s2">&quot;stimulus_anchor&quot;</span>
 <span class="n">SHIFT_AFTER_STIM</span> <span class="o">=</span> <span class="mf">0.5</span>
 <span class="n">WINDOW_LEN</span> <span class="o">=</span> <span class="mf">2.0</span>
-
 <span class="c1"># Keep only recordings that actually contain stimulus anchors</span>
 <span class="n">dataset</span> <span class="o">=</span> <a href="../../../api/generated/api-core/eegdash.hbn.html#eegdash.hbn.keep_only_recordings_with" title="eegdash.hbn.keep_only_recordings_with" class="sphx-glr-backref-module-eegdash-hbn sphx-glr-backref-type-py-function"><span class="n">keep_only_recordings_with</span></a><span class="p">(</span><span class="n">ANCHOR</span><span class="p">,</span> <span class="n">dataset_ccd</span><span class="p">)</span>
-
 <span class="c1"># Create single-interval windows (stim-locked, long enough to include the response)</span>
 <span class="n">single_windows</span> <span class="o">=</span> <span class="n">create_windows_from_events</span><span class="p">(</span>
     <span class="n">dataset</span><span class="p">,</span>
@@ -1101,7 +994,6 @@ Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-1_eeg.bdf: 100%|�
     <span class="n">window_stride_samples</span><span class="o">=</span><span class="n">SFREQ</span><span class="p">,</span>
     <span class="n">preload</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
 <span class="p">)</span>
-
 <span class="c1"># Injecting metadata into the extra mne annotation.</span>
 <span class="n">single_windows</span> <span class="o">=</span> <a href="../../../api/generated/api-core/eegdash.hbn.html#eegdash.hbn.add_extras_columns" title="eegdash.hbn.add_extras_columns" class="sphx-glr-backref-module-eegdash-hbn sphx-glr-backref-type-py-function"><span class="n">add_extras_columns</span></a><span class="p">(</span>
     <span class="n">single_windows</span><span class="p">,</span>
@@ -1181,13 +1073,13 @@ Used Annotations descriptions: [np.str_(&#39;stimulus_anchor&#39;)]
 Used Annotations descriptions: [np.str_(&#39;stimulus_anchor&#39;)]
 </pre></div>
 </div>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Inspect the label distribution</span>
-<span class="c1"># -------------------------------</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+</section>
+<section id="inspect-the-label-distribution">
+<h2><a class="toc-backref" href="#id4" role="doc-backlink">Inspect the label distribution</a><a class="headerlink" href="#inspect-the-label-distribution" title="Link to this heading">#</a></h2>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">skorch.helper</span><span class="w"> </span><span class="kn">import</span> <span class="n">SliceDataset</span>
 
 <span class="n">y_label</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">SliceDataset</span><span class="p">(</span><span class="n">single_windows</span><span class="p">,</span> <span class="mi">1</span><span class="p">)))</span>
-
 <span class="c1"># Plot histogram of the response times with matplotlib</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 
@@ -1200,40 +1092,34 @@ Used Annotations descriptions: [np.str_(&#39;stimulus_anchor&#39;)]
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<img src="../../../_images/sphx_glr_tutorial_challenge_1_001.png" srcset="../../../_images/sphx_glr_tutorial_challenge_1_001.png" alt="Response Time Distribution" class = "sphx-glr-single-img"/><div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Split the data</span>
-<span class="c1"># ---------------</span>
-<span class="c1"># Extract meta information</span>
-<span class="n">meta_information</span> <span class="o">=</span> <span class="n">single_windows</span><span class="o">.</span><span class="n">get_metadata</span><span class="p">()</span>
-
+<img src="../../../_images/sphx_glr_tutorial_challenge_1_001.png" srcset="../../../_images/sphx_glr_tutorial_challenge_1_001.png" alt="Response Time Distribution" class = "sphx-glr-single-img"/></section>
+<section id="split-the-data">
+<h2><a class="toc-backref" href="#id5" role="doc-backlink">Split the data</a><a class="headerlink" href="#split-the-data" title="Link to this heading">#</a></h2>
+<p>Extract meta information</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">meta_information</span> <span class="o">=</span> <span class="n">single_windows</span><span class="o">.</span><span class="n">get_metadata</span><span class="p">()</span>
 <span class="n">valid_frac</span> <span class="o">=</span> <span class="mf">0.1</span>
 <span class="n">test_frac</span> <span class="o">=</span> <span class="mf">0.1</span>
 <span class="n">seed</span> <span class="o">=</span> <span class="mi">2025</span>
-
 <span class="n">subjects</span> <span class="o">=</span> <span class="n">meta_information</span><span class="p">[</span><span class="s2">&quot;subject&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span>
-
 <span class="n">train_subj</span><span class="p">,</span> <span class="n">valid_test_subject</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span>
     <span class="n">subjects</span><span class="p">,</span>
     <span class="n">test_size</span><span class="o">=</span><span class="p">(</span><span class="n">valid_frac</span> <span class="o">+</span> <span class="n">test_frac</span><span class="p">),</span>
     <span class="n">random_state</span><span class="o">=</span><span class="n">check_random_state</span><span class="p">(</span><span class="n">seed</span><span class="p">),</span>
     <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
 <span class="p">)</span>
-
 <span class="n">valid_subj</span><span class="p">,</span> <span class="n">test_subj</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span>
     <span class="n">valid_test_subject</span><span class="p">,</span>
     <span class="n">test_size</span><span class="o">=</span><span class="n">test_frac</span><span class="p">,</span>
     <span class="n">random_state</span><span class="o">=</span><span class="n">check_random_state</span><span class="p">(</span><span class="n">seed</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span>
     <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
 <span class="p">)</span>
-
 <span class="c1"># Sanity check</span>
 <span class="k">assert</span> <span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">valid_subj</span><span class="p">)</span> <span class="o">|</span> <span class="nb">set</span><span class="p">(</span><span class="n">test_subj</span><span class="p">)</span> <span class="o">|</span> <span class="nb">set</span><span class="p">(</span><span class="n">train_subj</span><span class="p">))</span> <span class="o">==</span> <span class="nb">set</span><span class="p">(</span><span class="n">subjects</span><span class="p">)</span>
-
 <span class="c1"># Create train/valid/test splits for the windows</span>
 <span class="n">subject_split</span> <span class="o">=</span> <span class="n">single_windows</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;subject&quot;</span><span class="p">)</span>
 <span class="n">train_set</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="n">valid_set</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="n">test_set</span> <span class="o">=</span> <span class="p">[]</span>
-
 <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">subject_split</span><span class="p">:</span>
     <span class="k">if</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">train_subj</span><span class="p">:</span>
         <span class="n">train_set</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">subject_split</span><span class="p">[</span><span class="n">s</span><span class="p">])</span>
@@ -1241,11 +1127,9 @@ Used Annotations descriptions: [np.str_(&#39;stimulus_anchor&#39;)]
         <span class="n">valid_set</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">subject_split</span><span class="p">[</span><span class="n">s</span><span class="p">])</span>
     <span class="k">elif</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">test_subj</span><span class="p">:</span>
         <span class="n">test_set</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">subject_split</span><span class="p">[</span><span class="n">s</span><span class="p">])</span>
-
 <span class="n">train_set</span> <span class="o">=</span> <span class="n">BaseConcatDataset</span><span class="p">(</span><span class="n">train_set</span><span class="p">)</span>
 <span class="n">valid_set</span> <span class="o">=</span> <span class="n">BaseConcatDataset</span><span class="p">(</span><span class="n">valid_set</span><span class="p">)</span>
 <span class="n">test_set</span> <span class="o">=</span> <span class="n">BaseConcatDataset</span><span class="p">(</span><span class="n">test_set</span><span class="p">)</span>
-
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Number of examples in each split in the minirelease&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Train:</span><span class="se">\t</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">train_set</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Valid:</span><span class="se">\t</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">valid_set</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
@@ -1258,12 +1142,12 @@ Valid:  183
 Test:   50
 </pre></div>
 </div>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create dataloaders</span>
-<span class="c1"># -------------------</span>
-<span class="n">batch_size</span> <span class="o">=</span> <span class="mi">128</span>
+</section>
+<section id="create-dataloaders">
+<h2><a class="toc-backref" href="#id6" role="doc-backlink">Create dataloaders</a><a class="headerlink" href="#create-dataloaders" title="Link to this heading">#</a></h2>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">batch_size</span> <span class="o">=</span> <span class="mi">128</span>
 <span class="c1"># Set num_workers to 0 to avoid multiprocessing issues in notebooks/tutorials</span>
 <span class="n">num_workers</span> <span class="o">=</span> <span class="mi">0</span>
-
 <span class="n">train_loader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span>
     <span class="n">train_set</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">num_workers</span><span class="o">=</span><span class="n">num_workers</span>
 <span class="p">)</span>
@@ -1275,21 +1159,21 @@ Test:   50
 <span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Build the model</span>
-<span class="c1"># -----------------</span>
-<span class="c1"># For neural network models, **to start**, we suggest using `braindecode models &lt;https://braindecode.org/1.2/models/models_table.html&gt;`__ zoo.</span>
-<span class="c1"># We have implemented several different models for decoding the brain timeseries.</span>
-<span class="c1"># Your team&#39;s responsibility is to develop a PyTorch module that receives the three-dimensional (`batch`, `n_chans`, `n_times`)</span>
-<span class="c1"># input and outputs the contrastive response time.</span>
-<span class="c1"># **You can use any model you want**, as long as it follows the input/output</span>
-<span class="c1"># definitions above.</span>
-<span class="n">model</span> <span class="o">=</span> <span class="n">EEGNeX</span><span class="p">(</span>
+</section>
+<section id="build-the-model">
+<h2><a class="toc-backref" href="#id7" role="doc-backlink">Build the model</a><a class="headerlink" href="#build-the-model" title="Link to this heading">#</a></h2>
+<p>For neural network models, <strong>to start</strong>, we suggest using <a class="reference external" href="https://braindecode.org/1.2/models/models_table.html">braindecode models</a> zoo.
+We have implemented several different models for decoding the brain timeseries.
+Your team’s responsibility is to develop a PyTorch module that receives the three-dimensional (<cite>batch</cite>, <cite>n_chans</cite>, <cite>n_times</cite>)
+input and outputs the contrastive response time.
+<strong>You can use any model you want</strong>, as long as it follows the input/output
+definitions above.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">EEGNeX</span><span class="p">(</span>
     <span class="n">n_chans</span><span class="o">=</span><span class="mi">129</span><span class="p">,</span>  <span class="c1"># 129 channels</span>
     <span class="n">n_outputs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>  <span class="c1"># 1 output for regression</span>
     <span class="n">n_times</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span>  <span class="c1"># 2 seconds</span>
     <span class="n">sfreq</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>  <span class="c1"># sample frequency 100 Hz</span>
 <span class="p">)</span>
-
 <span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
 <span class="n">model</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
 </pre></div>
@@ -1386,16 +1270,13 @@ EEGNeX(
 )
 </pre></div>
 </div>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define training and validation functions</span>
-<span class="c1"># -------------------------------------------</span>
-<span class="c1"># The rest is our classic PyTorch/torch lighting/skorch training pipeline,</span>
-<span class="c1"># you can use any training framework you want.</span>
-<span class="c1"># We provide a simple training and validation loop below.</span>
-
-<span class="c1">#</span>
-
-
-<span class="k">def</span><span class="w"> </span><span class="nf">train_one_epoch</span><span class="p">(</span>
+</section>
+<section id="define-training-and-validation-functions">
+<h2><a class="toc-backref" href="#id8" role="doc-backlink">Define training and validation functions</a><a class="headerlink" href="#define-training-and-validation-functions" title="Link to this heading">#</a></h2>
+<p>The rest is our classic PyTorch/torch lighting/skorch training pipeline,
+you can use any training framework you want.
+We provide a simple training and validation loop below.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">train_one_epoch</span><span class="p">(</span>
     <span class="n">dataloader</span><span class="p">:</span> <span class="n">DataLoader</span><span class="p">,</span>
     <span class="n">model</span><span class="p">:</span> <span class="n">Module</span><span class="p">,</span>
     <span class="n">loss_fn</span><span class="p">,</span>
@@ -1406,44 +1287,35 @@ EEGNeX(
     <span class="n">print_batch_stats</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
 <span class="p">):</span>
     <span class="n">model</span><span class="o">.</span><span class="n">train</span><span class="p">()</span>
-
     <span class="n">total_loss</span> <span class="o">=</span> <span class="mf">0.0</span>
     <span class="n">sum_sq_err</span> <span class="o">=</span> <span class="mf">0.0</span>
     <span class="n">n_samples</span> <span class="o">=</span> <span class="mi">0</span>
-
     <span class="n">progress_bar</span> <span class="o">=</span> <span class="n">tqdm</span><span class="p">(</span>
         <span class="nb">enumerate</span><span class="p">(</span><span class="n">dataloader</span><span class="p">),</span> <span class="n">total</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">dataloader</span><span class="p">),</span> <span class="n">disable</span><span class="o">=</span><span class="ow">not</span> <span class="n">print_batch_stats</span>
     <span class="p">)</span>
-
     <span class="k">for</span> <span class="n">batch_idx</span><span class="p">,</span> <span class="n">batch</span> <span class="ow">in</span> <span class="n">progress_bar</span><span class="p">:</span>
         <span class="c1"># Support datasets that may return (X, y) or (X, y, ...)</span>
         <span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">batch</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">batch</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
         <span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span><span class="o">.</span><span class="n">float</span><span class="p">(),</span> <span class="n">y</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span><span class="o">.</span><span class="n">float</span><span class="p">()</span>
-
         <span class="n">optimizer</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">(</span><span class="n">set_to_none</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="n">preds</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
         <span class="n">loss</span> <span class="o">=</span> <span class="n">loss_fn</span><span class="p">(</span><span class="n">preds</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
         <span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
         <span class="n">optimizer</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
-
         <span class="n">total_loss</span> <span class="o">+=</span> <span class="n">loss</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
-
         <span class="c1"># Flatten to 1D for regression metrics and accumulate squared error</span>
         <span class="n">preds_flat</span> <span class="o">=</span> <span class="n">preds</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
         <span class="n">y_flat</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
         <span class="n">sum_sq_err</span> <span class="o">+=</span> <span class="n">torch</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">preds_flat</span> <span class="o">-</span> <span class="n">y_flat</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
         <span class="n">n_samples</span> <span class="o">+=</span> <span class="n">y_flat</span><span class="o">.</span><span class="n">numel</span><span class="p">()</span>
-
         <span class="k">if</span> <span class="n">print_batch_stats</span><span class="p">:</span>
             <span class="n">running_rmse</span> <span class="o">=</span> <span class="p">(</span><span class="n">sum_sq_err</span> <span class="o">/</span> <span class="nb">max</span><span class="p">(</span><span class="n">n_samples</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span> <span class="o">**</span> <span class="mf">0.5</span>
             <span class="n">progress_bar</span><span class="o">.</span><span class="n">set_description</span><span class="p">(</span>
                 <span class="sa">f</span><span class="s2">&quot;Epoch </span><span class="si">{</span><span class="n">epoch</span><span class="si">}</span><span class="s2">, Batch </span><span class="si">{</span><span class="n">batch_idx</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">dataloader</span><span class="p">)</span><span class="si">}</span><span class="s2">, &quot;</span>
                 <span class="sa">f</span><span class="s2">&quot;Loss: </span><span class="si">{</span><span class="n">loss</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">, RMSE: </span><span class="si">{</span><span class="n">running_rmse</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span>
             <span class="p">)</span>
-
     <span class="k">if</span> <span class="n">scheduler</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">scheduler</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
-
     <span class="n">avg_loss</span> <span class="o">=</span> <span class="n">total_loss</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">dataloader</span><span class="p">)</span>
     <span class="n">rmse</span> <span class="o">=</span> <span class="p">(</span><span class="n">sum_sq_err</span> <span class="o">/</span> <span class="nb">max</span><span class="p">(</span><span class="n">n_samples</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span> <span class="o">**</span> <span class="mf">0.5</span>
     <span class="k">return</span> <span class="n">avg_loss</span><span class="p">,</span> <span class="n">rmse</span>
@@ -1458,78 +1330,65 @@ EEGNeX(
     <span class="n">print_batch_stats</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
 <span class="p">):</span>
     <span class="n">model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
-
     <span class="n">total_loss</span> <span class="o">=</span> <span class="mf">0.0</span>
     <span class="n">sum_sq_err</span> <span class="o">=</span> <span class="mf">0.0</span>
     <span class="n">n_batches</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">dataloader</span><span class="p">)</span>
     <span class="n">n_samples</span> <span class="o">=</span> <span class="mi">0</span>
-
     <span class="n">iterator</span> <span class="o">=</span> <span class="n">tqdm</span><span class="p">(</span>
         <span class="nb">enumerate</span><span class="p">(</span><span class="n">dataloader</span><span class="p">),</span> <span class="n">total</span><span class="o">=</span><span class="n">n_batches</span><span class="p">,</span> <span class="n">disable</span><span class="o">=</span><span class="ow">not</span> <span class="n">print_batch_stats</span>
     <span class="p">)</span>
-
     <span class="k">for</span> <span class="n">batch_idx</span><span class="p">,</span> <span class="n">batch</span> <span class="ow">in</span> <span class="n">iterator</span><span class="p">:</span>
         <span class="c1"># Supports (X, y) or (X, y, ...)</span>
         <span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">batch</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">batch</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
         <span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span><span class="o">.</span><span class="n">float</span><span class="p">(),</span> <span class="n">y</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span><span class="o">.</span><span class="n">float</span><span class="p">()</span>
-
         <span class="n">preds</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
         <span class="n">batch_loss</span> <span class="o">=</span> <span class="n">loss_fn</span><span class="p">(</span><span class="n">preds</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
         <span class="n">total_loss</span> <span class="o">+=</span> <span class="n">batch_loss</span>
-
         <span class="n">preds_flat</span> <span class="o">=</span> <span class="n">preds</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
         <span class="n">y_flat</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
         <span class="n">sum_sq_err</span> <span class="o">+=</span> <span class="n">torch</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">preds_flat</span> <span class="o">-</span> <span class="n">y_flat</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
         <span class="n">n_samples</span> <span class="o">+=</span> <span class="n">y_flat</span><span class="o">.</span><span class="n">numel</span><span class="p">()</span>
-
         <span class="k">if</span> <span class="n">print_batch_stats</span><span class="p">:</span>
             <span class="n">running_rmse</span> <span class="o">=</span> <span class="p">(</span><span class="n">sum_sq_err</span> <span class="o">/</span> <span class="nb">max</span><span class="p">(</span><span class="n">n_samples</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span> <span class="o">**</span> <span class="mf">0.5</span>
             <span class="n">iterator</span><span class="o">.</span><span class="n">set_description</span><span class="p">(</span>
                 <span class="sa">f</span><span class="s2">&quot;Val Batch </span><span class="si">{</span><span class="n">batch_idx</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">n_batches</span><span class="si">}</span><span class="s2">, &quot;</span>
                 <span class="sa">f</span><span class="s2">&quot;Loss: </span><span class="si">{</span><span class="n">batch_loss</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">, RMSE: </span><span class="si">{</span><span class="n">running_rmse</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span>
             <span class="p">)</span>
-
     <span class="n">avg_loss</span> <span class="o">=</span> <span class="n">total_loss</span> <span class="o">/</span> <span class="n">n_batches</span> <span class="k">if</span> <span class="n">n_batches</span> <span class="k">else</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;nan&quot;</span><span class="p">)</span>
     <span class="n">rmse</span> <span class="o">=</span> <span class="p">(</span><span class="n">sum_sq_err</span> <span class="o">/</span> <span class="nb">max</span><span class="p">(</span><span class="n">n_samples</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span> <span class="o">**</span> <span class="mf">0.5</span>
-
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Val RMSE: </span><span class="si">{</span><span class="n">rmse</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">, Val Loss: </span><span class="si">{</span><span class="n">avg_loss</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">avg_loss</span><span class="p">,</span> <span class="n">rmse</span>
 </pre></div>
 </div>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Train the model</span>
-<span class="c1"># ------------------</span>
-<span class="n">lr</span> <span class="o">=</span> <span class="mf">1e-3</span>
+</section>
+<section id="train-the-model">
+<h2><a class="toc-backref" href="#id9" role="doc-backlink">Train the model</a><a class="headerlink" href="#train-the-model" title="Link to this heading">#</a></h2>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">lr</span> <span class="o">=</span> <span class="mf">1e-3</span>
 <span class="n">weight_decay</span> <span class="o">=</span> <span class="mf">1e-5</span>
 <span class="n">n_epochs</span> <span class="o">=</span> <span class="p">(</span>
     <span class="mi">5</span>  <span class="c1"># For demonstration purposes, we use just 5 epochs here. You can increase this.</span>
 <span class="p">)</span>
 <span class="n">early_stopping_patience</span> <span class="o">=</span> <span class="mi">50</span>
-
 <span class="n">optimizer</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">AdamW</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="n">lr</span><span class="p">,</span> <span class="n">weight_decay</span><span class="o">=</span><span class="n">weight_decay</span><span class="p">)</span>
 <span class="n">scheduler</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">lr_scheduler</span><span class="o">.</span><span class="n">CosineAnnealingLR</span><span class="p">(</span><span class="n">optimizer</span><span class="p">,</span> <span class="n">T_max</span><span class="o">=</span><span class="n">n_epochs</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
 <span class="n">loss_fn</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">MSELoss</span><span class="p">()</span>
-
 <span class="n">patience</span> <span class="o">=</span> <span class="mi">5</span>
 <span class="n">min_delta</span> <span class="o">=</span> <span class="mf">1e-4</span>
 <span class="n">best_rmse</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;inf&quot;</span><span class="p">)</span>
 <span class="n">epochs_no_improve</span> <span class="o">=</span> <span class="mi">0</span>
 <span class="n">best_state</span><span class="p">,</span> <span class="n">best_epoch</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
-
 <span class="k">for</span> <span class="n">epoch</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_epochs</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Epoch </span><span class="si">{</span><span class="n">epoch</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">n_epochs</span><span class="si">}</span><span class="s2">: &quot;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
-
     <span class="n">train_loss</span><span class="p">,</span> <span class="n">train_rmse</span> <span class="o">=</span> <span class="n">train_one_epoch</span><span class="p">(</span>
         <span class="n">train_loader</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">loss_fn</span><span class="p">,</span> <span class="n">optimizer</span><span class="p">,</span> <span class="n">scheduler</span><span class="p">,</span> <span class="n">epoch</span><span class="p">,</span> <span class="n">device</span>
     <span class="p">)</span>
     <span class="n">val_loss</span><span class="p">,</span> <span class="n">val_rmse</span> <span class="o">=</span> <span class="n">valid_model</span><span class="p">(</span><span class="n">test_loader</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">loss_fn</span><span class="p">,</span> <span class="n">device</span><span class="p">)</span>
-
     <span class="nb">print</span><span class="p">(</span>
         <span class="sa">f</span><span class="s2">&quot;Train RMSE: </span><span class="si">{</span><span class="n">train_rmse</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">, &quot;</span>
         <span class="sa">f</span><span class="s2">&quot;Average Train Loss: </span><span class="si">{</span><span class="n">train_loss</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">, &quot;</span>
         <span class="sa">f</span><span class="s2">&quot;Val RMSE: </span><span class="si">{</span><span class="n">val_rmse</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">, &quot;</span>
         <span class="sa">f</span><span class="s2">&quot;Average Val Loss: </span><span class="si">{</span><span class="n">val_loss</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span>
     <span class="p">)</span>
-
     <span class="k">if</span> <span class="n">val_rmse</span> <span class="o">&lt;</span> <span class="n">best_rmse</span> <span class="o">-</span> <span class="n">min_delta</span><span class="p">:</span>
         <span class="n">best_rmse</span> <span class="o">=</span> <span class="n">val_rmse</span>
         <span class="n">best_state</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">state_dict</span><span class="p">())</span>
@@ -1542,7 +1401,6 @@ EEGNeX(
                 <span class="sa">f</span><span class="s2">&quot;Early stopping at epoch </span><span class="si">{</span><span class="n">epoch</span><span class="si">}</span><span class="s2">. Best Val RMSE: </span><span class="si">{</span><span class="n">best_rmse</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2"> (epoch </span><span class="si">{</span><span class="n">best_epoch</span><span class="si">}</span><span class="s2">)&quot;</span>
             <span class="p">)</span>
             <span class="k">break</span>
-
 <span class="k">if</span> <span class="n">best_state</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
     <span class="n">model</span><span class="o">.</span><span class="n">load_state_dict</span><span class="p">(</span><span class="n">best_state</span><span class="p">)</span>
 </pre></div>
@@ -1550,151 +1408,152 @@ EEGNeX(
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Epoch 1/5:
   0%|          | 0/8 [00:00&lt;?, ?it/s]
 Epoch 1, Batch 1/8, Loss: 2.838698, RMSE: 1.684844:   0%|          | 0/8 [00:06&lt;?, ?it/s]
-Epoch 1, Batch 1/8, Loss: 2.838698, RMSE: 1.684844:  12%|█▎        | 1/8 [00:06&lt;00:45,  6.55s/it]
-Epoch 1, Batch 2/8, Loss: 2.693015, RMSE: 1.663086:  12%|█▎        | 1/8 [00:12&lt;00:45,  6.55s/it]
-Epoch 1, Batch 2/8, Loss: 2.693015, RMSE: 1.663086:  25%|██▌       | 2/8 [00:12&lt;00:38,  6.39s/it]
-Epoch 1, Batch 3/8, Loss: 2.785443, RMSE: 1.665048:  25%|██▌       | 2/8 [00:19&lt;00:38,  6.39s/it]
-Epoch 1, Batch 3/8, Loss: 2.785443, RMSE: 1.665048:  38%|███▊      | 3/8 [00:19&lt;00:31,  6.35s/it]
-Epoch 1, Batch 4/8, Loss: 2.746054, RMSE: 1.663070:  38%|███▊      | 3/8 [00:25&lt;00:31,  6.35s/it]
-Epoch 1, Batch 4/8, Loss: 2.746054, RMSE: 1.663070:  50%|█████     | 4/8 [00:25&lt;00:25,  6.27s/it]
-Epoch 1, Batch 5/8, Loss: 2.866567, RMSE: 1.669118:  50%|█████     | 4/8 [00:31&lt;00:25,  6.27s/it]
-Epoch 1, Batch 5/8, Loss: 2.866567, RMSE: 1.669118:  62%|██████▎   | 5/8 [00:31&lt;00:18,  6.22s/it]
-Epoch 1, Batch 6/8, Loss: 2.627282, RMSE: 1.661177:  62%|██████▎   | 5/8 [00:37&lt;00:18,  6.22s/it]
-Epoch 1, Batch 6/8, Loss: 2.627282, RMSE: 1.661177:  75%|███████▌  | 6/8 [00:37&lt;00:12,  6.18s/it]
-Epoch 1, Batch 7/8, Loss: 2.536175, RMSE: 1.651546:  75%|███████▌  | 6/8 [00:43&lt;00:12,  6.18s/it]
-Epoch 1, Batch 7/8, Loss: 2.536175, RMSE: 1.651546:  88%|████████▊ | 7/8 [00:43&lt;00:06,  6.17s/it]
-Epoch 1, Batch 8/8, Loss: 2.386838, RMSE: 1.642583:  88%|████████▊ | 7/8 [00:47&lt;00:06,  6.17s/it]
-Epoch 1, Batch 8/8, Loss: 2.386838, RMSE: 1.642583: 100%|██████████| 8/8 [00:47&lt;00:00,  5.52s/it]
-Epoch 1, Batch 8/8, Loss: 2.386838, RMSE: 1.642583: 100%|██████████| 8/8 [00:47&lt;00:00,  5.97s/it]
+Epoch 1, Batch 1/8, Loss: 2.838698, RMSE: 1.684844:  12%|█▎        | 1/8 [00:06&lt;00:44,  6.30s/it]
+Epoch 1, Batch 2/8, Loss: 2.693015, RMSE: 1.663086:  12%|█▎        | 1/8 [00:12&lt;00:44,  6.30s/it]
+Epoch 1, Batch 2/8, Loss: 2.693015, RMSE: 1.663086:  25%|██▌       | 2/8 [00:12&lt;00:36,  6.08s/it]
+Epoch 1, Batch 3/8, Loss: 2.785443, RMSE: 1.665048:  25%|██▌       | 2/8 [00:18&lt;00:36,  6.08s/it]
+Epoch 1, Batch 3/8, Loss: 2.785443, RMSE: 1.665048:  38%|███▊      | 3/8 [00:18&lt;00:29,  5.97s/it]
+Epoch 1, Batch 4/8, Loss: 2.746054, RMSE: 1.663070:  38%|███▊      | 3/8 [00:23&lt;00:29,  5.97s/it]
+Epoch 1, Batch 4/8, Loss: 2.746054, RMSE: 1.663070:  50%|█████     | 4/8 [00:23&lt;00:23,  5.89s/it]
+Epoch 1, Batch 5/8, Loss: 2.866567, RMSE: 1.669118:  50%|█████     | 4/8 [00:29&lt;00:23,  5.89s/it]
+Epoch 1, Batch 5/8, Loss: 2.866567, RMSE: 1.669118:  62%|██████▎   | 5/8 [00:29&lt;00:17,  5.85s/it]
+Epoch 1, Batch 6/8, Loss: 2.627282, RMSE: 1.661177:  62%|██████▎   | 5/8 [00:35&lt;00:17,  5.85s/it]
+Epoch 1, Batch 6/8, Loss: 2.627282, RMSE: 1.661177:  75%|███████▌  | 6/8 [00:35&lt;00:11,  5.83s/it]
+Epoch 1, Batch 7/8, Loss: 2.536175, RMSE: 1.651546:  75%|███████▌  | 6/8 [00:41&lt;00:11,  5.83s/it]
+Epoch 1, Batch 7/8, Loss: 2.536175, RMSE: 1.651546:  88%|████████▊ | 7/8 [00:41&lt;00:05,  5.81s/it]
+Epoch 1, Batch 8/8, Loss: 2.386837, RMSE: 1.642583:  88%|████████▊ | 7/8 [00:44&lt;00:05,  5.81s/it]
+Epoch 1, Batch 8/8, Loss: 2.386837, RMSE: 1.642583: 100%|██████████| 8/8 [00:44&lt;00:00,  5.17s/it]
+Epoch 1, Batch 8/8, Loss: 2.386837, RMSE: 1.642583: 100%|██████████| 8/8 [00:44&lt;00:00,  5.62s/it]
 
   0%|          | 0/1 [00:00&lt;?, ?it/s]
-Val Batch 1/1, Loss: 2.766312, RMSE: 1.663223:   0%|          | 0/1 [00:00&lt;?, ?it/s]
-Val Batch 1/1, Loss: 2.766312, RMSE: 1.663223: 100%|██████████| 1/1 [00:00&lt;00:00,  1.93it/s]
-Val Batch 1/1, Loss: 2.766312, RMSE: 1.663223: 100%|██████████| 1/1 [00:00&lt;00:00,  1.93it/s]
-Val RMSE: 1.663223, Val Loss: 2.766312
+Val Batch 1/1, Loss: 2.766600, RMSE: 1.663310:   0%|          | 0/1 [00:00&lt;?, ?it/s]
+Val Batch 1/1, Loss: 2.766600, RMSE: 1.663310: 100%|██████████| 1/1 [00:00&lt;00:00,  1.76it/s]
+Val Batch 1/1, Loss: 2.766600, RMSE: 1.663310: 100%|██████████| 1/1 [00:00&lt;00:00,  1.76it/s]
+Val RMSE: 1.663310, Val Loss: 2.766600
 
-Train RMSE: 1.642583, Average Train Loss: 2.685009, Val RMSE: 1.663223, Average Val Loss: 2.766312
+Train RMSE: 1.642583, Average Train Loss: 2.685009, Val RMSE: 1.663310, Average Val Loss: 2.766600
 Epoch 2/5:
   0%|          | 0/8 [00:00&lt;?, ?it/s]
-Epoch 2, Batch 1/8, Loss: 2.276956, RMSE: 1.508959:   0%|          | 0/8 [00:06&lt;?, ?it/s]
-Epoch 2, Batch 1/8, Loss: 2.276956, RMSE: 1.508959:  12%|█▎        | 1/8 [00:06&lt;00:43,  6.22s/it]
-Epoch 2, Batch 2/8, Loss: 2.429497, RMSE: 1.534023:  12%|█▎        | 1/8 [00:12&lt;00:43,  6.22s/it]
-Epoch 2, Batch 2/8, Loss: 2.429497, RMSE: 1.534023:  25%|██▌       | 2/8 [00:12&lt;00:37,  6.20s/it]
-Epoch 2, Batch 3/8, Loss: 2.399875, RMSE: 1.539083:  25%|██▌       | 2/8 [00:18&lt;00:37,  6.20s/it]
-Epoch 2, Batch 3/8, Loss: 2.399875, RMSE: 1.539083:  38%|███▊      | 3/8 [00:18&lt;00:30,  6.14s/it]
-Epoch 2, Batch 4/8, Loss: 2.270662, RMSE: 1.531094:  38%|███▊      | 3/8 [00:24&lt;00:30,  6.14s/it]
-Epoch 2, Batch 4/8, Loss: 2.270662, RMSE: 1.531094:  50%|█████     | 4/8 [00:24&lt;00:24,  6.14s/it]
-Epoch 2, Batch 5/8, Loss: 2.045108, RMSE: 1.511430:  50%|█████     | 4/8 [00:30&lt;00:24,  6.14s/it]
-Epoch 2, Batch 5/8, Loss: 2.045108, RMSE: 1.511430:  62%|██████▎   | 5/8 [00:30&lt;00:18,  6.17s/it]
-Epoch 2, Batch 6/8, Loss: 2.020219, RMSE: 1.496792:  62%|██████▎   | 5/8 [00:37&lt;00:18,  6.17s/it]
-Epoch 2, Batch 6/8, Loss: 2.020219, RMSE: 1.496792:  75%|███████▌  | 6/8 [00:37&lt;00:12,  6.18s/it]
-Epoch 2, Batch 7/8, Loss: 1.876298, RMSE: 1.479315:  75%|███████▌  | 6/8 [00:43&lt;00:12,  6.18s/it]
-Epoch 2, Batch 7/8, Loss: 1.876298, RMSE: 1.479315:  88%|████████▊ | 7/8 [00:43&lt;00:06,  6.17s/it]
-Epoch 2, Batch 8/8, Loss: 1.704226, RMSE: 1.465068:  88%|████████▊ | 7/8 [00:47&lt;00:06,  6.17s/it]
-Epoch 2, Batch 8/8, Loss: 1.704226, RMSE: 1.465068: 100%|██████████| 8/8 [00:47&lt;00:00,  5.50s/it]
-Epoch 2, Batch 8/8, Loss: 1.704226, RMSE: 1.465068: 100%|██████████| 8/8 [00:47&lt;00:00,  5.91s/it]
+Epoch 2, Batch 1/8, Loss: 2.276956, RMSE: 1.508959:   0%|          | 0/8 [00:05&lt;?, ?it/s]
+Epoch 2, Batch 1/8, Loss: 2.276956, RMSE: 1.508959:  12%|█▎        | 1/8 [00:05&lt;00:40,  5.84s/it]
+Epoch 2, Batch 2/8, Loss: 2.429497, RMSE: 1.534023:  12%|█▎        | 1/8 [00:11&lt;00:40,  5.84s/it]
+Epoch 2, Batch 2/8, Loss: 2.429497, RMSE: 1.534023:  25%|██▌       | 2/8 [00:11&lt;00:34,  5.79s/it]
+Epoch 2, Batch 3/8, Loss: 2.399875, RMSE: 1.539083:  25%|██▌       | 2/8 [00:17&lt;00:34,  5.79s/it]
+Epoch 2, Batch 3/8, Loss: 2.399875, RMSE: 1.539083:  38%|███▊      | 3/8 [00:17&lt;00:28,  5.78s/it]
+Epoch 2, Batch 4/8, Loss: 2.270662, RMSE: 1.531094:  38%|███▊      | 3/8 [00:23&lt;00:28,  5.78s/it]
+Epoch 2, Batch 4/8, Loss: 2.270662, RMSE: 1.531094:  50%|█████     | 4/8 [00:23&lt;00:23,  5.76s/it]
+Epoch 2, Batch 5/8, Loss: 2.045108, RMSE: 1.511430:  50%|█████     | 4/8 [00:28&lt;00:23,  5.76s/it]
+Epoch 2, Batch 5/8, Loss: 2.045108, RMSE: 1.511430:  62%|██████▎   | 5/8 [00:28&lt;00:17,  5.76s/it]
+Epoch 2, Batch 6/8, Loss: 2.020219, RMSE: 1.496792:  62%|██████▎   | 5/8 [00:34&lt;00:17,  5.76s/it]
+Epoch 2, Batch 6/8, Loss: 2.020219, RMSE: 1.496792:  75%|███████▌  | 6/8 [00:34&lt;00:11,  5.76s/it]
+Epoch 2, Batch 7/8, Loss: 1.876298, RMSE: 1.479315:  75%|███████▌  | 6/8 [00:40&lt;00:11,  5.76s/it]
+Epoch 2, Batch 7/8, Loss: 1.876298, RMSE: 1.479315:  88%|████████▊ | 7/8 [00:40&lt;00:05,  5.76s/it]
+Epoch 2, Batch 8/8, Loss: 1.704226, RMSE: 1.465068:  88%|████████▊ | 7/8 [00:44&lt;00:05,  5.76s/it]
+Epoch 2, Batch 8/8, Loss: 1.704226, RMSE: 1.465068: 100%|██████████| 8/8 [00:44&lt;00:00,  5.14s/it]
+Epoch 2, Batch 8/8, Loss: 1.704226, RMSE: 1.465068: 100%|██████████| 8/8 [00:44&lt;00:00,  5.52s/it]
 
   0%|          | 0/1 [00:00&lt;?, ?it/s]
-Val Batch 1/1, Loss: 2.393699, RMSE: 1.547158:   0%|          | 0/1 [00:00&lt;?, ?it/s]
-Val Batch 1/1, Loss: 2.393699, RMSE: 1.547158: 100%|██████████| 1/1 [00:00&lt;00:00,  1.97it/s]
-Val Batch 1/1, Loss: 2.393699, RMSE: 1.547158: 100%|██████████| 1/1 [00:00&lt;00:00,  1.97it/s]
-Val RMSE: 1.547158, Val Loss: 2.393699
+Val Batch 1/1, Loss: 2.395387, RMSE: 1.547704:   0%|          | 0/1 [00:00&lt;?, ?it/s]
+Val Batch 1/1, Loss: 2.395387, RMSE: 1.547704: 100%|██████████| 1/1 [00:00&lt;00:00,  1.78it/s]
+Val Batch 1/1, Loss: 2.395387, RMSE: 1.547704: 100%|██████████| 1/1 [00:00&lt;00:00,  1.78it/s]
+Val RMSE: 1.547704, Val Loss: 2.395387
 
-Train RMSE: 1.465068, Average Train Loss: 2.127855, Val RMSE: 1.547158, Average Val Loss: 2.393699
+Train RMSE: 1.465068, Average Train Loss: 2.127855, Val RMSE: 1.547704, Average Val Loss: 2.395387
 Epoch 3/5:
   0%|          | 0/8 [00:00&lt;?, ?it/s]
-Epoch 3, Batch 1/8, Loss: 1.526826, RMSE: 1.235648:   0%|          | 0/8 [00:06&lt;?, ?it/s]
-Epoch 3, Batch 1/8, Loss: 1.526826, RMSE: 1.235648:  12%|█▎        | 1/8 [00:06&lt;00:42,  6.08s/it]
-Epoch 3, Batch 2/8, Loss: 1.024627, RMSE: 1.129481:  12%|█▎        | 1/8 [00:12&lt;00:42,  6.08s/it]
-Epoch 3, Batch 2/8, Loss: 1.024627, RMSE: 1.129481:  25%|██▌       | 2/8 [00:12&lt;00:36,  6.08s/it]
-Epoch 3, Batch 3/8, Loss: 1.170787, RMSE: 1.113888:  25%|██▌       | 2/8 [00:18&lt;00:36,  6.08s/it]
-Epoch 3, Batch 3/8, Loss: 1.170787, RMSE: 1.113888:  38%|███▊      | 3/8 [00:18&lt;00:30,  6.09s/it]
-Epoch 3, Batch 4/8, Loss: 1.147321, RMSE: 1.103354:  38%|███▊      | 3/8 [00:24&lt;00:30,  6.09s/it]
-Epoch 3, Batch 4/8, Loss: 1.147321, RMSE: 1.103354:  50%|█████     | 4/8 [00:24&lt;00:24,  6.09s/it]
-Epoch 3, Batch 5/8, Loss: 1.070738, RMSE: 1.089982:  50%|█████     | 4/8 [00:30&lt;00:24,  6.09s/it]
-Epoch 3, Batch 5/8, Loss: 1.070738, RMSE: 1.089982:  62%|██████▎   | 5/8 [00:30&lt;00:18,  6.08s/it]
-Epoch 3, Batch 6/8, Loss: 0.955001, RMSE: 1.072015:  62%|██████▎   | 5/8 [00:36&lt;00:18,  6.08s/it]
-Epoch 3, Batch 6/8, Loss: 0.955001, RMSE: 1.072015:  75%|███████▌  | 6/8 [00:36&lt;00:12,  6.10s/it]
-Epoch 3, Batch 7/8, Loss: 0.711222, RMSE: 1.042423:  75%|███████▌  | 6/8 [00:42&lt;00:12,  6.10s/it]
-Epoch 3, Batch 7/8, Loss: 0.711222, RMSE: 1.042423:  88%|████████▊ | 7/8 [00:42&lt;00:06,  6.11s/it]
-Epoch 3, Batch 8/8, Loss: 0.684565, RMSE: 1.025577:  88%|████████▊ | 7/8 [00:46&lt;00:06,  6.11s/it]
-Epoch 3, Batch 8/8, Loss: 0.684565, RMSE: 1.025577: 100%|██████████| 8/8 [00:46&lt;00:00,  5.48s/it]
-Epoch 3, Batch 8/8, Loss: 0.684565, RMSE: 1.025577: 100%|██████████| 8/8 [00:46&lt;00:00,  5.85s/it]
+Epoch 3, Batch 1/8, Loss: 1.526827, RMSE: 1.235648:   0%|          | 0/8 [00:05&lt;?, ?it/s]
+Epoch 3, Batch 1/8, Loss: 1.526827, RMSE: 1.235648:  12%|█▎        | 1/8 [00:05&lt;00:40,  5.76s/it]
+Epoch 3, Batch 2/8, Loss: 1.024627, RMSE: 1.129481:  12%|█▎        | 1/8 [00:11&lt;00:40,  5.76s/it]
+Epoch 3, Batch 2/8, Loss: 1.024627, RMSE: 1.129481:  25%|██▌       | 2/8 [00:11&lt;00:34,  5.75s/it]
+Epoch 3, Batch 3/8, Loss: 1.170787, RMSE: 1.113888:  25%|██▌       | 2/8 [00:17&lt;00:34,  5.75s/it]
+Epoch 3, Batch 3/8, Loss: 1.170787, RMSE: 1.113888:  38%|███▊      | 3/8 [00:17&lt;00:28,  5.77s/it]
+Epoch 3, Batch 4/8, Loss: 1.147321, RMSE: 1.103354:  38%|███▊      | 3/8 [00:23&lt;00:28,  5.77s/it]
+Epoch 3, Batch 4/8, Loss: 1.147321, RMSE: 1.103354:  50%|█████     | 4/8 [00:23&lt;00:23,  5.76s/it]
+Epoch 3, Batch 5/8, Loss: 1.070738, RMSE: 1.089982:  50%|█████     | 4/8 [00:28&lt;00:23,  5.76s/it]
+Epoch 3, Batch 5/8, Loss: 1.070738, RMSE: 1.089982:  62%|██████▎   | 5/8 [00:28&lt;00:17,  5.76s/it]
+Epoch 3, Batch 6/8, Loss: 0.955001, RMSE: 1.072015:  62%|██████▎   | 5/8 [00:34&lt;00:17,  5.76s/it]
+Epoch 3, Batch 6/8, Loss: 0.955001, RMSE: 1.072015:  75%|███████▌  | 6/8 [00:34&lt;00:11,  5.75s/it]
+Epoch 3, Batch 7/8, Loss: 0.711222, RMSE: 1.042423:  75%|███████▌  | 6/8 [00:40&lt;00:11,  5.75s/it]
+Epoch 3, Batch 7/8, Loss: 0.711222, RMSE: 1.042423:  88%|████████▊ | 7/8 [00:40&lt;00:05,  5.76s/it]
+Epoch 3, Batch 8/8, Loss: 0.684565, RMSE: 1.025577:  88%|████████▊ | 7/8 [00:44&lt;00:05,  5.76s/it]
+Epoch 3, Batch 8/8, Loss: 0.684565, RMSE: 1.025577: 100%|██████████| 8/8 [00:44&lt;00:00,  5.14s/it]
+Epoch 3, Batch 8/8, Loss: 0.684565, RMSE: 1.025577: 100%|██████████| 8/8 [00:44&lt;00:00,  5.52s/it]
 
   0%|          | 0/1 [00:00&lt;?, ?it/s]
-Val Batch 1/1, Loss: 1.588087, RMSE: 1.260193:   0%|          | 0/1 [00:00&lt;?, ?it/s]
-Val Batch 1/1, Loss: 1.588087, RMSE: 1.260193: 100%|██████████| 1/1 [00:00&lt;00:00,  1.98it/s]
-Val Batch 1/1, Loss: 1.588087, RMSE: 1.260193: 100%|██████████| 1/1 [00:00&lt;00:00,  1.98it/s]
-Val RMSE: 1.260193, Val Loss: 1.588087
+Val Batch 1/1, Loss: 1.589483, RMSE: 1.260747:   0%|          | 0/1 [00:00&lt;?, ?it/s]
+Val Batch 1/1, Loss: 1.589483, RMSE: 1.260747: 100%|██████████| 1/1 [00:00&lt;00:00,  1.78it/s]
+Val Batch 1/1, Loss: 1.589483, RMSE: 1.260747: 100%|██████████| 1/1 [00:00&lt;00:00,  1.78it/s]
+Val RMSE: 1.260747, Val Loss: 1.589483
 
-Train RMSE: 1.025577, Average Train Loss: 1.036386, Val RMSE: 1.260193, Average Val Loss: 1.588087
+Train RMSE: 1.025577, Average Train Loss: 1.036386, Val RMSE: 1.260747, Average Val Loss: 1.589483
 Epoch 4/5:
   0%|          | 0/8 [00:00&lt;?, ?it/s]
-Epoch 4, Batch 1/8, Loss: 0.620081, RMSE: 0.787452:   0%|          | 0/8 [00:06&lt;?, ?it/s]
-Epoch 4, Batch 1/8, Loss: 0.620081, RMSE: 0.787452:  12%|█▎        | 1/8 [00:06&lt;00:42,  6.08s/it]
-Epoch 4, Batch 2/8, Loss: 0.546702, RMSE: 0.763801:  12%|█▎        | 1/8 [00:12&lt;00:42,  6.08s/it]
-Epoch 4, Batch 2/8, Loss: 0.546702, RMSE: 0.763801:  25%|██▌       | 2/8 [00:12&lt;00:36,  6.11s/it]
-Epoch 4, Batch 3/8, Loss: 0.606916, RMSE: 0.768917:  25%|██▌       | 2/8 [00:18&lt;00:36,  6.11s/it]
-Epoch 4, Batch 3/8, Loss: 0.606916, RMSE: 0.768917:  38%|███▊      | 3/8 [00:18&lt;00:30,  6.14s/it]
-Epoch 4, Batch 4/8, Loss: 0.515725, RMSE: 0.756542:  38%|███▊      | 3/8 [00:24&lt;00:30,  6.14s/it]
-Epoch 4, Batch 4/8, Loss: 0.515725, RMSE: 0.756542:  50%|█████     | 4/8 [00:24&lt;00:24,  6.17s/it]
-Epoch 4, Batch 5/8, Loss: 0.634652, RMSE: 0.764732:  50%|█████     | 4/8 [00:30&lt;00:24,  6.17s/it]
-Epoch 4, Batch 5/8, Loss: 0.634652, RMSE: 0.764732:  62%|██████▎   | 5/8 [00:30&lt;00:18,  6.16s/it]
-Epoch 4, Batch 6/8, Loss: 0.627709, RMSE: 0.769392:  62%|██████▎   | 5/8 [00:36&lt;00:18,  6.16s/it]
-Epoch 4, Batch 6/8, Loss: 0.627709, RMSE: 0.769392:  75%|███████▌  | 6/8 [00:36&lt;00:12,  6.14s/it]
-Epoch 4, Batch 7/8, Loss: 0.532959, RMSE: 0.763895:  75%|███████▌  | 6/8 [00:42&lt;00:12,  6.14s/it]
-Epoch 4, Batch 7/8, Loss: 0.532959, RMSE: 0.763895:  88%|████████▊ | 7/8 [00:42&lt;00:06,  6.12s/it]
-Epoch 4, Batch 8/8, Loss: 0.447731, RMSE: 0.756153:  88%|████████▊ | 7/8 [00:46&lt;00:06,  6.12s/it]
-Epoch 4, Batch 8/8, Loss: 0.447731, RMSE: 0.756153: 100%|██████████| 8/8 [00:46&lt;00:00,  5.44s/it]
-Epoch 4, Batch 8/8, Loss: 0.447731, RMSE: 0.756153: 100%|██████████| 8/8 [00:46&lt;00:00,  5.86s/it]
+Epoch 4, Batch 1/8, Loss: 0.620082, RMSE: 0.787453:   0%|          | 0/8 [00:05&lt;?, ?it/s]
+Epoch 4, Batch 1/8, Loss: 0.620082, RMSE: 0.787453:  12%|█▎        | 1/8 [00:05&lt;00:40,  5.77s/it]
+Epoch 4, Batch 2/8, Loss: 0.546702, RMSE: 0.763801:  12%|█▎        | 1/8 [00:11&lt;00:40,  5.77s/it]
+Epoch 4, Batch 2/8, Loss: 0.546702, RMSE: 0.763801:  25%|██▌       | 2/8 [00:11&lt;00:34,  5.76s/it]
+Epoch 4, Batch 3/8, Loss: 0.606916, RMSE: 0.768917:  25%|██▌       | 2/8 [00:17&lt;00:34,  5.76s/it]
+Epoch 4, Batch 3/8, Loss: 0.606916, RMSE: 0.768917:  38%|███▊      | 3/8 [00:17&lt;00:28,  5.75s/it]
+Epoch 4, Batch 4/8, Loss: 0.515725, RMSE: 0.756542:  38%|███▊      | 3/8 [00:23&lt;00:28,  5.75s/it]
+Epoch 4, Batch 4/8, Loss: 0.515725, RMSE: 0.756542:  50%|█████     | 4/8 [00:23&lt;00:23,  5.76s/it]
+Epoch 4, Batch 5/8, Loss: 0.634652, RMSE: 0.764732:  50%|█████     | 4/8 [00:28&lt;00:23,  5.76s/it]
+Epoch 4, Batch 5/8, Loss: 0.634652, RMSE: 0.764732:  62%|██████▎   | 5/8 [00:28&lt;00:17,  5.75s/it]
+Epoch 4, Batch 6/8, Loss: 0.627709, RMSE: 0.769392:  62%|██████▎   | 5/8 [00:34&lt;00:17,  5.75s/it]
+Epoch 4, Batch 6/8, Loss: 0.627709, RMSE: 0.769392:  75%|███████▌  | 6/8 [00:34&lt;00:11,  5.75s/it]
+Epoch 4, Batch 7/8, Loss: 0.532959, RMSE: 0.763895:  75%|███████▌  | 6/8 [00:40&lt;00:11,  5.75s/it]
+Epoch 4, Batch 7/8, Loss: 0.532959, RMSE: 0.763895:  88%|████████▊ | 7/8 [00:40&lt;00:05,  5.76s/it]
+Epoch 4, Batch 8/8, Loss: 0.447731, RMSE: 0.756154:  88%|████████▊ | 7/8 [00:44&lt;00:05,  5.76s/it]
+Epoch 4, Batch 8/8, Loss: 0.447731, RMSE: 0.756154: 100%|██████████| 8/8 [00:44&lt;00:00,  5.14s/it]
+Epoch 4, Batch 8/8, Loss: 0.447731, RMSE: 0.756154: 100%|██████████| 8/8 [00:44&lt;00:00,  5.51s/it]
 
   0%|          | 0/1 [00:00&lt;?, ?it/s]
-Val Batch 1/1, Loss: 1.018507, RMSE: 1.009211:   0%|          | 0/1 [00:00&lt;?, ?it/s]
-Val Batch 1/1, Loss: 1.018507, RMSE: 1.009211: 100%|██████████| 1/1 [00:00&lt;00:00,  1.98it/s]
-Val Batch 1/1, Loss: 1.018507, RMSE: 1.009211: 100%|██████████| 1/1 [00:00&lt;00:00,  1.98it/s]
-Val RMSE: 1.009211, Val Loss: 1.018507
+Val Batch 1/1, Loss: 1.018947, RMSE: 1.009429:   0%|          | 0/1 [00:00&lt;?, ?it/s]
+Val Batch 1/1, Loss: 1.018947, RMSE: 1.009429: 100%|██████████| 1/1 [00:00&lt;00:00,  1.78it/s]
+Val Batch 1/1, Loss: 1.018947, RMSE: 1.009429: 100%|██████████| 1/1 [00:00&lt;00:00,  1.78it/s]
+Val RMSE: 1.009429, Val Loss: 1.018947
 
-Train RMSE: 0.756153, Average Train Loss: 0.566559, Val RMSE: 1.009211, Average Val Loss: 1.018507
+Train RMSE: 0.756154, Average Train Loss: 0.566560, Val RMSE: 1.009429, Average Val Loss: 1.018947
 Epoch 5/5:
   0%|          | 0/8 [00:00&lt;?, ?it/s]
-Epoch 5, Batch 1/8, Loss: 0.483640, RMSE: 0.695443:   0%|          | 0/8 [00:06&lt;?, ?it/s]
-Epoch 5, Batch 1/8, Loss: 0.483640, RMSE: 0.695443:  12%|█▎        | 1/8 [00:06&lt;00:42,  6.07s/it]
-Epoch 5, Batch 2/8, Loss: 0.521336, RMSE: 0.708864:  12%|█▎        | 1/8 [00:12&lt;00:42,  6.07s/it]
-Epoch 5, Batch 2/8, Loss: 0.521336, RMSE: 0.708864:  25%|██▌       | 2/8 [00:12&lt;00:36,  6.09s/it]
-Epoch 5, Batch 3/8, Loss: 0.483137, RMSE: 0.704299:  25%|██▌       | 2/8 [00:18&lt;00:36,  6.09s/it]
-Epoch 5, Batch 3/8, Loss: 0.483137, RMSE: 0.704299:  38%|███▊      | 3/8 [00:18&lt;00:30,  6.12s/it]
-Epoch 5, Batch 4/8, Loss: 0.475719, RMSE: 0.700684:  38%|███▊      | 3/8 [00:24&lt;00:30,  6.12s/it]
-Epoch 5, Batch 4/8, Loss: 0.475719, RMSE: 0.700684:  50%|█████     | 4/8 [00:24&lt;00:24,  6.14s/it]
-Epoch 5, Batch 5/8, Loss: 0.526330, RMSE: 0.705714:  50%|█████     | 4/8 [00:30&lt;00:24,  6.14s/it]
-Epoch 5, Batch 5/8, Loss: 0.526330, RMSE: 0.705714:  62%|██████▎   | 5/8 [00:30&lt;00:18,  6.14s/it]
-Epoch 5, Batch 6/8, Loss: 0.519373, RMSE: 0.708229:  62%|██████▎   | 5/8 [00:36&lt;00:18,  6.14s/it]
-Epoch 5, Batch 6/8, Loss: 0.519373, RMSE: 0.708229:  75%|███████▌  | 6/8 [00:36&lt;00:12,  6.13s/it]
-Epoch 5, Batch 7/8, Loss: 0.430840, RMSE: 0.701058:  75%|███████▌  | 6/8 [00:42&lt;00:12,  6.13s/it]
-Epoch 5, Batch 7/8, Loss: 0.430840, RMSE: 0.701058:  88%|████████▊ | 7/8 [00:42&lt;00:06,  6.14s/it]
-Epoch 5, Batch 8/8, Loss: 0.559221, RMSE: 0.705231:  88%|████████▊ | 7/8 [00:47&lt;00:06,  6.14s/it]
-Epoch 5, Batch 8/8, Loss: 0.559221, RMSE: 0.705231: 100%|██████████| 8/8 [00:47&lt;00:00,  5.51s/it]
-Epoch 5, Batch 8/8, Loss: 0.559221, RMSE: 0.705231: 100%|██████████| 8/8 [00:47&lt;00:00,  5.88s/it]
+Epoch 5, Batch 1/8, Loss: 0.483640, RMSE: 0.695443:   0%|          | 0/8 [00:05&lt;?, ?it/s]
+Epoch 5, Batch 1/8, Loss: 0.483640, RMSE: 0.695443:  12%|█▎        | 1/8 [00:05&lt;00:40,  5.72s/it]
+Epoch 5, Batch 2/8, Loss: 0.521336, RMSE: 0.708864:  12%|█▎        | 1/8 [00:11&lt;00:40,  5.72s/it]
+Epoch 5, Batch 2/8, Loss: 0.521336, RMSE: 0.708864:  25%|██▌       | 2/8 [00:11&lt;00:34,  5.71s/it]
+Epoch 5, Batch 3/8, Loss: 0.483137, RMSE: 0.704299:  25%|██▌       | 2/8 [00:17&lt;00:34,  5.71s/it]
+Epoch 5, Batch 3/8, Loss: 0.483137, RMSE: 0.704299:  38%|███▊      | 3/8 [00:17&lt;00:28,  5.73s/it]
+Epoch 5, Batch 4/8, Loss: 0.475719, RMSE: 0.700684:  38%|███▊      | 3/8 [00:22&lt;00:28,  5.73s/it]
+Epoch 5, Batch 4/8, Loss: 0.475719, RMSE: 0.700684:  50%|█████     | 4/8 [00:22&lt;00:22,  5.74s/it]
+Epoch 5, Batch 5/8, Loss: 0.526330, RMSE: 0.705714:  50%|█████     | 4/8 [00:28&lt;00:22,  5.74s/it]
+Epoch 5, Batch 5/8, Loss: 0.526330, RMSE: 0.705714:  62%|██████▎   | 5/8 [00:28&lt;00:17,  5.74s/it]
+Epoch 5, Batch 6/8, Loss: 0.519373, RMSE: 0.708229:  62%|██████▎   | 5/8 [00:34&lt;00:17,  5.74s/it]
+Epoch 5, Batch 6/8, Loss: 0.519373, RMSE: 0.708229:  75%|███████▌  | 6/8 [00:34&lt;00:11,  5.72s/it]
+Epoch 5, Batch 7/8, Loss: 0.430840, RMSE: 0.701058:  75%|███████▌  | 6/8 [00:40&lt;00:11,  5.72s/it]
+Epoch 5, Batch 7/8, Loss: 0.430840, RMSE: 0.701058:  88%|████████▊ | 7/8 [00:40&lt;00:05,  5.72s/it]
+Epoch 5, Batch 8/8, Loss: 0.559221, RMSE: 0.705231:  88%|████████▊ | 7/8 [00:43&lt;00:05,  5.72s/it]
+Epoch 5, Batch 8/8, Loss: 0.559221, RMSE: 0.705231: 100%|██████████| 8/8 [00:43&lt;00:00,  5.11s/it]
+Epoch 5, Batch 8/8, Loss: 0.559221, RMSE: 0.705231: 100%|██████████| 8/8 [00:43&lt;00:00,  5.48s/it]
 
   0%|          | 0/1 [00:00&lt;?, ?it/s]
-Val Batch 1/1, Loss: 0.835757, RMSE: 0.914198:   0%|          | 0/1 [00:00&lt;?, ?it/s]
-Val Batch 1/1, Loss: 0.835757, RMSE: 0.914198: 100%|██████████| 1/1 [00:00&lt;00:00,  1.93it/s]
-Val Batch 1/1, Loss: 0.835757, RMSE: 0.914198: 100%|██████████| 1/1 [00:00&lt;00:00,  1.93it/s]
-Val RMSE: 0.914198, Val Loss: 0.835757
+Val Batch 1/1, Loss: 0.835890, RMSE: 0.914270:   0%|          | 0/1 [00:00&lt;?, ?it/s]
+Val Batch 1/1, Loss: 0.835890, RMSE: 0.914270: 100%|██████████| 1/1 [00:00&lt;00:00,  1.73it/s]
+Val Batch 1/1, Loss: 0.835890, RMSE: 0.914270: 100%|██████████| 1/1 [00:00&lt;00:00,  1.72it/s]
+Val RMSE: 0.914270, Val Loss: 0.835890
 
-Train RMSE: 0.705231, Average Train Loss: 0.499949, Val RMSE: 0.914198, Average Val Loss: 0.835757
+Train RMSE: 0.705231, Average Train Loss: 0.499949, Val RMSE: 0.914270, Average Val Loss: 0.835890
 </pre></div>
 </div>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Save the model</span>
-<span class="c1"># -----------------</span>
-<span class="n">torch</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">state_dict</span><span class="p">(),</span> <span class="s2">&quot;weights_challenge_1.pt&quot;</span><span class="p">)</span>
+</section>
+<section id="save-the-model">
+<h2><a class="toc-backref" href="#id10" role="doc-backlink">Save the model</a><a class="headerlink" href="#save-the-model" title="Link to this heading">#</a></h2>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">torch</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">state_dict</span><span class="p">(),</span> <span class="s2">&quot;weights_challenge_1.pt&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Model saved as &#39;weights_challenge_1.pt&#39;&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Model saved as &#39;weights_challenge_1.pt&#39;
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (4 minutes 58.147 seconds)</p>
-<p><strong>Estimated memory usage:</strong>  2920 MB</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (5 minutes 53.985 seconds)</p>
+<p><strong>Estimated memory usage:</strong>  2939 MB</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-generated-auto-examples-eeg2025-tutorial-challenge-1-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/eegdash/EEGDash/main?urlpath=lab/tree/notebooks/generated/auto_examples/eeg2025/tutorial_challenge_1.ipynb"><img alt="Launch binder" src="../../../_images/binder_badge_logo1.svg" style="width: 150px;" />
@@ -1711,6 +1570,7 @@ Train RMSE: 0.705231, Average Train Loss: 0.499949, Val RMSE: 0.914198, Average 
 </div>
 </div>
 <p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+</section>
 </section>
 
 
@@ -1751,6 +1611,27 @@ Train RMSE: 0.705231, Average Train Loss: 0.499949, Val RMSE: 0.914198, Average 
                 <dialog id="pst-secondary-sidebar-modal"></dialog>
                 <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#check-gpu-availability">Check GPU availability</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#alternatives-for-downloading-the-data">Alternatives for Downloading the data</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#create-windows-of-interest">Create windows of interest</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#inspect-the-label-distribution">Inspect the label distribution</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#split-the-data">Split the data</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#create-dataloaders">Create dataloaders</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#build-the-model">Build the model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#define-training-and-validation-functions">Define training and validation functions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#train-the-model">Train the model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#save-the-model">Save the model</a></li>
+</ul>
+  </nav></div>
 
   <div class="sidebar-secondary-item">
 

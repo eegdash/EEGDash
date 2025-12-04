@@ -18,7 +18,7 @@ Dataset Information
 -------------------
 
 - **Dataset ID:** ``DS004572``
-- **Summary:** Modality: Auditory | Type: Perception
+- **Summary:** Modality: Auditory | Type: Perception | Subjects: Healthy
 - **Number of Subjects:** 52
 - **Number of Recordings:** 516
 - **Number of Tasks:** 10

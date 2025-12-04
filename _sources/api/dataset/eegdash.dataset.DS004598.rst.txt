@@ -18,6 +18,7 @@ Dataset Information
 -------------------
 
 - **Dataset ID:** ``DS004598``
+- **Summary:** Modality: Motor | Subjects: Dementia
 - **Number of Subjects:** 9
 - **Number of Recordings:** 20
 - **Number of Tasks:** 1

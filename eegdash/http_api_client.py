@@ -133,21 +133,51 @@ class HTTPAPICollection:
         -------
         list of dict
             List of matching records.
-        """
-        params = {}
-        if query:
-            params["filter"] = json.dumps(query)
-        if "limit" in kwargs:
-            params["limit"] = kwargs["limit"]
-        if "skip" in kwargs:
-            params["skip"] = kwargs["skip"]
 
+        Notes
+        -----
+        If no limit is specified, this method will automatically paginate
+        through all results (the server has a max of 1000 per request).
+        """
         prefix = "admin" if self.is_admin else "api"
         url = f"{self.api_url}/{prefix}/{self.database}/records"
 
-        response = self.session.get(url, params=params, timeout=30)
-        response.raise_for_status()
-        return response.json().get("data", [])
+        params = {}
+        if query:
+            params["filter"] = json.dumps(query)
+
+        # If limit is specified, make a single request
+        if "limit" in kwargs:
+            params["limit"] = kwargs["limit"]
+            if "skip" in kwargs:
+                params["skip"] = kwargs["skip"]
+            response = self.session.get(url, params=params, timeout=30)
+            response.raise_for_status()
+            return response.json().get("data", [])
+
+        # No limit specified: paginate through all results
+        all_records = []
+        skip = kwargs.get("skip", 0)
+        page_size = 1000  # Server max
+
+        while True:
+            params["limit"] = page_size
+            params["skip"] = skip
+            response = self.session.get(url, params=params, timeout=60)
+            response.raise_for_status()
+            records = response.json().get("data", [])
+
+            if not records:
+                break
+
+            all_records.extend(records)
+
+            if len(records) < page_size:
+                break  # Last page
+
+            skip += page_size
+
+        return all_records
 
     def find_one(
         self, query: dict[str, Any] = None, projection: dict[str, Any] = None

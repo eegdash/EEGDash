@@ -310,6 +310,19 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
             )
             # We only need filesystem if we need to access S3
             self.filesystem = downloader.get_s3_filesystem()
+
+            # Provide helpful error message when no datasets are found
+            if len(datasets) == 0:
+                query_str = build_query_from_kwargs(**self.query)
+                raise ValueError(
+                    f"No datasets found matching the query: {query_str}\n"
+                    f"This could mean:\n"
+                    f"  1. The dataset '{self.query.get('dataset', 'unknown')}' does not exist in the database\n"
+                    f"  2. The specified filters (task, subject, etc.) are too restrictive\n"
+                    f"  3. There is a connection issue with the MongoDB database\n"
+                    f"If you're working offline or with local data, set download=False and ensure "
+                    f"the data exists at: {self.data_dir}"
+                )
         else:
             raise ValueError(
                 "You must provide either 'records', a 'data_dir', or a query/keyword arguments for filtering."

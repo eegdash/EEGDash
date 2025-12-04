@@ -8,15 +8,6 @@ This module provides a client that communicates with the EEGDash REST API gatewa
 (https://data.eegdash.org) instead of connecting directly to MongoDB. It maintains
 a similar interface to MongoConnectionManager for backward compatibility.
 
-API Features
-------------
-The EEGDash REST API (v2.1.0+) provides:
-
-- **Rate Limiting**: Public endpoints limited to 100 requests/minute per IP
-- **Request Tracing**: Responses include ``X-Request-ID`` for debugging
-- **Response Timing**: ``X-Response-Time`` header shows processing time in ms
-- **Health Checks**: Service status available at ``/health``
-
 Configuration
 -------------
 The API URL can be configured via environment variables:
@@ -31,15 +22,46 @@ Example
 >>> collection = conn.get_collection("eegdash", "records")
 >>> count = collection.count_documents({})
 >>> print(f"Total records: {count}")
+
+Error Handling
+--------------
+This module uses standard ``requests`` exceptions. Handle errors like this:
+
+>>> import requests
+>>> try:
+...     records = collection.find({})
+... except requests.HTTPError as e:
+...     if e.response.status_code == 429:
+...         print("Rate limited! Try again later.")
+...     else:
+...         print(f"HTTP error: {e}")
+... except requests.RequestException as e:
+...     print(f"Network error: {e}")
 """
 
 import json
 import threading
+from dataclasses import dataclass, field
 from typing import Any, Optional
 
 import requests
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
+
+
+@dataclass
+class InsertOneResult:
+    """Result of an insert_one operation."""
+
+    inserted_id: str
+
+
+@dataclass
+class InsertManyResult:
+    """Result of an insert_many operation."""
+
+    inserted_count: int
+    inserted_ids: list[str] = field(default_factory=list)
 
 
 class HTTPAPICollection:
@@ -61,6 +83,12 @@ class HTTPAPICollection:
     is_admin : bool, default False
         If True, use admin endpoints with write access (requires auth_token).
 
+    Raises
+    ------
+    requests.HTTPError
+        For HTTP errors (including rate limiting with status 429).
+    requests.RequestException
+        For network/connection errors.
     """
 
     def __init__(
@@ -77,18 +105,17 @@ class HTTPAPICollection:
         self.auth_token = auth_token
         self.is_admin = is_admin
 
-        # Create a session with retry strategy
+        # Create a session with retry strategy for server errors only
         self.session = requests.Session()
         retry_strategy = Retry(
             total=3,
-            status_forcelist=[429, 500, 502, 503, 504],
+            status_forcelist=[500, 502, 503, 504],
             backoff_factor=1,
         )
         adapter = HTTPAdapter(max_retries=retry_strategy)
         self.session.mount("http://", adapter)
         self.session.mount("https://", adapter)
 
-        # Only add auth header if token is provided (for admin operations)
         if auth_token:
             self.session.headers.update({"Authorization": f"Bearer {auth_token}"})
 
@@ -100,211 +127,73 @@ class HTTPAPICollection:
         query : dict, optional
             MongoDB-style query filter.
         **kwargs
-            Additional parameters like projection, limit, skip.
+            Additional parameters like limit, skip.
 
         Returns
         -------
         list of dict
             List of matching records.
-
         """
-        if query is None:
-            query = {}
-
-        # Prepare request parameters
         params = {}
         if query:
             params["filter"] = json.dumps(query)
-
-        # Handle limit and skip from kwargs
         if "limit" in kwargs:
             params["limit"] = kwargs["limit"]
         if "skip" in kwargs:
             params["skip"] = kwargs["skip"]
 
-        # Build URL
-        if self.is_admin:
-            url = f"{self.api_url}/admin/{self.database}/records"
-        else:
-            url = f"{self.api_url}/api/{self.database}/records"
+        prefix = "admin" if self.is_admin else "api"
+        url = f"{self.api_url}/{prefix}/{self.database}/records"
 
-        try:
-            response = self.session.get(url, params=params, timeout=30)
-            response.raise_for_status()
-            data = response.json()
-
-            if data.get("success"):
-                return data.get("data", [])
-            else:
-                raise RuntimeError(f"API request failed: {data}")
-
-        except requests.exceptions.RequestException as e:
-            raise RuntimeError(f"Failed to query API: {e}") from e
+        response = self.session.get(url, params=params, timeout=30)
+        response.raise_for_status()
+        return response.json().get("data", [])
 
     def find_one(
         self, query: dict[str, Any] = None, projection: dict[str, Any] = None
     ) -> Optional[dict[str, Any]]:
-        """Find a single record matching the query.
-
-        Parameters
-        ----------
-        query : dict, optional
-            MongoDB-style query filter.
-        projection : dict, optional
-            Field projection (not fully supported by REST API).
-
-        Returns
-        -------
-        dict or None
-            The first matching record, or None if no match.
-
-        """
+        """Find a single record matching the query."""
         results = self.find(query, limit=1)
         return results[0] if results else None
 
     def count_documents(self, query: dict[str, Any] = None, **kwargs) -> int:
-        """Count documents matching the query.
-
-        Parameters
-        ----------
-        query : dict, optional
-            MongoDB-style query filter.
-        **kwargs
-            Additional parameters (e.g., maxTimeMS).
-
-        Returns
-        -------
-        int
-            Number of matching documents.
-
-        """
-        if query is None:
-            query = {}
-
-        # Build URL
-        url = f"{self.api_url}/api/{self.database}/count"
-
-        # Prepare parameters
+        """Count documents matching the query."""
         params = {}
         if query:
             params["filter"] = json.dumps(query)
 
-        try:
-            response = self.session.get(url, params=params, timeout=30)
-            response.raise_for_status()
-            data = response.json()
-
-            if data.get("success"):
-                return data.get("count", 0)
-            else:
-                raise RuntimeError(f"API count request failed: {data}")
-
-        except requests.exceptions.RequestException as e:
-            raise RuntimeError(f"Failed to count via API: {e}") from e
+        url = f"{self.api_url}/api/{self.database}/count"
+        response = self.session.get(url, params=params, timeout=30)
+        response.raise_for_status()
+        return response.json().get("count", 0)
 
     def estimated_document_count(self) -> int:
-        """Get estimated document count (calls count_documents with empty filter).
-
-        Returns
-        -------
-        int
-            Estimated number of documents in the collection.
-
-        """
+        """Get estimated document count."""
         return self.count_documents({})
 
-    def insert_one(self, record: dict[str, Any]) -> Any:
-        """Insert a single record (admin only).
-
-        Parameters
-        ----------
-        record : dict
-            The record to insert.
-
-        Returns
-        -------
-        InsertOneResult-like object
-            Contains the insertedId.
-
-        Raises
-        ------
-        PermissionError
-            If no auth token is configured for admin operations.
-
-        """
+    def insert_one(self, record: dict[str, Any]) -> InsertOneResult:
+        """Insert a single record (admin only)."""
         if not self.auth_token:
-            raise PermissionError(
-                "Insert operations require admin authentication. "
-                "Provide auth_token when creating the client."
-            )
+            raise PermissionError("Insert requires auth_token.")
 
         url = f"{self.api_url}/admin/{self.database}/records"
+        response = self.session.post(url, json=record, timeout=30)
+        response.raise_for_status()
+        return InsertOneResult(inserted_id=response.json().get("insertedId", ""))
 
-        try:
-            response = self.session.post(url, json=record, timeout=30)
-            response.raise_for_status()
-            data = response.json()
-
-            if data.get("success"):
-                # Return a simple object with insertedId attribute
-                class InsertResult:
-                    def __init__(self, inserted_id):
-                        self.inserted_id = inserted_id
-
-                return InsertResult(data.get("insertedId"))
-            else:
-                raise RuntimeError(f"Insert failed: {data}")
-
-        except requests.exceptions.RequestException as e:
-            raise RuntimeError(f"Failed to insert via API: {e}") from e
-
-    def insert_many(self, records: list[dict[str, Any]]) -> Any:
-        """Insert multiple records (admin only).
-
-        Parameters
-        ----------
-        records : list of dict
-            The records to insert.
-
-        Returns
-        -------
-        InsertManyResult-like object
-            Contains insertedIds.
-
-        Raises
-        ------
-        PermissionError
-            If no auth token is configured for admin operations.
-
-        """
+    def insert_many(self, records: list[dict[str, Any]]) -> InsertManyResult:
+        """Insert multiple records (admin only)."""
         if not self.auth_token:
-            raise PermissionError(
-                "Insert operations require admin authentication. "
-                "Provide auth_token when creating the client."
-            )
+            raise PermissionError("Insert requires auth_token.")
 
         url = f"{self.api_url}/admin/{self.database}/records/bulk"
-
-        try:
-            response = self.session.post(url, json=records, timeout=60)
-            response.raise_for_status()
-            data = response.json()
-
-            if data.get("success"):
-                # Return a simple object with insertedIds attribute
-                class InsertManyResult:
-                    def __init__(self, inserted_count, inserted_ids=None):
-                        self.inserted_count = inserted_count
-                        self.inserted_ids = inserted_ids or []
-
-                return InsertManyResult(
-                    data.get("insertedCount", 0), data.get("insertedIds", [])
-                )
-            else:
-                raise RuntimeError(f"Bulk insert failed: {data}")
-
-        except requests.exceptions.RequestException as e:
-            raise RuntimeError(f"Failed to bulk insert via API: {e}") from e
+        response = self.session.post(url, json=records, timeout=60)
+        response.raise_for_status()
+        data = response.json()
+        return InsertManyResult(
+            inserted_count=data.get("insertedCount", 0),
+            inserted_ids=data.get("insertedIds", []),
+        )
 
 
 class HTTPAPIDatabase:
@@ -485,7 +374,9 @@ class HTTPAPIConnectionManager:
 
 __all__ = [
     "HTTPAPIClient",
-    "HTTPAPIDatabase",
     "HTTPAPICollection",
     "HTTPAPIConnectionManager",
+    "HTTPAPIDatabase",
+    "InsertManyResult",
+    "InsertOneResult",
 ]

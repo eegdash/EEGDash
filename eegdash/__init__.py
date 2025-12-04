@@ -13,6 +13,11 @@ from .api import EEGDash
 from .dataset import EEGChallengeDataset, EEGDashDataset
 from .hbn import preprocessing
 
-__all__ = ["EEGDash", "EEGDashDataset", "EEGChallengeDataset", "preprocessing"]
+__all__ = [
+    "EEGChallengeDataset",
+    "EEGDash",
+    "EEGDashDataset",
+    "preprocessing",
+]
 
 __version__ = "0.5.0"

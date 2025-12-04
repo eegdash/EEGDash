@@ -5,8 +5,32 @@
 """HTTP API client for EEGDash REST API.
 
 This module provides a client that communicates with the EEGDash REST API gateway
-instead of connecting directly to MongoDB. It maintains a similar interface to
-MongoConnectionManager for backward compatibility.
+(https://data.eegdash.org) instead of connecting directly to MongoDB. It maintains
+a similar interface to MongoConnectionManager for backward compatibility.
+
+API Features
+------------
+The EEGDash REST API (v2.1.0+) provides:
+
+- **Rate Limiting**: Public endpoints limited to 100 requests/minute per IP
+- **Request Tracing**: Responses include ``X-Request-ID`` for debugging
+- **Response Timing**: ``X-Response-Time`` header shows processing time in ms
+- **Health Checks**: Service status available at ``/health``
+
+Configuration
+-------------
+The API URL can be configured via environment variables:
+
+- ``EEGDASH_API_URL``: Override the default API URL (default: https://data.eegdash.org)
+- ``EEGDASH_API_TOKEN``: Admin token for write operations
+
+Example
+-------
+>>> from eegdash.http_api_client import HTTPAPIConnectionManager
+>>> conn = HTTPAPIConnectionManager()
+>>> collection = conn.get_collection("eegdash", "records")
+>>> count = collection.count_documents({})
+>>> print(f"Total records: {count}")
 """
 
 import json

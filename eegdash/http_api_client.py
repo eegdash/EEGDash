@@ -15,7 +15,7 @@ The API URL can be configured via environment variables:
 - ``EEGDASH_API_URL``: Override the default API URL (default: https://data.eegdash.org)
 - ``EEGDASH_API_TOKEN``: Admin token for write operations
 
-Example
+Example:
 -------
 >>> from eegdash.http_api_client import HTTPAPIConnectionManager
 >>> conn = HTTPAPIConnectionManager()
@@ -37,6 +37,7 @@ This module uses standard ``requests`` exceptions. Handle errors like this:
 ...         print(f"HTTP error: {e}")
 ... except requests.RequestException as e:
 ...     print(f"Network error: {e}")
+
 """
 
 import json
@@ -89,6 +90,7 @@ class HTTPAPICollection:
         For HTTP errors (including rate limiting with status 429).
     requests.RequestException
         For network/connection errors.
+
     """
 
     def __init__(
@@ -138,6 +140,7 @@ class HTTPAPICollection:
         -----
         If no limit is specified, this method will automatically paginate
         through all results (the server has a max of 1000 per request).
+
         """
         prefix = "admin" if self.is_admin else "api"
         url = f"{self.api_url}/{prefix}/{self.database}/records"

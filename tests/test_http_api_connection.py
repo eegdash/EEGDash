@@ -60,8 +60,8 @@ def test_uses_singleton(http_api_mocks):
 
 def test_different_staging_flags_create_separate_instances(http_api_mocks):
     """Changing is_staging should produce a distinct singleton entry."""
-    prod = EEGDash(is_staging=False)
-    stg = EEGDash(is_staging=True)
+    _prod = EEGDash(is_staging=False)
+    _stg = EEGDash(is_staging=True)
 
     # Different staging flags should create separate instances
     assert len(HTTPAPIConnectionManager._instances) == 2

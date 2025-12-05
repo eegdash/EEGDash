@@ -32,6 +32,7 @@ from .http_api_client import HTTPAPIConnectionManager
 from .logging import logger
 
 # Default public API endpoint
+# Note: DNS override is applied in http_api_client.py via socket patch
 EEGDASH_API_URL = "https://data.eegdash.org"
 
 

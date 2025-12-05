@@ -207,6 +207,29 @@ Once you have your :class:`~eegdash.api.EEGDashDataset` object, you can access i
 This provides a powerful and flexible way to integrate ``eegdash`` into your data analysis pipelines, whether you are working with remote or local data. For contributor resources, see :doc:`Developer Notes </developer_notes>`.
 
 
+API Configuration
+-----------------
+
+By default, :mod:`eegdash` connects to the public REST API at ``https://data.eegdash.org``.
+You can customize this behavior using environment variables:
+
+.. code-block:: bash
+
+   # Override the default API URL (e.g., for testing)
+   export EEGDASH_API_URL="https://data.eegdash.org"
+   
+   # For admin write operations (required for dataset ingestion)
+   export EEGDASH_API_TOKEN="your-admin-token"
+
+The API provides the following features:
+
+- **Rate Limiting**: Public endpoints are limited to 100 requests/minute per IP
+- **Health Checks**: Service status available at ``/health``
+- **Request Tracing**: All responses include ``X-Request-ID`` for debugging
+
+For more details about the API architecture, see :doc:`API Core </api/api_core>`.
+
+
 .. seealso::
 
    :doc:`developer_notes` captures contributor workflows for the core package.

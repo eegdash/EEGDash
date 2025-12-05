@@ -21,6 +21,12 @@ def mock_http_api_connection():
 
 
 @pytest.fixture
+def mock_mongo_connection(mock_http_api_connection):
+    """Alias for the mocked collection for tests that need to interact with it."""
+    return mock_http_api_connection
+
+
+@pytest.fixture
 def eegdash_instance(mock_http_api_connection):
     """Provides a clean instance of EEGDash for each test."""
     return EEGDash()

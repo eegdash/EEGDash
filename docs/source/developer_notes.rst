@@ -16,10 +16,10 @@ Library Overview
 EEG Dash ships a Python package named :mod:`eegdash` that provides several
 layers of abstraction:
 
-* ``EEGDash`` (:mod:`eegdash.api`) is the primary client for querying MongoDB
-  metadata, coordinating S3 downloads, and performing bulk updates. It handles
-  connection management via :class:`~eegdash.mongodb.MongoConnectionManager`
-  and reads default settings from ``mne`` config values or ``.env`` files.
+* ``EEGDash`` (:mod:`eegdash.api`) is the primary client for querying EEGDash
+  metadata via REST API, coordinating S3 downloads, and performing bulk updates.
+  It handles connection management via :class:`~eegdash.http_api_client.HTTPAPIConnectionManager`
+  and communicates with the EEGDash API gateway at ``https://data.eegdash.org``.
 * ``EEGDashDataset`` (:mod:`eegdash.data_utils`) wraps query results as a
   :class:`braindecode.datasets.BaseConcatDataset`, making it straightforward to
   integrate curated EEG collections into deep-learning pipelines.
@@ -31,10 +31,10 @@ layers of abstraction:
   feature extraction, summary reporting, and visualizations that appear in the
   documentation gallery.
 
-Configuration defaults live in :mod:`eegdash.const`. The MongoDB bootstrap logic
-is centralised in :func:`eegdash.utils._init_mongo_client`, which stores the
-resolved connection string in the ``mne`` config directory. When troubleshooting
-database access, confirm that the ``EEGDASH_DB_URI`` value is populated.
+Configuration defaults live in :mod:`eegdash.const`. The API URL can be
+overridden via the ``EEGDASH_API_URL`` environment variable. For admin write
+operations, set the ``EEGDASH_API_TOKEN`` environment variable with a valid
+authentication token.
 
 Local Development Workflow
 --------------------------
@@ -96,6 +96,11 @@ Release Checklist
 Metadata & Database Management
 ------------------------------
 
+The EEGDash API server uses a modern FastAPI-based architecture with MongoDB for
+metadata storage and optional Redis for distributed rate limiting.
+
+**Database Access**
+
 * Sign in to `mongodb.com <https://mongodb.com>`_ using the shared account
   (``sccn3709@gmail.com``; credentials are stored in the team password vault).
 * Toggle the target database inside ``scripts/data_ingest.py`` by updating the
@@ -106,6 +111,27 @@ Metadata & Database Management
 
      python scripts/data_ingest.py
 
+**Server Configuration**
+
+The API server is configured via environment variables. Create a ``.env`` file
+in the ``mongodb-eegdash-server/api/`` directory:
+
+.. code-block:: bash
+
+   # Required
+   MONGO_URI=mongodb://user:password@host:27017
+   MONGO_DB=eegdash
+   MONGO_COLLECTION=records
+   ADMIN_TOKEN=your-secure-admin-token
+
+   # Optional
+   REDIS_URL=redis://localhost:6379/0      # For distributed rate limiting
+   API_VERSION=2.1.0
+   ENABLE_METRICS=true
+   MONGO_MAX_POOL_SIZE=10
+   MONGO_MIN_POOL_SIZE=1
+   MONGO_CONNECT_TIMEOUT_MS=5000
+
 API Gateway Endpoint
 --------------------
 
@@ -113,6 +139,28 @@ The public HTTP gateway that fronts the MongoDB metadata service lives at
 ``|api-base-url|``. Point external tooling, health probes, and API examples at
 that hostname instead of the raw server IP so future migrations only require
 updating the ``|api-base-url|`` substitution in ``docs/source/links.inc``.
+
+**API Features (v2.1.0+)**
+
+- **Rate Limiting**: Public endpoints are limited to 100 requests/minute per IP
+- **Metrics**: Prometheus-compatible metrics at ``/metrics``
+- **Health Checks**: Service status at ``/health`` including MongoDB and Redis connectivity
+- **Request Tracing**: All responses include ``X-Request-ID`` for debugging
+- **Response Timing**: ``X-Response-Time`` header in milliseconds
+
+**Available Endpoints**
+
+.. code-block:: text
+
+   GET  /                                - API information
+   GET  /health                          - Health check with service status
+   GET  /metrics                         - Prometheus metrics
+   GET  /api/{database}/records          - Query records with filters
+   GET  /api/{database}/count            - Count matching documents
+   GET  /api/{database}/datasets         - List all dataset names
+   GET  /api/{database}/metadata/{name}  - Get dataset metadata
+   POST /admin/{database}/records        - Insert record (token required)
+   POST /admin/{database}/records/bulk   - Bulk insert (token required)
 
 
 Remote Storage Mounting

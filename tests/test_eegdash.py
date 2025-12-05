@@ -19,9 +19,9 @@ class DummyCollection:
         return None
 
 
-class DummyMongoManager:
+class DummyHTTPAPIManager:
     @staticmethod
-    def get_client(conn, is_staging):
+    def get_client(api_url, is_staging, auth_token=None):
         # Return (client, db, collection)
         client = MagicMock(name="client")
         db = MagicMock(name="db")
@@ -36,16 +36,16 @@ class DummyMongoManager:
 
 @pytest.fixture(autouse=True)
 def patch_manager(monkeypatch):
-    # Patch the MongoConnectionManager used inside EEGDash
+    # Patch the HTTPAPIConnectionManager used inside EEGDash
     from eegdash import api as api_module
 
-    monkeypatch.setattr(api_module, "MongoConnectionManager", DummyMongoManager)
+    monkeypatch.setattr(api_module, "HTTPAPIConnectionManager", DummyHTTPAPIManager)
     yield
 
 
 @pytest.fixture
 def eegdash_instance():
-    return EEGDash(is_public=True)
+    return EEGDash()
 
 
 def test_exist_returns_true_for_matching_data_name(eegdash_instance):

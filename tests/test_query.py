@@ -6,11 +6,13 @@ from eegdash import EEGDash
 from eegdash.bids_eeg_metadata import build_query_from_kwargs
 
 
-# Mock the MongoConnectionManager to prevent actual DB connections during tests
+# Mock the HTTPAPIConnectionManager to prevent actual API connections during tests
 @pytest.fixture(autouse=True)
-def mock_mongo_connection():
-    """Automatically mocks the MongoDB connection for all tests."""
-    with patch("eegdash.mongodb.MongoConnectionManager.get_client") as mock_get_client:
+def mock_http_api_connection():
+    """Automatically mocks the HTTP API connection for all tests."""
+    with patch(
+        "eegdash.http_api_client.HTTPAPIConnectionManager.get_client"
+    ) as mock_get_client:
         mock_collection = MagicMock()
         mock_db = MagicMock()
         mock_client = MagicMock()
@@ -19,9 +21,15 @@ def mock_mongo_connection():
 
 
 @pytest.fixture
-def eegdash_instance(mock_mongo_connection):
+def mock_mongo_connection(mock_http_api_connection):
+    """Alias for the mocked collection for tests that need to interact with it."""
+    return mock_http_api_connection
+
+
+@pytest.fixture
+def eegdash_instance(mock_http_api_connection):
     """Provides a clean instance of EEGDash for each test."""
-    return EEGDash(is_public=True)
+    return EEGDash()
 
 
 def test_build_query_with_single_values(eegdash_instance):

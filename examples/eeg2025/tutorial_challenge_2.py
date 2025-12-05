@@ -232,7 +232,7 @@ class DatasetWrapper(BaseDataset):
 
 # We filter out certain recordings, create fixed length windows and finally make use of our `DatasetWrapper`.
 # %%
-# Filter out recordings that are too short
+# Filter out recordings that are too short or missing p_factor
 all_datasets = BaseConcatDataset(
     [
         ds
@@ -240,6 +240,8 @@ all_datasets = BaseConcatDataset(
         if ds.description.subject not in sub_rm
         and ds.raw.n_times >= 4 * SFREQ
         and len(ds.raw.ch_names) == 129
+        and "p_factor" in ds.description
+        and ds.description["p_factor"] is not None
         and not math.isnan(ds.description["p_factor"])
     ]
 )

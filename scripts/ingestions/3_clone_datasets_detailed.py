@@ -36,7 +36,9 @@ import json
 import subprocess
 import sys
 import time
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
+from threading import Lock
 
 # ============================================================================
 # Source Detection & Routing
@@ -460,8 +462,8 @@ Examples:
     parser.add_argument(
         "--max-parallel",
         type=int,
-        default=1,
-        help="Max parallel clones (currently single-threaded, default: 1).",
+        default=4,
+        help="Max parallel clones (default: 4). Use 1 for sequential.",
     )
 
     parser.add_argument(
@@ -547,6 +549,7 @@ Examples:
     print(f"\nStarting dataset cloning at {time.strftime('%Y-%m-%d %H:%M:%S')}")
     print(f"Output directory: {args.output_dir}")
     print(f"Timeout per clone: {args.timeout}s")
+    print(f"Parallel workers: {args.max_parallel}")
     print(f"Total datasets: {total}")
     print()
 
@@ -554,7 +557,7 @@ Examples:
     args.output_dir.mkdir(parents=True, exist_ok=True)
 
     # ---------------------------------------------------------------
-    # Step 3: Clone All Datasets
+    # Step 3: Clone All Datasets (Parallel)
     # ---------------------------------------------------------------
 
     results = {
@@ -567,35 +570,64 @@ Examples:
 
     source_counts = {"openneuro": 0, "nemar": 0, "gin": 0, "unknown": 0}
 
-    start_time = time.time()
+    # Thread-safe lock for updating shared state
+    results_lock = Lock()
+    print_lock = Lock()
+    completed_count = [0]  # Mutable container for thread-safe counter
 
-    for idx, dataset in enumerate(datasets, start=1):
+    def process_dataset(idx_dataset):
+        """Process a single dataset (for parallel execution)."""
+        idx, dataset = idx_dataset
         dataset_id = dataset["dataset_id"]
         source_type = detect_source_type(dataset)
-        source_counts[source_type] = source_counts.get(source_type, 0) + 1
-
-        # Format output
-        status_str = f"[{idx:3d}/{total}] {dataset_id:30s} ({source_type:10s})"
-        print(f"{status_str}...", end=" ", flush=True)
 
         # Clone the dataset
         result = clone_dataset(dataset, args.output_dir, args.timeout)
         status = result.pop("status")
-        results[status].append(result)
 
-        # Print status indicator
-        if status == "success":
-            print("✓")
-        elif status == "skip":
-            print("⊘ (already cloned)")
-        elif status == "timeout":
-            print(f"⏱ ({args.timeout}s timeout)")
-        elif status == "failed":
-            error = result.get("error", "unknown")[:40]
-            print(f"✗ ({error}...)")
-        else:
-            error = result.get("error", "unknown")[:40]
-            print(f"? ({error}...)")
+        # Thread-safe update of results
+        with results_lock:
+            results[status].append(result)
+            source_counts[source_type] = source_counts.get(source_type, 0) + 1
+            completed_count[0] += 1
+            current = completed_count[0]
+
+        # Thread-safe print
+        with print_lock:
+            status_str = f"[{current:3d}/{total}] {dataset_id:30s} ({source_type:10s})"
+            if status == "success":
+                print(f"{status_str}... ✓")
+            elif status == "skip":
+                print(f"{status_str}... ⊘ (already cloned)")
+            elif status == "timeout":
+                print(f"{status_str}... ⏱ ({args.timeout}s timeout)")
+            elif status == "failed":
+                error = result.get("error", "unknown")[:40]
+                print(f"{status_str}... ✗ ({error}...)")
+            else:
+                error = result.get("error", "unknown")[:40]
+                print(f"{status_str}... ? ({error}...)")
+
+        return status, result
+
+    start_time = time.time()
+
+    # Use ThreadPoolExecutor for parallel cloning
+    with ThreadPoolExecutor(max_workers=args.max_parallel) as executor:
+        # Submit all tasks
+        futures = {
+            executor.submit(process_dataset, (idx, ds)): ds
+            for idx, ds in enumerate(datasets, start=1)
+        }
+
+        # Wait for all to complete (results already collected in process_dataset)
+        for future in as_completed(futures):
+            try:
+                future.result()  # Raises any exception from the thread
+            except Exception as e:
+                dataset = futures[future]
+                with print_lock:
+                    print(f"Unexpected error for {dataset.get('dataset_id', 'unknown')}: {e}")
 
     elapsed = time.time() - start_time
 
@@ -663,3 +695,4 @@ Examples:
 
 if __name__ == "__main__":
     main()
+    

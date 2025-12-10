@@ -31,7 +31,7 @@ LEARNING_RATE = 0.00002
 WEIGHT_DECAY = 1e-2
 NUM_EPOCHS = 30
 RANDOM_SEED = 41
-OFFLINE_MODE = False
+OFFLINE_MODE = True  # Set to True to use local data (dataset ds003775 not in MongoDB)
 
 # Set random seeds for reproducibility
 torch.manual_seed(RANDOM_SEED)
@@ -76,43 +76,50 @@ if PREPARE_DATA:
         "NDARLD243KRE",
         "NDARUJ292JXV",
         "NDARBA381JGH",
+        "041",  # Corrupted EDF file with invalid timestamp
     ]
+    # First filter: remove problematic subjects and zero-length (corrupted) datasets
+    filtered_datasets = [
+        ds
+        for ds in ds_data.datasets
+        if ds.description.subject not in sub_rm and len(ds) > 0
+    ]
+    # Second filter: check data quality (requires loading raw data)
+    # ds003775 has 64 channels, not 129
     all_datasets = BaseConcatDataset(
         [
             ds
-            for ds in ds_data.datasets
-            if ds.description.subject not in sub_rm
-            and ds.raw.n_times >= 4 * SFREQ
-            and len(ds.raw.ch_names) == 129
+            for ds in filtered_datasets
+            if ds.raw.n_times >= 4 * SFREQ and len(ds.raw.ch_names) == 64
         ]
     )
 
-    # Define preprocessing pipeline
+    # Define preprocessing pipeline - select a subset of standard 10-20 channels
     ch_names = [
-        "E22",
-        "E9",
-        "E33",
-        "E24",
-        "E11",
-        "E124",
-        "E122",
-        "E29",
-        "E6",
-        "E111",
-        "E45",
-        "E36",
-        "E104",
-        "E108",
-        "E42",
-        "E55",
-        "E93",
-        "E58",
-        "E52",
-        "E62",
-        "E92",
-        "E96",
-        "E70",
+        "Fp1",
+        "Fp2",
+        "F3",
+        "F4",
+        "C3",
+        "C4",
+        "P3",
+        "P4",
+        "O1",
+        "O2",
+        "F7",
+        "F8",
+        "T7",
+        "T8",
+        "P7",
+        "P8",
+        "Fz",
         "Cz",
+        "Pz",
+        "Oz",
+        "FC1",
+        "FC2",
+        "CP1",
+        "CP2",
     ]
     preprocessors = [
         Preprocessor("pick_channels", ch_names=ch_names),

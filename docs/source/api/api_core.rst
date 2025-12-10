@@ -10,25 +10,42 @@ data organization.
 Architecture Overview
 ---------------------
 
-The EEGDash core API is built around three interconnected components:
+The EEGDash core API is built around a REST API gateway that provides secure, scalable access
+to the underlying data infrastructure:
 
 .. code-block:: text
 
       +-----------------+
-      |     MongoDB     |
-      |    (Metadata)   |
+      |   REST API      |
+      | (FastAPI+Redis) |
       +-----------------+
             |
+            v
+      +-----------------+      +-----------------+
+      |     MongoDB     |      |      Redis      |
+      |    (Metadata)   |      |  (Rate Limit)   |
+      +-----------------+      +-----------------+
             |
+            v
       +-----------v-----------+      +-----------------+
       |       eegdash         |<---->|   S3 Filesystem |
       |     Interface         |      |    (Raw Data)   |
       +-----------------------+      +-----------------+
             |
-            |
+            v
       +-----------v-----------+
       |      BIDS Parser      |
       +-----------------------+
+
+**REST API Gateway**
+    A FastAPI-based REST API (``https://data.eegdash.org``) provides secure access to
+    the metadata database. Features include:
+    
+    - Rate limiting (100 requests/minute for public endpoints)
+    - Redis-backed distributed rate limiting for scalability
+    - Prometheus metrics for monitoring (``/metrics``)
+    - Request tracing with ``X-Request-ID`` headers
+    - Health checks (``/health``) for service monitoring
 
 **MongoDB Metadata Layer**
     Centralized NoSQL database storing EEG dataset metadata including subject information,
@@ -43,8 +60,60 @@ The EEGDash core API is built around three interconnected components:
 **BIDS Standardization**
     Brain Imaging Data Structure (BIDS) parser ensuring consistent data organization
     and interpretation across different datasets and experiments.
-    Use to perform the digest of BIDS datasets and extract relevant metadata for
-    the mongodb.
+    Used to perform the digest of BIDS datasets and extract relevant metadata for
+    the MongoDB database.
+
+API Endpoints
+-------------
+
+The REST API provides the following endpoints:
+
+**Public Endpoints (Rate Limited)**
+
+.. list-table::
+   :header-rows: 1
+   :widths: 10 40 50
+
+   * - Method
+     - Endpoint
+     - Description
+   * - GET
+     - ``/``
+     - API information and available endpoints
+   * - GET
+     - ``/health``
+     - Health check with service status
+   * - GET
+     - ``/metrics``
+     - Prometheus-compatible metrics
+   * - GET
+     - ``/api/{database}/records``
+     - Query records with filters
+   * - GET
+     - ``/api/{database}/count``
+     - Count documents matching filter
+   * - GET
+     - ``/api/{database}/datasets``
+     - List all unique dataset names
+   * - GET
+     - ``/api/{database}/metadata/{dataset}``
+     - Get metadata for specific dataset
+
+**Admin Endpoints (Token Required)**
+
+.. list-table::
+   :header-rows: 1
+   :widths: 10 40 50
+
+   * - Method
+     - Endpoint
+     - Description
+   * - POST
+     - ``/admin/{database}/records``
+     - Insert single record
+   * - POST
+     - ``/admin/{database}/records/bulk``
+     - Insert multiple records (max 1000)
 
 Core Modules
 ------------
@@ -55,9 +124,21 @@ The API is organized into focused modules that handle specific aspects of EEG da
 * :mod:`~eegdash.const` - Constants and enumerations used throughout the package
 * :doc:`dataset/api_dataset` - Dataset object management and operations
 * :mod:`~eegdash.bids_eeg_metadata` - BIDS-compliant metadata handling  
-* :mod:`~eegdash.mongodb` - Database connection and query operations
+* :mod:`~eegdash.http_api_client` - HTTP REST API client for database operations
 * :mod:`~eegdash.paths` - File system and storage path management
-* :mod:`~eegdash.utils` - General utility functions and helpers
+
+Configuration
+-------------
+
+The API URL can be configured via environment variables:
+
+.. code-block:: bash
+
+   # Override the default API URL
+   export EEGDASH_API_URL="https://data.eegdash.org"
+   
+   # For admin write operations
+   export EEGDASH_API_TOKEN="your-admin-token"
 
 API Reference
 -------------
@@ -71,8 +152,7 @@ API Reference
    api
    bids_eeg_metadata
    const
+   http_api_client
    logging
    hbn
-   mongodb
    paths
-   utils

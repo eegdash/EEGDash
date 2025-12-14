@@ -168,11 +168,21 @@ def load_eeg_attrs_from_bids_file(bids_dataset, bids_file: str) -> dict[str, Any
         except Exception:
             pass
 
+    # Handle run value - BIDSPath expects int, but we store as string
+    # Convert to int for BIDSPath if numeric, otherwise None (original value preserved in metadata)
+    run_value = bids_dataset.get_bids_file_attribute("run", bids_file)
+    if run_value is not None:
+        try:
+            run_value = int(run_value)
+        except (ValueError, TypeError):
+            # Non-numeric run values (e.g., '5F') - pass as None to BIDSPath
+            run_value = None
+
     bids_path = BIDSPath(
         subject=bids_dataset.get_bids_file_attribute("subject", bids_file),
         session=bids_dataset.get_bids_file_attribute("session", bids_file),
         task=bids_dataset.get_bids_file_attribute("task", bids_file),
-        run=bids_dataset.get_bids_file_attribute("run", bids_file),
+        run=run_value,
         root=bids_dataset.bidsdir,
         datatype=bids_dataset.get_bids_file_attribute("modality", bids_file),
         suffix="eeg",
@@ -187,10 +197,21 @@ def load_eeg_attrs_from_bids_file(bids_dataset, bids_file: str) -> dict[str, Any
         ".set": [".fdt"],
         ".vhdr": [".eeg", ".vmrk", ".dat", ".raw"],
     }
+    
+    # Get the original run value to handle alphanumeric runs for sidecar finding
+    original_run_value = bids_dataset.get_bids_file_attribute("run", bids_file)
+    
     for ext in sidecars_map.get(bids_path.extension, []):
+        # First try using BIDSPath's find_matching_sidecar
         sidecar = bids_path.find_matching_sidecar(extension=ext, on_error="ignore")
         if sidecar is not None:
             bidsdependencies.append(str(bids_dataset._get_relative_bidspath(sidecar)))
+        elif original_run_value is not None and run_value is None:
+            # Handle alphanumeric runs by looking for sidecar directly
+            # Replace extension in the original file path
+            sidecar_path = Path(bids_file).with_suffix(ext)
+            if sidecar_path.exists() or sidecar_path.is_symlink():
+                bidsdependencies.append(str(bids_dataset._get_relative_bidspath(str(sidecar_path))))
 
     # Define field extraction functions with error handling
     field_extractors = {

@@ -576,11 +576,11 @@ class EEGBIDSDataset:
             return {}
         participants_tsv.set_index("participant_id", inplace=True)
         subject = f"sub-{self.get_bids_file_attribute('subject', data_filepath)}"
-        
+
         # Handle case where subject not found in participants.tsv
         if subject not in participants_tsv.index:
             return {}
-        
+
         row_dict = participants_tsv.loc[subject].to_dict()
         # Convert NaN values to None for JSON compatibility
         return {k: (None if pd.isna(v) else v) for k, v in row_dict.items()}

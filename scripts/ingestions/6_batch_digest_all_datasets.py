@@ -2,6 +2,7 @@
 """Batch digest all cloned datasets."""
 
 import argparse
+import importlib.util
 import json
 import os
 import sys
@@ -11,10 +12,10 @@ from time import time
 from typing import Optional
 
 from tqdm import tqdm
-import importlib.util
 
 # Default to max cores - 1, minimum 1
 DEFAULT_WORKERS = max(1, os.cpu_count() - 1)
+
 
 def load_digest_function(script_path: str):
     """Dynamically load the digest_dataset function."""
@@ -32,14 +33,14 @@ def digest_one_dataset(
 ) -> dict:
     """Digest a single dataset and return results."""
     cloned_path = dataset_dir / dataset_id
-    
+
     if not cloned_path.exists():
         return {
             "dataset": dataset_id,
             "status": "skipped",
             "reason": "Dataset not cloned locally",
         }
-    
+
     try:
         summary = digest_func(
             dataset_id=dataset_id,
@@ -68,21 +69,23 @@ def batch_digest(
 ) -> dict:
     """Batch digest all datasets from cloned directory."""
     # Find all cloned datasets
-    dataset_dirs = sorted([d for d in dataset_dir.iterdir() if d.is_dir() and d.name.startswith('ds')])
+    dataset_dirs = sorted(
+        [d for d in dataset_dir.iterdir() if d.is_dir() and d.name.startswith("ds")]
+    )
     dataset_ids = [d.name for d in dataset_dirs]
-    
+
     if max_datasets:
         dataset_ids = dataset_ids[:max_datasets]
-    
+
     print(f"Found {len(dataset_ids)} datasets to process")
     print(f"Output directory: {output_dir}")
     print(f"Parallel workers: {parallel}")
     print()
-    
+
     # Load the digest function
     script_dir = Path(__file__).parent
     digest_func = load_digest_function(str(script_dir / "4_digest_single_dataset.py"))
-    
+
     # Batch digest with progress bar
     results = {
         "total": len(dataset_ids),
@@ -94,12 +97,12 @@ def batch_digest(
         "start_time": time(),
         "datasets": [],
     }
-    
+
     output_dir.mkdir(parents=True, exist_ok=True)
-    
+
     print(f"Starting batch digestion of {len(dataset_ids)} datasets...")
     print("=" * 70)
-    
+
     with ThreadPoolExecutor(max_workers=parallel) as executor:
         # Submit all tasks
         futures = {
@@ -112,7 +115,7 @@ def batch_digest(
             ): dataset_id
             for dataset_id in dataset_ids
         }
-        
+
         # Process results with progress bar
         with tqdm(total=len(futures), desc="Digesting datasets") as pbar:
             for future in as_completed(futures):
@@ -120,7 +123,7 @@ def batch_digest(
                 try:
                     result = future.result()
                     results["datasets"].append(result)
-                    
+
                     # Update counters
                     if result["status"] == "success":
                         results["success"] += 1
@@ -133,30 +136,30 @@ def batch_digest(
                     else:
                         results["error"] += 1
                         status_str = f"✗ {result.get('error', 'unknown')[:40]}"
-                    
+
                     pbar.set_description(f"{dataset_id}: {status_str}")
                     pbar.update(1)
-                    
+
                 except Exception as e:
                     results["error"] += 1
-                    results["datasets"].append({
-                        "dataset": dataset_id,
-                        "status": "error",
-                        "error": str(e),
-                    })
+                    results["datasets"].append(
+                        {
+                            "dataset": dataset_id,
+                            "status": "error",
+                            "error": str(e),
+                        }
+                    )
                     pbar.set_description(f"{dataset_id}: ✗ Exception")
                     pbar.update(1)
-    
+
     results["end_time"] = time()
     results["duration_seconds"] = results["end_time"] - results["start_time"]
-    
+
     return results
 
 
 def main():
-    parser = argparse.ArgumentParser(
-        description="Batch digest all EEGDash datasets."
-    )
+    parser = argparse.ArgumentParser(description="Batch digest all EEGDash datasets.")
     parser.add_argument(
         "--dataset-dir",
         type=Path,
@@ -181,9 +184,9 @@ def main():
         default=None,
         help="Limit to first N datasets (for testing), default None processes all available",
     )
-    
+
     args = parser.parse_args()
-    
+
     try:
         results = batch_digest(
             dataset_dir=args.dataset_dir,
@@ -191,7 +194,7 @@ def main():
             parallel=args.parallel,
             max_datasets=args.max_datasets,
         )
-        
+
         # Print summary
         print()
         print("=" * 70)
@@ -204,31 +207,34 @@ def main():
         print(f"Total records:      {results['total_records']}")
         print(f"Total file errors:  {results['total_errors']}")
         print(f"Duration:           {results['duration_seconds']:.1f}s")
-        if results['success'] > 0:
-            print(f"Avg records/dataset: {results['total_records']/results['success']:.0f}")
+        if results["success"] > 0:
+            print(
+                f"Avg records/dataset: {results['total_records'] / results['success']:.0f}"
+            )
         print()
-        
+
         # Show failed datasets
-        if results['error'] > 0:
-            failed = [d for d in results['datasets'] if d['status'] == 'error']
+        if results["error"] > 0:
+            failed = [d for d in results["datasets"] if d["status"] == "error"]
             print("Failed datasets:")
             for d in failed[:10]:
                 print(f"  - {d['dataset']}: {d.get('error', 'unknown')[:50]}")
             if len(failed) > 10:
                 print(f"  ... and {len(failed) - 10} more")
             print()
-        
+
         # Save full results
         summary_path = args.output_dir / "BATCH_SUMMARY.json"
         with open(summary_path, "w") as f:
             json.dump(results, f, indent=2, default=str)
         print(f"Full summary saved to: {summary_path}")
-        
-        return 0 if results['error'] == 0 else 1
-    
+
+        return 0 if results["error"] == 0 else 1
+
     except Exception as e:
         print(f"✗ Batch digestion failed: {e}", file=sys.stderr)
         import traceback
+
         traceback.print_exc()
         return 1
 

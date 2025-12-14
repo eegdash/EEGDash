@@ -197,10 +197,10 @@ def load_eeg_attrs_from_bids_file(bids_dataset, bids_file: str) -> dict[str, Any
         ".set": [".fdt"],
         ".vhdr": [".eeg", ".vmrk", ".dat", ".raw"],
     }
-    
+
     # Get the original run value to handle alphanumeric runs for sidecar finding
     original_run_value = bids_dataset.get_bids_file_attribute("run", bids_file)
-    
+
     for ext in sidecars_map.get(bids_path.extension, []):
         # First try using BIDSPath's find_matching_sidecar
         sidecar = bids_path.find_matching_sidecar(extension=ext, on_error="ignore")
@@ -211,7 +211,9 @@ def load_eeg_attrs_from_bids_file(bids_dataset, bids_file: str) -> dict[str, Any
             # Replace extension in the original file path
             sidecar_path = Path(bids_file).with_suffix(ext)
             if sidecar_path.exists() or sidecar_path.is_symlink():
-                bidsdependencies.append(str(bids_dataset._get_relative_bidspath(str(sidecar_path))))
+                bidsdependencies.append(
+                    str(bids_dataset._get_relative_bidspath(str(sidecar_path)))
+                )
 
     # Define field extraction functions with error handling
     field_extractors = {

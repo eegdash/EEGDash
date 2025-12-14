@@ -627,7 +627,9 @@ Examples:
             except Exception as e:
                 dataset = futures[future]
                 with print_lock:
-                    print(f"Unexpected error for {dataset.get('dataset_id', 'unknown')}: {e}")
+                    print(
+                        f"Unexpected error for {dataset.get('dataset_id', 'unknown')}: {e}"
+                    )
 
     elapsed = time.time() - start_time
 
@@ -695,4 +697,3 @@ Examples:
 
 if __name__ == "__main__":
     main()
-    

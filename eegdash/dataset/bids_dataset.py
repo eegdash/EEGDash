@@ -567,7 +567,9 @@ class EEGBIDSDataset:
             return {}
         participants_tsv.set_index("participant_id", inplace=True)
         subject = f"sub-{self.get_bids_file_attribute('subject', data_filepath)}"
-        return participants_tsv.loc[subject].to_dict()
+        row_dict = participants_tsv.loc[subject].to_dict()
+        # Convert NaN values to None for JSON compatibility
+        return {k: (None if pd.isna(v) else v) for k, v in row_dict.items()}
 
     def eeg_json(self, data_filepath: str) -> dict[str, Any]:
         """Get the merged eeg.json metadata for a data file.

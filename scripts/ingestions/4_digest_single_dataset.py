@@ -20,10 +20,6 @@ Output files:
 Usage:
     python digest_single_dataset.py ds002718 --dataset-dir test_diggestion/ds002718
 Upload to MongoDB:
-    curl -X POST https://data.eegdash.org/admin/eegdashstaging/records/bulk \\
-         -H "Authorization: Bearer AdminWrite2025SecureToken" \\
-         -H "Content-Type: application/json" \\
-         -d @digestion_output/ds002718/ds002718_core.json
 """
 
 import argparse

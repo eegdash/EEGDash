@@ -180,6 +180,9 @@ def load_eeg_attrs_from_bids_file(bids_dataset, bids_file: str) -> dict[str, Any
         check=False,
     )
 
+    # Add the main data file itself to dependencies
+    bidsdependencies.append(str(bids_dataset._get_relative_bidspath(bids_file)))
+
     sidecars_map = {
         ".set": [".fdt"],
         ".vhdr": [".eeg", ".vmrk", ".dat", ".raw"],

@@ -26,14 +26,14 @@ Core Attributes Extracted (from eegdash.const.config["attributes"]):
 9. sampling_frequency - Sampling rate in Hz
 10. nchans - Number of channels
 11. ntimes - Number of time points
-# Note: NEMAR datasets (nm*) automatically use s3://nemar/ regardless of --s3-base
+# Note: `bidspath` is stored as a dataset-relative path (e.g., "ds002718/sub-01/..."),
+# and the S3 bucket/base is selected at download time by the client.
 
 Usage:
-    # Process all cloned datasets (OpenNeuro + NEMAR)
+    # Process all cloned datasets
     python 5_digest_datasets_minimal.py \\
         --cloned-dir data/cloned_all \\
-        --output-dir digestion_output \\
-        --s3-base s3://openneuro.org
+        --output-dir digestion_output
 
     # Process specific datasets
     python 5_digest_datasets_minimal.py \\
@@ -80,7 +80,7 @@ from typing import Any
 
 
 def extract_minimal_metadata(
-    dataset_id: str, dataset_dir: Path, s3_base: str
+    dataset_id: str, dataset_dir: Path
 ) -> tuple[list[dict], list[dict]]:
     """Extract minimal metadata from a BIDS dataset.
 
@@ -93,8 +93,6 @@ def extract_minimal_metadata(
         Dataset identifier (e.g., "ds002718")
     dataset_dir : Path
         Path to the local BIDS dataset directory
-    s3_base : str
-        S3 base URL (e.g., "s3://openneuro.org")
 
     Returns
     -------
@@ -128,9 +126,7 @@ def extract_minimal_metadata(
 
         try:
             # Extract minimal attributes directly without loading full metadata
-            record = extract_minimal_record(
-                bids_dataset, bids_file, dataset_id, s3_base
-            )
+            record = extract_minimal_record(bids_dataset, bids_file, dataset_id)
             records.append(record)
 
         except Exception as exc:
@@ -142,7 +138,7 @@ def extract_minimal_metadata(
 
 
 def extract_minimal_record(
-    bids_dataset, bids_file: str, dataset_id: str, s3_base: str
+    bids_dataset, bids_file: str, dataset_id: str
 ) -> dict[str, Any]:
     """Extract minimal metadata for a single BIDS file.
 
@@ -156,8 +152,6 @@ def extract_minimal_record(
         Path to the BIDS file
     dataset_id : str
         Dataset identifier
-    s3_base : str
-        S3 base URL
 
     Returns
     -------
@@ -167,24 +161,15 @@ def extract_minimal_record(
     """
     file_name = Path(bids_file).name
 
-    # Construct S3 path based on dataset type
-    # NEMAR datasets (nm*) use s3://nemar/nm000XXX/...
-    # OpenNeuro datasets (ds*) use s3://openneuro.org/ds00XXXX/...
-    openneuro_path = dataset_id + bids_file.split(dataset_id)[1]
-
-    if dataset_id.startswith("nm"):
-        # NEMAR datasets use s3://nemar/{dataset_id}/...
-        s3_path = f"s3://nemar/{openneuro_path}"
-    else:
-        # OpenNeuro datasets use the provided s3_base
-        s3_path = f"{s3_base.rstrip('/')}/{openneuro_path}"
+    # Store dataset-relative bidspath (bucket/base is chosen at download time)
+    bidspath = str(bids_dataset.get_relative_bidspath(bids_file))
 
     # Extract only the 11 core attributes
     record = {
         # Required fields
         "data_name": f"{dataset_id}_{file_name}",
         "dataset": dataset_id,
-        "bidspath": s3_path,
+        "bidspath": bidspath,
         # BIDS entity fields
         "subject": bids_dataset.get_bids_file_attribute("subject", bids_file),
         "task": bids_dataset.get_bids_file_attribute("task", bids_file),
@@ -201,7 +186,7 @@ def extract_minimal_record(
 
 
 def digest_single_dataset(
-    dataset_id: str, cloned_dir: Path, output_dir: Path, s3_base: str
+    dataset_id: str, cloned_dir: Path, output_dir: Path
 ) -> dict[str, Any]:
     """Process a single dataset and generate minimal JSON.
 
@@ -237,7 +222,7 @@ def digest_single_dataset(
 
     try:
         # Extract minimal metadata
-        records, errors = extract_minimal_metadata(dataset_id, dataset_dir, s3_base)
+        records, errors = extract_minimal_metadata(dataset_id, dataset_dir)
 
         # Create output directory
         dataset_output_dir = output_dir / dataset_id
@@ -333,13 +318,6 @@ def main():
     )
 
     parser.add_argument(
-        "--s3-base",
-        type=str,
-        default="s3://openneuro.org",
-        help="S3 base URL (default: s3://openneuro.org)",
-    )
-
-    parser.add_argument(
         "--datasets",
         nargs="+",
         help="Specific dataset IDs to process (default: all in cloned-dir)",
@@ -370,7 +348,6 @@ def main():
     print("=" * 80)
     print(f"Cloned directory: {args.cloned_dir}")
     print(f"Output directory: {args.output_dir}")
-    print(f"S3 base URL: {args.s3_base}")
     print(f"Datasets to process: {len(datasets_to_process)}")
     print(f"Parallel workers: {args.workers}")
     print("=" * 80)
@@ -387,7 +364,7 @@ def main():
         # Sequential processing
         for dataset_id in datasets_to_process:
             summary = digest_single_dataset(
-                dataset_id, args.cloned_dir, args.output_dir, args.s3_base
+                dataset_id, args.cloned_dir, args.output_dir
             )
             summaries.append(summary)
     else:
@@ -399,7 +376,6 @@ def main():
                     dataset_id,
                     args.cloned_dir,
                     args.output_dir,
-                    args.s3_base,
                 ): dataset_id
                 for dataset_id in datasets_to_process
             }

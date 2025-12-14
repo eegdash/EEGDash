@@ -139,9 +139,7 @@ def load_eeg_attrs_from_bids_file(bids_dataset, bids_file: str) -> dict[str, Any
     attrs = {field: None for field in data_config["attributes"].keys()}
 
     file = Path(bids_file).name
-    dsnumber = bids_dataset.dataset
-    # extract openneuro path by finding the first occurrence of the dataset name in the filename and remove the path before that
-    openneuro_path = dsnumber + bids_file.split(dsnumber)[1]
+    bidspath = str(bids_dataset.get_relative_bidspath(bids_file))
 
     # Update with actual values where available
     try:
@@ -168,21 +166,18 @@ def load_eeg_attrs_from_bids_file(bids_dataset, bids_file: str) -> dict[str, Any
         except Exception:
             pass
 
-    # Handle run value - BIDSPath expects int, but we store as string
-    # Convert to int for BIDSPath if numeric, otherwise None (original value preserved in metadata)
-    run_value = bids_dataset.get_bids_file_attribute("run", bids_file)
-    if run_value is not None:
-        try:
-            run_value = int(run_value)
-        except (ValueError, TypeError):
-            # Non-numeric run values (e.g., '5F') - pass as None to BIDSPath
-            run_value = None
+    original_run_value = bids_dataset.get_bids_file_attribute("run", bids_file)
+    run_value_for_bids_path = None
+    if original_run_value is not None:
+        run_str = str(original_run_value)
+        if run_str.isdigit():
+            run_value_for_bids_path = run_str
 
     bids_path = BIDSPath(
         subject=bids_dataset.get_bids_file_attribute("subject", bids_file),
         session=bids_dataset.get_bids_file_attribute("session", bids_file),
         task=bids_dataset.get_bids_file_attribute("task", bids_file),
-        run=run_value,
+        run=run_value_for_bids_path,
         root=bids_dataset.bidsdir,
         datatype=bids_dataset.get_bids_file_attribute("modality", bids_file),
         suffix="eeg",
@@ -190,36 +185,30 @@ def load_eeg_attrs_from_bids_file(bids_dataset, bids_file: str) -> dict[str, Any
         check=False,
     )
 
-    # Add the main data file itself to dependencies
-    bidsdependencies.append(str(bids_dataset._get_relative_bidspath(bids_file)))
-
     sidecars_map = {
         ".set": [".fdt"],
         ".vhdr": [".eeg", ".vmrk", ".dat", ".raw"],
     }
 
-    # Get the original run value to handle alphanumeric runs for sidecar finding
-    original_run_value = bids_dataset.get_bids_file_attribute("run", bids_file)
-
     for ext in sidecars_map.get(bids_path.extension, []):
         # First try using BIDSPath's find_matching_sidecar
         sidecar = bids_path.find_matching_sidecar(extension=ext, on_error="ignore")
         if sidecar is not None:
-            bidsdependencies.append(str(bids_dataset._get_relative_bidspath(sidecar)))
-        elif original_run_value is not None and run_value is None:
+            bidsdependencies.append(str(bids_dataset.get_relative_bidspath(sidecar)))
+        elif original_run_value is not None and run_value_for_bids_path is None:
             # Handle alphanumeric runs by looking for sidecar directly
             # Replace extension in the original file path
             sidecar_path = Path(bids_file).with_suffix(ext)
             if sidecar_path.exists() or sidecar_path.is_symlink():
                 bidsdependencies.append(
-                    str(bids_dataset._get_relative_bidspath(str(sidecar_path)))
+                    str(bids_dataset.get_relative_bidspath(str(sidecar_path)))
                 )
 
     # Define field extraction functions with error handling
     field_extractors = {
         "data_name": lambda: f"{bids_dataset.dataset}_{file}",
         "dataset": lambda: bids_dataset.dataset,
-        "bidspath": lambda: openneuro_path,
+        "bidspath": lambda: bidspath,
         "subject": lambda: bids_dataset.get_bids_file_attribute("subject", bids_file),
         "task": lambda: bids_dataset.get_bids_file_attribute("task", bids_file),
         "session": lambda: bids_dataset.get_bids_file_attribute("session", bids_file),

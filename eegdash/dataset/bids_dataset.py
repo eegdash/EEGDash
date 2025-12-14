@@ -163,6 +163,7 @@ class EEGBIDSDataset:
         """
         # Initialize cache for BIDSPath objects
         self._bids_path_cache = {}
+        self._bids_entity_cache = {}
 
         # Find all recordings across specified modalities
         # Use MNE-BIDS constants to get valid extensions per modality
@@ -216,19 +217,34 @@ class EEGBIDSDataset:
             task = re.search(r"task-([^_]*)", filename)
             run = re.search(r"run-([^_]*)", filename)
 
-            # Always keep run as string for consistency
+            # Preserve the run entity as parsed from the filename (may be non-numeric)
             run_value = run.group(1) if run else None
+
+            # BIDSPath enforces "run" to be an index; accept numeric strings, but
+            # drop non-numeric runs (e.g., "5F") while preserving them in the cache.
+            run_value_for_bidspath = None
+            if run_value is not None:
+                run_str = str(run_value)
+                if run_str.isdigit():
+                    run_value_for_bidspath = run_str
 
             bids_path = BIDSPath(
                 subject=subject.group(1) if subject else None,
                 session=session.group(1) if session else None,
                 task=task.group(1) if task else None,
-                run=run_value,
+                run=run_value_for_bidspath,
                 datatype=modality,
                 extension=filepath.suffix,
                 root=self.bidsdir,
             )
             self._bids_path_cache[data_filepath] = bids_path
+            self._bids_entity_cache[data_filepath] = {
+                "subject": subject.group(1) if subject else None,
+                "session": session.group(1) if session else None,
+                "task": task.group(1) if task else None,
+                "run": run_value,
+                "modality": modality,
+            }
 
         return self._bids_path_cache[data_filepath]
 
@@ -423,14 +439,15 @@ class EEGBIDSDataset:
 
         """
         bids_path = self._get_bids_path_from_file(data_filepath)
+        entities = self._bids_entity_cache.get(data_filepath, {})
 
         # Direct BIDSPath properties for entities
         direct_attrs = {
-            "subject": bids_path.subject,
-            "session": bids_path.session,
-            "task": bids_path.task,
-            "run": bids_path.run,
-            "modality": bids_path.datatype,
+            "subject": entities.get("subject", bids_path.subject),
+            "session": entities.get("session", bids_path.session),
+            "task": entities.get("task", bids_path.task),
+            "run": entities.get("run", bids_path.run),
+            "modality": entities.get("modality", bids_path.datatype),
         }
 
         if attribute in direct_attrs:

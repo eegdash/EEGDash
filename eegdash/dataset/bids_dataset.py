@@ -216,11 +216,14 @@ class EEGBIDSDataset:
             task = re.search(r"task-([^_]*)", filename)
             run = re.search(r"run-([^_]*)", filename)
 
+            # Always keep run as string for consistency
+            run_value = run.group(1) if run else None
+
             bids_path = BIDSPath(
                 subject=subject.group(1) if subject else None,
                 session=session.group(1) if session else None,
                 task=task.group(1) if task else None,
-                run=int(run.group(1)) if run else None,
+                run=run_value,
                 datatype=modality,
                 extension=filepath.suffix,
                 root=self.bidsdir,
@@ -567,7 +570,8 @@ class EEGBIDSDataset:
         # the participant first column is always 'participant_id' or
         # some variation like 'participantID'
         participants_tsv_path = participants_tsv_files[0]
-        participants_tsv = pd.read_csv(participants_tsv_path, sep="\t")
+        # Use dtype=str to avoid pandas auto-converting values (e.g., '5F' being interpreted as hex)
+        participants_tsv = pd.read_csv(participants_tsv_path, sep="\t", dtype=str)
         if participants_tsv.empty:
             return {}
         participants_tsv.set_index("participant_id", inplace=True)

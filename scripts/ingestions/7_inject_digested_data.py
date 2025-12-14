@@ -46,7 +46,17 @@ def inject_dataset(
 
     """
     with open(core_json_path) as f:
-        records = json.load(f)
+        payload = json.load(f)
+
+    if isinstance(payload, list):
+        records = payload
+    elif isinstance(payload, dict) and isinstance(payload.get("records"), list):
+        records = payload["records"]
+    else:
+        raise ValueError(
+            f"Unexpected payload format in {core_json_path}: expected a list of records "
+            "or an object with a 'records' list."
+        )
 
     result = collection.insert_many(records)
 

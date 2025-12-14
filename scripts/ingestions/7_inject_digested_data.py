@@ -43,6 +43,7 @@ def inject_dataset(
     -------
     dict
         Result including inserted_count
+
     """
     with open(core_json_path) as f:
         records = json.load(f)
@@ -78,6 +79,7 @@ def inject_all_datasets(
     -------
     dict
         Summary of injection results
+
     """
     # Create the collection interface using existing class
     collection = HTTPAPICollection(
@@ -120,25 +122,31 @@ def inject_all_datasets(
                 results["success"] += 1
                 inserted = result.get("inserted_count", 0)
                 results["total_records"] += inserted
-                results["datasets"].append({
-                    "dataset": dataset_id,
-                    "status": "success",
-                    "records_inserted": inserted,
-                })
+                results["datasets"].append(
+                    {
+                        "dataset": dataset_id,
+                        "status": "success",
+                        "records_inserted": inserted,
+                    }
+                )
                 pbar.set_description(f"{dataset_id}: ✓ {inserted} records")
 
             except Exception as e:
                 results["failed"] += 1
                 error_msg = str(e)
-                results["errors"].append({
-                    "dataset": dataset_id,
-                    "error": error_msg,
-                })
-                results["datasets"].append({
-                    "dataset": dataset_id,
-                    "status": "failed",
-                    "error": error_msg[:100],
-                })
+                results["errors"].append(
+                    {
+                        "dataset": dataset_id,
+                        "error": error_msg,
+                    }
+                )
+                results["datasets"].append(
+                    {
+                        "dataset": dataset_id,
+                        "status": "failed",
+                        "error": error_msg[:100],
+                    }
+                )
                 pbar.set_description(f"{dataset_id}: ✗ {error_msg[:30]}")
 
             pbar.update(1)
@@ -198,12 +206,14 @@ def main():
         print(f"Failed:             {results['failed']}")
         print(f"Total records:      {results['total_records']}")
         print(f"Duration:           {results['duration_seconds']:.1f}s")
-        if results['success'] > 0:
-            print(f"Avg records/dataset: {results['total_records']/results['success']:.0f}")
+        if results["success"] > 0:
+            print(
+                f"Avg records/dataset: {results['total_records'] / results['success']:.0f}"
+            )
         print()
 
         # Show failed datasets
-        if results['failed'] > 0:
+        if results["failed"] > 0:
             print("Failed datasets:")
             for d in results["errors"][:10]:
                 print(f"  - {d['dataset']}: {d['error'][:60]}")
@@ -220,7 +230,7 @@ def main():
         print(f"Data injected into: {args.api_url}/admin/{args.database}")
         print(f"Query: curl {args.api_url}/{args.database}/records")
 
-        return 0 if results['failed'] == 0 else 1
+        return 0 if results["failed"] == 0 else 1
 
     except Exception as e:
         print(f"✗ Injection failed: {e}", file=sys.stderr)

@@ -559,14 +559,24 @@ class EEGBIDSDataset:
             A dictionary of the subject's information from participants.tsv.
 
         """
-        participants_tsv_path = self.get_bids_metadata_files(
+        participants_tsv_files = self.get_bids_metadata_files(
             data_filepath, "participants.tsv"
-        )[0]
+        )
+        if not participants_tsv_files:
+            return {}
+        # the participant first column is always 'participant_id' or
+        # some variation like 'participantID'
+        participants_tsv_path = participants_tsv_files[0]
         participants_tsv = pd.read_csv(participants_tsv_path, sep="\t")
         if participants_tsv.empty:
             return {}
         participants_tsv.set_index("participant_id", inplace=True)
         subject = f"sub-{self.get_bids_file_attribute('subject', data_filepath)}"
+        
+        # Handle case where subject not found in participants.tsv
+        if subject not in participants_tsv.index:
+            return {}
+        
         row_dict = participants_tsv.loc[subject].to_dict()
         # Convert NaN values to None for JSON compatibility
         return {k: (None if pd.isna(v) else v) for k, v in row_dict.items()}

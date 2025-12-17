@@ -26,7 +26,11 @@ import torch
 warnings.simplefilter("ignore", category=RuntimeWarning)
 
 from eegdash import EEGDashDataset
-from braindecode.preprocessing import preprocess, Preprocessor, create_windows_from_events
+from braindecode.preprocessing import (
+    preprocess,
+    Preprocessor,
+    create_windows_from_events,
+)
 from eegdash.hbn.preprocessing import hbn_ec_ec_reannotation
 
 
@@ -67,8 +71,30 @@ preprocessors = [
     Preprocessor(
         "pick_channels",
         ch_names=[
-            "E22","E9","E33","E24","E11","E124","E122","E29","E6","E111","E45","E36",
-            "E104","E108","E42","E55","E93","E58","E52","E62","E92","E96","E70","Cz",
+            "E22",
+            "E9",
+            "E33",
+            "E24",
+            "E11",
+            "E124",
+            "E122",
+            "E29",
+            "E6",
+            "E111",
+            "E45",
+            "E36",
+            "E104",
+            "E108",
+            "E42",
+            "E55",
+            "E93",
+            "E58",
+            "E52",
+            "E62",
+            "E92",
+            "E96",
+            "E70",
+            "Cz",
         ],
     ),
     Preprocessor("resample", sfreq=128),
@@ -105,7 +131,9 @@ for subj in subjects_all:
         print(f"[SKIP] EEGDashDataset empty for subject {subj}: {e}")
         continue
     except Exception as e:
-        print(f"[SKIP] Failed to construct EEGDashDataset for subject {subj}: {type(e).__name__}: {e}")
+        print(
+            f"[SKIP] Failed to construct EEGDashDataset for subject {subj}: {type(e).__name__}: {e}"
+        )
         continue
 
     try:
@@ -117,7 +145,9 @@ for subj in subjects_all:
             preload=True,
         )
     except Exception as e:
-        print(f"[SKIP] Preprocess/windowing failed for subject {subj}: {type(e).__name__}: {e}")
+        print(
+            f"[SKIP] Preprocess/windowing failed for subject {subj}: {type(e).__name__}: {e}"
+        )
         continue
 
     n_win = len(windows_ds)
@@ -131,7 +161,9 @@ for subj in subjects_all:
     valid_subjects.append(subj)
 
 if len(valid_subjects) < 2:
-    raise RuntimeError(f"Only {len(valid_subjects)} valid subject(s) collected; need >=2.")
+    raise RuntimeError(
+        f"Only {len(valid_subjects)} valid subject(s) collected; need >=2."
+    )
 
 if num_test_subjects >= len(valid_subjects):
     raise ValueError("NUM_TEST_SUBJECTS must be < number of valid subjects found.")
@@ -141,6 +173,7 @@ print("Total subjects requested:", num_subjects, " | collected:", len(valid_subj
 
 # Concatenate
 from braindecode.datasets import BaseConcatDataset
+
 concat_ds = BaseConcatDataset(all_windows)
 print("Total windows across valid subjects:", len(concat_ds))
 
@@ -149,6 +182,7 @@ print("Total windows across valid subjects:", len(concat_ds))
 # Save a sanity plot (no GUI)
 # -----------------------------
 import matplotlib
+
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
@@ -194,6 +228,7 @@ y_train = torch.LongTensor(np.array([concat_ds[i][1] for i in train_indices]))
 y_test = torch.LongTensor(np.array([concat_ds[i][1] for i in test_indices]))
 
 from torch.utils.data import DataLoader, TensorDataset
+
 dataset_train = TensorDataset(X_train, y_train)
 dataset_test = TensorDataset(X_test, y_test)
 
@@ -230,11 +265,13 @@ model = model.to(device=device)
 
 print("Using epochs =", epochs, "| device =", device, "| batch_size =", batch_size)
 
+
 def normalize_data(x):
     mean = x.mean(dim=2, keepdim=True)
     std = x.std(dim=2, keepdim=True) + 1e-7
     x = (x - mean) / std
     return x.to(device=device, dtype=torch.float32)
+
 
 for e in range(epochs):
     model.train()
@@ -264,7 +301,7 @@ for e in range(epochs):
     train_acc = correct_train / len(dataset_train)
     test_acc = correct_test / len(dataset_test)
     print(f"Epoch {e}, Train accuracy: {train_acc:.2f}, Test accuracy: {test_acc:.2f}")
-"tutorial_eoec.py" 265L, 8468C                                                                                                              265,87        Bot
+
 # -----------------------------
 torch.manual_seed(random_state)
 np.random.seed(random_state)
@@ -275,6 +312,7 @@ y_train = torch.LongTensor(np.array([concat_ds[i][1] for i in train_indices]))
 y_test = torch.LongTensor(np.array([concat_ds[i][1] for i in test_indices]))
 
 from torch.utils.data import DataLoader, TensorDataset
+
 dataset_train = TensorDataset(X_train, y_train)
 dataset_test = TensorDataset(X_test, y_test)
 
@@ -311,11 +349,13 @@ model = model.to(device=device)
 
 print("Using epochs =", epochs, "| device =", device, "| batch_size =", batch_size)
 
+
 def normalize_data(x):
     mean = x.mean(dim=2, keepdim=True)
     std = x.std(dim=2, keepdim=True) + 1e-7
     x = (x - mean) / std
     return x.to(device=device, dtype=torch.float32)
+
 
 for e in range(epochs):
     model.train()

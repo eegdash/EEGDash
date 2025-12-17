@@ -6,7 +6,7 @@
 .secret
 .venv*
 .vscode/
-.venv-ci/*
+.venv-ci*
 *.egg-info
 *.isorted
 *.json

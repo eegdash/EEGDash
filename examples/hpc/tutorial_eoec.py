@@ -264,7 +264,7 @@ for e in range(epochs):
     train_acc = correct_train / len(dataset_train)
     test_acc = correct_test / len(dataset_test)
     print(f"Epoch {e}, Train accuracy: {train_acc:.2f}, Test accuracy: {test_acc:.2f}")
-"tutorial_eoec.py" 265L, 8468C                                                                                                              265,87        Bot
+
 # -----------------------------
 torch.manual_seed(random_state)
 np.random.seed(random_state)

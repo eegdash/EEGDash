@@ -1,5 +1,6 @@
 from pathlib import Path
 from typing import Any
+from joblib import Parallel, delayed
 
 from docstring_inheritance import NumpyDocstringInheritanceInitMeta
 from mne_bids import find_matching_paths
@@ -116,6 +117,8 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
     download : bool, default True
         If False, load from local BIDS files only. Local data are expected
         under ``cache_dir / dataset``; no DB or S3 access is attempted.
+    n_jobs_download : int
+        Number of parallel jobs to use for downloading files (-1 uses all cores).
     n_jobs : int
         Number of parallel jobs to use where applicable (-1 uses all cores).
     eeg_dash_instance : EEGDash | None
@@ -139,6 +142,7 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
         s3_bucket: str | None = None,
         records: list[dict] | None = None,
         download: bool = True,
+        n_jobs_download: int = -1,
         n_jobs: int = -1,
         eeg_dash_instance: Any = None,
         **kwargs,
@@ -148,6 +152,7 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
         self.s3_bucket = s3_bucket
         self.records = records
         self.download = download
+        self.n_jobs_download = n_jobs_download
         self.n_jobs = n_jobs
         self.eeg_dash_instance = eeg_dash_instance
 
@@ -280,9 +285,9 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
                         part_row = bids_ds.subject_participant_tsv(local_file)
                         desc = merge_participants_fields(
                             description=desc,
-                            participants_row=part_row
-                            if isinstance(part_row, dict)
-                            else None,
+                            participants_row=(
+                                part_row if isinstance(part_row, dict) else None
+                            ),
                             description_fields=description_fields,
                         )
                     except Exception:
@@ -326,6 +331,12 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
         else:
             raise ValueError(
                 "You must provide either 'records', a 'data_dir', or a query/keyword arguments for filtering."
+            )
+
+        if self.download:
+            # Download all datasets in parallel
+            Parallel(n_jobs=self.n_jobs_download)(
+                delayed(len)(ds) for ds in datasets if ds.raw is None
             )
 
         super().__init__(datasets)

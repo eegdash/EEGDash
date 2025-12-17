@@ -26,8 +26,6 @@ from .const import (
     ALLOWED_QUERY_FIELDS,
 )
 from .const import config as data_config
-from .dataset.bids_dataset import EEGBIDSDataset
-from .dataset.dataset import EEGDashDataset
 from .http_api_client import HTTPAPIConnectionManager
 from .logging import logger
 
@@ -455,6 +453,10 @@ class EEGDash:
         """
         source_dir = Path(data_dir).expanduser()
         try:
+            # Local import to keep ``import eegdash.api`` lightweight (braindecode is
+            # only required when users want dataset helpers).
+            from .dataset.bids_dataset import EEGBIDSDataset
+
             bids_dataset = EEGBIDSDataset(
                 data_dir=str(source_dir),
                 dataset=dataset,
@@ -589,6 +591,15 @@ def _json_default(value: Any) -> Any:
         return sorted(value)
 
     raise TypeError(f"Object of type {type(value).__name__} is not JSON serializable")
+
+def __getattr__(name: str):
+    # Backward-compat: allow ``from eegdash.api import EEGDashDataset`` without
+    # importing braindecode unless needed.
+    if name == "EEGDashDataset":
+        from .dataset.dataset import EEGDashDataset
+
+        return EEGDashDataset
+    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
 
 
 __all__ = ["EEGDash", "EEGDashDataset"]

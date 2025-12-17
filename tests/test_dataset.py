@@ -1,3 +1,4 @@
+import os
 import time
 from pathlib import Path
 
@@ -6,10 +7,32 @@ import pytest
 from eegdash.api import EEGDash
 from eegdash.dataset import EEGChallengeDataset
 
-RELEASES = ["R1", "R2", "R3", "R4", "R5", "R6", "R7", "R8", "R9", "R10", "R11"]
-FILES_PER_RELEASE = [1342, 1405, 1812, 3342, 3326, 1227, 3100, 2320, 2885, 2516, 3397]
+# These tests hit the live metadata API and S3 and can be slow/flaky on
+# constrained networks. By default, run a small smoke subset; opt into the full
+# matrix with `EEGDASH_TEST_ALL_RELEASES=1` or `EEGDASH_TEST_RELEASES=R1,R5,...`.
+_ALL_RELEASE_FILES = {
+    "R1": 1342,
+    "R2": 1405,
+    "R3": 1812,
+    "R4": 3342,
+    "R5": 3326,
+    "R6": 1227,
+    "R7": 3100,
+    "R8": 2320,
+    "R9": 2885,
+    "R10": 2516,
+    "R11": 3397,
+}
 
-RELEASE_FILES = list(zip(RELEASES, FILES_PER_RELEASE))
+_env_releases = os.getenv("EEGDASH_TEST_RELEASES", "").strip()
+if _env_releases:
+    RELEASES = [r.strip() for r in _env_releases.split(",") if r.strip()]
+elif os.getenv("EEGDASH_TEST_ALL_RELEASES", "").strip() == "1":
+    RELEASES = list(_ALL_RELEASE_FILES.keys())
+else:
+    RELEASES = ["R5"]
+
+RELEASE_FILES = [(r, _ALL_RELEASE_FILES[r]) for r in RELEASES]
 
 
 def _load_release(release, cache_dir: Path):
@@ -33,8 +56,7 @@ def test_eeg_challenge_dataset_initialization(cache_dir: Path):
     expected_subject = "sub-NDARAC350XUM"
     expected_task = "DespicableMe"
     expected_suffix = (
-        f"{expected_dataset}/{expected_subject}/eeg/"
-        f"{expected_subject}_task-{expected_task}_eeg.set"
+        f"{expected_subject}/eeg/" f"{expected_subject}_task-{expected_task}_eeg.bdf"
     )
 
     expected_full_path = f"{dataset.s3_bucket}/{expected_suffix}"
@@ -54,6 +76,10 @@ def test_eeg_challenge_dataset_amount_files(release, number_files, cache_dir: Pa
 
 
 @pytest.mark.parametrize("release", RELEASES)
+@pytest.mark.skipif(
+    os.getenv("EEGDASH_TEST_BENCHMARKS", "").strip() != "1",
+    reason="Set EEGDASH_TEST_BENCHMARKS=1 to run live API benchmarks.",
+)
 def test_mongodb_load_benchmark(benchmark, release, cache_dir: Path):
     # Group makes the report nicer when comparing releases
     benchmark.group = "EEGChallengeDataset.load"

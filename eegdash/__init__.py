@@ -9,15 +9,30 @@ EEG datasets. It integrates with cloud storage and REST APIs to streamline EEG r
 workflows.
 """
 
-from .api import EEGDash
-from .dataset import EEGChallengeDataset, EEGDashDataset
-from .hbn import preprocessing
-
-__all__ = [
-    "EEGChallengeDataset",
-    "EEGDash",
-    "EEGDashDataset",
-    "preprocessing",
-]
-
 __version__ = "0.5.0"
+
+# NOTE: Keep the top-level import lightweight to avoid importing heavy optional
+# dependencies (e.g., braindecode/torch) when users only need small utilities.
+# Public objects are exposed via lazy attribute access (PEP 562).
+
+__all__ = ["EEGDash", "EEGDashDataset", "EEGChallengeDataset", "preprocessing"]
+
+
+def __getattr__(name: str):
+    if name == "EEGDash":
+        from .api import EEGDash
+
+        return EEGDash
+    if name in {"EEGDashDataset", "EEGChallengeDataset"}:
+        from .dataset import EEGChallengeDataset, EEGDashDataset
+
+        return EEGDashDataset if name == "EEGDashDataset" else EEGChallengeDataset
+    if name == "preprocessing":
+        from .hbn import preprocessing
+
+        return preprocessing
+    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
+
+
+def __dir__():
+    return sorted(list(globals().keys()) + __all__)

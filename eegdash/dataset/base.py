@@ -12,7 +12,7 @@ braindecode for machine learning workflows and handles data loading from both lo
 import io
 import os
 import traceback
-from contextlib import redirect_stderr
+from contextlib import contextmanager, nullcontext, redirect_stderr
 from pathlib import Path
 from typing import Any
 
@@ -21,6 +21,7 @@ import mne_bids
 from mne._fiff.utils import _read_segments_file
 from mne.io import BaseRaw
 from mne_bids import BIDSPath
+from mne_bids.config import reader as _mne_bids_reader
 
 from braindecode.datasets.base import BaseDataset
 
@@ -28,6 +29,40 @@ from .. import downloader
 from ..bids_eeg_metadata import enrich_from_participants
 from ..logging import logger
 from ..paths import get_default_cache_dir
+from ..records import adapt_record_v1_to_v2
+from ..resolver import resolve_record
+
+
+@contextmanager
+def _patch_mne_eeglab_missing_chanlocs():
+    """Patch MNE's EEGLAB reader to tolerate missing ``chanlocs``.
+
+    Some OpenNeuro EEGLAB ``.set`` files omit the ``EEG.chanlocs`` field and rely
+    on BIDS sidecars (e.g., ``*_channels.tsv``) for channel metadata. MNE's
+    reader currently errors early when ``chanlocs`` is absent.
+    """
+    try:
+        import mne.io.eeglab.eeglab as _mne_eeglab
+    except Exception:
+        yield
+        return
+
+    orig = getattr(_mne_eeglab, "_check_load_mat", None)
+    if orig is None:
+        yield
+        return
+
+    def _patched(fname, uint16_codec, *, preload=False):
+        eeg = orig(fname, uint16_codec, preload=preload)
+        if not hasattr(eeg, "chanlocs"):
+            eeg.chanlocs = []
+        return eeg
+
+    _mne_eeglab._check_load_mat = _patched
+    try:
+        yield
+    finally:
+        _mne_eeglab._check_load_mat = orig
 
 
 class EEGDashBaseDataset(BaseDataset):
@@ -63,95 +98,78 @@ class EEGDashBaseDataset(BaseDataset):
         **kwargs,
     ):
         super().__init__(None, **kwargs)
-        self.record = record
         self.cache_dir = Path(cache_dir)
-        self.bids_kwargs = self._get_raw_bids_args()
-
-        if s3_bucket:
-            self.s3_bucket = s3_bucket
-            self.s3_open_neuro = False
-        else:
-            self.s3_bucket = self._AWS_BUCKET
-            self.s3_open_neuro = True
-
-        # Compute a dataset folder name under cache_dir that encodes preprocessing
-        # (e.g., bdf, mini) to avoid overlapping with the original dataset cache.
-        self.dataset_folder = record.get("dataset", "")
-        # TODO: remove this hack when competition is over
-        if s3_bucket:
-            suffixes: list[str] = []
-            bucket_lower = str(s3_bucket).lower()
-            if "bdf" in bucket_lower:
-                suffixes.append("bdf")
-            if "mini" in bucket_lower:
-                suffixes.append("mini")
-            if suffixes:
-                self.dataset_folder = f"{self.dataset_folder}-{'-'.join(suffixes)}"
-
-        # Place files under the dataset-specific folder (with suffix if any)
-        rel = Path(record["bidspath"])  # usually starts with dataset id
-        if rel.parts and rel.parts[0] == record.get("dataset"):
-            rel = Path(self.dataset_folder, *rel.parts[1:])
-        else:
-            rel = Path(self.dataset_folder) / rel
-        self.filecache = self.cache_dir / rel
-        self.bids_root = self.cache_dir / self.dataset_folder
-
-        self.bidspath = BIDSPath(
-            root=self.bids_root,
-            datatype="eeg",
-            suffix="eeg",
-            **self.bids_kwargs,
+        self.s3_bucket = s3_bucket or self._AWS_BUCKET
+        # Normalize legacy records to a v2-shaped record at the boundary.
+        self.record = (
+            record
+            if record.get("schema_version") == 2
+            else adapt_record_v1_to_v2(record, s3_bucket=self.s3_bucket)
         )
 
-        self.s3file = downloader.get_s3path(self.s3_bucket, record["bidspath"])
-        self.bids_dependencies = record["bidsdependencies"]
-        self.bids_dependencies_original = record["bidsdependencies"]
-        # TODO: removing temporary fix for BIDS dependencies path
-        # when the competition is over and dataset is digested properly
-        if not self.s3_open_neuro:
-            self.bids_dependencies = [
-                dep.split("/", 1)[1] for dep in self.bids_dependencies
-            ]
+        resolved = resolve_record(self.record, cache_dir=self.cache_dir)
+        self.bids_root = resolved.bids_root
+        self.filecache = resolved.raw_path
+        self._dep_paths = resolved.dep_paths
+        self._raw_uri = resolved.raw_uri
+        self._dep_uris = resolved.dep_uris
+
+        self.bids_root.mkdir(parents=True, exist_ok=True)
+
+        # Public-ish attribute used in tests; now reflects the actual remote URI.
+        self.s3file = self._raw_uri
+
+        entities_mne = self.record.get("entities_mne") or {}
+        self.bidspath = BIDSPath(
+            root=self.bids_root,
+            datatype=self.record.get("datatype", "eeg"),
+            suffix=self.record.get("suffix", "eeg"),
+            extension=self.record.get("extension", self.filecache.suffix),
+            subject=entities_mne.get("subject"),
+            session=entities_mne.get("session"),
+            task=entities_mne.get("task"),
+            run=entities_mne.get("run"),
+            check=False,
+        )
 
         self._raw = None
 
-    def _get_raw_bids_args(self) -> dict[str, Any]:
-        """Extract BIDS-related arguments from the metadata record."""
-        desired_fields = ["subject", "session", "task", "run"]
-        return {k: self.record[k] for k in desired_fields if self.record[k]}
+    def _download_required_files(self) -> None:
+        if self._raw_uri is None:
+            return
+        filesystem = downloader.get_s3_filesystem()
+
+        # Download deps first (sidecars, companions), then raw.
+        downloader.download_files(
+            list(zip(self._dep_uris, self._dep_paths, strict=False)),
+            filesystem=filesystem,
+            skip_existing=True,
+        )
+        downloader.download_s3_file(self._raw_uri, self.filecache, filesystem=filesystem)
+        self.filenames = [self.filecache]
 
     def _ensure_raw(self) -> None:
         """Ensure the raw data file and its dependencies are cached locally."""
-        # TO-DO: remove this once is fixed on the our side
-        # for the competition
-        if not self.s3_open_neuro:
-            self.bidspath = self.bidspath.update(extension=".bdf")
-            self.filecache = self.filecache.with_suffix(".bdf")
-
-        if not os.path.exists(self.filecache):  # not preload
-            if self.bids_dependencies:
-                downloader.download_dependencies(
-                    s3_bucket=self.s3_bucket,
-                    bids_dependencies=self.bids_dependencies,
-                    bids_dependencies_original=self.bids_dependencies_original,
-                    cache_dir=self.cache_dir,
-                    dataset_folder=self.dataset_folder,
-                    record=self.record,
-                    s3_open_neuro=self.s3_open_neuro,
-                )
-            self.filecache = downloader.download_s3_file(
-                self.s3file, self.filecache, self.s3_open_neuro
-            )
-            self.filenames = [self.filecache]
+        self._download_required_files()
         if self._raw is None:
             try:
-                # mne-bids can emit noisy warnings to stderr; keep user logs clean
-                _stderr_buffer = io.StringIO()
-                with redirect_stderr(_stderr_buffer):
-                    self._raw = mne_bids.read_raw_bids(
-                        bids_path=self.bidspath, verbose="ERROR"
-                    )
+                patch_ctx = (
+                    _patch_mne_eeglab_missing_chanlocs()
+                    if self.filecache.suffix.lower() == ".set"
+                    else nullcontext()
+                )
+                # Prefer MNE-BIDS when the BIDSPath actually resolves to the cached file.
+                use_bids = self.bidspath.fpath.exists()
+                with patch_ctx:
+                    if use_bids:
+                        # mne-bids can emit noisy warnings to stderr; keep user logs clean
+                        _stderr_buffer = io.StringIO()
+                        with redirect_stderr(_stderr_buffer):
+                            self._raw = mne_bids.read_raw_bids(
+                                bids_path=self.bidspath, verbose="ERROR"
+                            )
+                    else:
+                        self._raw = self._read_raw_direct()
                 # Enrich Raw.info and description with participants.tsv extras
                 enrich_from_participants(
                     self.bids_root, self.bidspath, self._raw, self.description
@@ -168,6 +186,49 @@ class EEGDashBaseDataset(BaseDataset):
                 logger.error(f"Exception: {e}")
                 logger.error(traceback.format_exc())
                 raise e
+
+    def _read_raw_direct(self) -> BaseRaw:
+        """Read a cached raw file directly and apply BIDS sidecars where possible."""
+        ext = self.filecache.suffix
+        read_func = _mne_bids_reader.get(ext)
+        if read_func is None:
+            raise RuntimeError(f"No MNE-BIDS reader registered for extension: {ext}")
+
+        _stderr_buffer = io.StringIO()
+        with redirect_stderr(_stderr_buffer):
+            raw = read_func(str(self.filecache), preload=False, verbose="ERROR")
+
+        try:
+            import mne_bids.read as _mb_read
+
+            raw_dir = self.filecache.parent
+            stem = self.filecache.stem
+            suffix = str(self.record.get("suffix") or "eeg")
+            base = stem[: -len(f"_{suffix}")] if stem.endswith(f"_{suffix}") else stem
+
+            # Prefer non-suffix variants first (BIDS convention), then fall back.
+            events_candidates = [
+                raw_dir / f"{base}_events.tsv",
+                raw_dir / f"{stem}_events.tsv",
+            ]
+            for p in events_candidates:
+                if p.exists():
+                    _mb_read._handle_events_reading(str(p), raw)
+                    break
+
+            channels_candidates = [
+                raw_dir / f"{base}_channels.tsv",
+                raw_dir / f"{stem}_channels.tsv",
+                raw_dir / "channels.tsv",
+            ]
+            for p in channels_candidates:
+                if p.exists():
+                    _mb_read._handle_channels_reading(str(p), raw)
+                    break
+        except Exception:
+            pass
+
+        return raw
 
     def __len__(self) -> int:
         """Return the number of samples in the dataset."""
@@ -275,9 +336,7 @@ class EEGDashBaseRaw(BaseRaw):
         self.bids_dependencies = bids_dependencies
 
         if preload and not os.path.exists(self.filecache):
-            self.filecache = downloader.download_s3_file(
-                self.s3file, self.filecache, self.s3_open_neuro
-            )
+            self.filecache = downloader.download_s3_file(self.s3file, self.filecache)
             self.filenames = [self.filecache]
             preload = self.filecache
 
@@ -294,19 +353,13 @@ class EEGDashBaseRaw(BaseRaw):
     ):
         """Read a segment of data, downloading if necessary."""
         if not os.path.exists(self.filecache):  # not preload
-            if self.bids_dependencies:  # this is use only to sidecars for now
-                downloader.download_dependencies(
-                    s3_bucket=self._AWS_BUCKET,
-                    bids_dependencies=self.bids_dependencies,
-                    bids_dependencies_original=None,
-                    cache_dir=self.cache_dir,
-                    dataset_folder=self.filecache,
-                    record={},
-                    s3_open_neuro=self.s3_open_neuro,
-                )
-            self.filecache = downloader.download_s3_file(
-                self.s3file, self.filecache, self.s3_open_neuro
-            )
+            if self.bids_dependencies:
+                deps = [
+                    (downloader.get_s3path(self._AWS_BUCKET, dep), self.cache_dir / dep)
+                    for dep in self.bids_dependencies
+                ]
+                downloader.download_files(deps)
+            self.filecache = downloader.download_s3_file(self.s3file, self.filecache)
             self.filenames = [self.filecache]
         else:  # not preload and file is not cached
             self.filenames = [self.filecache]

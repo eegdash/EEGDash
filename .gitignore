@@ -4,8 +4,9 @@
 .env
 .ruff_cache/
 .secret
-.venv
+.venv*
 .vscode/
+.venv-ci/*
 *.egg-info
 *.isorted
 *.json

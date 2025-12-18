@@ -335,7 +335,7 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
 
         if self.download:
             # Download all datasets in parallel
-            Parallel(n_jobs=self.n_jobs_download)(
+            Parallel(n_jobs=self.n_jobs)(
                 delayed(len)(ds) for ds in datasets if ds.raw is None
             )
 

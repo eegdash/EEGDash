@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Documentation improvements for API reference
 - New EEGDash logo and branding assets
 - Favicon configuration for documentation
+- Allow paarllel download of files with the n_jobs parameter in EEGDashDataset
 
 ### Fixed
 - Sphinx documentation build warnings

@@ -1,8 +1,8 @@
 from pathlib import Path
 from typing import Any
-from joblib import Parallel, delayed
 
 from docstring_inheritance import NumpyDocstringInheritanceInitMeta
+from joblib import Parallel, delayed
 from mne_bids import find_matching_paths
 from rich.console import Console
 from rich.panel import Panel

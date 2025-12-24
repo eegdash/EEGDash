@@ -24,9 +24,7 @@ def filter_new_datasets(input_file: Path, output_file: Path, is_public: bool = T
     eegdash = EEGDash(is_public=is_public)
 
     # Get existing dataset IDs from MongoDB
-    existing_ids = set(
-        doc["dataset"] for doc in eegdash.collection.find({}, {"dataset": 1, "_id": 0})
-    )
+    existing_ids = {doc["dataset"] for doc in eegdash.find({})}
 
     # Filter out datasets that already exist
     new_datasets = [ds for ds in datasets if ds.get("dataset_id") not in existing_ids]

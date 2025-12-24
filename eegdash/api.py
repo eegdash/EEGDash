@@ -61,6 +61,8 @@ class EEGDash:
 
         Examples
         --------
+        >>> from eegdash import EEGDash
+        >>> eegdash = EEGDash()
         >>> eegdash.find({"dataset": "ds002718", "subject": {"$in": ["012", "013"]}})  # pre-built query
         >>> eegdash.find(dataset="ds002718", subject="012")  # keyword filters
         >>> eegdash.find(dataset="ds002718", subject=["012", "013"])  # sequence -> $in
@@ -141,18 +143,6 @@ class EEGDash:
         kwargs.pop("skip", None)
         final_query = merge_query(query, require_query=False, **kwargs)
         return self._client.count_documents(final_query)
-
-    @property
-    def collection(self):
-        """The underlying collection interface.
-
-        Returns
-        -------
-        EEGDashAPIClient
-            The API client used for database interactions via REST API.
-
-        """
-        return self._client
 
 
 def __getattr__(name: str):

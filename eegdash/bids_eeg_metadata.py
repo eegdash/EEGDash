@@ -106,6 +106,74 @@ def build_query_from_kwargs(**kwargs) -> dict[str, Any]:
     return query
 
 
+def merge_query(
+    query: dict[str, Any] | None = None,
+    require_query: bool = True,
+    **kwargs,
+) -> dict[str, Any]:
+    """Merge a raw query dict with keyword arguments into a final query.
+
+    Parameters
+    ----------
+    query : dict or None
+        Raw MongoDB query dictionary. Pass ``{}`` to match all documents.
+    require_query : bool, default True
+        If True, raise ValueError when no query or kwargs provided.
+        If False, return ``{}`` for empty inputs.
+    **kwargs
+        User-friendly field filters (converted via ``build_query_from_kwargs``).
+
+    Returns
+    -------
+    dict
+        The merged MongoDB query.
+
+    Raises
+    ------
+    ValueError
+        If ``require_query=True`` and neither query nor kwargs provided,
+        or if conflicting constraints are detected.
+
+    """
+    raw = query if isinstance(query, dict) else None
+    kw = build_query_from_kwargs(**kwargs) if kwargs else None
+
+    if raw is not None and kw:
+        # Check for conflicts on overlapping keys
+        for key in set(raw.keys()) & set(kw.keys()) & ALLOWED_QUERY_FIELDS:
+            _check_constraint_conflict(raw, kw, key)
+        # Merge: non-empty raw + kwargs => $and, empty raw => just kwargs
+        return {"$and": [raw, kw]} if raw else kw
+    if raw is not None:
+        return raw
+    if kw:
+        return kw
+    if require_query:
+        raise ValueError(
+            "Query required: pass a query dict or keyword arguments. "
+            "Use query={} to match all documents."
+        )
+    return {}
+
+
+def _check_constraint_conflict(
+    q1: dict[str, Any], q2: dict[str, Any], key: str
+) -> None:
+    """Raise ValueError if q1 and q2 have incompatible constraints on key."""
+    v1, v2 = q1.get(key), q2.get(key)
+    if v1 is None or v2 is None:
+        return
+
+    # Extract values (handle $in operator)
+    s1 = set(v1["$in"]) if isinstance(v1, dict) and "$in" in v1 else {v1}
+    s2 = set(v2["$in"]) if isinstance(v2, dict) and "$in" in v2 else {v2}
+
+    if not s1 & s2:
+        raise ValueError(
+            f"Conflicting constraints for '{key}': {v1!r} vs {v2!r}"
+        )
+
+
 def load_eeg_attrs_from_bids_file(bids_dataset, bids_file: str) -> dict[str, Any]:
     """Build a metadata record for a BIDS file.
 

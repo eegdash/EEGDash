@@ -178,12 +178,17 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
             )
             self.cache_dir.mkdir(exist_ok=True, parents=True)
 
-        # Separate query kwargs from other kwargs passed to the BaseDataset constructor
+        # Extract query filters from kwargs (validates field names)
+        query_kwargs = {k: v for k, v in kwargs.items() if k in ALLOWED_QUERY_FIELDS}
+        if query_kwargs:
+            # Validate early: this raises ValueError for unknown fields or empty values
+            build_query_from_kwargs(**query_kwargs)
+
+        # Separate query kwargs from BaseDataset constructor kwargs
         self.query = query or {}
-        self.query.update(
-            {k: v for k, v in kwargs.items() if k in ALLOWED_QUERY_FIELDS}
-        )
-        base_dataset_kwargs = {k: v for k, v in kwargs.items() if k not in self.query}
+        self.query.update(query_kwargs)
+        base_dataset_kwargs = {k: v for k, v in kwargs.items() if k not in ALLOWED_QUERY_FIELDS}
+
         if "dataset" not in self.query:
             # If explicit records are provided, infer dataset from records
             if isinstance(records, list) and records and isinstance(records[0], dict):

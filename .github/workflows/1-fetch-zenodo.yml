@@ -1,0 +1,18 @@
+# Fetch Zenodo datasets
+name: "1. Fetch: Zenodo"
+
+on:
+  schedule:
+    - cron: '0 3 * * 1'  # Weekly on Monday
+  workflow_dispatch:
+
+jobs:
+  fetch:
+    uses: ./.github/workflows/fetch-source.yml
+    with:
+      source_name: "Zenodo"
+      script_path: "scripts/ingestions/1_fetch_sources/zenodo.py"
+      output_file: "zenodo_datasets.json"
+      continue_on_error: true
+    secrets:
+      DATASET_LISTINGS_TOKEN: ${{ secrets.DATASET_LISTINGS_TOKEN }}

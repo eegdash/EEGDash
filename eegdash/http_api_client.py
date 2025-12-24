@@ -109,6 +109,29 @@ class EEGDashAPIClient:
         resp.raise_for_status()
         return resp.json().get("insertedCount", 0)
 
+    def update_many(self, query: dict[str, Any], update: dict[str, Any]) -> tuple[int, int]:
+        """Update records matching query (requires auth).
+        
+        Parameters
+        ----------
+        query : dict
+            Filter query to match records.
+        update : dict
+            Fields to set (wrapped in $set automatically).
+            
+        Returns
+        -------
+        tuple of (matched_count, modified_count)
+        """
+        resp = self._session.patch(
+            f"{self.api_url}/admin/{self.database}/records",
+            json={"filter": query, "update": update},
+            timeout=60,
+        )
+        resp.raise_for_status()
+        data = resp.json()
+        return data.get("matched_count", 0), data.get("modified_count", 0)
+
 
 def get_client(api_url: str | None = None, database: str = "eegdash", auth_token: str | None = None) -> EEGDashAPIClient:
     """Get an API client instance."""

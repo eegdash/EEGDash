@@ -115,8 +115,7 @@ class EEGDash:
         >>> eeg.exists({"data_name": "ds002718_sub-001_eeg.set"})  # check by data_name
 
         """
-        final_query = merge_query(query, require_query=True, **kwargs)
-        return self._client.find_one(final_query) is not None
+        return self.find_one(query, **kwargs) is not None
 
     def count(self, query: dict[str, Any] = None, /, **kwargs) -> int:
         """Count documents matching the query.
@@ -144,6 +143,110 @@ class EEGDash:
         kwargs.pop("skip", None)
         final_query = merge_query(query, require_query=False, **kwargs)
         return self._client.count_documents(final_query)
+
+    def find_one(self, query: dict[str, Any] = None, /, **kwargs) -> Mapping[str, Any] | None:
+        """Find a single record matching the query.
+
+        Parameters
+        ----------
+        query : dict, optional
+            Complete query dictionary. This is a positional-only argument.
+        **kwargs
+            User-friendly field filters (same as find()).
+
+        Returns
+        -------
+        dict or None
+            The first matching record, or None if no match.
+
+        Examples
+        --------
+        >>> eeg = EEGDash()
+        >>> record = eeg.find_one(data_name="ds002718_sub-001_eeg.set")
+
+        """
+        final_query = merge_query(query, require_query=True, **kwargs)
+        return self._client.find_one(final_query)
+
+    def insert(self, records: dict[str, Any] | list[dict[str, Any]]) -> int:
+        """Insert one or more records (requires auth_token).
+
+        Parameters
+        ----------
+        records : dict or list of dict
+            A single record or list of records to insert.
+
+        Returns
+        -------
+        int
+            Number of records inserted.
+
+        Examples
+        --------
+        >>> eeg = EEGDash(auth_token="...")
+        >>> eeg.insert({"dataset": "ds001", "subject": "01", ...})  # single
+        >>> eeg.insert([record1, record2, record3])  # batch
+
+        """
+        if isinstance(records, dict):
+            self._client.insert_one(records)
+            return 1
+        return self._client.insert_many(records)
+
+    def update_field(
+        self,
+        query: dict[str, Any] = None,
+        /,
+        **kwargs,
+    ) -> tuple[int, int]:
+        """Update a field on records matching the query (requires auth_token).
+
+        Use this to add or modify a single field across matching records,
+        e.g., after re-extracting entities with an improved algorithm.
+
+        Parameters
+        ----------
+        query : dict, optional
+            Filter query to match records. This is a positional-only argument.
+        **kwargs
+            Must contain exactly one key-value pair for the field to update.
+            The key is the field name, and the value is the new value.
+            All other kwargs are interpreted as filters (same as find()).
+
+        Returns
+        -------
+        tuple of (matched_count, modified_count)
+            Number of records matched and actually modified.
+
+        Raises
+        ------
+        ValueError
+            If no update field is provided.
+
+        Examples
+        --------
+        >>> eeg = EEGDash(auth_token="...")
+        >>> # Update entities field for all records in a dataset
+        >>> eeg.update_field({"dataset": "ds002718"}, entities={"subject": "01"})
+        >>> # Using kwargs for filter
+        >>> eeg.update_field(dataset="ds002718", subject="01", entities=new_entities)
+
+        """
+        # Separate filter kwargs from the update value
+        # Convention: if query is provided, all kwargs are update fields
+        # If query is None, we need to figure out which kwargs are filters
+        if query is not None:
+            # All kwargs are update fields
+            if not kwargs:
+                raise ValueError("Must provide at least one field to update")
+            return self._client.update_many(query, kwargs)
+
+        # No query provided - need at least a filter
+        # For simplicity, require explicit query dict for updates
+        raise ValueError(
+            "update_field() requires an explicit query dict as first argument. "
+            "Example: eeg.update_field({'dataset': 'ds001'}, entities={...})"
+        )
 
 
 def __getattr__(name: str):

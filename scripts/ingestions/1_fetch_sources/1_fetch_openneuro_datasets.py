@@ -211,7 +211,7 @@ def fetch_dataset_ids(
         "meg": {"page_size": page_size, "max_errors": 3},
     }
 
-    for modality in ["eeg", "ieeg", "meg"]:
+    for modality in ["eeg", "ieeg", "meg", "emg"]:
         config = modality_configs[modality]
         cursor = None
         consecutive_errors = 0

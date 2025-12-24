@@ -6,23 +6,19 @@ from eegdash import EEGDash
 from eegdash.bids_eeg_metadata import build_query_from_kwargs
 
 
-# Mock the HTTPAPIConnectionManager to prevent actual API connections during tests
+# Mock get_client to prevent actual API connections during tests
 @pytest.fixture(autouse=True)
 def mock_http_api_connection():
     """Automatically mocks the HTTP API connection for all tests."""
-    with patch(
-        "eegdash.http_api_client.HTTPAPIConnectionManager.get_client"
-    ) as mock_get_client:
-        mock_collection = MagicMock()
-        mock_db = MagicMock()
+    with patch("eegdash.api.get_client") as mock_get_client:
         mock_client = MagicMock()
-        mock_get_client.return_value = (mock_client, mock_db, mock_collection)
-        yield mock_collection
+        mock_get_client.return_value = mock_client
+        yield mock_client
 
 
 @pytest.fixture
 def mock_mongo_connection(mock_http_api_connection):
-    """Alias for the mocked collection for tests that need to interact with it."""
+    """Alias for the mocked client for tests that need to interact with it."""
     return mock_http_api_connection
 
 
@@ -32,21 +28,19 @@ def eegdash_instance(mock_http_api_connection):
     return EEGDash()
 
 
-def test_build_query_with_single_values(eegdash_instance):
+def test_build_query_with_single_values():
     """Test 1: Validates that the query builder correctly handles simple
     key-value pairs.
     """
     kwargs = {"dataset": "ds001", "subject": "sub-01"}
     expected_query = {"dataset": "ds001", "subject": "sub-01"}
 
-    # _build_query_from_kwargs is a protected method, but we test it
-    # to ensure the core logic is sound.
-    query = eegdash_instance._build_query_from_kwargs(**kwargs)
+    query = build_query_from_kwargs(**kwargs)
 
     assert query == expected_query
 
 
-def test_build_query_with_list_value(eegdash_instance):
+def test_build_query_with_list_value():
     """Test 2: Validates that the query builder correctly translates a list
     of values into a MongoDB `$in` operator.
     """
@@ -56,12 +50,12 @@ def test_build_query_with_list_value(eegdash_instance):
         "subject": {"$in": ["sub-01", "sub-02", "sub-03"]},
     }
 
-    query = eegdash_instance._build_query_from_kwargs(**kwargs)
+    query = build_query_from_kwargs(**kwargs)
 
     assert query == expected_query
 
 
-def test_build_query_with_invalid_field(eegdash_instance):
+def test_build_query_with_invalid_field():
     """Test 3: Ensures the query builder raises a ValueError when an unsupported
     query field is provided.
     """
@@ -70,7 +64,7 @@ def test_build_query_with_invalid_field(eegdash_instance):
     with pytest.raises(
         ValueError, match="Unsupported query field\\(s\\): invalid_field"
     ):
-        eegdash_instance._build_query_from_kwargs(**kwargs)
+        build_query_from_kwargs(**kwargs)
 
 
 def test_find_method_with_kwargs(eegdash_instance, mock_mongo_connection):
@@ -138,15 +132,15 @@ def test_find_all_documents_with_empty_query(eegdash_instance, mock_mongo_connec
     assert len(res) == 1
 
 
-def test_build_query_rejects_none_and_empty(eegdash_instance):
+def test_build_query_rejects_none_and_empty():
     with pytest.raises(ValueError, match="None for query parameter 'task'"):
         build_query_from_kwargs(task=None)
     with pytest.raises(ValueError, match="empty string for query parameter 'task'"):
         build_query_from_kwargs(task="   ")
 
 
-def test_build_query_cleans_list_values(eegdash_instance):
-    q = eegdash_instance._build_query_from_kwargs(
+def test_build_query_cleans_list_values():
+    q = build_query_from_kwargs(
         task=[" A ", None, "B", "", "A"]
     )  # dedupe + strip
     assert q == {"task": {"$in": ["A", "B"]}}

@@ -5,6 +5,7 @@ from mne_bids import BIDSPath, write_raw_bids
 
 from eegdash.dataset import EEGDashDataset
 from eegdash.paths import get_default_cache_dir
+from eegdash.records import create_record
 
 
 # Fixture to create a dummy BIDS dataset for testing
@@ -46,21 +47,20 @@ def test_eegdashdataset_empty_cache_dir():
     # The previous implementation used `get_default_cache_dir()` when an empty
     # string was passed. The new implementation uses `Path("")`, which resolves
     # to the current directory.
+    record = create_record(
+        dataset="ds005505",
+        storage_base="s3://test-bucket/ds005505",
+        bids_relpath="sub-01/eeg/sub-01_task-test_eeg.set",
+        subject="01",
+        task="test",
+    )
+    # Add extra fields for length calculation
+    record["sampling_frequency"] = 1
+    record["ntimes"] = 1
+
     ds = EEGDashDataset(
         cache_dir="",
-        records=[
-            {
-                "dataset": "ds005505",
-                "bidspath": "foo/bar.set",
-                "bidsdependencies": [],
-                "sampling_frequency": 1,
-                "ntimes": 1,
-                "subject": None,
-                "session": None,
-                "task": None,
-                "run": None,
-            }
-        ],
+        records=[record],
         download=False,
     )
     assert ds.cache_dir == get_default_cache_dir()

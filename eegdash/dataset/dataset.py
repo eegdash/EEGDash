@@ -22,6 +22,7 @@ from ..const import (
 )
 from ..logging import logger
 from ..paths import get_default_cache_dir
+from ..records import create_record, validate_record
 from .base import EEGDashBaseDataset
 from .bids_dataset import EEGBIDSDataset
 from .registry import register_openneuro_datasets
@@ -239,11 +240,17 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
 
         if records is not None:
             self.records = records
+            # Validate that records are v2 format
+            for rec in self.records:
+                errors = validate_record(rec)
+                if errors:
+                    raise ValueError(
+                        f"Record must be v2 format with storage.base: {errors}"
+                    )
             datasets = [
                 EEGDashBaseDataset(
                     record,
                     self.cache_dir,
-                    self.s3_bucket,
                     **base_dataset_kwargs,
                 )
                 for record in self.records
@@ -292,7 +299,6 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
                     EEGDashBaseDataset(
                         record=record,
                         cache_dir=self.cache_dir,
-                        s3_bucket=self.s3_bucket,
                         description=desc,
                         **base_dataset_kwargs,
                     )
@@ -333,11 +339,11 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
     def _find_local_bids_records(
         self, dataset_root: Path, filters: dict[str, Any]
     ) -> list[dict]:
-        """Discover local BIDS EEG files and build minimal records.
+        """Discover local BIDS EEG files and build v2 records.
 
         Enumerates EEG recordings under ``dataset_root`` using
         ``mne_bids.find_matching_paths`` and applies entity filters to produce
-        records suitable for :class:`EEGDashBaseDataset`. No network access is
+        v2 records suitable for :class:`EEGDashBaseDataset`. No network access is
         performed, and files are not read.
 
         Parameters
@@ -351,14 +357,13 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
         Returns
         -------
         list of dict
-            A list of records, one for each matched EEG file. Each record
-            contains BIDS entities, paths, and minimal metadata for offline use.
+            A list of v2 records, one for each matched EEG file.
 
         Notes
         -----
         Matching is performed for ``datatypes=['eeg']`` and ``suffixes=['eeg']``.
-        The ``bidspath`` is normalized to ensure it starts with the dataset ID,
-        even for suffixed cache directories.
+        For offline/local mode, storage backend is set to 'local' and the
+        storage base points to the local dataset root.
 
         """
         dataset_id = filters["dataset"]
@@ -391,30 +396,30 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
         records_out: list[dict] = []
 
         for bids_path in matched_paths:
-            # Build bidspath as dataset_id / relative_path_from_dataset_root (POSIX)
+            # Build bids_relpath relative to dataset root
             rel_from_root = (
                 Path(bids_path.fpath)
                 .resolve()
                 .relative_to(Path(bids_path.root).resolve())
             )
-            bidspath = f"{dataset_id}/{rel_from_root.as_posix()}"
+            bids_relpath = rel_from_root.as_posix()
 
-            rec = {
-                "data_name": f"{dataset_id}_{Path(bids_path.fpath).name}",
-                "dataset": dataset_id,
-                "bidspath": bidspath,
-                "subject": (bids_path.subject or None),
-                "session": (bids_path.session or None),
-                "task": (bids_path.task or None),
-                "run": (bids_path.run or None),
-                # minimal fields to satisfy BaseDataset from eegdash
-                "bidsdependencies": [],  # not needed to just run.
-                "modality": "eeg",
-                # minimal numeric defaults for offline length calculation
-                "sampling_frequency": None,
-                "nchans": None,
-                "ntimes": None,
-            }
+            rec = create_record(
+                dataset=dataset_id,
+                storage_base=str(dataset_root),
+                bids_relpath=bids_relpath,
+                subject=bids_path.subject or None,
+                session=bids_path.session or None,
+                task=bids_path.task or None,
+                run=bids_path.run or None,
+                dep_keys=[],
+                storage_backend="local",
+                dataset_subdir=dataset_root.name,
+            )
+            # Add extra fields for length calculation
+            rec["sampling_frequency"] = None
+            rec["nchans"] = None
+            rec["ntimes"] = None
             records_out.append(rec)
 
         return records_out
@@ -461,7 +466,8 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
         """Find and construct datasets from a MongoDB query.
 
         Queries the database, then creates a list of
-        :class:`EEGDashBaseDataset` objects from the results.
+        :class:`EEGDashBaseDataset` objects from the results. Records from the
+        database must be v2 format with storage.base explicitly set.
 
         Parameters
         ----------
@@ -478,11 +484,24 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
         list of EEGDashBaseDataset
             A list of dataset objects matching the query.
 
+        Raises
+        ------
+        ValueError
+            If records from the database are not v2 format.
+
         """
         datasets: list[EEGDashBaseDataset] = []
         self.records = self.eeg_dash_instance.find(query)
 
         for record in self.records:
+            # Validate v2 format
+            errors = validate_record(record)
+            if errors:
+                raise ValueError(
+                    f"Record from database must be v2 format: {errors}. "
+                    f"Record data_name: {record.get('data_name', 'unknown')}"
+                )
+
             description: dict[str, Any] = {}
             # Requested fields first (normalized matching)
             for field in description_fields:
@@ -501,7 +520,6 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
                 EEGDashBaseDataset(
                     record,
                     cache_dir=self.cache_dir,
-                    s3_bucket=self.s3_bucket,
                     description=description,
                     **base_dataset_kwargs,
                 )

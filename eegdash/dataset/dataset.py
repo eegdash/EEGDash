@@ -419,7 +419,6 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
                 run=bids_path.run or None,
                 dep_keys=[],
                 storage_backend="local",
-                dataset_subdir=dataset_root.name,
             )
             # Add extra fields for length calculation
             rec["sampling_frequency"] = None

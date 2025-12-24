@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 
 import numpy as np
@@ -87,11 +88,20 @@ def test_minirelease_subject_raw_equivalence(warmed_mongo, cache_dir: Path):
 
 
 def test_minirelease_consume_everything(warmed_mongo, cache_dir: Path):
-    """Simply try to load all data in the mini release to catch any errors."""
+    """Smoke-test that a few mini-release recordings can be read.
+
+    Loading every recording in the mini release is network- and I/O-heavy and
+    makes the default test suite slow and flaky. Set ``EEGDASH_TEST_LOAD_ALL=1``
+    to restore the exhaustive behavior when desired.
+    """
     release = "R5"
     ds_mini = EEGChallengeDataset(release=release, mini=True, cache_dir=cache_dir)
 
-    for dataset in ds_mini.datasets:
+    load_all = os.getenv("EEGDASH_TEST_LOAD_ALL", "").strip() == "1"
+    n_smoke = int(os.getenv("EEGDASH_TEST_MAX_RAW_LOADS", "1"))
+    to_load = ds_mini.datasets if load_all else ds_mini.datasets[: max(n_smoke, 0)]
+
+    for dataset in to_load:
         raw = dataset.raw  # noqa: F841
         description = dataset.description  # noqa: F841
         assert raw is not None

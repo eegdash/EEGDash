@@ -81,3 +81,68 @@ def test_numeric_run_preserved():
     )
     assert record["entities"]["run"] == "01"
     assert record["entities_mne"]["run"] == "01"
+
+
+def test_timestamps_auto_generated():
+    """Test timestamps.digested_at is automatically set."""
+    record = create_record(
+        dataset="ds000001",
+        storage_base="s3://openneuro.org/ds000001",
+        bids_relpath="sub-01/eeg/sub-01_task-rest_eeg.vhdr",
+        subject="01",
+    )
+    assert "timestamps" in record
+    assert "digested_at" in record["timestamps"]
+    assert record["timestamps"]["digested_at"].endswith("Z")
+
+
+def test_timestamps_with_dataset_modified():
+    """Test timestamps with explicit values."""
+    record = create_record(
+        dataset="ds000001",
+        storage_base="s3://openneuro.org/ds000001",
+        bids_relpath="sub-01/eeg/sub-01_task-rest_eeg.vhdr",
+        digested_at="2024-12-24T10:00:00Z",
+        dataset_modified_at="2024-12-20T08:30:00Z",
+    )
+    assert record["timestamps"]["digested_at"] == "2024-12-24T10:00:00Z"
+    assert record["timestamps"]["dataset_modified_at"] == "2024-12-20T08:30:00Z"
+
+
+def test_clinical_info():
+    """Test clinical classification fields."""
+    record = create_record(
+        dataset="ds000001",
+        storage_base="s3://openneuro.org/ds000001",
+        bids_relpath="sub-01/eeg/sub-01_task-rest_eeg.vhdr",
+        is_clinical=True,
+        clinical_purpose="epilepsy",
+    )
+    assert record["clinical"]["is_clinical"] is True
+    assert record["clinical"]["purpose"] == "epilepsy"
+
+
+def test_paradigm_info():
+    """Test paradigm classification fields."""
+    record = create_record(
+        dataset="ds000001",
+        storage_base="s3://openneuro.org/ds000001",
+        bids_relpath="sub-01/eeg/sub-01_task-rest_eeg.vhdr",
+        modality="visual",
+        cognitive_domain="attention",
+        is_10_20_system=True,
+    )
+    assert record["paradigm"]["modality"] == "visual"
+    assert record["paradigm"]["cognitive_domain"] == "attention"
+    assert record["paradigm"]["is_10_20_system"] is True
+
+
+def test_optional_fields_not_present_when_not_provided():
+    """Test clinical/paradigm not in record when not provided."""
+    record = create_record(
+        dataset="ds000001",
+        storage_base="s3://openneuro.org/ds000001",
+        bids_relpath="sub-01/eeg/sub-01_task-rest_eeg.vhdr",
+    )
+    assert "clinical" not in record
+    assert "paradigm" not in record

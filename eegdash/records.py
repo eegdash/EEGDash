@@ -41,7 +41,10 @@ class Demographics(TypedDict, total=False):
     ages: list[int]
     age_min: int | None
     age_max: int | None
+    age_mean: float | None  # Mean age of subjects
     species: str | None  # e.g., "Human", "Mouse"
+    sex_distribution: dict[str, int] | None  # e.g., {"m": 50, "f": 45, "o": 5}
+    handedness_distribution: dict[str, int] | None  # e.g., {"r": 80, "l": 15, "a": 5}
 
 
 class Clinical(TypedDict, total=False):
@@ -57,6 +60,23 @@ class Paradigm(TypedDict, total=False):
     modality: str | None  # e.g., "visual", "auditory", "somatosensory", "multisensory", "resting_state"
     cognitive_domain: str | None  # e.g., "attention", "memory", "learning", "motor", "language", "emotion"
     is_10_20_system: bool | None  # Whether electrodes follow the 10-20 system
+
+
+class ExternalLinks(TypedDict, total=False):
+    """External links to the dataset."""
+
+    source_url: str | None  # Primary URL (OpenNeuro, GIN, etc.)
+    osf_url: str | None  # Open Science Framework link
+    github_url: str | None  # GitHub repository
+    paper_url: str | None  # Link to associated paper
+
+
+class RepositoryStats(TypedDict, total=False):
+    """Repository statistics (for git-based sources like GIN)."""
+
+    stars: int
+    forks: int
+    watchers: int
 
 
 class Dataset(TypedDict, total=False):
@@ -90,12 +110,20 @@ class Dataset(TypedDict, total=False):
     study_domain: str | None  # e.g., "Perceptual consciousness", "Motor control"
     study_design: str | None
 
+    # Multi-site studies
+    contributing_labs: list[str] | None  # Labs that contributed data
+    n_contributing_labs: int | None
+
     # Demographics
     demographics: Demographics
 
     # Classification
     clinical: Clinical
     paradigm: Paradigm
+
+    # External resources
+    external_links: ExternalLinks
+    repository_stats: RepositoryStats | None  # For git-based sources
 
     # Timestamps
     timestamps: Timestamps
@@ -121,9 +149,15 @@ def create_dataset(
     data_processed: bool | None = None,
     study_domain: str | None = None,
     study_design: str | None = None,
+    # Demographics
     subjects_count: int | None = None,
     ages: list[int] | None = None,
+    age_mean: float | None = None,
     species: str | None = None,
+    sex_distribution: dict[str, int] | None = None,
+    handedness_distribution: dict[str, int] | None = None,
+    # Multi-site studies
+    contributing_labs: list[str] | None = None,
     # Clinical classification
     is_clinical: bool | None = None,
     clinical_purpose: str | None = None,
@@ -131,6 +165,15 @@ def create_dataset(
     paradigm_modality: str | None = None,
     cognitive_domain: str | None = None,
     is_10_20_system: bool | None = None,
+    # External links
+    source_url: str | None = None,
+    osf_url: str | None = None,
+    github_url: str | None = None,
+    paper_url: str | None = None,
+    # Repository stats (for git-based sources)
+    stars: int | None = None,
+    forks: int | None = None,
+    watchers: int | None = None,
     # Timestamps
     digested_at: str | None = None,
     dataset_modified_at: str | None = None,
@@ -179,8 +222,16 @@ def create_dataset(
         Number of subjects.
     ages : list[int], optional
         Subject ages.
+    age_mean : float, optional
+        Mean age of subjects.
     species : str, optional
         Species (e.g., "Human").
+    sex_distribution : dict[str, int], optional
+        Sex distribution (e.g., {"m": 50, "f": 45}).
+    handedness_distribution : dict[str, int], optional
+        Handedness distribution (e.g., {"r": 80, "l": 15}).
+    contributing_labs : list[str], optional
+        Labs that contributed data (for multi-site studies).
     is_clinical : bool, optional
         Whether this is clinical data.
     clinical_purpose : str, optional
@@ -191,6 +242,20 @@ def create_dataset(
         Cognitive domain (e.g., "attention", "memory", "motor").
     is_10_20_system : bool, optional
         Whether electrodes follow the 10-20 system.
+    source_url : str, optional
+        Primary URL to the dataset source.
+    osf_url : str, optional
+        Open Science Framework URL.
+    github_url : str, optional
+        GitHub repository URL.
+    paper_url : str, optional
+        URL to associated paper.
+    stars : int, optional
+        Repository stars count (for git-based sources).
+    forks : int, optional
+        Repository forks count.
+    watchers : int, optional
+        Repository watchers count.
     digested_at : str, optional
         ISO 8601 timestamp. Defaults to current time.
     dataset_modified_at : str, optional
@@ -206,6 +271,18 @@ def create_dataset(
 
     ages = ages or []
     ages_clean = [a for a in ages if a is not None]
+
+    # Build demographics
+    demographics = Demographics(
+        subjects_count=subjects_count or 0,
+        ages=ages_clean,
+        age_min=min(ages_clean) if ages_clean else None,
+        age_max=max(ages_clean) if ages_clean else None,
+        age_mean=age_mean,
+        species=species,
+        sex_distribution=sex_distribution,
+        handedness_distribution=handedness_distribution,
+    )
 
     dataset = Dataset(
         dataset_id=dataset_id,
@@ -226,13 +303,9 @@ def create_dataset(
         data_processed=data_processed,
         study_domain=study_domain,
         study_design=study_design,
-        demographics=Demographics(
-            subjects_count=subjects_count or 0,
-            ages=ages_clean,
-            age_min=min(ages_clean) if ages_clean else None,
-            age_max=max(ages_clean) if ages_clean else None,
-            species=species,
-        ),
+        contributing_labs=contributing_labs,
+        n_contributing_labs=len(contributing_labs) if contributing_labs else None,
+        demographics=demographics,
         timestamps=Timestamps(
             digested_at=digested_at or datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
             dataset_modified_at=dataset_modified_at,
@@ -252,6 +325,23 @@ def create_dataset(
             modality=paradigm_modality,
             cognitive_domain=cognitive_domain,
             is_10_20_system=is_10_20_system,
+        )
+
+    # Add external links if any provided
+    if source_url or osf_url or github_url or paper_url:
+        dataset["external_links"] = ExternalLinks(
+            source_url=source_url,
+            osf_url=osf_url,
+            github_url=github_url,
+            paper_url=paper_url,
+        )
+
+    # Add repository stats if any provided
+    if stars is not None or forks is not None or watchers is not None:
+        dataset["repository_stats"] = RepositoryStats(
+            stars=stars,
+            forks=forks,
+            watchers=watchers,
         )
 
     return dataset

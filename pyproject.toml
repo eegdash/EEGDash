@@ -36,7 +36,7 @@ classifiers = [
     "Programming Language :: Python :: 3.13",
 ]
 dependencies = [
-  "braindecode>=1.3.1",
+  "braindecode[hub]>=1.3.1",
   "mne_bids>=0.18.0",
   "numba",
   "requests>=2.25.0",

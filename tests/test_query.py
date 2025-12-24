@@ -3,7 +3,7 @@ from unittest.mock import MagicMock, patch
 import pytest
 
 from eegdash import EEGDash
-from eegdash.bids_eeg_metadata import build_query_from_kwargs
+from eegdash.bids_metadata import build_query_from_kwargs
 
 
 # Mock get_client to prevent actual API connections during tests

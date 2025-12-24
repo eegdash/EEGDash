@@ -26,7 +26,7 @@ from mne_bids.config import reader as _mne_bids_reader
 from braindecode.datasets.base import RawDataset
 
 from .. import downloader
-from ..bids_eeg_metadata import enrich_from_participants
+from ..bids_metadata import enrich_from_participants
 from ..logging import logger
 from ..paths import get_default_cache_dir
 from ..records import validate_record

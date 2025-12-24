@@ -10,7 +10,7 @@ from rich.text import Text
 from braindecode.datasets import BaseConcatDataset
 
 from .. import downloader
-from ..bids_eeg_metadata import (
+from ..bids_metadata import (
     build_query_from_kwargs,
     merge_participants_fields,
     normalize_key,

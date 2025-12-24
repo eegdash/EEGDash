@@ -9,6 +9,7 @@ and how to cache it locally. Each record explicitly specifies its storage base.
 
 from __future__ import annotations
 
+from datetime import datetime, timezone
 from pathlib import PurePosixPath
 from typing import Any, Literal, TypedDict
 
@@ -31,6 +32,28 @@ class Entities(TypedDict, total=False):
     run: str | None
 
 
+class Timestamps(TypedDict, total=False):
+    """Processing timestamps."""
+
+    digested_at: str  # ISO 8601 timestamp of when digestion occurred
+    dataset_modified_at: str | None  # ISO 8601 timestamp of last dataset update
+
+
+class Clinical(TypedDict, total=False):
+    """Clinical classification."""
+
+    is_clinical: bool  # Whether the dataset is clinical
+    purpose: str | None  # e.g., "epilepsy", "depression", "parkinson", "alzheimer", "sleep_disorder"
+
+
+class Paradigm(TypedDict, total=False):
+    """Experimental paradigm classification."""
+
+    modality: str | None  # e.g., "visual", "auditory", "somatosensory", "multisensory", "resting_state"
+    cognitive_domain: str | None  # e.g., "attention", "memory", "learning", "motor", "language", "emotion"
+    is_10_20_system: bool | None  # Whether electrodes follow the 10-20 system
+
+
 class Record(TypedDict, total=False):
     """EEGDash record schema."""
 
@@ -40,9 +63,13 @@ class Record(TypedDict, total=False):
     datatype: str
     suffix: str
     extension: str
+    recording_modality: str | None  # e.g., "eeg", "meg", "ieeg", "emg", "ecog"
     entities: Entities
     entities_mne: Entities  # run sanitized for MNE-BIDS (numeric or None)
     storage: Storage
+    timestamps: Timestamps
+    clinical: Clinical  # Clinical classification
+    paradigm: Paradigm  # Experimental paradigm
 
 
 def _sanitize_run_for_mne(value: Any) -> str | None:
@@ -72,6 +99,18 @@ def create_record(
     datatype: str = "eeg",
     suffix: str = "eeg",
     storage_backend: Literal["s3", "https", "local"] = "s3",
+    # Recording modality
+    recording_modality: str | None = None,
+    # Digestion metadata
+    digested_at: str | None = None,
+    dataset_modified_at: str | None = None,
+    # Clinical classification
+    is_clinical: bool | None = None,
+    clinical_purpose: str | None = None,
+    # Experimental info
+    modality: str | None = None,
+    cognitive_domain: str | None = None,
+    is_10_20_system: bool | None = None,
 ) -> Record:
     """Create an EEGDash record.
 
@@ -93,6 +132,22 @@ def create_record(
         BIDS suffix.
     storage_backend : {"s3", "https", "local"}, default "s3"
         Storage backend type.
+    recording_modality : str, optional
+        Recording modality (e.g., "eeg", "meg", "ieeg", "emg", "ecog").
+    digested_at : str, optional
+        ISO 8601 timestamp of when digestion occurred. Defaults to current time.
+    dataset_modified_at : str, optional
+        ISO 8601 timestamp of last dataset update.
+    is_clinical : bool, optional
+        Whether this is clinical data.
+    clinical_purpose : str, optional
+        Clinical purpose (e.g., "epilepsy", "depression", "parkinson").
+    modality : str, optional
+        Experimental modality (e.g., "visual", "auditory", "multisensory", "resting_state").
+    cognitive_domain : str, optional
+        Cognitive domain (e.g., "attention", "memory", "learning", "motor").
+    is_10_20_system : bool, optional
+        Whether electrodes follow the 10-20 system.
 
     Returns
     -------
@@ -129,13 +184,21 @@ def create_record(
     entities_mne: Entities = dict(entities)  # type: ignore[assignment]
     entities_mne["run"] = _sanitize_run_for_mne(run)
 
-    return Record(
+    # Build timestamps (always set digested_at)
+    timestamps: Timestamps = {
+        "digested_at": digested_at or datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
+    }
+    if dataset_modified_at is not None:
+        timestamps["dataset_modified_at"] = dataset_modified_at
+
+    record = Record(
         dataset=dataset,
         data_name=f"{dataset}_{PurePosixPath(bids_relpath).name}",
         bids_relpath=bids_relpath,
         datatype=datatype,
         suffix=suffix,
         extension=extension,
+        recording_modality=recording_modality or datatype,  # Default to datatype if not specified
         entities=entities,
         entities_mne=entities_mne,
         storage=Storage(
@@ -144,7 +207,25 @@ def create_record(
             raw_key=bids_relpath,
             dep_keys=dep_keys,
         ),
+        timestamps=timestamps,
     )
+
+    # Add clinical info if provided
+    if is_clinical is not None or clinical_purpose is not None:
+        record["clinical"] = Clinical(
+            is_clinical=is_clinical if is_clinical is not None else False,
+            purpose=clinical_purpose,
+        )
+
+    # Add paradigm info if any field is provided
+    if modality is not None or cognitive_domain is not None or is_10_20_system is not None:
+        record["paradigm"] = Paradigm(
+            modality=modality,
+            cognitive_domain=cognitive_domain,
+            is_10_20_system=is_10_20_system,
+        )
+
+    return record
 
 
 def validate_record(record: dict[str, Any]) -> list[str]:
@@ -166,9 +247,12 @@ def validate_record(record: dict[str, Any]) -> list[str]:
 
 
 __all__ = [
+    "Clinical",
     "Entities",
+    "Paradigm",
     "Record",
     "Storage",
+    "Timestamps",
     "create_record",
     "validate_record",
 ]

@@ -23,7 +23,7 @@ from mne.io import BaseRaw
 from mne_bids import BIDSPath
 from mne_bids.config import reader as _mne_bids_reader
 
-from braindecode.datasets.base import BaseDataset
+from braindecode.datasets.base import RawDataset
 
 from .. import downloader
 from ..bids_eeg_metadata import enrich_from_participants
@@ -64,7 +64,7 @@ def _patch_mne_eeglab_missing_chanlocs():
         _mne_eeglab._check_load_mat = orig
 
 
-class EEGDashBaseDataset(BaseDataset):
+class EEGDashBaseDataset(RawDataset):
     """A single EEG recording dataset.
 
     Represents a single EEG recording, typically hosted on a remote server (like AWS S3)

@@ -1,0 +1,65 @@
+# Master workflow to fetch all dataset sources
+name: "1. Fetch: All Sources"
+
+on:
+  schedule:
+    - cron: '0 0 * * 1'  # Weekly on Monday at 00:00 UTC
+  workflow_dispatch:
+    inputs:
+      sources:
+        description: 'Sources to fetch (comma-separated or "all")'
+        required: false
+        default: 'all'
+        type: choice
+        options:
+          - all
+          - openneuro
+          - nemar
+          - eegmanylabs
+          - zenodo
+          - figshare
+
+jobs:
+  # Trigger individual source workflows
+  openneuro:
+    if: github.event.inputs.sources == 'all' || github.event.inputs.sources == 'openneuro' || github.event_name == 'schedule'
+    uses: ./.github/workflows/1-fetch-openneuro.yml
+    secrets: inherit
+
+  nemar:
+    if: github.event.inputs.sources == 'all' || github.event.inputs.sources == 'nemar' || github.event_name == 'schedule'
+    uses: ./.github/workflows/1-fetch-nemar.yml
+    secrets: inherit
+
+  eegmanylabs:
+    if: github.event.inputs.sources == 'all' || github.event.inputs.sources == 'eegmanylabs' || github.event_name == 'schedule'
+    uses: ./.github/workflows/1-fetch-eegmanylabs.yml
+    secrets: inherit
+
+  zenodo:
+    if: github.event.inputs.sources == 'all' || github.event.inputs.sources == 'zenodo' || github.event_name == 'schedule'
+    uses: ./.github/workflows/1-fetch-zenodo.yml
+    secrets: inherit
+
+  figshare:
+    if: github.event.inputs.sources == 'all' || github.event.inputs.sources == 'figshare' || github.event_name == 'schedule'
+    uses: ./.github/workflows/1-fetch-figshare.yml
+    secrets: inherit
+
+  summary:
+    name: Summary
+    needs: [openneuro, nemar, eegmanylabs, zenodo, figshare]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Generate summary
+        run: |
+          echo "## 📊 Fetch Results Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Source | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|--------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| OpenNeuro | ${{ needs.openneuro.result || 'skipped' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| NEMAR | ${{ needs.nemar.result || 'skipped' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| EEGManyLabs | ${{ needs.eegmanylabs.result || 'skipped' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Zenodo | ${{ needs.zenodo.result || 'skipped' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Figshare | ${{ needs.figshare.result || 'skipped' }} |" >> $GITHUB_STEP_SUMMARY

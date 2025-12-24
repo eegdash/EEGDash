@@ -65,13 +65,14 @@ class EEGDashBaseDataset(RawDataset):
         errors = validate_record(record)
         if errors:
             raise ValueError(f"Invalid record: {errors}")
+        
         self.record = record
 
         # Derive local cache paths from record fields (portable - no absolute paths stored)
-        storage = self.record.get("storage") or {}
+        storage = self.record.get("storage", {})
         dataset = self.record["dataset"]
         bids_relpath = self.record["bids_relpath"]
-        dep_keys = storage.get("dep_keys") or []
+        dep_keys = storage.get("dep_keys", [])
 
         self.bids_root = self.cache_dir / dataset
         self.filecache = self.bids_root / bids_relpath
@@ -104,6 +105,7 @@ class EEGDashBaseDataset(RawDataset):
         self.s3file = self._raw_uri
 
         entities_mne = self.record.get("entities_mne") or {}
+
         self.bidspath = BIDSPath(
             root=self.bids_root,
             datatype=self.record.get("datatype", "eeg"),
@@ -137,10 +139,7 @@ class EEGDashBaseDataset(RawDataset):
         self._download_required_files()
         if self._raw is None:
             try:
-                if self.bidspath.fpath.exists():
-                    self._raw = mne_bids.read_raw_bids(bids_path=self.bidspath, verbose="ERROR")
-                else:
-                    self._raw = self._read_raw_direct()
+                self._raw = self._load_raw()
                 enrich_from_participants(
                     self.bids_root, self.bidspath, self._raw, self.description
                 )
@@ -148,8 +147,13 @@ class EEGDashBaseDataset(RawDataset):
                 logger.error(f"Error reading {self.bidspath}: {e}. Try `rm -rf {self.bids_root}`")
                 raise
 
-    def _read_raw_direct(self) -> BaseRaw:
-        """Read a cached raw file directly and apply BIDS sidecars where possible."""
+    def _load_raw(self) -> BaseRaw:
+        """Load raw data, preferring MNE-BIDS if BIDSPath resolves."""
+        # MNE-BIDS handles sidecars automatically
+        if self.bidspath.fpath.exists():
+            return mne_bids.read_raw_bids(bids_path=self.bidspath, verbose="ERROR")
+
+        # Fallback: direct read (for non-standard BIDS layouts)
         read_func = _mne_bids_reader.get(self.filecache.suffix)
         if read_func is None:
             raise RuntimeError(f"No MNE-BIDS reader for: {self.filecache.suffix}")

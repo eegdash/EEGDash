@@ -123,7 +123,7 @@ The API is organized into focused modules that handle specific aspects of EEG da
 * :mod:`~eegdash.api` - Main interface for data access and manipulation
 * :mod:`~eegdash.const` - Constants and enumerations used throughout the package
 * :doc:`dataset/api_dataset` - Dataset object management and operations
-* :mod:`~eegdash.bids_eeg_metadata` - BIDS-compliant metadata handling  
+* :mod:`~eegdash.bids_metadata` - BIDS-compliant metadata handling  
 * :mod:`~eegdash.http_api_client` - HTTP REST API client for database operations
 * :mod:`~eegdash.paths` - File system and storage path management
 
@@ -150,7 +150,7 @@ API Reference
    :recursive:
 
    api
-   bids_eeg_metadata
+   bids_metadata
    const
    http_api_client
    logging

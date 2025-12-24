@@ -11,7 +11,7 @@ metadata records stored in the EEGDash database via REST API.
 
 from typing import Any, Mapping
 
-from .bids_eeg_metadata import merge_query
+from .bids_metadata import merge_query
 from .http_api_client import get_client
 
 

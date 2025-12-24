@@ -28,7 +28,7 @@ class EEGDash:
     def __init__(
         self,
         *,
-        is_staging: bool = False,
+        database: str = "eegdash",
         api_url: str | None = None,
         auth_token: str | None = None,
     ) -> None:
@@ -36,9 +36,9 @@ class EEGDash:
 
         Parameters
         ----------
-        is_staging : bool, default False
-            If ``True``, use the staging database (``eegdashstaging``); otherwise
-            use the production database (``eegdash``).
+        database : str, default "eegdash"
+            Name of the MongoDB database to connect to. Common values:
+            ``"eegdash"`` (production), ``"eegdashstaging"`` (staging).
         api_url : str, optional
             Override the default API URL. If not provided, uses the default
             public endpoint or the ``EEGDASH_API_URL`` environment variable.
@@ -48,11 +48,12 @@ class EEGDash:
 
         Examples
         --------
-        >>> eegdash = EEGDash()
+        >>> eegdash = EEGDash()  # production
+        >>> eegdash = EEGDash(database="eegdashstaging")  # staging
         >>> records = eegdash.find({"dataset": "ds002718"})
 
         """
-        self._client = get_client(api_url, is_staging, auth_token)
+        self._client = get_client(api_url, database, auth_token)
 
     def find(
         self, query: dict[str, Any] = None, /, **kwargs

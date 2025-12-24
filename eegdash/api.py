@@ -6,32 +6,14 @@
 
 This module provides the main EEGDash class which serves as the primary entry point for
 interacting with the EEGDash ecosystem. It offers methods to query, insert, and update
-metadata records stored in the EEGDash database via REST API, and includes utilities to
-load EEG data from S3 for matched records.
+metadata records stored in the EEGDash database via REST API.
 """
 
-import json
-import os
-from pathlib import Path
 from typing import Any, Mapping
 
-import numpy as np
-import pandas as pd
-
-from .bids_eeg_metadata import (
-    build_query_from_kwargs,
-    load_eeg_attrs_from_bids_file,
-)
-from .const import (
-    ALLOWED_QUERY_FIELDS,
-)
-from .const import config as data_config
-from .http_api_client import HTTPAPIConnectionManager
-from .logging import logger
-
-# Default public API endpoint
-# Note: DNS override is applied in http_api_client.py via socket patch
-EEGDASH_API_URL = "https://data.eegdash.org"
+from .bids_eeg_metadata import build_query_from_kwargs
+from .const import ALLOWED_QUERY_FIELDS
+from .http_api_client import get_client
 
 
 class EEGDash:
@@ -71,24 +53,7 @@ class EEGDash:
         >>> records = eegdash.find({"dataset": "ds002718"})
 
         """
-        self.config = data_config
-        self.is_staging = is_staging
-        self._api_url = api_url
-        self._auth_token = auth_token
-        self._init_api_client()
-
-    def _init_api_client(self) -> None:
-        """Initialize HTTP API client connection."""
-        # Determine API URL: parameter > environment variable > default
-        url = self._api_url or os.getenv("EEGDASH_API_URL", EEGDASH_API_URL)
-
-        # Auth token is optional for public reads, only needed for admin writes
-        token = self._auth_token or os.getenv("EEGDASH_API_TOKEN")
-
-        # Use singleton to get HTTP API client, database, and collection
-        self.__client, self.__db, self.__collection = (
-            HTTPAPIConnectionManager.get_client(url, self.is_staging, token)
-        )
+        self._client = get_client(api_url, is_staging, auth_token)
 
     def find(
         self, query: dict[str, Any] = None, /, **kwargs
@@ -163,7 +128,7 @@ class EEGDash:
         if skip is not None:
             find_kwargs["skip"] = skip
 
-        results = self.__collection.find(final_query, **find_kwargs)
+        results = self._client.find(final_query, **find_kwargs)
 
         return list(results)
 
@@ -208,7 +173,7 @@ class EEGDash:
                 f"Allowed: {sorted(accepted_query_fields)}"
             )
 
-        doc = self.__collection.find_one(query, projection={"_id": 1})
+        doc = self._client.find_one(query)
         return doc is not None
 
     def count(self, query: dict[str, Any] = None, /, **kwargs) -> int:
@@ -261,70 +226,7 @@ class EEGDash:
             # For count, empty query is acceptable (count all)
             final_query = {}
 
-        return self.__collection.count_documents(final_query)
-
-    def _validate_input(self, record: dict[str, Any]) -> dict[str, Any]:
-        """Validate the input record against the expected schema.
-
-        Parameters
-        ----------
-        record : dict
-            A dictionary representing the EEG data record to be validated.
-
-        Returns
-        -------
-        dict
-            The record itself on success.
-
-        Raises
-        ------
-        ValueError
-            If the record is missing required keys or has values of the wrong type.
-
-        """
-        input_types = {
-            "data_name": str,
-            "dataset": str,
-            "bidspath": str,
-            "subject": str,
-            "task": str,
-            "session": str,
-            "run": str,
-            "sampling_frequency": float,
-            "modality": str,
-            "nchans": int,
-            "ntimes": int,
-            "channel_types": list,
-            "channel_names": list,
-        }
-        if "data_name" not in record:
-            raise ValueError("Missing key: data_name")
-        # check if args are in the keys and has correct type
-        for key, value in record.items():
-            if key not in input_types:
-                raise ValueError(f"Invalid input: {key}")
-            if not isinstance(value, input_types[key]):
-                raise ValueError(f"Invalid input: {key}")
-
-        return record
-
-    def _build_query_from_kwargs(self, **kwargs) -> dict[str, Any]:
-        """Build a validated MongoDB query from keyword arguments.
-
-        This delegates to the module-level builder used across the package.
-
-        Parameters
-        ----------
-        **kwargs
-            Keyword arguments to convert into a MongoDB query.
-
-        Returns
-        -------
-        dict
-            A MongoDB query dictionary.
-
-        """
-        return build_query_from_kwargs(**kwargs)
+        return self._client.count_documents(final_query)
 
     def _extract_simple_constraint(
         self, query: dict[str, Any], key: str
@@ -418,117 +320,6 @@ class EEGDash:
                         f"Conflicting constraints for '{key}': disjoint sets {r_val!r} and {k_val!r}"
                     )
 
-    def add_bids_dataset(
-        self,
-        dataset: str,
-        data_dir: str,
-        overwrite: bool = True,
-        output_path: str | Path | None = None,
-    ) -> dict[str, Any]:
-        """Collect metadata for a local BIDS dataset as JSON-ready records.
-
-        Instead of inserting records directly into MongoDB, this method scans
-        ``data_dir`` and returns a JSON-serializable manifest describing every
-        EEG recording that was discovered. The manifest can be written to disk
-        or forwarded to the EEGDash ingestion API for persistence.
-
-        Parameters
-        ----------
-        dataset : str
-            Dataset identifier (e.g., ``"ds002718"``).
-        data_dir : str
-            Path to the local BIDS dataset directory.
-        overwrite : bool, default True
-            If ``False``, skip records that already exist in the database based
-            on ``data_name`` lookups.
-        output_path : str | Path | None, optional
-            If provided, the manifest is written to the given JSON file.
-
-        Returns
-        -------
-        dict
-            A manifest with keys ``dataset``, ``source``, ``records`` and, when
-            applicable, ``skipped`` or ``errors``.
-
-        """
-        source_dir = Path(data_dir).expanduser()
-        try:
-            # Local import to keep ``import eegdash.api`` lightweight (braindecode is
-            # only required when users want dataset helpers).
-            from .dataset.bids_dataset import EEGBIDSDataset
-
-            bids_dataset = EEGBIDSDataset(
-                data_dir=str(source_dir),
-                dataset=dataset,
-            )
-        except Exception as exc:
-            logger.error("Error creating BIDS dataset %s: %s", dataset, exc)
-            raise exc
-
-        records: list[dict[str, Any]] = []
-        skipped: list[str] = []
-        errors: list[dict[str, str]] = []
-
-        for bids_file in bids_dataset.get_files():
-            data_id = f"{dataset}_{Path(bids_file).name}"
-            if not overwrite:
-                try:
-                    if self.exist({"data_name": data_id}):
-                        skipped.append(data_id)
-                        continue
-                except Exception as exc:
-                    logger.warning(
-                        "Could not verify existing record %s due to: %s",
-                        data_id,
-                        exc,
-                    )
-
-            try:
-                eeg_attrs = load_eeg_attrs_from_bids_file(bids_dataset, bids_file)
-                records.append(eeg_attrs)
-            except Exception as exc:  # log and continue collecting
-                logger.error("Error extracting metadata for %s", bids_file)
-                logger.error(str(exc))
-                errors.append({"file": str(bids_file), "error": str(exc)})
-
-        manifest: dict[str, Any] = {
-            "dataset": dataset,
-            "source": str(source_dir.resolve()),
-            "record_count": len(records),
-            "records": records,
-        }
-        if skipped:
-            manifest["skipped"] = skipped
-        if errors:
-            manifest["errors"] = errors
-
-        if output_path is not None:
-            output_path = Path(output_path)
-            output_path.parent.mkdir(parents=True, exist_ok=True)
-            with output_path.open("w", encoding="utf-8") as fh:
-                json.dump(
-                    manifest,
-                    fh,
-                    indent=2,
-                    sort_keys=True,
-                    default=_json_default,
-                )
-            logger.info(
-                "Wrote EEGDash ingestion manifest for %s to %s",
-                dataset,
-                output_path,
-            )
-
-        logger.info(
-            "Prepared %s records for dataset %s (skipped=%s, errors=%s)",
-            len(records),
-            dataset,
-            len(skipped),
-            len(errors),
-        )
-
-        return manifest
-
     def exists(self, query: dict[str, Any]) -> bool:
         """Check if at least one record matches the query.
 
@@ -553,44 +344,12 @@ class EEGDash:
 
         Returns
         -------
-        HTTPAPICollection
-            The collection object used for database interactions via REST API.
+        EEGDashAPIClient
+            The API client used for database interactions via REST API.
 
         """
-        return self.__collection
+        return self._client
 
-    @classmethod
-    def close_all_connections(cls) -> None:
-        """Close all HTTP API client connections managed by the singleton manager."""
-        HTTPAPIConnectionManager.close_all()
-
-
-def _json_default(value: Any) -> Any:
-    """Fallback serializer for complex objects when exporting ingestion JSON."""
-    try:
-        if isinstance(value, (np.generic,)):
-            return value.item()
-        if isinstance(value, np.ndarray):
-            return value.tolist()
-    except Exception:
-        pass
-
-    try:
-        if value is pd.NA:
-            return None
-        if isinstance(value, (pd.Timestamp, pd.Timedelta)):
-            return value.isoformat()
-        if isinstance(value, pd.Series):
-            return value.to_dict()
-    except Exception:
-        pass
-
-    if isinstance(value, Path):
-        return value.as_posix()
-    if isinstance(value, set):
-        return sorted(value)
-
-    raise TypeError(f"Object of type {type(value).__name__} is not JSON serializable")
 
 def __getattr__(name: str):
     # Backward-compat: allow ``from eegdash.api import EEGDashDataset`` without

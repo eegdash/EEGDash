@@ -1,4 +1,9 @@
-from eegdash.records import create_record, validate_record
+from eegdash.records import (
+    create_dataset,
+    create_record,
+    validate_dataset,
+    validate_record,
+)
 
 
 def test_create_openneuro_record():
@@ -146,3 +151,84 @@ def test_optional_fields_not_present_when_not_provided():
     )
     assert "clinical" not in record
     assert "paradigm" not in record
+
+
+# =============================================================================
+# Dataset Tests
+# =============================================================================
+
+
+def test_create_dataset_minimal():
+    """Test creating a dataset with minimal fields."""
+    dataset = create_dataset(dataset_id="ds001785")
+
+    assert dataset["dataset_id"] == "ds001785"
+    assert dataset["name"] == "ds001785"  # Defaults to dataset_id
+    assert dataset["source"] == "openneuro"
+    assert dataset["recording_modality"] == "eeg"
+    assert "digested_at" in dataset["timestamps"]
+
+
+def test_create_dataset_full():
+    """Test creating a dataset with all fields from OpenNeuro."""
+    dataset = create_dataset(
+        dataset_id="ds001785",
+        name="Evidence accumulation relates to perceptual consciousness",
+        source="openneuro",
+        recording_modality="eeg",
+        modalities=["eeg"],
+        bids_version="1.1.1",
+        license="CC0",
+        authors=["Michael Pereira", "Nathan Faivre"],
+        funding=["Bertarelli Foundation", "Swiss National Science Foundation"],
+        dataset_doi="10.18112/openneuro.ds001785.v1.1.1",
+        tasks=["tactile detection"],
+        sessions=["01"],
+        total_files=242,
+        size_bytes=26701806128,
+        study_domain="Perceptual consciousness",
+        subjects_count=18,
+        ages=[30, 26, 22, 29, 28, 26],
+        species="Human",
+        dataset_modified_at="2021-04-28T15:27:09.000Z",
+    )
+
+    assert dataset["dataset_id"] == "ds001785"
+    assert dataset["name"] == "Evidence accumulation relates to perceptual consciousness"
+    assert dataset["license"] == "CC0"
+    assert len(dataset["authors"]) == 2
+    assert dataset["tasks"] == ["tactile detection"]
+    assert dataset["total_files"] == 242
+    assert dataset["demographics"]["subjects_count"] == 18
+    assert dataset["demographics"]["age_min"] == 22
+    assert dataset["demographics"]["age_max"] == 30
+    assert dataset["demographics"]["species"] == "Human"
+    assert dataset["timestamps"]["dataset_modified_at"] == "2021-04-28T15:27:09.000Z"
+
+
+def test_create_dataset_ages_filters_none():
+    """Test that None values in ages are filtered out."""
+    dataset = create_dataset(
+        dataset_id="ds000117",
+        ages=[31, 25, None, 30, None, 26],
+    )
+    assert dataset["demographics"]["ages"] == [31, 25, 30, 26]
+    assert dataset["demographics"]["age_min"] == 25
+    assert dataset["demographics"]["age_max"] == 31
+
+
+def test_validate_dataset():
+    """Test dataset validation."""
+    errors = validate_dataset({})
+    assert any("dataset_id" in e for e in errors)
+
+    errors = validate_dataset({"dataset_id": "ds001785"})
+    assert len(errors) == 0
+
+
+def test_create_dataset_requires_id():
+    """Test that create_dataset raises without dataset_id."""
+    import pytest
+
+    with pytest.raises(ValueError, match="dataset_id is required"):
+        create_dataset(dataset_id="")

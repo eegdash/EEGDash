@@ -197,56 +197,42 @@ class EEGDash:
         self,
         query: dict[str, Any] = None,
         /,
+        *,
+        update: dict[str, Any],
         **kwargs,
     ) -> tuple[int, int]:
-        """Update a field on records matching the query (requires auth_token).
+        """Update fields on records matching the query (requires auth_token).
 
-        Use this to add or modify a single field across matching records,
+        Use this to add or modify fields across matching records,
         e.g., after re-extracting entities with an improved algorithm.
 
         Parameters
         ----------
         query : dict, optional
             Filter query to match records. This is a positional-only argument.
+        update : dict
+            Fields to update. Keys are field names, values are new values.
         **kwargs
-            Must contain exactly one key-value pair for the field to update.
-            The key is the field name, and the value is the new value.
-            All other kwargs are interpreted as filters (same as find()).
+            User-friendly field filters (same as find()).
 
         Returns
         -------
         tuple of (matched_count, modified_count)
             Number of records matched and actually modified.
 
-        Raises
-        ------
-        ValueError
-            If no update field is provided.
-
         Examples
         --------
         >>> eeg = EEGDash(auth_token="...")
-        >>> # Update entities field for all records in a dataset
-        >>> eeg.update_field({"dataset": "ds002718"}, entities={"subject": "01"})
+        >>> # Update entities for all records in a dataset
+        >>> eeg.update_field({"dataset": "ds002718"}, update={"entities": {"subject": "01"}})
         >>> # Using kwargs for filter
-        >>> eeg.update_field(dataset="ds002718", subject="01", entities=new_entities)
+        >>> eeg.update_field(dataset="ds002718", update={"entities": new_entities})
+        >>> # Combine query + kwargs
+        >>> eeg.update_field({"dataset": "ds002718"}, subject="01", update={"entities": new_entities})
 
         """
-        # Separate filter kwargs from the update value
-        # Convention: if query is provided, all kwargs are update fields
-        # If query is None, we need to figure out which kwargs are filters
-        if query is not None:
-            # All kwargs are update fields
-            if not kwargs:
-                raise ValueError("Must provide at least one field to update")
-            return self._client.update_many(query, kwargs)
-
-        # No query provided - need at least a filter
-        # For simplicity, require explicit query dict for updates
-        raise ValueError(
-            "update_field() requires an explicit query dict as first argument. "
-            "Example: eeg.update_field({'dataset': 'ds001'}, entities={...})"
-        )
+        final_query = merge_query(query, require_query=True, **kwargs)
+        return self._client.update_many(final_query, update)
 
 
 def __getattr__(name: str):

@@ -18,6 +18,8 @@ on:
           - eegmanylabs
           - zenodo
           - figshare
+          - osf
+          - scidb
 
 jobs:
   # Trigger individual source workflows
@@ -46,9 +48,19 @@ jobs:
     uses: ./.github/workflows/1-fetch-figshare.yml
     secrets: inherit
 
+  osf:
+    if: github.event.inputs.sources == 'all' || github.event.inputs.sources == 'osf' || github.event_name == 'schedule'
+    uses: ./.github/workflows/1-fetch-osf.yml
+    secrets: inherit
+
+  scidb:
+    if: github.event.inputs.sources == 'all' || github.event.inputs.sources == 'scidb' || github.event_name == 'schedule'
+    uses: ./.github/workflows/1-fetch-scidb.yml
+    secrets: inherit
+
   summary:
     name: Summary
-    needs: [openneuro, nemar, eegmanylabs, zenodo, figshare]
+    needs: [openneuro, nemar, eegmanylabs, zenodo, figshare, osf, scidb]
     if: always()
     runs-on: ubuntu-latest
     steps:
@@ -63,3 +75,5 @@ jobs:
           echo "| EEGManyLabs | ${{ needs.eegmanylabs.result || 'skipped' }} |" >> $GITHUB_STEP_SUMMARY
           echo "| Zenodo | ${{ needs.zenodo.result || 'skipped' }} |" >> $GITHUB_STEP_SUMMARY
           echo "| Figshare | ${{ needs.figshare.result || 'skipped' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| OSF | ${{ needs.osf.result || 'skipped' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| SciDB | ${{ needs.scidb.result || 'skipped' }} |" >> $GITHUB_STEP_SUMMARY

@@ -22,14 +22,6 @@ class Storage(TypedDict):
     dep_keys: list[str]  # relative to base
 
 
-class Cache(TypedDict):
-    """Local cache layout."""
-
-    dataset_subdir: str  # e.g., "ds000001" or "ds005509-bdf-mini"
-    raw_relpath: str  # relative to dataset_subdir
-    dep_relpaths: list[str]  # relative to dataset_subdir
-
-
 class Entities(TypedDict, total=False):
     """BIDS entities."""
 
@@ -51,7 +43,6 @@ class Record(TypedDict, total=False):
     entities: Entities
     entities_mne: Entities  # run sanitized for MNE-BIDS (numeric or None)
     storage: Storage
-    cache: Cache
 
 
 def _sanitize_run_for_mne(value: Any) -> str | None:
@@ -81,7 +72,6 @@ def create_record(
     datatype: str = "eeg",
     suffix: str = "eeg",
     storage_backend: Literal["s3", "https", "local"] = "s3",
-    dataset_subdir: str | None = None,
 ) -> Record:
     """Create an EEGDash record.
 
@@ -103,8 +93,6 @@ def create_record(
         BIDS suffix.
     storage_backend : {"s3", "https", "local"}, default "s3"
         Storage backend type.
-    dataset_subdir : str, optional
-        Cache subdirectory name. Defaults to dataset.
 
     Returns
     -------
@@ -130,7 +118,6 @@ def create_record(
 
     dep_keys = dep_keys or []
     extension = PurePosixPath(bids_relpath).suffix
-    subdir = dataset_subdir or dataset
 
     entities: Entities = {
         "subject": subject,
@@ -157,11 +144,6 @@ def create_record(
             raw_key=bids_relpath,
             dep_keys=dep_keys,
         ),
-        cache=Cache(
-            dataset_subdir=subdir,
-            raw_relpath=bids_relpath,
-            dep_relpaths=dep_keys,
-        ),
     )
 
 
@@ -180,17 +162,10 @@ def validate_record(record: dict[str, Any]) -> list[str]:
     elif not storage.get("base"):
         errors.append("missing: storage.base")
 
-    cache = record.get("cache")
-    if not cache:
-        errors.append("missing: cache")
-    elif not cache.get("dataset_subdir"):
-        errors.append("missing: cache.dataset_subdir")
-
     return errors
 
 
 __all__ = [
-    "Cache",
     "Entities",
     "Record",
     "Storage",

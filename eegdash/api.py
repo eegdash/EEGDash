@@ -11,8 +11,7 @@ metadata records stored in the EEGDash database via REST API.
 
 from typing import Any, Mapping
 
-from .bids_eeg_metadata import build_query_from_kwargs
-from .const import ALLOWED_QUERY_FIELDS
+from .bids_eeg_metadata import merge_query
 from .http_api_client import get_client
 
 
@@ -85,52 +84,11 @@ class EEGDash:
             DB records that match the query.
 
         """
-        # Extract pagination parameters before building query
         limit = kwargs.pop("limit", None)
         skip = kwargs.pop("skip", None)
-
-        final_query: dict[str, Any] | None = None
-
-        # Accept explicit empty dict {} to mean "match all"
-        raw_query = query if isinstance(query, dict) else None
-        kwargs_query = build_query_from_kwargs(**kwargs) if kwargs else None
-
-        # Determine presence, treating {} as a valid raw query
-        has_raw = isinstance(raw_query, dict)
-        has_kwargs = kwargs_query is not None
-
-        if has_raw and has_kwargs:
-            # Detect conflicting constraints on the same field (e.g., task specified
-            # differently in both places) and raise a clear error instead of silently
-            # producing an empty result.
-            self._raise_if_conflicting_constraints(raw_query, kwargs_query)
-            # Merge with logical AND so both constraints apply
-            if raw_query:  # non-empty dict adds constraints
-                final_query = {"$and": [raw_query, kwargs_query]}
-            else:  # {} adds nothing; use kwargs_query only
-                final_query = kwargs_query
-        elif has_raw:
-            # May be {} meaning match-all, or a non-empty dict
-            final_query = raw_query
-        elif has_kwargs:
-            final_query = kwargs_query
-        else:
-            # Avoid accidental full scans
-            raise ValueError(
-                "find() requires a query dictionary or at least one keyword argument. "
-                "To find all documents, use find({})."
-            )
-
-        # Pass limit and skip to the collection's find method
-        find_kwargs = {}
-        if limit is not None:
-            find_kwargs["limit"] = limit
-        if skip is not None:
-            find_kwargs["skip"] = skip
-
-        results = self._client.find(final_query, **find_kwargs)
-
-        return list(results)
+        final_query = merge_query(query, require_query=True, **kwargs)
+        find_kwargs = {k: v for k, v in {"limit": limit, "skip": skip}.items() if v is not None}
+        return list(self._client.find(final_query, **find_kwargs))
 
     def exist(self, query: dict[str, Any]) -> bool:
         """Return True if at least one record matches the query, else False.
@@ -198,127 +156,10 @@ class EEGDash:
         >>> count = eeg.count(dataset="ds002718")  # count by dataset
 
         """
-        # Extract limit/skip if present (not used for count but kept for consistency)
         kwargs.pop("limit", None)
         kwargs.pop("skip", None)
-
-        final_query: dict[str, Any] | None = None
-
-        # Accept explicit empty dict {} to mean "match all"
-        raw_query = query if isinstance(query, dict) else None
-        kwargs_query = build_query_from_kwargs(**kwargs) if kwargs else None
-
-        # Determine presence, treating {} as a valid raw query
-        has_raw = isinstance(raw_query, dict)
-        has_kwargs = kwargs_query is not None
-
-        if has_raw and has_kwargs:
-            self._raise_if_conflicting_constraints(raw_query, kwargs_query)
-            if raw_query:
-                final_query = {"$and": [raw_query, kwargs_query]}
-            else:
-                final_query = kwargs_query
-        elif has_raw:
-            final_query = raw_query
-        elif has_kwargs:
-            final_query = kwargs_query
-        else:
-            # For count, empty query is acceptable (count all)
-            final_query = {}
-
+        final_query = merge_query(query, require_query=False, **kwargs)
         return self._client.count_documents(final_query)
-
-    def _extract_simple_constraint(
-        self, query: dict[str, Any], key: str
-    ) -> tuple[str, Any] | None:
-        """Extract a simple constraint for a given key from a query dict.
-
-        Supports top-level equality (e.g., ``{'subject': '01'}``) and ``$in``
-        (e.g., ``{'subject': {'$in': ['01', '02']}}``) constraints.
-
-        Parameters
-        ----------
-        query : dict
-            The MongoDB query dictionary.
-        key : str
-            The key for which to extract the constraint.
-
-        Returns
-        -------
-        tuple or None
-            A tuple of (kind, value) where kind is "eq" or "in", or None if the
-            constraint is not present or unsupported.
-
-        """
-        if not isinstance(query, dict) or key not in query:
-            return None
-        val = query[key]
-        if isinstance(val, dict):
-            if "$in" in val and isinstance(val["$in"], (list, tuple)):
-                return ("in", list(val["$in"]))
-            return None  # unsupported operator shape for conflict checking
-        else:
-            return "eq", val
-
-    def _raise_if_conflicting_constraints(
-        self, raw_query: dict[str, Any], kwargs_query: dict[str, Any]
-    ) -> None:
-        """Raise ValueError if query sources have incompatible constraints.
-
-        Checks for mutually exclusive constraints on the same field to avoid
-        silent empty results.
-
-        Parameters
-        ----------
-        raw_query : dict
-            The raw MongoDB query dictionary.
-        kwargs_query : dict
-            The query dictionary built from keyword arguments.
-
-        Raises
-        ------
-        ValueError
-            If conflicting constraints are found.
-
-        """
-        if not raw_query or not kwargs_query:
-            return
-
-        # Only consider fields we generally allow; skip meta operators like $and
-        raw_keys = set(raw_query.keys()) & ALLOWED_QUERY_FIELDS
-        kw_keys = set(kwargs_query.keys()) & ALLOWED_QUERY_FIELDS
-        dup_keys = raw_keys & kw_keys
-        for key in dup_keys:
-            rc = self._extract_simple_constraint(raw_query, key)
-            kc = self._extract_simple_constraint(kwargs_query, key)
-            if rc is None or kc is None:
-                # If either side is non-simple, skip conflict detection for this key
-                continue
-
-            r_kind, r_val = rc
-            k_kind, k_val = kc
-
-            # Normalize to sets when appropriate for simpler checks
-            if r_kind == "eq" and k_kind == "eq":
-                if r_val != k_val:
-                    raise ValueError(
-                        f"Conflicting constraints for '{key}': query={r_val!r} vs kwargs={k_val!r}"
-                    )
-            elif r_kind == "in" and k_kind == "eq":
-                if k_val not in r_val:
-                    raise ValueError(
-                        f"Conflicting constraints for '{key}': query in {r_val!r} vs kwargs={k_val!r}"
-                    )
-            elif r_kind == "eq" and k_kind == "in":
-                if r_val not in k_val:
-                    raise ValueError(
-                        f"Conflicting constraints for '{key}': query={r_val!r} vs kwargs in {k_val!r}"
-                    )
-            elif r_kind == "in" and k_kind == "in":
-                if len(set(r_val).intersection(k_val)) == 0:
-                    raise ValueError(
-                        f"Conflicting constraints for '{key}': disjoint sets {r_val!r} and {k_val!r}"
-                    )
 
     def exists(self, query: dict[str, Any]) -> bool:
         """Check if at least one record matches the query.

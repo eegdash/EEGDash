@@ -42,7 +42,6 @@ This module uses standard ``requests`` exceptions. Handle errors like this:
 
 import json
 import os
-import socket
 import threading
 from dataclasses import dataclass, field
 from typing import Any, Optional
@@ -50,26 +49,6 @@ from typing import Any, Optional
 import requests
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
-
-# DNS override: direct IP for data.eegdash.org while DNS is misconfigured
-# TODO: Remove this once DNS is fixed
-_DNS_OVERRIDE = {
-    "data.eegdash.org": os.getenv("EEGDASH_API_IP", "137.110.244.65"),
-}
-
-# Patch socket.getaddrinfo to use DNS override
-_original_getaddrinfo = socket.getaddrinfo
-
-
-def _custom_getaddrinfo(host, port, family=0, type=0, proto=0, flags=0):
-    """Custom getaddrinfo that overrides specific hostnames to direct IPs."""
-    if host in _DNS_OVERRIDE:
-        host = _DNS_OVERRIDE[host]
-    return _original_getaddrinfo(host, port, family, type, proto, flags)
-
-
-# Apply the patch once at module load
-socket.getaddrinfo = _custom_getaddrinfo
 
 
 @dataclass

@@ -24,8 +24,6 @@ def test_create_openneuro_record():
     assert record["storage"]["raw_key"] == record["bids_relpath"]
     assert len(record["storage"]["dep_keys"]) == 2
 
-    assert record["cache"]["dataset_subdir"] == "ds000001"
-
 
 def test_create_challenge_record():
     """Test creating a challenge record."""
@@ -36,13 +34,11 @@ def test_create_challenge_record():
         subject="NDARAH793FBF",
         task="DespicableMe",
         dep_keys=["dataset_description.json"],
-        dataset_subdir="ds005509-bdf-mini",
     )
 
     assert record["dataset"] == "ds005509"
     assert record["bids_relpath"].endswith("_eeg.bdf")
     assert record["storage"]["base"] == "s3://nmdatasets/NeurIPS25/R5_mini_L100_bdf"
-    assert record["cache"]["dataset_subdir"] == "ds005509-bdf-mini"
 
 
 def test_validate_record_catches_missing_fields():
@@ -56,7 +52,6 @@ def test_validate_record_catches_missing_fields():
         "dataset": "ds000001",
         "bids_relpath": "sub-01/eeg/sub-01_eeg.vhdr",
         "storage": {"backend": "s3", "raw_key": "test", "dep_keys": []},
-        "cache": {"dataset_subdir": "ds000001", "raw_relpath": "test", "dep_relpaths": []},
     }
     errors = validate_record(partial)
     assert any("storage.base" in e for e in errors)

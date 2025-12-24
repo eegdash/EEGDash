@@ -67,16 +67,15 @@ class EEGDashBaseDataset(RawDataset):
             raise ValueError(f"Invalid record: {errors}")
         self.record = record
 
-        # Resolve paths from record
-        cache = self.record.get("cache") or {}
+        # Derive local cache paths from record fields (portable - no absolute paths stored)
         storage = self.record.get("storage") or {}
-        dataset_subdir = cache.get("dataset_subdir", "")
-        raw_relpath = cache.get("raw_relpath", "")
-        dep_relpaths = cache.get("dep_relpaths") or []
+        dataset = self.record["dataset"]
+        bids_relpath = self.record["bids_relpath"]
+        dep_keys = storage.get("dep_keys") or []
 
-        self.bids_root = self.cache_dir / dataset_subdir
-        self.filecache = self.bids_root / raw_relpath
-        self._dep_paths = [self.bids_root / p for p in dep_relpaths]
+        self.bids_root = self.cache_dir / dataset
+        self.filecache = self.bids_root / bids_relpath
+        self._dep_paths = [self.bids_root / p for p in dep_keys]
 
         # Build remote URIs based on storage backend
         backend = storage.get("backend")

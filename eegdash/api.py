@@ -90,49 +90,30 @@ class EEGDash:
         find_kwargs = {k: v for k, v in {"limit": limit, "skip": skip}.items() if v is not None}
         return list(self._client.find(final_query, **find_kwargs))
 
-    def exist(self, query: dict[str, Any]) -> bool:
-        """Return True if at least one record matches the query, else False.
-
-        This is a lightweight existence check that uses MongoDB's ``find_one``
-        instead of fetching all matching documents (which would be wasteful in
-        both time and memory for broad queries). Only a restricted set of
-        fields is accepted to avoid accidental full scans caused by malformed
-        or unsupported keys.
+    def exists(self, query: dict[str, Any] = None, /, **kwargs) -> bool:
+        """Check if at least one record matches the query.
 
         Parameters
         ----------
-        query : dict
-            Mapping of allowed field(s) to value(s). Allowed keys: ``data_name``
-            and ``dataset``. The query must not be empty.
+        query : dict, optional
+            Complete query dictionary. This is a positional-only argument.
+        **kwargs
+            User-friendly field filters (same as find()).
 
         Returns
         -------
         bool
             True if at least one matching record exists; False otherwise.
 
-        Raises
-        ------
-        TypeError
-            If ``query`` is not a dict.
-        ValueError
-            If ``query`` is empty or contains unsupported field names.
+        Examples
+        --------
+        >>> eeg = EEGDash()
+        >>> eeg.exists(dataset="ds002718")  # check by dataset
+        >>> eeg.exists({"data_name": "ds002718_sub-001_eeg.set"})  # check by data_name
 
         """
-        if not isinstance(query, dict):
-            raise TypeError("query must be a dict")
-        if not query:
-            raise ValueError("query cannot be empty")
-
-        accepted_query_fields = {"data_name", "dataset"}
-        unknown = set(query.keys()) - accepted_query_fields
-        if unknown:
-            raise ValueError(
-                f"Unsupported query field(s): {', '.join(sorted(unknown))}. "
-                f"Allowed: {sorted(accepted_query_fields)}"
-            )
-
-        doc = self._client.find_one(query)
-        return doc is not None
+        final_query = merge_query(query, require_query=True, **kwargs)
+        return self._client.find_one(final_query) is not None
 
     def count(self, query: dict[str, Any] = None, /, **kwargs) -> int:
         """Count documents matching the query.
@@ -160,24 +141,6 @@ class EEGDash:
         kwargs.pop("skip", None)
         final_query = merge_query(query, require_query=False, **kwargs)
         return self._client.count_documents(final_query)
-
-    def exists(self, query: dict[str, Any]) -> bool:
-        """Check if at least one record matches the query.
-
-        This is an alias for :meth:`exist`.
-
-        Parameters
-        ----------
-        query : dict
-            MongoDB query to check for existence.
-
-        Returns
-        -------
-        bool
-            True if a matching record exists, False otherwise.
-
-        """
-        return self.exist(query)
 
     @property
     def collection(self):

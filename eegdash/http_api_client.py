@@ -110,26 +110,9 @@ class EEGDashAPIClient:
         return resp.json().get("insertedCount", 0)
 
 
-def get_client(api_url: str | None = None, is_staging: bool = False, auth_token: str | None = None) -> EEGDashAPIClient:
+def get_client(api_url: str | None = None, database: str = "eegdash", auth_token: str | None = None) -> EEGDashAPIClient:
     """Get an API client instance."""
-    return EEGDashAPIClient(api_url=api_url, database="eegdashstaging" if is_staging else "eegdash", auth_token=auth_token)
+    return EEGDashAPIClient(api_url=api_url, database=database, auth_token=auth_token)
 
 
-# Backward compatibility
-HTTPAPICollection = HTTPAPIClient = HTTPAPIDatabase = EEGDashAPIClient
-
-
-class HTTPAPIConnectionManager:
-    """Backward compatibility wrapper."""
-
-    @classmethod
-    def get_client(cls, api_url: str, is_staging: bool = False, auth_token: str | None = None):
-        client = get_client(api_url, is_staging, auth_token)
-        return client, client, client
-
-    @classmethod
-    def close_all(cls) -> None:
-        pass
-
-
-__all__ = ["EEGDashAPIClient", "get_client", "HTTPAPIClient", "HTTPAPICollection", "HTTPAPIConnectionManager", "HTTPAPIDatabase"]
+__all__ = ["EEGDashAPIClient", "get_client"]

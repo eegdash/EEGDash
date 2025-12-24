@@ -29,8 +29,7 @@ from .. import downloader
 from ..bids_eeg_metadata import enrich_from_participants
 from ..logging import logger
 from ..paths import get_default_cache_dir
-from ..records import adapt_record_v1_to_v2
-from ..resolver import resolve_record
+from ..records import validate_record
 
 
 @contextmanager
@@ -76,43 +75,66 @@ class EEGDashBaseDataset(BaseDataset):
     Parameters
     ----------
     record : dict
-        A fully resolved metadata record for the data to load.
+        A v2 record containing all metadata and storage information.
+        Must have schema_version=2 and include storage.base (no default bucket).
     cache_dir : str
         The local directory where the data will be cached.
-    s3_bucket : str, optional
-        The S3 bucket to download data from. If not provided, defaults to the
-        OpenNeuro bucket.
     **kwargs
         Additional keyword arguments passed to the
         :class:`braindecode.datasets.BaseDataset` constructor.
 
+    Raises
+    ------
+    ValueError
+        If the record is not a valid v2 record or is missing required fields.
     """
-
-    _AWS_BUCKET = "s3://openneuro.org"
 
     def __init__(
         self,
         record: dict[str, Any],
         cache_dir: str,
-        s3_bucket: str | None = None,
         **kwargs,
     ):
         super().__init__(None, **kwargs)
         self.cache_dir = Path(cache_dir)
-        self.s3_bucket = s3_bucket or self._AWS_BUCKET
-        # Normalize legacy records to a v2-shaped record at the boundary.
-        self.record = (
-            record
-            if record.get("schema_version") == 2
-            else adapt_record_v1_to_v2(record, s3_bucket=self.s3_bucket)
-        )
 
-        resolved = resolve_record(self.record, cache_dir=self.cache_dir)
-        self.bids_root = resolved.bids_root
-        self.filecache = resolved.raw_path
-        self._dep_paths = resolved.dep_paths
-        self._raw_uri = resolved.raw_uri
-        self._dep_uris = resolved.dep_uris
+        # Validate record
+        errors = validate_record(record)
+        if errors:
+            raise ValueError(f"Invalid record: {errors}")
+        self.record = record
+
+        # Resolve paths from record
+        cache = self.record.get("cache") or {}
+        storage = self.record.get("storage") or {}
+        dataset_subdir = cache.get("dataset_subdir", "")
+        raw_relpath = cache.get("raw_relpath", "")
+        dep_relpaths = cache.get("dep_relpaths") or []
+
+        self.bids_root = self.cache_dir / dataset_subdir
+        self.filecache = self.bids_root / raw_relpath
+        self._dep_paths = [self.bids_root / p for p in dep_relpaths]
+
+        # Build remote URIs based on storage backend
+        backend = storage.get("backend")
+        base = storage.get("base", "").rstrip("/")
+        raw_key = storage.get("raw_key", "")
+        dep_keys = storage.get("dep_keys") or []
+
+        if backend in ("s3", "https") and base and raw_key:
+            self._raw_uri = f"{base}/{raw_key}"
+            self._dep_uris = [f"{base}/{k}" for k in dep_keys]
+        elif backend == "local" and base:
+            # Local backend: data already exists at storage.base
+            local_base = Path(base)
+            self.bids_root = local_base
+            self.filecache = local_base / raw_key if raw_key else self.filecache
+            self._dep_paths = [local_base / k for k in dep_keys] if dep_keys else self._dep_paths
+            self._raw_uri = None
+            self._dep_uris = []
+        else:
+            self._raw_uri = None
+            self._dep_uris = []
 
         self.bids_root.mkdir(parents=True, exist_ok=True)
 
@@ -289,6 +311,9 @@ class EEGDashBaseRaw(BaseRaw):
     metadata : dict
         The metadata record for the recording, containing information like
         sampling frequency, channel names, etc.
+    s3_bucket : str
+        The S3 bucket base URI (e.g., "s3://openneuro.org").
+        Must be explicitly provided - there is no default.
     preload : bool, default False
         If True, preload the data into memory.
     cache_dir : str, optional
@@ -298,24 +323,31 @@ class EEGDashBaseRaw(BaseRaw):
     verbose : str, int, or None, default None
         The MNE verbosity level.
 
+    Raises
+    ------
+    ValueError
+        If s3_bucket is not provided.
+
     See Also
     --------
     mne.io.Raw : The base class for Raw objects in MNE.
 
     """
 
-    _AWS_BUCKET = "s3://openneuro.org"
-
     def __init__(
         self,
         input_fname: str,
         metadata: dict[str, Any],
+        s3_bucket: str,
         preload: bool = False,
         *,
         cache_dir: str | None = None,
         bids_dependencies: list[str] | None = None,
         verbose: Any = None,
     ):
+        if not s3_bucket:
+            raise ValueError("s3_bucket is required (no default bucket)")
+
         # Create a simple RawArray
         sfreq = metadata["sfreq"]  # Sampling frequency
         n_times = metadata["n_times"]
@@ -328,7 +360,8 @@ class EEGDashBaseRaw(BaseRaw):
             ch_types.append(chtype)
         info = mne.create_info(ch_names=ch_names, sfreq=sfreq, ch_types=ch_types)
 
-        self.s3file = downloader.get_s3path(self._AWS_BUCKET, input_fname)
+        self._s3_bucket = s3_bucket.rstrip("/")
+        self.s3file = downloader.get_s3path(self._s3_bucket, input_fname)
         self.cache_dir = Path(cache_dir) if cache_dir else get_default_cache_dir()
         self.filecache = self.cache_dir / input_fname
         if bids_dependencies is None:
@@ -355,7 +388,7 @@ class EEGDashBaseRaw(BaseRaw):
         if not os.path.exists(self.filecache):  # not preload
             if self.bids_dependencies:
                 deps = [
-                    (downloader.get_s3path(self._AWS_BUCKET, dep), self.cache_dir / dep)
+                    (downloader.get_s3path(self._s3_bucket, dep), self.cache_dir / dep)
                     for dep in self.bids_dependencies
                 ]
                 downloader.download_files(deps)

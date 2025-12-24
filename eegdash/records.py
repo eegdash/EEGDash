@@ -4,8 +4,10 @@
 """EEGDash Record and Dataset schemas.
 
 Two-level hierarchy:
-- Dataset: per-dataset metadata (one per ds*, queried for discovery/filtering)
-- Record: per-file metadata (many per dataset, used for loading)
+- Dataset: per-dataset metadata (one per ds*, for discovery/filtering)
+  Contains: identity, demographics, clinical, paradigm, timestamps
+- Record: per-file metadata (many per dataset, optimized for fast loading)
+  Contains: dataset FK, storage location, BIDS entities only
 """
 
 from __future__ import annotations
@@ -42,6 +44,21 @@ class Demographics(TypedDict, total=False):
     species: str | None  # e.g., "Human", "Mouse"
 
 
+class Clinical(TypedDict, total=False):
+    """Clinical classification (dataset-level)."""
+
+    is_clinical: bool  # Whether the dataset is clinical
+    purpose: str | None  # e.g., "epilepsy", "depression", "parkinson", "alzheimer", "sleep_disorder"
+
+
+class Paradigm(TypedDict, total=False):
+    """Experimental paradigm classification (dataset-level)."""
+
+    modality: str | None  # e.g., "visual", "auditory", "somatosensory", "multisensory", "resting_state"
+    cognitive_domain: str | None  # e.g., "attention", "memory", "learning", "motor", "language", "emotion"
+    is_10_20_system: bool | None  # Whether electrodes follow the 10-20 system
+
+
 class Dataset(TypedDict, total=False):
     """Dataset-level metadata (one per ds*)."""
 
@@ -76,6 +93,10 @@ class Dataset(TypedDict, total=False):
     # Demographics
     demographics: Demographics
 
+    # Classification
+    clinical: Clinical
+    paradigm: Paradigm
+
     # Timestamps
     timestamps: Timestamps
 
@@ -103,6 +124,14 @@ def create_dataset(
     subjects_count: int | None = None,
     ages: list[int] | None = None,
     species: str | None = None,
+    # Clinical classification
+    is_clinical: bool | None = None,
+    clinical_purpose: str | None = None,
+    # Paradigm classification
+    paradigm_modality: str | None = None,
+    cognitive_domain: str | None = None,
+    is_10_20_system: bool | None = None,
+    # Timestamps
     digested_at: str | None = None,
     dataset_modified_at: str | None = None,
 ) -> Dataset:
@@ -152,6 +181,16 @@ def create_dataset(
         Subject ages.
     species : str, optional
         Species (e.g., "Human").
+    is_clinical : bool, optional
+        Whether this is clinical data.
+    clinical_purpose : str, optional
+        Clinical purpose (e.g., "epilepsy", "depression").
+    paradigm_modality : str, optional
+        Experimental modality (e.g., "visual", "auditory", "resting_state").
+    cognitive_domain : str, optional
+        Cognitive domain (e.g., "attention", "memory", "motor").
+    is_10_20_system : bool, optional
+        Whether electrodes follow the 10-20 system.
     digested_at : str, optional
         ISO 8601 timestamp. Defaults to current time.
     dataset_modified_at : str, optional
@@ -200,6 +239,21 @@ def create_dataset(
         ),
     )
 
+    # Add clinical if any field provided
+    if is_clinical is not None or clinical_purpose is not None:
+        dataset["clinical"] = Clinical(
+            is_clinical=is_clinical if is_clinical is not None else False,
+            purpose=clinical_purpose,
+        )
+
+    # Add paradigm if any field provided
+    if paradigm_modality is not None or cognitive_domain is not None or is_10_20_system is not None:
+        dataset["paradigm"] = Paradigm(
+            modality=paradigm_modality,
+            cognitive_domain=cognitive_domain,
+            is_10_20_system=is_10_20_system,
+        )
+
     return dataset
 
 
@@ -226,23 +280,11 @@ class Entities(TypedDict, total=False):
     run: str | None
 
 
-class Clinical(TypedDict, total=False):
-    """Clinical classification."""
-
-    is_clinical: bool  # Whether the dataset is clinical
-    purpose: str | None  # e.g., "epilepsy", "depression", "parkinson", "alzheimer", "sleep_disorder"
-
-
-class Paradigm(TypedDict, total=False):
-    """Experimental paradigm classification."""
-
-    modality: str | None  # e.g., "visual", "auditory", "somatosensory", "multisensory", "resting_state"
-    cognitive_domain: str | None  # e.g., "attention", "memory", "learning", "motor", "language", "emotion"
-    is_10_20_system: bool | None  # Whether electrodes follow the 10-20 system
-
-
 class Record(TypedDict, total=False):
-    """EEGDash record schema (per-file)."""
+    """EEGDash record schema (per-file, optimized for fast loading).
+
+    Minimal schema - clinical/paradigm info lives in Dataset.
+    """
 
     dataset: str  # FK to Dataset.dataset_id
     data_name: str
@@ -250,13 +292,11 @@ class Record(TypedDict, total=False):
     datatype: str
     suffix: str
     extension: str
-    recording_modality: str | None  # e.g., "eeg", "meg", "ieeg", "emg", "ecog"
+    recording_modality: str | None  # e.g., "eeg", "meg", "ieeg"
     entities: Entities
     entities_mne: Entities  # run sanitized for MNE-BIDS (numeric or None)
     storage: Storage
-    timestamps: Timestamps
-    clinical: Clinical  # Clinical classification
-    paradigm: Paradigm  # Experimental paradigm
+    digested_at: str  # ISO 8601 timestamp
 
 
 def _sanitize_run_for_mne(value: Any) -> str | None:
@@ -286,18 +326,8 @@ def create_record(
     datatype: str = "eeg",
     suffix: str = "eeg",
     storage_backend: Literal["s3", "https", "local"] = "s3",
-    # Recording modality
     recording_modality: str | None = None,
-    # Digestion metadata
     digested_at: str | None = None,
-    dataset_modified_at: str | None = None,
-    # Clinical classification
-    is_clinical: bool | None = None,
-    clinical_purpose: str | None = None,
-    # Experimental info
-    modality: str | None = None,
-    cognitive_domain: str | None = None,
-    is_10_20_system: bool | None = None,
 ) -> Record:
     """Create an EEGDash record.
 
@@ -320,26 +350,18 @@ def create_record(
     storage_backend : {"s3", "https", "local"}, default "s3"
         Storage backend type.
     recording_modality : str, optional
-        Recording modality (e.g., "eeg", "meg", "ieeg", "emg", "ecog").
+        Recording modality (e.g., "eeg", "meg", "ieeg").
     digested_at : str, optional
-        ISO 8601 timestamp of when digestion occurred. Defaults to current time.
-    dataset_modified_at : str, optional
-        ISO 8601 timestamp of last dataset update.
-    is_clinical : bool, optional
-        Whether this is clinical data.
-    clinical_purpose : str, optional
-        Clinical purpose (e.g., "epilepsy", "depression", "parkinson").
-    modality : str, optional
-        Experimental modality (e.g., "visual", "auditory", "multisensory", "resting_state").
-    cognitive_domain : str, optional
-        Cognitive domain (e.g., "attention", "memory", "learning", "motor").
-    is_10_20_system : bool, optional
-        Whether electrodes follow the 10-20 system.
+        ISO 8601 timestamp. Defaults to current time.
 
     Returns
     -------
     Record
-        A complete EEGDash record.
+        A slim EEGDash record optimized for loading.
+
+    Notes
+    -----
+    Clinical and paradigm info is stored at the Dataset level, not per-file.
 
     Examples
     --------
@@ -371,21 +393,14 @@ def create_record(
     entities_mne: Entities = dict(entities)  # type: ignore[assignment]
     entities_mne["run"] = _sanitize_run_for_mne(run)
 
-    # Build timestamps (always set digested_at)
-    timestamps: Timestamps = {
-        "digested_at": digested_at or datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
-    }
-    if dataset_modified_at is not None:
-        timestamps["dataset_modified_at"] = dataset_modified_at
-
-    record = Record(
+    return Record(
         dataset=dataset,
         data_name=f"{dataset}_{PurePosixPath(bids_relpath).name}",
         bids_relpath=bids_relpath,
         datatype=datatype,
         suffix=suffix,
         extension=extension,
-        recording_modality=recording_modality or datatype,  # Default to datatype if not specified
+        recording_modality=recording_modality or datatype,
         entities=entities,
         entities_mne=entities_mne,
         storage=Storage(
@@ -394,25 +409,8 @@ def create_record(
             raw_key=bids_relpath,
             dep_keys=dep_keys,
         ),
-        timestamps=timestamps,
+        digested_at=digested_at or datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
     )
-
-    # Add clinical info if provided
-    if is_clinical is not None or clinical_purpose is not None:
-        record["clinical"] = Clinical(
-            is_clinical=is_clinical if is_clinical is not None else False,
-            purpose=clinical_purpose,
-        )
-
-    # Add paradigm info if any field is provided
-    if modality is not None or cognitive_domain is not None or is_10_20_system is not None:
-        record["paradigm"] = Paradigm(
-            modality=modality,
-            cognitive_domain=cognitive_domain,
-            is_10_20_system=is_10_20_system,
-        )
-
-    return record
 
 
 def validate_record(record: dict[str, Any]) -> list[str]:
@@ -444,16 +442,16 @@ def validate_dataset(dataset: dict[str, Any]) -> list[str]:
 
 
 __all__ = [
-    # Dataset (per-dataset)
+    # Dataset (per-dataset, for discovery)
     "Dataset",
     "Demographics",
+    "Clinical",
+    "Paradigm",
     "create_dataset",
     "validate_dataset",
-    # Record (per-file)
-    "Clinical",
-    "Entities",
-    "Paradigm",
+    # Record (per-file, for loading)
     "Record",
+    "Entities",
     "Storage",
     "create_record",
     "validate_record",

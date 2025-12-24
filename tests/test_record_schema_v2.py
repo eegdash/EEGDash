@@ -1,111 +1,88 @@
-from eegdash.records import adapt_record_v1_to_v2
+from eegdash.records import create_record, validate_record
 
 
-def test_adapt_openneuro_v1_to_v2_preserves_alphanumeric_run():
-    rec_v1 = {
+def test_create_openneuro_record():
+    """Test creating a record for OpenNeuro."""
+    record = create_record(
+        dataset="ds000001",
+        storage_base="s3://openneuro.org/ds000001",
+        bids_relpath="sub-01/eeg/sub-01_task-test_run-5F_eeg.vhdr",
+        subject="01",
+        task="test",
+        run="5F",
+        dep_keys=["participants.tsv", "sub-01/eeg/sub-01_task-test_run-5F_events.tsv"],
+    )
+
+    assert record["dataset"] == "ds000001"
+    assert record["bids_relpath"] == "sub-01/eeg/sub-01_task-test_run-5F_eeg.vhdr"
+
+    # Original run is preserved, MNE-safe run is None (non-numeric)
+    assert record["entities"]["run"] == "5F"
+    assert record["entities_mne"]["run"] is None
+
+    assert record["storage"]["base"] == "s3://openneuro.org/ds000001"
+    assert record["storage"]["raw_key"] == record["bids_relpath"]
+    assert len(record["storage"]["dep_keys"]) == 2
+
+    assert record["cache"]["dataset_subdir"] == "ds000001"
+
+
+def test_create_challenge_record():
+    """Test creating a challenge record."""
+    record = create_record(
+        dataset="ds005509",
+        storage_base="s3://nmdatasets/NeurIPS25/R5_mini_L100_bdf",
+        bids_relpath="sub-NDARAH793FBF/eeg/sub-NDARAH793FBF_task-DespicableMe_eeg.bdf",
+        subject="NDARAH793FBF",
+        task="DespicableMe",
+        dep_keys=["dataset_description.json"],
+        dataset_subdir="ds005509-bdf-mini",
+    )
+
+    assert record["dataset"] == "ds005509"
+    assert record["bids_relpath"].endswith("_eeg.bdf")
+    assert record["storage"]["base"] == "s3://nmdatasets/NeurIPS25/R5_mini_L100_bdf"
+    assert record["cache"]["dataset_subdir"] == "ds005509-bdf-mini"
+
+
+def test_validate_record_catches_missing_fields():
+    """Test validation catches missing required fields."""
+    errors = validate_record({})
+    assert len(errors) > 0
+    assert any("dataset" in e for e in errors)
+
+    # Missing storage.base
+    partial = {
         "dataset": "ds000001",
-        "data_name": "ds000001_sub-01_task-test_run-5F_eeg.vhdr",
-        "bidspath": "ds000001/sub-01/eeg/sub-01_task-test_run-5F_eeg.vhdr",
-        "bidsdependencies": [
-            "ds000001/participants.tsv",
-            "ds000001/sub-01/eeg/sub-01_task-test_run-5F_events.tsv",
-        ],
-        "subject": "01",
-        "task": "test",
-        "session": None,
-        "run": "5F",
-        "modality": "eeg",
+        "bids_relpath": "sub-01/eeg/sub-01_eeg.vhdr",
+        "storage": {"backend": "s3", "raw_key": "test", "dep_keys": []},
+        "cache": {"dataset_subdir": "ds000001", "raw_relpath": "test", "dep_relpaths": []},
     }
-
-    out1 = adapt_record_v1_to_v2(rec_v1)
-    out2 = adapt_record_v1_to_v2(rec_v1)
-
-    assert out1["schema_version"] == 2
-    assert out1["variant"] == "openneuro_raw"
-    assert out1["record_id"] == out2["record_id"]
-
-    assert out1["bids_relpath"] == "sub-01/eeg/sub-01_task-test_run-5F_eeg.vhdr"
-
-    assert out1["entities"]["run"] == "5F"
-    assert out1["entities_mne"]["run"] is None
-
-    assert out1["storage"]["base"] == "s3://openneuro.org/ds000001"
-    assert out1["storage"]["raw_key"] == out1["bids_relpath"]
-    assert out1["storage"]["dep_keys"] == [
-        "participants.tsv",
-        "sub-01/eeg/sub-01_task-test_run-5F_events.tsv",
-    ]
-
-    assert out1["cache"]["dataset_subdir"] == "ds000001"
-    assert out1["cache"]["raw_relpath"] == out1["bids_relpath"]
-    assert out1["cache"]["dep_relpaths"] == out1["storage"]["dep_keys"]
+    errors = validate_record(partial)
+    assert any("storage.base" in e for e in errors)
 
 
-def test_adapt_challenge_v1_to_v2_converts_set_to_bdf_and_strips_dataset_prefix():
-    rec_v1 = {
-        "dataset": "ds005509",
-        "data_name": "ds005509_sub-NDARAH793FBF_task-DespicableMe_eeg.set",
-        "bidspath": "ds005509/sub-NDARAH793FBF/eeg/sub-NDARAH793FBF_task-DespicableMe_eeg.set",
-        "bidsdependencies": [
-            "ds005509/dataset_description.json",
-            "ds005509/sub-NDARAH793FBF/eeg/sub-NDARAH793FBF_task-DespicableMe_events.tsv",
-            # Defensive: if a legacy record includes a .set dep, adapt it to .bdf
-            "ds005509/sub-NDARAH793FBF/eeg/sub-NDARAH793FBF_task-DespicableMe_eeg.set",
-        ],
-        "subject": "NDARAH793FBF",
-        "task": "DespicableMe",
-        "session": None,
-        "run": None,
-        "modality": "eeg",
-    }
+def test_create_record_requires_storage_base():
+    """Test that create_record raises without storage_base."""
+    import pytest
 
-    s3_bucket = "s3://nmdatasets/NeurIPS25/R5_mini_L100_bdf"
+    with pytest.raises(ValueError, match="storage_base is required"):
+        create_record(
+            dataset="ds000001",
+            storage_base="",
+            bids_relpath="sub-01/eeg/sub-01_eeg.vhdr",
+        )
 
-    out1 = adapt_record_v1_to_v2(
-        rec_v1,
-        s3_bucket=s3_bucket,
-        variant="challenge_l100_bdf_mini",
+
+def test_numeric_run_preserved():
+    """Test numeric run is preserved in entities_mne."""
+    record = create_record(
+        dataset="ds000001",
+        storage_base="s3://openneuro.org/ds000001",
+        bids_relpath="sub-01/eeg/sub-01_task-rest_run-01_eeg.vhdr",
+        subject="01",
+        task="rest",
+        run="01",
     )
-    out2 = adapt_record_v1_to_v2(
-        rec_v1,
-        s3_bucket=s3_bucket,
-        variant="challenge_l100_bdf_mini",
-    )
-
-    assert out1["schema_version"] == 2
-    assert out1["variant"] == "challenge_l100_bdf_mini"
-    assert out1["record_id"] == out2["record_id"]
-
-    assert out1["bids_relpath"].endswith("_eeg.bdf")
-    assert out1["bids_relpath"].startswith("sub-NDARAH793FBF/eeg/")
-
-    assert out1["storage"]["base"] == s3_bucket
-    assert out1["storage"]["raw_key"] == out1["bids_relpath"]
-
-    assert out1["storage"]["dep_keys"] == [
-        "dataset_description.json",
-        "sub-NDARAH793FBF/eeg/sub-NDARAH793FBF_task-DespicableMe_events.tsv",
-        "sub-NDARAH793FBF/eeg/sub-NDARAH793FBF_task-DespicableMe_eeg.bdf",
-    ]
-
-    assert out1["cache"]["dataset_subdir"] == "ds005509-bdf-mini"
-
-
-def test_infer_variant_from_s3_bucket_for_legacy_records():
-    rec_v1 = {
-        "dataset": "ds005509",
-        "bidspath": "ds005509/sub-NDARAH793FBF/eeg/sub-NDARAH793FBF_task-DespicableMe_eeg.set",
-        "bidsdependencies": [],
-        "subject": "NDARAH793FBF",
-        "task": "DespicableMe",
-        "run": None,
-        "modality": "eeg",
-    }
-
-    out = adapt_record_v1_to_v2(
-        rec_v1,
-        s3_bucket="s3://nmdatasets/NeurIPS25/R5_mini_L100_bdf",
-        variant=None,
-    )
-    assert out["variant"] == "challenge_l100_bdf_mini"
-
+    assert record["entities"]["run"] == "01"
+    assert record["entities_mne"]["run"] == "01"

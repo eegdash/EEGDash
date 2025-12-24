@@ -1,70 +1,61 @@
 # Authors: The EEGDash contributors.
 # License: BSD-3-Clause
 
-"""Record schema helpers (v2) and backward-compatible adapters.
+"""EEGDash Record schema.
 
-This module defines a minimal "schema v2" view of EEGDash records and provides
-helpers to adapt legacy (v1) records into v2-shaped records in-memory.
-
-The adapter is intentionally conservative:
-- It preserves all original keys from the input record.
-- It adds v2 keys (`schema_version`, `record_id`, `variant`, `bids_relpath`, ...).
-- It does not mutate the legacy `bidspath` field (used by older code paths).
-
-The goal is to enable incremental refactors (resolver, loader, offline discovery)
-without requiring a DB migration first.
+Records are self-contained documents describing where EEG data lives
+and how to cache it locally. Each record explicitly specifies its storage base.
 """
 
 from __future__ import annotations
 
-import uuid
 from pathlib import PurePosixPath
-from typing import Any, Literal, Mapping, TypedDict
+from typing import Any, Literal, TypedDict
 
 
-DEFAULT_OPENNEURO_BUCKET = "s3://openneuro.org"
+class Storage(TypedDict):
+    """Remote storage location."""
 
-# Stable namespace for deterministic UUIDv5 record IDs.
-_RECORD_ID_NAMESPACE = uuid.UUID("4e5c2ad6-85c8-4f8c-8c2c-3a0cb11b1f6a")
-
-
-class StorageV2(TypedDict):
-    backend: Literal["s3"]
-    base: str
-    raw_key: str
-    dep_keys: list[str]
+    backend: Literal["s3", "https", "local"]
+    base: str  # e.g., "s3://openneuro.org/ds000001"
+    raw_key: str  # relative to base
+    dep_keys: list[str]  # relative to base
 
 
-class CacheV2(TypedDict):
-    dataset_subdir: str
-    raw_relpath: str
-    dep_relpaths: list[str]
+class Cache(TypedDict):
+    """Local cache layout."""
+
+    dataset_subdir: str  # e.g., "ds000001" or "ds005509-bdf-mini"
+    raw_relpath: str  # relative to dataset_subdir
+    dep_relpaths: list[str]  # relative to dataset_subdir
 
 
-class RecordV2(TypedDict, total=False):
-    schema_version: int
-    record_id: str
-    variant: str
+class Entities(TypedDict, total=False):
+    """BIDS entities."""
+
+    subject: str | None
+    session: str | None
+    task: str | None
+    run: str | None
+
+
+class Record(TypedDict, total=False):
+    """EEGDash record schema."""
+
     dataset: str
     data_name: str
     bids_relpath: str
     datatype: str
     suffix: str
     extension: str
-    entities: dict[str, Any]
-    entities_mne: dict[str, Any]
-    storage: StorageV2
-    cache: CacheV2
+    entities: Entities
+    entities_mne: Entities  # run sanitized for MNE-BIDS (numeric or None)
+    storage: Storage
+    cache: Cache
 
 
-def _strip_dataset_prefix(path: str, dataset: str) -> str:
-    p = PurePosixPath(str(path))
-    if p.parts and p.parts[0] == dataset:
-        return PurePosixPath(*p.parts[1:]).as_posix()
-    return p.as_posix()
-
-
-def _sanitize_index_value(value: Any) -> str | None:
+def _sanitize_run_for_mne(value: Any) -> str | None:
+    """Sanitize run value for MNE-BIDS (must be numeric or None)."""
     if value is None:
         return None
     if isinstance(value, int):
@@ -77,200 +68,132 @@ def _sanitize_index_value(value: Any) -> str | None:
     return None
 
 
-def _canonicalize_entity_value(value: Any) -> str | None:
-    if value is None:
-        return None
-    if isinstance(value, str):
-        value = value.strip()
-        if not value:
-            return None
-        if value.startswith("sub-"):
-            return value[4:]
-        return value
-    if isinstance(value, int):
-        return str(value)
-    return str(value)
-
-
-def infer_variant(*, variant: str | None, s3_bucket: str | None) -> str:
-    """Infer a variant for legacy records when it is not explicitly provided."""
-    if isinstance(variant, str) and variant.strip():
-        return variant.strip()
-
-    if not s3_bucket or "openneuro.org" in str(s3_bucket).lower():
-        return "openneuro_raw"
-
-    bucket = str(s3_bucket).lower()
-    if "neurips25" in bucket and "bdf" in bucket:
-        return "challenge_l100_bdf_mini" if "mini" in bucket else "challenge_l100_bdf"
-
-    return "custom"
-
-
-def dataset_subdir_for_variant(dataset: str, variant: str) -> str:
-    """Compute a cache dataset subdir for a given dataset + variant."""
-    v = str(variant).lower()
-    suffixes: list[str] = []
-    if "bdf" in v:
-        suffixes.append("bdf")
-    if "mini" in v:
-        suffixes.append("mini")
-    return f"{dataset}-{'-'.join(suffixes)}" if suffixes else dataset
-
-
-def adapt_record_v1_to_v2(
-    record: Mapping[str, Any],
+def create_record(
     *,
-    s3_bucket: str | None = None,
-    variant: str | None = None,
-) -> RecordV2:
-    """Adapt a legacy record (v1) to a schema-v2 shaped record (in-memory)."""
-    dataset = str(record.get("dataset") or "").strip()
+    dataset: str,
+    storage_base: str,
+    bids_relpath: str,
+    subject: str | None = None,
+    session: str | None = None,
+    task: str | None = None,
+    run: str | None = None,
+    dep_keys: list[str] | None = None,
+    datatype: str = "eeg",
+    suffix: str = "eeg",
+    storage_backend: Literal["s3", "https", "local"] = "s3",
+    dataset_subdir: str | None = None,
+) -> Record:
+    """Create an EEGDash record.
+
+    Parameters
+    ----------
+    dataset : str
+        Dataset identifier (e.g., "ds000001").
+    storage_base : str
+        Remote storage base URI (e.g., "s3://openneuro.org/ds000001").
+    bids_relpath : str
+        BIDS-relative path to the raw file (e.g., "sub-01/eeg/sub-01_task-rest_eeg.vhdr").
+    subject, session, task, run : str, optional
+        BIDS entities.
+    dep_keys : list[str], optional
+        Dependency paths relative to storage_base.
+    datatype : str, default "eeg"
+        BIDS datatype.
+    suffix : str, default "eeg"
+        BIDS suffix.
+    storage_backend : {"s3", "https", "local"}, default "s3"
+        Storage backend type.
+    dataset_subdir : str, optional
+        Cache subdirectory name. Defaults to dataset.
+
+    Returns
+    -------
+    Record
+        A complete EEGDash record.
+
+    Examples
+    --------
+    >>> record = create_record(
+    ...     dataset="ds000001",
+    ...     storage_base="s3://openneuro.org/ds000001",
+    ...     bids_relpath="sub-01/eeg/sub-01_task-rest_eeg.vhdr",
+    ...     subject="01",
+    ...     task="rest",
+    ... )
+    """
     if not dataset:
-        raise ValueError("record must include a non-empty 'dataset'")
-
-    data_name = str(record.get("data_name") or "").strip()
-    if not data_name:
-        # Keep stable legacy behavior: dataset + basename if available
-        bidspath = record.get("bidspath")
-        fname = PurePosixPath(str(bidspath)).name if bidspath else ""
-        data_name = f"{dataset}_{fname}" if fname else dataset
-
-    # Prefer explicit v2 field if present; otherwise derive from legacy bidspath.
-    bids_relpath = str(record.get("bids_relpath") or "").strip()
+        raise ValueError("dataset is required")
+    if not storage_base:
+        raise ValueError("storage_base is required")
     if not bids_relpath:
-        bidspath = record.get("bidspath")
-        if not bidspath:
-            raise ValueError("record must include 'bidspath' or 'bids_relpath'")
-        bids_relpath = _strip_dataset_prefix(str(bidspath), dataset)
+        raise ValueError("bids_relpath is required")
 
-    resolved_variant = infer_variant(variant=variant, s3_bucket=s3_bucket)
-
-    # Apply legacy compatibility rule: challenge buckets store BDF, while legacy
-    # records may still reference EEGLAB .set filenames.
-    if "bdf" in resolved_variant.lower() and bids_relpath.endswith(".set"):
-        bids_relpath = bids_relpath[:-4] + ".bdf"
-
-    datatype = str(record.get("modality") or record.get("datatype") or "eeg").lower()
-    suffix = str(record.get("suffix") or datatype)
+    dep_keys = dep_keys or []
     extension = PurePosixPath(bids_relpath).suffix
+    subdir = dataset_subdir or dataset
 
-    entities = {
-        "subject": _canonicalize_entity_value(record.get("subject")),
-        "session": _canonicalize_entity_value(record.get("session")),
-        "task": _canonicalize_entity_value(record.get("task")),
-        "run": _canonicalize_entity_value(record.get("run")),
+    entities: Entities = {
+        "subject": subject,
+        "session": session,
+        "task": task,
+        "run": run,
     }
-    entities_mne = dict(entities)
-    entities_mne["run"] = _sanitize_index_value(record.get("run"))
 
-    record_id = str(record.get("record_id") or "").strip()
-    if not record_id:
-        record_id = str(
-            uuid.uuid5(
-                _RECORD_ID_NAMESPACE,
-                f"{dataset}|{resolved_variant}|{bids_relpath}",
-            )
-        )
+    entities_mne: Entities = dict(entities)  # type: ignore[assignment]
+    entities_mne["run"] = _sanitize_run_for_mne(run)
 
-    storage_base = None
-    if resolved_variant == "openneuro_raw":
-        storage_base = f"{DEFAULT_OPENNEURO_BUCKET.rstrip('/')}/{dataset}"
-    else:
-        storage_base = (s3_bucket or "").rstrip("/")
-        if not storage_base:
-            storage_base = f"{DEFAULT_OPENNEURO_BUCKET.rstrip('/')}/{dataset}"
-
-    dep_keys: list[str] = []
-    deps = record.get("bidsdependencies") or []
-    if isinstance(deps, (list, tuple)):
-        raw_path = PurePosixPath(bids_relpath)
-        raw_dir = raw_path.parent
-        raw_stem = raw_path.stem
-        base = (
-            raw_stem[: -len(f"_{suffix}")]
-            if raw_stem.endswith(f"_{suffix}")
-            else raw_stem
-        )
-
-        task = entities.get("task")
-        keep_names: set[str] = {
-            "dataset_description.json",
-            "participants.tsv",
-            "participants.json",
-            f"{base}_channels.tsv",
-            f"{base}_channels.tsv.gz",
-            f"{base}_events.tsv",
-            f"{base}_events.tsv.gz",
-            f"{raw_stem}.json",
-            f"{raw_stem}.json.gz",
-            f"{base}_electrodes.tsv",
-            f"{base}_electrodes.tsv.gz",
-            f"{base}_coordsystem.json",
-        }
-        if task:
-            keep_names.add(f"task-{task}_events.json")
-            keep_names.add(f"task-{task}_{suffix}.json")
-
-        same_stem_sidecar_exts = {".eeg", ".vmrk", ".fdt"}
-
-        for dep in deps:
-            if dep is None:
-                continue
-            dep_key = _strip_dataset_prefix(str(dep), dataset)
-            if "bdf" in resolved_variant.lower() and dep_key.endswith(".set"):
-                dep_key = dep_key[:-4] + ".bdf"
-            dep_path = PurePosixPath(dep_key)
-            if dep_key == bids_relpath:
-                dep_keys.append(dep_key)
-                continue
-            if dep_path.name in keep_names:
-                dep_keys.append(dep_key)
-                continue
-            if (
-                dep_path.parent == raw_dir
-                and dep_path.stem == raw_stem
-                and dep_path.suffix.lower() in same_stem_sidecar_exts
-            ):
-                dep_keys.append(dep_key)
-
-    dataset_subdir = dataset_subdir_for_variant(dataset, resolved_variant)
-
-    out: dict[str, Any] = dict(record)
-    out.update(
-        {
-            "schema_version": 2,
-            "record_id": record_id,
-            "variant": resolved_variant,
-            "dataset": dataset,
-            "data_name": data_name,
-            "bids_relpath": bids_relpath,
-            "datatype": datatype,
-            "suffix": suffix,
-            "extension": extension,
-            "entities": entities,
-            "entities_mne": entities_mne,
-            "storage": {
-                "backend": "s3",
-                "base": storage_base,
-                "raw_key": bids_relpath,
-                "dep_keys": dep_keys,
-            },
-            "cache": {
-                "dataset_subdir": dataset_subdir,
-                "raw_relpath": bids_relpath,
-                "dep_relpaths": dep_keys,
-            },
-        }
+    return Record(
+        dataset=dataset,
+        data_name=f"{dataset}_{PurePosixPath(bids_relpath).name}",
+        bids_relpath=bids_relpath,
+        datatype=datatype,
+        suffix=suffix,
+        extension=extension,
+        entities=entities,
+        entities_mne=entities_mne,
+        storage=Storage(
+            backend=storage_backend,
+            base=storage_base.rstrip("/"),
+            raw_key=bids_relpath,
+            dep_keys=dep_keys,
+        ),
+        cache=Cache(
+            dataset_subdir=subdir,
+            raw_relpath=bids_relpath,
+            dep_relpaths=dep_keys,
+        ),
     )
-    return out  # type: ignore[return-value]
+
+
+def validate_record(record: dict[str, Any]) -> list[str]:
+    """Validate a record has required fields. Returns list of errors."""
+    errors: list[str] = []
+
+    if not record.get("dataset"):
+        errors.append("missing: dataset")
+    if not record.get("bids_relpath"):
+        errors.append("missing: bids_relpath")
+
+    storage = record.get("storage")
+    if not storage:
+        errors.append("missing: storage")
+    elif not storage.get("base"):
+        errors.append("missing: storage.base")
+
+    cache = record.get("cache")
+    if not cache:
+        errors.append("missing: cache")
+    elif not cache.get("dataset_subdir"):
+        errors.append("missing: cache.dataset_subdir")
+
+    return errors
 
 
 __all__ = [
-    "CacheV2",
-    "RecordV2",
-    "StorageV2",
-    "adapt_record_v1_to_v2",
-    "dataset_subdir_for_variant",
-    "infer_variant",
+    "Cache",
+    "Entities",
+    "Record",
+    "Storage",
+    "create_record",
+    "validate_record",
 ]

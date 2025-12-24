@@ -2,94 +2,209 @@
 
 import argparse
 import json
+import sys
 from collections.abc import Iterator
 from pathlib import Path
 
 import requests
 
+# Add parent paths for local imports
+sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
+from eegdash.records import Dataset, create_dataset
+
 GRAPHQL_URL = "https://openneuro.org/crn/graphql"
 
+# Query to list datasets by modality (for initial discovery)
 DATASETS_QUERY = """
-    query ($modality: String!, $first: Int!, $after: String) {
-      datasets(modality: $modality, first: $first, after: $after) {
-        pageInfo { hasNextPage endCursor }
-        edges {
-          node {
-            id
-            created
-          }
-        }
+query ($modality: String!, $first: Int!, $after: String) {
+  datasets(modality: $modality, first: $first, after: $after) {
+    pageInfo { hasNextPage endCursor }
+    edges {
+      node {
+        id
+        created
       }
     }
-    """
-
-
-def build_batch_modified_query(dataset_ids: list[str]) -> str:
-    """Build a batch query to fetch modified dates for multiple datasets."""
-    query_parts = []
-    for i, dataset_id in enumerate(dataset_ids):
-        # Create an alias for each dataset to avoid conflicts
-        query_parts.append(
-            f"""
-    ds{i}: dataset(id: "{dataset_id}") {{
-      id
-      latestSnapshot {{
-        created
-      }}
-    }}"""
-        )
-
-    return f"""
-query {{
-{chr(10).join(query_parts)}
-}}
+  }
+}
 """
 
+# Rich query to get full metadata for a single dataset
+DATASET_DETAIL_QUERY = """
+query($id: ID!) {
+  dataset(id: $id) {
+    id
+    created
+    publishDate
+    name
+    metadata {
+      studyDomain
+      studyDesign
+      species
+      associatedPaperDOI
+      modalities
+      ages
+    }
+    latestSnapshot {
+      tag
+      created
+      size
+      summary {
+        modalities
+        primaryModality
+        secondaryModalities
+        sessions
+        subjects
+        tasks
+        totalFiles
+        dataProcessed
+      }
+      description {
+        Name
+        BIDSVersion
+        License
+        Authors
+        Funding
+        DatasetDOI
+        DatasetType
+      }
+    }
+  }
+}
+"""
 
-def fetch_batch_modified(
-    dataset_ids: list[str], timeout: float = 30.0
-) -> dict[str, str]:
-    """Fetch modified dates for a batch of datasets in a single query."""
+# Batch query template for fetching details of multiple datasets
+def build_batch_detail_query(dataset_ids: list[str]) -> str:
+    """Build a batch query to fetch full details for multiple datasets."""
+    query_parts = []
+    for i, dataset_id in enumerate(dataset_ids):
+        query_parts.append(f"""
+    ds{i}: dataset(id: "{dataset_id}") {{
+      id
+      created
+      publishDate
+      name
+      metadata {{
+        studyDomain
+        studyDesign
+        species
+        associatedPaperDOI
+        modalities
+        ages
+      }}
+      latestSnapshot {{
+        tag
+        created
+        size
+        summary {{
+          modalities
+          primaryModality
+          secondaryModalities
+          sessions
+          subjects
+          tasks
+          totalFiles
+          dataProcessed
+        }}
+        description {{
+          Name
+          BIDSVersion
+          License
+          Authors
+          Funding
+          DatasetDOI
+          DatasetType
+        }}
+      }}
+    }}""")
+    
+    return f"query {{\n{''.join(query_parts)}\n}}"
+
+
+def fetch_batch_details(
+    dataset_ids: list[str], 
+    timeout: float = 30.0
+) -> dict[str, dict]:
+    """Fetch full details for a batch of datasets in a single query."""
     result = {}
-
+    
     if not dataset_ids:
         return result
-
+    
     try:
-        query = build_batch_modified_query(dataset_ids)
-        payload = {"query": query}
-        response = requests.post(GRAPHQL_URL, json=payload, timeout=timeout)
+        query = build_batch_detail_query(dataset_ids)
+        response = requests.post(GRAPHQL_URL, json={"query": query}, timeout=timeout)
         data = response.json()
-
+        
         if "errors" in data or "data" not in data:
+            print(f"  Error in batch query: {data.get('errors', 'no data')}")
             return result
-
+        
         response_data = data["data"]
-
-        # Extract modified dates from batch response
+        
         for i, dataset_id in enumerate(dataset_ids):
             alias = f"ds{i}"
-            if alias in response_data:
-                dataset = response_data[alias]
-                if dataset:
-                    latest_snapshot = dataset.get("latestSnapshot")
-                    if latest_snapshot:
-                        created = latest_snapshot.get("created")
-                        if created:
-                            result[dataset_id] = created
+            if alias in response_data and response_data[alias]:
+                result[dataset_id] = response_data[alias]
     except Exception as e:
-        print(f"  Error fetching batch: {str(e)[:100]}")
-
+        print(f"  Error fetching batch details: {str(e)[:100]}")
+    
     return result
 
 
-def fetch_datasets(
+def extract_dataset_metadata(raw: dict, modality: str) -> Dataset:
+    """Extract metadata from GraphQL response and create a Dataset document."""
+    snapshot = raw.get("latestSnapshot") or {}
+    summary = snapshot.get("summary") or {}
+    description = snapshot.get("description") or {}
+    metadata = raw.get("metadata") or {}
+    
+    # Extract subjects count (exclude "emptyroom")
+    subjects_list = summary.get("subjects") or []
+    subjects_count = len([s for s in subjects_list if s and s != "emptyroom"])
+    
+    # Extract and clean tasks
+    tasks_list = summary.get("tasks") or []
+    tasks_clean = [t for t in tasks_list if t and not t.startswith("TODO:")]
+    
+    # Extract ages (filter None values)
+    ages = metadata.get("ages") or []
+    ages_int = [int(a) for a in ages if a is not None]
+    
+    return create_dataset(
+        dataset_id=raw.get("id"),
+        name=description.get("Name") or raw.get("name"),
+        source="openneuro",
+        recording_modality=modality,
+        modalities=summary.get("modalities") or metadata.get("modalities") or [],
+        bids_version=description.get("BIDSVersion"),
+        license=description.get("License"),
+        authors=description.get("Authors") or [],
+        funding=description.get("Funding") or [],
+        dataset_doi=description.get("DatasetDOI"),
+        associated_paper_doi=metadata.get("associatedPaperDOI"),
+        tasks=tasks_clean,
+        sessions=summary.get("sessions") or [],
+        total_files=summary.get("totalFiles"),
+        size_bytes=snapshot.get("size"),
+        data_processed=summary.get("dataProcessed"),
+        study_domain=metadata.get("studyDomain"),
+        study_design=metadata.get("studyDesign"),
+        subjects_count=subjects_count,
+        ages=ages_int,
+        species=metadata.get("species"),
+        dataset_modified_at=snapshot.get("created"),
+    )
+
+
+def fetch_dataset_ids(
     page_size: int = 100,
     timeout: float = 30.0,
-    max_consecutive_errors: int = 5,
-) -> Iterator[dict]:
-    """Fetch all OpenNeuro datasets with id and modality using requests."""
-    # Use smaller page size for iEEG due to known API issue at offset 50
+) -> Iterator[tuple[str, str]]:
+    """Fetch all OpenNeuro dataset IDs with their modality.
+    
+    Yields tuples of (dataset_id, modality).
+    """
     modality_configs = {
         "eeg": {"page_size": page_size, "max_errors": 3},
         "ieeg": {"page_size": 10, "max_errors": 5},  # Smaller for iEEG
@@ -116,80 +231,89 @@ def fetch_datasets(
 
                 response = requests.post(GRAPHQL_URL, json=payload, timeout=timeout)
                 response.raise_for_status()
-
                 result = response.json()
 
-                # Check for GraphQL errors
                 if "errors" in result:
                     raise Exception(f"GraphQL Error: {result['errors'][0]['message']}")
 
-                # Reset error counter on successful fetch
                 consecutive_errors = 0
 
             except Exception as e:
                 consecutive_errors += 1
                 error_msg = str(e)
 
-                # Check if it's a server-side error
                 if "Not Found" in error_msg or "INTERNAL_SERVER_ERROR" in error_msg:
-                    print(
-                        f"  [{modality}] Server error (attempt {consecutive_errors}/{config['max_errors']})"
-                    )
-
+                    print(f"  [{modality}] Server error (attempt {consecutive_errors}/{config['max_errors']})")
                     if consecutive_errors < config["max_errors"]:
-                        print("    Skipping this batch and continuing...")
                         continue
-
-                    # If we've tried multiple times, move to next modality
-                    print(
-                        f"  [{modality}] Reached max consecutive errors, moving to next modality"
-                    )
+                    print(f"  [{modality}] Reached max errors, moving to next modality")
                     break
                 else:
-                    # For other errors, log and stop
                     print(f"  [{modality}] Error: {error_msg[:100]}")
                     break
 
-            data = result.get("data")
-            if not data:
-                print(f"  [{modality}] No data in response")
-                break
-
-            page = data.get("datasets")
-            if not page:
-                print(f"  [{modality}] No page data")
-                break
-
+            data = result.get("data", {})
+            page = data.get("datasets", {})
             edges = page.get("edges", [])
+
             if not edges:
-                print(f"  [{modality}] No edges in response")
                 break
 
-            # Process each dataset in the page
             for edge in edges:
                 node = edge.get("node")
-                if not node:
-                    continue
+                if node and node.get("id"):
+                    yield (node["id"], modality)
 
-                dataset_id = node.get("id")
-                created = node.get("created")
-
-                # Get modified date (will be fetched separately if needed)
-                modified = created  # Default to created date
-
-                yield {
-                    "dataset_id": dataset_id,
-                    "modality": modality,
-                    "created": created,
-                    "modified": modified,
-                }
-
-            # Check if there are more pages
             page_info = page.get("pageInfo", {})
             if not page_info.get("hasNextPage"):
                 print(f"  [{modality}] Completed")
                 break
             cursor = page_info.get("endCursor")
+
+
+def fetch_datasets_with_details(
+    page_size: int = 100,
+    timeout: float = 30.0,
+    batch_size: int = 10,
+) -> list[dict]:
+    """Fetch all OpenNeuro datasets with full metadata."""
+    # First, collect all dataset IDs
+    print("Phase 1: Discovering datasets...")
+    dataset_modalities = {}
+    for dataset_id, modality in fetch_dataset_ids(page_size=page_size, timeout=timeout):
+        # Track modality (prefer more specific: ieeg > eeg > meg)
+        if dataset_id not in dataset_modalities:
+            dataset_modalities[dataset_id] = modality
+    
+    dataset_ids = list(dataset_modalities.keys())
+    print(f"\nFound {len(dataset_ids)} unique datasets")
+    
+    # Then fetch full details in batches
+    print(f"\nPhase 2: Fetching full metadata (batch size: {batch_size})...")
+    datasets = []
+    
+    for batch_start in range(0, len(dataset_ids), batch_size):
+        batch_end = min(batch_start + batch_size, len(dataset_ids))
+        batch_ids = dataset_ids[batch_start:batch_end]
+        
+        details = fetch_batch_details(batch_ids, timeout=timeout)
+        
+        for dataset_id in batch_ids:
+            modality = dataset_modalities[dataset_id]
+            if dataset_id in details:
+                metadata = extract_dataset_metadata(details[dataset_id], modality)
+                datasets.append(metadata)
+            else:
+                # Fallback: minimal record if details fetch failed
+                datasets.append({
+                    "dataset_id": dataset_id,
+                    "recording_modality": modality,
+                })
+        
+        if batch_end % 50 == 0 or batch_end == len(dataset_ids):
+            print(f"  Processed {batch_end}/{len(dataset_ids)} datasets")
+    
+    return datasets
 
 
 def main() -> None:
@@ -204,50 +328,50 @@ def main() -> None:
     )
     parser.add_argument("--page-size", type=int, default=100)
     parser.add_argument("--timeout", type=float, default=30.0)
+    parser.add_argument("--batch-size", type=int, default=10,
+        help="Number of datasets to fetch details for per batch query (default: 10)")
     parser.add_argument(
-        "--fetch-modified",
+        "--minimal",
         action="store_true",
-        help="Fetch actual modified dates for each dataset (slower but complete)",
+        help="Fetch only dataset IDs and modality (faster, less data)",
     )
     args = parser.parse_args()
 
-    # Fetch main dataset list
-    datasets = list(
-        fetch_datasets(
+    if args.minimal:
+        # Fast mode: just IDs and modality (returns dicts, not Dataset objects)
+        datasets = [
+            {"dataset_id": did, "recording_modality": mod}
+            for did, mod in fetch_dataset_ids(page_size=args.page_size, timeout=args.timeout)
+        ]
+    else:
+        # Full mode: complete metadata using Dataset schema
+        datasets = fetch_datasets_with_details(
             page_size=args.page_size,
             timeout=args.timeout,
+            batch_size=args.batch_size,
         )
-    )
-
-    # Optionally fetch actual modified dates
-    if args.fetch_modified:
-        print(f"\nFetching actual modified dates for {len(datasets)} datasets...")
-        batch_size = 20  # Batch 20 datasets per query
-
-        for batch_start in range(0, len(datasets), batch_size):
-            batch_end = min(batch_start + batch_size, len(datasets))
-            batch = datasets[batch_start:batch_end]
-            dataset_ids = [d["dataset_id"] for d in batch]
-
-            # Fetch modified dates for this batch
-            modified_dates = fetch_batch_modified(dataset_ids, timeout=args.timeout)
-
-            # Update datasets with fetched modified dates
-            for dataset in batch:
-                dataset_id = dataset["dataset_id"]
-                if dataset_id in modified_dates:
-                    dataset["modified"] = modified_dates[dataset_id]
-
-            if batch_end % 100 == 0 or batch_end == len(datasets):
-                print(
-                    f"  Fetched modified dates for {batch_end}/{len(datasets)} datasets"
-                )
 
     args.output.parent.mkdir(parents=True, exist_ok=True)
     with args.output.open("w", encoding="utf-8") as fh:
         json.dump(datasets, fh, indent=2, sort_keys=True)
 
-    print(f"Saved {len(datasets)} dataset entries to {args.output}")
+    print(f"\nSaved {len(datasets)} dataset entries to {args.output}")
+    
+    # Print summary stats
+    if datasets and not args.minimal:
+        modalities = {}
+        total_subjects = 0
+        for ds in datasets:
+            mod = ds.get("recording_modality", "unknown")
+            modalities[mod] = modalities.get(mod, 0) + 1
+            # Access nested demographics
+            demographics = ds.get("demographics", {})
+            total_subjects += demographics.get("subjects_count", 0)
+        
+        print("\nSummary:")
+        for mod, count in sorted(modalities.items()):
+            print(f"  {mod}: {count} datasets")
+        print(f"  Total subjects: {total_subjects}")
 
 
 if __name__ == "__main__":

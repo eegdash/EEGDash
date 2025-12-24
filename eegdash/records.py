@@ -1,10 +1,11 @@
 # Authors: The EEGDash contributors.
 # License: BSD-3-Clause
 
-"""EEGDash Record schema.
+"""EEGDash Record and Dataset schemas.
 
-Records are self-contained documents describing where EEG data lives
-and how to cache it locally. Each record explicitly specifies its storage base.
+Two-level hierarchy:
+- Dataset: per-dataset metadata (one per ds*, queried for discovery/filtering)
+- Record: per-file metadata (many per dataset, used for loading)
 """
 
 from __future__ import annotations
@@ -12,6 +13,199 @@ from __future__ import annotations
 from datetime import datetime, timezone
 from pathlib import PurePosixPath
 from typing import Any, Literal, TypedDict
+
+
+# =============================================================================
+# Shared Types
+# =============================================================================
+
+
+class Timestamps(TypedDict, total=False):
+    """Processing timestamps."""
+
+    digested_at: str  # ISO 8601 timestamp of when digestion occurred
+    dataset_modified_at: str | None  # ISO 8601 timestamp of last dataset update
+
+
+# =============================================================================
+# Dataset Schema (per-dataset, for discovery/filtering)
+# =============================================================================
+
+
+class Demographics(TypedDict, total=False):
+    """Subject demographics for a dataset."""
+
+    subjects_count: int
+    ages: list[int]
+    age_min: int | None
+    age_max: int | None
+    species: str | None  # e.g., "Human", "Mouse"
+
+
+class Dataset(TypedDict, total=False):
+    """Dataset-level metadata (one per ds*)."""
+
+    # Identity
+    dataset_id: str  # e.g., "ds001785"
+    name: str  # Dataset title
+    source: str  # e.g., "openneuro", "nemar", "gin"
+
+    # Recording info
+    recording_modality: str  # Primary modality: "eeg", "meg", "ieeg"
+    modalities: list[str]  # All modalities present: ["eeg", "mri", "beh"]
+
+    # BIDS metadata
+    bids_version: str | None
+    license: str | None
+    authors: list[str]
+    funding: list[str]
+    dataset_doi: str | None
+    associated_paper_doi: str | None
+
+    # Content summary
+    tasks: list[str]
+    sessions: list[str]
+    total_files: int | None
+    size_bytes: int | None
+    data_processed: bool | None
+
+    # Study classification
+    study_domain: str | None  # e.g., "Perceptual consciousness", "Motor control"
+    study_design: str | None
+
+    # Demographics
+    demographics: Demographics
+
+    # Timestamps
+    timestamps: Timestamps
+
+
+def create_dataset(
+    *,
+    dataset_id: str,
+    name: str | None = None,
+    source: str = "openneuro",
+    recording_modality: str = "eeg",
+    modalities: list[str] | None = None,
+    bids_version: str | None = None,
+    license: str | None = None,
+    authors: list[str] | None = None,
+    funding: list[str] | None = None,
+    dataset_doi: str | None = None,
+    associated_paper_doi: str | None = None,
+    tasks: list[str] | None = None,
+    sessions: list[str] | None = None,
+    total_files: int | None = None,
+    size_bytes: int | None = None,
+    data_processed: bool | None = None,
+    study_domain: str | None = None,
+    study_design: str | None = None,
+    subjects_count: int | None = None,
+    ages: list[int] | None = None,
+    species: str | None = None,
+    digested_at: str | None = None,
+    dataset_modified_at: str | None = None,
+) -> Dataset:
+    """Create a Dataset document.
+
+    Parameters
+    ----------
+    dataset_id : str
+        Dataset identifier (e.g., "ds001785").
+    name : str, optional
+        Dataset title/name.
+    source : str, default "openneuro"
+        Data source ("openneuro", "nemar", "gin").
+    recording_modality : str, default "eeg"
+        Primary recording modality.
+    modalities : list[str], optional
+        All modalities present in the dataset.
+    bids_version : str, optional
+        BIDS version of the dataset.
+    license : str, optional
+        Dataset license (e.g., "CC0", "CC-BY-4.0").
+    authors : list[str], optional
+        Dataset authors.
+    funding : list[str], optional
+        Funding sources.
+    dataset_doi : str, optional
+        Dataset DOI.
+    associated_paper_doi : str, optional
+        DOI of associated publication.
+    tasks : list[str], optional
+        Tasks in the dataset.
+    sessions : list[str], optional
+        Sessions in the dataset.
+    total_files : int, optional
+        Total number of files.
+    size_bytes : int, optional
+        Total size in bytes.
+    data_processed : bool, optional
+        Whether data is processed.
+    study_domain : str, optional
+        Study domain/topic.
+    study_design : str, optional
+        Study design description.
+    subjects_count : int, optional
+        Number of subjects.
+    ages : list[int], optional
+        Subject ages.
+    species : str, optional
+        Species (e.g., "Human").
+    digested_at : str, optional
+        ISO 8601 timestamp. Defaults to current time.
+    dataset_modified_at : str, optional
+        Last modification timestamp.
+
+    Returns
+    -------
+    Dataset
+        A Dataset document.
+    """
+    if not dataset_id:
+        raise ValueError("dataset_id is required")
+
+    ages = ages or []
+    ages_clean = [a for a in ages if a is not None]
+
+    dataset = Dataset(
+        dataset_id=dataset_id,
+        name=name or dataset_id,
+        source=source,
+        recording_modality=recording_modality,
+        modalities=modalities or [recording_modality],
+        bids_version=bids_version,
+        license=license,
+        authors=authors or [],
+        funding=funding or [],
+        dataset_doi=dataset_doi,
+        associated_paper_doi=associated_paper_doi,
+        tasks=tasks or [],
+        sessions=sessions or [],
+        total_files=total_files,
+        size_bytes=size_bytes,
+        data_processed=data_processed,
+        study_domain=study_domain,
+        study_design=study_design,
+        demographics=Demographics(
+            subjects_count=subjects_count or 0,
+            ages=ages_clean,
+            age_min=min(ages_clean) if ages_clean else None,
+            age_max=max(ages_clean) if ages_clean else None,
+            species=species,
+        ),
+        timestamps=Timestamps(
+            digested_at=digested_at or datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
+            dataset_modified_at=dataset_modified_at,
+        ),
+    )
+
+    return dataset
+
+
+# =============================================================================
+# Record Schema (per-file, for loading)
+# =============================================================================
 
 
 class Storage(TypedDict):
@@ -32,13 +226,6 @@ class Entities(TypedDict, total=False):
     run: str | None
 
 
-class Timestamps(TypedDict, total=False):
-    """Processing timestamps."""
-
-    digested_at: str  # ISO 8601 timestamp of when digestion occurred
-    dataset_modified_at: str | None  # ISO 8601 timestamp of last dataset update
-
-
 class Clinical(TypedDict, total=False):
     """Clinical classification."""
 
@@ -55,9 +242,9 @@ class Paradigm(TypedDict, total=False):
 
 
 class Record(TypedDict, total=False):
-    """EEGDash record schema."""
+    """EEGDash record schema (per-file)."""
 
-    dataset: str
+    dataset: str  # FK to Dataset.dataset_id
     data_name: str
     bids_relpath: str
     datatype: str
@@ -246,13 +433,30 @@ def validate_record(record: dict[str, Any]) -> list[str]:
     return errors
 
 
+def validate_dataset(dataset: dict[str, Any]) -> list[str]:
+    """Validate a dataset has required fields. Returns list of errors."""
+    errors: list[str] = []
+
+    if not dataset.get("dataset_id"):
+        errors.append("missing: dataset_id")
+
+    return errors
+
+
 __all__ = [
+    # Dataset (per-dataset)
+    "Dataset",
+    "Demographics",
+    "create_dataset",
+    "validate_dataset",
+    # Record (per-file)
     "Clinical",
     "Entities",
     "Paradigm",
     "Record",
     "Storage",
-    "Timestamps",
     "create_record",
     "validate_record",
+    # Shared
+    "Timestamps",
 ]

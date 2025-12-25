@@ -848,7 +848,7 @@ class FeaturesConcatDataset(BaseConcatDataset):
     def std(
         self, ddof: int = 1, numeric_only: bool = False, eps: float = 0, n_jobs: int = 1
     ) -> pd.Series:
-        """Compute the standard deviation for each feature column across all datasets.
+        r"""Compute the standard deviation for each feature column across all datasets.
 
         Parameters
         ----------
@@ -864,7 +864,7 @@ class FeaturesConcatDataset(BaseConcatDataset):
         Returns
         -------
         pd.Series
-            Standard deviation of each feature column.
+            Standard deviation of each feature column. Indexed by feature names.
 
         """
         return np.sqrt(
@@ -874,7 +874,7 @@ class FeaturesConcatDataset(BaseConcatDataset):
     def zscore(
         self, ddof: int = 1, numeric_only: bool = False, eps: float = 0, n_jobs: int = 1
     ) -> None:
-        """Apply z-score normalization to numeric columns in-place.
+        r"""Apply z-score normalization to numeric columns in-place.
 
         This method scales features to a mean of 0 and a standard deviation 
         of 1 based on statistics pooled across all contained datasets.
@@ -916,10 +916,10 @@ class FeaturesConcatDataset(BaseConcatDataset):
 
     @staticmethod
     def _enforce_inplace_operations(func_name: str, kwargs: dict):
-        """Ensure that the operation is performed in-place.
+        r"""Ensure that the operation is performed in-place.
 
-        This helper method validates that 'inplace=False' is not passed and 
-        explicitly sets the 'inplace' key to True in the provided arguments.
+        Validates that 'inplace=False' is not passed and explicitly
+        sets the 'inplace' key to True in the provided arguments.
 
         Parameters
         ----------
@@ -942,75 +942,87 @@ class FeaturesConcatDataset(BaseConcatDataset):
         kwargs["inplace"] = True
 
     def fillna(self, *args, **kwargs) -> None:
-        """Fill NA/NaN values in-place across all datasets.
+        r"""Fill NA/NaN values in-place across all datasets.
 
         Parameters
         ----------
         *args, **kwargs
             Arguments passed to :meth:`pandas.DataFrame.fillna`.
-            Note: ``inplace`` is enforced as True.
+        
+        Notes
+        -----
+        ``inplace`` is enforced as True.
 
         See Also
         --------
-        pandas.DataFrame.fillna : The underlying pandas method.
+        :meth:pandas.DataFrame.fillna : The underlying pandas method.
         """
         FeaturesConcatDataset._enforce_inplace_operations("fillna", kwargs)
         for ds in self.datasets:
             ds.features.fillna(*args, **kwargs)
 
     def replace(self, *args, **kwargs) -> None:
-        """Replace values in-place across all datasets.
+        r"""Replace values in-place across all datasets.
 
         Parameters
         ----------
         *args, **kwargs
             Arguments passed to :meth:`pandas.DataFrame.replace`.
-            Note: ``inplace`` is enforced as True.
+        
+        Notes
+        -----
+        ``inplace`` is enforced as True.
 
         See Also
         --------
-        pandas.DataFrame.replace : The underlying pandas method.
+        :meth:pandas.DataFrame.replace : The underlying pandas method.
         """
         FeaturesConcatDataset._enforce_inplace_operations("replace", kwargs)
         for ds in self.datasets:
             ds.features.replace(*args, **kwargs)
 
     def interpolate(self, *args, **kwargs) -> None:
-        """Interpolate values in-place across all datasets.
+        r"""Interpolate values in-place across all datasets.
 
         Parameters
         ----------
         *args, **kwargs
             Arguments passed to :meth:`pandas.DataFrame.interpolate`.
-            Note: ``inplace`` is enforced as True.
+        
+        Notes
+        -----
+        ``inplace`` is enforced as True.
 
         See Also
         --------
-        pandas.DataFrame.interpolate : The underlying pandas method.
+        :meth:pandas.DataFrame.interpolate : The underlying pandas method.
         """
         FeaturesConcatDataset._enforce_inplace_operations("interpolate", kwargs)
         for ds in self.datasets:
             ds.features.interpolate(*args, **kwargs)
 
     def dropna(self, *args, **kwargs) -> None:
-        """Remove missing values in-place across all datasets.
+        r"""Remove missing values in-place across all datasets.
 
         Parameters
         ----------
         *args, **kwargs
             Arguments passed to :meth:`pandas.DataFrame.dropna`.
-            Note: ``inplace`` is enforced as True.
+        
+        Notes
+        -----
+        ``inplace`` is enforced as True.
 
         See Also
         --------
-        pandas.DataFrame.dropna : The underlying pandas method.
+        :meth:pandas.DataFrame.dropna : The underlying pandas method.
         """
         FeaturesConcatDataset._enforce_inplace_operations("dropna", kwargs)
         for ds in self.datasets:
             ds.features.dropna(*args, **kwargs)
 
     def drop(self, *args, **kwargs) -> None:
-        """Drop specified labels from rows or columns in-place across all datasets.
+        r"""Drop specified labels from rows or columns in-place across all datasets.
 
         This method removes features (columns) or samples (rows) from every 
         underlying dataset in the collection.
@@ -1019,11 +1031,14 @@ class FeaturesConcatDataset(BaseConcatDataset):
         ----------
         *args, **kwargs
             Arguments passed to :meth:`pandas.DataFrame.drop`.
-            Note: ``inplace`` is enforced as True.
+        
+        Notes
+        -----
+        ``inplace`` is enforced as True.
 
         See Also
         --------
-        pandas.DataFrame.drop : The underlying pandas method.
+        :meth:pandas.DataFrame.drop : The underlying pandas method.
 
         Examples
         --------
@@ -1039,7 +1054,7 @@ class FeaturesConcatDataset(BaseConcatDataset):
             ds.features.drop(*args, **kwargs)
 
     def join(self, concat_dataset: FeaturesConcatDataset, **kwargs) -> None:
-        """Join columns with another FeaturesConcatDataset in-place.
+        r"""Join columns with another FeaturesConcatDataset in-place.
 
         This method merges the feature columns of another dataset into the 
         current one. Both collections must contain the same number of 

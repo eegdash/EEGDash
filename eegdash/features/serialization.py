@@ -4,7 +4,7 @@ Serialization Utilities for Feature Datasets.
 This module provides functions for reconstructing feature datasets 
 from disk. It serves as the inverse of the saving logic implemented in 
 :class:`FeaturesConcatDataset`, allowing for efficient, parallelized 
-reloading of processed EEG features and their associated metadata.
+reloading of processed features and their associated metadata.
 
 See Also
 --------
@@ -32,18 +32,16 @@ __all__ = [
 def load_features_concat_dataset(
     path: str | Path, ids_to_load: list[int] | None = None, n_jobs: int = 1
 ) -> FeaturesConcatDataset:
-    """
-    Load a stored :class:`FeaturesConcatDataset` from a directory.
+    r"""Load a stored :class:`FeaturesConcatDataset` from a directory.
 
     This function reconstructs a concatenated dataset by loading individual 
-    :class:`FeaturesDataset` instances from numbered subdirectories. It 
-    utilizes parallel processing to speed up the loading of large collections.
+    :class:`FeaturesDataset` instances from numbered subdirectories.
 
     Parameters
     ----------
     path : str or pathlib.Path
         The root directory where the dataset was previously saved. This 
-        directory should contain numbered subdirectories (e.g., "0", "1", ...).
+        directory should contain numbered subdirectories.
     ids_to_load : list of int, optional
         A list of specific recording IDs (subdirectory names) to load. 
         If **None**, all numbered subdirectories found in the path are 
@@ -79,12 +77,9 @@ def load_features_concat_dataset(
 
 
 def _load_parallel(path: Path, i: str) -> FeaturesDataset:
-    """
-    Load a single :class:`FeaturesDataset` from its subdirectory.
+    r"""Load a single :class:`FeaturesDataset` from its subdirectory.
 
-    Internal helper function for :func:`load_features_concat_dataset` 
-    that handles the multi-file reconstruction of a recording-level dataset 
-    instance.
+    Internal helper function for :func:`load_features_concat_dataset`.
 
     Parameters
     ----------

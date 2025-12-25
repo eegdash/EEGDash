@@ -17,6 +17,25 @@ DEFAULT_FREQ_BANDS = {
 
 
 def get_valid_freq_band(fs, n, f_min=None, f_max=None):
+    """Validate and return frequency boundaries based on Nyquist and resolution.
+
+    Parameters
+    ----------
+    fs : float
+        The sampling frequency in Hz.
+    n : int
+        The number of points in the signal/window.
+    f_min : float, optional
+        Requested minimum frequency. Defaults to 2 * resolution (f0).
+    f_max : float, optional
+        Requested maximum frequency. Defaults to Nyquist frequency.
+
+    Returns
+    -------
+    f_min, f_max : float
+        The validated frequency boundaries.
+
+    """
     f0 = 2 * fs / n
     f1 = fs / 2
     if f_min is None:
@@ -31,6 +50,27 @@ def get_valid_freq_band(fs, n, f_min=None, f_max=None):
 
 
 def slice_freq_band(f, *x, f_min=None, f_max=None):
+    """Slice frequency vector and associated data arrays to a specific range.
+
+    Parameters
+    ----------
+    f : ndarray
+        The frequency vector.
+    *x : ndarray
+        One or more data arrays to be sliced along the last axis.
+    f_min : float, optional
+        Lower frequency bound.
+    f_max : float, optional
+        Upper frequency bound.
+
+    Returns
+    -------
+    f_sliced : ndarray
+        The truncated frequency vector.
+    *x_sliced : ndarray
+        The truncated data arrays.
+
+    """
     if f_min is None and f_max is None:
         return f, *x
     else:
@@ -45,6 +85,26 @@ def slice_freq_band(f, *x, f_min=None, f_max=None):
 
 
 def reduce_freq_bands(f, x, bands, reduce_func=np.sum):
+    """Reduce spectral data into discrete frequency bands.
+
+    Parameters
+    ----------
+    f : ndarray
+        Frequency vector.
+    x : ndarray
+        Spectral data. The last dimension must match `f`.
+    bands : dict
+        Mapping of band names to (min, max) tuples.
+    reduce_func : callable, optional
+        Function to aggregate the values (e.g., np.sum, np.mean). 
+        Default is np.sum.
+
+    Returns
+    -------
+    dict
+        Dictionary where keys are band names and values are reduced arrays.
+    
+    """
     x_bands = dict()
     for k, lims in bands.items():
         assert isinstance(k, str)

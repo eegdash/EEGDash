@@ -18,6 +18,31 @@ __all__ = [
 @univariate_feature
 @nb.njit(cache=True, fastmath=True)
 def dimensionality_higuchi_fractal_dim(x, /, k_max=10, eps=1e-7):
+    """Calculate Higuchi's Fractal Dimension (HFD).
+
+    HFD estimates the complexity of a time series by measuring the mean length 
+    of the curve at different time scales $k$. It is highly robust for non-stationary 
+    EEG signals. 
+
+    Parameters
+    ----------
+    x : ndarray
+        The input signal.
+    k_max : int, optional
+        Maximum time interval (delay) used for calculating curve lengths.
+    eps : float, optional
+        A small constant to avoid log of zero during regression.
+
+    Returns
+    -------
+    ndarray
+        The fractal dimension values. Shape is ``x.shape[:-1]``.
+
+    Notes
+    ----------
+    Optimized with Numba..
+    
+    """
     N = x.shape[-1]
     hfd = np.empty(x.shape[:-1])
     log_k = np.vstack((-np.log(np.arange(1, k_max + 1)), np.ones(k_max))).T
@@ -36,6 +61,22 @@ def dimensionality_higuchi_fractal_dim(x, /, k_max=10, eps=1e-7):
 @FeaturePredecessor(*SIGNAL_PREDECESSORS)
 @univariate_feature
 def dimensionality_petrosian_fractal_dim(x, /):
+    """Calculate Petrosian Fractal Dimension (PFD).
+
+    PFD provides a fast estimate of fractal dimension by analyzing the 
+    number of sign changes in the signal's first derivative.
+
+    Parameters
+    ----------
+    x : ndarray
+        The input signal.
+
+    Returns
+    -------
+    ndarray
+        The fractal dimension values. Shape is ``x.shape[:-1]``.
+    
+    """
     nd = signal_zero_crossings(np.diff(x, axis=-1))
     log_n = np.log(x.shape[-1])
     return log_n / (np.log(nd) + log_n)
@@ -44,6 +85,22 @@ def dimensionality_petrosian_fractal_dim(x, /):
 @FeaturePredecessor(*SIGNAL_PREDECESSORS)
 @univariate_feature
 def dimensionality_katz_fractal_dim(x, /):
+    """Calculate Katz Fractal Dimension (KFD).
+
+    KFD is calculated as the ratio between the total path length and the 
+    maximum planar distance from the first point to any other point.
+
+    Parameters
+    ----------
+    x : ndarray
+        The input signal.
+
+    Returns
+    -------
+    ndarray
+        The fractal dimension values. Shape is ``x.shape[:-1]``.
+    
+    """
     dists = np.abs(np.diff(x, axis=-1))
     L = dists.sum(axis=-1)
     a = dists.mean(axis=-1)
@@ -54,6 +111,41 @@ def dimensionality_katz_fractal_dim(x, /):
 
 @nb.njit(cache=True, fastmath=True)
 def _hurst_exp(x, ns, a, gamma_ratios, log_n):
+    """Numba-accelerated core for Rescaled Range (R/S) Hurst exponent estimation.
+
+    This function performs the recursive windowing and log-log regression 
+    required to estimate long-range dependence, optimized with JIT 
+    compilation for multi-channel EEG data.
+
+    Parameters
+    ----------
+    x : ndarray
+        The input signal (or analytic signal magnitude).
+    ns : ndarray
+        The array of window sizes (time scales).
+    a : ndarray
+        Pre-computed range used for bias correction terms.
+    gamma_ratios : ndarray
+        Pre-computed ratios of Gamma functions used for the Anis-Lloyd 
+        corrected R/S expected value.
+    log_n : ndarray
+        The design matrix (log-scales and intercept) for the linear 
+        least-squares regression.
+
+    Returns
+    -------
+    ndarray
+        The estimated Hurst exponent for each channel/trial. 
+        Shape is ``x.shape[:-1]``.
+
+    Notes
+    -----
+    The function implements the corrected R/S analysis to reduce bias 
+    for small sample sizes, which is common in sliding-window EEG 
+    analysis.
+    
+    """
+    
     h = np.empty(x.shape[:-1])
     rs = np.empty((ns.shape[0], x.shape[-1] // ns[0]))
     log_rs = np.empty(ns.shape[0])
@@ -80,6 +172,22 @@ def _hurst_exp(x, ns, a, gamma_ratios, log_n):
 @FeaturePredecessor(*SIGNAL_PREDECESSORS)
 @univariate_feature
 def dimensionality_hurst_exp(x, /):
+    """Estimate the Hurst Exponent (H).
+
+    The Hurst exponent characterizes the long-term memory or persistence of 
+    a time series. $H = 0.5$ implies a random walk, $H > 0.5$ indicates 
+    persistence, and $H < 0.5$ indicates anti-persistence.
+
+    Parameters
+    ----------
+    x : ndarray
+        The input signal.
+
+    Returns
+    -------
+    ndarray
+        The estimated Hurst exponents. Shape is ``x.shape[:-1]``.
+    """
     ns = np.unique(np.power(2, np.arange(2, np.log2(x.shape[-1]) - 1)).astype(int))
     idx = ns > 340
     gamma_ratios = np.empty(ns.shape[0])
@@ -95,6 +203,27 @@ def dimensionality_hurst_exp(x, /):
 @univariate_feature
 @nb.njit(cache=True, fastmath=True)
 def dimensionality_detrended_fluctuation_analysis(x, /):
+    r"""Calculate the Scaling Exponent ($\alpha$) via DFA.
+
+    Detrended Fluctuation Analysis (DFA) is used to detect long-range 
+    temporal correlations (LRTC) in non-stationary signals.
+
+    Parameters
+    ----------
+    x : ndarray
+        The input signal.
+
+    Returns
+    -------
+    ndarray
+        The DFA scaling exponents ($\alpha$). Shape is ``x.shape[:-1]``.
+        
+    Notes
+    -----
+    $\alpha \approx 1$ typically indicates $1/f$ noise, often associated with 
+    optimal information processing near a critical state.
+
+    """
     ns = np.unique(np.floor(np.power(2, np.arange(2, np.log2(x.shape[-1]) - 1))))
     a = np.vstack((np.arange(ns[-1]), np.ones(int(ns[-1])))).T
     log_n = np.vstack((np.log(ns), np.ones(ns.shape[0]))).T

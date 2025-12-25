@@ -1,3 +1,19 @@
+"""
+Core Feature Extraction Orchestration.
+
+This module defines the fundamental building blocks for creating complex EEG 
+feature extraction pipelines. It implements a dependency-aware architecture 
+that supports functional feature definitions, trainable extractors, and 
+automated result formatting based on channel names.
+
+The module provides the base classes:
+    * :class:`FeatureExtractor` - The central pipeline for execution trees.
+    * :class:`TrainableFeature` - The interface for features requiring a 
+      fitting phase.
+    * :class:`MultivariateFeature` and its subclasses - Logic for mapping 
+      raw arrays to named features (Univariate, Bivariate, etc.).
+"""
+
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
@@ -19,20 +35,28 @@ __all__ = [
 
 
 def _get_underlying_func(func: Callable) -> Callable:
-    """Get the underlying function from a potential wrapper.
+    """Retrieve the original Python function from a potential wrapper.
 
-    This helper unwraps functions that might be wrapped by `functools.partial`
-    or `numba.dispatcher.Dispatcher`.
+    This helper is essential for inspecting metadata (like predecessors or 
+    feature kinds) attached to functions that have been transformed by 
+    optimization or utility wrappers.
 
     Parameters
     ----------
     func : callable
-        The function to unwrap.
+        The function to unwrap. Typically a raw function, a 
+        :class:`functools.partial` object, or a Numba :class:`Dispatcher`.
 
     Returns
     -------
     callable
         The underlying Python function.
+
+    Notes
+    -----
+    This utility specifically handles:
+    * **functools.partial**: Returns the ``.func`` attribute.
+    * **numba.Dispatcher**: Returns the ``.py_func`` attribute.
 
     """
     f = func
@@ -44,11 +68,19 @@ def _get_underlying_func(func: Callable) -> Callable:
 
 
 class TrainableFeature(ABC):
-    """Abstract base class for features that require training.
+    """Abstract base class for features requiring a training phase.
 
-    This ABC defines the interface for feature extractors that need to be
-    fitted on data before they can be used. It includes methods for fitting
-    the feature extractor and for resetting its state.
+    This class provides the interface for features that must be
+    fitted on a representative dataset before they can process new samples. 
+    It enforces a workflow of partial fitting across batches followed by a 
+    finalization step.
+
+    Attributes
+    ----------
+    _is_trained : bool
+        Internal flag indicating whether the feature has completed 
+        its training phase.
+    
     """
 
     def __init__(self):
@@ -57,33 +89,48 @@ class TrainableFeature(ABC):
 
     @abstractmethod
     def clear(self):
-        """Reset the internal state of the feature extractor."""
+        """Reset the internal state of the feature.
+
+        This method must be implemented by subclasses to clear any learned 
+        parameters, statistics, or buffers.
+        """
         pass
 
     @abstractmethod
     def partial_fit(self, *x, y=None):
-        """Update the feature extractor's state with a batch of data.
+        """Update the extractor's state using a single batch of data.
+
+        This method allows for incremental learning, making it possible to 
+        train on datasets that are too large to fit into memory at once.
 
         Parameters
         ----------
-        *x : tuple
-            The input data for fitting.
-        y : any, optional
-            The target data, if required for supervised training.
-
+        *x : tuple of ndarray
+            The input data batch. Typically contains the raw EEG windows 
+            or preprocessed signal representations.
+        y : ndarray, optional
+            Target labels associated with the batch, required for supervised 
+            feature extraction methods (like CSP).
         """
         pass
 
     def fit(self):
         """Finalize the training of the feature extractor.
 
-        This method should be called after all data has been seen via
-        `partial_fit`. It marks the feature as fitted.
+        This method should be called after the entire training set has been 
+        processed via :meth:`partial_fit`. It transitions the object to a 
+        "fitted" state, enabling the :meth:`__call__` method.
         """
         self._is_fitted = True
 
     def __call__(self, *args, **kwargs):
-        """Check if the feature is fitted before execution."""
+        """Validate the fitted state before execution.
+
+        Raises
+        ------
+        RuntimeError
+            If the feature is called before :meth:`fit` has been executed.
+        """
         if not self._is_fitted:
             raise RuntimeError(
                 f"{self.__class__} cannot be called, it has to be fitted first."
@@ -91,20 +138,51 @@ class TrainableFeature(ABC):
 
 
 class FeatureExtractor(TrainableFeature):
-    """A composite feature extractor that applies multiple feature functions.
+    """Pipeline for multi-stage EEG feature extraction.
 
-    This class orchestrates the application of a dictionary of feature
-    extraction functions to input data. It can handle nested extractors,
-    pre-processing, and trainable features.
+    This class manages a collection of feature extraction functions or nested 
+    extractors. It handles the application of shared preprocessing, validates 
+    the dependency graph between components, and aggregates results into a 
+    named dictionary compatible with :class:`FeaturesDataset`.
 
     Parameters
     ----------
     feature_extractors : dict[str, callable]
-        A dictionary where keys are feature names and values are the feature
-        extraction functions or other `FeatureExtractor` instances.
-    preprocessor
-        A shared preprocessing function for all child feature extraction functions.
+        A dictionary where keys are the base names for the features and 
+        values are the extraction functions or other :class:`FeatureExtractor` 
+        instances.
+    preprocessor : callable, optional
+        A shared preprocessing function applied to the input data
+        before it is passed to child extractors.
 
+    Attributes
+    ----------
+    preprocessor : callable or None
+        The shared preprocessing stage for this extractor.
+    feature_extractors_dict : dict
+        The validated dictionary of child extractors.
+    _is_trainable : bool
+        'True' if any of the contained features are trainable
+    features_kwargs : dict
+        A collection of all keyword arguments used by the preprocessor and 
+        child functions, preserved for metadata tracking.
+
+    Notes
+    -----
+    The extractor automatically detects if any child components are 
+    trainable and will require a :meth:`fit` phase before 
+    extraction can occur.
+
+    Examples
+    --------
+    >>> # Create a simple extractor
+    >>> fe = FeatureExtractor(
+    ...     feature_extractors={'mean': signal_mean, 'std': signal_std}
+    ... )
+
+    >>> # Extract from a batch (2 windows, 3 channels, 100 samples)
+    >>> X = np.random.randn(2, 3, 100)
+    >>> results = fe(X, _batch_size=2, _ch_names=['O1', 'Oz', 'O2'])
     """
 
     def __init__(
@@ -131,7 +209,24 @@ class FeatureExtractor(TrainableFeature):
                 self.features_kwargs[fn] = fe.keywords
 
     def _validate_execution_tree(self, feature_extractors: dict) -> dict:
-        """Validate the feature dependency graph."""
+        """Validate the consistency of the feature dependency graph.
+
+        Parameters
+        ----------
+        feature_extractors : dict
+            The dictionary of extractors to validate.
+
+        Returns
+        -------
+        dict
+            The validated dictionary.
+
+        Raises
+        ------
+        TypeError
+            If a child feature's required predecessors do not match the 
+            current preprocessor.
+        """
         preprocessor = (
             None
             if self.preprocessor is None
@@ -151,7 +246,13 @@ class FeatureExtractor(TrainableFeature):
         return feature_extractors
 
     def _check_is_trainable(self, feature_extractors: dict) -> bool:
-        """Check if any of the contained features are trainable."""
+        """Scan the execution tree for components requiring training.
+
+        Returns
+        -------
+        bool
+            True if any child function or nested extractor is trainable.
+        """
         for fname, f in feature_extractors.items():
             if isinstance(f, FeatureExtractor):
                 if f._is_trainable:
@@ -161,18 +262,18 @@ class FeatureExtractor(TrainableFeature):
         return False
 
     def preprocess(self, *x):
-        """Apply pre-processing to the input data.
+        """Apply the shared preprocessor to the input data.
 
         Parameters
         ----------
-        *x : tuple
-            Input data.
+        *x : tuple of ndarray
+            The input data batch.
 
         Returns
         -------
         tuple
-            The pre-processed data.
-
+            The preprocessed data passed as a tuple to support multi-output 
+            preprocessors.
         """
         if self.preprocessor is None:
             return (*x,)
@@ -180,22 +281,31 @@ class FeatureExtractor(TrainableFeature):
             return self.preprocessor(*x)
 
     def __call__(self, *x, _batch_size=None, _ch_names=None) -> dict:
-        """Apply all feature extractors to the input data.
+        """Execute the full extraction pipeline on a batch of data.
+
+        This method applies preprocessing, executes all child extractors, 
+        maps results to channel names, and flattens the output.
 
         Parameters
         ----------
-        *x : tuple
-            Input data.
-        _batch_size : int, optional
-            The number of samples in the batch.
-        _ch_names : list of str, optional
-            The names of the channels in the input data.
+        *x : tuple of ndarray
+            The input EEG data batch.
+        _batch_size : int
+            The number of windows in the current batch.
+        _ch_names : list of str
+            The names of the EEG channels.
 
         Returns
         -------
         dict
-            A dictionary where keys are feature names and values are the
-            computed feature values.
+            A dictionary where keys are formatted as ``{extractor_name}_{channel}`` 
+            and values are the extracted feature arrays.
+
+        Raises
+        ------
+        RuntimeError
+            If the extractor contains trainable components and has not 
+            been fitted.
 
         """
         assert _batch_size is not None
@@ -227,7 +337,19 @@ class FeatureExtractor(TrainableFeature):
     def _add_feature_to_dict(
         self, results_dict: dict, name: str, value: any, batch_size: int
     ):
-        """Add a computed feature to the results dictionary."""
+        """Safely add a feature array to the results collection.
+
+        Parameters
+        ----------
+        results_dict : dict
+            The dictionary to add features to.
+        name : str
+            The name of the feature.
+        value : any
+            The feature value to add.
+        batch_size : int
+            The expected batch size for validation.
+        """
         if isinstance(value, np.ndarray):
             assert value.shape[0] == batch_size
         results_dict[name] = value
@@ -242,7 +364,16 @@ class FeatureExtractor(TrainableFeature):
                 f.clear()
 
     def partial_fit(self, *x, y=None):
-        """Partially fit all trainable sub-features."""
+        """Propagate partial fitting to all trainable children.
+
+        Parameters
+        ----------
+        *x : tuple of ndarray
+            The input data batch.
+        y : ndarray, optional
+            Target labels for supervised training.
+
+        """
         if not self._is_trainable:
             return
         z = self.preprocess(*x)
@@ -265,31 +396,37 @@ class FeatureExtractor(TrainableFeature):
 
 
 class MultivariateFeature:
-    """A mixin for features that operate on multiple channels.
+    """"Mixin** for features that operate on one or more EEG channels.
 
-    This class provides a `__call__` method that converts a feature array into
-    a dictionary with named features, where names are derived from channel
-    names.
+    This class defines the logic for mapping raw numerical results into 
+    structured, named dictionaries. It determines the "kind" of a feature 
+    (e.g., univariate, bivariate) and handles the association of feature 
+    values with specific channels or channel groupings.
+
+    Notes
+    -----
+    Subclasses should override :meth:`feature_channel_names` to define 
+    specific naming conventions for the extracted features.
     """
 
     def __call__(
         self, x: np.ndarray, _ch_names: list[str] | None = None
     ) -> dict | np.ndarray:
-        """Convert a feature array to a named dictionary.
+        """Convert a raw feature array into a named dictionary.
 
         Parameters
         ----------
         x : numpy.ndarray
-            The computed feature array.
+            The computed feature array from the extraction function.
         _ch_names : list of str, optional
-            The list of channel names.
+            The list of channel names from the original EEG recording.
 
         Returns
         -------
         dict or numpy.ndarray
-            A dictionary of named features, or the original array if feature
-            channel names cannot be generated.
-
+            A dictionary where keys are formatted feature names and values 
+            are feature arrays. Returns the original array if channel names 
+            cannot be resolved.
         """
         assert _ch_names is not None
         f_channels = self.feature_channel_names(_ch_names)
@@ -304,7 +441,24 @@ class MultivariateFeature:
     def _array_to_dict(
         x: np.ndarray, f_channels: list[str], name: str = ""
     ) -> dict | np.ndarray:
-        """Convert a numpy array to a dictionary with named keys."""
+        """Map a numpy array to a dictionary with named keys.
+
+        Parameters
+        ----------
+        x : numpy.ndarray
+            The feature values to be mapped.
+        f_channels : list of str
+            The list of generated feature channel names.
+        name : str, default=""
+            A prefix for the feature name (e.g., the name of the function).
+
+        Returns
+        -------
+        dict or numpy.ndarray
+            A dictionary of named features or the original array if 
+            `f_channels` is empty.
+        
+        """
         assert isinstance(x, np.ndarray)
         if not f_channels:
             return {name: x} if name else x
@@ -315,24 +469,28 @@ class MultivariateFeature:
         return dict(zip(names, x))
 
     def feature_channel_names(self, ch_names: list[str]) -> list[str]:
-        """Generate feature names based on channel names.
+        """Generate feature-specific names based on input channels.
 
         Parameters
         ----------
         ch_names : list of str
-            The names of the input channels.
+            The names of the input EEG channels.
 
         Returns
         -------
         list of str
-            The names for the output features.
-
+            A list of strings defining the naming for each output feature. 
+            Returns an empty list in the base implementation.
         """
         return []
 
 
 class UnivariateFeature(MultivariateFeature):
-    """A feature kind for operations applied to each channel independently."""
+    """Feature kind for operations applied to each channel independently.
+
+    Used when a single feature value is produced per channel.
+
+    """
 
     def feature_channel_names(self, ch_names: list[str]) -> list[str]:
         """Return the channel names themselves as feature names."""
@@ -340,14 +498,15 @@ class UnivariateFeature(MultivariateFeature):
 
 
 class BivariateFeature(MultivariateFeature):
-    """A feature kind for operations on pairs of channels.
+    """Feature kind for operations on pairs of channels.
+
+    Designed for undirected relationship measures between two signals.
 
     Parameters
     ----------
     channel_pair_format : str, default="{}<>{}"
-        A format string used to create feature names from pairs of
+        A format string used to create feature names from pairs of 
         channel names.
-
     """
 
     def __init__(self, *args, channel_pair_format: str = "{}<>{}"):
@@ -356,11 +515,36 @@ class BivariateFeature(MultivariateFeature):
 
     @staticmethod
     def get_pair_iterators(n: int) -> tuple[np.ndarray, np.ndarray]:
-        """Get indices for unique, unordered pairs of channels."""
+        """Get indices for unique, unordered pairs of channels.
+
+        Computes the upper triangle indices of an (n, n) matrix, 
+        excluding the diagonal.
+
+        Parameters
+        ----------
+        n : int
+            The number of channels.
+
+        Returns
+        -------
+        tuple of ndarray
+            The row and column indices for the unique pairs.
+        """
         return np.triu_indices(n, 1)
 
     def feature_channel_names(self, ch_names: list[str]) -> list[str]:
-        """Generate feature names for each pair of channels."""
+        """Generate feature names for each unique pair of channels.
+
+        Parameters
+        ----------
+        ch_names : list of str
+            The input EEG channel names.
+
+        Returns
+        -------
+        list of str
+            Formatted strings representing channel pairs (e.g., 'F3<>F4').
+        """
         return [
             self.channel_pair_format.format(ch_names[i], ch_names[j])
             for i, j in zip(*self.get_pair_iterators(len(ch_names)))
@@ -368,11 +552,30 @@ class BivariateFeature(MultivariateFeature):
 
 
 class DirectedBivariateFeature(BivariateFeature):
-    """A feature kind for directed operations on pairs of channels."""
+    """Feature kind for directed operations on pairs of channels.
+
+    Used for features where the interaction from channel A to B is 
+    distinct from the interaction from B to A.
+
+    """
 
     @staticmethod
     def get_pair_iterators(n: int) -> list[np.ndarray]:
-        """Get indices for all ordered pairs of channels (excluding self-pairs)."""
+        """Get indices for all ordered pairs of channels.
+
+        Includes both directions (A to B and B to A) while excluding 
+        self-pairs (A to A).
+
+        Parameters
+        ----------
+        n : int
+            The number of channels.
+
+        Returns
+        -------
+        list of ndarray
+            A list containing two arrays: the row indices and column indices.
+        """
         return [
             np.append(a, b)
             for a, b in zip(np.tril_indices(n, -1), np.triu_indices(n, 1))

@@ -18,6 +18,29 @@ __all__ = [
 
 @FeaturePredecessor(*SIGNAL_PREDECESSORS)
 def connectivity_coherency_preprocessor(x, /, **kwargs):
+    """Compute complex coherency for all unique channel pairs.
+
+    This function calculates the Cross-Spectral Density (CSD) and normalizes 
+    it by the Power Spectral Densities (PSD) to produce the complex coherency 
+    matrix. It handles frequency slicing and validation internally.
+
+    Parameters
+    ----------
+    x : ndarray
+        The input signal of shape (n_channels, n_times).
+    **kwargs : dict
+        Must include 'fs' (sampling rate) and 'nperseg'. May include 
+        'f_min' and 'f_max' for frequency band slicing.
+
+    Returns
+    -------
+    f : ndarray
+        The frequency vector within the validated band.
+    c : ndarray
+        The complex coherency array for all unique bivariate pairs.
+        Shape is (n_pairs, n_frequencies).
+    
+    """
     f_min = kwargs.pop("f_min") if "f_min" in kwargs else None
     f_max = kwargs.pop("f_max") if "f_max" in kwargs else None
     assert "fs" in kwargs and "nperseg" in kwargs
@@ -37,7 +60,31 @@ def connectivity_coherency_preprocessor(x, /, **kwargs):
 @FeaturePredecessor(connectivity_coherency_preprocessor)
 @bivariate_feature
 def connectivity_magnitude_square_coherence(f, c, /, bands=utils.DEFAULT_FREQ_BANDS):
-    # https://neuroimage.usc.edu/brainstorm/Tutorials/Connectivity
+    """Calculate Magnitude Squared Coherence (MSC).
+
+    MSC measures the linear correlation between two signals in the frequency 
+    domain. It is defined as the squared magnitude of the complex coherency: 
+    $|c|^2$.
+
+    Parameters
+    ----------
+    f : ndarray
+        Frequency vector.
+    c : ndarray
+        Complex coherency array.
+    bands : dict, optional
+        Frequency bands to aggregate (defaults to DEFAULT_FREQ_BANDS).
+
+    Returns
+    -------
+    dict
+        Mean MSC for each frequency band.
+    
+    See also
+    --------
+    `https://neuroimage.usc.edu/brainstorm/Tutorials/Connectivity`
+    
+    """
     coher = c.real**2 + c.imag**2
     return utils.reduce_freq_bands(f, coher, bands, np.mean)
 
@@ -45,7 +92,29 @@ def connectivity_magnitude_square_coherence(f, c, /, bands=utils.DEFAULT_FREQ_BA
 @FeaturePredecessor(connectivity_coherency_preprocessor)
 @bivariate_feature
 def connectivity_imaginary_coherence(f, c, /, bands=utils.DEFAULT_FREQ_BANDS):
-    # https://neuroimage.usc.edu/brainstorm/Tutorials/Connectivity
+    """Calculate Imaginary Coherence (iCOH).
+
+    iCOH captures only the non-zero phase-lagged synchronization.
+
+    Parameters
+    ----------
+    f : ndarray
+        Frequency vector.
+    c : ndarray
+        Complex coherency array.
+    bands : dict, optional
+        Frequency bands to aggregate.
+
+    Returns
+    -------
+    dict
+        Mean Imaginary Coherence for each frequency band.
+    
+    See also
+    --------
+    `https://neuroimage.usc.edu/brainstorm/Tutorials/Connectivity`
+    
+    """
     coher = c.imag
     return utils.reduce_freq_bands(f, coher, bands, np.mean)
 
@@ -53,6 +122,30 @@ def connectivity_imaginary_coherence(f, c, /, bands=utils.DEFAULT_FREQ_BANDS):
 @FeaturePredecessor(connectivity_coherency_preprocessor)
 @bivariate_feature
 def connectivity_lagged_coherence(f, c, /, bands=utils.DEFAULT_FREQ_BANDS):
-    # https://neuroimage.usc.edu/brainstorm/Tutorials/Connectivity
+    """Calculate Lagged Coherence.
+
+    Lagged coherence further refines the synchronization measure by 
+    normalizing the imaginary part of the coherency, effectively removing 
+    all instantaneous (zero-lag) contributions.
+
+    Parameters
+    ----------
+    f : ndarray
+        Frequency vector.
+    c : ndarray
+        Complex coherency array.
+    bands : dict, optional
+        Frequency bands to aggregate.
+
+    Returns
+    -------
+    dict
+        Mean Lagged Coherence for each frequency band.
+    
+    See also
+    --------
+    `https://neuroimage.usc.edu/brainstorm/Tutorials/Connectivity`
+    
+    """
     coher = c.imag / np.sqrt(1 - c.real)
     return utils.reduce_freq_bands(f, coher, bands, np.mean)

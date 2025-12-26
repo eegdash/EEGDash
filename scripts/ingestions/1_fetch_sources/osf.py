@@ -551,7 +551,7 @@ def main() -> None:
     with_bids = sum(1 for d in datasets if d.get("bids_version"))
     print(f"Datasets with BIDS: {with_bids}/{len(datasets)}")
 
-    print("=" * 60)")
+    print("=" * 60)
 
 
 

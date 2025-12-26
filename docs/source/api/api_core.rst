@@ -114,18 +114,64 @@ The REST API provides the following endpoints:
    * - POST
      - ``/admin/{database}/records/bulk``
      - Insert multiple records (max 1000)
+   * - POST
+     - ``/admin/{database}/datasets``
+     - Insert dataset metadata
+   * - POST
+     - ``/admin/{database}/datasets/bulk``
+     - Insert multiple datasets (max 1000)
+
+Database Schema
+---------------
+
+EEGDash uses a two-level MongoDB schema optimized for different query patterns:
+
+**Datasets Collection** (for discovery/filtering)
+
+One document per dataset containing metadata for browsing:
+
+.. code-block:: python
+
+   from eegdash.records import Dataset, create_dataset
+
+   dataset = create_dataset(
+       dataset_id="ds002718",
+       name="A multi-subject EEG dataset",
+       source="openneuro",
+       recording_modality="eeg",
+       tasks=["RestingState"],
+       subjects_count=32,
+   )
+
+**Records Collection** (for fast file loading)
+
+One document per EEG file with storage location:
+
+.. code-block:: python
+
+   from eegdash.records import Record, create_record
+
+   record = create_record(
+       dataset="ds002718",
+       storage_base="s3://openneuro.org/ds002718",
+       bids_relpath="sub-012/eeg/sub-012_task-RestingState_eeg.set",
+       subject="012",
+       task="RestingState",
+   )
 
 Core Modules
 ------------
 
 The API is organized into focused modules that handle specific aspects of EEG data processing:
 
-* :mod:`~eegdash.api` - Main interface for data access and manipulation
-* :mod:`~eegdash.const` - Constants and enumerations used throughout the package
-* :doc:`dataset/api_dataset` - Dataset object management and operations
-* :mod:`~eegdash.bids_metadata` - BIDS-compliant metadata handling  
+* :mod:`~eegdash.api` - Main ``EEGDash`` client for data access and querying
+* :mod:`~eegdash.records` - Schema definitions (``Dataset``, ``Record`` TypedDicts)
 * :mod:`~eegdash.http_api_client` - HTTP REST API client for database operations
+* :mod:`~eegdash.downloader` - S3 and HTTPS download utilities
+* :mod:`~eegdash.bids_metadata` - BIDS-compliant metadata handling
+* :mod:`~eegdash.const` - Constants and configuration defaults
 * :mod:`~eegdash.paths` - File system and storage path management
+* :doc:`dataset/api_dataset` - Dataset classes and registry
 
 Configuration
 -------------
@@ -150,9 +196,11 @@ API Reference
    :recursive:
 
    api
+   records
+   http_api_client
+   downloader
    bids_metadata
    const
-   http_api_client
    logging
-   hbn
    paths
+   hbn

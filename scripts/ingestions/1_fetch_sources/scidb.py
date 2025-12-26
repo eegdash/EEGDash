@@ -10,6 +10,7 @@ Output: consolidated/scidb_datasets.json (Dataset schema format)
 import argparse
 import json
 import sys
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
@@ -17,6 +18,10 @@ import requests
 
 sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent))
 from eegdash.records import create_dataset
+
+# Add ingestions dir to path for _serialize module
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from _serialize import save_datasets_deterministically
 
 # Modality keywords for searching SciDB
 MODALITY_KEYWORDS = {
@@ -241,6 +246,12 @@ def main() -> None:
         default=100,
         help="Maximum results per modality (default: 100).",
     )
+    parser.add_argument(
+        "--digested-at",
+        type=str,
+        default=None,
+        help="ISO 8601 timestamp for digested_at field (for deterministic output, default: omitted for determinism)",
+    )
 
     args = parser.parse_args()
 
@@ -264,10 +275,14 @@ def main() -> None:
         if dataset:
             datasets.append(dataset)
 
-    # Save to JSON
-    args.output.parent.mkdir(parents=True, exist_ok=True)
-    with args.output.open("w") as fh:
-        json.dump(datasets, fh, indent=2)
+    # Add digested_at timestamp if provided
+    if args.digested_at:
+        for ds in datasets:
+            if "timestamps" in ds:
+                ds["timestamps"]["digested_at"] = args.digested_at
+
+    # Save deterministically
+    save_datasets_deterministically(datasets, args.output)
 
     # Print summary
     print(f"\n{'=' * 60}")

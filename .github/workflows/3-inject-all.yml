@@ -1,0 +1,48 @@
+# Inject all digested datasets to MongoDB
+name: "3. Inject: All to MongoDB"
+
+on:
+  schedule:
+    - cron: '0 6 * * 2'  # Weekly on Tuesday at 06:00 UTC (after Monday digests)
+  workflow_dispatch:
+    inputs:
+      database:
+        description: 'Target database'
+        required: true
+        default: 'eegdashstaging'
+        type: choice
+        options:
+          - eegdashstaging
+          - eegdash
+      dry_run:
+        description: 'Dry run (validate without uploading)'
+        required: false
+        default: true
+        type: boolean
+
+jobs:
+  inject:
+    uses: ./.github/workflows/3-inject.yml
+    with:
+      source_name: "all"
+      database: ${{ github.event.inputs.database || 'eegdashstaging' }}
+      dry_run: ${{ github.event.inputs.dry_run == 'true' || github.event_name == 'schedule' }}
+    secrets:
+      DATASET_LISTINGS_TOKEN: ${{ secrets.DATASET_LISTINGS_TOKEN }}
+      EEGDASH_ADMIN_TOKEN: ${{ secrets.EEGDASH_ADMIN_TOKEN }}
+
+  summary:
+    name: Summary
+    needs: [inject]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Generate summary
+        run: |
+          echo "## 💉 MongoDB Injection Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Metric | Value |" >> $GITHUB_STEP_SUMMARY
+          echo "|--------|-------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Status | ${{ needs.inject.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Datasets | ${{ needs.inject.outputs.datasets_injected || 'N/A' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Records | ${{ needs.inject.outputs.records_injected || 'N/A' }} |" >> $GITHUB_STEP_SUMMARY

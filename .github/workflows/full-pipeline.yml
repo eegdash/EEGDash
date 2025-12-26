@@ -1,0 +1,216 @@
+# Full ingestion pipeline: Fetch → Clone/Digest → Inject
+name: "Full Pipeline: Ingestion"
+
+on:
+  workflow_dispatch:
+    inputs:
+      sources:
+        description: 'Sources to process'
+        required: true
+        default: 'all'
+        type: choice
+        options:
+          - all
+          - openneuro
+          - nemar
+          - eegmanylabs
+          - zenodo
+          - figshare
+          - osf
+          - scidb
+          - datarn
+      database:
+        description: 'Target database for injection'
+        required: true
+        default: 'eegdashstaging'
+        type: choice
+        options:
+          - eegdashstaging
+          - eegdash
+      dry_run:
+        description: 'Dry run injection (validate only)'
+        required: false
+        default: true
+        type: boolean
+      max_datasets:
+        description: 'Max datasets per source (0 = all)'
+        required: false
+        default: '0'
+        type: string
+
+jobs:
+  # ============================================================================
+  # Step 1: Fetch
+  # ============================================================================
+  fetch-openneuro:
+    if: ${{ github.event.inputs.sources == 'all' || github.event.inputs.sources == 'openneuro' }}
+    uses: ./.github/workflows/1-fetch-openneuro.yml
+    secrets: inherit
+
+  fetch-nemar:
+    if: ${{ github.event.inputs.sources == 'all' || github.event.inputs.sources == 'nemar' }}
+    uses: ./.github/workflows/1-fetch-nemar.yml
+    secrets: inherit
+
+  fetch-eegmanylabs:
+    if: ${{ github.event.inputs.sources == 'all' || github.event.inputs.sources == 'eegmanylabs' }}
+    uses: ./.github/workflows/1-fetch-eegmanylabs.yml
+    secrets: inherit
+
+  fetch-zenodo:
+    if: ${{ github.event.inputs.sources == 'all' || github.event.inputs.sources == 'zenodo' }}
+    uses: ./.github/workflows/1-fetch-zenodo.yml
+    secrets: inherit
+
+  fetch-figshare:
+    if: ${{ github.event.inputs.sources == 'all' || github.event.inputs.sources == 'figshare' }}
+    uses: ./.github/workflows/1-fetch-figshare.yml
+    secrets: inherit
+
+  fetch-osf:
+    if: ${{ github.event.inputs.sources == 'all' || github.event.inputs.sources == 'osf' }}
+    uses: ./.github/workflows/1-fetch-osf.yml
+    secrets: inherit
+
+  fetch-scidb:
+    if: ${{ github.event.inputs.sources == 'all' || github.event.inputs.sources == 'scidb' }}
+    uses: ./.github/workflows/1-fetch-scidb.yml
+    secrets: inherit
+
+  fetch-datarn:
+    if: ${{ github.event.inputs.sources == 'all' || github.event.inputs.sources == 'datarn' }}
+    uses: ./.github/workflows/1-fetch-datarn.yml
+    secrets: inherit
+
+  # ============================================================================
+  # Step 2: Clone & Digest (runs after fetch completes)
+  # ============================================================================
+  digest-openneuro:
+    needs: [fetch-openneuro]
+    if: ${{ always() && (github.event.inputs.sources == 'all' || github.event.inputs.sources == 'openneuro') && needs.fetch-openneuro.result == 'success' }}
+    uses: ./.github/workflows/2-clone-digest.yml
+    with:
+      source_name: "OpenNeuro"
+      consolidated_file: "openneuro_datasets.json"
+      max_datasets: ${{ fromJSON(github.event.inputs.max_datasets || '0') }}
+    secrets:
+      DATASET_LISTINGS_TOKEN: ${{ secrets.DATASET_LISTINGS_TOKEN }}
+
+  digest-nemar:
+    needs: [fetch-nemar]
+    if: ${{ always() && (github.event.inputs.sources == 'all' || github.event.inputs.sources == 'nemar') && needs.fetch-nemar.result == 'success' }}
+    uses: ./.github/workflows/2-clone-digest.yml
+    with:
+      source_name: "NEMAR"
+      consolidated_file: "nemar_datasets.json"
+      max_datasets: ${{ fromJSON(github.event.inputs.max_datasets || '0') }}
+    secrets:
+      DATASET_LISTINGS_TOKEN: ${{ secrets.DATASET_LISTINGS_TOKEN }}
+
+  digest-eegmanylabs:
+    needs: [fetch-eegmanylabs]
+    if: ${{ always() && (github.event.inputs.sources == 'all' || github.event.inputs.sources == 'eegmanylabs') && needs.fetch-eegmanylabs.result == 'success' }}
+    uses: ./.github/workflows/2-clone-digest.yml
+    with:
+      source_name: "EEGManyLabs"
+      consolidated_file: "eegmanylabs_datasets.json"
+      max_datasets: ${{ fromJSON(github.event.inputs.max_datasets || '0') }}
+    secrets:
+      DATASET_LISTINGS_TOKEN: ${{ secrets.DATASET_LISTINGS_TOKEN }}
+
+  digest-zenodo:
+    needs: [fetch-zenodo]
+    if: ${{ always() && (github.event.inputs.sources == 'all' || github.event.inputs.sources == 'zenodo') && needs.fetch-zenodo.result == 'success' }}
+    uses: ./.github/workflows/2-clone-digest.yml
+    with:
+      source_name: "Zenodo"
+      consolidated_file: "zenodo_datasets.json"
+      max_datasets: ${{ fromJSON(github.event.inputs.max_datasets || '0') }}
+    secrets:
+      DATASET_LISTINGS_TOKEN: ${{ secrets.DATASET_LISTINGS_TOKEN }}
+
+  digest-figshare:
+    needs: [fetch-figshare]
+    if: ${{ always() && (github.event.inputs.sources == 'all' || github.event.inputs.sources == 'figshare') && needs.fetch-figshare.result == 'success' }}
+    uses: ./.github/workflows/2-clone-digest.yml
+    with:
+      source_name: "Figshare"
+      consolidated_file: "figshare_datasets.json"
+      max_datasets: ${{ fromJSON(github.event.inputs.max_datasets || '0') }}
+    secrets:
+      DATASET_LISTINGS_TOKEN: ${{ secrets.DATASET_LISTINGS_TOKEN }}
+
+  digest-osf:
+    needs: [fetch-osf]
+    if: ${{ always() && (github.event.inputs.sources == 'all' || github.event.inputs.sources == 'osf') && needs.fetch-osf.result == 'success' }}
+    uses: ./.github/workflows/2-clone-digest.yml
+    with:
+      source_name: "OSF"
+      consolidated_file: "osf_datasets.json"
+      max_datasets: ${{ fromJSON(github.event.inputs.max_datasets || '0') }}
+    secrets:
+      DATASET_LISTINGS_TOKEN: ${{ secrets.DATASET_LISTINGS_TOKEN }}
+
+  digest-scidb:
+    needs: [fetch-scidb]
+    if: ${{ always() && (github.event.inputs.sources == 'all' || github.event.inputs.sources == 'scidb') && needs.fetch-scidb.result == 'success' }}
+    uses: ./.github/workflows/2-clone-digest.yml
+    with:
+      source_name: "SciDB"
+      consolidated_file: "scidb_datasets.json"
+      max_datasets: ${{ fromJSON(github.event.inputs.max_datasets || '0') }}
+    secrets:
+      DATASET_LISTINGS_TOKEN: ${{ secrets.DATASET_LISTINGS_TOKEN }}
+
+  digest-datarn:
+    needs: [fetch-datarn]
+    if: ${{ always() && (github.event.inputs.sources == 'all' || github.event.inputs.sources == 'datarn') && needs.fetch-datarn.result == 'success' }}
+    uses: ./.github/workflows/2-clone-digest.yml
+    with:
+      source_name: "datarn"
+      consolidated_file: "datarn_datasets.json"
+      max_datasets: ${{ fromJSON(github.event.inputs.max_datasets || '0') }}
+    secrets:
+      DATASET_LISTINGS_TOKEN: ${{ secrets.DATASET_LISTINGS_TOKEN }}
+
+  # ============================================================================
+  # Step 3: Inject to MongoDB (after all digests complete)
+  # ============================================================================
+  inject:
+    needs: [digest-openneuro, digest-nemar, digest-eegmanylabs, digest-zenodo, digest-figshare, digest-osf, digest-scidb, digest-datarn]
+    if: always()
+    uses: ./.github/workflows/3-inject.yml
+    with:
+      source_name: "all"
+      database: ${{ github.event.inputs.database }}
+      dry_run: ${{ github.event.inputs.dry_run == 'true' }}
+    secrets:
+      DATASET_LISTINGS_TOKEN: ${{ secrets.DATASET_LISTINGS_TOKEN }}
+      EEGDASH_ADMIN_TOKEN: ${{ secrets.EEGDASH_ADMIN_TOKEN }}
+
+  # ============================================================================
+  # Summary
+  # ============================================================================
+  summary:
+    name: Pipeline Summary
+    needs: [inject]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Generate summary
+        run: |
+          echo "## 🚀 Full Ingestion Pipeline Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Configuration" >> $GITHUB_STEP_SUMMARY
+          echo "- Sources: \`${{ github.event.inputs.sources }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- Database: \`${{ github.event.inputs.database }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- Dry Run: \`${{ github.event.inputs.dry_run }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Results" >> $GITHUB_STEP_SUMMARY
+          echo "| Step | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Injection | ${{ needs.inject.result || 'skipped' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          if [ "${{ github.event.inputs.dry_run }}" == "true" ]; then
+            echo "⚠️ **DRY RUN** - No data was uploaded to MongoDB" >> $GITHUB_STEP_SUMMARY
+          fi

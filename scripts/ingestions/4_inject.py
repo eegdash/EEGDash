@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""Inject digested records into MongoDB via API Gateway.
+"""Inject digested datasets and records into MongoDB via API Gateway.
 
-Upload core metadata from digested datasets into MongoDB.
+Upload Dataset and Record documents from digested datasets into separate MongoDB collections.
 
 Usage:
     # Inject all digested datasets to staging
@@ -15,6 +15,12 @@ Usage:
 
     # Dry run (validate without uploading)
     python 4_inject.py --input digestion_output --database eegdashstaging --dry-run
+
+    # Inject only datasets (skip records)
+    python 4_inject.py --input digestion_output --database eegdashstaging --only-datasets
+
+    # Inject only records (skip datasets)
+    python 4_inject.py --input digestion_output --database eegdashstaging --only-records
 """
 
 import argparse
@@ -29,15 +35,15 @@ from tqdm import tqdm
 DEFAULT_API_URL = "https://data.eegdash.org"
 
 
-def find_record_files(input_dir: Path, datasets: list[str] | None = None) -> list[Path]:
-    """Find all record JSON files in the digestion output.
+def find_digested_datasets(input_dir: Path, datasets: list[str] | None = None) -> list[Path]:
+    """Find all dataset directories in the digestion output.
 
-    Looks for:
-    - {dataset_id}_records.json (from minimal mode, new schema)
-    - {dataset_id}_core.json (from full mode)
-    - {dataset_id}_minimal.json (legacy)
+    Returns
+    -------
+    list[Path]
+        List of dataset directories containing _dataset.json and _records.json files
     """
-    record_files = []
+    dataset_dirs = []
 
     for dataset_dir in sorted(input_dir.iterdir()):
         if not dataset_dir.is_dir():
@@ -45,36 +51,92 @@ def find_record_files(input_dir: Path, datasets: list[str] | None = None) -> lis
 
         dataset_id = dataset_dir.name
 
+        # Skip special files/dirs
+        if dataset_id.startswith(".") or dataset_id.startswith("_"):
+            continue
+
         # Filter by specific datasets if provided
         if datasets and dataset_id not in datasets:
             continue
 
-        # Look for record files in order of preference
-        records_path = dataset_dir / f"{dataset_id}_records.json"  # New schema
-        core_path = dataset_dir / f"{dataset_id}_core.json"  # Full mode
-        minimal_path = dataset_dir / f"{dataset_id}_minimal.json"  # Legacy
+        # Check for either dataset or records file (new schema)
+        dataset_file = dataset_dir / f"{dataset_id}_dataset.json"
+        records_file = dataset_dir / f"{dataset_id}_records.json"
 
-        if records_path.exists():
-            record_files.append(records_path)
-        elif core_path.exists():
-            record_files.append(core_path)
-        elif minimal_path.exists():
-            record_files.append(minimal_path)
+        if dataset_file.exists() or records_file.exists():
+            dataset_dirs.append(dataset_dir)
 
-    return record_files
+    return dataset_dirs
 
 
-def load_records(json_path: Path) -> list[dict]:
-    """Load records from a JSON file."""
-    with open(json_path) as f:
-        data = json.load(f)
+def load_dataset(dataset_dir: Path) -> dict | None:
+    """Load a Dataset document from a directory."""
+    dataset_id = dataset_dir.name
+    dataset_file = dataset_dir / f"{dataset_id}_dataset.json"
 
-    if isinstance(data, list):
-        return data
-    elif isinstance(data, dict) and "records" in data:
-        return data["records"]
-    else:
-        raise ValueError(f"Unexpected format in {json_path}")
+    if not dataset_file.exists():
+        return None
+
+    with open(dataset_file) as f:
+        return json.load(f)
+
+
+def load_records(dataset_dir: Path) -> list[dict]:
+    """Load Records from a directory.
+
+    Supports both new schema (_records.json) and legacy formats.
+    """
+    dataset_id = dataset_dir.name
+
+    # Try new schema first
+    records_file = dataset_dir / f"{dataset_id}_records.json"
+    if records_file.exists():
+        with open(records_file) as f:
+            data = json.load(f)
+            if isinstance(data, dict) and "records" in data:
+                return data["records"]
+            elif isinstance(data, list):
+                return data
+
+    # Try legacy formats
+    for legacy_name in [f"{dataset_id}_core.json", f"{dataset_id}_minimal.json"]:
+        legacy_file = dataset_dir / legacy_name
+        if legacy_file.exists():
+            with open(legacy_file) as f:
+                data = json.load(f)
+                if isinstance(data, list):
+                    return data
+                elif isinstance(data, dict) and "records" in data:
+                    return data["records"]
+
+    return []
+
+
+def inject_datasets(
+    datasets: list[dict],
+    api_url: str,
+    database: str,
+    admin_token: str,
+) -> dict:
+    """Upload Dataset documents to MongoDB via API Gateway.
+
+    Returns
+    -------
+    dict
+        Result with inserted_count
+    """
+    from eegdash.http_api_client import HTTPAPICollection
+
+    collection = HTTPAPICollection(
+        base_url=f"{api_url}/admin/{database}/datasets",
+        admin_token=admin_token,
+    )
+
+    result = collection.insert_many(datasets)
+
+    return {
+        "inserted_count": result.inserted_count,
+    }
 
 
 def inject_records(
@@ -83,7 +145,7 @@ def inject_records(
     database: str,
     admin_token: str,
 ) -> dict:
-    """Upload records to MongoDB via API Gateway.
+    """Upload Record documents to MongoDB via API Gateway.
 
     Returns
     -------
@@ -106,7 +168,7 @@ def inject_records(
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Inject digested records into MongoDB via API Gateway."
+        description="Inject digested datasets and records into MongoDB via API Gateway."
     )
     parser.add_argument(
         "--input",
@@ -150,8 +212,23 @@ def main():
         default=1000,
         help="Maximum records per API request (default: 1000)",
     )
+    parser.add_argument(
+        "--only-datasets",
+        action="store_true",
+        help="Only inject Dataset documents (skip Records)",
+    )
+    parser.add_argument(
+        "--only-records",
+        action="store_true",
+        help="Only inject Record documents (skip Datasets)",
+    )
 
     args = parser.parse_args()
+
+    # Validate args
+    if args.only_datasets and args.only_records:
+        print("Error: Cannot use both --only-datasets and --only-records", file=sys.stderr)
+        return 1
 
     # Get admin token
     admin_token = args.token or os.environ.get("EEGDASH_ADMIN_TOKEN")
@@ -159,49 +236,92 @@ def main():
         print("Error: Admin token required. Set EEGDASH_ADMIN_TOKEN or use --token", file=sys.stderr)
         return 1
 
-    # Find record files
-    record_files = find_record_files(args.input, args.datasets)
-    print(f"Found {len(record_files)} datasets to inject")
+    # Find dataset directories
+    dataset_dirs = find_digested_datasets(args.input, args.datasets)
+    print(f"Found {len(dataset_dirs)} datasets to inject")
 
-    if not record_files:
-        print("No record files found.")
+    if not dataset_dirs:
+        print("No digested datasets found.")
         return 0
 
-    # Process files
-    stats = {"datasets": 0, "records": 0, "errors": 0}
+    # Collect all documents
+    all_datasets = []
+    all_records = []
     errors = []
 
-    for json_path in tqdm(record_files, desc="Injecting"):
-        dataset_id = json_path.parent.name
+    print("\nLoading documents...")
+    for dataset_dir in tqdm(dataset_dirs, desc="Loading"):
+        dataset_id = dataset_dir.name
 
         try:
-            records = load_records(json_path)
+            # Load dataset document
+            if not args.only_records:
+                dataset = load_dataset(dataset_dir)
+                if dataset:
+                    all_datasets.append(dataset)
 
-            if args.dry_run:
-                print(f"  [DRY RUN] {dataset_id}: {len(records)} records")
-                stats["datasets"] += 1
-                stats["records"] += len(records)
-            else:
-                # Upload in batches
-                for i in range(0, len(records), args.batch_size):
-                    batch = records[i : i + args.batch_size]
-                    result = inject_records(batch, args.api_url, args.database, admin_token)
-                    stats["records"] += result["inserted_count"]
-
-                stats["datasets"] += 1
+            # Load record documents
+            if not args.only_datasets:
+                records = load_records(dataset_dir)
+                all_records.extend(records)
 
         except Exception as e:
-            stats["errors"] += 1
             errors.append({"dataset": dataset_id, "error": str(e)})
-            print(f"  Error processing {dataset_id}: {e}", file=sys.stderr)
+            print(f"  Error loading {dataset_id}: {e}", file=sys.stderr)
+
+    print(f"\nLoaded {len(all_datasets)} datasets and {len(all_records)} records")
+
+    # Stats tracking
+    stats = {
+        "datasets_injected": 0,
+        "records_injected": 0,
+        "errors": len(errors),
+    }
+
+    if args.dry_run:
+        print("\n[DRY RUN] Would inject:")
+        print(f"  - {len(all_datasets)} datasets to {args.database}.datasets")
+        print(f"  - {len(all_records)} records to {args.database}.records")
+        stats["datasets_injected"] = len(all_datasets)
+        stats["records_injected"] = len(all_records)
+
+    else:
+        # Inject datasets
+        if all_datasets and not args.only_records:
+            print(f"\nInjecting {len(all_datasets)} datasets...")
+            try:
+                for i in range(0, len(all_datasets), args.batch_size):
+                    batch = all_datasets[i : i + args.batch_size]
+                    result = inject_datasets(batch, args.api_url, args.database, admin_token)
+                    stats["datasets_injected"] += result["inserted_count"]
+                    print(f"  Batch {i // args.batch_size + 1}: {result['inserted_count']} datasets")
+            except Exception as e:
+                stats["errors"] += 1
+                errors.append({"dataset": "datasets_collection", "error": str(e)})
+                print(f"  Error injecting datasets: {e}", file=sys.stderr)
+
+        # Inject records
+        if all_records and not args.only_datasets:
+            print(f"\nInjecting {len(all_records)} records...")
+            try:
+                for i in range(0, len(all_records), args.batch_size):
+                    batch = all_records[i : i + args.batch_size]
+                    result = inject_records(batch, args.api_url, args.database, admin_token)
+                    stats["records_injected"] += result["inserted_count"]
+                    if (i // args.batch_size) % 10 == 0:
+                        print(f"  Progress: {i + len(batch)} / {len(all_records)} records")
+            except Exception as e:
+                stats["errors"] += 1
+                errors.append({"dataset": "records_collection", "error": str(e)})
+                print(f"  Error injecting records: {e}", file=sys.stderr)
 
     # Print summary
     print("\n" + "=" * 60)
     print("INJECTION SUMMARY")
     print("=" * 60)
     print(f"  Database:   {args.database}")
-    print(f"  Datasets:   {stats['datasets']}")
-    print(f"  Records:    {stats['records']}")
+    print(f"  Datasets:   {stats['datasets_injected']}")
+    print(f"  Records:    {stats['records_injected']}")
     print(f"  Errors:     {stats['errors']}")
 
     if args.dry_run:

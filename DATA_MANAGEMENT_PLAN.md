@@ -229,7 +229,7 @@ Sources reviewed for these deliverables:
 
 **Deliverable B1 — Digestion scripts emit v2 fields (plus legacy during transition)**
 1. Implement a shared “record builder” that produces v2 fields (`record_id`, `variant`, `bids_relpath`, `storage.*`, `cache.*`).
-2. Update `scripts/ingestions/4_digest_single_dataset.py` and `scripts/ingestions/5_digest_datasets_minimal.py` to output v2 + keep v1 fields for compatibility.
+2. Update `scripts/ingestions/3_digest.py` to output v2 + keep v1 fields for compatibility.
 3. Add a schema validation step (or unit tests) that asserts v2 outputs are internally consistent (URIs/paths/entities).
 
 **Deliverable B2 — Align ingestion docs with reality**

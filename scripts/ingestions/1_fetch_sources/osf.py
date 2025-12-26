@@ -5,13 +5,21 @@ or other neural recording modalities with BIDS formatting, using the OSF API v2.
 It retrieves comprehensive metadata including contributors, licenses, and project
 details, outputting in the EEGDash Dataset schema format.
 
+BIDS validation is performed by checking OSF storage for:
+- Required BIDS files (dataset_description.json)
+- Optional BIDS files (participants.tsv, README, etc.)
+- BIDS-like subject folder patterns (sub-XX)
+- BIDS dataset zip files (containing BIDS data)
+
 Output: consolidated/osf_datasets.json
 """
 
 import argparse
+import re
 import sys
 import time
 from pathlib import Path
+from typing import Any
 
 import requests
 
@@ -40,68 +48,191 @@ LICENSE_NAMES = {
 # Categories we're interested in (datasets/data, not posters/presentations)
 DATA_CATEGORIES = {"data", "project", "analysis", "software", "other"}
 
-# Modality tags to search for - comprehensive keyword coverage
+# Modality tags to search for - optimized for speed (core keywords only)
+# Less common variants are covered by title search
 MODALITY_TAGS = {
+    "eeg": ["eeg", "electroencephalography", "erp"],  # erp = event-related potential
+    "meg": ["meg", "magnetoencephalography"],
+    "emg": ["emg", "electromyography"],
+    "fnirs": ["fnirs", "fNIRS", "nirs"],
+    "lfp": ["lfp", "local field potential"],
+    "spike": ["spike", "single unit", "multi-unit"],
+    "mea": ["mea", "microelectrode array", "neuropixels"],
+    "ieeg": ["ieeg", "intracranial eeg", "seeg", "ecog"],
+    "bids": ["bids"],
+}
+
+# BIDS indicator files (case-insensitive matching)
+BIDS_REQUIRED_FILES = ["dataset_description.json"]
+BIDS_OPTIONAL_FILES = [
+    "participants.tsv",
+    "participants.json",
+    "readme",
+    "readme.md",
+    "readme.txt",
+    "changes",
+]
+
+# Patterns for BIDS subject folders/zips
+BIDS_SUBJECT_PATTERN = re.compile(r"^sub-[a-zA-Z0-9]+(?:\.zip)?$", re.IGNORECASE)
+
+# Patterns for BIDS dataset zips (contains BIDS data inside)
+BIDS_DATASET_ZIP_PATTERN = re.compile(
+    r"(?:bids|dataset).*\.zip$|.*_bids\.zip$", re.IGNORECASE
+)
+
+# Title search keywords - for datasets without tags
+# These are searched via filter[title][icontains]
+TITLE_SEARCH_KEYWORDS = {
     "eeg": [
-        "eeg",
+        "EEG",
         "electroencephalography",
         "electroencephalogram",
-        "scalp eeg",
-        "scalp-eeg",
+        "event-related potential",
+        "ERP CORE",
     ],
-    "meg": ["meg", "magnetoencephalography", "magnetoencephalogram"],
-    "emg": ["emg", "electromyography", "electromyogram"],
-    "fnirs": [
-        "fnirs",
-        "fNIRS",
-        "nirs",
-        "near-infrared spectroscopy",
-        "near infrared spectroscopy",
-        "functional near-infrared",
-    ],
-    "lfp": [
-        "lfp",
-        "local field potential",
-        "local field potentials",
-        "field potential",
-        "field potentials",
-    ],
-    "spike": [
-        "single unit",
-        "single-unit",
-        "multi-unit",
-        "multiunit",
-        "spike",
-        "spike train",
-        "neuronal firing",
-        "unit activity",
-        "single unit activity",
-        "multi-unit activity",
-    ],
-    "mea": [
-        "mea",
-        "microelectrode array",
-        "microelectrode arrays",
-        "utah array",
-        "neuropixels",
-        "depth electrode",
-    ],
-    "ieeg": [
-        "ieeg",
-        "intracranial eeg",
-        "intracranial electroencephalography",
-        "intracranial electroencephalogram",
-        "seeg",
-        "stereoelectroencephalography",
-        "ecog",
-        "electrocorticography",
-        "corticography",
-        "subdural electrode",
-        "subdural grid",
-        "subdural strip",
-    ],
-    "bids": ["bids", "brain imaging data structure", "brain imaging data structures"],
+    "meg": ["MEG", "magnetoencephalography"],
+    "emg": ["EMG", "electromyography"],
+    "fnirs": ["fNIRS", "NIRS", "near-infrared spectroscopy"],
+    "ieeg": ["iEEG", "intracranial EEG", "ECoG", "sEEG"],
+    "bids": ["BIDS"],
 }
+
+
+def validate_bids_structure(files: list[dict[str, Any]]) -> dict[str, Any]:
+    """Validate BIDS structure from OSF file list.
+
+    Checks for:
+    - Required BIDS files (dataset_description.json)
+    - Optional BIDS files (participants.tsv, README, etc.)
+    - Subject-level folders (sub-XX)
+    - BIDS dataset zip files
+
+    Args:
+        files: List of file/folder dictionaries from OSF API
+
+    Returns:
+        Dictionary with validation results:
+        - is_bids: True if BIDS structure confirmed
+        - bids_files_found: List of BIDS files found
+        - subject_count: Number of subject folders/zips
+        - has_subject_zips: True if subjects are in ZIP format
+        - has_bids_zip: True if BIDS dataset ZIP found
+        - bids_zip_files: List of BIDS dataset ZIP filenames
+
+    """
+    result = {
+        "is_bids": False,
+        "bids_files_found": [],
+        "subject_count": 0,
+        "has_subject_zips": False,
+        "has_bids_zip": False,
+        "bids_zip_files": [],
+    }
+
+    if not files:
+        return result
+
+    # Collect all file/folder names (handle both files and folders)
+    all_names = []
+    for f in files:
+        name = f.get("name", "")
+        if name:
+            all_names.append(name)
+
+    all_names_lower = [n.lower() for n in all_names]
+
+    # Check for required BIDS files
+    for req_file in BIDS_REQUIRED_FILES:
+        if req_file.lower() in all_names_lower:
+            result["bids_files_found"].append(req_file)
+
+    # Check for optional BIDS files
+    for opt_file in BIDS_OPTIONAL_FILES:
+        if opt_file.lower() in all_names_lower:
+            result["bids_files_found"].append(opt_file)
+
+    # Check for subject folders/zips
+    subject_folders = []
+    subject_zips = []
+    for name in all_names:
+        if BIDS_SUBJECT_PATTERN.match(name):
+            if name.lower().endswith(".zip"):
+                subject_zips.append(name)
+            else:
+                subject_folders.append(name)
+
+    result["subject_count"] = len(subject_folders) + len(subject_zips)
+    result["has_subject_zips"] = len(subject_zips) > 0
+
+    # Check for BIDS dataset zips
+    for name in all_names:
+        if BIDS_DATASET_ZIP_PATTERN.match(name):
+            result["has_bids_zip"] = True
+            result["bids_zip_files"].append(name)
+
+    # Determine if this is a valid BIDS dataset
+    # Criteria: has dataset_description.json OR has subject folders OR has BIDS zip
+    has_required = "dataset_description.json" in result["bids_files_found"]
+    has_subjects = result["subject_count"] > 0
+    has_bids_zip = result["has_bids_zip"]
+
+    result["is_bids"] = (
+        has_required
+        or (has_subjects and len(result["bids_files_found"]) > 0)
+        or has_bids_zip
+    )
+
+    return result
+
+
+def fetch_node_files(
+    node_id: str,
+    storage_provider: str = "osfstorage",
+    timeout: float = 10.0,
+    max_files: int = 200,
+) -> list[dict[str, Any]]:
+    """Fetch files from OSF node storage.
+
+    Args:
+        node_id: OSF node ID
+        storage_provider: Storage provider (default: osfstorage)
+        timeout: Request timeout
+        max_files: Maximum files to fetch
+
+    Returns:
+        List of file/folder dictionaries
+
+    """
+    files = []
+    url = f"{OSF_API_URL}/nodes/{node_id}/files/{storage_provider}/"
+
+    try:
+        response = requests.get(url, timeout=timeout)
+        if response.status_code != 200:
+            return files
+
+        data = response.json()
+        items = data.get("data", [])
+
+        for item in items[:max_files]:
+            attrs = item.get("attributes", {})
+            files.append(
+                {
+                    "name": attrs.get("name", ""),
+                    "kind": attrs.get("kind", ""),  # 'file' or 'folder'
+                    "size": attrs.get("size", 0),
+                    "path": attrs.get("materialized_path", ""),
+                }
+            )
+
+    except Exception:
+        pass
+
+    return files
+
+
+# Modality tags continued (ieeg closing moved above)
 
 
 def fetch_license_name(license_id: str, timeout: float = 10.0) -> str | None:
@@ -149,23 +280,231 @@ def fetch_contributors(node_id: str, timeout: float = 10.0) -> list[str]:
         return []
 
 
+def fetch_node_children(
+    node_id: str,
+    timeout: float = 10.0,
+    fetch_details: bool = True,
+    require_bids: bool = True,
+    validate_bids: bool = True,
+    seen_ids: set | None = None,
+) -> list[Dataset]:
+    """Fetch children of an OSF node (for projects with sub-components).
+
+    This captures datasets like ERP CORE which has separate components
+    for N170, P3, N400, etc.
+
+    Args:
+        node_id: Parent node ID
+        timeout: Request timeout
+        fetch_details: Whether to fetch additional details
+        require_bids: Only include datasets mentioning BIDS
+        validate_bids: Validate BIDS by checking file structure
+        seen_ids: Set of already-seen node IDs to skip
+
+    Returns:
+        List of Dataset documents from children
+
+    """
+    if seen_ids is None:
+        seen_ids = set()
+
+    datasets = []
+
+    try:
+        response = requests.get(
+            f"{OSF_API_URL}/nodes/{node_id}/children/",
+            params={"page[size]": 100},
+            timeout=timeout,
+        )
+        if response.status_code != 200:
+            return datasets
+
+        data = response.json()
+        children = data.get("data", [])
+
+        for child in children:
+            child_id = child.get("id", "")
+            if child_id in seen_ids:
+                continue
+
+            try:
+                dataset = process_node(
+                    child,
+                    fetch_details=fetch_details,
+                    timeout=timeout,
+                    require_bids=require_bids,
+                    validate_bids=validate_bids,
+                )
+                if dataset:
+                    datasets.append(dataset)
+                    seen_ids.add(child_id)
+            except Exception:
+                continue
+
+    except Exception:
+        pass
+
+    return datasets
+
+
+def fetch_nodes_by_title(
+    keyword: str,
+    max_results: int = 100,
+    page_size: int = 100,
+    timeout: float = 30.0,
+    fetch_details: bool = True,
+    require_bids: bool = True,
+    validate_bids: bool = True,
+    seen_ids: set | None = None,
+    fetch_children: bool = True,
+) -> list[Dataset]:
+    """Fetch public OSF nodes by title keyword search.
+
+    This captures datasets that don't use tags but have relevant keywords
+    in their title (like "ERP CORE", "EEG dataset", etc.).
+    Also fetches children of projects to capture sub-components.
+
+    Args:
+        keyword: Keyword to search in titles
+        max_results: Maximum number of results to fetch
+        page_size: Number of results per page (max 100)
+        timeout: Request timeout in seconds
+        fetch_details: Whether to fetch additional details
+        require_bids: Only include datasets mentioning BIDS
+        validate_bids: Validate BIDS by checking file structure
+        seen_ids: Set of already-seen node IDs to skip
+        fetch_children: Also fetch children of projects found
+
+    Returns:
+        List of Dataset documents
+
+    """
+    if seen_ids is None:
+        seen_ids = set()
+
+    datasets = []
+    projects_to_check_children = []  # Track projects for child fetching
+    page = 1
+    fetched = 0
+
+    # Build initial URL with title filter
+    base_params = {
+        "filter[public]": "true",
+        "filter[title][icontains]": keyword,
+        "page[size]": min(page_size, 100),
+    }
+
+    url = f"{OSF_API_URL}/nodes/"
+    params = base_params.copy()
+
+    while fetched < max_results:
+        try:
+            response = requests.get(url, params=params, timeout=timeout)
+            response.raise_for_status()
+        except requests.RequestException as e:
+            print(f"  Error fetching page {page}: {e}", file=sys.stderr)
+            break
+
+        data = response.json()
+        nodes = data.get("data", [])
+
+        if not nodes:
+            break
+
+        # Get total from meta
+        meta = data.get("links", {}).get("meta", {}) or data.get("meta", {})
+        total = meta.get("total", 0)
+        if page == 1:
+            print(f"  Total available: {total}")
+
+        for node in nodes:
+            if fetched >= max_results:
+                break
+
+            node_id = node.get("id", "")
+            if node_id in seen_ids:
+                continue
+
+            # Track projects for child fetching
+            category = node.get("attributes", {}).get("category", "")
+            if fetch_children and category == "project":
+                projects_to_check_children.append(node_id)
+
+            try:
+                dataset = process_node(
+                    node,
+                    fetch_details=fetch_details,
+                    timeout=timeout,
+                    require_bids=require_bids,
+                    validate_bids=validate_bids,
+                )
+                if dataset:
+                    datasets.append(dataset)
+                    seen_ids.add(node_id)
+                    fetched += 1
+            except Exception as e:
+                print(
+                    f"  Warning: Error processing node {node_id}: {e}", file=sys.stderr
+                )
+                continue
+
+        # Check for next page
+        next_url = data.get("links", {}).get("next")
+        if not next_url or fetched >= max_results:
+            break
+
+        url = next_url
+        params = {}  # Next URL has all params
+        page += 1
+        time.sleep(0.1)  # Rate limiting
+
+    # Fetch children of projects found
+    if fetch_children and projects_to_check_children:
+        children_found = 0
+        for project_id in projects_to_check_children[
+            :20
+        ]:  # Limit to avoid too many requests
+            children = fetch_node_children(
+                project_id,
+                timeout=timeout,
+                fetch_details=fetch_details,
+                require_bids=require_bids,
+                validate_bids=validate_bids,
+                seen_ids=seen_ids,
+            )
+            datasets.extend(children)
+            children_found += len(children)
+            time.sleep(0.1)
+        if children_found > 0:
+            print(f"  + {children_found} children from projects")
+
+    return datasets
+
+
 def fetch_osf_nodes(
     modalities: list[str] | None = None,
     require_bids: bool = True,
+    validate_bids: bool = True,
     max_results_per_modality: int = 1000,
     page_size: int = 100,
     timeout: float = 30.0,
     fetch_details: bool = True,
+    search_titles: bool = True,
 ) -> list[Dataset]:
     """Fetch public OSF nodes with neural recording modalities.
+
+    Searches both by tags and by title keywords to capture datasets
+    that don't use tags (like ERP CORE).
 
     Args:
         modalities: List of modalities to search for (default: all)
         require_bids: Only include datasets with BIDS in tags/description
+        validate_bids: Validate BIDS by checking file structure
         max_results_per_modality: Maximum results per modality tag search
         page_size: Number of results per page (max 100)
         timeout: Request timeout in seconds
         fetch_details: Whether to fetch additional details (contributors, license)
+        search_titles: Also search by title keywords (captures untagged datasets)
 
     Returns:
         List of Dataset documents
@@ -207,6 +546,7 @@ def fetch_osf_nodes(
             timeout=timeout,
             fetch_details=fetch_details,
             require_bids=require_bids,
+            validate_bids=validate_bids,
             seen_ids=seen_ids,
         )
 
@@ -216,7 +556,45 @@ def fetch_osf_nodes(
         print(f"  New unique datasets from '{tag}': {len(datasets)}")
         print(f"  Total unique so far: {len(all_datasets)}")
 
-        time.sleep(0.5)  # Rate limiting between tag searches
+        time.sleep(0.2)  # Rate limiting between tag searches
+
+    # Also search by title keywords to capture untagged datasets
+    if search_titles:
+        print(f"\n{'=' * 60}")
+        print("Searching by title keywords (captures untagged datasets)")
+        print(f"{'=' * 60}")
+
+        # Collect title search keywords
+        title_keywords = set()
+        for mod in modalities:
+            if mod in TITLE_SEARCH_KEYWORDS:
+                title_keywords.update(TITLE_SEARCH_KEYWORDS[mod])
+
+        # Always search for BIDS in title
+        title_keywords.add("BIDS")
+
+        for keyword in sorted(title_keywords):
+            print(f"\n{'=' * 40}")
+            print(f"Title search: '{keyword}'")
+            print(f"{'=' * 40}")
+
+            datasets = fetch_nodes_by_title(
+                keyword=keyword,
+                max_results=max_results_per_modality,
+                page_size=page_size,
+                timeout=timeout,
+                fetch_details=fetch_details,
+                require_bids=require_bids,
+                validate_bids=validate_bids,
+                seen_ids=seen_ids,
+            )
+
+            all_datasets.extend(datasets)
+
+            print(f"  New unique datasets from title '{keyword}': {len(datasets)}")
+            print(f"  Total unique so far: {len(all_datasets)}")
+
+            time.sleep(0.2)  # Rate limiting
 
     print(f"\n\nTotal unique datasets: {len(all_datasets)}")
     return all_datasets
@@ -229,6 +607,7 @@ def fetch_nodes_by_tag(
     timeout: float = 30.0,
     fetch_details: bool = True,
     require_bids: bool = True,
+    validate_bids: bool = True,
     seen_ids: set | None = None,
 ) -> list[Dataset]:
     """Fetch public OSF nodes with a specific tag.
@@ -297,6 +676,7 @@ def fetch_nodes_by_tag(
                     fetch_details=fetch_details,
                     timeout=timeout,
                     require_bids=require_bids,
+                    validate_bids=validate_bids,
                 )
                 if dataset:
                     datasets.append(dataset)
@@ -316,7 +696,7 @@ def fetch_nodes_by_tag(
         url = next_url
         params = {}  # Next URL has all params
         page += 1
-        time.sleep(0.3)  # Rate limiting
+        time.sleep(0.1)  # Rate limiting
 
     return datasets
 
@@ -326,6 +706,7 @@ def process_node(
     fetch_details: bool = True,
     timeout: float = 10.0,
     require_bids: bool = True,
+    validate_bids: bool = True,
 ) -> Dataset | None:
     """Process an OSF node into a Dataset document.
 
@@ -333,7 +714,8 @@ def process_node(
         node: OSF node data
         fetch_details: Whether to fetch additional details
         timeout: Request timeout
-        require_bids: Only include datasets mentioning BIDS
+        require_bids: Only include datasets mentioning BIDS in tags (legacy)
+        validate_bids: Validate BIDS by checking actual file structure
 
     Returns:
         Dataset document or None if filtered out
@@ -363,15 +745,28 @@ def process_node(
     date_created = attrs.get("date_created", "")
     date_modified = attrs.get("date_modified", "")
 
-    # Check for BIDS - in tags or description
+    # Check for BIDS mentions in tags or description
     tags_lower = [t.lower() for t in tags]
     desc_lower = description.lower()
-    has_bids = any("bids" in t for t in tags_lower) or "bids" in desc_lower
+    has_bids_mention = any("bids" in t for t in tags_lower) or "bids" in desc_lower
 
-    if require_bids and not has_bids:
+    # Legacy behavior: skip if require_bids and no BIDS mention
+    if require_bids and not has_bids_mention:
         return None
 
-    bids_version = "unknown" if has_bids else None
+    bids_version = "unknown" if has_bids_mention else None
+    bids_validation = None
+
+    # Validate BIDS structure by checking actual files
+    if validate_bids and fetch_details:
+        files = fetch_node_files(node_id, timeout=timeout)
+        if files:
+            bids_validation = validate_bids_structure(files)
+            if bids_validation["is_bids"]:
+                bids_version = "validated"
+            elif not has_bids_mention:
+                # No BIDS mention and no BIDS structure - skip unless validate_bids is False
+                pass  # Continue processing, will be flagged as non-BIDS
 
     # Get license
     license_info = None
@@ -459,6 +854,20 @@ def process_node(
     if description:
         dataset["description"] = description[:1000]  # Truncate long descriptions
 
+    # Add BIDS validation results
+    if bids_validation:
+        dataset["bids_validated"] = bids_validation["is_bids"]
+        if bids_validation["bids_files_found"]:
+            dataset["bids_files_found"] = bids_validation["bids_files_found"]
+        if bids_validation["subject_count"] > 0:
+            dataset["bids_subject_count"] = bids_validation["subject_count"]
+            dataset["bids_has_subject_zips"] = bids_validation["has_subject_zips"]
+        if bids_validation["has_bids_zip"]:
+            dataset["bids_has_dataset_zip"] = True
+            dataset["bids_zip_files"] = bids_validation["bids_zip_files"]
+    else:
+        dataset["bids_validated"] = has_bids_mention  # Fall back to tag-based
+
     return dataset
 
 
@@ -488,7 +897,18 @@ def main() -> None:
     parser.add_argument(
         "--no-bids",
         action="store_true",
-        help="Include datasets without BIDS (not recommended).",
+        help="Don't require BIDS mention in tags/description (searches all neural recording datasets).",
+    )
+    parser.add_argument(
+        "--validate-bids",
+        action="store_true",
+        default=True,
+        help="Validate BIDS by checking actual file structure (default: True).",
+    )
+    parser.add_argument(
+        "--no-validate-bids",
+        action="store_true",
+        help="Skip BIDS file structure validation.",
     )
     parser.add_argument(
         "--no-details",
@@ -516,10 +936,14 @@ def main() -> None:
     else:
         print(f"Fetching OSF datasets for all modalities: {list(MODALITY_TAGS.keys())}")
 
+    # Determine validation mode
+    validate_bids = not args.no_validate_bids
+
     # Fetch nodes
     datasets = fetch_osf_nodes(
         modalities=modalities,
         require_bids=not args.no_bids,
+        validate_bids=validate_bids,
         max_results_per_modality=args.max_results,
         fetch_details=not args.no_details,
         timeout=args.timeout,
@@ -577,8 +1001,20 @@ def main() -> None:
     print(f"Unique authors: {total_authors}")
 
     # BIDS coverage
-    with_bids = sum(1 for d in datasets if d.get("bids_version"))
-    print(f"Datasets with BIDS: {with_bids}/{len(datasets)}")
+    with_bids_tag = sum(1 for d in datasets if d.get("bids_version"))
+    with_bids_validated = sum(1 for d in datasets if d.get("bids_validated"))
+    with_subject_folders = sum(
+        1 for d in datasets if d.get("bids_subject_count", 0) > 0
+    )
+    with_subject_zips = sum(1 for d in datasets if d.get("bids_has_subject_zips"))
+    with_bids_zip = sum(1 for d in datasets if d.get("bids_has_dataset_zip"))
+
+    print("\nBIDS Validation:")
+    print(f"  With BIDS tag/mention: {with_bids_tag}/{len(datasets)}")
+    print(f"  Confirmed BIDS (file check): {with_bids_validated}/{len(datasets)}")
+    print(f"  With subject folders/zips: {with_subject_folders}/{len(datasets)}")
+    print(f"  Using subject-level ZIPs: {with_subject_zips}/{len(datasets)}")
+    print(f"  With BIDS dataset ZIP: {with_bids_zip}/{len(datasets)}")
 
     print("=" * 60)
 

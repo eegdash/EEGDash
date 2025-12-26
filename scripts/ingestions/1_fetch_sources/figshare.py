@@ -4,10 +4,16 @@ This script searches Figshare for datasets containing both "EEG" and "BIDS" keyw
 using the Figshare API v2. It retrieves comprehensive metadata including DOIs,
 descriptions, files, authors, and download URLs.
 
+BIDS validation is performed by checking for:
+- Required BIDS files (dataset_description.json)
+- Optional BIDS files (participants.tsv, README, etc.)
+- BIDS-like subject folder patterns (sub-XX or sub-XX.zip)
+
 Output: consolidated/figshare_datasets.json
 """
 
 import argparse
+import re
 import sys
 import time
 from pathlib import Path
@@ -22,6 +28,76 @@ from eegdash.records import create_dataset
 # Add ingestions dir to path for _serialize module
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from _serialize import generate_dataset_id, save_datasets_deterministically
+
+# BIDS indicator files
+BIDS_REQUIRED_FILES = ["dataset_description.json"]
+BIDS_OPTIONAL_FILES = [
+    "participants.tsv",
+    "participants.json",
+    "readme",
+    "readme.md",
+    "readme.txt",
+    "changes",
+]
+
+# Patterns for BIDS subject folders/zips
+BIDS_SUBJECT_PATTERN = re.compile(r"^sub-[a-zA-Z0-9]+(?:\.zip)?$", re.IGNORECASE)
+
+
+def validate_bids_structure(files: list[dict[str, Any]]) -> dict[str, Any]:
+    """Validate BIDS structure from file list.
+
+    Checks for:
+    - Required BIDS files (dataset_description.json)
+    - Optional BIDS files (participants.tsv, README, etc.)
+    - Subject-level files/zips (sub-XX or sub-XX.zip)
+
+    Args:
+        files: List of file dictionaries from Figshare API
+
+    Returns:
+        Dictionary with validation results:
+        - is_bids: Whether dataset appears to be BIDS compliant
+        - bids_files_found: List of BIDS files found
+        - subject_count: Number of subject folders/zips detected
+        - has_subject_zips: Whether subjects are in ZIP format
+
+    """
+    file_names = [f.get("name", "").lower() for f in files]
+    file_names_original = [f.get("name", "") for f in files]
+
+    # Check for required BIDS files
+    found_required = []
+    for bf in BIDS_REQUIRED_FILES:
+        if bf.lower() in file_names:
+            found_required.append(bf)
+
+    # Check for optional BIDS files
+    found_optional = []
+    for bf in BIDS_OPTIONAL_FILES:
+        if bf.lower() in file_names:
+            found_optional.append(bf)
+
+    # Check for subject folders/zips
+    subject_files = []
+    for fn in file_names_original:
+        if BIDS_SUBJECT_PATTERN.match(fn):
+            subject_files.append(fn)
+
+    # Determine if it's BIDS
+    # Accept if: has dataset_description.json OR has subject folders/zips with BIDS naming
+    is_bids = len(found_required) > 0 or len(subject_files) >= 2
+
+    # Check if subjects are zipped
+    has_subject_zips = any(fn.lower().endswith(".zip") for fn in subject_files)
+
+    return {
+        "is_bids": is_bids,
+        "bids_files_found": found_required + found_optional,
+        "subject_count": len(subject_files),
+        "has_subject_zips": has_subject_zips,
+        "subject_files": subject_files[:10],  # Store first 10 for reference
+    }
 
 
 def search_figshare(
@@ -191,11 +267,16 @@ def extract_dataset_info(
     title = article.get("title", "")
     doi = article.get("doi", "")
 
+    # Clean HTML tags from title (search results may have highlighting)
+    title = re.sub(r"<[^>]+>", "", title)
+
     # Fetch full details if requested
     if fetch_details and article_id:
         details = get_article_details(article_id)
         if details:
             article = details
+            # Re-clean title from details (might also have HTML)
+            title = re.sub(r"<[^>]+>", "", article.get("title", title))
 
     # Extract URLs
     url_public_html = article.get("url_public_html", "")
@@ -211,8 +292,14 @@ def extract_dataset_info(
     license_info = article.get("license", {})
     license_name = license_info.get("name", "") if license_info else None
 
+    # Get files list for BIDS validation and size calculation
+    files = article.get("files", [])
+
     # Calculate total size
-    total_size_bytes = sum(f.get("size", 0) for f in article.get("files", []))
+    total_size_bytes = sum(f.get("size", 0) for f in files)
+
+    # Validate BIDS structure
+    bids_validation = validate_bids_structure(files)
 
     # Detect modalities from content
     modalities = detect_modalities(article)
@@ -240,7 +327,7 @@ def extract_dataset_info(
         authors=author_names,
         dataset_doi=doi,
         source_url=url_public_html,
-        total_files=len(article.get("files", [])),
+        total_files=len(files),
         size_bytes=total_size_bytes if total_size_bytes > 0 else None,
         dataset_modified_at=modified_date,
         digested_at=digested_at,
@@ -248,6 +335,14 @@ def extract_dataset_info(
 
     # Store original Figshare ID for reference
     dataset["figshare_id"] = str(article_id)
+
+    # Add BIDS validation results
+    dataset["bids_validated"] = bids_validation["is_bids"]
+    if bids_validation["bids_files_found"]:
+        dataset["bids_files_found"] = bids_validation["bids_files_found"]
+    if bids_validation["subject_count"] > 0:
+        dataset["bids_subject_count"] = bids_validation["subject_count"]
+        dataset["bids_has_subject_zips"] = bids_validation["has_subject_zips"]
 
     return dataset
 
@@ -345,6 +440,18 @@ def main() -> None:
     print(f"Successfully saved {len(datasets)} datasets to {args.output}")
     print(f"{'=' * 60}")
     print("\nDataset Statistics:")
+
+    # BIDS validation summary
+    bids_validated = sum(1 for ds in datasets if ds.get("bids_validated"))
+    bids_with_subjects = sum(
+        1 for ds in datasets if ds.get("bids_subject_count", 0) > 0
+    )
+    bids_with_zips = sum(1 for ds in datasets if ds.get("bids_has_subject_zips"))
+
+    print("\nBIDS Validation:")
+    print(f"  Confirmed BIDS: {bids_validated}/{len(datasets)}")
+    print(f"  With subject folders/zips: {bids_with_subjects}/{len(datasets)}")
+    print(f"  Using subject-level ZIPs: {bids_with_zips}/{len(datasets)}")
 
     # Count by modality
     modalities_found = {}

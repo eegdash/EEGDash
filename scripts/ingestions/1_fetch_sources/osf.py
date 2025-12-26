@@ -42,12 +42,45 @@ LICENSE_NAMES = {
 # Categories we're interested in (datasets/data, not posters/presentations)
 DATA_CATEGORIES = {"data", "project", "analysis", "software", "other"}
 
-# Modality tags to search for
+# Modality tags to search for - comprehensive keyword coverage
 MODALITY_TAGS = {
-    "eeg": ["eeg", "electroencephalography", "electroencephalogram"],
-    "meg": ["meg", "magnetoencephalography"],
-    "ieeg": ["ieeg", "ecog", "seeg", "intracranial eeg", "electrocorticography", "stereoelectroencephalography"],
-    "fnirs": ["fnirs", "nirs", "fNIRS", "near-infrared spectroscopy"],
+    "eeg": [
+        "eeg", "electroencephalography", "electroencephalogram", 
+        "scalp eeg", "scalp-eeg"
+    ],
+    "meg": [
+        "meg", "magnetoencephalography", "magnetoencephalogram"
+    ],
+    "emg": [
+        "emg", "electromyography", "electromyogram"
+    ],
+    "fnirs": [
+        "fnirs", "fNIRS", "nirs", "near-infrared spectroscopy", 
+        "near infrared spectroscopy", "functional near-infrared"
+    ],
+    "lfp": [
+        "lfp", "local field potential", "local field potentials", 
+        "field potential", "field potentials"
+    ],
+    "spike": [
+        "single unit", "single-unit", "multi-unit", "multiunit",
+        "spike", "spike train", "neuronal firing", "unit activity", 
+        "single unit activity", "multi-unit activity"
+    ],
+    "mea": [
+        "mea", "microelectrode array", "microelectrode arrays",
+        "utah array", "neuropixels", "depth electrode"
+    ],
+    "ieeg": [
+        "ieeg", "intracranial eeg", "intracranial electroencephalography",
+        "intracranial electroencephalogram", "seeg", "stereoelectroencephalography",
+        "ecog", "electrocorticography", "corticography",
+        "subdural electrode", "subdural grid", "subdural strip"
+    ],
+    "bids": [
+        "bids", "brain imaging data structure", 
+        "brain imaging data structures"
+    ],
 }
 
 

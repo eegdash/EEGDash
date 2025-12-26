@@ -40,7 +40,7 @@ def search_zenodo(
 ) -> list[dict[str, Any]]:
     """Search Zenodo aggressively for maximum recall.
 
-    Uses broad search: ANY neurophysiology modality OR BIDS (maximum recall strategy).
+    Uses comprehensive search: ALL neurophysiology modalities OR BIDS (maximum recall strategy).
 
     Args:
         max_results: Maximum datasets to fetch
@@ -50,11 +50,33 @@ def search_zenodo(
         List of Zenodo records
 
     """
+    # Comprehensive keyword search covering all neural recording modalities
     query = (
-        "EEG OR electroencephalography OR MEG OR magnetoencephalography OR "
-        "iEEG OR 'intracranial EEG' OR ECoG OR electrocorticography OR SEEG OR "
-        "stereo EEG OR EMG OR electromyography OR BIDS OR "
-        "'Brain Imaging Data Structure'"
+        "(EEG OR electroencephalogram OR electroencephalography OR \"scalp EEG\") "
+        "OR "
+        "(MEG OR magnetoencephalography OR magnetoencephalogram) "
+        "OR "
+        "(EMG OR electromyography OR electromyogram) "
+        "OR "
+        "(fNIRS OR \"functional near-infrared spectroscopy\" OR NIRS OR \"near infrared spectroscopy\") "
+        "OR "
+        "(\"local field potential\" OR LFP OR \"field potential\") "
+        "OR "
+        "(\"single unit\" OR \"single-unit\" OR \"single-unit activity\" OR SUA "
+        "OR \"multiunit\" OR \"multi-unit\" OR \"multi-unit activity\" OR MUA "
+        "OR spikes OR \"spike train*\" OR \"neuronal firing\") "
+        "OR "
+        "(\"microelectrode array\" OR MEA OR \"Utah array\" OR Neuropixels OR \"depth electrode*\") "
+        "OR "
+        "("
+        "iEEG OR \"intracranial EEG\" OR \"intracranial electroencephalography\" "
+        "OR sEEG OR stereoelectroencephalography "
+        "OR ECoG OR electrocorticography OR \"corticography\" "
+        "OR \"intracranial electroencephalogram\" "
+        "OR \"subdural electrode*\" OR \"subdural grid*\" OR \"subdural strip*\" "
+        ") "
+        "OR "
+        "(BIDS OR \"Brain Imaging Data Structure\")"
     )
 
     return _search_zenodo_api(

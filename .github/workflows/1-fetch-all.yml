@@ -20,6 +20,7 @@ on:
           - figshare
           - osf
           - scidb
+          - datarn
 
 jobs:
   # Trigger individual source workflows
@@ -58,9 +59,14 @@ jobs:
     uses: ./.github/workflows/1-fetch-scidb.yml
     secrets: inherit
 
+  datarn:
+    if: github.event.inputs.sources == 'all' || github.event.inputs.sources == 'datarn' || github.event_name == 'schedule'
+    uses: ./.github/workflows/1-fetch-datarn.yml
+    secrets: inherit
+
   summary:
     name: Summary
-    needs: [openneuro, nemar, eegmanylabs, zenodo, figshare, osf, scidb]
+    needs: [openneuro, nemar, eegmanylabs, zenodo, figshare, osf, scidb, datarn]
     if: always()
     runs-on: ubuntu-latest
     steps:
@@ -77,3 +83,4 @@ jobs:
           echo "| Figshare | ${{ needs.figshare.result || 'skipped' }} |" >> $GITHUB_STEP_SUMMARY
           echo "| OSF | ${{ needs.osf.result || 'skipped' }} |" >> $GITHUB_STEP_SUMMARY
           echo "| SciDB | ${{ needs.scidb.result || 'skipped' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| data.ru.nl | ${{ needs.datarn.result || 'skipped' }} |" >> $GITHUB_STEP_SUMMARY

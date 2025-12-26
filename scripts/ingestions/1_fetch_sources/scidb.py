@@ -9,6 +9,7 @@ Output: consolidated/scidb_datasets.json (Dataset schema format)
 
 import argparse
 import json
+import re
 import sys
 from pathlib import Path
 from typing import Any
@@ -17,6 +18,90 @@ import requests
 
 sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent))
 from eegdash.records import create_dataset
+
+# BIDS indicator files that must be present at root level
+BIDS_REQUIRED_FILES = ["dataset_description.json"]
+BIDS_OPTIONAL_FILES = [
+    "participants.tsv",
+    "participants.json",
+    "README",
+    "README.md",
+    "CHANGES",
+]
+
+# File tree API endpoint
+FILETREE_API_URL = (
+    "https://www.scidb.cn/api/gin-sdb-filetree/public/file/childrenFileListByPath"
+)
+
+
+def clean_html_tags(text: str) -> str:
+    """Remove HTML tags from text (e.g., highlighting spans from search results)."""
+    if not text:
+        return text
+    return re.sub(r"<[^>]+>", "", text)
+
+
+def check_bids_structure(
+    dataset_id: str,
+    version: str = "V1",
+    timeout: float = 15.0,
+) -> tuple[bool, list[str], str | None]:
+    """Check if a SciDB dataset has BIDS structure by examining its file tree.
+
+    Args:
+        dataset_id: The SciDB dataSetId (not the record id)
+        version: Dataset version (default: V1)
+        timeout: Request timeout in seconds
+
+    Returns:
+        Tuple of (is_bids, found_bids_files, bids_version)
+
+    """
+    headers = {
+        "Content-Type": "application/json;charset=utf-8",
+        "Accept": "application/json, text/plain, */*",
+    }
+
+    body = {
+        "dataSetId": dataset_id,
+        "version": version,
+        "path": f"/{version}",
+        "lastIndex": 0,
+        "pageSize": 200,
+    }
+
+    try:
+        response = requests.post(
+            FILETREE_API_URL,
+            json=body,
+            headers=headers,
+            timeout=timeout,
+        )
+        response.raise_for_status()
+        data = response.json()
+
+        if data.get("code") != 20000:
+            return False, [], None
+
+        files = data.get("data", [])
+        file_names = [f.get("fileName", "").lower() for f in files]
+
+        # Check for required BIDS files
+        found_required = [f for f in BIDS_REQUIRED_FILES if f.lower() in file_names]
+        found_optional = [f for f in BIDS_OPTIONAL_FILES if f.lower() in file_names]
+
+        is_bids = len(found_required) > 0
+        found_files = found_required + found_optional
+
+        # TODO: Could fetch dataset_description.json to get BIDS version
+        bids_version = None
+
+        return is_bids, found_files, bids_version
+
+    except Exception:
+        return False, [], None
+
 
 # Add ingestions dir to path for _serialize module
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
@@ -247,16 +332,22 @@ def process_scidb_dataset(
         if not original_id:
             return None
 
-        # Extract metadata
-        title = record.get("titleEn", "") or record.get("titleZh", "")
-        description = record.get("introductionEn", "") or record.get(
-            "introductionZh", ""
+        # Extract metadata - clean HTML tags from search result highlighting
+        title = clean_html_tags(record.get("titleEn", "") or record.get("titleZh", ""))
+        description = clean_html_tags(
+            record.get("introductionEn", "") or record.get("introductionZh", "")
         )
 
-        # Extract authors
+        # Get the dataSetId (different from id - needed for file tree API)
+        data_set_id = record.get("dataSetId", "")
+        version = record.get("version", "V1")
+
+        # Extract authors - clean HTML tags
         authors = []
         for author_dict in record.get("author", []):
-            name = author_dict.get("nameEn", "") or author_dict.get("nameZh", "")
+            name = clean_html_tags(
+                author_dict.get("nameEn", "") or author_dict.get("nameZh", "")
+            )
             if name:
                 authors.append(name)
 
@@ -285,16 +376,21 @@ def process_scidb_dataset(
 
         # Add SciDB-specific metadata
         dataset["scidb_id"] = original_id
+        dataset["scidb_dataset_id"] = data_set_id  # For file tree API
+        dataset["scidb_version"] = version
+
+        # Extract DOI - it's directly in the record
         if doi := record.get("doi"):
             dataset["dataset_doi"] = doi
+            # Add to identifiers if present
+            if "identifiers" not in dataset:
+                dataset["identifiers"] = {}
+            dataset["identifiers"]["doi"] = doi
+
         if description:
-            dataset["description"] = description[:1000]
+            dataset["description"] = clean_html_tags(description[:1000])
 
         return dataset
-
-    except Exception as e:
-        print(f"  Error processing dataset {record.get('id')}: {e}", file=sys.stderr)
-        return None
 
     except Exception as e:
         print(f"  Error processing dataset {record.get('id')}: {e}", file=sys.stderr)
@@ -316,6 +412,11 @@ def main() -> None:
         type=int,
         default=100,
         help="Maximum results per modality (default: 100).",
+    )
+    parser.add_argument(
+        "--validate-bids",
+        action="store_true",
+        help="Validate BIDS structure by checking file tree (slower but more accurate).",
     )
     parser.add_argument(
         "--digested-at",
@@ -342,11 +443,40 @@ def main() -> None:
     # Convert to Dataset schema
     print(f"\nProcessing {len(unique_datasets)} unique datasets...")
     datasets = []
-    for record in unique_datasets:
+    bids_validated_count = 0
+    bids_confirmed_count = 0
+
+    for i, record in enumerate(unique_datasets, 1):
         modality = modality_map[record.get("id")]
         dataset = process_scidb_dataset(record, modality)
         if dataset:
+            # Optionally validate BIDS structure
+            if args.validate_bids:
+                data_set_id = record.get("dataSetId", "")
+                version = record.get("version", "V1")
+                if data_set_id:
+                    is_bids, bids_files, bids_version = check_bids_structure(
+                        data_set_id, version
+                    )
+                    bids_validated_count += 1
+                    if is_bids:
+                        bids_confirmed_count += 1
+                        dataset["bids_validated"] = True
+                        dataset["bids_files_found"] = bids_files
+                        if bids_version:
+                            dataset["bids_version"] = bids_version
+                    else:
+                        dataset["bids_validated"] = False
+
+                    if i % 10 == 0:
+                        print(f"  Validated {i}/{len(unique_datasets)} datasets...")
+
             datasets.append(dataset)
+
+    if args.validate_bids:
+        print(
+            f"\nBIDS Validation: {bids_confirmed_count}/{bids_validated_count} confirmed as BIDS"
+        )
 
     # Add digested_at timestamp if provided
     if args.digested_at:

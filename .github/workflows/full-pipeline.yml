@@ -1,4 +1,4 @@
-# Full ingestion pipeline: Fetch → Clone/Digest → Inject
+e# Full ingestion pipeline: Fetch → Clone/Digest → Inject
 name: "Full Pipeline: Ingestion"
 
 on:

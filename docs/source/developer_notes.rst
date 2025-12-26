@@ -1,5 +1,3 @@
-:orphan:
-
 .. _developer_notes:
 
 Developer Notes
@@ -99,6 +97,47 @@ Metadata & Database Management
 The EEGDash API server uses a modern FastAPI-based architecture with MongoDB for
 metadata storage and optional Redis for distributed rate limiting.
 
+**Database Schema (Two-Level Hierarchy)**
+
+EEGDash uses two separate MongoDB collections for efficient querying:
+
+1. **datasets** - Per-dataset metadata for discovery and filtering:
+
+   .. code-block:: json
+
+      {
+        "dataset_id": "ds002718",
+        "name": "EEG Dataset Name",
+        "source": "openneuro",
+        "recording_modality": "eeg",
+        "modalities": ["eeg"],
+        "tasks": ["RestingState"],
+        "demographics": {
+          "subjects_count": 32,
+          "age_mean": 28.5,
+          "sex_distribution": {"m": 16, "f": 16}
+        },
+        "external_links": {
+          "source_url": "https://openneuro.org/datasets/ds002718"
+        }
+      }
+
+2. **records** - Per-file metadata optimized for fast loading:
+
+   .. code-block:: json
+
+      {
+        "dataset": "ds002718",
+        "data_name": "ds002718_sub-012_task-RestingState_eeg.set",
+        "bids_relpath": "sub-012/eeg/sub-012_task-RestingState_eeg.set",
+        "entities": {"subject": "012", "task": "RestingState"},
+        "storage": {
+          "backend": "s3",
+          "base": "s3://openneuro.org/ds002718",
+          "raw_key": "sub-012/eeg/sub-012_task-RestingState_eeg.set"
+        }
+      }
+
 **Database Access**
 
 * Sign in to `mongodb.com <https://mongodb.com>`_ using the shared account
@@ -131,6 +170,123 @@ in the ``mongodb-eegdash-server/api/`` directory:
    MONGO_MAX_POOL_SIZE=10
    MONGO_MIN_POOL_SIZE=1
    MONGO_CONNECT_TIMEOUT_MS=5000
+
+
+Dataset Ingestion Pipeline
+--------------------------
+
+The ingestion pipeline transforms datasets from 8 sources into MongoDB-ready
+documents. It runs as GitHub Actions workflows with data stored in the
+``eegdash-dataset-listings`` repository.
+
+**Supported Sources (8 total)**
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 20 60
+
+   * - Source
+     - Method
+     - Notes
+   * - OpenNeuro
+     - GraphQL API + Git shallow clone
+     - S3 storage backend (``s3://openneuro.org``)
+   * - NEMAR
+     - GitHub API + Git shallow clone
+     - HTTPS storage backend
+   * - EEGManyLabs (GIN)
+     - GIN API + Git shallow clone
+     - HTTPS storage backend
+   * - Figshare
+     - REST API manifest
+     - No git clone needed
+   * - Zenodo
+     - REST API manifest
+     - No git clone needed
+   * - OSF
+     - REST API recursive traversal
+     - No git clone needed
+   * - ScienceDB (scidb.cn)
+     - Query Service API
+     - File listing requires authentication
+   * - data.ru.nl
+     - WebDAV PROPFIND
+     - Recursive directory listing
+
+**Pipeline Steps**
+
+The pipeline consists of 3 scripts in ``scripts/ingestions/``:
+
+1. **Fetch** (``1_fetch_sources/*.py``) - Retrieve dataset listings from each source:
+
+   .. code-block:: bash
+
+      python scripts/ingestions/1_fetch_sources/openneuro.py \
+        --output consolidated/openneuro_datasets.json
+
+2. **Clone & Digest** (``2_clone.py`` + ``3_digest.py``) - Smart clone without
+   downloading raw data, then extract BIDS metadata:
+
+   .. code-block:: bash
+
+      # Smart clone (shallow git or API manifest)
+      python scripts/ingestions/2_clone.py \
+        --input consolidated/openneuro_datasets.json \
+        --output data/cloned
+
+      # Digest to Dataset + Records JSON
+      python scripts/ingestions/3_digest.py \
+        --input data/cloned \
+        --output digestion_output
+
+3. **Inject** (``4_inject.py``) - Upload to MongoDB collections:
+
+   .. code-block:: bash
+
+      python scripts/ingestions/4_inject.py \
+        --input digestion_output \
+        --database eegdashstaging \
+        --dry-run  # Remove for actual upload
+
+**Smart Clone Strategies**
+
+The clone script uses different strategies per source to avoid downloading
+large raw data files:
+
+- **Git sources** (OpenNeuro, NEMAR, GIN): Shallow clone with
+  ``GIT_LFS_SKIP_SMUDGE=1`` - files appear as symlinks (~300KB per dataset)
+- **API sources** (Figshare, Zenodo, OSF): REST API manifest fetching
+- **WebDAV sources** (data.ru.nl): PROPFIND recursive directory listing
+
+**Output Structure**
+
+.. code-block:: text
+
+   digestion_output/
+   ├── ds001785/
+   │   ├── ds001785_dataset.json   # Dataset document (1 per dataset)
+   │   ├── ds001785_records.json   # Records array (many per dataset)
+   │   └── ds001785_summary.json   # Processing summary
+   └── BATCH_SUMMARY.json
+
+**CI/CD Workflows**
+
+Automated workflows in ``.github/workflows/``:
+
+.. list-table::
+   :header-rows: 1
+   :widths: 30 70
+
+   * - Workflow
+     - Description
+   * - ``1-fetch-*.yml``
+     - Fetch datasets from each source (weekly on Monday)
+   * - ``2-digest-*.yml``
+     - Clone + digest (triggered after fetch)
+   * - ``3-inject-all.yml``
+     - Inject to MongoDB (weekly on Tuesday)
+   * - ``full-pipeline.yml``
+     - Manual full pipeline: Fetch → Digest → Inject
 
 API Gateway Endpoint
 --------------------

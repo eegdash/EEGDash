@@ -1,27 +1,12 @@
-"""Fetch neural recording BIDS datasets from Zenodo with multiple strategies.
+"""Fetch neural recording BIDS datasets from Zenodo with maximum recall.
 
-This script consolidates three previously separate Zenodo fetching approaches:
+AGGRESSIVE SEARCH STRATEGY - Maximum Recall:
+This script searches Zenodo broadly for ANY neurophysiology modality OR BIDS reference,
+capturing all potentially relevant datasets including false positives.
 
-1. CONSERVATIVE (Default):
-   - Balanced recall and precision
-   - Searches for neuroimaging modalities (EEG, MEG, iEEG, etc.) AND BIDS keywords
-   - Output: consolidated/zenodo_datasets.json
+Expected results: ~1,500+ datasets across all neural recording modalities.
 
-2. AGGRESSIVE:
-   - Maximum recall strategy
-   - Searches broadly for ANY neurophysiology modality OR BIDS reference
-   - Captures ~1,570 datasets (many false positives)
-   - Output: consolidated/zenodo_datasets_aggressive.json
-   - Use case: Data discovery phase before filtering
-
-3. FILTER:
-   - Post-processing of aggressive results
-   - Identifies genuine BIDS datasets from aggressive search results
-   - Validates structure using archive preview and file analysis
-   - Outputs: validated BIDS, convertible neurophysiology, rejected false positives
-   - Use case: Clean dataset classification
-
-All modes output Dataset schema format for consistency with other sources.
+Output: consolidated/zenodo_datasets.json (Dataset schema format)
 """
 
 import argparse
@@ -40,48 +25,17 @@ from eegdash.records import create_dataset
 
 
 # =============================================================================
-# Search Functions
+# Search Function
 # =============================================================================
 
 
-def search_zenodo_conservative(
-    max_results: int = 1000,
-    access_token: str | None = None,
-) -> list[dict[str, Any]]:
-    """Search Zenodo with balanced approach (modalities AND BIDS).
-
-    This is the default mode: balanced recall and precision.
-
-    Args:
-        max_results: Maximum datasets to fetch
-        access_token: Optional Zenodo API token
-
-    Returns:
-        List of Zenodo records
-
-    """
-    query = (
-        "(EEG OR electroencephalography OR MEG OR magnetoencephalography OR "
-        "iEEG OR 'intracranial EEG' OR ECoG OR electrocorticography OR SEEG OR "
-        "'stereo EEG' OR EMG OR electromyography) AND "
-        "(BIDS OR 'Brain Imaging Data Structure' OR neuroimaging)"
-    )
-
-    return _search_zenodo_api(
-        query=query,
-        max_results=max_results,
-        access_token=access_token,
-        mode="conservative",
-    )
-
-
-def search_zenodo_aggressive(
+def search_zenodo(
     max_results: int = 2000,
     access_token: str | None = None,
 ) -> list[dict[str, Any]]:
     """Search Zenodo aggressively for maximum recall.
 
-    Uses broader search: ANY modality OR BIDS (maximum recall strategy).
+    Uses broad search: ANY neurophysiology modality OR BIDS (maximum recall strategy).
 
     Args:
         max_results: Maximum datasets to fetch
@@ -102,15 +56,13 @@ def search_zenodo_aggressive(
         query=query,
         max_results=max_results,
         access_token=access_token,
-        mode="aggressive",
     )
 
 
 def _search_zenodo_api(
     query: str,
-    max_results: int = 1000,
+    max_results: int = 2000,
     access_token: str | None = None,
-    mode: str = "conservative",
 ) -> list[dict[str, Any]]:
     """Core Zenodo REST API search function.
 
@@ -118,7 +70,6 @@ def _search_zenodo_api(
         query: Search query
         max_results: Maximum results to fetch
         access_token: Optional auth token
-        mode: Search mode (conservative, aggressive, etc.)
 
     Returns:
         List of Zenodo records
@@ -142,7 +93,7 @@ def _search_zenodo_api(
 
     rate_limit_info = "Auth (100 req/min)" if access_token else "Guest (60 req/min)"
     print(f"\n{'=' * 70}")
-    print(f"Zenodo {mode.upper()} Search - {rate_limit_info}")
+    print(f"Zenodo Aggressive Search - {rate_limit_info}")
     print(f"{'=' * 70}")
     print(f"Query: {query}")
     print(f"Max results: {max_results}")
@@ -507,175 +458,25 @@ def extract_dataset_info(
 
 
 # =============================================================================
-# Filtering Functions (for AGGRESSIVE mode post-processing)
-# =============================================================================
-
-
-BIDS_FILE_INDICATORS = {
-    "strict": [
-        "dataset_description.json",
-        "participants.tsv",
-        "README.md",
-        "_eeg.json",
-        "_channels.tsv",
-        "_events.tsv",
-        "sub-",
-        "ses-",
-        "task-",
-        "run-",
-    ],
-    "moderate": [
-        "_eeg.set",
-        "_eeg.bdf",
-        "_eeg.edf",
-        "_eeg.vhdr",
-        "_meg.fif",
-        "_ieeg.json",
-        "derivatives/",
-        "sourcedata/",
-    ],
-}
-
-
-def classify_bids_dataset(
-    record: dict[str, Any],
-    enrich_oaipmh: bool = False,
-    access_token: str | None = None,
-) -> tuple[str, dict[str, Any]]:
-    """Classify dataset as BIDS, convertible, or rejected.
-
-    Args:
-        record: Zenodo record
-        enrich_oaipmh: Whether to enrich with OAI-PMH
-        access_token: Optional auth token
-
-    Returns:
-        Tuple of (classification, dataset_dict)
-        Classification: "bids", "neurophysiology", or "rejected"
-
-    """
-    metadata = record.get("metadata", {})
-    record_id = str(record.get("id", ""))
-
-    title = (metadata.get("title", "") or "").lower()
-    description = (metadata.get("description", "") or "").lower()
-    keywords = [
-        (s.get("subject", s.get("id", "")) or "").lower()
-        for s in metadata.get("subjects", [])
-    ]
-    combined_text = f"{title} {description} {' '.join(keywords)}"
-
-    # Check for BIDS keywords
-    has_bids_keyword = any(
-        x in combined_text for x in ["bids", "brain imaging data structure"]
-    )
-
-    # Check archive contents for BIDS structure
-    archive_bids_indicators = 0
-    files_data = record.get("files", {})
-    if isinstance(files_data, dict):
-        file_entries = files_data.get("entries", {})
-        for filename in file_entries:
-            fn_lower = filename.lower()
-            if any(fn_lower.endswith(ext) for ext in [".zip", ".tar.gz", ".tgz"]):
-                preview = get_archive_preview_files(record_id, filename, access_token)
-                for item in preview:
-                    item_lower = item.lower()
-                    for indicator in BIDS_FILE_INDICATORS["strict"]:
-                        if indicator in item_lower:
-                            archive_bids_indicators += 1
-
-    # Classification logic
-    has_neuro_content = any(
-        x in combined_text
-        for x in [
-            "eeg",
-            "meg",
-            "ieeg",
-            "ecog",
-            "emg",
-            "neurophysiology",
-            "electrophysiology",
-        ]
-    )
-
-    if has_bids_keyword or archive_bids_indicators >= 3:
-        classification = "bids"
-    elif has_neuro_content:
-        classification = "neurophysiology"
-    else:
-        classification = "rejected"
-
-    # Extract dataset info
-    dataset_dict = extract_dataset_info(record, enrich_oaipmh, access_token)
-
-    return classification, dataset_dict
-
-
-# =============================================================================
 # Main CLI
 # =============================================================================
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="Fetch neural recording BIDS datasets from Zenodo (consolidated)",
-        formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="""
-SEARCH MODES:
-
-  conservative (DEFAULT): Balanced recall and precision
-    Query: (modalities) AND (BIDS)
-    Expected: ~100-200 high-quality BIDS datasets
-    Use case: Clean dataset collection
-
-  aggressive: Maximum recall (discovers all neurophysiology)
-    Query: (modalities) OR (BIDS)
-    Expected: ~1,500+ datasets (many false positives)
-    Use case: Initial discovery, requires filtering
-
-  filter: Post-process aggressive results
-    Input: Aggressive search results or saved file
-    Output: Classified as BIDS, neurophysiology, or rejected
-    Use case: Validate and categorize large discovery sets
-
-EXAMPLES:
-
-  # Conservative mode (recommended for production)
-  python zenodo.py --mode conservative
-
-  # Aggressive discovery
-  python zenodo.py --mode aggressive --size 2000
-
-  # Filter aggressive results (requires input file)
-  python zenodo.py --mode filter --input consolidated/zenodo_datasets_aggressive.json
-""",
-    )
-
-    parser.add_argument(
-        "--mode",
-        type=str,
-        choices=["conservative", "aggressive", "filter"],
-        default="conservative",
-        help="Search mode (default: conservative)",
+        description="Fetch neural recording BIDS datasets from Zenodo (aggressive search)",
     )
     parser.add_argument(
         "--output",
         type=Path,
-        default=None,
-        help="Output JSON file (default: zenodo_datasets_<mode>.json)",
-    )
-    parser.add_argument(
-        "--input",
-        type=Path,
-        default=None,
-        help="Input JSON file for filter mode",
+        default=Path("consolidated/zenodo_datasets.json"),
+        help="Output JSON file (default: zenodo_datasets.json)",
     )
     parser.add_argument(
         "--size",
         type=int,
-        default=1000,
-        help="Max results to fetch (default: 1000 for conservative, 2000 for aggressive)",
+        default=2000,
+        help="Max results to fetch (default: 2000)",
     )
     parser.add_argument(
         "--access-token",
@@ -691,66 +492,8 @@ EXAMPLES:
 
     args = parser.parse_args()
 
-    # Set default output path based on mode
-    if args.output is None:
-        args.output = Path(f"consolidated/zenodo_datasets_{args.mode}.json")
-
-    # Aggressive mode: default size = 2000
-    if args.mode == "aggressive" and args.size == 1000:
-        args.size = 2000
-
-    # FILTER MODE
-    if args.mode == "filter":
-        if not args.input or not args.input.exists():
-            print(
-                f"Error: Filter mode requires --input with valid file",
-                file=sys.stderr,
-            )
-            sys.exit(1)
-
-        print(f"\nLoading aggressive results from {args.input}...")
-        with args.input.open() as f:
-            input_data = json.load(f)
-
-        # Classify records
-        classified = {"bids": [], "neurophysiology": [], "rejected": []}
-        for i, record in enumerate(input_data, 1):
-            if i % 100 == 0:
-                print(f"  Classified {i}/{len(input_data)}...")
-
-            classification, dataset_dict = classify_bids_dataset(
-                record,
-                enrich_oaipmh=args.enrich_oaipmh,
-                access_token=args.access_token,
-            )
-            classified[classification].append(dataset_dict)
-
-        # Save all classifications
-        output_dir = args.output.parent
-        output_dir.mkdir(parents=True, exist_ok=True)
-
-        for class_name, datasets in classified.items():
-            output_path = output_dir / f"zenodo_datasets_{class_name}.json"
-            with output_path.open("w") as f:
-                json.dump(datasets, f, indent=2)
-            print(f"Saved {len(datasets)} {class_name} datasets to {output_path}")
-
-        # Print summary
-        print(f"\n{'=' * 70}")
-        print(f"Classification Results:")
-        print(f"  BIDS datasets:        {len(classified['bids']):4d}")
-        print(f"  Neurophysiology:      {len(classified['neurophysiology']):4d}")
-        print(f"  Rejected:             {len(classified['rejected']):4d}")
-        print(f"  Total:                {len(input_data):4d}")
-        print(f"{'=' * 70}")
-
-        return
-
-    # CONSERVATIVE / AGGRESSIVE MODES
-    if args.mode == "conservative":
-        records = search_zenodo_conservative(max_results=args.size, access_token=args.access_token)
-    else:  # aggressive
-        records = search_zenodo_aggressive(max_results=args.size, access_token=args.access_token)
+    # Search Zenodo
+    records = search_zenodo(max_results=args.size, access_token=args.access_token)
 
     if not records:
         print("No datasets found.", file=sys.stderr)

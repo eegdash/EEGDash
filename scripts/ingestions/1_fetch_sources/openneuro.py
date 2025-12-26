@@ -4,6 +4,7 @@ import argparse
 import json
 import sys
 from collections.abc import Iterator
+from datetime import datetime, timezone
 from pathlib import Path
 
 import requests
@@ -11,6 +12,10 @@ import requests
 # Add parent paths for local imports
 sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 from eegdash.records import Dataset, create_dataset
+
+# Add ingestions dir to path for _serialize module
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from _serialize import save_datasets_deterministically
 
 GRAPHQL_URL = "https://openneuro.org/crn/graphql"
 
@@ -335,6 +340,12 @@ def main() -> None:
         action="store_true",
         help="Fetch only dataset IDs and modality (faster, less data)",
     )
+    parser.add_argument(
+        "--digested-at",
+        type=str,
+        default=None,
+        help="ISO 8601 timestamp for digested_at field (for deterministic output, default: omitted for determinism)",
+    )
     args = parser.parse_args()
 
     if args.minimal:
@@ -350,10 +361,15 @@ def main() -> None:
             timeout=args.timeout,
             batch_size=args.batch_size,
         )
+        
+        # Add digested_at timestamp if provided
+        if args.digested_at:
+            for ds in datasets:
+                if "timestamps" in ds:
+                    ds["timestamps"]["digested_at"] = args.digested_at
 
-    args.output.parent.mkdir(parents=True, exist_ok=True)
-    with args.output.open("w", encoding="utf-8") as fh:
-        json.dump(datasets, fh, indent=2, sort_keys=True)
+    # Save deterministically
+    save_datasets_deterministically(datasets, args.output)
 
     print(f"\nSaved {len(datasets)} dataset entries to {args.output}")
     

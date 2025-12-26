@@ -3,12 +3,19 @@
 This script uses the Zenodo REST API to search for EEG, MEG, and other neural recording datasets.
 It searches for specific recording modalities and the BIDS standard.
 
+BIDS validation is performed by checking for:
+- Required BIDS files (dataset_description.json)
+- Optional BIDS files (participants.tsv, README, etc.)
+- BIDS-like subject folder patterns (sub-XX or sub-XX.zip)
+- BIDS dataset zip files (containing BIDS data)
+
 Output: consolidated/zenodo_datasets.json
 """
 
 import argparse
 import json
 import os
+import re
 import sys
 import time
 from pathlib import Path
@@ -39,6 +46,93 @@ MODALITY_SEARCHES = {
     "lfp": "lfp",
     "ieeg": "ieeg",
 }
+
+# BIDS indicator files
+BIDS_REQUIRED_FILES = ["dataset_description.json"]
+BIDS_OPTIONAL_FILES = [
+    "participants.tsv",
+    "participants.json",
+    "readme",
+    "readme.md",
+    "readme.txt",
+    "changes",
+]
+
+# Patterns for BIDS subject folders/zips
+BIDS_SUBJECT_PATTERN = re.compile(r"^sub-[a-zA-Z0-9]+(?:\.zip)?$", re.IGNORECASE)
+
+# Patterns for BIDS dataset zips (contains BIDS data inside)
+BIDS_DATASET_ZIP_PATTERN = re.compile(
+    r"(?:bids|dataset).*\.zip$|.*_bids\.zip$", re.IGNORECASE
+)
+
+
+def validate_bids_structure(files: list[dict[str, Any]]) -> dict[str, Any]:
+    """Validate BIDS structure from file list.
+
+    Checks for:
+    - Required BIDS files (dataset_description.json)
+    - Optional BIDS files (participants.tsv, README, etc.)
+    - Subject-level files/zips (sub-XX or sub-XX.zip)
+    - BIDS dataset zip files
+
+    Args:
+        files: List of file dictionaries from Zenodo API
+
+    Returns:
+        Dictionary with validation results:
+        - is_bids: Whether dataset appears to be BIDS compliant
+        - bids_files_found: List of BIDS files found
+        - subject_count: Number of subject folders/zips detected
+        - has_subject_zips: Whether subjects are in ZIP format
+        - has_bids_zip: Whether there's a BIDS dataset zip
+
+    """
+    file_names = [f.get("key", "").lower() for f in files]
+    file_names_original = [f.get("key", "") for f in files]
+
+    # Check for required BIDS files
+    found_required = []
+    for bf in BIDS_REQUIRED_FILES:
+        if bf.lower() in file_names:
+            found_required.append(bf)
+
+    # Check for optional BIDS files
+    found_optional = []
+    for bf in BIDS_OPTIONAL_FILES:
+        if bf.lower() in file_names:
+            found_optional.append(bf)
+
+    # Check for subject folders/zips
+    subject_files = []
+    for fn in file_names_original:
+        if BIDS_SUBJECT_PATTERN.match(fn):
+            subject_files.append(fn)
+
+    # Check for BIDS dataset zips
+    bids_zips = []
+    for fn in file_names_original:
+        if BIDS_DATASET_ZIP_PATTERN.search(fn):
+            bids_zips.append(fn)
+
+    # Determine if it's BIDS
+    # Accept if:
+    # - has dataset_description.json OR
+    # - has ≥2 subject folders/zips with BIDS naming OR
+    # - has a BIDS dataset zip
+    is_bids = len(found_required) > 0 or len(subject_files) >= 2 or len(bids_zips) > 0
+
+    # Check if subjects are zipped
+    has_subject_zips = any(fn.lower().endswith(".zip") for fn in subject_files)
+
+    return {
+        "is_bids": is_bids,
+        "bids_files_found": found_required + found_optional,
+        "subject_count": len(subject_files),
+        "has_subject_zips": has_subject_zips,
+        "has_bids_zip": len(bids_zips) > 0,
+        "bids_zip_files": bids_zips[:5],  # Store first 5 for reference
+    }
 
 
 def fetch_zenodo_datasets(
@@ -284,6 +378,15 @@ def extract_dataset_info(
         # Create dataset record
         source_url = record.get("links", {}).get("self_html", "")
 
+        # Get files for BIDS validation and size calculation
+        files = record.get("files", [])
+
+        # Calculate total size
+        total_size_bytes = sum(f.get("size", 0) for f in files)
+
+        # Validate BIDS structure
+        bids_validation = validate_bids_structure(files)
+
         # Get publication date for SurnameYEAR ID
         pub_date = metadata.get("publication_date") or record.get("created")
 
@@ -304,10 +407,23 @@ def extract_dataset_info(
             authors=creators if creators else None,
             source_url=source_url,
             dataset_doi=doi if doi else None,
+            total_files=len(files),
+            size_bytes=total_size_bytes if total_size_bytes > 0 else None,
         )
 
         # Store original Zenodo ID for reference
         dataset["zenodo_id"] = record_id
+
+        # Add BIDS validation results
+        dataset["bids_validated"] = bids_validation["is_bids"]
+        if bids_validation["bids_files_found"]:
+            dataset["bids_files_found"] = bids_validation["bids_files_found"]
+        if bids_validation["subject_count"] > 0:
+            dataset["bids_subject_count"] = bids_validation["subject_count"]
+            dataset["bids_has_subject_zips"] = bids_validation["has_subject_zips"]
+        if bids_validation["has_bids_zip"]:
+            dataset["bids_has_dataset_zip"] = True
+            dataset["bids_zip_files"] = bids_validation["bids_zip_files"]
 
         return dataset
 
@@ -390,6 +506,20 @@ def main() -> None:
     print(f"Successfully saved {len(datasets)} datasets to {args.output}")
     print(f"{'=' * 70}")
 
+    # BIDS validation summary
+    bids_validated = sum(1 for ds in datasets if ds.get("bids_validated"))
+    bids_with_subjects = sum(
+        1 for ds in datasets if ds.get("bids_subject_count", 0) > 0
+    )
+    bids_with_zips = sum(1 for ds in datasets if ds.get("bids_has_subject_zips"))
+    bids_with_dataset_zip = sum(1 for ds in datasets if ds.get("bids_has_dataset_zip"))
+
+    print("\nBIDS Validation:")
+    print(f"  Confirmed BIDS: {bids_validated}/{len(datasets)}")
+    print(f"  With subject folders/zips: {bids_with_subjects}/{len(datasets)}")
+    print(f"  Using subject-level ZIPs: {bids_with_zips}/{len(datasets)}")
+    print(f"  With BIDS dataset ZIP: {bids_with_dataset_zip}/{len(datasets)}")
+
     # Statistics
     modalities = {}
     for ds in datasets:
@@ -400,6 +530,15 @@ def main() -> None:
         print("\nModalities detected:")
         for mod in sorted(modalities.keys()):
             print(f"  {mod.upper():10s}: {modalities[mod]:4d}")
+
+    # File statistics
+    datasets_with_files = sum(1 for ds in datasets if ds.get("total_files", 0) > 0)
+    print(f"\nDatasets with files: {datasets_with_files}/{len(datasets)}")
+
+    # Total size
+    total_size_bytes = sum(ds.get("size_bytes", 0) or 0 for ds in datasets)
+    total_size_gb = round(total_size_bytes / (1024 * 1024 * 1024), 2)
+    print(f"Total Size: {total_size_gb} GB")
 
     datasets_with_doi = sum(1 for ds in datasets if ds.get("dataset_doi"))
     print(f"\nDatasets with DOI: {datasets_with_doi}/{len(datasets)}")

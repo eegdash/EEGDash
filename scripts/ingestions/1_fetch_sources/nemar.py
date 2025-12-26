@@ -6,10 +6,8 @@ from dataset_description.json and participants.tsv files.
 """
 
 import argparse
-import json
 import sys
 from collections.abc import Iterator
-from datetime import datetime, timezone
 from pathlib import Path
 
 import requests
@@ -26,7 +24,9 @@ GITHUB_API_URL = "https://api.github.com"
 GITHUB_RAW_URL = "https://raw.githubusercontent.com"
 
 
-def fetch_bids_description(org: str, repo: str, branch: str, timeout: float = 10.0) -> dict | None:
+def fetch_bids_description(
+    org: str, repo: str, branch: str, timeout: float = 10.0
+) -> dict | None:
     """Fetch dataset_description.json from a repository."""
     url = f"{GITHUB_RAW_URL}/{org}/{repo}/{branch}/dataset_description.json"
     try:
@@ -38,7 +38,9 @@ def fetch_bids_description(org: str, repo: str, branch: str, timeout: float = 10
     return None
 
 
-def fetch_participants_tsv(org: str, repo: str, branch: str, timeout: float = 10.0) -> list[dict] | None:
+def fetch_participants_tsv(
+    org: str, repo: str, branch: str, timeout: float = 10.0
+) -> list[dict] | None:
     """Fetch and parse participants.tsv from a repository."""
     url = f"{GITHUB_RAW_URL}/{org}/{repo}/{branch}/participants.tsv"
     try:
@@ -63,7 +65,7 @@ def extract_ages_from_participants(participants: list[dict] | None) -> list[int]
     """Extract ages from participants data."""
     if not participants:
         return []
-    
+
     ages = []
     for p in participants:
         # Try common age column names
@@ -126,7 +128,10 @@ def fetch_repositories(
                 )
 
                 # Check rate limit
-                if response.status_code == 403 and "rate limit" in response.text.lower():
+                if (
+                    response.status_code == 403
+                    and "rate limit" in response.text.lower()
+                ):
                     print("  Warning: GitHub API rate limit exceeded")
                     remaining = response.headers.get("X-RateLimit-Remaining", "?")
                     reset = response.headers.get("X-RateLimit-Reset", "?")
@@ -146,21 +151,25 @@ def fetch_repositories(
                     # Skip special GitHub repositories
                     if repo_name in [".github", ".gitignore", "README"]:
                         continue
-                    
+
                     # NEMAR datasets start with "nm" prefix
                     if not repo_name.startswith("nm"):
                         continue
 
                     total_fetched += 1
-                    
+
                     # Fetch BIDS metadata
                     bids_desc = None
                     participants = None
                     if fetch_bids:
                         branch = repo.get("default_branch", "main")
-                        bids_desc = fetch_bids_description(organization, repo_name, branch)
-                        participants = fetch_participants_tsv(organization, repo_name, branch)
-                    
+                        bids_desc = fetch_bids_description(
+                            organization, repo_name, branch
+                        )
+                        participants = fetch_participants_tsv(
+                            organization, repo_name, branch
+                        )
+
                     # Extract metadata from BIDS description
                     authors = []
                     funding = []
@@ -168,7 +177,7 @@ def fetch_repositories(
                     bids_version = None
                     dataset_doi = None
                     name = repo.get("description") or repo_name
-                    
+
                     if bids_desc:
                         name = bids_desc.get("Name") or name
                         authors = bids_desc.get("Authors") or []
@@ -176,14 +185,14 @@ def fetch_repositories(
                         license_str = bids_desc.get("License")
                         bids_version = bids_desc.get("BIDSVersion")
                         dataset_doi = bids_desc.get("DatasetDOI")
-                    
+
                     # Extract ages from participants
                     ages = extract_ages_from_participants(participants)
                     subjects_count = len(participants) if participants else 0
-                    
+
                     # Build NEMAR GitHub URL
                     nemar_url = f"https://github.com/nemardatasets/{repo_name}"
-                    
+
                     # Create Dataset document
                     yield create_dataset(
                         dataset_id=repo_name,
@@ -193,8 +202,16 @@ def fetch_repositories(
                         modalities=["eeg"],
                         bids_version=bids_version,
                         license=license_str,
-                        authors=authors if isinstance(authors, list) else [authors] if authors else [],
-                        funding=funding if isinstance(funding, list) else [funding] if funding else [],
+                        authors=authors
+                        if isinstance(authors, list)
+                        else [authors]
+                        if authors
+                        else [],
+                        funding=funding
+                        if isinstance(funding, list)
+                        else [funding]
+                        if funding
+                        else [],
                         dataset_doi=dataset_doi,
                         subjects_count=subjects_count,
                         ages=ages,
@@ -202,7 +219,7 @@ def fetch_repositories(
                         source_url=nemar_url,
                         dataset_modified_at=repo.get("pushed_at"),
                     )
-                    
+
                     if total_fetched % 20 == 0:
                         print(f"  Processed {total_fetched} repositories...")
 
@@ -216,7 +233,9 @@ def fetch_repositories(
 
             except requests.exceptions.RequestException as e:
                 attempt += 1
-                print(f"  Warning: Error fetching page {page} (attempt {attempt}/{retries}): {e}")
+                print(
+                    f"  Warning: Error fetching page {page} (attempt {attempt}/{retries}): {e}"
+                )
                 if attempt >= retries:
                     print(f"  Skipping to next page after {retries} failed attempts")
                     page += 1
@@ -298,19 +317,25 @@ def main() -> None:
     if datasets:
         print("\nSummary:")
         print(f"  Total datasets: {len(datasets)}")
-        
+
         # Count with BIDS info
         with_bids = sum(1 for d in datasets if d.get("bids_version"))
         print(f"  With BIDS version: {with_bids}")
-        
+
         # Count with participants
-        with_subjects = sum(1 for d in datasets if d.get("demographics", {}).get("subjects_count", 0) > 0)
+        with_subjects = sum(
+            1
+            for d in datasets
+            if d.get("demographics", {}).get("subjects_count", 0) > 0
+        )
         print(f"  With subject count: {with_subjects}")
-        
+
         # Total subjects
-        total_subjects = sum(d.get("demographics", {}).get("subjects_count", 0) for d in datasets)
+        total_subjects = sum(
+            d.get("demographics", {}).get("subjects_count", 0) for d in datasets
+        )
         print(f"  Total subjects: {total_subjects}")
-        
+
         # With ages
         with_ages = sum(1 for d in datasets if d.get("demographics", {}).get("ages"))
         print(f"  With age info: {with_ages}")

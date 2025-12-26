@@ -187,7 +187,9 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
         # Separate query kwargs from BaseDataset constructor kwargs
         self.query = query or {}
         self.query.update(query_kwargs)
-        base_dataset_kwargs = {k: v for k, v in kwargs.items() if k not in ALLOWED_QUERY_FIELDS}
+        base_dataset_kwargs = {
+            k: v for k, v in kwargs.items() if k not in ALLOWED_QUERY_FIELDS
+        }
 
         if "dataset" not in self.query:
             # If explicit records are provided, infer dataset from records

@@ -140,7 +140,5 @@ def test_build_query_rejects_none_and_empty():
 
 
 def test_build_query_cleans_list_values():
-    q = build_query_from_kwargs(
-        task=[" A ", None, "B", "", "A"]
-    )  # dedupe + strip
+    q = build_query_from_kwargs(task=[" A ", None, "B", "", "A"])  # dedupe + strip
     assert q == {"task": {"$in": ["A", "B"]}}

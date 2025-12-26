@@ -90,7 +90,9 @@ class EEGDash:
         limit = kwargs.pop("limit", None)
         skip = kwargs.pop("skip", None)
         final_query = merge_query(query, require_query=True, **kwargs)
-        find_kwargs = {k: v for k, v in {"limit": limit, "skip": skip}.items() if v is not None}
+        find_kwargs = {
+            k: v for k, v in {"limit": limit, "skip": skip}.items() if v is not None
+        }
         return list(self._client.find(final_query, **find_kwargs))
 
     def exists(self, query: dict[str, Any] = None, /, **kwargs) -> bool:
@@ -144,7 +146,9 @@ class EEGDash:
         final_query = merge_query(query, require_query=False, **kwargs)
         return self._client.count_documents(final_query)
 
-    def find_one(self, query: dict[str, Any] = None, /, **kwargs) -> Mapping[str, Any] | None:
+    def find_one(
+        self, query: dict[str, Any] = None, /, **kwargs
+    ) -> Mapping[str, Any] | None:
         """Find a single record matching the query.
 
         Parameters
@@ -245,4 +249,4 @@ def __getattr__(name: str):
     raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
 
 
-__all__ = ["EEGDash", "EEGDashDataset"]
+__all__ = ["EEGDash"]

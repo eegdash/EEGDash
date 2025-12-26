@@ -47,9 +47,7 @@ def openneuro_local_file(cache_dir: Path) -> Path:
 
 @pytest.fixture(scope="module")
 def challenge_local_file(cache_dir: Path) -> Path:
-    _require_s3(
-        "s3://nmdatasets/NeurIPS25/R5_mini_L100_bdf/dataset_description.json"
-    )
+    _require_s3("s3://nmdatasets/NeurIPS25/R5_mini_L100_bdf/dataset_description.json")
     destination = cache_dir / Path(CHALLENGE_EEG_FILE).name
     if not destination.exists():
         downloader.download_s3_file(CHALLENGE_EEG_FILE, destination)
@@ -85,16 +83,12 @@ def test_download_dependencies_fetches_sidecar_files(cache_dir: Path):
 
 
 def test_download_dependencies_handles_competition_paths(cache_dir: Path):
-    _require_s3(
-        "s3://nmdatasets/NeurIPS25/R5_mini_L100_bdf/dataset_description.json"
-    )
+    _require_s3("s3://nmdatasets/NeurIPS25/R5_mini_L100_bdf/dataset_description.json")
     dataset_subdir = cache_dir / "ds005509-bdf-mini"
     dataset_subdir.mkdir(parents=True, exist_ok=True)
     pairs = [
         (
-            downloader.get_s3path(
-                "s3://nmdatasets/NeurIPS25/R5_mini_L100_bdf", rel
-            ),
+            downloader.get_s3path("s3://nmdatasets/NeurIPS25/R5_mini_L100_bdf", rel),
             dataset_subdir / rel,
         )
         for rel in CHALLENGE_SMALL_FILES

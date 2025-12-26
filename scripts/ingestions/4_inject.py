@@ -35,13 +35,16 @@ from tqdm import tqdm
 DEFAULT_API_URL = "https://data.eegdash.org"
 
 
-def find_digested_datasets(input_dir: Path, datasets: list[str] | None = None) -> list[Path]:
+def find_digested_datasets(
+    input_dir: Path, datasets: list[str] | None = None
+) -> list[Path]:
     """Find all dataset directories in the digestion output.
 
     Returns
     -------
     list[Path]
         List of dataset directories containing _dataset.json and _records.json files
+
     """
     dataset_dirs = []
 
@@ -124,6 +127,7 @@ def inject_datasets(
     -------
     dict
         Result with inserted_count
+
     """
     from eegdash.http_api_client import HTTPAPICollection
 
@@ -151,6 +155,7 @@ def inject_records(
     -------
     dict
         Result with inserted_count
+
     """
     from eegdash.http_api_client import HTTPAPICollection
 
@@ -227,13 +232,18 @@ def main():
 
     # Validate args
     if args.only_datasets and args.only_records:
-        print("Error: Cannot use both --only-datasets and --only-records", file=sys.stderr)
+        print(
+            "Error: Cannot use both --only-datasets and --only-records", file=sys.stderr
+        )
         return 1
 
     # Get admin token
     admin_token = args.token or os.environ.get("EEGDASH_ADMIN_TOKEN")
     if not admin_token and not args.dry_run:
-        print("Error: Admin token required. Set EEGDASH_ADMIN_TOKEN or use --token", file=sys.stderr)
+        print(
+            "Error: Admin token required. Set EEGDASH_ADMIN_TOKEN or use --token",
+            file=sys.stderr,
+        )
         return 1
 
     # Find dataset directories
@@ -292,9 +302,13 @@ def main():
             try:
                 for i in range(0, len(all_datasets), args.batch_size):
                     batch = all_datasets[i : i + args.batch_size]
-                    result = inject_datasets(batch, args.api_url, args.database, admin_token)
+                    result = inject_datasets(
+                        batch, args.api_url, args.database, admin_token
+                    )
                     stats["datasets_injected"] += result["inserted_count"]
-                    print(f"  Batch {i // args.batch_size + 1}: {result['inserted_count']} datasets")
+                    print(
+                        f"  Batch {i // args.batch_size + 1}: {result['inserted_count']} datasets"
+                    )
             except Exception as e:
                 stats["errors"] += 1
                 errors.append({"dataset": "datasets_collection", "error": str(e)})
@@ -306,10 +320,14 @@ def main():
             try:
                 for i in range(0, len(all_records), args.batch_size):
                     batch = all_records[i : i + args.batch_size]
-                    result = inject_records(batch, args.api_url, args.database, admin_token)
+                    result = inject_records(
+                        batch, args.api_url, args.database, admin_token
+                    )
                     stats["records_injected"] += result["inserted_count"]
                     if (i // args.batch_size) % 10 == 0:
-                        print(f"  Progress: {i + len(batch)} / {len(all_records)} records")
+                        print(
+                            f"  Progress: {i + len(batch)} / {len(all_records)} records"
+                        )
             except Exception as e:
                 stats["errors"] += 1
                 errors.append({"dataset": "records_collection", "error": str(e)})

@@ -37,7 +37,7 @@ from eegdash.records import create_dataset
 
 # Add ingestions dir to path for _serialize module
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-from _serialize import save_datasets_deterministically
+from _serialize import generate_dataset_id, save_datasets_deterministically
 
 # Base URL and API endpoint
 DATARN_BASE_URL = "https://data.ru.nl"
@@ -170,20 +170,20 @@ def extract_dataset_info(
     try:
         # Extract basic info from API record
         # data.ru.nl API fields: title, description, authors[], doi, collectionIdentifier, relativeUrl, etc.
-        dataset_id = (
+        original_id = (
             api_record.get("persistentId")
             or api_record.get("collectionIdentifier")
             or api_record.get("id", "datarn_unknown")
         )
 
-        name = api_record.get("title", dataset_id)
+        name = api_record.get("title", original_id)
 
         # Build URL from relative path if available
         relative_url = api_record.get("relativeUrl")
         if relative_url:
             url = f"{DATARN_BASE_URL}{relative_url}"
         else:
-            url = f"{DATARN_BASE_URL}/dataset.xhtml?persistentId={dataset_id}"
+            url = f"{DATARN_BASE_URL}/dataset.xhtml?persistentId={original_id}"
 
         # Extract metadata
         description = api_record.get("description", "")
@@ -215,6 +215,17 @@ def extract_dataset_info(
         if "bids" in search_text:
             is_bids = True
 
+        # Get publication date
+        pub_date = api_record.get("releaseDate") or api_record.get("publicationDate")
+
+        # Generate SurnameYEAR dataset_id
+        dataset_id = generate_dataset_id(
+            source="datarn",
+            authors=authors,
+            date=pub_date,
+            fallback_id=original_id,
+        )
+
         # Create Dataset document
         dataset = create_dataset(
             dataset_id=dataset_id,
@@ -227,6 +238,9 @@ def extract_dataset_info(
             source_url=url,
         )
 
+        # Store original data.ru.nl ID for reference
+        dataset["datarn_id"] = original_id
+
         # Add BIDS info if detected
         if is_bids and "metadata" in dataset:
             dataset["metadata"]["bids_compatible"] = True
@@ -234,8 +248,8 @@ def extract_dataset_info(
         return dataset
 
     except Exception as e:
-        dataset_id = api_record.get("id", api_record.get("persistentId", "unknown"))
-        print(f"Error extracting dataset {dataset_id}: {e}", file=sys.stderr)
+        original_id = api_record.get("id", api_record.get("persistentId", "unknown"))
+        print(f"Error extracting dataset {original_id}: {e}", file=sys.stderr)
         return None
 
 

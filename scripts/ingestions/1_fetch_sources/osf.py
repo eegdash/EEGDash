@@ -21,7 +21,7 @@ from eegdash.records import Dataset, create_dataset
 
 # Add ingestions dir to path for _serialize module
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-from _serialize import save_datasets_deterministically
+from _serialize import generate_dataset_id, save_datasets_deterministically
 
 OSF_API_URL = "https://api.osf.io/v2"
 
@@ -429,9 +429,17 @@ def process_node(
             study_domain = domain
             break
 
+    # Generate SurnameYEAR dataset_id
+    dataset_id = generate_dataset_id(
+        source="osf",
+        authors=authors,
+        date=date_created,
+        fallback_id=node_id,
+    )
+
     # Create dataset
     dataset = create_dataset(
-        dataset_id=f"osf_{node_id}",
+        dataset_id=dataset_id,
         name=title,
         source="osf",
         recording_modality=primary_modality,

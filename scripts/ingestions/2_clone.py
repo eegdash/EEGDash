@@ -593,53 +593,23 @@ def fetch_scidb_manifest(
     timeout: int = 60,
     validate_bids: bool = False,
 ) -> dict[str, Any]:
-    """Fetch dataset metadata from ScienceDB (scidb.cn) via Open API.
+    """Create manifest stub for ScienceDB (scidb.cn) datasets.
     
-    The ScienceDB Open API (/json endpoint) provides dataset metadata but not
-    file listings. File listings require authentication via the detail endpoint.
+    ScienceDB file listing requires authentication via the detail endpoint.
+    Dataset metadata (name, description, license, DOI) is already captured
+    by the fetch script via the query-service API.
     
-    We fetch what we can: size, license, description, keywords.
+    The clone script only stores path-related info, which is not available
+    without authentication.
     """
     dataset_id = dataset["dataset_id"]
-    dataset_doi = dataset.get("dataset_doi")
-    
-    files = []
-    bids_files = []
-    api_metadata = {}
-    
-    if dataset_doi:
-        try:
-            # Use ScienceDB Open API to get metadata
-            api_url = f"https://www.scidb.cn/api/sdb-openapi-service/json?doi={dataset_doi}"
-            response = requests.get(api_url, timeout=timeout)
-            
-            if response.status_code == 200:
-                data = response.json()
-                if data:
-                    # Extract useful metadata
-                    api_metadata = {
-                        "name": data.get("name"),
-                        "description": data.get("description", "")[:500],
-                        "license": data.get("license"),
-                        "datePublished": data.get("datePublished"),
-                        "keywords": data.get("keywords"),
-                    }
-                    
-                    # Extract size info
-                    size_info = data.get("size", {})
-                    if isinstance(size_info, dict):
-                        api_metadata["total_size_bytes"] = size_info.get("value", 0)
-                    
-        except Exception as e:
-            api_metadata["fetch_error"] = str(e)
     
     manifest = {
         "dataset_id": dataset_id,
         "source": "scidb",
-        "dataset_doi": dataset_doi,
-        "api_metadata": api_metadata if api_metadata else None,
-        "note": "ScienceDB file listing requires authentication - metadata only via Open API",
+        "dataset_doi": dataset.get("dataset_doi"),
         "external_links": dataset.get("external_links", {}),
+        "note": "ScienceDB file listing requires authentication - metadata already in consolidated JSON",
         "total_files": 0,
         "bids_files": [],
         "files": [],
@@ -657,8 +627,7 @@ def fetch_scidb_manifest(
         "dataset_id": dataset_id,
         "source": "scidb",
         "file_count": 0,
-        "has_api_metadata": bool(api_metadata),
-        "note": "Metadata via Open API, no file listing available",
+        "note": "File listing requires authentication",
     }
 
 

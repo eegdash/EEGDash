@@ -1,10 +1,8 @@
 """Fetch OpenNeuro dataset IDs with metadata using requests library."""
 
 import argparse
-import json
 import sys
 from collections.abc import Iterator
-from datetime import datetime, timezone
 from pathlib import Path
 
 import requests
@@ -78,6 +76,7 @@ query($id: ID!) {
 }
 """
 
+
 # Batch query template for fetching details of multiple datasets
 def build_batch_detail_query(dataset_ids: list[str]) -> str:
     """Build a batch query to fetch full details for multiple datasets."""
@@ -122,38 +121,37 @@ def build_batch_detail_query(dataset_ids: list[str]) -> str:
         }}
       }}
     }}""")
-    
+
     return f"query {{\n{''.join(query_parts)}\n}}"
 
 
 def fetch_batch_details(
-    dataset_ids: list[str], 
-    timeout: float = 30.0
+    dataset_ids: list[str], timeout: float = 30.0
 ) -> dict[str, dict]:
     """Fetch full details for a batch of datasets in a single query."""
     result = {}
-    
+
     if not dataset_ids:
         return result
-    
+
     try:
         query = build_batch_detail_query(dataset_ids)
         response = requests.post(GRAPHQL_URL, json={"query": query}, timeout=timeout)
         data = response.json()
-        
+
         if "errors" in data or "data" not in data:
             print(f"  Error in batch query: {data.get('errors', 'no data')}")
             return result
-        
+
         response_data = data["data"]
-        
+
         for i, dataset_id in enumerate(dataset_ids):
             alias = f"ds{i}"
             if alias in response_data and response_data[alias]:
                 result[dataset_id] = response_data[alias]
     except Exception as e:
         print(f"  Error fetching batch details: {str(e)[:100]}")
-    
+
     return result
 
 
@@ -163,26 +161,26 @@ def extract_dataset_metadata(raw: dict, modality: str) -> Dataset:
     summary = snapshot.get("summary") or {}
     description = snapshot.get("description") or {}
     metadata = raw.get("metadata") or {}
-    
+
     # Extract subjects count (exclude "emptyroom")
     subjects_list = summary.get("subjects") or []
     subjects_count = len([s for s in subjects_list if s and s != "emptyroom"])
-    
+
     # Extract and clean tasks
     tasks_list = summary.get("tasks") or []
     tasks_clean = [t for t in tasks_list if t and not t.startswith("TODO:")]
-    
+
     # Extract ages (filter None values)
     ages = metadata.get("ages") or []
     ages_int = [int(a) for a in ages if a is not None]
-    
+
     # Build OpenNeuro URL
     dataset_id = raw.get("id")
     snapshot_tag = snapshot.get("tag")
     openneuro_url = f"https://openneuro.org/datasets/{dataset_id}"
     if snapshot_tag:
         openneuro_url += f"/versions/{snapshot_tag}"
-    
+
     return create_dataset(
         dataset_id=dataset_id,
         name=description.get("Name") or raw.get("name"),
@@ -215,7 +213,7 @@ def fetch_dataset_ids(
     timeout: float = 30.0,
 ) -> Iterator[tuple[str, str]]:
     """Fetch all OpenNeuro dataset IDs with their modality.
-    
+
     Yields tuples of (dataset_id, modality).
     """
     modality_configs = {
@@ -224,7 +222,7 @@ def fetch_dataset_ids(
         "meg": {"page_size": page_size, "max_errors": 3},
     }
 
-    for modality in ["eeg", "ieeg", "meg"]: # include this later "emg"
+    for modality in ["eeg", "ieeg", "meg"]:  # include this later "emg"
         config = modality_configs[modality]
         cursor = None
         consecutive_errors = 0
@@ -256,7 +254,9 @@ def fetch_dataset_ids(
                 error_msg = str(e)
 
                 if "Not Found" in error_msg or "INTERNAL_SERVER_ERROR" in error_msg:
-                    print(f"  [{modality}] Server error (attempt {consecutive_errors}/{config['max_errors']})")
+                    print(
+                        f"  [{modality}] Server error (attempt {consecutive_errors}/{config['max_errors']})"
+                    )
                     if consecutive_errors < config["max_errors"]:
                         continue
                     print(f"  [{modality}] Reached max errors, moving to next modality")
@@ -297,20 +297,20 @@ def fetch_datasets_with_details(
         # Track modality (prefer more specific: ieeg > eeg > meg)
         if dataset_id not in dataset_modalities:
             dataset_modalities[dataset_id] = modality
-    
+
     dataset_ids = list(dataset_modalities.keys())
     print(f"\nFound {len(dataset_ids)} unique datasets")
-    
+
     # Then fetch full details in batches
     print(f"\nPhase 2: Fetching full metadata (batch size: {batch_size})...")
     datasets = []
-    
+
     for batch_start in range(0, len(dataset_ids), batch_size):
         batch_end = min(batch_start + batch_size, len(dataset_ids))
         batch_ids = dataset_ids[batch_start:batch_end]
-        
+
         details = fetch_batch_details(batch_ids, timeout=timeout)
-        
+
         for dataset_id in batch_ids:
             modality = dataset_modalities[dataset_id]
             if dataset_id in details:
@@ -318,14 +318,16 @@ def fetch_datasets_with_details(
                 datasets.append(metadata)
             else:
                 # Fallback: minimal record if details fetch failed
-                datasets.append({
-                    "dataset_id": dataset_id,
-                    "recording_modality": modality,
-                })
-        
+                datasets.append(
+                    {
+                        "dataset_id": dataset_id,
+                        "recording_modality": modality,
+                    }
+                )
+
         if batch_end % 50 == 0 or batch_end == len(dataset_ids):
             print(f"  Processed {batch_end}/{len(dataset_ids)} datasets")
-    
+
     return datasets
 
 
@@ -341,8 +343,12 @@ def main() -> None:
     )
     parser.add_argument("--page-size", type=int, default=100)
     parser.add_argument("--timeout", type=float, default=30.0)
-    parser.add_argument("--batch-size", type=int, default=10,
-        help="Number of datasets to fetch details for per batch query (default: 10)")
+    parser.add_argument(
+        "--batch-size",
+        type=int,
+        default=10,
+        help="Number of datasets to fetch details for per batch query (default: 10)",
+    )
     parser.add_argument(
         "--minimal",
         action="store_true",
@@ -360,7 +366,9 @@ def main() -> None:
         # Fast mode: just IDs and modality (returns dicts, not Dataset objects)
         datasets = [
             {"dataset_id": did, "recording_modality": mod}
-            for did, mod in fetch_dataset_ids(page_size=args.page_size, timeout=args.timeout)
+            for did, mod in fetch_dataset_ids(
+                page_size=args.page_size, timeout=args.timeout
+            )
         ]
     else:
         # Full mode: complete metadata using Dataset schema
@@ -369,7 +377,7 @@ def main() -> None:
             timeout=args.timeout,
             batch_size=args.batch_size,
         )
-        
+
         # Add digested_at timestamp if provided
         if args.digested_at:
             for ds in datasets:
@@ -380,7 +388,7 @@ def main() -> None:
     save_datasets_deterministically(datasets, args.output)
 
     print(f"\nSaved {len(datasets)} dataset entries to {args.output}")
-    
+
     # Print summary stats
     if datasets and not args.minimal:
         modalities = {}
@@ -391,7 +399,7 @@ def main() -> None:
             # Access nested demographics
             demographics = ds.get("demographics", {})
             total_subjects += demographics.get("subjects_count", 0)
-        
+
         print("\nSummary:")
         for mod, count in sorted(modalities.items()):
             print(f"  {mod}: {count} datasets")

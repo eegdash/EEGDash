@@ -8,10 +8,8 @@ Output: consolidated/figshare_datasets.json
 """
 
 import argparse
-import json
 import sys
 import time
-from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
@@ -133,23 +131,26 @@ def get_article_details(article_id: int) -> dict[str, Any]:
 
 def detect_modalities(article: dict) -> list[str]:
     """Detect modalities from article metadata.
-    
+
     Args:
         article: Figshare article dictionary
-        
+
     Returns:
         List of detected modalities
+
     """
     modalities = []
-    
+
     # Search in title, description, tags, categories
-    search_text = " ".join([
-        article.get("title", ""),
-        article.get("description", ""),
-        " ".join(article.get("tags", [])),
-        " ".join([c.get("title", "") for c in article.get("categories", [])]),
-    ]).lower()
-    
+    search_text = " ".join(
+        [
+            article.get("title", ""),
+            article.get("description", ""),
+            " ".join(article.get("tags", [])),
+            " ".join([c.get("title", "") for c in article.get("categories", [])]),
+        ]
+    ).lower()
+
     # Map keywords to modalities
     modality_keywords = {
         "eeg": ["eeg"],
@@ -159,19 +160,21 @@ def detect_modalities(article: dict) -> list[str]:
         "fnirs": ["fnirs", "fNIRS", "nirs"],
         "lfp": ["lfp", "local field potential"],
     }
-    
+
     for modality, keywords in modality_keywords.items():
         if any(kw in search_text for kw in keywords):
             modalities.append(modality)
-    
+
     # Default to EEG if nothing detected (since we search for "EEG BIDS")
     if not modalities:
         modalities = ["eeg"]
-    
+
     return modalities
 
 
-def extract_dataset_info(article: dict, fetch_details: bool = False, digested_at: str | None = None) -> dict[str, Any]:
+def extract_dataset_info(
+    article: dict, fetch_details: bool = False, digested_at: str | None = None
+) -> dict[str, Any]:
     """Extract relevant information from a Figshare article and normalize to Dataset schema.
 
     Args:
@@ -194,9 +197,6 @@ def extract_dataset_info(article: dict, fetch_details: bool = False, digested_at
         if details:
             article = details
 
-    # Extract metadata
-    description = article.get("description", "")
-    
     # Extract URLs
     url_public_html = article.get("url_public_html", "")
 
@@ -213,11 +213,11 @@ def extract_dataset_info(article: dict, fetch_details: bool = False, digested_at
 
     # Calculate total size
     total_size_bytes = sum(f.get("size", 0) for f in article.get("files", []))
-    
+
     # Detect modalities from content
     modalities = detect_modalities(article)
     recording_modality = modalities[0] if modalities else "eeg"
-    
+
     # Extract modified date for dataset_modified_at
     modified_date = article.get("modified_date")
 
@@ -310,7 +310,7 @@ def main() -> None:
 
         try:
             dataset = extract_dataset_info(
-                article, 
+                article,
                 fetch_details=args.fetch_details,
                 digested_at=args.digested_at,
             )
@@ -342,7 +342,9 @@ def main() -> None:
             modalities_found[mod] = modalities_found.get(mod, 0) + 1
 
     print("\nBy Modality:")
-    for mod, count in sorted(modalities_found.items(), key=lambda x: x[1], reverse=True):
+    for mod, count in sorted(
+        modalities_found.items(), key=lambda x: x[1], reverse=True
+    ):
         print(f"  {mod}: {count}")
 
     # Datasets with files

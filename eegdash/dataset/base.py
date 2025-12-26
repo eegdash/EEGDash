@@ -14,7 +14,6 @@ from typing import Any
 
 import mne_bids
 import mne_bids.read as _mb_read
-
 from mne.io import BaseRaw
 from mne_bids import BIDSPath
 from mne_bids.config import reader as _mne_bids_reader
@@ -50,6 +49,7 @@ class EEGDashBaseDataset(RawDataset):
     ------
     ValueError
         If the record is not a valid v2 record or is missing required fields.
+
     """
 
     def __init__(
@@ -65,7 +65,7 @@ class EEGDashBaseDataset(RawDataset):
         errors = validate_record(record)
         if errors:
             raise ValueError(f"Invalid record: {errors}")
-        
+
         self.record = record
 
         # Derive local cache paths from record fields (portable - no absolute paths stored)
@@ -92,7 +92,9 @@ class EEGDashBaseDataset(RawDataset):
             local_base = Path(base)
             self.bids_root = local_base
             self.filecache = local_base / raw_key if raw_key else self.filecache
-            self._dep_paths = [local_base / k for k in dep_keys] if dep_keys else self._dep_paths
+            self._dep_paths = (
+                [local_base / k for k in dep_keys] if dep_keys else self._dep_paths
+            )
             self._raw_uri = None
             self._dep_uris = []
         else:
@@ -131,7 +133,9 @@ class EEGDashBaseDataset(RawDataset):
             filesystem=filesystem,
             skip_existing=True,
         )
-        downloader.download_s3_file(self._raw_uri, self.filecache, filesystem=filesystem)
+        downloader.download_s3_file(
+            self._raw_uri, self.filecache, filesystem=filesystem
+        )
         self.filenames = [self.filecache]
 
     def _ensure_raw(self) -> None:
@@ -144,7 +148,9 @@ class EEGDashBaseDataset(RawDataset):
                     self.bids_root, self.bidspath, self._raw, self.description
                 )
             except Exception as e:
-                logger.error(f"Error reading {self.bidspath}: {e}. Try `rm -rf {self.bids_root}`")
+                logger.error(
+                    f"Error reading {self.bidspath}: {e}. Try `rm -rf {self.bids_root}`"
+                )
                 raise
 
     def _load_raw(self) -> BaseRaw:

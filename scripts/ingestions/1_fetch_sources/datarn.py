@@ -2,11 +2,11 @@
 
 This script searches the Radboud University Research Data Management repository
 (data.ru.nl) for BIDS-compliant datasets across neural recording modalities using
-the REST API endpoint. It retrieves dataset information and outputs in the EEGDash 
+the REST API endpoint. It retrieves dataset information and outputs in the EEGDash
 Dataset schema format.
 
 Data.ru.nl is the Research Data Management system of Radboud University, hosting
-research data from Radboud University and affiliated institutions with support 
+research data from Radboud University and affiliated institutions with support
 for BIDS datasets.
 
 The script uses the public REST API at /api/search/collections/published to discover
@@ -16,24 +16,19 @@ Output: consolidated/datarn_datasets.json (Dataset schema format)
 """
 
 import argparse
-import json
 import sys
 import time
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
-from urllib.parse import urlencode
 
 import requests
 
+# Selenium availability check (imports checked but not used directly)
 try:
-    from selenium import webdriver
-    from selenium.webdriver.common.by import By
-    from selenium.webdriver.support.ui import WebDriverWait
-    from selenium.webdriver.support import expected_conditions as EC
-    from selenium.webdriver.chrome.options import Options as ChromeOptions
-    from selenium.webdriver.chrome.service import Service as ChromeService
-    SELENIUM_AVAILABLE = True
+    import importlib.util
+
+    SELENIUM_AVAILABLE = importlib.util.find_spec("selenium") is not None
 except ImportError:
     SELENIUM_AVAILABLE = False
 
@@ -61,12 +56,14 @@ MODALITY_SEARCHES = {
     "ieeg": "iEEG",
 }
 
+
 # Helper function to create manifest template
 def create_datarn_manifest_template() -> dict[str, Any]:
     """Create a template for manual data.ru.nl dataset manifest.
-    
+
     Returns:
         Template dictionary for user to fill in
+
     """
     return {
         "metadata": {
@@ -75,7 +72,7 @@ def create_datarn_manifest_template() -> dict[str, Any]:
             "description": "Manually curated BIDS datasets from data.ru.nl",
             "harvest_method": "manual_curation",
             "harvest_date": datetime.now(timezone.utc).isoformat(),
-            "note": "Add datasets manually by filling in the datasets array below"
+            "note": "Add datasets manually by filling in the datasets array below",
         },
         "datasets": [
             {
@@ -85,9 +82,9 @@ def create_datarn_manifest_template() -> dict[str, Any]:
                 "doi": "10.34894/XXXXXX",
                 "modalities": ["eeg"],
                 "authors": ["Author Name"],
-                "description": "Brief description of dataset"
+                "description": "Brief description of dataset",
             }
-        ]
+        ],
     }
 
 
@@ -97,29 +94,30 @@ def fetch_datasets_from_api(
     timeout: float = 30.0,
 ) -> list[dict[str, Any]]:
     """Fetch datasets from data.ru.nl REST API.
-    
+
     Args:
         query: Search query term (e.g., "EEG", "MEG", "BIDS")
         access_levels: List of access levels to include
         timeout: Request timeout in seconds
-        
+
     Returns:
         List of dataset records from API
+
     """
     if access_levels is None:
         access_levels = DEFAULT_ACCESS_LEVELS
-    
+
     params = {
         "access": ",".join(access_levels),
         "q": query,
     }
-    
+
     try:
         headers = {
             "Accept": "application/json",
             "User-Agent": "EEGDash-DataHarvester/1.0",
         }
-        
+
         print(f"Querying API with: q={query}, access={','.join(access_levels)}")
         response = requests.get(
             DATARN_API_URL,
@@ -128,9 +126,9 @@ def fetch_datasets_from_api(
             timeout=timeout,
         )
         response.raise_for_status()
-        
+
         data = response.json()
-        
+
         # API returns documents in a nested structure with "documents" and "document" keys
         datasets = []
         if isinstance(data, dict):
@@ -141,15 +139,15 @@ def fetch_datasets_from_api(
                     # Extract the document and ID
                     doc = doc_wrapper.get("document", doc_wrapper)
                     doc_id = doc_wrapper.get("id", doc.get("id", ""))
-                    
+
                     # Enrich document with ID
                     if "persistentId" not in doc and doc_id:
                         doc["persistentId"] = doc_id
                     datasets.append(doc)
-        
+
         print(f"Retrieved {len(datasets)} records from API for query '{query}'")
         return datasets
-        
+
     except requests.RequestException as e:
         print(f"Error fetching datasets for query '{query}': {e}", file=sys.stderr)
         return []
@@ -160,13 +158,14 @@ def extract_dataset_info(
     modality: str,
 ) -> dict[str, Any] | None:
     """Extract dataset information from API record.
-    
+
     Args:
         api_record: Record from data.ru.nl API
         modality: Detected modality for this record
-        
+
     Returns:
         Dataset schema document or None if extraction fails
+
     """
     try:
         # Extract basic info from API record
@@ -176,22 +175,22 @@ def extract_dataset_info(
             or api_record.get("collectionIdentifier")
             or api_record.get("id", "datarn_unknown")
         )
-        
+
         name = api_record.get("title", dataset_id)
-        
+
         # Build URL from relative path if available
         relative_url = api_record.get("relativeUrl")
         if relative_url:
             url = f"{DATARN_BASE_URL}{relative_url}"
         else:
             url = f"{DATARN_BASE_URL}/dataset.xhtml?persistentId={dataset_id}"
-        
+
         # Extract metadata
         description = api_record.get("description", "")
         if isinstance(description, list):
             description = " ".join(description)
         description = description[:500] if description else ""
-        
+
         # Extract authors
         authors = []
         if "authors" in api_record and api_record["authors"]:
@@ -200,22 +199,22 @@ def extract_dataset_info(
                 authors = auth[:10]  # Limit to first 10 authors
             elif isinstance(auth, str):
                 authors = [auth]
-        
+
         # If no authors, try contributorsDisplayNameList or managersDisplayNameList
         if not authors:
             authors = api_record.get("contributorsDisplayNameList", [])
         if not authors:
             authors = api_record.get("managersDisplayNameList", [])
-        
+
         # Extract DOI
         doi = api_record.get("doi")
-        
+
         # Detect BIDS from metadata
         is_bids = False
         search_text = f"{name} {description}".lower()
         if "bids" in search_text:
             is_bids = True
-        
+
         # Create Dataset document
         dataset = create_dataset(
             dataset_id=dataset_id,
@@ -227,13 +226,13 @@ def extract_dataset_info(
             dataset_doi=doi,
             source_url=url,
         )
-        
+
         # Add BIDS info if detected
         if is_bids and "metadata" in dataset:
             dataset["metadata"]["bids_compatible"] = True
-        
+
         return dataset
-        
+
     except Exception as e:
         dataset_id = api_record.get("id", api_record.get("persistentId", "unknown"))
         print(f"Error extracting dataset {dataset_id}: {e}", file=sys.stderr)
@@ -268,10 +267,10 @@ def main() -> None:
     print("\n" + "=" * 70)
     print("Fetching neural recording datasets from data.ru.nl (Radboud RDM)")
     print("=" * 70)
-    
+
     # Collect all datasets from all modality searches
     all_records = []
-    
+
     for modality_key, modality_search_term in MODALITY_SEARCHES.items():
         print(f"\nSearching for {modality_search_term} datasets...")
         records = fetch_datasets_from_api(
@@ -280,7 +279,7 @@ def main() -> None:
         )
         all_records.extend(records)
         time.sleep(0.5)  # Rate limiting
-    
+
     # Also search for BIDS keyword
     print("\nSearching for BIDS datasets...")
     bids_records = fetch_datasets_from_api(
@@ -288,7 +287,7 @@ def main() -> None:
         timeout=args.timeout,
     )
     all_records.extend(bids_records)
-    
+
     # Deduplicate by persistent ID
     seen_ids = set()
     unique_records = []
@@ -297,9 +296,9 @@ def main() -> None:
         if persistent_id and persistent_id not in seen_ids:
             seen_ids.add(persistent_id)
             unique_records.append(record)
-    
+
     print(f"\nTotal unique records after deduplication: {len(unique_records)}")
-    
+
     if not unique_records:
         print("No datasets found. Exiting.", file=sys.stderr)
         sys.exit(1)
@@ -311,19 +310,19 @@ def main() -> None:
         # Try to detect modality from record
         name_desc = f"{record.get('name', '')} {record.get('description', '')}".lower()
         detected_modality = None
-        
+
         for mod_key, mod_name in MODALITY_SEARCHES.items():
             if mod_name.lower() in name_desc or mod_key in name_desc:
                 detected_modality = mod_key
                 break
-        
+
         if not detected_modality:
             detected_modality = "unknown"
-        
+
         dataset = extract_dataset_info(record, detected_modality)
         if dataset:
             datasets.append(dataset)
-        
+
         # Rate limiting
         if i % 10 == 0:
             print(f"  Processed {i}/{len(unique_records)} records...")

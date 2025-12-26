@@ -287,6 +287,7 @@ def fetch_node_children(
     require_bids: bool = True,
     validate_bids: bool = True,
     seen_ids: set | None = None,
+    parent_modality: str | None = None,
 ) -> list[Dataset]:
     """Fetch children of an OSF node (for projects with sub-components).
 
@@ -300,6 +301,7 @@ def fetch_node_children(
         require_bids: Only include datasets mentioning BIDS
         validate_bids: Validate BIDS by checking file structure
         seen_ids: Set of already-seen node IDs to skip
+        parent_modality: Modality inherited from parent (for children without tags)
 
     Returns:
         List of Dataset documents from children
@@ -334,6 +336,7 @@ def fetch_node_children(
                     timeout=timeout,
                     require_bids=require_bids,
                     validate_bids=validate_bids,
+                    inherit_modality=parent_modality,
                 )
                 if dataset:
                     datasets.append(dataset)
@@ -425,10 +428,8 @@ def fetch_nodes_by_title(
             if node_id in seen_ids:
                 continue
 
-            # Track projects for child fetching
+            # Track projects for child fetching (with their modality)
             category = node.get("attributes", {}).get("category", "")
-            if fetch_children and category == "project":
-                projects_to_check_children.append(node_id)
 
             try:
                 dataset = process_node(
@@ -442,6 +443,11 @@ def fetch_nodes_by_title(
                     datasets.append(dataset)
                     seen_ids.add(node_id)
                     fetched += 1
+                    # Track projects with their primary modality for child fetching
+                    if fetch_children and category == "project":
+                        projects_to_check_children.append(
+                            (node_id, dataset.get("recording_modality"))
+                        )
             except Exception as e:
                 print(
                     f"  Warning: Error processing node {node_id}: {e}", file=sys.stderr
@@ -458,10 +464,10 @@ def fetch_nodes_by_title(
         page += 1
         time.sleep(0.1)  # Rate limiting
 
-    # Fetch children of projects found
+    # Fetch children of projects found (inherit modality from parent)
     if fetch_children and projects_to_check_children:
         children_found = 0
-        for project_id in projects_to_check_children[
+        for project_id, parent_modality in projects_to_check_children[
             :20
         ]:  # Limit to avoid too many requests
             children = fetch_node_children(
@@ -471,6 +477,7 @@ def fetch_nodes_by_title(
                 require_bids=require_bids,
                 validate_bids=validate_bids,
                 seen_ids=seen_ids,
+                parent_modality=parent_modality,
             )
             datasets.extend(children)
             children_found += len(children)
@@ -707,6 +714,7 @@ def process_node(
     timeout: float = 10.0,
     require_bids: bool = True,
     validate_bids: bool = True,
+    inherit_modality: str | None = None,
 ) -> Dataset | None:
     """Process an OSF node into a Dataset document.
 
@@ -716,6 +724,7 @@ def process_node(
         timeout: Request timeout
         require_bids: Only include datasets mentioning BIDS in tags (legacy)
         validate_bids: Validate BIDS by checking actual file structure
+        inherit_modality: Modality to use if none detected (inherited from parent)
 
     Returns:
         Dataset document or None if filtered out
@@ -794,7 +803,11 @@ def process_node(
         if any(kw in combined_text for kw in keywords):
             modalities.append(mod)
 
-    # If no modality detected, skip
+    # If no modality detected, use inherited modality from parent (for children nodes)
+    if not modalities and inherit_modality:
+        modalities = [inherit_modality]
+
+    # If still no modality detected, skip
     if not modalities:
         return None
 

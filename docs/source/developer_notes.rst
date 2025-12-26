@@ -3,63 +3,56 @@
 Developer Notes
 ===============
 
-This page collects the institutional knowledge that lived in ``DevNotes.md`` and
-expands it with context about the EEG Dash codebase. It is intended for project
-maintainers and contributors who need to work on the package, publish releases,
-or administer supporting services.
+This guide is for project maintainers and contributors who need to work on the
+EEGDash package, manage the data ingestion pipeline, or administer supporting services.
 
-Library Overview
+Package Overview
 ----------------
 
-EEG Dash ships a Python package named :mod:`eegdash` that provides several
-layers of abstraction:
+EEGDash (``eegdash``) provides a unified interface for accessing large-scale EEG datasets
+from multiple sources. The package architecture consists of:
 
-* ``EEGDash`` (:mod:`eegdash.api`) is the primary client for querying EEGDash
-  metadata via REST API, coordinating S3 downloads, and performing bulk updates.
-  It handles connection management via :class:`~eegdash.http_api_client.HTTPAPIConnectionManager`
-  and communicates with the EEGDash API gateway at ``https://data.eegdash.org``.
-* ``EEGDashDataset`` (:mod:`eegdash.data_utils`) wraps query results as a
-  :class:`braindecode.datasets.BaseConcatDataset`, making it straightforward to
-  integrate curated EEG collections into deep-learning pipelines.
-* ``EEGChallengeDataset`` (:mod:`eegdash.dataset`) and the dynamically
-  registered OpenNeuro dataset classes expose challenge-ready datasets with
-  consistent preprocessing and metadata merging, all discoverable from
-  ``eegdash.dataset``.
-* ``features`` and ``plotting`` modules provide convenience utilities for
-  feature extraction, summary reporting, and visualizations that appear in the
-  documentation gallery.
+**Core Modules**
 
-Configuration defaults live in :mod:`eegdash.const`. The API URL can be
-overridden via the ``EEGDASH_API_URL`` environment variable. For admin write
-operations, set the ``EEGDASH_API_TOKEN`` environment variable with a valid
-authentication token.
+.. list-table::
+   :widths: 25 75
 
-Local Development Workflow
---------------------------
+   * - :mod:`eegdash.api`
+     - ``EEGDash`` client for querying metadata via REST API and coordinating downloads
+   * - :mod:`eegdash.dataset`
+     - ``EEGDashDataset``, ``EEGChallengeDataset``, and dynamically registered dataset classes
+   * - :mod:`eegdash.records`
+     - Schema definitions for ``Dataset`` and ``Record`` TypedDicts
+   * - :mod:`eegdash.http_api_client`
+     - HTTP connection management for the EEGDash API gateway
+   * - :mod:`eegdash.downloader`
+     - S3 and HTTPS download utilities with progress tracking
+   * - :mod:`eegdash.features`
+     - Feature extraction utilities for EEG analysis
 
-Install editable dependencies and ensure the local import path points at your
-workspace:
+**Configuration**
 
-.. code-block:: bash
+Configuration defaults live in :mod:`eegdash.const`. Key environment variables:
 
-   pip install -r requirements.txt
-   pip uninstall eegdash -y
-   python -m pip install --editable .
+- ``EEGDASH_API_URL`` - Override API endpoint (default: ``https://data.eegdash.org``)
+- ``EEGDASH_ADMIN_TOKEN`` - Admin token for write operations
 
-.. warning::
+Local Development
+-----------------
 
-   Use the exact ``python -m pip install --editable .`` command above. Running
-   ``pip install`` without ``python -m`` may resolve to a different Python
-   interpreter and leave the editable install in a broken state.
-
-Smoke-test your environment from a clean shell or a different working directory:
+**Setup**
 
 .. code-block:: bash
 
-   python -c "from eegdash import EEGDashDataset; print(EEGDashDataset)"
+   # Clone and install in editable mode
+   git clone https://github.com/eegdash/EEGDash.git
+   cd EEGDash
+   pip install -e .[dev,digestion]
 
-Code Quality Automation
------------------------
+   # Verify installation
+   python -c "from eegdash import EEGDash; print(EEGDash)"
+
+**Code Quality**
 
 .. code-block:: bash
 
@@ -67,267 +60,335 @@ Code Quality Automation
    pre-commit install
    pre-commit run --all-files
 
-The pre-commit suite runs Ruff for linting and import sorting, Black for
-documentation snippets, and Codespell for spelling corrections.
+The pre-commit suite runs Ruff for linting/formatting and Codespell for spelling.
 
-Release Checklist
------------------
-
-1. Update the package version in ``pyproject.toml``.
-2. Build distribution artifacts:
-
-   .. code-block:: bash
-
-      python -m build
-
-3. Upload to TestPyPI or PyPI:
-
-   .. code-block:: bash
-
-      python -m twine upload --repository testpypi dist/*
-      # or
-      python -m twine upload dist/*
-
-4. Retrieve the appropriate API token from the project email inbox (separate
-   tokens exist for TestPyPI and PyPI).
-
-Metadata & Database Management
-------------------------------
-
-The EEGDash API server uses a modern FastAPI-based architecture with MongoDB for
-metadata storage and optional Redis for distributed rate limiting.
-
-**Database Schema (Two-Level Hierarchy)**
-
-EEGDash uses two separate MongoDB collections for efficient querying:
-
-1. **datasets** - Per-dataset metadata for discovery and filtering:
-
-   .. code-block:: json
-
-      {
-        "dataset_id": "ds002718",
-        "name": "EEG Dataset Name",
-        "source": "openneuro",
-        "recording_modality": "eeg",
-        "modalities": ["eeg"],
-        "tasks": ["RestingState"],
-        "demographics": {
-          "subjects_count": 32,
-          "age_mean": 28.5,
-          "sex_distribution": {"m": 16, "f": 16}
-        },
-        "external_links": {
-          "source_url": "https://openneuro.org/datasets/ds002718"
-        }
-      }
-
-2. **records** - Per-file metadata optimized for fast loading:
-
-   .. code-block:: json
-
-      {
-        "dataset": "ds002718",
-        "data_name": "ds002718_sub-012_task-RestingState_eeg.set",
-        "bids_relpath": "sub-012/eeg/sub-012_task-RestingState_eeg.set",
-        "entities": {"subject": "012", "task": "RestingState"},
-        "storage": {
-          "backend": "s3",
-          "base": "s3://openneuro.org/ds002718",
-          "raw_key": "sub-012/eeg/sub-012_task-RestingState_eeg.set"
-        }
-      }
-
-**Database Access**
-
-* Sign in to `mongodb.com <https://mongodb.com>`_ using the shared account
-  (``sccn3709@gmail.com``; credentials are stored in the team password vault).
-* Toggle the target database inside ``scripts/data_ingest.py`` by updating the
-  ``eegdash`` or ``eegdashstaging`` reference in ``main.py``.
-* Run the ingestion script to populate or refresh records:
-
-  .. code-block:: bash
-
-     python scripts/data_ingest.py
-
-**Server Configuration**
-
-The API server is configured via environment variables. Create a ``.env`` file
-in the ``mongodb-eegdash-server/api/`` directory:
+**Running Tests**
 
 .. code-block:: bash
 
-   # Required
-   MONGO_URI=mongodb://user:password@host:27017
-   MONGO_DB=eegdash
-   MONGO_COLLECTION=records
-   ADMIN_TOKEN=your-secure-admin-token
+   pytest tests/ -v
 
-   # Optional
-   REDIS_URL=redis://localhost:6379/0      # For distributed rate limiting
-   API_VERSION=2.1.0
-   ENABLE_METRICS=true
-   MONGO_MAX_POOL_SIZE=10
-   MONGO_MIN_POOL_SIZE=1
-   MONGO_CONNECT_TIMEOUT_MS=5000
+Database Architecture
+---------------------
 
+EEGDash uses MongoDB with a **two-level schema** optimized for different query patterns:
 
-Dataset Ingestion Pipeline
---------------------------
+**1. Datasets Collection** (discovery & filtering)
 
-The ingestion pipeline transforms datasets from 8 sources into MongoDB-ready
-documents. It runs as GitHub Actions workflows with data stored in the
-``eegdash-dataset-listings`` repository.
+One document per dataset containing metadata for browsing and filtering:
 
-**Supported Sources (8 total)**
+.. code-block:: json
+
+   {
+     "dataset_id": "ds002718",
+     "name": "A multi-subject EEG dataset",
+     "source": "openneuro",
+     "recording_modality": "eeg",
+     "modalities": ["eeg"],
+     "bids_version": "1.6.0",
+     "license": "CC0",
+     "tasks": ["RestingState", "GoNoGo"],
+     "sessions": ["01", "02"],
+     "demographics": {
+       "subjects_count": 32,
+       "age_mean": 28.5,
+       "sex_distribution": {"m": 16, "f": 16}
+     },
+     "external_links": {
+       "source_url": "https://openneuro.org/datasets/ds002718"
+     },
+     "timestamps": {
+       "digested_at": "2024-01-15T10:30:00Z"
+     }
+   }
+
+**2. Records Collection** (fast file loading)
+
+One document per EEG file with storage information for direct loading:
+
+.. code-block:: json
+
+   {
+     "dataset": "ds002718",
+     "data_name": "ds002718_sub-012_task-RestingState_eeg.set",
+     "bids_relpath": "sub-012/eeg/sub-012_task-RestingState_eeg.set",
+     "datatype": "eeg",
+     "suffix": "eeg",
+     "extension": ".set",
+     "entities": {
+       "subject": "012",
+       "task": "RestingState",
+       "session": "01"
+     },
+     "entities_mne": {
+       "subject": "012",
+       "task": "RestingState",
+       "session": "01"
+     },
+     "storage": {
+       "backend": "s3",
+       "base": "s3://openneuro.org/ds002718",
+       "raw_key": "sub-012/eeg/sub-012_task-RestingState_eeg.set",
+       "dep_keys": ["sub-012/eeg/sub-012_task-RestingState_events.tsv"]
+     },
+     "digested_at": "2024-01-15T10:30:00Z"
+   }
+
+Data Ingestion Pipeline
+-----------------------
+
+The ingestion pipeline fetches BIDS datasets from 8 sources and transforms them
+into MongoDB documents. All scripts are in ``scripts/ingestions/``.
+
+**Supported Sources**
 
 .. list-table::
    :header-rows: 1
-   :widths: 20 20 60
+   :widths: 15 15 35 35
 
    * - Source
-     - Method
-     - Notes
+     - Storage
+     - Fetch Method
+     - Clone Strategy
    * - OpenNeuro
-     - GraphQL API + Git shallow clone
-     - S3 storage backend (``s3://openneuro.org``)
+     - S3
+     - GraphQL API
+     - Git shallow clone (``GIT_LFS_SKIP_SMUDGE=1``)
    * - NEMAR
-     - GitHub API + Git shallow clone
-     - HTTPS storage backend
-   * - EEGManyLabs (GIN)
-     - GIN API + Git shallow clone
-     - HTTPS storage backend
+     - HTTPS
+     - GitHub API
+     - Git shallow clone
+   * - EEGManyLabs
+     - HTTPS
+     - GIN API
+     - Git shallow clone
    * - Figshare
-     - REST API manifest
-     - No git clone needed
+     - HTTPS
+     - REST API
+     - API manifest (no clone)
    * - Zenodo
-     - REST API manifest
-     - No git clone needed
+     - HTTPS
+     - REST API
+     - API manifest (no clone)
    * - OSF
-     - REST API recursive traversal
-     - No git clone needed
-   * - ScienceDB (scidb.cn)
+     - HTTPS
+     - REST API
+     - Recursive folder traversal
+   * - ScienceDB
+     - HTTPS
      - Query Service API
-     - File listing requires authentication
+     - Metadata only (auth required for files)
    * - data.ru.nl
+     - HTTPS
+     - REST API
      - WebDAV PROPFIND
-     - Recursive directory listing
 
-**Pipeline Steps**
+**Pipeline Scripts**
 
-The pipeline consists of 3 scripts in ``scripts/ingestions/``:
+The pipeline consists of 4 steps:
 
-1. **Fetch** (``1_fetch_sources/*.py``) - Retrieve dataset listings from each source:
+.. code-block:: text
 
-   .. code-block:: bash
+   1_fetch_sources/     → consolidated/*.json     (dataset listings)
+         ↓
+   2_clone.py           → data/cloned/*/         (shallow clones / manifests)
+         ↓
+   3_digest.py          → digestion_output/*/    (Dataset + Records JSON)
+         ↓
+   4_inject.py          → MongoDB                (datasets + records collections)
 
-      python scripts/ingestions/1_fetch_sources/openneuro.py \
-        --output consolidated/openneuro_datasets.json
+**Step 1: Fetch** - Retrieve dataset listings from each source:
 
-2. **Clone & Digest** (``2_clone.py`` + ``3_digest.py``) - Smart clone without
-   downloading raw data, then extract BIDS metadata:
+.. code-block:: bash
 
-   .. code-block:: bash
+   # Fetch OpenNeuro datasets
+   python scripts/ingestions/1_fetch_sources/openneuro.py \
+     --output consolidated/openneuro_datasets.json
 
-      # Smart clone (shallow git or API manifest)
-      python scripts/ingestions/2_clone.py \
-        --input consolidated/openneuro_datasets.json \
-        --output data/cloned
+   # Available scripts: openneuro.py, nemar.py, eegmanylabs.py,
+   #                    figshare.py, zenodo.py, osf.py, scidb.py, datarn.py
 
-      # Digest to Dataset + Records JSON
-      python scripts/ingestions/3_digest.py \
-        --input data/cloned \
-        --output digestion_output
+**Step 2: Clone** - Smart clone without downloading raw data:
 
-3. **Inject** (``4_inject.py``) - Upload to MongoDB collections:
+.. code-block:: bash
 
-   .. code-block:: bash
+   # Clone all datasets from consolidated files
+   python scripts/ingestions/2_clone.py \
+     --input consolidated \
+     --output data/cloned \
+     --workers 4
 
-      python scripts/ingestions/4_inject.py \
-        --input digestion_output \
-        --database eegdashstaging \
-        --dry-run  # Remove for actual upload
+   # Clone specific sources
+   python scripts/ingestions/2_clone.py \
+     --input consolidated \
+     --output data/cloned \
+     --sources openneuro nemar
 
-**Smart Clone Strategies**
+The clone script uses source-specific strategies:
 
-The clone script uses different strategies per source to avoid downloading
-large raw data files:
+- **Git sources**: Shallow clone with ``GIT_LFS_SKIP_SMUDGE=1`` (~300KB per dataset)
+- **API sources**: REST API manifest fetching (no files downloaded)
+- **WebDAV**: PROPFIND recursive directory listing
 
-- **Git sources** (OpenNeuro, NEMAR, GIN): Shallow clone with
-  ``GIT_LFS_SKIP_SMUDGE=1`` - files appear as symlinks (~300KB per dataset)
-- **API sources** (Figshare, Zenodo, OSF): REST API manifest fetching
-- **WebDAV sources** (data.ru.nl): PROPFIND recursive directory listing
+**Step 3: Digest** - Extract BIDS metadata and generate documents:
 
-**Output Structure**
+.. code-block:: bash
+
+   python scripts/ingestions/3_digest.py \
+     --input data/cloned \
+     --output digestion_output \
+     --workers 4
+
+Output structure:
 
 .. code-block:: text
 
    digestion_output/
    ├── ds001785/
-   │   ├── ds001785_dataset.json   # Dataset document (1 per dataset)
-   │   ├── ds001785_records.json   # Records array (many per dataset)
-   │   └── ds001785_summary.json   # Processing summary
+   │   ├── ds001785_dataset.json    # Dataset document
+   │   ├── ds001785_records.json    # Records array
+   │   └── ds001785_summary.json    # Processing stats
+   ├── ds002718/
+   │   └── ...
    └── BATCH_SUMMARY.json
 
-**CI/CD Workflows**
-
-Automated workflows in ``.github/workflows/``:
-
-.. list-table::
-   :header-rows: 1
-   :widths: 30 70
-
-   * - Workflow
-     - Description
-   * - ``1-fetch-*.yml``
-     - Fetch datasets from each source (weekly on Monday)
-   * - ``2-digest-*.yml``
-     - Clone + digest (triggered after fetch)
-   * - ``3-inject-all.yml``
-     - Inject to MongoDB (weekly on Tuesday)
-   * - ``full-pipeline.yml``
-     - Manual full pipeline: Fetch → Digest → Inject
-
-API Gateway Endpoint
---------------------
-
-The public HTTP gateway that fronts the MongoDB metadata service lives at
-``|api-base-url|``. Point external tooling, health probes, and API examples at
-that hostname instead of the raw server IP so future migrations only require
-updating the ``|api-base-url|`` substitution in ``docs/source/links.inc``.
-
-**API Features (v2.1.0+)**
-
-- **Rate Limiting**: Public endpoints are limited to 100 requests/minute per IP
-- **Metrics**: Prometheus-compatible metrics at ``/metrics``
-- **Health Checks**: Service status at ``/health`` including MongoDB and Redis connectivity
-- **Request Tracing**: All responses include ``X-Request-ID`` for debugging
-- **Response Timing**: ``X-Response-Time`` header in milliseconds
-
-**Available Endpoints**
-
-.. code-block:: text
-
-   GET  /                                - API information
-   GET  /health                          - Health check with service status
-   GET  /metrics                         - Prometheus metrics
-   GET  /api/{database}/records          - Query records with filters
-   GET  /api/{database}/count            - Count matching documents
-   GET  /api/{database}/datasets         - List all dataset names
-   GET  /api/{database}/metadata/{name}  - Get dataset metadata
-   POST /admin/{database}/records        - Insert record (token required)
-   POST /admin/{database}/records/bulk   - Bulk insert (token required)
-
-
-Remote Storage Mounting
------------------------
-
-Some workflows require mounting Expanse project storage locally:
+**Step 4: Inject** - Upload to MongoDB:
 
 .. code-block:: bash
 
-   sudo sshfs -o allow_other,IdentityFile=/home/dung/.ssh/id_rsa \
-     arno@login.expanse.sdsc.edu:/expanse/projects/nemar /mnt/nemar/
+   # Dry run (validate without uploading)
+   python scripts/ingestions/4_inject.py \
+     --input digestion_output \
+     --database eegdashstaging \
+     --dry-run
 
-Ensure the identity file path matches your local SSH configuration before
-issuing the command.
+   # Actual injection
+   python scripts/ingestions/4_inject.py \
+     --input digestion_output \
+     --database eegdash
+
+   # Inject only datasets or records
+   python scripts/ingestions/4_inject.py \
+     --input digestion_output \
+     --database eegdash \
+     --only-datasets
+
+CI/CD Workflows
+---------------
+
+Automated GitHub Actions workflows handle the full pipeline:
+
+**Fetch Workflows** (``1-fetch-*.yml``)
+
+Run weekly on Monday to update dataset listings:
+
+- ``1-fetch-openneuro.yml``, ``1-fetch-nemar.yml``, etc.
+- ``1-fetch-all.yml`` - Orchestrates all sources
+
+**Digest Workflows** (``2-digest-*.yml``)
+
+Triggered automatically after fetch completes:
+
+- ``2-digest-openneuro.yml``, ``2-digest-nemar.yml``, etc.
+- Uses ``2-clone-digest.yml`` reusable workflow
+
+**Inject Workflow** (``3-inject-all.yml``)
+
+Runs weekly on Tuesday to upload digested data:
+
+- Injects to ``eegdashstaging`` by default (dry run)
+- Manual trigger to inject to production ``eegdash``
+
+**Full Pipeline** (``full-pipeline.yml``)
+
+Manual workflow for end-to-end processing:
+
+.. code-block:: yaml
+
+   # Trigger via GitHub Actions UI with options:
+   # - sources: all / openneuro / nemar / ...
+   # - database: eegdashstaging / eegdash
+   # - dry_run: true / false
+   # - max_datasets: 0 (all) or limit
+
+Data is stored in the ``eegdash-dataset-listings`` repository:
+
+.. code-block:: text
+
+   eegdash-dataset-listings/
+   ├── consolidated/          # Fetched dataset listings
+   │   ├── openneuro_datasets.json
+   │   ├── nemar_datasets.json
+   │   └── ...
+   ├── cloned/                # Shallow clones / manifests
+   │   ├── ds001785/
+   │   └── ...
+   └── digested/              # MongoDB-ready documents
+       ├── ds001785/
+       └── ...
+
+API Server
+----------
+
+The API server (``mongodb-eegdash-server/``) is a FastAPI application:
+
+**Environment Configuration**
+
+Create ``.env`` in ``mongodb-eegdash-server/api/``:
+
+.. code-block:: bash
+
+   MONGO_URI=mongodb://user:password@host:27017
+   MONGO_DB=eegdash
+   ADMIN_TOKEN=your-secure-token
+
+   # Optional
+   REDIS_URL=redis://localhost:6379/0
+   ENABLE_METRICS=true
+
+**API Endpoints**
+
+.. code-block:: text
+
+   GET  /                                - API info
+   GET  /health                          - Health check
+   GET  /metrics                         - Prometheus metrics
+
+   GET  /api/{db}/records                - Query records
+   GET  /api/{db}/count                  - Count records
+   GET  /api/{db}/datasets               - List dataset IDs
+   GET  /api/{db}/metadata/{dataset_id}  - Get dataset metadata
+
+   POST /admin/{db}/records              - Insert records (auth required)
+   POST /admin/{db}/records/bulk         - Bulk insert (auth required)
+   POST /admin/{db}/datasets             - Insert datasets (auth required)
+
+**Rate Limiting**: 100 requests/minute per IP on public endpoints.
+
+Release Process
+---------------
+
+1. Update version in ``pyproject.toml``
+2. Update ``CHANGELOG.md``
+3. Build and upload:
+
+   .. code-block:: bash
+
+      python -m build
+      python -m twine upload dist/*
+
+4. Create GitHub release with tag ``v{version}``
+
+Documentation
+-------------
+
+Build documentation locally:
+
+.. code-block:: bash
+
+   cd docs
+   pip install -r requirements.txt
+   make html-noplot  # Fast build (no examples)
+   make html         # Full build with examples
+
+Documentation is auto-deployed to https://eegdash.org via GitHub Pages.

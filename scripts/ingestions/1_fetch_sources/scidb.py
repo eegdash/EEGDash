@@ -20,7 +20,7 @@ from eegdash.records import create_dataset
 
 # Add ingestions dir to path for _serialize module
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-from _serialize import save_datasets_deterministically
+from _serialize import generate_dataset_id, save_datasets_deterministically
 
 # Modality keywords for searching SciDB - comprehensive keyword coverage
 MODALITY_KEYWORDS = {
@@ -243,8 +243,8 @@ def process_scidb_dataset(
 
     """
     try:
-        dataset_id = str(record.get("id", ""))
-        if not dataset_id:
+        original_id = str(record.get("id", ""))
+        if not original_id:
             return None
 
         # Extract metadata
@@ -260,20 +260,31 @@ def process_scidb_dataset(
             if name:
                 authors.append(name)
 
+        # Get publication date
+        pub_date = record.get("publishTime") or record.get("createTime")
+
+        # Generate SurnameYEAR dataset_id
+        dataset_id = generate_dataset_id(
+            source="scidb",
+            authors=authors,
+            date=pub_date,
+            fallback_id=original_id,
+        )
+
         # Create dataset using create_dataset
         dataset = create_dataset(
-            dataset_id=f"scidb_{dataset_id}",
+            dataset_id=dataset_id,
             name=title or "SciDB Dataset",
             source="scidb",
             recording_modality=modality,
             modalities=[modality],
             license=record.get("copyRight", {}).get("code") or None,
             authors=authors or None,
-            source_url=f"https://www.scidb.cn/en/detail?id={dataset_id}",
+            source_url=f"https://www.scidb.cn/en/detail?id={original_id}",
         )
 
         # Add SciDB-specific metadata
-        dataset["scidb_id"] = dataset_id
+        dataset["scidb_id"] = original_id
         if doi := record.get("doi"):
             dataset["dataset_doi"] = doi
         if description:

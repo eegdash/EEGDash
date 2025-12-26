@@ -21,7 +21,7 @@ from eegdash.records import create_dataset
 
 # Add ingestions dir to path for _serialize module
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-from _serialize import save_datasets_deterministically
+from _serialize import generate_dataset_id, save_datasets_deterministically
 
 # Zenodo REST API endpoint
 ZENODO_BASE_URL = "https://zenodo.org/api/records"
@@ -284,8 +284,19 @@ def extract_dataset_info(
         # Create dataset record
         source_url = record.get("links", {}).get("self_html", "")
 
+        # Get publication date for SurnameYEAR ID
+        pub_date = metadata.get("publication_date") or record.get("created")
+
+        # Generate SurnameYEAR dataset_id
+        dataset_id = generate_dataset_id(
+            source="zenodo",
+            authors=creators,
+            date=pub_date,
+            fallback_id=record_id,
+        )
+
         dataset = create_dataset(
-            dataset_id=f"zenodo_{record_id}",
+            dataset_id=dataset_id,
             name=title,
             source="zenodo",
             recording_modality=primary_modality,
@@ -294,6 +305,9 @@ def extract_dataset_info(
             source_url=source_url,
             dataset_doi=doi if doi else None,
         )
+
+        # Store original Zenodo ID for reference
+        dataset["zenodo_id"] = record_id
 
         return dataset
 

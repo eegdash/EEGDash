@@ -28,7 +28,7 @@ from eegdash.records import Dataset, create_dataset
 
 # Add ingestions dir to path for _serialize module
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-from _serialize import save_datasets_deterministically
+from _serialize import generate_dataset_id, save_datasets_deterministically
 
 GIN_BASE_URL = "https://gin.g-node.org"
 GIN_API_URL = f"{GIN_BASE_URL}/api/v1"
@@ -379,8 +379,26 @@ def fetch_eegmanylabs_repos(
             forks = repo_details.get("forks_count") if repo_details else None
             watchers = repo_details.get("watchers_count") if repo_details else None
 
+            # Generate dataset_id from replication authors (SurnameYEAR format)
+            # Add data type suffix for raw/processed distinction
+            data_type_suffix = (
+                f"_{name_meta['data_type']}" if name_meta.get("data_type") else ""
+            )
+            updated_at = repo_details.get("updated_at") if repo_details else None
+
+            base_id = generate_dataset_id(
+                source="gin",
+                authors=authors,
+                date=updated_at,
+                fallback_id=repo_name,
+            )
+            dataset_id = f"{base_id}{data_type_suffix}"
+
+            # Store original repo name for reference
+            gin_repo_name = repo_name
+
             dataset = create_dataset(
-                dataset_id=repo_name,
+                dataset_id=dataset_id,
                 name=name,
                 source="gin",
                 recording_modality="eeg",
@@ -412,6 +430,9 @@ def fetch_eegmanylabs_repos(
                 if repo_details
                 else None,
             )
+
+            # Store GIN repo name for reference
+            dataset["gin_repo"] = gin_repo_name
 
             # Add project DOI if available (not yet in schema)
             if readme_meta and readme_meta.get("project_doi"):

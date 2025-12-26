@@ -21,7 +21,7 @@ from eegdash.records import create_dataset
 
 # Add ingestions dir to path for _serialize module
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-from _serialize import save_datasets_deterministically
+from _serialize import generate_dataset_id, save_datasets_deterministically
 
 
 def search_figshare(
@@ -221,9 +221,17 @@ def extract_dataset_info(
     # Extract modified date for dataset_modified_at
     modified_date = article.get("modified_date")
 
+    # Generate SurnameYEAR dataset_id
+    dataset_id = generate_dataset_id(
+        source="figshare",
+        authors=author_names,
+        date=modified_date or article.get("created_date"),
+        fallback_id=str(article_id),
+    )
+
     # Create Dataset document using the schema
     dataset = create_dataset(
-        dataset_id=f"figshare_{article_id}",
+        dataset_id=dataset_id,
         name=title,
         source="figshare",
         recording_modality=recording_modality,
@@ -237,6 +245,9 @@ def extract_dataset_info(
         dataset_modified_at=modified_date,
         digested_at=digested_at,
     )
+
+    # Store original Figshare ID for reference
+    dataset["figshare_id"] = str(article_id)
 
     return dataset
 

@@ -33,8 +33,9 @@ def find_record_files(input_dir: Path, datasets: list[str] | None = None) -> lis
     """Find all record JSON files in the digestion output.
 
     Looks for:
-    - {dataset_id}_minimal.json (from minimal mode)
+    - {dataset_id}_records.json (from minimal mode, new schema)
     - {dataset_id}_core.json (from full mode)
+    - {dataset_id}_minimal.json (legacy)
     """
     record_files = []
 
@@ -48,14 +49,17 @@ def find_record_files(input_dir: Path, datasets: list[str] | None = None) -> lis
         if datasets and dataset_id not in datasets:
             continue
 
-        # Look for minimal or core JSON
-        minimal_path = dataset_dir / f"{dataset_id}_minimal.json"
-        core_path = dataset_dir / f"{dataset_id}_core.json"
+        # Look for record files in order of preference
+        records_path = dataset_dir / f"{dataset_id}_records.json"  # New schema
+        core_path = dataset_dir / f"{dataset_id}_core.json"  # Full mode
+        minimal_path = dataset_dir / f"{dataset_id}_minimal.json"  # Legacy
 
-        if minimal_path.exists():
-            record_files.append(minimal_path)
+        if records_path.exists():
+            record_files.append(records_path)
         elif core_path.exists():
             record_files.append(core_path)
+        elif minimal_path.exists():
+            record_files.append(minimal_path)
 
     return record_files
 

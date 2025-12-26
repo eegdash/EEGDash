@@ -1,12 +1,10 @@
-"""Fetch EEG BIDS datasets from SciDB (Science Data Bank).
+"""Fetch neural recording BIDS datasets from SciDB (Science Data Bank).
 
-This script searches SciDB for public datasets containing both "EEG" and "BIDS" keywords
-using the SciDB query service API. It retrieves comprehensive metadata including DOIs,
-CSTR identifiers, descriptions, authors, and file information.
+This script searches SciDB for BIDS-compliant datasets across multiple modalities
+(EEG, MEG, iEEG, fNIRS) using the SciDB query service API. Each modality is searched
+separately and results are deduplicated by dataset ID to ensure uniqueness.
 
-Supports simple queries and advanced boolean queries using AND, OR, NOT operators.
-
-Output: consolidated/scidb_datasets.json
+Output: consolidated/scidb_datasets.json (Dataset schema format)
 """
 
 import argparse
@@ -17,75 +15,48 @@ from typing import Any
 
 import requests
 
-# Predefined query templates for neuroimaging research
-QUERY_TEMPLATES = {
-    "eeg_bids": "EEG BIDS",
-    "neuroimaging": ("(EEG OR MEG OR iEEG OR ECoG OR EMG) AND (BIDS OR neuroimaging)"),
-    # TODO: Revisit query structure - SciDB may require different query syntax
-    # Current structure may not correctly combine boolean operators
-    # See: SCIDB_QUERY_TEMPLATES.md for details and testing notes
-    # "comprehensive": (
-    #     '(("EEG" OR "electroencephalography" OR "MEG" OR "magnetoencephalography" '
-    #     'OR "iEEG" OR "intracranial EEG" OR "ECoG" OR "electrocorticography" '
-    #     'OR "SEEG" OR "stereo EEG" OR "EMG" OR "electromyography") '
-    #     'AND '
-    #     '("BIDS" OR "Brain Imaging Data Structure" OR "BIDS-EEG" OR "BIDS-MEG" '
-    #     'OR "BIDS-iEEG" OR "BIDS specification" OR "BIDS extension" '
-    #     'OR "BIDS derivatives" OR "BIDS apps" OR "BIDS validator" OR "BIDS converter")) '
-    #     'OR '
-    #     '(("EEG-BIDS" OR "MEG-BIDS" OR "iEEG-BIDS" OR "EMG-BIDS") '
-    #     'AND '
-    #     '("data sharing" OR "open data" OR "FAIR principles" OR "neuroimaging standardization"))'
-    # ),
+sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent))
+from eegdash.records import create_dataset
+
+# Modality keywords for searching SciDB
+MODALITY_KEYWORDS = {
+    "eeg": ["eeg", "electroencephalography"],
+    "meg": ["meg", "magnetoencephalography"],
+    "ieeg": ["ieeg", "intracranial eeg", "ecog", "electrocorticography", "seeg"],
+    "fnirs": ["fnirs", "nirs", "fnirs"],
 }
 
 
-def search_scidb(
+def search_scidb_by_query(
     query: str,
-    size: int = 100,
+    max_results: int = 100,
     page_size: int = 100,
-    public_only: bool = True,
 ) -> list[dict[str, Any]]:
-    """Search SciDB for datasets matching the query.
+    """Search SciDB for datasets matching a single query.
 
     Args:
         query: Search query string
-        size: Maximum number of results to fetch
+        max_results: Maximum number of results to fetch per query
         page_size: Number of results per page (max 100)
-        public_only: Filter for public datasets only (default: True)
 
     Returns:
         List of SciDB dataset dictionaries
 
     """
     base_url = "https://www.scidb.cn/api/sdb-query-service/query"
-
-    # Build query parameters
-    params = {
-        "queryCode": "",
-        "q": query,
-    }
-
-    print(f"Searching SciDB with query: {query}")
-    print(f"Max results to fetch: {size}")
-    print(f"Results per page: {min(page_size, 100)}")
-    if public_only:
-        print("Filtering: Public datasets only")
-
+    params = {"queryCode": "", "q": query}
+    
     all_datasets = []
     page = 1
-    actual_page_size = min(page_size, 100)  # SciDB max appears to be 100
+    actual_page_size = min(page_size, 100)
 
     while True:
-        print(f"\nFetching page {page}...", end=" ", flush=True)
-
-        # Build request body
         body = {
             "fileType": ["001"],  # 001 = dataset type
-            "dataSetStatus": ["PUBLIC"] if public_only else [],
+            "dataSetStatus": ["PUBLIC"],
             "copyrightCode": [],
             "publishDate": [],
-            "ordernum": "6",  # Sort order (6 appears to be relevance)
+            "ordernum": "6",  # Relevance sort
             "rorId": [],
             "ror": "",
             "taxonomyEn": [],
@@ -107,189 +78,156 @@ def search_scidb(
             )
             response.raise_for_status()
         except requests.RequestException as e:
-            print(f"\nError fetching page {page}: {e}", file=sys.stderr)
+            print(f"  Error on page {page}: {e}", file=sys.stderr)
             break
 
         try:
             data = response.json()
         except json.JSONDecodeError as e:
-            print(f"\nError parsing JSON response: {e}", file=sys.stderr)
+            print(f"  JSON parse error: {e}", file=sys.stderr)
             break
 
         # Check API response code
         code = data.get("code", 0)
         if code != 20000:
             message = data.get("message", "Unknown error")
-            print(f"\nAPI Error (code {code}): {message}", file=sys.stderr)
+            print(f"  API error (code {code}): {message}", file=sys.stderr)
             break
 
-        # Extract records from nested data structure: response.data.data[]
+        # Extract records from nested data structure
         datasets = data.get("data", {}).get("data", [])
-
         if not datasets:
-            print("No more results")
             break
 
-        print(f"Got {len(datasets)} records (total: {len(all_datasets)})")
         all_datasets.extend(datasets)
 
-        # If we got fewer results than page_size, we've reached the end
-        if len(datasets) < actual_page_size:
-            print("Reached end of results")
-            break
-
-        # Check if we've reached the requested size (only if size > 0)
-        if size > 0 and len(all_datasets) >= size:
-            print(f"Reached target limit ({len(all_datasets)} datasets)")
+        # Check if we've reached max_results or end of results
+        if len(datasets) < actual_page_size or len(all_datasets) >= max_results:
             break
 
         page += 1
 
-    # Return all if size is 0 or negative, otherwise trim to size
-    if size <= 0:
-        return all_datasets
-    else:
-        return all_datasets[:size]
-
-    print(f"\nTotal datasets fetched: {len(all_datasets)}")
-    return all_datasets[:size]  # Trim to exact size
+    return all_datasets[:max_results]
 
 
-def extract_dataset_info(record: dict) -> dict[str, Any]:
-    """Extract relevant information from a SciDB dataset record.
+def fetch_scidb_datasets(
+    max_results_per_modality: int = 100,
+) -> dict[str, list[dict[str, Any]]]:
+    """Fetch SciDB datasets across multiple modalities with BIDS requirement.
 
     Args:
-        record: SciDB dataset record dictionary
+        max_results_per_modality: Max results per modality search
 
     Returns:
-        Cleaned dataset dictionary with normalized fields
+        Dictionary mapping modality -> list of datasets
 
     """
-    # Extract IDs
-    dataset_id = record.get("id", "")
-    doi = record.get("doi", "")
-    cstr = record.get("cstr", "")
-    pid = record.get("pid", "")
+    results_by_modality = {}
+    
+    for modality, keywords in MODALITY_KEYWORDS.items():
+        print(f"\nSearching {modality.upper()} datasets with BIDS requirement...")
+        modality_datasets = []
+        
+        for keyword in keywords:
+            query = f"{keyword} BIDS"
+            print(f"  Query: '{query}'...", end=" ", flush=True)
+            datasets = search_scidb_by_query(query, max_results=max_results_per_modality // len(keywords))
+            modality_datasets.extend(datasets)
+            print(f"found {len(datasets)}")
+        
+        results_by_modality[modality] = modality_datasets
+    
+    return results_by_modality
 
-    # Extract basic metadata - API uses titleEn/titleZh pattern
-    title_en = record.get("titleEn", "")
-    title_zh = record.get("titleZh", "")
-    abstract_en = record.get("introductionEn", "")
-    abstract_zh = record.get("introductionZh", "")
 
-    # Extract keywords
-    keywords_en = record.get("keywordEn", [])
-    if isinstance(keywords_en, str):
-        keywords_en = [keywords_en] if keywords_en else []
-    keywords_zh = record.get("keywordZh", [])
-    if isinstance(keywords_zh, str):
-        keywords_zh = [keywords_zh] if keywords_zh else []
+def deduplicate_datasets(results_by_modality: dict[str, list[dict[str, Any]]]) -> list[dict[str, Any]]:
+    """Deduplicate datasets across modalities by ID.
 
-    # Extract authors with affiliations
-    authors = []
-    for author in record.get("author", []):
-        author_info = {
-            "name_en": author.get("nameEn", ""),
-            "name_zh": author.get("nameZh", ""),
-        }
-        if author.get("email"):
-            author_info["email"] = author["email"]
+    Args:
+        results_by_modality: Datasets grouped by modality
 
-        # Handle affiliations (organizations)
-        affiliations = []
-        for org in author.get("organizations", []):
-            aff_info = {
-                "name_en": org.get("nameEn", ""),
-                "name_zh": org.get("nameZh", ""),
-            }
-            # Extract ROR ID if available
-            for orgid in org.get("orgids", []):
-                if orgid.get("type") == "ROR":
-                    aff_info["ror_id"] = orgid.get("value")
-                    break
-            affiliations.append(aff_info)
-        if affiliations:
-            author_info["affiliations"] = affiliations
+    Returns:
+        Deduplicated list of datasets
 
-        authors.append(author_info)
+    """
+    seen_ids = set()
+    unique_datasets = []
+    modality_map = {}
 
-    # Extract dates
-    publication_date = record.get("dataSetPublishDate", "")
-    create_time = record.get("create_time", "")
-    update_time = record.get("update_time", "")
+    for modality, datasets in results_by_modality.items():
+        for dataset in datasets:
+            dataset_id = dataset.get("id")
+            if dataset_id and dataset_id not in seen_ids:
+                seen_ids.add(dataset_id)
+                unique_datasets.append(dataset)
+                modality_map[dataset_id] = modality
 
-    # Extract access and status
-    data_set_status = record.get("dataSetStatus", "")
+    return unique_datasets, modality_map
 
-    # Extract license information
-    license_info = record.get("copyRight", {})
-    license_code = license_info.get("code", "")
 
-    # Extract file information
-    file_size_bytes = record.get("size", 0)
-    file_size_mb = round(file_size_bytes / (1024 * 1024), 2) if file_size_bytes else 0
+def process_scidb_dataset(
+    record: dict[str, Any],
+    modality: str,
+) -> dict[str, Any] | None:
+    """Convert SciDB record to Dataset schema format.
 
-    # Extract metrics
-    download_count = record.get("download", 0)
-    visit_count = record.get("visit", 0)
+    Args:
+        record: SciDB dataset record
+        modality: Detected modality (eeg, meg, ieeg, fnirs)
 
-    # Extract URL
-    url = record.get("url", "")
-    if not url and dataset_id:
-        url = f"https://www.scidb.cn/en/detail?id={dataset_id}"
+    Returns:
+        Dataset schema dictionary or None if invalid
 
-    # Build dataset dictionary
-    dataset = {
-        "dataset_id": str(dataset_id),
-        "doi": doi,
-        "cstr": cstr,
-        "pid": pid,
-        "title": title_en or title_zh,
-        "title_en": title_en,
-        "title_zh": title_zh,
-        "description": abstract_en or abstract_zh,
-        "description_en": abstract_en,
-        "description_zh": abstract_zh,
-        "authors": authors,
-        "keywords_en": keywords_en,
-        "keywords_zh": keywords_zh,
-        "publication_date": publication_date,
-        "created": create_time,
-        "modified": update_time,
-        "status": data_set_status,
-        "license": license_code,
-        "file_size_mb": file_size_mb,
-        "file_size_bytes": file_size_bytes,
-        "download_count": download_count,
-        "visit_count": visit_count,
-        "url": url,
-        "source": "scidb",
-    }
+    """
+    try:
+        dataset_id = str(record.get("id", ""))
+        if not dataset_id:
+            return None
 
-    return dataset
+        # Extract metadata
+        title = record.get("titleEn", "") or record.get("titleZh", "")
+        description = record.get("introductionEn", "") or record.get("introductionZh", "")
+        
+        # Extract authors
+        authors = []
+        for author_dict in record.get("author", []):
+            name = author_dict.get("nameEn", "") or author_dict.get("nameZh", "")
+            if name:
+                authors.append(name)
+
+        # Create dataset using create_dataset
+        dataset = create_dataset(
+            dataset_id=f"scidb_{dataset_id}",
+            name=title or "SciDB Dataset",
+            source="scidb",
+            recording_modality=modality,
+            modalities=[modality],
+            license=record.get("copyRight", {}).get("code") or None,
+            authors=authors or None,
+            source_url=f"https://www.scidb.cn/en/detail?id={dataset_id}",
+        )
+
+        # Add SciDB-specific metadata
+        dataset["scidb_id"] = dataset_id
+        if doi := record.get("doi"):
+            dataset["dataset_doi"] = doi
+        if description:
+            dataset["description"] = description[:1000]
+
+        return dataset
+
+    except Exception as e:
+        print(f"  Error processing dataset {record.get('id')}: {e}", file=sys.stderr)
+        return None
+
+    except Exception as e:
+        print(f"  Error processing dataset {record.get('id')}: {e}", file=sys.stderr)
+        return None
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="Fetch EEG BIDS datasets from SciDB (Science Data Bank).",
-        epilog="Query templates: eeg_bids, neuroimaging | TODO: Add comprehensive template after query syntax validation",
-    )
-    parser.add_argument(
-        "--query",
-        type=str,
-        default="eeg_bids",
-        help=(
-            'Search query or template name (default: "eeg_bids"). '
-            "Available templates: eeg_bids, neuroimaging. "
-            "Use --list-queries to see all templates. "
-            "Or provide a custom query with boolean operators (AND, OR, NOT). "
-            "TODO: comprehensive template syntax may need adjustment for SciDB API."
-        ),
-    )
-    parser.add_argument(
-        "--list-queries",
-        action="store_true",
-        help="List all available query templates and exit.",
+        description="Fetch neural recording BIDS datasets from SciDB (Science Data Bank).",
     )
     parser.add_argument(
         "--output",
@@ -298,102 +236,61 @@ def main() -> None:
         help="Output JSON file path (default: consolidated/scidb_datasets.json).",
     )
     parser.add_argument(
-        "--size",
-        type=int,
-        default=10000,
-        help="Maximum number of results to fetch (default: 10000, use 0 to fetch all pages).",
-    )
-    parser.add_argument(
-        "--page-size",
+        "--max-results",
         type=int,
         default=100,
-        help="Number of results per page (max 100, default: 100).",
-    )
-    parser.add_argument(
-        "--include-restricted",
-        action="store_true",
-        help="Include restricted/private datasets (default: public only).",
+        help="Maximum results per modality (default: 100).",
     )
 
     args = parser.parse_args()
 
-    # Handle list-queries
-    if args.list_queries:
-        print("Available query templates:\n")
-        for name, query in QUERY_TEMPLATES.items():
-            print(f"  {name}:")
-            print(f"    {query}\n")
-        sys.exit(0)
+    # Fetch across all modalities
+    print("Fetching BIDS datasets from SciDB across multiple modalities...")
+    results_by_modality = fetch_scidb_datasets(max_results_per_modality=args.max_results)
 
-    # Resolve query template or use custom query
-    query = QUERY_TEMPLATES.get(args.query, args.query)
-
-    # Search SciDB
-    records = search_scidb(
-        query=query,
-        size=args.size,
-        page_size=args.page_size,
-        public_only=not args.include_restricted,
-    )
-
-    if not records:
+    # Deduplicate
+    unique_datasets, modality_map = deduplicate_datasets(results_by_modality)
+    
+    if not unique_datasets:
         print("No datasets found. Exiting.", file=sys.stderr)
         sys.exit(1)
 
-    # Extract dataset information
-    print("\nExtracting dataset information...")
+    # Convert to Dataset schema
+    print(f"\nProcessing {len(unique_datasets)} unique datasets...")
     datasets = []
-    for record in records:
-        try:
-            dataset = extract_dataset_info(record)
+    for record in unique_datasets:
+        modality = modality_map[record.get("id")]
+        dataset = process_scidb_dataset(record, modality)
+        if dataset:
             datasets.append(dataset)
-        except Exception as e:
-            print(
-                f"Warning: Error extracting info for record {record.get('id')}: {e}",
-                file=sys.stderr,
-            )
-            continue
-
-    # Create output directory
-    args.output.parent.mkdir(parents=True, exist_ok=True)
 
     # Save to JSON
+    args.output.parent.mkdir(parents=True, exist_ok=True)
     with args.output.open("w") as fh:
-        json.dump(datasets, fh, indent=2, ensure_ascii=False)
+        json.dump(datasets, fh, indent=2)
 
-    # Print summary statistics
+    # Print summary
     print(f"\n{'=' * 60}")
     print(f"Successfully saved {len(datasets)} datasets to {args.output}")
     print(f"{'=' * 60}")
-    print("\nDataset Statistics:")
-
-    # Count by status
-    statuses = {}
+    
+    # Statistics
+    modalities_found = {}
     for ds in datasets:
-        status = ds.get("status", "unknown")
-        statuses[status] = statuses.get(status, 0) + 1
-
-    print("\nBy Status:")
-    for status, count in sorted(statuses.items(), key=lambda x: x[1], reverse=True):
-        print(f"  {status}: {count}")
-
-    # Datasets with files
-    datasets_with_files = sum(1 for ds in datasets if ds.get("file_count", 0) > 0)
-    print(f"\nDatasets with files: {datasets_with_files}/{len(datasets)}")
-
-    # Total size
-    total_size_mb = sum(ds.get("total_size_mb", 0) for ds in datasets)
-    total_size_gb = round(total_size_mb / 1024, 2)
-    print(f"Total Size: {total_size_gb} GB ({total_size_mb} MB)")
-
-    # Datasets with DOI
-    datasets_with_doi = sum(1 for ds in datasets if ds.get("doi", ""))
-    print(f"Datasets with DOI: {datasets_with_doi}/{len(datasets)}")
-
-    # Datasets with CSTR
-    datasets_with_cstr = sum(1 for ds in datasets if ds.get("cstr", ""))
-    print(f"Datasets with CSTR: {datasets_with_cstr}/{len(datasets)}")
-
+        for mod in ds.get("modalities", []):
+            modalities_found[mod] = modalities_found.get(mod, 0) + 1
+    
+    print("\nDatasets by modality:")
+    for mod in sorted(MODALITY_KEYWORDS.keys()):
+        count = modalities_found.get(mod, 0)
+        print(f"  {mod.upper()}: {count}")
+    
+    datasets_with_doi = sum(1 for ds in datasets if ds.get("identifiers", {}).get("doi"))
+    print(f"\nDatasets with DOI: {datasets_with_doi}/{len(datasets)}")
+    
+    datasets_with_authors = sum(1 for ds in datasets if ds.get("authors"))
+    print(f"Datasets with authors: {datasets_with_authors}/{len(datasets)}")
+    
     print(f"{'=' * 60}")
 
 

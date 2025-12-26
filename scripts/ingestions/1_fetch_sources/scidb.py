@@ -23,12 +23,45 @@ from eegdash.records import create_dataset
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from _serialize import save_datasets_deterministically
 
-# Modality keywords for searching SciDB
+# Modality keywords for searching SciDB - comprehensive keyword coverage
 MODALITY_KEYWORDS = {
-    "eeg": ["eeg", "electroencephalography"],
-    "meg": ["meg", "magnetoencephalography"],
-    "ieeg": ["ieeg", "intracranial eeg", "ecog", "electrocorticography", "seeg"],
-    "fnirs": ["fnirs", "nirs", "fnirs"],
+    "eeg": [
+        "eeg", "electroencephalography", "electroencephalogram", 
+        "scalp eeg", "scalp-eeg"
+    ],
+    "meg": [
+        "meg", "magnetoencephalography", "magnetoencephalogram"
+    ],
+    "emg": [
+        "emg", "electromyography", "electromyogram"
+    ],
+    "fnirs": [
+        "fnirs", "fNIRS", "nirs", "near-infrared spectroscopy", 
+        "near infrared spectroscopy", "functional near-infrared"
+    ],
+    "lfp": [
+        "lfp", "local field potential", "local field potentials", 
+        "field potential", "field potentials"
+    ],
+    "spike": [
+        "single unit", "single-unit", "multi-unit", "multiunit",
+        "spike", "spike train", "neuronal firing", "unit activity", 
+        "single unit activity", "multi-unit activity"
+    ],
+    "mea": [
+        "mea", "microelectrode array", "microelectrode arrays",
+        "utah array", "neuropixels", "depth electrode"
+    ],
+    "ieeg": [
+        "ieeg", "intracranial eeg", "intracranial electroencephalography",
+        "intracranial electroencephalogram", "seeg", "stereoelectroencephalography",
+        "ecog", "electrocorticography", "corticography",
+        "subdural electrode", "subdural grid", "subdural strip"
+    ],
+    "bids": [
+        "bids", "brain imaging data structure", 
+        "brain imaging data structures"
+    ],
 }
 
 

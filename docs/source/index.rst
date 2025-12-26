@@ -66,3 +66,4 @@
    API <api/api>
    Dataset Catalog <dataset_summary>
    Examples <generated/auto_examples/index>
+   Developer Notes <developer_notes>

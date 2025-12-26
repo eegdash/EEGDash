@@ -4,7 +4,7 @@
 Unified digestion script supporting both minimal and full modes.
 
 Modes:
-    - minimal: Core 11 fields only (fast, for production)
+    - minimal: Core Record schema fields only (fast, for production)
     - full: Core + enriched metadata (complete, for debugging)
 
 Usage:
@@ -31,24 +31,87 @@ from typing import Any
 
 from tqdm import tqdm
 
-# Core fields for minimal mode (11 fields)
-CORE_FIELDS = {
-    "data_name",  # Unique identifier (dataset_filename)
-    "dataset",  # Dataset ID
-    "bidspath",  # Path within BIDS structure
-    "subject",  # Subject identifier
-    "task",  # Task name
-    "session",  # Session identifier
-    "run",  # Run number
-    "modality",  # Data modality (eeg, meg, ieeg)
-    "sampling_frequency",  # Sampling rate in Hz
-    "nchans",  # Number of channels
-    "ntimes",  # Number of time points
+from eegdash.records import create_record
+
+# Storage base URLs per source
+STORAGE_BASES = {
+    "openneuro": "s3://openneuro.org",
+    "nemar": "https://nemar.org/dataexplorer/detail",  # NEMAR uses HTTPS
+    "gin": "https://gin.g-node.org/EEGManyLabs",  # GIN WebDAV
+    "figshare": "https://figshare.com/ndownloader/files",  # Figshare CDN
+    "zenodo": "https://zenodo.org/records",  # Zenodo
+    "osf": "https://files.osf.io",  # OSF storage
+    "scidb": "https://www.scidb.cn",  # SciDB
+    "datarn": "https://webdav.data.ru.nl/dcc",  # data.ru.nl WebDAV
+}
+
+# Enriched fields (not part of core Record schema)
+ENRICHED_FIELDS = {
+    "participant_tsv",
+    "eeg_json",
+    "channels_tsv",
+    "events_tsv",
+    "bidsdependencies",
+    "sampling_frequency",
+    "nchans",
+    "ntimes",
 }
 
 
-def extract_record(bids_dataset, bids_file: str, dataset_id: str, mode: str) -> dict[str, Any]:
-    """Extract metadata for a single BIDS file.
+def get_storage_base(dataset_id: str, source: str) -> str:
+    """Get storage base URL for a dataset.
+    
+    Parameters
+    ----------
+    dataset_id : str
+        Dataset identifier
+    source : str
+        Source name (openneuro, nemar, etc.)
+    
+    Returns
+    -------
+    str
+        Full storage base URL
+    """
+    base = STORAGE_BASES.get(source, STORAGE_BASES["openneuro"])
+    
+    if source == "openneuro":
+        return f"{base}/{dataset_id}"
+    elif source == "nemar":
+        return f"{base}/{dataset_id}"
+    elif source == "gin":
+        return f"{base}/{dataset_id}"
+    else:
+        return f"{base}/{dataset_id}"
+
+
+def get_storage_backend(source: str) -> str:
+    """Get storage backend type for a source.
+    
+    Parameters
+    ----------
+    source : str
+        Source name
+    
+    Returns
+    -------
+    str
+        Backend type: 's3', 'https', or 'local'
+    """
+    if source == "openneuro":
+        return "s3"
+    return "https"
+
+
+def extract_record(
+    bids_dataset,
+    bids_file: str,
+    dataset_id: str,
+    source: str,
+    mode: str,
+    digested_at: str,
+) -> dict[str, Any]:
+    """Extract metadata for a single BIDS file using Record schema.
 
     Parameters
     ----------
@@ -58,39 +121,132 @@ def extract_record(bids_dataset, bids_file: str, dataset_id: str, mode: str) -> 
         Path to the BIDS file
     dataset_id : str
         Dataset identifier
+    source : str
+        Source name (openneuro, nemar, etc.)
     mode : str
         'minimal' for core fields only, 'full' for all metadata
+    digested_at : str
+        ISO 8601 timestamp
 
     Returns
     -------
     dict
-        Metadata record
+        Record schema compliant metadata
     """
-    file_name = Path(bids_file).name
-    bidspath = str(bids_dataset.get_relative_bidspath(bids_file))
-
-    # Core record (always extracted)
-    record = {
-        "data_name": f"{dataset_id}_{file_name}",
-        "dataset": dataset_id,
-        "bidspath": bidspath,
-        "subject": bids_dataset.get_bids_file_attribute("subject", bids_file),
-        "task": bids_dataset.get_bids_file_attribute("task", bids_file),
-        "session": bids_dataset.get_bids_file_attribute("session", bids_file),
-        "run": bids_dataset.get_bids_file_attribute("run", bids_file),
-        "modality": bids_dataset.get_bids_file_attribute("modality", bids_file),
-        "sampling_frequency": bids_dataset.get_bids_file_attribute("sfreq", bids_file),
-        "nchans": bids_dataset.get_bids_file_attribute("nchans", bids_file),
-        "ntimes": bids_dataset.get_bids_file_attribute("ntimes", bids_file),
-    }
+    # Get BIDS entities
+    subject = bids_dataset.get_bids_file_attribute("subject", bids_file)
+    session = bids_dataset.get_bids_file_attribute("session", bids_file)
+    task = bids_dataset.get_bids_file_attribute("task", bids_file)
+    run = bids_dataset.get_bids_file_attribute("run", bids_file)
+    modality = bids_dataset.get_bids_file_attribute("modality", bids_file) or "eeg"
+    
+    # Get BIDS relative path (without dataset prefix)
+    bids_relpath = str(bids_dataset.get_relative_bidspath(bids_file))
+    # Remove dataset_id prefix if present
+    if bids_relpath.startswith(f"{dataset_id}/"):
+        bids_relpath = bids_relpath[len(dataset_id) + 1:]
+    
+    # Determine datatype and suffix from path
+    path_parts = Path(bids_relpath).parts
+    datatype = modality  # eeg, meg, ieeg
+    suffix = modality
+    
+    # Get storage info
+    storage_base = get_storage_base(dataset_id, source)
+    storage_backend = get_storage_backend(source)
+    
+    # Find dependency files (channels.tsv, events.tsv, etc.)
+    dep_keys = []
+    bids_file_path = Path(bids_file)
+    parent_dir = bids_file_path.parent
+    base_name = bids_file_path.stem.rsplit("_", 1)[0]  # Remove suffix like _eeg
+    
+    for dep_suffix in ["_channels.tsv", "_events.tsv", "_electrodes.tsv", "_coordsystem.json"]:
+        dep_file = parent_dir / f"{base_name}{dep_suffix}"
+        if dep_file.exists() or (dep_file.is_symlink()):
+            # Get relative path
+            try:
+                dep_relpath = dep_file.relative_to(bids_dataset.bids_dir)
+                dep_keys.append(str(dep_relpath))
+            except ValueError:
+                pass
+    
+    # Create record using the schema
+    record = create_record(
+        dataset=dataset_id,
+        storage_base=storage_base,
+        bids_relpath=bids_relpath,
+        subject=subject,
+        session=session,
+        task=task,
+        run=str(run) if run is not None else None,
+        dep_keys=dep_keys,
+        datatype=datatype,
+        suffix=suffix,
+        storage_backend=storage_backend,
+        recording_modality=modality,
+        digested_at=digested_at,
+    )
 
     if mode == "full":
+        # Add enriched metadata
+        enriched = {}
+        
+        # Get sampling info from JSON sidecars
+        sfreq = bids_dataset.get_bids_file_attribute("sfreq", bids_file)
+        nchans = bids_dataset.get_bids_file_attribute("nchans", bids_file)
+        ntimes = bids_dataset.get_bids_file_attribute("ntimes", bids_file)
+        
+        if sfreq is not None:
+            enriched["sampling_frequency"] = sfreq
+        if nchans is not None:
+            enriched["nchans"] = nchans
+        if ntimes is not None:
+            enriched["ntimes"] = ntimes
+        
         # Load full metadata including participant info, EEG JSON, etc.
-        from eegdash.bids_eeg_metadata import load_eeg_attrs_from_bids_file
-        full_attrs = load_eeg_attrs_from_bids_file(bids_dataset, bids_file)
-        record.update(full_attrs)
+        try:
+            from eegdash.bids_eeg_metadata import load_eeg_attrs_from_bids_file
+            full_attrs = load_eeg_attrs_from_bids_file(bids_dataset, bids_file)
+            enriched.update({k: v for k, v in full_attrs.items() if k in ENRICHED_FIELDS})
+        except Exception:
+            pass
+        
+        record["_enriched"] = enriched
 
-    return record
+    return dict(record)  # Convert TypedDict to regular dict
+
+
+def detect_source(dataset_dir: Path) -> str:
+    """Detect source from manifest.json or dataset structure.
+    
+    Parameters
+    ----------
+    dataset_dir : Path
+        Path to dataset directory
+    
+    Returns
+    -------
+    str
+        Source name (openneuro, nemar, gin, figshare, zenodo, osf, scidb, datarn)
+    """
+    manifest_path = dataset_dir / "manifest.json"
+    if manifest_path.exists():
+        try:
+            with open(manifest_path) as f:
+                manifest = json.load(f)
+                return manifest.get("source", "openneuro")
+        except Exception:
+            pass
+    
+    # Fallback: check dataset_id pattern
+    dataset_id = dataset_dir.name
+    if dataset_id.startswith("ds"):
+        return "openneuro"
+    elif "EEGManyLabs" in dataset_id:
+        return "gin"
+    
+    return "openneuro"
 
 
 def digest_dataset(
@@ -129,6 +285,12 @@ def digest_dataset(
             "reason": "directory not found",
         }
 
+    # Detect source
+    source = detect_source(dataset_dir)
+    
+    # Generate timestamp
+    digested_at = datetime.now(timezone.utc).isoformat()
+
     # Load BIDS dataset
     try:
         bids_dataset = EEGBIDSDataset(
@@ -157,7 +319,7 @@ def digest_dataset(
 
     for bids_file in files:
         try:
-            record = extract_record(bids_dataset, bids_file, dataset_id, mode)
+            record = extract_record(bids_dataset, bids_file, dataset_id, source, mode, digested_at)
             records.append(record)
         except Exception as e:
             errors.append({"file": str(bids_file), "error": str(e)})
@@ -175,10 +337,12 @@ def digest_dataset(
 
     # Save records
     if mode == "minimal":
-        # Single minimal output file
-        output_path = dataset_output_dir / f"{dataset_id}_minimal.json"
+        # Single output file with all records
+        output_path = dataset_output_dir / f"{dataset_id}_records.json"
         output_data = {
             "dataset": dataset_id,
+            "source": source,
+            "digested_at": digested_at,
             "record_count": len(records),
             "records": records,
         }
@@ -188,24 +352,43 @@ def digest_dataset(
         enriched_records = []
 
         for record in records:
-            core = {k: record.get(k) for k in CORE_FIELDS if k in record}
-            enriched = {k: v for k, v in record.items() if k not in CORE_FIELDS}
-            enriched["data_name"] = core.get("data_name")  # Link key
+            # Core = all Record schema fields (without _enriched)
+            core = {k: v for k, v in record.items() if k != "_enriched"}
             core_records.append(core)
+            
+            # Enriched = the _enriched dict with data_name link
+            enriched = record.get("_enriched", {})
+            enriched["data_name"] = record.get("data_name")  # Link key
             enriched_records.append(enriched)
 
         # Save core
         core_path = dataset_output_dir / f"{dataset_id}_core.json"
         with open(core_path, "w") as f:
-            json.dump({"dataset": dataset_id, "record_count": len(core_records), "records": core_records}, f, indent=2, default=_json_serializer)
+            json.dump({
+                "dataset": dataset_id,
+                "source": source,
+                "digested_at": digested_at,
+                "record_count": len(core_records),
+                "records": core_records,
+            }, f, indent=2, default=_json_serializer)
 
         # Save enriched
         enriched_path = dataset_output_dir / f"{dataset_id}_enriched.json"
         with open(enriched_path, "w") as f:
-            json.dump({"dataset": dataset_id, "record_count": len(enriched_records), "records": enriched_records}, f, indent=2, default=_json_serializer)
+            json.dump({
+                "dataset": dataset_id,
+                "record_count": len(enriched_records),
+                "records": enriched_records,
+            }, f, indent=2, default=_json_serializer)
 
         output_path = core_path
-        output_data = {"dataset": dataset_id, "record_count": len(core_records), "records": core_records}
+        output_data = {
+            "dataset": dataset_id,
+            "source": source,
+            "digested_at": digested_at,
+            "record_count": len(core_records),
+            "records": core_records,
+        }
 
     # Save output
     with open(output_path, "w") as f:

@@ -26,7 +26,10 @@ from bs4 import BeautifulSoup
 # Add parent paths for local imports
 sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 from eegdash.records import Dataset, create_dataset
-from ingestions._serialize import save_datasets_deterministically
+
+# Add ingestions dir to path for _serialize module
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from _serialize import save_datasets_deterministically
 
 GIN_BASE_URL = "https://gin.g-node.org"
 GIN_API_URL = f"{GIN_BASE_URL}/api/v1"

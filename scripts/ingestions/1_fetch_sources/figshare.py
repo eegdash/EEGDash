@@ -11,10 +11,19 @@ import argparse
 import json
 import sys
 import time
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
 import requests
+
+# Add parent paths for local imports
+sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
+from eegdash.records import create_dataset
+
+# Add ingestions dir to path for _serialize module
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from _serialize import save_datasets_deterministically
 
 
 def search_figshare(
@@ -122,15 +131,56 @@ def get_article_details(article_id: int) -> dict[str, Any]:
         return {}
 
 
-def extract_dataset_info(article: dict, fetch_details: bool = False) -> dict[str, Any]:
-    """Extract relevant information from a Figshare article.
+def detect_modalities(article: dict) -> list[str]:
+    """Detect modalities from article metadata.
+    
+    Args:
+        article: Figshare article dictionary
+        
+    Returns:
+        List of detected modalities
+    """
+    modalities = []
+    
+    # Search in title, description, tags, categories
+    search_text = " ".join([
+        article.get("title", ""),
+        article.get("description", ""),
+        " ".join(article.get("tags", [])),
+        " ".join([c.get("title", "") for c in article.get("categories", [])]),
+    ]).lower()
+    
+    # Map keywords to modalities
+    modality_keywords = {
+        "eeg": ["eeg"],
+        "meg": ["meg"],
+        "ieeg": ["ieeg", "intracranial"],
+        "emg": ["emg"],
+        "fnirs": ["fnirs", "fNIRS", "nirs"],
+        "lfp": ["lfp", "local field potential"],
+    }
+    
+    for modality, keywords in modality_keywords.items():
+        if any(kw in search_text for kw in keywords):
+            modalities.append(modality)
+    
+    # Default to EEG if nothing detected (since we search for "EEG BIDS")
+    if not modalities:
+        modalities = ["eeg"]
+    
+    return modalities
+
+
+def extract_dataset_info(article: dict, fetch_details: bool = False, digested_at: str | None = None) -> dict[str, Any]:
+    """Extract relevant information from a Figshare article and normalize to Dataset schema.
 
     Args:
         article: Figshare article dictionary
         fetch_details: Whether to fetch full details (slower but more complete)
+        digested_at: ISO 8601 timestamp for digested_at field
 
     Returns:
-        Cleaned dataset dictionary
+        Dataset schema document
 
     """
     # Get basic info from search results
@@ -146,83 +196,47 @@ def extract_dataset_info(article: dict, fetch_details: bool = False) -> dict[str
 
     # Extract metadata
     description = article.get("description", "")
-    defined_type = article.get("defined_type", 0)
-    defined_type_name = article.get("defined_type_name", "")
-
-    # Extract dates
-    published_date = article.get("published_date", "")
-    created_date = article.get("created_date", "")
-    modified_date = article.get("modified_date", "")
-
+    
     # Extract URLs
     url_public_html = article.get("url_public_html", "")
-    url_public_api = article.get("url_public_api", "")
 
-    # Extract resource info (linked DOI/resource)
-    resource_title = article.get("resource_title", "")
-    resource_doi = article.get("resource_doi", "")
-
-    # Extract authors (may not be in search results)
-    authors = []
+    # Extract authors - normalize to simple list of names
+    author_names = []
     for author in article.get("authors", []):
-        author_info = {
-            "name": author.get("full_name", ""),
-        }
-        if "id" in author:
-            author_info["id"] = author["id"]
-        if "orcid_id" in author:
-            author_info["orcid"] = author["orcid_id"]
-        authors.append(author_info)
-
-    # Extract tags/categories
-    tags = article.get("tags", [])
-    categories = article.get("categories", [])
-
-    # Extract files info
-    files = []
-    for file_entry in article.get("files", []):
-        file_info = {
-            "id": file_entry.get("id", ""),
-            "name": file_entry.get("name", ""),
-            "size_bytes": file_entry.get("size", 0),
-            "download_url": file_entry.get("download_url", ""),
-        }
-        if "computed_md5" in file_entry:
-            file_info["md5"] = file_entry["computed_md5"]
-        files.append(file_info)
-
-    # Calculate total size
-    total_size_bytes = sum(f.get("size", 0) for f in article.get("files", []))
-    total_size_mb = round(total_size_bytes / (1024 * 1024), 2)
+        name = author.get("full_name", "")
+        if name:
+            author_names.append(name)
 
     # Extract license
     license_info = article.get("license", {})
-    license_name = license_info.get("name", "") if license_info else ""
+    license_name = license_info.get("name", "") if license_info else None
 
-    # Build dataset dictionary
-    dataset = {
-        "dataset_id": str(article_id),
-        "doi": doi,
-        "title": title,
-        "description": description,
-        "defined_type": defined_type,
-        "defined_type_name": defined_type_name,
-        "published_date": published_date,
-        "created_date": created_date,
-        "modified_date": modified_date,
-        "authors": authors,
-        "tags": tags,
-        "categories": categories,
-        "license": license_name,
-        "url": url_public_html,
-        "api_url": url_public_api,
-        "resource_title": resource_title,
-        "resource_doi": resource_doi,
-        "files": files,
-        "file_count": len(files),
-        "total_size_mb": total_size_mb,
-        "source": "figshare",
-    }
+    # Calculate total size
+    total_size_bytes = sum(f.get("size", 0) for f in article.get("files", []))
+    
+    # Detect modalities from content
+    modalities = detect_modalities(article)
+    recording_modality = modalities[0] if modalities else "eeg"
+    
+    # Extract modified date for dataset_modified_at
+    modified_date = article.get("modified_date")
+
+    # Create Dataset document using the schema
+    dataset = create_dataset(
+        dataset_id=f"figshare_{article_id}",
+        name=title,
+        source="figshare",
+        recording_modality=recording_modality,
+        modalities=modalities,
+        license=license_name,
+        authors=author_names,
+        dataset_doi=doi,
+        source_url=url_public_html,
+        total_files=len(article.get("files", [])),
+        size_bytes=total_size_bytes if total_size_bytes > 0 else None,
+        dataset_modified_at=modified_date,
+        digested_at=digested_at,
+    )
 
     return dataset
 
@@ -266,6 +280,12 @@ def main() -> None:
         default=3,
         help="Figshare item type: 3=dataset, 1=figure, 2=media, etc. (default: 3).",
     )
+    parser.add_argument(
+        "--digested-at",
+        type=str,
+        default=None,
+        help="ISO 8601 timestamp for digested_at field (for deterministic output).",
+    )
 
     args = parser.parse_args()
 
@@ -289,7 +309,11 @@ def main() -> None:
             print(f"Processing {idx}/{len(articles)}...", flush=True)
 
         try:
-            dataset = extract_dataset_info(article, fetch_details=args.fetch_details)
+            dataset = extract_dataset_info(
+                article, 
+                fetch_details=args.fetch_details,
+                digested_at=args.digested_at,
+            )
             datasets.append(dataset)
         except Exception as e:
             print(
@@ -302,12 +326,8 @@ def main() -> None:
         if args.fetch_details:
             time.sleep(0.2)
 
-    # Create output directory
-    args.output.parent.mkdir(parents=True, exist_ok=True)
-
-    # Save to JSON
-    with args.output.open("w") as fh:
-        json.dump(datasets, fh, indent=2, sort_keys=True)
+    # Save deterministically
+    save_datasets_deterministically(datasets, args.output)
 
     # Print summary statistics
     print(f"\n{'=' * 60}")
@@ -315,28 +335,32 @@ def main() -> None:
     print(f"{'=' * 60}")
     print("\nDataset Statistics:")
 
-    # Count by type
-    types = {}
+    # Count by modality
+    modalities_found = {}
     for ds in datasets:
-        dtype = ds.get("defined_type_name", "unknown")
-        types[dtype] = types.get(dtype, 0) + 1
+        for mod in ds.get("modalities", []):
+            modalities_found[mod] = modalities_found.get(mod, 0) + 1
 
-    print("\nBy Type:")
-    for dtype, count in sorted(types.items(), key=lambda x: x[1], reverse=True):
-        print(f"  {dtype}: {count}")
+    print("\nBy Modality:")
+    for mod, count in sorted(modalities_found.items(), key=lambda x: x[1], reverse=True):
+        print(f"  {mod}: {count}")
 
     # Datasets with files
-    datasets_with_files = sum(1 for ds in datasets if ds.get("file_count", 0) > 0)
+    datasets_with_files = sum(1 for ds in datasets if ds.get("total_files", 0) > 0)
     print(f"\nDatasets with files: {datasets_with_files}/{len(datasets)}")
 
     # Total size
-    total_size_mb = sum(ds.get("total_size_mb", 0) for ds in datasets)
-    total_size_gb = round(total_size_mb / 1024, 2)
-    print(f"Total Size: {total_size_gb} GB ({total_size_mb} MB)")
+    total_size_bytes = sum(ds.get("size_bytes", 0) or 0 for ds in datasets)
+    total_size_gb = round(total_size_bytes / (1024 * 1024 * 1024), 2)
+    print(f"Total Size: {total_size_gb} GB")
 
     # Datasets with DOI
-    datasets_with_doi = sum(1 for ds in datasets if ds.get("doi", ""))
+    datasets_with_doi = sum(1 for ds in datasets if ds.get("dataset_doi", ""))
     print(f"Datasets with DOI: {datasets_with_doi}/{len(datasets)}")
+
+    # Datasets with authors
+    datasets_with_authors = sum(1 for ds in datasets if ds.get("authors"))
+    print(f"Datasets with authors: {datasets_with_authors}/{len(datasets)}")
 
     print(f"{'=' * 60}")
 

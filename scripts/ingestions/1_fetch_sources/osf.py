@@ -1,10 +1,11 @@
-"""Fetch EEG BIDS projects from Open Science Framework (OSF).
+"""Fetch neural recording BIDS datasets from Open Science Framework (OSF).
 
-This script searches OSF for projects containing both "EEG" and "BIDS" keywords
-using the OSF API v2. It retrieves comprehensive metadata including project IDs,
-descriptions, contributors, files, and DOIs.
+This script searches OSF for public nodes (projects/data) containing EEG, MEG, iEEG,
+or other neural recording modalities with BIDS formatting, using the OSF API v2. 
+It retrieves comprehensive metadata including contributors, licenses, and project 
+details, outputting in the EEGDash Dataset schema format.
 
-Output: consolidated/osf_projects.json
+Output: consolidated/osf_datasets.json
 """
 
 import argparse
@@ -12,279 +13,499 @@ import json
 import sys
 import time
 from pathlib import Path
-from typing import Any
 
 import requests
 
+# Add parent paths for local imports
+sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
+from eegdash.records import Dataset, create_dataset
 
-def search_osf(
-    query: str,
-    size: int = 100,
+OSF_API_URL = "https://api.osf.io/v2"
+
+# License ID to name mapping (common OSF licenses)
+LICENSE_NAMES = {
+    "563c1cf88c5e4a3877f9e96a": "CC-BY-4.0",
+    "563c1cf88c5e4a3877f9e965": "CC0-1.0",
+    "563c1cf88c5e4a3877f9e968": "MIT",
+    "563c1cf88c5e4a3877f9e96c": "GPL-3.0",
+    "563c1cf88c5e4a3877f9e96e": "Apache-2.0",
+    "563c1cf88c5e4a3877f9e967": "BSD-2-Clause",
+    "563c1cf88c5e4a3877f9e969": "BSD-3-Clause",
+    "563c1cf88c5e4a3877f9e96b": "CC-BY-NC-4.0",
+}
+
+# Categories we're interested in (datasets/data, not posters/presentations)
+DATA_CATEGORIES = {"data", "project", "analysis", "software", "other"}
+
+# Modality tags to search for
+MODALITY_TAGS = {
+    "eeg": ["eeg", "electroencephalography", "electroencephalogram"],
+    "meg": ["meg", "magnetoencephalography"],
+    "ieeg": ["ieeg", "ecog", "seeg", "intracranial eeg", "electrocorticography", "stereoelectroencephalography"],
+    "fnirs": ["fnirs", "nirs", "fNIRS", "near-infrared spectroscopy"],
+}
+
+
+def fetch_license_name(license_id: str, timeout: float = 10.0) -> str | None:
+    """Fetch license name from OSF API."""
+    if license_id in LICENSE_NAMES:
+        return LICENSE_NAMES[license_id]
+    
+    try:
+        response = requests.get(
+            f"{OSF_API_URL}/licenses/{license_id}/",
+            timeout=timeout
+        )
+        if response.status_code == 200:
+            data = response.json()
+            name = data.get("data", {}).get("attributes", {}).get("name")
+            return name
+    except Exception:
+        pass
+    return None
+
+
+def fetch_contributors(node_id: str, timeout: float = 10.0) -> list[str]:
+    """Fetch contributor names for a node."""
+    try:
+        response = requests.get(
+            f"{OSF_API_URL}/nodes/{node_id}/contributors/",
+            params={"embed": "users"},
+            timeout=timeout
+        )
+        if response.status_code != 200:
+            return []
+        
+        data = response.json()
+        contributors = []
+        
+        for c in data.get("data", []):
+            # Try embedded users first
+            user_data = c.get("embeds", {}).get("users", {}).get("data", {})
+            if user_data:
+                name = user_data.get("attributes", {}).get("full_name")
+                if name:
+                    contributors.append(name)
+        
+        return contributors
+    except Exception:
+        return []
+
+
+def fetch_osf_nodes(
+    modalities: list[str] | None = None,
+    require_bids: bool = True,
+    max_results_per_modality: int = 1000,
     page_size: int = 100,
-) -> list[dict[str, Any]]:
-    """Search OSF for projects matching the query.
+    timeout: float = 30.0,
+    fetch_details: bool = True,
+) -> list[Dataset]:
+    """Fetch public OSF nodes with neural recording modalities.
 
     Args:
-        query: Search query string
-        size: Maximum number of results to fetch
+        modalities: List of modalities to search for (default: all)
+        require_bids: Only include datasets with BIDS in tags/description
+        max_results_per_modality: Maximum results per modality tag search
         page_size: Number of results per page (max 100)
+        timeout: Request timeout in seconds
+        fetch_details: Whether to fetch additional details (contributors, license)
 
     Returns:
-        List of OSF project dictionaries
+        List of Dataset documents
 
     """
-    base_url = "https://api.osf.io/v2/search/"
+    if modalities is None:
+        modalities = list(MODALITY_TAGS.keys())
+    
+    print(f"Searching for modalities: {modalities}")
+    print(f"Require BIDS: {require_bids}")
+    
+    # Collect all search tags
+    search_tags = []
+    for mod in modalities:
+        if mod in MODALITY_TAGS:
+            search_tags.extend(MODALITY_TAGS[mod])
+    
+    # Also search directly for BIDS
+    if require_bids:
+        search_tags.append("bids")
+    
+    # Deduplicate
+    search_tags = list(set(search_tags))
+    print(f"Search tags: {search_tags}")
+    
+    # Track seen nodes to avoid duplicates
+    seen_ids = set()
+    all_datasets = []
+    
+    for tag in search_tags:
+        print(f"\n{'='*40}")
+        print(f"Searching for tag: {tag}")
+        print(f"{'='*40}")
+        
+        datasets = fetch_nodes_by_tag(
+            tag=tag,
+            max_results=max_results_per_modality,
+            page_size=page_size,
+            timeout=timeout,
+            fetch_details=fetch_details,
+            require_bids=require_bids,
+            seen_ids=seen_ids,
+        )
+        
+        # Add new datasets (already filtered by seen_ids in fetch_nodes_by_tag)
+        all_datasets.extend(datasets)
+        
+        print(f"  New unique datasets from '{tag}': {len(datasets)}")
+        print(f"  Total unique so far: {len(all_datasets)}")
+        
+        time.sleep(0.5)  # Rate limiting between tag searches
+    
+    print(f"\n\nTotal unique datasets: {len(all_datasets)}")
+    return all_datasets
 
-    # Build query parameters
-    params = {
-        "q": query,
-        "page[size]": min(page_size, 100),  # OSF max is 100
-    }
 
-    print(f"Searching OSF with query: {query}")
-    print(f"Max results to fetch: {size}")
-    print(f"Results per page: {params['page[size]']}")
+def fetch_nodes_by_tag(
+    tag: str,
+    max_results: int = 1000,
+    page_size: int = 100,
+    timeout: float = 30.0,
+    fetch_details: bool = True,
+    require_bids: bool = True,
+    seen_ids: set | None = None,
+) -> list[Dataset]:
+    """Fetch public OSF nodes with a specific tag.
 
-    all_records = []
+    Args:
+        tag: Tag to filter by
+        max_results: Maximum number of results to fetch
+        page_size: Number of results per page (max 100)
+        timeout: Request timeout in seconds
+        fetch_details: Whether to fetch additional details
+        require_bids: Only include datasets mentioning BIDS
+        seen_ids: Set of already-seen node IDs to skip
+
+    Returns:
+        List of Dataset documents
+
+    """
+    if seen_ids is None:
+        seen_ids = set()
+    
+    datasets = []
     page = 1
-    current_url = base_url
-
-    while True:
-        print(f"\nFetching page {page}...", end=" ", flush=True)
-
+    fetched = 0
+    
+    # Build initial URL with filters
+    base_params = {
+        "filter[public]": "true",
+        "filter[tags]": tag,
+        "page[size]": min(page_size, 100),
+    }
+    
+    url = f"{OSF_API_URL}/nodes/"
+    params = base_params.copy()
+    
+    while fetched < max_results:
         try:
-            response = requests.get(current_url, params=params, timeout=30)
+            response = requests.get(url, params=params, timeout=timeout)
             response.raise_for_status()
         except requests.RequestException as e:
-            print(f"\nError fetching page {page}: {e}", file=sys.stderr)
+            print(f"  Error fetching page {page}: {e}", file=sys.stderr)
             break
-
+        
         data = response.json()
-        records = data.get("data", [])
-
-        if not records:
-            print("No more results")
+        nodes = data.get("data", [])
+        
+        if not nodes:
             break
-
-        # Get total count from meta
-        links = data.get("links", {})
-        meta = links.get("meta", {})
+        
+        # Get total from meta
+        meta = data.get("links", {}).get("meta", {}) or data.get("meta", {})
         total = meta.get("total", 0)
-
-        print(f"Got {len(records)} records (total available: {total})")
-        all_records.extend(records)
-
-        # Check if we've reached the requested size or all available records
-        if len(all_records) >= size:
-            print(f"Reached limit ({len(all_records)} records)")
+        if page == 1:
+            print(f"  Total available: {total}")
+        
+        for node in nodes:
+            if fetched >= max_results:
+                break
+            
+            node_id = node.get("id", "")
+            if node_id in seen_ids:
+                continue
+            
+            try:
+                dataset = process_node(
+                    node, 
+                    fetch_details=fetch_details, 
+                    timeout=timeout,
+                    require_bids=require_bids,
+                )
+                if dataset:
+                    datasets.append(dataset)
+                    seen_ids.add(node_id)
+                    fetched += 1
+            except Exception as e:
+                print(f"  Warning: Error processing node {node_id}: {e}", file=sys.stderr)
+                continue
+        
+        # Check for next page
+        next_url = data.get("links", {}).get("next")
+        if not next_url or fetched >= max_results:
             break
-
-        # Check if there are more pages
-        next_url = links.get("next")
-
-        if not next_url:
-            print("No more pages available")
-            break
-
-        # Update for next page
-        current_url = next_url
-        params = {}  # Next URL already has all params
+        
+        url = next_url
+        params = {}  # Next URL has all params
         page += 1
-
-        # Be nice to the API
-        time.sleep(0.5)
-
-    print(f"\nTotal records fetched: {len(all_records)}")
-    return all_records
+        time.sleep(0.3)  # Rate limiting
+    
+    return datasets
 
 
-def extract_project_info(record: dict) -> dict[str, Any]:
-    """Extract relevant information from an OSF project record.
+def process_node(
+    node: dict,
+    fetch_details: bool = True,
+    timeout: float = 10.0,
+    require_bids: bool = True,
+) -> Dataset | None:
+    """Process an OSF node into a Dataset document.
 
     Args:
-        record: Raw OSF project record dictionary
+        node: OSF node data
+        fetch_details: Whether to fetch additional details
+        timeout: Request timeout
+        require_bids: Only include datasets mentioning BIDS
 
     Returns:
-        Cleaned project dictionary
+        Dataset document or None if filtered out
 
     """
-    project_id = record.get("id", "")
-    record_type = record.get("type", "")
-
-    attributes = record.get("attributes", {})
-    relationships = record.get("relationships", {})
-    links = record.get("links", {})
-
-    # Extract basic metadata
-    title = attributes.get("title", "")
-    description = attributes.get("description", "")
-    category = attributes.get("category", "")
-    tags = attributes.get("tags", [])
-
-    # Extract dates
-    date_created = attributes.get("date_created", "")
-    date_modified = attributes.get("date_modified", "")
-
-    # Extract flags
-    is_public = attributes.get("public", False)
-    is_registration = attributes.get("registration", False)
-    is_preprint = attributes.get("preprint", False)
-    is_fork = attributes.get("fork", False)
-    wiki_enabled = attributes.get("wiki_enabled", False)
-
-    # Extract license info
-    node_license = attributes.get("node_license", {})
-    license_year = node_license.get("year", "")
-    copyright_holders = node_license.get("copyright_holders", [])
-
-    # Extract DOI if available
-    doi = None
-    identifiers = (
-        relationships.get("identifiers", {}).get("links", {}).get("related", {})
-    )
-    if identifiers:
-        doi_href = identifiers.get("href", "")
-        if doi_href:
-            # We'd need to fetch this separately, but for now we'll note it exists
-            doi = "available"  # Placeholder
-
-    # Extract URLs
-    html_url = links.get("html", "")
-    self_url = links.get("self", "")
-
-    # Build project dictionary
-    project = {
-        "project_id": project_id,
-        "type": record_type,
-        "title": title,
-        "description": description,
-        "category": category,
-        "tags": tags,
-        "date_created": date_created,
-        "date_modified": date_modified,
-        "is_public": is_public,
-        "is_registration": is_registration,
-        "is_preprint": is_preprint,
-        "is_fork": is_fork,
-        "wiki_enabled": wiki_enabled,
-        "license_year": license_year,
-        "copyright_holders": copyright_holders,
-        "url": html_url,
-        "api_url": self_url,
-        "source": "osf",
+    node_id = node.get("id", "")
+    attrs = node.get("attributes", {})
+    relationships = node.get("relationships", {})
+    links = node.get("links", {})
+    
+    # Filter out non-data categories
+    category = attrs.get("category", "")
+    if category not in DATA_CATEGORIES:
+        return None
+    
+    # Skip registrations, preprints, forks
+    if attrs.get("registration") or attrs.get("preprint") or attrs.get("fork"):
+        return None
+    
+    # Skip non-public
+    if not attrs.get("public", False):
+        return None
+    
+    title = attrs.get("title", "")
+    description = attrs.get("description", "") or ""
+    tags = attrs.get("tags", [])
+    date_created = attrs.get("date_created", "")
+    date_modified = attrs.get("date_modified", "")
+    
+    # Check for BIDS - in tags or description
+    tags_lower = [t.lower() for t in tags]
+    desc_lower = description.lower()
+    has_bids = any("bids" in t for t in tags_lower) or "bids" in desc_lower
+    
+    if require_bids and not has_bids:
+        return None
+    
+    bids_version = "unknown" if has_bids else None
+    
+    # Get license
+    license_info = None
+    license_rel = relationships.get("license", {}).get("data", {})
+    if license_rel:
+        license_id = license_rel.get("id")
+        if license_id:
+            license_info = LICENSE_NAMES.get(license_id)
+            if not license_info and fetch_details:
+                license_info = fetch_license_name(license_id, timeout=timeout)
+    
+    # Get contributors
+    authors = []
+    if fetch_details:
+        authors = fetch_contributors(node_id, timeout=timeout)
+    
+    # Build URLs
+    html_url = links.get("html", f"https://osf.io/{node_id}/")
+    
+    # Determine modalities from tags and description
+    modalities = []
+    combined_text = " ".join(tags_lower + [desc_lower])
+    
+    for mod, keywords in MODALITY_TAGS.items():
+        if any(kw in combined_text for kw in keywords):
+            modalities.append(mod)
+    
+    # If no modality detected, skip
+    if not modalities:
+        return None
+    
+    # Determine primary modality
+    primary_modality = modalities[0]
+    
+    # Determine study domain from tags/description
+    study_domain = None
+    domain_keywords = {
+        "attention": "attention",
+        "memory": "memory",
+        "language": "language",
+        "motor": "motor",
+        "sleep": "sleep",
+        "epilepsy": "epilepsy",
+        "emotion": "emotion",
+        "perception": "perception",
+        "cognition": "cognition",
+        "learning": "learning",
+        "decision": "decision-making",
+        "bci": "brain-computer interface",
+        "erp": "event-related potentials",
+        "resting": "resting-state",
     }
-
-    # Add DOI if available
-    if doi:
-        project["doi"] = doi
-
-    return project
+    for keyword, domain in domain_keywords.items():
+        if keyword in combined_text:
+            study_domain = domain
+            break
+    
+    # Create dataset
+    dataset = create_dataset(
+        dataset_id=f"osf_{node_id}",
+        name=title,
+        source="osf",
+        recording_modality=primary_modality,
+        modalities=modalities,
+        bids_version=bids_version,
+        license=license_info,
+        authors=authors,
+        study_domain=study_domain,
+        source_url=html_url,
+        dataset_modified_at=date_modified or date_created,
+    )
+    
+    # Add OSF-specific metadata
+    dataset["osf_id"] = node_id
+    dataset["osf_category"] = category
+    dataset["tags"] = tags
+    if description:
+        dataset["description"] = description[:1000]  # Truncate long descriptions
+    
+    return dataset
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="Fetch EEG BIDS projects from Open Science Framework."
+        description="Fetch neural recording BIDS datasets from Open Science Framework."
     )
     parser.add_argument(
-        "--query",
+        "--modalities",
         type=str,
-        default="EEG BIDS",
-        help='Search query (default: "EEG BIDS").',
+        nargs="+",
+        default=None,
+        help='Modalities to search for (default: all). Options: eeg, meg, ieeg, fnirs',
     )
     parser.add_argument(
         "--output",
         type=Path,
-        default=Path("consolidated/osf_projects.json"),
-        help="Output JSON file path (default: consolidated/osf_projects.json).",
+        default=Path("consolidated/osf_datasets.json"),
+        help="Output JSON file path.",
     )
     parser.add_argument(
-        "--size",
+        "--max-results",
         type=int,
-        default=1000,
-        help="Maximum number of results to fetch (default: 1000).",
+        default=500,
+        help="Maximum results per modality tag (default: 500).",
     )
     parser.add_argument(
-        "--page-size",
-        type=int,
-        default=100,
-        help="Number of results per page (max 100, default: 100).",
+        "--no-bids",
+        action="store_true",
+        help="Include datasets without BIDS (not recommended).",
+    )
+    parser.add_argument(
+        "--no-details",
+        action="store_true",
+        help="Skip fetching additional details (faster but less metadata).",
+    )
+    parser.add_argument(
+        "--timeout",
+        type=float,
+        default=30.0,
+        help="Request timeout in seconds (default: 30.0)",
     )
 
     args = parser.parse_args()
 
-    # Search OSF
-    records = search_osf(
-        query=args.query,
-        size=args.size,
-        page_size=args.page_size,
+    modalities = args.modalities
+    if modalities:
+        print(f"Fetching OSF datasets for modalities: {modalities}")
+    else:
+        print(f"Fetching OSF datasets for all modalities: {list(MODALITY_TAGS.keys())}")
+
+    # Fetch nodes
+    datasets = fetch_osf_nodes(
+        modalities=modalities,
+        require_bids=not args.no_bids,
+        max_results_per_modality=args.max_results,
+        fetch_details=not args.no_details,
+        timeout=args.timeout,
     )
 
-    if not records:
-        print("No records found. Exiting.", file=sys.stderr)
+    if not datasets:
+        print("No datasets found. Exiting.", file=sys.stderr)
         sys.exit(1)
-
-    # Extract project information
-    print("\nExtracting project information...")
-    projects = []
-    for record in records:
-        try:
-            project = extract_project_info(record)
-            projects.append(project)
-        except Exception as e:
-            print(
-                f"Warning: Error extracting info for record {record.get('id')}: {e}",
-                file=sys.stderr,
-            )
-            continue
 
     # Create output directory
     args.output.parent.mkdir(parents=True, exist_ok=True)
 
     # Save to JSON
     with args.output.open("w") as fh:
-        json.dump(projects, fh, indent=2, sort_keys=True)
+        json.dump(datasets, fh, indent=2, sort_keys=True)
 
-    # Print summary statistics
-    print(f"\n{'=' * 60}")
-    print(f"Successfully saved {len(projects)} projects to {args.output}")
-    print(f"{'=' * 60}")
-    print("\nProject Statistics:")
+    print(f"\nSaved {len(datasets)} datasets to {args.output}")
+
+    # Print summary
+    print("\n" + "=" * 60)
+    print("SUMMARY")
+    print("=" * 60)
+    print(f"Total datasets: {len(datasets)}")
 
     # Count by category
     categories = {}
-    for proj in projects:
-        cat = proj.get("category", "unknown")
+    for d in datasets:
+        cat = d.get("osf_category", "unknown")
         categories[cat] = categories.get(cat, 0) + 1
-
+    
     print("\nBy Category:")
     for cat, count in sorted(categories.items(), key=lambda x: x[1], reverse=True):
         print(f"  {cat}: {count}")
 
-    # Count by type
-    types = {}
-    for proj in projects:
-        ptype = proj.get("type", "unknown")
-        types[ptype] = types.get(ptype, 0) + 1
+    # Count by modality
+    modalities = {}
+    for d in datasets:
+        for mod in d.get("modalities", []):
+            modalities[mod] = modalities.get(mod, 0) + 1
+    
+    print("\nBy Modality:")
+    for mod, count in sorted(modalities.items(), key=lambda x: x[1], reverse=True):
+        print(f"  {mod}: {count}")
 
-    print("\nBy Type:")
-    for ptype, count in sorted(types.items(), key=lambda x: x[1], reverse=True):
-        print(f"  {ptype}: {count}")
+    # License coverage
+    with_license = sum(1 for d in datasets if d.get("license"))
+    print(f"\nDatasets with license: {with_license}/{len(datasets)}")
 
-    # Public vs private
-    public_count = sum(1 for proj in projects if proj.get("is_public", False))
-    print(f"\nPublic projects: {public_count}/{len(projects)}")
+    # Author coverage
+    with_authors = sum(1 for d in datasets if d.get("authors"))
+    total_authors = len(set(a for d in datasets for a in d.get("authors", [])))
+    print(f"Datasets with authors: {with_authors}/{len(datasets)}")
+    print(f"Unique authors: {total_authors}")
 
-    # Registrations
-    registration_count = sum(
-        1 for proj in projects if proj.get("is_registration", False)
-    )
-    print(f"Registrations: {registration_count}/{len(projects)}")
+    # BIDS coverage
+    with_bids = sum(1 for d in datasets if d.get("bids_version"))
+    print(f"Datasets with BIDS: {with_bids}/{len(datasets)}")
 
-    # Preprints
-    preprint_count = sum(1 for proj in projects if proj.get("is_preprint", False))
-    print(f"Preprints: {preprint_count}/{len(projects)}")
-
-    print(f"{'=' * 60}")
+    print("=" * 60)
 
 
 if __name__ == "__main__":

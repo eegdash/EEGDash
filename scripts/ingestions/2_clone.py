@@ -593,17 +593,53 @@ def fetch_scidb_manifest(
     timeout: int = 60,
     validate_bids: bool = False,
 ) -> dict[str, Any]:
-    """Fetch file manifest from SciDB - limited, store metadata only."""
-    dataset_id = dataset["dataset_id"]
+    """Fetch dataset metadata from ScienceDB (scidb.cn) via Open API.
     
-    # SciDB doesn't have a public file listing API
-    # Store metadata from the consolidated dataset info
+    The ScienceDB Open API (/json endpoint) provides dataset metadata but not
+    file listings. File listings require authentication via the detail endpoint.
+    
+    We fetch what we can: size, license, description, keywords.
+    """
+    dataset_id = dataset["dataset_id"]
+    dataset_doi = dataset.get("dataset_doi")
+    
+    files = []
+    bids_files = []
+    api_metadata = {}
+    
+    if dataset_doi:
+        try:
+            # Use ScienceDB Open API to get metadata
+            api_url = f"https://www.scidb.cn/api/sdb-openapi-service/json?doi={dataset_doi}"
+            response = requests.get(api_url, timeout=timeout)
+            
+            if response.status_code == 200:
+                data = response.json()
+                if data:
+                    # Extract useful metadata
+                    api_metadata = {
+                        "name": data.get("name"),
+                        "description": data.get("description", "")[:500],
+                        "license": data.get("license"),
+                        "datePublished": data.get("datePublished"),
+                        "keywords": data.get("keywords"),
+                    }
+                    
+                    # Extract size info
+                    size_info = data.get("size", {})
+                    if isinstance(size_info, dict):
+                        api_metadata["total_size_bytes"] = size_info.get("value", 0)
+                    
+        except Exception as e:
+            api_metadata["fetch_error"] = str(e)
+    
     manifest = {
         "dataset_id": dataset_id,
         "source": "scidb",
-        "note": "SciDB does not provide file listing API - manual review needed",
+        "dataset_doi": dataset_doi,
+        "api_metadata": api_metadata if api_metadata else None,
+        "note": "ScienceDB file listing requires authentication - metadata only via Open API",
         "external_links": dataset.get("external_links", {}),
-        "dataset_doi": dataset.get("dataset_doi"),
         "total_files": 0,
         "bids_files": [],
         "files": [],
@@ -621,7 +657,8 @@ def fetch_scidb_manifest(
         "dataset_id": dataset_id,
         "source": "scidb",
         "file_count": 0,
-        "note": "No file API - metadata only",
+        "has_api_metadata": bool(api_metadata),
+        "note": "Metadata via Open API, no file listing available",
     }
 
 
@@ -631,20 +668,163 @@ def fetch_datarn_manifest(
     timeout: int = 60,
     validate_bids: bool = False,
 ) -> dict[str, Any]:
-    """Fetch file manifest from data.ru.nl - limited API."""
-    dataset_id = dataset["dataset_id"]
+    """Fetch file manifest from data.ru.nl via WebDAV PROPFIND.
     
-    # datarn doesn't have a public file listing API
+    data.ru.nl provides WebDAV access for public datasets. We can list
+    files recursively using PROPFIND without downloading actual data.
+    """
+    import xml.etree.ElementTree as ET
+    from urllib.parse import unquote
+    
+    dataset_id = dataset["dataset_id"]
+    ext_links = dataset.get("external_links", {})
+    source_url = ext_links.get("source_url", "")
+    
+    files = []
+    bids_files = []
+    webdav_url = None
+    
+    # Try to get WebDAV URL from page JSON-LD
+    if source_url:
+        try:
+            response = requests.get(source_url, timeout=timeout)
+            if response.status_code == 200:
+                ld_match = re.search(r'<script type="application/ld\+json">([^<]+)</script>', response.text)
+                if ld_match:
+                    ld_data = json.loads(ld_match.group(1))
+                    dist = ld_data.get("distribution", {})
+                    if isinstance(dist, dict):
+                        webdav_url = dist.get("contentUrl")
+        except Exception:
+            pass
+    
+    def parse_propfind_response(xml_text: str, current_url: str) -> tuple[list, list]:
+        """Parse WebDAV PROPFIND response, return (files, directories)."""
+        files_found = []
+        dirs_found = []
+        
+        # Extract the path from current URL for comparison
+        from urllib.parse import urlparse
+        current_path = urlparse(current_url).path.rstrip("/")
+        
+        try:
+            root = ET.fromstring(xml_text)
+            ns = {"d": "DAV:"}
+            
+            for resp in root.findall(".//d:response", ns):
+                href = resp.find("d:href", ns)
+                if href is None or not href.text:
+                    continue
+                
+                path = unquote(href.text).rstrip("/")
+                
+                # Skip the directory itself
+                if path == current_path:
+                    continue
+                
+                # Check if collection (directory)
+                resourcetype = resp.find(".//d:resourcetype", ns)
+                is_collection = resourcetype is not None and resourcetype.find("d:collection", ns) is not None
+                
+                if is_collection:
+                    dirs_found.append(path)
+                else:
+                    # Get file size
+                    size_elem = resp.find(".//d:getcontentlength", ns)
+                    size = int(size_elem.text) if size_elem is not None and size_elem.text else 0
+                    files_found.append({"path": path, "size": size})
+                    
+        except ET.ParseError:
+            pass
+            
+        return files_found, dirs_found
+    
+    def list_webdav_recursive(url: str, base_url: str, max_depth: int = 10) -> list:
+        """Recursively list WebDAV directory using depth-1 PROPFIND."""
+        all_files = []
+        dirs_to_visit = [url]
+        visited = set()
+        depth = 0
+        
+        # Base for constructing absolute URLs from relative paths
+        url_base = url.rsplit("/dcc/", 1)[0]  # e.g., https://webdav.data.ru.nl
+        
+        while dirs_to_visit and depth < max_depth:
+            current_dirs = dirs_to_visit[:]
+            dirs_to_visit = []
+            
+            for dir_url in current_dirs:
+                if dir_url in visited:
+                    continue
+                visited.add(dir_url)
+                
+                try:
+                    r = requests.request(
+                        "PROPFIND",
+                        dir_url,
+                        headers={"Depth": "1"},
+                        timeout=timeout,
+                    )
+                    
+                    if r.status_code in (200, 207):
+                        files_found, subdirs = parse_propfind_response(r.text, dir_url)
+                        all_files.extend(files_found)
+                        
+                        # Queue subdirectories (they come as absolute paths like /dcc/xxx/)
+                        for subdir in subdirs:
+                            full_url = url_base + subdir
+                            if full_url not in visited:
+                                dirs_to_visit.append(full_url)
+                                
+                except Exception:
+                    pass
+                    
+            depth += 1
+            
+        return all_files
+    
+    if webdav_url:
+        try:
+            raw_files = list_webdav_recursive(webdav_url, webdav_url)
+            
+            # Process file paths
+            base_path = webdav_url.split("/")[-1]  # e.g., DSC_2017.00097_354_v1
+            
+            for f in raw_files:
+                path = f["path"]
+                # Extract relative path after the dataset folder
+                parts = path.split(base_path + "/", 1)
+                rel_path = parts[1] if len(parts) > 1 else Path(path).name
+                
+                file_info = {
+                    "path": rel_path,
+                    "name": Path(rel_path).name,
+                    "size": f["size"],
+                }
+                files.append(file_info)
+                
+                if is_bids_data_file(Path(rel_path).name):
+                    bids_files.append(rel_path)
+                    
+        except Exception as e:
+            files = []
+            bids_files = []
+    
     manifest = {
         "dataset_id": dataset_id,
         "source": "datarn",
-        "note": "data.ru.nl does not provide file listing API - manual review needed",
-        "external_links": dataset.get("external_links", {}),
+        "webdav_url": webdav_url,
+        "external_links": ext_links,
         "dataset_doi": dataset.get("dataset_doi"),
-        "total_files": 0,
-        "bids_files": [],
-        "files": [],
+        "total_files": len(files),
+        "bids_files": bids_files,
+        "files": files,
     }
+    
+    if not files and webdav_url:
+        manifest["note"] = "WebDAV listing failed"
+    elif not webdav_url:
+        manifest["note"] = "WebDAV URL not found"
     
     # Save manifest
     manifest_dir = output_dir / dataset_id
@@ -657,8 +837,9 @@ def fetch_datarn_manifest(
         "status": "manifest",
         "dataset_id": dataset_id,
         "source": "datarn",
-        "file_count": 0,
-        "note": "No file API - metadata only",
+        "file_count": len(files),
+        "bids_file_count": len(bids_files),
+        "webdav_available": webdav_url is not None,
     }
 
 

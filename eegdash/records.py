@@ -16,7 +16,6 @@ from datetime import datetime, timezone
 from pathlib import PurePosixPath
 from typing import Any, Literal, TypedDict
 
-
 # =============================================================================
 # Shared Types
 # =============================================================================
@@ -51,14 +50,20 @@ class Clinical(TypedDict, total=False):
     """Clinical classification (dataset-level)."""
 
     is_clinical: bool  # Whether the dataset is clinical
-    purpose: str | None  # e.g., "epilepsy", "depression", "parkinson", "alzheimer", "sleep_disorder"
+    purpose: (
+        str | None
+    )  # e.g., "epilepsy", "depression", "parkinson", "alzheimer", "sleep_disorder"
 
 
 class Paradigm(TypedDict, total=False):
     """Experimental paradigm classification (dataset-level)."""
 
-    modality: str | None  # e.g., "visual", "auditory", "somatosensory", "multisensory", "resting_state"
-    cognitive_domain: str | None  # e.g., "attention", "memory", "learning", "motor", "language", "emotion"
+    modality: (
+        str | None
+    )  # e.g., "visual", "auditory", "somatosensory", "multisensory", "resting_state"
+    cognitive_domain: (
+        str | None
+    )  # e.g., "attention", "memory", "learning", "motor", "language", "emotion"
     is_10_20_system: bool | None  # Whether electrodes follow the 10-20 system
 
 
@@ -265,6 +270,7 @@ def create_dataset(
     -------
     Dataset
         A Dataset document.
+
     """
     if not dataset_id:
         raise ValueError("dataset_id is required")
@@ -320,7 +326,11 @@ def create_dataset(
         )
 
     # Add paradigm if any field provided
-    if paradigm_modality is not None or cognitive_domain is not None or is_10_20_system is not None:
+    if (
+        paradigm_modality is not None
+        or cognitive_domain is not None
+        or is_10_20_system is not None
+    ):
         dataset["paradigm"] = Paradigm(
             modality=paradigm_modality,
             cognitive_domain=cognitive_domain,
@@ -462,6 +472,7 @@ def create_record(
     ...     subject="01",
     ...     task="rest",
     ... )
+
     """
     if not dataset:
         raise ValueError("dataset is required")
@@ -499,7 +510,8 @@ def create_record(
             raw_key=bids_relpath,
             dep_keys=dep_keys,
         ),
-        digested_at=digested_at or datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
+        digested_at=digested_at
+        or datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
     )
 
 

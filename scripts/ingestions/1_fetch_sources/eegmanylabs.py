@@ -17,7 +17,6 @@ import argparse
 import json
 import re
 import sys
-from datetime import datetime, timezone
 from pathlib import Path
 
 import requests
@@ -47,7 +46,9 @@ def fetch_repo_details(org: str, repo: str, timeout: float = 10.0) -> dict | Non
     return None
 
 
-def fetch_raw_file(org: str, repo: str, filepath: str, branch: str = "main", timeout: float = 10.0) -> str | None:
+def fetch_raw_file(
+    org: str, repo: str, filepath: str, branch: str = "main", timeout: float = 10.0
+) -> str | None:
     """Fetch raw file content from GIN repository."""
     url = f"{GIN_BASE_URL}/{org}/{repo}/raw/{branch}/{filepath}"
     try:
@@ -78,14 +79,14 @@ def fetch_participants_tsv(org: str, repo: str, timeout: float = 10.0) -> dict |
     content = fetch_raw_file(org, repo, "participants.tsv", timeout=timeout)
     if not content:
         return None
-    
+
     lines = content.strip().split("\n")
     if len(lines) < 2:
         return None
-    
+
     # Parse header
     headers = lines[0].split("\t")
-    
+
     # Parse data rows
     participants = []
     for line in lines[1:]:
@@ -93,13 +94,13 @@ def fetch_participants_tsv(org: str, repo: str, timeout: float = 10.0) -> dict |
             values = line.split("\t")
             row = dict(zip(headers, values))
             participants.append(row)
-    
+
     if not participants:
         return None
-    
+
     # Extract statistics
     result = {"n_subjects": len(participants)}
-    
+
     # Age statistics
     ages = []
     for p in participants:
@@ -110,12 +111,12 @@ def fetch_participants_tsv(org: str, repo: str, timeout: float = 10.0) -> dict |
                 ages.append(age)
         except (ValueError, TypeError):
             pass
-    
+
     if ages:
         result["age_min"] = min(ages)
         result["age_max"] = max(ages)
         result["age_mean"] = sum(ages) / len(ages)
-    
+
     # Sex distribution
     sex_counts = {}
     for p in participants:
@@ -124,7 +125,7 @@ def fetch_participants_tsv(org: str, repo: str, timeout: float = 10.0) -> dict |
             sex_counts[sex] = sex_counts.get(sex, 0) + 1
     if sex_counts:
         result["sex_distribution"] = sex_counts
-    
+
     # Handedness distribution
     hand_counts = {}
     for p in participants:
@@ -133,7 +134,7 @@ def fetch_participants_tsv(org: str, repo: str, timeout: float = 10.0) -> dict |
             hand_counts[hand] = hand_counts.get(hand, 0) + 1
     if hand_counts:
         result["handedness_distribution"] = hand_counts
-    
+
     # Unique labs
     labs = set()
     for p in participants:
@@ -143,7 +144,7 @@ def fetch_participants_tsv(org: str, repo: str, timeout: float = 10.0) -> dict |
     if labs:
         result["labs"] = sorted(labs)
         result["n_labs"] = len(labs)
-    
+
     return result
 
 
@@ -152,43 +153,45 @@ def fetch_readme(org: str, repo: str, timeout: float = 10.0) -> dict | None:
     content = fetch_raw_file(org, repo, "README.md", timeout=timeout)
     if not content:
         return None
-    
+
     result = {}
-    
-    # Extract DOIs
-    doi_pattern = r'https?://doi\.org/([^\s\)]+)'
-    dois = re.findall(doi_pattern, content)
-    
+
     # Extract OSF links
-    osf_pattern = r'https?://osf\.io/([^\s\)/]+)'
+    osf_pattern = r"https?://osf\.io/([^\s\)/]+)"
     osf_links = re.findall(osf_pattern, content)
-    
+
     # Extract specific DOIs from common patterns
     if "Replicated publication" in content:
-        match = re.search(r'Replicated publication[:\*\s]+https?://doi\.org/([^\s\)]+)', content)
+        match = re.search(
+            r"Replicated publication[:\*\s]+https?://doi\.org/([^\s\)]+)", content
+        )
         if match:
             result["original_paper_doi"] = match.group(1)
-    
+
     if "Replication paper" in content:
-        match = re.search(r'Replication paper[:\*\s]+https?://[^\s\)]+/([^\s\)]+)', content)
+        match = re.search(
+            r"Replication paper[:\*\s]+https?://[^\s\)]+/([^\s\)]+)", content
+        )
         if match:
             result["replication_paper_url"] = match.group(0).split("**")[-1].strip()
-    
+
     if "EEGManyLabs project" in content:
-        match = re.search(r'EEGManyLabs project[:\*\s]+https?://doi\.org/([^\s\)]+)', content)
+        match = re.search(
+            r"EEGManyLabs project[:\*\s]+https?://doi\.org/([^\s\)]+)", content
+        )
         if match:
             result["project_doi"] = match.group(1)
-    
+
     if osf_links:
         result["osf_id"] = osf_links[0]
         result["osf_url"] = f"https://osf.io/{osf_links[0]}/"
-    
+
     return result if result else None
 
 
 def parse_repo_name(name: str) -> dict:
     """Parse EEGManyLabs repo name to extract metadata.
-    
+
     Format: EEGManyLabs_Replication_AuthorYear_[Raw|Processed]
     """
     result = {
@@ -196,20 +199,20 @@ def parse_repo_name(name: str) -> dict:
         "original_study": None,
         "data_type": None,
     }
-    
+
     parts = name.split("_")
     if len(parts) >= 3:
         if parts[1] == "Replication":
             result["study_type"] = "replication"
-        
+
         # Extract original study (e.g., "ClarkHillyard1996")
         if len(parts) >= 3:
             result["original_study"] = parts[2]
-        
+
         # Check for Raw/Processed suffix
         if parts[-1] in ["Raw", "Processed"]:
             result["data_type"] = parts[-1].lower()
-    
+
     return result
 
 
@@ -262,12 +265,12 @@ def fetch_eegmanylabs_repos(
                 continue
 
             repo_name = repo_path.split("/")[-1]
-            
+
             # Skip preprocessed datasets - we only want raw data
             if "Processed" in repo_name or "preprocessed" in repo_name.lower():
                 print(f"  Skipping {repo_name} (preprocessed data)")
                 continue
-            
+
             total_processed += 1
             print(f"  Processing {repo_name}...")
 
@@ -277,27 +280,29 @@ def fetch_eegmanylabs_repos(
 
             # Fetch detailed info via API
             repo_details = fetch_repo_details(organization, repo_name, timeout=timeout)
-            
+
             # Fetch BIDS metadata
             bids_desc = fetch_bids_description(organization, repo_name, timeout=timeout)
-            
+
             # Fetch participant demographics
-            participants = fetch_participants_tsv(organization, repo_name, timeout=timeout)
-            
+            participants = fetch_participants_tsv(
+                organization, repo_name, timeout=timeout
+            )
+
             # Skip empty repositories (no BIDS metadata and no participants)
             if not bids_desc and not participants:
-                print(f"    -> Skipping (empty or incomplete repository)")
+                print("    -> Skipping (empty or incomplete repository)")
                 continue
-            
+
             if participants:
                 print(f"    -> Found {participants.get('n_subjects')} subjects")
-            
+
             # Fetch README for paper DOIs
             readme_meta = fetch_readme(organization, repo_name, timeout=timeout)
-            
+
             # Parse repo name for study metadata
             name_meta = parse_repo_name(repo_name)
-            
+
             # Build dataset name from BIDS or fallback
             if bids_desc and bids_desc.get("Name"):
                 name = bids_desc["Name"]
@@ -307,71 +312,73 @@ def fetch_eegmanylabs_repos(
                     name = f"EEGManyLabs: {name_meta['original_study']} Replication"
                     if name_meta["data_type"]:
                         name += f" ({name_meta['data_type'].capitalize()})"
-            
-            # Get description from BIDS or README
-            description = None
-            if bids_desc:
-                if bids_desc.get("Acknowledgements"):
-                    description = bids_desc["Acknowledgements"]
-            
+
             # Determine if this is processed data
-            data_processed = name_meta["data_type"] == "processed" if name_meta["data_type"] else None
-            
+            data_processed = (
+                name_meta["data_type"] == "processed"
+                if name_meta["data_type"]
+                else None
+            )
+
             # Build study domain
             study_domain = None
             if name_meta["study_type"] == "replication":
                 study_domain = f"Replication: {name_meta['original_study']}"
-            
+
             # Extract license from BIDS
             license_info = None
             if bids_desc and bids_desc.get("License"):
                 license_info = bids_desc["License"]
-            
+
             # Extract authors from BIDS
             authors = None
             if bids_desc and bids_desc.get("Authors"):
                 authors = bids_desc["Authors"]
-            
+
             # Extract funding
             funding = None
             if bids_desc and bids_desc.get("Funding"):
                 funding = bids_desc["Funding"]
-            
+
             # Build associated paper DOI
             associated_paper = None
             if readme_meta and readme_meta.get("original_paper_doi"):
                 associated_paper = readme_meta["original_paper_doi"]
-            
+
             # Create Dataset document using all schema fields
             n_subjects = participants.get("n_subjects") if participants else None
-            
+
             # Collect ages for age_min/max calculation
             ages_list = None
             if participants and participants.get("age_min") is not None:
                 ages_list = [int(participants["age_min"]), int(participants["age_max"])]
-            
+
             # Get age mean
             age_mean = None
             if participants and participants.get("age_mean"):
                 age_mean = round(participants["age_mean"], 1)
-            
+
             # Get sex/handedness distributions
             sex_dist = participants.get("sex_distribution") if participants else None
-            hand_dist = participants.get("handedness_distribution") if participants else None
-            
+            hand_dist = (
+                participants.get("handedness_distribution") if participants else None
+            )
+
             # Get contributing labs
             labs = participants.get("labs") if participants else None
-            
+
             # Build external links
             source_url = f"{GIN_BASE_URL}/{organization}/{repo_name}"
             osf_url = readme_meta.get("osf_url") if readme_meta else None
-            paper_url = readme_meta.get("replication_paper_url") if readme_meta else None
-            
+            paper_url = (
+                readme_meta.get("replication_paper_url") if readme_meta else None
+            )
+
             # Get repository stats
             stars = repo_details.get("stars_count") if repo_details else None
             forks = repo_details.get("forks_count") if repo_details else None
             watchers = repo_details.get("watchers_count") if repo_details else None
-            
+
             dataset = create_dataset(
                 dataset_id=repo_name,
                 name=name,
@@ -385,7 +392,9 @@ def fetch_eegmanylabs_repos(
                 associated_paper_doi=associated_paper,
                 data_processed=data_processed,
                 study_domain=study_domain,
-                study_design="replication" if name_meta["study_type"] == "replication" else None,
+                study_design="replication"
+                if name_meta["study_type"] == "replication"
+                else None,
                 species="Human",
                 subjects_count=n_subjects,
                 ages=ages_list,
@@ -399,9 +408,11 @@ def fetch_eegmanylabs_repos(
                 stars=stars,
                 forks=forks,
                 watchers=watchers,
-                dataset_modified_at=repo_details.get("updated_at") if repo_details else None,
+                dataset_modified_at=repo_details.get("updated_at")
+                if repo_details
+                else None,
             )
-            
+
             # Add project DOI if available (not yet in schema)
             if readme_meta and readme_meta.get("project_doi"):
                 dataset["project_doi"] = readme_meta["project_doi"]
@@ -409,7 +420,9 @@ def fetch_eegmanylabs_repos(
             datasets.append(dataset)
 
         except Exception as e:
-            print(f"Warning: Error parsing repository {repo_name}: {e}", file=sys.stderr)
+            print(
+                f"Warning: Error parsing repository {repo_name}: {e}", file=sys.stderr
+            )
             continue
 
     print(f"\nFound {len(datasets)} repositories")
@@ -477,39 +490,47 @@ def main() -> None:
         print("SUMMARY")
         print("=" * 60)
         print(f"Total datasets: {len(datasets)}")
-        
+
         # Count by data type
         raw_count = sum(1 for d in datasets if "Raw" in d.get("dataset_id", ""))
-        processed_count = sum(1 for d in datasets if "Processed" in d.get("dataset_id", ""))
+        processed_count = sum(
+            1 for d in datasets if "Processed" in d.get("dataset_id", "")
+        )
         print(f"  Raw datasets: {raw_count}")
         print(f"  Processed datasets: {processed_count}")
-        
+
         # Subject counts
-        total_subjects = sum(d.get("demographics", {}).get("subjects_count", 0) or 0 for d in datasets)
+        total_subjects = sum(
+            d.get("demographics", {}).get("subjects_count", 0) or 0 for d in datasets
+        )
         print(f"\nTotal subjects across all datasets: {total_subjects}")
-        
+
         # BIDS metadata coverage
         with_bids = sum(1 for d in datasets if d.get("bids_version"))
         print(f"\nBIDS metadata available: {with_bids}/{len(datasets)}")
-        
+
         # Authors
         all_authors = set()
         for d in datasets:
             if d.get("authors"):
                 all_authors.update(d["authors"])
         print(f"Unique contributing authors: {len(all_authors)}")
-        
+
         # Contributing labs
         n_labs_total = sum(d.get("n_contributing_labs", 0) or 0 for d in datasets)
         if n_labs_total > 0:
-            print(f"Contributing labs (max per dataset): {max(d.get('n_contributing_labs', 0) or 0 for d in datasets)}")
-        
+            print(
+                f"Contributing labs (max per dataset): {max(d.get('n_contributing_labs', 0) or 0 for d in datasets)}"
+            )
+
         # External links
-        with_osf = sum(1 for d in datasets if d.get("external_links", {}).get("osf_url"))
+        with_osf = sum(
+            1 for d in datasets if d.get("external_links", {}).get("osf_url")
+        )
         with_doi = sum(1 for d in datasets if d.get("associated_paper_doi"))
         print(f"\nDatasets with OSF link: {with_osf}")
         print(f"Datasets with paper DOI: {with_doi}")
-        
+
         print("\n" + "-" * 60)
         print("Per-dataset details:")
         print("-" * 60)
@@ -521,7 +542,9 @@ def main() -> None:
                 print(f"    Subjects: {demo['subjects_count']}")
             if demo.get("age_min") is not None:
                 age_mean = demo.get("age_mean", "?")
-                print(f"    Age range: {demo['age_min']}-{demo['age_max']} (mean: {age_mean})")
+                print(
+                    f"    Age range: {demo['age_min']}-{demo['age_max']} (mean: {age_mean})"
+                )
             if d.get("bids_version"):
                 print(f"    BIDS: v{d['bids_version']}")
             if d.get("license"):

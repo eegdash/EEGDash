@@ -115,6 +115,7 @@ def download_files(
         Optional pre-created filesystem to reuse across multiple downloads.
     skip_existing : bool
         If True, do not download files that already exist locally.
+
     """
     filesystem = filesystem or get_s3_filesystem()
     downloaded: list[Path] = []
@@ -128,7 +129,9 @@ def download_files(
                     continue
             dest.unlink(missing_ok=True)
 
-        _filesystem_get(filesystem=filesystem, s3path=uri, filepath=dest, size=remote_size)
+        _filesystem_get(
+            filesystem=filesystem, s3path=uri, filepath=dest, size=remote_size
+        )
         if remote_size is not None and dest.stat().st_size != remote_size:
             dest.unlink(missing_ok=True)
             raise OSError(
@@ -154,7 +157,11 @@ def _remote_size(filesystem: s3fs.S3FileSystem, s3path: str) -> int | None:
 
 
 def _filesystem_get(
-    filesystem: s3fs.S3FileSystem, s3path: str, filepath: Path, *, size: int | None = None
+    filesystem: s3fs.S3FileSystem,
+    s3path: str,
+    filepath: Path,
+    *,
+    size: int | None = None,
 ) -> Path:
     """Perform the file download using fsspec with a progress bar.
 

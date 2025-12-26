@@ -36,6 +36,7 @@ class EEGDashAPIClient:
         Database name ("eegdash" or "eegdashstaging").
     auth_token : str, optional
         Auth token for admin write operations.
+
     """
 
     def __init__(
@@ -44,7 +45,9 @@ class EEGDashAPIClient:
         database: str = "eegdash",
         auth_token: str | None = None,
     ):
-        self.api_url = (api_url or os.getenv("EEGDASH_API_URL", DEFAULT_API_URL)).rstrip("/")
+        self.api_url = (
+            api_url or os.getenv("EEGDASH_API_URL", DEFAULT_API_URL)
+        ).rstrip("/")
         self.database = database
         self._session = _make_session(auth_token or os.getenv("EEGDASH_API_TOKEN"))
 
@@ -74,7 +77,9 @@ class EEGDashAPIClient:
         all_records: list[dict] = []
         page_skip = skip or 0
         while True:
-            resp = self._session.get(url, params={**params, "limit": 1000, "skip": page_skip}, timeout=60)
+            resp = self._session.get(
+                url, params={**params, "limit": 1000, "skip": page_skip}, timeout=60
+            )
             resp.raise_for_status()
             records = resp.json().get("data", [])
             if not records:
@@ -85,7 +90,9 @@ class EEGDashAPIClient:
             page_skip += 1000
         return all_records
 
-    def find_one(self, query: dict[str, Any] | None = None, **kwargs) -> dict[str, Any] | None:
+    def find_one(
+        self, query: dict[str, Any] | None = None, **kwargs
+    ) -> dict[str, Any] | None:
         """Find a single record."""
         results = self.find(query, limit=1)
         return results[0] if results else None
@@ -93,35 +100,46 @@ class EEGDashAPIClient:
     def count_documents(self, query: dict[str, Any] | None = None, **kwargs) -> int:
         """Count documents matching query."""
         params = {"filter": json.dumps(query)} if query else {}
-        resp = self._session.get(f"{self.api_url}/api/{self.database}/count", params=params, timeout=30)
+        resp = self._session.get(
+            f"{self.api_url}/api/{self.database}/count", params=params, timeout=30
+        )
         resp.raise_for_status()
         return resp.json().get("count", 0)
 
     def insert_one(self, record: dict[str, Any]) -> str:
         """Insert single record (requires auth)."""
-        resp = self._session.post(f"{self.api_url}/admin/{self.database}/records", json=record, timeout=30)
+        resp = self._session.post(
+            f"{self.api_url}/admin/{self.database}/records", json=record, timeout=30
+        )
         resp.raise_for_status()
         return resp.json().get("insertedId", "")
 
     def insert_many(self, records: list[dict[str, Any]]) -> int:
         """Insert multiple records (requires auth)."""
-        resp = self._session.post(f"{self.api_url}/admin/{self.database}/records/bulk", json=records, timeout=60)
+        resp = self._session.post(
+            f"{self.api_url}/admin/{self.database}/records/bulk",
+            json=records,
+            timeout=60,
+        )
         resp.raise_for_status()
         return resp.json().get("insertedCount", 0)
 
-    def update_many(self, query: dict[str, Any], update: dict[str, Any]) -> tuple[int, int]:
+    def update_many(
+        self, query: dict[str, Any], update: dict[str, Any]
+    ) -> tuple[int, int]:
         """Update records matching query (requires auth).
-        
+
         Parameters
         ----------
         query : dict
             Filter query to match records.
         update : dict
             Fields to set (wrapped in $set automatically).
-            
+
         Returns
         -------
         tuple of (matched_count, modified_count)
+
         """
         resp = self._session.patch(
             f"{self.api_url}/admin/{self.database}/records",
@@ -133,7 +151,9 @@ class EEGDashAPIClient:
         return data.get("matched_count", 0), data.get("modified_count", 0)
 
 
-def get_client(api_url: str | None = None, database: str = "eegdash", auth_token: str | None = None) -> EEGDashAPIClient:
+def get_client(
+    api_url: str | None = None, database: str = "eegdash", auth_token: str | None = None
+) -> EEGDashAPIClient:
     """Get an API client instance."""
     return EEGDashAPIClient(api_url=api_url, database=database, auth_token=auth_token)
 

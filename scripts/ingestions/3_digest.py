@@ -99,6 +99,7 @@ def extract_dataset_metadata(
     -------
     dict
         Dataset schema compliant metadata
+
     """
     bids_root = Path(bids_dataset.bidsdir)
 
@@ -154,7 +155,9 @@ def extract_dataset_metadata(
     participants_path = bids_root / "participants.tsv"
     if participants_path.exists():
         try:
-            df = pd.read_csv(participants_path, sep="\t", dtype="string", keep_default_na=False)
+            df = pd.read_csv(
+                participants_path, sep="\t", dtype="string", keep_default_na=False
+            )
             subjects_count = len(df)
 
             # Extract ages
@@ -185,7 +188,13 @@ def extract_dataset_metadata(
                         sex_distribution["m"] = sex_distribution.get("m", 0) + 1
                     elif val_lower in ("f", "female"):
                         sex_distribution["f"] = sex_distribution.get("f", 0) + 1
-                    elif val_lower and val_lower not in ("n/a", "na", "nan", "unknown", ""):
+                    elif val_lower and val_lower not in (
+                        "n/a",
+                        "na",
+                        "nan",
+                        "unknown",
+                        "",
+                    ):
                         sex_distribution["o"] = sex_distribution.get("o", 0) + 1
 
             # Extract handedness distribution
@@ -198,18 +207,26 @@ def extract_dataset_metadata(
                 for val in df[hand_col]:
                     val_lower = str(val).lower().strip()
                     if val_lower in ("r", "right"):
-                        handedness_distribution["r"] = handedness_distribution.get("r", 0) + 1
+                        handedness_distribution["r"] = (
+                            handedness_distribution.get("r", 0) + 1
+                        )
                     elif val_lower in ("l", "left"):
-                        handedness_distribution["l"] = handedness_distribution.get("l", 0) + 1
+                        handedness_distribution["l"] = (
+                            handedness_distribution.get("l", 0) + 1
+                        )
                     elif val_lower in ("a", "ambidextrous"):
-                        handedness_distribution["a"] = handedness_distribution.get("a", 0) + 1
+                        handedness_distribution["a"] = (
+                            handedness_distribution.get("a", 0) + 1
+                        )
 
         except Exception:
             pass
 
     # Count subjects from directories if participants.tsv not available
     if subjects_count == 0:
-        subjects_count = len([d for d in bids_root.iterdir() if d.is_dir() and d.name.startswith("sub-")])
+        subjects_count = len(
+            [d for d in bids_root.iterdir() if d.is_dir() and d.name.startswith("sub-")]
+        )
 
     # Check for derivatives (processed data)
     data_processed = (bids_root / "derivatives").exists()
@@ -243,7 +260,9 @@ def extract_dataset_metadata(
         ages=ages,
         age_mean=sum(ages) / len(ages) if ages else None,
         sex_distribution=sex_distribution if sex_distribution else None,
-        handedness_distribution=handedness_distribution if handedness_distribution else None,
+        handedness_distribution=handedness_distribution
+        if handedness_distribution
+        else None,
         source_url=source_url,
         digested_at=digested_at,
     )
@@ -277,6 +296,7 @@ def extract_record(
     -------
     dict
         Record schema compliant metadata
+
     """
     # Get BIDS entities
     subject = bids_dataset.get_bids_file_attribute("subject", bids_file)
@@ -288,7 +308,7 @@ def extract_record(
     # Get BIDS relative path (without dataset prefix)
     bids_relpath = str(bids_dataset.get_relative_bidspath(bids_file))
     if bids_relpath.startswith(f"{dataset_id}/"):
-        bids_relpath = bids_relpath[len(dataset_id) + 1:]
+        bids_relpath = bids_relpath[len(dataset_id) + 1 :]
 
     # Determine datatype and suffix
     datatype = modality
@@ -304,7 +324,12 @@ def extract_record(
     parent_dir = bids_file_path.parent
     base_name = bids_file_path.stem.rsplit("_", 1)[0]
 
-    for dep_suffix in ["_channels.tsv", "_events.tsv", "_electrodes.tsv", "_coordsystem.json"]:
+    for dep_suffix in [
+        "_channels.tsv",
+        "_events.tsv",
+        "_electrodes.tsv",
+        "_coordsystem.json",
+    ]:
         dep_file = parent_dir / f"{base_name}{dep_suffix}"
         if dep_file.exists() or dep_file.is_symlink():
             try:
@@ -357,6 +382,7 @@ def digest_dataset(
     -------
     dict
         Summary of digestion results
+
     """
     from eegdash.dataset.bids_dataset import EEGBIDSDataset
 
@@ -400,7 +426,9 @@ def digest_dataset(
 
     # Extract Dataset metadata
     try:
-        dataset_meta = extract_dataset_metadata(bids_dataset, dataset_id, source, digested_at)
+        dataset_meta = extract_dataset_metadata(
+            bids_dataset, dataset_id, source, digested_at
+        )
     except Exception as e:
         dataset_meta = {
             "dataset_id": dataset_id,
@@ -414,7 +442,9 @@ def digest_dataset(
 
     for bids_file in files:
         try:
-            record = extract_record(bids_dataset, bids_file, dataset_id, source, digested_at)
+            record = extract_record(
+                bids_dataset, bids_file, dataset_id, source, digested_at
+            )
             records.append(record)
         except Exception as e:
             errors.append({"file": str(bids_file), "error": str(e)})
@@ -491,7 +521,11 @@ def find_datasets(input_dir: Path, datasets: list[str] | None = None) -> list[st
 
     found = []
     for d in input_dir.iterdir():
-        if d.is_dir() and (d.name.startswith("ds") or d.name.startswith("nm") or "EEGManyLabs" in d.name):
+        if d.is_dir() and (
+            d.name.startswith("ds")
+            or d.name.startswith("nm")
+            or "EEGManyLabs" in d.name
+        ):
             found.append(d.name)
 
     return sorted(found)
@@ -557,7 +591,9 @@ def main():
                 executor.submit(digest_dataset, ds_id, args.input, args.output): ds_id
                 for ds_id in dataset_ids
             }
-            for future in tqdm(as_completed(futures), total=len(futures), desc="Digesting"):
+            for future in tqdm(
+                as_completed(futures), total=len(futures), desc="Digesting"
+            ):
                 result = future.result()
                 results.append(result)
                 status = result.get("status", "error")
@@ -575,7 +611,9 @@ def main():
         "timestamp": datetime.now(timezone.utc).isoformat(),
         "total_datasets": len(dataset_ids),
         "stats": stats,
-        "total_records": sum(r.get("record_count", 0) for r in results if r.get("status") == "success"),
+        "total_records": sum(
+            r.get("record_count", 0) for r in results if r.get("status") == "success"
+        ),
     }
 
     batch_summary_path = args.output / "BATCH_SUMMARY.json"

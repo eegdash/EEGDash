@@ -189,7 +189,9 @@ def test_create_dataset_full():
     )
 
     assert dataset["dataset_id"] == "ds001785"
-    assert dataset["name"] == "Evidence accumulation relates to perceptual consciousness"
+    assert (
+        dataset["name"] == "Evidence accumulation relates to perceptual consciousness"
+    )
     assert dataset["license"] == "CC0"
     assert len(dataset["authors"]) == 2
     assert dataset["tasks"] == ["tactile detection"]

@@ -52,11 +52,10 @@ def test_eeg_challenge_dataset_initialization(cache_dir: Path):
     )
 
     # Expected components (kept explicit for readability & easier future edits)
-    expected_dataset = "ds005509"
     expected_subject = "sub-NDARAC350XUM"
     expected_task = "DespicableMe"
     expected_suffix = (
-        f"{expected_subject}/eeg/" f"{expected_subject}_task-{expected_task}_eeg.bdf"
+        f"{expected_subject}/eeg/{expected_subject}_task-{expected_task}_eeg.bdf"
     )
 
     expected_full_path = f"{dataset.s3_bucket}/{expected_suffix}"

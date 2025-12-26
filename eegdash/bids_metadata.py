@@ -76,9 +76,7 @@ def build_query_from_kwargs(**kwargs) -> dict[str, Any]:
                 cleaned.append(item)
             cleaned = list(dict.fromkeys(cleaned))  # dedupe preserving order
             if not cleaned:
-                raise ValueError(
-                    f"Received an empty list for query parameter '{key}'."
-                )
+                raise ValueError(f"Received an empty list for query parameter '{key}'.")
             query[key] = {"$in": cleaned}
         else:
             if isinstance(value, str):
@@ -151,9 +149,7 @@ def _check_constraint_conflict(
     s2 = set(v2["$in"]) if isinstance(v2, dict) and "$in" in v2 else {v2}
 
     if not s1 & s2:
-        raise ValueError(
-            f"Conflicting constraints for '{key}': {v1!r} vs {v2!r}"
-        )
+        raise ValueError(f"Conflicting constraints for '{key}': {v1!r} vs {v2!r}")
 
 
 # =============================================================================

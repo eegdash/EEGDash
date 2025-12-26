@@ -1,18 +1,16 @@
 """Fetch neural recording BIDS datasets from Open Science Framework (OSF).
 
 This script searches OSF for public nodes (projects/data) containing EEG, MEG, iEEG,
-or other neural recording modalities with BIDS formatting, using the OSF API v2. 
-It retrieves comprehensive metadata including contributors, licenses, and project 
+or other neural recording modalities with BIDS formatting, using the OSF API v2.
+It retrieves comprehensive metadata including contributors, licenses, and project
 details, outputting in the EEGDash Dataset schema format.
 
 Output: consolidated/osf_datasets.json
 """
 
 import argparse
-import json
 import sys
 import time
-from datetime import datetime, timezone
 from pathlib import Path
 
 import requests
@@ -45,42 +43,64 @@ DATA_CATEGORIES = {"data", "project", "analysis", "software", "other"}
 # Modality tags to search for - comprehensive keyword coverage
 MODALITY_TAGS = {
     "eeg": [
-        "eeg", "electroencephalography", "electroencephalogram", 
-        "scalp eeg", "scalp-eeg"
+        "eeg",
+        "electroencephalography",
+        "electroencephalogram",
+        "scalp eeg",
+        "scalp-eeg",
     ],
-    "meg": [
-        "meg", "magnetoencephalography", "magnetoencephalogram"
-    ],
-    "emg": [
-        "emg", "electromyography", "electromyogram"
-    ],
+    "meg": ["meg", "magnetoencephalography", "magnetoencephalogram"],
+    "emg": ["emg", "electromyography", "electromyogram"],
     "fnirs": [
-        "fnirs", "fNIRS", "nirs", "near-infrared spectroscopy", 
-        "near infrared spectroscopy", "functional near-infrared"
+        "fnirs",
+        "fNIRS",
+        "nirs",
+        "near-infrared spectroscopy",
+        "near infrared spectroscopy",
+        "functional near-infrared",
     ],
     "lfp": [
-        "lfp", "local field potential", "local field potentials", 
-        "field potential", "field potentials"
+        "lfp",
+        "local field potential",
+        "local field potentials",
+        "field potential",
+        "field potentials",
     ],
     "spike": [
-        "single unit", "single-unit", "multi-unit", "multiunit",
-        "spike", "spike train", "neuronal firing", "unit activity", 
-        "single unit activity", "multi-unit activity"
+        "single unit",
+        "single-unit",
+        "multi-unit",
+        "multiunit",
+        "spike",
+        "spike train",
+        "neuronal firing",
+        "unit activity",
+        "single unit activity",
+        "multi-unit activity",
     ],
     "mea": [
-        "mea", "microelectrode array", "microelectrode arrays",
-        "utah array", "neuropixels", "depth electrode"
+        "mea",
+        "microelectrode array",
+        "microelectrode arrays",
+        "utah array",
+        "neuropixels",
+        "depth electrode",
     ],
     "ieeg": [
-        "ieeg", "intracranial eeg", "intracranial electroencephalography",
-        "intracranial electroencephalogram", "seeg", "stereoelectroencephalography",
-        "ecog", "electrocorticography", "corticography",
-        "subdural electrode", "subdural grid", "subdural strip"
+        "ieeg",
+        "intracranial eeg",
+        "intracranial electroencephalography",
+        "intracranial electroencephalogram",
+        "seeg",
+        "stereoelectroencephalography",
+        "ecog",
+        "electrocorticography",
+        "corticography",
+        "subdural electrode",
+        "subdural grid",
+        "subdural strip",
     ],
-    "bids": [
-        "bids", "brain imaging data structure", 
-        "brain imaging data structures"
-    ],
+    "bids": ["bids", "brain imaging data structure", "brain imaging data structures"],
 }
 
 
@@ -88,11 +108,10 @@ def fetch_license_name(license_id: str, timeout: float = 10.0) -> str | None:
     """Fetch license name from OSF API."""
     if license_id in LICENSE_NAMES:
         return LICENSE_NAMES[license_id]
-    
+
     try:
         response = requests.get(
-            f"{OSF_API_URL}/licenses/{license_id}/",
-            timeout=timeout
+            f"{OSF_API_URL}/licenses/{license_id}/", timeout=timeout
         )
         if response.status_code == 200:
             data = response.json()
@@ -109,14 +128,14 @@ def fetch_contributors(node_id: str, timeout: float = 10.0) -> list[str]:
         response = requests.get(
             f"{OSF_API_URL}/nodes/{node_id}/contributors/",
             params={"embed": "users"},
-            timeout=timeout
+            timeout=timeout,
         )
         if response.status_code != 200:
             return []
-        
+
         data = response.json()
         contributors = []
-        
+
         for c in data.get("data", []):
             # Try embedded users first
             user_data = c.get("embeds", {}).get("users", {}).get("data", {})
@@ -124,7 +143,7 @@ def fetch_contributors(node_id: str, timeout: float = 10.0) -> list[str]:
                 name = user_data.get("attributes", {}).get("full_name")
                 if name:
                     contributors.append(name)
-        
+
         return contributors
     except Exception:
         return []
@@ -154,33 +173,33 @@ def fetch_osf_nodes(
     """
     if modalities is None:
         modalities = list(MODALITY_TAGS.keys())
-    
+
     print(f"Searching for modalities: {modalities}")
     print(f"Require BIDS: {require_bids}")
-    
+
     # Collect all search tags
     search_tags = []
     for mod in modalities:
         if mod in MODALITY_TAGS:
             search_tags.extend(MODALITY_TAGS[mod])
-    
+
     # Also search directly for BIDS
     if require_bids:
         search_tags.append("bids")
-    
+
     # Deduplicate
     search_tags = list(set(search_tags))
     print(f"Search tags: {search_tags}")
-    
+
     # Track seen nodes to avoid duplicates
     seen_ids = set()
     all_datasets = []
-    
+
     for tag in search_tags:
-        print(f"\n{'='*40}")
+        print(f"\n{'=' * 40}")
         print(f"Searching for tag: {tag}")
-        print(f"{'='*40}")
-        
+        print(f"{'=' * 40}")
+
         datasets = fetch_nodes_by_tag(
             tag=tag,
             max_results=max_results_per_modality,
@@ -190,15 +209,15 @@ def fetch_osf_nodes(
             require_bids=require_bids,
             seen_ids=seen_ids,
         )
-        
+
         # Add new datasets (already filtered by seen_ids in fetch_nodes_by_tag)
         all_datasets.extend(datasets)
-        
+
         print(f"  New unique datasets from '{tag}': {len(datasets)}")
         print(f"  Total unique so far: {len(all_datasets)}")
-        
+
         time.sleep(0.5)  # Rate limiting between tag searches
-    
+
     print(f"\n\nTotal unique datasets: {len(all_datasets)}")
     return all_datasets
 
@@ -229,21 +248,21 @@ def fetch_nodes_by_tag(
     """
     if seen_ids is None:
         seen_ids = set()
-    
+
     datasets = []
     page = 1
     fetched = 0
-    
+
     # Build initial URL with filters
     base_params = {
         "filter[public]": "true",
         "filter[tags]": tag,
         "page[size]": min(page_size, 100),
     }
-    
+
     url = f"{OSF_API_URL}/nodes/"
     params = base_params.copy()
-    
+
     while fetched < max_results:
         try:
             response = requests.get(url, params=params, timeout=timeout)
@@ -251,31 +270,31 @@ def fetch_nodes_by_tag(
         except requests.RequestException as e:
             print(f"  Error fetching page {page}: {e}", file=sys.stderr)
             break
-        
+
         data = response.json()
         nodes = data.get("data", [])
-        
+
         if not nodes:
             break
-        
+
         # Get total from meta
         meta = data.get("links", {}).get("meta", {}) or data.get("meta", {})
         total = meta.get("total", 0)
         if page == 1:
             print(f"  Total available: {total}")
-        
+
         for node in nodes:
             if fetched >= max_results:
                 break
-            
+
             node_id = node.get("id", "")
             if node_id in seen_ids:
                 continue
-            
+
             try:
                 dataset = process_node(
-                    node, 
-                    fetch_details=fetch_details, 
+                    node,
+                    fetch_details=fetch_details,
                     timeout=timeout,
                     require_bids=require_bids,
                 )
@@ -284,19 +303,21 @@ def fetch_nodes_by_tag(
                     seen_ids.add(node_id)
                     fetched += 1
             except Exception as e:
-                print(f"  Warning: Error processing node {node_id}: {e}", file=sys.stderr)
+                print(
+                    f"  Warning: Error processing node {node_id}: {e}", file=sys.stderr
+                )
                 continue
-        
+
         # Check for next page
         next_url = data.get("links", {}).get("next")
         if not next_url or fetched >= max_results:
             break
-        
+
         url = next_url
         params = {}  # Next URL has all params
         page += 1
         time.sleep(0.3)  # Rate limiting
-    
+
     return datasets
 
 
@@ -322,36 +343,36 @@ def process_node(
     attrs = node.get("attributes", {})
     relationships = node.get("relationships", {})
     links = node.get("links", {})
-    
+
     # Filter out non-data categories
     category = attrs.get("category", "")
     if category not in DATA_CATEGORIES:
         return None
-    
+
     # Skip registrations, preprints, forks
     if attrs.get("registration") or attrs.get("preprint") or attrs.get("fork"):
         return None
-    
+
     # Skip non-public
     if not attrs.get("public", False):
         return None
-    
+
     title = attrs.get("title", "")
     description = attrs.get("description", "") or ""
     tags = attrs.get("tags", [])
     date_created = attrs.get("date_created", "")
     date_modified = attrs.get("date_modified", "")
-    
+
     # Check for BIDS - in tags or description
     tags_lower = [t.lower() for t in tags]
     desc_lower = description.lower()
     has_bids = any("bids" in t for t in tags_lower) or "bids" in desc_lower
-    
+
     if require_bids and not has_bids:
         return None
-    
+
     bids_version = "unknown" if has_bids else None
-    
+
     # Get license
     license_info = None
     license_rel = relationships.get("license", {}).get("data", {})
@@ -361,30 +382,30 @@ def process_node(
             license_info = LICENSE_NAMES.get(license_id)
             if not license_info and fetch_details:
                 license_info = fetch_license_name(license_id, timeout=timeout)
-    
+
     # Get contributors
     authors = []
     if fetch_details:
         authors = fetch_contributors(node_id, timeout=timeout)
-    
+
     # Build URLs
     html_url = links.get("html", f"https://osf.io/{node_id}/")
-    
+
     # Determine modalities from tags and description
     modalities = []
     combined_text = " ".join(tags_lower + [desc_lower])
-    
+
     for mod, keywords in MODALITY_TAGS.items():
         if any(kw in combined_text for kw in keywords):
             modalities.append(mod)
-    
+
     # If no modality detected, skip
     if not modalities:
         return None
-    
+
     # Determine primary modality
     primary_modality = modalities[0]
-    
+
     # Determine study domain from tags/description
     study_domain = None
     domain_keywords = {
@@ -407,7 +428,7 @@ def process_node(
         if keyword in combined_text:
             study_domain = domain
             break
-    
+
     # Create dataset
     dataset = create_dataset(
         dataset_id=f"osf_{node_id}",
@@ -422,14 +443,14 @@ def process_node(
         source_url=html_url,
         dataset_modified_at=date_modified or date_created,
     )
-    
+
     # Add OSF-specific metadata
     dataset["osf_id"] = node_id
     dataset["osf_category"] = category
     dataset["tags"] = tags
     if description:
         dataset["description"] = description[:1000]  # Truncate long descriptions
-    
+
     return dataset
 
 
@@ -442,7 +463,7 @@ def main() -> None:
         type=str,
         nargs="+",
         default=None,
-        help='Modalities to search for (default: all). Options: eeg, meg, ieeg, fnirs',
+        help="Modalities to search for (default: all). Options: eeg, meg, ieeg, fnirs",
     )
     parser.add_argument(
         "--output",
@@ -522,7 +543,7 @@ def main() -> None:
     for d in datasets:
         cat = d.get("osf_category", "unknown")
         categories[cat] = categories.get(cat, 0) + 1
-    
+
     print("\nBy Category:")
     for cat, count in sorted(categories.items(), key=lambda x: x[1], reverse=True):
         print(f"  {cat}: {count}")
@@ -532,7 +553,7 @@ def main() -> None:
     for d in datasets:
         for mod in d.get("modalities", []):
             modalities[mod] = modalities.get(mod, 0) + 1
-    
+
     print("\nBy Modality:")
     for mod, count in sorted(modalities.items(), key=lambda x: x[1], reverse=True):
         print(f"  {mod}: {count}")
@@ -552,7 +573,6 @@ def main() -> None:
     print(f"Datasets with BIDS: {with_bids}/{len(datasets)}")
 
     print("=" * 60)
-
 
 
 if __name__ == "__main__":

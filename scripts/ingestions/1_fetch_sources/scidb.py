@@ -10,7 +10,6 @@ Output: consolidated/scidb_datasets.json (Dataset schema format)
 import argparse
 import json
 import sys
-from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
@@ -26,42 +25,64 @@ from _serialize import save_datasets_deterministically
 # Modality keywords for searching SciDB - comprehensive keyword coverage
 MODALITY_KEYWORDS = {
     "eeg": [
-        "eeg", "electroencephalography", "electroencephalogram", 
-        "scalp eeg", "scalp-eeg"
+        "eeg",
+        "electroencephalography",
+        "electroencephalogram",
+        "scalp eeg",
+        "scalp-eeg",
     ],
-    "meg": [
-        "meg", "magnetoencephalography", "magnetoencephalogram"
-    ],
-    "emg": [
-        "emg", "electromyography", "electromyogram"
-    ],
+    "meg": ["meg", "magnetoencephalography", "magnetoencephalogram"],
+    "emg": ["emg", "electromyography", "electromyogram"],
     "fnirs": [
-        "fnirs", "fNIRS", "nirs", "near-infrared spectroscopy", 
-        "near infrared spectroscopy", "functional near-infrared"
+        "fnirs",
+        "fNIRS",
+        "nirs",
+        "near-infrared spectroscopy",
+        "near infrared spectroscopy",
+        "functional near-infrared",
     ],
     "lfp": [
-        "lfp", "local field potential", "local field potentials", 
-        "field potential", "field potentials"
+        "lfp",
+        "local field potential",
+        "local field potentials",
+        "field potential",
+        "field potentials",
     ],
     "spike": [
-        "single unit", "single-unit", "multi-unit", "multiunit",
-        "spike", "spike train", "neuronal firing", "unit activity", 
-        "single unit activity", "multi-unit activity"
+        "single unit",
+        "single-unit",
+        "multi-unit",
+        "multiunit",
+        "spike",
+        "spike train",
+        "neuronal firing",
+        "unit activity",
+        "single unit activity",
+        "multi-unit activity",
     ],
     "mea": [
-        "mea", "microelectrode array", "microelectrode arrays",
-        "utah array", "neuropixels", "depth electrode"
+        "mea",
+        "microelectrode array",
+        "microelectrode arrays",
+        "utah array",
+        "neuropixels",
+        "depth electrode",
     ],
     "ieeg": [
-        "ieeg", "intracranial eeg", "intracranial electroencephalography",
-        "intracranial electroencephalogram", "seeg", "stereoelectroencephalography",
-        "ecog", "electrocorticography", "corticography",
-        "subdural electrode", "subdural grid", "subdural strip"
+        "ieeg",
+        "intracranial eeg",
+        "intracranial electroencephalography",
+        "intracranial electroencephalogram",
+        "seeg",
+        "stereoelectroencephalography",
+        "ecog",
+        "electrocorticography",
+        "corticography",
+        "subdural electrode",
+        "subdural grid",
+        "subdural strip",
     ],
-    "bids": [
-        "bids", "brain imaging data structure", 
-        "brain imaging data structures"
-    ],
+    "bids": ["bids", "brain imaging data structure", "brain imaging data structures"],
 }
 
 
@@ -83,7 +104,7 @@ def search_scidb_by_query(
     """
     base_url = "https://www.scidb.cn/api/sdb-query-service/query"
     params = {"queryCode": "", "q": query}
-    
+
     all_datasets = []
     page = 1
     actual_page_size = min(page_size, 100)
@@ -161,24 +182,28 @@ def fetch_scidb_datasets(
 
     """
     results_by_modality = {}
-    
+
     for modality, keywords in MODALITY_KEYWORDS.items():
         print(f"\nSearching {modality.upper()} datasets with BIDS requirement...")
         modality_datasets = []
-        
+
         for keyword in keywords:
             query = f"{keyword} BIDS"
             print(f"  Query: '{query}'...", end=" ", flush=True)
-            datasets = search_scidb_by_query(query, max_results=max_results_per_modality // len(keywords))
+            datasets = search_scidb_by_query(
+                query, max_results=max_results_per_modality // len(keywords)
+            )
             modality_datasets.extend(datasets)
             print(f"found {len(datasets)}")
-        
+
         results_by_modality[modality] = modality_datasets
-    
+
     return results_by_modality
 
 
-def deduplicate_datasets(results_by_modality: dict[str, list[dict[str, Any]]]) -> list[dict[str, Any]]:
+def deduplicate_datasets(
+    results_by_modality: dict[str, list[dict[str, Any]]],
+) -> list[dict[str, Any]]:
     """Deduplicate datasets across modalities by ID.
 
     Args:
@@ -224,8 +249,10 @@ def process_scidb_dataset(
 
         # Extract metadata
         title = record.get("titleEn", "") or record.get("titleZh", "")
-        description = record.get("introductionEn", "") or record.get("introductionZh", "")
-        
+        description = record.get("introductionEn", "") or record.get(
+            "introductionZh", ""
+        )
+
         # Extract authors
         authors = []
         for author_dict in record.get("author", []):
@@ -290,11 +317,13 @@ def main() -> None:
 
     # Fetch across all modalities
     print("Fetching BIDS datasets from SciDB across multiple modalities...")
-    results_by_modality = fetch_scidb_datasets(max_results_per_modality=args.max_results)
+    results_by_modality = fetch_scidb_datasets(
+        max_results_per_modality=args.max_results
+    )
 
     # Deduplicate
     unique_datasets, modality_map = deduplicate_datasets(results_by_modality)
-    
+
     if not unique_datasets:
         print("No datasets found. Exiting.", file=sys.stderr)
         sys.exit(1)
@@ -321,24 +350,26 @@ def main() -> None:
     print(f"\n{'=' * 60}")
     print(f"Successfully saved {len(datasets)} datasets to {args.output}")
     print(f"{'=' * 60}")
-    
+
     # Statistics
     modalities_found = {}
     for ds in datasets:
         for mod in ds.get("modalities", []):
             modalities_found[mod] = modalities_found.get(mod, 0) + 1
-    
+
     print("\nDatasets by modality:")
     for mod in sorted(MODALITY_KEYWORDS.keys()):
         count = modalities_found.get(mod, 0)
         print(f"  {mod.upper()}: {count}")
-    
-    datasets_with_doi = sum(1 for ds in datasets if ds.get("identifiers", {}).get("doi"))
+
+    datasets_with_doi = sum(
+        1 for ds in datasets if ds.get("identifiers", {}).get("doi")
+    )
     print(f"\nDatasets with DOI: {datasets_with_doi}/{len(datasets)}")
-    
+
     datasets_with_authors = sum(1 for ds in datasets if ds.get("authors"))
     print(f"Datasets with authors: {datasets_with_authors}/{len(datasets)}")
-    
+
     print(f"{'=' * 60}")
 
 

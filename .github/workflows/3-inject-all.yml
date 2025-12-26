@@ -9,11 +9,12 @@ on:
       database:
         description: 'Target database'
         required: true
-        default: 'eegdashstaging'
+        default: 'eegdash_staging'
         type: choice
         options:
-          - eegdashstaging
+          - eegdash_staging
           - eegdash
+          - eegdash_v1
       dry_run:
         description: 'Dry run (validate without uploading)'
         required: false
@@ -25,7 +26,7 @@ jobs:
     uses: ./.github/workflows/3-inject.yml
     with:
       source_name: "all"
-      database: ${{ github.event.inputs.database || 'eegdashstaging' }}
+      database: ${{ github.event.inputs.database || 'eegdash_staging' }}
       dry_run: ${{ github.event.inputs.dry_run == 'true' || github.event_name == 'schedule' }}
     secrets:
       DATASET_LISTINGS_TOKEN: ${{ secrets.DATASET_LISTINGS_TOKEN }}

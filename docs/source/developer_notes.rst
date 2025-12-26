@@ -58,7 +58,7 @@ Local Development
 
    pip install pre-commit
    pre-commit install
-   pre-commit run --all-files
+   pre-commit run -a
 
 The pre-commit suite runs Ruff for linting/formatting and Codespell for spelling.
 

@@ -5,22 +5,22 @@ Upload Dataset and Record documents from digested datasets into separate MongoDB
 
 Usage:
     # Inject all digested datasets to staging
-    python 4_inject.py --input digestion_output --database eegdashstaging
+    python 4_inject.py --input digestion_output --database eegdash_staging
 
     # Inject to production
     python 4_inject.py --input digestion_output --database eegdash
 
     # Inject specific datasets
-    python 4_inject.py --input digestion_output --database eegdashstaging --datasets ds002718 ds005506
+    python 4_inject.py --input digestion_output --database eegdash_staging --datasets ds002718 ds005506
 
     # Dry run (validate without uploading)
-    python 4_inject.py --input digestion_output --database eegdashstaging --dry-run
+    python 4_inject.py --input digestion_output --database eegdash_staging --dry-run
 
     # Inject only datasets (skip records)
-    python 4_inject.py --input digestion_output --database eegdashstaging --only-datasets
+    python 4_inject.py --input digestion_output --database eegdash_staging --only-datasets
 
     # Inject only records (skip datasets)
-    python 4_inject.py --input digestion_output --database eegdashstaging --only-records
+    python 4_inject.py --input digestion_output --database eegdash_staging --only-records
 """
 
 import argparse
@@ -185,8 +185,8 @@ def main():
         "--database",
         type=str,
         required=True,
-        choices=["eegdashstaging", "eegdash"],
-        help="Target MongoDB database (eegdashstaging or eegdash)",
+        choices=["eegdash", "eegdash_staging", "eegdash_v1"],
+        help="Target MongoDB database (eegdash, eegdash_staging, or eegdash_v1)",
     )
     parser.add_argument(
         "--api-url",

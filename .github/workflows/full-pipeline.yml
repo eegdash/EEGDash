@@ -22,11 +22,12 @@ on:
       database:
         description: 'Target database for injection'
         required: true
-        default: 'eegdashstaging'
+        default: 'eegdash_staging'
         type: choice
         options:
-          - eegdashstaging
+          - eegdash_staging
           - eegdash
+          - eegdash_v1
       dry_run:
         description: 'Dry run injection (validate only)'
         required: false

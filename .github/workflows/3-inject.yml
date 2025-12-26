@@ -9,7 +9,7 @@ on:
         required: true
         type: string
       database:
-        description: 'Target database (eegdashstaging or eegdash)'
+        description: 'Target database (eegdash, eegdash_staging, or eegdash_v1)'
         required: true
         type: string
       dry_run:

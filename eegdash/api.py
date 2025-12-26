@@ -38,7 +38,8 @@ class EEGDash:
         ----------
         database : str, default "eegdash"
             Name of the MongoDB database to connect to. Common values:
-            ``"eegdash"`` (production), ``"eegdashstaging"`` (staging).
+            ``"eegdash"`` (production), ``"eegdash_staging"`` (staging),
+            ``"eegdash_v1"`` (legacy archive).
         api_url : str, optional
             Override the default API URL. If not provided, uses the default
             public endpoint or the ``EEGDASH_API_URL`` environment variable.
@@ -49,7 +50,7 @@ class EEGDash:
         Examples
         --------
         >>> eegdash = EEGDash()  # production
-        >>> eegdash = EEGDash(database="eegdashstaging")  # staging
+        >>> eegdash = EEGDash(database="eegdash_staging")  # staging
         >>> records = eegdash.find({"dataset": "ds002718"})
 
         """

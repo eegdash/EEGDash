@@ -33,7 +33,7 @@ class EEGDashAPIClient:
     api_url : str, optional
         Base API URL. Default: https://data.eegdash.org
     database : str, default "eegdash"
-        Database name ("eegdash" or "eegdashstaging").
+        Database name ("eegdash", "eegdash_staging", or "eegdash_v1").
     auth_token : str, optional
         Auth token for admin write operations.
 

@@ -158,7 +158,7 @@ Upload digested datasets and records to **separate MongoDB collections** via API
 # Inject to staging (both datasets and records)
 python scripts/ingestions/4_inject.py \
   --input digestion_output \
-  --database eegdashstaging
+  --database eegdash_staging
 
 # Inject to production
 python scripts/ingestions/4_inject.py \
@@ -168,19 +168,19 @@ python scripts/ingestions/4_inject.py \
 # Dry run (validate only)
 python scripts/ingestions/4_inject.py \
   --input digestion_output \
-  --database eegdashstaging \
+  --database eegdash_staging \
   --dry-run
 
 # Inject only datasets (skip records)
 python scripts/ingestions/4_inject.py \
   --input digestion_output \
-  --database eegdashstaging \
+  --database eegdash_staging \
   --only-datasets
 
 # Inject only records (skip datasets)
 python scripts/ingestions/4_inject.py \
   --input digestion_output \
-  --database eegdashstaging \
+  --database eegdash_staging \
   --only-records
 ```
 
@@ -318,5 +318,5 @@ python scripts/ingestions/2_clone.py --output data/cloned
 python scripts/ingestions/3_digest.py --input data/cloned --output digestion_output
 
 # 4. Upload to staging
-python scripts/ingestions/4_inject.py --input digestion_output --database eegdashstaging
+python scripts/ingestions/4_inject.py --input digestion_output --database eegdash_staging
 ```

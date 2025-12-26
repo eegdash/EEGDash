@@ -17,6 +17,7 @@ import argparse
 import json
 import re
 import sys
+from datetime import datetime, timezone
 from pathlib import Path
 
 import requests
@@ -25,6 +26,10 @@ from bs4 import BeautifulSoup
 # Add parent paths for local imports
 sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 from eegdash.records import Dataset, create_dataset
+
+# Add ingestions dir to path for _serialize module
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from _serialize import save_datasets_deterministically
 
 GIN_BASE_URL = "https://gin.g-node.org"
 GIN_API_URL = f"{GIN_BASE_URL}/api/v1"
@@ -434,6 +439,12 @@ def main() -> None:
         default=30.0,
         help="Request timeout in seconds (default: 30.0)",
     )
+    parser.add_argument(
+        "--digested-at",
+        type=str,
+        default=None,
+        help="ISO 8601 timestamp for digested_at field (for deterministic output, default: omitted for determinism)",
+    )
 
     args = parser.parse_args()
 
@@ -449,12 +460,14 @@ def main() -> None:
         print("No datasets fetched. Exiting.", file=sys.stderr)
         sys.exit(1)
 
-    # Create output directory
-    args.output.parent.mkdir(parents=True, exist_ok=True)
+    # Add digested_at timestamp if provided
+    if args.digested_at:
+        for ds in datasets:
+            if "timestamps" in ds:
+                ds["timestamps"]["digested_at"] = args.digested_at
 
-    # Save to JSON
-    with args.output.open("w") as fh:
-        json.dump(datasets, fh, indent=2, sort_keys=True)
+    # Save deterministically
+    save_datasets_deterministically(datasets, args.output)
 
     print(f"\nSaved {len(datasets)} dataset entries to {args.output}")
 

@@ -257,7 +257,7 @@ def create_dataset(
     watchers : int, optional
         Repository watchers count.
     digested_at : str, optional
-        ISO 8601 timestamp. Defaults to current time.
+        ISO 8601 timestamp. If not provided, no timestamp is set (for deterministic output).
     dataset_modified_at : str, optional
         Last modification timestamp.
 
@@ -307,7 +307,7 @@ def create_dataset(
         n_contributing_labs=len(contributing_labs) if contributing_labs else None,
         demographics=demographics,
         timestamps=Timestamps(
-            digested_at=digested_at or datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
+            digested_at=digested_at,
             dataset_modified_at=dataset_modified_at,
         ),
     )

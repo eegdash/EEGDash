@@ -14,6 +14,7 @@ import json
 import re
 import sys
 import time
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 from xml.etree import ElementTree as ET
@@ -22,6 +23,10 @@ import requests
 
 sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent))
 from eegdash.records import create_dataset
+
+# Add ingestions dir to path for _serialize module
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from _serialize import save_datasets_deterministically
 
 
 # =============================================================================
@@ -489,6 +494,12 @@ def main() -> None:
         action="store_true",
         help="Enrich with OAI-PMH metadata (slower)",
     )
+    parser.add_argument(
+        "--digested-at",
+        type=str,
+        default=None,
+        help="ISO 8601 timestamp for digested_at field (for deterministic output, default: omitted for determinism)",
+    )
 
     args = parser.parse_args()
 
@@ -518,10 +529,14 @@ def main() -> None:
             print(f"  Error processing record {record.get('id')}: {e}", file=sys.stderr)
             continue
 
-    # Save
-    args.output.parent.mkdir(parents=True, exist_ok=True)
-    with args.output.open("w") as f:
-        json.dump(datasets, f, indent=2)
+    # Add digested_at timestamp if provided
+    if args.digested_at:
+        for ds in datasets:
+            if "timestamps" in ds:
+                ds["timestamps"]["digested_at"] = args.digested_at
+
+    # Save deterministically
+    save_datasets_deterministically(datasets, args.output)
 
     # Statistics
     print(f"\n{'=' * 70}")

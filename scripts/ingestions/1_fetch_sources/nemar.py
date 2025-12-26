@@ -181,6 +181,9 @@ def fetch_repositories(
                     ages = extract_ages_from_participants(participants)
                     subjects_count = len(participants) if participants else 0
                     
+                    # Build NEMAR GitHub URL
+                    nemar_url = f"https://github.com/nemardatasets/{repo_name}"
+                    
                     # Create Dataset document
                     yield create_dataset(
                         dataset_id=repo_name,
@@ -196,6 +199,7 @@ def fetch_repositories(
                         subjects_count=subjects_count,
                         ages=ages,
                         species="Human",  # NEMAR datasets are human
+                        source_url=nemar_url,
                         dataset_modified_at=repo.get("pushed_at"),
                     )
                     

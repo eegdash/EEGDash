@@ -176,8 +176,15 @@ def extract_dataset_metadata(raw: dict, modality: str) -> Dataset:
     ages = metadata.get("ages") or []
     ages_int = [int(a) for a in ages if a is not None]
     
+    # Build OpenNeuro URL
+    dataset_id = raw.get("id")
+    snapshot_tag = snapshot.get("tag")
+    openneuro_url = f"https://openneuro.org/datasets/{dataset_id}"
+    if snapshot_tag:
+        openneuro_url += f"/versions/{snapshot_tag}"
+    
     return create_dataset(
-        dataset_id=raw.get("id"),
+        dataset_id=dataset_id,
         name=description.get("Name") or raw.get("name"),
         source="openneuro",
         recording_modality=modality,
@@ -198,6 +205,7 @@ def extract_dataset_metadata(raw: dict, modality: str) -> Dataset:
         subjects_count=subjects_count,
         ages=ages_int,
         species=metadata.get("species"),
+        source_url=openneuro_url,
         dataset_modified_at=snapshot.get("created"),
     )
 

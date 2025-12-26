@@ -2,6 +2,7 @@
 .coverage*
 .DS_Store
 .env
+.env.zenodo
 .ruff_cache/
 .secret
 .venv*

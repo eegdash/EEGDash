@@ -1,13 +1,14 @@
 """Fetch neural recording datasets from Zenodo.
 
-This script uses the Zenodo REST API to search for EEG-related datasets.
-It handles rate limiting by using aggressive delays between requests.
+This script uses the Zenodo REST API to search for EEG, MEG, and other neural recording datasets.
+It searches for specific recording modalities and the BIDS standard.
 
 Output: consolidated/zenodo_datasets.json
 """
 
 import argparse
 import json
+import os
 import sys
 import time
 from pathlib import Path
@@ -25,142 +26,188 @@ from _serialize import save_datasets_deterministically
 # Zenodo REST API endpoint
 ZENODO_BASE_URL = "https://zenodo.org/api/records"
 
+# Zenodo API key for authentication (doubles rate limit: 60→100 requests/min)
+# Set via environment variable: export ZENODO_API_KEY="your_key_here"
+ZENODO_API_KEY = os.environ.get("ZENODO_API_KEY", "")
+
+# Neural recording modality keywords for searching
+MODALITY_SEARCHES = {
+    "eeg": "eeg",  # Lowercase to avoid rate limiting
+    "meg": "meg",
+    "emg": "emg",
+    "fnirs": "fnirs",
+    "lfp": "lfp",
+    "ieeg": "ieeg",
+}
+
 
 def fetch_zenodo_datasets(
+    search_terms: list[str] | None = None,
     max_results: int = 500,
-    access_token: str | None = None,
 ) -> list[dict[str, Any]]:
-    """Fetch datasets from Zenodo REST API.
+    """Fetch datasets from Zenodo REST API with intelligent rate limiting.
+    
+    Searches across all datasets and filters neural recording modalities locally.
+    Uses progressive delays based on API response headers to avoid rate limiting.
+    
+    Authenticated requests get 100 req/min limit (vs 60 req/min for guest users).
     
     Args:
-        max_results: Maximum datasets to fetch
-        access_token: Optional Zenodo API token
+        search_terms: List of modality search terms (optional, for focused searches)
+        max_results: Maximum total datasets to fetch across all searches
         
     Returns:
-        List of dataset records from Zenodo
+        List of unique dataset records from Zenodo
     """
     print(f"\n{'=' * 70}")
     print("Fetching datasets from Zenodo REST API")
     print(f"{'=' * 70}")
     print(f"Max results: {max_results}")
+    if ZENODO_API_KEY:
+        print("✓ Using authenticated requests (100 req/min limit)")
+    else:
+        print("⚠ Guest requests only (60 req/min limit)")
+        print("  Tip: Set ZENODO_API_KEY env var for better rate limits")
     print(f"{'=' * 70}\n")
     
     all_records = {}  # Use dict for deduplication
     headers = {"Accept": "application/json"}
     
-    if access_token:
-        headers["Authorization"] = f"Bearer {access_token}"
+    # Add authentication if API key is available
+    if ZENODO_API_KEY:
+        headers["Authorization"] = f"Bearer {ZENODO_API_KEY}"
     
-    # Search for all datasets (no specific query to avoid syntax errors)
-    # Filter by type instead
-    page = 1
-    page_size = 50
-    total_fetched = 0
-    consecutive_errors = 0
-    max_consecutive_errors = 3
+    # If search terms provided, search them; otherwise do broad search
+    if search_terms is None:
+        search_terms = ["neural recording", "EEG", "brain"]
     
-    while total_fetched < max_results:
-        params = {
-            "page": page,
-            "size": page_size,
-            "sort": "-mostrecent",
-        }
+    for search_term in search_terms:
+        print(f"\nSearching for: {search_term}")
+        print("-" * 70)
         
-        print(f"Page {page:3d}: ", end="", flush=True)
+        page = 1
+        page_size = 50
+        total_for_term = 0
+        consecutive_429s = 0
+        max_consecutive_429s = 3
         
-        try:
-            response = requests.get(
-                ZENODO_BASE_URL,
-                params=params,
-                headers=headers,
-                timeout=30,
-            )
+        while len(all_records) < max_results and total_for_term < (max_results // len(search_terms) + 100):
+            params = [
+                ("q", search_term),
+                ("page", str(page)),
+                ("size", str(page_size)),
+                ("sort", "-mostrecent"),
+            ]
             
-            # Check status code
-            if response.status_code == 429:
-                # Rate limited
-                print("Rate limited, waiting 60s...")
-                time.sleep(60)
-                consecutive_errors = 0
-                continue
+            print(f"  Page {page:3d}: ", end="", flush=True)
             
-            if response.status_code >= 500:
-                # Server error
-                print(f"Server error ({response.status_code}), waiting 30s...")
-                time.sleep(30)
-                consecutive_errors += 1
-                if consecutive_errors >= max_consecutive_errors:
-                    print("Too many server errors, stopping.")
-                    break
-                continue
-            
-            if response.status_code != 200:
-                print(f"Error {response.status_code}")
-                break
-            
-            consecutive_errors = 0
-            data = response.json()
-            hits = data.get("hits", {}).get("hits", [])
-            
-            if not hits:
-                print("No more results")
-                break
-            
-            # Add records to dict (deduplicates by ID)
-            for record in hits:
-                record_id = record.get("id")
-                if record_id:
-                    all_records[record_id] = record
-            
-            total_fetched = len(all_records)
-            print(f"✓ {len(hits):3d} records | Total unique: {total_fetched:5d}/{max_results}")
-            
-            # Check if we have enough
-            if total_fetched >= max_results:
-                break
-            
-            page += 1
-            
-            # Aggressive delay to avoid rate limiting
-            remaining = response.headers.get("X-RateLimit-Remaining", "?")
-            
-            if remaining != "?":
-                remaining_int = int(remaining)
-                if remaining_int < 5:
-                    # Very close to limit
-                    print("  Approaching rate limit, waiting 60s...", end="", flush=True)
-                    time.sleep(60)
-                    print(" Done.")
-                elif remaining_int < 15:
-                    # Getting close
+            try:
+                response = requests.get(
+                    ZENODO_BASE_URL,
+                    params=params,
+                    headers=headers,
+                    timeout=30,
+                )
+                
+                # Check status code
+                if response.status_code == 429:
+                    # Rate limited - use exponential backoff
+                    consecutive_429s += 1
+                    if consecutive_429s > max_consecutive_429s:
+                        print(f"Too many rate limits, moving to next search term")
+                        break
+                    
+                    # Get reset time from headers if available
+                    reset_after = response.headers.get("Retry-After")
+                    if reset_after:
+                        try:
+                            wait_time = int(reset_after)
+                        except:
+                            wait_time = min(30, 2 ** consecutive_429s)
+                    else:
+                        wait_time = min(30, 2 ** consecutive_429s)
+                    
+                    print(f"Rate limited (429), waiting {wait_time}s...")
+                    time.sleep(wait_time)
+                    continue
+                
+                consecutive_429s = 0
+                
+                if response.status_code >= 500:
+                    print(f"Server error ({response.status_code})")
                     time.sleep(10)
+                    continue
+                
+                if response.status_code != 200:
+                    print(f"Error {response.status_code}")
+                    break
+                
+                data = response.json()
+                hits = data.get("hits", {}).get("hits", [])
+                
+                if not hits:
+                    print("No more results")
+                    break
+                
+                # Add records to dict (deduplicates by ID)
+                for record in hits:
+                    record_id = record.get("id")
+                    if record_id:
+                        all_records[record_id] = record
+                
+                total_for_term += len(hits)
+                unique_total = len(all_records)
+                print(f"✓ {len(hits):3d} records | Unique: {unique_total:5d}/{max_results}")
+                
+                # Check if we have enough total
+                if len(all_records) >= max_results:
+                    break
+                
+                page += 1
+                
+                # Smart delay based on rate limit headers (respect API preferences)
+                remaining = response.headers.get("X-RateLimit-Remaining")
+                reset_time = response.headers.get("X-RateLimit-Reset")
+                
+                if remaining:
+                    try:
+                        remaining_int = int(remaining)
+                        if remaining_int <= 0:
+                            # Out of requests, wait for reset
+                            if reset_time:
+                                try:
+                                    reset_int = int(reset_time)
+                                    import time as time_module
+                                    current = time_module.time()
+                                    wait = max(1, reset_int - current)
+                                    print(f"    Rate limit exhausted, waiting {wait:.1f}s...")
+                                    time.sleep(wait)
+                                except:
+                                    time.sleep(60)
+                            else:
+                                time.sleep(60)
+                        elif remaining_int < 5:
+                            time.sleep(5)
+                        elif remaining_int < 15:
+                            time.sleep(2)
+                        else:
+                            time.sleep(0.5)
+                    except (ValueError, TypeError):
+                        time.sleep(1)
                 else:
-                    # Normal delay
-                    time.sleep(3)
-            else:
-                # Unknown rate limit, use conservative delay
+                    # No rate limit header, use conservative delay
+                    time.sleep(1)
+                
+            except requests.Timeout:
+                print("Timeout, skipping to next page")
+                page += 1
                 time.sleep(5)
-            
-        except requests.Timeout:
-            print("Timeout, waiting 30s...")
-            consecutive_errors += 1
-            time.sleep(30)
-            if consecutive_errors >= max_consecutive_errors:
-                print("Too many timeouts, stopping.")
-                break
-        except requests.RequestException as e:
-            print(f"Error: {type(e).__name__}")
-            consecutive_errors += 1
-            time.sleep(15)
-            if consecutive_errors >= max_consecutive_errors:
-                print("Too many errors, stopping.")
-                break
-        except json.JSONDecodeError:
-            print("JSON decode error")
-            consecutive_errors += 1
-            time.sleep(15)
-            if consecutive_errors >= max_consecutive_errors:
-                break
+            except requests.RequestException as e:
+                print(f"Request error: {type(e).__name__}")
+                time.sleep(5)
+            except (json.JSONDecodeError, KeyError):
+                print("JSON/data parse error")
+                time.sleep(5)
     
     print(f"\n{'=' * 70}")
     print(f"Total unique records fetched: {len(all_records)}")
@@ -187,14 +234,17 @@ def extract_dataset_info(
         # Basic info
         title = metadata.get("title", "Zenodo Dataset")
         description = metadata.get("description", "")
-        doi = record.get("pids", {}).get("doi", {}).get("identifier", "")
+        doi = record.get("doi") or metadata.get("doi", "")
         
         # Authors
         creators = []
         for creator in metadata.get("creators", []):
             if isinstance(creator, dict):
-                person = creator.get("person_or_org", {})
-                name = person.get("name", "")
+                # Handle both old and new API formats
+                name = creator.get("name")
+                if not name:
+                    person = creator.get("person_or_org", {})
+                    name = person.get("name")
                 if name:
                     creators.append(name)
         
@@ -215,6 +265,8 @@ def extract_dataset_info(
             modalities.append("fnirs")
         if any(x in combined_text for x in ["emg"]):
             modalities.append("emg")
+        if any(x in combined_text for x in ["lfp", "local field potential"]):
+            modalities.append("lfp")
         
         # Skip if no neural recording modality detected
         if not modalities:
@@ -255,16 +307,17 @@ def main() -> None:
         help="Output JSON file (default: consolidated/zenodo_datasets.json)",
     )
     parser.add_argument(
-        "--max-results",
+        "--max-per-query",
         type=int,
         default=500,
-        help="Maximum datasets to fetch (default: 500)",
+        help="Maximum total results to fetch (default: 500)",
     )
     parser.add_argument(
-        "--api-token",
+        "--queries",
         type=str,
+        nargs="+",
         default=None,
-        help="Zenodo API token (optional, for higher rate limits)",
+        help="Custom search queries (default: neural recording, EEG, brain)",
     )
     parser.add_argument(
         "--digested-at",
@@ -277,8 +330,8 @@ def main() -> None:
     
     # Fetch records from Zenodo
     records = fetch_zenodo_datasets(
-        max_results=args.max_results,
-        access_token=args.api_token,
+        search_terms=args.queries,
+        max_results=args.max_per_query,
     )
     
     if not records:

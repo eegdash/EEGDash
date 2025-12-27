@@ -1101,11 +1101,12 @@ def digest_dataset(
     manifest_path = dataset_dir / "manifest.json"
     has_manifest = manifest_path.exists()
 
-    # Check if there are actual EEG files or just manifest
+    # Check if there are actual EEG files or symlinks (git-annex uses broken symlinks)
+    # We accept both real files and symlinks for metadata extraction
     has_actual_files = any(
         f.suffix in [".set", ".edf", ".bdf", ".vhdr", ".fif", ".cnt"]
         for f in dataset_dir.rglob("*")
-        if f.is_file() and not f.is_symlink()
+        if f.is_file() or f.is_symlink()  # Include symlinks for git-annex
     )
 
     # For API-only sources, use manifest-based digestion

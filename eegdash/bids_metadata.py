@@ -90,18 +90,14 @@ def get_entities_from_record(
     }
 
 
-# BIDS entity fields that should be queried in entities.* namespace
-_ENTITY_FIELDS = {"subject", "task", "session", "run"}
-
-
 def build_query_from_kwargs(**kwargs) -> dict[str, Any]:
     """Build and validate a MongoDB query from keyword arguments.
 
     Converts user-friendly keyword arguments into a valid MongoDB query dictionary.
     Scalar values become exact matches; list-like values become ``$in`` queries.
 
-    BIDS entity fields (subject, task, session, run) are automatically mapped to
-    the nested ``entities.*`` namespace for v2 records compatibility.
+    Entity fields (subject, task, session, run) are queried at the top level
+    since the inject script flattens these from nested entities.
 
     Parameters
     ----------
@@ -133,9 +129,6 @@ def build_query_from_kwargs(**kwargs) -> dict[str, Any]:
                 f"Received None for query parameter '{key}'. Provide a concrete value."
             )
 
-        # Map entity fields to nested entities.* namespace
-        query_key = f"entities.{key}" if key in _ENTITY_FIELDS else key
-
         if isinstance(value, (list, tuple, set)):
             cleaned: list[Any] = []
             for item in value:
@@ -149,7 +142,7 @@ def build_query_from_kwargs(**kwargs) -> dict[str, Any]:
             cleaned = list(dict.fromkeys(cleaned))  # dedupe preserving order
             if not cleaned:
                 raise ValueError(f"Received an empty list for query parameter '{key}'.")
-            query[query_key] = {"$in": cleaned}
+            query[key] = {"$in": cleaned}
         else:
             if isinstance(value, str):
                 value = value.strip()
@@ -157,7 +150,7 @@ def build_query_from_kwargs(**kwargs) -> dict[str, Any]:
                     raise ValueError(
                         f"Received an empty string for query parameter '{key}'."
                     )
-            query[query_key] = value
+            query[key] = value
 
     return query
 

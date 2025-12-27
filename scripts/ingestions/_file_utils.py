@@ -515,16 +515,32 @@ def list_datarn_files(source_url: str) -> list[dict]:
 
 
 def list_git_files(clone_dir: Path) -> list[dict]:
-    """List files from a cloned git repository."""
+    """List files from a cloned git repository.
+
+    Includes both regular files and symlinks (even broken ones like git-annex pointers).
+    For symlinks, size is reported as 0 since the actual data may not be available.
+    """
     result = []
 
     for path in clone_dir.rglob("*"):
-        if path.is_file() and ".git" not in path.parts:
-            rel_path = path.relative_to(clone_dir)
+        if ".git" in path.parts:
+            continue
+
+        # Include regular files and symlinks (even broken git-annex symlinks)
+        if path.is_file():
+            # Regular file or resolved symlink
             result.append(
                 {
-                    "name": str(rel_path),
+                    "name": str(path.relative_to(clone_dir)),
                     "size": path.stat().st_size,
+                }
+            )
+        elif path.is_symlink():
+            # Broken symlink (e.g., git-annex pointer) - still include it
+            result.append(
+                {
+                    "name": str(path.relative_to(clone_dir)),
+                    "size": 0,  # Size unknown for unresolved symlinks
                 }
             )
 

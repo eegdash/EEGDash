@@ -12,13 +12,12 @@ from pathlib import Path
 
 import requests
 
-# Add parent paths for local imports
-sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
-from eegdash.records import Dataset, create_dataset
-
-# Add ingestions dir to path for _serialize module
+# Add ingestion paths before importing local modules
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-from _serialize import save_datasets_deterministically
+from _serialize import save_datasets_deterministically, setup_paths
+
+setup_paths()
+from eegdash.records import Dataset, create_dataset
 
 GITHUB_API_URL = "https://api.github.com"
 GITHUB_RAW_URL = "https://raw.githubusercontent.com"

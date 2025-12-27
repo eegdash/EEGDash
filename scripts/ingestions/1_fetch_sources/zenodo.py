@@ -31,12 +31,12 @@ from typing import Any
 import requests
 from dotenv import load_dotenv
 
-sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent))
-from eegdash.records import create_dataset
-
-# Add ingestions dir to path for _serialize module
+# Add ingestion paths before importing local modules
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-from _serialize import generate_dataset_id, save_datasets_deterministically
+from _serialize import generate_dataset_id, save_datasets_deterministically, setup_paths
+
+setup_paths()
+from eegdash.records import create_dataset
 
 # Zenodo REST API endpoint
 ZENODO_BASE_URL = "https://zenodo.org/api/records"

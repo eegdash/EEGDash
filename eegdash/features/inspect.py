@@ -1,10 +1,10 @@
-"""
+r"""
 Feature Bank Inspection and Discovery.
 
 This module provides utilities for introspecting the feature extraction 
 registry. It allows users and system components to discover available 
-features, identify their kinds (univariate, bivariate, etc.), and
-traverse the preprocessing dependency graph.
+features, identify their kinds, and traverse the preprocessing dependency 
+graph.
 
 The module provides the following utilities:
 - :func:`get_all_features` — Lists all final feature functions.
@@ -35,7 +35,7 @@ __all__ = [
 
 
 def get_feature_predecessors(feature_or_extractor: Callable | None) -> list:
-    """Get the dependency hierarchy for a feature or feature extractor.
+    r"""Get the dependency hierarchy for a feature or feature extractor.
 
     This function recursively traverses the `parent_extractor_type` attribute 
     of a feature or extractor to build a list representing its dependency 
@@ -59,15 +59,11 @@ def get_feature_predecessors(feature_or_extractor: Callable | None) -> list:
     Notes
     -----
     The traversal stops when it reaches a predecessor of ``None``, which 
-    typically represents the raw EEG signal.
+    typically represents the raw signal.
 
     Examples
     --------
-    >>> # Example 1: Direct predecessor (Base Case)
-    >>> print(get_feature_predecessors(feature_bank.signal_hilbert_preprocessor))
-        [<function signal_hilbert_preprocessor at 0x...>, None]
-
-    >>> # Example 2: Linear dependency with a branching dependency
+    >>> # Example: Linear dependency with a branching dependency
     >>> print(get_feature_predecessors(feature_bank.spectral_entropy))
         [<function spectral_entropy at 0x...>,
         <function spectral_normalized_preprocessor at 0x...>,
@@ -93,7 +89,7 @@ def get_feature_predecessors(feature_or_extractor: Callable | None) -> list:
 
 
 def get_feature_kind(feature: Callable) -> extractors.MultivariateFeature:
-    """Get the 'kind' of a feature function.
+    r"""Get the 'kind' of a feature function.
 
     Identifies whether a feature is univariate, bivariate, or multivariate 
     using decorators.
@@ -106,14 +102,14 @@ def get_feature_kind(feature: Callable) -> extractors.MultivariateFeature:
     Returns
     -------
     :class:`~eegdash.features.extractors.MultivariateFeature`
-        An instance of the feature kind (e.g., ``UnivariateFeature()``).
+        An instance of the feature kind.
 
     """
     return _get_underlying_func(feature).feature_kind
 
 
 def get_all_features() -> list[tuple[str, Callable]]:
-    """Get a list of all available feature functions.
+    r"""Get a list of all available feature functions.
 
     Scans the :mod:`~eegdash.features.feature_bank` module for functions 
     that have been decorated with a `feature_kind`.
@@ -131,7 +127,7 @@ def get_all_features() -> list[tuple[str, Callable]]:
 
 
 def get_all_feature_extractors() -> list[tuple[str, Callable]]:
-    """Get a list of all available feature extractor callables.
+    r"""Get a list of all available feature extractor callables.
 
     A feature extractor is any callable in the feature bank that declares 
     a ``parent_extractor_type``. This includes both intermediate 
@@ -152,7 +148,7 @@ def get_all_feature_extractors() -> list[tuple[str, Callable]]:
 
 
 def get_all_feature_preprocessors() -> list[tuple[str, Callable]]:
-    """Get a list of all available preprocessor functions.
+    r"""Get a list of all available preprocessor functions.
 
     Scans the :mod:`~eegdash.features.feature_bank` module for all functions 
     that participate in the dependency graph but do not produce final 
@@ -177,7 +173,7 @@ def get_all_feature_preprocessors() -> list[tuple[str, Callable]]:
 
 
 def get_all_feature_kinds() -> list[tuple[str, type[extractors.MultivariateFeature]]]:
-    """Get a list of all available feature 'kind' classes.
+    r"""Get a list of all available feature 'kind' classes.
 
     Scans the :mod:`~eegdash.features.extractors` module for all classes 
     that subclass :class:`~eegdash.features.extractors.MultivariateFeature`.
@@ -185,8 +181,7 @@ def get_all_feature_kinds() -> list[tuple[str, type[extractors.MultivariateFeatu
     Returns
     -------
     list of tuple
-        A list of (name, class) tuples for all discovered feature kinds 
-        (e.g., ('UnivariateFeature', UnivariateFeature)).
+        A list of (name, class) tuples for all discovered feature kinds.
     """
 
     def isfeaturekind(x):

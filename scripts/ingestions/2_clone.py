@@ -45,7 +45,13 @@ from threading import Lock
 from typing import Any
 
 import requests
+from dotenv import load_dotenv
 from tqdm import tqdm
+
+# Load Figshare API key from .env.figshare
+_figshare_env_path = Path(__file__).resolve().parents[2] / ".env.figshare"
+load_dotenv(_figshare_env_path)
+FIGSHARE_API_KEY = os.getenv("FIGSHARE_API_KEY", "")
 
 # Thread-safe counters
 _stats_lock = Lock()
@@ -397,8 +403,65 @@ def fetch_gin_manifest(
 
 
 # =============================================================================
-# Figshare - API-based manifest
+# Figshare - API-based manifest with rate limiting
 # =============================================================================
+
+# Rate limiting for Figshare API
+_figshare_last_request_time = 0.0
+_figshare_rate_limit_lock = Lock()
+FIGSHARE_RATE_LIMIT_DELAY = 1.2  # Minimum seconds between Figshare API requests
+
+
+def _figshare_rate_limited_request(
+    url: str, timeout: int = 60, max_retries: int = 3
+) -> requests.Response | None:
+    """Make a rate-limited request to Figshare API with exponential backoff."""
+    import time
+
+    global _figshare_last_request_time
+
+    headers = {
+        "User-Agent": "EEGDash/1.0 (https://github.com/eegdash/EEGDash)",
+        "Accept": "application/json",
+    }
+    # Add API key if available for higher rate limits
+    if FIGSHARE_API_KEY:
+        headers["Authorization"] = f"token {FIGSHARE_API_KEY}"
+
+    for attempt in range(max_retries):
+        # Ensure rate limiting
+        with _figshare_rate_limit_lock:
+            elapsed = time.time() - _figshare_last_request_time
+            if elapsed < FIGSHARE_RATE_LIMIT_DELAY:
+                time.sleep(FIGSHARE_RATE_LIMIT_DELAY - elapsed)
+            _figshare_last_request_time = time.time()
+
+        try:
+            response = requests.get(url, headers=headers, timeout=timeout)
+
+            if response.status_code == 200:
+                return response
+            elif response.status_code in (403, 429):
+                # Rate limited - exponential backoff
+                wait_time = (2**attempt) * 5  # 5, 10, 20 seconds
+                print(
+                    f"  Figshare rate limited ({response.status_code}), "
+                    f"waiting {wait_time}s (attempt {attempt + 1}/{max_retries})...",
+                    flush=True,
+                )
+                time.sleep(wait_time)
+                continue
+            else:
+                return response
+
+        except requests.RequestException as e:
+            print(f"  Figshare request error: {e}", flush=True)
+            if attempt < max_retries - 1:
+                time.sleep(2**attempt)
+                continue
+            return None
+
+    return None
 
 
 def fetch_figshare_manifest(
@@ -407,31 +470,81 @@ def fetch_figshare_manifest(
     timeout: int = 60,
     validate_bids: bool = False,
 ) -> dict[str, Any]:
-    """Fetch file manifest from Figshare via API."""
+    """Fetch file manifest from Figshare via API.
+
+    Uses pre-fetched file data if available (from fetch script with --fetch-details),
+    otherwise attempts API with rate limiting, falls back to metadata-only manifest.
+    """
     dataset_id = dataset["dataset_id"]
+    files_data = None
 
-    # Extract article ID from figshare_id field, or from dataset_id if in figshare_xxxxx format
-    article_id = dataset.get("figshare_id") or dataset_id.replace("figshare_", "")
+    # Check if file data is pre-fetched (avoids additional API calls)
+    if "_files" in dataset and dataset["_files"]:
+        files_data = dataset["_files"]
+        print(f"  Using pre-fetched files for {dataset_id}", flush=True)
+    else:
+        # Try API with rate limiting - use /files endpoint (more efficient than full article)
+        article_id = dataset.get("figshare_id") or dataset_id.replace("figshare_", "")
 
+        try:
+            # Use dedicated files endpoint - lighter than full article details
+            response = _figshare_rate_limited_request(
+                f"https://api.figshare.com/v2/articles/{article_id}/files",
+                timeout=timeout,
+            )
+
+            if response is not None and response.status_code == 200:
+                files_data = response.json()  # This endpoint returns files directly
+            elif response is not None and response.status_code in (403, 429):
+                # Rate limited - create minimal manifest from existing metadata
+                print(
+                    f"  Rate limited for {dataset_id}, using metadata-only manifest",
+                    flush=True,
+                )
+        except Exception as e:
+            print(
+                f"  API error for {dataset_id}: {e}, using metadata-only manifest",
+                flush=True,
+            )
+
+    # If no files data, create minimal manifest from existing metadata
+    if not files_data:
+        manifest = {
+            "dataset_id": dataset_id,
+            "total_files": dataset.get("total_files", 0),
+            "size_bytes": dataset.get("size_bytes", 0),
+            "bids_validated": dataset.get("bids_validated", False),
+            "bids_files_found": dataset.get("bids_files_found", []),
+            "source_url": dataset.get("external_links", {}).get("source_url", ""),
+            "metadata_only": True,  # Flag indicating no actual file list
+            "files": [],
+        }
+
+        # Save manifest
+        manifest_dir = output_dir / dataset_id
+        manifest_dir.mkdir(parents=True, exist_ok=True)
+        manifest_path = manifest_dir / "manifest.json"
+        with open(manifest_path, "w") as mf:
+            json.dump(manifest, mf, indent=2)
+
+        return {
+            "status": "manifest",
+            "dataset_id": dataset_id,
+            "source": "figshare",
+            "file_count": manifest["total_files"],
+            "bids_file_count": len(manifest.get("bids_files_found", [])),
+            "manifest": manifest,
+            "metadata_only": True,
+        }
+
+    # Build full manifest from files data
     try:
-        # Fetch article details including files
-        api_url = f"https://api.figshare.com/v2/articles/{article_id}"
-        response = requests.get(api_url, timeout=timeout)
-
-        if response.status_code != 200:
-            return {
-                "status": "error",
-                "dataset_id": dataset_id,
-                "source": "figshare",
-                "error": f"API error {response.status_code}",
-            }
-
-        data = response.json()
-        files_data = data.get("files", [])
-
         files = []
         bids_files = []
         zip_contents = []
+
+        # Check if ZIP contents are pre-fetched (from fetch script with --fetch-details)
+        prefetched_zip_contents = dataset.get("_zip_contents", [])
 
         for f in files_data:
             file_info = {
@@ -444,21 +557,57 @@ def fetch_figshare_manifest(
 
             # Check if it's a zip that might contain BIDS
             if f.get("name", "").endswith(".zip"):
-                # Try to read zip contents without downloading full file
-                zip_manifest = peek_zip_contents(f.get("download_url"), timeout=timeout)
-                if zip_manifest:
-                    zip_contents.extend(zip_manifest)
-                    for zf in zip_manifest:
-                        if is_bids_data_file(Path(zf).name):
-                            bids_files.append(zf)
+                # First check if we have pre-fetched ZIP contents
+                prefetched = next(
+                    (
+                        zc
+                        for zc in prefetched_zip_contents
+                        if zc.get("zip_name") == f.get("name")
+                    ),
+                    None,
+                )
+
+                if prefetched:
+                    # Use pre-fetched ZIP contents
+                    zip_file_list = [
+                        zf.get("path") for zf in prefetched.get("files", [])
+                    ]
+                    zip_contents.extend(zip_file_list)
+                    for zf_path in zip_file_list:
+                        if is_bids_data_file(Path(zf_path).name):
+                            bids_files.append(zf_path)
+                    # Store detailed info for the manifest
+                    file_info["_zip_contents"] = prefetched.get("files", [])
+                else:
+                    # Try to read zip contents without downloading full file (may fail due to rate limits)
+                    zip_manifest = peek_zip_contents(
+                        f.get("download_url"), timeout=timeout
+                    )
+                    if zip_manifest:
+                        zip_contents.extend(zip_manifest)
+                        for zf in zip_manifest:
+                            if is_bids_data_file(Path(zf).name):
+                                bids_files.append(zf)
             elif is_bids_data_file(f.get("name", "")):
                 bids_files.append(f.get("name", ""))
 
+        # Build manifest with full metadata from source dataset
         manifest = {
             "dataset_id": dataset_id,
+            "source": "figshare",
             "total_files": len(files),
             "bids_files": bids_files,
             "files": files,
+            # Include metadata from original dataset
+            "name": dataset.get("name"),
+            "authors": dataset.get("authors", []),
+            "license": dataset.get("license"),
+            "dataset_doi": dataset.get("dataset_doi"),
+            "modalities": dataset.get("modalities", []),
+            "recording_modality": dataset.get("recording_modality", "eeg"),
+            "size_bytes": dataset.get("size_bytes"),
+            "external_links": dataset.get("external_links", {}),
+            "demographics": dataset.get("demographics", {}),
         }
         if zip_contents:
             manifest["zip_contents"] = zip_contents

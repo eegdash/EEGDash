@@ -245,10 +245,41 @@ python scripts/ingestions/4_inject.py \
     "backend": "s3",
     "base": "s3://openneuro.org/ds002718",
     "raw_key": "sub-012/eeg/sub-012_task-RestingState_eeg.set",
-    "dep_keys": ["sub-012/eeg/sub-012_task-RestingState_events.tsv"]
+    "dep_keys": [
+      "sub-012/eeg/sub-012_task-RestingState_events.tsv",
+      "sub-012/eeg/sub-012_task-RestingState_eeg.fdt"
+    ]
   },
   "digested_at": "2024-01-15T10:30:00Z"
 }
+```
+
+**Note on `dep_keys`**: The digester automatically detects companion files required for loading:
+- `.fdt` files for EEGLAB `.set` format
+- `.vmrk` and `.eeg` files for BrainVision `.vhdr` format
+- BIDS sidecar files (`_events.tsv`, `_channels.tsv`, `_electrodes.tsv`, `_coordsystem.json`)
+
+---
+
+### Step 5: Validate Output (Optional)
+
+**Script**: `validate_output.py`
+
+Validates digested output before injection:
+
+```bash
+# Validate all digested datasets
+python scripts/ingestions/validate_output.py
+
+# Validate specific directory
+python scripts/ingestions/validate_output.py --input digestion_output
+```
+
+Checks for:
+- Missing mandatory fields (`dataset`, `bids_relpath`, `storage`, `recording_modality`)
+- Invalid storage URLs
+- Empty datasets (0 records)
+- ZIP placeholders that need extraction
 ```
 
 ---
@@ -274,8 +305,9 @@ Automated pipelines in `.github/workflows/`:
 
 | Script | Purpose |
 |--------|---------|
+| `validate_output.py` | Validate digested records before injection |
 | `_serialize.py` | Deterministic JSON serialization |
-| `compare_ground_truth_to_generated.py` | Validate digested records |
+| `compare_ground_truth_to_generated.py` | Validate digested records against ground truth |
 | `aggregate_gt_comparison_stats.py` | Aggregate validation stats |
 | `test_digest_openneuro.py` | Test digestion on sample datasets |
 
@@ -297,9 +329,24 @@ scripts/ingestions/
 ├── 2_clone.py                # Smart clone/manifest
 ├── 3_digest.py               # BIDS metadata extraction
 ├── 4_inject.py               # MongoDB upload
+├── validate_output.py        # Output validation
 ├── _serialize.py             # JSON serialization utils
 └── README.md                 # This file
 ```
+
+---
+
+## Technical Notes
+
+### Git-Annex Symlink Handling
+
+For OpenNeuro and other git-based sources, the clone step creates **broken symlinks** 
+(pointers to `.git/annex/objects/`) rather than downloading actual data. The digester 
+handles these correctly:
+
+- Uses `Path.is_symlink()` to detect git-annex files
+- Extracts metadata from symlink paths without requiring actual file content
+- Companion files (`.fdt`, `.vmrk`, `.eeg`) are detected even as broken symlinks
 
 ---
 
@@ -317,6 +364,9 @@ python scripts/ingestions/2_clone.py --output data/cloned
 # 3. Digest metadata
 python scripts/ingestions/3_digest.py --input data/cloned --output digestion_output
 
-# 4. Upload to staging
+# 4. Validate output (optional but recommended)
+python scripts/ingestions/validate_output.py
+
+# 5. Upload to staging
 python scripts/ingestions/4_inject.py --input digestion_output --database eegdash_staging
 ```

@@ -524,19 +524,57 @@ def digest_from_manifest(
             "reason": "no files in manifest",
         }
 
-    # Extract metadata from manifest (populated by enhanced OSF clone)
-    storage_base = manifest.get(
-        "storage_base", f"https://files.osf.io/{manifest.get('osf_id', dataset_id)}"
-    )
+    # Check for ZIP contents (files extracted from subject ZIPs)
+    zip_contents = manifest.get("zip_contents", [])
 
-    # Collect BIDS entities from file paths
+    # Determine storage base based on source
+    if source == "figshare":
+        # For Figshare, use the source_url from external_links
+        source_url = manifest.get("external_links", {}).get("source_url", "")
+        storage_base = (
+            source_url
+            if source_url
+            else f"https://figshare.com/articles/dataset/{dataset_id}"
+        )
+    elif source == "zenodo":
+        storage_base = manifest.get(
+            "storage_base", f"https://zenodo.org/records/{dataset_id}"
+        )
+    elif source == "osf":
+        storage_base = manifest.get(
+            "storage_base", f"https://files.osf.io/{manifest.get('osf_id', dataset_id)}"
+        )
+    else:
+        storage_base = manifest.get(
+            "storage_base", f"https://files.osf.io/{dataset_id}"
+        )
+
+    # Collect BIDS entities from file paths (both direct files and ZIP contents)
     subjects = set()
     sessions = set()
     tasks = set()
     modalities = set()
 
+    all_paths = []
     for f in files:
         filepath = f.get("path", "") if isinstance(f, dict) else f
+        all_paths.append(filepath)
+
+        # Check if this file has extracted ZIP contents
+        if isinstance(f, dict) and f.get("_zip_contents"):
+            for zf in f["_zip_contents"]:
+                zpath = zf.get("path", "") if isinstance(zf, dict) else zf
+                all_paths.append(zpath)
+
+    # Also add any separately stored zip_contents
+    for zpath in zip_contents:
+        if isinstance(zpath, dict):
+            all_paths.append(zpath.get("path", ""))
+        else:
+            all_paths.append(zpath)
+
+    # Extract BIDS entities from all paths
+    for filepath in all_paths:
         entities = parse_bids_entities_from_path(filepath)
         if entities.get("subject"):
             subjects.add(entities["subject"])
@@ -600,6 +638,103 @@ def digest_from_manifest(
             download_url = None
             file_size = 0
 
+        # Check if this is a ZIP file with extracted contents
+        zip_file_contents = None
+        if isinstance(file_info, dict):
+            zip_file_contents = file_info.get("_zip_contents", [])
+
+        # If this is a ZIP with contents, create records from ZIP contents instead
+        if zip_file_contents:
+            zip_name = file_info.get("name", "")
+            zip_download_url = file_info.get("download_url", "")
+
+            for zf in zip_file_contents:
+                zf_path = zf.get("path", "") if isinstance(zf, dict) else zf
+                zf_size = zf.get("size", 0) if isinstance(zf, dict) else 0
+
+                # Only create records for EEG data files inside ZIPs
+                if not is_eeg_data_file(zf_path):
+                    continue
+
+                try:
+                    entities = parse_bids_entities_from_path(zf_path)
+
+                    record = create_record(
+                        dataset=dataset_id,
+                        storage_base=storage_base,
+                        bids_relpath=zf_path,
+                        subject=entities.get("subject"),
+                        session=entities.get("session"),
+                        task=entities.get("task"),
+                        run=entities.get("run"),
+                        dep_keys=[],
+                        datatype=entities.get("datatype", "eeg"),
+                        suffix=entities.get("suffix", "eeg"),
+                        storage_backend="https",
+                        recording_modality=entities.get("modality", "eeg"),
+                        digested_at=digested_at,
+                    )
+
+                    # Store ZIP info for download
+                    if zip_download_url:
+                        record["container_url"] = zip_download_url
+                        record["container_type"] = "zip"
+                        record["container_name"] = zip_name
+                    if zf_size:
+                        record["file_size"] = zf_size
+
+                    records.append(dict(record))
+                except Exception as e:
+                    errors.append({"file": zf_path, "error": str(e)})
+            continue  # Skip to next file (we've processed the ZIP contents)
+
+        # Handle subject ZIP files without extracted contents (e.g., rate-limited)
+        # Create placeholder records for BIDS subject ZIPs like sub-01.zip
+        import re
+
+        if filepath.lower().endswith(".zip"):
+            subject_match = re.match(
+                r"^(sub-[a-zA-Z0-9]+)\.zip$", filepath, re.IGNORECASE
+            )
+            if subject_match:
+                subject_id = subject_match.group(1)
+                # Infer recording modality from dataset modalities
+                recording_modality = manifest.get("recording_modality", "eeg")
+
+                try:
+                    # Create a placeholder record for this subject
+                    record = create_record(
+                        dataset=dataset_id,
+                        storage_base=storage_base,
+                        bids_relpath=f"{subject_id}/eeg/{subject_id}_eeg.set",  # Placeholder path
+                        subject=subject_id.replace("sub-", ""),
+                        session=None,
+                        task=None,
+                        run=None,
+                        dep_keys=[],
+                        datatype="eeg",
+                        suffix="eeg",
+                        storage_backend="https",
+                        recording_modality=recording_modality,
+                        digested_at=digested_at,
+                    )
+
+                    # Store ZIP info
+                    if download_url:
+                        record["container_url"] = download_url
+                        record["container_type"] = "zip"
+                        record["container_name"] = filepath
+                        record["zip_contains_bids"] = (
+                            True  # Flag that this ZIP contains BIDS data
+                        )
+                    if file_size:
+                        record["container_size"] = file_size
+
+                    records.append(dict(record))
+                except Exception as e:
+                    errors.append({"file": filepath, "error": str(e)})
+                continue
+
         # Only create records for EEG data files
         if not is_eeg_data_file(filepath):
             continue
@@ -627,6 +762,44 @@ def digest_from_manifest(
             # Add download URL if available
             if download_url:
                 record["download_url"] = download_url
+            if file_size:
+                record["file_size"] = file_size
+
+            records.append(dict(record))
+        except Exception as e:
+            errors.append({"file": filepath, "error": str(e)})
+
+    # Also process standalone zip_contents (from clone script)
+    for zpath in zip_contents:
+        if isinstance(zpath, dict):
+            filepath = zpath.get("path", "")
+            file_size = zpath.get("size", 0)
+        else:
+            filepath = zpath
+            file_size = 0
+
+        if not is_eeg_data_file(filepath):
+            continue
+
+        try:
+            entities = parse_bids_entities_from_path(filepath)
+
+            record = create_record(
+                dataset=dataset_id,
+                storage_base=storage_base,
+                bids_relpath=filepath,
+                subject=entities.get("subject"),
+                session=entities.get("session"),
+                task=entities.get("task"),
+                run=entities.get("run"),
+                dep_keys=[],
+                datatype=entities.get("datatype", "eeg"),
+                suffix=entities.get("suffix", "eeg"),
+                storage_backend="https",
+                recording_modality=entities.get("modality", "eeg"),
+                digested_at=digested_at,
+            )
+
             if file_size:
                 record["file_size"] = file_size
 

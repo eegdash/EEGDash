@@ -10,16 +10,33 @@ BIDS validation is performed by checking for:
 - BIDS-like subject folder patterns (sub-XX or sub-XX.zip)
 
 Output: consolidated/figshare_datasets.json
+
+Authentication:
+- Uses API key from .env.figshare file (FIGSHARE_API_KEY)
+- Higher rate limits with authentication (vs 1 req/sec for anonymous)
 """
 
 import argparse
+import os
 import re
 import sys
 import time
+import zipfile
+from io import BytesIO
 from pathlib import Path
 from typing import Any
 
 import requests
+from dotenv import load_dotenv
+
+# Load API key from .env.figshare
+_env_path = Path(__file__).resolve().parents[3] / ".env.figshare"
+load_dotenv(_env_path)
+FIGSHARE_API_KEY = os.getenv("FIGSHARE_API_KEY", "")
+if FIGSHARE_API_KEY:
+    print(f"✓ Figshare API key loaded from {_env_path}")
+else:
+    print(f"⚠ No Figshare API key found in {_env_path} (using anonymous access)")
 
 # Add parent paths for local imports
 sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
@@ -103,27 +120,34 @@ def validate_bids_structure(files: list[dict[str, Any]]) -> dict[str, Any]:
 def search_figshare(
     query: str,
     size: int = 100,
-    page_size: int = 100,
+    page_size: int = 1000,  # API max is 1000 - use it for efficiency
     item_type: int = 3,  # 3 = dataset
+    max_retries: int = 3,
 ) -> list[dict[str, Any]]:
     """Search Figshare for datasets matching the query.
 
     Args:
         query: Search query string
-        size: Maximum number of results to fetch
+        size: Maximum number of results to fetch (0 = unlimited)
         page_size: Number of results per page (max 1000)
         item_type: Figshare item type (3=dataset, 1=figure, 2=media, etc.)
+        max_retries: Maximum number of retries on rate limit errors
 
     Returns:
         List of Figshare article dictionaries
 
     """
+    global _figshare_request_count, _figshare_last_request_time
+
     base_url = "https://api.figshare.com/v2/articles/search"
 
     print(f"Searching Figshare with query: {query}")
     print(f"Item type: {item_type} (dataset)")
-    print(f"Max results to fetch: {size}")
+    print(f"Max results to fetch: {size if size > 0 else 'unlimited'}")
     print(f"Results per page: {min(page_size, 1000)}")
+    print(
+        f"Rate limit delay: {FIGSHARE_RATE_LIMIT_DELAY}s (auth: {bool(FIGSHARE_API_KEY)})"
+    )
 
     all_articles = []
     page = 1
@@ -140,19 +164,60 @@ def search_figshare(
             "page_size": actual_page_size,
         }
 
-        try:
-            response = requests.post(
-                base_url,
-                json=payload,
-                headers={"Content-Type": "application/json"},
-                timeout=30,
-            )
-            response.raise_for_status()
-        except requests.RequestException as e:
-            print(f"\nError fetching page {page}: {e}", file=sys.stderr)
-            break
+        headers = {
+            "Content-Type": "application/json",
+            "User-Agent": "EEGDash/1.0 (https://github.com/eegdash/EEGDash)",
+        }
+        # Add API key if available for higher rate limits
+        if FIGSHARE_API_KEY:
+            headers["Authorization"] = f"token {FIGSHARE_API_KEY}"
 
-        articles = response.json()
+        # Retry loop for this page
+        articles = None
+        for attempt in range(max_retries):
+            # Rate limiting (reduced with API key)
+            elapsed = time.time() - _figshare_last_request_time
+            if elapsed < FIGSHARE_RATE_LIMIT_DELAY:
+                time.sleep(FIGSHARE_RATE_LIMIT_DELAY - elapsed)
+
+            try:
+                _figshare_last_request_time = time.time()
+                _figshare_request_count += 1
+
+                response = requests.post(
+                    base_url,
+                    json=payload,
+                    headers=headers,
+                    timeout=30,
+                )
+
+                if response.status_code == 200:
+                    articles = response.json()
+                    break
+                elif response.status_code in (403, 429):
+                    # Rate limited - exponential backoff
+                    wait_time = (2**attempt) * 5  # 5, 10, 20 seconds
+                    print(
+                        f"\\n  Rate limited ({response.status_code}), "
+                        f"waiting {wait_time}s (attempt {attempt + 1}/{max_retries})...",
+                        flush=True,
+                    )
+                    time.sleep(wait_time)
+                    continue
+                else:
+                    print(f"\\nError {response.status_code}", file=sys.stderr)
+                    break
+
+            except requests.RequestException as e:
+                print(f"\\nRequest error: {e}", file=sys.stderr)
+                if attempt < max_retries - 1:
+                    time.sleep(2**attempt)
+                    continue
+                break
+
+        if articles is None:
+            print("Failed to fetch page, stopping", file=sys.stderr)
+            break
 
         if not articles:
             print("No more results")
@@ -173,36 +238,348 @@ def search_figshare(
 
         page += 1
 
-        # Be nice to the API
-        time.sleep(0.5)
-
-    print(f"\nTotal articles fetched: {len(all_articles)}")
+    print(f"\\nTotal articles fetched: {len(all_articles)}")
     # Return all articles if size=0, otherwise trim to exact size
     return all_articles if size <= 0 else all_articles[:size]
 
 
-def get_article_details(article_id: int) -> dict[str, Any]:
-    """Fetch detailed information for a specific article.
+# Rate limiting for Figshare API
+# Figshare recommends max 1 request/second for all users
+# WAF-level rate limiting may kick in before API limits
+_figshare_request_count = 0
+_figshare_last_request_time = 0.0
+# Conservative rate limit - Figshare has aggressive WAF-level blocking
+FIGSHARE_RATE_LIMIT_DELAY = 1.5 if FIGSHARE_API_KEY else 2.0
+
+
+def _get_headers() -> dict[str, str]:
+    """Get standard headers for Figshare API requests."""
+    headers = {
+        "User-Agent": "EEGDash/1.0 (https://github.com/eegdash/EEGDash)",
+        "Accept": "application/json",
+    }
+    if FIGSHARE_API_KEY:
+        headers["Authorization"] = f"token {FIGSHARE_API_KEY}"
+    return headers
+
+
+def peek_zip_contents(
+    download_url: str,
+    timeout: int = 30,
+    max_bytes: int = 65536,
+) -> list[dict[str, Any]] | None:
+    """Peek at ZIP file contents by reading only the central directory.
+
+    Uses HTTP Range requests to download only the last ~64KB of the file,
+    which contains the ZIP central directory with file listings.
+
+    Args:
+        download_url: URL to the ZIP file
+        timeout: Request timeout in seconds
+        max_bytes: Maximum bytes to download from end of file
+
+    Returns:
+        List of file info dicts with 'path' and 'size', or None if failed
+
+    """
+    global _figshare_last_request_time
+
+    try:
+        # Rate limiting
+        elapsed = time.time() - _figshare_last_request_time
+        if elapsed < FIGSHARE_RATE_LIMIT_DELAY:
+            time.sleep(FIGSHARE_RATE_LIMIT_DELAY - elapsed)
+        _figshare_last_request_time = time.time()
+
+        # Get file size with HEAD request
+        headers = {
+            "User-Agent": "EEGDash/1.0 (https://github.com/eegdash/EEGDash)",
+        }
+        head = requests.head(
+            download_url, headers=headers, timeout=timeout, allow_redirects=True
+        )
+
+        if head.status_code == 403:
+            # Figshare download might require different access
+            return None
+
+        if head.status_code != 200:
+            return None
+
+        file_size = int(head.headers.get("Content-Length", 0))
+        if file_size == 0:
+            return None
+
+        # Check if server supports range requests
+        accept_ranges = head.headers.get("Accept-Ranges", "none")
+        if accept_ranges == "none":
+            return None
+
+        # Rate limit before range request
+        time.sleep(FIGSHARE_RATE_LIMIT_DELAY)
+        _figshare_last_request_time = time.time()
+
+        # Download last 64KB to get central directory
+        start_byte = max(0, file_size - max_bytes)
+        range_headers = {
+            **headers,
+            "Range": f"bytes={start_byte}-{file_size - 1}",
+        }
+
+        response = requests.get(download_url, headers=range_headers, timeout=timeout)
+        if response.status_code not in (200, 206):
+            return None
+
+        content = response.content
+        # If server returned full file (200) instead of range (206), take last portion
+        if response.status_code == 200 and len(content) > max_bytes:
+            content = content[-max_bytes:]
+
+        # Try to read ZIP central directory
+        try:
+            with zipfile.ZipFile(BytesIO(content)) as zf:
+                files = []
+                for info in zf.infolist():
+                    if not info.is_dir():
+                        files.append(
+                            {
+                                "path": info.filename,
+                                "size": info.file_size,
+                            }
+                        )
+                return files
+        except zipfile.BadZipFile:
+            return None
+
+    except requests.RequestException:
+        return None
+    except Exception:
+        return None
+
+
+def download_and_extract_zip(
+    download_url: str,
+    zip_name: str,
+    download_dir: Path,
+    timeout: int = 300,
+) -> list[dict[str, Any]] | None:
+    """Download a ZIP file and extract its contents listing.
+
+    This is a fallback for when peek_zip_contents fails (e.g., due to rate limits).
+    Downloads the full ZIP file, extracts the file listing, then deletes the ZIP.
+
+    Args:
+        download_url: URL to download the ZIP file
+        zip_name: Name of the ZIP file (for display and temp file)
+        download_dir: Directory to store temporary downloads
+        timeout: Request timeout in seconds
+
+    Returns:
+        List of file info dicts with 'path' and 'size', or None if failed
+
+    """
+    global _figshare_last_request_time
+
+    download_dir.mkdir(parents=True, exist_ok=True)
+    zip_path = download_dir / zip_name
+
+    try:
+        # Rate limiting
+        elapsed = time.time() - _figshare_last_request_time
+        if elapsed < FIGSHARE_RATE_LIMIT_DELAY * 2:  # Extra delay for downloads
+            time.sleep(FIGSHARE_RATE_LIMIT_DELAY * 2 - elapsed)
+        _figshare_last_request_time = time.time()
+
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36",
+        }
+
+        print(f"      Downloading {zip_name}...", end=" ", flush=True)
+        response = requests.get(
+            download_url, headers=headers, timeout=timeout, stream=True
+        )
+
+        if response.status_code == 403:
+            print("blocked (403)", flush=True)
+            return None
+
+        if response.status_code != 200:
+            print(f"failed ({response.status_code})", flush=True)
+            return None
+
+        # Stream to file to handle large files
+        downloaded = 0
+        with open(zip_path, "wb") as f:
+            for chunk in response.iter_content(chunk_size=8192):
+                f.write(chunk)
+                downloaded += len(chunk)
+
+        size_mb = downloaded / (1024 * 1024)
+        print(f"{size_mb:.1f} MB downloaded", flush=True)
+
+        # Extract file listing
+        files = []
+        try:
+            with zipfile.ZipFile(zip_path) as zf:
+                for info in zf.infolist():
+                    if not info.is_dir():
+                        files.append(
+                            {
+                                "path": info.filename,
+                                "size": info.file_size,
+                            }
+                        )
+            print(f"        Extracted listing: {len(files)} files", flush=True)
+        except zipfile.BadZipFile:
+            print("        Invalid ZIP file", flush=True)
+            return None
+        finally:
+            # Clean up the downloaded file
+            if zip_path.exists():
+                zip_path.unlink()
+
+        return files
+
+    except requests.RequestException as e:
+        print(f"download error: {e}", flush=True)
+        return None
+    except Exception as e:
+        print(f"error: {e}", flush=True)
+        return None
+    finally:
+        # Ensure cleanup
+        if zip_path.exists():
+            try:
+                zip_path.unlink()
+            except Exception:
+                pass
+
+
+def get_article_files(article_id: int, max_retries: int = 3) -> list[dict[str, Any]]:
+    """Fetch files list for a specific article using dedicated endpoint.
+
+    This is more efficient than fetching full article details when we only need files.
+    Uses /articles/{id}/files endpoint.
 
     Args:
         article_id: Figshare article ID
+        max_retries: Maximum number of retries on rate limit
+
+    Returns:
+        List of file dictionaries with name, size, download_url
+
+    """
+    global _figshare_request_count, _figshare_last_request_time
+
+    url = f"https://api.figshare.com/v2/articles/{article_id}/files"
+    headers = _get_headers()
+
+    for attempt in range(max_retries):
+        # Rate limiting
+        elapsed = time.time() - _figshare_last_request_time
+        if elapsed < FIGSHARE_RATE_LIMIT_DELAY:
+            time.sleep(FIGSHARE_RATE_LIMIT_DELAY - elapsed)
+
+        try:
+            _figshare_last_request_time = time.time()
+            _figshare_request_count += 1
+
+            response = requests.get(url, headers=headers, timeout=30)
+
+            if response.status_code == 200:
+                return response.json()
+            elif response.status_code in (403, 429):
+                wait_time = (2**attempt) * 3
+                print(
+                    f"\n  Rate limited for files {article_id}, waiting {wait_time}s...",
+                    file=sys.stderr,
+                )
+                time.sleep(wait_time)
+                continue
+            else:
+                return []
+
+        except requests.RequestException:
+            if attempt < max_retries - 1:
+                time.sleep(2**attempt)
+                continue
+            return []
+
+    return []
+
+
+def get_article_details(article_id: int, max_retries: int = 3) -> dict[str, Any]:
+    """Fetch detailed information for a specific article with rate limiting.
+
+    Args:
+        article_id: Figshare article ID
+        max_retries: Maximum number of retries on rate limit
 
     Returns:
         Detailed article dictionary
 
     """
-    url = f"https://api.figshare.com/v2/articles/{article_id}"
+    global _figshare_request_count, _figshare_last_request_time
 
-    try:
-        response = requests.get(url, timeout=30)
-        response.raise_for_status()
-        return response.json()
-    except requests.RequestException as e:
-        print(
-            f"Warning: Error fetching details for article {article_id}: {e}",
-            file=sys.stderr,
-        )
-        return {}
+    url = f"https://api.figshare.com/v2/articles/{article_id}"
+    headers = _get_headers()
+
+    for attempt in range(max_retries):
+        # Rate limiting (reduced with API key)
+        elapsed = time.time() - _figshare_last_request_time
+        if elapsed < FIGSHARE_RATE_LIMIT_DELAY:
+            time.sleep(FIGSHARE_RATE_LIMIT_DELAY - elapsed)
+
+        try:
+            _figshare_last_request_time = time.time()
+            _figshare_request_count += 1
+
+            response = requests.get(url, headers=headers, timeout=30)
+
+            if response.status_code == 200:
+                return response.json()
+            elif response.status_code == 403:
+                # Rate limited - exponential backoff
+                wait_time = (2**attempt) * 5  # 5, 10, 20 seconds
+                print(
+                    f"\n  Rate limited (403) for article {article_id}, "
+                    f"waiting {wait_time}s (attempt {attempt + 1}/{max_retries})...",
+                    file=sys.stderr,
+                )
+                time.sleep(wait_time)
+                continue
+            elif response.status_code == 429:
+                # Too Many Requests - longer backoff
+                wait_time = (2**attempt) * 10  # 10, 20, 40 seconds
+                print(
+                    f"\n  Too many requests (429) for article {article_id}, "
+                    f"waiting {wait_time}s (attempt {attempt + 1}/{max_retries})...",
+                    file=sys.stderr,
+                )
+                time.sleep(wait_time)
+                continue
+            else:
+                print(
+                    f"\n  Warning: Error {response.status_code} for article {article_id}",
+                    file=sys.stderr,
+                )
+                return {}
+
+        except requests.RequestException as e:
+            print(
+                f"\n  Warning: Request error for article {article_id}: {e}",
+                file=sys.stderr,
+            )
+            if attempt < max_retries - 1:
+                time.sleep(2**attempt)
+                continue
+            return {}
+
+    print(
+        f"\n  Warning: Max retries exceeded for article {article_id}",
+        file=sys.stderr,
+    )
+    return {}
 
 
 def detect_modalities(article: dict) -> list[str]:
@@ -249,7 +626,11 @@ def detect_modalities(article: dict) -> list[str]:
 
 
 def extract_dataset_info(
-    article: dict, fetch_details: bool = False, digested_at: str | None = None
+    article: dict,
+    fetch_details: bool = False,
+    digested_at: str | None = None,
+    download_zips: bool = False,
+    download_dir: Path | None = None,
 ) -> dict[str, Any]:
     """Extract relevant information from a Figshare article and normalize to Dataset schema.
 
@@ -257,6 +638,8 @@ def extract_dataset_info(
         article: Figshare article dictionary
         fetch_details: Whether to fetch full details (slower but more complete)
         digested_at: ISO 8601 timestamp for digested_at field
+        download_zips: Whether to download and extract ZIP contents (fallback when peek fails)
+        download_dir: Directory for temporary ZIP downloads
 
     Returns:
         Dataset schema document
@@ -270,13 +653,20 @@ def extract_dataset_info(
     # Clean HTML tags from title (search results may have highlighting)
     title = re.sub(r"<[^>]+>", "", title)
 
+    # Get files - either from article or fetch separately
+    files = article.get("files", [])
+
     # Fetch full details if requested
     if fetch_details and article_id:
         details = get_article_details(article_id)
         if details:
             article = details
+            files = details.get("files", files)
             # Re-clean title from details (might also have HTML)
             title = re.sub(r"<[^>]+>", "", article.get("title", title))
+        elif not files:
+            # Fallback: use dedicated files endpoint (more efficient than full details)
+            files = get_article_files(article_id)
 
     # Extract URLs
     url_public_html = article.get("url_public_html", "")
@@ -292,10 +682,7 @@ def extract_dataset_info(
     license_info = article.get("license", {})
     license_name = license_info.get("name", "") if license_info else None
 
-    # Get files list for BIDS validation and size calculation
-    files = article.get("files", [])
-
-    # Calculate total size
+    # Calculate total size (files already set above)
     total_size_bytes = sum(f.get("size", 0) for f in files)
 
     # Validate BIDS structure
@@ -343,6 +730,69 @@ def extract_dataset_info(
     if bids_validation["subject_count"] > 0:
         dataset["bids_subject_count"] = bids_validation["subject_count"]
         dataset["bids_has_subject_zips"] = bids_validation["has_subject_zips"]
+
+    # Store files list for use by clone/manifest script (avoids extra API calls)
+    if files:
+        dataset["_files"] = [
+            {
+                "name": f.get("name", ""),
+                "size": f.get("size", 0),
+                "download_url": f.get("download_url", ""),
+            }
+            for f in files
+        ]
+
+        # Extract ZIP contents for datasets with subject zips (BIDS data inside)
+        if bids_validation.get("has_subject_zips") and fetch_details:
+            zip_contents = []
+            zip_files = [f for f in files if f.get("name", "").lower().endswith(".zip")]
+
+            for zf in zip_files[:5]:  # Limit to first 5 ZIPs to avoid rate limits
+                download_url = zf.get("download_url", "")
+                if download_url:
+                    print(f"    Peeking ZIP: {zf.get('name')}...", end=" ", flush=True)
+                    contents = peek_zip_contents(download_url)
+
+                    if contents:
+                        zip_contents.append(
+                            {
+                                "zip_name": zf.get("name"),
+                                "zip_size": zf.get("size", 0),
+                                "files": contents,
+                            }
+                        )
+                        print(f"{len(contents)} files", flush=True)
+                    elif download_zips and download_dir:
+                        # Fallback: download and extract
+                        print("peek failed, trying download...", flush=True)
+                        contents = download_and_extract_zip(
+                            download_url,
+                            zf.get("name", ""),
+                            download_dir,
+                        )
+                        if contents:
+                            zip_contents.append(
+                                {
+                                    "zip_name": zf.get("name"),
+                                    "zip_size": zf.get("size", 0),
+                                    "files": contents,
+                                }
+                            )
+                    else:
+                        print("failed (rate limit or unsupported)", flush=True)
+
+            if zip_contents:
+                dataset["_zip_contents"] = zip_contents
+                # Update BIDS files found from ZIP contents
+                for zc in zip_contents:
+                    for f in zc.get("files", []):
+                        path = f.get("path", "")
+                        if any(
+                            bids_file in path.lower()
+                            for bids_file in BIDS_REQUIRED_FILES + BIDS_OPTIONAL_FILES
+                        ):
+                            if path not in dataset.get("bids_files_found", []):
+                                dataset.setdefault("bids_files_found", []).append(path)
 
     return dataset
 
@@ -392,16 +842,42 @@ def main() -> None:
         default=None,
         help="ISO 8601 timestamp for digested_at field (for deterministic output).",
     )
+    parser.add_argument(
+        "--article-id",
+        type=int,
+        default=None,
+        help="Fetch a specific article by ID (bypasses search).",
+    )
+    parser.add_argument(
+        "--download-zips",
+        action="store_true",
+        help="Download and extract ZIP contents (for datasets with subject ZIPs).",
+    )
+    parser.add_argument(
+        "--download-dir",
+        type=Path,
+        default=Path("/tmp/figshare_downloads"),
+        help="Directory for temporary ZIP downloads (default: /tmp/figshare_downloads).",
+    )
 
     args = parser.parse_args()
 
-    # Search Figshare
-    articles = search_figshare(
-        query=args.query,
-        size=args.size,
-        page_size=args.page_size,
-        item_type=args.item_type,
-    )
+    # Handle single article fetch
+    if args.article_id:
+        print(f"Fetching single article: {args.article_id}")
+        details = get_article_details(args.article_id)
+        if not details:
+            print(f"Failed to fetch article {args.article_id}", file=sys.stderr)
+            sys.exit(1)
+        articles = [details]
+    else:
+        # Search Figshare
+        articles = search_figshare(
+            query=args.query,
+            size=args.size,
+            page_size=args.page_size,
+            item_type=args.item_type,
+        )
 
     if not articles:
         print("No articles found. Exiting.", file=sys.stderr)
@@ -409,6 +885,10 @@ def main() -> None:
 
     # Extract dataset information
     print("\nExtracting dataset information...")
+    if args.download_zips:
+        print(f"ZIP download enabled, using dir: {args.download_dir}")
+        args.download_dir.mkdir(parents=True, exist_ok=True)
+
     datasets = []
     for idx, article in enumerate(articles, start=1):
         if args.fetch_details and idx % 10 == 0:
@@ -419,6 +899,8 @@ def main() -> None:
                 article,
                 fetch_details=args.fetch_details,
                 digested_at=args.digested_at,
+                download_zips=args.download_zips,
+                download_dir=args.download_dir if args.download_zips else None,
             )
             datasets.append(dataset)
         except Exception as e:

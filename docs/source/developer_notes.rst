@@ -129,10 +129,19 @@ One document per EEG file with storage information for direct loading:
        "backend": "s3",
        "base": "s3://openneuro.org/ds002718",
        "raw_key": "sub-012/eeg/sub-012_task-RestingState_eeg.set",
-       "dep_keys": ["sub-012/eeg/sub-012_task-RestingState_events.tsv"]
+       "dep_keys": [
+         "sub-012/eeg/sub-012_task-RestingState_events.tsv",
+         "sub-012/eeg/sub-012_task-RestingState_eeg.fdt"
+       ]
      },
      "digested_at": "2024-01-15T10:30:00Z"
    }
+
+**Note on ``dep_keys``**: The digester automatically detects companion files required for loading:
+
+- ``.fdt`` files for EEGLAB ``.set`` format
+- ``.vmrk`` and ``.eeg`` files for BrainVision ``.vhdr`` format
+- BIDS sidecar files (``_events.tsv``, ``_channels.tsv``, ``_electrodes.tsv``, ``_coordsystem.json``)
 
 Data Ingestion Pipeline
 -----------------------
@@ -195,6 +204,8 @@ The pipeline consists of 4 steps:
          ↓
    3_digest.py          → digestion_output/*/    (Dataset + Records JSON)
          ↓
+   validate_output.py   → validation report      (optional but recommended)
+         ↓
    4_inject.py          → MongoDB                (datasets + records collections)
 
 **Step 1: Fetch** - Retrieve dataset listings from each source:
@@ -230,6 +241,11 @@ The clone script uses source-specific strategies:
 - **API sources**: REST API manifest fetching (no files downloaded)
 - **WebDAV**: PROPFIND recursive directory listing
 
+**Note on Git-Annex**: OpenNeuro and other git sources create **broken symlinks** 
+(pointers to ``.git/annex/objects/``) rather than actual files. The digester handles 
+these correctly using ``Path.is_symlink()`` to detect files and extract metadata 
+without requiring actual file content.
+
 **Step 3: Digest** - Extract BIDS metadata and generate documents:
 
 .. code-block:: bash
@@ -252,14 +268,22 @@ Output structure:
    │   └── ...
    └── BATCH_SUMMARY.json
 
-**Step 4: Inject** - Upload to MongoDB:
+**Step 4: Validate** (optional but recommended):
+
+.. code-block:: bash
+
+   python scripts/ingestions/validate_output.py
+
+Checks for missing mandatory fields, invalid storage URLs, empty datasets, and ZIP placeholders.
+
+**Step 5: Inject** - Upload to MongoDB:
 
 .. code-block:: bash
 
    # Dry run (validate without uploading)
    python scripts/ingestions/4_inject.py \
      --input digestion_output \
-     --database eegdashstaging \
+     --database eegdash_staging \
      --dry-run
 
    # Actual injection
@@ -296,7 +320,7 @@ Triggered automatically after fetch completes:
 
 Runs weekly on Tuesday to upload digested data:
 
-- Injects to ``eegdashstaging`` by default (dry run)
+- Injects to ``eegdash_staging`` by default (dry run)
 - Manual trigger to inject to production ``eegdash``
 
 **Full Pipeline** (``full-pipeline.yml``)

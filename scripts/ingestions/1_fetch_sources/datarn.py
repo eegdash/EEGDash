@@ -24,20 +24,12 @@ from typing import Any
 
 import requests
 
-# Selenium availability check (imports checked but not used directly)
-try:
-    import importlib.util
-
-    SELENIUM_AVAILABLE = importlib.util.find_spec("selenium") is not None
-except ImportError:
-    SELENIUM_AVAILABLE = False
-
-sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent))
-from eegdash.records import create_dataset
-
-# Add ingestions dir to path for _serialize module
+# Add ingestion paths before importing local modules
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-from _serialize import generate_dataset_id, save_datasets_deterministically
+from _serialize import generate_dataset_id, save_datasets_deterministically, setup_paths
+
+setup_paths()
+from eegdash.records import create_dataset
 
 # Base URL and API endpoint
 DATARN_BASE_URL = "https://data.ru.nl"

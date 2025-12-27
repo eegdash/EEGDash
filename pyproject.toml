@@ -98,6 +98,7 @@ digestion = [
   "gql[requests]",
   "requests_toolbelt",
   "beautifulsoup4",
+  "selenium",
 ]
 
 all = [

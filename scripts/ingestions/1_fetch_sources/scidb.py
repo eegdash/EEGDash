@@ -16,7 +16,11 @@ from typing import Any
 
 import requests
 
-sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent))
+# Add ingestion paths before importing local modules
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from _serialize import generate_dataset_id, save_datasets_deterministically, setup_paths
+
+setup_paths()
 from eegdash.records import create_dataset
 
 # BIDS indicator files that must be present at root level
@@ -102,10 +106,6 @@ def check_bids_structure(
     except Exception:
         return False, [], None
 
-
-# Add ingestions dir to path for _serialize module
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-from _serialize import generate_dataset_id, save_datasets_deterministically
 
 # Modality keywords for searching SciDB - comprehensive keyword coverage
 MODALITY_KEYWORDS = {

@@ -461,11 +461,25 @@ for modality, extensions in ALLOWED_DATATYPE_EXTENSIONS.items():
 # Supported modalities for neurophysiology
 NEURO_MODALITIES = ("eeg", "meg", "ieeg", "emg", "nirs")
 
+# CTF MEG uses .ds directories containing multiple files
+# We should only match the .ds directory path, not files inside
+CTF_INTERNAL_EXTENSIONS = {
+    ".meg4",
+    ".res4",
+    ".hc",
+    ".infods",
+    ".acq",
+    ".hist",
+    ".newds",
+}
+
 
 def is_neuro_data_file(filepath: str) -> bool:
     """Check if file is a neurophysiology data file (EEG, MEG, iEEG, EMG, fNIRS).
 
     Uses MNE-BIDS ALLOWED_DATATYPE_EXTENSIONS for extension detection.
+    Handles CTF MEG .ds directories specially - only matches the .ds path,
+    not internal files like .meg4, .res4, etc.
 
     Parameters
     ----------
@@ -479,6 +493,16 @@ def is_neuro_data_file(filepath: str) -> bool:
 
     """
     filepath_lower = filepath.lower()
+
+    # Skip files inside CTF .ds directories (we want the .ds directory itself)
+    # e.g., skip "sub-01_meg.ds/sub-01_meg.meg4" but keep "sub-01_meg.ds"
+    if ".ds/" in filepath_lower:
+        return False
+
+    # Also skip CTF internal files by extension
+    for ext in CTF_INTERNAL_EXTENSIONS:
+        if filepath_lower.endswith(ext):
+            return False
 
     # Check for modality indicators in path (folder or suffix)
     has_modality_indicator = False
@@ -698,6 +722,47 @@ def digest_from_manifest(
     records = []
     errors = []
 
+    # First pass: Extract unique CTF .ds directory paths from files inside them
+    # CTF MEG stores data in .ds directories, but manifests list individual files
+    ctf_ds_dirs = set()
+    for file_info in files:
+        if isinstance(file_info, dict):
+            filepath = file_info.get("path", "")
+        else:
+            filepath = file_info
+
+        filepath_lower = filepath.lower()
+        if ".ds/" in filepath_lower:
+            # Extract the .ds directory path (everything up to and including .ds)
+            ds_idx = filepath_lower.index(".ds/") + 3  # +3 to include ".ds"
+            ds_path = filepath[:ds_idx]  # Use original case
+            ctf_ds_dirs.add(ds_path)
+
+    # Create records for CTF .ds directories
+    for ds_path in ctf_ds_dirs:
+        try:
+            entities = parse_bids_entities_from_path(ds_path)
+            detected_modality = detect_modality_from_path(ds_path)
+
+            record = create_record(
+                dataset=dataset_id,
+                storage_base=storage_base,
+                bids_relpath=ds_path,
+                subject=entities.get("subject"),
+                session=entities.get("session"),
+                task=entities.get("task"),
+                run=entities.get("run"),
+                dep_keys=[],
+                datatype=entities.get("datatype", detected_modality),
+                suffix=entities.get("suffix", detected_modality),
+                storage_backend=get_storage_backend(source),
+                recording_modality=detected_modality,
+                digested_at=digested_at,
+            )
+            records.append(dict(record))
+        except Exception as e:
+            errors.append({"file": ds_path, "error": str(e)})
+
     for file_info in files:
         if isinstance(file_info, dict):
             filepath = file_info.get("path", "")
@@ -759,11 +824,11 @@ def digest_from_manifest(
                     errors.append({"file": zf_path, "error": str(e)})
             continue  # Skip to next file (we've processed the ZIP contents)
 
-        # Handle subject ZIP files without extracted contents (e.g., rate-limited)
-        # Create placeholder records for BIDS subject ZIPs like sub-01.zip
+        # Handle ZIP files without extracted contents
         import re
 
         if filepath.lower().endswith(".zip"):
+            # Pattern 1: Subject ZIP files like sub-01.zip
             subject_match = re.match(
                 r"^(sub-[a-zA-Z0-9]+)\.zip$", filepath, re.IGNORECASE
             )
@@ -797,6 +862,57 @@ def digest_from_manifest(
                         record["container_name"] = filepath
                         record["zip_contains_bids"] = (
                             True  # Flag that this ZIP contains BIDS data
+                        )
+                    if file_size:
+                        record["container_size"] = file_size
+
+                    records.append(dict(record))
+                except Exception as e:
+                    errors.append({"file": filepath, "error": str(e)})
+                continue
+
+            # Pattern 2: BIDS data ZIPs (e.g., data_bids.zip, *_bids_EEG.zip, bids_data.zip)
+            # These commonly contain BIDS-formatted data but we can't peek inside
+            bids_zip_patterns = [
+                r".*bids.*\.zip$",  # Contains 'bids' anywhere
+                r".*_eeg\.zip$",  # Ends with _eeg.zip
+                r".*_meg\.zip$",  # Ends with _meg.zip
+                r".*_ieeg\.zip$",  # Ends with _ieeg.zip
+                r".*dataset.*\.zip$",  # Contains 'dataset'
+                r".*rawdata.*\.zip$",  # Contains 'rawdata'
+            ]
+
+            filepath_lower = filepath.lower()
+            is_bids_zip = any(re.match(p, filepath_lower) for p in bids_zip_patterns)
+
+            if is_bids_zip:
+                recording_modality = manifest.get("recording_modality", "eeg")
+
+                try:
+                    # Create a placeholder record indicating data is in ZIP
+                    record = create_record(
+                        dataset=dataset_id,
+                        storage_base=storage_base,
+                        bids_relpath=f"__ZIP__/{filepath}",  # Special path indicating ZIP
+                        subject=None,
+                        session=None,
+                        task=None,
+                        run=None,
+                        dep_keys=[],
+                        datatype=recording_modality,
+                        suffix=recording_modality,
+                        storage_backend=get_storage_backend(source),
+                        recording_modality=recording_modality,
+                        digested_at=digested_at,
+                    )
+
+                    # Store ZIP info for download
+                    if download_url:
+                        record["container_url"] = download_url
+                        record["container_type"] = "zip"
+                        record["container_name"] = filepath
+                        record["needs_extraction"] = (
+                            True  # Flag that ZIP needs extraction
                         )
                     if file_size:
                         record["container_size"] = file_size

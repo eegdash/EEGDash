@@ -175,6 +175,15 @@ def clone_git(dataset: dict, output_dir: Path, timeout: int = 300) -> dict:
 def fetch_figshare(dataset: dict, output_dir: Path, **_kwargs) -> dict:
     """Fetch file manifest from Figshare."""
     dataset_id = dataset["dataset_id"]
+    manifest_path = output_dir / dataset_id / "manifest.json"
+    if manifest_path.exists():
+        with open(manifest_path) as f:
+            manifest = json.load(f)
+        return {
+            "status": "skip",
+            "dataset_id": dataset_id,
+            "file_count": manifest.get("total_files", 0),
+        }
     figshare_id = dataset.get("figshare_id")
 
     # Try to get figshare_id from various places
@@ -213,6 +222,15 @@ def fetch_figshare(dataset: dict, output_dir: Path, **_kwargs) -> dict:
 def fetch_zenodo(dataset: dict, output_dir: Path, **_kwargs) -> dict:
     """Fetch file manifest from Zenodo."""
     dataset_id = dataset["dataset_id"]
+    manifest_path = output_dir / dataset_id / "manifest.json"
+    if manifest_path.exists():
+        with open(manifest_path) as f:
+            manifest = json.load(f)
+        return {
+            "status": "skip",
+            "dataset_id": dataset_id,
+            "file_count": manifest.get("total_files", 0),
+        }
     zenodo_id = dataset.get("zenodo_id")
 
     if not zenodo_id:

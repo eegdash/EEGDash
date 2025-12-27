@@ -332,6 +332,7 @@ def extract_record(
     parent_dir = bids_file_path.parent
     base_name = bids_file_path.stem.rsplit("_", 1)[0]
 
+    # BIDS sidecar files
     for dep_suffix in [
         "_channels.tsv",
         "_events.tsv",
@@ -345,6 +346,28 @@ def extract_record(
                 dep_keys.append(str(dep_relpath))
             except ValueError:
                 pass
+
+    # Format-specific companion files (e.g., .fdt for EEGLAB .set files)
+    ext = bids_file_path.suffix.lower()
+    if ext == ".set":
+        # EEGLAB .set files may have a companion .fdt file with the same stem
+        fdt_file = bids_file_path.with_suffix(".fdt")
+        if fdt_file.exists() or fdt_file.is_symlink():
+            try:
+                fdt_relpath = fdt_file.relative_to(bids_dataset.bidsdir)
+                dep_keys.append(str(fdt_relpath))
+            except ValueError:
+                pass
+    elif ext == ".vhdr":
+        # BrainVision .vhdr files have .vmrk (markers) and .eeg (data) companions
+        for bv_ext in [".vmrk", ".eeg"]:
+            bv_file = bids_file_path.with_suffix(bv_ext)
+            if bv_file.exists() or bv_file.is_symlink():
+                try:
+                    bv_relpath = bv_file.relative_to(bids_dataset.bidsdir)
+                    dep_keys.append(str(bv_relpath))
+                except ValueError:
+                    pass
 
     # Create record using the schema
     record = create_record(

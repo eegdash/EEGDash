@@ -358,6 +358,322 @@ def extract_record(
     return dict(record)
 
 
+# =============================================================================
+# API-Only Digest (for OSF, Figshare, Zenodo - no actual files on disk)
+# =============================================================================
+
+
+def parse_bids_entities_from_path(filepath: str) -> dict[str, Any]:
+    """Extract BIDS entities from a file path without needing actual files.
+
+    Parameters
+    ----------
+    filepath : str
+        BIDS-style file path (e.g., "sub-01/ses-01/eeg/sub-01_ses-01_task-rest_eeg.set")
+
+    Returns
+    -------
+    dict
+        Extracted BIDS entities (subject, session, task, run, modality, etc.)
+
+    """
+    import re
+
+    entities = {}
+    filename = Path(filepath).name
+
+    # Extract entities from filename using BIDS naming convention
+    # Format: sub-<label>[_ses-<label>][_task-<label>][_run-<index>][_<suffix>].<extension>
+
+    # Subject
+    sub_match = re.search(r"sub-([^_/]+)", filepath)
+    if sub_match:
+        entities["subject"] = sub_match.group(1)
+
+    # Session
+    ses_match = re.search(r"ses-([^_/]+)", filepath)
+    if ses_match:
+        entities["session"] = ses_match.group(1)
+
+    # Task
+    task_match = re.search(r"task-([^_/]+)", filepath)
+    if task_match:
+        entities["task"] = task_match.group(1)
+
+    # Run
+    run_match = re.search(r"run-([^_/]+)", filepath)
+    if run_match:
+        entities["run"] = run_match.group(1)
+
+    # Acquisition
+    acq_match = re.search(r"acq-([^_/]+)", filepath)
+    if acq_match:
+        entities["acquisition"] = acq_match.group(1)
+
+    # Determine modality/datatype from path or filename
+    if "/eeg/" in filepath or "_eeg." in filename:
+        entities["modality"] = "eeg"
+        entities["datatype"] = "eeg"
+    elif "/meg/" in filepath or "_meg." in filename:
+        entities["modality"] = "meg"
+        entities["datatype"] = "meg"
+    elif "/ieeg/" in filepath or "_ieeg." in filename:
+        entities["modality"] = "ieeg"
+        entities["datatype"] = "ieeg"
+    elif "/anat/" in filepath:
+        entities["modality"] = "anat"
+        entities["datatype"] = "anat"
+    elif "/func/" in filepath:
+        entities["modality"] = "func"
+        entities["datatype"] = "func"
+    elif "/fmap/" in filepath:
+        entities["modality"] = "fmap"
+        entities["datatype"] = "fmap"
+    elif "/beh/" in filepath:
+        entities["modality"] = "beh"
+        entities["datatype"] = "beh"
+
+    # Extract suffix (last part before extension)
+    suffix_match = re.search(r"_([^_]+)\.[^.]+$", filename)
+    if suffix_match:
+        entities["suffix"] = suffix_match.group(1)
+
+    return entities
+
+
+def is_eeg_data_file(filepath: str) -> bool:
+    """Check if file is an EEG data file based on path and extension."""
+    filepath_lower = filepath.lower()
+
+    # Check for EEG indicators in path
+    if "/eeg/" not in filepath_lower and "_eeg." not in filepath_lower:
+        return False
+
+    # Check for data file extensions
+    data_extensions = [
+        ".set",
+        ".edf",
+        ".bdf",
+        ".vhdr",
+        ".vmrk",
+        ".eeg",
+        ".fif",
+        ".cnt",
+        ".mff",
+    ]
+    return any(filepath_lower.endswith(ext) for ext in data_extensions)
+
+
+def digest_from_manifest(
+    dataset_id: str,
+    input_dir: Path,
+    output_dir: Path,
+) -> dict[str, Any]:
+    """Digest a dataset from its manifest.json without requiring actual files.
+
+    This is used for API-only sources (OSF, Figshare, Zenodo) where we have
+    file listings but no actual files on disk.
+
+    Parameters
+    ----------
+    dataset_id : str
+        Dataset identifier
+    input_dir : Path
+        Directory containing cloned datasets (with manifest.json)
+    output_dir : Path
+        Directory for output JSON files
+
+    Returns
+    -------
+    dict
+        Summary of digestion results
+
+    """
+    dataset_dir = input_dir / dataset_id
+    dataset_output_dir = output_dir / dataset_id
+    manifest_path = dataset_dir / "manifest.json"
+
+    if not manifest_path.exists():
+        return {
+            "status": "skipped",
+            "dataset_id": dataset_id,
+            "reason": "manifest.json not found",
+        }
+
+    # Load manifest
+    try:
+        with open(manifest_path) as f:
+            manifest = json.load(f)
+    except Exception as e:
+        return {
+            "status": "error",
+            "dataset_id": dataset_id,
+            "error": f"Failed to load manifest: {e}",
+        }
+
+    source = manifest.get("source", "osf")
+    digested_at = datetime.now(timezone.utc).isoformat()
+
+    # Get file list from manifest
+    files = manifest.get("files", [])
+
+    if not files:
+        return {
+            "status": "empty",
+            "dataset_id": dataset_id,
+            "reason": "no files in manifest",
+        }
+
+    # Extract metadata from manifest (populated by enhanced OSF clone)
+    storage_base = manifest.get(
+        "storage_base", f"https://files.osf.io/{manifest.get('osf_id', dataset_id)}"
+    )
+
+    # Collect BIDS entities from file paths
+    subjects = set()
+    sessions = set()
+    tasks = set()
+    modalities = set()
+
+    for f in files:
+        filepath = f.get("path", "") if isinstance(f, dict) else f
+        entities = parse_bids_entities_from_path(filepath)
+        if entities.get("subject"):
+            subjects.add(entities["subject"])
+        if entities.get("session"):
+            sessions.add(entities["session"])
+        if entities.get("task"):
+            tasks.add(entities["task"])
+        if entities.get("modality"):
+            modalities.add(entities["modality"])
+
+    # Get demographics from manifest
+    demographics = manifest.get("demographics", {})
+    subjects_count = demographics.get("subjects_count", 0) or len(subjects)
+    ages = demographics.get("ages", [])
+
+    # Get DOI from manifest (OSF enhanced clone provides this)
+    dataset_doi = manifest.get("dataset_doi")
+    if not dataset_doi:
+        identifiers = manifest.get("identifiers", {})
+        dataset_doi = identifiers.get("doi")
+
+    # Get source URL (prefer explicit URL, fallback to OSF URL)
+    source_url = manifest.get("external_links", {}).get("source_url")
+    if not source_url:
+        source_url = manifest.get("external_links", {}).get("osf_url")
+
+    # Build Dataset document
+    dataset_doc = create_dataset(
+        dataset_id=dataset_id,
+        name=manifest.get("name"),
+        source=source,
+        recording_modality=manifest.get("recording_modality", "eeg"),
+        modalities=sorted(manifest.get("modalities", list(modalities))),
+        bids_version=None,  # Not available from API
+        license=manifest.get("license"),
+        authors=manifest.get("authors", []),
+        funding=manifest.get("funding", []),
+        dataset_doi=dataset_doi,
+        tasks=sorted(manifest.get("tasks", list(tasks))),
+        sessions=sorted(manifest.get("sessions", list(sessions))),
+        total_files=len(files),
+        subjects_count=subjects_count,
+        ages=ages,
+        age_mean=sum(ages) / len(ages) if ages else None,
+        study_domain=manifest.get("study_domain"),
+        source_url=source_url,
+        digested_at=digested_at,
+    )
+
+    # Generate Records for EEG data files
+    records = []
+    errors = []
+
+    for file_info in files:
+        if isinstance(file_info, dict):
+            filepath = file_info.get("path", "")
+            download_url = file_info.get("download_url")
+            file_size = file_info.get("size", 0)
+        else:
+            filepath = file_info
+            download_url = None
+            file_size = 0
+
+        # Only create records for EEG data files
+        if not is_eeg_data_file(filepath):
+            continue
+
+        try:
+            entities = parse_bids_entities_from_path(filepath)
+
+            # Build the record
+            record = create_record(
+                dataset=dataset_id,
+                storage_base=storage_base,
+                bids_relpath=filepath,
+                subject=entities.get("subject"),
+                session=entities.get("session"),
+                task=entities.get("task"),
+                run=entities.get("run"),
+                dep_keys=[],  # Can't determine dependencies without actual files
+                datatype=entities.get("datatype", "eeg"),
+                suffix=entities.get("suffix", "eeg"),
+                storage_backend="https",
+                recording_modality=entities.get("modality", "eeg"),
+                digested_at=digested_at,
+            )
+
+            # Add download URL if available
+            if download_url:
+                record["download_url"] = download_url
+            if file_size:
+                record["file_size"] = file_size
+
+            records.append(dict(record))
+        except Exception as e:
+            errors.append({"file": filepath, "error": str(e)})
+
+    # Create output directory
+    dataset_output_dir.mkdir(parents=True, exist_ok=True)
+
+    # Save Dataset document
+    dataset_path = dataset_output_dir / f"{dataset_id}_dataset.json"
+    with open(dataset_path, "w") as f:
+        json.dump(dict(dataset_doc), f, indent=2)
+
+    # Save Records document
+    records_path = dataset_output_dir / f"{dataset_id}_records.json"
+    records_data = {
+        "dataset": dataset_id,
+        "source": source,
+        "digested_at": digested_at,
+        "record_count": len(records),
+        "records": records,
+    }
+    with open(records_path, "w") as f:
+        json.dump(records_data, f, indent=2)
+
+    # Save summary
+    summary = {
+        "status": "success" if records else "no_eeg_files",
+        "dataset_id": dataset_id,
+        "source": source,
+        "record_count": len(records),
+        "total_files": len(files),
+        "error_count": len(errors),
+        "dataset_file": str(dataset_path),
+        "records_file": str(records_path),
+        "digest_method": "manifest_only",
+    }
+
+    summary_path = dataset_output_dir / f"{dataset_id}_summary.json"
+    with open(summary_path, "w") as f:
+        json.dump(summary, f, indent=2)
+
+    return summary
+
+
 def digest_dataset(
     dataset_id: str,
     input_dir: Path,
@@ -396,6 +712,21 @@ def digest_dataset(
             "reason": "directory not found",
         }
 
+    # Check if this is an API-only source (has manifest.json but no actual files)
+    manifest_path = dataset_dir / "manifest.json"
+    has_manifest = manifest_path.exists()
+
+    # Check if there are actual EEG files or just manifest
+    has_actual_files = any(
+        f.suffix in [".set", ".edf", ".bdf", ".vhdr", ".fif", ".cnt"]
+        for f in dataset_dir.rglob("*")
+        if f.is_file() and not f.is_symlink()
+    )
+
+    # For API-only sources, use manifest-based digestion
+    if has_manifest and not has_actual_files:
+        return digest_from_manifest(dataset_id, input_dir, output_dir)
+
     # Detect source
     source = detect_source(dataset_dir)
 
@@ -410,6 +741,9 @@ def digest_dataset(
             allow_symlinks=True,
         )
     except Exception as e:
+        # Fallback to manifest-based digestion if BIDS parsing fails
+        if has_manifest:
+            return digest_from_manifest(dataset_id, input_dir, output_dir)
         return {
             "status": "error",
             "dataset_id": dataset_id,
@@ -418,6 +752,9 @@ def digest_dataset(
 
     files = bids_dataset.get_files()
     if not files:
+        # Fallback to manifest-based digestion if no files found
+        if has_manifest:
+            return digest_from_manifest(dataset_id, input_dir, output_dir)
         return {
             "status": "empty",
             "dataset_id": dataset_id,
@@ -450,6 +787,9 @@ def digest_dataset(
             errors.append({"file": str(bids_file), "error": str(e)})
 
     if not records:
+        # Fallback to manifest-based digestion if no records extracted
+        if has_manifest:
+            return digest_from_manifest(dataset_id, input_dir, output_dir)
         return {
             "status": "error",
             "dataset_id": dataset_id,
@@ -521,12 +861,10 @@ def find_datasets(input_dir: Path, datasets: list[str] | None = None) -> list[st
 
     found = []
     for d in input_dir.iterdir():
-        if d.is_dir() and (
-            d.name.startswith("ds")
-            or d.name.startswith("nm")
-            or "EEGManyLabs" in d.name
-        ):
-            found.append(d.name)
+        if d.is_dir() and d.name not in ("__pycache__", ".git"):
+            # Check if it has a manifest.json (indicating it's a valid cloned dataset)
+            if (d / "manifest.json").exists():
+                found.append(d.name)
 
     return sorted(found)
 

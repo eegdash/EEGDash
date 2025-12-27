@@ -12,6 +12,7 @@ from braindecode.datasets import BaseConcatDataset
 from .. import downloader
 from ..bids_metadata import (
     build_query_from_kwargs,
+    get_entities_from_record,
     merge_participants_fields,
     normalize_key,
 )
@@ -122,6 +123,12 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
     eeg_dash_instance : EEGDash | None
         Optional existing EEGDash client to reuse for DB queries. If None,
         a new client is created on demand, not used in the case of no download.
+    database : str | None
+        Database name to use (e.g., "eegdash", "eegdash_staging"). If None,
+        uses the default database.
+    auth_token : str | None
+        Authentication token for accessing protected databases. Required for
+        staging or admin operations.
     **kwargs : dict
         Additional keyword arguments serving two purposes:
 
@@ -142,11 +149,15 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
         download: bool = True,
         n_jobs: int = -1,
         eeg_dash_instance: Any = None,
+        database: str | None = None,
+        auth_token: str | None = None,
         **kwargs,
     ):
         # Parameters that don't need validation
         _suppress_comp_warning: bool = kwargs.pop("_suppress_comp_warning", False)
         self.s3_bucket = s3_bucket
+        self.database = database
+        self.auth_token = auth_token
         self.records = records
         self.download = download
         self.n_jobs = n_jobs
@@ -278,12 +289,8 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
 
             datasets = []
             for record in records:
-                # Start with entity values from filename
-                desc: dict[str, Any] = {
-                    k: record.get(k)
-                    for k in ("subject", "session", "run", "task")
-                    if record.get(k) is not None
-                }
+                # Start with entity values from filename (supports v1 and v2 formats)
+                desc: dict[str, Any] = get_entities_from_record(record)
 
                 if bids_ds is not None:
                     try:
@@ -315,7 +322,13 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
                 # to avoid circular import
                 from ..api import EEGDash
 
-                self.eeg_dash_instance = EEGDash()
+                # Pass database and auth_token if specified
+                eegdash_kwargs = {}
+                if self.database:
+                    eegdash_kwargs["database"] = self.database
+                if self.auth_token:
+                    eegdash_kwargs["auth_token"] = self.auth_token
+                self.eeg_dash_instance = EEGDash(**eegdash_kwargs)
             datasets = self._find_datasets(
                 query=build_query_from_kwargs(**self.query),
                 description_fields=description_fields,

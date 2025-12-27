@@ -29,10 +29,24 @@ import os
 import sys
 from pathlib import Path
 
+import requests
+from requests.adapters import HTTPAdapter
 from tqdm import tqdm
+from urllib3.util.retry import Retry
 
 # Default API configuration
 DEFAULT_API_URL = "https://data.eegdash.org"
+
+
+def _make_session(auth_token: str) -> requests.Session:
+    """Create session with retry strategy and auth."""
+    session = requests.Session()
+    retry = Retry(total=3, status_forcelist=[500, 502, 503, 504], backoff_factor=1)
+    session.mount("https://", HTTPAdapter(max_retries=retry))
+    session.mount("http://", HTTPAdapter(max_retries=retry))
+    session.headers["Authorization"] = f"Bearer {auth_token}"
+    session.headers["Content-Type"] = "application/json"
+    return session
 
 
 def find_digested_datasets(
@@ -88,6 +102,7 @@ def load_records(dataset_dir: Path) -> list[dict]:
     """Load Records from a directory.
 
     Supports both new schema (_records.json) and legacy formats.
+    Flattens entities to top-level fields for compatibility with EEGDash API.
     """
     dataset_id = dataset_dir.name
 
@@ -97,9 +112,12 @@ def load_records(dataset_dir: Path) -> list[dict]:
         with open(records_file) as f:
             data = json.load(f)
             if isinstance(data, dict) and "records" in data:
-                return data["records"]
+                records = data["records"]
             elif isinstance(data, list):
-                return data
+                records = data
+            else:
+                records = []
+            return [_flatten_entities(r) for r in records]
 
     # Try legacy formats
     for legacy_name in [f"{dataset_id}_core.json", f"{dataset_id}_minimal.json"]:
@@ -108,11 +126,33 @@ def load_records(dataset_dir: Path) -> list[dict]:
             with open(legacy_file) as f:
                 data = json.load(f)
                 if isinstance(data, list):
-                    return data
+                    records = data
                 elif isinstance(data, dict) and "records" in data:
-                    return data["records"]
+                    records = data["records"]
+                else:
+                    records = []
+                return [_flatten_entities(r) for r in records]
 
     return []
+
+
+def _flatten_entities(record: dict) -> dict:
+    """Flatten entities dict to top-level fields for EEGDash API compatibility.
+
+    The EEGDash API expects subject, task, session, run at the top level,
+    not nested in an entities dict.
+    """
+    result = record.copy()
+
+    # Extract entities to top level if present
+    entities = result.pop("entities", {})
+    if entities:
+        for key in ("subject", "task", "session", "run"):
+            if key in entities and key not in result:
+                result[key] = entities[key]
+
+    # Keep entities_mne as-is for reference
+    return result
 
 
 def inject_datasets(
@@ -120,6 +160,7 @@ def inject_datasets(
     api_url: str,
     database: str,
     admin_token: str,
+    batch_size: int = 100,
 ) -> dict:
     """Upload Dataset documents to MongoDB via API Gateway.
 
@@ -129,17 +170,26 @@ def inject_datasets(
         Result with inserted_count
 
     """
-    from eegdash.http_api_client import HTTPAPICollection
+    session = _make_session(admin_token)
+    url = f"{api_url}/admin/{database}/datasets/bulk"
 
-    collection = HTTPAPICollection(
-        base_url=f"{api_url}/admin/{database}/datasets",
-        admin_token=admin_token,
-    )
+    inserted_count = 0
+    errors = []
 
-    result = collection.insert_many(datasets)
+    # Batch insert datasets
+    for i in range(0, len(datasets), batch_size):
+        batch = datasets[i : i + batch_size]
+        try:
+            resp = session.post(url, json=batch, timeout=60)
+            resp.raise_for_status()
+            result = resp.json()
+            inserted_count += result.get("inserted_count", len(batch))
+        except requests.exceptions.RequestException as e:
+            errors.append(f"Batch {i // batch_size}: {e}")
 
     return {
-        "inserted_count": result.inserted_count,
+        "inserted_count": inserted_count,
+        "errors": errors,
     }
 
 
@@ -148,6 +198,7 @@ def inject_records(
     api_url: str,
     database: str,
     admin_token: str,
+    batch_size: int = 1000,
 ) -> dict:
     """Upload Record documents to MongoDB via API Gateway.
 
@@ -157,17 +208,26 @@ def inject_records(
         Result with inserted_count
 
     """
-    from eegdash.http_api_client import HTTPAPICollection
+    session = _make_session(admin_token)
+    url = f"{api_url}/admin/{database}/records/bulk"
 
-    collection = HTTPAPICollection(
-        base_url=f"{api_url}/admin/{database}/records",
-        admin_token=admin_token,
-    )
+    inserted_count = 0
+    errors = []
 
-    result = collection.insert_many(records)
+    # Batch insert records
+    for i in range(0, len(records), batch_size):
+        batch = records[i : i + batch_size]
+        try:
+            resp = session.post(url, json=batch, timeout=120)
+            resp.raise_for_status()
+            result = resp.json()
+            inserted_count += result.get("inserted_count", len(batch))
+        except requests.exceptions.RequestException as e:
+            errors.append(f"Batch {i // batch_size}: {e}")
 
     return {
-        "inserted_count": result.inserted_count,
+        "inserted_count": inserted_count,
+        "errors": errors,
     }
 
 

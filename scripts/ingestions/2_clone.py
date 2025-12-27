@@ -567,8 +567,71 @@ def fetch_zenodo_manifest(
 
 
 # =============================================================================
-# OSF - API-based manifest
+# OSF - API-based manifest with rate limiting and enhanced metadata
 # =============================================================================
+
+# Rate limiting for OSF API
+_osf_last_request_time = 0.0
+_osf_rate_limit_lock = Lock()
+OSF_RATE_LIMIT_DELAY = 1.0  # Minimum seconds between OSF API requests
+
+
+def _osf_rate_limited_request(
+    url: str, timeout: int = 60, max_retries: int = 3
+) -> requests.Response | None:
+    """Make a rate-limited request to OSF API with exponential backoff.
+
+    OSF API has strict rate limits (429 errors). This function:
+    - Enforces minimum delay between requests
+    - Retries with exponential backoff on rate limit errors
+    - Uses proper User-Agent header
+    """
+    import time
+
+    global _osf_last_request_time
+
+    headers = {
+        "User-Agent": "EEGDash/1.0 (https://github.com/eegdash/EEGDash)",
+        "Accept": "application/vnd.api+json",
+    }
+
+    for attempt in range(max_retries):
+        # Enforce rate limiting
+        with _osf_rate_limit_lock:
+            now = time.time()
+            elapsed = now - _osf_last_request_time
+            if elapsed < OSF_RATE_LIMIT_DELAY:
+                time.sleep(OSF_RATE_LIMIT_DELAY - elapsed)
+            _osf_last_request_time = time.time()
+
+        try:
+            response = requests.get(url, headers=headers, timeout=timeout)
+
+            if response.status_code == 200:
+                return response
+            elif response.status_code == 429:
+                # Rate limited - exponential backoff
+                wait_time = (2**attempt) * 2  # 2, 4, 8 seconds
+                time.sleep(wait_time)
+                continue
+            elif response.status_code == 404:
+                # Resource not found - don't retry
+                return None
+            else:
+                # Other error - retry once
+                if attempt < max_retries - 1:
+                    time.sleep(1)
+                    continue
+                return None
+        except requests.exceptions.Timeout:
+            if attempt < max_retries - 1:
+                time.sleep(1)
+                continue
+            return None
+        except requests.exceptions.RequestException:
+            return None
+
+    return None
 
 
 def fetch_osf_manifest(
@@ -577,23 +640,114 @@ def fetch_osf_manifest(
     timeout: int = 60,
     validate_bids: bool = False,
 ) -> dict[str, Any]:
-    """Fetch file manifest from OSF via API."""
+    """Fetch file manifest from OSF via API with enhanced metadata.
+
+    Fetches:
+    - File listings with download URLs
+    - Node metadata (title, description, contributors)
+    - Storage information
+
+    Uses rate limiting to avoid 429 errors.
+    """
     dataset_id = dataset["dataset_id"]
 
-    # Extract node ID from dataset_id (osf_xxxxx)
-    node_id = dataset_id.replace("osf_", "")
+    # Extract node ID from osf_id field, or from dataset_id if in osf_xxxxx format
+    node_id = dataset.get("osf_id") or dataset_id.replace("osf_", "")
 
     try:
-        # Fetch files from OSF storage (recursively)
+        # Fetch node metadata first
+        node_metadata = {}
+        node_url = f"https://api.osf.io/v2/nodes/{node_id}/"
+        node_response = _osf_rate_limited_request(node_url, timeout)
+
+        if node_response and node_response.status_code == 200:
+            node_data = node_response.json().get("data", {})
+            attrs = node_data.get("attributes", {})
+            node_metadata = {
+                "title": attrs.get("title"),
+                "description": attrs.get("description"),
+                "category": attrs.get("category"),
+                "date_created": attrs.get("date_created"),
+                "date_modified": attrs.get("date_modified"),
+                "public": attrs.get("public", False),
+                "tags": attrs.get("tags", []),
+            }
+
+        # Fetch contributors with ORCID
+        contributors = []
+        contributors_detailed = []
+        contributors_url = f"https://api.osf.io/v2/nodes/{node_id}/contributors/"
+        contrib_response = _osf_rate_limited_request(contributors_url, timeout)
+
+        if contrib_response and contrib_response.status_code == 200:
+            contrib_data = contrib_response.json()
+            for contrib in contrib_data.get("data", []):
+                embeds = contrib.get("embeds", {})
+                users = embeds.get("users", {}).get("data", {})
+                if users:
+                    user_attrs = users.get("attributes", {})
+                    full_name = user_attrs.get("full_name")
+                    if full_name:
+                        contributors.append(full_name)
+                        # Extract detailed contributor info
+                        contrib_info = {
+                            "name": full_name,
+                            "given_name": user_attrs.get("given_name"),
+                            "family_name": user_attrs.get("family_name"),
+                        }
+                        # Extract ORCID from social field
+                        social = user_attrs.get("social", {})
+                        if social.get("orcid"):
+                            contrib_info["orcid"] = social["orcid"]
+                        contributors_detailed.append(contrib_info)
+
+        # Fetch identifiers (DOI, ARK)
+        identifiers = {}
+        identifiers_url = f"https://api.osf.io/v2/nodes/{node_id}/identifiers/"
+        ident_response = _osf_rate_limited_request(identifiers_url, timeout)
+
+        if ident_response and ident_response.status_code == 200:
+            ident_data = ident_response.json()
+            for ident in ident_data.get("data", []):
+                ident_attrs = ident.get("attributes", {})
+                category = ident_attrs.get("category")  # 'doi' or 'ark'
+                value = ident_attrs.get("value")
+                if category and value:
+                    identifiers[category] = value
+
+        # Fetch license information
+        license_info = None
+        license_id = (
+            node_data.get("relationships", {})
+            .get("license", {})
+            .get("data", {})
+            .get("id")
+            if node_response
+            else None
+        )
+        if license_id:
+            license_url = f"https://api.osf.io/v2/licenses/{license_id}/"
+            license_response = _osf_rate_limited_request(license_url, timeout)
+            if license_response and license_response.status_code == 200:
+                license_data = license_response.json().get("data", {})
+                license_attrs = license_data.get("attributes", {})
+                license_info = {
+                    "name": license_attrs.get("name"),
+                    "text": license_attrs.get("text"),
+                    "url": license_attrs.get("url"),
+                }
+
+        # Fetch files from OSF storage (recursively including child nodes)
         files = []
         bids_files = []
+        child_nodes = []
 
         def fetch_folder(api_url: str, prefix: str = ""):
-            """Recursively fetch files from OSF storage."""
+            """Recursively fetch files from OSF storage with download URLs."""
             while api_url:
-                response = requests.get(api_url, timeout=timeout)
+                response = _osf_rate_limited_request(api_url, timeout)
 
-                if response.status_code != 200:
+                if not response or response.status_code != 200:
                     break
 
                 data = response.json()
@@ -603,6 +757,7 @@ def fetch_osf_manifest(
                     kind = attrs.get("kind", "file")
                     name = attrs.get("name", "")
                     path = (prefix + "/" + name).lstrip("/") if prefix else name
+                    links = item.get("links", {})
 
                     if kind == "folder":
                         # Get folder contents link
@@ -616,11 +771,20 @@ def fetch_osf_manifest(
                         if folder_link:
                             fetch_folder(folder_link, path)
                     else:
+                        # Get download URL from links
+                        download_url = links.get("download")
+                        guid = attrs.get("guid")
+
                         file_info = {
                             "path": path,
                             "name": name,
                             "size": attrs.get("size", 0),
                             "kind": kind,
+                            "guid": guid,
+                            "download_url": download_url,
+                            "materialized_path": attrs.get("materialized_path"),
+                            "content_type": attrs.get("content_type"),
+                            "date_modified": attrs.get("date_modified"),
                         }
                         files.append(file_info)
 
@@ -631,15 +795,86 @@ def fetch_osf_manifest(
                 next_link = data.get("links", {}).get("next")
                 api_url = next_link if next_link else None
 
-        # Start fetching from root storage
-        root_url = f"https://api.osf.io/v2/nodes/{node_id}/files/osfstorage/"
-        fetch_folder(root_url)
+        def fetch_node_files(nid: str, path_prefix: str = ""):
+            """Fetch files from a node and recursively from its children."""
+            # Fetch files from this node
+            storage_url = f"https://api.osf.io/v2/nodes/{nid}/files/osfstorage/"
+            fetch_folder(storage_url, path_prefix)
 
+            # Check for child nodes and traverse them too
+            children_url = f"https://api.osf.io/v2/nodes/{nid}/children/"
+            children_response = _osf_rate_limited_request(children_url, timeout)
+
+            if children_response and children_response.status_code == 200:
+                children_data = children_response.json()
+                for child in children_data.get("data", []):
+                    child_id = child.get("id")
+                    child_title = child.get("attributes", {}).get("title", child_id)
+                    if child_id:
+                        child_nodes.append(
+                            {
+                                "id": child_id,
+                                "title": child_title,
+                            }
+                        )
+                        # Use child title as path prefix to maintain BIDS structure
+                        child_prefix = (
+                            f"{path_prefix}/{child_title}"
+                            if path_prefix
+                            else child_title
+                        )
+                        fetch_node_files(child_id, child_prefix)
+
+        # Start fetching from root node and traverse children
+        fetch_node_files(node_id)
+
+        # Calculate total size
+        total_size = sum(f.get("size", 0) for f in files if isinstance(f, dict))
+
+        # Merge with dataset metadata from consolidated JSON
         manifest = {
             "dataset_id": dataset_id,
+            "osf_id": node_id,
+            "source": "osf",
+            # Node metadata from API
+            "node_metadata": node_metadata,
+            "contributors_from_api": contributors,
+            "contributors_detailed": contributors_detailed,
+            # Identifiers (DOI, ARK) from API
+            "identifiers": identifiers,
+            "dataset_doi": identifiers.get("doi") or dataset.get("dataset_doi"),
+            # License from API
+            "license_from_api": license_info,
+            # Child nodes traversed
+            "child_nodes": child_nodes,
+            # Merged from consolidated JSON
+            "name": dataset.get("name") or node_metadata.get("title"),
+            "description": dataset.get("description")
+            or node_metadata.get("description"),
+            "authors": dataset.get("authors") or contributors,
+            "license": dataset.get("license")
+            or (license_info.get("name") if license_info else None),
+            "tags": list(
+                set(dataset.get("tags", []) + node_metadata.get("tags", []))
+            ),  # Deduplicate
+            "modalities": dataset.get("modalities", []),
+            "recording_modality": dataset.get("recording_modality", "eeg"),
+            "study_domain": dataset.get("study_domain"),
+            "sessions": dataset.get("sessions", []),
+            "tasks": dataset.get("tasks", []),
+            "funding": dataset.get("funding", []),
+            "external_links": {
+                **dataset.get("external_links", {}),
+                "osf_url": f"https://osf.io/{node_id}/",
+            },
+            "demographics": dataset.get("demographics", {}),
+            # File information
             "total_files": len(files),
+            "total_size_bytes": total_size,
             "bids_files": bids_files,
             "files": files,
+            # Storage base for record generation
+            "storage_base": f"https://files.osf.io/v1/resources/{node_id}/providers/osfstorage",
         }
 
         # Save manifest
@@ -655,6 +890,10 @@ def fetch_osf_manifest(
             "source": "osf",
             "file_count": len(files),
             "bids_file_count": len(bids_files),
+            "total_size_bytes": total_size,
+            "has_doi": bool(identifiers.get("doi")),
+            "contributor_count": len(contributors),
+            "child_nodes_count": len(child_nodes),
             "manifest": manifest,
         }
 
@@ -1144,6 +1383,12 @@ def main():
         help="Maximum datasets to process (for testing)",
     )
     parser.add_argument(
+        "--datasets",
+        nargs="+",
+        default=None,
+        help="Process only specific dataset IDs (space-separated)",
+    )
+    parser.add_argument(
         "--validate-bids",
         action="store_true",
         help="Validate BIDS structure (skip invalid datasets)",
@@ -1163,6 +1408,11 @@ def main():
 
     datasets = load_datasets(args.input, args.sources)
     print(f"Found {len(datasets)} datasets")
+
+    # Filter by specific dataset IDs if specified
+    if args.datasets:
+        datasets = [d for d in datasets if d.get("dataset_id") in args.datasets]
+        print(f"Filtered to {len(datasets)} specified datasets")
 
     if args.limit:
         datasets = datasets[: args.limit]

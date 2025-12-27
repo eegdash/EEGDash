@@ -120,6 +120,14 @@ def normalize_to_dataset(
         'n_records': int,
         'subject_id': [unique subjects],
         'task': [unique tasks],
+        'session': [unique sessions],
+        'run': [unique runs],
+        'extension': [unique file extensions],
+        'datatype': [unique datatypes],
+        'suffix': [unique suffixes],
+        'recording_modality': [unique recording modalities],
+        'storage_backend': str (e.g., 's3'),
+        'storage_base': str (e.g., 's3://openneuro.org/ds001785'),
         'nchans': [unique channel counts],
         'duration': {'seconds_total': float, 'hours_total': float},
         'extra_info': { eeg_json_key: [unique original values] },
@@ -133,10 +141,19 @@ def normalize_to_dataset(
             "n_records": 0,
             "subject_id": set(),
             "task": set(),
+            "session": set(),
+            "run": set(),
+            "extension": set(),
+            "datatype": set(),
+            "suffix": set(),
+            "recording_modality": set(),
+            "storage_backend": None,
+            "storage_base": None,
             "nchans": set(),
             "sampling_frequency": set(),
             "channel_types": set(),
             "duration_seconds_total": 0.0,
+            "dep_keys_count": 0,
             # store {canon_key -> original_value} so we dedupe but keep originals
             "extra_info": defaultdict(dict),
         }
@@ -165,6 +182,47 @@ def normalize_to_dataset(
         task = rec.get("task") or (rec.get("rawdatainfo") or {}).get("task")
         if task:
             a["task"].add(task)
+
+        # sessions (new)
+        session = rec.get("session")
+        if session:
+            a["session"].add(session)
+
+        # runs (new)
+        run = rec.get("run")
+        if run:
+            a["run"].add(run)
+
+        # extension (new)
+        ext = rec.get("extension")
+        if ext:
+            a["extension"].add(ext)
+
+        # datatype (new)
+        datatype = rec.get("datatype")
+        if datatype:
+            a["datatype"].add(datatype)
+
+        # suffix (new)
+        suffix = rec.get("suffix")
+        if suffix:
+            a["suffix"].add(suffix)
+
+        # recording_modality (new)
+        modality = rec.get("recording_modality")
+        if modality:
+            a["recording_modality"].add(modality)
+
+        # storage info (new)
+        storage = rec.get("storage") or {}
+        if storage.get("backend") and not a["storage_backend"]:
+            a["storage_backend"] = storage["backend"]
+        if storage.get("base") and not a["storage_base"]:
+            a["storage_base"] = storage["base"]
+
+        # count companion files (dep_keys)
+        dep_keys = storage.get("dep_keys") or []
+        a["dep_keys_count"] += len(dep_keys)
 
         # nchans
         nchan = (
@@ -217,7 +275,20 @@ def normalize_to_dataset(
             "dataset": a["dataset"],
             "n_records": int(a["n_records"]),
             "subject_id": sorted(a["subject_id"]),
+            "n_subjects": len(a["subject_id"]),
             "task": sorted(a["task"]),
+            "n_tasks": len(a["task"]),
+            "session": sorted(a["session"]),
+            "n_sessions": len(a["session"]),
+            "run": sorted(a["run"]),
+            "n_runs": len(a["run"]),
+            "extension": sorted(a["extension"]),
+            "datatype": sorted(a["datatype"]),
+            "suffix": sorted(a["suffix"]),
+            "recording_modality": sorted(a["recording_modality"]),
+            "storage_backend": a["storage_backend"],
+            "storage_base": a["storage_base"],
+            "dep_keys_count": a["dep_keys_count"],
             "nchans": sorted(int(x) for x in a["nchans"]),
             "duration": {
                 "seconds_total": round(float(a["duration_seconds_total"]), 3),
@@ -278,9 +349,19 @@ def dataset_summary_table(
             {
                 "dataset": ds,
                 "n_records": blob["n_records"],
-                "n_subjects": len(blob["subject_id"]),
-                "n_tasks": len(blob["task"]),
-                "nchans_set": ",".join(map(str, blob["nchans"])),
+                "n_subjects": blob.get("n_subjects", len(blob.get("subject_id", []))),
+                "n_tasks": blob.get("n_tasks", len(blob.get("task", []))),
+                "n_sessions": blob.get("n_sessions", len(blob.get("session", []))),
+                "n_runs": blob.get("n_runs", len(blob.get("run", []))),
+                "tasks": ",".join(blob.get("task", [])),
+                "extensions": ",".join(blob.get("extension", [])),
+                "datatypes": ",".join(blob.get("datatype", [])),
+                "suffixes": ",".join(blob.get("suffix", [])),
+                "recording_modalities": ",".join(blob.get("recording_modality", [])),
+                "storage_backend": blob.get("storage_backend", ""),
+                "storage_base": blob.get("storage_base", ""),
+                "dep_keys_count": blob.get("dep_keys_count", 0),
+                "nchans_set": ",".join(map(str, blob.get("nchans", []))),
                 "sampling_freqs": ",".join(
                     sorted(
                         {
@@ -289,10 +370,10 @@ def dataset_summary_table(
                         }
                     )
                 ),
-                "duration_hours_total": blob["duration"]["hours_total"],
+                "channel_types": ",".join(blob.get("channel_types", [])),
+                "duration_hours_total": blob.get("duration", {}).get("hours_total", 0),
                 "size": blob.get("size", "0 B"),
                 "size_bytes": blob.get("size_bytes", 0),
-                "s3_item_count": blob.get("s3_item_count", 0),
             }
         )
     return rows
@@ -353,25 +434,94 @@ def save_consolidation(
 
 
 # ---------- example usage ----------
-from eegdash import EEGDash
-
-records = EEGDash().find({})
+import argparse
 
 
-records_to_table = normalize_to_dataset(records)
-# Enrich with S3 sizes before producing summary
-records_to_table = enrich_with_s3_size(records_to_table, max_workers=60)
-summary_rows = dataset_summary_table(records_to_table)
+def main():
+    parser = argparse.ArgumentParser(
+        description="Create dataset metadata summary from EEGDash API"
+    )
+    parser.add_argument(
+        "--database",
+        type=str,
+        default="eegdash_staging",
+        help="Database name (default: eegdash_staging)",
+    )
+    parser.add_argument(
+        "--api-url",
+        type=str,
+        default="https://data.eegdash.org",
+        help="API URL (default: https://data.eegdash.org)",
+    )
+    parser.add_argument(
+        "--mongodb-uri",
+        type=str,
+        default=None,
+        help="MongoDB URI for direct connection (e.g., mongodb://user:pass@host:27017). "
+        "If provided, bypasses HTTP API for faster access.",
+    )
+    parser.add_argument(
+        "--output",
+        type=str,
+        default="consolidated",
+        help="Output directory (default: consolidated)",
+    )
+    parser.add_argument(
+        "--skip-s3",
+        action="store_true",
+        help="Skip S3 size enrichment (faster)",
+    )
+    parser.add_argument(
+        "--workers",
+        type=int,
+        default=60,
+        help="Max workers for S3 queries (default: 60)",
+    )
+    args = parser.parse_args()
 
-files = save_consolidation(
-    records_to_table,
-    summary_rows,
-    out_dir="consolidated",
-    split_per_dataset_json=True,
-    all_in_one_json=True,
-    write_summary_csv=True,
-)
+    # Fetch records - either via MongoDB directly or HTTP API
+    if args.mongodb_uri:
+        from pymongo import MongoClient
 
-print("Saved:", files)
-# Access your consolidated JSON for ds005509 if needed:
-dataset_info = records_to_table.get("ds005509", {})
+        print(f"Connecting directly to MongoDB database={args.database}...")
+        client = MongoClient(args.mongodb_uri)
+        db = client[args.database]
+        records = list(db.records.find({}))
+        print(f"Found {len(records)} records")
+        client.close()
+    else:
+        from eegdash import EEGDash
+
+        print(f"Fetching records from {args.api_url} database={args.database}...")
+        client = EEGDash(api_url=args.api_url, database=args.database)
+        records = list(client.find({}))
+        print(f"Found {len(records)} records")
+
+    print("Normalizing to dataset level...")
+    records_to_table = normalize_to_dataset(records)
+    print(f"Found {len(records_to_table)} unique datasets")
+
+    if not args.skip_s3:
+        print(f"Enriching with S3 sizes (workers={args.workers})...")
+        records_to_table = enrich_with_s3_size(
+            records_to_table, max_workers=args.workers
+        )
+    else:
+        print("Skipping S3 size enrichment")
+
+    summary_rows = dataset_summary_table(records_to_table)
+
+    files = save_consolidation(
+        records_to_table,
+        summary_rows,
+        out_dir=args.output,
+        split_per_dataset_json=True,
+        all_in_one_json=True,
+        write_summary_csv=True,
+    )
+
+    print("Saved:", files)
+
+
+if __name__ == "__main__":
+    main()

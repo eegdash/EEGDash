@@ -1,9 +1,9 @@
-"""
+r"""
 Feature Metadata Decorators.
 
-This module provides a suite of decorators used to annotate EEG feature 
-extraction functions with structural metadata. These annotations define the 
-dependency graph (via predecessors) and the data format (via feature kinds).
+This module provides  decorators used to annotate feature extraction
+functions with structural metadata. These annotations define the dependency
+graph (via predecessors) and the data format (via feature kinds).
 
 The module provides the following decorators:
 - :class:`FeaturePredecessor` — Specifies the required input transformation 
@@ -35,7 +35,7 @@ __all__ = [
 
 
 class FeaturePredecessor:
-    """Decorator to specify parent extractors for a feature function.
+    r"""Decorator to specify parent extractors for a feature function.
 
     This decorator attaches a list of immediate parent preprocessing steps to 
     a feature extraction function. This metadata is used by the 
@@ -47,7 +47,7 @@ class FeaturePredecessor:
     *parent_extractor_type : list of callable or None
         A list of preprocessing functions that this feature immediately 
         depends on. Use ``None`` to indicate that the feature can operate 
-        directly on raw EEG signal arrays.
+        directly on raw signal arrays.
 
     Attributes
     ----------
@@ -69,7 +69,7 @@ class FeaturePredecessor:
         self.parent_extractor_type = parent_func
 
     def __call__(self, func: Callable) -> Callable:
-        """Apply the decorator to a function.
+        r"""Apply the decorator to a function.
 
         Parameters
         ----------
@@ -89,7 +89,7 @@ class FeaturePredecessor:
 
 
 class FeatureKind:
-    """Decorator to specify the operational dimensionality of a feature.
+    r"""Decorator to specify the operational dimensionality of a feature.
 
     This decorator attaches a "feature kind" instance to a function, 
     determining how the :class:`~eegdash.features.extractors.FeatureExtractor` 
@@ -112,7 +112,7 @@ class FeatureKind:
         self.feature_kind = feature_kind
 
     def __call__(self, func: Callable) -> Callable:
-        """Apply the decorator to a function.
+        r"""Apply the decorator to a function.
 
         Parameters
         ----------
@@ -132,16 +132,16 @@ class FeatureKind:
 
 # Syntax sugar 
 univariate_feature = FeatureKind(UnivariateFeature())
-"""Decorator to mark a feature as univariate.
+r"""Decorator to mark a feature as univariate.
 
-Indicates that the feature is computed for each EEG channel independently. 
+Indicates that the feature is computed for each channel independently. 
 The output will be formatted as a dictionary with keys matching the 
 original channel names.
 """
 
 
 def bivariate_feature(func: Callable, directed: bool = False) -> Callable:
-    """Decorator to mark a feature as bivariate.
+    r"""Decorator to mark a feature as bivariate.
 
     Specifies that the feature operates on pairs of channels.
 
@@ -170,9 +170,9 @@ def bivariate_feature(func: Callable, directed: bool = False) -> Callable:
 
 
 multivariate_feature = FeatureKind(MultivariateFeature())
-"""Decorator to mark a feature as multivariate.
+r"""Decorator to mark a feature as multivariate.
 
 Indicates that the feature operates on all channels simultaneously. The 
 output naming convention is determined by the feature's internal logic 
-rather than simple channel labels.
+rather than channel labels.
 """

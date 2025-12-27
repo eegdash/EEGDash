@@ -1,15 +1,13 @@
-"""
+r"""
 Feature Extraction Utilities.
 
 This module provides the primary entry points for applying feature extraction 
-pipelines to windowed EEG datasets. It handles the iteration over 
-concatenated datasets, manages parallel execution, and orchestrates the 
-fitting of trainable extractors.
+pipelines to windowed datasets. 
 
 The module provides the following functions:
 - :func:`extract_features` — The main interface for computing features 
   across an entire concatenated dataset.
-- :func:`fit_feature_extractors` — Fits trainable features  using a
+- :func:`fit_feature_extractors` — Fits trainable features using a
   representative dataset.
 - :func:`_extract_features_from_windowsdataset` — Internal helper for 
   processing individual recording datasets.
@@ -45,13 +43,11 @@ def _extract_features_from_windowsdataset(
     feature_extractor: extractors.FeatureExtractor,
     batch_size: int = 512,
 ) -> FeaturesDataset:
-    """Extract features from a single recording-level windowed dataset.
+    r"""Extract features from a single recording windowed dataset.
 
     This helper function iterates through a :class:`WindowsDataset` in 
     batches, applies a :class:`FeatureExtractor`, and packages the 
     resulting feature vectors into a :class:`FeaturesDataset` instance. 
-    It ensures that metadata and target labels are correctly aligned with 
-    the extracted features.
 
     Parameters
     ----------
@@ -124,12 +120,10 @@ def extract_features(
     batch_size: int = 512,
     n_jobs: int = 1,
 ) -> FeaturesConcatDataset:
-    """Extract features from a collection of windowed recordings.
+    r"""Extract features from a collection of windowed recordings.
 
     This function applies a feature extraction pipeline to every 
-    individual recording in a :class:`BaseConcatDataset`. Processing is 
-    parallelized across recordings to improve performance on large 
-    datasets.
+    individual recording in a :class:`BaseConcatDataset`.
 
     Parameters
     ----------
@@ -178,18 +172,17 @@ def fit_feature_extractors(
     features: extractors.FeatureExtractor | Dict[str, Callable] | List[Callable],
     batch_size: int = 8192,
 ) -> extractors.FeatureExtractor:
-    """Fit trainable feature extractors on a concatenated dataset.
+    r"""Fit trainable feature extractors on a concatenated dataset.
 
     Scans the provided feature pipeline for components that require training 
-    (i.e., subclasses of :class:`~eegdash.features.extractors.TrainableFeature`). 
+    (subclasses of :class:`~eegdash.features.extractors.TrainableFeature`). 
     If found, the function iterates through the dataset in batches to 
     perform partial fitting before finalization.
 
     Parameters
     ----------
     concat_dataset : BaseConcatDataset
-        The dataset used to train the feature extractors (e.g., to compute 
-        spatial filters or global statistics).
+        The dataset used to train the feature extractors.
     features : ~eegdash.features.extractors.FeatureExtractor or dict or list
         The feature extractor pipeline(s) to fit.
     batch_size : int, default 8192

@@ -1,4 +1,4 @@
-"""
+r"""
 Core Feature Extraction Orchestration.
 
 This module defines the fundamental building blocks for creating feature

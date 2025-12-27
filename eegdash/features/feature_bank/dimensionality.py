@@ -1,3 +1,20 @@
+"""
+Dimensionality Features Extraction
+===============================
+
+This module provides functions to compute various dimensionality features
+from signals.
+
+Data Shape Convention
+---------------------
+This module follows a **Time-Last** convention:
+
+* **Input:** ``(..., time)``
+* **Output:** ``(...,)``
+
+All functions collapse the last dimension (time), returning an ndarray of 
+features corresponding to the leading dimensions (e.g., subjects, channels).
+"""
 import numba as nb
 import numpy as np
 from scipy import special
@@ -18,11 +35,11 @@ __all__ = [
 @univariate_feature
 @nb.njit(cache=True, fastmath=True)
 def dimensionality_higuchi_fractal_dim(x, /, k_max=10, eps=1e-7):
-    """Calculate Higuchi's Fractal Dimension (HFD).
+    r"""Calculate Higuchi's Fractal Dimension (HFD).
 
-    HFD estimates the complexity of a time series by measuring the mean length 
-    of the curve at different time scales $k$. It is highly robust for non-stationary 
-    EEG signals. 
+    Higuchi's Fractal Dimension estimates the complexity of a time series by 
+    measuring the mean length of the curve at different time scales $k$. It is 
+    highly robust for non-stationary signals. 
 
     Parameters
     ----------
@@ -36,12 +53,15 @@ def dimensionality_higuchi_fractal_dim(x, /, k_max=10, eps=1e-7):
     Returns
     -------
     ndarray
-        The fractal dimension values. Shape is ``x.shape[:-1]``.
+        The Higuchi's Fractal Dimension values. 
+        Shape is ``x.shape[:-1]``.
 
     Notes
     ----------
-    Optimized with Numba..
-    
+    Optimized with Numba.
+
+    For a theoretical overview of Higuchi's Fractal Dimension, see the 
+    `Wikipedia entry <https://en.wikipedia.org/wiki/Higuchi_dimension>`_.
     """
     N = x.shape[-1]
     hfd = np.empty(x.shape[:-1])
@@ -61,10 +81,11 @@ def dimensionality_higuchi_fractal_dim(x, /, k_max=10, eps=1e-7):
 @FeaturePredecessor(*SIGNAL_PREDECESSORS)
 @univariate_feature
 def dimensionality_petrosian_fractal_dim(x, /):
-    """Calculate Petrosian Fractal Dimension (PFD).
+    r"""Calculate Petrosian Fractal Dimension (PFD).
 
-    PFD provides a fast estimate of fractal dimension by analyzing the 
-    number of sign changes in the signal's first derivative.
+    Petrosian Fractal Dimension provides a fast estimate of fractal 
+    dimension by analyzing the number of sign changes in the signal's 
+    first derivative.
 
     Parameters
     ----------
@@ -74,8 +95,8 @@ def dimensionality_petrosian_fractal_dim(x, /):
     Returns
     -------
     ndarray
-        The fractal dimension values. Shape is ``x.shape[:-1]``.
-    
+        The Petrosian Fractal Dimension values. 
+        Shape is ``x.shape[:-1]``.
     """
     nd = signal_zero_crossings(np.diff(x, axis=-1))
     log_n = np.log(x.shape[-1])
@@ -85,7 +106,7 @@ def dimensionality_petrosian_fractal_dim(x, /):
 @FeaturePredecessor(*SIGNAL_PREDECESSORS)
 @univariate_feature
 def dimensionality_katz_fractal_dim(x, /):
-    """Calculate Katz Fractal Dimension (KFD).
+    r"""Calculate Katz Fractal Dimension (KFD).
 
     KFD is calculated as the ratio between the total path length and the 
     maximum planar distance from the first point to any other point.
@@ -98,7 +119,8 @@ def dimensionality_katz_fractal_dim(x, /):
     Returns
     -------
     ndarray
-        The fractal dimension values. Shape is ``x.shape[:-1]``.
+        The Katz Fractal Dimension values. 
+        Shape is ``x.shape[:-1]``.
     
     """
     dists = np.abs(np.diff(x, axis=-1))
@@ -111,26 +133,20 @@ def dimensionality_katz_fractal_dim(x, /):
 
 @nb.njit(cache=True, fastmath=True)
 def _hurst_exp(x, ns, a, gamma_ratios, log_n):
-    """Numba-accelerated core for Rescaled Range (R/S) Hurst exponent estimation.
-
-    This function performs the recursive windowing and log-log regression 
-    required to estimate long-range dependence, optimized with JIT 
-    compilation for multi-channel EEG data.
+    r"""Internal helper to calculate the Hurst Exponent via corrected R/S analysis.
 
     Parameters
     ----------
     x : ndarray
-        The input signal (or analytic signal magnitude).
+        The input signal.
     ns : ndarray
         The array of window sizes (time scales).
     a : ndarray
-        Pre-computed range used for bias correction terms.
+        Precomputed bias correction factors for the Anis-Lloyd correction.
     gamma_ratios : ndarray
-        Pre-computed ratios of Gamma functions used for the Anis-Lloyd 
-        corrected R/S expected value.
+        Precomputed Gamma function ratios for the Anis-Lloyd correction.
     log_n : ndarray
-        The design matrix (log-scales and intercept) for the linear 
-        least-squares regression.
+        The natural logarithm of the window sizes (ns).
 
     Returns
     -------
@@ -140,12 +156,11 @@ def _hurst_exp(x, ns, a, gamma_ratios, log_n):
 
     Notes
     -----
-    The function implements the corrected R/S analysis to reduce bias 
-    for small sample sizes, which is common in sliding-window EEG 
-    analysis.
-    
+    Optimized with Numba.
+
+    References
+    ----------
     """
-    
     h = np.empty(x.shape[:-1])
     rs = np.empty((ns.shape[0], x.shape[-1] // ns[0]))
     log_rs = np.empty(ns.shape[0])

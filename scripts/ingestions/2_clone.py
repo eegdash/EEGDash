@@ -410,8 +410,8 @@ def fetch_figshare_manifest(
     """Fetch file manifest from Figshare via API."""
     dataset_id = dataset["dataset_id"]
 
-    # Extract article ID from dataset_id (figshare_12345)
-    article_id = dataset_id.replace("figshare_", "")
+    # Extract article ID from figshare_id field, or from dataset_id if in figshare_xxxxx format
+    article_id = dataset.get("figshare_id") or dataset_id.replace("figshare_", "")
 
     try:
         # Fetch article details including files
@@ -489,8 +489,60 @@ def fetch_figshare_manifest(
 
 
 # =============================================================================
-# Zenodo - API-based manifest
+# Zenodo - API-based manifest with rate limiting
 # =============================================================================
+
+# Rate limiting for Zenodo API
+_zenodo_last_request_time = 0.0
+_zenodo_rate_limit_lock = Lock()
+ZENODO_RATE_LIMIT_DELAY = 1.5  # Minimum seconds between Zenodo API requests
+
+
+def _zenodo_rate_limited_request(
+    url: str, timeout: int = 60, max_retries: int = 3
+) -> requests.Response | None:
+    """Make a rate-limited request to Zenodo API with exponential backoff."""
+    import time
+
+    global _zenodo_last_request_time
+
+    headers = {
+        "User-Agent": "EEGDash/1.0 (https://github.com/eegdash/EEGDash)",
+    }
+
+    for attempt in range(max_retries):
+        # Enforce rate limiting
+        with _zenodo_rate_limit_lock:
+            now = time.time()
+            elapsed = now - _zenodo_last_request_time
+            if elapsed < ZENODO_RATE_LIMIT_DELAY:
+                time.sleep(ZENODO_RATE_LIMIT_DELAY - elapsed)
+            _zenodo_last_request_time = time.time()
+
+        try:
+            response = requests.get(url, headers=headers, timeout=timeout)
+
+            if response.status_code == 200:
+                return response
+            elif response.status_code == 429:
+                # Rate limited - exponential backoff
+                wait_time = (2**attempt) * 2  # 2, 4, 8 seconds
+                time.sleep(wait_time)
+                continue
+            elif response.status_code == 404:
+                return None
+            else:
+                if attempt < max_retries - 1:
+                    time.sleep(1)
+                    continue
+                return None
+        except requests.exceptions.RequestException:
+            if attempt < max_retries - 1:
+                time.sleep(1)
+                continue
+            return None
+
+    return None
 
 
 def fetch_zenodo_manifest(
@@ -499,22 +551,22 @@ def fetch_zenodo_manifest(
     timeout: int = 60,
     validate_bids: bool = False,
 ) -> dict[str, Any]:
-    """Fetch file manifest from Zenodo via API."""
+    """Fetch file manifest from Zenodo via API with rate limiting."""
     dataset_id = dataset["dataset_id"]
 
-    # Extract record ID from dataset_id (zenodo_12345) or external_links
-    record_id = dataset_id.replace("zenodo_", "")
+    # Extract record ID from zenodo_id field, or from dataset_id if in zenodo_xxxxx format
+    record_id = dataset.get("zenodo_id") or dataset_id.replace("zenodo_", "")
 
     try:
         api_url = f"https://zenodo.org/api/records/{record_id}"
-        response = requests.get(api_url, timeout=timeout)
+        response = _zenodo_rate_limited_request(api_url, timeout)
 
-        if response.status_code != 200:
+        if not response:
             return {
                 "status": "error",
                 "dataset_id": dataset_id,
                 "source": "zenodo",
-                "error": f"API error {response.status_code}",
+                "error": "API request failed or rate limited",
             }
 
         data = response.json()

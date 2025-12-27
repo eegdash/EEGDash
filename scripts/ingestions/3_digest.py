@@ -862,8 +862,11 @@ def find_datasets(input_dir: Path, datasets: list[str] | None = None) -> list[st
     found = []
     for d in input_dir.iterdir():
         if d.is_dir() and d.name not in ("__pycache__", ".git"):
-            # Check if it has a manifest.json (indicating it's a valid cloned dataset)
-            if (d / "manifest.json").exists():
+            # Check if it has a manifest.json (API-based sources)
+            # or dataset_description.json (git-cloned BIDS datasets)
+            if (d / "manifest.json").exists() or (
+                d / "dataset_description.json"
+            ).exists():
                 found.append(d.name)
 
     return sorted(found)

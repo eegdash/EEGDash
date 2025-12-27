@@ -29,22 +29,26 @@ from typing import Any
 import requests
 from dotenv import load_dotenv
 
+# Add ingestion paths before importing local modules
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from _serialize import (
+    PROJECT_ROOT,
+    generate_dataset_id,
+    save_datasets_deterministically,
+    setup_paths,
+)
+
+setup_paths()
+from eegdash.records import create_dataset
+
 # Load API key from .env.figshare
-_env_path = Path(__file__).resolve().parents[3] / ".env.figshare"
+_env_path = PROJECT_ROOT / ".env.figshare"
 load_dotenv(_env_path)
 FIGSHARE_API_KEY = os.getenv("FIGSHARE_API_KEY", "")
 if FIGSHARE_API_KEY:
     print(f"✓ Figshare API key loaded from {_env_path}")
 else:
     print(f"⚠ No Figshare API key found in {_env_path} (using anonymous access)")
-
-# Add parent paths for local imports
-sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
-from eegdash.records import create_dataset
-
-# Add ingestions dir to path for _serialize module
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-from _serialize import generate_dataset_id, save_datasets_deterministically
 
 # BIDS indicator files
 BIDS_REQUIRED_FILES = ["dataset_description.json"]

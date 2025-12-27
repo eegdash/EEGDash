@@ -5,9 +5,36 @@ Ensures consistent, sorted output across runs for CI/CD reproducibility.
 
 import json
 import re
+import sys
 import unicodedata
 from pathlib import Path
 from typing import Any
+
+# Path constants for the ingestion scripts
+_SERIALIZE_FILE = Path(__file__).resolve()
+INGESTIONS_DIR = _SERIALIZE_FILE.parent
+SCRIPTS_DIR = INGESTIONS_DIR.parent
+PROJECT_ROOT = SCRIPTS_DIR.parent
+
+
+def setup_paths() -> None:
+    """Add project paths to sys.path for importing eegdash modules.
+
+    Call this at the top of any fetch script before importing from eegdash.
+
+    Example:
+        from _serialize import setup_paths, generate_dataset_id, save_datasets_deterministically
+        setup_paths()
+        from eegdash.records import create_dataset
+
+    """
+    project_root_str = str(PROJECT_ROOT)
+    ingestions_dir_str = str(INGESTIONS_DIR)
+
+    if project_root_str not in sys.path:
+        sys.path.insert(0, project_root_str)
+    if ingestions_dir_str not in sys.path:
+        sys.path.insert(0, ingestions_dir_str)
 
 
 def extract_surname(author_name: str) -> str | None:

@@ -17,7 +17,7 @@ DEFAULT_FREQ_BANDS = {
 
 
 def get_valid_freq_band(fs, n, f_min=None, f_max=None):
-    """Validate and return frequency boundaries based on Nyquist and resolution.
+    r"""Validate and return frequency boundaries based on Nyquist and resolution.
 
     Parameters
     ----------
@@ -35,6 +35,20 @@ def get_valid_freq_band(fs, n, f_min=None, f_max=None):
     f_min, f_max : float
         The validated frequency boundaries.
 
+    Raises
+    ------
+    AssertionError
+        If `f_min` is below the minimum resolvable frequency.
+    AssertionError
+        If `f_max` is above the Nyquist frequency.
+    
+    Examples
+    --------
+    >>> get_valid_freq_band(fs=100, n=1000)
+    (0.2, 50.0)
+    >>> get_valid_freq_band(fs=200, n=500, f_min=1, f_max=80)
+    (1, 80)
+
     """
     f0 = 2 * fs / n
     f1 = fs / 2
@@ -50,14 +64,15 @@ def get_valid_freq_band(fs, n, f_min=None, f_max=None):
 
 
 def slice_freq_band(f, *x, f_min=None, f_max=None):
-    """Slice frequency vector and associated data arrays to a specific range.
+    r"""Slice frequency vector and associated data arrays to a specific range.
 
     Parameters
     ----------
     f : ndarray
         The frequency vector.
     *x : ndarray
-        One or more data arrays to be sliced along the last axis.
+        One or more data arrays to be sliced along the frequency axis.
+        The last dimension of each array must match the length of `f`.
     f_min : float, optional
         Lower frequency bound.
     f_max : float, optional
@@ -65,11 +80,28 @@ def slice_freq_band(f, *x, f_min=None, f_max=None):
 
     Returns
     -------
-    f_sliced : ndarray
-        The truncated frequency vector.
-    *x_sliced : ndarray
-        The truncated data arrays.
+    f : ndarray
+        The cropped frequency vector.
+    *xl : ndarray
+        The cropped data arrays.
 
+    Examples
+    --------
+    >>> # Create 0-10 Hz frequencies
+    >>> freqs = np.array([0, 2, 4, 6, 8, 10])
+
+    >>> # Create data: (2 channels, 6 frequency bins)
+    >>> data = np.array([[10, 20, 30, 40, 50, 60],
+    ...                  [15, 25, 35, 45, 55, 65]])
+
+    >>> # Keep only the range 4Hz to 8Hz
+    >>> f_s, d_s = slice_freq_band(freqs, data, f_min=4, f_max=8)
+
+    >>> f_s
+    array([4, 6, 8])~
+    >>> d_s
+    array([[30, 40, 50],
+           [35, 45, 55]])   
     """
     if f_min is None and f_max is None:
         return f, *x
@@ -85,24 +117,53 @@ def slice_freq_band(f, *x, f_min=None, f_max=None):
 
 
 def reduce_freq_bands(f, x, bands, reduce_func=np.sum):
-    """Reduce spectral data into discrete frequency bands.
+    r"""Reduce spectral data into discrete frequency bands by aggregating bins.
+
+    This function identifies the frequency indices belonging to specific 
+    bands and applies a reduction function (like sum or mean) to collapse 
+    the frequency axis.
 
     Parameters
     ----------
     f : ndarray
         Frequency vector.
     x : ndarray
-        Spectral data. The last dimension must match `f`.
+        Spectral data. Can be multi-dimensional. 
+        The last dimension must match the length of `f`.
     bands : dict
-        Mapping of band names to (min, max) tuples.
+        Mapping of band names to (min, max) frequency tuples.
     reduce_func : callable, optional
-        Function to aggregate the values (e.g., np.sum, np.mean). 
-        Default is np.sum.
+        Function to aggregate the values. Default is np.sum.
 
     Returns
     -------
-    dict
-        Dictionary where keys are band names and values are reduced arrays.
+    x_bands : dict
+        Dictionary where keys are the band names from `bands` and values 
+        are the reduced arrays. The last dimension of the input `x` 
+        is removed.
+    
+    Raises
+    ------
+    AssertionError
+        If a band name is not a string.
+        If a band limit tuple does not contain exactly two values or 
+        if min > max.
+        If the requested band limits fall outside the range of the 
+        available frequency vector `f`.
+
+    Examples
+    --------
+    >>> f = np.array([0, 2, 4, 6, 8, 10])
+    >>> x = np.array([
+    ...     [1, 2, 3, 4, 5, 6],
+    ...     [60, 50, 40, 30, 20, 10],
+    ... ])
+    >>> bands = {'low': (0, 5), 'high': (5, 11)} #check assersion
+    >>> results = reduce_freq_bands(f, x, bands, reduce_func=np.sum)
+    >>> results['low']
+    array([6, 150])
+    >>> results['high']
+    array([15, 60])
     
     """
     x_bands = dict()

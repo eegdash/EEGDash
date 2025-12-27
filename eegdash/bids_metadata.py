@@ -25,7 +25,73 @@ __all__ = [
     "participants_extras_from_tsv",
     "attach_participants_extras",
     "enrich_from_participants",
+    "get_entity_from_record",
+    "get_entities_from_record",
 ]
+
+
+def get_entity_from_record(record: dict[str, Any], entity: str) -> Any:
+    """Get an entity value from a record, supporting both v1 (flat) and v2 (nested) formats.
+
+    Parameters
+    ----------
+    record : dict
+        A record dictionary.
+    entity : str
+        Entity name (e.g., "subject", "task", "session", "run").
+
+    Returns
+    -------
+    Any
+        The entity value, or None if not found.
+
+    Examples
+    --------
+    >>> # v2 record (nested)
+    >>> rec = {"entities": {"subject": "01", "task": "rest"}}
+    >>> get_entity_from_record(rec, "subject")
+    '01'
+    >>> # v1 record (flat)
+    >>> rec = {"subject": "01", "task": "rest"}
+    >>> get_entity_from_record(rec, "subject")
+    '01'
+
+    """
+    # Try nested entities first (v2 format)
+    if "entities" in record and isinstance(record["entities"], dict):
+        val = record["entities"].get(entity)
+        if val is not None:
+            return val
+    # Fall back to flat format (v1 / legacy)
+    return record.get(entity)
+
+
+def get_entities_from_record(
+    record: dict[str, Any],
+    entities: tuple[str, ...] = ("subject", "session", "run", "task"),
+) -> dict[str, Any]:
+    """Get multiple entity values from a record.
+
+    Parameters
+    ----------
+    record : dict
+        A record dictionary.
+    entities : tuple of str
+        Entity names to extract.
+
+    Returns
+    -------
+    dict
+        Dictionary of entity values (only non-None values included).
+
+    """
+    return {
+        k: v for k in entities if (v := get_entity_from_record(record, k)) is not None
+    }
+
+
+# BIDS entity fields that should be queried in entities.* namespace
+_ENTITY_FIELDS = {"subject", "task", "session", "run"}
 
 
 def build_query_from_kwargs(**kwargs) -> dict[str, Any]:
@@ -33,6 +99,9 @@ def build_query_from_kwargs(**kwargs) -> dict[str, Any]:
 
     Converts user-friendly keyword arguments into a valid MongoDB query dictionary.
     Scalar values become exact matches; list-like values become ``$in`` queries.
+
+    BIDS entity fields (subject, task, session, run) are automatically mapped to
+    the nested ``entities.*`` namespace for v2 records compatibility.
 
     Parameters
     ----------
@@ -64,6 +133,9 @@ def build_query_from_kwargs(**kwargs) -> dict[str, Any]:
                 f"Received None for query parameter '{key}'. Provide a concrete value."
             )
 
+        # Map entity fields to nested entities.* namespace
+        query_key = f"entities.{key}" if key in _ENTITY_FIELDS else key
+
         if isinstance(value, (list, tuple, set)):
             cleaned: list[Any] = []
             for item in value:
@@ -77,7 +149,7 @@ def build_query_from_kwargs(**kwargs) -> dict[str, Any]:
             cleaned = list(dict.fromkeys(cleaned))  # dedupe preserving order
             if not cleaned:
                 raise ValueError(f"Received an empty list for query parameter '{key}'.")
-            query[key] = {"$in": cleaned}
+            query[query_key] = {"$in": cleaned}
         else:
             if isinstance(value, str):
                 value = value.strip()
@@ -85,7 +157,7 @@ def build_query_from_kwargs(**kwargs) -> dict[str, Any]:
                     raise ValueError(
                         f"Received an empty string for query parameter '{key}'."
                     )
-            query[key] = value
+            query[query_key] = value
 
     return query
 

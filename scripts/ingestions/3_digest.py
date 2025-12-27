@@ -441,27 +441,82 @@ def parse_bids_entities_from_path(filepath: str) -> dict[str, Any]:
     return entities
 
 
-def is_eeg_data_file(filepath: str) -> bool:
-    """Check if file is an EEG data file based on path and extension."""
+# Import neurophysiology data extensions from MNE-BIDS
+from mne_bids.config import ALLOWED_DATATYPE_EXTENSIONS
+
+# Build flat set of all neurophysiology data extensions
+NEURO_DATA_EXTENSIONS = set()
+for modality, extensions in ALLOWED_DATATYPE_EXTENSIONS.items():
+    if modality in ("eeg", "meg", "ieeg", "emg", "nirs"):
+        NEURO_DATA_EXTENSIONS.update(extensions)
+
+# Supported modalities for neurophysiology
+NEURO_MODALITIES = ("eeg", "meg", "ieeg", "emg", "nirs")
+
+
+def is_neuro_data_file(filepath: str) -> bool:
+    """Check if file is a neurophysiology data file (EEG, MEG, iEEG, EMG, fNIRS).
+
+    Uses MNE-BIDS ALLOWED_DATATYPE_EXTENSIONS for extension detection.
+
+    Parameters
+    ----------
+    filepath : str
+        Path to check (BIDS-style relative path)
+
+    Returns
+    -------
+    bool
+        True if file appears to be neurophysiology data
+
+    """
     filepath_lower = filepath.lower()
 
-    # Check for EEG indicators in path
-    if "/eeg/" not in filepath_lower and "_eeg." not in filepath_lower:
+    # Check for modality indicators in path (folder or suffix)
+    has_modality_indicator = False
+    for modality in NEURO_MODALITIES:
+        if f"/{modality}/" in filepath_lower or f"_{modality}." in filepath_lower:
+            has_modality_indicator = True
+            break
+
+    if not has_modality_indicator:
         return False
 
-    # Check for data file extensions
-    data_extensions = [
-        ".set",
-        ".edf",
-        ".bdf",
-        ".vhdr",
-        ".vmrk",
-        ".eeg",
-        ".fif",
-        ".cnt",
-        ".mff",
-    ]
-    return any(filepath_lower.endswith(ext) for ext in data_extensions)
+    # Check for data file extensions from MNE-BIDS
+    return any(filepath_lower.endswith(ext) for ext in NEURO_DATA_EXTENSIONS)
+
+
+def detect_modality_from_path(filepath: str) -> str:
+    """Detect the recording modality from a file path.
+
+    Parameters
+    ----------
+    filepath : str
+        BIDS-style file path
+
+    Returns
+    -------
+    str
+        Detected modality (eeg, meg, ieeg, emg, nirs) or 'eeg' as default
+
+    """
+    filepath_lower = filepath.lower()
+
+    for modality in NEURO_MODALITIES:
+        # Check folder pattern first (more reliable)
+        if f"/{modality}/" in filepath_lower:
+            return modality
+        # Check suffix pattern
+        if f"_{modality}." in filepath_lower:
+            return modality
+
+    return "eeg"  # Default fallback
+
+
+# Keep old function name as alias for backward compatibility
+def is_eeg_data_file(filepath: str) -> bool:
+    """Check if file is a neurophysiology data file. Alias for is_neuro_data_file."""
+    return is_neuro_data_file(filepath)
 
 
 def digest_from_manifest(
@@ -652,12 +707,13 @@ def digest_from_manifest(
                 zf_path = zf.get("path", "") if isinstance(zf, dict) else zf
                 zf_size = zf.get("size", 0) if isinstance(zf, dict) else 0
 
-                # Only create records for EEG data files inside ZIPs
-                if not is_eeg_data_file(zf_path):
+                # Only create records for neurophysiology data files inside ZIPs
+                if not is_neuro_data_file(zf_path):
                     continue
 
                 try:
                     entities = parse_bids_entities_from_path(zf_path)
+                    detected_modality = detect_modality_from_path(zf_path)
 
                     record = create_record(
                         dataset=dataset_id,
@@ -668,10 +724,10 @@ def digest_from_manifest(
                         task=entities.get("task"),
                         run=entities.get("run"),
                         dep_keys=[],
-                        datatype=entities.get("datatype", "eeg"),
-                        suffix=entities.get("suffix", "eeg"),
+                        datatype=entities.get("datatype", detected_modality),
+                        suffix=entities.get("suffix", detected_modality),
                         storage_backend="https",
-                        recording_modality=entities.get("modality", "eeg"),
+                        recording_modality=detected_modality,
                         digested_at=digested_at,
                     )
 
@@ -735,12 +791,13 @@ def digest_from_manifest(
                     errors.append({"file": filepath, "error": str(e)})
                 continue
 
-        # Only create records for EEG data files
-        if not is_eeg_data_file(filepath):
+        # Check if this is a neurophysiology data file (treat symlinks as files)
+        if not is_neuro_data_file(filepath):
             continue
 
         try:
             entities = parse_bids_entities_from_path(filepath)
+            detected_modality = detect_modality_from_path(filepath)
 
             # Build the record
             record = create_record(
@@ -752,10 +809,10 @@ def digest_from_manifest(
                 task=entities.get("task"),
                 run=entities.get("run"),
                 dep_keys=[],  # Can't determine dependencies without actual files
-                datatype=entities.get("datatype", "eeg"),
-                suffix=entities.get("suffix", "eeg"),
-                storage_backend="https",
-                recording_modality=entities.get("modality", "eeg"),
+                datatype=entities.get("datatype", detected_modality),
+                suffix=entities.get("suffix", detected_modality),
+                storage_backend=get_storage_backend(source),
+                recording_modality=detected_modality,
                 digested_at=digested_at,
             )
 
@@ -778,11 +835,12 @@ def digest_from_manifest(
             filepath = zpath
             file_size = 0
 
-        if not is_eeg_data_file(filepath):
+        if not is_neuro_data_file(filepath):
             continue
 
         try:
             entities = parse_bids_entities_from_path(filepath)
+            detected_modality = detect_modality_from_path(filepath)
 
             record = create_record(
                 dataset=dataset_id,
@@ -793,10 +851,10 @@ def digest_from_manifest(
                 task=entities.get("task"),
                 run=entities.get("run"),
                 dep_keys=[],
-                datatype=entities.get("datatype", "eeg"),
-                suffix=entities.get("suffix", "eeg"),
+                datatype=entities.get("datatype", detected_modality),
+                suffix=entities.get("suffix", detected_modality),
                 storage_backend="https",
-                recording_modality=entities.get("modality", "eeg"),
+                recording_modality=detected_modality,
                 digested_at=digested_at,
             )
 
@@ -829,7 +887,7 @@ def digest_from_manifest(
 
     # Save summary
     summary = {
-        "status": "success" if records else "no_eeg_files",
+        "status": "success" if records else "no_neuro_files",
         "dataset_id": dataset_id,
         "source": source,
         "record_count": len(records),
@@ -931,7 +989,7 @@ def digest_dataset(
         return {
             "status": "empty",
             "dataset_id": dataset_id,
-            "reason": "no EEG files found",
+            "reason": "no neurophysiology files found",
         }
 
     # Extract Dataset metadata

@@ -1,3 +1,20 @@
+r"""
+Signal-Level Feature Extraction
+===============================
+
+This module provides temporal and statistical features computed 
+directly from time-series data. 
+
+Data Shape Convention
+---------------------
+This module follows a **Time-Last** convention:
+
+* **Input:** ``(..., time)``
+* **Output:** ``(...,)``
+
+All functions collapse the last dimension (time), returning an ndarray of 
+features corresponding to the leading dimensions (e.g., subjects, channels).
+"""
 import numbers
 
 import numpy as np
@@ -27,7 +44,7 @@ __all__ = [
 
 @FeaturePredecessor()
 def signal_hilbert_preprocessor(x, /):
-    """Compute the amplitude envelope of the analytic signal.
+    r"""Compute the amplitude envelope of the analytic signal.
 
     Parameters
     ----------
@@ -38,7 +55,6 @@ def signal_hilbert_preprocessor(x, /):
     -------
     ndarray
         The magnitude of the Hilbert transform after mean subtraction.
-    
     """
     return np.abs(signal.hilbert(x - x.mean(axis=-1, keepdims=True), axis=-1))
 
@@ -50,7 +66,7 @@ SIGNAL_PREDECESSORS = [None, signal_hilbert_preprocessor]
 @FeaturePredecessor(*SIGNAL_PREDECESSORS)
 @univariate_feature
 def signal_mean(x, /):
-    """Compute the temporal mean of the signal.
+    r"""Compute the temporal mean of the signal.
     
     Parameters
     ----------
@@ -60,8 +76,8 @@ def signal_mean(x, /):
     Returns
     -------
     ndarray
-        The mean of the signal along the temporal axis. Shape is ``x.shape[:-1]``.
-
+        The mean of the signal along the temporal axis. 
+        Shape is ``x.shape[:-1]``.
     """
     return x.mean(axis=-1)
 
@@ -69,7 +85,7 @@ def signal_mean(x, /):
 @FeaturePredecessor(*SIGNAL_PREDECESSORS)
 @univariate_feature
 def signal_variance(x, /, **kwargs):
-    """Compute the temporal variance of the signal.
+    r"""Compute the temporal variance of the signal.
 
     Parameters
     ----------
@@ -81,8 +97,8 @@ def signal_variance(x, /, **kwargs):
     Returns
     -------
     ndarray
-        The variance of the signal along the temporal axis. Shape is ``x.shape[:-1]``.
-
+        The variance of the signal along the temporal axis. 
+        Shape is ``x.shape[:-1]``.
     """
     return x.var(axis=-1, **kwargs)
 
@@ -90,7 +106,7 @@ def signal_variance(x, /, **kwargs):
 @FeaturePredecessor(*SIGNAL_PREDECESSORS)
 @univariate_feature
 def signal_std(x, /, **kwargs):
-    """Compute the temporal standard deviation of the signal.
+    r"""Compute the temporal standard deviation of the signal.
 
     Parameters
     ----------
@@ -102,9 +118,8 @@ def signal_std(x, /, **kwargs):
     Returns
     -------
     ndarray
-        The standard deviation of the signal along the temporal axis. Shape 
-        is ``x.shape[:-1]``
-    
+        The standard deviation of the signal along the temporal axis. 
+        Shape is ``x.shape[:-1]``.
     """
     return x.std(axis=-1, **kwargs)
 
@@ -112,7 +127,7 @@ def signal_std(x, /, **kwargs):
 @FeaturePredecessor(*SIGNAL_PREDECESSORS)
 @univariate_feature
 def signal_skewness(x, /, **kwargs):
-    """Compute the temporal skewness of the signal.
+    r"""Compute the temporal skewness of the signal.
 
     Parameters
     ----------
@@ -124,8 +139,8 @@ def signal_skewness(x, /, **kwargs):
     Returns
     -------
     ndarray
-        The skewness of the signal along the temporal axis. Shape is ``x.shape[:-1]``
-    
+        The skewness of the signal along the temporal axis. 
+        Shape is ``x.shape[:-1]``.
     """
     return stats.skew(x, axis=x.ndim - 1, **kwargs)
 
@@ -133,7 +148,7 @@ def signal_skewness(x, /, **kwargs):
 @FeaturePredecessor(*SIGNAL_PREDECESSORS)
 @univariate_feature
 def signal_kurtosis(x, /, **kwargs):
-    """Measure the temporal kurtosis of the signal distribution.
+    r"""Compute the temporal kurtosis of the signal.
 
     Parameters
     ----------
@@ -145,8 +160,8 @@ def signal_kurtosis(x, /, **kwargs):
     Returns
     -------
     ndarray
-        The kurtosis of the signal along the temporal axis. Shape is ``x.shape[:-1]``
-        
+        The kurtosis of the signal along the temporal axis. 
+        Shape is ``x.shape[:-1]``
     """
     return stats.kurtosis(x, axis=x.ndim - 1, **kwargs)
 
@@ -154,7 +169,7 @@ def signal_kurtosis(x, /, **kwargs):
 @FeaturePredecessor(*SIGNAL_PREDECESSORS)
 @univariate_feature
 def signal_root_mean_square(x, /):
-    """Calculate the Root Mean Square (RMS) magnitude.
+    r"""Calculate the Root Mean Square (RMS) magnitude.
 
     Parameters
     ----------
@@ -164,7 +179,13 @@ def signal_root_mean_square(x, /):
     Returns
     -------
     ndarray
-        The RMS amplitude of the signal. Shape is ``x.shape[:-1]``
+        The RMS amplitude of the signal. 
+        Shape is ``x.shape[:-1]``
+    
+    Notes
+    -----
+    For the RMS definition, see the
+    `Wikipedia entry <https://en.wikipedia.org/wiki/Root_mean_square>`_.
     """
     return np.sqrt(np.power(x, 2).mean(axis=-1))
 
@@ -172,7 +193,7 @@ def signal_root_mean_square(x, /):
 @FeaturePredecessor(*SIGNAL_PREDECESSORS)
 @univariate_feature
 def signal_peak_to_peak(x, /, **kwargs):
-    """Calculate the peak-to-peak (maximum range) of the signal.
+    r"""Calculate the peak-to-peak (maximum range) of the signal.
 
     Parameters
     ----------
@@ -184,7 +205,16 @@ def signal_peak_to_peak(x, /, **kwargs):
     Returns
     -------
     ndarray
-        The peak-to-peak amplitude. Shape is ``x.shape[:-1]``.
+        The peak-to-peak amplitude. 
+        Shape is ``x.shape[:-1]``.
+
+    Notes
+    -----   
+    This function wraps :obj:`numpy.ptp`; see the NumPy documentation for 
+    details on additional keyword arguments.
+
+    For a theoretical overview of Peak-To-Peak amplitude in signal analysis, 
+    see the `Wikipedia entry <https://en.wikipedia.org/wiki/Peak-to-peak>`_.
     """
     return np.ptp(x, axis=-1, **kwargs)
 
@@ -192,7 +222,7 @@ def signal_peak_to_peak(x, /, **kwargs):
 @FeaturePredecessor(*SIGNAL_PREDECESSORS)
 @univariate_feature
 def signal_quantile(x, /, q: numbers.Number = 0.5, **kwargs):
-    """Compute the q-th quantile of the signal.
+    r"""Compute the q-th quantile of the signal.
 
     Parameters
     ----------
@@ -206,7 +236,13 @@ def signal_quantile(x, /, q: numbers.Number = 0.5, **kwargs):
     Returns
     -------
     ndarray
-        The requested quantile value(s). Shape is ``x.shape[:-1]``.
+        The quantile values. 
+        Shape is ``x.shape[:-1]``.
+
+    Notes
+    -----
+    This function wraps :obj:`numpy.quantile`; see the NumPy documentation for 
+    details on additional keyword arguments.
     """
     return np.quantile(x, q=q, axis=-1, **kwargs)
 
@@ -214,9 +250,7 @@ def signal_quantile(x, /, q: numbers.Number = 0.5, **kwargs):
 @FeaturePredecessor(*SIGNAL_PREDECESSORS)
 @univariate_feature
 def signal_line_length(x, /):
-    """Calculate the average line length (waveform complexity).
-
-    The mean absolute vertical distance between consecutive samples.
+    r"""Calculate the Mean Signal Line Length.
 
     Parameters
     ----------
@@ -226,8 +260,8 @@ def signal_line_length(x, /):
     Returns
     -------
     ndarray
-        The line length of the signal. Shape is ``x.shape[:-1]``.
-    
+        The mean absolute vertical distance between consecutive samples.
+        Shape is ``x.shape[:-1]``.
     """
     return np.abs(np.diff(x, axis=-1)).mean(axis=-1)
 
@@ -235,7 +269,7 @@ def signal_line_length(x, /):
 @FeaturePredecessor(*SIGNAL_PREDECESSORS)
 @univariate_feature
 def signal_zero_crossings(x, /, threshold=1e-15):
-    """Count the number of times the signal crosses the zero axis.
+    r"""Count the number of times the signal crosses the zero axis.
 
     This function identifies points where the signal changes sign or 
     enters/leaves a defined noise floor (threshold).
@@ -251,9 +285,13 @@ def signal_zero_crossings(x, /, threshold=1e-15):
     Returns
     -------
     ndarray
-        The count of zero crossings. Shape is ``x.shape[:-1]``, 
-        dtype is typically ``int``.
+        The count of zero crossings.
+        Shape is ``x.shape[:-1]``.
     
+    See Also
+    --------
+    For a theoretical overview of zero-crossing rate in signal analysis,
+    see the `Wikipedia entry <https://en.wikipedia.org/wiki/Zero_crossing>`_.
     """
     zero_ind = np.logical_and(x > -threshold, x < threshold)
     zero_cross = np.diff(zero_ind, axis=-1).astype(int).sum(axis=-1)
@@ -266,11 +304,10 @@ def signal_zero_crossings(x, /, threshold=1e-15):
 @FeaturePredecessor(*SIGNAL_PREDECESSORS)
 @univariate_feature
 def signal_hjorth_mobility(x, /):
-    """Calculate Hjorth Mobility.
+    r"""Calculate the Hjorth Mobility of the signal.
 
-    Mobility represents the mean frequency of the power spectrum. 
-    It is calculated as the square root of the ratio of the variance 
-    of the first derivative to the variance of the signal.
+    Mobility is defined as the standard deviation of the signal's first 
+    derivative normalized by the standard deviation of the signal itself.
 
     Parameters
     ----------
@@ -280,7 +317,16 @@ def signal_hjorth_mobility(x, /):
     Returns
     -------
     ndarray
-        The mobility value. Shape is ``x.shape[:-1]``.
+        The Hjorth Mobility value. Shape is ``x.shape[:-1]``.
+
+    Notes
+    -----
+    The mobility is calculated using the following formula:
+    .. math::
+        \text{Mobility} = \sqrt{\frac{\text{var}(\frac{dx(t)}{dt})}{\text{var}(x(t))}}
+
+    for more details, see the `Wikipedia entry 
+    <https://en.wikipedia.org/wiki/Hjorth_parameters#Hjorth_Mobility>`_.   
     """
     return np.diff(x, axis=-1).std(axis=-1) / x.std(axis=-1)
 
@@ -288,11 +334,11 @@ def signal_hjorth_mobility(x, /):
 @FeaturePredecessor(*SIGNAL_PREDECESSORS)
 @univariate_feature
 def signal_hjorth_complexity(x, /):
-    """Calculate Hjorth Complexity.
+    r"""Calculate the Hjorth Complexity of the signal.
 
-    Complexity (or form factor) indicates how similar the signal 
-    is to a pure sine wave. A value of 1 represents a pure sinusoid; 
-    higher values indicate a more complex, irregular signal.
+    Complexity represents the change in frequency. The parameter 
+    compares the signal's similarity to a pure sine wave, where value 
+    of 1 indicates a perfect sine wave.
 
     Parameters
     ----------
@@ -304,6 +350,14 @@ def signal_hjorth_complexity(x, /):
     ndarray
         The complexity value. Shape is ``x.shape[:-1]``.
     
+    Notes
+    -----
+    The complexity is calculated using the following formula:   
+    .. math::
+        \text{Complexity} = \frac{\text{Mobility}(\frac{dx(t)}{dt})}{\text{Mobility}(x(t))}
+
+    For more details, see the `Wikipedia entry 
+    <https://en.wikipedia.org/wiki/Hjorth_parameters#Hjorth_Complexity
     """
     return (np.diff(x, 2, axis=-1).std(axis=-1) * x.std(axis=-1)) / np.diff(
         x, axis=-1
@@ -313,10 +367,11 @@ def signal_hjorth_complexity(x, /):
 @FeaturePredecessor(*SIGNAL_PREDECESSORS)
 @univariate_feature
 def signal_decorrelation_time(x, /, fs=1):
-    """Estimate the decorrelation time of the signal.
+    r"""Calculate the Decorrelation Time of the signal.
 
-    This function calculates the autocorrelation function (ACF) using FFT 
-    and finds the first time point where the ACF drops to or below zero.
+    This function computes the time it takes for the signal to 
+    decorrelate, defined as the first time lag where the autocorrelation 
+    function drops to zero.
 
     Parameters
     ----------
@@ -332,6 +387,11 @@ def signal_decorrelation_time(x, /, fs=1):
         The time (in seconds or samples) until the signal decorrelates. 
         Shape is ``x.shape[:-1]``.
 
+    Notes
+    -----
+    This function uses the '<Wiener-Khinchin Theorem 
+    <https://en.wikipedia.org/wiki/Wiener%E2%80%93Khinchin_theorem>'_ to
+    compute the autocorrelation via the inverse FFT of the power spectrum.
     """
     f = np.fft.fft(x - x.mean(axis=-1, keepdims=True), axis=-1)
     ac = np.fft.ifft(f.real**2 + f.imag**2, axis=-1)[..., : x.shape[-1] // 2]
@@ -342,8 +402,27 @@ def signal_decorrelation_time(x, /, fs=1):
 
 
 # =================================  Aliases  =================================
-
-#: In Hjorth parameters, Activity represents the total power of the signal.
 signal_hjorth_activity = signal_variance
-"""a
-"""
+r"""Calculate the Hjorth Activity of the signal.
+
+    Activity is defined as the variance of the signal itself.
+
+    Parameters
+    ----------
+    x : ndarray
+        The input signal.
+
+    Returns
+    -------
+    ndarray
+        The Hjorth Activity value. Shape is ``x.shape[:-1]``.
+
+    Notes
+    -----
+    The activity is calculated using the following formula:
+    .. math::
+        \text{Activity} = \text{var}(x(t))
+
+    for more details, see the `Wikipedia entry 
+    <https://en.wikipedia.org/wiki/Hjorth_parameters#Hjorth_Activity>`_.   
+    """

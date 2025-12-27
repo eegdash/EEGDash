@@ -564,7 +564,8 @@ def build_manifest(
         dataset_id: Dataset identifier
         source: Source name (openneuro, figshare, etc.)
         files: List of file info dicts with at least 'name' and 'size'
-        metadata: Optional additional metadata (name, authors, license, etc.)
+        metadata: Optional additional metadata from consolidated files.
+                  ALL metadata is preserved to ensure no information loss.
 
     Returns:
         Manifest dict ready to be saved
@@ -572,6 +573,9 @@ def build_manifest(
     Note:
         Normalizes file info to use 'path' key (expected by digest script)
         and '_zip_contents' for ZIP contents.
+
+        IMPORTANT: All metadata from the fetch step is preserved in the manifest
+        to ensure downstream scripts (digest) have access to all collected data.
 
     """
     # Normalize file info format for digest script
@@ -605,22 +609,27 @@ def build_manifest(
     # Calculate totals
     total_size = sum(f.get("size", 0) for f in normalized_files)
 
-    manifest = {
-        "dataset_id": dataset_id,
-        "source": source,
-        "total_files": len(normalized_files),
-        "total_size": total_size,
-        "bids_files": bids_files,
-        "files": normalized_files,
-    }
-
-    # Add metadata if provided
+    # Start with all metadata from the fetch step (preserve everything!)
+    # This ensures no information is lost between fetch -> clone -> digest
+    manifest = {}
     if metadata:
-        for key in ["name", "authors", "license", "dataset_doi", "modalities"]:
-            if key in metadata:
-                manifest[key] = metadata[key]
-        if "external_links" in metadata:
-            manifest["external_links"] = metadata["external_links"]
+        # Copy all metadata except internal/computed fields
+        exclude_keys = {"_files", "files", "total_files", "total_size", "bids_files"}
+        for key, value in metadata.items():
+            if key not in exclude_keys and value is not None:
+                manifest[key] = value
+
+    # Override/set core fields (these are authoritative from this step)
+    manifest.update(
+        {
+            "dataset_id": dataset_id,
+            "source": source,
+            "total_files": len(normalized_files),
+            "total_size": total_size,
+            "bids_files": bids_files,
+            "files": normalized_files,
+        }
+    )
 
     return manifest
 

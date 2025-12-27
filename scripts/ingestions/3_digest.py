@@ -29,30 +29,38 @@ from tqdm import tqdm
 
 from eegdash.records import create_dataset, create_record
 
-# Storage base URLs per source
-STORAGE_BASES = {
-    "openneuro": "s3://openneuro.org",
-    "nemar": "https://nemar.org/dataexplorer/detail",
-    "gin": "https://gin.g-node.org/EEGManyLabs",
-    "figshare": "https://figshare.com/ndownloader/files",
-    "zenodo": "https://zenodo.org/records",
-    "osf": "https://files.osf.io",
-    "scidb": "https://www.scidb.cn",
-    "datarn": "https://webdav.data.ru.nl/dcc",
+# Storage configuration per source
+# Each source has a backend type and base URL pattern
+STORAGE_CONFIGS = {
+    "openneuro": {"backend": "s3", "base": "s3://openneuro.org"},
+    "nemar": {"backend": "s3", "base": "s3://nemar"},  # NEMAR uses S3 too
+    "gin": {"backend": "https", "base": "https://gin.g-node.org"},
+    "figshare": {"backend": "https", "base": "https://figshare.com/ndownloader/files"},
+    "zenodo": {"backend": "https", "base": "https://zenodo.org/records"},
+    "osf": {"backend": "https", "base": "https://files.osf.io"},
+    "scidb": {"backend": "https", "base": "https://www.scidb.cn"},
+    "datarn": {"backend": "webdav", "base": "https://webdav.data.ru.nl"},
 }
+
+# Default config for unknown sourcess
+DEFAULT_STORAGE_CONFIG = {"backend": "https", "base": "https://unknown"}
+
+
+def get_storage_config(source: str) -> dict:
+    """Get storage configuration for a source."""
+    return STORAGE_CONFIGS.get(source, DEFAULT_STORAGE_CONFIG)
 
 
 def get_storage_base(dataset_id: str, source: str) -> str:
     """Get storage base URL for a dataset."""
-    base = STORAGE_BASES.get(source, STORAGE_BASES["openneuro"])
-    return f"{base}/{dataset_id}"
+    config = get_storage_config(source)
+    return f"{config['base']}/{dataset_id}"
 
 
 def get_storage_backend(source: str) -> str:
     """Get storage backend type for a source."""
-    if source == "openneuro":
-        return "s3"
-    return "https"
+    config = get_storage_config(source)
+    return config["backend"]
 
 
 def detect_source(dataset_dir: Path) -> str:
@@ -583,26 +591,33 @@ def digest_from_manifest(
     zip_contents = manifest.get("zip_contents", [])
 
     # Determine storage base based on source
-    if source == "figshare":
-        # For Figshare, use the source_url from external_links
-        source_url = manifest.get("external_links", {}).get("source_url", "")
-        storage_base = (
-            source_url
-            if source_url
-            else f"https://figshare.com/articles/dataset/{dataset_id}"
-        )
-    elif source == "zenodo":
-        storage_base = manifest.get(
-            "storage_base", f"https://zenodo.org/records/{dataset_id}"
-        )
-    elif source == "osf":
-        storage_base = manifest.get(
-            "storage_base", f"https://files.osf.io/{manifest.get('osf_id', dataset_id)}"
-        )
-    else:
-        storage_base = manifest.get(
-            "storage_base", f"https://files.osf.io/{dataset_id}"
-        )
+    # First check if manifest has explicit storage_base (from fetch step)
+    storage_base = manifest.get("storage_base")
+
+    if not storage_base:
+        # Build storage base from source configuration
+        config = get_storage_config(source)
+        base = config["base"]
+
+        if source == "figshare":
+            # Figshare: use source_url from external_links if available
+            source_url = manifest.get("external_links", {}).get("source_url", "")
+            storage_base = source_url if source_url else f"{base}/{dataset_id}"
+        elif source == "zenodo":
+            # Zenodo: use zenodo_id if available
+            zenodo_id = manifest.get("zenodo_id", dataset_id)
+            storage_base = f"{base}/{zenodo_id}"
+        elif source == "osf":
+            # OSF: use osf_id if available
+            osf_id = manifest.get("osf_id", dataset_id)
+            storage_base = f"{base}/{osf_id}"
+        elif source == "gin":
+            # GIN: include organization in path
+            org = manifest.get("organization", "EEGManyLabs")
+            storage_base = f"{base}/{org}/{dataset_id}"
+        else:
+            # Default: use base/dataset_id pattern
+            storage_base = f"{base}/{dataset_id}"
 
     # Collect BIDS entities from file paths (both direct files and ZIP contents)
     subjects = set()

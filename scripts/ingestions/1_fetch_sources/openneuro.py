@@ -344,6 +344,7 @@ def fetch_datasets_with_details(
     page_size: int = 100,
     timeout: float = 30.0,
     batch_size: int = 10,
+    limit: int | None = None,
 ) -> list[dict]:
     """Fetch all OpenNeuro datasets with full metadata."""
     # First, collect all dataset IDs
@@ -355,7 +356,9 @@ def fetch_datasets_with_details(
             dataset_modalities[dataset_id] = modality
 
     dataset_ids = list(dataset_modalities.keys())
-    print(f"\nFound {len(dataset_ids)} unique datasets")
+    if limit:
+        dataset_ids = dataset_ids[:limit]
+    print(f"\nFound {len(dataset_ids)} unique datasets (limit: {limit})")
 
     # Then fetch full details in batches
     print(f"\nPhase 2: Fetching full metadata (batch size: {batch_size})...")
@@ -416,6 +419,11 @@ def main() -> None:
         default=None,
         help="ISO 8601 timestamp for digested_at field (for deterministic output, default: omitted for determinism)",
     )
+    parser.add_argument(
+        "--limit",
+        type=int,
+        help="Maximum number of datasets to fetch (default: all)",
+    )
     args = parser.parse_args()
 
     if args.minimal:
@@ -426,12 +434,15 @@ def main() -> None:
                 page_size=args.page_size, timeout=args.timeout
             )
         ]
+        if args.limit:
+            datasets = datasets[: args.limit]
     else:
         # Full mode: complete metadata using Dataset schema
         datasets = fetch_datasets_with_details(
             page_size=args.page_size,
             timeout=args.timeout,
             batch_size=args.batch_size,
+            limit=args.limit,
         )
 
         # Add digested_at timestamp if provided

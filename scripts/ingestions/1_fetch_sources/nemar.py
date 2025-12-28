@@ -11,6 +11,7 @@ from collections.abc import Iterator
 from pathlib import Path
 
 import requests
+from _http import build_headers, request_json, request_text
 
 # Add ingestion paths before importing local modules
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
@@ -28,12 +29,9 @@ def fetch_bids_description(
 ) -> dict | None:
     """Fetch dataset_description.json from a repository."""
     url = f"{GITHUB_RAW_URL}/{org}/{repo}/{branch}/dataset_description.json"
-    try:
-        response = requests.get(url, timeout=timeout)
-        if response.status_code == 200:
-            return response.json()
-    except Exception:
-        pass
+    data, response = request_json("get", url, timeout=timeout)
+    if response and response.status_code == 200 and data is not None:
+        return data
     return None
 
 
@@ -42,21 +40,18 @@ def fetch_participants_tsv(
 ) -> list[dict] | None:
     """Fetch and parse participants.tsv from a repository."""
     url = f"{GITHUB_RAW_URL}/{org}/{repo}/{branch}/participants.tsv"
-    try:
-        response = requests.get(url, timeout=timeout)
-        if response.status_code == 200:
-            lines = response.text.strip().split("\n")
-            if len(lines) < 2:
-                return None
-            headers = lines[0].split("\t")
-            participants = []
-            for line in lines[1:]:
-                values = line.split("\t")
-                participant = dict(zip(headers, values))
-                participants.append(participant)
-            return participants
-    except Exception:
-        pass
+    text, response = request_text("get", url, timeout=timeout)
+    if response and response.status_code == 200 and text:
+        lines = text.strip().split("\n")
+        if len(lines) < 2:
+            return None
+        headers = lines[0].split("\t")
+        participants = []
+        for line in lines[1:]:
+            values = line.split("\t")
+            participant = dict(zip(headers, values))
+            participants.append(participant)
+        return participants
     return None
 
 
@@ -84,12 +79,9 @@ def fetch_readme(org: str, repo: str, branch: str, timeout: float = 10.0) -> str
     readme_names = ["README.md", "README", "README.txt", "readme.md", "readme"]
     for name in readme_names:
         url = f"{GITHUB_RAW_URL}/{org}/{repo}/{branch}/{name}"
-        try:
-            response = requests.get(url, timeout=timeout)
-            if response.status_code == 200:
-                return response.text
-        except Exception:
-            pass
+        text, response = request_text("get", url, timeout=timeout)
+        if response and response.status_code == 200 and text:
+            return text
     return None
 
 
@@ -113,9 +105,7 @@ def fetch_repositories(
         Dataset documents
 
     """
-    headers = {
-        "Accept": "application/vnd.github.v3+json",
-    }
+    headers = build_headers(accept="application/vnd.github.v3+json")
 
     page = 1
     total_fetched = 0
@@ -133,7 +123,8 @@ def fetch_repositories(
         attempt = 0
         while attempt < retries:
             try:
-                response = requests.get(
+                response_data, response = request_json(
+                    "get",
                     url,
                     headers=headers,
                     params=params,
@@ -142,7 +133,8 @@ def fetch_repositories(
 
                 # Check rate limit
                 if (
-                    response.status_code == 403
+                    response
+                    and response.status_code == 403
                     and "rate limit" in response.text.lower()
                 ):
                     print("  Warning: GitHub API rate limit exceeded")
@@ -151,8 +143,12 @@ def fetch_repositories(
                     print(f"  Remaining: {remaining}, Reset: {reset}")
                     return
 
+                if not response:
+                    raise requests.RequestException("No response from GitHub API")
+                if response_data is None:
+                    raise requests.RequestException("Invalid JSON response")
                 response.raise_for_status()
-                repos = response.json()
+                repos = response_data
 
                 # If empty list, we've fetched all repositories
                 if not repos:
@@ -247,7 +243,7 @@ def fetch_repositories(
                 page += 1
                 break
 
-            except requests.exceptions.RequestException as e:
+            except requests.RequestException as e:
                 attempt += 1
                 print(
                     f"  Warning: Error fetching page {page} (attempt {attempt}/{retries}): {e}"

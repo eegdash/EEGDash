@@ -15,7 +15,6 @@ Output: consolidated/osf_datasets.json
 """
 
 import argparse
-import re
 import sys
 import time
 from pathlib import Path
@@ -25,6 +24,14 @@ import requests
 
 # Add ingestion paths before importing local modules
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from _bids import (
+    BIDS_DATASET_ZIP_PATTERN,
+    BIDS_OPTIONAL_FILES,
+    BIDS_REQUIRED_FILES,
+    BIDS_SUBJECT_PATTERN,
+    collect_bids_matches,
+)
+from _http import request_json
 from _serialize import (
     extract_subjects_count,
     generate_dataset_id,
@@ -65,25 +72,6 @@ MODALITY_TAGS = {
     "ieeg": ["ieeg", "intracranial eeg", "seeg", "ecog"],
     "bids": ["bids"],
 }
-
-# BIDS indicator files (case-insensitive matching)
-BIDS_REQUIRED_FILES = ["dataset_description.json"]
-BIDS_OPTIONAL_FILES = [
-    "participants.tsv",
-    "participants.json",
-    "readme",
-    "readme.md",
-    "readme.txt",
-    "changes",
-]
-
-# Patterns for BIDS subject folders/zips
-BIDS_SUBJECT_PATTERN = re.compile(r"^sub-[a-zA-Z0-9]+(?:\.zip)?$", re.IGNORECASE)
-
-# Patterns for BIDS dataset zips (contains BIDS data inside)
-BIDS_DATASET_ZIP_PATTERN = re.compile(
-    r"(?:bids|dataset).*\.zip$|.*_bids\.zip$", re.IGNORECASE
-)
 
 # Title search keywords - for datasets without tags
 # These are searched via filter[title][icontains]
@@ -144,36 +132,23 @@ def validate_bids_structure(files: list[dict[str, Any]]) -> dict[str, Any]:
         if name:
             all_names.append(name)
 
-    all_names_lower = [n.lower() for n in all_names]
+    matches = collect_bids_matches(
+        all_names,
+        required_files=BIDS_REQUIRED_FILES,
+        optional_files=BIDS_OPTIONAL_FILES,
+        subject_pattern=BIDS_SUBJECT_PATTERN,
+        dataset_zip_pattern=BIDS_DATASET_ZIP_PATTERN,
+        dataset_zip_matcher="match",
+    )
+    result["bids_files_found"] = matches["required_found"] + matches["optional_found"]
 
-    # Check for required BIDS files
-    for req_file in BIDS_REQUIRED_FILES:
-        if req_file.lower() in all_names_lower:
-            result["bids_files_found"].append(req_file)
-
-    # Check for optional BIDS files
-    for opt_file in BIDS_OPTIONAL_FILES:
-        if opt_file.lower() in all_names_lower:
-            result["bids_files_found"].append(opt_file)
-
-    # Check for subject folders/zips
-    subject_folders = []
-    subject_zips = []
-    for name in all_names:
-        if BIDS_SUBJECT_PATTERN.match(name):
-            if name.lower().endswith(".zip"):
-                subject_zips.append(name)
-            else:
-                subject_folders.append(name)
-
-    result["subject_count"] = len(subject_folders) + len(subject_zips)
+    subject_files = matches["subject_files"]
+    subject_zips = matches["subject_zips"]
+    result["subject_count"] = len(subject_files)
     result["has_subject_zips"] = len(subject_zips) > 0
 
-    # Check for BIDS dataset zips
-    for name in all_names:
-        if BIDS_DATASET_ZIP_PATTERN.match(name):
-            result["has_bids_zip"] = True
-            result["bids_zip_files"].append(name)
+    result["bids_zip_files"] = matches["bids_zip_files"]
+    result["has_bids_zip"] = len(matches["bids_zip_files"]) > 0
 
     # Determine if this is a valid BIDS dataset
     # Criteria: has dataset_description.json OR has subject folders OR has BIDS zip
@@ -212,11 +187,9 @@ def fetch_node_files(
     url = f"{OSF_API_URL}/nodes/{node_id}/files/{storage_provider}/"
 
     try:
-        response = requests.get(url, timeout=timeout)
-        if response.status_code != 200:
+        data, response = request_json("get", url, timeout=timeout)
+        if not response or response.status_code != 200 or data is None:
             return files
-
-        data = response.json()
         items = data.get("data", [])
 
         for item in items[:max_files]:
@@ -245,11 +218,12 @@ def fetch_license_name(license_id: str, timeout: float = 10.0) -> str | None:
         return LICENSE_NAMES[license_id]
 
     try:
-        response = requests.get(
-            f"{OSF_API_URL}/licenses/{license_id}/", timeout=timeout
+        data, response = request_json(
+            "get",
+            f"{OSF_API_URL}/licenses/{license_id}/",
+            timeout=timeout,
         )
-        if response.status_code == 200:
-            data = response.json()
+        if response and response.status_code == 200 and data is not None:
             name = data.get("data", {}).get("attributes", {}).get("name")
             return name
     except Exception:
@@ -260,15 +234,14 @@ def fetch_license_name(license_id: str, timeout: float = 10.0) -> str | None:
 def fetch_contributors(node_id: str, timeout: float = 10.0) -> list[str]:
     """Fetch contributor names for a node."""
     try:
-        response = requests.get(
+        data, response = request_json(
+            "get",
             f"{OSF_API_URL}/nodes/{node_id}/contributors/",
             params={"embed": "users"},
             timeout=timeout,
         )
-        if response.status_code != 200:
+        if not response or response.status_code != 200 or data is None:
             return []
-
-        data = response.json()
         contributors = []
 
         for c in data.get("data", []):
@@ -317,15 +290,14 @@ def fetch_node_children(
     datasets = []
 
     try:
-        response = requests.get(
+        data, response = request_json(
+            "get",
             f"{OSF_API_URL}/nodes/{node_id}/children/",
             params={"page[size]": 100},
             timeout=timeout,
         )
-        if response.status_code != 200:
+        if not response or response.status_code != 200 or data is None:
             return datasets
-
-        data = response.json()
         children = data.get("data", [])
 
         for child in children:
@@ -406,13 +378,21 @@ def fetch_nodes_by_title(
 
     while fetched < max_results:
         try:
-            response = requests.get(url, params=params, timeout=timeout)
-            response.raise_for_status()
+            data, response = request_json(
+                "get",
+                url,
+                params=params,
+                timeout=timeout,
+                raise_for_status=True,
+                raise_for_request=True,
+            )
         except requests.RequestException as e:
             print(f"  Error fetching page {page}: {e}", file=sys.stderr)
             break
 
-        data = response.json()
+        if not response or data is None:
+            print(f"  Error fetching page {page}: empty response", file=sys.stderr)
+            break
         nodes = data.get("data", [])
 
         if not nodes:
@@ -655,13 +635,21 @@ def fetch_nodes_by_tag(
 
     while fetched < max_results:
         try:
-            response = requests.get(url, params=params, timeout=timeout)
-            response.raise_for_status()
+            data, response = request_json(
+                "get",
+                url,
+                params=params,
+                timeout=timeout,
+                raise_for_status=True,
+                raise_for_request=True,
+            )
         except requests.RequestException as e:
             print(f"  Error fetching page {page}: {e}", file=sys.stderr)
             break
 
-        data = response.json()
+        if not response or data is None:
+            print(f"  Error fetching page {page}: empty response", file=sys.stderr)
+            break
         nodes = data.get("data", [])
 
         if not nodes:

@@ -19,7 +19,7 @@ import re
 import sys
 from pathlib import Path
 
-import requests
+from _http import request_json, request_text
 from bs4 import BeautifulSoup
 
 # Add ingestion paths before importing local modules
@@ -36,12 +36,9 @@ GIN_API_URL = f"{GIN_BASE_URL}/api/v1"
 def fetch_repo_details(org: str, repo: str, timeout: float = 10.0) -> dict | None:
     """Fetch repository details via GIN API."""
     url = f"{GIN_API_URL}/repos/{org}/{repo}"
-    try:
-        response = requests.get(url, timeout=timeout)
-        if response.status_code == 200:
-            return response.json()
-    except Exception:
-        pass
+    data, response = request_json("get", url, timeout=timeout)
+    if response and response.status_code == 200 and data is not None:
+        return data
     return None
 
 
@@ -50,12 +47,14 @@ def fetch_raw_file(
 ) -> str | None:
     """Fetch raw file content from GIN repository."""
     url = f"{GIN_BASE_URL}/{org}/{repo}/raw/{branch}/{filepath}"
-    try:
-        response = requests.get(url, timeout=timeout)
-        if response.status_code == 200 and not response.text.startswith("<!DOCTYPE"):
-            return response.text
-    except Exception:
-        pass
+    text, response = request_text("get", url, timeout=timeout)
+    if (
+        response
+        and response.status_code == 200
+        and text
+        and not text.startswith("<!DOCTYPE")
+    ):
+        return text
     # Try master branch as fallback
     if branch == "main":
         return fetch_raw_file(org, repo, filepath, branch="master", timeout=timeout)
@@ -233,14 +232,17 @@ def fetch_eegmanylabs_repos(
 
     print(f"Fetching repositories from {org_url}")
 
-    try:
-        response = requests.get(org_url, timeout=timeout)
-        response.raise_for_status()
-    except requests.RequestException as e:
-        print(f"Error fetching organization page: {e}", file=sys.stderr)
+    text, response = request_text(
+        "get",
+        org_url,
+        timeout=timeout,
+        raise_for_status=True,
+    )
+    if not response or not text:
+        print("Error fetching organization page", file=sys.stderr)
         return []
 
-    soup = BeautifulSoup(response.text, "html.parser")
+    soup = BeautifulSoup(text, "html.parser")
 
     # Find all repository items
     repo_items = soup.find_all("div", class_="item")

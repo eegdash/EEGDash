@@ -22,17 +22,24 @@ Output: consolidated/zenodo_full.json
 import argparse
 import json
 import os
-import re
 import sys
 import time
 from pathlib import Path
 from typing import Any
 
 import requests
+from _http import request_response
 from dotenv import load_dotenv
 
 # Add ingestion paths before importing local modules
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from _bids import (
+    BIDS_DATASET_ZIP_PATTERN,
+    BIDS_OPTIONAL_FILES,
+    BIDS_REQUIRED_FILES,
+    BIDS_SUBJECT_PATTERN,
+    collect_bids_matches,
+)
 from _serialize import (
     extract_subjects_count,
     generate_dataset_id,
@@ -92,25 +99,6 @@ SIMPLE_SEARCHES = [
     "ERP BIDS",
 ]
 
-# BIDS indicator files
-BIDS_REQUIRED_FILES = ["dataset_description.json"]
-BIDS_OPTIONAL_FILES = [
-    "participants.tsv",
-    "participants.json",
-    "readme",
-    "readme.md",
-    "readme.txt",
-    "changes",
-]
-
-# Patterns for BIDS subject folders/zips
-BIDS_SUBJECT_PATTERN = re.compile(r"^sub-[a-zA-Z0-9]+(?:\.zip)?$", re.IGNORECASE)
-
-# Patterns for BIDS dataset zips (contains BIDS data inside)
-BIDS_DATASET_ZIP_PATTERN = re.compile(
-    r"(?:bids|dataset).*\.zip$|.*_bids\.zip$", re.IGNORECASE
-)
-
 
 def validate_bids_structure(files: list[dict[str, Any]]) -> dict[str, Any]:
     """Validate BIDS structure from file list.
@@ -133,32 +121,19 @@ def validate_bids_structure(files: list[dict[str, Any]]) -> dict[str, Any]:
         - has_bids_zip: Whether there's a BIDS dataset zip
 
     """
-    file_names = [f.get("key", "").lower() for f in files]
     file_names_original = [f.get("key", "") for f in files]
-
-    # Check for required BIDS files
-    found_required = []
-    for bf in BIDS_REQUIRED_FILES:
-        if bf.lower() in file_names:
-            found_required.append(bf)
-
-    # Check for optional BIDS files
-    found_optional = []
-    for bf in BIDS_OPTIONAL_FILES:
-        if bf.lower() in file_names:
-            found_optional.append(bf)
-
-    # Check for subject folders/zips
-    subject_files = []
-    for fn in file_names_original:
-        if BIDS_SUBJECT_PATTERN.match(fn):
-            subject_files.append(fn)
-
-    # Check for BIDS dataset zips
-    bids_zips = []
-    for fn in file_names_original:
-        if BIDS_DATASET_ZIP_PATTERN.search(fn):
-            bids_zips.append(fn)
+    matches = collect_bids_matches(
+        file_names_original,
+        required_files=BIDS_REQUIRED_FILES,
+        optional_files=BIDS_OPTIONAL_FILES,
+        subject_pattern=BIDS_SUBJECT_PATTERN,
+        dataset_zip_pattern=BIDS_DATASET_ZIP_PATTERN,
+        dataset_zip_matcher="search",
+    )
+    found_required = matches["required_found"]
+    found_optional = matches["optional_found"]
+    subject_files = matches["subject_files"]
+    bids_zips = matches["bids_zip_files"]
 
     # Determine if it's BIDS
     # Accept if:
@@ -168,7 +143,7 @@ def validate_bids_structure(files: list[dict[str, Any]]) -> dict[str, Any]:
     is_bids = len(found_required) > 0 or len(subject_files) >= 2 or len(bids_zips) > 0
 
     # Check if subjects are zipped
-    has_subject_zips = any(fn.lower().endswith(".zip") for fn in subject_files)
+    has_subject_zips = len(matches["subject_zips"]) > 0
 
     return {
         "is_bids": is_bids,
@@ -257,15 +232,17 @@ def fetch_zenodo_datasets(
             print(f"  Page {page:3d}: ", end="", flush=True)
 
             try:
-                response = requests.get(
+                response = request_response(
+                    "get",
                     ZENODO_BASE_URL,
                     params=params,
                     headers=headers,
                     timeout=30,
+                    raise_for_request=True,
                 )
 
                 # Check status code
-                if response.status_code == 429:
+                if response and response.status_code == 429:
                     # Rate limited - use exponential backoff
                     consecutive_429s += 1
                     if consecutive_429s > max_consecutive_429s:
@@ -288,13 +265,14 @@ def fetch_zenodo_datasets(
 
                 consecutive_429s = 0
 
-                if response.status_code >= 500:
+                if response and response.status_code >= 500:
                     print(f"Server error ({response.status_code})")
                     time.sleep(10)
                     continue
 
-                if response.status_code != 200:
-                    print(f"Error {response.status_code}")
+                if not response or response.status_code != 200:
+                    status = response.status_code if response else "no response"
+                    print(f"Error {status}")
                     break
 
                 data = response.json()

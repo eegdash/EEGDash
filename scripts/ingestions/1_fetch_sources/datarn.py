@@ -239,6 +239,11 @@ def main() -> None:
         default=None,
         help="ISO 8601 timestamp for digested_at field (for deterministic output).",
     )
+    parser.add_argument(
+        "--limit",
+        type=int,
+        help="Maximum number of datasets to fetch (default: all).",
+    )
 
     args = parser.parse_args()
 
@@ -276,6 +281,10 @@ def main() -> None:
             unique_records.append(record)
 
     print(f"\nTotal unique records after deduplication: {len(unique_records)}")
+
+    if args.limit:
+        unique_records = unique_records[: args.limit]
+        print(f"Limiting to {args.limit} records.")
 
     if not unique_records:
         print("No datasets found. Exiting.", file=sys.stderr)

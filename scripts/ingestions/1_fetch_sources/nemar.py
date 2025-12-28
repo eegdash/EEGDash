@@ -96,6 +96,7 @@ def fetch_repositories(
     timeout: float = 30.0,
     retries: int = 5,
     fetch_bids: bool = True,
+    limit: int | None = None,
 ) -> Iterator[Dataset]:
     """Fetch all repositories from a GitHub organization.
 
@@ -105,6 +106,7 @@ def fetch_repositories(
         timeout: Request timeout in seconds
         retries: Number of retry attempts
         fetch_bids: Whether to fetch BIDS metadata from repos
+        limit: Maximum number of datasets to fetch
 
     Yields:
         Dataset documents
@@ -118,6 +120,9 @@ def fetch_repositories(
         timeout=timeout,
         retries=retries,
     ):
+        if limit and total_fetched >= limit:
+            break
+
         repo_name = str(repo.get("name") or "")
         if not repo_name:
             continue
@@ -244,6 +249,11 @@ def main() -> None:
         default=None,
         help="ISO 8601 timestamp for digested_at field (for deterministic output, default: omitted for determinism)",
     )
+    parser.add_argument(
+        "--limit",
+        type=int,
+        help="Maximum number of datasets to fetch (default: all)",
+    )
     args = parser.parse_args()
 
     print(f"Fetching NEMAR datasets from: {args.organization}")
@@ -256,6 +266,7 @@ def main() -> None:
             timeout=args.timeout,
             retries=args.retries,
             fetch_bids=not args.skip_bids,
+            limit=args.limit,
         )
     )
 

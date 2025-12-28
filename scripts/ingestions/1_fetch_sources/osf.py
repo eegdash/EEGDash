@@ -844,6 +844,31 @@ def process_node(
         fallback_id=node_id,
     )
 
+    # Extract subject count from description
+    subjects_count = 0
+    subject_patterns = [
+        r"(\d+)\s*subjects?",
+        r"(\d+)\s*participants?",
+        r"n\s*=\s*(\d+)",
+        r"(\d+)\s*healthy",
+        r"(\d+)\s*patients?",
+        r"(\d+)\s*individuals?",
+        r"(\d+)\s*volunteers?",
+        r"(\d+)\s*children",
+        r"(\d+)\s*adults?",
+        r"recorded\s+from\s+(\d+)",
+        r"data\s+from\s+(\d+)",
+    ]
+    for pattern in subject_patterns:
+        match = re.search(pattern, description, re.I)
+        if match:
+            try:
+                subjects_count = int(match.group(1))
+                if subjects_count > 0 and subjects_count < 10000:  # Sanity check
+                    break
+            except ValueError:
+                pass
+
     # Create dataset
     dataset = create_dataset(
         dataset_id=dataset_id,
@@ -857,6 +882,7 @@ def process_node(
         study_domain=study_domain,
         source_url=html_url,
         dataset_modified_at=date_modified or date_created,
+        subjects_count=subjects_count if subjects_count > 0 else None,
     )
 
     # Add OSF-specific metadata
@@ -865,6 +891,13 @@ def process_node(
     dataset["tags"] = tags
     if description:
         dataset["description"] = description[:1000]  # Truncate long descriptions
+
+    # Store demographics for downstream use (for manifest->digester)
+    if subjects_count > 0:
+        dataset["demographics"] = {
+            "subjects_count": subjects_count,
+            "ages": [],
+        }
 
     # Add BIDS validation results
     if bids_validation:

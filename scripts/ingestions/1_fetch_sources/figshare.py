@@ -26,18 +26,14 @@ from io import BytesIO
 from pathlib import Path
 from typing import Any
 
-# Shared HTTP helper
-from _http import RequestError, request_json, request_response
-from dotenv import load_dotenv
-
 # Add ingestion paths before importing local modules
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from _bids import (
     BIDS_OPTIONAL_FILES,
     BIDS_REQUIRED_FILES,
-    BIDS_SUBJECT_PATTERN,
-    collect_bids_matches,
+    validate_bids_structure_from_files,
 )
+from _http import RequestError, request_json, request_response
 from _serialize import (
     PROJECT_ROOT,
     extract_subjects_count,
@@ -47,6 +43,9 @@ from _serialize import (
 )
 
 setup_paths()
+# Third-party
+from dotenv import load_dotenv
+
 from eegdash.records import create_dataset
 
 # Load API key from .env.figshare
@@ -57,52 +56,6 @@ if FIGSHARE_API_KEY:
     print(f"✓ Figshare API key loaded from {_env_path}")
 else:
     print(f"⚠ No Figshare API key found in {_env_path} (using anonymous access)")
-
-
-def validate_bids_structure(files: list[dict[str, Any]]) -> dict[str, Any]:
-    """Validate BIDS structure from file list.
-
-    Checks for:
-    - Required BIDS files (dataset_description.json)
-    - Optional BIDS files (participants.tsv, README, etc.)
-    - Subject-level files/zips (sub-XX or sub-XX.zip)
-
-    Args:
-        files: List of file dictionaries from Figshare API
-
-    Returns:
-        Dictionary with validation results:
-        - is_bids: Whether dataset appears to be BIDS compliant
-        - bids_files_found: List of BIDS files found
-        - subject_count: Number of subject folders/zips detected
-        - has_subject_zips: Whether subjects are in ZIP format
-
-    """
-    file_names_original = [f.get("name", "") for f in files]
-    matches = collect_bids_matches(
-        file_names_original,
-        required_files=BIDS_REQUIRED_FILES,
-        optional_files=BIDS_OPTIONAL_FILES,
-        subject_pattern=BIDS_SUBJECT_PATTERN,
-    )
-    found_required = matches["required_found"]
-    found_optional = matches["optional_found"]
-    subject_files = matches["subject_files"]
-
-    # Determine if it's BIDS
-    # Accept if: has dataset_description.json OR has subject folders/zips with BIDS naming
-    is_bids = len(found_required) > 0 or len(subject_files) >= 2
-
-    # Check if subjects are zipped
-    has_subject_zips = len(matches["subject_zips"]) > 0
-
-    return {
-        "is_bids": is_bids,
-        "bids_files_found": found_required + found_optional,
-        "subject_count": len(subject_files),
-        "has_subject_zips": has_subject_zips,
-        "subject_files": subject_files[:10],  # Store first 10 for reference
-    }
 
 
 def search_figshare(
@@ -735,7 +688,9 @@ def extract_dataset_info(
     total_size_bytes = sum(f.get("size", 0) for f in files)
 
     # Validate BIDS structure
-    bids_validation = validate_bids_structure(files)
+    bids_validation = validate_bids_structure_from_files(
+        files, name_key="name", include_subject_files=True
+    )
 
     # Detect modalities from content
     modalities = detect_modalities(article)
@@ -762,7 +717,7 @@ def extract_dataset_info(
         name=title,
         source="figshare",
         recording_modality=recording_modality,
-        modalities=modalities,
+        datatypes=modalities,
         license=license_name,
         authors=author_names,
         dataset_doi=doi,

@@ -27,17 +27,21 @@ import time
 from pathlib import Path
 from typing import Any
 
-from _http import HTTPStatusError, RequestError, TimeoutException, request_response
-from dotenv import load_dotenv
-
 # Add ingestion paths before importing local modules
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from _bids import (
     BIDS_DATASET_ZIP_PATTERN,
-    BIDS_OPTIONAL_FILES,
-    BIDS_REQUIRED_FILES,
-    BIDS_SUBJECT_PATTERN,
-    collect_bids_matches,
+    validate_bids_structure_from_files,
+)
+from _http import HTTPStatusError, RequestError, TimeoutException, request_response
+from _keywords import (
+    ZENODO_EXCLUDED_MODALITIES as EXCLUDED_MODALITIES,
+)
+from _keywords import (
+    ZENODO_SIMPLE_SEARCHES as SIMPLE_SEARCHES,
+)
+from _keywords import (
+    ZENODO_TARGET_MODALITIES as TARGET_MODALITIES,
 )
 from _serialize import (
     extract_subjects_count,
@@ -45,6 +49,7 @@ from _serialize import (
     save_datasets_deterministically,
     setup_paths,
 )
+from dotenv import load_dotenv
 
 setup_paths()
 from eegdash.records import create_dataset
@@ -61,97 +66,6 @@ if _env_file.exists():
 # Set via environment variable or .env.zenodo file
 # Get your key at: https://zenodo.org/account/settings/applications/tokens/new/
 ZENODO_API_KEY = os.environ.get("ZENODO_API_KEY", "")
-
-# Target modalities (focused on surface/non-invasive recordings)
-TARGET_MODALITIES = ["eeg", "meg", "fnirs"]
-
-# Modalities to exclude from results
-EXCLUDED_MODALITIES = [
-    "ieeg",
-    "ecog",
-    "seeg",
-    "intracranial",
-    "lfp",
-    "spike",
-    "spiking",
-    "neuropixels",
-    "mea",
-]
-
-# Simple keyword searches - more reliable than complex Elasticsearch syntax
-# Each search combines modality + BIDS keywords
-SIMPLE_SEARCHES = [
-    # EEG variants
-    "EEG BIDS",
-    "electroencephalography BIDS",
-    "electroencephalogram BIDS",
-    # MEG variants
-    "MEG BIDS",
-    "magnetoencephalography BIDS",
-    # fNIRS variants
-    "fNIRS BIDS",
-    "NIRS BIDS",
-    "near-infrared spectroscopy BIDS",
-    # General neural + BIDS
-    "BIDS brain imaging",
-    "BIDS neuroimaging dataset",
-    "ERP BIDS",
-]
-
-
-def validate_bids_structure(files: list[dict[str, Any]]) -> dict[str, Any]:
-    """Validate BIDS structure from file list.
-
-    Checks for:
-    - Required BIDS files (dataset_description.json)
-    - Optional BIDS files (participants.tsv, README, etc.)
-    - Subject-level files/zips (sub-XX or sub-XX.zip)
-    - BIDS dataset zip files
-
-    Args:
-        files: List of file dictionaries from Zenodo API
-
-    Returns:
-        Dictionary with validation results:
-        - is_bids: Whether dataset appears to be BIDS compliant
-        - bids_files_found: List of BIDS files found
-        - subject_count: Number of subject folders/zips detected
-        - has_subject_zips: Whether subjects are in ZIP format
-        - has_bids_zip: Whether there's a BIDS dataset zip
-
-    """
-    file_names_original = [f.get("key", "") for f in files]
-    matches = collect_bids_matches(
-        file_names_original,
-        required_files=BIDS_REQUIRED_FILES,
-        optional_files=BIDS_OPTIONAL_FILES,
-        subject_pattern=BIDS_SUBJECT_PATTERN,
-        dataset_zip_pattern=BIDS_DATASET_ZIP_PATTERN,
-        dataset_zip_matcher="search",
-    )
-    found_required = matches["required_found"]
-    found_optional = matches["optional_found"]
-    subject_files = matches["subject_files"]
-    bids_zips = matches["bids_zip_files"]
-
-    # Determine if it's BIDS
-    # Accept if:
-    # - has dataset_description.json OR
-    # - has ≥2 subject folders/zips with BIDS naming OR
-    # - has a BIDS dataset zip
-    is_bids = len(found_required) > 0 or len(subject_files) >= 2 or len(bids_zips) > 0
-
-    # Check if subjects are zipped
-    has_subject_zips = len(matches["subject_zips"]) > 0
-
-    return {
-        "is_bids": is_bids,
-        "bids_files_found": found_required + found_optional,
-        "subject_count": len(subject_files),
-        "has_subject_zips": has_subject_zips,
-        "has_bids_zip": len(bids_zips) > 0,
-        "bids_zip_files": bids_zips[:5],  # Store first 5 for reference
-    }
 
 
 def fetch_zenodo_datasets(
@@ -422,7 +336,12 @@ def extract_dataset_info(
         total_size_bytes = sum(f.get("size", 0) for f in files)
 
         # Validate BIDS structure
-        bids_validation = validate_bids_structure(files)
+        bids_validation = validate_bids_structure_from_files(
+            files,
+            name_key="key",
+            dataset_zip_pattern=BIDS_DATASET_ZIP_PATTERN,
+            dataset_zip_matcher="search",
+        )
 
         # Get publication date for SurnameYEAR ID
         pub_date = metadata.get("publication_date") or record.get("created")
@@ -443,7 +362,7 @@ def extract_dataset_info(
             name=title,
             source="zenodo",
             recording_modality=primary_modality,
-            modalities=modalities,
+            datatypes=modalities,
             authors=creators if creators else None,
             source_url=source_url,
             dataset_doi=doi if doi else None,

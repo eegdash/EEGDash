@@ -19,14 +19,15 @@ import re
 import sys
 from pathlib import Path
 
-from _http import request_json, request_text
-from bs4 import BeautifulSoup
-
 # Add ingestion paths before importing local modules
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from _http import HTTPStatusError, RequestError, request_json, request_text
 from _serialize import generate_dataset_id, save_datasets_deterministically, setup_paths
 
 setup_paths()
+# Third-party
+from bs4 import BeautifulSoup
+
 from eegdash.records import Dataset, create_dataset
 
 GIN_BASE_URL = "https://gin.g-node.org"
@@ -36,10 +37,17 @@ GIN_API_URL = f"{GIN_BASE_URL}/api/v1"
 def fetch_repo_details(org: str, repo: str, timeout: float = 10.0) -> dict | None:
     """Fetch repository details via GIN API."""
     url = f"{GIN_API_URL}/repos/{org}/{repo}"
-    data, response = request_json("get", url, timeout=timeout)
-    if response and response.status_code == 200 and data is not None:
-        return data
-    return None
+    try:
+        data, _ = request_json(
+            "get",
+            url,
+            timeout=timeout,
+            raise_for_status=True,
+            raise_for_request=True,
+        )
+        return data if isinstance(data, dict) else None
+    except (RequestError, HTTPStatusError):
+        return None
 
 
 def fetch_raw_file(
@@ -403,7 +411,6 @@ def fetch_eegmanylabs_repos(
                 name=name,
                 source="gin",
                 recording_modality="eeg",
-                modalities=["eeg"],
                 bids_version=bids_desc.get("BIDSVersion") if bids_desc else None,
                 license=license_info,
                 authors=authors,

@@ -21,6 +21,9 @@ Usage:
 
     # Inject only records (skip datasets)
     python 5_inject.py --input digestion_output --database eegdash_dev --only-records
+
+    # Force injection even if unchanged
+    python 5_inject.py --input digestion_output --database eegdash_dev --force
 """
 
 import argparse
@@ -29,17 +32,40 @@ import os
 import sys
 from pathlib import Path
 
-import requests
-from _http import make_retry_session
+from _fingerprint import fingerprint_from_records
+from _http import (
+    HTTPStatusError,
+    RequestError,
+    get_client,
+    make_retry_client,
+    request_json,
+)
 from tqdm import tqdm
 
 # Default API configuration
 DEFAULT_API_URL = "https://data.eegdash.org"
 
 
-def _make_session(auth_token: str) -> requests.Session:
+def fetch_existing_dataset(
+    api_url: str,
+    database: str,
+    dataset_id: str,
+):
+    """Fetch existing dataset metadata from the API (if present)."""
+    url = f"{api_url}/api/{database}/datasets/{dataset_id}"
+    data, response = request_json("get", url, timeout=30, client=get_client())
+    if response is None:
+        return None
+    if response.status_code == 404:
+        return None
+    if response.status_code != 200 or data is None:
+        return None
+    return data.get("data", {})
+
+
+def _make_session(auth_token: str):
     """Create session with retry strategy and auth."""
-    return make_retry_session(auth_token)
+    return make_retry_client(auth_token)
 
 
 def find_digested_datasets(
@@ -154,6 +180,7 @@ def inject_datasets(
     database: str,
     admin_token: str,
     batch_size: int = 100,
+    client=None,
 ) -> dict:
     """Upload Dataset documents to MongoDB via API Gateway.
 
@@ -163,7 +190,7 @@ def inject_datasets(
         Result with inserted_count
 
     """
-    session = _make_session(admin_token)
+    session = client or _make_session(admin_token)
     url = f"{api_url}/admin/{database}/datasets/bulk"
 
     inserted_count = 0
@@ -173,11 +200,17 @@ def inject_datasets(
     for i in range(0, len(datasets), batch_size):
         batch = datasets[i : i + batch_size]
         try:
-            resp = session.post(url, json=batch, timeout=60)
-            resp.raise_for_status()
-            result = resp.json()
-            inserted_count += result.get("inserted_count", len(batch))
-        except requests.exceptions.RequestException as e:
+            result, _response = request_json(
+                "post",
+                url,
+                json_body=batch,
+                timeout=60,
+                raise_for_status=True,
+                raise_for_request=True,
+                client=session,
+            )
+            inserted_count += (result or {}).get("inserted_count", len(batch))
+        except (RequestError, HTTPStatusError) as e:
             errors.append(f"Batch {i // batch_size}: {e}")
 
     return {
@@ -192,6 +225,7 @@ def inject_records(
     database: str,
     admin_token: str,
     batch_size: int = 1000,
+    client=None,
 ) -> dict:
     """Upload Record documents to MongoDB via API Gateway.
 
@@ -201,7 +235,7 @@ def inject_records(
         Result with inserted_count
 
     """
-    session = _make_session(admin_token)
+    session = client or _make_session(admin_token)
     url = f"{api_url}/admin/{database}/records/bulk"
 
     inserted_count = 0
@@ -211,17 +245,70 @@ def inject_records(
     for i in range(0, len(records), batch_size):
         batch = records[i : i + batch_size]
         try:
-            resp = session.post(url, json=batch, timeout=120)
-            resp.raise_for_status()
-            result = resp.json()
-            inserted_count += result.get("inserted_count", len(batch))
-        except requests.exceptions.RequestException as e:
+            result, _response = request_json(
+                "post",
+                url,
+                json_body=batch,
+                timeout=120,
+                raise_for_status=True,
+                raise_for_request=True,
+                client=session,
+            )
+            inserted_count += (result or {}).get("inserted_count", len(batch))
+        except (RequestError, HTTPStatusError) as e:
             errors.append(f"Batch {i // batch_size}: {e}")
 
     return {
         "inserted_count": inserted_count,
         "errors": errors,
     }
+
+
+def _ensure_fingerprint(dataset_id: str, dataset: dict | None, records: list[dict]):
+    """Ensure ingestion_fingerprint is set on dataset or derived from records."""
+    if dataset is None:
+        dataset = {"dataset_id": dataset_id}
+    if dataset.get("ingestion_fingerprint"):
+        return dataset
+    if records:
+        dataset["ingestion_fingerprint"] = fingerprint_from_records(
+            dataset_id,
+            dataset.get("source", "unknown"),
+            records,
+        )
+    return dataset
+
+
+def filter_changed_datasets(
+    dataset_ids: list[str],
+    datasets_by_id: dict[str, dict],
+    records_by_id: dict[str, list[dict]],
+    api_url: str,
+    database: str,
+):
+    """Return dataset IDs that are new or updated, plus skipped IDs."""
+    changed_ids: list[str] = []
+    skipped_ids: list[str] = []
+
+    for dataset_id in dataset_ids:
+        dataset = datasets_by_id.get(dataset_id)
+        records = records_by_id.get(dataset_id, [])
+        dataset = _ensure_fingerprint(dataset_id, dataset, records)
+        datasets_by_id[dataset_id] = dataset
+
+        existing = fetch_existing_dataset(api_url, database, dataset_id)
+        existing_fp = (existing or {}).get("ingestion_fingerprint")
+        current_fp = dataset.get("ingestion_fingerprint")
+
+        if not existing:
+            changed_ids.append(dataset_id)
+            continue
+        if existing_fp and current_fp and existing_fp == current_fp:
+            skipped_ids.append(dataset_id)
+            continue
+        changed_ids.append(dataset_id)
+
+    return changed_ids, skipped_ids
 
 
 def main():
@@ -238,8 +325,18 @@ def main():
         "--database",
         type=str,
         required=True,
-        choices=["eegdash", "eegdash_dev", "eegdash_archive"],
-        help="Target MongoDB database (eegdash=production, eegdash_dev=development, eegdash_archive=old data)",
+        choices=[
+            "eegdash",
+            "eegdash_dev",
+            "eegdash_archive",
+            "eegdash_staging",
+            "eegdash_v1",
+        ],
+        help=(
+            "Target MongoDB database (eegdash=production, "
+            "eegdash_dev=development, eegdash_archive=old data, "
+            "eegdash_staging=staging, eegdash_v1=legacy)"
+        ),
     )
     parser.add_argument(
         "--api-url",
@@ -280,6 +377,11 @@ def main():
         action="store_true",
         help="Only inject Record documents (skip Datasets)",
     )
+    parser.add_argument(
+        "--force",
+        action="store_true",
+        help="Inject even if ingestion_fingerprint matches existing dataset",
+    )
 
     args = parser.parse_args()
 
@@ -290,14 +392,8 @@ def main():
         )
         return 1
 
-    # Get admin token
+    # Get admin token (validated later if injection is needed)
     admin_token = args.token or os.environ.get("EEGDASH_ADMIN_TOKEN")
-    if not admin_token and not args.dry_run:
-        print(
-            "Error: Admin token required. Set EEGDASH_ADMIN_TOKEN or use --token",
-            file=sys.stderr,
-        )
-        return 1
 
     # Find dataset directories
     dataset_dirs = find_digested_datasets(args.input, args.datasets)
@@ -310,6 +406,7 @@ def main():
     # Collect all documents
     all_datasets = []
     all_records = []
+    dataset_docs: dict[str, dict] = {}
     errors = []
 
     print("\nLoading documents...")
@@ -317,15 +414,16 @@ def main():
         dataset_id = dataset_dir.name
 
         try:
-            # Load dataset document
-            if not args.only_records:
-                dataset = load_dataset(dataset_dir)
-                if dataset:
+            # Load dataset document (always for fingerprinting)
+            dataset = load_dataset(dataset_dir)
+            if dataset:
+                dataset_docs[dataset_id] = dataset
+                if not args.only_records:
                     all_datasets.append(dataset)
 
-            # Load record documents
+            # Load record documents (always for fingerprinting)
+            records = load_records(dataset_dir)
             if not args.only_datasets:
-                records = load_records(dataset_dir)
                 all_records.extend(records)
 
         except Exception as e:
@@ -334,11 +432,50 @@ def main():
 
     print(f"\nLoaded {len(all_datasets)} datasets and {len(all_records)} records")
 
+    datasets_by_id = {ds_id: ds for ds_id, ds in dataset_docs.items() if ds_id and ds}
+    records_by_id: dict[str, list[dict]] = {}
+    for record in all_records:
+        dataset_id = record.get("dataset")
+        if not dataset_id:
+            continue
+        records_by_id.setdefault(dataset_id, []).append(record)
+
+    dataset_ids = sorted(set(datasets_by_id) | set(records_by_id))
+
+    for dataset_id in dataset_ids:
+        dataset = datasets_by_id.get(dataset_id)
+        records = records_by_id.get(dataset_id, [])
+        datasets_by_id[dataset_id] = _ensure_fingerprint(dataset_id, dataset, records)
+
+    skipped_ids: list[str] = []
+    if not args.force:
+        changed_ids, skipped_ids = filter_changed_datasets(
+            dataset_ids,
+            datasets_by_id,
+            records_by_id,
+            args.api_url,
+            args.database,
+        )
+        changed_set = set(changed_ids)
+        all_datasets = [
+            datasets_by_id[ds_id] for ds_id in changed_ids if ds_id in datasets_by_id
+        ]
+        all_records = [r for r in all_records if r.get("dataset") in changed_set]
+        print(
+            f"Filtered to {len(changed_ids)} changed/new datasets "
+            f"(skipped {len(skipped_ids)} unchanged)"
+        )
+
+        if not changed_ids:
+            print("No updated datasets detected. Skipping injection.")
+            return 0
+
     # Stats tracking
     stats = {
         "datasets_injected": 0,
         "records_injected": 0,
         "errors": len(errors),
+        "datasets_skipped": len(skipped_ids),
     }
 
     if args.dry_run:
@@ -349,19 +486,30 @@ def main():
         stats["records_injected"] = len(all_records)
 
     else:
+        if not admin_token:
+            print(
+                "Error: Admin token required. Set EEGDASH_ADMIN_TOKEN or use --token",
+                file=sys.stderr,
+            )
+            return 1
         # Inject datasets
         if all_datasets and not args.only_records:
             print(f"\nInjecting {len(all_datasets)} datasets...")
             try:
-                for i in range(0, len(all_datasets), args.batch_size):
-                    batch = all_datasets[i : i + args.batch_size]
-                    result = inject_datasets(
-                        batch, args.api_url, args.database, admin_token
-                    )
-                    stats["datasets_injected"] += result["inserted_count"]
-                    print(
-                        f"  Batch {i // args.batch_size + 1}: {result['inserted_count']} datasets"
-                    )
+                with _make_session(admin_token) as client:
+                    for i in range(0, len(all_datasets), args.batch_size):
+                        batch = all_datasets[i : i + args.batch_size]
+                        result = inject_datasets(
+                            batch,
+                            args.api_url,
+                            args.database,
+                            admin_token,
+                            client=client,
+                        )
+                        stats["datasets_injected"] += result["inserted_count"]
+                        print(
+                            f"  Batch {i // args.batch_size + 1}: {result['inserted_count']} datasets"
+                        )
             except Exception as e:
                 stats["errors"] += 1
                 errors.append({"dataset": "datasets_collection", "error": str(e)})
@@ -371,16 +519,21 @@ def main():
         if all_records and not args.only_datasets:
             print(f"\nInjecting {len(all_records)} records...")
             try:
-                for i in range(0, len(all_records), args.batch_size):
-                    batch = all_records[i : i + args.batch_size]
-                    result = inject_records(
-                        batch, args.api_url, args.database, admin_token
-                    )
-                    stats["records_injected"] += result["inserted_count"]
-                    if (i // args.batch_size) % 10 == 0:
-                        print(
-                            f"  Progress: {i + len(batch)} / {len(all_records)} records"
+                with _make_session(admin_token) as client:
+                    for i in range(0, len(all_records), args.batch_size):
+                        batch = all_records[i : i + args.batch_size]
+                        result = inject_records(
+                            batch,
+                            args.api_url,
+                            args.database,
+                            admin_token,
+                            client=client,
                         )
+                        stats["records_injected"] += result["inserted_count"]
+                        if (i // args.batch_size) % 10 == 0:
+                            print(
+                                f"  Progress: {i + len(batch)} / {len(all_records)} records"
+                            )
             except Exception as e:
                 stats["errors"] += 1
                 errors.append({"dataset": "records_collection", "error": str(e)})
@@ -393,6 +546,7 @@ def main():
     print(f"  Database:   {args.database}")
     print(f"  Datasets:   {stats['datasets_injected']}")
     print(f"  Records:    {stats['records_injected']}")
+    print(f"  Skipped:    {stats['datasets_skipped']}")
     print(f"  Errors:     {stats['errors']}")
 
     if args.dry_run:

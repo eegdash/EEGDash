@@ -14,8 +14,7 @@ from functools import wraps
 from pathlib import Path
 from urllib.parse import urljoin, urlparse
 
-import requests
-from _http import request_response
+from _http import HTTPStatusError, RequestError, request_response
 
 # BIDS file detection patterns
 BIDS_ROOT_FILES = {
@@ -94,13 +93,13 @@ def rate_limited(min_interval: float = 0.5, max_retries: int = 3):
                     result = func(*args, **kwargs)
                     last_call[0] = time.time()
                     return result
-                except requests.exceptions.HTTPError as e:
+                except HTTPStatusError as e:
                     if e.response is not None and e.response.status_code == 429:
                         wait = min_interval * (2**attempt)
                         time.sleep(wait)
                     elif attempt == max_retries - 1:
                         raise
-                except requests.exceptions.RequestException:
+                except RequestError:
                     if attempt == max_retries - 1:
                         raise
                     time.sleep(min_interval * (attempt + 1))

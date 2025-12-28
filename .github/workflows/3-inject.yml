@@ -74,6 +74,13 @@ jobs:
         env:
           EEGDASH_ADMIN_TOKEN: ${{ secrets.EEGDASH_ADMIN_TOKEN }}
         run: |
+          if [ ! -d "eegdash-dataset-listings/digested" ] || [ -z "$(ls -A eegdash-dataset-listings/digested 2>/dev/null)" ]; then
+            echo "No digested datasets available, skipping injection"
+            echo "datasets=0" >> $GITHUB_OUTPUT
+            echo "records=0" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
           ARGS="--input eegdash-dataset-listings/digested"
           ARGS="$ARGS --database ${{ inputs.database }}"
           
@@ -82,7 +89,7 @@ jobs:
           fi
           
           # Run injection and capture output
-          OUTPUT=$(python eegdash/scripts/ingestions/4_inject.py $ARGS 2>&1)
+          OUTPUT=$(python eegdash/scripts/ingestions/5_inject.py $ARGS 2>&1)
           echo "$OUTPUT"
           
           # Parse results

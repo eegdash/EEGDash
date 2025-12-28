@@ -22,8 +22,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-import requests
-from _http import build_headers, request_json
+from _http import HTTPStatusError, RequestError, build_headers, request_json
 
 # Add ingestion paths before importing local modules
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
@@ -121,9 +120,10 @@ def fetch_datasets_from_api(
             headers=headers,
             timeout=timeout,
             raise_for_status=True,
+            raise_for_request=True,
         )
         if data is None:
-            raise requests.RequestException("Empty response")
+            raise ValueError("Empty response")
 
         # API returns documents in a nested structure with "documents" and "document" keys
         datasets = []
@@ -144,7 +144,7 @@ def fetch_datasets_from_api(
         print(f"Retrieved {len(datasets)} records from API for query '{query}'")
         return datasets
 
-    except requests.RequestException as e:
+    except (RequestError, HTTPStatusError, ValueError) as e:
         print(f"Error fetching datasets for query '{query}': {e}", file=sys.stderr)
         return []
 

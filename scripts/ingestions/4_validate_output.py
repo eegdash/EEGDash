@@ -26,7 +26,9 @@ import sys
 from collections import Counter
 from pathlib import Path
 
-from jsonschema import Draft202012Validator
+from pydantic import ValidationError
+
+from eegdash.schemas import DatasetModel, ManifestFileModel, ManifestModel, RecordModel
 
 # Valid storage URL patterns per source
 VALID_STORAGE_PATTERNS = {
@@ -38,27 +40,6 @@ VALID_STORAGE_PATTERNS = {
     "scidb": r"^https://(www\.)?scidb\.cn/",
     "datarn": r"^https://webdav\.data\.ru\.nl/",
     "gin": r"^https://gin\.g-node\.org/",
-}
-
-# Mandatory fields for Records (required for eegdash to work)
-MANDATORY_RECORD_FIELDS = {
-    "dataset": "Dataset ID (FK to Dataset)",
-    "bids_relpath": "BIDS relative path to data file",
-    "storage": "Storage configuration (backend, base, raw_key)",
-    "recording_modality": "Recording modality (eeg, meg, ieeg, etc.)",
-}
-
-MANDATORY_STORAGE_FIELDS = {
-    "backend": "Storage backend (s3, https, webdav)",
-    "base": "Storage base URL",
-    "raw_key": "Relative path from base",
-}
-
-# Mandatory fields for Datasets
-MANDATORY_DATASET_FIELDS = {
-    "dataset_id": "Dataset identifier",
-    "source": "Data source (openneuro, nemar, etc.)",
-    "recording_modality": "Primary recording modality",
 }
 
 # Recommended fields (warnings if missing)
@@ -82,41 +63,6 @@ VALID_SOURCES = {
     "datarn",
     "hbn",
 }
-
-# JSON Schemas (minimal required fields)
-STORAGE_SCHEMA = {
-    "type": "object",
-    "required": ["backend", "base", "raw_key"],
-    "properties": {
-        "backend": {"type": "string"},
-        "base": {"type": "string"},
-        "raw_key": {"type": "string"},
-    },
-}
-
-RECORD_SCHEMA = {
-    "type": "object",
-    "required": ["dataset", "bids_relpath", "storage", "recording_modality"],
-    "properties": {
-        "dataset": {"type": "string"},
-        "bids_relpath": {"type": "string"},
-        "recording_modality": {"type": "string"},
-        "storage": STORAGE_SCHEMA,
-    },
-}
-
-DATASET_SCHEMA = {
-    "type": "object",
-    "required": ["dataset_id", "source", "recording_modality"],
-    "properties": {
-        "dataset_id": {"type": "string"},
-        "source": {"type": "string"},
-        "recording_modality": {"type": "string"},
-    },
-}
-
-RECORD_VALIDATOR = Draft202012Validator(RECORD_SCHEMA)
-DATASET_VALIDATOR = Draft202012Validator(DATASET_SCHEMA)
 
 # Data file extensions that indicate valid neurophysiology data
 NEURO_EXTENSIONS = {
@@ -236,6 +182,23 @@ def validate_storage_url(source: str, storage_base: str) -> tuple[bool, str]:
     )
 
 
+def _add_pydantic_errors(
+    result: "ValidationResult",
+    *,
+    dataset_id: str,
+    exc: ValidationError,
+    prefix: str | None = None,
+):
+    for err in exc.errors():
+        loc = [str(p) for p in err.get("loc", [])]
+        if prefix:
+            loc = [prefix, *loc]
+        field_path = ".".join(loc) if loc else None
+        result.add_error(dataset_id, err.get("msg", "Invalid value"), field=field_path)
+        if err.get("type") == "missing":
+            result.stats["missing_mandatory"] += 1
+
+
 def validate_record(
     record: dict,
     dataset_id: str,
@@ -244,12 +207,10 @@ def validate_record(
     record_idx: int = 0,
 ):
     """Validate a single record for mandatory fields."""
-    # Schema validation for required fields
-    for error in RECORD_VALIDATOR.iter_errors(record):
-        field_path = ".".join(str(p) for p in error.path) if error.path else None
-        result.add_error(dataset_id, error.message, field=field_path)
-        if error.validator == "required":
-            result.stats["missing_mandatory"] += 1
+    try:
+        RecordModel.model_validate(record)
+    except ValidationError as exc:
+        _add_pydantic_errors(result, dataset_id=dataset_id, exc=exc, prefix="record")
 
     # Validate storage URL matches source
     storage = record.get("storage", {})
@@ -276,12 +237,10 @@ def validate_dataset(dataset: dict, result: ValidationResult):
     """Validate a single dataset document for mandatory fields."""
     dataset_id = dataset.get("dataset_id", "unknown")
 
-    # Schema validation for required fields
-    for error in DATASET_VALIDATOR.iter_errors(dataset):
-        field_path = ".".join(str(p) for p in error.path) if error.path else None
-        result.add_error(dataset_id, error.message, field=field_path)
-        if error.validator == "required":
-            result.stats["missing_mandatory"] += 1
+    try:
+        DatasetModel.model_validate(dataset)
+    except ValidationError as exc:
+        _add_pydantic_errors(result, dataset_id=dataset_id, exc=exc, prefix="dataset")
 
     # Check source is valid
     source = dataset.get("source")
@@ -439,20 +398,31 @@ def validate_pre_digestion(input_dir: Path, verbose: bool = False) -> Validation
             with open(manifest_path) as f:
                 manifest = json.load(f)
 
-            source = manifest.get("source", "unknown")
+            try:
+                manifest_model = ManifestModel.model_validate(manifest)
+            except ValidationError as exc:
+                _add_pydantic_errors(
+                    result, dataset_id=dataset_id, exc=exc, prefix="manifest"
+                )
+                continue
+
+            source = manifest_model.source or "unknown"
             sources[source] += 1
             result.stats["datasets_checked"] += 1
 
-            files = manifest.get("files", [])
+            files = manifest_model.files
 
             # Count potential data files and CTF .ds directories
             data_file_count = 0
             ctf_ds_dirs = set()
 
             for f in files:
-                filepath = (
-                    f.get("path", f.get("name", "")) if isinstance(f, dict) else f
-                )
+                if isinstance(f, str):
+                    filepath = f
+                elif isinstance(f, ManifestFileModel):
+                    filepath = f.path_or_name()
+                else:
+                    filepath = ""
                 filepath_lower = filepath.lower()
 
                 # Track CTF .ds directories (files inside .ds/ paths)

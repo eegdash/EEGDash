@@ -73,6 +73,7 @@ VALID_SOURCES = {
     "osf",
     "scidb",
     "datarn",
+    "hbn",
 }
 
 # Data file extensions that indicate valid neurophysiology data

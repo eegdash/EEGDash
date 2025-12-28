@@ -46,11 +46,20 @@ query($id: ID!) {
       associatedPaperDOI
       modalities
       ages
+      trialCount
+      grantFunderName
+      grantIdentifier
+      openneuroPaperDOI
+      seniorAuthor
+      adminUsers
+      affirmedDefaced
+      affirmedConsent
     }
     latestSnapshot {
       tag
       created
       size
+      readme
       summary {
         modalities
         primaryModality
@@ -60,6 +69,7 @@ query($id: ID!) {
         tasks
         totalFiles
         dataProcessed
+        size
       }
       description {
         Name
@@ -69,6 +79,10 @@ query($id: ID!) {
         Funding
         DatasetDOI
         DatasetType
+        Acknowledgements
+        HowToAcknowledge
+        ReferencesAndLinks
+        EthicsApprovals
       }
     }
   }
@@ -94,11 +108,20 @@ def build_batch_detail_query(dataset_ids: list[str]) -> str:
         associatedPaperDOI
         modalities
         ages
+        trialCount
+        grantFunderName
+        grantIdentifier
+        openneuroPaperDOI
+        seniorAuthor
+        adminUsers
+        affirmedDefaced
+        affirmedConsent
       }}
       latestSnapshot {{
         tag
         created
         size
+        readme
         summary {{
           modalities
           primaryModality
@@ -108,6 +131,7 @@ def build_batch_detail_query(dataset_ids: list[str]) -> str:
           tasks
           totalFiles
           dataProcessed
+          size
         }}
         description {{
           Name
@@ -117,6 +141,10 @@ def build_batch_detail_query(dataset_ids: list[str]) -> str:
           Funding
           DatasetDOI
           DatasetType
+          Acknowledgements
+          HowToAcknowledge
+          ReferencesAndLinks
+          EthicsApprovals
         }}
       }}
     }}""")
@@ -180,22 +208,39 @@ def extract_dataset_metadata(raw: dict, modality: str) -> Dataset:
     if snapshot_tag:
         openneuro_url += f"/versions/{snapshot_tag}"
 
+    # Get README from snapshot
+    readme = snapshot.get("readme")
+
+    # Get paper DOI - check multiple sources
+    paper_doi = metadata.get("associatedPaperDOI") or metadata.get("openneuroPaperDOI")
+
+    # Combine funding sources
+    funding_list = description.get("Funding") or []
+    grant_funder = metadata.get("grantFunderName")
+    grant_id = metadata.get("grantIdentifier")
+    if grant_funder and grant_funder not in funding_list:
+        grant_info = f"{grant_funder}: {grant_id}" if grant_id else grant_funder
+        funding_list = funding_list + [grant_info]
+
     return create_dataset(
         dataset_id=dataset_id,
         name=description.get("Name") or raw.get("name"),
         source="openneuro",
+        readme=readme,
         recording_modality=modality,
-        modalities=summary.get("modalities") or metadata.get("modalities") or [],
+        experimental_modalities=summary.get("modalities")
+        or metadata.get("modalities")
+        or [],
         bids_version=description.get("BIDSVersion"),
         license=description.get("License"),
         authors=description.get("Authors") or [],
-        funding=description.get("Funding") or [],
+        funding=funding_list,
         dataset_doi=description.get("DatasetDOI"),
-        associated_paper_doi=metadata.get("associatedPaperDOI"),
+        associated_paper_doi=paper_doi,
         tasks=tasks_clean,
         sessions=summary.get("sessions") or [],
         total_files=summary.get("totalFiles"),
-        size_bytes=snapshot.get("size"),
+        size_bytes=snapshot.get("size") or summary.get("size"),
         data_processed=summary.get("dataProcessed"),
         study_domain=metadata.get("studyDomain"),
         study_design=metadata.get("studyDesign"),
@@ -219,9 +264,10 @@ def fetch_dataset_ids(
         "eeg": {"page_size": page_size, "max_errors": 3},
         "ieeg": {"page_size": 10, "max_errors": 5},  # Smaller for iEEG
         "meg": {"page_size": page_size, "max_errors": 3},
+        "nirs": {"page_size": page_size, "max_errors": 3},  # fNIRS
     }
 
-    for modality in ["eeg", "ieeg", "meg"]:  # include this later "emg"
+    for modality in ["eeg", "ieeg", "meg", "nirs"]:  # include this later "emg"
         config = modality_configs[modality]
         cursor = None
         consecutive_errors = 0

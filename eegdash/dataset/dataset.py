@@ -2,7 +2,6 @@ from pathlib import Path
 from typing import Any
 
 from docstring_inheritance import NumpyDocstringInheritanceInitMeta
-from mne_bids import find_matching_paths
 from rich.console import Console
 from rich.panel import Panel
 from rich.text import Text
@@ -21,9 +20,10 @@ from ..const import (
     RELEASE_TO_OPENNEURO_DATASET_MAP,
     SUBJECT_MINI_RELEASE_MAP,
 )
+from ..local_bids import discover_local_bids_records
 from ..logging import logger
 from ..paths import get_default_cache_dir
-from ..records import create_record, validate_record
+from ..records import validate_record
 from .base import EEGDashBaseDataset
 from .bids_dataset import EEGBIDSDataset
 from .registry import register_openneuro_datasets
@@ -279,6 +279,7 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
                     f"Offline mode is enabled, but local data_dir {self.data_dir} does not exist."
                 )
             records = self._find_local_bids_records(self.data_dir, self.query)
+            self.records = records
             # Try to enrich from local participants.tsv to restore requested fields
             try:
                 bids_ds = EEGBIDSDataset(
@@ -381,67 +382,13 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
 
         Notes
         -----
-        Matching is performed for ``datatypes=['eeg']`` and ``suffixes=['eeg']``.
-        For offline/local mode, storage backend is set to 'local' and the
-        storage base points to the local dataset root.
+        Matching is performed via :func:`mne_bids.find_matching_paths` using
+        datatypes/suffixes derived from the ``'modality'`` filter (default:
+        ``'eeg'``). For offline/local mode, storage backend is set to ``'local'``
+        and the storage base points to the local dataset root.
 
         """
-        dataset_id = filters["dataset"]
-        arg_map = {
-            "subjects": "subject",
-            "sessions": "session",
-            "tasks": "task",
-            "runs": "run",
-        }
-        matching_args: dict[str, list[str]] = {}
-        for finder_key, entity_key in arg_map.items():
-            entity_val = filters.get(entity_key)
-            if entity_val is None:
-                continue
-            if isinstance(entity_val, (list, tuple, set)):
-                entity_vals = list(entity_val)
-                if not entity_vals:
-                    continue
-                matching_args[finder_key] = entity_vals
-            else:
-                matching_args[finder_key] = [entity_val]
-
-        matched_paths = find_matching_paths(
-            root=str(dataset_root),
-            datatypes=["eeg"],
-            suffixes=["eeg"],
-            ignore_json=True,
-            **matching_args,
-        )
-        records_out: list[dict] = []
-
-        for bids_path in matched_paths:
-            # Build bids_relpath relative to dataset root
-            rel_from_root = (
-                Path(bids_path.fpath)
-                .resolve()
-                .relative_to(Path(bids_path.root).resolve())
-            )
-            bids_relpath = rel_from_root.as_posix()
-
-            rec = create_record(
-                dataset=dataset_id,
-                storage_base=str(dataset_root),
-                bids_relpath=bids_relpath,
-                subject=bids_path.subject or None,
-                session=bids_path.session or None,
-                task=bids_path.task or None,
-                run=bids_path.run or None,
-                dep_keys=[],
-                storage_backend="local",
-            )
-            # Add extra fields for length calculation
-            rec["sampling_frequency"] = None
-            rec["nchans"] = None
-            rec["ntimes"] = None
-            records_out.append(rec)
-
-        return records_out
+        return discover_local_bids_records(dataset_root, filters)
 
     def _find_key_in_nested_dict(self, data: Any, target_key: str) -> Any:
         """Recursively search for a key in nested dicts/lists.

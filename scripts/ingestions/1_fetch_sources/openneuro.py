@@ -5,10 +5,9 @@ import sys
 from collections.abc import Iterator
 from pathlib import Path
 
-from _http import request_json
-
 # Add ingestion paths before importing local modules
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from _http import request_json
 from _serialize import save_datasets_deterministically, setup_paths
 
 setup_paths()

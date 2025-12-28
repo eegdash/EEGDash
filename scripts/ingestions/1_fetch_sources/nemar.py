@@ -8,8 +8,13 @@ from dataset_description.json and participants.tsv files.
 import argparse
 import sys
 from collections.abc import Iterator
+from io import StringIO
 from pathlib import Path
 
+# Add ingestion paths before importing local modules
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+
+import pandas as pd
 from _http import (
     HTTPStatusError,
     RequestError,
@@ -17,9 +22,6 @@ from _http import (
     request_json,
     request_text,
 )
-
-# Add ingestion paths before importing local modules
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from _serialize import save_datasets_deterministically, setup_paths
 
 setup_paths()
@@ -34,10 +36,17 @@ def fetch_bids_description(
 ) -> dict | None:
     """Fetch dataset_description.json from a repository."""
     url = f"{GITHUB_RAW_URL}/{org}/{repo}/{branch}/dataset_description.json"
-    data, response = request_json("get", url, timeout=timeout)
-    if response and response.status_code == 200 and data is not None:
-        return data
-    return None
+    try:
+        data, _ = request_json(
+            "get",
+            url,
+            timeout=timeout,
+            raise_for_status=True,
+            raise_for_request=True,
+        )
+        return data if isinstance(data, dict) else None
+    except (RequestError, HTTPStatusError):
+        return None
 
 
 def fetch_participants_tsv(
@@ -46,18 +55,13 @@ def fetch_participants_tsv(
     """Fetch and parse participants.tsv from a repository."""
     url = f"{GITHUB_RAW_URL}/{org}/{repo}/{branch}/participants.tsv"
     text, response = request_text("get", url, timeout=timeout)
-    if response and response.status_code == 200 and text:
-        lines = text.strip().split("\n")
-        if len(lines) < 2:
-            return None
-        headers = lines[0].split("\t")
-        participants = []
-        for line in lines[1:]:
-            values = line.split("\t")
-            participant = dict(zip(headers, values))
-            participants.append(participant)
-        return participants
-    return None
+    if not response or response.status_code != 200 or not text:
+        return None
+    try:
+        df = pd.read_csv(StringIO(text), sep="\t", dtype="string")
+    except Exception:
+        return None
+    return df.to_dict(orient="records") if not df.empty else None
 
 
 def extract_ages_from_participants(participants: list[dict] | None) -> list[int]:
@@ -65,18 +69,17 @@ def extract_ages_from_participants(participants: list[dict] | None) -> list[int]
     if not participants:
         return []
 
-    ages = []
-    for p in participants:
-        # Try common age column names
-        age_val = p.get("age") or p.get("Age") or p.get("AGE")
-        if age_val:
-            try:
-                age = int(float(age_val))
-                if 0 < age < 150:  # Sanity check
-                    ages.append(age)
-            except (ValueError, TypeError):
-                pass
-    return ages
+    df = pd.DataFrame(participants)
+    if df.empty:
+        return []
+
+    age_cols = [c for c in df.columns if str(c).strip().lower() == "age"]
+    if not age_cols:
+        return []
+
+    ages = pd.to_numeric(df[age_cols[0]], errors="coerce")
+    ages = ages[(ages > 0) & (ages < 150)].dropna()
+    return [int(a) for a in ages.astype(float).tolist()]
 
 
 def fetch_readme(org: str, repo: str, branch: str, timeout: float = 10.0) -> str | None:

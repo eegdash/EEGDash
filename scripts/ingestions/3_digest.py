@@ -903,6 +903,11 @@ def digest_from_manifest(
                 r".*_ieeg\.zip$",  # Ends with _ieeg.zip
                 r".*dataset.*\.zip$",  # Contains 'dataset'
                 r".*rawdata.*\.zip$",  # Contains 'rawdata'
+                r".*data\.zip$",  # Simple data.zip
+                r".*eeg.*\.zip$",  # Contains 'eeg' anywhere
+                r".*meg.*\.zip$",  # Contains 'meg' anywhere
+                r".*nirs.*\.zip$",  # Contains 'nirs' anywhere
+                r".*fnirs.*\.zip$",  # Contains 'fnirs' anywhere
             ]
 
             filepath_lower = filepath.lower()
@@ -911,38 +916,83 @@ def digest_from_manifest(
             if is_bids_zip:
                 recording_modality = manifest.get("recording_modality", "eeg")
 
-                try:
-                    # Create a placeholder record indicating data is in ZIP
-                    record = create_record(
-                        dataset=dataset_id,
-                        storage_base=storage_base,
-                        bids_relpath=f"__ZIP__/{filepath}",  # Special path indicating ZIP
-                        subject=None,
-                        session=None,
-                        task=None,
-                        run=None,
-                        dep_keys=[],
-                        datatype=recording_modality,
-                        suffix=recording_modality,
-                        storage_backend=get_storage_backend(source),
-                        recording_modality=recording_modality,
-                        digested_at=digested_at,
-                    )
+                # Try to infer subject count from manifest demographics
+                demographics = manifest.get("demographics", {})
+                inferred_subjects = demographics.get("subjects_count", 0)
 
-                    # Store ZIP info for download
-                    if download_url:
-                        record["container_url"] = download_url
-                        record["container_type"] = "zip"
-                        record["container_name"] = filepath
-                        record["needs_extraction"] = (
-                            True  # Flag that ZIP needs extraction
+                # If we have subject count, create individual subject records
+                if inferred_subjects and inferred_subjects > 0:
+                    for sub_idx in range(
+                        1, min(inferred_subjects + 1, 201)
+                    ):  # Cap at 200 subjects
+                        sub_id = (
+                            f"{sub_idx:02d}"
+                            if inferred_subjects < 100
+                            else f"{sub_idx:03d}"
                         )
-                    if file_size:
-                        record["container_size"] = file_size
 
-                    records.append(dict(record))
-                except Exception as e:
-                    errors.append({"file": filepath, "error": str(e)})
+                        try:
+                            record = create_record(
+                                dataset=dataset_id,
+                                storage_base=storage_base,
+                                bids_relpath=f"sub-{sub_id}/{recording_modality}/sub-{sub_id}_{recording_modality}.set",
+                                subject=sub_id,
+                                session=None,
+                                task=manifest.get("tasks", [None])[0]
+                                if manifest.get("tasks")
+                                else None,
+                                run=None,
+                                dep_keys=[],
+                                datatype=recording_modality,
+                                suffix=recording_modality,
+                                storage_backend="https",
+                                recording_modality=recording_modality,
+                                digested_at=digested_at,
+                            )
+
+                            # Store ZIP info for download
+                            if download_url:
+                                record["container_url"] = download_url
+                                record["container_type"] = "zip"
+                                record["container_name"] = filepath
+                                record["needs_extraction"] = True
+                                record["inferred_from_metadata"] = True
+                            if file_size:
+                                record["container_size"] = file_size
+
+                            records.append(dict(record))
+                        except Exception as e:
+                            errors.append({"file": f"sub-{sub_id}", "error": str(e)})
+                else:
+                    # No subject count - create single placeholder record
+                    try:
+                        record = create_record(
+                            dataset=dataset_id,
+                            storage_base=storage_base,
+                            bids_relpath=f"__ZIP__/{filepath}",
+                            subject=None,
+                            session=None,
+                            task=None,
+                            run=None,
+                            dep_keys=[],
+                            datatype=recording_modality,
+                            suffix=recording_modality,
+                            storage_backend=get_storage_backend(source),
+                            recording_modality=recording_modality,
+                            digested_at=digested_at,
+                        )
+
+                        if download_url:
+                            record["container_url"] = download_url
+                            record["container_type"] = "zip"
+                            record["container_name"] = filepath
+                            record["needs_extraction"] = True
+                        if file_size:
+                            record["container_size"] = file_size
+
+                        records.append(dict(record))
+                    except Exception as e:
+                        errors.append({"file": filepath, "error": str(e)})
                 continue
 
         # Check if this is a neurophysiology data file (treat symlinks as files)

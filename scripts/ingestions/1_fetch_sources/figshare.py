@@ -33,7 +33,8 @@ from _bids import (
     BIDS_REQUIRED_FILES,
     validate_bids_structure_from_files,
 )
-from _http import RequestError, request_json, request_response
+from _http import RequestError, build_headers, request_json, request_response
+from _keywords import FIGSHARE_MULTI_QUERIES
 from _serialize import (
     PROJECT_ROOT,
     extract_subjects_count,
@@ -56,6 +57,11 @@ if FIGSHARE_API_KEY:
     print(f"✓ Figshare API key loaded from {_env_path}")
 else:
     print(f"⚠ No Figshare API key found in {_env_path} (using anonymous access)")
+
+FIGSHARE_USER_AGENT = "EEGDash/1.0 (https://github.com/eegdash/EEGDash)"
+FIGSHARE_DOWNLOAD_USER_AGENT = (
+    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36"
+)
 
 
 def search_figshare(
@@ -105,13 +111,7 @@ def search_figshare(
             "page_size": actual_page_size,
         }
 
-        headers = {
-            "Content-Type": "application/json",
-            "User-Agent": "EEGDash/1.0 (https://github.com/eegdash/EEGDash)",
-        }
-        # Add API key if available for higher rate limits
-        if FIGSHARE_API_KEY:
-            headers["Authorization"] = f"token {FIGSHARE_API_KEY}"
+        headers = _get_headers()
 
         # Retry loop for this page with aggressive backoff
         articles = None
@@ -197,13 +197,12 @@ _figshare_last_request_time = 0.0
 FIGSHARE_RATE_LIMIT_DELAY = float(os.getenv("FIGSHARE_RATE_LIMIT", "3.0"))
 
 
-def _get_headers() -> dict[str, str]:
+def _get_headers(
+    *, accept: str = "application/json", include_auth: bool = True
+) -> dict[str, str]:
     """Get standard headers for Figshare API requests."""
-    headers = {
-        "User-Agent": "EEGDash/1.0 (https://github.com/eegdash/EEGDash)",
-        "Accept": "application/json",
-    }
-    if FIGSHARE_API_KEY:
+    headers = build_headers(user_agent=FIGSHARE_USER_AGENT, accept=accept)
+    if include_auth and FIGSHARE_API_KEY:
         headers["Authorization"] = f"token {FIGSHARE_API_KEY}"
     return headers
 
@@ -237,12 +236,7 @@ def peek_zip_contents(
         _figshare_last_request_time = time.time()
 
         # Get file size with HEAD request - include API key for authenticated access
-        headers = {
-            "User-Agent": "EEGDash/1.0 (https://github.com/eegdash/EEGDash)",
-            "Accept": "application/octet-stream",
-        }
-        if FIGSHARE_API_KEY:
-            headers["Authorization"] = f"token {FIGSHARE_API_KEY}"
+        headers = _get_headers(accept="application/octet-stream")
 
         head = request_response(
             "head",
@@ -265,10 +259,9 @@ def peek_zip_contents(
 
         if head and head.status_code == 403:
             # Try without auth header (some downloads are public)
-            headers_no_auth = {
-                "User-Agent": headers["User-Agent"],
-                "Accept": headers["Accept"],
-            }
+            headers_no_auth = _get_headers(
+                accept="application/octet-stream", include_auth=False
+            )
             head = request_response(
                 "head",
                 download_url,
@@ -380,9 +373,7 @@ def download_and_extract_zip(
             time.sleep(FIGSHARE_RATE_LIMIT_DELAY * 2 - elapsed)
         _figshare_last_request_time = time.time()
 
-        headers = {
-            "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36",
-        }
+        headers = build_headers(user_agent=FIGSHARE_DOWNLOAD_USER_AGENT, accept=None)
 
         print(f"      Downloading {zip_name}...", end=" ", flush=True)
         response = request_response(
@@ -892,37 +883,15 @@ def main() -> None:
             sys.exit(1)
         articles = [details]
     elif args.multi_query:
-        # Multiple search queries to find more EEG/neural recording datasets
-        queries = [
-            "EEG BIDS",
-            "electroencephalography BIDS",
-            "EEG dataset",
-            "ERP EEG",
-            "MEG BIDS",
-            "magnetoencephalography",
-            "iEEG BIDS",
-            "intracranial EEG",
-            "ECoG dataset",
-            "EMG dataset",
-            "electromyography",
-            "fNIRS dataset",
-            "brain signals dataset",
-            "neural recording dataset",
-            "BCI dataset",
-            "brain-computer interface",
-            "sleep EEG",
-            "epilepsy EEG",
-        ]
-
         all_articles = {}  # Use dict to dedupe by article ID
-        for q in queries:
+        for q in FIGSHARE_MULTI_QUERIES:
             print(f"\n{'=' * 60}")
             print(f"Searching: {q}")
             print("=" * 60)
 
             results = search_figshare(
                 query=q,
-                size=args.size // len(queries) + 50,  # Distribute quota
+                size=args.size // len(FIGSHARE_MULTI_QUERIES) + 50,  # Distribute quota
                 page_size=args.page_size,
                 item_type=args.item_type,
             )

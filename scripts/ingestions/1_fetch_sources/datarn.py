@@ -18,7 +18,6 @@ Output: consolidated/datarn_datasets.json (Dataset schema format)
 import argparse
 import sys
 import time
-from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
@@ -42,37 +41,6 @@ DATARN_API_URL = f"{DATARN_BASE_URL}/api/search/collections/published"
 
 # Default access levels
 DEFAULT_ACCESS_LEVELS = ["OPEN_ACCESS", "REGISTERED_ACCESS", "RESTRICTED_ACCESS"]
-
-
-# Helper function to create manifest template
-def create_datarn_manifest_template() -> dict[str, Any]:
-    """Create a template for manual data.ru.nl dataset manifest.
-
-    Returns:
-        Template dictionary for user to fill in
-
-    """
-    return {
-        "metadata": {
-            "source": "datarn",
-            "source_name": "Radboud University RDM (data.ru.nl)",
-            "description": "Manually curated BIDS datasets from data.ru.nl",
-            "harvest_method": "manual_curation",
-            "harvest_date": datetime.now(timezone.utc).isoformat(),
-            "note": "Add datasets manually by filling in the datasets array below",
-        },
-        "datasets": [
-            {
-                "dataset_id": "example_dataset_1",
-                "name": "Example BIDS Dataset",
-                "url": "https://data.ru.nl/dataset.xhtml?persistentId=doi:10.34894/XXXXXX",
-                "doi": "10.34894/XXXXXX",
-                "modalities": ["eeg"],
-                "authors": ["Author Name"],
-                "description": "Brief description of dataset",
-            }
-        ],
-    }
 
 
 def fetch_datasets_from_api(

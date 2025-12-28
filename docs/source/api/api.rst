@@ -104,6 +104,70 @@ The API is organized into three main components:
          :click-parent:
 
          → Explore the Dataset API
+
+
+********************
+REST API Endpoints
+********************
+
+The EEGDash metadata server exposes a FastAPI REST interface for discovery and
+querying. Base URL: `https://data.eegdash.org`_. Below is a concise map of the main
+entrypoints and their purpose.
+
+.. _https://data.eegdash.org: https://data.eegdash.org
+
+
+
+Meta Endpoints
+==============
+
+- ``GET /``
+  Returns API name, version, and available databases.
+- ``GET /health``
+  Returns API health and MongoDB connection status.
+- ``GET /metrics``
+  Prometheus metrics (if enabled).
+
+Public Data Endpoints
+=====================
+
+- ``GET /api/{database}/records``
+  Query records (files) with filter and pagination.
+- ``GET /api/{database}/count``
+  Count records matching a filter.
+- ``GET /api/{database}/datasets/names``
+  List unique dataset names from records.
+- ``GET /api/{database}/metadata/{dataset}``
+  Get metadata for a single dataset (from records).
+- ``GET /api/{database}/datasets/summary``
+  Get summary statistics and metadata for all datasets (with pagination, filtering).
+  Query params: ``limit`` (1-1000), ``skip``, ``modality`` (eeg/meg/ieeg), ``source`` (openneuro/nemar/zenodo/etc.).
+  Response includes aggregate totals for datasets, subjects, files, and size.
+- ``GET /api/{database}/datasets/summary/{dataset_id}``
+  Get detailed summary for a specific dataset.
+  ``dataset_id`` may be the dataset ID or dataset name.
+- ``GET /api/{database}/datasets/{dataset_id}``
+  Get a specific dataset document by ID.
+- ``GET /api/{database}/datasets``
+  List dataset documents (with filtering and pagination).
+
+Admin Endpoints (require Bearer token)
+======================================
+
+- ``POST /admin/{database}/records``
+  Insert a single record (file document).
+- ``POST /admin/{database}/records/bulk``
+  Insert multiple records (max 1000 per request).
+- ``POST /admin/{database}/datasets``
+  Insert or update a single dataset document (upsert by ``dataset_id``).
+- ``POST /admin/{database}/datasets/bulk``
+  Insert or update multiple dataset documents (max 500 per request).
+- ``PATCH /admin/{database}/records``
+  Update records matching a filter (only ``$set`` allowed).
+- ``GET /admin/security/blocked``
+  List blocked IPs and offense counts.
+- ``POST /admin/security/unblock``
+  Unblock a specific IP.
     
 
 ******************

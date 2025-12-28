@@ -266,7 +266,7 @@ def extract_dataset_metadata(
         source=source,
         readme=readme,
         recording_modality=recording_modality,
-        modalities=sorted(modalities) if modalities else [recording_modality],
+        datatypes=sorted(modalities) if modalities else [recording_modality],
         bids_version=bids_version,
         license=license_info,
         authors=authors if isinstance(authors, list) else [authors] if authors else [],
@@ -737,7 +737,7 @@ def digest_from_manifest(
         source=source,
         readme=manifest.get("readme"),
         recording_modality=manifest.get("recording_modality", "eeg"),
-        modalities=sorted(manifest.get("modalities", list(modalities))),
+        datatypes=sorted(manifest.get("modalities", list(modalities))),
         bids_version=None,  # Not available from API
         license=manifest.get("license"),
         authors=manifest.get("authors", []),

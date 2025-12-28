@@ -97,6 +97,11 @@ class Dataset(TypedDict, total=False):
     recording_modality: str  # Primary recording type: "eeg", "meg", "ieeg"
     datatypes: list[str]  # BIDS datatypes present: ["eeg", "anat", "beh"]
 
+    # Experimental info
+    experimental_modalities: (
+        list[str] | None
+    )  # Stimulus types: ["visual", "auditory", "tactile"]
+
     # BIDS metadata
     bids_version: str | None
     license: str | None
@@ -143,6 +148,7 @@ def create_dataset(
     readme: str | None = None,
     recording_modality: str = "eeg",
     datatypes: list[str] | None = None,
+    experimental_modalities: list[str] | None = None,
     bids_version: str | None = None,
     license: str | None = None,
     authors: list[str] | None = None,
@@ -199,6 +205,8 @@ def create_dataset(
         Primary recording type ("eeg", "meg", "ieeg").
     datatypes : list[str], optional
         BIDS datatypes present in the dataset (e.g., ["eeg", "anat", "beh"]).
+    experimental_modalities : list[str], optional
+        Stimulus/experimental modalities (e.g., ["visual", "auditory", "tactile"]).
     bids_version : str, optional
         BIDS version of the dataset.
     license : str, optional
@@ -299,6 +307,7 @@ def create_dataset(
         readme=readme,
         recording_modality=recording_modality,
         datatypes=datatypes or [recording_modality],
+        experimental_modalities=experimental_modalities,
         bids_version=bids_version,
         license=license,
         authors=authors or [],

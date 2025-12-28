@@ -31,6 +31,7 @@ from _file_utils import (
     list_datarn_files,
     list_figshare_files,
     list_git_files,
+    list_local_bids_files,
     list_osf_files,
     list_scidb_files,
     list_zenodo_files,
@@ -332,6 +333,50 @@ def fetch_datarn(dataset: dict, output_dir: Path, **_kwargs) -> dict:
     return {"status": "manifest", "dataset_id": dataset_id, "file_count": len(files)}
 
 
+def fetch_hbn(dataset: dict, output_dir: Path, **_kwargs) -> dict:
+    """Fetch file manifest from local HBN/NeurIPS2025 BIDS directories.
+
+    This handler scans local BIDS directories and creates manifests
+    with S3 paths for storage.
+    """
+    dataset_id = dataset["dataset_id"]
+    manifest_path = output_dir / dataset_id / "manifest.json"
+
+    # Skip if manifest already exists
+    if manifest_path.exists():
+        with open(manifest_path) as f:
+            manifest = json.load(f)
+        return {
+            "status": "skip",
+            "dataset_id": dataset_id,
+            "file_count": manifest.get("total_files", 0),
+        }
+
+    # Get local path from dataset metadata
+    local_path = dataset.get("local_path")
+    if not local_path:
+        return {"status": "error", "dataset_id": dataset_id, "error": "No local_path"}
+
+    local_path = Path(local_path)
+    if not local_path.exists():
+        return {
+            "status": "error",
+            "dataset_id": dataset_id,
+            "error": f"Path not found: {local_path}",
+        }
+
+    # List files from local BIDS directory
+    files = list_local_bids_files(local_path)
+
+    if not files:
+        return {"status": "error", "dataset_id": dataset_id, "error": "No files found"}
+
+    manifest = build_manifest(dataset_id, "hbn", files, dataset)
+    save_manifest(manifest, output_dir)
+
+    return {"status": "manifest", "dataset_id": dataset_id, "file_count": len(files)}
+
+
 def fetch_generic(dataset: dict, output_dir: Path, **_kwargs) -> dict:
     """Generic handler - just save metadata as manifest."""
     dataset_id = dataset["dataset_id"]
@@ -358,6 +403,7 @@ HANDLERS = {
     "osf": fetch_osf,
     "scidb": fetch_scidb,
     "datarn": fetch_datarn,
+    "hbn": fetch_hbn,
     "unknown": fetch_generic,
 }
 

@@ -660,3 +660,47 @@ def save_manifest(manifest: dict, output_dir: Path) -> Path:
         json.dump(manifest, f, indent=2)
 
     return manifest_path
+
+
+def list_local_bids_files(local_path: str | Path) -> list[dict]:
+    """List files from a local BIDS directory.
+
+    Args:
+        local_path: Path to local BIDS dataset directory
+
+    Returns:
+        List of file dicts with {name, size} for each file
+
+    """
+    import os
+
+    local_path = Path(local_path)
+    if not local_path.exists():
+        return []
+
+    files = []
+    for root, dirs, filenames in os.walk(local_path):
+        # Skip hidden directories
+        dirs[:] = [d for d in dirs if not d.startswith(".")]
+
+        for filename in filenames:
+            # Skip hidden files
+            if filename.startswith("."):
+                continue
+
+            filepath = Path(root) / filename
+            rel_path = filepath.relative_to(local_path)
+
+            try:
+                size = filepath.stat().st_size
+            except OSError:
+                size = 0
+
+            files.append(
+                {
+                    "name": str(rel_path),
+                    "size": size,
+                }
+            )
+
+    return files

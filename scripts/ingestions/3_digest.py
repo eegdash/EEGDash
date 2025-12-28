@@ -121,6 +121,17 @@ def extract_dataset_metadata(
         except Exception:
             pass
 
+    # Read README file
+    readme = None
+    for readme_name in ["README", "README.md", "README.txt", "readme", "readme.md"]:
+        readme_path = bids_root / readme_name
+        if readme_path.exists():
+            try:
+                readme = readme_path.read_text(encoding="utf-8")
+                break
+            except Exception:
+                pass
+
     # Extract basic metadata
     name = description.get("Name", dataset_id)
     bids_version = description.get("BIDSVersion")
@@ -253,6 +264,7 @@ def extract_dataset_metadata(
         dataset_id=dataset_id,
         name=name,
         source=source,
+        readme=readme,
         recording_modality=recording_modality,
         modalities=sorted(modalities) if modalities else [recording_modality],
         bids_version=bids_version,
@@ -723,6 +735,7 @@ def digest_from_manifest(
         dataset_id=dataset_id,
         name=manifest.get("name"),
         source=source,
+        readme=manifest.get("readme"),
         recording_modality=manifest.get("recording_modality", "eeg"),
         modalities=sorted(manifest.get("modalities", list(modalities))),
         bids_version=None,  # Not available from API

@@ -26,6 +26,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from _serialize import save_datasets_deterministically, setup_paths
 
 setup_paths()
+from eegdash.local_bids import discover_local_bids_records
 from eegdash.records import create_dataset
 
 
@@ -120,52 +121,41 @@ def scan_local_bids_dataset(
     # Read README
     readme = read_readme(dataset_dir)
 
-    # Count subjects by looking at sub-* directories
-    subject_dirs = list(dataset_dir.glob("sub-*"))
+    # Use EEGDash's offline discovery logic (same path as EEGDashDataset(download=False))
+    dataset_id = dataset_dir.name
+    records = discover_local_bids_records(
+        dataset_dir,
+        {
+            "dataset": dataset_id,
+            "modality": modality,
+        },
+    )
+
+    # Optional: filter to specific extensions (helps for mixed-format datasets)
+    wanted_exts = {e if e.startswith(".") else f".{e}" for e in file_extensions}
+    records = [r for r in records if (r.get("extension") or "") in wanted_exts]
+
+    entities = [
+        r.get("entities") for r in records if isinstance(r.get("entities"), dict)
+    ]
+    tasks = sorted({e.get("task") for e in entities if e.get("task")})
+    sessions = sorted({e.get("session") for e in entities if e.get("session")})
+    subjects = {e.get("subject") for e in entities if e.get("subject")}
+    total_files = len(records)
+
     if not demographics["subjects_count"]:
-        demographics["subjects_count"] = len(subject_dirs)
-
-    # Extract tasks, sessions, and count files
-    tasks = set()
-    sessions = set()
-    total_files = 0
-
-    for sub_dir in subject_dirs:
-        # Check for session directories
-        ses_dirs = list(sub_dir.glob("ses-*"))
-        if ses_dirs:
-            for ses_dir in ses_dirs:
-                sessions.add(ses_dir.name.replace("ses-", ""))
-                modality_dir = ses_dir / modality
-                if modality_dir.exists():
-                    for ext in file_extensions:
-                        for f in modality_dir.glob(f"*{ext}"):
-                            total_files += 1
-                            # Extract task from filename
-                            parts = f.stem.split("_")
-                            for part in parts:
-                                if part.startswith("task-"):
-                                    tasks.add(part.replace("task-", ""))
-        else:
-            # No sessions, check directly for modality folder
-            modality_dir = sub_dir / modality
-            if modality_dir.exists():
-                for ext in file_extensions:
-                    for f in modality_dir.glob(f"*{ext}"):
-                        total_files += 1
-                        parts = f.stem.split("_")
-                        for part in parts:
-                            if part.startswith("task-"):
-                                tasks.add(part.replace("task-", ""))
+        demographics["subjects_count"] = len(subjects)
+    if not demographics["subjects_count"]:
+        demographics["subjects_count"] = len(list(dataset_dir.glob("sub-*")))
 
     # Build dataset entry
-    dataset_id = dataset_dir.name
-
     # Get metadata from dataset_description.json
     dataset_doi = desc.get("DatasetDOI")
     authors = desc.get("Authors", [])
     funding = desc.get("Funding", [])
     license_str = desc.get("License", "")
+
+    datatypes = sorted({r.get("datatype") for r in records if r.get("datatype")})
 
     # Build the dataset dict
     dataset = create_dataset(
@@ -174,14 +164,15 @@ def scan_local_bids_dataset(
         source=source,
         readme=readme,
         recording_modality=modality,
+        datatypes=datatypes or None,
         experimental_modalities=[modality],
         bids_version=desc.get("BIDSVersion"),
         license=license_str,
         authors=authors,
         funding=funding,
         dataset_doi=dataset_doi,
-        tasks=sorted(tasks) if tasks else [],
-        sessions=sorted(sessions) if sessions else [],
+        tasks=tasks,
+        sessions=sessions,
         total_files=total_files,
         # Demographics (unpacked)
         subjects_count=demographics.get("subjects_count", 0),
@@ -190,11 +181,6 @@ def scan_local_bids_dataset(
         sex_distribution=demographics.get("sex_distribution", {}),
         source_url=storage_url,
     )
-
-    # Add storage URL as external link
-    if "external_links" not in dataset:
-        dataset["external_links"] = {}
-    dataset["external_links"]["s3_bucket"] = storage_url
 
     # Add local_path for clone step (transient field, not stored in DB)
     # Use absolute path to ensure it works from any working directory

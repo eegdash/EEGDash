@@ -47,6 +47,32 @@ ZENODO_SIMPLE_SEARCHES = [
 ]
 
 # -----------------------------------------------------------------------------
+# Figshare
+# -----------------------------------------------------------------------------
+
+# Multiple search queries to find more EEG/neural recording datasets
+FIGSHARE_MULTI_QUERIES = [
+    "EEG BIDS",
+    "electroencephalography BIDS",
+    "EEG dataset",
+    "ERP EEG",
+    "MEG BIDS",
+    "magnetoencephalography",
+    "iEEG BIDS",
+    "intracranial EEG",
+    "ECoG dataset",
+    "EMG dataset",
+    "electromyography",
+    "fNIRS dataset",
+    "brain signals dataset",
+    "neural recording dataset",
+    "BCI dataset",
+    "brain-computer interface",
+    "sleep EEG",
+    "epilepsy EEG",
+]
+
+# -----------------------------------------------------------------------------
 # OSF
 # -----------------------------------------------------------------------------
 

@@ -24,12 +24,21 @@ from typing import Any
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from _bids import (
     BIDS_DATASET_ZIP_PATTERN,
-    BIDS_OPTIONAL_FILES,
-    BIDS_REQUIRED_FILES,
-    BIDS_SUBJECT_PATTERN,
-    collect_bids_matches,
+    validate_bids_structure_from_files,
 )
 from _http import HTTPStatusError, RequestError, request_json
+from _keywords import (
+    OSF_DATA_CATEGORIES as DATA_CATEGORIES,
+)
+from _keywords import (
+    OSF_LICENSE_NAMES as LICENSE_NAMES,
+)
+from _keywords import (
+    OSF_MODALITY_TAGS as MODALITY_TAGS,
+)
+from _keywords import (
+    OSF_TITLE_SEARCH_KEYWORDS as TITLE_SEARCH_KEYWORDS,
+)
 from _serialize import (
     extract_subjects_count,
     generate_dataset_id,
@@ -41,126 +50,6 @@ setup_paths()
 from eegdash.records import Dataset, create_dataset
 
 OSF_API_URL = "https://api.osf.io/v2"
-
-# License ID to name mapping (common OSF licenses)
-LICENSE_NAMES = {
-    "563c1cf88c5e4a3877f9e96a": "CC-BY-4.0",
-    "563c1cf88c5e4a3877f9e965": "CC0-1.0",
-    "563c1cf88c5e4a3877f9e968": "MIT",
-    "563c1cf88c5e4a3877f9e96c": "GPL-3.0",
-    "563c1cf88c5e4a3877f9e96e": "Apache-2.0",
-    "563c1cf88c5e4a3877f9e967": "BSD-2-Clause",
-    "563c1cf88c5e4a3877f9e969": "BSD-3-Clause",
-    "563c1cf88c5e4a3877f9e96b": "CC-BY-NC-4.0",
-}
-
-# Categories we're interested in (datasets/data, not posters/presentations)
-DATA_CATEGORIES = {"data", "project", "analysis", "software", "other"}
-
-# Modality tags to search for - optimized for speed (core keywords only)
-# Less common variants are covered by title search
-MODALITY_TAGS = {
-    "eeg": ["eeg", "electroencephalography", "erp"],  # erp = event-related potential
-    "meg": ["meg", "magnetoencephalography"],
-    "emg": ["emg", "electromyography"],
-    "fnirs": ["fnirs", "fNIRS", "nirs"],
-    "lfp": ["lfp", "local field potential"],
-    "spike": ["spike", "single unit", "multi-unit"],
-    "mea": ["mea", "microelectrode array", "neuropixels"],
-    "ieeg": ["ieeg", "intracranial eeg", "seeg", "ecog"],
-    "bids": ["bids"],
-}
-
-# Title search keywords - for datasets without tags
-# These are searched via filter[title][icontains]
-TITLE_SEARCH_KEYWORDS = {
-    "eeg": [
-        "EEG",
-        "electroencephalography",
-        "electroencephalogram",
-        "event-related potential",
-        "ERP CORE",
-    ],
-    "meg": ["MEG", "magnetoencephalography"],
-    "emg": ["EMG", "electromyography"],
-    "fnirs": ["fNIRS", "NIRS", "near-infrared spectroscopy"],
-    "ieeg": ["iEEG", "intracranial EEG", "ECoG", "sEEG"],
-    "bids": ["BIDS"],
-}
-
-
-def validate_bids_structure(files: list[dict[str, Any]]) -> dict[str, Any]:
-    """Validate BIDS structure from OSF file list.
-
-    Checks for:
-    - Required BIDS files (dataset_description.json)
-    - Optional BIDS files (participants.tsv, README, etc.)
-    - Subject-level folders (sub-XX)
-    - BIDS dataset zip files
-
-    Args:
-        files: List of file/folder dictionaries from OSF API
-
-    Returns:
-        Dictionary with validation results:
-        - is_bids: True if BIDS structure confirmed
-        - bids_files_found: List of BIDS files found
-        - subject_count: Number of subject folders/zips
-        - has_subject_zips: True if subjects are in ZIP format
-        - has_bids_zip: True if BIDS dataset ZIP found
-        - bids_zip_files: List of BIDS dataset ZIP filenames
-
-    """
-    result = {
-        "is_bids": False,
-        "bids_files_found": [],
-        "subject_count": 0,
-        "has_subject_zips": False,
-        "has_bids_zip": False,
-        "bids_zip_files": [],
-    }
-
-    if not files:
-        return result
-
-    # Collect all file/folder names (handle both files and folders)
-    all_names = []
-    for f in files:
-        name = f.get("name", "")
-        if name:
-            all_names.append(name)
-
-    matches = collect_bids_matches(
-        all_names,
-        required_files=BIDS_REQUIRED_FILES,
-        optional_files=BIDS_OPTIONAL_FILES,
-        subject_pattern=BIDS_SUBJECT_PATTERN,
-        dataset_zip_pattern=BIDS_DATASET_ZIP_PATTERN,
-        dataset_zip_matcher="match",
-    )
-    result["bids_files_found"] = matches["required_found"] + matches["optional_found"]
-
-    subject_files = matches["subject_files"]
-    subject_zips = matches["subject_zips"]
-    result["subject_count"] = len(subject_files)
-    result["has_subject_zips"] = len(subject_zips) > 0
-
-    result["bids_zip_files"] = matches["bids_zip_files"]
-    result["has_bids_zip"] = len(matches["bids_zip_files"]) > 0
-
-    # Determine if this is a valid BIDS dataset
-    # Criteria: has dataset_description.json OR has subject folders OR has BIDS zip
-    has_required = "dataset_description.json" in result["bids_files_found"]
-    has_subjects = result["subject_count"] > 0
-    has_bids_zip = result["has_bids_zip"]
-
-    result["is_bids"] = (
-        has_required
-        or (has_subjects and len(result["bids_files_found"]) > 0)
-        or has_bids_zip
-    )
-
-    return result
 
 
 def fetch_node_files(
@@ -760,7 +649,14 @@ def process_node(
     if validate_bids and fetch_details:
         files = fetch_node_files(node_id, timeout=timeout)
         if files:
-            bids_validation = validate_bids_structure(files)
+            bids_validation = validate_bids_structure_from_files(
+                files,
+                name_key="name",
+                dataset_zip_pattern=BIDS_DATASET_ZIP_PATTERN,
+                dataset_zip_matcher="match",
+                subject_min_count=1,
+                subject_requires_bids_files=True,
+            )
             if bids_validation["is_bids"]:
                 bids_version = "validated"
             elif not has_bids_mention:
@@ -844,7 +740,7 @@ def process_node(
         name=title,
         source="osf",
         recording_modality=primary_modality,
-        modalities=modalities,
+        datatypes=modalities,
         bids_version=bids_version,
         license=license_info,
         authors=authors,

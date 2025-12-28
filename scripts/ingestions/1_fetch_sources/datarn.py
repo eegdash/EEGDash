@@ -22,10 +22,10 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-from _http import HTTPStatusError, RequestError, build_headers, request_json
-
 # Add ingestion paths before importing local modules
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from _http import HTTPStatusError, RequestError, build_headers, request_json
+from _keywords import DATARN_MODALITY_SEARCHES as MODALITY_SEARCHES
 from _serialize import (
     extract_subjects_count,
     generate_dataset_id,
@@ -42,16 +42,6 @@ DATARN_API_URL = f"{DATARN_BASE_URL}/api/search/collections/published"
 
 # Default access levels
 DEFAULT_ACCESS_LEVELS = ["OPEN_ACCESS", "REGISTERED_ACCESS", "RESTRICTED_ACCESS"]
-
-# Neural recording modality keywords for searching
-MODALITY_SEARCHES = {
-    "eeg": "EEG",
-    "meg": "MEG",
-    "emg": "EMG",
-    "fnirs": "fNIRS",
-    "lfp": "LFP",
-    "ieeg": "iEEG",
-}
 
 
 # Helper function to create manifest template
@@ -231,7 +221,6 @@ def extract_dataset_info(
             name=name,
             source="datarn",
             recording_modality=modality,
-            modalities=[modality],
             authors=authors,
             dataset_doi=doi,
             source_url=url,

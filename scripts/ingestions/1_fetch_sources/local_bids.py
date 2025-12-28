@@ -19,6 +19,8 @@ import json
 import sys
 from pathlib import Path
 
+import pandas as pd
+
 # Add ingestion paths before importing local modules
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from _serialize import save_datasets_deterministically, setup_paths
@@ -39,8 +41,6 @@ def parse_participants_tsv(participants_file: Path) -> dict:
         return demographics
 
     try:
-        import pandas as pd
-
         df = pd.read_csv(participants_file, sep="\t")
         demographics["subjects_count"] = len(df)
 

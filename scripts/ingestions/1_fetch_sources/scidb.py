@@ -13,11 +13,15 @@ import sys
 from pathlib import Path
 from typing import Any
 
-from _http import request_json
-
 # Add ingestion paths before importing local modules
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-from _bids import collect_bids_matches
+from _bids import (
+    BIDS_OPTIONAL_FILES,
+    BIDS_REQUIRED_FILES,
+    validate_bids_structure_from_names,
+)
+from _http import request_json
+from _keywords import SCIDB_MODALITY_KEYWORDS as MODALITY_KEYWORDS
 from _serialize import (
     extract_subjects_count,
     generate_dataset_id,
@@ -27,16 +31,6 @@ from _serialize import (
 
 setup_paths()
 from eegdash.records import create_dataset
-
-# BIDS indicator files that must be present at root level
-BIDS_REQUIRED_FILES = ["dataset_description.json"]
-BIDS_OPTIONAL_FILES = [
-    "participants.tsv",
-    "participants.json",
-    "README",
-    "README.md",
-    "CHANGES",
-]
 
 # File tree API endpoint
 FILETREE_API_URL = (
@@ -97,18 +91,16 @@ def check_bids_structure(
 
         files = data.get("data", [])
         file_names = [f.get("fileName", "").lower() for f in files]
-        matches = collect_bids_matches(
+        bids_validation = validate_bids_structure_from_names(
             file_names,
             required_files=BIDS_REQUIRED_FILES,
             optional_files=BIDS_OPTIONAL_FILES,
             subject_pattern=None,
             dataset_zip_pattern=None,
         )
-        found_required = matches["required_found"]
-        found_optional = matches["optional_found"]
 
-        is_bids = len(found_required) > 0
-        found_files = found_required + found_optional
+        is_bids = bids_validation["is_bids"]
+        found_files = bids_validation["bids_files_found"]
 
         # TODO: Could fetch dataset_description.json to get BIDS version
         bids_version = None
@@ -117,70 +109,6 @@ def check_bids_structure(
 
     except Exception:
         return False, [], None
-
-
-# Modality keywords for searching SciDB - comprehensive keyword coverage
-MODALITY_KEYWORDS = {
-    "eeg": [
-        "eeg",
-        "electroencephalography",
-        "electroencephalogram",
-        "scalp eeg",
-        "scalp-eeg",
-    ],
-    "meg": ["meg", "magnetoencephalography", "magnetoencephalogram"],
-    "emg": ["emg", "electromyography", "electromyogram"],
-    "fnirs": [
-        "fnirs",
-        "fNIRS",
-        "nirs",
-        "near-infrared spectroscopy",
-        "near infrared spectroscopy",
-        "functional near-infrared",
-    ],
-    "lfp": [
-        "lfp",
-        "local field potential",
-        "local field potentials",
-        "field potential",
-        "field potentials",
-    ],
-    "spike": [
-        "single unit",
-        "single-unit",
-        "multi-unit",
-        "multiunit",
-        "spike",
-        "spike train",
-        "neuronal firing",
-        "unit activity",
-        "single unit activity",
-        "multi-unit activity",
-    ],
-    "mea": [
-        "mea",
-        "microelectrode array",
-        "microelectrode arrays",
-        "utah array",
-        "neuropixels",
-        "depth electrode",
-    ],
-    "ieeg": [
-        "ieeg",
-        "intracranial eeg",
-        "intracranial electroencephalography",
-        "intracranial electroencephalogram",
-        "seeg",
-        "stereoelectroencephalography",
-        "ecog",
-        "electrocorticography",
-        "corticography",
-        "subdural electrode",
-        "subdural grid",
-        "subdural strip",
-    ],
-    "bids": ["bids", "brain imaging data structure", "brain imaging data structures"],
-}
 
 
 def search_scidb_by_query(
@@ -380,7 +308,6 @@ def process_scidb_dataset(
             name=title or "SciDB Dataset",
             source="scidb",
             recording_modality=modality,
-            modalities=[modality],
             license=record.get("copyRight", {}).get("code") or None,
             authors=authors or None,
             source_url=f"https://www.scidb.cn/en/detail?id={original_id}",

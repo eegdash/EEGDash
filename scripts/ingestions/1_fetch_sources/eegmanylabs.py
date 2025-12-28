@@ -225,12 +225,14 @@ def parse_repo_name(name: str) -> dict:
 def fetch_eegmanylabs_repos(
     organization: str = "EEGManyLabs",
     timeout: float = 30.0,
+    limit: int | None = None,
 ) -> list[Dataset]:
     """Fetch all repositories from the EEGManyLabs organization.
 
     Args:
         organization: GIN organization name
         timeout: Request timeout in seconds
+        limit: Maximum number of datasets to fetch
 
     Returns:
         List of Dataset documents
@@ -263,6 +265,9 @@ def fetch_eegmanylabs_repos(
     total_processed = 0
 
     for item in repo_items:
+        if limit and len(datasets) >= limit:
+            break
+
         try:
             # Get repository link
             repo_link = item.find("a", class_="name")
@@ -487,6 +492,11 @@ def main() -> None:
         default=None,
         help="ISO 8601 timestamp for digested_at field (for deterministic output, default: omitted for determinism)",
     )
+    parser.add_argument(
+        "--limit",
+        type=int,
+        help="Maximum number of datasets to fetch (default: all)",
+    )
 
     args = parser.parse_args()
 
@@ -496,6 +506,7 @@ def main() -> None:
     datasets = fetch_eegmanylabs_repos(
         organization=args.organization,
         timeout=args.timeout,
+        limit=args.limit,
     )
 
     if not datasets:

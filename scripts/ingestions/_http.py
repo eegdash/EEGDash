@@ -137,7 +137,7 @@ def _request_with_retry(
     stream: bool,
 ) -> httpx.Response:
     def _do_request() -> httpx.Response:
-        return client.request(
+        request = client.build_request(
             method,
             url,
             headers=headers,
@@ -145,6 +145,9 @@ def _request_with_retry(
             json=json_body,
             data=data,
             timeout=timeout,
+        )
+        return client.send(
+            request,
             follow_redirects=follow_redirects,
             stream=stream,
         )

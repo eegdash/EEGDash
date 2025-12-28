@@ -50,7 +50,7 @@ def _pygithub_client(
     return Github(
         login_or_token=token or None,
         per_page=min(per_page, 100),
-        timeout=timeout,
+        timeout=int(timeout),
     )
 
 

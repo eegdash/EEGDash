@@ -23,7 +23,7 @@ STATIC_DATASET_DIR = DOCS_DIR / "source" / "_static" / "dataset_generated"
 
 # API Configuration
 API_BASE_URL = "https://data.eegdash.org/api"
-DEFAULT_DATABASE = "eegdash_staging"
+DEFAULT_DATABASE = "eegdash"
 
 
 def wrap_dataset_name(name: str):

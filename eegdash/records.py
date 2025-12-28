@@ -148,6 +148,7 @@ def create_dataset(
     readme: str | None = None,
     recording_modality: str = "eeg",
     datatypes: list[str] | None = None,
+    modalities: list[str] | None = None,
     experimental_modalities: list[str] | None = None,
     bids_version: str | None = None,
     license: str | None = None,
@@ -284,6 +285,9 @@ def create_dataset(
     """
     if not dataset_id:
         raise ValueError("dataset_id is required")
+
+    if datatypes is None and modalities:
+        datatypes = modalities
 
     ages = ages or []
     ages_clean = [a for a in ages if a is not None]

@@ -176,10 +176,10 @@ def search_figshare(
         if FIGSHARE_API_KEY:
             headers["Authorization"] = f"token {FIGSHARE_API_KEY}"
 
-        # Retry loop for this page
+        # Retry loop for this page with aggressive backoff
         articles = None
         for attempt in range(max_retries):
-            # Rate limiting (reduced with API key)
+            # Rate limiting
             elapsed = time.time() - _figshare_last_request_time
             if elapsed < FIGSHARE_RATE_LIMIT_DELAY:
                 time.sleep(FIGSHARE_RATE_LIMIT_DELAY - elapsed)
@@ -199,8 +199,8 @@ def search_figshare(
                     articles = response.json()
                     break
                 elif response.status_code in (403, 429):
-                    # Rate limited - exponential backoff
-                    wait_time = (2**attempt) * 5  # 5, 10, 20 seconds
+                    # Rate limited - aggressive exponential backoff
+                    wait_time = (2**attempt) * 30  # 30, 60, 120 seconds
                     print(
                         f"\\n  Rate limited ({response.status_code}), "
                         f"waiting {wait_time}s (attempt {attempt + 1}/{max_retries})...",
@@ -215,7 +215,7 @@ def search_figshare(
             except requests.RequestException as e:
                 print(f"\\nRequest error: {e}", file=sys.stderr)
                 if attempt < max_retries - 1:
-                    time.sleep(2**attempt)
+                    time.sleep(2**attempt * 10)
                     continue
                 break
 
@@ -252,8 +252,9 @@ def search_figshare(
 # WAF-level rate limiting may kick in before API limits
 _figshare_request_count = 0
 _figshare_last_request_time = 0.0
-# Conservative rate limit - Figshare has aggressive WAF-level blocking
-FIGSHARE_RATE_LIMIT_DELAY = 1.5 if FIGSHARE_API_KEY else 2.0
+# Very conservative rate limit - Figshare has aggressive WAF-level blocking
+# Use longer delays to avoid being blocked
+FIGSHARE_RATE_LIMIT_DELAY = float(os.getenv("FIGSHARE_RATE_LIMIT", "3.0"))
 
 
 def _get_headers() -> dict[str, str]:
@@ -295,17 +296,40 @@ def peek_zip_contents(
             time.sleep(FIGSHARE_RATE_LIMIT_DELAY - elapsed)
         _figshare_last_request_time = time.time()
 
-        # Get file size with HEAD request
+        # Get file size with HEAD request - include API key for authenticated access
         headers = {
             "User-Agent": "EEGDash/1.0 (https://github.com/eegdash/EEGDash)",
+            "Accept": "application/octet-stream",
         }
+        if FIGSHARE_API_KEY:
+            headers["Authorization"] = f"token {FIGSHARE_API_KEY}"
+
         head = requests.head(
             download_url, headers=headers, timeout=timeout, allow_redirects=True
         )
 
+        # Figshare may return 302 redirect - follow it
+        if head.status_code in (301, 302, 307, 308):
+            redirect_url = head.headers.get("Location", download_url)
+            head = requests.head(
+                redirect_url, headers=headers, timeout=timeout, allow_redirects=True
+            )
+
         if head.status_code == 403:
-            # Figshare download might require different access
-            return None
+            # Try without auth header (some downloads are public)
+            headers_no_auth = {
+                "User-Agent": headers["User-Agent"],
+                "Accept": headers["Accept"],
+            }
+            head = requests.head(
+                download_url,
+                headers=headers_no_auth,
+                timeout=timeout,
+                allow_redirects=True,
+            )
+            if head.status_code == 403:
+                return None
+            headers = headers_no_auth
 
         if head.status_code != 200:
             return None
@@ -315,9 +339,10 @@ def peek_zip_contents(
             return None
 
         # Check if server supports range requests
-        accept_ranges = head.headers.get("Accept-Ranges", "none")
-        if accept_ranges == "none":
-            return None
+        accept_ranges = head.headers.get("Accept-Ranges", "")
+        if accept_ranges.lower() == "none":
+            # Server explicitly doesn't support ranges - try anyway
+            pass
 
         # Rate limit before range request
         time.sleep(FIGSHARE_RATE_LIMIT_DELAY)
@@ -330,7 +355,10 @@ def peek_zip_contents(
             "Range": f"bytes={start_byte}-{file_size - 1}",
         }
 
-        response = requests.get(download_url, headers=range_headers, timeout=timeout)
+        response = requests.get(
+            download_url, headers=range_headers, timeout=timeout, allow_redirects=True
+        )
+
         if response.status_code not in (200, 206):
             return None
 
@@ -353,6 +381,10 @@ def peek_zip_contents(
                         )
                 return files
         except zipfile.BadZipFile:
+            # Central directory not in last 64KB - try larger chunk
+            if max_bytes < 262144:  # 256KB
+                time.sleep(FIGSHARE_RATE_LIMIT_DELAY)
+                return peek_zip_contents(download_url, timeout, max_bytes=262144)
             return None
 
     except requests.RequestException:
@@ -863,6 +895,11 @@ def main() -> None:
         default=Path("/tmp/figshare_downloads"),
         help="Directory for temporary ZIP downloads (default: /tmp/figshare_downloads).",
     )
+    parser.add_argument(
+        "--multi-query",
+        action="store_true",
+        help="Search with multiple queries to find more datasets.",
+    )
 
     args = parser.parse_args()
 
@@ -874,6 +911,59 @@ def main() -> None:
             print(f"Failed to fetch article {args.article_id}", file=sys.stderr)
             sys.exit(1)
         articles = [details]
+    elif args.multi_query:
+        # Multiple search queries to find more EEG/neural recording datasets
+        queries = [
+            "EEG BIDS",
+            "electroencephalography BIDS",
+            "EEG dataset",
+            "ERP EEG",
+            "MEG BIDS",
+            "magnetoencephalography",
+            "iEEG BIDS",
+            "intracranial EEG",
+            "ECoG dataset",
+            "EMG dataset",
+            "electromyography",
+            "fNIRS dataset",
+            "brain signals dataset",
+            "neural recording dataset",
+            "BCI dataset",
+            "brain-computer interface",
+            "sleep EEG",
+            "epilepsy EEG",
+        ]
+
+        all_articles = {}  # Use dict to dedupe by article ID
+        for q in queries:
+            print(f"\n{'=' * 60}")
+            print(f"Searching: {q}")
+            print("=" * 60)
+
+            results = search_figshare(
+                query=q,
+                size=args.size // len(queries) + 50,  # Distribute quota
+                page_size=args.page_size,
+                item_type=args.item_type,
+            )
+
+            new_count = 0
+            for article in results:
+                aid = article.get("id")
+                if aid and aid not in all_articles:
+                    all_articles[aid] = article
+                    new_count += 1
+
+            print(f"  New unique articles: {new_count}")
+            print(f"  Total unique so far: {len(all_articles)}")
+
+            # Longer delay between different queries
+            time.sleep(10)
+
+        articles = list(all_articles.values())
+        print(f"\n{'=' * 60}")
+        print(f"Total unique articles across all queries: {len(articles)}")
+        print("=" * 60)
     else:
         # Search Figshare
         articles = search_figshare(

@@ -281,14 +281,28 @@ def list_zenodo_files(record_id: int | str, api_key: str = "") -> list[dict]:
                 "checksum": f.get("checksum", ""),
             }
 
-            # Build download URL
-            bucket = data.get("links", {}).get("bucket", "")
-            if bucket:
-                file_info["download_url"] = f"{bucket}/{file_info['name']}"
+            # Build download URL - try multiple sources
+            # 1. New Zenodo API: links.self (content endpoint)
+            # 2. Old Zenodo API: bucket + filename
+            download_url = None
+
+            # New API format
+            file_links = f.get("links", {})
+            if file_links.get("self"):
+                download_url = file_links["self"]
+
+            # Old API format fallback
+            if not download_url:
+                bucket = data.get("links", {}).get("bucket", "")
+                if bucket:
+                    download_url = f"{bucket}/{file_info['name']}"
+
+            if download_url:
+                file_info["download_url"] = download_url
 
                 # Try to peek into ZIP files
                 if file_info["name"].lower().endswith(".zip"):
-                    zip_contents = peek_zip_contents(file_info["download_url"])
+                    zip_contents = peek_zip_contents(download_url)
                     if zip_contents:
                         file_info["zip_contents"] = zip_contents
 

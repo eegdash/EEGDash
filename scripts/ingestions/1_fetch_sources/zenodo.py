@@ -453,6 +453,31 @@ def extract_dataset_info(
             fallback_id=record_id,
         )
 
+        # Extract subject count from description
+        subjects_count = 0
+        subject_patterns = [
+            r"(\d+)\s*subjects?",
+            r"(\d+)\s*participants?",
+            r"n\s*=\s*(\d+)",
+            r"(\d+)\s*healthy",
+            r"(\d+)\s*patients?",
+            r"(\d+)\s*individuals?",
+            r"(\d+)\s*volunteers?",
+            r"(\d+)\s*children",
+            r"(\d+)\s*adults?",
+            r"recorded\s+from\s+(\d+)",
+            r"data\s+from\s+(\d+)",
+        ]
+        for pattern in subject_patterns:
+            match = re.search(pattern, description, re.I)
+            if match:
+                try:
+                    subjects_count = int(match.group(1))
+                    if subjects_count > 0 and subjects_count < 10000:  # Sanity check
+                        break
+                except ValueError:
+                    pass
+
         dataset = create_dataset(
             dataset_id=dataset_id,
             name=title,
@@ -464,10 +489,17 @@ def extract_dataset_info(
             dataset_doi=doi if doi else None,
             total_files=len(files),
             size_bytes=total_size_bytes if total_size_bytes > 0 else None,
+            subjects_count=subjects_count if subjects_count > 0 else None,
         )
 
         # Store original Zenodo ID for reference
         dataset["zenodo_id"] = record_id
+
+        # Store demographics for downstream use
+        dataset["demographics"] = {
+            "subjects_count": subjects_count,
+            "ages": [],
+        }
 
         # Add BIDS validation results
         dataset["bids_validated"] = bids_validation["is_bids"]

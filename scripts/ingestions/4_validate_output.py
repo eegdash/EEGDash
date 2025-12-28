@@ -26,6 +26,8 @@ import sys
 from collections import Counter
 from pathlib import Path
 
+from jsonschema import Draft202012Validator
+
 # Valid storage URL patterns per source
 VALID_STORAGE_PATTERNS = {
     "openneuro": r"^s3://openneuro\.org/ds\d+",
@@ -61,7 +63,12 @@ MANDATORY_DATASET_FIELDS = {
 
 # Recommended fields (warnings if missing)
 RECOMMENDED_RECORD_FIELDS = ["entities", "datatype", "suffix", "extension"]
-RECOMMENDED_DATASET_FIELDS = ["name", "datatypes", "demographics"]
+RECOMMENDED_DATASET_FIELDS = [
+    "name",
+    "datatypes",
+    "demographics",
+    "ingestion_fingerprint",
+]
 
 # Valid sources
 VALID_SOURCES = {
@@ -75,6 +82,41 @@ VALID_SOURCES = {
     "datarn",
     "hbn",
 }
+
+# JSON Schemas (minimal required fields)
+STORAGE_SCHEMA = {
+    "type": "object",
+    "required": ["backend", "base", "raw_key"],
+    "properties": {
+        "backend": {"type": "string"},
+        "base": {"type": "string"},
+        "raw_key": {"type": "string"},
+    },
+}
+
+RECORD_SCHEMA = {
+    "type": "object",
+    "required": ["dataset", "bids_relpath", "storage", "recording_modality"],
+    "properties": {
+        "dataset": {"type": "string"},
+        "bids_relpath": {"type": "string"},
+        "recording_modality": {"type": "string"},
+        "storage": STORAGE_SCHEMA,
+    },
+}
+
+DATASET_SCHEMA = {
+    "type": "object",
+    "required": ["dataset_id", "source", "recording_modality"],
+    "properties": {
+        "dataset_id": {"type": "string"},
+        "source": {"type": "string"},
+        "recording_modality": {"type": "string"},
+    },
+}
+
+RECORD_VALIDATOR = Draft202012Validator(RECORD_SCHEMA)
+DATASET_VALIDATOR = Draft202012Validator(DATASET_SCHEMA)
 
 # Data file extensions that indicate valid neurophysiology data
 NEURO_EXTENSIONS = {
@@ -202,29 +244,16 @@ def validate_record(
     record_idx: int = 0,
 ):
     """Validate a single record for mandatory fields."""
-    # Check mandatory fields
-    for field, description in MANDATORY_RECORD_FIELDS.items():
-        if field not in record or record[field] is None:
-            result.add_error(
-                dataset_id,
-                f"Missing mandatory field: {description}",
-                field=field,
-            )
+    # Schema validation for required fields
+    for error in RECORD_VALIDATOR.iter_errors(record):
+        field_path = ".".join(str(p) for p in error.path) if error.path else None
+        result.add_error(dataset_id, error.message, field=field_path)
+        if error.validator == "required":
             result.stats["missing_mandatory"] += 1
 
-    # Check storage fields
+    # Validate storage URL matches source
     storage = record.get("storage", {})
     if storage:
-        for field, description in MANDATORY_STORAGE_FIELDS.items():
-            if field not in storage or storage[field] is None:
-                result.add_error(
-                    dataset_id,
-                    f"Storage missing: {description}",
-                    field=f"storage.{field}",
-                )
-                result.stats["missing_mandatory"] += 1
-
-        # Validate storage URL matches source
         storage_base = storage.get("base", "")
         is_valid, error_msg = validate_storage_url(source, storage_base)
         if not is_valid:
@@ -247,14 +276,11 @@ def validate_dataset(dataset: dict, result: ValidationResult):
     """Validate a single dataset document for mandatory fields."""
     dataset_id = dataset.get("dataset_id", "unknown")
 
-    # Check mandatory fields
-    for field, description in MANDATORY_DATASET_FIELDS.items():
-        if field not in dataset or dataset[field] is None:
-            result.add_error(
-                dataset_id,
-                f"Missing mandatory field: {description}",
-                field=field,
-            )
+    # Schema validation for required fields
+    for error in DATASET_VALIDATOR.iter_errors(dataset):
+        field_path = ".".join(str(p) for p in error.path) if error.path else None
+        result.add_error(dataset_id, error.message, field=field_path)
+        if error.validator == "required":
             result.stats["missing_mandatory"] += 1
 
     # Check source is valid

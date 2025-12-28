@@ -99,6 +99,10 @@ digestion = [
   "requests_toolbelt",
   "beautifulsoup4",
   "selenium",
+  "httpx",
+  "tenacity",
+  "hishel",
+  "jsonschema",
 ]
 
 all = [

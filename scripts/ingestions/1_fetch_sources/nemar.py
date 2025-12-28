@@ -10,8 +10,13 @@ import sys
 from collections.abc import Iterator
 from pathlib import Path
 
-import requests
-from _http import build_headers, request_json, request_text
+from _http import (
+    HTTPStatusError,
+    RequestError,
+    build_headers,
+    request_json,
+    request_text,
+)
 
 # Add ingestion paths before importing local modules
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
@@ -144,9 +149,9 @@ def fetch_repositories(
                     return
 
                 if not response:
-                    raise requests.RequestException("No response from GitHub API")
+                    raise ValueError("No response from GitHub API")
                 if response_data is None:
-                    raise requests.RequestException("Invalid JSON response")
+                    raise ValueError("Invalid JSON response")
                 response.raise_for_status()
                 repos = response_data
 
@@ -243,7 +248,7 @@ def fetch_repositories(
                 page += 1
                 break
 
-            except requests.RequestException as e:
+            except (RequestError, HTTPStatusError, ValueError) as e:
                 attempt += 1
                 print(
                     f"  Warning: Error fetching page {page} (attempt {attempt}/{retries}): {e}"

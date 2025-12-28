@@ -20,8 +20,6 @@ import time
 from pathlib import Path
 from typing import Any
 
-import requests
-
 # Add ingestion paths before importing local modules
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from _bids import (
@@ -31,7 +29,7 @@ from _bids import (
     BIDS_SUBJECT_PATTERN,
     collect_bids_matches,
 )
-from _http import request_json
+from _http import HTTPStatusError, RequestError, request_json
 from _serialize import (
     extract_subjects_count,
     generate_dataset_id,
@@ -386,7 +384,7 @@ def fetch_nodes_by_title(
                 raise_for_status=True,
                 raise_for_request=True,
             )
-        except requests.RequestException as e:
+        except (RequestError, HTTPStatusError) as e:
             print(f"  Error fetching page {page}: {e}", file=sys.stderr)
             break
 
@@ -643,7 +641,7 @@ def fetch_nodes_by_tag(
                 raise_for_status=True,
                 raise_for_request=True,
             )
-        except requests.RequestException as e:
+        except (RequestError, HTTPStatusError) as e:
             print(f"  Error fetching page {page}: {e}", file=sys.stderr)
             break
 

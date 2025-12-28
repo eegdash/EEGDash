@@ -91,6 +91,7 @@ class Dataset(TypedDict, total=False):
     dataset_id: str  # e.g., "ds001785"
     name: str  # Dataset title
     source: str  # e.g., "openneuro", "nemar", "gin"
+    readme: str | None  # README content from dataset
 
     # Recording info
     recording_modality: str  # Primary modality: "eeg", "meg", "ieeg"
@@ -139,6 +140,7 @@ def create_dataset(
     dataset_id: str,
     name: str | None = None,
     source: str = "openneuro",
+    readme: str | None = None,
     recording_modality: str = "eeg",
     modalities: list[str] | None = None,
     bids_version: str | None = None,
@@ -294,6 +296,7 @@ def create_dataset(
         dataset_id=dataset_id,
         name=name or dataset_id,
         source=source,
+        readme=readme,
         recording_modality=recording_modality,
         modalities=modalities or [recording_modality],
         bids_version=bids_version,

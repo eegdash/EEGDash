@@ -15,47 +15,43 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 import pandas as pd
-from _http import (
-    HTTPStatusError,
-    RequestError,
-    build_headers,
-    request_json,
-    request_text,
+from _github import (
+    fetch_first_repo_file_text,
+    fetch_repo_file_json,
+    fetch_repo_file_text,
+    iter_org_repos,
 )
 from _serialize import save_datasets_deterministically, setup_paths
 
 setup_paths()
 from eegdash.records import Dataset, create_dataset
 
-GITHUB_API_URL = "https://api.github.com"
-GITHUB_RAW_URL = "https://raw.githubusercontent.com"
-
 
 def fetch_bids_description(
     org: str, repo: str, branch: str, timeout: float = 10.0
 ) -> dict | None:
     """Fetch dataset_description.json from a repository."""
-    url = f"{GITHUB_RAW_URL}/{org}/{repo}/{branch}/dataset_description.json"
-    try:
-        data, _ = request_json(
-            "get",
-            url,
-            timeout=timeout,
-            raise_for_status=True,
-            raise_for_request=True,
-        )
-        return data if isinstance(data, dict) else None
-    except (RequestError, HTTPStatusError):
-        return None
+    return fetch_repo_file_json(
+        org,
+        repo,
+        "dataset_description.json",
+        ref=branch,
+        timeout=timeout,
+    )
 
 
 def fetch_participants_tsv(
     org: str, repo: str, branch: str, timeout: float = 10.0
 ) -> list[dict] | None:
     """Fetch and parse participants.tsv from a repository."""
-    url = f"{GITHUB_RAW_URL}/{org}/{repo}/{branch}/participants.tsv"
-    text, response = request_text("get", url, timeout=timeout)
-    if not response or response.status_code != 200 or not text:
+    text = fetch_repo_file_text(
+        org,
+        repo,
+        "participants.tsv",
+        ref=branch,
+        timeout=timeout,
+    )
+    if not text:
         return None
     try:
         df = pd.read_csv(StringIO(text), sep="\t", dtype="string")
@@ -85,12 +81,13 @@ def extract_ages_from_participants(participants: list[dict] | None) -> list[int]
 def fetch_readme(org: str, repo: str, branch: str, timeout: float = 10.0) -> str | None:
     """Fetch README from a repository."""
     readme_names = ["README.md", "README", "README.txt", "readme.md", "readme"]
-    for name in readme_names:
-        url = f"{GITHUB_RAW_URL}/{org}/{repo}/{branch}/{name}"
-        text, response = request_text("get", url, timeout=timeout)
-        if response and response.status_code == 200 and text:
-            return text
-    return None
+    return fetch_first_repo_file_text(
+        org,
+        repo,
+        readme_names,
+        ref=branch,
+        timeout=timeout,
+    )
 
 
 def fetch_repositories(
@@ -113,153 +110,93 @@ def fetch_repositories(
         Dataset documents
 
     """
-    headers = build_headers(accept="application/vnd.github.v3+json")
-
-    page = 1
     total_fetched = 0
 
-    while True:
-        url = f"{GITHUB_API_URL}/orgs/{organization}/repos"
-        params = {
-            "per_page": min(page_size, 100),
-            "page": page,
-            "type": "all",
-            "sort": "created",
-            "direction": "asc",
-        }
+    for repo in iter_org_repos(
+        organization,
+        per_page=page_size,
+        timeout=timeout,
+        retries=retries,
+    ):
+        repo_name = str(repo.get("name") or "")
+        if not repo_name:
+            continue
 
-        attempt = 0
-        while attempt < retries:
-            try:
-                response_data, response = request_json(
-                    "get",
-                    url,
-                    headers=headers,
-                    params=params,
-                    timeout=timeout,
-                )
+        # Skip special GitHub repositories
+        if repo_name in {".github", ".gitignore", "README"}:
+            continue
 
-                # Check rate limit
-                if (
-                    response
-                    and response.status_code == 403
-                    and "rate limit" in response.text.lower()
-                ):
-                    print("  Warning: GitHub API rate limit exceeded")
-                    remaining = response.headers.get("X-RateLimit-Remaining", "?")
-                    reset = response.headers.get("X-RateLimit-Reset", "?")
-                    print(f"  Remaining: {remaining}, Reset: {reset}")
-                    return
+        # NEMAR datasets start with "nm" prefix
+        if not repo_name.startswith("nm"):
+            continue
 
-                if not response:
-                    raise ValueError("No response from GitHub API")
-                if response_data is None:
-                    raise ValueError("Invalid JSON response")
-                response.raise_for_status()
-                repos = response_data
+        total_fetched += 1
 
-                # If empty list, we've fetched all repositories
-                if not repos:
-                    return
+        # Fetch BIDS metadata
+        bids_desc = None
+        participants = None
+        readme = None
+        branch = str(repo.get("default_branch") or "main")
+        if fetch_bids:
+            bids_desc = fetch_bids_description(organization, repo_name, branch)
+            participants = fetch_participants_tsv(organization, repo_name, branch)
+            readme = fetch_readme(organization, repo_name, branch)
 
-                for repo in repos:
-                    repo_name = repo.get("name")
+        # Extract metadata from BIDS description
+        authors = []
+        funding = []
+        license_str = None
+        bids_version = None
+        dataset_doi = None
+        name = repo.get("description") or repo_name
 
-                    # Skip special GitHub repositories
-                    if repo_name in [".github", ".gitignore", "README"]:
-                        continue
+        if bids_desc:
+            name = bids_desc.get("Name") or name
+            authors = bids_desc.get("Authors") or []
+            funding = bids_desc.get("Funding") or []
+            license_str = bids_desc.get("License")
+            bids_version = bids_desc.get("BIDSVersion")
+            dataset_doi = bids_desc.get("DatasetDOI")
 
-                    # NEMAR datasets start with "nm" prefix
-                    if not repo_name.startswith("nm"):
-                        continue
+        # Extract ages from participants
+        ages = extract_ages_from_participants(participants)
+        subjects_count = len(participants) if participants else 0
 
-                    total_fetched += 1
+        # Build NEMAR GitHub URL
+        nemar_url = (
+            repo.get("html_url") or f"https://github.com/nemardatasets/{repo_name}"
+        )
 
-                    # Fetch BIDS metadata
-                    bids_desc = None
-                    participants = None
-                    readme = None
-                    branch = repo.get("default_branch", "main")
-                    if fetch_bids:
-                        bids_desc = fetch_bids_description(
-                            organization, repo_name, branch
-                        )
-                        participants = fetch_participants_tsv(
-                            organization, repo_name, branch
-                        )
-                        readme = fetch_readme(organization, repo_name, branch)
+        # Create Dataset document
+        yield create_dataset(
+            dataset_id=repo_name,
+            name=name,
+            source="nemar",
+            readme=readme,
+            recording_modality="eeg",  # NEMAR is EEG-focused
+            experimental_modalities=["eeg"],
+            bids_version=bids_version,
+            license=license_str,
+            authors=authors
+            if isinstance(authors, list)
+            else [authors]
+            if authors
+            else [],
+            funding=funding
+            if isinstance(funding, list)
+            else [funding]
+            if funding
+            else [],
+            dataset_doi=dataset_doi,
+            subjects_count=subjects_count,
+            ages=ages,
+            species="Human",  # NEMAR datasets are human
+            source_url=nemar_url,
+            dataset_modified_at=repo.get("pushed_at"),
+        )
 
-                    # Extract metadata from BIDS description
-                    authors = []
-                    funding = []
-                    license_str = None
-                    bids_version = None
-                    dataset_doi = None
-                    name = repo.get("description") or repo_name
-
-                    if bids_desc:
-                        name = bids_desc.get("Name") or name
-                        authors = bids_desc.get("Authors") or []
-                        funding = bids_desc.get("Funding") or []
-                        license_str = bids_desc.get("License")
-                        bids_version = bids_desc.get("BIDSVersion")
-                        dataset_doi = bids_desc.get("DatasetDOI")
-
-                    # Extract ages from participants
-                    ages = extract_ages_from_participants(participants)
-                    subjects_count = len(participants) if participants else 0
-
-                    # Build NEMAR GitHub URL
-                    nemar_url = f"https://github.com/nemardatasets/{repo_name}"
-
-                    # Create Dataset document
-                    yield create_dataset(
-                        dataset_id=repo_name,
-                        name=name,
-                        source="nemar",
-                        readme=readme,
-                        recording_modality="eeg",  # NEMAR is EEG-focused
-                        experimental_modalities=["eeg"],
-                        bids_version=bids_version,
-                        license=license_str,
-                        authors=authors
-                        if isinstance(authors, list)
-                        else [authors]
-                        if authors
-                        else [],
-                        funding=funding
-                        if isinstance(funding, list)
-                        else [funding]
-                        if funding
-                        else [],
-                        dataset_doi=dataset_doi,
-                        subjects_count=subjects_count,
-                        ages=ages,
-                        species="Human",  # NEMAR datasets are human
-                        source_url=nemar_url,
-                        dataset_modified_at=repo.get("pushed_at"),
-                    )
-
-                    if total_fetched % 20 == 0:
-                        print(f"  Processed {total_fetched} repositories...")
-
-                # Check if there are more pages
-                link_header = response.headers.get("Link", "")
-                if 'rel="next"' not in link_header:
-                    return
-
-                page += 1
-                break
-
-            except (RequestError, HTTPStatusError, ValueError) as e:
-                attempt += 1
-                print(
-                    f"  Warning: Error fetching page {page} (attempt {attempt}/{retries}): {e}"
-                )
-                if attempt >= retries:
-                    print(f"  Skipping to next page after {retries} failed attempts")
-                    page += 1
-                    break
+        if total_fetched % 20 == 0:
+            print(f"  Processed {total_fetched} repositories...")
 
 
 def main() -> None:

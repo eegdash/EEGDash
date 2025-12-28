@@ -172,8 +172,9 @@ def scan_local_bids_dataset(
         dataset_id=dataset_id,
         name=desc.get("Name", dataset_id),
         source=source,
+        readme=readme,
         recording_modality=modality,
-        modalities=[modality],
+        experimental_modalities=[modality],
         bids_version=desc.get("BIDSVersion"),
         license=license_str,
         authors=authors,
@@ -189,10 +190,6 @@ def scan_local_bids_dataset(
         sex_distribution=demographics.get("sex_distribution", {}),
         source_url=storage_url,
     )
-
-    # Add README content
-    if readme:
-        dataset["readme"] = readme
 
     # Add storage URL as external link
     if "external_links" not in dataset:

@@ -79,6 +79,20 @@ def extract_ages_from_participants(participants: list[dict] | None) -> list[int]
     return ages
 
 
+def fetch_readme(org: str, repo: str, branch: str, timeout: float = 10.0) -> str | None:
+    """Fetch README from a repository."""
+    readme_names = ["README.md", "README", "README.txt", "readme.md", "readme"]
+    for name in readme_names:
+        url = f"{GITHUB_RAW_URL}/{org}/{repo}/{branch}/{name}"
+        try:
+            response = requests.get(url, timeout=timeout)
+            if response.status_code == 200:
+                return response.text
+        except Exception:
+            pass
+    return None
+
+
 def fetch_repositories(
     organization: str = "nemardatasets",
     page_size: int = 100,
@@ -160,14 +174,16 @@ def fetch_repositories(
                     # Fetch BIDS metadata
                     bids_desc = None
                     participants = None
+                    readme = None
+                    branch = repo.get("default_branch", "main")
                     if fetch_bids:
-                        branch = repo.get("default_branch", "main")
                         bids_desc = fetch_bids_description(
                             organization, repo_name, branch
                         )
                         participants = fetch_participants_tsv(
                             organization, repo_name, branch
                         )
+                        readme = fetch_readme(organization, repo_name, branch)
 
                     # Extract metadata from BIDS description
                     authors = []
@@ -197,8 +213,9 @@ def fetch_repositories(
                         dataset_id=repo_name,
                         name=name,
                         source="nemar",
+                        readme=readme,
                         recording_modality="eeg",  # NEMAR is EEG-focused
-                        modalities=["eeg"],
+                        experimental_modalities=["eeg"],
                         bids_version=bids_version,
                         license=license_str,
                         authors=authors

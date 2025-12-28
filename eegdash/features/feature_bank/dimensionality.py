@@ -1,6 +1,6 @@
-"""
+r"""
 Dimensionality Features Extraction
-===============================
+==================================
 
 This module provides functions to compute various dimensionality features
 from signals.
@@ -81,6 +81,7 @@ def dimensionality_higuchi_fractal_dim(x, /, k_max=10, eps=1e-7):
 @FeaturePredecessor(*SIGNAL_PREDECESSORS)
 @univariate_feature
 def dimensionality_petrosian_fractal_dim(x, /):
+    # TODO: Add reference
     r"""Calculate Petrosian Fractal Dimension (PFD).
 
     Petrosian Fractal Dimension provides a fast estimate of fractal 
@@ -106,6 +107,7 @@ def dimensionality_petrosian_fractal_dim(x, /):
 @FeaturePredecessor(*SIGNAL_PREDECESSORS)
 @univariate_feature
 def dimensionality_katz_fractal_dim(x, /):
+    # TODO: Add reference
     r"""Calculate Katz Fractal Dimension (KFD).
 
     KFD is calculated as the ratio between the total path length and the 
@@ -133,7 +135,11 @@ def dimensionality_katz_fractal_dim(x, /):
 
 @nb.njit(cache=True, fastmath=True)
 def _hurst_exp(x, ns, a, gamma_ratios, log_n):
-    r"""Internal helper to calculate the Hurst Exponent via corrected R/S analysis.
+    r"""Internal helper to calculate the Hurst Exponent. 
+    
+    The Hurst Exponent is calculated using the Rescaled range (R/S) analysis
+    method, expanded with Anis-Lloyd correction.
+    
 
     Parameters
     ----------
@@ -160,6 +166,8 @@ def _hurst_exp(x, ns, a, gamma_ratios, log_n):
 
     References
     ----------
+    For more details on the Hurst Exponent and R/S analysis, visit the
+    `Wikipedia entry <https://en.wikipedia.org/wiki/Hurst_exponent#Rescaled_range_(R/S)_analysis>`_.
     """
     h = np.empty(x.shape[:-1])
     rs = np.empty((ns.shape[0], x.shape[-1] // ns[0]))
@@ -187,11 +195,12 @@ def _hurst_exp(x, ns, a, gamma_ratios, log_n):
 @FeaturePredecessor(*SIGNAL_PREDECESSORS)
 @univariate_feature
 def dimensionality_hurst_exp(x, /):
-    """Estimate the Hurst Exponent (H).
+    r"""Estimate the Hurst Exponent.
 
-    The Hurst exponent characterizes the long-term memory or persistence of 
-    a time series. $H = 0.5$ implies a random walk, $H > 0.5$ indicates 
-    persistence, and $H < 0.5$ indicates anti-persistence.
+    The Hurst exponent quantifies the long-term memory and predictability of 
+    a time series. It indicates whether a process is purely random, tends to 
+    trend in the same direction (persistent), or tends to reverse its direction 
+    (anti-persistent).
 
     Parameters
     ----------
@@ -201,7 +210,16 @@ def dimensionality_hurst_exp(x, /):
     Returns
     -------
     ndarray
-        The estimated Hurst exponents. Shape is ``x.shape[:-1]``.
+        The estimated Hurst Exponents. 
+        Shape is ``x.shape[:-1]``.
+
+    Notes
+    -----
+    This function calculate the Gamma Function Ratios and Bias Correction Factors
+    to apply the Anis-Lloyd correction for small sample sizes.
+
+    For more details on the Hurst Exponent and R/S analysis, visit the
+    `Wikipedia entry <https://en.wikipedia.org/wiki/Hurst_exponent#Rescaled_range_(R/S)_analysis>`_.
     """
     ns = np.unique(np.power(2, np.arange(2, np.log2(x.shape[-1]) - 1)).astype(int))
     idx = ns > 340
@@ -218,10 +236,11 @@ def dimensionality_hurst_exp(x, /):
 @univariate_feature
 @nb.njit(cache=True, fastmath=True)
 def dimensionality_detrended_fluctuation_analysis(x, /):
-    r"""Calculate the Scaling Exponent ($\alpha$) via DFA.
+    r"""Calculate the Scaling Exponent via DFA.
 
-    Detrended Fluctuation Analysis (DFA) is used to detect long-range 
-    temporal correlations (LRTC) in non-stationary signals.
+    Detrended Fluctuation Analysis (DFA) is a method used to detect long-range 
+    temporal correlations (LRTC) in non-stationary signals. It is a more robust 
+    way to estimate the Hurst exponent when the data is noisy or has shifting trends.
 
     Parameters
     ----------
@@ -231,13 +250,15 @@ def dimensionality_detrended_fluctuation_analysis(x, /):
     Returns
     -------
     ndarray
-        The DFA scaling exponents ($\alpha$). Shape is ``x.shape[:-1]``.
+        The DFA scaling exponents ($\alpha$). 
+        Shape is ``x.shape[:-1]``.
         
     Notes
     -----
-    $\alpha \approx 1$ typically indicates $1/f$ noise, often associated with 
-    optimal information processing near a critical state.
+    Optimized with Numba.
 
+    For a theoretical overview of Detrended Fluctuation Analysis, see the 
+    `Wikipedia entry <https://en.wikipedia.org/wiki/Detrended_fluctuation_analysis>`_.
     """
     ns = np.unique(np.floor(np.power(2, np.arange(2, np.log2(x.shape[-1]) - 1))))
     a = np.vstack((np.arange(ns[-1]), np.ones(int(ns[-1])))).T

@@ -1,3 +1,10 @@
+r"""
+Common Spatial Pattern Features Extraction
+==========================================
+This module provides the Common Spatial Pattern (CSP) feature extractor
+for signal classification.
+"""
+
 import numba as nb
 import numpy as np
 import scipy
@@ -14,11 +21,31 @@ __all__ = [
 
 @nb.njit(cache=True, fastmath=True, parallel=True)
 def _update_mean_cov(count, mean, cov, x_count, x_mean, x_cov):
-    """Online update of running mean and covariance matrix.
+    r"""Online update of running mean and covariance matrix.
 
-    Uses a weighted incremental update rule to combine existing statistics 
-    with a new batch of data without storing the entire dataset in memory.
+    Combine existing statistics with a new batch of data without 
+    storing the entire dataset in memory.
 
+    Parameters
+    ----------
+    count : int
+        Total number of samples after the update.
+    mean : ndarray
+        Running mean vector to be updated.
+    cov : ndarray
+        Running covariance matrix to be updated.
+    x_count : int
+        Number of samples in the new batch.
+    x_mean : ndarray
+        Mean vector of the new batch.
+    x_cov : ndarray
+        Covariance matrix of the new batch.
+
+    Notes
+    -----
+    Optimized with Numba.
+
+    This function modifies `mean` and `cov` in place.   
     """
     alpha2 = x_count / count
     alpha1 = 1 - alpha2
@@ -31,16 +58,16 @@ def _update_mean_cov(count, mean, cov, x_count, x_mean, x_cov):
 @FeaturePredecessor(*SIGNAL_PREDECESSORS)
 @multivariate_feature
 class CommonSpatialPattern(TrainableFeature):
-    """Common Spatial Pattern (CSP) for binary signal classification.
+    r"""Common Spatial Pattern (CSP) for binary signal classification.
 
     CSP finds spatial filters that maximize the variance for one class while 
-    minimizing it for the other. It transforms multi-channel EEG signals into 
-    a subspace where the differences between two conditionsare most prominent.
+    minimizing it for the other. It transforms multi-channel signals into a
+    subspace where the differences between two conditions are most prominent.
 
     Attributes
     ----------
     _weights : ndarray
-        The spatial filter matrix (eigenvectors).
+        The spatial filter matrix.
     _eigvals : ndarray
         The eigenvalues representing the variance ratio for class 0.
     _means : ndarray
@@ -52,17 +79,19 @@ class CommonSpatialPattern(TrainableFeature):
     -----
     This implementation supports online learning through ``partial_fit``, 
     allowing the model to be updated with new batches.
+
+    For a theoretical overview of Common Spatial Patterns, see the 
+    `Wikipedia entry <https://en.wikipedia.org/wiki/Common_spatial_pattern>`_.
     """
     def __init__(self):
         super().__init__()
 
     def clear(self):
-        """Reset the internal state of the feature extractor. 
+        r"""Reset the internal state of the feature extractor. 
 
         See also
         --------
         :func:`eegdash.features.extractors.TrainableFeature.clear`
-
         """
         self._labels = None
         self._counts = np.array([0, 0])
@@ -73,15 +102,12 @@ class CommonSpatialPattern(TrainableFeature):
         self._weights = None
 
     def _update_labels(self, labels):
-        """Update and validate the set of unique class labels.
-
-        This ensures the CSP instance only tracks exactly two classes, 
-        as the algorithm is inherently a binary discriminator.
+        r"""Update and validate the set of unique class labels.
 
         Parameters
         ----------
         labels : ndarray
-            Unique labels found in the current batch of data.
+            Labels to be added to the tracked set ``_labels``.
 
         Returns
         -------
@@ -91,9 +117,7 @@ class CommonSpatialPattern(TrainableFeature):
         Raises
         ------
         AssertionError
-            If more than two unique labels are detected across all 
-            partial fits.
-        
+            If more than two unique labels are tracked.
         """
         if self._labels is None:
             self._labels = labels
@@ -105,20 +129,17 @@ class CommonSpatialPattern(TrainableFeature):
         return self._labels
 
     def _update_stats(self, l, x):
-        """Update the running mean and covariance for a specific class.
+        r"""Update the running mean and covariance for a specific class.
 
         This method calculates the batch statistics and merges them with 
-        the existing class-wise counts, means, and covariances using 
-        Welford-style incremental updates.
+        the existing class-wise counts, means, and covariances.
 
         Parameters
         ----------
         l : int
             The index of the class being updated (0 or 1).
         x : ndarray
-            The input data for this specific class, reshaped to 
-            (n_samples, n_channels).
-        
+            The input data for this specific class.
         """
         x_count, x_mean, x_cov = x.shape[0], x.mean(axis=0), np.cov(x.T, ddof=0)
         if self._counts[l] == 0:
@@ -132,12 +153,12 @@ class CommonSpatialPattern(TrainableFeature):
             )
 
     def partial_fit(self, x, y=None):
-        """Incrementally update class-wise mean and covariance statistics.
+        r"""Incrementally update class-wise mean and covariance statistics.
 
         Parameters
         ----------
         x : ndarray
-            EEG data of shape (n_epochs, n_channels, n_times).
+            Input array of shape (n_epochs, n_channels, n_times).
         y : ndarray
             Class labels for each epoch (must contain exactly two classes).
 
@@ -146,7 +167,6 @@ class CommonSpatialPattern(TrainableFeature):
         AssertionError
             If more than two unique labels are detected across all 
             partial fits.
-            
         """
         labels = self._update_labels(np.unique(y))
         for i, l in enumerate(labels):
@@ -157,8 +177,7 @@ class CommonSpatialPattern(TrainableFeature):
 
     @staticmethod
     def transform_input(x):
-        """
-        Reshape and transpose epoch data for matrix operations.
+        r"""Reshape and transpose epoch data for matrix operations.
 
         Converts 3D epoch data into a 2D format suitable for covariance 
         estimation and spatial filtering. The temporal dimension is 
@@ -178,7 +197,7 @@ class CommonSpatialPattern(TrainableFeature):
         return x.swapaxes(1, 2).reshape(-1, x.shape[1])
 
     def fit(self):
-        """Solve the generalized eigenvalue problem to find spatial filters.
+        r"""Solve the generalized eigenvalue problem to find spatial filters.
 
         Calculates the filters $W$ such that the ratio of variances between 
         the two classes is maximized. Filters are sorted by their 
@@ -186,8 +205,12 @@ class CommonSpatialPattern(TrainableFeature):
 
         See also
         --------
-        :func:`~eegdash.features.extractors.TrainableFeature.fit`
+        :func:`~eegdash.features.extractors.TrainableFeature.fit`.
 
+        Notes
+        -----
+        For more details on the CSP algorithm, visit the
+        `Wikipedia entry <https://en.wikipedia.org/wiki/Common_spatial_pattern>`_.
         """
         alphas = self._counts / self._counts.sum()
         self._mean = np.sum(alphas * self._means)
@@ -203,23 +226,26 @@ class CommonSpatialPattern(TrainableFeature):
         super().fit()
 
     def __call__(self, x, n_select=None, crit_select=None):
+        # TODO: Verify correctness of docstring - return description
         r"""Apply CSP filters and return the log-variance of the projections.
 
         Parameters
         ----------
         x : ndarray
-            The input EEG signal to transform.
+            Input array of shape (n_epochs, n_channels, n_times).
         n_select : int, optional
-            Number of top filters to select (from both ends of the spectrum).
+            Number of top filters to select.
         crit_select : float, optional
             Threshold for selecting filters based on eigenvalue distance 
-            from 0.5. Filters with $\left| \lambda - 0.5 \right| > {crit}_{select}$ are kept.
+            from 0.5. Filters with $\left| \lambda - 0.5 \right| > {crit}_{select}$ 
+            are kept.
 
         Returns
         -------
         dict
-            A dictionary where keys are filter indices and values are the 
-            variance of the spatially filtered signal (features).
+            A dictionary where keys are string indices of the selected components 
+            and values are 1D arrays of shape (n_epochs,) representing the 
+            variance of that component.
 
         Raises
         ------
@@ -230,6 +256,10 @@ class CommonSpatialPattern(TrainableFeature):
         -------
         :func:`~eegdash.features.extractors.TrainableFeature.__call__` 
 
+        Notes
+        -----
+        For more details on the CSP algorithm, visit the
+        `Wikipedia entry <https://en.wikipedia.org/wiki/Common_spatial_pattern>`_.
         """
         super().__call__()
         w = self._weights

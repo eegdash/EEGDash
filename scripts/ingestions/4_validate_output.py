@@ -61,7 +61,7 @@ MANDATORY_DATASET_FIELDS = {
 
 # Recommended fields (warnings if missing)
 RECOMMENDED_RECORD_FIELDS = ["entities", "datatype", "suffix", "extension"]
-RECOMMENDED_DATASET_FIELDS = ["name", "modalities", "demographics"]
+RECOMMENDED_DATASET_FIELDS = ["name", "datatypes", "demographics"]
 
 # Valid sources
 VALID_SOURCES = {

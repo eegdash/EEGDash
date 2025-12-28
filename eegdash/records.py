@@ -94,8 +94,8 @@ class Dataset(TypedDict, total=False):
     readme: str | None  # README content from dataset
 
     # Recording info
-    recording_modality: str  # Primary modality: "eeg", "meg", "ieeg"
-    modalities: list[str]  # All modalities present: ["eeg", "mri", "beh"]
+    recording_modality: str  # Primary recording type: "eeg", "meg", "ieeg"
+    datatypes: list[str]  # BIDS datatypes present: ["eeg", "anat", "beh"]
 
     # BIDS metadata
     bids_version: str | None
@@ -142,7 +142,7 @@ def create_dataset(
     source: str = "openneuro",
     readme: str | None = None,
     recording_modality: str = "eeg",
-    modalities: list[str] | None = None,
+    datatypes: list[str] | None = None,
     bids_version: str | None = None,
     license: str | None = None,
     authors: list[str] | None = None,
@@ -196,9 +196,9 @@ def create_dataset(
     source : str, default "openneuro"
         Data source ("openneuro", "nemar", "gin").
     recording_modality : str, default "eeg"
-        Primary recording modality.
-    modalities : list[str], optional
-        All modalities present in the dataset.
+        Primary recording type ("eeg", "meg", "ieeg").
+    datatypes : list[str], optional
+        BIDS datatypes present in the dataset (e.g., ["eeg", "anat", "beh"]).
     bids_version : str, optional
         BIDS version of the dataset.
     license : str, optional
@@ -298,7 +298,7 @@ def create_dataset(
         source=source,
         readme=readme,
         recording_modality=recording_modality,
-        modalities=modalities or [recording_modality],
+        datatypes=datatypes or [recording_modality],
         bids_version=bids_version,
         license=license,
         authors=authors or [],

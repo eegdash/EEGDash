@@ -56,7 +56,7 @@ jobs:
           repository: eegdash/eegdash-dataset-listings
           token: ${{ secrets.DATASET_LISTINGS_TOKEN }}
           persist-credentials: true
-          fetch-depth: 1
+          fetch-depth: 2
           path: eegdash-dataset-listings
 
       - name: Set up Python
@@ -77,7 +77,22 @@ jobs:
           mkdir -p eegdash-dataset-listings/cloned
           mkdir -p eegdash-dataset-listings/digested
 
+      - name: Check consolidated changes
+        id: changed
+        run: |
+          cd eegdash-dataset-listings
+          if git rev-parse --verify HEAD~1 >/dev/null 2>&1; then
+            if git diff --name-only HEAD~1 HEAD -- consolidated/${{ inputs.consolidated_file }} | grep -q .; then
+              echo "changed=true" >> $GITHUB_OUTPUT
+            else
+              echo "changed=false" >> $GITHUB_OUTPUT
+            fi
+          else
+            echo "changed=true" >> $GITHUB_OUTPUT
+          fi
+
       - name: Smart Clone datasets
+        if: steps.changed.outputs.changed == 'true'
         run: |
           ARGS="--input eegdash-dataset-listings/consolidated/${{ inputs.consolidated_file }}"
           ARGS="$ARGS --output eegdash-dataset-listings/cloned"
@@ -87,9 +102,10 @@ jobs:
             ARGS="$ARGS --limit ${{ inputs.max_datasets }}"
           fi
           
-          python eegdash/scripts/ingestions/2_clone.py $ARGS || true
+          python eegdash/scripts/ingestions/2_clone.py $ARGS
 
       - name: Digest datasets
+        if: steps.changed.outputs.changed == 'true'
         run: |
           # Only digest if there are cloned datasets
           if [ -d "eegdash-dataset-listings/cloned" ] && [ "$(ls -A eegdash-dataset-listings/cloned 2>/dev/null)" ]; then
@@ -97,14 +113,34 @@ jobs:
             ARGS="$ARGS --output eegdash-dataset-listings/digested"
             ARGS="$ARGS --workers ${{ inputs.workers }}"
             
-            python eegdash/scripts/ingestions/3_digest.py $ARGS || true
+            python eegdash/scripts/ingestions/3_digest.py $ARGS
           else
             echo "No datasets to digest"
+          fi
+
+      - name: Validate digested output
+        if: steps.changed.outputs.changed == 'true'
+        run: |
+          if [ -d "eegdash-dataset-listings/digested" ] && [ "$(ls -A eegdash-dataset-listings/digested 2>/dev/null)" ]; then
+            python eegdash/scripts/ingestions/4_validate_output.py \
+              --input eegdash-dataset-listings/digested \
+              --strict
+          else
+            echo "No digested datasets to validate"
           fi
 
       - name: Generate summary
         id: summary
         run: |
+          if [ "${{ steps.changed.outputs.changed }}" != "true" ]; then
+            echo "### 📊 ${{ inputs.source_name }} Digest Results" >> $GITHUB_STEP_SUMMARY
+            echo "- Changed: false" >> $GITHUB_STEP_SUMMARY
+            echo "- No digestion run" >> $GITHUB_STEP_SUMMARY
+            echo "datasets=0" >> $GITHUB_OUTPUT
+            echo "records=0" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
           cd eegdash-dataset-listings/digested
           
           # Count datasets and records
@@ -124,17 +160,20 @@ jobs:
           echo "records=$RECORDS" >> $GITHUB_OUTPUT
           
           echo "### 📊 ${{ inputs.source_name }} Digest Results" >> $GITHUB_STEP_SUMMARY
+          echo "- Changed: ${{ steps.changed.outputs.changed }}" >> $GITHUB_STEP_SUMMARY
           echo "- Datasets processed: $DATASETS" >> $GITHUB_STEP_SUMMARY
           echo "- Records created: $RECORDS" >> $GITHUB_STEP_SUMMARY
 
       - name: Upload digested artifacts
         uses: actions/upload-artifact@v4
+        if: steps.changed.outputs.changed == 'true'
         with:
           name: digested-${{ inputs.source_name }}
           path: eegdash-dataset-listings/digested/
           retention-days: 7
 
       - name: Commit digested data
+        if: steps.changed.outputs.changed == 'true'
         run: |
           cd eegdash-dataset-listings
           git config user.name "github-actions[bot]"

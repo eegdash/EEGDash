@@ -26,10 +26,8 @@ from io import BytesIO
 from pathlib import Path
 from typing import Any
 
-import requests
-
 # Shared HTTP helper
-from _http import request_json, request_response
+from _http import RequestError, request_json, request_response
 from dotenv import load_dotenv
 
 # Add ingestion paths before importing local modules
@@ -201,7 +199,7 @@ def search_figshare(
                     print(f"\\nError {status}", file=sys.stderr)
                     break
 
-            except requests.RequestException as e:
+            except RequestError as e:
                 print(f"\\nRequest error: {e}", file=sys.stderr)
                 if attempt < max_retries - 1:
                     time.sleep(2**attempt * 10)
@@ -389,7 +387,7 @@ def peek_zip_contents(
                 return peek_zip_contents(download_url, timeout, max_bytes=262144)
             return None
 
-    except requests.RequestException:
+    except RequestError:
         return None
     except Exception:
         return None
@@ -421,6 +419,7 @@ def download_and_extract_zip(
     download_dir.mkdir(parents=True, exist_ok=True)
     zip_path = download_dir / zip_name
 
+    response = None
     try:
         # Rate limiting
         elapsed = time.time() - _figshare_last_request_time
@@ -454,7 +453,7 @@ def download_and_extract_zip(
         # Stream to file to handle large files
         downloaded = 0
         with open(zip_path, "wb") as f:
-            for chunk in response.iter_content(chunk_size=8192):
+            for chunk in response.iter_bytes():
                 f.write(chunk)
                 downloaded += len(chunk)
 
@@ -484,7 +483,7 @@ def download_and_extract_zip(
 
         return files
 
-    except requests.RequestException as e:
+    except RequestError as e:
         print(f"download error: {e}", flush=True)
         return None
     except Exception as e:
@@ -492,6 +491,11 @@ def download_and_extract_zip(
         return None
     finally:
         # Ensure cleanup
+        if response is not None:
+            try:
+                response.close()
+            except Exception:
+                pass
         if zip_path.exists():
             try:
                 zip_path.unlink()
@@ -543,7 +547,7 @@ def get_article_files(article_id: int, max_retries: int = 3) -> list[dict[str, A
             else:
                 return []
 
-        except requests.RequestException:
+        except RequestError:
             if attempt < max_retries - 1:
                 time.sleep(2**attempt)
                 continue
@@ -610,7 +614,7 @@ def get_article_details(article_id: int, max_retries: int = 3) -> dict[str, Any]
                 )
                 return {}
 
-        except requests.RequestException as e:
+        except RequestError as e:
             print(
                 f"\n  Warning: Request error for article {article_id}: {e}",
                 file=sys.stderr,

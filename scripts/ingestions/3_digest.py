@@ -18,6 +18,7 @@ Usage:
 
 import argparse
 import json
+import os
 import sys
 from concurrent.futures import ProcessPoolExecutor, as_completed
 from datetime import datetime, timezone
@@ -25,6 +26,7 @@ from pathlib import Path
 from typing import Any
 
 import pandas as pd
+from _fingerprint import fingerprint_from_files, fingerprint_from_manifest
 from tqdm import tqdm
 
 from eegdash.records import create_dataset, create_record
@@ -484,15 +486,6 @@ def parse_bids_entities_from_path(filepath: str) -> dict[str, Any]:
     return entities
 
 
-# Import neurophysiology data extensions from MNE-BIDS
-from mne_bids.config import ALLOWED_DATATYPE_EXTENSIONS
-
-# Build flat set of all neurophysiology data extensions
-NEURO_DATA_EXTENSIONS = set()
-for modality, extensions in ALLOWED_DATATYPE_EXTENSIONS.items():
-    if modality in ("eeg", "meg", "ieeg", "emg", "nirs"):
-        NEURO_DATA_EXTENSIONS.update(extensions)
-
 # Supported modalities for neurophysiology
 NEURO_MODALITIES = ("eeg", "meg", "ieeg", "emg", "nirs")
 
@@ -507,6 +500,29 @@ CTF_INTERNAL_EXTENSIONS = {
     ".hist",
     ".newds",
 }
+
+
+NEURO_DATA_EXTENSIONS: set[str] | None = None
+
+
+def _load_neuro_data_extensions() -> set[str]:
+    """Lazily load neurophysiology data extensions from MNE-BIDS."""
+    global NEURO_DATA_EXTENSIONS
+    if NEURO_DATA_EXTENSIONS is not None:
+        return NEURO_DATA_EXTENSIONS
+
+    # Avoid numba cache issues on CI/help by setting cache dir before import.
+    os.environ.setdefault("NUMBA_CACHE_DIR", str(Path(".cache") / "numba"))
+
+    from mne_bids.config import ALLOWED_DATATYPE_EXTENSIONS
+
+    extensions: set[str] = set()
+    for modality, exts in ALLOWED_DATATYPE_EXTENSIONS.items():
+        if modality in NEURO_MODALITIES:
+            extensions.update(exts)
+
+    NEURO_DATA_EXTENSIONS = extensions
+    return extensions
 
 
 def is_neuro_data_file(filepath: str) -> bool:
@@ -550,7 +566,8 @@ def is_neuro_data_file(filepath: str) -> bool:
         return False
 
     # Check for data file extensions from MNE-BIDS
-    return any(filepath_lower.endswith(ext) for ext in NEURO_DATA_EXTENSIONS)
+    data_exts = _load_neuro_data_extensions()
+    return any(filepath_lower.endswith(ext) for ext in data_exts)
 
 
 def detect_modality_from_path(filepath: str) -> str:
@@ -730,6 +747,8 @@ def digest_from_manifest(
     if not source_url:
         source_url = manifest.get("external_links", {}).get("osf_url")
 
+    fingerprint = fingerprint_from_manifest(dataset_id, source, manifest)
+
     # Build Dataset document
     dataset_doc = create_dataset(
         dataset_id=dataset_id,
@@ -753,6 +772,7 @@ def digest_from_manifest(
         source_url=source_url,
         digested_at=digested_at,
     )
+    dataset_doc["ingestion_fingerprint"] = fingerprint
 
     # Generate Records for EEG data files
     records = []
@@ -1221,6 +1241,15 @@ def digest_dataset(
             "source": source,
             "error": str(e),
         }
+
+    try:
+        file_paths = [Path(str(f)) for f in files]
+        fingerprint = fingerprint_from_files(
+            dataset_id, source, file_paths, dataset_dir
+        )
+        dataset_meta["ingestion_fingerprint"] = fingerprint
+    except Exception:
+        pass
 
     # Extract Record metadata for each file
     records = []

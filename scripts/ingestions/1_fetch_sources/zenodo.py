@@ -27,8 +27,7 @@ import time
 from pathlib import Path
 from typing import Any
 
-import requests
-from _http import request_response
+from _http import HTTPStatusError, RequestError, TimeoutException, request_response
 from dotenv import load_dotenv
 
 # Add ingestion paths before importing local modules
@@ -336,11 +335,11 @@ def fetch_zenodo_datasets(
                     # No rate limit header, use conservative delay
                     time.sleep(1)
 
-            except requests.Timeout:
+            except TimeoutException:
                 print("Timeout, skipping to next page")
                 page += 1
                 time.sleep(5)
-            except requests.RequestException as e:
+            except (RequestError, HTTPStatusError) as e:
                 print(f"Request error: {type(e).__name__}")
                 time.sleep(5)
             except (json.JSONDecodeError, KeyError):

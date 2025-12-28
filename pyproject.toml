@@ -104,6 +104,7 @@ digestion = [
   "tenacity",
   "hishel",
   "pydantic>=2",
+  "PyGithub>=2",
 ]
 
 all = [

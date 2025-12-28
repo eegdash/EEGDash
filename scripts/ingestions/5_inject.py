@@ -5,22 +5,22 @@ Upload Dataset and Record documents from digested datasets into separate MongoDB
 
 Usage:
     # Inject all digested datasets to staging
-    python 4_inject.py --input digestion_output --database eegdash_staging
+    python 5_inject.py --input digestion_output --database eegdash_staging
 
     # Inject to production
-    python 4_inject.py --input digestion_output --database eegdash
+    python 5_inject.py --input digestion_output --database eegdash
 
     # Inject specific datasets
-    python 4_inject.py --input digestion_output --database eegdash_staging --datasets ds002718 ds005506
+    python 5_inject.py --input digestion_output --database eegdash_staging --datasets ds002718 ds005506
 
     # Dry run (validate without uploading)
-    python 4_inject.py --input digestion_output --database eegdash_staging --dry-run
+    python 5_inject.py --input digestion_output --database eegdash_staging --dry-run
 
     # Inject only datasets (skip records)
-    python 4_inject.py --input digestion_output --database eegdash_staging --only-datasets
+    python 5_inject.py --input digestion_output --database eegdash_staging --only-datasets
 
     # Inject only records (skip datasets)
-    python 4_inject.py --input digestion_output --database eegdash_staging --only-records
+    python 5_inject.py --input digestion_output --database eegdash_staging --only-records
 """
 
 import argparse

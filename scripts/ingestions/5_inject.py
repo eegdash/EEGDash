@@ -30,9 +30,8 @@ import sys
 from pathlib import Path
 
 import requests
-from requests.adapters import HTTPAdapter
+from _http import make_retry_session
 from tqdm import tqdm
-from urllib3.util.retry import Retry
 
 # Default API configuration
 DEFAULT_API_URL = "https://data.eegdash.org"
@@ -40,13 +39,7 @@ DEFAULT_API_URL = "https://data.eegdash.org"
 
 def _make_session(auth_token: str) -> requests.Session:
     """Create session with retry strategy and auth."""
-    session = requests.Session()
-    retry = Retry(total=3, status_forcelist=[500, 502, 503, 504], backoff_factor=1)
-    session.mount("https://", HTTPAdapter(max_retries=retry))
-    session.mount("http://", HTTPAdapter(max_retries=retry))
-    session.headers["Authorization"] = f"Bearer {auth_token}"
-    session.headers["Content-Type"] = "application/json"
-    return session
+    return make_retry_session(auth_token)
 
 
 def find_digested_datasets(

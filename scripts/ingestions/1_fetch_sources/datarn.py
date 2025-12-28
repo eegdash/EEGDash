@@ -23,6 +23,7 @@ from pathlib import Path
 from typing import Any
 
 import requests
+from _http import build_headers, request_json
 
 # Add ingestion paths before importing local modules
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
@@ -110,21 +111,19 @@ def fetch_datasets_from_api(
     }
 
     try:
-        headers = {
-            "Accept": "application/json",
-            "User-Agent": "EEGDash-DataHarvester/1.0",
-        }
+        headers = build_headers()
 
         print(f"Querying API with: q={query}, access={','.join(access_levels)}")
-        response = requests.get(
+        data, _response = request_json(
+            "get",
             DATARN_API_URL,
             params=params,
             headers=headers,
             timeout=timeout,
+            raise_for_status=True,
         )
-        response.raise_for_status()
-
-        data = response.json()
+        if data is None:
+            raise requests.RequestException("Empty response")
 
         # API returns documents in a nested structure with "documents" and "document" keys
         datasets = []

@@ -5,7 +5,7 @@ import sys
 from collections.abc import Iterator
 from pathlib import Path
 
-import requests
+from _http import request_json
 
 # Add ingestion paths before importing local modules
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
@@ -163,9 +163,15 @@ def fetch_batch_details(
 
     try:
         query = build_batch_detail_query(dataset_ids)
-        response = requests.post(GRAPHQL_URL, json={"query": query}, timeout=timeout)
-        data = response.json()
-
+        data, response = request_json(
+            "post",
+            GRAPHQL_URL,
+            json_body={"query": query},
+            timeout=timeout,
+        )
+        if not response or not isinstance(data, dict):
+            print("  Error in batch query: no data")
+            return result
         if "errors" in data or "data" not in data:
             print(f"  Error in batch query: {data.get('errors', 'no data')}")
             return result
@@ -285,9 +291,15 @@ def fetch_dataset_ids(
                     },
                 }
 
-                response = requests.post(GRAPHQL_URL, json=payload, timeout=timeout)
-                response.raise_for_status()
-                result = response.json()
+                result, response = request_json(
+                    "post",
+                    GRAPHQL_URL,
+                    json_body=payload,
+                    timeout=timeout,
+                    raise_for_status=True,
+                )
+                if not response or not isinstance(result, dict):
+                    raise Exception("Empty response")
 
                 if "errors" in result:
                     raise Exception(f"GraphQL Error: {result['errors'][0]['message']}")

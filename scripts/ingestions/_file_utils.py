@@ -15,6 +15,7 @@ from pathlib import Path
 from urllib.parse import urljoin, urlparse
 
 import requests
+from _http import request_response
 
 # BIDS file detection patterns
 BIDS_ROOT_FILES = {
@@ -131,8 +132,13 @@ def peek_zip_contents(url: str, timeout: int = 30) -> list[dict] | None:
     """
     try:
         # Get file size via HEAD
-        head = requests.head(url, timeout=timeout, allow_redirects=True)
-        if head.status_code != 200:
+        head = request_response(
+            "head",
+            url,
+            timeout=timeout,
+            allow_redirects=True,
+        )
+        if not head or head.status_code != 200:
             return None
 
         file_size = int(head.headers.get("Content-Length", 0))
@@ -147,12 +153,13 @@ def peek_zip_contents(url: str, timeout: int = 30) -> list[dict] | None:
         eocd_search_size = min(65536, file_size)
         range_start = file_size - eocd_search_size
 
-        resp = requests.get(
+        resp = request_response(
+            "get",
             url,
             headers={"Range": f"bytes={range_start}-{file_size - 1}"},
             timeout=timeout,
         )
-        if resp.status_code not in (200, 206):
+        if not resp or resp.status_code not in (200, 206):
             return None
 
         data = resp.content
@@ -172,12 +179,13 @@ def peek_zip_contents(url: str, timeout: int = 30) -> list[dict] | None:
         cd_offset = struct.unpack("<I", eocd[16:20])[0]
 
         # Read Central Directory
-        resp = requests.get(
+        resp = request_response(
+            "get",
             url,
             headers={"Range": f"bytes={cd_offset}-{cd_offset + cd_size - 1}"},
             timeout=timeout,
         )
-        if resp.status_code not in (200, 206):
+        if not resp or resp.status_code not in (200, 206):
             return None
 
         cd_data = resp.content
@@ -234,8 +242,9 @@ def list_figshare_files(article_id: int | str, api_key: str = "") -> list[dict]:
     url = f"https://api.figshare.com/v2/articles/{article_id}/files"
 
     try:
-        resp = requests.get(url, headers=headers, timeout=30)
-        resp.raise_for_status()
+        resp = request_response("get", url, headers=headers, timeout=30)
+        if not resp or resp.status_code != 200:
+            return []
         files = resp.json()
 
         result = []
@@ -269,8 +278,9 @@ def list_zenodo_files(record_id: int | str, api_key: str = "") -> list[dict]:
     url = f"https://zenodo.org/api/records/{record_id}"
 
     try:
-        resp = requests.get(url, headers=headers, timeout=30)
-        resp.raise_for_status()
+        resp = request_response("get", url, headers=headers, timeout=30)
+        if not resp or resp.status_code != 200:
+            return []
         data = resp.json()
 
         result = []
@@ -322,8 +332,8 @@ def list_osf_files(node_id: str, path: str = "/") -> list[dict]:
     result = []
 
     try:
-        resp = requests.get(url, headers=headers, timeout=30)
-        if resp.status_code != 200:
+        resp = request_response("get", url, headers=headers, timeout=30)
+        if not resp or resp.status_code != 200:
             return result
 
         data = resp.json()
@@ -359,8 +369,8 @@ def list_osf_files(node_id: str, path: str = "/") -> list[dict]:
         # Handle pagination
         next_url = data.get("links", {}).get("next")
         if next_url:
-            next_resp = requests.get(next_url, headers=headers, timeout=30)
-            if next_resp.status_code == 200:
+            next_resp = request_response("get", next_url, headers=headers, timeout=30)
+            if next_resp and next_resp.status_code == 200:
                 # Extract path from next URL and recurse
                 pass  # Simplified - OSF pagination rarely needed for single datasets
 
@@ -407,8 +417,11 @@ def list_scidb_files(
         }
 
         try:
-            resp = requests.post(api_url, json=body, headers=headers, timeout=30)
-            resp.raise_for_status()
+            resp = request_response(
+                "post", api_url, json_body=body, headers=headers, timeout=30
+            )
+            if not resp or resp.status_code != 200:
+                return []
             data = resp.json()
 
             if data.get("code") != 20000:
@@ -450,8 +463,8 @@ def list_datarn_files(source_url: str) -> list[dict]:
     webdav_url = None
 
     try:
-        resp = requests.get(source_url, timeout=30)
-        if resp.status_code == 200:
+        resp = request_response("get", source_url, timeout=30)
+        if resp and resp.status_code == 200:
             import re
 
             ld_match = re.search(
@@ -480,13 +493,13 @@ def list_datarn_files(source_url: str) -> list[dict]:
         visited.add(url)
 
         try:
-            resp = requests.request(
+            resp = request_response(
                 "PROPFIND",
                 url,
                 headers={"Depth": "1"},
                 timeout=30,
             )
-            if resp.status_code not in (200, 207):
+            if not resp or resp.status_code not in (200, 207):
                 return
 
             root = ET.fromstring(resp.content)

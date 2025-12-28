@@ -8,16 +8,16 @@ Output: consolidated/scidb_datasets.json (Dataset schema format)
 """
 
 import argparse
-import json
 import re
 import sys
 from pathlib import Path
 from typing import Any
 
-import requests
+from _http import request_json
 
 # Add ingestion paths before importing local modules
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from _bids import collect_bids_matches
 from _serialize import (
     extract_subjects_count,
     generate_dataset_id,
@@ -81,24 +81,31 @@ def check_bids_structure(
     }
 
     try:
-        response = requests.post(
+        data, response = request_json(
+            "post",
             FILETREE_API_URL,
-            json=body,
+            json_body=body,
             headers=headers,
             timeout=timeout,
+            raise_for_status=True,
         )
-        response.raise_for_status()
-        data = response.json()
+        if not response or data is None:
+            return False, [], None
 
         if data.get("code") != 20000:
             return False, [], None
 
         files = data.get("data", [])
         file_names = [f.get("fileName", "").lower() for f in files]
-
-        # Check for required BIDS files
-        found_required = [f for f in BIDS_REQUIRED_FILES if f.lower() in file_names]
-        found_optional = [f for f in BIDS_OPTIONAL_FILES if f.lower() in file_names]
+        matches = collect_bids_matches(
+            file_names,
+            required_files=BIDS_REQUIRED_FILES,
+            optional_files=BIDS_OPTIONAL_FILES,
+            subject_pattern=None,
+            dataset_zip_pattern=None,
+        )
+        found_required = matches["required_found"]
+        found_optional = matches["optional_found"]
 
         is_bids = len(found_required) > 0
         found_files = found_required + found_optional
@@ -214,26 +221,23 @@ def search_scidb_by_query(
             "size": actual_page_size,
         }
 
-        try:
-            response = requests.post(
-                base_url,
-                params=params,
-                json=body,
-                headers={
-                    "Content-Type": "application/json;charset=utf-8",
-                    "Accept": "application/json, text/plain, */*",
-                },
-                timeout=30,
-            )
-            response.raise_for_status()
-        except requests.RequestException as e:
-            print(f"  Error on page {page}: {e}", file=sys.stderr)
+        data, response = request_json(
+            "post",
+            base_url,
+            params=params,
+            json_body=body,
+            headers={
+                "Content-Type": "application/json;charset=utf-8",
+                "Accept": "application/json, text/plain, */*",
+            },
+            timeout=30,
+            raise_for_status=True,
+        )
+        if not response:
+            print(f"  Error on page {page}: no response", file=sys.stderr)
             break
-
-        try:
-            data = response.json()
-        except json.JSONDecodeError as e:
-            print(f"  JSON parse error: {e}", file=sys.stderr)
+        if data is None:
+            print(f"  JSON parse error on page {page}", file=sys.stderr)
             break
 
         # Check API response code

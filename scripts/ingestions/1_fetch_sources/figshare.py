@@ -27,10 +27,19 @@ from pathlib import Path
 from typing import Any
 
 import requests
+
+# Shared HTTP helper
+from _http import request_json, request_response
 from dotenv import load_dotenv
 
 # Add ingestion paths before importing local modules
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from _bids import (
+    BIDS_OPTIONAL_FILES,
+    BIDS_REQUIRED_FILES,
+    BIDS_SUBJECT_PATTERN,
+    collect_bids_matches,
+)
 from _serialize import (
     PROJECT_ROOT,
     extract_subjects_count,
@@ -50,20 +59,6 @@ if FIGSHARE_API_KEY:
     print(f"✓ Figshare API key loaded from {_env_path}")
 else:
     print(f"⚠ No Figshare API key found in {_env_path} (using anonymous access)")
-
-# BIDS indicator files
-BIDS_REQUIRED_FILES = ["dataset_description.json"]
-BIDS_OPTIONAL_FILES = [
-    "participants.tsv",
-    "participants.json",
-    "readme",
-    "readme.md",
-    "readme.txt",
-    "changes",
-]
-
-# Patterns for BIDS subject folders/zips
-BIDS_SUBJECT_PATTERN = re.compile(r"^sub-[a-zA-Z0-9]+(?:\.zip)?$", re.IGNORECASE)
 
 
 def validate_bids_structure(files: list[dict[str, Any]]) -> dict[str, Any]:
@@ -85,33 +80,23 @@ def validate_bids_structure(files: list[dict[str, Any]]) -> dict[str, Any]:
         - has_subject_zips: Whether subjects are in ZIP format
 
     """
-    file_names = [f.get("name", "").lower() for f in files]
     file_names_original = [f.get("name", "") for f in files]
-
-    # Check for required BIDS files
-    found_required = []
-    for bf in BIDS_REQUIRED_FILES:
-        if bf.lower() in file_names:
-            found_required.append(bf)
-
-    # Check for optional BIDS files
-    found_optional = []
-    for bf in BIDS_OPTIONAL_FILES:
-        if bf.lower() in file_names:
-            found_optional.append(bf)
-
-    # Check for subject folders/zips
-    subject_files = []
-    for fn in file_names_original:
-        if BIDS_SUBJECT_PATTERN.match(fn):
-            subject_files.append(fn)
+    matches = collect_bids_matches(
+        file_names_original,
+        required_files=BIDS_REQUIRED_FILES,
+        optional_files=BIDS_OPTIONAL_FILES,
+        subject_pattern=BIDS_SUBJECT_PATTERN,
+    )
+    found_required = matches["required_found"]
+    found_optional = matches["optional_found"]
+    subject_files = matches["subject_files"]
 
     # Determine if it's BIDS
     # Accept if: has dataset_description.json OR has subject folders/zips with BIDS naming
     is_bids = len(found_required) > 0 or len(subject_files) >= 2
 
     # Check if subjects are zipped
-    has_subject_zips = any(fn.lower().endswith(".zip") for fn in subject_files)
+    has_subject_zips = len(matches["subject_zips"]) > 0
 
     return {
         "is_bids": is_bids,
@@ -189,17 +174,19 @@ def search_figshare(
                 _figshare_last_request_time = time.time()
                 _figshare_request_count += 1
 
-                response = requests.post(
+                response = request_response(
+                    "post",
                     base_url,
-                    json=payload,
+                    json_body=payload,
                     headers=headers,
                     timeout=30,
+                    raise_for_request=True,
                 )
 
-                if response.status_code == 200:
+                if response and response.status_code == 200:
                     articles = response.json()
                     break
-                elif response.status_code in (403, 429):
+                elif response and response.status_code in (403, 429):
                     # Rate limited - aggressive exponential backoff
                     wait_time = (2**attempt) * 30  # 30, 60, 120 seconds
                     print(
@@ -210,7 +197,8 @@ def search_figshare(
                     time.sleep(wait_time)
                     continue
                 else:
-                    print(f"\\nError {response.status_code}", file=sys.stderr)
+                    status = response.status_code if response else "no response"
+                    print(f"\\nError {status}", file=sys.stderr)
                     break
 
             except requests.RequestException as e:
@@ -305,34 +293,43 @@ def peek_zip_contents(
         if FIGSHARE_API_KEY:
             headers["Authorization"] = f"token {FIGSHARE_API_KEY}"
 
-        head = requests.head(
-            download_url, headers=headers, timeout=timeout, allow_redirects=True
+        head = request_response(
+            "head",
+            download_url,
+            headers=headers,
+            timeout=timeout,
+            allow_redirects=True,
         )
 
         # Figshare may return 302 redirect - follow it
-        if head.status_code in (301, 302, 307, 308):
+        if head and head.status_code in (301, 302, 307, 308):
             redirect_url = head.headers.get("Location", download_url)
-            head = requests.head(
-                redirect_url, headers=headers, timeout=timeout, allow_redirects=True
+            head = request_response(
+                "head",
+                redirect_url,
+                headers=headers,
+                timeout=timeout,
+                allow_redirects=True,
             )
 
-        if head.status_code == 403:
+        if head and head.status_code == 403:
             # Try without auth header (some downloads are public)
             headers_no_auth = {
                 "User-Agent": headers["User-Agent"],
                 "Accept": headers["Accept"],
             }
-            head = requests.head(
+            head = request_response(
+                "head",
                 download_url,
                 headers=headers_no_auth,
                 timeout=timeout,
                 allow_redirects=True,
             )
-            if head.status_code == 403:
+            if head and head.status_code == 403:
                 return None
             headers = headers_no_auth
 
-        if head.status_code != 200:
+        if not head or head.status_code != 200:
             return None
 
         file_size = int(head.headers.get("Content-Length", 0))
@@ -356,11 +353,15 @@ def peek_zip_contents(
             "Range": f"bytes={start_byte}-{file_size - 1}",
         }
 
-        response = requests.get(
-            download_url, headers=range_headers, timeout=timeout, allow_redirects=True
+        response = request_response(
+            "get",
+            download_url,
+            headers=range_headers,
+            timeout=timeout,
+            allow_redirects=True,
         )
 
-        if response.status_code not in (200, 206):
+        if not response or response.status_code not in (200, 206):
             return None
 
         content = response.content
@@ -432,16 +433,22 @@ def download_and_extract_zip(
         }
 
         print(f"      Downloading {zip_name}...", end=" ", flush=True)
-        response = requests.get(
-            download_url, headers=headers, timeout=timeout, stream=True
+        response = request_response(
+            "get",
+            download_url,
+            headers=headers,
+            timeout=timeout,
+            stream=True,
+            raise_for_request=True,
         )
 
-        if response.status_code == 403:
+        if response and response.status_code == 403:
             print("blocked (403)", flush=True)
             return None
 
-        if response.status_code != 200:
-            print(f"failed ({response.status_code})", flush=True)
+        if not response or response.status_code != 200:
+            status = response.status_code if response else "no response"
+            print(f"failed ({status})", flush=True)
             return None
 
         # Stream to file to handle large files
@@ -521,11 +528,11 @@ def get_article_files(article_id: int, max_retries: int = 3) -> list[dict[str, A
             _figshare_last_request_time = time.time()
             _figshare_request_count += 1
 
-            response = requests.get(url, headers=headers, timeout=30)
+            data, response = request_json("get", url, headers=headers, timeout=30)
 
-            if response.status_code == 200:
-                return response.json()
-            elif response.status_code in (403, 429):
+            if response and response.status_code == 200 and data is not None:
+                return data
+            elif response and response.status_code in (403, 429):
                 wait_time = (2**attempt) * 3
                 print(
                     f"\n  Rate limited for files {article_id}, waiting {wait_time}s...",
@@ -571,11 +578,11 @@ def get_article_details(article_id: int, max_retries: int = 3) -> dict[str, Any]
             _figshare_last_request_time = time.time()
             _figshare_request_count += 1
 
-            response = requests.get(url, headers=headers, timeout=30)
+            data, response = request_json("get", url, headers=headers, timeout=30)
 
-            if response.status_code == 200:
-                return response.json()
-            elif response.status_code == 403:
+            if response and response.status_code == 200 and data is not None:
+                return data
+            elif response and response.status_code == 403:
                 # Rate limited - exponential backoff
                 wait_time = (2**attempt) * 5  # 5, 10, 20 seconds
                 print(
@@ -585,7 +592,7 @@ def get_article_details(article_id: int, max_retries: int = 3) -> dict[str, Any]
                 )
                 time.sleep(wait_time)
                 continue
-            elif response.status_code == 429:
+            elif response and response.status_code == 429:
                 # Too Many Requests - longer backoff
                 wait_time = (2**attempt) * 10  # 10, 20, 40 seconds
                 print(
@@ -596,8 +603,9 @@ def get_article_details(article_id: int, max_retries: int = 3) -> dict[str, Any]
                 time.sleep(wait_time)
                 continue
             else:
+                status = response.status_code if response else "no response"
                 print(
-                    f"\n  Warning: Error {response.status_code} for article {article_id}",
+                    f"\n  Warning: Error {status} for article {article_id}",
                     file=sys.stderr,
                 )
                 return {}

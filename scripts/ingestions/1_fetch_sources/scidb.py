@@ -18,7 +18,12 @@ import requests
 
 # Add ingestion paths before importing local modules
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-from _serialize import generate_dataset_id, save_datasets_deterministically, setup_paths
+from _serialize import (
+    extract_subjects_count,
+    generate_dataset_id,
+    save_datasets_deterministically,
+    setup_paths,
+)
 
 setup_paths()
 from eegdash.records import create_dataset
@@ -362,6 +367,9 @@ def process_scidb_dataset(
             fallback_id=original_id,
         )
 
+        # Extract subject count from description using shared utility
+        subjects_count = extract_subjects_count(description)
+
         # Create dataset using create_dataset
         dataset = create_dataset(
             dataset_id=dataset_id,
@@ -372,12 +380,20 @@ def process_scidb_dataset(
             license=record.get("copyRight", {}).get("code") or None,
             authors=authors or None,
             source_url=f"https://www.scidb.cn/en/detail?id={original_id}",
+            subjects_count=subjects_count if subjects_count > 0 else None,
         )
 
         # Add SciDB-specific metadata
         dataset["scidb_id"] = original_id
         dataset["scidb_dataset_id"] = data_set_id  # For file tree API
         dataset["scidb_version"] = version
+
+        # Store demographics for downstream use (for manifest->digester)
+        if subjects_count > 0:
+            dataset["demographics"] = {
+                "subjects_count": subjects_count,
+                "ages": [],
+            }
 
         # Extract DOI - it's directly in the record
         if doi := record.get("doi"):

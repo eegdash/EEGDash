@@ -33,7 +33,12 @@ from dotenv import load_dotenv
 
 # Add ingestion paths before importing local modules
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-from _serialize import generate_dataset_id, save_datasets_deterministically, setup_paths
+from _serialize import (
+    extract_subjects_count,
+    generate_dataset_id,
+    save_datasets_deterministically,
+    setup_paths,
+)
 
 setup_paths()
 from eegdash.records import create_dataset
@@ -453,30 +458,8 @@ def extract_dataset_info(
             fallback_id=record_id,
         )
 
-        # Extract subject count from description
-        subjects_count = 0
-        subject_patterns = [
-            r"(\d+)\s*subjects?",
-            r"(\d+)\s*participants?",
-            r"n\s*=\s*(\d+)",
-            r"(\d+)\s*healthy",
-            r"(\d+)\s*patients?",
-            r"(\d+)\s*individuals?",
-            r"(\d+)\s*volunteers?",
-            r"(\d+)\s*children",
-            r"(\d+)\s*adults?",
-            r"recorded\s+from\s+(\d+)",
-            r"data\s+from\s+(\d+)",
-        ]
-        for pattern in subject_patterns:
-            match = re.search(pattern, description, re.I)
-            if match:
-                try:
-                    subjects_count = int(match.group(1))
-                    if subjects_count > 0 and subjects_count < 10000:  # Sanity check
-                        break
-                except ValueError:
-                    pass
+        # Extract subject count from description using shared utility
+        subjects_count = extract_subjects_count(description)
 
         dataset = create_dataset(
             dataset_id=dataset_id,

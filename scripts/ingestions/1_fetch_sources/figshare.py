@@ -33,6 +33,7 @@ from dotenv import load_dotenv
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from _serialize import (
     PROJECT_ROOT,
+    extract_subjects_count,
     generate_dataset_id,
     save_datasets_deterministically,
     setup_paths,
@@ -739,31 +740,9 @@ def extract_dataset_info(
         fallback_id=str(article_id),
     )
 
-    # Extract subject count from description
+    # Extract subject count from description using shared utility
     description = article.get("description", "") or ""
-    subjects_count = 0
-    subject_patterns = [
-        r"(\d+)\s*subjects?",
-        r"(\d+)\s*participants?",
-        r"n\s*=\s*(\d+)",
-        r"(\d+)\s*healthy",
-        r"(\d+)\s*patients?",
-        r"(\d+)\s*individuals?",
-        r"(\d+)\s*volunteers?",
-        r"(\d+)\s*children",
-        r"(\d+)\s*adults?",
-        r"recorded\s+from\s+(\d+)",
-        r"data\s+from\s+(\d+)",
-    ]
-    for pattern in subject_patterns:
-        match = re.search(pattern, description, re.I)
-        if match:
-            try:
-                subjects_count = int(match.group(1))
-                if subjects_count > 0 and subjects_count < 10000:  # Sanity check
-                    break
-            except ValueError:
-                pass
+    subjects_count = extract_subjects_count(description)
 
     # Create Dataset document using the schema
     dataset = create_dataset(

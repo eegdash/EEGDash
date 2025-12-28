@@ -37,6 +37,52 @@ def setup_paths() -> None:
         sys.path.insert(0, ingestions_dir_str)
 
 
+# Shared patterns for extracting subject counts from descriptions
+# Used by zenodo.py, figshare.py, osf.py, datarn.py, scidb.py
+SUBJECT_COUNT_PATTERNS = [
+    r"(\d+)\s*subjects?",
+    r"(\d+)\s*participants?",
+    r"n\s*=\s*(\d+)",
+    r"(\d+)\s*healthy",
+    r"(\d+)\s*patients?",
+    r"(\d+)\s*individuals?",
+    r"(\d+)\s*volunteers?",
+    r"(\d+)\s*children",
+    r"(\d+)\s*adults?",
+    r"recorded\s+from\s+(\d+)",
+    r"data\s+from\s+(\d+)",
+]
+
+
+def extract_subjects_count(description: str | None) -> int:
+    """Extract subject count from a description text.
+
+    Uses regex patterns to find mentions of subject/participant counts
+    in various formats common in dataset descriptions.
+
+    Args:
+        description: Text description that may contain subject count info
+
+    Returns:
+        Extracted subject count, or 0 if not found
+
+    """
+    if not description:
+        return 0
+
+    for pattern in SUBJECT_COUNT_PATTERNS:
+        match = re.search(pattern, description, re.IGNORECASE)
+        if match:
+            try:
+                count = int(match.group(1))
+                if 0 < count < 10000:  # Sanity check: reasonable subject count
+                    return count
+            except ValueError:
+                pass
+
+    return 0
+
+
 def extract_surname(author_name: str) -> str | None:
     """Extract surname from an author name string.
 

@@ -26,7 +26,12 @@ import requests
 
 # Add ingestion paths before importing local modules
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-from _serialize import generate_dataset_id, save_datasets_deterministically, setup_paths
+from _serialize import (
+    extract_subjects_count,
+    generate_dataset_id,
+    save_datasets_deterministically,
+    setup_paths,
+)
 
 setup_paths()
 from eegdash.records import create_dataset
@@ -218,6 +223,9 @@ def extract_dataset_info(
             fallback_id=original_id,
         )
 
+        # Extract subject count from description using shared utility
+        subjects_count = extract_subjects_count(description)
+
         # Create Dataset document
         dataset = create_dataset(
             dataset_id=dataset_id,
@@ -228,10 +236,18 @@ def extract_dataset_info(
             authors=authors,
             dataset_doi=doi,
             source_url=url,
+            subjects_count=subjects_count if subjects_count > 0 else None,
         )
 
         # Store original data.ru.nl ID for reference
         dataset["datarn_id"] = original_id
+
+        # Store demographics for downstream use (for manifest->digester)
+        if subjects_count > 0:
+            dataset["demographics"] = {
+                "subjects_count": subjects_count,
+                "ages": [],
+            }
 
         # Add BIDS info if detected
         if is_bids and "metadata" in dataset:

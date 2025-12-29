@@ -146,26 +146,36 @@ def extract_dataset_metadata(
     files = bids_dataset.get_files()
     modalities = set()
     tasks = set()
+    tasks = set()
     sessions = set()
+    subjects = set()
 
     for bids_file in files:
         mod = bids_dataset.get_bids_file_attribute("modality", bids_file)
         if mod:
             modalities.add(mod)
-        task = bids_dataset.get_bids_file_attribute("task", bids_file)
-        if task:
-            tasks.add(task)
-        session = bids_dataset.get_bids_file_attribute("session", bids_file)
-        if session:
-            sessions.add(session)
 
-    # Determine primary modality
-    modality_priority = ["eeg", "meg", "ieeg"]
-    recording_modality = "eeg"
-    for mod in modality_priority:
-        if mod in modalities:
-            recording_modality = mod
-            break
+        # Only collect subjects/tasks/sessions if file belongs to a neuro modality
+        if mod in NEURO_MODALITIES:
+            task = bids_dataset.get_bids_file_attribute("task", bids_file)
+            if task:
+                tasks.add(task)
+            session = bids_dataset.get_bids_file_attribute("session", bids_file)
+            if session:
+                sessions.add(session)
+            subject = bids_dataset.get_bids_file_attribute("subject", bids_file)
+            if subject:
+                subjects.add(subject)
+
+    # Determine primary modality (join all found modalities)
+    if modalities:
+        # Sort to ensure deterministic order (e.g. "eeg+meg" vs "meg+eeg")
+        # Priority order could be used, but alphabetical is simpler/standard?
+        # Let's use the explicit priority list for sorting if present, else alphabetical
+        # Actually, let's just join sorted set for consistency
+        recording_modality = "+".join(sorted(modalities))
+    else:
+        recording_modality = "eeg"
 
     # Read participants.tsv for demographics
     subjects_count = 0
@@ -243,8 +253,12 @@ def extract_dataset_metadata(
         except Exception:
             pass
 
-    # Count subjects from directories if participants.tsv not available
-    if subjects_count == 0:
+    # Count subjects from directories if participants.tsv based count is inconsistent or we prefer file based
+    # User request: "count only subject from the modalities that are validated"
+    # So we should prioritize the count derived from valid files (len(subjects))
+    if subjects:
+        subjects_count = len(subjects)
+    elif subjects_count == 0:
         subjects_count = len(
             [d for d in bids_root.iterdir() if d.is_dir() and d.name.startswith("sub-")]
         )
@@ -431,26 +445,26 @@ def parse_bids_entities_from_path(filepath: str) -> dict[str, Any]:
     # Format: sub-<label>[_ses-<label>][_task-<label>][_run-<index>][_<suffix>].<extension>
 
     # Subject
-    sub_match = re.search(r"sub-([^_/]+)", filepath)
+    sub_match = re.search(r"sub-([^_/.]+)", filepath)
     if sub_match:
         entities["subject"] = sub_match.group(1)
 
     # Session
-    ses_match = re.search(r"ses-([^_/]+)", filepath)
+    ses_match = re.search(r"ses-([^_/.]+)", filepath)
     if ses_match:
         entities["session"] = ses_match.group(1)
 
     # Task
-    task_match = re.search(r"task-([^_/]+)", filepath)
+    task_match = re.search(r"task-([^_/.]+)", filepath)
     if task_match:
         val = task_match.group(1)
         # needed because of ds004841
-        if "run-" in val:
-            val = val.split("run-")[0]
+        # if "run-" in val:
+        #    val = val.split("run-")[0]
         entities["task"] = val
 
     # Run
-    run_match = re.search(r"run-([^_/]+)", filepath)
+    run_match = re.search(r"run-([^_/.]+)", filepath)
     if run_match:
         entities["run"] = run_match.group(1)
 
@@ -466,6 +480,12 @@ def parse_bids_entities_from_path(filepath: str) -> dict[str, Any]:
     elif "/meg/" in filepath or "_meg." in filename:
         entities["modality"] = "meg"
         entities["datatype"] = "meg"
+    elif "/nirs/" in filepath or "_nirs." in filename:
+        entities["modality"] = "nirs"
+        entities["datatype"] = "nirs"
+    elif "/fnirs/" in filepath or "_fnirs." in filename:
+        entities["modality"] = "fnirs"
+        entities["datatype"] = "fnirs"
     elif "/ieeg/" in filepath or "_ieeg." in filename:
         entities["modality"] = "ieeg"
         entities["datatype"] = "ieeg"
@@ -726,18 +746,27 @@ def digest_from_manifest(
     # Extract BIDS entities from all paths
     for filepath in all_paths:
         entities = parse_bids_entities_from_path(filepath)
-        if entities.get("subject"):
-            subjects.add(entities["subject"])
-        if entities.get("session"):
-            sessions.add(entities["session"])
-        if entities.get("task"):
-            tasks.add(entities["task"])
+
+        # Always track modalities found
         if entities.get("modality"):
             modalities.add(entities["modality"])
 
+        # Only count subjects/sessions/tasks for supported neuro modalities
+        if entities.get("modality") in NEURO_MODALITIES:
+            if entities.get("subject"):
+                subjects.add(entities["subject"])
+            if entities.get("session"):
+                sessions.add(entities["session"])
+            if entities.get("task"):
+                tasks.add(entities["task"])
+
     # Get demographics from manifest
     demographics = manifest.get("demographics", {})
-    subjects_count = demographics.get("subjects_count", 0) or len(subjects)
+    # User request: "count only subject from the modalities that are validated"
+    # So we prefer the count from valid files (len(subjects)) if available
+    subjects_count = (
+        len(subjects) if subjects else demographics.get("subjects_count", 0)
+    )
     ages = demographics.get("ages", [])
 
     # Get DOI from manifest (OSF enhanced clone provides this)
@@ -759,7 +788,9 @@ def digest_from_manifest(
         name=manifest.get("name"),
         source=source,
         readme=manifest.get("readme"),
-        recording_modality=manifest.get("recording_modality", "eeg"),
+        recording_modality=manifest.get(
+            "recording_modality", "+".join(sorted(modalities)) if modalities else "eeg"
+        ),
         datatypes=sorted(manifest.get("modalities", list(modalities))),
         bids_version=None,  # Not available from API
         license=manifest.get("license"),

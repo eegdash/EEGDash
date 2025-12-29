@@ -211,10 +211,10 @@ class EEGBIDSDataset:
 
             # Extract entities from filename using BIDS pattern
             # Expected format: sub-<label>[_ses-<label>][_task-<label>][_run-<label>]_<modality>.<ext>
-            subject = re.search(r"sub-([^_]*)", filename)
-            session = re.search(r"ses-([^_]*)", filename)
-            task = re.search(r"task-([^_]*)", filename)
-            run = re.search(r"run-([^_]*)", filename)
+            subject = re.search(r"sub-([^_/.]*)", filename)
+            session = re.search(r"ses-([^_/.]*)", filename)
+            task = re.search(r"task-([^_/.]*)", filename)
+            run = re.search(r"run-([^_/.]*)", filename)
 
             # Extract raw values
             subject_val = subject.group(1) if subject else None
@@ -699,11 +699,12 @@ def _find_bids_files(
         pattern = f"**/{modality}/*{extension}"
         found = list(bidsdir.glob(pattern))
 
-        # Filter based on validation mode
+        # Filter based on validation mode and exclude derivatives
         valid_files = [
             str(f)
             for f in found
             if _is_valid_eeg_file(f, allow_symlinks=allow_symlinks)
+            and "derivatives" not in f.parts
         ]
         all_files.extend(valid_files)
 

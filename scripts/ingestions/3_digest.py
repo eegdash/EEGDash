@@ -479,6 +479,49 @@ def parse_bids_entities_from_path(filepath: str) -> dict[str, Any]:
     if acq_match:
         entities["acquisition"] = acq_match.group(1)
 
+    # --- Fallback for non-BIDS datasets ---
+    # If no subject or task was found using BIDS convention, use folder/filename as fallback
+    if "subject" not in entities:
+        # Take the parent directory name if it's not the root or a standard bids folder
+        parts = Path(filepath).parts
+        if len(parts) > 1:
+            # Avoid using standard modality folders as subject names
+            possible_sub = parts[0]
+            if (
+                possible_sub.lower() not in NEURO_MODALITIES
+                and possible_sub.lower()
+                not in (
+                    "anat",
+                    "derivatives",
+                    "sourcedata",
+                    "code",
+                    "raw",
+                    "data",
+                    "files",
+                )
+            ):
+                entities["subject"] = possible_sub
+
+    if "task" not in entities:
+        stem = Path(filepath).stem
+        # Clean up common suffixes
+        for mod in NEURO_MODALITIES:
+            if stem.endswith(f"_{mod}"):
+                stem = stem[: -(len(mod) + 1)]
+                break
+        # Avoid generic task names
+        if stem.lower() not in (
+            "dataset",
+            "manifest",
+            "readme",
+            "participants",
+            "scans",
+            "dataset_description",
+            "samples",
+            "data",
+        ):
+            entities["task"] = stem
+
     # Determine modality/datatype from path or filename
     if "/eeg/" in filepath or "_eeg." in filename:
         entities["modality"] = "eeg"
@@ -507,6 +550,11 @@ def parse_bids_entities_from_path(filepath: str) -> dict[str, Any]:
     elif "/beh/" in filepath:
         entities["modality"] = "beh"
         entities["datatype"] = "beh"
+
+    # If no modality found via indicators, use detect_modality_from_path as fallback
+    if "modality" not in entities:
+        entities["modality"] = detect_modality_from_path(filepath)
+        entities["datatype"] = entities["modality"]
 
     # Extract suffix (last part before extension)
     suffix_match = re.search(r"_([^_]+)\.[^.]+$", filename)
@@ -585,19 +633,21 @@ def is_neuro_data_file(filepath: str) -> bool:
         if filepath_lower.endswith(ext):
             return False
 
-    # Check for modality indicators in path (folder or suffix)
-    has_modality_indicator = False
-    for modality in NEURO_MODALITIES:
-        if f"/{modality}/" in filepath_lower or f"_{modality}." in filepath_lower:
-            has_modality_indicator = True
-            break
-
-    if not has_modality_indicator:
-        return False
-
     # Check for data file extensions from MNE-BIDS
     data_exts = _load_neuro_data_extensions()
-    return any(filepath_lower.endswith(ext) for ext in data_exts)
+    is_data_ext = any(filepath_lower.endswith(ext) for ext in data_exts)
+
+    # If NO modality indicator, RELAX:
+    # Still count it if it's a known data extension (typical for Zenodo/SciDB/etc.)
+    if is_data_ext:
+        return True
+
+    # Also allow .zip files if they seem to be subject/session zips (common on Zenodo)
+    if filepath_lower.endswith(".zip"):
+        if "sub-" in filepath_lower or "ses-" in filepath_lower:
+            return True
+
+    return False
 
 
 def detect_modality_from_path(filepath: str) -> str:
@@ -769,9 +819,15 @@ def digest_from_manifest(
     # Get demographics from manifest
     demographics = manifest.get("demographics", {})
     # User request: "count only subject from the modalities that are validated"
-    # So we prefer the count from valid files (len(subjects)) if available
+    # So we prefer the count from valid files (len(subjects)) if available.
+    # If not found from files, check manifest's demographic subjects_count or bids_subject_count.
     subjects_count = (
-        len(subjects) if subjects else demographics.get("subjects_count", 0)
+        len(subjects)
+        if subjects
+        else (
+            demographics.get("subjects_count", 0)
+            or manifest.get("bids_subject_count", 0)
+        )
     )
     ages = demographics.get("ages", [])
 
@@ -803,8 +859,8 @@ def digest_from_manifest(
         authors=manifest.get("authors", []),
         funding=manifest.get("funding", []),
         dataset_doi=dataset_doi,
-        tasks=sorted(manifest.get("tasks", list(tasks))),
-        sessions=sorted(manifest.get("sessions", list(sessions))),
+        tasks=sorted(manifest.get("tasks") or sorted(list(tasks))),
+        sessions=sorted(manifest.get("sessions") or sorted(list(sessions))),
         total_files=len(files),
         subjects_count=subjects_count,
         ages=ages,

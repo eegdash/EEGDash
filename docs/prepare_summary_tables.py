@@ -87,15 +87,18 @@ DATA_TABLE_TEMPLATE = textwrap.dedent(
         vertical-align: middle;
     }
 
-    /* Right-align numeric-like columns (2..8) consistently for body & footer */
-    table.sd-table tbody td:nth-child(n+2),
-    table.sd-table tfoot td:nth-child(n+2) {
-        text-align: right;
-    }
-    /* Keep first column (Dataset/Total) left-aligned */
-    table.sd-table tbody td:first-child,
-    table.sd-table tfoot td:first-child {
+    /* Left-align text columns (1..6) */
+    table.sd-table tbody td:nth-child(-n+6),
+    table.sd-table tfoot td:nth-child(-n+6),
+    table.sd-table thead th:nth-child(-n+6) {
         text-align: left;
+    }
+
+    /* Right-align numeric-like columns (7..12) consistently for body & footer */
+    table.sd-table tbody td:nth-child(n+7),
+    table.sd-table tfoot td:nth-child(n+7),
+    table.sd-table thead th:nth-child(n+7) {
+        text-align: right;
     }
 </style>
 
@@ -152,7 +155,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // 2) Initialize DataTable with SearchPanes button
-    const FILTER_COLS = [1,2,3,4,5,6,7];
+    const FILTER_COLS = [1, 2, 3, 4, 5, 6, 7, 8];
     // Detect the index of the size column by header text
     const sizeIdx = (function(){
         let idx = -1;
@@ -198,7 +201,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // 3) UX: click a header to open the relevant filter pane
     $table.find('thead th').each(function (i) {
-        if ([1,2,3,4,5].indexOf(i) === -1) return;
+        if ([1, 2, 3, 4, 5].indexOf(i) === -1) return; // Source, Record modality, Pathology, Modality, Type
         window.jQuery(this)
             .css('cursor','pointer')
             .attr('title','Click to filter this column')
@@ -233,14 +236,19 @@ def _tag_normalizer(kind: str):
 
 
 def prepare_table(df: pd.DataFrame):
-    # drop test dataset and create a copy to avoid SettingWithCopyWarning
-    df = df[df["dataset"] != "test"].copy()
+    # drop test dataset and specific excluded datasets
+    excluded_datasets = {"test", "ds003380"}
+    df = df[~df["dataset"].str.lower().isin(excluded_datasets)].copy()
 
     df["dataset"] = df["dataset"].apply(wrap_dataset_name)
     # changing the column order
+    if "source" not in df.columns:
+        df["source"] = ""
+
     df = df[
         [
             "dataset",
+            "source",
             "record_modality",
             "n_records",
             "n_subjects",
@@ -315,6 +323,7 @@ def prepare_table(df: pd.DataFrame):
     df.loc["Total", "dataset"] = f"Total {len(df) - 1} datasets"
     df.loc["Total", "nchans_set"] = ""
     df.loc["Total", "sampling_freqs"] = ""
+    df.loc["Total", "source"] = ""
     df.loc["Total", "pathology"] = ""
     df.loc["Total", "modality"] = ""
     df.loc["Total", "type"] = ""
@@ -377,6 +386,7 @@ def main(source_dir: str, target_dir: str):
         df = df.rename(
             columns={
                 "dataset": "Dataset",
+                "source": "Source",
                 "nchans_set": "# of channels",
                 "sampling_freqs": "sampling (Hz)",
                 "size": "size",
@@ -392,6 +402,7 @@ def main(source_dir: str, target_dir: str):
         df = df[
             [
                 "Dataset",
+                "Source",
                 "Record modality",
                 "Pathology",
                 "Modality",
@@ -601,6 +612,7 @@ def main_from_api(target_dir: str, database: str = DEFAULT_DATABASE):
     df = df.rename(
         columns={
             "dataset": "Dataset",
+            "source": "Source",
             "nchans_set": "# of channels",
             "sampling_freqs": "sampling (Hz)",
             "size": "size",
@@ -616,6 +628,7 @@ def main_from_api(target_dir: str, database: str = DEFAULT_DATABASE):
     df = df[
         [
             "Dataset",
+            "Source",
             "Record modality",
             "Pathology",
             "Modality",

@@ -404,6 +404,7 @@ HANDLERS = {
     "scidb": fetch_scidb,
     "datarn": fetch_datarn,
     "hbn": fetch_hbn,
+    "neurips25": fetch_hbn,
     "unknown": fetch_generic,
 }
 

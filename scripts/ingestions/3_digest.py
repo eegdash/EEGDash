@@ -443,7 +443,11 @@ def parse_bids_entities_from_path(filepath: str) -> dict[str, Any]:
     # Task
     task_match = re.search(r"task-([^_/]+)", filepath)
     if task_match:
-        entities["task"] = task_match.group(1)
+        val = task_match.group(1)
+        # needed because of ds004841
+        if "run-" in val:
+            val = val.split("run-")[0]
+        entities["task"] = val
 
     # Run
     run_match = re.search(r"run-([^_/]+)", filepath)
@@ -487,7 +491,7 @@ def parse_bids_entities_from_path(filepath: str) -> dict[str, Any]:
 
 
 # Supported modalities for neurophysiology
-NEURO_MODALITIES = ("eeg", "meg", "ieeg", "emg", "nirs")
+NEURO_MODALITIES = ("eeg", "meg", "ieeg", "emg", "nirs", "fnirs")
 
 # CTF MEG uses .ds directories containing multiple files
 # We should only match the .ds directory path, not files inside

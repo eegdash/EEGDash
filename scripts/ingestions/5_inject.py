@@ -42,6 +42,12 @@ from _http import (
 )
 from tqdm import tqdm
 
+# Datasets to explicitly ignore during ingestion
+EXCLUDED_DATASETS = {
+    "test",
+    "ds003380",
+}
+
 # Default API configuration
 DEFAULT_API_URL = "https://data.eegdash.org"
 
@@ -87,8 +93,12 @@ def find_digested_datasets(
 
         dataset_id = dataset_dir.name
 
-        # Skip special files/dirs
-        if dataset_id.startswith(".") or dataset_id.startswith("_"):
+        # Skip special files/dirs or excluded datasets
+        if (
+            dataset_id.startswith(".")
+            or dataset_id.startswith("_")
+            or dataset_id in EXCLUDED_DATASETS
+        ):
             continue
 
         # Filter by specific datasets if provided

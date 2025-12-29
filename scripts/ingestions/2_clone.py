@@ -471,7 +471,7 @@ def load_datasets(
             elif "datasets" in data:
                 datasets = data["datasets"]
     elif input_path.is_dir():
-        for json_file in sorted(input_path.glob("*_full.json")):
+        for json_file in sorted(input_path.glob("*.json")):
             with open(json_file) as f:
                 data = json.load(f)
                 if isinstance(data, list):

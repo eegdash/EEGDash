@@ -1,6 +1,7 @@
 import csv
 import importlib
 import inspect
+import json
 import os
 import shutil
 import sys
@@ -680,6 +681,25 @@ def _split_tokens(value: str | None) -> set[str]:
 
 
 def _compute_dataset_counter_defaults() -> dict[str, int]:
+    # 1. Try to load from the generated JSON (produced by prepare_summary_tables.py)
+    # Note: prepare_summary_tables.py runs before sphinx-build in the Makefile
+    stats_path = (
+        Path(__file__).parent / "_static" / "dataset_generated" / "summary_stats.json"
+    )
+    if stats_path.exists():
+        try:
+            with open(stats_path, "r") as f:
+                data = json.load(f)
+            return {
+                "datasets": data.get("datasets_total", 0),
+                "subjects": data.get("subjects_total", 0),
+                "recording": data.get("recording_total", 0),
+                "sources": data.get("sources_total", 0),
+            }
+        except Exception:
+            pass
+
+    # 2. Fallback to legacy CSV logic
     csv_path = Path(importlib.import_module("eegdash.dataset").__file__).with_name(
         "dataset_summary.csv"
     )
@@ -688,7 +708,7 @@ def _compute_dataset_counter_defaults() -> dict[str, int]:
 
     dataset_ids: set[str] = set()
     modalities: set[str] = set()
-    cognitive: set[str] = set()
+    sources: set[str] = set()
     subject_total = 0
 
     with csv_path.open(encoding="utf-8") as handle:
@@ -709,13 +729,13 @@ def _compute_dataset_counter_defaults() -> dict[str, int]:
                 pass
 
             modalities.update(_split_tokens(row.get("record_modality")))
-            cognitive.update(_split_tokens(row.get("type of exp")))
+            sources.add((row.get("source") or "unknown").strip())
 
     return {
         "datasets": len(dataset_ids),
         "subjects": subject_total,
-        "modalities": len(modalities),
-        "cognitive": len(cognitive),
+        "recording": len(modalities),
+        "sources": len(sources),
     }
 
 
@@ -734,8 +754,8 @@ def _format_counter(key: str) -> str:
 _DATASET_COUNTER_PLACEHOLDERS = {
     "|datasets_total|": _format_counter("datasets"),
     "|subjects_total|": _format_counter("subjects"),
-    "|modalities_total|": _format_counter("modalities"),
-    "|cognitive_total|": _format_counter("cognitive"),
+    "|recording_total|": _format_counter("recording"),
+    "|sources_total|": _format_counter("sources"),
 }
 
 

@@ -53,8 +53,8 @@ To leverage recent and ongoing advancements in large-scale computational methods
          </svg>
        </div>
        <div class="dataset-counter-body">
-         <span class="dataset-counter-label">Experiment Modalities</span>
-         <span class="dataset-counter-value">|modalities_total|</span>
+         <span class="dataset-counter-label">Recording Modalities</span>
+         <span class="dataset-counter-value">|recording_total|</span>
        </div>
      </article>
      <article class="dataset-counter-card">
@@ -64,8 +64,8 @@ To leverage recent and ongoing advancements in large-scale computational methods
          </svg>
        </div>
        <div class="dataset-counter-body">
-         <span class="dataset-counter-label">Cognitive Domains</span>
-         <span class="dataset-counter-value">|cognitive_total|</span>
+         <span class="dataset-counter-label">Sources</span>
+         <span class="dataset-counter-value">|sources_total|</span>
        </div>
      </article>
    </section>

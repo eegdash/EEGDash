@@ -206,7 +206,7 @@ class EEGBIDSDataset:
             path_parts = filepath.parts
             modality = "eeg"  # default
             for part in path_parts:
-                if part in ["eeg", "meg", "ieeg", "emg"]:
+                if part in ["eeg", "meg", "ieeg", "emg", "nirs", "fnirs"]:
                     modality = part
                     break
 
@@ -217,21 +217,30 @@ class EEGBIDSDataset:
             task = re.search(r"task-([^_]*)", filename)
             run = re.search(r"run-([^_]*)", filename)
 
-            # Preserve the run entity as parsed from the filename (may be non-numeric)
-            run_value = run.group(1) if run else None
+            # Extract raw values
+            subject_val = subject.group(1) if subject else None
+            session_val = session.group(1) if session else None
+            task_val = task.group(1) if task else None
+            run_val = run.group(1) if run else None
+
+            # Sanitize task if it incorrectly absorbed 'run-' due to missing separator
+            # e.g., "task-ECONrun-1" -> task="ECON"
+            if task_val and "run-" in task_val:
+                task_parts = task_val.split("run-")
+                task_val = task_parts[0]
 
             # BIDSPath enforces "run" to be an index; accept numeric strings, but
             # drop non-numeric runs (e.g., "5F") while preserving them in the cache.
             run_value_for_bidspath = None
-            if run_value is not None:
-                run_str = str(run_value)
+            if run_val is not None:
+                run_str = str(run_val)
                 if run_str.isdigit():
                     run_value_for_bidspath = run_str
 
             bids_path = BIDSPath(
-                subject=subject.group(1) if subject else None,
-                session=session.group(1) if session else None,
-                task=task.group(1) if task else None,
+                subject=subject_val,
+                session=session_val,
+                task=task_val,
                 run=run_value_for_bidspath,
                 datatype=modality,
                 extension=filepath.suffix,
@@ -239,10 +248,10 @@ class EEGBIDSDataset:
             )
             self._bids_path_cache[data_filepath] = bids_path
             self._bids_entity_cache[data_filepath] = {
-                "subject": subject.group(1) if subject else None,
-                "session": session.group(1) if session else None,
-                "task": task.group(1) if task else None,
-                "run": run_value,
+                "subject": subject_val,
+                "session": session_val,
+                "task": task_val,
+                "run": run_val,
                 "modality": modality,
             }
 

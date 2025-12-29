@@ -563,7 +563,7 @@ class EEGChallengeDataset(EEGDashDataset):
         cache_dir: str,
         mini: bool = True,
         query: dict | None = None,
-        s3_bucket: str | None = "s3://nmdatasets/NeurIPS25",
+        s3_bucket: str | None = None,
         **kwargs,
     ):
         self.release = release
@@ -572,14 +572,6 @@ class EEGChallengeDataset(EEGDashDataset):
         if release not in RELEASE_TO_OPENNEURO_DATASET_MAP:
             raise ValueError(
                 f"Unknown release: {release}, expected one of {list(RELEASE_TO_OPENNEURO_DATASET_MAP.keys())}"
-            )
-
-        dataset_parameters = []
-        if isinstance(release, str):
-            dataset_parameters.append(RELEASE_TO_OPENNEURO_DATASET_MAP[release])
-        else:
-            raise ValueError(
-                f"Unknown release type: {type(release)}, the expected type is str."
             )
 
         if query and "dataset" in query:
@@ -639,9 +631,14 @@ class EEGChallengeDataset(EEGDashDataset):
                 # No subject specified by the user: default to the full mini subset
                 kwargs["subject"] = sorted(allowed_subjects)
 
-            s3_bucket = f"{s3_bucket}/{release}_mini_L100_bdf"
+            # Construct dataset ID for mini
+            dataset_id = f"{release}_mini_L100_bdf"
         else:
-            s3_bucket = f"{s3_bucket}/{release}_L100_bdf"
+            # Construct dataset ID for full
+            dataset_id = f"{release}_L100_bdf"
+
+        # Check if s3_bucket override is requested, otherwise use default from DB/Dataset
+        # The DB now contains the correct storage URL for these datasets.
 
         message_text = Text.from_markup(
             "This object loads the HBN dataset that has been preprocessed for the EEG Challenge:\n"
@@ -670,7 +667,7 @@ class EEGChallengeDataset(EEGDashDataset):
             logger.warning(warning_message)
 
         super().__init__(
-            dataset=RELEASE_TO_OPENNEURO_DATASET_MAP[release],
+            dataset=dataset_id,
             query=query,
             cache_dir=cache_dir,
             s3_bucket=s3_bucket,

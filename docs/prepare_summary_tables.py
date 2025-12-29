@@ -356,6 +356,10 @@ def main(source_dir: str, target_dir: str):
             x_var="subjects",
         )
         copyfile(bubble_output, STATIC_DATASET_DIR / bubble_output.name)
+        print(f"Generated: {bubble_output.name}")
+
+        # Save summary stats for documentation cards
+        save_summary_stats(df_raw)
 
         # Generate Sankey diagram showing dataset flow across categories
         try:
@@ -473,6 +477,45 @@ def parse_freqs(value) -> str:
     return ""  # for other types like nan
 
 
+def save_summary_stats(df_raw: pd.DataFrame):
+    """Calculate and save summary stats for the documentation cards."""
+    unique_modalities = set()
+    # Handle the fact that record_modality might be a join of modalities
+    if "record_modality" in df_raw.columns:
+        col = "record_modality"
+    elif "record modality" in df_raw.columns:
+        col = "record modality"
+    else:
+        col = None
+
+    if col:
+        for m in df_raw[col].dropna():
+            # Support both + and , as separators
+            unique_modalities.update(str(m).replace("+", ",").split(","))
+    unique_modalities = {m.strip() for m in unique_modalities if m.strip()}
+
+    # n_subjects might be in df_raw or subjects
+    n_subj_col = "n_subjects" if "n_subjects" in df_raw.columns else "subjects"
+    try:
+        subjects_total = int(pd.to_numeric(df_raw[n_subj_col], errors="coerce").sum())
+    except Exception:
+        subjects_total = 0
+
+    summary_stats = {
+        "datasets_total": len(df_raw),
+        "subjects_total": subjects_total,
+        "recording_total": len(unique_modalities),
+        "sources_total": df_raw["source"].nunique()
+        if "source" in df_raw.columns
+        else 0,
+    }
+
+    stats_path = STATIC_DATASET_DIR / "summary_stats.json"
+    with open(stats_path, "w") as f:
+        json.dump(summary_stats, f)
+    print(f"Generated summary stats: {stats_path}")
+
+
 def fetch_datasets_from_api(
     database: str = DEFAULT_DATABASE, limit: int = 1000
 ) -> pd.DataFrame:
@@ -582,6 +625,9 @@ def main_from_api(target_dir: str, database: str = DEFAULT_DATABASE):
         print(f"Generated: {bubble_output.name}")
     except Exception as exc:
         print(f"[dataset Bubble] Skipped due to error: {exc}")
+
+    # Save summary stats for documentation cards
+    save_summary_stats(df_raw)
 
     # Generate Sankey diagram
     try:

@@ -94,7 +94,7 @@ class Dataset(TypedDict, total=False):
     readme: str | None  # README content from dataset
 
     # Recording info
-    recording_modality: str  # Primary recording type: "eeg", "meg", "ieeg"
+    recording_modality: list[str]  # Recording types: ["eeg", "meg", "ieeg"]
     datatypes: list[str]  # BIDS datatypes present: ["eeg", "anat", "beh"]
 
     # Experimental info
@@ -146,7 +146,7 @@ def create_dataset(
     name: str | None = None,
     source: str = "openneuro",
     readme: str | None = None,
-    recording_modality: str = "eeg",
+    recording_modality: list[str] | None = None,
     datatypes: list[str] | None = None,
     modalities: list[str] | None = None,
     experimental_modalities: list[str] | None = None,
@@ -202,8 +202,8 @@ def create_dataset(
         Dataset title/name.
     source : str, default "openneuro"
         Data source ("openneuro", "nemar", "gin").
-    recording_modality : str, default "eeg"
-        Primary recording type ("eeg", "meg", "ieeg").
+    recording_modality : list[str], optional
+        Recording types (e.g., ["eeg", "meg", "ieeg"]).
     datatypes : list[str], optional
         BIDS datatypes present in the dataset (e.g., ["eeg", "anat", "beh"]).
     experimental_modalities : list[str], optional
@@ -309,8 +309,8 @@ def create_dataset(
         name=name or dataset_id,
         source=source,
         readme=readme,
-        recording_modality=recording_modality,
-        datatypes=datatypes or [recording_modality],
+        recording_modality=recording_modality or ["eeg"],
+        datatypes=datatypes or recording_modality or ["eeg"],
         experimental_modalities=experimental_modalities,
         bids_version=bids_version,
         license=license,
@@ -408,7 +408,7 @@ class Record(TypedDict, total=False):
     datatype: str
     suffix: str
     extension: str
-    recording_modality: str | None  # e.g., "eeg", "meg", "ieeg"
+    recording_modality: list[str] | None  # e.g., ["eeg", "meg", "ieeg"]
     entities: Entities
     entities_mne: Entities  # run sanitized for MNE-BIDS (numeric or None)
     storage: Storage
@@ -442,7 +442,7 @@ def create_record(
     datatype: str = "eeg",
     suffix: str = "eeg",
     storage_backend: Literal["s3", "https", "local"] = "s3",
-    recording_modality: str | None = None,
+    recording_modality: list[str] | None = None,
     digested_at: str | None = None,
 ) -> Record:
     """Create an EEGDash record.
@@ -465,8 +465,8 @@ def create_record(
         BIDS suffix.
     storage_backend : {"s3", "https", "local"}, default "s3"
         Storage backend type.
-    recording_modality : str, optional
-        Recording modality (e.g., "eeg", "meg", "ieeg").
+    recording_modality : list[str], optional
+        Recording modalities (e.g., ["eeg", "meg", "ieeg"]).
     digested_at : str, optional
         ISO 8601 timestamp. Defaults to current time.
 
@@ -517,7 +517,7 @@ def create_record(
         datatype=datatype,
         suffix=suffix,
         extension=extension,
-        recording_modality=recording_modality or datatype,
+        recording_modality=recording_modality or [datatype],
         entities=entities,
         entities_mne=entities_mne,
         storage=Storage(

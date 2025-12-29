@@ -158,11 +158,12 @@ def extract_dataset_metadata(
 
     for bids_file in files:
         mod = bids_dataset.get_bids_file_attribute("modality", bids_file)
-        if mod:
-            modalities.add(mod)
+        mod_canon = normalize_modality(mod)
+        if mod_canon:
+            modalities.add(mod_canon)
 
         # Only collect subjects/tasks/sessions if file belongs to a neuro modality
-        if mod in NEURO_MODALITIES:
+        if mod_canon in NEURO_MODALITIES:
             task = bids_dataset.get_bids_file_attribute("task", bids_file)
             if task:
                 tasks.add(task)
@@ -173,15 +174,13 @@ def extract_dataset_metadata(
             if subject:
                 subjects.add(subject)
 
-    # Determine primary modality (join all found modalities)
-    if modalities:
-        # Sort to ensure deterministic order (e.g. "eeg+meg" vs "meg+eeg")
-        # Priority order could be used, but alphabetical is simpler/standard?
-        # Let's use the explicit priority list for sorting if present, else alphabetical
-        # Actually, let's just join sorted set for consistency
-        recording_modality = "+".join(sorted(modalities))
-    else:
-        recording_modality = "eeg"
+    # Determine recording modalities (list of canonical names)
+    # Filter to only include NEURO_MODALITIES for the summary field
+    recording_modalities = sorted(
+        list({m for m in modalities if m in NEURO_MODALITIES})
+    )
+    if not recording_modalities:
+        recording_modalities = ["eeg"]
 
     # Read participants.tsv for demographics
     subjects_count = 0
@@ -287,8 +286,8 @@ def extract_dataset_metadata(
         name=name,
         source=source,
         readme=readme,
-        recording_modality=recording_modality,
-        datatypes=sorted(modalities) if modalities else [recording_modality],
+        recording_modality=recording_modalities,
+        datatypes=sorted(modalities) if modalities else recording_modalities,
         bids_version=bids_version,
         license=license_info,
         authors=authors if isinstance(authors, list) else [authors] if authors else [],
@@ -346,6 +345,7 @@ def extract_record(
     task = bids_dataset.get_bids_file_attribute("task", bids_file)
     run = bids_dataset.get_bids_file_attribute("run", bids_file)
     modality = bids_dataset.get_bids_file_attribute("modality", bids_file) or "eeg"
+    mod_canon = normalize_modality(modality) or "eeg"
 
     # Get BIDS relative path (without dataset prefix)
     bids_relpath = str(bids_dataset.get_relative_bidspath(bids_file))
@@ -353,8 +353,8 @@ def extract_record(
         bids_relpath = bids_relpath[len(dataset_id) + 1 :]
 
     # Determine datatype and suffix
-    datatype = modality
-    suffix = modality
+    datatype = mod_canon
+    suffix = mod_canon
 
     # Get storage info
     storage_base = get_storage_base(dataset_id, source)
@@ -416,7 +416,7 @@ def extract_record(
         datatype=datatype,
         suffix=suffix,
         storage_backend=storage_backend,
-        recording_modality=modality,
+        recording_modality=[mod_canon],
         digested_at=digested_at,
     )
 
@@ -446,6 +446,8 @@ def parse_bids_entities_from_path(filepath: str) -> dict[str, Any]:
 
     entities = {}
     filename = Path(filepath).name
+    filepath_lower = filepath.lower()
+    filename_lower = filename.lower()
 
     # Extract entities from filename using BIDS naming convention
     # Format: sub-<label>[_ses-<label>][_task-<label>][_run-<index>][_<suffix>].<extension>
@@ -488,7 +490,7 @@ def parse_bids_entities_from_path(filepath: str) -> dict[str, Any]:
             # Avoid using standard modality folders as subject names
             possible_sub = parts[0]
             if (
-                possible_sub.lower() not in NEURO_MODALITIES
+                possible_sub.lower() not in MODALITY_DETECTION_TARGETS
                 and possible_sub.lower()
                 not in (
                     "anat",
@@ -505,8 +507,8 @@ def parse_bids_entities_from_path(filepath: str) -> dict[str, Any]:
     if "task" not in entities:
         stem = Path(filepath).stem
         # Clean up common suffixes
-        for mod in NEURO_MODALITIES:
-            if stem.endswith(f"_{mod}"):
+        for mod in MODALITY_DETECTION_TARGETS:
+            if stem.lower().endswith(f"_{mod}"):
                 stem = stem[: -(len(mod) + 1)]
                 break
         # Avoid generic task names
@@ -523,33 +525,27 @@ def parse_bids_entities_from_path(filepath: str) -> dict[str, Any]:
             entities["task"] = stem
 
     # Determine modality/datatype from path or filename
-    if "/eeg/" in filepath or "_eeg." in filename:
-        entities["modality"] = "eeg"
-        entities["datatype"] = "eeg"
-    elif "/meg/" in filepath or "_meg." in filename:
-        entities["modality"] = "meg"
-        entities["datatype"] = "meg"
-    elif "/nirs/" in filepath or "_nirs." in filename:
-        entities["modality"] = "nirs"
-        entities["datatype"] = "nirs"
-    elif "/fnirs/" in filepath or "_fnirs." in filename:
-        entities["modality"] = "fnirs"
-        entities["datatype"] = "fnirs"
-    elif "/ieeg/" in filepath or "_ieeg." in filename:
-        entities["modality"] = "ieeg"
-        entities["datatype"] = "ieeg"
-    elif "/anat/" in filepath:
-        entities["modality"] = "anat"
-        entities["datatype"] = "anat"
-    elif "/func/" in filepath:
-        entities["modality"] = "func"
-        entities["datatype"] = "func"
-    elif "/fmap/" in filepath:
-        entities["modality"] = "fmap"
-        entities["datatype"] = "fmap"
-    elif "/beh/" in filepath:
-        entities["modality"] = "beh"
-        entities["datatype"] = "beh"
+    for mod_target in MODALITY_DETECTION_TARGETS:
+        if f"/{mod_target}/" in filepath_lower or f"_{mod_target}." in filename_lower:
+            ent_mod = normalize_modality(mod_target)
+            if ent_mod:
+                entities["modality"] = ent_mod
+                entities["datatype"] = ent_mod
+                break
+
+    if "modality" not in entities:
+        if "/anat/" in filepath_lower:
+            entities["modality"] = "anat"
+            entities["datatype"] = "anat"
+        elif "/func/" in filepath_lower:
+            entities["modality"] = "func"
+            entities["datatype"] = "func"
+        elif "/fmap/" in filepath_lower:
+            entities["modality"] = "fmap"
+            entities["datatype"] = "fmap"
+        elif "/beh/" in filepath_lower:
+            entities["modality"] = "beh"
+            entities["datatype"] = "beh"
 
     # If no modality found via indicators, use detect_modality_from_path as fallback
     if "modality" not in entities:
@@ -564,8 +560,30 @@ def parse_bids_entities_from_path(filepath: str) -> dict[str, Any]:
     return entities
 
 
-# Supported modalities for neurophysiology
-NEURO_MODALITIES = ("eeg", "meg", "ieeg", "emg", "nirs", "fnirs")
+# Semantic mapping to canonical BIDS modalities
+MODALITY_CANONICAL_MAP = {
+    "nirs": "fnirs",
+    "fnirs": "fnirs",
+    "spike": "ieeg",
+    "lfp": "ieeg",
+    "mea": "ieeg",
+}
+
+# Supported canonical neurophysiology modalities
+NEURO_MODALITIES = ("eeg", "meg", "ieeg", "emg", "fnirs")
+
+# Modalities we care about detecting (including aliases/variants)
+MODALITY_DETECTION_TARGETS = (
+    "eeg",
+    "meg",
+    "ieeg",
+    "emg",
+    "nirs",
+    "fnirs",
+    "spike",
+    "lfp",
+    "mea",
+)
 
 # CTF MEG uses .ds directories containing multiple files
 # We should only match the .ds directory path, not files inside
@@ -578,6 +596,16 @@ CTF_INTERNAL_EXTENSIONS = {
     ".hist",
     ".newds",
 }
+
+
+def normalize_modality(modality: str | None) -> str | None:
+    """Normalize modality to canonical BIDS terms."""
+    if not modality:
+        return None
+    lowered = modality.lower()
+    if lowered == "bids":
+        return None
+    return MODALITY_CANONICAL_MAP.get(lowered, lowered)
 
 
 NEURO_DATA_EXTENSIONS: set[str] | None = None
@@ -596,7 +624,7 @@ def _load_neuro_data_extensions() -> set[str]:
 
     extensions: set[str] = set()
     for modality, exts in ALLOWED_DATATYPE_EXTENSIONS.items():
-        if modality in NEURO_MODALITIES:
+        if modality in NEURO_MODALITIES or modality in MODALITY_DETECTION_TARGETS:
             extensions.update(exts)
 
     NEURO_DATA_EXTENSIONS = extensions
@@ -633,6 +661,11 @@ def is_neuro_data_file(filepath: str) -> bool:
         if filepath_lower.endswith(ext):
             return False
 
+    # Check for modality indicators (makes detection more robust for non-BIDS)
+    for modality in MODALITY_DETECTION_TARGETS:
+        if f"/{modality}/" in filepath_lower or f"_{modality}." in filepath_lower:
+            return True
+
     # Check for data file extensions from MNE-BIDS
     data_exts = _load_neuro_data_extensions()
     is_data_ext = any(filepath_lower.endswith(ext) for ext in data_exts)
@@ -666,13 +699,13 @@ def detect_modality_from_path(filepath: str) -> str:
     """
     filepath_lower = filepath.lower()
 
-    for modality in NEURO_MODALITIES:
+    for modality in MODALITY_DETECTION_TARGETS:
         # Check folder pattern first (more reliable)
         if f"/{modality}/" in filepath_lower:
-            return modality
+            return normalize_modality(modality) or "eeg"
         # Check suffix pattern
         if f"_{modality}." in filepath_lower:
-            return modality
+            return normalize_modality(modality) or "eeg"
 
     return "eeg"  # Default fallback
 
@@ -844,15 +877,37 @@ def digest_from_manifest(
 
     fingerprint = fingerprint_from_manifest(dataset_id, source, manifest)
 
+    # Determine recording modalities
+    recording_modality_val = manifest.get("recording_modality")
+    if isinstance(recording_modality_val, str):
+        # Support both + and , as separators and wrap in list
+        recording_modality_val = [
+            m.strip()
+            for m in recording_modality_val.replace("+", ",").split(",")
+            if m.strip()
+        ]
+
+    if recording_modality_val:
+        # Normalize and filter
+        recording_modality_val = [normalize_modality(m) for m in recording_modality_val]
+        recording_modality_val = sorted(
+            list({m for m in recording_modality_val if m in NEURO_MODALITIES})
+        )
+    if not recording_modality_val:
+        recording_modality_val = sorted(
+            list({m for m in modalities if m in NEURO_MODALITIES})
+        ) or ["eeg"]
+
+    # Use first neuro modality for BIDS path construction in placeholders
+    primary_mod = recording_modality_val[0] if recording_modality_val else "eeg"
+
     # Build Dataset document
     dataset_doc = create_dataset(
         dataset_id=dataset_id,
         name=manifest.get("name"),
         source=source,
         readme=manifest.get("readme"),
-        recording_modality=manifest.get(
-            "recording_modality", "+".join(sorted(modalities)) if modalities else "eeg"
-        ),
+        recording_modality=recording_modality_val,
         datatypes=sorted(manifest.get("modalities", list(modalities))),
         bids_version=None,  # Not available from API
         license=manifest.get("license"),
@@ -909,7 +964,7 @@ def digest_from_manifest(
                 datatype=entities.get("datatype", detected_modality),
                 suffix=entities.get("suffix", detected_modality),
                 storage_backend=get_storage_backend(source),
-                recording_modality=detected_modality,
+                recording_modality=[detected_modality],
                 digested_at=digested_at,
             )
             records.append(dict(record))
@@ -960,7 +1015,7 @@ def digest_from_manifest(
                         datatype=entities.get("datatype", detected_modality),
                         suffix=entities.get("suffix", detected_modality),
                         storage_backend="https",
-                        recording_modality=detected_modality,
+                        recording_modality=[detected_modality],
                         digested_at=digested_at,
                     )
 
@@ -987,24 +1042,23 @@ def digest_from_manifest(
             )
             if subject_match:
                 subject_id = subject_match.group(1)
-                # Infer recording modality from dataset modalities
-                recording_modality = manifest.get("recording_modality", "eeg")
+                # Infer recording modality from dataset modalities (already in recording_modality_val)
 
                 try:
                     # Create a placeholder record for this subject
                     record = create_record(
                         dataset=dataset_id,
                         storage_base=storage_base,
-                        bids_relpath=f"{subject_id}/eeg/{subject_id}_eeg.set",  # Placeholder path
+                        bids_relpath=f"{subject_id}/{primary_mod}/{subject_id}_{primary_mod}.set",  # Placeholder path
                         subject=subject_id.replace("sub-", ""),
                         session=None,
                         task=None,
                         run=None,
                         dep_keys=[],
-                        datatype="eeg",
-                        suffix="eeg",
+                        datatype=primary_mod,
+                        suffix=primary_mod,
                         storage_backend="https",
-                        recording_modality=recording_modality,
+                        recording_modality=recording_modality_val,
                         digested_at=digested_at,
                     )
 
@@ -1044,8 +1098,6 @@ def digest_from_manifest(
             is_bids_zip = any(re.match(p, filepath_lower) for p in bids_zip_patterns)
 
             if is_bids_zip:
-                recording_modality = manifest.get("recording_modality", "eeg")
-
                 # Try to infer subject count from manifest demographics
                 demographics = manifest.get("demographics", {})
                 inferred_subjects = demographics.get("subjects_count", 0)
@@ -1065,7 +1117,7 @@ def digest_from_manifest(
                             record = create_record(
                                 dataset=dataset_id,
                                 storage_base=storage_base,
-                                bids_relpath=f"sub-{sub_id}/{recording_modality}/sub-{sub_id}_{recording_modality}.set",
+                                bids_relpath=f"sub-{sub_id}/{primary_mod}/sub-{sub_id}_{primary_mod}.set",
                                 subject=sub_id,
                                 session=None,
                                 task=manifest.get("tasks", [None])[0]
@@ -1073,10 +1125,10 @@ def digest_from_manifest(
                                 else None,
                                 run=None,
                                 dep_keys=[],
-                                datatype=recording_modality,
-                                suffix=recording_modality,
+                                datatype=primary_mod,
+                                suffix=primary_mod,
                                 storage_backend="https",
-                                recording_modality=recording_modality,
+                                recording_modality=recording_modality_val,
                                 digested_at=digested_at,
                             )
 
@@ -1105,10 +1157,10 @@ def digest_from_manifest(
                             task=None,
                             run=None,
                             dep_keys=[],
-                            datatype=recording_modality,
-                            suffix=recording_modality,
+                            datatype=primary_mod,
+                            suffix=primary_mod,
                             storage_backend=get_storage_backend(source),
-                            recording_modality=recording_modality,
+                            recording_modality=recording_modality_val,
                             digested_at=digested_at,
                         )
 
@@ -1146,7 +1198,7 @@ def digest_from_manifest(
                 datatype=entities.get("datatype", detected_modality),
                 suffix=entities.get("suffix", detected_modality),
                 storage_backend=get_storage_backend(source),
-                recording_modality=detected_modality,
+                recording_modality=[detected_modality],
                 digested_at=digested_at,
             )
 
@@ -1188,7 +1240,7 @@ def digest_from_manifest(
                 datatype=entities.get("datatype", detected_modality),
                 suffix=entities.get("suffix", detected_modality),
                 storage_backend="https",
-                recording_modality=detected_modality,
+                recording_modality=[detected_modality],
                 digested_at=digested_at,
             )
 

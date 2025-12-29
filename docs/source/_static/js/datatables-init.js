@@ -8,17 +8,24 @@
     }
     const div = document.createElement('div');
     div.innerHTML = html;
+
+    // Prefer finding explicit tags first
     const tags = Array.from(div.querySelectorAll('.tag'))
       .map((el) => el.textContent.trim())
       .filter(Boolean);
     if (tags.length) {
-      return tags;
+      return [...new Set(tags)]; // Unique values
     }
-    const text = div.textContent || '';
+
+    const text = (div.textContent || '').trim();
+    if (!text) return [];
+
+    // Fallback to splitting by common separators
     return text
-      .split(/,\s*|\s+/)
+      .split(/[,;|/\n\s]+/)
       .map((token) => token.trim())
-      .filter(Boolean);
+      .filter(Boolean)
+      .filter((token, index, self) => self.indexOf(token) === index);
   }
 
   function parseSizeToBytes(text) {
@@ -138,7 +145,7 @@
 
     ensureTotalRowInFoot($table);
 
-    const filterCols = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+    const filterCols = [1, 2, 3, 4, 5];
 
     const headerCells = $table.find('thead th');
     const sizeIndex = headerCells
@@ -155,8 +162,16 @@
     const columnDefs = [
       {
         targets: filterCols,
-        render: { _: (d) => d, sp: (d) => tagsArrayFromHtml(d) },
-        searchPanes: { show: true, orthogonal: 'sp' },
+        render: function (data, type, row) {
+          if (type === 'sp' || type === 'filter' || type === 'search') {
+            return tagsArrayFromHtml(data);
+          }
+          return data;
+        },
+        searchPanes: {
+          show: true,
+          orthogonal: 'sp',
+        },
       },
     ];
 

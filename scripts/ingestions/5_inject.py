@@ -414,17 +414,23 @@ def main():
         dataset_id = dataset_dir.name
 
         try:
-            # Load dataset document (always for fingerprinting)
+            # Load record documents
+            records = load_records(dataset_dir)
+
+            # Skip if empty (unless force-including empty datasets)
+            if not records and not args.only_datasets:
+                # print(f"  Skipping empty dataset {dataset_id}", file=sys.stderr)
+                continue
+
+            if not args.only_datasets:
+                all_records.extend(records)
+
+            # Load dataset document (only if records found or forced)
             dataset = load_dataset(dataset_dir)
             if dataset:
                 dataset_docs[dataset_id] = dataset
                 if not args.only_records:
                     all_datasets.append(dataset)
-
-            # Load record documents (always for fingerprinting)
-            records = load_records(dataset_dir)
-            if not args.only_datasets:
-                all_records.extend(records)
 
         except Exception as e:
             errors.append({"dataset": dataset_id, "error": str(e)})

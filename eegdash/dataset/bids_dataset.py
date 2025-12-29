@@ -177,10 +177,9 @@ class EEGBIDSDataset:
                     allow_symlinks=self.allow_symlinks,
                 )
                 if found_files:
-                    self.files = found_files
-                    break
-            if self.files:
-                break
+                    self.files.extend(found_files)
+                    # Continue searching for other extensions and modalities to ensure
+                    # we capture all data (e.g., mixed EEG/MEG datasets).
 
     def _get_bids_path_from_file(self, data_filepath: str):
         """Get a BIDSPath object for a data file with caching.

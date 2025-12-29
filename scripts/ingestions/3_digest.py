@@ -44,8 +44,14 @@ STORAGE_CONFIGS = {
     "datarn": {"backend": "webdav", "base": "https://webdav.data.ru.nl"},
 }
 
-# Default config for unknown sourcess
+# Default config for unknown sources
 DEFAULT_STORAGE_CONFIG = {"backend": "https", "base": "https://unknown"}
+
+# Datasets to explicitly ignore during ingestion
+EXCLUDED_DATASETS = {
+    "test",
+    "ds003380",
+}
 
 
 def get_storage_config(source: str) -> dict:
@@ -1374,7 +1380,11 @@ def find_datasets(input_dir: Path, datasets: list[str] | None = None) -> list[st
 
     found = []
     for d in input_dir.iterdir():
-        if d.is_dir() and d.name not in ("__pycache__", ".git"):
+        if (
+            d.is_dir()
+            and d.name not in ("__pycache__", ".git")
+            and d.name not in EXCLUDED_DATASETS
+        ):
             # Check if it has a manifest.json (API-based sources)
             # or dataset_description.json (git-cloned BIDS datasets)
             if (d / "manifest.json").exists() or (

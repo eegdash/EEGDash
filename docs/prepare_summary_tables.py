@@ -16,7 +16,7 @@ from plot_dataset import (
     generate_modality_ridgeline,
 )
 from plot_dataset.utils import get_dataset_url, human_readable_size
-from table_tag_utils import wrap_tags
+from table_tag_utils import _normalize_values, wrap_tags
 
 DOCS_DIR = Path(__file__).resolve().parent
 STATIC_DATASET_DIR = DOCS_DIR / "source" / "_static" / "dataset_generated"
@@ -50,6 +50,10 @@ DATASET_CANONICAL_MAP = {
         "visual": "Visual",
         "somatosensory": "Somatosensory",
         "multisensory": "Multisensory",
+    },
+    "record_modality": {
+        "eeg": "EEG",
+        "emg": "EMG",
     },
     "type": {
         "perception": "Perception",
@@ -117,7 +121,8 @@ function tagsArrayFromHtml(html) {
     const tags = Array.from(tmp.querySelectorAll('.tag')).map(function(el){
         return (el.textContent || '').trim();
     });
-    return tags.length ? tags : [tmp.textContent.trim()];
+    const text = tmp.textContent.trim();
+    return tags.length ? tags : (text ? [text] : []);
 }
 
 // Helper: parse human-readable sizes like "4.31 GB" into bytes (number)
@@ -156,6 +161,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // 2) Initialize DataTable with SearchPanes button
     const FILTER_COLS = [1, 2, 3, 4, 5, 6, 7, 8];
+    const TAG_COLS = (function(){
+        const tagHeaders = new Set(['record modality', 'pathology', 'modality', 'type']);
+        const cols = [];
+        $table.find('thead th').each(function(i){
+            const t = window.jQuery(this).text().trim().toLowerCase();
+            if (tagHeaders.has(t)) cols.push(i);
+        });
+        return cols;
+    })();
     // Detect the index of the size column by header text
     const sizeIdx = (function(){
         let idx = -1;
@@ -184,6 +198,18 @@ document.addEventListener('DOMContentLoaded', function () {
             const defs = [
                 { searchPanes: { show: true }, targets: FILTER_COLS }
             ];
+            if (TAG_COLS.length) {
+                defs.push({
+                    targets: TAG_COLS,
+                    searchPanes: { show: true, orthogonal: 'sp' },
+                    render: function(data, type) {
+                        if (type === 'sp') {
+                            return tagsArrayFromHtml(data);
+                        }
+                        return data;
+                    }
+                });
+            }
             if (sizeIdx !== -1) {
                 defs.push({
                     targets: sizeIdx,
@@ -490,9 +516,8 @@ def save_summary_stats(df_raw: pd.DataFrame):
 
     if col:
         for m in df_raw[col].dropna():
-            # Support both + and , as separators
-            unique_modalities.update(str(m).replace("+", ",").split(","))
-    unique_modalities = {m.strip() for m in unique_modalities if m.strip()}
+            unique_modalities.update(_normalize_values(m))
+    unique_modalities = {m.strip().lower() for m in unique_modalities if m.strip()}
 
     # n_subjects might be in df_raw or subjects
     n_subj_col = "n_subjects" if "n_subjects" in df_raw.columns else "subjects"

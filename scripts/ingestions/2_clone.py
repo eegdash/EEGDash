@@ -136,6 +136,8 @@ def clone_git(dataset: dict, output_dir: Path, timeout: int = 300) -> dict:
     if (clone_dir / ".git").exists():
         files = list_git_files(clone_dir)
         manifest = build_manifest(dataset_id, source, files, dataset)
+        if source == "openneuro":
+            manifest["storage_base"] = f"s3://openneuro.org/{dataset_id}"
         save_manifest(manifest, output_dir)
         return {"status": "skip", "dataset_id": dataset_id, "file_count": len(files)}
 
@@ -158,6 +160,8 @@ def clone_git(dataset: dict, output_dir: Path, timeout: int = 300) -> dict:
 
         files = list_git_files(clone_dir)
         manifest = build_manifest(dataset_id, source, files, dataset)
+        if source == "openneuro":
+            manifest["storage_base"] = f"s3://openneuro.org/{dataset_id}"
         save_manifest(manifest, output_dir)
 
         return {

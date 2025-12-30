@@ -39,7 +39,7 @@ class RecordModel(BaseModel):
     dataset: str = Field(min_length=1)
     bids_relpath: str = Field(min_length=1)
     storage: StorageModel
-    recording_modality: str = Field(min_length=1)
+    recording_modality: list[str] = Field(min_length=1)
 
     datatype: str | None = None
     suffix: str | None = None
@@ -52,7 +52,7 @@ class DatasetModel(BaseModel):
 
     dataset_id: str = Field(min_length=1)
     source: str = Field(min_length=1)
-    recording_modality: str = Field(min_length=1)
+    recording_modality: list[str] = Field(min_length=1)
     ingestion_fingerprint: str | None = None
 
 

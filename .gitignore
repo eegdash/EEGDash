@@ -23,7 +23,7 @@
 # Generated dataset visualizations
 #Mac files
 build/
-consolidated/
+
 cover
 data/
 digestion_output/
@@ -52,4 +52,3 @@ tags
 test_diggestion/
 tests/.testeegdash/
 tests/data/
-/ingestions/

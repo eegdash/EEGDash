@@ -24,7 +24,7 @@ from ..local_bids import discover_local_bids_records
 from ..logging import logger
 from ..paths import get_default_cache_dir
 from ..records import validate_record
-from .base import EEGDashBaseDataset
+from .base import EEGDashRaw
 from .bids_dataset import EEGBIDSDataset
 from .registry import register_openneuro_datasets
 
@@ -135,7 +135,7 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
         - Filtering: any keys present in ``ALLOWED_QUERY_FIELDS`` are treated as
           query filters (e.g., ``dataset``, ``subject``, ``task``, ...).
         - Dataset options: remaining keys are forwarded to
-          ``EEGDashBaseDataset``.
+          ``EEGDashRaw``.
 
     """
 
@@ -217,15 +217,6 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
         # challenge/preprocessed buckets (e.g., BDF, mini subsets), append
         # informative suffixes to avoid overlapping with the original dataset.
         dataset_folder = self.query["dataset"]
-        if self.s3_bucket:
-            suffixes: list[str] = []
-            bucket_lower = str(self.s3_bucket).lower()
-            if "bdf" in bucket_lower:
-                suffixes.append("bdf")
-            if "mini" in bucket_lower:
-                suffixes.append("mini")
-            if suffixes:
-                dataset_folder = f"{dataset_folder}-{'-'.join(suffixes)}"
 
         self.data_dir = self.cache_dir / dataset_folder
 
@@ -266,7 +257,7 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
                         f"Record must be v2 format with storage.base: {errors}"
                     )
             datasets = [
-                EEGDashBaseDataset(
+                EEGDashRaw(
                     record,
                     self.cache_dir,
                     **base_dataset_kwargs,
@@ -311,7 +302,7 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
                         pass
 
                 datasets.append(
-                    EEGDashBaseDataset(
+                    EEGDashRaw(
                         record=record,
                         cache_dir=self.cache_dir,
                         description=desc,
@@ -428,11 +419,11 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
         query: dict[str, Any] | None,
         description_fields: list[str],
         base_dataset_kwargs: dict,
-    ) -> list[EEGDashBaseDataset]:
+    ) -> list[EEGDashRaw]:
         """Find and construct datasets from a MongoDB query.
 
         Queries the database, then creates a list of
-        :class:`EEGDashBaseDataset` objects from the results. Records from the
+        :class:`EEGDashRaw` objects from the results. Records from the
         database must be v2 format with storage.base explicitly set.
 
         Parameters
@@ -443,11 +434,11 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
             Fields to extract from each record for the dataset description.
         base_dataset_kwargs : dict
             Additional keyword arguments to pass to the
-            :class:`EEGDashBaseDataset` constructor.
+            :class:`EEGDashRaw` constructor.
 
         Returns
         -------
-        list of EEGDashBaseDataset
+        list of EEGDashRaw
             A list of dataset objects matching the query.
 
         Raises
@@ -456,7 +447,7 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
             If records from the database are not v2 format.
 
         """
-        datasets: list[EEGDashBaseDataset] = []
+        datasets: list[EEGDashRaw] = []
         self.records = self.eeg_dash_instance.find(query)
 
         for record in self.records:
@@ -483,7 +474,7 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
                     description_fields=description_fields,
                 )
             datasets.append(
-                EEGDashBaseDataset(
+                EEGDashRaw(
                     record,
                     cache_dir=self.cache_dir,
                     description=description,
@@ -580,6 +571,8 @@ class EEGChallengeDataset(EEGDashDataset):
                 "Please use the release argument instead, or the object EEGDashDataset instead."
             )
 
+        dataset_id = f"EEG2025r{release[1:]}"
+
         if self.mini:
             # When using the mini release, restrict subjects to the predefined subset.
             # If the user specifies subject(s), ensure they all belong to the mini subset;
@@ -632,10 +625,7 @@ class EEGChallengeDataset(EEGDashDataset):
                 kwargs["subject"] = sorted(allowed_subjects)
 
             # Construct dataset ID for mini
-            dataset_id = f"{release}_mini_L100_bdf"
-        else:
-            # Construct dataset ID for full
-            dataset_id = f"{release}_L100_bdf"
+            dataset_id = f"{dataset_id}mini"
 
         # Check if s3_bucket override is requested, otherwise use default from DB/Dataset
         # The DB now contains the correct storage URL for these datasets.

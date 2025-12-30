@@ -6,13 +6,14 @@ from eegdash.dataset import EEGChallengeDataset, EEGDashDataset
 
 
 def _dummy_record(dataset: str, ext: str = ".set") -> dict:
-    # Minimal record used by EEGDashBaseDataset without triggering IO
-    # bidspath must start with dataset root
-    bidspath = f"{dataset}/sub-01/ses-01/eeg/sub-01_ses-01_task-test_run-01_eeg{ext}"
+    # Minimal record used by Raw without triggering IO
+    # bids_relpath must be the path within the dataset
+    bids_relpath = f"sub-01/ses-01/eeg/sub-01_ses-01_task-test_run-01_eeg{ext}"
     return {
         "data_name": f"{dataset}_sub-01_ses-01_task-test_run-01_eeg{ext}",
         "dataset": dataset,
-        "bidspath": bidspath,
+        "bidspath": f"{dataset}/{bids_relpath}",
+        "bids_relpath": bids_relpath,
         "bidsdependencies": [],
         # BIDS entities used to construct BIDSPath
         "subject": "01",
@@ -24,12 +25,18 @@ def _dummy_record(dataset: str, ext: str = ".set") -> dict:
         "sampling_frequency": 100.0,
         "nchans": 3,
         "ntimes": 100,
+        "storage": {
+            "backend": "s3",
+            "base": f"s3://openneuro.org/{dataset}",
+            "raw_key": bids_relpath,
+            "dep_keys": [],
+        },
     }
 
 
 @pytest.mark.parametrize(
     "release,dataset_id",
-    [("R5", "ds005509")],
+    [("R5", "EEG2025r5")],
 )
 def test_dataset_folder_suffixes(cache_dir: Path, release: str, dataset_id: str):
     # Baseline EEGDashDataset should use plain dataset folder
@@ -39,20 +46,21 @@ def test_dataset_folder_suffixes(cache_dir: Path, release: str, dataset_id: str)
     assert base.bids_root == cache_dir / dataset_id
     assert str(base.filecache).startswith(str((cache_dir / dataset_id).resolve()))
 
-    # EEGChallengeDataset mini=True should suffix with -bdf-mini
-    ds_min = EEGChallengeDataset(release=release, cache_dir=cache_dir, records=[rec])
+    # EEGChallengeDataset mini=True should use EEG2025r{X}mini
+    rec_mini = _dummy_record(f"{dataset_id}mini")
+    ds_min = EEGChallengeDataset(
+        release=release, cache_dir=cache_dir, records=[rec_mini]
+    )
     base_min = ds_min.datasets[0]
-    assert base_min.bids_root == cache_dir / f"{dataset_id}-bdf-mini"
+    assert base_min.bids_root == cache_dir / f"{dataset_id}mini"
     assert str(base_min.filecache).startswith(
-        str((cache_dir / f"{dataset_id}-bdf-mini").resolve())
+        str((cache_dir / f"{dataset_id}mini").resolve())
     )
 
-    # EEGChallengeDataset mini=False should suffix with -bdf
+    # EEGChallengeDataset mini=False should use EEG2025r{X}
     ds_full = EEGChallengeDataset(
         release=release, cache_dir=cache_dir, mini=False, records=[rec]
     )
     base_full = ds_full.datasets[0]
-    assert base_full.bids_root == cache_dir / f"{dataset_id}-bdf"
-    assert str(base_full.filecache).startswith(
-        str((cache_dir / f"{dataset_id}-bdf").resolve())
-    )
+    assert base_full.bids_root == cache_dir / dataset_id
+    assert str(base_full.filecache).startswith(str((cache_dir / dataset_id).resolve()))

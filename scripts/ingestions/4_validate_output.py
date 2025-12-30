@@ -33,7 +33,7 @@ from eegdash.schemas import DatasetModel, ManifestFileModel, ManifestModel, Reco
 # Valid storage URL patterns per source
 VALID_STORAGE_PATTERNS = {
     "openneuro": r"^s3://openneuro\.org/ds\d+",
-    "nemar": r"^s3://nemar/nm\d+",
+    "nemar": r"^s3://(nemar|nmdatasets)/",
     "osf": r"^https://files\.osf\.io/",
     "figshare": r"^https://(figshare\.com|ndownloader|.*\.figshare\.com)",
     "zenodo": r"^https://zenodo\.org/",

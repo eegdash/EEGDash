@@ -1,6 +1,7 @@
 # Authors: The EEGDash contributors.
 # License: BSD-3-Clause
-
+# TODO: merge this with records.py, maybe change the name for better name, now that
+# we have the dataset model.
 """Pydantic models for EEGDash documents.
 
 These models are intended for validation of documents exchanged with the EEGDash
@@ -54,6 +55,9 @@ class DatasetModel(BaseModel):
     source: str = Field(min_length=1)
     recording_modality: list[str] = Field(min_length=1)
     ingestion_fingerprint: str | None = None
+    senior_author: str | None = None
+    contact_info: list[str] | None = None
+    timestamps: dict[str, Any] | None = None
 
 
 class ManifestFileModel(BaseModel):

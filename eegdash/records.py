@@ -25,6 +25,7 @@ class Timestamps(TypedDict, total=False):
     """Processing timestamps."""
 
     digested_at: str  # ISO 8601 timestamp of when digestion occurred
+    dataset_created_at: str | None  # ISO 8601 timestamp of when dataset was created
     dataset_modified_at: str | None  # ISO 8601 timestamp of last dataset update
 
 
@@ -136,6 +137,10 @@ class Dataset(TypedDict, total=False):
     external_links: ExternalLinks
     repository_stats: RepositoryStats | None  # For git-based sources
 
+    # Contact
+    senior_author: str | None
+    contact_info: list[str] | None  # Admin users/emails
+
     # Timestamps
     timestamps: Timestamps
 
@@ -188,8 +193,12 @@ def create_dataset(
     stars: int | None = None,
     forks: int | None = None,
     watchers: int | None = None,
+    # Contact
+    senior_author: str | None = None,
+    contact_info: list[str] | None = None,
     # Timestamps
     digested_at: str | None = None,
+    dataset_created_at: str | None = None,
     dataset_modified_at: str | None = None,
 ) -> Dataset:
     """Create a Dataset document.
@@ -328,8 +337,11 @@ def create_dataset(
         contributing_labs=contributing_labs,
         n_contributing_labs=len(contributing_labs) if contributing_labs else None,
         demographics=demographics,
+        senior_author=senior_author,
+        contact_info=contact_info,
         timestamps=Timestamps(
             digested_at=digested_at,
+            dataset_created_at=dataset_created_at,
             dataset_modified_at=dataset_modified_at,
         ),
     )

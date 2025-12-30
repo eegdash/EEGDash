@@ -406,8 +406,8 @@ def fetch_datasets_with_details(
                     }
                 )
 
-        if batch_end % 50 == 0 or batch_end == len(dataset_ids):
-            print(f"  Processed {batch_end}/{len(dataset_ids)} datasets")
+        if batch_end % 50 == 0 or batch_end == len(found_ids):
+            print(f"  Processed {batch_end}/{len(found_ids)} datasets")
 
     return datasets
 

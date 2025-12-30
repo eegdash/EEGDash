@@ -3,6 +3,7 @@
 .DS_Store
 .env
 .env.zenodo
+.env.figshare
 .ruff_cache/
 .secret
 .venv*
@@ -51,4 +52,3 @@ tags
 test_diggestion/
 tests/.testeegdash/
 tests/data/
-.env.figshare

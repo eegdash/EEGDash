@@ -49,8 +49,41 @@ DEFAULT_STORAGE_CONFIG = {"backend": "https", "base": "https://unknown"}
 
 # Datasets to explicitly ignore during ingestion
 EXCLUDED_DATASETS = {
-    "test",
-    "ds003380",
+    "ABUDUKADI",
+    "ABUDUKADI_2",
+    "ABUDUKADI_3",
+    "ABUDUKADI_4",
+    "AILIJIANG",
+    "AILIJIANG_3",
+    "AILIJIANG_4",
+    "AILIJIANG_5",
+    "AILIJIANG_7",
+    "AILIJIANG_8",
+    "BAIHETI",
+    "BAIHETI_2",
+    "BAIHETI_3",
+    "BIAN_3",
+    "BIN_27",
+    "BLIX",
+    "BOJIN",
+    "BOUSSAGOL",
+    "AISHENG",
+    "ACHOLA",
+    "ANASHKIN",
+    "ANJUM",
+    "BARBIERI",
+    "BIN_8",
+    "BIN_9",
+    "BING_4",
+    "BING_8",
+    "BOWEN_4",
+    "AZIZAH",
+    "BAO",
+    "BAO-YOU",
+    "BAO_2",
+    "BENABBOU",
+    "BING",
+    "BOXIN",
 }
 
 
@@ -521,7 +554,7 @@ def parse_bids_entities_from_path(filepath: str) -> dict[str, Any]:
             "dataset_description",
             "samples",
             "data",
-        ):
+        ) and not stem.lower().startswith(("sub-", "ses-")):
             entities["task"] = stem
 
     # Determine modality/datatype from path or filename
@@ -630,6 +663,8 @@ def _load_neuro_data_extensions() -> set[str]:
     NEURO_DATA_EXTENSIONS = extensions
     return extensions
 
+    return False
+
 
 def is_neuro_data_file(filepath: str) -> bool:
     """Check if file is a neurophysiology data file (EEG, MEG, iEEG, EMG, fNIRS).
@@ -676,8 +711,14 @@ def is_neuro_data_file(filepath: str) -> bool:
         return True
 
     # Also allow .zip files if they seem to be subject/session zips (common on Zenodo)
+    # OR if it's a generic "Dataset.zip" or variants which often hold the raw data
     if filepath_lower.endswith(".zip"):
-        if "sub-" in filepath_lower or "ses-" in filepath_lower:
+        if (
+            "sub-" in filepath_lower
+            or "ses-" in filepath_lower
+            or "dataset.zip" in filepath_lower
+            or "data.zip" in filepath_lower
+        ):
             return True
 
     return False
@@ -862,6 +903,47 @@ def digest_from_manifest(
             or manifest.get("bids_subject_count", 0)
         )
     )
+
+    # Fallback: Try to fetch metadata files if counts/tasks are missing
+    if subjects_count == 0 or not tasks:
+        import urllib.error
+        import urllib.request
+
+        # Look for key metadata files in the file list
+        desc_url = None
+        participants_url = None
+
+        for f in files:
+            if isinstance(f, dict):
+                path = f.get("path", "").lower()
+                url = f.get("download_url")
+                if path.endswith("dataset_description.json"):
+                    desc_url = url
+                elif path.endswith("participants.tsv"):
+                    participants_url = url
+
+        # Try dataset_description.json first
+        if desc_url:
+            try:
+                with urllib.request.urlopen(desc_url, timeout=10) as response:
+                    desc_data = json.loads(response.read().decode("utf-8"))
+                    # Some datasets put subject count here
+                    if "Subjects" in desc_data:  # heuristic
+                        subjects_count = int(desc_data["Subjects"])
+            except Exception as e:
+                print(f"Failed to fetch/parse dataset_description.json: {e}")
+
+        # Try participants.tsv if still 0
+        if subjects_count == 0 and participants_url:
+            try:
+                with urllib.request.urlopen(participants_url, timeout=10) as response:
+                    content = response.read().decode("utf-8")
+                    lines = [l for l in content.splitlines() if l.strip()]
+                    # Subtract header
+                    if len(lines) > 1:
+                        subjects_count = len(lines) - 1
+            except Exception as e:
+                print(f"Failed to fetch/parse participants.tsv: {e}")
     ages = demographics.get("ages", [])
 
     # Get DOI from manifest (OSF enhanced clone provides this)

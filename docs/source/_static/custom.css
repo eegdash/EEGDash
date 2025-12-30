@@ -1,792 +1,429 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Sora:wght@400;600;700;800&display=swap");
 
-@import url("https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&display=swap");
-
-/* EEGDash Color Theme - Override PyData Theme */
+/* --------------------------------------------------------------------------
+   1. Global Variable & Typography Overrides
+   -------------------------------------------------------------------------- */
 :root {
-  --eegdash-primary: #006ca3;  /* New blue */
-  --eegdash-accent: #f7941d;   /* Orange */
-  
-  /* Override PyData theme colors */
-  --pst-color-primary: #006ca3;
-  --pst-color-accent: #f7941d;
-  --sd-color-primary: #006ca3;
-  --sd-color-primary-highlight: #004a76;
-}
+  /* Brand Colors */
+  --eegdash-primary: #006ca3;
+  /* Blue */
+  --eegdash-primary-dark: #004a76;
+  --eegdash-accent: #f7941d;
+  /* Orange */
+  --eegdash-accent-hover: #d67a0e;
 
-html[data-theme="light"] {
-  --pst-color-primary: #006ca3;
-  --sd-color-primary: #006ca3;
+  /* Fonts */
+  --pst-font-family-base: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+  --pst-font-family-heading: "Sora", var(--pst-font-family-base);
+
+  /* Theme Overrides for PyData */
+  --pst-color-primary: var(--eegdash-primary);
+  --pst-color-accent: var(--eegdash-accent);
+  --sd-color-primary: var(--eegdash-primary);
+  --sd-color-primary-highlight: var(--eegdash-primary-dark);
+
+  /* Base sizing */
+  --pst-font-size-base: 1.15rem;
+  /* Larger font size like MOABB */
+  --pst-line-height-base: 1.65;
 }
 
 html[data-theme="dark"] {
-  --pst-color-primary: #006ca3;
-  --sd-color-primary: #006ca3;
+  --eegdash-primary: #3aa3d9;
+  /* Lighter blue for dark mode contrast */
+  --pst-color-primary: var(--eegdash-primary);
+  --sd-color-primary: var(--eegdash-primary);
 }
 
-.eegdash-hero { text-align:center; margin: 0 0 1.25rem; }
-
-.eegdash-hero__title{
-  display: block;
+/* --------------------------------------------------------------------------
+   2. Hero Section & General Layout
+   -------------------------------------------------------------------------- */
+.eegdash-hero {
   text-align: center;
-  font-family:"Sora", var(--pst-font-family-base, system-ui), sans-serif;
-  font-weight:800;
-  font-size:clamp(3.6rem, 9vw, 5.9rem);
-  line-height:1.08;
-  margin:0 0 .85rem;
-  color:var(--pst-color-text, #111827);
-  letter-spacing:.01em;
+  margin: 0 0 3rem;
+  padding: 4rem 1rem;
+  background: linear-gradient(135deg, rgba(0, 108, 163, 0.05) 0%, rgba(247, 148, 29, 0.05) 100%);
+  border-radius: 1.5rem;
+  border: 1px solid rgba(0, 0, 0, 0.03);
 }
 
-html[data-theme="light"] .eegdash-hero__title {
-  color:#0f172a;
+html[data-theme="dark"] .eegdash-hero {
+  background: linear-gradient(135deg, rgba(0, 108, 163, 0.15) 0%, rgba(247, 148, 29, 0.1) 100%);
+  border-color: rgba(255, 255, 255, 0.05);
 }
 
-html[data-theme="dark"] .eegdash-hero__title {
-  color:#f9fafb;
-  text-shadow:0 3px 12px rgba(0,0,0,0.45);
+.eegdash-hero__title {
+  display: block;
+  font-family: var(--pst-font-family-heading);
+  font-weight: 800;
+  font-size: clamp(2.5rem, 5vw, 4.5rem);
+  line-height: 1.1;
+  margin: 0 0 1.5rem;
+  color: var(--pst-color-text-base);
+  letter-spacing: -0.02em;
 }
 
-.eegdash-hero img.logo.mainlogo{ display:block; margin:0 auto; }
+.eegdash-hero img.logo.mainlogo {
+  display: block;
+  margin: 0 auto;
+  max-width: 100%;
+  height: auto;
+  filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.1));
+}
 
-/* Footer logo styling */
-/* Footer styling */
+/* --------------------------------------------------------------------------
+   3. "Institutions" Logo Grid (Flexbox/Grid)
+   -------------------------------------------------------------------------- */
+/* --------------------------------------------------------------------------
+   3. "Institutions" Logo Grid (Flexbox/Grid)
+   -------------------------------------------------------------------------- */
+.logos-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 4rem;
+  /* Increased gap */
+  margin: 2rem auto;
+  padding: 1rem;
+}
+
+.logo-item {
+  flex: 0 1 auto;
+  max-width: 300px;
+  /* Slightly larger max width */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0.85;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.logo-item:hover {
+  opacity: 1;
+  transform: translateY(-2px);
+}
+
+.logo-item img {
+  width: auto;
+  max-width: 100%;
+  max-height: 80px;
+  /* Constrain height to align better */
+  display: block;
+}
+
+/* --------------------------------------------------------------------------
+   4. Interactive Links & Buttons
+   -------------------------------------------------------------------------- */
+/* Content links */
+article a:not(.btn):not(.headerlink):not(.sd-btn) {
+  text-decoration: none;
+  border-bottom: 2px solid rgba(0, 108, 163, 0.3);
+  transition: all 0.2s ease;
+  color: var(--pst-color-primary);
+  font-weight: 500;
+}
+
+article a:not(.btn):not(.headerlink):not(.sd-btn):hover {
+  border-bottom-color: var(--eegdash-accent);
+  color: var(--pst-color-primary-highlight);
+  background-color: rgba(0, 108, 163, 0.05);
+  border-radius: 2px;
+}
+
+/* Buttons (sphinx-design) hover lift */
+.sd-btn {
+  transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+}
+
+.sd-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* --------------------------------------------------------------------------
+   5. Admonitions & Badges
+   -------------------------------------------------------------------------- */
+.admonition {
+  border-left-width: 4px !important;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  border-left-style: solid;
+}
+
+.admonition.note {
+  background-color: rgba(0, 108, 163, 0.04);
+  border-left-color: var(--eegdash-primary);
+}
+
+.admonition.warning,
+.admonition.attention {
+  background-color: rgba(247, 148, 29, 0.05);
+  border-left-color: var(--eegdash-accent);
+}
+
+.bdg-danger,
+.badge-danger {
+  background-color: #ef4444;
+  /* Brighter red */
+  color: white;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.85em;
+  letter-spacing: 0.02em;
+}
+
+/* --------------------------------------------------------------------------
+   6. Cards (Sphinx Design & Custom)
+   -------------------------------------------------------------------------- */
+.sd-card {
+  border: 1px solid rgba(0, 0, 0, 0.08) !important;
+  border-radius: 0.75rem !important;
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.sd-card:hover {
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08) !important;
+  transform: translateY(-4px);
+  border-color: var(--eegdash-primary) !important;
+}
+
+/* API Landing Cards (Custom) */
+.api-card {
+  border-radius: 0.75rem;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  background: var(--pst-color-surface);
+}
+
+.api-card .card-header {
+  background: var(--eegdash-primary);
+  color: white;
+  padding: 1rem 1.25rem;
+  font-family: var(--pst-font-family-heading);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 0.9rem;
+}
+
+.api-card__content {
+  padding: 1.5rem;
+  display: flex;
+  gap: 1.25rem;
+  align-items: flex-start;
+}
+
+.api-card__icon {
+  flex-shrink: 0;
+  width: 3rem;
+  height: 3rem;
+  background: rgba(0, 108, 163, 0.1);
+  color: var(--eegdash-primary);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+}
+
+/* --------------------------------------------------------------------------
+   7. Code Blocks & Code Aesthetics
+   -------------------------------------------------------------------------- */
+div.highlight {
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.03);
+  margin-bottom: 1.5rem;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  /* For radius */
+}
+
+div.highlight pre {
+  padding: 1.25rem;
+  font-family: "JetBrains Mono", "Fira Code", monospace;
+  font-size: 0.9em;
+  line-height: 1.5;
+}
+
+html[data-theme="light"] div.highlight {
+  background: #fafafa;
+}
+
+/* --------------------------------------------------------------------------
+   8. Table Styling
+   -------------------------------------------------------------------------- */
+table.table,
+.sd-table {
+  border-collapse: separate;
+  border-spacing: 0;
+  width: 100%;
+  margin-bottom: 2rem;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+table.table thead th,
+.sd-table thead th {
+  background-color: var(--eegdash-primary);
+  color: #fff;
+  font-weight: 600;
+  padding: 0.85rem 1rem;
+  border: none;
+  font-family: var(--pst-font-family-heading);
+  letter-spacing: 0.02em;
+}
+
+table.table tbody td,
+.sd-table tbody td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  vertical-align: middle;
+}
+
+table.table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+table.table tbody tr:hover {
+  background-color: rgba(0, 108, 163, 0.02);
+}
+
+/* Dataset Summary specific tweaks */
+#datasets-table {
+  font-size: 0.95rem;
+}
+
+/* --------------------------------------------------------------------------
+   9. Footer & Branding
+   -------------------------------------------------------------------------- */
 .pst-footer-custom {
-  position: relative;
+  margin-top: 4rem;
+  padding: 3rem 1rem;
+  background-color: var(--pst-color-surface-secondary, #f3f4f6);
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  text-align: center;
+}
+
+html[data-theme="dark"] .pst-footer-custom {
+  background-color: #0f172a;
+  /* Darker background for footer in dark mode */
 }
 
 .pst-footer-wrapper {
   display: flex;
-  align-items: center;
   justify-content: center;
-  gap: 0.5rem;
+  align-items: center;
+  gap: 1.5rem;
   flex-wrap: wrap;
 }
 
 .footer-brand-logo {
-  height: 24px;
+  height: 28px;
   width: auto;
-  opacity: 0.7;
-  transition: opacity 0.3s ease;
+  opacity: 0.6;
+  filter: grayscale(100%);
+  transition: all 0.3s ease;
 }
 
-.pst-footer-wrapper:hover .footer-brand-logo,
 .footer-brand-logo:hover {
   opacity: 1;
+  filter: grayscale(0%);
 }
 
-/* Core API title with icon */
-h1#core-api {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.85rem;
-  font-weight: 800;
+/* --------------------------------------------------------------------------
+   10. Navbar Polish
+   -------------------------------------------------------------------------- */
+.bd-header {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+  background-color: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(8px);
 }
 
-h1#core-api::before {
-  content: "\f2db";
-  font-family: "Font Awesome 6 Free";
-  font-weight: 900;
-  font-size: 1.75rem;
-  line-height: 1;
-  color: var(--sd-color-primary, #006ca3);
+html[data-theme="dark"] .bd-header {
+  background-color: rgba(18, 24, 38, 0.9);
 }
 
-h1#core-api .headerlink {
-  margin-left: 0.6rem;
-}
-
-/* Spacing + sizing for the two homepage logos */
-table.logos-row {
-  border-collapse: separate !important;
-  border-spacing: 20px 0 !important; /* horizontal gap between cells */
-}
-/* spacing between logos (table cells) */
-table.logos-row {
-  border-collapse: separate !important;
-  border-spacing: 20px 0 !important;   /* adjust gap */
-  background: transparent !important;
-  box-shadow: none !important;
-  border: 0 !important;
-}
-
-/* remove zebra/row styling from PyData theme */
-table.logos-row tbody tr,
-table.logos-row td,
-table.logos-row th {
-  background: transparent !important;
-  box-shadow: none !important;
-  border: 0 !important;
-}
-table.logos-row tbody tr:nth-child(odd) td,
-table.logos-row tbody tr:nth-child(odd) th {
-  background: transparent !important;
-}
-
-/* cell alignment (light padding optional now) */
-table.logos-row td {
-  padding: 0 8px !important;           /* optional, can be 0 */
-  vertical-align: middle;
-}
-
-/* logo sizing */
-table.logos-row img.logo.mainlogo {
-  display: block;
-  margin: 0 auto;
-  width: 100%;
-  max-height: 90px;
-  object-fit: contain;
-}
-
-/* small screens: shrink max-height a bit */
-@media (max-width: 640px) {
-  table.logos-row img.logo.mainlogo { max-height: 70px; }
-}
-
-.logos-flex {
-  display: flex;
-  flex-wrap: wrap;           /* wraps on small screens */
-  justify-content: center;   /* <-- centers the whole group */
-  align-items: center;
-  gap: 30px 24px;   /* row x column space between logos */
-  margin: 12px 0 24px;
-}
-
-/* center each image itself */
-.logos-flex img.flex-logo {
-  display: block;
-  margin: 0 auto;            /* <-- centers each image within its slot */
-  height: auto;
-  max-height: 110px;         /* optional cap */
-}
-
-
-/* Small screens */
-@media (max-width: 640px) {
-  .logos-flex { gap: 16px; }
-  .logos-flex img.flex-logo { max-height: 80px; }
-}
-
-/* -------------------------------------------------------------
-   Dataset summary table: increase font size slightly and
-   align with PyData theme base font size.
-   Only affects tables we render via pandas (class `sd-table`).
----------------------------------------------------------------- */
-.dataTables_wrapper .sd-table,
-.dataTables_wrapper .sd-table thead th,
-.dataTables_wrapper .sd-table tbody td,
-.dataTables_wrapper .sd-table tfoot td {
-  font-size: var(--pst-font-size-base, 1rem);
-  line-height: 1.5;
-}
-
-/* Captions for embedded figures/tables on dataset summary */
-figure.eegdash-figure figcaption.eegdash-caption {
-  color: var(--pst-color-text-muted, #5b6168);
-  font-size: calc(var(--pst-font-size-base, 1rem) * 0.95);
-  line-height: 1.5;
-  margin-top: 0.35rem;
-  text-align: center;
-}
-
-/* Dataset counters on treemap page */
-.dataset-counter-grid {
-  display: grid;
-  gap: 1.25rem;
-  margin: 1.5rem 0 2.5rem;
-  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-}
-
-.dataset-counter-card {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  padding: 1.25rem 1.5rem;
-  border-radius: 1rem;
-  background-color: var(--sd-color-surface, var(--pst-color-background, #ffffff));
-  border: 1px solid rgba(15, 23, 42, 0.08);
-  box-shadow: 0 14px 32px rgba(15, 23, 42, 0.08);
-}
-
-html[data-theme="dark"] .dataset-counter-card {
-  background-color: rgba(15, 23, 42, 0.65);
-  border-color: rgba(148, 163, 184, 0.28);
-  box-shadow: 0 16px 36px rgba(8, 8, 8, 0.55);
-}
-
-.dataset-counter-icon {
-  width: 3.25rem;
-  height: 3.25rem;
-  border-radius: 50%;
-  display: grid;
-  place-items: center;
-}
-
-.dataset-counter-svg {
-  width: 2rem;
-  height: 2rem;
-}
-
-.dataset-counter-body {
-  display: flex;
-  flex-direction: column;
-  gap: 0.3rem;
-}
-
-.dataset-counter-label {
-  font-size: 0.9rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  font-weight: 600;
-  color: var(--pst-color-text-muted, #6b7280);
-}
-
-.dataset-counter-value {
-  font-family: "Sora", var(--pst-font-family-heading, system-ui), sans-serif;
+.navbar-nav .nav-link.active {
   font-weight: 700;
-  font-size: clamp(1.7rem, 2.4vw, 2.25rem);
-  color: var(--pst-color-text, #0f172a);
+  color: var(--eegdash-primary) !important;
+  position: relative;
 }
 
-html[data-theme="dark"] .dataset-counter-value {
-  color: #f9fafb;
+.navbar-nav .nav-link.active::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0.5rem;
+  right: 0.5rem;
+  height: 3px;
+  background-color: var(--eegdash-accent);
+  border-radius: 2px 2px 0 0;
 }
 
-.dataset-counter-card:nth-child(1) .dataset-counter-icon {
-  background: rgba(0, 108, 163, 0.12);
-  color: #006ca3;
+/* --------------------------------------------------------------------------
+   Specific Element Fixes (Tags, Videos etc.)
+   -------------------------------------------------------------------------- */
+.tag {
+  display: inline-block;
+  padding: 3px 10px;
+  margin: 2px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-decoration: none !important;
+  background: #e2e8f0;
+  color: #475569;
+  border: 1px solid transparent;
+  transition: all 0.2s;
 }
 
-.dataset-counter-card:nth-child(2) .dataset-counter-icon {
-  background: rgba(124, 58, 237, 0.14);
-  color: #7c3aed;
+.tag:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-.dataset-counter-card:nth-child(3) .dataset-counter-icon {
-  background: rgba(5, 150, 105, 0.14);
-  color: #059669;
+/* Example Palette (preserving existing logic but modernizing colors) */
+.tag-conv {
+  background: #dcfce7;
+  color: #166534;
+  border-color: #86efac;
 }
 
-.dataset-counter-card:nth-child(4) .dataset-counter-icon {
-  background: rgba(245, 158, 11, 0.16);
-  color: #d97706;
+.tag-recurrent {
+  background: #f3e8ff;
+  color: #6b21a8;
+  border-color: #d8b4fe;
 }
 
-html[data-theme="dark"] .dataset-counter-card:nth-child(1) .dataset-counter-icon {
-  background: rgba(0, 108, 163, 0.28);
+.tag-channel {
+  background: #f1f5f9;
+  color: #334155;
+  border-color: #cbd5e1;
 }
 
-html[data-theme="dark"] .dataset-counter-card:nth-child(2) .dataset-counter-icon {
-  background: rgba(124, 58, 237, 0.28);
-}
-
-html[data-theme="dark"] .dataset-counter-card:nth-child(3) .dataset-counter-icon {
-  background: rgba(5, 150, 105, 0.28);
-}
-
-html[data-theme="dark"] .dataset-counter-card:nth-child(4) .dataset-counter-icon {
-  background: rgba(245, 158, 11, 0.32);
-}
-
-@media (max-width: 640px) {
-  .dataset-counter-card {
-    padding: 1.1rem 1.25rem;
-    gap: 0.85rem;
-  }
-
-  .dataset-counter-icon {
-    width: 3rem;
-    height: 3rem;
-  }
-
-  .dataset-counter-svg {
-    width: 1.75rem;
-    height: 1.75rem;
-  }
-}
-
-/* Make the DataTables filter input and buttons match size */
-.dataTables_wrapper .dataTables_filter input {
-  font-size: var(--pst-font-size-base, 1rem);
-  padding: 6px 10px;
-}
-
-.dataTables_wrapper .dt-buttons .dt-button,
-.dataTables_wrapper .dt-buttons .dt-button:active,
-.dataTables_wrapper .dt-buttons .dt-button:focus {
-  font-size: var(--pst-font-size-base, 1rem);
-}
-
-/* Responsive YouTube/video embeds */
+/* Video Wrapper */
 .video-wrapper {
   position: relative;
-  padding-bottom: 56.25%; /* 16:9 */
+  padding-bottom: 56.25%;
   height: 0;
+  border-radius: 1rem;
   overflow: hidden;
-  max-width: 100%;
-  background: #000;
-  border-radius: 8px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  margin: 2rem 0;
 }
+
 .video-wrapper iframe {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  border: 0;
-}
-
-/* -------------------------------------------------------------
-   API Reference landing cards
-------------------------------------------------------------- */
-.api-card {
-  min-height: 15rem;
-  border-left: 4px solid rgba(0, 108, 163, 0.18);
-  background-color: var(--sd-color-surface, #ffffff);
-}
-
-.api-card .card-header {
-  background-color: var(--sd-color-primary, #006ca3);
-  color: #ffffff;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  font-size: 1rem;
-  padding: 0.9rem 1.25rem;
-  border-bottom: none;
-}
-
-.api-card .card-body {
-  background-color: rgba(0, 108, 163, 0.06);
-  padding: 1.75rem;
-  border-bottom-left-radius: 0.75rem;
-  border-bottom-right-radius: 0.75rem;
-}
-
-.api-card__content {
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  gap: 1.5rem;
-  font-size: 1.05rem;
-  line-height: 1.6;
-}
-
-.api-card__icon {
-  flex: 0 0 3.25rem;
-  height: 3.25rem;
-  border-radius: 999px;
-  background-color: rgba(0, 108, 163, 0.15);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.api-card__icon .fa-solid {
-  font-size: 2.2rem;
-  color: var(--sd-color-primary, #006ca3);
-}
-
-.api-card__text {
-  flex: 1 1 auto;
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-  color: var(--pst-color-text, #1b1f24);
-}
-
-.api-card__text p {
-  margin: 0;
-}
-
-.api-card__cta {
-  margin: 0;
-  font-weight: 600;
-}
-
-.api-card__cta a {
-  color: var(--sd-color-primary, #006ca3);
-  text-decoration: none;
-}
-
-.api-card__cta a:hover,
-.api-card__cta a:focus {
-  text-decoration: underline;
-}
-
-.api-hero-buttons {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  margin: 1.25rem 0 2.25rem;
-}
-
-.api-hero-buttons .sd-btn {
-  font-weight: 600;
-  padding: 0.75rem 1.75rem;
-}
-
-@media (max-width: 640px) {
-  .api-card__content {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .api-card__icon {
-    width: 3.25rem;
-  }
-}
-
-/* Stacked style (SciPy-like) for API landing cards */
-.api-card__content--stack {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  gap: 1rem;
-}
-
-.api-card__title {
-  font-size: 1.35rem;
-  font-weight: 700;
-  margin: .25rem 0 0;
-}
-
-.api-card__subtitle {
-  font-size: 1.06rem;
-  color: var(--pst-color-text, #1b1f24);
-  line-height: 1.6;
-  position: relative;
-  padding-bottom: .5rem;
-}
-
-.api-card__subtitle::after {
-  content: "";
-  display: block;
-  height: 1px;
-  width: 72px;
-  margin: .75rem auto 0;
-  background: rgba(0, 108, 163, .25);
-}
-
-/* -------------------------------------------------------------
-   SciPy-style grid cards for API landing page
-------------------------------------------------------------- */
-.api-grid-card {
-  border: 1px solid rgba(15, 23, 42, 0.12);
-  border-radius: 0.85rem;
-  box-shadow: 0 10px 22px rgba(15, 23, 42, 0.08);
-  overflow: hidden;
-}
-
-.api-grid-card__header {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.85rem;
-  padding: 1.75rem 1.5rem 1.35rem;
-  background: var(--sd-color-surface, #ffffff);
-  border-bottom: 1px solid rgba(15, 23, 42, 0.08);
-}
-
-.api-grid-card__icon {
-  display: inline-flex;
-  width: 3.25rem;
-  height: 3.25rem;
-  border-radius: 999px;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.8rem;
-  color: var(--sd-color-primary, #5e5ef6);
-  background: rgba(94, 94, 246, 0.12);
-}
-
-.api-grid-card__title {
-  font-size: 1.25rem;
-  font-weight: 700;
-  margin: 0;
-}
-
-.api-grid-card__body {
-  padding: 1.6rem 1.85rem;
-  font-size: 1.05rem;
-  line-height: 1.65;
-  color: var(--pst-color-text, #1b1f24);
-}
-
-.api-grid-card__body p:last-child {
-  margin: 0;
-}
-
-.api-grid-card__footer {
-  padding: 1.3rem 1.6rem 1.6rem;
-  border-top: 1px solid rgba(15, 23, 42, 0.08);
-  background: var(--sd-color-surface, #ffffff);
-}
-
-.api-grid-card__button {
-  font-weight: 600;
-  font-size: 1rem;
-  padding: 0.75rem 1.75rem;
-}
-
-/* -------------------------------------------------------------
-   Tag styling shared across models + datasets tables
-------------------------------------------------------------- */
-.tag,
-.tag:link,
-.tag:visited,
-a.tag,
-a.tag:visited {
-  display: inline-block;
-  padding: 4px 10px;
-  margin: 2px 2px 2px 0;
-  border-radius: 9999px;
-  font-size: 0.85em;
-  font-weight: 600;
-  line-height: 1;
-  text-decoration: none;
-  border: 1px solid transparent;
-  background: #eef2f7;
-  color: #334155;
-  transition: box-shadow 0.15s ease, transform 0.15s ease;
-}
-
-.tag:hover,
-a.tag:hover {
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  transform: translateY(-1px);
-  text-decoration: none;
-}
-
-/* Categorization palette (models summary) */
-.tag-conv {
-  background: #22c55e !important;
-  color: #ffffff !important;
-  border-color: #16a34a !important;
-}
-
-.tag-recurrent {
-  background: #8b5cf6 !important;
-  color: #ffffff !important;
-  border-color: #7c3aed !important;
-}
-
-.tag-smallattn {
-  background: #3b82f6 !important;
-  color: #ffffff !important;
-  border-color: #2563eb !important;
-}
-
-.tag-filterbank {
-  background: #06b6d4 !important;
-  color: #073042 !important;
-  border-color: #0891b2 !important;
-}
-
-.tag-interp {
-  background: #f59e0b !important;
-  color: #1f2937 !important;
-  border-color: #d97706 !important;
-}
-
-.tag-spd {
-  background: #111827 !important;
-  color: #ffffff !important;
-  border-color: #0b1220 !important;
-}
-
-.tag-lbm {
-  background: #e11d48 !important;
-  color: #ffffff !important;
-  border-color: #be123c !important;
-}
-
-.tag-gnn {
-  background: #475569 !important;
-  color: #ffffff !important;
-  border-color: #334155 !important;
-}
-
-.tag-channel {
-  background: #64748b !important;
-  color: #ffffff !important;
-  border-color: #475569 !important;
-}
-
-/* Dataset table field palettes */
-.tag-kind-dataset-pathology {
-  background: #fee2e2;
-  color: #9f1239;
-  border-color: #fecaca;
-}
-
-.tag-pathology-generic {
-  background: #fecdd3;
-  color: #881337;
-  border-color: #fca5a5;
-}
-
-.tag-pathology-healthy {
-  background: #dcfce7;
-  color: #166534;
-  border-color: #86efac;
-}
-
-.tag-pathology-clinical {
-  background: #fee2e2;
-  color: #9f1239;
-  border-color: #fecaca;
-}
-
-.tag-pathology-neurodevelopmental {
-  background: #fae8ff;
-  color: #6b21a8;
-  border-color: #e9d5ff;
-}
-
-.tag-pathology-neurological {
-  background: #fef3c7;
-  color: #92400e;
-  border-color: #fcd34d;
-}
-
-.tag-pathology-sleep {
-  background: #ede9fe;
-  color: #4c1d95;
-  border-color: #c4b5fd;
-}
-
-.tag-kind-dataset-modality {
-  background: #e0f2fe;
-  color: #1d4ed8;
-  border-color: #93c5fd;
-}
-
-.tag-modality-generic {
-  background: #cffafe;
-  color: #0f172a;
-  border-color: #67e8f9;
-}
-
-.tag-modality-visual {
-  background: #bfdbfe;
-  color: #1e3a8a;
-  border-color: #60a5fa;
-}
-
-.tag-modality-auditory {
-  background: #bae6fd;
-  color: #0f172a;
-  border-color: #38bdf8;
-}
-
-.tag-modality-somatosensory {
-  background: #d1fae5;
-  color: #0f766e;
-  border-color: #6ee7b7;
-}
-
-.tag-modality-multisensory {
-  background: #fce7f3;
-  color: #9d174d;
-  border-color: #f9a8d4;
-}
-
-.tag-modality-motor {
-  background: #fef9c3;
-  color: #92400e;
-  border-color: #fde68a;
-}
-
-.tag-modality-rest {
-  background: #ede9fe;
-  color: #5b21b6;
-  border-color: #c4b5fd;
-}
-
-.tag-kind-dataset-type {
-  background: #f5f3ff;
-  color: #5b21b6;
-  border-color: #ddd6fe;
-}
-
-.tag-type-generic {
-  background: #ede9fe;
-  color: #5b21b6;
-  border-color: #c4b5fd;
-}
-
-.tag-type-perception {
-  background: #dbeafe;
-  color: #1d4ed8;
-  border-color: #60a5fa;
-}
-
-.tag-type-decision {
-  background: #fef3c7;
-  color: #92400e;
-  border-color: #fcd34d;
-}
-
-.tag-type-rest {
-  background: #dcfce7;
-  color: #166534;
-  border-color: #86efac;
-}
-
-.tag-type-sleep {
-  background: #ede9fe;
-  color: #4338ca;
-  border-color: #c4b5fd;
-}
-
-.tag-type-cognitive {
-  background: #e0e7ff;
-  color: #3730a3;
-  border-color: #c7d2fe;
-}
-
-.tag-type-clinical {
-  background: #fee2e2;
-  color: #991b1b;
-  border-color: #fecaca;
-}
-
-/* Dataset summary table layout tweaks */
-#datasets-table tbody td:nth-child(n + 2),
-#datasets-table tfoot td:nth-child(n + 2) {
-  text-align: right;
-}
-
-#datasets-table tbody td:first-child,
-#datasets-table tfoot td:first-child {
-  text-align: left;
-}
-
-#datasets-table tfoot td {
-  font-weight: 600;
-  border-top: 2px solid rgba(0, 0, 0, 0.2);
-  background: #f9fafb;
-  padding: 8px 10px !important;
-  vertical-align: middle;
-}
-
-/* Full-width treatment for dataset summary page */
-html.dataset-summary-page .bd-main .bd-content {
-  padding-left: clamp(0.5rem, 1.75vw, 1.25rem);
-  padding-right: clamp(0.5rem, 1.75vw, 1.25rem);
-}
-
-html.dataset-summary-page .bd-main .bd-content .bd-article-container {
-  max-width: min(1760px, calc(100vw - 1.5rem)) !important;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-@media (max-width: 992px) {
-  html.dataset-summary-page .bd-article-container {
-    max-width: 100%;
-  }
 }
 
 /* Inline reading time badge for tutorials */
@@ -823,4 +460,157 @@ html[data-theme="dark"] .eegdash-reading-time {
 
 html[data-theme="dark"] .eegdash-reading-time__value {
   color: var(--pst-color-text, #f9fafb);
+}
+
+/* --------------------------------------------------------------------------
+   11. Dataset Summary Page Enhancements
+   -------------------------------------------------------------------------- */
+
+/* Prevent table overflow */
+.dataset-summary-page .bd-content {
+  overflow-x: auto;
+  font-size: 0.95rem;
+  /* Slight compacting for dense data */
+}
+
+/* Ensure dataTable responsive scroll */
+#datasets-table-container,
+div.dataTables_wrapper {
+  width: 100%;
+  display: block;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Make sticky headers work */
+table.dataTable thead th {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  /* Ensure background is opaque so scrolling content doesn't show through */
+  background-color: var(--eegdash-primary) !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Tabs Styling - Make them pop */
+.sd-tab-set>input:checked+label {
+  border-color: var(--eegdash-primary) !important;
+  color: var(--eegdash-primary) !important;
+  background-color: rgba(0, 108, 163, 0.05);
+  font-weight: 700 !important;
+}
+
+.sd-tab-set>label {
+  font-family: var(--pst-font-family-heading);
+  font-weight: 600;
+  padding: 0.75rem 1.25rem;
+  transition: all 0.2s ease;
+  border-radius: 6px 6px 0 0;
+}
+
+.sd-tab-set>label:hover {
+  color: var(--eegdash-primary-dark);
+  background-color: rgba(0, 0, 0, 0.02);
+}
+
+/* Charts sizing constraints */
+.plotly-graph-div {
+  width: 100% !important;
+  min-height: 550px;
+  margin-bottom: 2rem;
+}
+
+/* Ensure Back-top button doesn't cover data */
+.pst-back-to-top {
+  z-index: 900;
+  transform: scale(0.9);
+}
+
+/* Fix for any oversized icons in headers if user report was about SVG */
+.dataset-counter-svg {
+  max-width: 3rem;
+  max-height: 3rem;
+  width: auto;
+  height: auto;
+}
+
+/* --------------------------------------------------------------------------
+   12. Homepage Overhaul (MOABB Style)
+   -------------------------------------------------------------------------- */
+
+.eegdash-badges img {
+  margin: 0 4px 6px;
+  height: 24px;
+}
+
+.eegdash-hero-subtitle {
+  font-family: var(--pst-font-family-heading);
+  font-size: 1.5rem;
+  color: var(--pst-color-text-muted);
+  margin-bottom: 2rem;
+  font-weight: 300;
+}
+
+.feature-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: none !important;
+  background: var(--pst-color-surface);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
+}
+
+.feature-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+}
+
+/* --------------------------------------------------------------------------
+   13. Dataset Summary Tweaks
+   -------------------------------------------------------------------------- */
+
+/* Maximize width for dataset summary */
+.dataset-summary-page .bd-container {
+  max-width: 95% !important;
+}
+
+.dataset-summary-page .bd-sidebar-primary,
+.dataset-summary-page .bd-sidebar-secondary {
+  display: none !important;
+  /* Force hide sidebars to ensure full width */
+}
+
+/* Bigger Stats Cards */
+.dataset-counter-card {
+  padding: 2rem !important;
+}
+
+.dataset-counter-card .sd-card-text {
+  font-size: 1.25rem;
+}
+
+.dataset-counter-card strong {
+  font-size: 2.5rem;
+  /* Massive numbers */
+  color: var(--eegdash-primary);
+  display: block;
+  margin-top: 0.5rem;
+}
+
+/* --------------------------------------------------------------------------
+   14. Homepage Specifics
+   -------------------------------------------------------------------------- */
+/* Reduce lateral white space on homepage */
+body[data-page="index"] .bd-container,
+.bd-page-index .bd-container {
+  max-width: 95% !important;
+}
+
+body[data-page="index"] .bd-article-container,
+.bd-page-index .bd-article-container {
+  max-width: 100% !important;
+}
+
+/* Larger icons in feature grid */
+.feature-card .sd-octicon {
+  font-size: 4rem !important;
+  /* Increase from default/3em */
 }

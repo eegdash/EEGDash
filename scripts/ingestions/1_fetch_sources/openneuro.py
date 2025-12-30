@@ -49,6 +49,7 @@ query($id: ID!) {
       grantFunderName
       grantIdentifier
       openneuroPaperDOI
+      openneuroPaperDOI
       seniorAuthor
       adminUsers
       affirmedDefaced
@@ -171,16 +172,26 @@ def fetch_batch_details(
         if not response or not isinstance(data, dict):
             print("  Error in batch query: no data")
             return result
-        if "errors" in data or "data" not in data:
-            print(f"  Error in batch query: {data.get('errors', 'no data')}")
+        if "errors" in data:
+            print(f"  Error in batch query: {data.get('errors')}")
+            # If we return here, we lose data? But usually errors means query failed?
+            # Partial errors?
+            # If partial errors, data might still be present.
+            # But let's see.
+
+        response_data = data.get("data")
+        if not response_data:
+            print(f"  No data field in response. Keys: {data.keys()}")
             return result
 
-        response_data = data["data"]
+        # print(f"DEBUG: Response keys: {response_data.keys()}")
 
         for i, dataset_id in enumerate(dataset_ids):
             alias = f"ds{i}"
             if alias in response_data and response_data[alias]:
                 result[dataset_id] = response_data[alias]
+            else:
+                print(f"DEBUG: {alias} not found or null for {dataset_id}")
     except Exception as e:
         print(f"  Error fetching batch details: {str(e)[:100]}")
 
@@ -227,6 +238,9 @@ def extract_dataset_metadata(raw: dict, modality: str) -> Dataset:
         grant_info = f"{grant_funder}: {grant_id}" if grant_id else grant_funder
         funding_list = funding_list + [grant_info]
 
+    # Extract senior author
+    senior_author = metadata.get("seniorAuthor")
+
     return create_dataset(
         dataset_id=dataset_id,
         name=description.get("Name") or raw.get("name"),
@@ -253,7 +267,10 @@ def extract_dataset_metadata(raw: dict, modality: str) -> Dataset:
         ages=ages_int,
         species=metadata.get("species"),
         source_url=openneuro_url,
+        dataset_created_at=raw.get("created") or metadata.get("created"),
         dataset_modified_at=snapshot.get("created"),
+        senior_author=senior_author,
+        contact_info=metadata.get("adminUsers"),
     )
 
 
@@ -345,28 +362,33 @@ def fetch_datasets_with_details(
     timeout: float = 30.0,
     batch_size: int = 10,
     limit: int | None = None,
+    dataset_ids: list[str] | None = None,
 ) -> list[dict]:
     """Fetch all OpenNeuro datasets with full metadata."""
     # First, collect all dataset IDs
     print("Phase 1: Discovering datasets...")
     dataset_modalities = {}
-    for dataset_id, modality in fetch_dataset_ids(page_size=page_size, timeout=timeout):
-        # Track modality (prefer more specific: ieeg > eeg > meg)
-        if dataset_id not in dataset_modalities:
-            dataset_modalities[dataset_id] = modality
+    for did, modality in fetch_dataset_ids(page_size=page_size, timeout=timeout):
+        # Filter specific IDs if requested
+        if dataset_ids and did not in dataset_ids:
+            continue
 
-    dataset_ids = list(dataset_modalities.keys())
+        # Track modality (prefer more specific: ieeg > eeg > meg)
+        if did not in dataset_modalities:
+            dataset_modalities[did] = modality
+
+    found_ids = list(dataset_modalities.keys())
     if limit:
-        dataset_ids = dataset_ids[:limit]
-    print(f"\nFound {len(dataset_ids)} unique datasets (limit: {limit})")
+        found_ids = found_ids[:limit]
+    print(f"\nFound {len(found_ids)} unique datasets (limit: {limit})")
 
     # Then fetch full details in batches
     print(f"\nPhase 2: Fetching full metadata (batch size: {batch_size})...")
     datasets = []
 
-    for batch_start in range(0, len(dataset_ids), batch_size):
-        batch_end = min(batch_start + batch_size, len(dataset_ids))
-        batch_ids = dataset_ids[batch_start:batch_end]
+    for batch_start in range(0, len(found_ids), batch_size):
+        batch_end = min(batch_start + batch_size, len(found_ids))
+        batch_ids = found_ids[batch_start:batch_end]
 
         details = fetch_batch_details(batch_ids, timeout=timeout)
 
@@ -424,6 +446,11 @@ def main() -> None:
         type=int,
         help="Maximum number of datasets to fetch (default: all)",
     )
+    parser.add_argument(
+        "--dataset-ids",
+        nargs="+",
+        help="List of specific dataset IDs to fetch (e.g. ds004504)",
+    )
     args = parser.parse_args()
 
     if args.minimal:
@@ -443,6 +470,7 @@ def main() -> None:
             timeout=args.timeout,
             batch_size=args.batch_size,
             limit=args.limit,
+            dataset_ids=args.dataset_ids,
         )
 
         # Add digested_at timestamp if provided

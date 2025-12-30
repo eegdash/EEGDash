@@ -130,6 +130,7 @@ def extract_dataset_metadata(
     dataset_id: str,
     source: str,
     digested_at: str,
+    metadata: dict | None = None,
 ) -> dict[str, Any]:
     """Extract Dataset-level metadata from a BIDS dataset.
 
@@ -143,6 +144,8 @@ def extract_dataset_metadata(
         Source name (openneuro, nemar, etc.)
     digested_at : str
         ISO 8601 timestamp
+    metadata : dict | None
+        Optional metadata from source (e.g. from GraphQL/API)
 
     Returns
     -------
@@ -151,6 +154,7 @@ def extract_dataset_metadata(
 
     """
     bids_root = Path(bids_dataset.bidsdir)
+    metadata = metadata or {}
 
     # Read dataset_description.json
     description = {}
@@ -168,7 +172,11 @@ def extract_dataset_metadata(
         readme_path = bids_root / readme_name
         if readme_path.exists():
             try:
-                readme = readme_path.read_text(encoding="utf-8")
+                raw_readme = readme_path.read_text(encoding="utf-8")
+                # Clean up readme: strip lines and join
+                readme = "\n".join(
+                    [line.rstrip() for line in raw_readme.splitlines() if line.strip()]
+                )
                 break
             except Exception:
                 pass
@@ -313,6 +321,19 @@ def extract_dataset_metadata(
     elif source == "gin":
         source_url = f"https://gin.g-node.org/EEGManyLabs/{dataset_id}"
 
+    # Extract timestamps from metadata if available
+    dataset_created_at = metadata.get("dataset_created_at")
+    dataset_modified_at = metadata.get("dataset_modified_at")
+    senior_author = metadata.get("senior_author")
+    contact_info = metadata.get("contact_info")
+
+    if not dataset_modified_at:
+        # Try to get from manifest timestamps dict if present
+        ts = metadata.get("timestamps", {})
+        if isinstance(ts, dict):
+            dataset_modified_at = ts.get("dataset_modified_at")
+            dataset_created_at = ts.get("dataset_created_at") or dataset_created_at
+
     # Create Dataset document
     dataset = create_dataset(
         dataset_id=dataset_id,
@@ -339,6 +360,10 @@ def extract_dataset_metadata(
         else None,
         source_url=source_url,
         digested_at=digested_at,
+        dataset_created_at=dataset_created_at,
+        dataset_modified_at=dataset_modified_at,
+        senior_author=senior_author,
+        contact_info=contact_info,
     )
 
     return dict(dataset)
@@ -1461,10 +1486,18 @@ def digest_dataset(
             "reason": "no neurophysiology files found",
         }
 
+    manifest_data = None
+    if has_manifest:
+        try:
+            with open(manifest_path) as f:
+                manifest_data = json.load(f)
+        except Exception:
+            pass
+
     # Extract Dataset metadata
     try:
         dataset_meta = extract_dataset_metadata(
-            bids_dataset, dataset_id, source, digested_at
+            bids_dataset, dataset_id, source, digested_at, metadata=manifest_data
         )
     except Exception as e:
         dataset_meta = {

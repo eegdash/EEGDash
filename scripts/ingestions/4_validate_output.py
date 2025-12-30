@@ -325,8 +325,11 @@ def validate_digestion_output(
                 has_zip_placeholder = False
                 for idx, record in enumerate(records):
                     validate_record(record, dataset_id, source, result, idx)
-                    mod = record.get("recording_modality", "unknown")
-                    modalities[mod] += 1
+                    mods = record.get("recording_modality", ["unknown"])
+                    if isinstance(mods, str):
+                        mods = [mods]
+                    for mod in mods:
+                        modalities[mod] += 1
 
                     # Track ZIP placeholders
                     if record.get("needs_extraction") or record.get(

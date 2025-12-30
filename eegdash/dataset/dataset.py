@@ -680,6 +680,7 @@ registered_classes = register_openneuro_datasets(
     summary_file=Path(__file__).with_name("dataset_summary.csv"),
     base_class=EEGDashDataset,
     namespace=globals(),
+    from_api=True,
 )
 
 

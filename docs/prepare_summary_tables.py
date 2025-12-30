@@ -1,5 +1,6 @@
 import glob
 import json
+import os
 import textwrap
 import urllib.request
 from argparse import ArgumentParser
@@ -35,6 +36,50 @@ def wrap_dataset_name(name: str):
     if not url:
         return name.upper()
     return f'<a href="{url}">{name.upper()}</a>'
+
+    return f'<a href="{url}">{name.upper()}</a>'
+
+
+# Datasets to explicitly ignore (synced with rules in 3_digest.py)
+EXCLUDED_DATASETS = {
+    "ABUDUKADI",
+    "ABUDUKADI_2",
+    "ABUDUKADI_3",
+    "ABUDUKADI_4",
+    "AILIJIANG",
+    "AILIJIANG_3",
+    "AILIJIANG_4",
+    "AILIJIANG_5",
+    "AILIJIANG_7",
+    "AILIJIANG_8",
+    "BAIHETI",
+    "BAIHETI_2",
+    "BAIHETI_3",
+    "BIAN_3",
+    "BIN_27",
+    "BLIX",
+    "BOJIN",
+    "BOUSSAGOL",
+    "AISHENG",
+    "ACHOLA",
+    "ANASHKIN",
+    "ANJUM",
+    "BARBIERI",
+    "BIN_8",
+    "BIN_9",
+    "BING_4",
+    "BING_8",
+    "BOWEN_4",
+    "AZIZAH",
+    "BAO",
+    "BAO-YOU",
+    "BAO_2",
+    "BENABBOU",
+    "BING",
+    "BOXIN",
+    "test",
+    "ds003380",
+}
 
 
 DATASET_CANONICAL_MAP = {
@@ -582,8 +627,8 @@ def fetch_datasets_from_api(
                 f"Total subjects: {totals.get('subjects', '?')}, Total files: {totals.get('files', '?')}"
             )
 
-        # Check if we got all datasets
-        if len(datasets) < limit or len(all_datasets) >= total:
+        # Check if we got all datasets or reached the limit
+        if len(datasets) < limit or len(all_datasets) >= limit:
             break
 
         skip += limit
@@ -593,8 +638,12 @@ def fetch_datasets_from_api(
     # Convert API response to DataFrame with expected columns
     rows = []
     for ds in datasets:
-        # Skip test datasets
-        if ds.get("dataset_id", "").lower() in ("test", "test_dataset"):
+        ds_id = ds.get("dataset_id", "").strip()
+        # Skip test datasets and excluded ones
+        if (
+            ds_id.lower() in ("test", "test_dataset")
+            or ds_id.upper() in EXCLUDED_DATASETS
+        ):
             continue
 
         row = {
@@ -625,14 +674,14 @@ def fetch_datasets_from_api(
     return df
 
 
-def main_from_api(target_dir: str, database: str = DEFAULT_DATABASE):
+def main_from_api(target_dir: str, database: str = DEFAULT_DATABASE, limit: int = 1000):
     """Generate summary tables from API data."""
     target_dir = Path(target_dir)
     target_dir.mkdir(parents=True, exist_ok=True)
     STATIC_DATASET_DIR.mkdir(parents=True, exist_ok=True)
 
     print(f"Fetching data from API (database: {database})...")
-    df_raw = fetch_datasets_from_api(database)
+    df_raw = fetch_datasets_from_api(database, limit=limit)
 
     if df_raw.empty:
         print("No datasets fetched from API!")
@@ -790,6 +839,8 @@ if __name__ == "__main__":
         main(args.source_dir, args.target_dir)
     else:
         # Default: fetch from API
-        main_from_api(args.target_dir, args.database)
+        # Default: fetch from API
+        limit = int(os.environ.get("EEGDASH_DOC_LIMIT", 1000))
+        main_from_api(args.target_dir, args.database, limit=limit)
 
     print(f"Output directory: {args.target_dir}")

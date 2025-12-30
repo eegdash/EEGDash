@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import json
+import urllib.request
 from pathlib import Path
 from typing import Any, Dict
 
@@ -8,17 +10,20 @@ from tabulate import tabulate
 
 
 def register_openneuro_datasets(
-    summary_file: str | Path,
+    summary_file: str | Path | None = None,
     *,
     base_class=None,
     namespace: Dict[str, Any] | None = None,
     add_to_all: bool = True,
+    from_api: bool = False,
+    api_url: str = "https://data.eegdash.org/api",
+    database: str = "eegdash",
 ) -> Dict[str, type]:
-    """Dynamically create and register dataset classes from a summary file.
+    """Dynamically create and register dataset classes from a summary file or API.
 
-    This function reads a CSV file containing summaries of OpenNeuro datasets
-    and dynamically creates a Python class for each dataset. These classes
-    inherit from a specified base class and are pre-configured with the
+    This function reads a CSV file or queries the API containing summaries of
+    datasets and dynamically creates a Python class for each dataset. These
+    classes inherit from a specified base class and are pre-configured with the
     dataset's ID.
 
     Parameters
@@ -46,12 +51,23 @@ def register_openneuro_datasets(
     if base_class is None:
         from ..api import EEGDashDataset as base_class  # lazy import
 
-    summary_path = Path(summary_file)
     namespace = namespace if namespace is not None else globals()
     module_name = namespace.get("__name__", __name__)
     registered: Dict[str, type] = {}
 
-    df = pd.read_csv(summary_path, comment="#", skip_blank_lines=True)
+    df = pd.DataFrame()
+    if from_api:
+        try:
+            df = _fetch_datasets_from_api(api_url, database)
+        except Exception:
+            # Fallback to CSV if API fails, or empty if no CSV provided
+            pass
+
+    if df.empty and summary_file:
+        summary_path = Path(summary_file)
+        if summary_path.exists():
+            df = pd.read_csv(summary_path, comment="#", skip_blank_lines=True)
+
     for _, row_series in df.iterrows():
         # Use the explicit 'dataset' column, not the CSV index.
         dataset_id = str(row_series.get("dataset", "")).strip()
@@ -285,3 +301,91 @@ def _markdown_table(row_series: pd.Series) -> str:
     # Indent the table to fit within the admonition block
     indented_table = "\n".join("    " + line for line in table.split("\n"))
     return f"\n\n{indented_table}\n\n{caption}"
+
+
+# Datasets to explicitly ignore (synced with rules in 3_digest.py)
+EXCLUDED_DATASETS = {
+    "ABUDUKADI",
+    "ABUDUKADI_2",
+    "ABUDUKADI_3",
+    "ABUDUKADI_4",
+    "AILIJIANG",
+    "AILIJIANG_3",
+    "AILIJIANG_4",
+    "AILIJIANG_5",
+    "AILIJIANG_7",
+    "AILIJIANG_8",
+    "BAIHETI",
+    "BAIHETI_2",
+    "BAIHETI_3",
+    "BIAN_3",
+    "BIN_27",
+    "BLIX",
+    "BOJIN",
+    "BOUSSAGOL",
+    "AISHENG",
+    "ACHOLA",
+    "ANASHKIN",
+    "ANJUM",
+    "BARBIERI",
+    "BIN_8",
+    "BIN_9",
+    "BING_4",
+    "BING_8",
+    "BOWEN_4",
+    "AZIZAH",
+    "BAO",
+    "BAO-YOU",
+    "BAO_2",
+    "BENABBOU",
+    "BING",
+    "BOXIN",
+    "test",
+    "ds003380",
+}
+
+
+def _fetch_datasets_from_api(api_url: str, database: str) -> pd.DataFrame:
+    """Fetch dataset summaries from API and return as DataFrame matching CSV structure."""
+    import os
+
+    limit = int(os.environ.get("EEGDASH_DOC_LIMIT", 1000))
+    url = f"{api_url}/{database}/datasets/summary?limit={limit}"
+    try:
+        with urllib.request.urlopen(url, timeout=10) as response:
+            data = json.loads(response.read().decode("utf-8"))
+    except Exception:
+        return pd.DataFrame()
+
+    if not data.get("success"):
+        return pd.DataFrame()
+
+    datasets = data.get("data", [])
+    rows = []
+    for ds in datasets:
+        ds_id = ds.get("dataset_id", "").strip()
+        # Filter test datasets and excluded ones
+        if (
+            ds_id.lower() in ("test", "test_dataset")
+            or ds_id.upper() in EXCLUDED_DATASETS
+        ):
+            continue
+
+        meta = ds.get("metadata", {})
+        # Map API fields to expected CSV columns
+        row = {
+            "dataset": ds.get("dataset_id"),
+            "n_subjects": meta.get("subject_count", 0),
+            "n_records": ds.get("record_count", 0),
+            "n_tasks": len(meta.get("tasks", [])),
+            "modality of exp": ", ".join(meta.get("recording_modalities", []) or []),
+            "type of exp": meta.get("type", "Unknown"),
+            "Type Subject": meta.get("pathology", "Unknown"),
+            "duration_hours_total": round(meta.get("duration_hours_total", 0) or 0, 2),
+            "size": ds.get("size_human", "Unknown"),
+            # internal/extra fields
+            "source": ds.get("source", "unknown"),
+        }
+        rows.append(row)
+
+    return pd.DataFrame(rows)

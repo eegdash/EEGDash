@@ -334,6 +334,9 @@ def extract_dataset_metadata(
             dataset_modified_at = ts.get("dataset_modified_at")
             dataset_created_at = ts.get("dataset_created_at") or dataset_created_at
 
+    # Extract size_bytes
+    size_bytes = metadata.get("size_bytes")
+
     # Create Dataset document
     dataset = create_dataset(
         dataset_id=dataset_id,
@@ -350,6 +353,7 @@ def extract_dataset_metadata(
         tasks=sorted(tasks),
         sessions=sorted(sessions),
         total_files=len(files),
+        size_bytes=size_bytes,
         data_processed=data_processed,
         subjects_count=subjects_count,
         ages=ages,

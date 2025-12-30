@@ -52,3 +52,4 @@ tags
 test_diggestion/
 tests/.testeegdash/
 tests/data/
+ingestions/

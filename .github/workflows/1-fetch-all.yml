@@ -15,12 +15,12 @@ on:
           - all
           - openneuro
           - nemar
-          - eegmanylabs
-          - zenodo
-          - figshare
-          - osf
-          - scidb
-          - datarn
+          # - eegmanylabs
+          # - zenodo
+          # - figshare
+          # - osf
+          # - scidb
+          # - datarn
 
 jobs:
   # Trigger individual source workflows
@@ -34,39 +34,39 @@ jobs:
     uses: ./.github/workflows/1-fetch-nemar.yml
     secrets: inherit
 
-  eegmanylabs:
-    if: github.event.inputs.sources == 'all' || github.event.inputs.sources == 'eegmanylabs' || github.event_name == 'schedule'
-    uses: ./.github/workflows/1-fetch-eegmanylabs.yml
-    secrets: inherit
-
-  zenodo:
-    if: github.event.inputs.sources == 'all' || github.event.inputs.sources == 'zenodo' || github.event_name == 'schedule'
-    uses: ./.github/workflows/1-fetch-zenodo.yml
-    secrets: inherit
-
-  figshare:
-    if: github.event.inputs.sources == 'all' || github.event.inputs.sources == 'figshare' || github.event_name == 'schedule'
-    uses: ./.github/workflows/1-fetch-figshare.yml
-    secrets: inherit
-
-  osf:
-    if: github.event.inputs.sources == 'all' || github.event.inputs.sources == 'osf' || github.event_name == 'schedule'
-    uses: ./.github/workflows/1-fetch-osf.yml
-    secrets: inherit
-
-  scidb:
-    if: github.event.inputs.sources == 'all' || github.event.inputs.sources == 'scidb' || github.event_name == 'schedule'
-    uses: ./.github/workflows/1-fetch-scidb.yml
-    secrets: inherit
-
-  datarn:
-    if: github.event.inputs.sources == 'all' || github.event.inputs.sources == 'datarn' || github.event_name == 'schedule'
-    uses: ./.github/workflows/1-fetch-datarn.yml
-    secrets: inherit
+  # eegmanylabs:
+  #   if: github.event.inputs.sources == 'all' || github.event.inputs.sources == 'eegmanylabs' || github.event_name == 'schedule'
+  #   uses: ./.github/workflows/1-fetch-eegmanylabs.yml
+  #   secrets: inherit
+  #
+  # zenodo:
+  #   if: github.event.inputs.sources == 'all' || github.event.inputs.sources == 'zenodo' || github.event_name == 'schedule'
+  #   uses: ./.github/workflows/1-fetch-zenodo.yml
+  #   secrets: inherit
+  #
+  # figshare:
+  #   if: github.event.inputs.sources == 'all' || github.event.inputs.sources == 'figshare' || github.event_name == 'schedule'
+  #   uses: ./.github/workflows/1-fetch-figshare.yml
+  #   secrets: inherit
+  #
+  # osf:
+  #   if: github.event.inputs.sources == 'all' || github.event.inputs.sources == 'osf' || github.event_name == 'schedule'
+  #   uses: ./.github/workflows/1-fetch-osf.yml
+  #   secrets: inherit
+  #
+  # scidb:
+  #   if: github.event.inputs.sources == 'all' || github.event.inputs.sources == 'scidb' || github.event_name == 'schedule'
+  #   uses: ./.github/workflows/1-fetch-scidb.yml
+  #   secrets: inherit
+  #
+  # datarn:
+  #   if: github.event.inputs.sources == 'all' || github.event.inputs.sources == 'datarn' || github.event_name == 'schedule'
+  #   uses: ./.github/workflows/1-fetch-datarn.yml
+  #   secrets: inherit
 
   summary:
     name: Summary
-    needs: [openneuro, nemar, eegmanylabs, zenodo, figshare, osf, scidb, datarn]
+    needs: [openneuro, nemar]
     if: always()
     runs-on: ubuntu-latest
     steps:
@@ -78,9 +78,9 @@ jobs:
           echo "|--------|--------|" >> $GITHUB_STEP_SUMMARY
           echo "| OpenNeuro | ${{ needs.openneuro.result || 'skipped' }} |" >> $GITHUB_STEP_SUMMARY
           echo "| NEMAR | ${{ needs.nemar.result || 'skipped' }} |" >> $GITHUB_STEP_SUMMARY
-          echo "| EEGManyLabs | ${{ needs.eegmanylabs.result || 'skipped' }} |" >> $GITHUB_STEP_SUMMARY
-          echo "| Zenodo | ${{ needs.zenodo.result || 'skipped' }} |" >> $GITHUB_STEP_SUMMARY
-          echo "| Figshare | ${{ needs.figshare.result || 'skipped' }} |" >> $GITHUB_STEP_SUMMARY
-          echo "| OSF | ${{ needs.osf.result || 'skipped' }} |" >> $GITHUB_STEP_SUMMARY
-          echo "| SciDB | ${{ needs.scidb.result || 'skipped' }} |" >> $GITHUB_STEP_SUMMARY
-          echo "| data.ru.nl | ${{ needs.datarn.result || 'skipped' }} |" >> $GITHUB_STEP_SUMMARY
+          # echo "| EEGManyLabs | ${{ needs.eegmanylabs.result || 'skipped' }} |" >> $GITHUB_STEP_SUMMARY
+          # echo "| Zenodo | ${{ needs.zenodo.result || 'skipped' }} |" >> $GITHUB_STEP_SUMMARY
+          # echo "| Figshare | ${{ needs.figshare.result || 'skipped' }} |" >> $GITHUB_STEP_SUMMARY
+          # echo "| OSF | ${{ needs.osf.result || 'skipped' }} |" >> $GITHUB_STEP_SUMMARY
+          # echo "| SciDB | ${{ needs.scidb.result || 'skipped' }} |" >> $GITHUB_STEP_SUMMARY
+          # echo "| data.ru.nl | ${{ needs.datarn.result || 'skipped' }} |" >> $GITHUB_STEP_SUMMARY

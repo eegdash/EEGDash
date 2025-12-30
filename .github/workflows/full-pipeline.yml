@@ -13,12 +13,12 @@ on:
           - all
           - openneuro
           - nemar
-          - eegmanylabs
-          - zenodo
-          - figshare
-          - osf
-          - scidb
-          - datarn
+          # - eegmanylabs
+          # - zenodo
+          # - figshare
+          # - osf
+          # - scidb
+          # - datarn
       database:
         description: 'Target database for injection'
         required: true
@@ -53,35 +53,35 @@ jobs:
     uses: ./.github/workflows/1-fetch-nemar.yml
     secrets: inherit
 
-  fetch-eegmanylabs:
-    if: ${{ github.event.inputs.sources == 'all' || github.event.inputs.sources == 'eegmanylabs' }}
-    uses: ./.github/workflows/1-fetch-eegmanylabs.yml
-    secrets: inherit
-
-  fetch-zenodo:
-    if: ${{ github.event.inputs.sources == 'all' || github.event.inputs.sources == 'zenodo' }}
-    uses: ./.github/workflows/1-fetch-zenodo.yml
-    secrets: inherit
-
-  fetch-figshare:
-    if: ${{ github.event.inputs.sources == 'all' || github.event.inputs.sources == 'figshare' }}
-    uses: ./.github/workflows/1-fetch-figshare.yml
-    secrets: inherit
-
-  fetch-osf:
-    if: ${{ github.event.inputs.sources == 'all' || github.event.inputs.sources == 'osf' }}
-    uses: ./.github/workflows/1-fetch-osf.yml
-    secrets: inherit
-
-  fetch-scidb:
-    if: ${{ github.event.inputs.sources == 'all' || github.event.inputs.sources == 'scidb' }}
-    uses: ./.github/workflows/1-fetch-scidb.yml
-    secrets: inherit
-
-  fetch-datarn:
-    if: ${{ github.event.inputs.sources == 'all' || github.event.inputs.sources == 'datarn' }}
-    uses: ./.github/workflows/1-fetch-datarn.yml
-    secrets: inherit
+  # fetch-eegmanylabs:
+  #   if: ${{ github.event.inputs.sources == 'all' || github.event.inputs.sources == 'eegmanylabs' }}
+  #   uses: ./.github/workflows/1-fetch-eegmanylabs.yml
+  #   secrets: inherit
+  #
+  # fetch-zenodo:
+  #   if: ${{ github.event.inputs.sources == 'all' || github.event.inputs.sources == 'zenodo' }}
+  #   uses: ./.github/workflows/1-fetch-zenodo.yml
+  #   secrets: inherit
+  #
+  # fetch-figshare:
+  #   if: ${{ github.event.inputs.sources == 'all' || github.event.inputs.sources == 'figshare' }}
+  #   uses: ./.github/workflows/1-fetch-figshare.yml
+  #   secrets: inherit
+  #
+  # fetch-osf:
+  #   if: ${{ github.event.inputs.sources == 'all' || github.event.inputs.sources == 'osf' }}
+  #   uses: ./.github/workflows/1-fetch-osf.yml
+  #   secrets: inherit
+  #
+  # fetch-scidb:
+  #   if: ${{ github.event.inputs.sources == 'all' || github.event.inputs.sources == 'scidb' }}
+  #   uses: ./.github/workflows/1-fetch-scidb.yml
+  #   secrets: inherit
+  #
+  # fetch-datarn:
+  #   if: ${{ github.event.inputs.sources == 'all' || github.event.inputs.sources == 'datarn' }}
+  #   uses: ./.github/workflows/1-fetch-datarn.yml
+  #   secrets: inherit
 
   # ============================================================================
   # Step 2: Clone & Digest (runs after fetch completes)
@@ -108,77 +108,77 @@ jobs:
     secrets:
       DATASET_LISTINGS_TOKEN: ${{ secrets.DATASET_LISTINGS_TOKEN }}
 
-  digest-eegmanylabs:
-    needs: [fetch-eegmanylabs]
-    if: ${{ always() && (github.event.inputs.sources == 'all' || github.event.inputs.sources == 'eegmanylabs') && needs.fetch-eegmanylabs.result == 'success' }}
-    uses: ./.github/workflows/2-clone-digest.yml
-    with:
-      source_name: "EEGManyLabs"
-      consolidated_file: "eegmanylabs_datasets.json"
-      max_datasets: ${{ fromJSON(github.event.inputs.max_datasets || '0') }}
-    secrets:
-      DATASET_LISTINGS_TOKEN: ${{ secrets.DATASET_LISTINGS_TOKEN }}
-
-  digest-zenodo:
-    needs: [fetch-zenodo]
-    if: ${{ always() && (github.event.inputs.sources == 'all' || github.event.inputs.sources == 'zenodo') && needs.fetch-zenodo.result == 'success' }}
-    uses: ./.github/workflows/2-clone-digest.yml
-    with:
-      source_name: "Zenodo"
-      consolidated_file: "zenodo_datasets.json"
-      max_datasets: ${{ fromJSON(github.event.inputs.max_datasets || '0') }}
-    secrets:
-      DATASET_LISTINGS_TOKEN: ${{ secrets.DATASET_LISTINGS_TOKEN }}
-
-  digest-figshare:
-    needs: [fetch-figshare]
-    if: ${{ always() && (github.event.inputs.sources == 'all' || github.event.inputs.sources == 'figshare') && needs.fetch-figshare.result == 'success' }}
-    uses: ./.github/workflows/2-clone-digest.yml
-    with:
-      source_name: "Figshare"
-      consolidated_file: "figshare_datasets.json"
-      max_datasets: ${{ fromJSON(github.event.inputs.max_datasets || '0') }}
-    secrets:
-      DATASET_LISTINGS_TOKEN: ${{ secrets.DATASET_LISTINGS_TOKEN }}
-
-  digest-osf:
-    needs: [fetch-osf]
-    if: ${{ always() && (github.event.inputs.sources == 'all' || github.event.inputs.sources == 'osf') && needs.fetch-osf.result == 'success' }}
-    uses: ./.github/workflows/2-clone-digest.yml
-    with:
-      source_name: "OSF"
-      consolidated_file: "osf_datasets.json"
-      max_datasets: ${{ fromJSON(github.event.inputs.max_datasets || '0') }}
-    secrets:
-      DATASET_LISTINGS_TOKEN: ${{ secrets.DATASET_LISTINGS_TOKEN }}
-
-  digest-scidb:
-    needs: [fetch-scidb]
-    if: ${{ always() && (github.event.inputs.sources == 'all' || github.event.inputs.sources == 'scidb') && needs.fetch-scidb.result == 'success' }}
-    uses: ./.github/workflows/2-clone-digest.yml
-    with:
-      source_name: "SciDB"
-      consolidated_file: "scidb_datasets.json"
-      max_datasets: ${{ fromJSON(github.event.inputs.max_datasets || '0') }}
-    secrets:
-      DATASET_LISTINGS_TOKEN: ${{ secrets.DATASET_LISTINGS_TOKEN }}
-
-  digest-datarn:
-    needs: [fetch-datarn]
-    if: ${{ always() && (github.event.inputs.sources == 'all' || github.event.inputs.sources == 'datarn') && needs.fetch-datarn.result == 'success' }}
-    uses: ./.github/workflows/2-clone-digest.yml
-    with:
-      source_name: "datarn"
-      consolidated_file: "datarn_datasets.json"
-      max_datasets: ${{ fromJSON(github.event.inputs.max_datasets || '0') }}
-    secrets:
-      DATASET_LISTINGS_TOKEN: ${{ secrets.DATASET_LISTINGS_TOKEN }}
+  # digest-eegmanylabs:
+  #   needs: [fetch-eegmanylabs]
+  #   if: ${{ always() && (github.event.inputs.sources == 'all' || github.event.inputs.sources == 'eegmanylabs') && needs.fetch-eegmanylabs.result == 'success' }}
+  #   uses: ./.github/workflows/2-clone-digest.yml
+  #   with:
+  #     source_name: "EEGManyLabs"
+  #     consolidated_file: "eegmanylabs_datasets.json"
+  #     max_datasets: ${{ fromJSON(github.event.inputs.max_datasets || '0') }}
+  #   secrets:
+  #     DATASET_LISTINGS_TOKEN: ${{ secrets.DATASET_LISTINGS_TOKEN }}
+  #
+  # digest-zenodo:
+  #   needs: [fetch-zenodo]
+  #   if: ${{ always() && (github.event.inputs.sources == 'all' || github.event.inputs.sources == 'zenodo') && needs.fetch-zenodo.result == 'success' }}
+  #   uses: ./.github/workflows/2-clone-digest.yml
+  #   with:
+  #     source_name: "Zenodo"
+  #     consolidated_file: "zenodo_datasets.json"
+  #     max_datasets: ${{ fromJSON(github.event.inputs.max_datasets || '0') }}
+  #   secrets:
+  #     DATASET_LISTINGS_TOKEN: ${{ secrets.DATASET_LISTINGS_TOKEN }}
+  #
+  # digest-figshare:
+  #   needs: [fetch-figshare]
+  #   if: ${{ always() && (github.event.inputs.sources == 'all' || github.event.inputs.sources == 'figshare') && needs.fetch-figshare.result == 'success' }}
+  #   uses: ./.github/workflows/2-clone-digest.yml
+  #   with:
+  #     source_name: "Figshare"
+  #     consolidated_file: "figshare_datasets.json"
+  #     max_datasets: ${{ fromJSON(github.event.inputs.max_datasets || '0') }}
+  #   secrets:
+  #     DATASET_LISTINGS_TOKEN: ${{ secrets.DATASET_LISTINGS_TOKEN }}
+  #
+  # digest-osf:
+  #   needs: [fetch-osf]
+  #   if: ${{ always() && (github.event.inputs.sources == 'all' || github.event.inputs.sources == 'osf') && needs.fetch-osf.result == 'success' }}
+  #   uses: ./.github/workflows/2-clone-digest.yml
+  #   with:
+  #     source_name: "OSF"
+  #     consolidated_file: "osf_datasets.json"
+  #     max_datasets: ${{ fromJSON(github.event.inputs.max_datasets || '0') }}
+  #   secrets:
+  #     DATASET_LISTINGS_TOKEN: ${{ secrets.DATASET_LISTINGS_TOKEN }}
+  #
+  # digest-scidb:
+  #   needs: [fetch-scidb]
+  #   if: ${{ always() && (github.event.inputs.sources == 'all' || github.event.inputs.sources == 'scidb') && needs.fetch-scidb.result == 'success' }}
+  #   uses: ./.github/workflows/2-clone-digest.yml
+  #   with:
+  #     source_name: "SciDB"
+  #     consolidated_file: "scidb_datasets.json"
+  #     max_datasets: ${{ fromJSON(github.event.inputs.max_datasets || '0') }}
+  #   secrets:
+  #     DATASET_LISTINGS_TOKEN: ${{ secrets.DATASET_LISTINGS_TOKEN }}
+  #
+  # digest-datarn:
+  #   needs: [fetch-datarn]
+  #   if: ${{ always() && (github.event.inputs.sources == 'all' || github.event.inputs.sources == 'datarn') && needs.fetch-datarn.result == 'success' }}
+  #   uses: ./.github/workflows/2-clone-digest.yml
+  #   with:
+  #     source_name: "datarn"
+  #     consolidated_file: "datarn_datasets.json"
+  #     max_datasets: ${{ fromJSON(github.event.inputs.max_datasets || '0') }}
+  #   secrets:
+  #     DATASET_LISTINGS_TOKEN: ${{ secrets.DATASET_LISTINGS_TOKEN }}
 
   # ============================================================================
   # Step 3: Inject to MongoDB (after all digests complete)
   # ============================================================================
   inject:
-    needs: [digest-openneuro, digest-nemar, digest-eegmanylabs, digest-zenodo, digest-figshare, digest-osf, digest-scidb, digest-datarn]
+    needs: [digest-openneuro, digest-nemar]
     if: always()
     uses: ./.github/workflows/3-inject.yml
     with:

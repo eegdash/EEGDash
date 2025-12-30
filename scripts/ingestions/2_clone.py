@@ -375,7 +375,7 @@ def fetch_hbn(dataset: dict, output_dir: Path, **_kwargs) -> dict:
     if not files:
         return {"status": "error", "dataset_id": dataset_id, "error": "No files found"}
 
-    manifest = build_manifest(dataset_id, "hbn", files, dataset)
+    manifest = build_manifest(dataset_id, dataset.get("source", "hbn"), files, dataset)
     save_manifest(manifest, output_dir)
 
     return {"status": "manifest", "dataset_id": dataset_id, "file_count": len(files)}
@@ -425,6 +425,9 @@ def process_dataset(
     # Use manifest-only handlers for git sources if requested
     if manifest_only and source in ("openneuro", "nemar", "gin"):
         handler = fetch_generic
+    elif dataset.get("local_path"):
+        # For local datasets (like NeurIPS2025), use the HBN/local handler
+        handler = fetch_hbn
     else:
         handler = HANDLERS.get(source, fetch_generic)
 

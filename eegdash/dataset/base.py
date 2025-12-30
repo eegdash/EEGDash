@@ -13,20 +13,17 @@ from pathlib import Path
 from typing import Any
 
 import mne_bids
-import mne_bids.read as _mb_read
 from mne.io import BaseRaw
 from mne_bids import BIDSPath
-from mne_bids.config import reader as _mne_bids_reader
 
 from braindecode.datasets.base import RawDataset
 
 from .. import downloader
-from ..bids_metadata import enrich_from_participants
 from ..logging import logger
 from ..records import validate_record
 
 
-class EEGDashBaseDataset(RawDataset):
+class EEGDashRaw(RawDataset):
     """A single EEG recording dataset.
 
     Represents a single EEG recording, typically hosted on a remote server (like AWS S3)
@@ -144,9 +141,6 @@ class EEGDashBaseDataset(RawDataset):
         if self._raw is None:
             try:
                 self._raw = self._load_raw()
-                enrich_from_participants(
-                    self.bids_root, self.bidspath, self._raw, self.description
-                )
             except Exception as e:
                 logger.error(
                     f"Error reading {self.bidspath}: {e}. Try `rm -rf {self.bids_root}`"
@@ -156,38 +150,7 @@ class EEGDashBaseDataset(RawDataset):
     def _load_raw(self) -> BaseRaw:
         """Load raw data, preferring MNE-BIDS if BIDSPath resolves."""
         # MNE-BIDS handles sidecars automatically
-        if self.bidspath.fpath.exists():
-            return mne_bids.read_raw_bids(bids_path=self.bidspath, verbose="ERROR")
-
-        # Fallback: direct read (for non-standard BIDS layouts)
-        read_func = _mne_bids_reader.get(self.filecache.suffix)
-        if read_func is None:
-            raise RuntimeError(f"No MNE-BIDS reader for: {self.filecache.suffix}")
-
-        raw = read_func(str(self.filecache), preload=False, verbose="ERROR")
-        self._apply_sidecars(raw)
-        return raw
-
-    def _apply_sidecars(self, raw: BaseRaw) -> None:
-        """Apply BIDS sidecar files (events.tsv, channels.tsv) to raw."""
-        raw_dir = self.filecache.parent
-        stem = self.filecache.stem
-        suffix = self.record.get("suffix") or "eeg"
-        base = stem.removesuffix(f"_{suffix}")
-
-        # Find and apply sidecar files
-        for sidecar, handler in [
-            ("events.tsv", _mb_read._handle_events_reading),
-            ("channels.tsv", _mb_read._handle_channels_reading),
-        ]:
-            for candidate in [f"{base}_{sidecar}", f"{stem}_{sidecar}", sidecar]:
-                path = raw_dir / candidate
-                if path.exists():
-                    try:
-                        handler(str(path), raw)
-                    except Exception:
-                        pass
-                    break
+        return mne_bids.read_raw_bids(bids_path=self.bidspath, verbose="ERROR")
 
     def __len__(self) -> int:
         """Return the number of samples in the dataset."""
@@ -234,4 +197,4 @@ class EEGDashBaseDataset(RawDataset):
         self._raw = raw
 
 
-__all__ = ["EEGDashBaseDataset"]
+__all__ = ["EEGDashRaw"]

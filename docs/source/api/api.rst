@@ -184,3 +184,4 @@ Related Guides
    api_core
    api_features
    dataset/api_dataset
+   ../developer_notes

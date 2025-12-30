@@ -154,7 +154,12 @@ html_theme_options = {
     ],
 }
 
-html_sidebars = {"api": [], "dataset_summary": [], "installation": []}
+html_sidebars = {
+    "index": [],  # Remove sidebars on homepage
+    "dataset_summary": [],
+    "api": [],
+    "installation": [],
+}
 
 # Copy extra files (e.g., robots.txt) to the output root
 html_extra_path = ["_extra"]

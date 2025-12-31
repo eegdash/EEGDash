@@ -11,8 +11,8 @@ def test_challenge_dataset_passes_task_and_dataset_filters(cache_dir: Path):
         task="RestingState",
     )
 
-    assert len(ds.datasets) == 329
-    assert ds.datasets[0].record["dataset"] == "ds005509"
+    assert len(ds.datasets) == 1317
+    assert ds.datasets[0].record["dataset"] == "EEG2025r5"
 
 
 def test_eegdashdataset_ignores_empty_query_when_kwargs_present(cache_dir: Path):

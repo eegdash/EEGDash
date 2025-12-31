@@ -46,6 +46,24 @@
     return value * factor;
   }
 
+  function escapeRegex(text) {
+    return String(text).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  }
+
+  function findColumnIndex($table, matcher) {
+    const headerCells = $table.find('thead th');
+    let index = null;
+    headerCells.each(function (i) {
+      const text = ($(this).text() || '').trim().toLowerCase();
+      if (matcher(text)) {
+        index = i;
+        return false;
+      }
+      return undefined;
+    });
+    return index;
+  }
+
   function ensureTotalRowInFoot($table) {
     const $tbody = $table.find('tbody');
     const $rows = $tbody.find('tr');
@@ -217,6 +235,38 @@
 
     initHeaderFilterShortcuts($table, dataTable, filterCols);
     applyTagPalette($table.closest('.dataTables_wrapper').get(0) || document);
+
+    const params = new URLSearchParams(window.location.search);
+    const query = params.get('q');
+    const modalities = params.getAll('modality').filter(Boolean);
+    const tasks = params.getAll('task').filter(Boolean);
+    let hasFilters = false;
+
+    if (query) {
+      dataTable.search(query);
+      hasFilters = true;
+    }
+
+    const modalityIndex = findColumnIndex($table, (text) => text === 'modality');
+    if (modalities.length && modalityIndex !== null) {
+      dataTable.column(modalityIndex).search(modalities.map(escapeRegex).join('|'), true, false);
+      hasFilters = true;
+    }
+
+    const typeIndex = findColumnIndex($table, (text) => text === 'type');
+    if (tasks.length) {
+      if (typeIndex !== null) {
+        dataTable.column(typeIndex).search(tasks.map(escapeRegex).join('|'), true, false);
+      } else {
+        const merged = [query, ...tasks].filter(Boolean).join(' ');
+        dataTable.search(merged);
+      }
+      hasFilters = true;
+    }
+
+    if (hasFilters) {
+      dataTable.draw();
+    }
   }
 
   function initialiseTables() {

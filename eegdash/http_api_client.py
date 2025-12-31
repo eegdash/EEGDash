@@ -12,7 +12,8 @@ from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 
 DEFAULT_API_URL = "https://data.eegdash.org"
-_RETRY = Retry(total=3, status_forcelist=[500, 502, 503, 504], backoff_factor=1)
+# Retry on 429 (Too Many Requests) and standard server errors
+_RETRY = Retry(total=5, status_forcelist=[429, 500, 502, 503, 504], backoff_factor=1.0)
 
 
 def _make_session(auth_token: str | None = None) -> requests.Session:
@@ -21,7 +22,13 @@ def _make_session(auth_token: str | None = None) -> requests.Session:
     session.mount("https://", HTTPAdapter(max_retries=_RETRY))
     session.mount("http://", HTTPAdapter(max_retries=_RETRY))
     if auth_token:
-        session.headers["Authorization"] = f"Bearer {auth_token}"
+        session.headers.update({"Authorization": f"Bearer {auth_token}"})
+
+    # Inject Admin Token for Rate Limit Bypass in tests/dev (without full auth)
+    admin_token_env = os.environ.get("EEGDASH_ADMIN_TOKEN")
+    if admin_token_env:
+        session.headers.update({"X-EEGDASH-TOKEN": admin_token_env})
+
     return session
 
 

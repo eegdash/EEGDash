@@ -53,7 +53,8 @@ def test_offline_real_data_end_to_end(cache_dir: Path):
 def test_offline_real_bidspath_and_cache_suffix(cache_dir: Path):
     """Verify bidspath root and local cache folder for real data (tutorial style)."""
     release = "R2"
-    dataset_id = RELEASE_TO_OPENNEURO_DATASET_MAP[release]
+    dataset_id = f"EEG2025r{release[1:]}mini"
+    # dataset_id = RELEASE_TO_OPENNEURO_DATASET_MAP[release]
 
     subject_id = "NDARAB793GL3"
     ds_offline = EEGChallengeDataset(
@@ -68,8 +69,8 @@ def test_offline_real_bidspath_and_cache_suffix(cache_dir: Path):
     # bidspath must start with dataset id (not suffixed cache folder)
     assert base.record["bidspath"].split("/")[0] == dataset_id
     # local BIDS root points to suffixed folder used by the challenge
-    assert (cache_dir / f"{dataset_id}-bdf-mini").exists()
-    assert base.bids_root == cache_dir / f"{dataset_id}-bdf-mini"
+    assert (cache_dir / dataset_id).exists()
+    assert base.bids_root == cache_dir / dataset_id
 
 
 def test_offline_real_records_description_shape(cache_dir: Path):

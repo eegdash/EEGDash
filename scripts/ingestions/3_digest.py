@@ -422,7 +422,27 @@ def extract_record(
     storage_base = get_storage_base(dataset_id, source)
     storage_backend = get_storage_backend(source)
 
-    # Find dependency files (channels.tsv, events.tsv, etc.)
+    # Extract technical metadata from BIDS sidecars via EEGBIDSDataset
+    sampling_frequency = bids_dataset.get_bids_file_attribute("sfreq", bids_file)
+    nchans = bids_dataset.get_bids_file_attribute("nchans", bids_file)
+    ntimes = bids_dataset.get_bids_file_attribute("ntimes", bids_file)
+
+    # Convert sfreq to float and nchans to int if found
+    if sampling_frequency:
+        sampling_frequency = float(sampling_frequency)
+    if nchans:
+        nchans = int(nchans)
+    if ntimes:
+        ntimes = int(ntimes)
+
+    # Extract channel names if channels.tsv exists
+    ch_names = None
+    try:
+        ch_names = bids_dataset.channel_labels(bids_file)
+    except Exception:
+        pass
+
+    # Find dependency files (channels.tsv, events.tsv, etc.) for storage manifest
     dep_keys = []
     bids_file_path = Path(bids_file)
     parent_dir = bids_file_path.parent
@@ -434,6 +454,7 @@ def extract_record(
         "_events.tsv",
         "_electrodes.tsv",
         "_coordsystem.json",
+        "_eeg.json",
     ]:
         dep_file = parent_dir / f"{base_name}{dep_suffix}"
         if dep_file.exists() or dep_file.is_symlink():
@@ -456,14 +477,49 @@ def extract_record(
                 pass
     elif ext == ".vhdr":
         # BrainVision .vhdr files have .vmrk (markers) and .eeg (data) companions
-        for bv_ext in [".vmrk", ".eeg"]:
+        # First try standard BIDS names (matching the .vhdr stem)
+        found_bv_exts = set()
+        for bv_ext in [".vmrk", ".eeg", ".dat"]:
             bv_file = bids_file_path.with_suffix(bv_ext)
             if bv_file.exists() or bv_file.is_symlink():
                 try:
                     bv_relpath = bv_file.relative_to(bids_dataset.bidsdir)
                     dep_keys.append(str(bv_relpath))
+                    found_bv_exts.add(bv_ext)
                 except ValueError:
                     pass
+
+        # If companions missing, try parsing the .vhdr for internal pointers
+        if not (
+            ".vmrk" in found_bv_exts
+            and (".eeg" in found_bv_exts or ".dat" in found_bv_exts)
+        ):
+            try:
+                # Use latin-1 to be safe with any byte values
+                import re
+
+                vhdr_content = bids_file_path.read_text(encoding="latin-1")
+                for key, companion_ext in [
+                    ("DataFile", ".eeg"),
+                    ("MarkerFile", ".vmrk"),
+                ]:
+                    if companion_ext in found_bv_exts:
+                        continue
+
+                    match = re.search(rf"^{key}\s*=\s*(.*)$", vhdr_content, re.M | re.I)
+                    if match:
+                        pointer_name = match.group(1).strip()
+                        pointer_file = bids_file_path.parent / pointer_name
+                        if pointer_file.exists() or pointer_file.is_symlink():
+                            try:
+                                pointer_relpath = pointer_file.relative_to(
+                                    bids_dataset.bidsdir
+                                )
+                                dep_keys.append(str(pointer_relpath))
+                            except ValueError:
+                                pass
+            except Exception:
+                pass  # Best effort
 
     # Create record using the schema
     record = create_record(
@@ -479,6 +535,10 @@ def extract_record(
         suffix=suffix,
         storage_backend=storage_backend,
         recording_modality=[mod_canon],
+        ch_names=ch_names,
+        sampling_frequency=sampling_frequency,
+        nchans=nchans,
+        ntimes=ntimes,
         digested_at=digested_at,
     )
 

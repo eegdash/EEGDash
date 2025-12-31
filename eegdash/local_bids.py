@@ -140,9 +140,37 @@ def discover_local_bids_records(
             suffix=suffix,
             storage_backend="local",
         )
-        rec["sampling_frequency"] = None
-        rec["nchans"] = None
-        rec["ntimes"] = None
+
+        # Try to extract more metadata if possible
+        # (This is a simplified version for local discovery)
+        current_rec = bids_path.fpath
+        try:
+            from .dataset.bids_dataset import EEGBIDSDataset
+
+            # Note: creating a dataset object per file is expensive, but this is local discovery
+            # In a real scenario we'd reuse it.
+            ds_helper = EEGBIDSDataset(
+                data_dir=dataset_root, dataset=dataset_id, allow_symlinks=True
+            )
+            rec["sampling_frequency"] = ds_helper.get_bids_file_attribute(
+                "sfreq", str(current_rec)
+            )
+            rec["nchans"] = ds_helper.get_bids_file_attribute(
+                "nchans", str(current_rec)
+            )
+            rec["ntimes"] = ds_helper.get_bids_file_attribute(
+                "ntimes", str(current_rec)
+            )
+            try:
+                rec["ch_names"] = ds_helper.channel_labels(str(current_rec))
+            except Exception:
+                rec["ch_names"] = None
+        except Exception:
+            rec["sampling_frequency"] = None
+            rec["nchans"] = None
+            rec["ntimes"] = None
+            rec["ch_names"] = None
+
         records_out.append(rec)
 
     return records_out

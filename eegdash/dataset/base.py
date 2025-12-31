@@ -67,11 +67,21 @@ class EEGDashRaw(RawDataset):
 
         # Derive local cache paths from record fields (portable - no absolute paths stored)
         storage = self.record.get("storage", {})
-        dataset = self.record["dataset"]
+        dataset_id = self.record["dataset"]
         bids_relpath = self.record["bids_relpath"]
         dep_keys = storage.get("dep_keys", [])
 
-        self.bids_root = self.cache_dir / dataset
+        # Robust root resolution: check if a folder with the dataset_id exists,
+        # or if there's a unique folder that "matches" the dataset (e.g. ds0001mini)
+        self.bids_root = self.cache_dir / dataset_id
+        if not self.bids_root.exists():
+            # Try to find a folder that starts with dataset_id if it's not a common name like 'ds'
+            potential = [d for d in self.cache_dir.glob(f"{dataset_id}*") if d.is_dir()]
+            if len(potential) == 1:
+                self.bids_root = potential[0]
+            elif (self.cache_dir / dataset_id).exists():
+                self.bids_root = self.cache_dir / dataset_id
+
         self.filecache = self.bids_root / bids_relpath
         self._dep_paths = [self.bids_root / p for p in dep_keys]
 
@@ -98,7 +108,8 @@ class EEGDashRaw(RawDataset):
             self._raw_uri = None
             self._dep_uris = []
 
-        self.bids_root.mkdir(parents=True, exist_ok=True)
+        if not self.bids_root.exists() and self._raw_uri:
+            self.bids_root.mkdir(parents=True, exist_ok=True)
 
         # Public-ish attribute used in tests; now reflects the actual remote URI.
         self.s3file = self._raw_uri
@@ -120,19 +131,20 @@ class EEGDashRaw(RawDataset):
         self._raw = None
 
     def _download_required_files(self) -> None:
-        if self._raw_uri is None:
-            return
-        filesystem = downloader.get_s3_filesystem()
+        if self._raw_uri is not None:
+            filesystem = downloader.get_s3_filesystem()
 
-        # Download deps first (sidecars, companions), then raw.
-        downloader.download_files(
-            list(zip(self._dep_uris, self._dep_paths, strict=False)),
-            filesystem=filesystem,
-            skip_existing=True,
-        )
-        downloader.download_s3_file(
-            self._raw_uri, self.filecache, filesystem=filesystem
-        )
+            # Download deps first (sidecars, companions), then raw.
+            downloader.download_files(
+                list(zip(self._dep_uris, self._dep_paths, strict=False)),
+                filesystem=filesystem,
+                skip_existing=True,
+            )
+            downloader.download_s3_file(
+                self._raw_uri, self.filecache, filesystem=filesystem
+            )
+
+        # Always set filenames (important for local datasets)
         self.filenames = [self.filecache]
 
     def _ensure_raw(self) -> None:

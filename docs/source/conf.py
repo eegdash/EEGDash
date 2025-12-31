@@ -91,6 +91,7 @@ html_css_files = [
     "https://cdn.datatables.net/searchpanes/2.3.1/css/searchPanes.dataTables.min.css",
     "custom.css",
     "css/treemap.css",
+    "css/custom.css",
 ]
 html_js_files = [
     "https://code.jquery.com/jquery-3.7.1.min.js",
@@ -100,6 +101,7 @@ html_js_files = [
     "https://cdn.datatables.net/searchpanes/2.3.1/js/dataTables.searchPanes.min.js",
     "js/tag-palette.js",
     "js/datatables-init.js",
+    "js/hero-search.js",
 ]
 
 # Required for sphinx-sitemap: set the canonical base URL of the site
@@ -124,6 +126,7 @@ html_theme_options = {
         "alt_text": "EEG Dash Logo",
     },
     "external_links": [
+        {"name": "Community", "url": "https://discord.gg/8jd7nVKwsc"},
         {"name": "EEG2025", "url": "https://eeg2025.github.io/"},
     ],
     "icon_links": [

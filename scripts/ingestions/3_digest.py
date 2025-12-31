@@ -1524,6 +1524,10 @@ def digest_dataset(
     errors = []
 
     for bids_file in files:
+        # Filter out non-neuro data files (sidecars, etc.)
+        if not is_neuro_data_file(str(bids_file)):
+            continue
+
         try:
             record = extract_record(
                 bids_dataset, bids_file, dataset_id, source, digested_at

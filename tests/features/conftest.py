@@ -60,35 +60,39 @@ def preprocess_instance(eeg_dash_dataset, cache_dir: Path):
     ]
     pre_processed_dir = cache_dir / "preprocessed"
     pre_processed_dir.mkdir(parents=True, exist_ok=True)
-    try:
-        eeg_dash_dataset = load_concat_dataset(
-            pre_processed_dir,
-            preload=True,
-        )
-        return eeg_dash_dataset
+    loaded_ds = None
+    if pre_processed_dir.exists() and any(pre_processed_dir.iterdir()):
+        try:
+            loaded_ds = load_concat_dataset(
+                pre_processed_dir,
+                preload=True,
+            )
+        except Exception as e:
+            logger.warning(f"Failed to load dataset, recreating: {e}")
 
-    except Exception as e:
-        logger.warning(f"Failed to load dataset creating a new instance: {e}. ")
-        if pre_processed_dir.exists():
-            # folder with issue, erasing and creating again
-            shutil.rmtree(pre_processed_dir)
-            pre_processed_dir.mkdir(parents=True, exist_ok=True)
+    if loaded_ds is not None:
+        return loaded_ds
 
-        preprocessors = [
-            hbn_ec_ec_reannotation(),
-            Preprocessor(
-                "pick_channels",
-                ch_names=selected_channels,
-            ),
-            Preprocessor("resample", sfreq=128),
-            Preprocessor("filter", l_freq=1, h_freq=55),
-        ]
+    if pre_processed_dir.exists():
+        # folder with issue or empty, erasing and creating again
+        shutil.rmtree(pre_processed_dir)
+    pre_processed_dir.mkdir(parents=True, exist_ok=True)
 
-        eeg_dash_dataset = preprocess(
-            eeg_dash_dataset, preprocessors, n_jobs=-1, save_dir=pre_processed_dir
-        )
+    preprocessors = [
+        hbn_ec_ec_reannotation(),
+        Preprocessor(
+            "pick_channels",
+            ch_names=selected_channels,
+        ),
+        Preprocessor("resample", sfreq=128),
+        Preprocessor("filter", l_freq=1, h_freq=55),
+    ]
 
-        return eeg_dash_dataset
+    eeg_dash_dataset = preprocess(
+        eeg_dash_dataset, preprocessors, n_jobs=-1, save_dir=pre_processed_dir
+    )
+
+    return eeg_dash_dataset
 
 
 @pytest.fixture(scope="session")

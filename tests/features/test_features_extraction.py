@@ -12,7 +12,32 @@ from eegdash.features import FeatureExtractor, FeaturesConcatDataset, extract_fe
 def feature_dict(windows_ds):
     """Fixture to create a feature extraction tree."""
     sfreq = windows_ds.datasets[0].raw.info["sfreq"]
-    filter_freqs = dict(windows_ds.datasets[0].raw_preproc_kwargs)["filter"]
+    raw_kwargs = windows_ds.datasets[0].raw_preproc_kwargs
+    filter_freqs = None
+
+    # Handle list of preprocessors (standard braindecode/eegdash structure)
+    if isinstance(raw_kwargs, list):
+        for item in raw_kwargs:
+            if isinstance(item, dict) and item.get("fn") == "filter":
+                filter_freqs = item.get("kwargs")
+                break
+
+    # Fallback/Debug
+    if filter_freqs is None:
+        try:
+            # Old behavior or different structure?
+            filter_freqs = dict(raw_kwargs)["filter"]
+        except Exception:
+            # Default if not found (or raise error if critical)
+            # But the test depends on it, so let's default to typical vals if missing?
+            # Or fail gracefully.
+            # Based on debug output: {'l_freq': 1, 'h_freq': 55}
+            pass
+
+    if filter_freqs is None:
+        raise ValueError(
+            f"Could not find filter parameters in raw_preproc_kwargs: {raw_kwargs}"
+        )
 
     feats = {
         "sig": features.FeatureExtractor(

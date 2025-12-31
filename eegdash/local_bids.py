@@ -88,8 +88,37 @@ def discover_local_bids_records(
 
     dataset_root_path = Path(dataset_root)
     records_out: list[dict[str, Any]] = []
+
+    # Valid raw extensions
+    valid_raw_extensions = {
+        ".bdf",
+        ".edf",
+        ".vhdr",
+        ".set",
+        ".fif",
+        ".ds",
+        ".egimff",
+        ".cnt",
+        ".mef",
+        ".nwb",
+        ".snirf",
+    }
+
     for bids_path in matched_paths:
         file_path = Path(bids_path.fpath)
+
+        # Filter out sidecars based on extension
+        # find_matching_paths with suffix='eeg' returns .json too.
+        # We only want strictly the raw data file.
+        # Note: BIDSPath.extension might be None for some directories (like .ds), check fpath
+        _ = "".join(
+            file_path.suffixes
+        )  # handle .eeg.json if needed, but we check final
+        final_ext = file_path.suffix.lower()
+
+        if final_ext not in valid_raw_extensions:
+            continue
+
         try:
             bids_relpath = file_path.resolve().relative_to(dataset_root_path.resolve())
         except ValueError:

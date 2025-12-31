@@ -87,6 +87,7 @@ def test_minirelease_subject_raw_equivalence(warmed_mongo, cache_dir: Path):
     )
 
 
+@pytest.mark.slow
 def test_minirelease_consume_everything(warmed_mongo, cache_dir: Path):
     """Smoke-test that a few mini-release recordings can be read.
 

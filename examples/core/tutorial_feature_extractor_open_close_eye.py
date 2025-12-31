@@ -157,7 +157,23 @@ from eegdash.features import extract_features
 from functools import partial
 
 sfreq = windows_ds.datasets[0].raw.info["sfreq"]
-filter_freqs = dict(windows_ds.datasets[0].raw_preproc_kwargs)["filter"]
+# Support both old (dict) and new (list) braindecode preproc metadata formats
+preproc_data = windows_ds.datasets[0].raw_preproc_kwargs
+if isinstance(preproc_data, list):
+    # Find the 'filter' preprocessor in the list of dicts/objects
+    filter_kwargs = {}
+    for item in preproc_data:
+        if isinstance(item, dict) and (
+            item.get("fn") == "filter" or item.get("__class_path__") == "filter"
+        ):
+            filter_kwargs = item.get("kwargs", {})
+            break
+        elif hasattr(item, "fn") and getattr(item.fn, "__name__", "") == "filter":
+            filter_kwargs = getattr(item, "kwargs", {})
+            break
+    filter_freqs = filter_kwargs
+else:
+    filter_freqs = preproc_data.get("filter", {})
 features_dict = {
     "sig": features.FeatureExtractor(
         {

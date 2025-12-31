@@ -132,12 +132,29 @@ def preprocess_dataset(dataset, channels, dataset_type="P3"):
     trial_start = int(TRIAL_START_OFFSET * RESAMPLE_FREQ)
     trial_stop = int((TRIAL_START_OFFSET + TRIAL_DURATION) * RESAMPLE_FREQ)
 
+    # Define event mapping to handle both datasets
+    # ErpCore uses "Target"/"NonTarget"
+    # ds005863 (AVO) uses "S 11", "S 21", etc. for targets and "S 12", "S 22" for nontargets
+    mapping = {
+        "Target": 1,
+        "NonTarget": 0,
+        "standard": 0,
+        "target": 1,
+    }
+    # Add AVO specific codes if they are missing
+    for i in range(1, 6):
+        mapping[f"S {i}1"] = 1  # Often S 11, S 21, ... are targets
+        mapping[f"S {i}2"] = 0  # Often S 12, S 22, ... are nontargets
+        mapping[f"S{i}1"] = 1
+        mapping[f"S{i}2"] = 0
+
     windows_ds = create_windows_from_events(
         dataset,
         trial_start_offset_samples=trial_start,
         trial_stop_offset_samples=trial_stop,
         preload=True,
         drop_bad_windows=True,
+        mapping=mapping,
     )
 
     X, y = [], []
@@ -153,6 +170,13 @@ def preprocess_dataset(dataset, channels, dataset_type="P3"):
 # Preprocess both datasets
 X_p3, y_p3 = preprocess_dataset(ds_p3, COMMON_CHANNELS, "P3")
 X_avo, y_avo = preprocess_dataset(ds_avo, COMMON_CHANNELS, "AVO")
+
+# Ensure both have the same number of samples (cropping to the minimum)
+min_samples = min(X_p3.shape[2], X_avo.shape[2])
+if X_p3.shape[2] != X_avo.shape[2]:
+    print(f"\nCropping trials to {min_samples} samples for consistency...")
+    X_p3 = X_p3[:, :, :min_samples]
+    X_avo = X_avo[:, :, :min_samples]
 
 # Combine datasets for training
 X_all = np.vstack([X_p3, X_avo])
@@ -386,8 +410,8 @@ def train_asmmd_model(
         pool_time_length=75,
         pool_time_stride=15,
         drop_prob=0.5,
-        att_depth=3,
-        att_heads=4,
+        num_layers=3,  # Corrected from att_depth
+        num_heads=4,  # Corrected from att_heads
         att_drop_prob=0.5,
     ).to(DEVICE)
 

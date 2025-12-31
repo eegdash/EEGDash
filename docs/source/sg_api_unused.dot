@@ -1,0 +1,1714 @@
+digraph {
+	graph [overlap=scale pad=0.5]
+	node [color="#98CAE180" fontname="Open Sans,Arial" fontsize=20 shape=box style=filled]
+	eegdash
+	"dataset (523)" [color="#A5002680"]
+	eegdash -> "dataset (523)" [color="#00000080"]
+	eegdash
+	"EEGDash (6)" [color="#F67E4B80"]
+	eegdash -> "EEGDash (6)" [color="#00000080"]
+	eegdash
+	"bids_metadata (10)" [color="#F67E4B80"]
+	eegdash -> "bids_metadata (10)" [color="#00000080"]
+	eegdash
+	"EEGDashDataset (7)" [color="#F67E4B80"]
+	eegdash -> "EEGDashDataset (7)" [color="#00000080"]
+	eegdash
+	"downloader (4)" [color="#FEDA8B80"]
+	eegdash -> "downloader (4)" [color="#00000080"]
+	eegdash
+	"records (12)" [color="#A5002680"]
+	eegdash -> "records (12)" [color="#00000080"]
+	eegdash
+	"features (7)" [color="#F67E4B80"]
+	eegdash -> "features (7)" [color="#00000080"]
+	eegdash
+	"http_api_client (2)" [color="#FEDA8B80"]
+	eegdash -> "http_api_client (2)" [color="#00000080"]
+	eegdash
+	"api (1)" [color="#FEDA8B80"]
+	eegdash -> "api (1)" [color="#00000080"]
+	eegdash
+	"local_bids (1)" [color="#FEDA8B80"]
+	eegdash -> "local_bids (1)" [color="#00000080"]
+	eegdash
+	"paths (1)" [color="#FEDA8B80"]
+	eegdash -> "paths (1)" [color="#00000080"]
+	eegdash
+	"hbn (1)" [color="#FEDA8B80"]
+	eegdash -> "hbn (1)" [color="#00000080"]
+	"dataset (523)"
+	"dataset (522)" [color="#A5002680"]
+	"dataset (523)" -> "dataset (522)" [color="#00000080"]
+	"dataset (522)"
+	"DS003846 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS003846 (7)" [color="#00000080"]
+	"dataset (522)"
+	"NM000104 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "NM000104 (7)" [color="#00000080"]
+	"dataset (522)"
+	"EEG2025R3 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "EEG2025R3 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004457 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004457 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004448 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004448 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004993 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004993 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS003620 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS003620 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005929 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005929 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005289 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005289 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS006466 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS006466 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005356 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005356 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004929 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004929 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS006914 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS006914 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS003392 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS003392 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS006260 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS006260 (7)" [color="#00000080"]
+	"dataset (522)"
+	"EEG2025R8MINI (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "EEG2025R8MINI (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004105 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004105 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004625 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004625 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004850 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004850 (7)" [color="#00000080"]
+	"dataset (522)"
+	"EEGBIDSDataset (10)" [color="#F67E4B80"]
+	"dataset (522)" -> "EEGBIDSDataset (10)" [color="#00000080"]
+	"dataset (522)"
+	"DS004635 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004635 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005776 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005776 (7)" [color="#00000080"]
+	"dataset (522)"
+	"EEG2025R4MINI (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "EEG2025R4MINI (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004194 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004194 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004579 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004579 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004370 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004370 (7)" [color="#00000080"]
+	"features (7)"
+	"inspect (6)" [color="#F67E4B80"]
+	"features (7)" -> "inspect (6)" [color="#00000080"]
+	"dataset (522)"
+	"DS003082 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS003082 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005516 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005516 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004860 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004860 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004843 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004843 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004357 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004357 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS003194 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS003194 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005420 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005420 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004789 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004789 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005907 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005907 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS006761 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS006761 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004000 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004000 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004106 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004106 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004603 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004603 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS003708 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS003708 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004785 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004785 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005095 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005095 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS006802 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS006802 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005515 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005515 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005411 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005411 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS006018 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS006018 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004010 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004010 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005410 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005410 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005169 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005169 (7)" [color="#00000080"]
+	"dataset (522)"
+	"EEG2025R11 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "EEG2025R11 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS006460 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS006460 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS006850 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS006850 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005779 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005779 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005083 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005083 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS003876 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS003876 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005697 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005697 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS002723 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS002723 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004520 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004520 (7)" [color="#00000080"]
+	"dataset (522)"
+	"EEG2025R9 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "EEG2025R9 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS002893 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS002893 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS003848 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS003848 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005106 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005106 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS006720 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS006720 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005059 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005059 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004706 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004706 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS006392 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS006392 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004944 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004944 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS002550 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS002550 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004718 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004718 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS003478 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS003478 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005628 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005628 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005285 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005285 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS006374 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS006374 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004511 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004511 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS003505 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS003505 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004855 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004855 (7)" [color="#00000080"]
+	"dataset (522)"
+	"EEG2025R10 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "EEG2025R10 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS002691 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS002691 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS006367 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS006367 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS006317 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS006317 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005293 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005293 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004151 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004151 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005863 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005863 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS006468 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS006468 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS002725 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS002725 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005346 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005346 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005505 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005505 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005291 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005291 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS003626 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS003626 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005261 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005261 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS002578 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS002578 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005787 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005787 (7)" [color="#00000080"]
+	"dataset (522)"
+	"registry (1)" [color="#FEDA8B80"]
+	"dataset (522)" -> "registry (1)" [color="#00000080"]
+	"dataset (522)"
+	"DS004122 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004122 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS006735 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS006735 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004127 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004127 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005089 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005089 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS006563 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS006563 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004278 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004278 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004388 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004388 (7)" [color="#00000080"]
+	"dataset (522)"
+	"EEG2025R2MINI (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "EEG2025R2MINI (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004119 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004119 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004865 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004865 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005280 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005280 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS006465 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS006465 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004770 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004770 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004852 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004852 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS006366 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS006366 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004973 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004973 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004367 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004367 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005207 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005207 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005691 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005691 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005408 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005408 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004588 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004588 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS006159 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS006159 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005507 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005507 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS002791 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS002791 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS003774 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS003774 (7)" [color="#00000080"]
+	"features (7)"
+	"datasets (2)" [color="#FEDA8B80"]
+	"features (7)" -> "datasets (2)" [color="#00000080"]
+	"dataset (522)"
+	"DS004587 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004587 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005385 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005385 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS003766 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS003766 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004080 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004080 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005931 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005931 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005397 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005397 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS006040 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS006040 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS002680 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS002680 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS006012 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS006012 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS003574 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS003574 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS001971 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS001971 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004841 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004841 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS003352 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS003352 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS002908 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS002908 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004381 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004381 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004574 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004574 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005342 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005342 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005795 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005795 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005279 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005279 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004078 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004078 (7)" [color="#00000080"]
+	"dataset (522)"
+	"NM000103 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "NM000103 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS003682 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS003682 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005857 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005857 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS006525 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS006525 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004745 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004745 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS006963 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS006963 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS002034 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS002034 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS003753 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS003753 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004505 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004505 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004212 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004212 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS003490 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS003490 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS003516 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS003516 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS007006 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS007006 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS000247 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS000247 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005121 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005121 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005296 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005296 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004389 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004389 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS003104 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS003104 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS003922 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS003922 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004473 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004473 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005557 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005557 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS003509 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS003509 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004315 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004315 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005340 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005340 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004883 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004883 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS003421 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS003421 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS006817 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS006817 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004902 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004902 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005815 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005815 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004595 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004595 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004517 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004517 (7)" [color="#00000080"]
+	"dataset (522)"
+	"EEG2025R2 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "EEG2025R2 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005530 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005530 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004561 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004561 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS000248 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS000248 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS003568 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS003568 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004011 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004011 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS006801 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS006801 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005087 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005087 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS003039 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS003039 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS003768 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS003768 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS003523 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS003523 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005648 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005648 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005594 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005594 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS006902 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS006902 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005416 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005416 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005398 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005398 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS003825 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS003825 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004033 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004033 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS002814 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS002814 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005868 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005868 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS003702 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS003702 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005509 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005509 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS006695 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS006695 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS003518 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS003518 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS003987 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS003987 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005131 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005131 (7)" [color="#00000080"]
+	"dataset (522)"
+	"EEG2025R10MINI (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "EEG2025R10MINI (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004276 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004276 (7)" [color="#00000080"]
+	"dataset (522)"
+	"EEG2025R6MINI (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "EEG2025R6MINI (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS001849 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS001849 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS000117 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS000117 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004148 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004148 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004196 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004196 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004626 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004626 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS003195 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS003195 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS002718 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS002718 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005672 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005672 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005486 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005486 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS001785 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS001785 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS003506 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS003506 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005065 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005065 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004024 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004024 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004854 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004854 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004842 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004842 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS006459 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS006459 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004554 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004554 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004252 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004252 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS006910 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS006910 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004771 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004771 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS006673 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS006673 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004356 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004356 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS003688 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS003688 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS003805 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS003805 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS003801 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS003801 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS006629 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS006629 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004447 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004447 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS003844 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS003844 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005028 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005028 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS006107 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS006107 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004515 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004515 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS006519 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS006519 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS007095 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS007095 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS006269 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS006269 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005262 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005262 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004703 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004703 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS003751 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS003751 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004642 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004642 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS002218 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS002218 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS002312 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS002312 (7)" [color="#00000080"]
+	"dataset (522)"
+	"EEG2025R11MINI (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "EEG2025R11MINI (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004264 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004264 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004279 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004279 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS006940 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS006940 (7)" [color="#00000080"]
+	"dataset (522)"
+	"NM000106 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "NM000106 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004369 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004369 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004475 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004475 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004324 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004324 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004784 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004784 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS006253 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS006253 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004504 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004504 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004502 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004502 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005777 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005777 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005523 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005523 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS006890 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS006890 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004123 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004123 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS003078 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS003078 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS006848 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS006848 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004018 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004018 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005866 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005866 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004942 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004942 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004837 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004837 (7)" [color="#00000080"]
+	"features (7)"
+	"extractors (6)" [color="#F67E4B80"]
+	"features (7)" -> "extractors (6)" [color="#00000080"]
+	"dataset (522)"
+	"DS005286 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005286 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005872 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005872 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004980 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004980 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS002799 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS002799 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005522 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005522 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005178 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005178 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005508 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005508 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005512 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005512 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004117 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004117 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004563 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004563 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005620 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005620 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004995 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004995 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005383 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005383 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004460 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004460 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS006648 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS006648 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS002001 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS002001 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005491 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005491 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005574 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005574 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004657 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004657 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS002761 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS002761 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS003555 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS003555 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004809 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004809 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005506 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005506 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS002721 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS002721 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005960 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005960 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005571 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005571 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS002722 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS002722 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005273 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005273 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004043 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004043 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS006866 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS006866 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005510 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005510 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS006545 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS006545 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004446 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004446 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004348 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004348 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS003810 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS003810 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005185 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005185 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004040 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004040 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004859 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004859 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS006903 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS006903 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004572 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004572 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS003458 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS003458 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004817 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004817 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005692 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005692 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS003638 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS003638 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS006945 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS006945 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS006502 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS006502 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005876 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005876 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005540 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005540 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005292 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005292 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS006803 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS006803 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS006377 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS006377 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS001787 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS001787 (7)" [color="#00000080"]
+	"dataset (522)"
+	"EEG2025R1MINI (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "EEG2025R1MINI (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS007020 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS007020 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS003645 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS003645 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS006035 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS006035 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS003739 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS003739 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004477 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004477 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005429 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005429 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004951 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004951 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005555 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005555 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004075 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004075 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005688 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005688 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS006334 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS006334 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS003887 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS003887 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004551 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004551 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004819 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004819 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004256 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004256 (7)" [color="#00000080"]
+	"dataset (522)"
+	"NM000107 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "NM000107 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS003483 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS003483 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004362 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004362 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004346 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004346 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004602 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004602 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS002158 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS002158 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS003498 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS003498 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005473 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005473 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005107 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005107 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004738 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004738 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS003633 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS003633 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004107 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004107 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005953 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005953 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005558 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005558 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004295 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004295 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004621 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004621 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS002336 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS002336 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS002181 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS002181 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS006923 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS006923 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004368 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004368 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004851 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004851 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS007081 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS007081 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS006647 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS006647 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS003655 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS003655 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS006437 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS006437 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS002885 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS002885 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004019 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004019 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004519 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004519 (7)" [color="#00000080"]
+	"hbn (1)"
+	"hbn_ec_ec_reannotation (1)" [color="#FEDA8B80"]
+	"hbn (1)" -> "hbn_ec_ec_reannotation (1)" [color="#00000080"]
+	"dataset (522)"
+	"DS003947 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS003947 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005307 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005307 (7)" [color="#00000080"]
+	"dataset (522)"
+	"EEG2025R1 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "EEG2025R1 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS006233 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS006233 (7)" [color="#00000080"]
+	"dataset (522)"
+	"EEG2025R7MINI (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "EEG2025R7MINI (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS002724 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS002724 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS003474 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS003474 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS003004 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS003004 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005565 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005565 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004147 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004147 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS003838 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS003838 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005363 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005363 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005305 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005305 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004395 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004395 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004521 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004521 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005545 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005545 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004584 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004584 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004152 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004152 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS006554 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS006554 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005274 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005274 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004660 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004660 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004200 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004200 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004977 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004977 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005034 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005034 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004774 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004774 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004830 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004830 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS006234 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS006234 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005284 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005284 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS006033 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS006033 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004306 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004306 (7)" [color="#00000080"]
+	"dataset (522)"
+	"EEG2025R7 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "EEG2025R7 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004580 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004580 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005343 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005343 (7)" [color="#00000080"]
+	"dataset (522)"
+	"EEG2025R5MINI (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "EEG2025R5MINI (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004100 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004100 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004350 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004350 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS000246 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS000246 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS003602 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS003602 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004444 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004444 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS001810 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS001810 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005586 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005586 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005021 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005021 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004998 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004998 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS006126 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS006126 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS003969 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS003969 (7)" [color="#00000080"]
+	"api (1)"
+	"EEGDash (6)" [color="#F67E4B80"]
+	"api (1)" -> "EEGDash (6)" [color="#00000080"]
+	"dataset (522)"
+	"DS006434 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS006434 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005048 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005048 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS006840 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS006840 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS003343 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS003343 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS003775 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS003775 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004012 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004012 (7)" [color="#00000080"]
+	"dataset (522)"
+	"NM000105 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "NM000105 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005520 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005520 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004067 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004067 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004624 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004624 (7)" [color="#00000080"]
+	"dataset (522)"
+	"EEG2025R3MINI (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "EEG2025R3MINI (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005407 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005407 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005930 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005930 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004262 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004262 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS006142 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS006142 (7)" [color="#00000080"]
+	"features (7)"
+	"decorators (3)" [color="#FEDA8B80"]
+	"features (7)" -> "decorators (3)" [color="#00000080"]
+	"dataset (522)"
+	"DS003061 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS003061 (7)" [color="#00000080"]
+	"dataset (522)"
+	"EEG2025R9MINI (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "EEG2025R9MINI (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004118 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004118 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005241 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005241 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005007 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005007 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005448 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005448 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005403 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005403 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005811 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005811 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS003029 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS003029 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005964 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005964 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004166 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004166 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS003710 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS003710 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004022 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004022 (7)" [color="#00000080"]
+	"features (7)"
+	"utils (2)" [color="#FEDA8B80"]
+	"features (7)" -> "utils (2)" [color="#00000080"]
+	"dataset (522)"
+	"DS005932 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005932 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS006593 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS006593 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005406 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005406 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS006095 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS006095 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS006394 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS006394 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005963 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005963 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS003703 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS003703 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004598 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004598 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS006171 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS006171 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004284 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004284 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004849 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004849 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS003522 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS003522 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS006547 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS006547 (7)" [color="#00000080"]
+	"hbn (1)"
+	"windows (5)" [color="#FEDA8B80"]
+	"hbn (1)" -> "windows (5)" [color="#00000080"]
+	"dataset (522)"
+	"DS005514 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005514 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS006446 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS006446 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004816 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004816 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS003190 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS003190 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004120 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004120 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004661 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004661 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004317 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004317 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS006861 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS006861 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005873 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005873 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004330 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004330 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005670 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005670 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005810 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005810 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS003885 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS003885 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS002338 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS002338 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004840 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004840 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005489 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005489 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS003570 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS003570 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS006036 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS006036 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS006104 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS006104 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS003822 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS003822 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS003670 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS003670 (7)" [color="#00000080"]
+	"dataset (522)"
+	"EEG2025R5 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "EEG2025R5 (7)" [color="#00000080"]
+	"dataset (522)"
+	"EEG2025R8 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "EEG2025R8 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005642 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005642 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005752 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005752 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS003374 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS003374 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004121 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004121 (7)" [color="#00000080"]
+	"http_api_client (2)"
+	"EEGDashAPIClient (6)" [color="#F67E4B80"]
+	"http_api_client (2)" -> "EEGDashAPIClient (6)" [color="#00000080"]
+	"dataset (522)"
+	"DS005624 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005624 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005935 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005935 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004577 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004577 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005662 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005662 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004802 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004802 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004483 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004483 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005415 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005415 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS003800 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS003800 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS003519 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS003519 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005494 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005494 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005170 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005170 (7)" [color="#00000080"]
+	"dataset (522)"
+	"EEG2025R4 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "EEG2025R4 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004398 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004398 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS002094 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS002094 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS006921 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS006921 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS003517 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS003517 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS006065 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS006065 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004796 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004796 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005114 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005114 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004940 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004940 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004582 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004582 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005946 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005946 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS002778 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS002778 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS006839 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS006839 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005189 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005189 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004752 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004752 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS002833 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS002833 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004952 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004952 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004917 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004917 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004017 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004017 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004514 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004514 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS003690 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS003690 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004532 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004532 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS006576 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS006576 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005079 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005079 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004853 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004853 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS003694 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS003694 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS006480 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS006480 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004844 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004844 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS003420 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS003420 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004015 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004015 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS006370 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS006370 (7)" [color="#00000080"]
+	"dataset (522)"
+	"EEG2025R6 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "EEG2025R6 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS002720 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS002720 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS002712 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS002712 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004347 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004347 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004696 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004696 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS004229 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004229 (7)" [color="#00000080"]
+	"dataset (522)"
+	"base (1)" [color="#FEDA8B80"]
+	"dataset (522)" -> "base (1)" [color="#00000080"]
+	"dataset (522)"
+	"DS004408 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS004408 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005841 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005841 (7)" [color="#00000080"]
+	"dataset (522)"
+	"bids_dataset (1)" [color="#FEDA8B80"]
+	"dataset (522)" -> "bids_dataset (1)" [color="#00000080"]
+	"dataset (522)"
+	"DS003944 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS003944 (7)" [color="#00000080"]
+	"dataset (522)"
+	"DS005345 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS005345 (7)" [color="#00000080"]
+	"dataset (522)"
+	"EEGDashDataset (1)" [color="#FEDA8B80"]
+	"dataset (522)" -> "EEGDashDataset (1)" [color="#00000080"]
+	"dataset (522)"
+	"DS006768 (7)" [color="#F67E4B80"]
+	"dataset (522)" -> "DS006768 (7)" [color="#00000080"]
+	"hbn (1)"
+	"preprocessing (1)" [color="#FEDA8B80"]
+	"hbn (1)" -> "preprocessing (1)" [color="#00000080"]
+	"features (7)"
+	"serialization (1)" [color="#FEDA8B80"]
+	"features (7)" -> "serialization (1)" [color="#00000080"]
+	"datasets (2)"
+	"FeaturesConcatDataset (15)" [color="#A5002680"]
+	"datasets (2)" -> "FeaturesConcatDataset (15)" [color="#00000080"]
+	"features (7)"
+	feature_bank
+	"features (7)" -> feature_bank [color="#00000080"]
+	feature_bank
+	"signal (15)" [color="#A5002680"]
+	feature_bank -> "signal (15)" [color="#00000080"]
+	feature_bank
+	"dimensionality (5)" [color="#FEDA8B80"]
+	feature_bank -> "dimensionality (5)" [color="#00000080"]
+	feature_bank
+	"utils (3)" [color="#FEDA8B80"]
+	feature_bank -> "utils (3)" [color="#00000080"]
+	"bids_dataset (1)"
+	"EEGBIDSDataset (10)" [color="#F67E4B80"]
+	"bids_dataset (1)" -> "EEGBIDSDataset (10)" [color="#00000080"]
+	feature_bank
+	"connectivity (4)" [color="#FEDA8B80"]
+	feature_bank -> "connectivity (4)" [color="#00000080"]
+	feature_bank
+	"spectral (12)" [color="#A5002680"]
+	feature_bank -> "spectral (12)" [color="#00000080"]
+	feature_bank
+	"complexity (5)" [color="#FEDA8B80"]
+	feature_bank -> "complexity (5)" [color="#00000080"]
+	"extractors (6)"
+	"BivariateFeature (2)" [color="#FEDA8B80"]
+	"extractors (6)" -> "BivariateFeature (2)" [color="#00000080"]
+	"extractors (6)"
+	"FeatureExtractor (4)" [color="#FEDA8B80"]
+	"extractors (6)" -> "FeatureExtractor (4)" [color="#00000080"]
+	"extractors (6)"
+	"TrainableFeature (3)" [color="#FEDA8B80"]
+	"extractors (6)" -> "TrainableFeature (3)" [color="#00000080"]
+	"preprocessing (1)"
+	"hbn_ec_ec_reannotation (1)" [color="#FEDA8B80"]
+	"preprocessing (1)" -> "hbn_ec_ec_reannotation (1)" [color="#00000080"]
+	"extractors (6)"
+	"UnivariateFeature (1)" [color="#FEDA8B80"]
+	"extractors (6)" -> "UnivariateFeature (1)" [color="#00000080"]
+	"extractors (6)"
+	"DirectedBivariateFeature (1)" [color="#FEDA8B80"]
+	"extractors (6)" -> "DirectedBivariateFeature (1)" [color="#00000080"]
+	"extractors (6)"
+	"MultivariateFeature (1)" [color="#FEDA8B80"]
+	"extractors (6)" -> "MultivariateFeature (1)" [color="#00000080"]
+	feature_bank
+	"csp (1)" [color="#FEDA8B80"]
+	feature_bank -> "csp (1)" [color="#00000080"]
+	"csp (1)"
+	"CommonSpatialPattern (4)" [color="#FEDA8B80"]
+	"csp (1)" -> "CommonSpatialPattern (4)" [color="#00000080"]
+	eegdash -> logging
+	eegdash -> const
+	features -> feature_bank
+	features -> feature_bank
+	features -> feature_bank
+	features -> feature_bank
+	features -> feature_bank
+	features -> feature_bank
+	features -> feature_bank
+}

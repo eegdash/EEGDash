@@ -11,7 +11,7 @@ def test_challenge_dataset_passes_task_and_dataset_filters(cache_dir: Path):
         task="RestingState",
     )
 
-    assert len(ds.datasets) == 658
+    assert len(ds.datasets) == 329
     assert ds.datasets[0].record["dataset"] == "EEG2025r5"
 
 

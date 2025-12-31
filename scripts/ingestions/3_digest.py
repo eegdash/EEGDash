@@ -489,38 +489,6 @@ def extract_record(
                 except ValueError:
                     pass
 
-        # If companions missing, try parsing the .vhdr for internal pointers
-        if not (
-            ".vmrk" in found_bv_exts
-            and (".eeg" in found_bv_exts or ".dat" in found_bv_exts)
-        ):
-            try:
-                # Use latin-1 to be safe with any byte values
-                import re
-
-                vhdr_content = bids_file_path.read_text(encoding="latin-1")
-                for key, companion_ext in [
-                    ("DataFile", ".eeg"),
-                    ("MarkerFile", ".vmrk"),
-                ]:
-                    if companion_ext in found_bv_exts:
-                        continue
-
-                    match = re.search(rf"^{key}\s*=\s*(.*)$", vhdr_content, re.M | re.I)
-                    if match:
-                        pointer_name = match.group(1).strip()
-                        pointer_file = bids_file_path.parent / pointer_name
-                        if pointer_file.exists() or pointer_file.is_symlink():
-                            try:
-                                pointer_relpath = pointer_file.relative_to(
-                                    bids_dataset.bidsdir
-                                )
-                                dep_keys.append(str(pointer_relpath))
-                            except ValueError:
-                                pass
-            except Exception:
-                pass  # Best effort
-
     # Create record using the schema
     record = create_record(
         dataset=dataset_id,

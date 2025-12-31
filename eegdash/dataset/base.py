@@ -74,13 +74,6 @@ class EEGDashRaw(RawDataset):
         # Robust root resolution: check if a folder with the dataset_id exists,
         # or if there's a unique folder that "matches" the dataset (e.g. ds0001mini)
         self.bids_root = self.cache_dir / dataset_id
-        if not self.bids_root.exists():
-            # Try to find a folder that starts with dataset_id if it's not a common name like 'ds'
-            potential = [d for d in self.cache_dir.glob(f"{dataset_id}*") if d.is_dir()]
-            if len(potential) == 1:
-                self.bids_root = potential[0]
-            elif (self.cache_dir / dataset_id).exists():
-                self.bids_root = self.cache_dir / dataset_id
 
         self.filecache = self.bids_root / bids_relpath
         self._dep_paths = [self.bids_root / p for p in dep_keys]

@@ -425,6 +425,10 @@ class Record(TypedDict, total=False):
     entities: Entities
     entities_mne: Entities  # run sanitized for MNE-BIDS (numeric or None)
     storage: Storage
+    ch_names: list[str] | None  # List of channel names from channels.tsv or raw file
+    sampling_frequency: float | None  # Sampling rate in Hz
+    nchans: int | None  # Number of channels
+    ntimes: int | None  # Number of samples (duration in samples)
     digested_at: str  # ISO 8601 timestamp
 
 
@@ -456,6 +460,10 @@ def create_record(
     suffix: str = "eeg",
     storage_backend: Literal["s3", "https", "local"] = "s3",
     recording_modality: list[str] | None = None,
+    ch_names: list[str] | None = None,
+    sampling_frequency: float | None = None,
+    nchans: int | None = None,
+    ntimes: int | None = None,
     digested_at: str | None = None,
 ) -> Record:
     """Create an EEGDash record.
@@ -540,6 +548,10 @@ def create_record(
             raw_key=bids_relpath,
             dep_keys=dep_keys,
         ),
+        ch_names=ch_names,
+        sampling_frequency=sampling_frequency,
+        nchans=nchans,
+        ntimes=ntimes,
         digested_at=digested_at
         or datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
     )

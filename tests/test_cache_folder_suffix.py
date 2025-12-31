@@ -46,18 +46,19 @@ def test_dataset_folder_suffixes(cache_dir: Path, release: str, dataset_id: str)
     assert base.bids_root == cache_dir / dataset_id
     assert str(base.filecache).startswith(str((cache_dir / dataset_id).resolve()))
 
-    # EEGChallengeDataset mini=True should use EEG2025r{X}mini
+    # EEGChallengeDataset mini=True should now plain dataset folder (suffixes removed)
     rec_mini = _dummy_record(f"{dataset_id}mini")
     ds_min = EEGChallengeDataset(
         release=release, cache_dir=cache_dir, records=[rec_mini]
     )
     base_min = ds_min.datasets[0]
+    # User removed suffix logic, so it should be just the dataset ID (which IS the mini ID)
     assert base_min.bids_root == cache_dir / f"{dataset_id}mini"
     assert str(base_min.filecache).startswith(
         str((cache_dir / f"{dataset_id}mini").resolve())
     )
 
-    # EEGChallengeDataset mini=False should use EEG2025r{X}
+    # EEGChallengeDataset mini=False should use EEG2025r{X} (no suffix)
     ds_full = EEGChallengeDataset(
         release=release, cache_dir=cache_dir, mini=False, records=[rec]
     )

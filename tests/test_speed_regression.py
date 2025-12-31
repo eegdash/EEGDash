@@ -43,6 +43,7 @@ def bids_dataset(bids_dataset_path):
     return dataset
 
 
+@pytest.mark.slow
 class TestInitializationPerformance:
     """Tests for dataset initialization time."""
 
@@ -153,6 +154,7 @@ class TestMetadataAccessPerformance:
         )
 
 
+@pytest.mark.slow
 class TestBatchMetadataPerformance:
     """Tests for batch metadata queries (common usage pattern)."""
 

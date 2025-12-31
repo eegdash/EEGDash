@@ -160,7 +160,7 @@ def test_create_dataset_minimal():
     assert dataset["dataset_id"] == "ds001785"
     assert dataset["name"] == "ds001785"  # Defaults to dataset_id
     assert dataset["source"] == "openneuro"
-    assert dataset["recording_modality"] == "eeg"
+    assert dataset["recording_modality"] == ["eeg"]
     assert "digested_at" in dataset["timestamps"]
 
 

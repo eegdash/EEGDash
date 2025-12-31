@@ -553,6 +553,8 @@ def validate_record(record: dict[str, Any]) -> list[str]:
         errors.append("missing: dataset")
     if not record.get("bids_relpath"):
         errors.append("missing: bids_relpath")
+    if not record.get("bidspath"):
+        errors.append("missing: bidspath")
 
     storage = record.get("storage")
     if not storage:

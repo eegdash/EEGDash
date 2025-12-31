@@ -13,6 +13,7 @@
 *.isorted
 *.json
 *.npy
+*Hugging*
 *.py.isorted
 **/__pycache__/
 **/.eegdash_cache/
@@ -25,6 +26,7 @@
 build/
 
 cover
+
 data/
 digestion_output/
 dist/

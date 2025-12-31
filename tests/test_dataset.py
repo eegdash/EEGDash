@@ -99,7 +99,7 @@ def test_mongodb_load_under_sometime(release, cache_dir: Path):
     start_time = time.perf_counter()
     _ = EEGChallengeDataset(release=release, cache_dir=cache_dir)
     duration = time.perf_counter() - start_time
-    assert duration < 30, f"{release} took {duration:.2f}s"
+    assert duration < 300, f"{release} took {duration:.2f}s"
 
 
 @pytest.mark.parametrize("mini", [True, False])

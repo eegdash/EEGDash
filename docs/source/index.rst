@@ -7,7 +7,7 @@
     <style type="text/css">
     /* Visually hide H1 but keep for metadata */
     h1 {
-      position: absolute !important;   
+      position: absolute !important;
       width: 1px !important;
       height: 1px !important;
       padding: 0 !important;
@@ -19,121 +19,223 @@
     }
     </style>
 
-.. container:: eegdash-hero
+.. container:: hf-hero
 
-   .. container:: eegdash-hero-title
-      
-      .. text is hidden or removed to rely on logo
+   .. grid:: 1 1 2 2
+      :gutter: 4
+      :class-container: hf-hero-grid
 
-   .. container:: eegdash-hero-subtitle
-   
-      Data-sharing interface for M/EEG and related (fNIRS, EMG)
+      .. grid-item::
+         :class: hf-hero-copy hf-reveal hf-delay-1
 
-   .. image:: _static/eegdash.svg
-      :alt: EEG Dash Logo
-      :class: logo mainlogo only-dark
-      :align: center
-      :width: 600px
+         .. rst-class:: hf-kicker
 
-   .. image:: _static/eegdash.svg
-      :alt: EEG Dash Logo
-      :class: logo mainlogo only-light
-      :align: center
-      :width: 600px
+            EEG Dash
 
-   .. rst-class:: lead text-center font-weight-light my-4
-   
-      The **EEG-DaSh** is a data-sharing resource for **M/EEG** (EEG, MEG, iEEG, fNIRS, EMG) data, 
-      allowing **interoperability** and enabling large-scale computational advancements to preserve and share scientific data 
-      from publicly funded research for machine learning and deep learning applications.
+         .. rst-class:: hf-hero-title
 
-   .. container:: eegdash-badges text-center mb-2
+            The open hub for M/EEG datasets and benchmarks.
 
-      .. image:: https://github.com/eegdash/EEGDash/actions/workflows/tests.yml/badge.svg
-         :alt: Test Status
-         :target: https://github.com/eegdash/EEGDash/actions/workflows/tests.yml
+         .. rst-class:: hf-hero-lede
 
-      .. image:: https://github.com/eegdash/EEGDash/actions/workflows/doc.yaml/badge.svg
-         :alt: Doc Status
-         :target: https://github.com/eegdash/EEGDash/actions/workflows/doc.yaml
+            Data-sharing interface for EEG, MEG, iEEG, fNIRS, and EMG with standardized metadata,
+            reproducible preprocessing, and model-ready benchmarks.
 
+         .. container:: hf-hero-actions
 
-      .. image:: https://img.shields.io/pypi/v/eegdash?color=blue&style=flat-square
-         :alt: PyPI
-         :target: https://pypi.org/project/eegdash/
+            .. button-ref:: install/install
+               :color: primary
+               :class: sd-btn-lg hf-btn hf-btn-primary
 
-      .. image:: https://img.shields.io/pypi/pyversions/eegdash?style=flat-square
-         :alt: Python
-         :target: https://pypi.org/project/eegdash/
+               Get Started
 
+            .. button-ref:: dataset_summary
+               :color: secondary
+               :class: sd-btn-lg hf-btn hf-btn-secondary
 
-   .. container:: eegdash-badges text-center mb-4
+               Explore Datasets
 
-      .. image:: https://pepy.tech/badge/eegdash
-         :alt: Downloads
-         :target: https://pepy.tech/project/eegdash
+         .. container:: hf-hero-meta
 
-      .. image:: https://img.shields.io/github/license/eegdash/eegdash?style=flat-square
-         :alt: License
-         :target: https://github.com/eegdash/EEGDash/blob/main/LICENSE
+            .. container:: hf-pill
 
-      .. image:: https://img.shields.io/github/stars/eegdash/eegdash?style=flat-square
-         :alt: GitHub Stats
-         :target: https://github.com/eegdash/EEGDash
+               Open source
 
-   .. container:: eegdash-hero-actions
-   
-      .. button-ref:: install/install
-         :color: primary
-         :class: sd-btn-lg mr-2
-         
-         Get Started
+            .. container:: hf-pill
 
-      .. button-ref:: dataset_summary
-         :color: secondary
-         :class: sd-btn-lg
-         
-         Explore Datasets
+               500+ datasets
 
-.. grid:: 1 2 3 3
-    :gutter: 3
-    :class-container: pb-5
+            .. container:: hf-pill
 
-    .. grid-item-card::  Datasets
-        :link: dataset_summary
-        :link-type: doc
-        :text-align: center
-        :class-card: feature-card
+               BIDS-first
 
-        :octicon:`database;1em;sd-text-primary`
-        
-        Access **500+ standardized M/EEG datasets** from multiple institutions with unified metadata.
+         .. container:: hf-badges
 
-    .. grid-item-card:: Preprocessing
-        :link: user_guide
-        :link-type: doc
-        :text-align: center
-        :class-card: feature-card
+            .. image:: https://github.com/eegdash/EEGDash/actions/workflows/tests.yml/badge.svg
+               :alt: Test Status
+               :target: https://github.com/eegdash/EEGDash/actions/workflows/tests.yml
 
-        :octicon:`plug;1em;sd-text-secondary`
-        
-        Seamless integration with **EEGPrep**, **MNE-Python**, and **BIDS** standards for easy preprocessing.
+            .. image:: https://github.com/eegdash/EEGDash/actions/workflows/doc.yaml/badge.svg
+               :alt: Doc Status
+               :target: https://github.com/eegdash/EEGDash/actions/workflows/doc.yaml
 
-    .. grid-item-card::  Feature Extraction and Hugging Face Integration
-        :link: generated/auto_examples/index
-        :link-type: doc
-        :text-align: center
-        :class-card: feature-card
+            .. image:: https://img.shields.io/pypi/v/eegdash?color=blue&style=flat-square
+               :alt: PyPI
+               :target: https://pypi.org/project/eegdash/
 
-        :octicon:`gear;1em;sd-text-success`
-        
-        Reproducible machine learning benchmarks and advanced data analysis pipelines.
+            .. image:: https://img.shields.io/github/stars/eegdash/eegdash?style=flat-square
+               :alt: GitHub Stars
+               :target: https://github.com/eegdash/EEGDash
+
+      .. grid-item::
+         :class: hf-hero-panel hf-reveal hf-delay-2
+
+         .. container:: hf-hero-card
+
+            .. rst-class:: hf-card-title
+
+               Quickstart
+
+            .. code-block:: bash
+
+               pip install eegdash
+
+            .. rst-class:: hf-card-note
+
+               Pull standardized metadata, run EEGPrep pipelines, and publish model-ready features.
+
+            .. container:: hf-card-actions
+
+               .. button-ref:: user_guide
+                  :color: secondary
+                  :class: sd-btn-sm hf-btn hf-btn-ghost
+
+                  Read the Guide
+
+               .. button-ref:: generated/auto_examples/index
+                  :color: secondary
+                  :class: sd-btn-sm hf-btn hf-btn-ghost
+
+                  Browse Examples
+
+         .. container:: hf-hero-stats
+
+            .. container:: hf-stat
+
+               .. rst-class:: hf-stat-value
+
+                  500+
+
+               .. rst-class:: hf-stat-label
+
+                  Datasets
+
+            .. container:: hf-stat
+
+               .. rst-class:: hf-stat-value
+
+                  5
+
+               .. rst-class:: hf-stat-label
+
+                  Modalities
+
+            .. container:: hf-stat
+
+               .. rst-class:: hf-stat-value
+
+                  BIDS
+
+               .. rst-class:: hf-stat-label
+
+                  Standard
 
 .. raw:: html
 
-    <h2 style="text-align: center; margin-top: 3rem; margin-bottom: 2rem;">Institutions</h2>
+   <h2 class="hf-section-title">Build, benchmark, and share at scale</h2>
+   <p class="hf-section-subtitle">From ingestion to evaluation, EEG Dash keeps workflows reproducible and datasets easy to explore.</p>
 
-.. container:: logos-container
+.. grid:: 1 1 3 3
+   :gutter: 4
+   :class-container: hf-feature-grid
+
+   .. grid-item-card:: Dataset Atlas
+      :link: dataset_summary
+      :link-type: doc
+      :text-align: left
+      :class-card: feature-card hf-reveal hf-delay-1
+
+      :octicon:`database;1.6em;sd-text-primary`
+
+      Browse curated metadata, licensing, and modality coverage across hundreds of studies.
+
+   .. grid-item-card:: Pipeline Library
+      :link: user_guide
+      :link-type: doc
+      :text-align: left
+      :class-card: feature-card hf-reveal hf-delay-2
+
+      :octicon:`plug;1.6em;sd-text-primary`
+
+      Run EEGPrep and MNE-compatible workflows with traceable preprocessing decisions.
+
+   .. grid-item-card:: Benchmarks and HF Integration
+      :link: generated/auto_examples/index
+      :link-type: doc
+      :text-align: left
+      :class-card: feature-card hf-reveal hf-delay-3
+
+      :octicon:`rocket;1.6em;sd-text-primary`
+
+      Publish reproducible baselines and export model-ready features for the Hugging Face ecosystem.
+
+.. raw:: html
+
+   <h2 class="hf-section-title">A research-ready workflow</h2>
+   <p class="hf-section-subtitle">Keep ingestion, preprocessing, and benchmarking in one auditable pipeline.</p>
+
+.. grid:: 1 1 3 3
+   :gutter: 3
+   :class-container: hf-step-grid
+
+   .. grid-item::
+      :class: hf-step hf-reveal hf-delay-1
+
+      .. rst-class:: hf-step-title
+
+         1. Ingest
+
+      .. rst-class:: hf-step-text
+
+         Validate metadata and harmonize datasets across labs and modalities.
+
+   .. grid-item::
+      :class: hf-step hf-reveal hf-delay-2
+
+      .. rst-class:: hf-step-title
+
+         2. Preprocess
+
+      .. rst-class:: hf-step-text
+
+         Apply standardized pipelines with transparent QC and reporting.
+
+   .. grid-item::
+      :class: hf-step hf-reveal hf-delay-3
+
+      .. rst-class:: hf-step-title
+
+         3. Benchmark
+
+      .. rst-class:: hf-step-text
+
+         Compare models across tasks, export features, and share results.
+
+.. raw:: html
+
+   <h2 class="hf-section-title hf-section-title-center">Institutions</h2>
+
+.. container:: logos-container hf-logo-cloud
 
     .. container:: logo-item
 
@@ -159,6 +261,30 @@
             :class: can-zoom only-light
             :width: 300px
 
+.. container:: hf-callout hf-reveal hf-delay-2
+
+   .. rst-class:: hf-callout-title
+
+      Build with the community
+
+   .. rst-class:: hf-callout-text
+
+      Share datasets, contribute pipelines, and help define open standards for M/EEG.
+
+   .. container:: hf-callout-actions
+
+      .. button-link:: https://github.com/eegdash/EEGDash
+         :color: secondary
+         :class: sd-btn-lg hf-btn hf-btn-secondary
+
+         GitHub
+
+      .. button-link:: https://discord.gg/8jd7nVKwsc
+         :color: primary
+         :class: sd-btn-lg hf-btn hf-btn-primary
+
+         Join Discord
+
 .. toctree::
    :hidden:
 
@@ -167,4 +293,3 @@
    API <api/api>
    Dataset Catalog <dataset_summary>
    Examples <generated/auto_examples/index>
-

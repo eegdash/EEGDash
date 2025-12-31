@@ -416,6 +416,7 @@ class Record(TypedDict, total=False):
 
     dataset: str  # FK to Dataset.dataset_id
     data_name: str
+    bidspath: str  # Legacy field, but used by tests/clients. Format: "{dataset}/{bids_relpath}"
     bids_relpath: str
     datatype: str
     suffix: str
@@ -525,6 +526,7 @@ def create_record(
     return Record(
         dataset=dataset,
         data_name=f"{dataset}_{PurePosixPath(bids_relpath).name}",
+        bidspath=f"{dataset}/{bids_relpath}",
         bids_relpath=bids_relpath,
         datatype=datatype,
         suffix=suffix,

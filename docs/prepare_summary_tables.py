@@ -3,6 +3,8 @@ import json
 import os
 import textwrap
 import urllib.request
+from collections import Counter
+from urllib.parse import quote
 from argparse import ArgumentParser
 from datetime import datetime
 from pathlib import Path
@@ -517,38 +519,73 @@ def main(source_dir: str, target_dir: str):
 
 
 def parse_freqs(value) -> str:
-    if isinstance(value, str):
-        value = value.strip("[]")
-        if not value:  # empty string after stripping
-            return ""
-        parts = [p.strip() for p in value.split(",") if p.strip()]
-        if not parts:
-            return ""
-        try:
-            freq = [int(float(f)) for f in parts]
-        except ValueError:
-            return ""  # couldn't parse
-        if len(freq) == 1:
-            return f"{int(freq[0])}"
-        else:
-            return f"{int(np.median(freq))}*"
+    """Parse frequencies/channels list and return mode with * if variable.
 
-    elif isinstance(value, (int, float)) and not pd.isna(value):
-        return f"{int(value)}"
-    elif isinstance(value, list):
-        if not value:
-            return ""
-        try:
-            freq = [int(float(f)) for f in value if f is not None]
-        except (ValueError, TypeError):
-            return ""
-        if not freq:
-            return ""
-        if len(freq) == 1:
-            return f"{int(freq[0])}"
-        else:
-            return f"{int(np.median(freq))}*"
-    return ""  # for other types like nan
+    Supports:
+    - List of values: [64, 64, 64, 63]
+    - List of dicts (from API aggregation): [{"val": 64, "count": 100}, {"val": 63, "count": 1}]
+    - Single value: 64
+    - String: "[64, 63]"
+    """
+    if not value:
+        return ""
+
+    counts = Counter()
+
+    # 1. Handle API aggregation format (list of dicts)
+    if (
+        isinstance(value, list)
+        and value
+        and isinstance(value[0], dict)
+        and "val" in value[0]
+    ):
+        for item in value:
+            val = item.get("val")
+            count = item.get("count", 1)
+            if val is not None:
+                try:
+                    # Normalize to int for display (e.g. 64.0 -> 64)
+                    val_int = int(float(val))
+                    counts[val_int] += count
+                except (ValueError, TypeError):
+                    pass
+
+    # 2. Handle simple list of values or string representation
+    else:
+        freqs = []
+        if isinstance(value, str):
+            value = value.strip("[]")
+            if not value:
+                return ""
+            parts = [p.strip() for p in value.split(",") if p.strip()]
+            try:
+                freqs = [float(f) for f in parts]
+            except ValueError:
+                pass
+        elif isinstance(value, (int, float)) and not pd.isna(value):
+            freqs = [value]
+        elif isinstance(value, list):
+            try:
+                freqs = [float(f) for f in value if f is not None]
+            except (ValueError, TypeError):
+                pass
+
+        # Count frequencies
+        for f in freqs:
+            try:
+                counts[int(f)] += 1
+            except ValueError:
+                pass
+
+    if not counts:
+        return ""
+
+    most_common_val, _ = counts.most_common(1)[0]
+
+    if len(counts) == 1:
+        return f"{most_common_val}"
+    else:
+        return f"{most_common_val}*"
 
 
 def save_summary_stats(df_raw: pd.DataFrame):
@@ -638,6 +675,11 @@ def fetch_datasets_from_api(
 
     print(f"Fetched {len(all_datasets)} datasets total")
 
+    # Fetch global stats once
+    # We collect IDs to potentially optimize the query
+    dataset_ids = {ds.get("dataset_id") for ds in all_datasets if ds.get("dataset_id")}
+    global_stats = fetch_global_record_stats(database, dataset_ids)
+
     # Convert API response to DataFrame with expected columns
     rows = []
     for ds in datasets:
@@ -649,14 +691,19 @@ def fetch_datasets_from_api(
         ):
             continue
 
+        # Get stats from global dict - now expecting counts dict or list of dicts
+        ds_stats = global_stats.get(ds_id, {})
+        nchans_list = ds_stats.get("nchans_counts", [])
+        sfreq_list = ds_stats.get("sfreq_counts", [])
+
         row = {
             "dataset": ds.get("dataset_id", ds.get("name", "")),
             "record_modality": ds.get("recording_modality", ""),
             "n_records": ds.get("total_files", 0) or 0,
             "n_subjects": ds.get("demographics", {}).get("subjects_count", 0) or 0,
             "n_tasks": len(ds.get("tasks", [])) or 0,
-            "nchans_set": "",  # Not available in current API schema
-            "sampling_freqs": "",  # Not available in current API schema
+            "nchans_set": nchans_list,
+            "sampling_freqs": sfreq_list,
             "size": human_readable_size(ds.get("size_bytes") or 0),
             "size_bytes": ds.get("size_bytes") or 0,
             "dataset_name": ds.get("name", ""),
@@ -676,6 +723,23 @@ def fetch_datasets_from_api(
     df = pd.DataFrame(rows)
     print(f"Created DataFrame with {len(df)} datasets")
     return df
+
+
+def fetch_global_record_stats(database: str, dataset_ids: set[str] = None):
+    """Fetch nchans and sfreq aggregated stats for all datasets."""
+    print("Fetching global record statistics (aggregated endpoint)...")
+    url = f"{API_BASE_URL}/{database}/datasets/stats/records"
+
+    try:
+        with urllib.request.urlopen(url, timeout=120) as response:
+            resp_json = json.loads(response.read().decode("utf-8"))
+    except Exception as e:
+        print(f"Error fetching global stats: {e}")
+        return {}
+
+    data = resp_json.get("data", {})
+    print(f"Fetched stats for {len(data)} datasets")
+    return data
 
 
 def main_from_api(target_dir: str, database: str = DEFAULT_DATABASE, limit: int = 1000):

@@ -55,18 +55,22 @@ def test_minirelease_subject_raw_equivalence(warmed_mongo, cache_dir: Path):
     assert len(ds_mini.datasets) > 0
     assert len(ds_full.datasets) > 0
 
-    # Identify a common BIDS file (bidspath) present in both (bucket prefixes differ between mini/full)
-    mini_paths = {d.record["bidspath"] for d in ds_mini.datasets}
-    full_paths = {d.record["bidspath"] for d in ds_full.datasets}
+    # Identify a common BIDS file (relative path) present in both
+    mini_paths = {d.record["bids_relpath"] for d in ds_mini.datasets}
+    full_paths = {d.record["bids_relpath"] for d in ds_full.datasets}
     intersection = mini_paths & full_paths
     assert intersection, "No common recordings found for the chosen subject"
 
     common_path = next(iter(intersection))
     mini_idx = next(
-        i for i, d in enumerate(ds_mini.datasets) if d.record["bidspath"] == common_path
+        i
+        for i, d in enumerate(ds_mini.datasets)
+        if d.record["bids_relpath"] == common_path
     )
     full_idx = next(
-        i for i, d in enumerate(ds_full.datasets) if d.record["bidspath"] == common_path
+        i
+        for i, d in enumerate(ds_full.datasets)
+        if d.record["bids_relpath"] == common_path
     )
 
     raw_mini = ds_mini.datasets[mini_idx].raw

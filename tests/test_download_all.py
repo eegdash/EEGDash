@@ -1,32 +1,32 @@
 from unittest.mock import patch
 
+import pytest
+
 import eegdash.dataset.dataset as dataset_mod
+from eegdash import EEGDash
 from eegdash.dataset.dataset import EEGDashDataset
-from eegdash.schemas import create_record
+
+OPENNEURO_DATASET = "ds000248"
 
 
-def _make_records(dataset_id: str, count: int):
-    records = []
-    for idx in range(count):
-        subject = f"{idx:02d}"
-        bids_relpath = f"sub-{subject}/eeg/sub-{subject}_task-test_eeg.bdf"
-        records.append(
-            create_record(
-                dataset=dataset_id,
-                storage_base="s3://example-bucket",
-                bids_relpath=bids_relpath,
-                subject=subject,
-                task="test",
-                sampling_frequency=100.0,
-                ntimes=1,
-            )
-        )
+@pytest.fixture(scope="session")
+def ds000248_records():
+    eegdash = EEGDash()
+    try:
+        records = eegdash.find({"dataset": OPENNEURO_DATASET}, limit=2)
+    except Exception as exc:
+        pytest.skip(f"EEGDash API unavailable for {OPENNEURO_DATASET}: {exc}")
+    if len(records) < 2:
+        pytest.skip(f"Not enough records returned for {OPENNEURO_DATASET}")
     return records
 
 
-def test_download_all_skips_when_disabled(tmp_path):
-    records = _make_records("ds000001", 2)
-    dataset = EEGDashDataset(cache_dir=tmp_path, records=records, download=False)
+def _build_dataset(tmp_path, records, *, download=True):
+    return EEGDashDataset(cache_dir=tmp_path, records=records, download=download)
+
+
+def test_download_all_skips_when_disabled(tmp_path, ds000248_records):
+    dataset = _build_dataset(tmp_path, [ds000248_records[0]], download=False)
 
     with patch.object(
         dataset_mod.EEGDashRaw, "_download_required_files", autospec=True
@@ -36,13 +36,21 @@ def test_download_all_skips_when_disabled(tmp_path):
     download_mock.assert_not_called()
 
 
-def test_download_all_only_missing_files(tmp_path):
-    records = _make_records("ds000002", 2)
-    dataset = EEGDashDataset(cache_dir=tmp_path, records=records)
+def test_download_all_only_missing_files(tmp_path, ds000248_records):
+    records = ds000248_records[:2]
+    dataset = _build_dataset(tmp_path, records)
 
     cached_path = dataset.datasets[0].filecache
     cached_path.parent.mkdir(parents=True, exist_ok=True)
     cached_path.write_text("cached")
+    for dep_path in getattr(dataset.datasets[0], "_dep_paths", []):
+        dep_path.parent.mkdir(parents=True, exist_ok=True)
+        dep_path.write_text("cached")
+
+    missing_path = dataset.datasets[1].filecache
+    missing_path.unlink(missing_ok=True)
+    for dep_path in getattr(dataset.datasets[1], "_dep_paths", []):
+        dep_path.unlink(missing_ok=True)
 
     with patch.object(
         dataset_mod.EEGDashRaw, "_download_required_files", autospec=True
@@ -55,9 +63,14 @@ def test_download_all_only_missing_files(tmp_path):
     assert dataset.datasets[0] not in called_datasets
 
 
-def test_download_all_uses_parallel(tmp_path, monkeypatch):
-    records = _make_records("ds000003", 3)
-    dataset = EEGDashDataset(cache_dir=tmp_path, records=records)
+def test_download_all_uses_parallel(tmp_path, monkeypatch, ds000248_records):
+    records = ds000248_records[:2]
+    dataset = _build_dataset(tmp_path, records)
+
+    for ds in dataset.datasets:
+        ds.filecache.unlink(missing_ok=True)
+        for dep_path in getattr(ds, "_dep_paths", []):
+            dep_path.unlink(missing_ok=True)
 
     parallel_calls = []
 

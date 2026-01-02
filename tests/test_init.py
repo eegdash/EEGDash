@@ -30,8 +30,8 @@ def test_dataset_api():
 def test_number_recordings():
     eeg_dash_instance = EEGDash()
 
-    records = eeg_dash_instance.find({})
+    count = eeg_dash_instance.count({})
 
-    assert isinstance(records, list)
-    assert len(records) >= 55088
+    assert isinstance(count, int)
+    assert count >= 55088
     # As of the last known count in 9 of jun of 2025, there are 55088 recordings in the dataset

@@ -125,3 +125,151 @@ def test_build_trial_table_without_feedback_column():
     assert row["rt_from_trialstart"] == pytest.approx(1.5)
     assert row["response_type"] == "right_buttonPress"
     assert row["correct"] is None
+
+
+def test_annotate_trials_with_target(tmp_path):
+    # Setup dummy BIDS structure
+    sub = "01"
+    ses = "01"
+    task = "test"
+    run = "01"
+
+    bids_root = tmp_path / "bids_dataset"
+    bids_root.mkdir()
+
+    # Create events file
+    events_dir = bids_root / f"sub-{sub}" / f"ses-{ses}" / "eeg"
+    events_dir.mkdir(parents=True)
+    events_fname = f"sub-{sub}_ses-{ses}_task-{task}_run-{run}_events.tsv"
+
+    # Minimal events for a valid trial
+    events_data = {
+        "onset": [1.0, 2.0, 3.0, 4.0],
+        "duration": [0, 0, 0, 0],
+        "value": [
+            "contrastTrial_start",
+            "left_target",
+            "left_buttonPress",
+            "contrastTrial_start",  # Next trial to end previous
+        ],
+    }
+    pd.DataFrame(events_data).to_csv(events_dir / events_fname, sep="\t", index=False)
+
+    # Mock Raw
+    raw_fname = f"sub-{sub}_ses-{ses}_task-{task}_run-{run}_eeg.vhdr"
+    raw_path = events_dir / raw_fname
+    # We don't need real EEG file, just the path matching for get_bids_path
+
+    # Create a raw object with matching filename
+    info = mne.create_info(["ch1"], 1000.0, ["eeg"])
+    raw = mne.io.RawArray(np.zeros((1, 5000)), info)
+
+    # Mock filenames attribute (hacky but works for the test)
+    raw._filenames = [str(raw_path)]
+
+    # Run annotation
+    # We need to compute what rt_from_stimulus would be:
+    # stim at 2.0, resp at 3.0 -> rt = 1.0
+    from eegdash.hbn.windows import annotate_trials_with_target
+
+    raw = annotate_trials_with_target(raw, target_field="rt_from_stimulus")
+
+    assert len(raw.annotations) == 1
+    assert raw.annotations.description[0] == "contrast_trial_start"
+    assert raw.annotations.onset[0] == 1.0
+
+    # Check extras
+    extras = raw.annotations.extras[0]
+    assert extras["target"] == 1.0
+    assert extras["stimulus_onset"] == 2.0
+    assert extras["response_onset"] == 3.0
+
+
+def test_add_aux_anchors():
+    from eegdash.hbn.windows import add_aux_anchors
+
+    info = mne.create_info(["ch1"], 1000.0, ["eeg"])
+    raw = mne.io.RawArray(np.zeros((1, 5000)), info)
+
+    # Create an annotation with extras
+    extras = {"stimulus_onset": 2.0, "response_onset": 3.0, "rt_from_stimulus": 1.0}
+
+    ann = mne.Annotations(
+        onset=[1.0],
+        duration=[2.0],
+        description=["contrast_trial_start"],
+        extras=[extras],
+    )
+    raw.set_annotations(ann)
+
+    raw = add_aux_anchors(raw)
+
+    # Should have 3 annotations now: start, stim_anchor, resp_anchor
+    assert len(raw.annotations) == 3
+
+    descs = raw.annotations.description
+    onsets = raw.annotations.onset
+
+    assert "contrast_trial_start" in descs
+    assert "stimulus_anchor" in descs
+    assert "response_anchor" in descs
+
+    # Check times
+    stim_idx = np.where(descs == "stimulus_anchor")[0][0]
+    assert onsets[stim_idx] == 2.0
+
+    resp_idx = np.where(descs == "response_anchor")[0][0]
+    assert onsets[resp_idx] == 3.0
+
+
+def test_add_extras_columns():
+    from braindecode.datasets import BaseConcatDataset
+    from braindecode.datasets.base import BaseDataset
+    from eegdash.hbn.windows import add_extras_columns
+
+    # 1. Create BaseConcatDataset with one recording having annotations+extras
+    info = mne.create_info(["ch1"], 100.0, ["eeg"])
+    raw = mne.io.RawArray(np.zeros((1, 1000)), info)
+
+    extras = {"target": 0.5, "correct": 1}
+    ann = mne.Annotations(
+        onset=[1.0],
+        duration=[1.0],
+        description=["contrast_trial_start"],
+        extras=[extras],
+    )
+    raw.set_annotations(ann)
+
+    base_ds = BaseDataset(raw, description=None)
+    original_concat_ds = BaseConcatDataset([base_ds])
+
+    # 2. Create WindowsDataset (mocked)
+    # We need a metadata df
+    metadata = pd.DataFrame(
+        {
+            "i_window_in_trial": [0, 1],
+            "i_start_in_trial": [0, 100],
+            "i_stop_in_trial": [100, 200],
+            "target": [-1, -1],  # placeholder
+        }
+    )
+
+    # We can mock WindowsDataset by just attaching metadata to a BaseDataset (duck typing)
+    win_ds = BaseDataset(raw, description=None)
+    win_ds.metadata = metadata
+
+    windows_concat_ds = BaseConcatDataset([win_ds])
+
+    # 3. Run add_extras_columns
+    windows_concat_ds = add_extras_columns(windows_concat_ds, original_concat_ds)
+
+    # 4. Verify metadata
+    md = windows_concat_ds.datasets[0].metadata
+
+    assert "target" in md.columns
+    # Both windows belong to the 0-th trial (cumulatively)
+    # The function maps windows to trials based on i_window_in_trial==0
+
+    assert md.iloc[0]["target"] == 0.5
+    assert md.iloc[1]["target"] == 0.5
+    assert md.iloc[0]["correct"] == 1

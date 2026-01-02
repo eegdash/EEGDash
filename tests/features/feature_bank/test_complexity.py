@@ -89,3 +89,28 @@ def test_complexity_lempel_ziv(sine_wave, random_noise):
     lz_noise = complexity_lempel_ziv(random_noise[None, :])
 
     assert lz_sin < lz_noise
+
+
+def test_complexity_lempel_ziv_correctness():
+    # Test specific patterns
+
+    # 1. Constant signal
+    # Binary: all 0s (or all 1s if >=thresh). LZC should be low.
+    x_const = np.zeros((1, 100))
+    lzc_const = complexity_lempel_ziv(x_const, threshold=0.1, normalize=True)
+    # Normalized LZC approaches 0 for constant/periodic
+    assert lzc_const < 0.15
+
+    # 2. Alternating 0 1 0 1 ...
+    x_alt = np.tile([0, 1], 50).reshape(1, -1).astype(float)
+    lzc_alt = complexity_lempel_ziv(x_alt, threshold=0.5, normalize=True)
+    # Simple periodic pattern, low complexity
+    assert lzc_alt < 0.2
+
+    # 3. Random noise
+    np.random.seed(42)
+    x_rand = np.random.randn(1, 100)
+    lzc_rand = complexity_lempel_ziv(x_rand, normalize=True)
+    # Random sequence should have high LZC
+    assert lzc_rand > lzc_alt
+    assert lzc_rand > 0.8  # Normalized LZC for random seq -> 1.0 asymptotically

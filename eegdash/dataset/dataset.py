@@ -249,13 +249,7 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
 
         if records is not None:
             self.records = records
-            # Validate that records are v2 format
-            for rec in self.records:
-                errors = validate_record(rec)
-                if errors:
-                    raise ValueError(
-                        f"Record must be v2 format with storage.base: {errors}"
-                    )
+
             datasets = [
                 EEGDashRaw(
                     record,

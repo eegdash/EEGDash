@@ -302,16 +302,6 @@ DATASET_PAGE_TEMPLATE = """{notice}{title}
 
 {hero_section}
 
-Highlights
-----------
-
-{highlights_section}
-
-Quickstart
-----------
-
-{quickstart_section}
-
 Dataset Information
 -------------------
 
@@ -551,13 +541,23 @@ def _clean_value(value: object, default: str = "") -> str:
     return text
 
 
+def _collapse_whitespace(text: str) -> str:
+    if not text:
+        return ""
+    return " ".join(text.split())
+
+
 def _normalize_list(value: object) -> list[str]:
     if value is None:
         return []
     if isinstance(value, list):
-        items = [str(item).strip() for item in value if str(item).strip()]
+        items = [
+            _collapse_whitespace(str(item).strip())
+            for item in value
+            if str(item).strip()
+        ]
         return items
-    text = str(value).strip()
+    text = _collapse_whitespace(str(value).strip())
     return [text] if text else []
 
 
@@ -625,7 +625,7 @@ def _build_dataset_context(
         "class_name": class_name,
         "dataset_id": dataset_id,
         "dataset_upper": dataset_id.upper(),
-        "title": _clean_value(details.get("title")),
+        "title": _collapse_whitespace(_clean_value(details.get("title"))),
         "authors": details.get("authors", []),
         "license": _clean_value(details.get("license")),
         "doi": _clean_value(details.get("doi")),

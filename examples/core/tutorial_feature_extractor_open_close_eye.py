@@ -31,10 +31,18 @@ This example uses the :mod:`eegdash` library in combination with PyTorch to deve
 
 # %%
 from pathlib import Path
+import os
+
+os.environ.setdefault("NUMBA_DISABLE_JIT", "1")
+os.environ.setdefault("_MNE_FAKE_HOME_DIR", str(Path.cwd()))
+(Path(os.environ["_MNE_FAKE_HOME_DIR"]) / ".mne").mkdir(exist_ok=True)
 
 from eegdash import EEGDashDataset
 
-cache_folder = Path.home() / "eegdash"
+cache_folder = Path(
+    os.getenv("EEGDASH_CACHE_DIR", Path.cwd() / "eegdash_cache")
+).resolve()
+cache_folder.mkdir(parents=True, exist_ok=True)
 
 ds_eoec = EEGDashDataset(
     dataset="ds005514",

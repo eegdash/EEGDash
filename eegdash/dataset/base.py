@@ -20,7 +20,7 @@ from braindecode.datasets.base import RawDataset
 
 from .. import downloader
 from ..logging import logger
-from ..records import validate_record
+from ..schemas import validate_record
 
 
 class EEGDashRaw(RawDataset):
@@ -160,7 +160,6 @@ class EEGDashRaw(RawDataset):
     def __len__(self) -> int:
         """Return the number of samples in the dataset."""
         if self._raw is None:
-            # v2 records may not have ntimes/sampling_frequency - use .get() for safety
             ntimes = self.record.get("ntimes")
             sfreq = self.record.get("sampling_frequency")
             if ntimes is None or sfreq is None:

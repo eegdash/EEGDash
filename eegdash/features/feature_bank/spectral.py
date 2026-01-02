@@ -71,7 +71,10 @@ def spectral_hjorth_mobility(f, p, /):
 @FeaturePredecessor(spectral_normalized_preprocessor)
 @univariate_feature
 def spectral_hjorth_complexity(f, p, /):
-    return np.sqrt(np.sum(np.power(f, 4) * p, axis=-1))
+    M2 = np.sum(np.power(f, 2) * p, axis=-1)
+    M4 = np.sum(np.power(f, 4) * p, axis=-1)
+    M0 = np.sum(p, axis=-1)
+    return np.sqrt(M4 * M0) / M2
 
 
 @FeaturePredecessor(spectral_normalized_preprocessor)

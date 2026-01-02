@@ -127,21 +127,21 @@
    <p class="hf-section-subtitle">Search-first discovery with reproducible pipelines and standardized metadata.</p>
 
 
-      .. image:: https://github.com/eegdash/EEGDash/actions/workflows/tests.yml/badge.svg
-         :alt: Test Status
-         :target: https://github.com/eegdash/EEGDash/actions/workflows/tests.yml
+.. image:: https://github.com/eegdash/EEGDash/actions/workflows/tests.yml/badge.svg
+   :alt: Test Status
+   :target: https://github.com/eegdash/EEGDash/actions/workflows/tests.yml
 
-      .. image:: https://github.com/eegdash/EEGDash/actions/workflows/doc.yaml/badge.svg
-         :alt: Doc Status
-         :target: https://github.com/eegdash/EEGDash/actions/workflows/doc.yaml
+.. image:: https://github.com/eegdash/EEGDash/actions/workflows/doc.yaml/badge.svg
+   :alt: Doc Status
+   :target: https://github.com/eegdash/EEGDash/actions/workflows/doc.yaml
 
-      .. image:: https://img.shields.io/pypi/v/eegdash?color=blue&style=flat-square
-         :alt: PyPI
-         :target: https://pypi.org/project/eegdash/
+.. image:: https://img.shields.io/pypi/v/eegdash?color=blue&style=flat-square
+   :alt: PyPI
+   :target: https://pypi.org/project/eegdash/
 
-      .. image:: https://img.shields.io/github/stars/eegdash/eegdash?style=flat-square
-         :alt: GitHub Stars
-         :target: https://github.com/eegdash/EEGDash
+.. image:: https://img.shields.io/github/stars/eegdash/eegdash?style=flat-square
+   :alt: GitHub Stars
+   :target: https://github.com/eegdash/EEGDash
 
 
 .. grid:: 1 2 4 4

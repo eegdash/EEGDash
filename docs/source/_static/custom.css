@@ -246,6 +246,38 @@ article a:not(.btn):not(.headerlink):not(.sd-btn):hover {
   font-size: 1.4rem;
 }
 
+/* API Reference Component Grid */
+.api-grid-card-header,
+.api-grid-card__header {
+  padding: 1.35rem 1.5rem 1rem;
+}
+
+.api-grid-card__icon {
+  font-size: 2.2rem;
+}
+
+.api-grid-card-title,
+.api-grid-card__title {
+  font-size: 1.3rem;
+  margin: 0.35rem 0 0;
+}
+
+.api-grid-card-body .sd-card-text,
+.api-grid-card__body .sd-card-text {
+  font-size: 1.05rem;
+}
+
+.api-grid-card-footer,
+.api-grid-card__footer {
+  padding: 1rem 1.5rem 1.35rem;
+}
+
+.api-grid-card-button,
+.api-grid-card__button {
+  font-size: 1rem !important;
+  padding: 0.65rem 1.4rem !important;
+}
+
 /* --------------------------------------------------------------------------
    7. Code Blocks & Code Aesthetics
    -------------------------------------------------------------------------- */

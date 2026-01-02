@@ -126,6 +126,24 @@
    <h2 class="hf-section-title">At a glance</h2>
    <p class="hf-section-subtitle">Search-first discovery with reproducible pipelines and standardized metadata.</p>
 
+
+      .. image:: https://github.com/eegdash/EEGDash/actions/workflows/tests.yml/badge.svg
+         :alt: Test Status
+         :target: https://github.com/eegdash/EEGDash/actions/workflows/tests.yml
+
+      .. image:: https://github.com/eegdash/EEGDash/actions/workflows/doc.yaml/badge.svg
+         :alt: Doc Status
+         :target: https://github.com/eegdash/EEGDash/actions/workflows/doc.yaml
+
+      .. image:: https://img.shields.io/pypi/v/eegdash?color=blue&style=flat-square
+         :alt: PyPI
+         :target: https://pypi.org/project/eegdash/
+
+      .. image:: https://img.shields.io/github/stars/eegdash/eegdash?style=flat-square
+         :alt: GitHub Stars
+         :target: https://github.com/eegdash/EEGDash
+
+
 .. grid:: 1 2 4 4
    :gutter: 3
    :class-container: hf-stat-grid
@@ -186,29 +204,29 @@
 
          Community-driven datasets, pipelines, and benchmarks.
 
-.. container:: hf-trust
+.. container:: hf-callout hf-reveal hf-delay-2
 
-   .. rst-class:: hf-trust-title
+   .. rst-class:: hf-callout-title
 
-      Trusted by labs and open-source community
+      Build with the community
 
-   .. container:: hf-trust-badges
+   .. rst-class:: hf-callout-text
 
-      .. image:: https://github.com/eegdash/EEGDash/actions/workflows/tests.yml/badge.svg
-         :alt: Test Status
-         :target: https://github.com/eegdash/EEGDash/actions/workflows/tests.yml
+      Share datasets, contribute pipelines, and help define open standards for EEG and MEG.
 
-      .. image:: https://github.com/eegdash/EEGDash/actions/workflows/doc.yaml/badge.svg
-         :alt: Doc Status
-         :target: https://github.com/eegdash/EEGDash/actions/workflows/doc.yaml
+   .. container:: hf-callout-actions
 
-      .. image:: https://img.shields.io/pypi/v/eegdash?color=blue&style=flat-square
-         :alt: PyPI
-         :target: https://pypi.org/project/eegdash/
+      .. button-link:: https://github.com/eegdash/EEGDash
+         :color: secondary
+         :class: sd-btn-lg hf-btn hf-btn-secondary
 
-      .. image:: https://img.shields.io/github/stars/eegdash/eegdash?style=flat-square
-         :alt: GitHub Stars
-         :target: https://github.com/eegdash/EEGDash
+         GitHub
+
+      .. button-link:: https://discord.gg/8jd7nVKwsc
+         :color: primary
+         :class: sd-btn-lg hf-btn hf-btn-primary
+
+         Join Discord
 
    .. container:: logos-container hf-logo-cloud
 
@@ -236,44 +254,6 @@
             :class: can-zoom only-light
             :width: 260px
 
-   .. container:: hf-trust-actions
-
-      .. button-link:: https://github.com/eegdash/EEGDash
-         :color: secondary
-         :class: sd-btn-sm hf-btn hf-btn-secondary
-
-         GitHub
-
-      .. button-link:: https://discord.gg/8jd7nVKwsc
-         :color: primary
-         :class: sd-btn-sm hf-btn hf-btn-primary
-
-         Join Discord
-
-
-.. container:: hf-callout hf-reveal hf-delay-2
-
-   .. rst-class:: hf-callout-title
-
-      Build with the community
-
-   .. rst-class:: hf-callout-text
-
-      Share datasets, contribute pipelines, and help define open standards for EEG and MEG.
-
-   .. container:: hf-callout-actions
-
-      .. button-link:: https://github.com/eegdash/EEGDash
-         :color: secondary
-         :class: sd-btn-lg hf-btn hf-btn-secondary
-
-         GitHub
-
-      .. button-link:: https://discord.gg/8jd7nVKwsc
-         :color: primary
-         :class: sd-btn-lg hf-btn hf-btn-primary
-
-         Join Discord
 
 .. toctree::
    :hidden:

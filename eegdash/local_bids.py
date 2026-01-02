@@ -11,7 +11,7 @@ from typing import Any
 
 from mne_bids import find_matching_paths
 
-from .records import create_record
+from .schemas import create_record
 
 _MODALITY_ALIASES = {"fnirs": "nirs"}
 

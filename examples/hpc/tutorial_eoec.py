@@ -25,6 +25,7 @@ import torch
 warnings.simplefilter("ignore", category=RuntimeWarning)
 
 os.environ.setdefault("NUMBA_DISABLE_JIT", "1")
+os.environ.setdefault("MNE_USE_NUMBA", "false")
 os.environ.setdefault("_MNE_FAKE_HOME_DIR", str(Path.cwd()))
 (Path(os.environ["_MNE_FAKE_HOME_DIR"]) / ".mne").mkdir(exist_ok=True)
 

@@ -2,6 +2,7 @@ from pathlib import Path
 from typing import Any
 
 from docstring_inheritance import NumpyDocstringInheritanceInitMeta
+from joblib import Parallel, delayed
 from rich.console import Console
 from rich.panel import Panel
 from rich.text import Text
@@ -342,6 +343,42 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
             )
 
         super().__init__(datasets)
+
+    def download_parallel(self, n_jobs: int | None = None) -> None:
+        """Download missing remote files in parallel.
+
+        Parameters
+        ----------
+        n_jobs : int | None
+            Number of parallel workers to use. If None, defaults to ``self.n_jobs``.
+
+        """
+        if not self.download:
+            return
+
+        if n_jobs is None:
+            n_jobs = self.n_jobs
+
+        targets: list[EEGDashRaw] = []
+        for ds in self.datasets:
+            if getattr(ds, "_raw_uri", None) is None:
+                continue
+            if not ds.filecache.exists() or any(
+                not path.exists() for path in getattr(ds, "_dep_paths", [])
+            ):
+                targets.append(ds)
+
+        if not targets:
+            return
+
+        if n_jobs == 1:
+            for ds in targets:
+                ds._download_required_files()
+            return
+
+        Parallel(n_jobs=n_jobs, prefer="threads")(
+            delayed(EEGDashRaw._download_required_files)(ds) for ds in targets
+        )
 
     def _find_local_bids_records(
         self, dataset_root: Path, filters: dict[str, Any]

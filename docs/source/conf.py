@@ -126,7 +126,6 @@ html_theme_options = {
         "alt_text": "EEG Dash Logo",
     },
     "external_links": [
-        {"name": "Community", "url": "https://discord.gg/8jd7nVKwsc"},
         {"name": "EEG2025", "url": "https://eeg2025.github.io/"},
     ],
     "icon_links": [

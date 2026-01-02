@@ -49,6 +49,7 @@ dependencies = [
   "rich",
   "pyarrow",
   "pandas>=2.0",
+  "pydantic",
 ]
 
 [project.urls]

@@ -539,6 +539,7 @@
    :hidden:
 
    Datasets <dataset_summary>
-   Pipelines <user_guide>
-   Benchmarks <generated/auto_examples/index>
-   Docs <install/install>
+   User Guide <user_guide>
+   Install <install/install>
+   Examples <generated/auto_examples/index>
+   Docs <generated/api/index>

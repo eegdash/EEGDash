@@ -21,7 +21,7 @@ from multiple sources. The package architecture consists of:
      - ``EEGDash`` client for querying metadata via REST API and coordinating downloads
    * - :mod:`eegdash.dataset`
      - ``EEGDashDataset``, ``EEGChallengeDataset``, and dynamically registered dataset classes
-   * - :mod:`eegdash.records`
+   * - :mod:`eegdash.schemas`
      - Schema definitions for ``Dataset`` and ``Record`` TypedDicts
    * - :mod:`eegdash.http_api_client`
      - HTTP connection management for the EEGDash API gateway

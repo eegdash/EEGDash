@@ -172,11 +172,11 @@ def _generate_rich_docstring(
 
     summary_bits: list[str] = []
     if modality:
-        summary_bits.append(f"Modality: {modality}")
+        summary_bits.append(f"Modality: ``{modality}``")
     if exp_type:
-        summary_bits.append(f"Experiment type: {exp_type}")
+        summary_bits.append(f"Experiment type: ``{exp_type}``")
     if subject_type:
-        summary_bits.append(f"Subject type: {subject_type}")
+        summary_bits.append(f"Subject type: ``{subject_type}``")
 
     summary_line = f"OpenNeuro dataset ``{dataset_id}``."
     if summary_bits:

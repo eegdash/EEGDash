@@ -1,13 +1,12 @@
 # Authors: The EEGDash contributors.
 # License: BSD-3-Clause
-# TODO: merge this with records.py, maybe change the name for better name, now that
-# we have the dataset model.
 """Pydantic models and TypedDict schemas for EEGDash documents.
 
 This module contains both the Pydantic models (for validation) and TypedDict
 definitions (for fast loading/runtime) of EEGDash Dataset and Record objects.
 
 Two-level hierarchy:
+
 - Dataset: per-dataset metadata (one per ds*, for discovery/filtering)
   Contains: identity, demographics, clinical, paradigm, timestamps
 - Record: per-file metadata (many per dataset, optimized for fast loading)

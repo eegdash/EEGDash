@@ -469,7 +469,7 @@ class EEGBIDSDataset:
 
         json_attrs = {
             "sfreq": modality_json.get("SamplingFrequency"),
-            "ntimes": modality_json.get("RecordingDuration"),
+            "duration": modality_json.get("RecordingDuration"),
             "nchans": modality_json.get("EEGChannelCount")
             or modality_json.get("MEGChannelCount")
             or modality_json.get("iEEGChannelCount"),
@@ -600,7 +600,13 @@ class EEGBIDSDataset:
         if participants_tsv.empty:
             return {}
         participants_tsv.set_index("participant_id", inplace=True)
-        subject = f"sub-{self.get_bids_file_attribute('subject', data_filepath)}"
+
+        subj_val = self.get_bids_file_attribute("subject", data_filepath)
+        # Ensure 'sub-' prefix is handled cleanly
+        if not subj_val.startswith("sub-"):
+            subject = f"sub-{subj_val}"
+        else:
+            subject = subj_val
 
         # Handle case where subject not found in participants.tsv
         if subject not in participants_tsv.index:

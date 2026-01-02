@@ -1740,6 +1740,26 @@ html[data-theme="dark"] .hf-callout {
   gap: 0.75rem;
 }
 
+.hf-callout-support {
+  margin: 1.75rem 0 0.75rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--hf-text-muted);
+}
+
+.hf-callout .hf-logo-cloud {
+  padding: 1rem 0 0;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+
+html[data-theme="dark"] .hf-callout .hf-logo-cloud {
+  background: transparent;
+}
+
 @media (max-width: 900px) {
   .hf-hero {
     padding: 2.5rem 2rem;

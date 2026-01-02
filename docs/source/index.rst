@@ -246,6 +246,10 @@
 
          Join Discord
 
+   .. rst-class:: hf-callout-support
+
+      Support Institutions
+
    .. container:: logos-container hf-logo-cloud
 
       .. container:: logo-item

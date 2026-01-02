@@ -1740,13 +1740,64 @@ html[data-theme="dark"] .hf-callout {
   gap: 0.75rem;
 }
 
-.hf-callout-support {
-  margin: 1.75rem 0 0.75rem;
+.hf-callout-support,
+.hf-callout-funders {
+  margin: 1.4rem 0 0.75rem;
   font-size: 0.85rem;
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--hf-text-muted);
+  position: relative;
+  padding-top: 1.1rem;
+}
+
+.hf-callout-support::before,
+.hf-callout-funders::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 160px;
+  height: 1px;
+  background: rgba(148, 163, 184, 0.4);
+}
+
+.hf-supporter-line {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.25rem;
+  margin: 1.35rem 0 0.6rem;
+}
+
+.hf-supporter-logo {
+  width: 92px;
+  height: auto;
+  opacity: 0.95;
+  filter: drop-shadow(0 6px 12px rgba(15, 23, 42, 0.15));
+}
+
+.hf-supporter-text {
+  margin: 0;
+  font-family: var(--pst-font-family-heading);
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--pst-color-text-base);
+  max-width: 12.5rem;
+  line-height: 1.15;
+  text-align: left;
+}
+
+html[data-theme="dark"] .hf-supporter-logo {
+  filter: drop-shadow(0 8px 16px rgba(15, 23, 42, 0.35));
+}
+
+html[data-theme="dark"] .hf-callout-support::before,
+html[data-theme="dark"] .hf-callout-funders::before {
+  background: rgba(148, 163, 184, 0.3);
 }
 
 .hf-callout .hf-logo-cloud {
@@ -1901,6 +1952,34 @@ html[data-theme="dark"] .dataset-summary-article h1 {
     0 8px 32px rgba(0, 108, 163, 0.08),
     inset 0 1px 0 rgba(255, 255, 255, 0.6);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+  padding: 0 !important;
+}
+
+.dataset-summary-page .dataset-counter-card .sd-card-title {
+  font-size: 1.35rem;
+  letter-spacing: 0.04em;
+}
+
+.dataset-summary-page .dataset-counter-card .sd-octicon {
+  font-size: 2.1em !important;
+}
+
+.dataset-summary-page .dataset-counter-card strong {
+  font-size: 2.35rem;
+  letter-spacing: -0.01em;
+}
+
+.dataset-summary-page .dataset-counter-card .sd-card-body {
+  padding: 1.35rem 1.25rem 1.55rem;
+}
+
+.dataset-summary-page .dataset-counter-card .sd-card-text {
+  margin: 0.45rem 0;
+}
+
+.dataset-summary-page .dataset-counter-svg {
+  max-width: 3.2rem;
+  max-height: 3.2rem;
 }
 
 .dataset-summary-page .dataset-counter-card:hover {
@@ -1921,7 +2000,7 @@ html[data-theme="dark"] .dataset-summary-page .dataset-counter-card {
 /* 3. Pill-Style Tab Navigation (React.dev style) */
 .dataset-summary-page .sd-tab-set>label {
   border-radius: 999px !important;
-  margin: 0 0.35rem;
+  margin: 0 0.5rem 0.4rem 0;
   padding: 0.65rem 1.5rem !important;
   background: rgba(0, 108, 163, 0.06);
   border: 1px solid transparent !important;
@@ -2121,7 +2200,7 @@ html[data-theme="dark"] .tag[data-tag-value="meg"] {
   .dataset-summary-page .sd-tab-set>label {
     padding: 0.5rem 1rem !important;
     font-size: 0.85rem;
-    margin: 0.15rem;
+    margin: 0.25rem;
   }
 }
 

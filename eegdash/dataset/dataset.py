@@ -23,7 +23,7 @@ from ..const import (
 from ..local_bids import discover_local_bids_records
 from ..logging import logger
 from ..paths import get_default_cache_dir
-from ..records import validate_record
+from ..schemas import validate_record
 from .base import EEGDashRaw
 from .bids_dataset import EEGBIDSDataset
 from .registry import register_openneuro_datasets

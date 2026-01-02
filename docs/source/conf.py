@@ -12,7 +12,6 @@ from typing import Iterable, Mapping, Sequence
 
 from sphinx.util import logging
 from sphinx_gallery.sorting import ExplicitOrder, FileNameSortKey
-from tabulate import tabulate
 
 sys.path.insert(0, os.path.abspath(".."))
 
@@ -276,6 +275,19 @@ sphinx_gallery_conf = {
 
 
 LOGGER = logging.getLogger(__name__)
+REPO_ROOT = Path(__file__).resolve().parents[2]
+CLONE_ROOT = REPO_ROOT / "ingestions" / "clone"
+_DATASET_DETAILS_CACHE: dict[str, dict[str, object]] = {}
+
+DEFAULT_METADATA_FIELDS = [
+    ("subject", "Subject identifier."),
+    ("session", "Session identifier."),
+    ("run", "Run identifier."),
+    ("task", "Task label."),
+    ("age", "Participant age (if available)."),
+    ("gender", "Participant gender (if available)."),
+    ("sex", "Participant sex (if available)."),
+]
 
 
 AUTOGEN_NOTICE = """..
@@ -288,24 +300,37 @@ AUTOGEN_NOTICE = """..
 DATASET_PAGE_TEMPLATE = """{notice}{title}
 {underline}
 
-.. currentmodule:: eegdash.dataset
+{hero_section}
 
-.. autoclass:: eegdash.dataset.{class_name}
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :inherited-members:
-   :member-order: bysource
+Highlights
+----------
+
+{highlights_section}
+
+Quickstart
+----------
+
+{quickstart_section}
 
 Dataset Information
 -------------------
 
-{metadata_section}
+{dataset_info_section}
 
-Usage Example
--------------
+Schema & metadata
+-----------------
 
-{usage_section}
+{schema_section}
+
+Quality & caveats
+-----------------
+
+{quality_section}
+
+API
+---
+
+{api_section}
 
 See Also
 --------
@@ -512,82 +537,353 @@ def _load_dataset_rows(dataset_names: Sequence[str]) -> Mapping[str, Mapping[str
     return rows
 
 
-def _format_metadata_section(row: Mapping[str, str] | None, class_name: str) -> str:
-    if not row:
-        return (
-            "Metadata for this dataset is not available in ``dataset_summary.csv``.\n"
-        )
+def _clean_value(value: object, default: str = "") -> str:
+    if value is None:
+        return default
+    text = str(value).strip()
+    if not text or text.lower() in {"nan", "none", "null"}:
+        return default
+    return text
 
-    def _clean(key: str, *, default: str | None = "") -> str:
-        value = row.get(key, "")
-        text = str(value).strip()
-        if not text and default is not None:
-            return default
-        return text
 
-    dataset_id = _clean("dataset", default="").lower() or class_name.lower()
-    dataset_upper = dataset_id.upper()
+def _normalize_list(value: object) -> list[str]:
+    if value is None:
+        return []
+    if isinstance(value, list):
+        items = [str(item).strip() for item in value if str(item).strip()]
+        return items
+    text = str(value).strip()
+    return [text] if text else []
 
-    summary_bits: list[str] = []
-    modality = _clean("modality of exp")
-    if modality:
-        summary_bits.append(f"Modality: {modality}")
-    exp_type = _clean("type of exp")
-    if exp_type:
-        summary_bits.append(f"Type: {exp_type}")
-    subject_type = _clean("Type Subject")
-    if subject_type:
-        summary_bits.append(f"Subjects: {subject_type}")
 
-    lines = [f"- **Dataset ID:** ``{dataset_upper}``"]
-    if summary_bits:
-        lines.append(f"- **Summary:** {' | '.join(summary_bits)}")
+def _value_or_unknown(value: str) -> str:
+    return value if value else "Unknown"
 
-    def _add_numeric(label: str, key: str) -> None:
-        value = _clean(key)
-        if value:
-            lines.append(f"- **{label}:** {value}")
 
-    _add_numeric("Number of Subjects", "n_subjects")
-    _add_numeric("Number of Recordings", "n_records")
-    _add_numeric("Number of Tasks", "n_tasks")
-    _add_numeric("Number of Channels", "nchans_set")
-    _add_numeric("Sampling Frequencies", "sampling_freqs")
-    _add_numeric("Total Duration (hours)", "duration_hours_total")
-    _add_numeric("Dataset Size", "size")
+def _normalize_doi(doi: str) -> str:
+    if not doi:
+        return ""
+    return doi.replace("doi:", "").strip()
 
-    nemar_url = f"https://nemar.org/dataexplorer/detail?dataset_id={dataset_id}"
-    openneuro_url = f"https://openneuro.org/datasets/{dataset_id}"
-    lines.append(f"- **OpenNeuro:** `{dataset_id} <{openneuro_url}>`__")
-    lines.append(f"- **NeMAR:** `{dataset_id} <{nemar_url}>`__")
 
-    table_row = {
-        "dataset": dataset_id,
-        "#Subj": _clean("n_subjects"),
-        "#Chan": _clean("nchans_set"),
-        "#Classes": _clean("n_tasks"),
-        "Freq(Hz)": _clean("sampling_freqs"),
-        "Duration(H)": _clean("duration_hours_total"),
-        "Size": _clean("size"),
+def _load_dataset_details(dataset_id: str) -> dict[str, object]:
+    dataset_id = dataset_id.lower()
+    cached = _DATASET_DETAILS_CACHE.get(dataset_id)
+    if cached is not None:
+        return cached
+
+    details: dict[str, object] = {}
+    dataset_dir = CLONE_ROOT / dataset_id
+    desc_path = dataset_dir / "dataset_description.json"
+    if desc_path.exists():
+        try:
+            data = json.loads(desc_path.read_text(encoding="utf-8"))
+        except Exception:
+            data = {}
+        details["title"] = _clean_value(data.get("Name"))
+        details["authors"] = _normalize_list(data.get("Authors"))
+        details["license"] = _clean_value(data.get("License"))
+        details["doi"] = _clean_value(data.get("DatasetDOI"))
+        details["how_to_acknowledge"] = _clean_value(data.get("HowToAcknowledge"))
+        details["references"] = _normalize_list(data.get("ReferencesAndLinks"))
+        details["funding"] = _normalize_list(data.get("Funding"))
+
+    manifest_path = dataset_dir / "manifest.json"
+    if manifest_path.exists():
+        try:
+            data = json.loads(manifest_path.read_text(encoding="utf-8"))
+        except Exception:
+            data = {}
+        details.setdefault("doi", _clean_value(data.get("dataset_doi")))
+        details["source_url"] = _clean_value(data.get("source_url"))
+
+    _DATASET_DETAILS_CACHE[dataset_id] = details
+    return details
+
+
+def _build_dataset_context(
+    class_name: str, row: Mapping[str, str] | None
+) -> dict[str, object]:
+    dataset_id = _clean_value(row.get("dataset") if row else "")
+    dataset_id = dataset_id.lower() if dataset_id else class_name.lower()
+    details = _load_dataset_details(dataset_id)
+
+    modality = _clean_value((row or {}).get("record_modality"))
+    if not modality:
+        modality = _clean_value((row or {}).get("modality of exp"))
+
+    source = _clean_value((row or {}).get("source"))
+    if not source:
+        source = "OpenNeuro"
+
+    return {
+        "class_name": class_name,
+        "dataset_id": dataset_id,
+        "dataset_upper": dataset_id.upper(),
+        "title": _clean_value(details.get("title")),
+        "authors": details.get("authors", []),
+        "license": _clean_value(details.get("license")),
+        "doi": _clean_value(details.get("doi")),
+        "source_url": _clean_value(details.get("source_url")),
+        "references": details.get("references", []),
+        "how_to_acknowledge": _clean_value(details.get("how_to_acknowledge")),
+        "n_subjects": _clean_value((row or {}).get("n_subjects")),
+        "n_records": _clean_value((row or {}).get("n_records")),
+        "n_tasks": _clean_value((row or {}).get("n_tasks")),
+        "n_channels": _clean_value((row or {}).get("nchans_set")),
+        "sampling_freqs": _clean_value((row or {}).get("sampling_freqs")),
+        "duration_hours_total": _clean_value((row or {}).get("duration_hours_total")),
+        "size": _clean_value((row or {}).get("size")),
+        "s3_item_count": _clean_value((row or {}).get("s3_item_count")),
+        "modality": modality,
+        "exp_type": _clean_value((row or {}).get("type of exp")),
+        "subject_type": _clean_value((row or {}).get("Type Subject")),
+        "source": source,
+        "openneuro_url": f"https://openneuro.org/datasets/{dataset_id}",
+        "nemar_url": f"https://nemar.org/dataexplorer/detail?dataset_id={dataset_id}",
+        "metadata_fields": DEFAULT_METADATA_FIELDS,
     }
 
-    table = tabulate([table_row], headers="keys", tablefmt="rst", showindex=False)
 
-    bullet_text = "\n".join(lines)
-    return f"{bullet_text}\n\n{table}\n"
+def _format_badges(items: Sequence[tuple[str, str]]) -> str:
+    badges = " ".join(
+        f":bdg-light:`{label}: {_value_or_unknown(value)}`" for label, value in items
+    )
+    return "\n".join([".. rst-class:: sd-badges", "", badges]).rstrip()
 
 
-def _format_usage_section(class_name: str) -> str:
+def _format_hero_section(context: Mapping[str, object]) -> str:
+    dataset_id = str(context.get("dataset_id", ""))
+    title = str(context.get("title", "")).strip()
+    if title:
+        tagline = f"{title} (OpenNeuro ``{dataset_id}``)."
+    else:
+        tagline = f"OpenNeuro dataset ``{dataset_id}``."
+    tagline = f"{tagline} Access recordings and metadata through EEGDash."
+
+    badges = _format_badges(
+        [
+            ("Modality", str(context.get("modality", ""))),
+            ("Tasks", str(context.get("n_tasks", ""))),
+            ("License", str(context.get("license", ""))),
+            ("Subjects", str(context.get("n_subjects", ""))),
+            ("Recordings", str(context.get("n_records", ""))),
+            ("Source", str(context.get("source", ""))),
+        ]
+    )
+    return f"{tagline}\n\n{badges}"
+
+
+def _format_highlights_section(context: Mapping[str, object]) -> str:
+    def _stat_line(label: str, value: object, suffix: str = "") -> str:
+        text = _value_or_unknown(_clean_value(value))
+        if text != "Unknown" and suffix:
+            text = f"{text}{suffix}"
+        return f"{label}: {text}"
+
+    openneuro_url = str(context.get("openneuro_url", ""))
+    nemar_url = str(context.get("nemar_url", ""))
+    dataset_id = str(context.get("dataset_id", ""))
+
+    cards = [
+        (
+            "Subjects & recordings",
+            [
+                _stat_line("Subjects", context.get("n_subjects")),
+                _stat_line("Recordings", context.get("n_records")),
+                _stat_line("Tasks", context.get("n_tasks")),
+            ],
+        ),
+        (
+            "Channels & sampling rate",
+            [
+                _stat_line("Channels", context.get("n_channels")),
+                _stat_line("Sampling rate (Hz)", context.get("sampling_freqs")),
+                _stat_line("Duration (hours)", context.get("duration_hours_total")),
+            ],
+        ),
+        (
+            "Tasks & conditions",
+            [
+                _stat_line("Tasks", context.get("n_tasks")),
+                _stat_line("Experiment type", context.get("exp_type")),
+                _stat_line("Subject type", context.get("subject_type")),
+            ],
+        ),
+        (
+            "Files & format",
+            [
+                _stat_line("Size on disk", context.get("size")),
+                _stat_line("File count", context.get("s3_item_count")),
+                _stat_line("Format", ""),
+            ],
+        ),
+        (
+            "License & citation",
+            [
+                _stat_line("License", context.get("license")),
+                _stat_line("DOI", context.get("doi")),
+            ],
+        ),
+        (
+            "Provenance",
+            [
+                _stat_line("Source", context.get("source")),
+                f"OpenNeuro: `{dataset_id} <{openneuro_url}>`__",
+                f"NeMAR: `{dataset_id} <{nemar_url}>`__",
+            ],
+        ),
+    ]
+
+    lines = [".. grid:: 1 2 3 3", "   :gutter: 2", ""]
+    for title, items in cards:
+        lines.append(f"   .. grid-item-card:: {title}")
+        lines.append("      :class-card: sd-border-1")
+        lines.append("")
+        for item in items:
+            lines.append(f"      - {item}")
+        lines.append("")
+
+    return "\n".join(lines).rstrip()
+
+
+def _format_quickstart_section(context: Mapping[str, object]) -> str:
+    class_name = str(context.get("class_name", ""))
     return (
+        "**Install**\n\n"
+        ".. code-block:: bash\n\n"
+        "   pip install eegdash\n\n"
+        "**Load a recording**\n\n"
         ".. code-block:: python\n\n"
         f"   from eegdash.dataset import {class_name}\n\n"
-        f'   dataset = {class_name}(cache_dir="./data")\n\n'
-        '   print(f"Number of recordings: {len(dataset)}")\n\n'
-        "   if len(dataset):\n"
-        "       recording = dataset[0]\n"
-        "       raw = recording.load()\n"
-        "       print(f\"Sampling rate: {raw.info['sfreq']} Hz\")\n"
-        '       print(f"Channels: {len(raw.ch_names)}")\n'
+        f'   dataset = {class_name}(cache_dir="./data")\n'
+        "   recording = dataset[0]\n"
+        "   raw = recording.load()\n\n"
+        "**Filter/query**\n\n"
+        ".. tab-set::\n\n"
+        "   .. tab-item:: Basic\n\n"
+        "      .. code-block:: python\n\n"
+        f'         dataset = {class_name}(cache_dir="./data", subject="01")\n\n'
+        "   .. tab-item:: Advanced\n\n"
+        "      .. code-block:: python\n\n"
+        f"         dataset = {class_name}(\n"
+        '             cache_dir="./data",\n'
+        '             query={"subject": {"$in": ["01", "02"]}},\n'
+        "         )\n"
+    )
+
+
+def _format_dataset_info_section(context: Mapping[str, object]) -> str:
+    dataset_id = str(context.get("dataset_id", ""))
+    dataset_upper = str(context.get("dataset_upper", ""))
+    title = _value_or_unknown(_clean_value(context.get("title")))
+    authors = context.get("authors") or []
+    authors_text = ", ".join(authors) if authors else "Unknown"
+    license_text = _value_or_unknown(_clean_value(context.get("license")))
+    doi = _clean_value(context.get("doi"))
+    doi_clean = _normalize_doi(doi)
+    doi_text = f"`{doi} <https://doi.org/{doi_clean}>`__" if doi_clean else "Unknown"
+    openneuro_url = str(context.get("openneuro_url", ""))
+    nemar_url = str(context.get("nemar_url", ""))
+    source_url = _clean_value(context.get("source_url"))
+
+    source_links = [
+        f"`OpenNeuro <{openneuro_url}>`__",
+        f"`NeMAR <{nemar_url}>`__",
+    ]
+    if source_url:
+        source_links.append(f"`Source URL <{source_url}>`__")
+
+    rows = [
+        ("Dataset ID", f"``{dataset_upper}``"),
+        ("Title", title),
+        ("Year", "Unknown"),
+        ("Authors", authors_text),
+        ("License", license_text),
+        ("Citation / DOI", doi_text),
+        ("Source links", " | ".join(source_links)),
+    ]
+
+    lines = [".. list-table::", "   :widths: 25 75", "   :header-rows: 0", ""]
+    for label, value in rows:
+        lines.append(f"   * - {label}")
+        lines.append(f"     - {value}")
+
+    bibtex_dropdown = _format_bibtex_dropdown(dataset_id, context)
+    if bibtex_dropdown:
+        lines.append("")
+        lines.append(bibtex_dropdown)
+
+    return "\n".join(lines).rstrip()
+
+
+def _format_bibtex_dropdown(dataset_id: str, context: Mapping[str, object]) -> str:
+    doi = _clean_value(context.get("doi"))
+    doi_clean = _normalize_doi(doi)
+    if not doi_clean:
+        return ""
+
+    key = dataset_id.replace("-", "_")
+    bibtex_lines = [f"@dataset{{{key},"]
+    title = _clean_value(context.get("title"))
+    if title:
+        bibtex_lines.append(f"  title = {{{title}}},")
+    authors = context.get("authors") or []
+    if authors:
+        bibtex_lines.append(f"  author = {{{' and '.join(authors)}}},")
+    bibtex_lines.append(f"  doi = {{{doi_clean}}},")
+    bibtex_lines.append(f"  url = {{https://doi.org/{doi_clean}}},")
+    bibtex_lines.append("}")
+
+    dropdown_lines = [
+        ".. dropdown:: Copy-paste BibTeX",
+        "   :class-container: sd-shadow-sm",
+        "   :class-title: sd-bg-light",
+        "",
+        "   .. code-block:: bibtex",
+        "",
+    ]
+    dropdown_lines.extend([f"      {line}" for line in bibtex_lines])
+    return "\n".join(dropdown_lines)
+
+
+def _format_schema_section(context: Mapping[str, object]) -> str:
+    lines = [
+        "``dataset[i]`` returns an :class:`eegdash.dataset.EEGDashRaw` recording.",
+        "Recording-level metadata live in ``dataset.description`` (pandas DataFrame).",
+    ]
+    section = "\n\n".join(lines)
+
+    fields = context.get("metadata_fields") or []
+    if fields:
+        dropdown_lines = [
+            ".. dropdown:: Metadata fields",
+            "   :class-container: sd-shadow-sm",
+            "",
+            "   Common fields (availability depends on the dataset):",
+            "",
+        ]
+        for name, desc in fields:
+            dropdown_lines.append(f"   - ``{name}``: {desc}")
+        section = f"{section}\n\n" + "\n".join(dropdown_lines)
+
+    return section
+
+
+def _format_quality_section(context: Mapping[str, object]) -> str:
+    caveats = context.get("caveats") or []
+    if caveats:
+        return "\n".join(f"- {note}" for note in caveats)
+    return "- No dataset-specific caveats are listed in the available metadata."
+
+
+def _format_api_section(class_name: str) -> str:
+    return (
+        ".. currentmodule:: eegdash.dataset\n\n"
+        f".. autoclass:: eegdash.dataset.{class_name}\n"
+        "   :members: __init__, save\n"
+        "   :show-inheritance:\n"
+        "   :member-order: bysource\n"
     )
 
 
@@ -650,16 +946,21 @@ def _generate_dataset_docs(app) -> None:
     for name in dataset_names:
         title = f"eegdash.dataset.{name}"
         row = dataset_rows.get(name)
-        dataset_id = ((row.get("dataset") if row else "") or name.lower()).strip()
-        dataset_id = dataset_id or name.lower()
+        context = _build_dataset_context(name, row)
         page_content = DATASET_PAGE_TEMPLATE.format(
             notice=AUTOGEN_NOTICE,
             title=title,
             underline="=" * len(title),
-            class_name=name,
-            metadata_section=_format_metadata_section(row, name),
-            usage_section=_format_usage_section(name),
-            see_also_section=_format_see_also_section(dataset_id),
+            hero_section=_format_hero_section(context),
+            highlights_section=_format_highlights_section(context),
+            quickstart_section=_format_quickstart_section(context),
+            dataset_info_section=_format_dataset_info_section(context),
+            schema_section=_format_schema_section(context),
+            quality_section=_format_quality_section(context),
+            api_section=_format_api_section(name),
+            see_also_section=_format_see_also_section(
+                str(context.get("dataset_id", ""))
+            ),
         )
         page_path = dataset_dir / f"eegdash.dataset.{name}.rst"
         if _write_if_changed(page_path, page_content):

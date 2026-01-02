@@ -76,6 +76,11 @@
 # Imports and setup
 # -----------------
 from pathlib import Path
+import os
+
+os.environ.setdefault("NUMBA_DISABLE_JIT", "1")
+os.environ.setdefault("_MNE_FAKE_HOME_DIR", str(Path.cwd()))
+(Path(os.environ["_MNE_FAKE_HOME_DIR"]) / ".mne").mkdir(exist_ok=True)
 import torch
 from braindecode.datasets import BaseConcatDataset
 from braindecode.preprocessing import (
@@ -215,7 +220,7 @@ from eegdash.hbn.windows import (
 )
 
 # Match tests' cache layout under ~/eegdash_cache/eeg_challenge_cache
-DATA_DIR = (Path.home() / "eegdash_cache" / "eeg_challenge_cache").resolve()
+DATA_DIR = Path(os.getenv("EEGDASH_CACHE_DIR", Path.cwd() / "eegdash_cache")).resolve()
 DATA_DIR.mkdir(parents=True, exist_ok=True)
 dataset_ccd = EEGChallengeDataset(
     task="contrastChangeDetection", release="R5", cache_dir=DATA_DIR, mini=True

@@ -936,7 +936,7 @@ html[data-theme="dark"] .hf-search-submit {
   pointer-events: none;
 }
 
-.hf-chip input:checked + span,
+.hf-chip input:checked+span,
 .hf-chip input:checked {
   color: inherit;
 }
@@ -1060,7 +1060,7 @@ html[data-theme="dark"] .hf-search-submit {
   pointer-events: none;
 }
 
-.hf-hero-card > * {
+.hf-hero-card>* {
   position: relative;
   z-index: 1;
 }
@@ -1661,7 +1661,7 @@ html[data-theme="dark"] .hf-logo-cloud {
   pointer-events: none;
 }
 
-.hf-callout > * {
+.hf-callout>* {
   position: relative;
   z-index: 1;
 }
@@ -1781,6 +1781,7 @@ body[data-page="index"] .hf-delay-3 {
     opacity: 0;
     transform: translateY(12px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -1793,4 +1794,612 @@ body[data-page="index"] .hf-delay-3 {
     opacity: 1;
     transform: none;
   }
+}
+
+/* ==========================================================================
+   17. Dataset Summary Page Modern Enhancements (HuggingFace / React.dev inspired)
+   ========================================================================== */
+
+/* 1. Hero Title Gradient Text Effect (React.dev style) */
+.dataset-summary-article h1 {
+  background: linear-gradient(135deg, var(--eegdash-primary) 0%, var(--hf-sky-strong) 50%, var(--eegdash-accent) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-size: clamp(2.2rem, 4vw, 3.5rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  padding-bottom: 0.25rem;
+}
+
+html[data-theme="dark"] .dataset-summary-article h1 {
+  background: linear-gradient(135deg, var(--hf-sky) 0%, var(--hf-mint) 50%, var(--hf-sun) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+/* 2. Glassmorphism Stat Cards */
+.dataset-summary-page .dataset-counter-card {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  background: rgba(255, 255, 255, 0.65) !important;
+  border: 1px solid rgba(255, 255, 255, 0.4) !important;
+  box-shadow:
+    0 8px 32px rgba(0, 108, 163, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.dataset-summary-page .dataset-counter-card:hover {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow:
+    0 20px 40px rgba(0, 108, 163, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.7);
+}
+
+html[data-theme="dark"] .dataset-summary-page .dataset-counter-card {
+  background: rgba(30, 41, 59, 0.75) !important;
+  border: 1px solid rgba(148, 163, 184, 0.2) !important;
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+/* 3. Pill-Style Tab Navigation (React.dev style) */
+.dataset-summary-page .sd-tab-set>label {
+  border-radius: 999px !important;
+  margin: 0 0.35rem;
+  padding: 0.65rem 1.5rem !important;
+  background: rgba(0, 108, 163, 0.06);
+  border: 1px solid transparent !important;
+  font-size: 0.95rem;
+}
+
+.dataset-summary-page .sd-tab-set>input:checked+label {
+  background: linear-gradient(135deg, var(--eegdash-primary), var(--hf-sky-strong)) !important;
+  color: #fff !important;
+  border-color: transparent !important;
+  box-shadow: 0 4px 15px rgba(0, 108, 163, 0.3);
+}
+
+.dataset-summary-page .sd-tab-set>label:hover:not(:has(+ input:checked)) {
+  background: rgba(0, 108, 163, 0.12);
+  border-color: rgba(0, 108, 163, 0.2) !important;
+}
+
+html[data-theme="dark"] .dataset-summary-page .sd-tab-set>label {
+  background: rgba(79, 140, 255, 0.1);
+}
+
+/* 4. Table Row Focus State (Accessibility) */
+#datasets-table tbody tr:focus-within {
+  outline: 2px solid var(--hf-sky-strong);
+  outline-offset: -2px;
+  border-radius: 4px;
+}
+
+#datasets-table tbody tr:focus-within td {
+  background: rgba(79, 140, 255, 0.06);
+}
+
+/* 5. Table Row Hover with Left Accent Border */
+#datasets-table tbody tr {
+  transition: all 0.2s ease;
+  border-left: 3px solid transparent;
+}
+
+#datasets-table tbody tr:hover {
+  background: linear-gradient(90deg, rgba(0, 108, 163, 0.06), rgba(79, 140, 255, 0.03)) !important;
+  border-left-color: var(--eegdash-primary);
+  box-shadow: 0 4px 16px rgba(0, 108, 163, 0.1);
+}
+
+html[data-theme="dark"] #datasets-table tbody tr:hover {
+  background: linear-gradient(90deg, rgba(79, 140, 255, 0.12), rgba(79, 140, 255, 0.04)) !important;
+}
+
+/* 6. Floating Search Bar Styling */
+.dataset-search-hero,
+.dataset-summary-page .search-field {
+  border-radius: 999px;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  padding: 0.75rem 1.5rem;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid var(--hf-card-border);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.dataset-search-hero:focus-within,
+.dataset-summary-page .search-field:focus-within {
+  border-color: var(--hf-sky-strong);
+  box-shadow: 0 8px 32px rgba(79, 140, 255, 0.15), 0 0 0 3px rgba(79, 140, 255, 0.1);
+}
+
+/* 7. Colorful Modality Tag Pills */
+.tag[data-tag-value="eeg"] {
+  background: linear-gradient(135deg, #e0f2fe, #bae6fd);
+  border: 1px solid #7dd3fc !important;
+  color: #0369a1;
+}
+
+.tag[data-tag-value="meg"] {
+  background: linear-gradient(135deg, #fae8ff, #f5d0fe);
+  border: 1px solid #e879f9 !important;
+  color: #a21caf;
+}
+
+.tag[data-tag-value="ieeg"] {
+  background: linear-gradient(135deg, #fef3c7, #fde68a);
+  border: 1px solid #fbbf24 !important;
+  color: #b45309;
+}
+
+.tag[data-tag-value="fnirs"] {
+  background: linear-gradient(135deg, #dcfce7, #bbf7d0);
+  border: 1px solid #4ade80 !important;
+  color: #15803d;
+}
+
+.tag[data-tag-value="emg"] {
+  background: linear-gradient(135deg, #fee2e2, #fecaca);
+  border: 1px solid #f87171 !important;
+  color: #b91c1c;
+}
+
+html[data-theme="dark"] .tag[data-tag-value="eeg"] {
+  background: rgba(14, 165, 233, 0.2);
+  border-color: rgba(56, 189, 248, 0.5) !important;
+  color: #7dd3fc;
+}
+
+html[data-theme="dark"] .tag[data-tag-value="meg"] {
+  background: rgba(217, 70, 239, 0.2);
+  border-color: rgba(232, 121, 249, 0.5) !important;
+  color: #f0abfc;
+}
+
+/* 8. Page Fade-in Animation */
+.dataset-summary-article {
+  animation: dataset-fade-up 0.6s ease-out;
+}
+
+.dataset-summary-page .sd-container-fluid {
+  animation: dataset-fade-up 0.5s ease-out;
+  animation-delay: 0.1s;
+  animation-fill-mode: both;
+}
+
+.dataset-summary-page .sd-tab-set {
+  animation: dataset-fade-up 0.5s ease-out;
+  animation-delay: 0.2s;
+  animation-fill-mode: both;
+}
+
+@keyframes dataset-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  .dataset-summary-article,
+  .dataset-summary-page .sd-container-fluid,
+  .dataset-summary-page .sd-tab-set {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* 9. Modern DataTables Buttons */
+.dataTables_wrapper .dt-buttons .dt-button {
+  border-radius: 8px !important;
+  padding: 0.5rem 1rem !important;
+  background: rgba(0, 108, 163, 0.08) !important;
+  border: 1px solid rgba(0, 108, 163, 0.2) !important;
+  color: var(--eegdash-primary) !important;
+  font-weight: 600;
+  transition: all 0.2s ease !important;
+}
+
+.dataTables_wrapper .dt-buttons .dt-button:hover {
+  background: var(--eegdash-primary) !important;
+  color: #fff !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 108, 163, 0.25);
+}
+
+.dataTables_wrapper .dataTables_filter input {
+  border-radius: 999px !important;
+  padding: 0.5rem 1rem !important;
+  border: 1px solid var(--hf-card-border) !important;
+  transition: all 0.2s ease;
+}
+
+.dataTables_wrapper .dataTables_filter input:focus {
+  border-color: var(--hf-sky-strong) !important;
+  box-shadow: 0 0 0 3px rgba(79, 140, 255, 0.15);
+  outline: none;
+}
+
+/* 10. Responsive Card Grid Breakpoints */
+@media (max-width: 768px) {
+  .dataset-summary-page .dataset-counter-card {
+    padding: 1.25rem !important;
+  }
+
+  .dataset-summary-page .dataset-counter-card strong {
+    font-size: 1.8rem;
+  }
+
+  .dataset-summary-page .dataset-counter-card .sd-card-title {
+    font-size: 0.9rem;
+  }
+
+  .dataset-summary-page .sd-tab-set>label {
+    padding: 0.5rem 1rem !important;
+    font-size: 0.85rem;
+    margin: 0.15rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .dataset-summary-article h1 {
+    font-size: 1.8rem;
+  }
+
+  .dataset-summary-page .sd-row {
+    gap: 0.75rem;
+  }
+}
+
+/* 11. Chart Container Styling */
+.dataset-summary-page .plotly-graph-div {
+  border-radius: 20px !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+  border: 1px solid var(--hf-card-border);
+  overflow: hidden;
+  background: #fff;
+}
+
+html[data-theme="dark"] .dataset-summary-page .plotly-graph-div {
+  background: rgba(15, 23, 42, 0.6);
+  border-color: rgba(148, 163, 184, 0.25);
+}
+
+/* 12. Beta Badge Pulse Animation */
+.dataset-summary-page .bdg-danger,
+.dataset-summary-article .bdg-danger {
+  animation: badge-pulse 2.5s ease-in-out infinite;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.dataset-summary-page .bdg-danger::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  background: #fff;
+  border-radius: 50%;
+  animation: badge-dot-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes badge-pulse {
+
+  0%,
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4);
+  }
+
+  50% {
+    transform: scale(1.03);
+    box-shadow: 0 0 0 6px rgba(239, 68, 68, 0);
+  }
+}
+
+@keyframes badge-dot-pulse {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dataset-summary-page .bdg-danger {
+    animation: none;
+  }
+
+  .dataset-summary-page .bdg-danger::before {
+    animation: none;
+  }
+}
+
+/* 13. Table Header Gradient */
+#datasets-table thead th {
+  background: linear-gradient(135deg, var(--eegdash-primary) 0%, var(--eegdash-primary-dark) 100%) !important;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+#datasets-table thead th:first-child {
+  border-top-left-radius: 12px;
+}
+
+#datasets-table thead th:last-child {
+  border-top-right-radius: 12px;
+}
+
+/* 14. Sticky Stats Bar on Scroll */
+@media (min-width: 1024px) {
+  .dataset-summary-page .sd-container-fluid:first-of-type {
+    position: sticky;
+    top: 65px;
+    z-index: 50;
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    margin-left: -1rem;
+    margin-right: -1rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    transition: box-shadow 0.3s ease;
+  }
+
+  .dataset-summary-page .sd-container-fluid:first-of-type:has(~ .sd-tab-set) {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  }
+
+  html[data-theme="dark"] .dataset-summary-page .sd-container-fluid:first-of-type {
+    background: rgba(15, 23, 42, 0.92);
+    border-bottom-color: rgba(148, 163, 184, 0.15);
+  }
+}
+
+/* 15. Dark Mode Refinements */
+html[data-theme="dark"] .dataset-summary-page .dataset-counter-card:hover {
+  box-shadow:
+    0 20px 40px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+html[data-theme="dark"] #datasets-table {
+  border-color: rgba(148, 163, 184, 0.2);
+}
+
+html[data-theme="dark"] #datasets-table tbody td {
+  border-bottom-color: rgba(148, 163, 184, 0.1);
+}
+
+html[data-theme="dark"] .dataset-summary-page .sd-tab-set>input:checked+label {
+  background: linear-gradient(135deg, var(--hf-sky-strong), var(--hf-mint)) !important;
+  box-shadow: 0 4px 15px rgba(79, 140, 255, 0.4);
+}
+
+html[data-theme="dark"] .dataTables_wrapper .dt-buttons .dt-button {
+  background: rgba(79, 140, 255, 0.15) !important;
+  border-color: rgba(79, 140, 255, 0.3) !important;
+  color: var(--hf-sky) !important;
+}
+
+html[data-theme="dark"] .dataTables_wrapper .dt-buttons .dt-button:hover {
+  background: var(--hf-sky-strong) !important;
+  color: #fff !important;
+}
+
+html[data-theme="dark"] .dataTables_wrapper .dataTables_filter input {
+  background: rgba(15, 23, 42, 0.8);
+  border-color: rgba(148, 163, 184, 0.3) !important;
+  color: #f8fafc;
+}
+
+/* ==========================================================================
+   18. Round 2 Improvements: Landing Page & Global UI Polish
+   ========================================================================== */
+
+/* 1. Hero Section "Alive" Background */
+.hf-hero {
+  background:
+    radial-gradient(circle at 10% 20%, rgba(79, 140, 255, 0.08) 0%, transparent 40%),
+    radial-gradient(circle at 90% 80%, rgba(255, 179, 71, 0.08) 0%, transparent 40%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.6) 100%);
+  position: relative;
+  overflow: hidden;
+  border-radius: 24px;
+}
+
+.hf-hero::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(79, 140, 255, 0.05) 0%, transparent 60%);
+  animation: hero-pulse 15s ease-in-out infinite alternate;
+  z-index: 0;
+  pointer-events: none;
+}
+
+@keyframes hero-pulse {
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+
+  100% {
+    transform: translate(-10%, -10%) scale(1.1);
+  }
+}
+
+html[data-theme="dark"] .hf-hero {
+  background:
+    radial-gradient(circle at 10% 20%, rgba(79, 140, 255, 0.05) 0%, transparent 40%),
+    radial-gradient(circle at 90% 80%, rgba(255, 179, 71, 0.05) 0%, transparent 40%),
+    linear-gradient(135deg, rgba(30, 41, 59, 0.95) 0%, rgba(15, 23, 42, 0.8) 100%);
+}
+
+/* 2. Modern Sidebar Navigation */
+.bd-sidebar .nav-link {
+  border-radius: 8px;
+  padding: 0.5rem 0.75rem;
+  transition: all 0.2s ease;
+  margin-bottom: 2px;
+}
+
+.bd-sidebar .nav-link:hover {
+  background: rgba(0, 108, 163, 0.04);
+  color: var(--eegdash-primary);
+}
+
+.bd-sidebar .nav-link.active {
+  background: rgba(0, 108, 163, 0.08);
+  color: var(--eegdash-primary);
+  font-weight: 600;
+  box-shadow: inset 3px 0 0 var(--eegdash-primary);
+}
+
+html[data-theme="dark"] .bd-sidebar .nav-link.active {
+  background: rgba(79, 140, 255, 0.1);
+  color: var(--hf-sky);
+  box-shadow: inset 3px 0 0 var(--hf-sky);
+}
+
+/* 3. Glassmorphic Admonitions */
+.admonition {
+  border: 1px solid rgba(0, 108, 163, 0.08);
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: 12px !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+  margin-bottom: 1.5rem;
+}
+
+.admonition .admonition-title {
+  background: transparent !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  font-weight: 700;
+  padding: 0.75rem 1rem;
+}
+
+.admonition.note {
+  border-left: 4px solid var(--eegdash-primary);
+}
+
+.admonition.warning {
+  border-left: 4px solid #f59e0b;
+}
+
+.admonition.tip {
+  border-left: 4px solid #10b981;
+}
+
+html[data-theme="dark"] .admonition {
+  background: rgba(30, 41, 59, 0.6);
+  border-color: rgba(148, 163, 184, 0.1);
+}
+
+/* 4. Enhanced Landing Page Cards */
+.hf-trending-card,
+.feature-card,
+.hf-dataset-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border-radius: 20px !important;
+  border: 1px solid var(--hf-card-border);
+  background: #fff;
+  overflow: hidden;
+}
+
+.hf-trending-card:hover,
+.feature-card:hover,
+.hf-dataset-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px rgba(0, 108, 163, 0.12);
+  border-color: var(--eegdash-primary);
+}
+
+html[data-theme="dark"] .hf-trending-card,
+html[data-theme="dark"] .feature-card,
+html[data-theme="dark"] .hf-dataset-card {
+  background: rgba(30, 41, 59, 0.8);
+  border-color: rgba(148, 163, 184, 0.2);
+}
+
+html[data-theme="dark"] .hf-trending-card:hover,
+html[data-theme="dark"] .feature-card:hover,
+html[data-theme="dark"] .hf-dataset-card:hover {
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+  border-color: var(--hf-sky);
+}
+
+/* 5. Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 5px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #94a3b8;
+}
+
+html[data-theme="dark"] ::-webkit-scrollbar-thumb {
+  background-color: #475569;
+}
+
+html[data-theme="dark"] ::-webkit-scrollbar-thumb:hover {
+  background-color: #64748b;
+}
+
+/* 6. Footer Polish */
+footer.bd-footer {
+  margin-top: 4rem;
+  border-top: 1px solid var(--hf-card-border);
+  padding: 3rem 0;
+  background: linear-gradient(to bottom, transparent, rgba(0, 108, 163, 0.02));
+}
+
+html[data-theme="dark"] footer.bd-footer {
+  border-top-color: rgba(148, 163, 184, 0.1);
+  background: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.2));
+}
+
+/* 7. Code Block Contrast Boost */
+.hf-quickstart .highlight {
+  background: #f8fafc;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 8px;
+}
+
+html[data-theme="dark"] .hf-quickstart .highlight {
+  background: #0f172a;
+  border-color: rgba(255, 255, 255, 0.1);
 }

@@ -82,6 +82,11 @@ import math
 import os
 import random
 from joblib import Parallel, delayed
+
+os.environ.setdefault("NUMBA_DISABLE_JIT", "1")
+os.environ.setdefault("_MNE_FAKE_HOME_DIR", str(Path.cwd()))
+(Path(os.environ["_MNE_FAKE_HOME_DIR"]) / ".mne").mkdir(exist_ok=True)
+
 import torch
 from torch.utils.data import DataLoader
 from torch import optim
@@ -135,7 +140,7 @@ print(msg)
 ######################################################################
 # The first step is to define the cache folder!
 # Match tests' cache layout under ~/eegdash_cache/eeg_challenge_cache
-DATA_DIR = (Path.home() / "eegdash_cache" / "eeg_challenge_cache").resolve()
+DATA_DIR = Path(os.getenv("EEGDASH_CACHE_DIR", Path.cwd() / "eegdash_cache")).resolve()
 # Creating the path if it does not exist
 DATA_DIR.mkdir(parents=True, exist_ok=True)
 # We define the list of releases to load.

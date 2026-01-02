@@ -29,7 +29,7 @@ import pandas as pd
 from _fingerprint import fingerprint_from_files, fingerprint_from_manifest
 from tqdm import tqdm
 
-from eegdash.records import create_dataset, create_record
+from eegdash.schemas import create_dataset, create_record
 
 # Storage configuration per source
 # Each source has a backend type and base URL pattern
@@ -441,6 +441,10 @@ def extract_record(
         ch_names = bids_dataset.channel_labels(bids_file)
     except Exception:
         pass
+
+    # Fallback for nchans if not in sidecar but we have channel names
+    if not nchans and ch_names:
+        nchans = len(ch_names)
 
     # Find dependency files (channels.tsv, events.tsv, etc.) for storage manifest
     dep_keys = []

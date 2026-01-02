@@ -17,6 +17,8 @@ def _make_records(dataset_id: str, count: int):
                 bids_relpath=bids_relpath,
                 subject=subject,
                 task="test",
+                sampling_frequency=100.0,
+                ntimes=1,
             )
         )
     return records
@@ -68,7 +70,14 @@ def test_download_all_uses_parallel(tmp_path, monkeypatch):
 
         def __call__(self, tasks):
             self.tasks = list(tasks)
-            return [task() for task in self.tasks]
+            results = []
+            for task in self.tasks:
+                if callable(task):
+                    results.append(task())
+                else:
+                    func, args, kwargs = task
+                    results.append(func(*args, **kwargs))
+            return results
 
     monkeypatch.setattr(dataset_mod, "Parallel", ParallelSpy)
 

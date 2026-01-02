@@ -98,7 +98,6 @@ from torch.nn import Module
 from torch.optim.lr_scheduler import LRScheduler
 from tqdm import tqdm
 import copy
-from joblib import Parallel, delayed
 
 ######################################################################
 # Check GPU availability
@@ -241,7 +240,7 @@ print(
 # We can also access the Raw object for visualization purposes, we will see just one object.
 raw = dataset_ccd.datasets[0].raw  # get the Raw object of the first recording
 # And to download all the data all data directly, you can do:
-raws = Parallel(n_jobs=-1)(delayed(lambda d: d.raw)(d) for d in dataset_ccd.datasets)
+dataset_ccd.download_all(n_jobs=-1)
 ######################################################################
 # Alternatives for Downloading the data
 # -------------------------------------

@@ -48,9 +48,7 @@ ds_online = EEGChallengeDataset(
 )
 
 # Optional prefetch of all recordings (downloads everything to cache).
-from joblib import Parallel, delayed
-
-_ = Parallel(n_jobs=-1)(delayed(lambda d: d.raw)(d) for d in ds_online.datasets)
+ds_online.download_all(n_jobs=-1)
 
 
 #######################################################################

@@ -81,7 +81,6 @@ from pathlib import Path
 import math
 import os
 import random
-from joblib import Parallel, delayed
 
 os.environ.setdefault("NUMBA_DISABLE_JIT", "1")
 os.environ.setdefault("_MNE_FAKE_HOME_DIR", str(Path.cwd()))
@@ -175,9 +174,8 @@ sub_rm = ["NDARWV769JM7"]
 # %%
 all_datasets = BaseConcatDataset(all_datasets_list)
 print(all_datasets.description)
-raws = Parallel(n_jobs=os.cpu_count())(
-    delayed(lambda d: d.raw)(d) for d in all_datasets.datasets
-)
+for ds in all_datasets_list:
+    ds.download_all(n_jobs=os.cpu_count())
 ######################################################################
 # Inspect your data
 # -----------------

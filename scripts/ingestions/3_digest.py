@@ -121,6 +121,8 @@ def detect_source(dataset_dir: Path) -> str:
         return "openneuro"
     elif "EEGManyLabs" in dataset_id:
         return "gin"
+    elif dataset_id.startswith("EEG2025"):
+        return "nemar"
 
     return "openneuro"
 

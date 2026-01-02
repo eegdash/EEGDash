@@ -64,3 +64,55 @@ def test_eegdashdataset_empty_cache_dir():
         download=False,
     )
     assert ds.cache_dir == get_default_cache_dir()
+
+
+def test_eegdash_api_actions():
+    """Test EEGDash convenience methods with mocked client."""
+    from unittest.mock import MagicMock
+
+    from eegdash.api import EEGDash
+
+    # Mock client
+    with pytest.MonkeyPatch.context() as mp:
+        mock_client = MagicMock()
+        mock_get_client = MagicMock(return_value=mock_client)
+        mp.setattr("eegdash.api.get_client", mock_get_client)
+
+        eeg = EEGDash()
+
+        # 1. find
+        mock_client.find.return_value = [{"id": 1}]
+        assert eeg.find({"dataset": "ds1"}) == [{"id": 1}]
+        # Kwargs handled
+        eeg.find(dataset="ds1", subject="01")
+        # Check call arguments (merged query)
+        args, kwargs = mock_client.find.call_args
+        assert args[0] == {"dataset": "ds1", "subject": "01"}
+
+        # 2. exists (uses find_one)
+        mock_client.find_one.return_value = {"id": 1}
+        assert eeg.exists(dataset="ds1") is True
+
+        mock_client.find_one.return_value = None
+        assert eeg.exists(dataset="missing") is False
+
+        # 3. count
+        mock_client.count_documents.return_value = 42
+        assert eeg.count(dataset="ds1") == 42
+
+        # 4. insert
+        mock_client.insert_one.return_value = "id123"
+        eeg.insert({"dataset": "ds1"})
+        assert mock_client.insert_one.call_count == 1
+
+        mock_client.insert_many.return_value = 2
+        eeg.insert([{"a": 1}, {"b": 2}])
+        assert mock_client.insert_many.call_count == 1
+
+        # 5. update_field
+        mock_client.update_many.return_value = (5, 3)  # matched, modified
+        matched, modified = eeg.update_field(
+            {"dataset": "ds1"}, update={"field": "val"}
+        )
+        assert matched == 5
+        assert modified == 3

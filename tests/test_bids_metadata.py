@@ -54,6 +54,22 @@ def test_build_query_from_kwargs():
     with pytest.raises(ValueError, match="Received None"):
         build_query_from_kwargs(subject=None)
 
+    # Empty list
+    with pytest.raises(ValueError, match="Received an empty list"):
+        build_query_from_kwargs(session=[])
+
+    # List with None or empty strings (should be filtered)
+    q = build_query_from_kwargs(subject=["01", None, "  ", "02"])
+    assert q["subject"] == {"$in": ["01", "02"]}
+
+    # List filtering results in empty list
+    with pytest.raises(ValueError, match="Received an empty list"):
+        build_query_from_kwargs(subject=[None, "   "])
+
+    # Empty string scalar
+    with pytest.raises(ValueError, match="Received an empty string"):
+        build_query_from_kwargs(subject="   ")
+
 
 def test_merge_query():
     # Only kwargs
@@ -67,6 +83,17 @@ def test_merge_query():
     # Both
     q = merge_query(query={"subject": "01"}, task="rest")
     assert q == {"$and": [{"subject": "01"}, {"task": "rest"}]}
+
+    # Both but query=None (safe handling)
+    q = merge_query(query=None, task="rest")
+    assert q == {"task": "rest"}
+
+    # Not require query
+    q = merge_query(require_query=False)
+    assert q == {}
+
+    q = merge_query(query=None, require_query=False)
+    assert q == {}
 
     # Conflicting
     with pytest.raises(ValueError, match="Conflicting constraints"):

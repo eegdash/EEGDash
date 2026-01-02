@@ -276,6 +276,20 @@
             :class: can-zoom only-light
             :width: 260px
 
+   .. rst-class:: hf-callout-funders
+
+      Funders
+
+   .. container:: hf-supporter-line
+
+      .. image:: _static/logos/nsf_logo.png
+         :alt: National Science Foundation (NSF)
+         :class: hf-supporter-logo
+
+      .. rst-class:: hf-supporter-text
+
+         AWS Open Data Sponsorship Program
+
 
 .. toctree::
    :hidden:

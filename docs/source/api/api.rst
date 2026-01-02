@@ -56,7 +56,9 @@ dataset metadata. The focus is interoperability, extensibility, and ease of use.
       :text-align: left
       :class-card: feature-card hf-reveal hf-delay-3
 
-      :octicon:`checklist;1.5em;sd-text-primary`
+      .. image:: ../_static/bids_logo_black.svg
+         :alt: BIDS
+         :class: hf-feature-logo
 
       Keep metadata consistent and portable across teams and tools.
 

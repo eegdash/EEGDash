@@ -1140,26 +1140,36 @@ html[data-theme="dark"] .hf-search-submit {
   outline-offset: 2px;
 }
 
-.hf-code-tabs .sd-tab-set {
-  margin-bottom: 1rem;
+.sd-tab-set.hf-code-tabs {
+  margin-bottom: 0;
 }
 
-.hf-code-tabs .sd-tab-set>label {
-  color: rgba(226, 232, 240, 0.8);
-  background: rgba(15, 23, 42, 0.6);
-  border-color: rgba(148, 163, 184, 0.25);
+.sd-tab-set.hf-code-tabs>label {
+  color: #1f2937;
+  background: #f8fafc;
+  border: 1px solid rgba(148, 163, 184, 0.6);
+  border-bottom: 0;
   font-weight: 600;
+  padding: 0.6rem 1.1rem;
+  margin-right: 0.4rem;
 }
 
-.hf-code-tabs .sd-tab-set>input:checked+label {
-  background: rgba(255, 255, 255, 0.12);
-  color: #f8fafc;
+.sd-tab-set.hf-code-tabs>label:hover {
+  color: var(--eegdash-primary-dark);
+  background: #ffffff;
 }
 
-.hf-code-tabs .sd-tab-content {
-  background: rgba(15, 23, 42, 0.6);
-  border: 1px solid rgba(148, 163, 184, 0.25);
-  border-radius: 0 0 12px 12px;
+.sd-tab-set.hf-code-tabs>input:checked+label {
+  background: #ffffff;
+  color: var(--eegdash-primary);
+  border-color: rgba(0, 108, 163, 0.75);
+}
+
+.sd-tab-set.hf-code-tabs .sd-tab-content {
+  background: #f8fafc;
+  border: 2px solid rgba(0, 108, 163, 0.45);
+  border-radius: 0 12px 12px 12px;
+  padding: 0.8rem 1.05rem;
 }
 
 .hf-preview-card {
@@ -2394,12 +2404,29 @@ html[data-theme="dark"] footer.bd-footer {
 
 /* 7. Code Block Contrast Boost */
 .hf-quickstart .highlight {
-  background: #f8fafc;
-  border: 1px solid rgba(0, 0, 0, 0.06);
-  border-radius: 8px;
+  background: #ffffff;
+  border: 1px solid rgba(148, 163, 184, 0.6);
+  border-radius: 10px;
+}
+
+.hf-quickstart .highlight pre {
+  margin: 0;
+  padding: 0.9rem 1rem;
+  color: #0f172a;
+}
+
+.hf-quickstart .highlight code,
+.hf-quickstart .highlight span {
+  color: #0f172a !important;
 }
 
 html[data-theme="dark"] .hf-quickstart .highlight {
   background: #0f172a;
   border-color: rgba(255, 255, 255, 0.1);
+}
+
+html[data-theme="dark"] .hf-quickstart .highlight pre,
+html[data-theme="dark"] .hf-quickstart .highlight code,
+html[data-theme="dark"] .hf-quickstart .highlight span {
+  color: #f8fafc !important;
 }

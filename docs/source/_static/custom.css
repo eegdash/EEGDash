@@ -1173,6 +1173,30 @@ html[data-theme="dark"] .hf-search-submit {
   padding: 0.8rem 1.05rem;
 }
 
+html[data-theme="dark"] .sd-tab-set.hf-code-tabs>label {
+  background: rgba(30, 41, 59, 0.5);
+  color: var(--pst-color-text-muted);
+  border-color: rgba(148, 163, 184, 0.2);
+}
+
+html[data-theme="dark"] .sd-tab-set.hf-code-tabs>label:hover {
+  background: rgba(30, 41, 59, 1);
+  color: var(--eegdash-primary);
+}
+
+html[data-theme="dark"] .sd-tab-set.hf-code-tabs>input:checked+label {
+  background: rgba(15, 23, 42, 1);
+  color: var(--eegdash-primary);
+  border-color: var(--eegdash-primary);
+  border-bottom: 2px solid var(--eegdash-primary);
+}
+
+html[data-theme="dark"] .sd-tab-set.hf-code-tabs .sd-tab-content {
+  background: rgba(15, 23, 42, 0.8);
+  border-color: var(--eegdash-primary);
+  color: var(--pst-color-text-base);
+}
+
 .hf-preview-card {
   background: var(--hf-surface);
   border: 1px solid var(--hf-card-border);
@@ -1659,6 +1683,11 @@ html[data-theme="dark"] .hf-logo-cloud {
   text-align: center;
   overflow: hidden;
   box-shadow: 0 24px 50px -40px rgba(15, 23, 42, 0.4);
+}
+
+html[data-theme="dark"] .hf-callout {
+  background: linear-gradient(120deg, rgba(79, 140, 255, 0.08), rgba(255, 179, 71, 0.08));
+  box-shadow: 0 24px 50px -40px rgba(0, 0, 0, 0.4);
 }
 
 .hf-callout::before {

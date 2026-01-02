@@ -132,7 +132,7 @@ One document per dataset containing metadata for browsing:
 
 .. code-block:: python
 
-   from eegdash.records import Dataset, create_dataset
+   from eegdash.schemas import Dataset, create_dataset
 
    dataset = create_dataset(
        dataset_id="ds002718",
@@ -149,7 +149,7 @@ One document per EEG file with storage location:
 
 .. code-block:: python
 
-   from eegdash.records import Record, create_record
+   from eegdash.schemas import Record, create_record
 
    record = create_record(
        dataset="ds002718",
@@ -165,7 +165,7 @@ Core Modules
 The API is organized into focused modules that handle specific aspects of EEG data processing:
 
 * :mod:`~eegdash.api` - Main ``EEGDash`` client for data access and querying
-* :mod:`~eegdash.records` - Schema definitions (``Dataset``, ``Record`` TypedDicts)
+* :mod:`~eegdash.schemas` - Schema definitions (``Dataset``, ``Record`` TypedDicts)
 * :mod:`~eegdash.http_api_client` - HTTP REST API client for database operations
 * :mod:`~eegdash.downloader` - S3 and HTTPS download utilities
 * :mod:`~eegdash.bids_metadata` - BIDS-compliant metadata handling
@@ -196,7 +196,7 @@ API Reference
    :recursive:
 
    api
-   records
+   schemas
    http_api_client
    downloader
    bids_metadata

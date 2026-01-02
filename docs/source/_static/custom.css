@@ -1027,6 +1027,7 @@ html[data-theme="dark"] .hf-search-submit {
   flex-wrap: wrap;
   gap: 0.5rem;
   align-items: center;
+  margin-bottom: 1rem;
 }
 
 .hf-badges img {
@@ -1051,6 +1052,10 @@ html[data-theme="dark"] .hf-search-submit {
   overflow: hidden;
 }
 
+.hf-hero-card.hf-quickstart {
+  padding: 2.1rem;
+}
+
 .hf-hero-card::before {
   content: "";
   position: absolute;
@@ -1072,6 +1077,14 @@ html[data-theme="dark"] .hf-search-submit {
   font-weight: 700;
   color: rgba(248, 250, 252, 0.7);
   margin: 0 0 0.75rem;
+}
+
+.hf-quickstart .hf-card-title {
+  font-size: 1.05rem;
+}
+
+.hf-quickstart .sd-tab-set>label {
+  font-size: 0.95rem;
 }
 
 .hf-hero-card div.highlight {
@@ -2434,19 +2447,110 @@ html[data-theme="dark"] footer.bd-footer {
 
 /* 7. Code Block Contrast Boost */
 .hf-quickstart .highlight {
-  background: #ffffff !important;
-  border: 1px solid rgba(148, 163, 184, 0.6);
-  border-radius: 10px;
+  background: #f8fafc !important;
+  border: 1px solid rgba(15, 23, 42, 0.2);
+  border-radius: 12px;
   color: #0f172a !important;
+  box-shadow: inset 0 0 0 1px rgba(0, 108, 163, 0.08);
 }
 
 .hf-quickstart .highlight pre {
   margin: 0;
   padding: 0.9rem 1rem;
   color: #0f172a !important;
+  font-size: 1.15rem;
 }
 
 .hf-quickstart .highlight code,
 .hf-quickstart .highlight span {
   color: #0f172a !important;
+  font-size: 1.15rem;
+}
+
+.hf-quickstart .highlight .k,
+.hf-quickstart .highlight .kd,
+.hf-quickstart .highlight .kn,
+.hf-quickstart .highlight .kt {
+  color: #1d4ed8 !important;
+}
+
+.hf-quickstart .highlight .nf,
+.hf-quickstart .highlight .nb,
+.hf-quickstart .highlight .nc {
+  color: #0f766e !important;
+}
+
+.hf-quickstart .highlight .s,
+.hf-quickstart .highlight .s1,
+.hf-quickstart .highlight .s2,
+.hf-quickstart .highlight .sa,
+.hf-quickstart .highlight .sb,
+.hf-quickstart .highlight .sc,
+.hf-quickstart .highlight .sd,
+.hf-quickstart .highlight .se,
+.hf-quickstart .highlight .sh,
+.hf-quickstart .highlight .si,
+.hf-quickstart .highlight .sr,
+.hf-quickstart .highlight .ss {
+  color: #b45309 !important;
+}
+
+.hf-quickstart .highlight .c,
+.hf-quickstart .highlight .c1,
+.hf-quickstart .highlight .cm,
+.hf-quickstart .highlight .cp,
+.hf-quickstart .highlight .cs {
+  color: #64748b !important;
+}
+
+html[data-theme="dark"] .hf-quickstart .highlight {
+  background: linear-gradient(135deg, rgba(11, 18, 32, 0.98), rgba(15, 32, 58, 0.95)) !important;
+  border: 1px solid rgba(79, 140, 255, 0.45);
+  color: #e2e8f0 !important;
+  box-shadow: inset 0 0 0 1px rgba(247, 148, 29, 0.08);
+}
+
+html[data-theme="dark"] .hf-quickstart .highlight pre {
+  color: #e2e8f0 !important;
+}
+
+html[data-theme="dark"] .hf-quickstart .highlight code,
+html[data-theme="dark"] .hf-quickstart .highlight span {
+  color: #e2e8f0 !important;
+}
+
+html[data-theme="dark"] .hf-quickstart .highlight .k,
+html[data-theme="dark"] .hf-quickstart .highlight .kd,
+html[data-theme="dark"] .hf-quickstart .highlight .kn,
+html[data-theme="dark"] .hf-quickstart .highlight .kt {
+  color: #7dd3fc !important;
+}
+
+html[data-theme="dark"] .hf-quickstart .highlight .nf,
+html[data-theme="dark"] .hf-quickstart .highlight .nb,
+html[data-theme="dark"] .hf-quickstart .highlight .nc {
+  color: #34d399 !important;
+}
+
+html[data-theme="dark"] .hf-quickstart .highlight .s,
+html[data-theme="dark"] .hf-quickstart .highlight .s1,
+html[data-theme="dark"] .hf-quickstart .highlight .s2,
+html[data-theme="dark"] .hf-quickstart .highlight .sa,
+html[data-theme="dark"] .hf-quickstart .highlight .sb,
+html[data-theme="dark"] .hf-quickstart .highlight .sc,
+html[data-theme="dark"] .hf-quickstart .highlight .sd,
+html[data-theme="dark"] .hf-quickstart .highlight .se,
+html[data-theme="dark"] .hf-quickstart .highlight .sh,
+html[data-theme="dark"] .hf-quickstart .highlight .si,
+html[data-theme="dark"] .hf-quickstart .highlight .sr,
+html[data-theme="dark"] .hf-quickstart .highlight .ss {
+  color: #fbbf24 !important;
+}
+
+html[data-theme="dark"] .hf-quickstart .highlight .c,
+html[data-theme="dark"] .hf-quickstart .highlight .c1,
+html[data-theme="dark"] .hf-quickstart .highlight .cm,
+html[data-theme="dark"] .hf-quickstart .highlight .cp,
+html[data-theme="dark"] .hf-quickstart .highlight .cs {
+  color: #94a3b8 !important;
 }

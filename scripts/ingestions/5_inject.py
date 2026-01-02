@@ -28,6 +28,7 @@ Usage:
 
 import argparse
 import json
+import math
 import os
 import sys
 from pathlib import Path
@@ -240,9 +241,6 @@ def inject_datasets(
 
     inserted_count = 0
     errors = []
-
-    # Batch insert datasets
-    import math
 
     def sanitize_for_json(obj):
         if isinstance(obj, float):

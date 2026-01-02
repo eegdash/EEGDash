@@ -242,13 +242,26 @@ def inject_datasets(
     errors = []
 
     # Batch insert datasets
+    import math
+
+    def sanitize_for_json(obj):
+        if isinstance(obj, float):
+            if math.isnan(obj) or math.isinf(obj):
+                return None
+            return obj
+        elif isinstance(obj, dict):
+            return {k: sanitize_for_json(v) for k, v in obj.items()}
+        elif isinstance(obj, list):
+            return [sanitize_for_json(i) for i in obj]
+        return obj
+
     for i in range(0, len(datasets), batch_size):
         batch = datasets[i : i + batch_size]
         try:
             result, _response = request_json(
                 "post",
                 url,
-                json_body=batch,
+                json_body=sanitize_for_json(batch),
                 timeout=60,
                 raise_for_status=True,
                 raise_for_request=True,
@@ -287,13 +300,26 @@ def inject_records(
     errors = []
 
     # Batch insert records
+    import math
+
+    def sanitize_for_json(obj):
+        if isinstance(obj, float):
+            if math.isnan(obj) or math.isinf(obj):
+                return None
+            return obj
+        elif isinstance(obj, dict):
+            return {k: sanitize_for_json(v) for k, v in obj.items()}
+        elif isinstance(obj, list):
+            return [sanitize_for_json(i) for i in obj]
+        return obj
+
     for i in range(0, len(records), batch_size):
         batch = records[i : i + batch_size]
         try:
             result, _response = request_json(
                 "post",
                 url,
-                json_body=batch,
+                json_body=sanitize_for_json(batch),
                 timeout=120,
                 raise_for_status=True,
                 raise_for_request=True,

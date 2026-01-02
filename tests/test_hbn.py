@@ -65,13 +65,9 @@ def test_hbn_ec_ec_reannotation(mock_raw):
 
 
 def test_build_trial_table():
-    # Construct synthetic events DataFrame
-    # 1. Trial Start
-    # 2. Stimulus
-    # 3. Response
-    # 4. Next Trial
-
     data = [
+        {"onset": 5, "duration": 0, "value": "contrastTrial_start"},
+        {"onset": 6, "duration": 0, "value": "right_target"},
         {"onset": 0, "duration": 0, "value": "contrastTrial_start"},
         {"onset": 1, "duration": 0, "value": "left_target"},
         {
@@ -80,10 +76,40 @@ def test_build_trial_table():
             "value": "left_buttonPress",
             "feedback": "smiley_face",
         },
-        {"onset": 5, "duration": 0, "value": "contrastTrial_start"},
-        # Trial 2: stimulus but no response?
-        {"onset": 6, "duration": 0, "value": "right_target"},
-        {"onset": 10, "duration": 0, "value": "end_experiment"},  # to close last trial
+        {"onset": 10, "duration": 0, "value": "end_experiment"},
+    ]
+    df = pd.DataFrame(data)
+
+    table = build_trial_table(df)
+
+    assert len(table) == 2
+    first = table.iloc[0]
+    assert first["trial_start_onset"] == 0
+    assert first["trial_stop_onset"] == 5
+    assert first["stimulus_onset"] == 1
+    assert first["response_onset"] == 1.5
+    assert first["rt_from_stimulus"] == pytest.approx(0.5)
+    assert first["rt_from_trialstart"] == pytest.approx(1.5)
+    assert first["response_type"] == "left_buttonPress"
+    assert bool(first["correct"]) is True
+
+    second = table.iloc[1]
+    assert second["trial_start_onset"] == 5
+    assert second["trial_stop_onset"] == 10
+    assert second["stimulus_onset"] == 6
+    assert pd.isna(second["response_onset"])
+    assert pd.isna(second["rt_from_stimulus"])
+    assert pd.isna(second["rt_from_trialstart"])
+    assert second["response_type"] is None
+    assert second["correct"] is None
+
+
+def test_build_trial_table_without_feedback_column():
+    data = [
+        {"onset": 0, "duration": 0, "value": "contrastTrial_start"},
+        {"onset": 1, "duration": 0, "value": "right_target"},
+        {"onset": 1.5, "duration": 0, "value": "right_buttonPress"},
+        {"onset": 4, "duration": 0, "value": "end_experiment"},
     ]
     df = pd.DataFrame(data)
 
@@ -91,12 +117,11 @@ def test_build_trial_table():
 
     assert len(table) == 1
     row = table.iloc[0]
-
     assert row["trial_start_onset"] == 0
-    assert row["trial_stop_onset"] == 5
+    assert row["trial_stop_onset"] == 4
     assert row["stimulus_onset"] == 1
     assert row["response_onset"] == 1.5
-    assert row["rt_from_stimulus"] == 0.5
-    assert row["rt_from_trialstart"] == 1.5
-    assert row["response_type"] == "left_buttonPress"
-    assert bool(row["correct"]) is True
+    assert row["rt_from_stimulus"] == pytest.approx(0.5)
+    assert row["rt_from_trialstart"] == pytest.approx(1.5)
+    assert row["response_type"] == "right_buttonPress"
+    assert row["correct"] is None

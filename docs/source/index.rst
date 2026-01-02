@@ -55,9 +55,9 @@
               </div>
               <div class="hf-search-suggest">
                 <span class="hf-suggest-label">Suggested:</span>
-                <a class="hf-suggest-link" data-query="ds004504" href="dataset_summary.html?q=ds004504">ds004504</a>
-                <a class="hf-suggest-link" data-query="ds000117" href="dataset_summary.html?q=ds000117">ds000117</a>
-                <a class="hf-suggest-link" data-query="nm000107" href="dataset_summary.html?q=nm000107">nm000107</a>
+                <a class="hf-suggest-link" data-query="ds004504" href="api/dataset/eegdash.dataset.DS004504.html">ds004504</a>
+                <a class="hf-suggest-link" data-query="ds000117" href="api/dataset/eegdash.dataset.DS000117.html">ds000117</a>
+                <a class="hf-suggest-link" data-query="nm000107" href="api/dataset/eegdash.dataset.NM000107.html">nm000107</a>
               </div>
             </form>
 
@@ -127,21 +127,39 @@
    <p class="hf-section-subtitle">Search-first discovery with reproducible pipelines and standardized metadata.</p>
 
 
-.. image:: https://github.com/eegdash/EEGDash/actions/workflows/tests.yml/badge.svg
-   :alt: Test Status
-   :target: https://github.com/eegdash/EEGDash/actions/workflows/tests.yml
+.. container:: hf-badges
 
-.. image:: https://github.com/eegdash/EEGDash/actions/workflows/doc.yaml/badge.svg
-   :alt: Doc Status
-   :target: https://github.com/eegdash/EEGDash/actions/workflows/doc.yaml
+   .. image:: https://github.com/eegdash/EEGDash/actions/workflows/tests.yml/badge.svg
+      :alt: Test Status
+      :target: https://github.com/eegdash/EEGDash/actions/workflows/tests.yml
 
-.. image:: https://img.shields.io/pypi/v/eegdash?color=blue&style=flat-square
-   :alt: PyPI
-   :target: https://pypi.org/project/eegdash/
+   .. image:: https://github.com/eegdash/EEGDash/actions/workflows/doc.yaml/badge.svg
+      :alt: Doc Status
+      :target: https://github.com/eegdash/EEGDash/actions/workflows/doc.yaml
 
-.. image:: https://img.shields.io/github/stars/eegdash/eegdash?style=flat-square
-   :alt: GitHub Stars
-   :target: https://github.com/eegdash/EEGDash
+   .. image:: https://img.shields.io/pypi/v/eegdash?color=blue&style=flat-square
+      :alt: PyPI
+      :target: https://pypi.org/project/eegdash/
+
+   .. image:: https://img.shields.io/pypi/pyversions/eegdash?style=flat-square
+      :alt: Python Versions
+      :target: https://pypi.org/project/eegdash/
+
+   .. image:: https://pepy.tech/badge/eegdash
+      :alt: Downloads
+      :target: https://pepy.tech/project/eegdash
+
+   .. image:: https://codecov.io/gh/eegdash/EEGDash/branch/main/graph/badge.svg
+      :alt: Code Coverage
+      :target: https://codecov.io/gh/eegdash/EEGDash
+
+   .. image:: https://img.shields.io/pypi/l/eegdash?style=flat-square
+      :alt: License
+      :target: https://github.com/eegdash/EEGDash/blob/main/LICENSE
+
+   .. image:: https://img.shields.io/github/stars/eegdash/eegdash?style=flat-square
+      :alt: GitHub Stars
+      :target: https://github.com/eegdash/EEGDash
 
 
 .. grid:: 1 2 4 4

@@ -21,7 +21,7 @@ dataset metadata. The focus is interoperability, extensibility, and ease of use.
    :class-container: hf-feature-grid
 
    .. grid-item-card:: Dataset discovery
-      :link: dataset_summary
+      :link: ../dataset_summary
       :link-type: doc
       :text-align: left
       :class-card: feature-card hf-reveal hf-delay-1
@@ -31,7 +31,7 @@ dataset metadata. The focus is interoperability, extensibility, and ease of use.
       Search metadata, modalities, tasks, and cohorts with unified filters.
 
    .. grid-item-card:: Reproducible preprocessing
-      :link: user_guide
+      :link: ../user_guide
       :link-type: doc
       :text-align: left
       :class-card: feature-card hf-reveal hf-delay-2
@@ -41,7 +41,7 @@ dataset metadata. The focus is interoperability, extensibility, and ease of use.
       One-command pipelines with EEGPrep, MNE, and BIDS alignment.
 
    .. grid-item-card:: Benchmarks and features
-      :link: generated/auto_examples/index
+      :link: ../generated/auto_examples/index
       :link-type: doc
       :text-align: left
       :class-card: feature-card hf-reveal hf-delay-3
@@ -51,7 +51,7 @@ dataset metadata. The focus is interoperability, extensibility, and ease of use.
       Export model-ready features and compare baselines across datasets.
 
    .. grid-item-card:: BIDS-first interoperability
-      :link: user_guide
+      :link: ../user_guide
       :link-type: doc
       :text-align: left
       :class-card: feature-card hf-reveal hf-delay-3

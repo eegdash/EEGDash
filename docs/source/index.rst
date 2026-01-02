@@ -115,7 +115,7 @@
 
                   Run your first search
 
-               .. button-ref:: generated/api/index
+               .. button-ref:: api/api
                   :color: secondary
                   :class: sd-btn-sm hf-btn hf-btn-ghost
 
@@ -262,4 +262,4 @@
    User Guide <user_guide>
    Install <install/install>
    Examples <generated/auto_examples/index>
-   Docs <generated/api/index>
+   Docs <api/api>

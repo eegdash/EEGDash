@@ -67,3 +67,48 @@ def test_dfa(signals):
 
     assert alpha_white.shape == (1,)
     assert alpha_brown.shape == (1,)
+
+
+def test_fractal_dimensions_correctness(signals):
+    # Verify expected relative values
+    sine = signals["sine"]
+    white = signals["white"]
+
+    # 1. Higuchi
+    # Sine wave is smooth (D ~ 1)
+    # White noise is rough (D ~ 2)
+    h_sine = dimensionality_higuchi_fractal_dim(sine)[0]
+    h_white = dimensionality_higuchi_fractal_dim(white)[0]
+    assert h_sine < 1.1  # Close to 1
+    assert h_white > 1.8  # Close to 2
+    assert h_white > h_sine
+
+    # 2. Petrosian
+    # Sine has few sign changes in diff
+    # White noise has many
+    p_sine = dimensionality_petrosian_fractal_dim(sine)[0]
+    p_white = dimensionality_petrosian_fractal_dim(white)[0]
+    assert p_sine < 1.05
+    assert p_white > p_sine
+
+    # 3. Katz
+    k_sine = dimensionality_katz_fractal_dim(sine)[0]
+    k_white = dimensionality_katz_fractal_dim(white)[0]
+    # Katz is sensitive to length/diameter ratio.
+    # We mainly check that noise > sine
+    assert k_white > k_sine
+
+
+def test_dfa_correctness(signals):
+    # Check theoretical scaling exponents (alpha)
+    white = signals["white"]
+    brown = signals["brown"]
+
+    a_white = dimensionality_detrended_fluctuation_analysis(white)[0]
+    a_brown = dimensionality_detrended_fluctuation_analysis(brown)[0]
+
+    # White noise: alpha ~ 0.5
+    assert 0.4 < a_white < 0.6
+
+    # Brownian noise (integrated white noise): alpha ~ 1.5
+    assert 1.3 < a_brown < 1.7

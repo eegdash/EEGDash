@@ -317,10 +317,15 @@ Dataset Information
 
 {dataset_info_section}
 
-Schema & metadata
------------------
+Highlights
+----------
 
-{schema_section}
+{highlights_section}
+
+Quickstart
+----------
+
+{quickstart_section}
 
 Quality & caveats
 -----------------
@@ -952,10 +957,9 @@ def _generate_dataset_docs(app) -> None:
             title=title,
             underline="=" * len(title),
             hero_section=_format_hero_section(context),
+            dataset_info_section=_format_dataset_info_section(context),
             highlights_section=_format_highlights_section(context),
             quickstart_section=_format_quickstart_section(context),
-            dataset_info_section=_format_dataset_info_section(context),
-            schema_section=_format_schema_section(context),
             quality_section=_format_quality_section(context),
             api_section=_format_api_section(name),
             see_also_section=_format_see_also_section(

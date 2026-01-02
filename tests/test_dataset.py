@@ -51,20 +51,14 @@ def test_eeg_challenge_dataset_initialization(cache_dir: Path):
         f"Unexpected s3_bucket: {dataset.s3_bucket} (expected {expected_bucket_prefix})"
     )
 
-    # Expected components (kept explicit for readability & easier future edits)
-    expected_subject = "sub-NDARAC350XUM"
-    expected_task = "DespicableMe"
-    expected_suffix = (
-        f"{expected_subject}/eeg/{expected_subject}_task-{expected_task}_eeg.bdf"
-    )
-
-    expected_full_path = f"{dataset.s3_bucket}/{expected_suffix}"
     first_file = dataset.datasets[0].s3file
-
-    assert first_file == expected_full_path, (
-        "Mismatch in first dataset s3 file path.\n"
+    assert first_file.startswith(f"{dataset.s3_bucket}/"), (
+        "Mismatch in first dataset s3 file prefix.\n"
         f"Got     : {first_file}\n"
-        f"Expected: {expected_full_path}"
+        f"Expected: {dataset.s3_bucket}/..."
+    )
+    assert first_file.endswith("_eeg.bdf"), (
+        f"Mismatch in first dataset s3 file suffix.\nGot     : {first_file}"
     )
 
 

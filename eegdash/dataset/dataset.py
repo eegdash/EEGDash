@@ -156,6 +156,7 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
     ):
         # Parameters that don't need validation
         _suppress_comp_warning: bool = kwargs.pop("_suppress_comp_warning", False)
+        self._dedupe_records: bool = kwargs.pop("_dedupe_records", False)
         self.s3_bucket = s3_bucket
         self.database = database
         self.auth_token = auth_token
@@ -249,7 +250,7 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
                 logger.warning(str(message_text))
 
         if records is not None:
-            self.records = records
+            self.records = self._normalize_records(records)
 
             datasets = [
                 EEGDashRaw(
@@ -342,7 +343,35 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
                 "You must provide either 'records', a 'data_dir', or a query/keyword arguments for filtering."
             )
 
-        super().__init__(datasets)
+        super().__init__(datasets, lazy=True)
+
+    def _normalize_records(self, records: list[dict[str, Any]]) -> list[dict[str, Any]]:
+        """Apply dataset-level record normalization before building datasets."""
+        if self.s3_bucket:
+            for record in records:
+                storage = record.setdefault("storage", {})
+                storage["base"] = self.s3_bucket
+                storage["backend"] = "s3"
+
+        if self._dedupe_records:
+            seen: set[str] = set()
+            deduped: list[dict[str, Any]] = []
+            for record in records:
+                key = (
+                    record.get("bids_relpath")
+                    or record.get("bidspath")
+                    or record.get("data_name")
+                )
+                if key is None:
+                    deduped.append(record)
+                    continue
+                if key in seen:
+                    continue
+                seen.add(key)
+                deduped.append(record)
+            return deduped
+
+        return records
 
     def download_all(self, n_jobs: int | None = None) -> None:
         """Download missing remote files in parallel.
@@ -481,7 +510,7 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
 
         """
         datasets: list[EEGDashRaw] = []
-        self.records = self.eeg_dash_instance.find(query)
+        self.records = self._normalize_records(self.eeg_dash_instance.find(query))
 
         for record in self.records:
             # Validate v2 format
@@ -660,8 +689,11 @@ class EEGChallengeDataset(EEGDashDataset):
             # Construct dataset ID for mini
             dataset_id = f"{dataset_id}mini"
 
-        # Check if s3_bucket override is requested, otherwise use default from DB/Dataset
-        # The DB now contains the correct storage URL for these datasets.
+        if s3_bucket is None:
+            if self.mini:
+                s3_bucket = f"s3://nmdatasets/NeurIPS25/{release}_mini_L100_bdf"
+            else:
+                s3_bucket = f"s3://nmdatasets/NeurIPS25/{release}_L100_bdf"
 
         message_text = Text.from_markup(
             "This object loads the HBN dataset that has been preprocessed for the EEG Challenge:\n"
@@ -695,6 +727,7 @@ class EEGChallengeDataset(EEGDashDataset):
             cache_dir=cache_dir,
             s3_bucket=s3_bucket,
             _suppress_comp_warning=True,
+            _dedupe_records=True,
             **kwargs,
         )
 

@@ -5,7 +5,7 @@ from mne_bids import BIDSPath, write_raw_bids
 
 from eegdash.dataset import EEGDashDataset
 from eegdash.paths import get_default_cache_dir
-from eegdash.records import create_record
+from eegdash.schemas import create_record
 
 
 # Fixture to create a dummy BIDS dataset for testing

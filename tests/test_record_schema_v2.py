@@ -1,4 +1,4 @@
-from eegdash.records import (
+from eegdash.schemas import (
     create_dataset,
     create_record,
     validate_dataset,

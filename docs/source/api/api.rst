@@ -201,6 +201,9 @@ Public Data Endpoints
   Get a specific dataset document by ID.
 - ``GET /api/{database}/datasets``
   List dataset documents (with filtering and pagination).
+- ``GET /api/{database}/datasets/stats/records``
+  Get aggregated ``nchans`` and ``sampling_frequency`` counts for all datasets.
+  Used to generate summary tables efficiently.
 
 Admin Endpoints (require Bearer token)
 ======================================

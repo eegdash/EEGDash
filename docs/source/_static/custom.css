@@ -652,6 +652,17 @@ table.dataTable thead th {
   font-size: 2.4rem !important;
 }
 
+.feature-card .hf-feature-logo {
+  display: block;
+  height: 2.4rem;
+  width: auto;
+  margin-bottom: 0.35rem;
+}
+
+html[data-theme="dark"] .feature-card .hf-feature-logo {
+  filter: invert(1) grayscale(1) brightness(1.05);
+}
+
 /* --------------------------------------------------------------------------
    15. Hugging Face-inspired Homepage
    -------------------------------------------------------------------------- */
@@ -1325,6 +1336,12 @@ html[data-theme="dark"] .hf-preview-card {
   font-weight: 700;
   color: var(--pst-color-text-base);
   margin: 0 0 0.25rem;
+}
+
+.hf-stat-logo {
+  display: inline-block;
+  height: 32px;
+  width: auto;
 }
 
 .hf-stat-label {

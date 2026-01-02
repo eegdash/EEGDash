@@ -344,7 +344,7 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
 
         super().__init__(datasets)
 
-    def download_parallel(self, n_jobs: int | None = None) -> None:
+    def download_all(self, n_jobs: int | None = None) -> None:
         """Download missing remote files in parallel.
 
         Parameters
@@ -353,7 +353,7 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
             Number of parallel workers to use. If None, defaults to ``self.n_jobs``.
 
         """
-        if not self.download:
+        if self.download is False:
             return
 
         if n_jobs is None:

@@ -11,6 +11,55 @@ The EEGDash API reference curates everything you need to integrate, extend,
 and automate EEGDash—from core dataset helpers to feature extraction and rich
 dataset metadata. The focus is interoperability, extensibility, and ease of use.
 
+.. raw:: html
+
+   <h2 class="hf-section-title">What's inside EEGDash</h2>
+   <p class="hf-section-subtitle">Everything you need to discover, prepare, and benchmark EEG and MEG data.</p>
+
+.. grid:: 1 1 2 2
+   :gutter: 4
+   :class-container: hf-feature-grid
+
+   .. grid-item-card:: Dataset discovery
+      :link: dataset_summary
+      :link-type: doc
+      :text-align: left
+      :class-card: feature-card hf-reveal hf-delay-1
+
+      :octicon:`search;1.5em;sd-text-primary`
+
+      Search metadata, modalities, tasks, and cohorts with unified filters.
+
+   .. grid-item-card:: Reproducible preprocessing
+      :link: user_guide
+      :link-type: doc
+      :text-align: left
+      :class-card: feature-card hf-reveal hf-delay-2
+
+      :octicon:`plug;1.5em;sd-text-primary`
+
+      One-command pipelines with EEGPrep, MNE, and BIDS alignment.
+
+   .. grid-item-card:: Benchmarks and features
+      :link: generated/auto_examples/index
+      :link-type: doc
+      :text-align: left
+      :class-card: feature-card hf-reveal hf-delay-3
+
+      :octicon:`rocket;1.5em;sd-text-primary`
+
+      Export model-ready features and compare baselines across datasets.
+
+   .. grid-item-card:: BIDS-first interoperability
+      :link: user_guide
+      :link-type: doc
+      :text-align: left
+      :class-card: feature-card hf-reveal hf-delay-3
+
+      :octicon:`checklist;1.5em;sd-text-primary`
+
+      Keep metadata consistent and portable across teams and tools.
+
 The API is organized into three main components:
 
 

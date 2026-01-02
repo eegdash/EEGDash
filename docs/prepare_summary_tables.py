@@ -7,6 +7,7 @@ from argparse import ArgumentParser
 from datetime import datetime
 from pathlib import Path
 from shutil import copyfile
+from tqdm import tqdm
 
 import numpy as np
 import pandas as pd
@@ -319,6 +320,7 @@ def prepare_table(df: pd.DataFrame):
     df = df[
         [
             "dataset",
+            "dataset_name",  # Added
             "source",
             "record_modality",
             "n_records",
@@ -331,6 +333,7 @@ def prepare_table(df: pd.DataFrame):
             "Type Subject",
             "modality of exp",
             "type of exp",
+            "license",  # Added
         ]
     ]
 
@@ -656,6 +659,7 @@ def fetch_datasets_from_api(
             "sampling_freqs": "",  # Not available in current API schema
             "size": human_readable_size(ds.get("size_bytes") or 0),
             "size_bytes": ds.get("size_bytes") or 0,
+            "dataset_name": ds.get("name", ""),
             # Map to expected categorical columns (these may need enrichment)
             "Type Subject": ds.get("study_domain", "") or "",
             "modality of exp": ", ".join(ds.get("modalities", []))
@@ -789,6 +793,183 @@ def main_from_api(target_dir: str, database: str = DEFAULT_DATABASE, limit: int 
     print(f"Static files copied to: {STATIC_DATASET_DIR}")
 
 
+def main_from_json(source_dir: str, target_dir: str):
+    """Generate summary tables from local JSON digestion output."""
+    source_dir = Path(source_dir)
+    target_dir = Path(target_dir)
+    target_dir.mkdir(parents=True, exist_ok=True)
+    STATIC_DATASET_DIR.mkdir(parents=True, exist_ok=True)
+
+    print(f"Reading datasets from {source_dir}...")
+    dataset_files = list(source_dir.glob("*/ds*_dataset.json"))
+
+    rows = []
+    print(f"Found {len(dataset_files)} dataset files. loading...")
+
+    for f in tqdm(dataset_files):
+        try:
+            with open(f) as fp:
+                ds = json.load(fp)
+
+            ds_id = ds.get("dataset_id", "").strip()
+            if ds_id.upper() in EXCLUDED_DATASETS or ds_id.lower() in (
+                "test",
+                "test_dataset",
+            ):
+                continue
+
+            # Handle modality list or single string
+            rec_mod = ds.get("recording_modality")
+            if isinstance(rec_mod, list):
+                rec_mod = ", ".join(rec_mod)
+            elif rec_mod is None:
+                rec_mod = ""
+
+            row = {
+                "dataset": ds_id,
+                "dataset_name": ds.get("name", ""),  # New field
+                "record_modality": rec_mod,
+                "n_records": ds.get("total_files", 0) or 0,
+                # Demographics might be empty or null
+                "n_subjects": ds.get("demographics", {}).get("subjects_count", 0) or 0,
+                "n_tasks": len(ds.get("tasks", []) or []) or 0,
+                "nchans_set": "",  # Not easily available in dataset.json
+                "sampling_freqs": "",  # Not easily available
+                "size": human_readable_size(ds.get("size_bytes") or 0),
+                "size_bytes": ds.get("size_bytes") or 0,
+                # Mappings
+                "Type Subject": ds.get("study_domain", "") or "",
+                "modality of exp": "",  # 'experimental_modalities' is null in my sample
+                "type of exp": ds.get("study_design", "") or "",
+                # Extra
+                "source": ds.get("source", ""),
+                "license": ds.get("license", ""),
+            }
+            rows.append(row)
+        except Exception as e:
+            print(f"Error reading {f}: {e}")
+
+    df_raw = pd.DataFrame(rows)
+    print(f"Created DataFrame with {len(df_raw)} datasets")
+
+    if df_raw.empty:
+        print("No valid datasets found!")
+        return
+
+    # Generate visualizations (Bubble, Sankey, Treemap, KDE)
+    # Reusing fetch_datasets logic...
+
+    # Bubble
+    try:
+        bubble_path = target_dir / "dataset_bubble.html"
+        df_bubble = df_raw.rename(columns={"n_subjects": "subjects"})
+        bubble_output = generate_dataset_bubble(
+            df_bubble, bubble_path, x_var="subjects"
+        )
+        copyfile(bubble_output, STATIC_DATASET_DIR / bubble_output.name)
+        print(f"Generated: {bubble_output.name}")
+    except Exception as exc:
+        print(f"[dataset Bubble] Skipped due to error: {exc}")
+
+    # Summary Stats
+    save_summary_stats(df_raw)
+
+    # Sankey
+    try:
+        sankey_path = target_dir / "dataset_sankey.html"
+        sankey_output = generate_dataset_sankey(df_raw, sankey_path)
+        copyfile(sankey_output, STATIC_DATASET_DIR / sankey_output.name)
+        print(f"Generated: {sankey_output.name}")
+    except Exception as exc:
+        print(f"[dataset Sankey] Skipped due to error: {exc}")
+
+    # Treemap
+    try:
+        treemap_path = target_dir / "dataset_treemap.html"
+        treemap_output = generate_dataset_treemap(df_raw, treemap_path)
+        copyfile(treemap_output, STATIC_DATASET_DIR / treemap_output.name)
+        print(f"Generated: {treemap_output.name}")
+    except Exception as exc:
+        print(f"[dataset Treemap] Skipped due to error: {exc}")
+
+    # Table Generation
+    df = prepare_table(df_raw)
+
+    # Post-processing to match main_from_api logic
+    df["n_subjects"] = df["n_subjects"].astype(int)
+    df["n_tasks"] = df["n_tasks"].astype(int)
+    df["n_records"] = df["n_records"].astype(int)
+    int_cols = ["n_subjects", "n_tasks", "n_records"]
+    df[int_cols] = df[int_cols].apply(pd.to_numeric, errors="coerce").astype("Int64")
+
+    # Rename and select columns
+    # Added "Name" and "License" to selection
+    df = df.rename(
+        columns={
+            "dataset": "Dataset",
+            "dataset_name": "Name",  # Ensure this exists (prepare_table keeps existing columns if not dropped)
+            "source": "Source",
+            "nchans_set": "# of channels",
+            "sampling_freqs": "sampling (Hz)",
+            "size": "size",
+            "n_records": "# of records",
+            "n_subjects": "# of subjects",
+            "n_tasks": "# of tasks",
+            "pathology": "Pathology",
+            "modality": "Modality",
+            "type": "Type",
+            "record modality": "Record modality",
+            "license": "License",
+        }
+    )
+
+    # Define column order
+    cols_to_keep = [
+        "Dataset",
+        "Name",  # New
+        "Source",
+        "Record modality",
+        "Pathology",
+        "Modality",
+        "Type",
+        "# of records",
+        "# of subjects",
+        "# of tasks",
+        # "# of channels", # Dropped as empty/null in local json
+        # "sampling (Hz)", # Dropped
+        "size",
+        "License",  # New
+    ]
+    # Filter only existing columns
+    cols_to_keep = [c for c in cols_to_keep if c in df.columns]
+    df = df[cols_to_keep]
+
+    html_table = df.to_html(
+        classes=["sd-table", "sortable"],
+        index=False,
+        escape=False,
+        table_id="datasets-table",
+    )
+    html_table = DATA_TABLE_TEMPLATE.replace("<TABLE_HTML>", html_table)
+    table_path = target_dir / "dataset_summary_table.html"
+    with open(table_path, "w", encoding="utf-8") as f:
+        f.write(html_table)
+    copyfile(table_path, STATIC_DATASET_DIR / table_path.name)
+    print(f"Generated: {table_path.name}")
+
+    # KDE
+    try:
+        kde_path = target_dir / "dataset_kde_modalities.html"
+        kde_output = generate_modality_ridgeline(df_raw, kde_path)
+        if kde_output:
+            copyfile(kde_output, STATIC_DATASET_DIR / kde_output.name)
+            print(f"Generated: {kde_output.name}")
+    except Exception as exc:
+        print(f"[dataset KDE] Skipped due to error: {exc}")
+
+    print(f"\nAll outputs saved to: {target_dir}")
+
+
 if __name__ == "__main__":
     parser = ArgumentParser()
     parser.add_argument(
@@ -797,6 +978,13 @@ if __name__ == "__main__":
         type=str,
         default=None,
         help="Source directory with CSV files (legacy mode)",
+    )
+    parser.add_argument(
+        "--json-dir",
+        dest="json_dir",
+        type=str,
+        default=None,
+        help="Source directory with JSON digestion output (digestion_full/)",
     )
     parser.add_argument(
         "--target",
@@ -833,12 +1021,14 @@ if __name__ == "__main__":
     if args.legacy_source and args.legacy_target:
         print("Using legacy CSV mode (positional arguments detected)")
         main(args.legacy_source, args.legacy_target)
+    elif args.json_dir:
+        print(f"Using JSON directory: {args.json_dir}")
+        main_from_json(args.json_dir, args.target_dir)
     elif args.from_csv:
         if not args.source_dir:
             parser.error("--from-csv requires --source directory")
         main(args.source_dir, args.target_dir)
     else:
-        # Default: fetch from API
         # Default: fetch from API
         limit = int(os.environ.get("EEGDASH_DOC_LIMIT", 1000))
         main_from_api(args.target_dir, args.database, limit=limit)

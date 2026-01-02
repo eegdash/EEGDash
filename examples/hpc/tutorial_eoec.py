@@ -6,8 +6,8 @@ Eyes Open vs. Closed Classification
 EEGDash example for eyes open vs. closed classification.
 
 CHANGES:
-- Offline OpenNeuro mirror: /expanse/projects/nemar/openneuro (download=False)
-- Multi-subject run: auto-discover subjects from local BIDS and use ~10 valid subjects
+- Uses the EEGDash API (no local OpenNeuro mirror required)
+- Multi-subject run: auto-discover subjects from API and use ~10 valid subjects
 - Skip subjects that produce empty EEGDashDataset (no recordings)
 - Skip subjects that produce 0 windows after preprocessing/windowing
 - Subject-wise train/test split (no leakage)
@@ -17,7 +17,6 @@ CHANGES:
 
 from pathlib import Path
 import os
-import re
 import warnings
 
 import numpy as np
@@ -25,7 +24,11 @@ import torch
 
 warnings.simplefilter("ignore", category=RuntimeWarning)
 
-from eegdash import EEGDashDataset
+os.environ.setdefault("NUMBA_DISABLE_JIT", "1")
+os.environ.setdefault("_MNE_FAKE_HOME_DIR", str(Path.cwd()))
+(Path(os.environ["_MNE_FAKE_HOME_DIR"]) / ".mne").mkdir(exist_ok=True)
+
+from eegdash import EEGDash, EEGDashDataset
 from braindecode.preprocessing import (
     preprocess,
     Preprocessor,
@@ -37,9 +40,12 @@ from eegdash.hbn.preprocessing import hbn_ec_ec_reannotation
 # -----------------------------
 # Config
 # -----------------------------
-cache_folder = Path("/expanse/projects/nemar/openneuro")
+cache_folder = Path(
+    os.getenv("EEGDASH_CACHE_DIR", Path.cwd() / "eegdash_cache")
+).resolve()
+cache_folder.mkdir(parents=True, exist_ok=True)
 dataset_id = "ds005514"
-bids_root = cache_folder / dataset_id
+task = "RestingState"
 
 # number of *valid* subjects to use
 num_subjects = int(os.environ.get("NUM_SUBJECTS", "10"))
@@ -52,15 +58,6 @@ window_size_samples = 256
 # training params
 epochs = int(os.environ.get("EPOCHS", "6"))
 batch_size = int(os.environ.get("BATCH_SIZE", "32"))
-
-
-def get_subjects_from_bids(bids_root: Path):
-    subs = []
-    for p in sorted(bids_root.glob("sub-*")):
-        m = re.match(r"sub-(.+)", p.name)
-        if m:
-            subs.append(m.group(1))
-    return subs
 
 
 # -----------------------------
@@ -105,9 +102,13 @@ preprocessors = [
 # -----------------------------
 # Build multi-subject windows (skip empties)
 # -----------------------------
-subjects_all = get_subjects_from_bids(bids_root)
+eegdash = EEGDash()
+records = eegdash.find(dataset=dataset_id, task=task, limit=500)
+subjects_all = sorted({rec.get("subject") for rec in records if rec.get("subject")})
 if len(subjects_all) == 0:
-    raise RuntimeError(f"No subjects found under {bids_root} (expected sub-*)")
+    raise RuntimeError(
+        f"No subjects returned by API for dataset={dataset_id}, task={task}"
+    )
 
 print("Discovered subjects (first 20):", subjects_all[:20])
 
@@ -122,9 +123,10 @@ for subj in subjects_all:
     print(f"\n=== Subject {subj} ===")
     try:
         ds_eoec = EEGDashDataset(
-            query={"dataset": dataset_id, "task": "RestingState", "subject": subj},
+            dataset=dataset_id,
+            task=task,
+            subject=subj,
             cache_dir=cache_folder,
-            download=False,  # offline-only
         )
     except AssertionError as e:
         # This happens when EEGDashDataset finds 0 recordings (empty iterable)

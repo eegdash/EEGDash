@@ -106,7 +106,6 @@ def feature_extractor(feature_dict):
     return feats
 
 
-@pytest.mark.slow
 def test_feature_extraction_benchmark(
     benchmark, windows_ds, feature_extractor, batch_size=512, n_jobs=1
 ):

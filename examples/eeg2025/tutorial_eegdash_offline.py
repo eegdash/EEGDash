@@ -10,14 +10,9 @@ present on disk.
 """
 
 from pathlib import Path
-import os
-
-os.environ.setdefault("NUMBA_DISABLE_JIT", "1")
-os.environ.setdefault("MNE_USE_NUMBA", "false")
-os.environ.setdefault("_MNE_FAKE_HOME_DIR", str(Path.cwd()))
-(Path(os.environ["_MNE_FAKE_HOME_DIR"]) / ".mne").mkdir(exist_ok=True)
 
 from eegdash.const import RELEASE_TO_OPENNEURO_DATASET_MAP
+from eegdash.paths import get_default_cache_dir
 from eegdash import EEGChallengeDataset
 
 
@@ -28,7 +23,7 @@ release = "R2"
 dataset_id = RELEASE_TO_OPENNEURO_DATASET_MAP[release]
 task = "RestingState"
 # Choose a cache directory. This should be on a fast local filesystem.
-cache_dir = Path(os.getenv("EEGDASH_CACHE_DIR", Path.cwd() / "eegdash_cache")).resolve()
+cache_dir = Path(get_default_cache_dir()).resolve()
 cache_dir.mkdir(parents=True, exist_ok=True)
 
 #######################################################################

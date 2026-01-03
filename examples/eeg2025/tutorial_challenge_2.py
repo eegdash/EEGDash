@@ -82,10 +82,6 @@ import math
 import os
 import random
 
-os.environ.setdefault("NUMBA_DISABLE_JIT", "1")
-os.environ.setdefault("MNE_USE_NUMBA", "false")
-os.environ.setdefault("_MNE_FAKE_HOME_DIR", str(Path.cwd()))
-(Path(os.environ["_MNE_FAKE_HOME_DIR"]) / ".mne").mkdir(exist_ok=True)
 
 import torch
 from torch.utils.data import DataLoader
@@ -95,6 +91,7 @@ from braindecode.preprocessing import create_fixed_length_windows
 from braindecode.datasets.base import EEGWindowsDataset, BaseConcatDataset, BaseDataset
 from braindecode.models import EEGNeX
 from eegdash import EEGChallengeDataset
+from eegdash.paths import get_default_cache_dir
 
 ######################################################################
 # .. warning::
@@ -140,7 +137,7 @@ print(msg)
 ######################################################################
 # The first step is to define the cache folder!
 # Match tests' cache layout under ~/eegdash_cache/eeg_challenge_cache
-DATA_DIR = Path(os.getenv("EEGDASH_CACHE_DIR", Path.cwd() / "eegdash_cache")).resolve()
+DATA_DIR = Path(get_default_cache_dir()).resolve()
 # Creating the path if it does not exist
 DATA_DIR.mkdir(parents=True, exist_ok=True)
 # We define the list of releases to load.

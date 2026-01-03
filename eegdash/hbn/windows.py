@@ -49,9 +49,17 @@ def build_trial_table(events_df: pd.DataFrame) -> pd.DataFrame:
     responses = events_df[
         events_df["value"].isin(["left_buttonPress", "right_buttonPress"])
     ].copy()
+    end_events = events_df[events_df["value"].eq("end_experiment")].copy()
 
     trials = trials.reset_index(drop=True)
     trials["next_onset"] = trials["onset"].shift(-1)
+    if len(trials) and not end_events.empty:
+        last_end = float(end_events["onset"].iloc[-1])
+        last_idx = trials.index[-1]
+        if pd.isna(trials.loc[last_idx, "next_onset"]) and last_end > float(
+            trials.loc[last_idx, "onset"]
+        ):
+            trials.loc[last_idx, "next_onset"] = last_end
     trials = trials.dropna(subset=["next_onset"]).reset_index(drop=True)
 
     rows = []
@@ -78,7 +86,7 @@ def build_trial_table(events_df: pd.DataFrame) -> pd.DataFrame:
         else:
             resp_onset = float(resp_block.iloc[0]["onset"])
             resp_type = resp_block.iloc[0]["value"]
-            feedback = resp_block.iloc[0]["feedback"]
+            feedback = resp_block.iloc[0].get("feedback")
 
         rt_from_stim = (
             (resp_onset - stim_onset)

@@ -180,3 +180,84 @@ def test_dimensionality_gaps():
 
     # DFA 114-134
     dimensionality_detrended_fluctuation_analysis(x)
+
+
+import numpy as np
+
+
+def test_dimensionality_gaps():
+    from eegdash.features.feature_bank.dimensionality import (
+        dimensionality_higuchi_fractal_dim,
+        dimensionality_hurst_exp,
+        dimensionality_detrended_fluctuation_analysis,
+    )
+
+    x = np.random.randn(1, 100)
+    dimensionality_higuchi_fractal_dim(x, k_max=5)
+
+    # Higuchi edge case: short signal to trigger loop skipping (lines 38-40)
+    x_short = np.random.randn(1, 5)
+    dimensionality_higuchi_fractal_dim(x_short, k_max=5)
+
+    # Petrosian (missing)
+    from eegdash.features.feature_bank.dimensionality import (
+        dimensionality_petrosian_fractal_dim,
+    )
+
+    dimensionality_petrosian_fractal_dim(x)
+
+    # Katz (missing)
+    from eegdash.features.feature_bank.dimensionality import (
+        dimensionality_katz_fractal_dim,
+    )
+
+    dimensionality_katz_fractal_dim(x)
+
+    # Hurst 48-69 (missing all)
+    dimensionality_hurst_exp(x)
+
+    # Hurst edge case: flat signal (std=0) to trigger line 87
+    x_flat = np.zeros((1, 100))
+    dimensionality_hurst_exp(x_flat)
+
+    # DFA 114-134
+    dimensionality_detrended_fluctuation_analysis(x)
+
+
+def test_dimensionality_features(signal_2d):
+    from eegdash.features.feature_bank.dimensionality import (
+        dimensionality_detrended_fluctuation_analysis,
+        dimensionality_higuchi_fractal_dim,
+        dimensionality_hurst_exp,
+        dimensionality_katz_fractal_dim,
+        dimensionality_petrosian_fractal_dim,
+    )
+
+    # Higuchi
+    hfd = dimensionality_higuchi_fractal_dim(signal_2d, k_max=5)
+    assert hfd.shape == (2,)
+
+    # Petrosian
+    pfd = dimensionality_petrosian_fractal_dim(signal_2d)
+    assert pfd.shape == (2,)
+
+    # Katz
+    kfd = dimensionality_katz_fractal_dim(signal_2d)
+    assert kfd.shape == (2,)
+
+    # Hurst
+    he = dimensionality_hurst_exp(signal_2d)
+    assert he.shape == (2,)
+
+    # DFA
+    dfa = dimensionality_detrended_fluctuation_analysis(signal_2d)
+    assert dfa.shape == (2,)
+
+
+def test_dimensionality_hurst_edge_cases():
+    from eegdash.features.feature_bank.dimensionality import dimensionality_hurst_exp
+
+    # Signal with zero variance
+    sig = np.zeros((1, 100))
+    he = dimensionality_hurst_exp(sig)
+    assert np.isnan(he).all()

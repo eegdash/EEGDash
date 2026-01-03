@@ -229,3 +229,288 @@ def test_create_dataset_requires_id():
 
     with pytest.raises(ValueError, match="dataset_id is required"):
         create_dataset(dataset_id="")
+
+
+def test_manifest_file_model_path_or_name_priority():
+    """Test ManifestFileModel.path_or_name returns path first."""
+    from eegdash.schemas import ManifestFileModel
+
+    # Line 74: path_or_name returns path
+    model = ManifestFileModel(path="/path/to/file", name="name.txt")
+    assert model.path_or_name() == "/path/to/file"
+
+    # With only name
+    model2 = ManifestFileModel(name="name.txt")
+    assert model2.path_or_name() == "name.txt"
+
+    # With neither
+    model3 = ManifestFileModel()
+    assert model3.path_or_name() == ""
+
+
+def test_create_dataset_with_external_links():
+    """Test create_dataset with external links."""
+    from eegdash.schemas import create_dataset
+
+    # Lines 439, 448: external_links added
+    dataset = create_dataset(
+        dataset_id="ds001",
+        source_url="https://example.com",
+        github_url="https://github.com/example",
+    )
+    assert "external_links" in dataset
+    assert dataset["external_links"]["source_url"] == "https://example.com"
+
+
+def test_create_dataset_with_repository_stats():
+    """Test create_dataset with repository stats."""
+    from eegdash.schemas import create_dataset
+
+    # Lines 448: repository_stats added
+    dataset = create_dataset(dataset_id="ds001", stars=100, forks=20, watchers=50)
+    assert "repository_stats" in dataset
+    assert dataset["repository_stats"]["stars"] == 100
+
+
+def test_sanitize_run_for_mne_edge_cases():
+    """Test _sanitize_run_for_mne with various inputs."""
+    from eegdash.schemas import _sanitize_run_for_mne
+
+    # Line 513: None input
+    assert _sanitize_run_for_mne(None) is None
+
+    # Line 515: integer input
+    assert _sanitize_run_for_mne(1) == "1"
+
+    # String numeric
+    assert _sanitize_run_for_mne("5") == "5"
+
+    # String non-numeric
+    assert _sanitize_run_for_mne("run-01") is None
+
+    # Empty string
+    assert _sanitize_run_for_mne("") is None
+    assert _sanitize_run_for_mne("  ") is None
+
+
+def test_create_record_validation_errors():
+    """Test create_record raises for missing required fields."""
+    from eegdash.schemas import create_record
+    import pytest
+
+    # Line 588: missing required fields
+    with pytest.raises(ValueError, match="dataset is required"):
+        create_record(dataset="", storage_base="s3://", bids_relpath="file.vhdr")
+
+    with pytest.raises(ValueError, match="storage_base is required"):
+        create_record(dataset="ds001", storage_base="", bids_relpath="file.vhdr")
+
+    with pytest.raises(ValueError, match="bids_relpath is required"):
+        create_record(dataset="ds001", storage_base="s3://", bids_relpath="")
+
+
+def test_sanitize_run_float():
+    """Test _sanitize_run_for_mne with float input."""
+    from eegdash.schemas import _sanitize_run_for_mne
+
+    # Line 515: return None for non-int, non-str types
+    assert _sanitize_run_for_mne(3.14) is None
+    assert _sanitize_run_for_mne(["1"]) is None
+    assert _sanitize_run_for_mne({"run": 1}) is None
+
+
+def test_create_record_minimal():
+    """Test create_record with minimal required fields."""
+    from eegdash.schemas import create_record
+
+    record = create_record(
+        dataset="ds001234",
+        storage_base="s3://bucket",
+        bids_relpath="sub-01/eeg/sub-01_eeg.set",
+    )
+
+    assert record["dataset"] == "ds001234"
+    assert "storage" in record
+    assert record["storage"]["base"] == "s3://bucket"
+
+
+def test_create_record_with_all_fields():
+    """Test create_record with all optional fields."""
+    from eegdash.schemas import create_record
+
+    record = create_record(
+        dataset="ds001234",
+        storage_base="s3://bucket",
+        bids_relpath="sub-01/eeg/sub-01_task-rest_eeg.set",
+        subject="01",
+        session="01",
+        task="rest",
+        run="01",
+        dep_keys=["key1", "key2"],
+        datatype="eeg",
+        suffix="eeg",
+        storage_backend="s3",
+    )
+
+    # Check entities are in the record
+    assert record["entities"]["subject"] == "01"
+    assert record["entities"]["session"] == "01"
+    assert record["entities"]["task"] == "rest"
+
+
+def test_validate_record_missing_fields():
+    """Test validate_record with missing fields."""
+    from eegdash.schemas import validate_record
+
+    # Minimal invalid record
+    record = {}
+    errors = validate_record(record)
+    assert "missing: dataset" in errors
+    assert "missing: bids_relpath" in errors
+
+
+def test_validate_record_missing_storage():
+    """Test validate_record with missing storage."""
+    from eegdash.schemas import validate_record
+
+    record = {"dataset": "ds001234", "bids_relpath": "x", "bidspath": "y"}
+    errors = validate_record(record)
+    assert "missing: storage" in errors
+
+
+def test_sanitize_run_for_mne():
+    """Test _sanitize_run_for_mne function."""
+    from eegdash.schemas import _sanitize_run_for_mne
+
+    assert _sanitize_run_for_mne(None) is None
+    assert _sanitize_run_for_mne(1) == "1"
+    assert _sanitize_run_for_mne("2") == "2"
+    assert _sanitize_run_for_mne("abc") is None  # non-numeric
+    assert _sanitize_run_for_mne("") is None
+
+
+def test_sanitize_run():
+    from eegdash import schemas
+
+    assert schemas._sanitize_run_for_mne(1) == "1"
+    assert schemas._sanitize_run_for_mne("01") == "01"
+    assert schemas._sanitize_run_for_mne("run") is None  # Not digit
+    assert schemas._sanitize_run_for_mne(None) is None
+
+
+def test_validate_record():
+    from eegdash import schemas
+
+    assert "missing: dataset" in schemas.validate_record({})
+    assert "missing: storage" in schemas.validate_record(
+        {"dataset": "d", "bids_relpath": "p", "bidspath": "p"}
+    )
+    # Need non-empty storage to bypass "missing: storage" check
+    assert "missing: storage.base" in schemas.validate_record(
+        {
+            "dataset": "d",
+            "bids_relpath": "p",
+            "bidspath": "p",
+            "storage": {"backend": "local"},
+        }
+    )
+
+
+def test_create_record_validation():
+    from eegdash import schemas
+    import pytest
+
+    with pytest.raises(ValueError):
+        schemas.create_record(dataset="", storage_base="b", bids_relpath="p")
+
+    rec = schemas.create_record(dataset="d", storage_base="b", bids_relpath="p", run=1)
+    assert rec["entities_mne"]["run"] == "1"
+
+
+def test_create_dataset_full():
+    # Coverage for create_dataset (schemas.py 364-454)
+    from eegdash import schemas
+    import pytest
+
+    # 1. basic
+    ds = schemas.create_dataset(dataset_id="ds1", name="Test DS", source="openneuro")
+    assert ds["dataset_id"] == "ds1"
+    assert ds["name"] == "Test DS"
+
+    # 2. full fields
+    ds_full = schemas.create_dataset(
+        dataset_id="ds2",
+        ages=[20, 30, 40],
+        age_mean=30.0,
+        species="Human",
+        is_clinical=True,
+        clinical_purpose="epilepsy",
+        paradigm_modality="resting_state",
+        cognitive_domain="memory",
+        is_10_20_system=True,
+        source_url="http://ds.org",
+        stars=10,
+        authors=["Author A"],
+        funding=["Grant 1"],
+        modalities=["eeg"],
+    )
+    assert ds_full["demographics"]["age_min"] == 20
+    assert ds_full["demographics"]["age_max"] == 40
+    assert ds_full["clinical"]["is_clinical"] is True
+    assert ds_full["paradigm"]["modality"] == "resting_state"
+    assert ds_full["external_links"]["source_url"] == "http://ds.org"
+    assert ds_full["repository_stats"]["stars"] == 10
+
+    # 3. Validation
+    with pytest.raises(ValueError, match="dataset_id is required"):
+        schemas.create_dataset(dataset_id="")
+
+
+def test_validate_dataset():
+    # schemas.py 651-656
+    from eegdash import schemas
+
+    assert "missing: dataset_id" in schemas.validate_dataset({})
+    assert not schemas.validate_dataset({"dataset_id": "ds1"})
+
+
+def test_sanitize_run_edge_cases():
+    # schemas.py 511-515
+    from eegdash import schemas
+
+    assert schemas._sanitize_run_for_mne("  ") is None
+    assert schemas._sanitize_run_for_mne("01") == "01"
+    assert schemas._sanitize_run_for_mne("run1") is None
+
+
+def test_create_record_errors():
+    # schemas.py 584-588
+    from eegdash import schemas
+    import pytest
+
+    with pytest.raises(ValueError, match="dataset is required"):
+        schemas.create_record(dataset="", storage_base="s3://b", bids_relpath="f.set")
+    with pytest.raises(ValueError, match="storage_base is required"):
+        schemas.create_record(dataset="ds", storage_base="", bids_relpath="f.set")
+    with pytest.raises(ValueError, match="bids_relpath is required"):
+        schemas.create_record(dataset="ds", storage_base="s3://b", bids_relpath="")
+
+
+def test_manifest_model_coverage():
+    # schemas.py 74
+    from eegdash import schemas
+
+    m = schemas.ManifestFileModel(path=" p ")
+    assert m.path_or_name() == "p"
+    m2 = schemas.ManifestFileModel(name=" n ")
+    assert m2.path_or_name() == "n"
+    m3 = schemas.ManifestFileModel()
+    assert m3.path_or_name() == ""
+
+
+def test_schemas_run_digit_coverage():
+    # schemas.py 515
+    from eegdash import schemas
+
+    assert schemas._sanitize_run_for_mne("A123") is None
+    assert schemas._sanitize_run_for_mne("01") == "01"

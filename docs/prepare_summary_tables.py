@@ -322,7 +322,7 @@ def prepare_table(df: pd.DataFrame):
     df = df[
         [
             "dataset",
-            "dataset_name",  # Added
+            "dataset_title",  # Added
             "source",
             "record_modality",
             "n_records",
@@ -611,10 +611,17 @@ def save_summary_stats(df_raw: pd.DataFrame):
     except Exception:
         subjects_total = 0
 
+    # n_records might be in df_raw or records
+    n_rec_col = "n_records" if "n_records" in df_raw.columns else "records"
+    try:
+        recording_total = int(pd.to_numeric(df_raw[n_rec_col], errors="coerce").sum())
+    except Exception:
+        recording_total = 0
+
     summary_stats = {
         "datasets_total": len(df_raw),
         "subjects_total": subjects_total,
-        "recording_total": len(unique_modalities),
+        "recording_total": recording_total,
         "sources_total": df_raw["source"].nunique()
         if "source" in df_raw.columns
         else 0,
@@ -682,7 +689,7 @@ def fetch_datasets_from_api(
 
     # Convert API response to DataFrame with expected columns
     rows = []
-    for ds in datasets:
+    for ds in all_datasets:
         ds_id = ds.get("dataset_id", "").strip()
         # Skip test datasets and excluded ones
         if (
@@ -706,7 +713,7 @@ def fetch_datasets_from_api(
             "sampling_freqs": sfreq_list,
             "size": human_readable_size(ds.get("size_bytes") or 0),
             "size_bytes": ds.get("size_bytes") or 0,
-            "dataset_name": ds.get("name", ""),
+            "dataset_title": ds.get("name", ""),
             # Map to expected categorical columns (these may need enrichment)
             "Type Subject": ds.get("study_domain", "") or "",
             "modality of exp": ", ".join(ds.get("modalities", []))
@@ -717,6 +724,7 @@ def fetch_datasets_from_api(
             "source": ds.get("source", ""),
             "license": ds.get("license", ""),
             "doi": ds.get("dataset_doi", ""),
+            "duration_hours_total": 0.0,  # Fallback for treemap
         }
         rows.append(row)
 
@@ -891,7 +899,7 @@ def main_from_json(source_dir: str, target_dir: str):
 
             row = {
                 "dataset": ds_id,
-                "dataset_name": ds.get("name", ""),  # New field
+                "dataset_title": ds.get("name", ""),  # New field
                 "record_modality": rec_mod,
                 "n_records": ds.get("total_files", 0) or 0,
                 # Demographics might be empty or null
@@ -971,7 +979,7 @@ def main_from_json(source_dir: str, target_dir: str):
     df = df.rename(
         columns={
             "dataset": "Dataset",
-            "dataset_name": "Name",  # Ensure this exists (prepare_table keeps existing columns if not dropped)
+            "dataset_title": "Name",  # Ensure this exists (prepare_table keeps existing columns if not dropped)
             "source": "Source",
             "nchans_set": "# of channels",
             "sampling_freqs": "sampling (Hz)",

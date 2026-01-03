@@ -436,7 +436,6 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
         and the storage base points to the local dataset root.
 
         """
-        print(f"DEBUG: Calling discover_local_bids_records on {dataset_root}")
         return discover_local_bids_records(dataset_root, filters)
 
     def _find_key_in_nested_dict(self, data: Any, target_key: str) -> Any:

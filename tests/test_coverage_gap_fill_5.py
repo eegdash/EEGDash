@@ -387,12 +387,24 @@ def test_dataset_init_cache_defaults(tmp_path):
             "eegdash.dataset.dataset.get_default_cache_dir",
             return_value=str(tmp_path / "def_cache"),
         ):
+            # Ensure the data_dir for the dataset exists so it doesn't fail offline check
+            (tmp_path / "def_cache" / "ds").mkdir(parents=True, exist_ok=True)
             # 181: cache_dir is None
-            EEGDashDataset(dataset="ds", cache_dir=None, download=False)
-            assert (tmp_path / "def_cache").exists()  # 192 hit
+            record = {
+                "dataset": "ds",
+                "bids_relpath": "f.set",
+                "bidspath": "ds/f.set",
+                "storage": {"base": "s3", "backend": "s3"},
+                "schema_version": 2,
+            }
+            with patch.object(
+                EEGDashDataset, "_find_local_bids_records", return_value=[record]
+            ):
+                EEGDashDataset(dataset="ds", cache_dir=None, download=False)
+                assert (tmp_path / "def_cache").exists()  # 192 hit
 
 
-def test_dataset_record_inference():
+def test_dataset_record_inference(tmp_path):
     # dataset.py 212
     from eegdash.dataset.dataset import EEGDashDataset
 
@@ -406,7 +418,7 @@ def test_dataset_record_inference():
         }
     ]
     with patch("eegdash.api.get_client"):
-        ds = EEGDashDataset(records=records, download=False)
+        ds = EEGDashDataset(records=records, download=False, cache_dir=str(tmp_path))
         assert ds.query["dataset"] == "ds_inf"
 
 
@@ -415,37 +427,56 @@ def test_dataset_dedupe_none_key(tmp_path):
     from eegdash.dataset.dataset import EEGDashDataset
 
     # record with no bids_relpath, bidspath, data_name
-    records = [{"schema_version": 2, "storage": {"base": "s3", "backend": "s3"}}]
-    # We need to satisfy the datasets populating
+    record = {"schema_version": 2}
     with patch("eegdash.api.get_client"):
-        ds = EEGDashDataset(
-            dataset="ds", records=records, _dedupe_records=True, download=False
-        )
-        assert len(ds.records) == 1
+        # We need to mock EEGDashRaw to avoid validation error during datasets list comp
+        with patch("eegdash.dataset.dataset.EEGDashRaw"):
+            ds = EEGDashDataset(
+                dataset="ds",
+                records=[record],
+                _dedupe_records=True,
+                download=False,
+                cache_dir=str(tmp_path),
+            )
+            assert len(ds.records) == 1
 
 
-def test_dataset_download_all_coverage():
+def test_dataset_download_all_coverage(tmp_path):
     # dataset.py 385, 390, 397
     from eegdash.dataset.dataset import EEGDashDataset
 
     with patch("eegdash.api.get_client"):
-        ds = EEGDashDataset(dataset="ds", download=False)
+        # We need to mock _find_datasets to return something or it will raise ValueError
+        with patch.object(EEGDashDataset, "_find_datasets", return_value=[]):
+            # match with re.DOTALL implicitly or just part of it
+            with pytest.raises(
+                ValueError, match="No datasets found matching the query"
+            ):
+                EEGDashDataset(dataset="ds", download=True, cache_dir=str(tmp_path))
+
+        # Manually create one so we can call download_all
+        ds = MagicMock(spec=EEGDashDataset)
+        ds.download = True
+        ds.n_jobs = 1
+
         # 397: no targets
-        ds.download_all()
-        # 385: default n_jobs (implicitly covered if we had targets, let's mock targets)
+        ds.datasets = []
+        EEGDashDataset.download_all(ds)
+
+        # 385: default n_jobs (implicitly handled if targets present)
         mock_raw = MagicMock()
         mock_raw._raw_uri = "s3://..."
+        mock_raw._dep_paths = []
         mock_raw.filecache.exists.return_value = False
-        with patch.object(ds, "datasets", [mock_raw]):
-            # 385 hit
-            with patch.object(mock_raw, "_download_required_files"):
-                ds.download_all(n_jobs=None)
+        ds.datasets = [mock_raw]
+        EEGDashDataset.download_all(ds, n_jobs=None)
+        assert mock_raw._download_required_files.called
 
         # 390: _raw_uri is None
         mock_raw2 = MagicMock()
         mock_raw2._raw_uri = None
-        with patch.object(ds, "datasets", [mock_raw2]):
-            ds.download_all()
+        ds.datasets = [mock_raw2]
+        EEGDashDataset.download_all(ds)
 
 
 def test_challenge_dataset_more_coverage(tmp_path):
@@ -454,20 +485,38 @@ def test_challenge_dataset_more_coverage(tmp_path):
 
     from eegdash.dataset.dataset import EEGChallengeDataset
 
+    record = {
+        "dataset": "EEG2025R1mini",
+        "subject": "NDARAC904DMU",
+        "bids_relpath": "f.set",
+        "bidspath": "EEG2025R1mini/sub-1/f.set",
+        "storage": {"base": "s3", "backend": "s3"},
+        "schema_version": 2,
+    }
+
     # 664: $in in query subject
-    query = {"subject": {"$in": ["001"]}}
-    with patch("eegdash.api.get_client"):
-        # We need release R1 (001 is in mini R1)
+    query = {"subject": {"$in": ["NDARAC904DMU"]}}
+    with patch("eegdash.api.get_client") as mock_get:
+        mock_client = MagicMock()
+        mock_client.find.return_value = [record]
+        mock_get.return_value = mock_client
+        # We need release R1
         ds = EEGChallengeDataset(release="R1", cache_dir=str(tmp_path), query=query)
-        assert "001" in ds.query["subject"]
+        assert "NDARAC904DMU" in ds.query["subject"]["$in"]
 
     # 667-668: qval is not None
-    query2 = {"subject": "001"}
-    with patch("eegdash.api.get_client"):
+    query2 = {"subject": "NDARAC904DMU"}
+    with patch("eegdash.api.get_client") as mock_get:
+        mock_client = MagicMock()
+        mock_client.find.return_value = [record]
+        mock_get.return_value = mock_client
         ds2 = EEGChallengeDataset(release="R1", cache_dir=str(tmp_path), query=query2)
-        assert ds2.query["subject"] == "001"
+        assert ds2.query["subject"] == "NDARAC904DMU"
 
     # 716-718: console fail
     with patch.object(Console, "print", side_effect=Exception("Rich dead")):
-        with patch("eegdash.api.get_client"):
+        with patch("eegdash.api.get_client") as mock_get:
+            mock_client = MagicMock()
+            mock_client.find.return_value = [record]
+            mock_get.return_value = mock_client
             EEGChallengeDataset(release="R2", cache_dir=str(tmp_path))

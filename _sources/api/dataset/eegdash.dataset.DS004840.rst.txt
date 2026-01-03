@@ -5,53 +5,134 @@
 eegdash.dataset.DS004840
 ========================
 
-.. currentmodule:: eegdash.dataset
+OpenNeuro dataset ``ds004840``. Access recordings and metadata through EEGDash.
 
-.. autoclass:: eegdash.dataset.DS004840
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :inherited-members:
-   :member-order: bysource
+.. rst-class:: sd-badges
+
+:bdg-light:`Modality: EEG` :bdg-light:`Tasks: 3` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 9` :bdg-light:`Recordings: 51` :bdg-light:`Source: OpenNeuro`
 
 Dataset Information
 -------------------
 
-- **Dataset ID:** ``DS004840``
-- **Summary:** Modality: Auditory | Type: Clinical/Intervention | Subjects: Other
-- **Number of Subjects:** 9
-- **Number of Recordings:** 51
-- **Number of Tasks:** 3
-- **Number of Channels:** 8
-- **Sampling Frequencies:** 1024,256,512
-- **Total Duration (hours):** 11.306
-- **Dataset Size:** 1.75 GB
-- **OpenNeuro:** `ds004840 <https://openneuro.org/datasets/ds004840>`__
-- **NeMAR:** `ds004840 <https://nemar.org/dataexplorer/detail?dataset_id=ds004840>`__
+.. list-table::
+   :widths: 25 75
+   :header-rows: 0
 
-=========  =======  =======  ==========  ============  =============  =======
-dataset      #Subj    #Chan    #Classes  Freq(Hz)        Duration(H)  Size
-=========  =======  =======  ==========  ============  =============  =======
-ds004840         9        8           3  1024,256,512         11.306  1.75 GB
-=========  =======  =======  ==========  ============  =============  =======
+   * - Dataset ID
+     - ``DS004840``
+   * - Title
+     - Unknown
+   * - Year
+     - Unknown
+   * - Authors
+     - Unknown
+   * - License
+     - Unknown
+   * - Citation / DOI
+     - Unknown
+   * - Source links
+     - `OpenNeuro <https://openneuro.org/datasets/ds004840>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004840>`__
 
+Highlights
+----------
 
-Usage Example
--------------
+.. grid:: 1 2 3 3
+   :gutter: 2
+
+   .. grid-item-card:: Subjects & recordings
+      :class-card: sd-border-1
+
+      - Subjects: 9
+      - Recordings: 51
+      - Tasks: 3
+
+   .. grid-item-card:: Channels & sampling rate
+      :class-card: sd-border-1
+
+      - Channels: 8
+      - Sampling rate (Hz): 1024,256,512
+      - Duration (hours): 11.306
+
+   .. grid-item-card:: Tasks & conditions
+      :class-card: sd-border-1
+
+      - Tasks: 3
+      - Experiment type: Clinical/Intervention
+      - Subject type: Other
+
+   .. grid-item-card:: Files & format
+      :class-card: sd-border-1
+
+      - Size on disk: 1.75 GB
+      - File count: 0
+      - Format: Unknown
+
+   .. grid-item-card:: License & citation
+      :class-card: sd-border-1
+
+      - License: Unknown
+      - DOI: Unknown
+
+   .. grid-item-card:: Provenance
+      :class-card: sd-border-1
+
+      - Source: OpenNeuro
+      - OpenNeuro: `ds004840 <https://openneuro.org/datasets/ds004840>`__
+      - NeMAR: `ds004840 <https://nemar.org/dataexplorer/detail?dataset_id=ds004840>`__
+
+Quickstart
+----------
+
+**Install**
+
+.. code-block:: bash
+
+   pip install eegdash
+
+**Load a recording**
 
 .. code-block:: python
 
    from eegdash.dataset import DS004840
 
    dataset = DS004840(cache_dir="./data")
+   recording = dataset[0]
+   raw = recording.load()
 
-   print(f"Number of recordings: {len(dataset)}")
+**Filter/query**
 
-   if len(dataset):
-       recording = dataset[0]
-       raw = recording.load()
-       print(f"Sampling rate: {raw.info['sfreq']} Hz")
-       print(f"Channels: {len(raw.ch_names)}")
+.. tab-set::
+
+   .. tab-item:: Basic
+
+      .. code-block:: python
+
+         dataset = DS004840(cache_dir="./data", subject="01")
+
+   .. tab-item:: Advanced
+
+      .. code-block:: python
+
+         dataset = DS004840(
+             cache_dir="./data",
+             query={"subject": {"$in": ["01", "02"]}},
+         )
+
+
+Quality & caveats
+-----------------
+
+- No dataset-specific caveats are listed in the available metadata.
+
+API
+---
+
+.. currentmodule:: eegdash.dataset
+
+.. autoclass:: eegdash.dataset.DS004840
+   :members: __init__, save
+   :show-inheritance:
+   :member-order: bysource
 
 
 See Also

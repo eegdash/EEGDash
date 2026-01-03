@@ -5,53 +5,134 @@
 eegdash.dataset.DS005540
 ========================
 
-.. currentmodule:: eegdash.dataset
+OpenNeuro dataset ``ds005540``. Access recordings and metadata through EEGDash.
 
-.. autoclass:: eegdash.dataset.DS005540
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :inherited-members:
-   :member-order: bysource
+.. rst-class:: sd-badges
+
+:bdg-light:`Modality: EEG, BEH` :bdg-light:`Tasks: 1` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 59` :bdg-light:`Recordings: 103` :bdg-light:`Source: OpenNeuro`
 
 Dataset Information
 -------------------
 
-- **Dataset ID:** ``DS005540``
-- **Summary:** Modality: Other | Subjects: Healthy
-- **Number of Subjects:** 59
-- **Number of Recordings:** 103
-- **Number of Tasks:** 1
-- **Number of Channels:** 64
-- **Sampling Frequencies:** 1200,600
-- **Total Duration (hours):** 0.0
-- **Dataset Size:** 70.40 GB
-- **OpenNeuro:** `ds005540 <https://openneuro.org/datasets/ds005540>`__
-- **NeMAR:** `ds005540 <https://nemar.org/dataexplorer/detail?dataset_id=ds005540>`__
+.. list-table::
+   :widths: 25 75
+   :header-rows: 0
 
-=========  =======  =======  ==========  ==========  =============  ========
-dataset      #Subj    #Chan    #Classes  Freq(Hz)      Duration(H)  Size
-=========  =======  =======  ==========  ==========  =============  ========
-ds005540        59       64           1  1200,600                0  70.40 GB
-=========  =======  =======  ==========  ==========  =============  ========
+   * - Dataset ID
+     - ``DS005540``
+   * - Title
+     - Unknown
+   * - Year
+     - Unknown
+   * - Authors
+     - Unknown
+   * - License
+     - Unknown
+   * - Citation / DOI
+     - Unknown
+   * - Source links
+     - `OpenNeuro <https://openneuro.org/datasets/ds005540>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005540>`__
 
+Highlights
+----------
 
-Usage Example
--------------
+.. grid:: 1 2 3 3
+   :gutter: 2
+
+   .. grid-item-card:: Subjects & recordings
+      :class-card: sd-border-1
+
+      - Subjects: 59
+      - Recordings: 103
+      - Tasks: 1
+
+   .. grid-item-card:: Channels & sampling rate
+      :class-card: sd-border-1
+
+      - Channels: 64
+      - Sampling rate (Hz): 1200,600
+      - Duration (hours): 0.0
+
+   .. grid-item-card:: Tasks & conditions
+      :class-card: sd-border-1
+
+      - Tasks: 1
+      - Experiment type: Unknown
+      - Subject type: Healthy
+
+   .. grid-item-card:: Files & format
+      :class-card: sd-border-1
+
+      - Size on disk: 70.40 GB
+      - File count: 0
+      - Format: Unknown
+
+   .. grid-item-card:: License & citation
+      :class-card: sd-border-1
+
+      - License: Unknown
+      - DOI: Unknown
+
+   .. grid-item-card:: Provenance
+      :class-card: sd-border-1
+
+      - Source: OpenNeuro
+      - OpenNeuro: `ds005540 <https://openneuro.org/datasets/ds005540>`__
+      - NeMAR: `ds005540 <https://nemar.org/dataexplorer/detail?dataset_id=ds005540>`__
+
+Quickstart
+----------
+
+**Install**
+
+.. code-block:: bash
+
+   pip install eegdash
+
+**Load a recording**
 
 .. code-block:: python
 
    from eegdash.dataset import DS005540
 
    dataset = DS005540(cache_dir="./data")
+   recording = dataset[0]
+   raw = recording.load()
 
-   print(f"Number of recordings: {len(dataset)}")
+**Filter/query**
 
-   if len(dataset):
-       recording = dataset[0]
-       raw = recording.load()
-       print(f"Sampling rate: {raw.info['sfreq']} Hz")
-       print(f"Channels: {len(raw.ch_names)}")
+.. tab-set::
+
+   .. tab-item:: Basic
+
+      .. code-block:: python
+
+         dataset = DS005540(cache_dir="./data", subject="01")
+
+   .. tab-item:: Advanced
+
+      .. code-block:: python
+
+         dataset = DS005540(
+             cache_dir="./data",
+             query={"subject": {"$in": ["01", "02"]}},
+         )
+
+
+Quality & caveats
+-----------------
+
+- No dataset-specific caveats are listed in the available metadata.
+
+API
+---
+
+.. currentmodule:: eegdash.dataset
+
+.. autoclass:: eegdash.dataset.DS005540
+   :members: __init__, save
+   :show-inheritance:
+   :member-order: bysource
 
 
 See Also

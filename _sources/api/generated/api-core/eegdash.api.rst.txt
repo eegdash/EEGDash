@@ -13,6 +13,5 @@
    .. autosummary::
    
       EEGDash
-      EEGDashDataset
    
 

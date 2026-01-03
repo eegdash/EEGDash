@@ -42,8 +42,9 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css" />
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/select/1.7.0/css/select.dataTables.min.css" />
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/searchpanes/2.3.1/css/searchPanes.dataTables.min.css" />
-    <link rel="stylesheet" type="text/css" href="_static/custom.css?v=1449feac" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css?v=7021f170" />
     <link rel="stylesheet" type="text/css" href="_static/css/treemap.css?v=7131b20f" />
+    <link rel="stylesheet" type="text/css" href="_static/css/custom.css?v=d9bd6b14" />
   
   <!-- So that users can add custom icons -->
   <script src="_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
@@ -64,13 +65,14 @@
     <script src="https://cdn.datatables.net/select/1.7.0/js/dataTables.select.min.js"></script>
     <script src="https://cdn.datatables.net/searchpanes/2.3.1/js/dataTables.searchPanes.min.js"></script>
     <script src="_static/js/tag-palette.js?v=6f5eac9a"></script>
-    <script src="_static/js/datatables-init.js?v=42062302"></script>
+    <script src="_static/js/datatables-init.js?v=0986bc1f"></script>
+    <script src="_static/js/hero-search.js?v=d34ab722"></script>
     <link rel="canonical" href="https://eegdash.org/user_guide.html" />
     <link rel="icon" href="_static/favicon.ico"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="API Reference" href="api/api.html" />
-    <link rel="prev" title="Installing from sources" href="install/install_source.html" />
+    <link rel="next" title="Installation" href="install/install.html" />
+    <link rel="prev" title="Datasets Catalog" href="dataset_summary.html" />
   
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -165,8 +167,8 @@
   <ul class="bd-navbar-elements navbar-nav">
     
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="install/install.html">
-    Installing
+  <a class="nav-link nav-internal" href="dataset_summary.html">
+    Datasets
   </a>
 </li>
 
@@ -179,15 +181,8 @@
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="api/api.html">
-    API
-  </a>
-</li>
-
-
-<li class="nav-item ">
-  <a class="nav-link nav-internal" href="dataset_summary.html">
-    Dataset Catalog
+  <a class="nav-link nav-internal" href="install/install.html">
+    Install
   </a>
 </li>
 
@@ -195,6 +190,13 @@
 <li class="nav-item ">
   <a class="nav-link nav-internal" href="generated/auto_examples/index.html">
     Examples
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="api/api.html">
+    Docs
   </a>
 </li>
 
@@ -327,8 +329,8 @@
   <ul class="bd-navbar-elements navbar-nav">
     
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="install/install.html">
-    Installing
+  <a class="nav-link nav-internal" href="dataset_summary.html">
+    Datasets
   </a>
 </li>
 
@@ -341,15 +343,8 @@
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="api/api.html">
-    API
-  </a>
-</li>
-
-
-<li class="nav-item ">
-  <a class="nav-link nav-internal" href="dataset_summary.html">
-    Dataset Catalog
+  <a class="nav-link nav-internal" href="install/install.html">
+    Install
   </a>
 </li>
 
@@ -357,6 +352,13 @@
 <li class="nav-item ">
   <a class="nav-link nav-internal" href="generated/auto_examples/index.html">
     Examples
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="api/api.html">
+    Docs
   </a>
 </li>
 
@@ -502,12 +504,12 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="id1">
-<h1>User Guide<a class="headerlink" href="#id1" title="Link to this heading">#</a></h1>
-<p>This guide provides a comprehensive overview of the <code class="xref py py-mod docutils literal notranslate"><span class="pre">eegdash</span></code> library, focusing on its core data access object, <a class="reference internal" href="api/generated/api-core/eegdash.api.html#eegdash.api.EEGDashDataset" title="eegdash.api.EEGDashDataset"><code class="xref py py-class docutils literal notranslate"><span class="pre">EEGDashDataset</span></code></a>. You will learn how to use this object to find, access, and manage EEG data for your research and analysis tasks.</p>
+  <section id="user-guide">
+<h1>User Guide<a class="headerlink" href="#user-guide" title="Link to this heading">#</a></h1>
+<p>This guide provides a comprehensive overview of the <code class="xref py py-mod docutils literal notranslate"><span class="pre">eegdash</span></code> library, focusing on its core data access object, <code class="xref py py-class docutils literal notranslate"><span class="pre">EEGDashDataset</span></code>. You will learn how to use this object to find, access, and manage EEG data for your research and analysis tasks.</p>
 <section id="the-eegdash-object">
 <h2>The EEGDash Object<a class="headerlink" href="#the-eegdash-object" title="Link to this heading">#</a></h2>
-<p>While <a class="reference internal" href="api/generated/api-core/eegdash.api.html#eegdash.api.EEGDashDataset" title="eegdash.api.EEGDashDataset"><code class="xref py py-class docutils literal notranslate"><span class="pre">EEGDashDataset</span></code></a> is the main tool for loading data for machine learning, the <a class="reference internal" href="api/generated/api-core/eegdash.api.html#eegdash.api.EEGDash" title="eegdash.api.EEGDash"><code class="xref py py-class docutils literal notranslate"><span class="pre">EEGDash</span></code></a> object provides a lower-level interface for directly interacting with the metadata database. It is useful for exploring the available data, performing complex queries, or managing metadata records.</p>
+<p>While <code class="xref py py-class docutils literal notranslate"><span class="pre">EEGDashDataset</span></code> is the main tool for loading data for machine learning, the <a class="reference internal" href="api/generated/api-core/eegdash.api.html#eegdash.api.EEGDash" title="eegdash.api.EEGDash"><code class="xref py py-class docutils literal notranslate"><span class="pre">EEGDash</span></code></a> object provides a lower-level interface for directly interacting with the metadata database. It is useful for exploring the available data, performing complex queries, or managing metadata records.</p>
 <section id="initializing-eegdash">
 <h3>Initializing EEGDash<a class="headerlink" href="#initializing-eegdash" title="Link to this heading">#</a></h3>
 <p>You can create a client to connect to the public database like this:</p>
@@ -537,17 +539,17 @@
 <p>It’s important to understand the distinction between these two objects:</p>
 <ul class="simple">
 <li><p><a class="reference internal" href="api/generated/api-core/eegdash.api.html#eegdash.api.EEGDash" title="eegdash.api.EEGDash"><code class="xref py py-class docutils literal notranslate"><span class="pre">EEGDash</span></code></a>: Use this for querying and managing metadata. It returns a list of dictionaries, where each dictionary is a record from the database.</p></li>
-<li><p><a class="reference internal" href="api/generated/api-core/eegdash.api.html#eegdash.api.EEGDashDataset" title="eegdash.api.EEGDashDataset"><code class="xref py py-class docutils literal notranslate"><span class="pre">EEGDashDataset</span></code></a>: Use this when you need to load EEG data for analysis or machine learning. It returns a PyTorch-compatible dataset object where each item can load the actual EEG signal.</p></li>
+<li><p><code class="xref py py-class docutils literal notranslate"><span class="pre">EEGDashDataset</span></code>: Use this when you need to load EEG data for analysis or machine learning. It returns a PyTorch-compatible dataset object where each item can load the actual EEG signal.</p></li>
 </ul>
-<p>In general, you will use <a class="reference internal" href="api/generated/api-core/eegdash.api.html#eegdash.api.EEGDashDataset" title="eegdash.api.EEGDashDataset"><code class="xref py py-class docutils literal notranslate"><span class="pre">EEGDashDataset</span></code></a> for most of your data loading needs.</p>
+<p>In general, you will use <code class="xref py py-class docutils literal notranslate"><span class="pre">EEGDashDataset</span></code> for most of your data loading needs.</p>
 </section>
 </section>
 <section id="the-eegdashdataset-object">
 <h2>The EEGDashDataset Object<a class="headerlink" href="#the-eegdashdataset-object" title="Link to this heading">#</a></h2>
-<p>The <a class="reference internal" href="api/generated/api-core/eegdash.api.html#eegdash.api.EEGDashDataset" title="eegdash.api.EEGDashDataset"><code class="xref py py-class docutils literal notranslate"><span class="pre">EEGDashDataset</span></code></a> is the primary entry point for working with EEG recordings in <code class="xref py py-mod docutils literal notranslate"><span class="pre">eegdash</span></code>. It acts as a high-level interface that allows you to query a metadata database and load corresponding EEG data, either from a remote source or from a local cache.</p>
+<p>The <code class="xref py py-class docutils literal notranslate"><span class="pre">EEGDashDataset</span></code> is the primary entry point for working with EEG recordings in <code class="xref py py-mod docutils literal notranslate"><span class="pre">eegdash</span></code>. It acts as a high-level interface that allows you to query a metadata database and load corresponding EEG data, either from a remote source or from a local cache.</p>
 <section id="initializing-eegdashdataset">
 <h3>Initializing EEGDashDataset<a class="headerlink" href="#initializing-eegdashdataset" title="Link to this heading">#</a></h3>
-<p>To get started, you need to create an instance of <a class="reference internal" href="api/generated/api-core/eegdash.api.html#eegdash.api.EEGDashDataset" title="eegdash.api.EEGDashDataset"><code class="xref py py-class docutils literal notranslate"><span class="pre">EEGDashDataset</span></code></a>. The two most important parameters are <code class="docutils literal notranslate"><span class="pre">cache_dir</span></code> and <code class="docutils literal notranslate"><span class="pre">dataset</span></code>.</p>
+<p>To get started, you need to create an instance of <code class="xref py py-class docutils literal notranslate"><span class="pre">EEGDashDataset</span></code>. The two most important parameters are <code class="docutils literal notranslate"><span class="pre">cache_dir</span></code> and <code class="docutils literal notranslate"><span class="pre">dataset</span></code>.</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">cache_dir</span></code>: This is the local directory where <code class="docutils literal notranslate"><span class="pre">eegdash</span></code> will store downloaded data.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">dataset</span></code>: The identifier of the dataset you want to work with (e.g., <code class="docutils literal notranslate"><span class="pre">&quot;ds002718&quot;</span></code>).</p></li>
@@ -569,7 +571,7 @@
 </section>
 <section id="querying-for-specific-data">
 <h2>Querying for Specific Data<a class="headerlink" href="#querying-for-specific-data" title="Link to this heading">#</a></h2>
-<p><a class="reference internal" href="api/generated/api-core/eegdash.api.html#eegdash.api.EEGDashDataset" title="eegdash.api.EEGDashDataset"><code class="xref py py-class docutils literal notranslate"><span class="pre">EEGDashDataset</span></code></a> offers powerful filtering capabilities, allowing you to select a subset of recordings based on various criteria. You can filter by task, subject, session, or run.</p>
+<p><code class="xref py py-class docutils literal notranslate"><span class="pre">EEGDashDataset</span></code> offers powerful filtering capabilities, allowing you to select a subset of recordings based on various criteria. You can filter by task, subject, session, or run.</p>
 <section id="filtering-by-task">
 <h3>Filtering by Task<a class="headerlink" href="#filtering-by-task" title="Link to this heading">#</a></h3>
 <p>You can easily select recordings associated with a specific experimental task. For example, to get all resting-state recordings:</p>
@@ -640,9 +642,9 @@
 </section>
 <section id="working-with-local-data-offline-mode">
 <h2>Working with Local Data (Offline Mode)<a class="headerlink" href="#working-with-local-data-offline-mode" title="Link to this heading">#</a></h2>
-<p><code class="xref py py-mod docutils literal notranslate"><span class="pre">eegdash</span></code> also supports working with local data that you have already downloaded or manage separately. By setting <code class="docutils literal notranslate"><span class="pre">download=False</span></code>, you can instruct <a class="reference internal" href="api/generated/api-core/eegdash.api.html#eegdash.api.EEGDashDataset" title="eegdash.api.EEGDashDataset"><code class="xref py py-class docutils literal notranslate"><span class="pre">EEGDashDataset</span></code></a> to use local BIDS-compliant data instead of accessing the database or remote storage.</p>
+<p><code class="xref py py-mod docutils literal notranslate"><span class="pre">eegdash</span></code> also supports working with local data that you have already downloaded or manage separately. By setting <code class="docutils literal notranslate"><span class="pre">download=False</span></code>, you can instruct <code class="xref py py-class docutils literal notranslate"><span class="pre">EEGDashDataset</span></code> to use local BIDS-compliant data instead of accessing the database or remote storage.</p>
 <p>To use this feature, your data must be organized in a BIDS-like structure within your <code class="docutils literal notranslate"><span class="pre">cache_dir</span></code>. For example, if your <code class="docutils literal notranslate"><span class="pre">cache_dir</span></code> is <code class="docutils literal notranslate"><span class="pre">./eeg_data</span></code> and your dataset is <code class="docutils literal notranslate"><span class="pre">ds002718</span></code>, the files should be located at <code class="docutils literal notranslate"><span class="pre">./eeg_data/ds002718/</span></code>.</p>
-<p>Here is how to use <a class="reference internal" href="api/generated/api-core/eegdash.api.html#eegdash.api.EEGDashDataset" title="eegdash.api.EEGDashDataset"><code class="xref py py-class docutils literal notranslate"><span class="pre">EEGDashDataset</span></code></a> in offline mode:</p>
+<p>Here is how to use <code class="xref py py-class docutils literal notranslate"><span class="pre">EEGDashDataset</span></code> in offline mode:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Initialize in offline mode</span>
 <span class="n">local_dataset</span> <span class="o">=</span> <span class="n">EEGDashDataset</span><span class="p">(</span>
     <span class="n">cache_dir</span><span class="o">=</span><span class="s2">&quot;./eeg_data&quot;</span><span class="p">,</span>
@@ -657,7 +659,7 @@
 </section>
 <section id="accessing-data-from-the-dataset">
 <h2>Accessing Data from the Dataset<a class="headerlink" href="#accessing-data-from-the-dataset" title="Link to this heading">#</a></h2>
-<p>Once you have your <a class="reference internal" href="api/generated/api-core/eegdash.api.html#eegdash.api.EEGDashDataset" title="eegdash.api.EEGDashDataset"><code class="xref py py-class docutils literal notranslate"><span class="pre">EEGDashDataset</span></code></a> object, you can access individual recordings as if it were a list. Each item in the dataset is an <code class="xref py py-class docutils literal notranslate"><span class="pre">EEGDashBaseDataset</span></code> object, which contains the metadata and methods to load the actual EEG data.</p>
+<p>Once you have your <code class="xref py py-class docutils literal notranslate"><span class="pre">EEGDashDataset</span></code> object, you can access individual recordings as if it were a list. Each item in the dataset is an <code class="xref py py-class docutils literal notranslate"><span class="pre">EEGDashBaseDataset</span></code> object, which contains the metadata and methods to load the actual EEG data.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">dataset</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
     <span class="c1"># Get the first recording</span>
     <span class="n">recording</span> <span class="o">=</span> <span class="n">dataset</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
@@ -671,6 +673,25 @@
 </pre></div>
 </div>
 <p>This provides a powerful and flexible way to integrate <code class="docutils literal notranslate"><span class="pre">eegdash</span></code> into your data analysis pipelines, whether you are working with remote or local data. For contributor resources, see <a class="reference internal" href="developer_notes.html"><span class="doc">Developer Notes</span></a>.</p>
+</section>
+<section id="api-configuration">
+<h2>API Configuration<a class="headerlink" href="#api-configuration" title="Link to this heading">#</a></h2>
+<p>By default, <code class="xref py py-mod docutils literal notranslate"><span class="pre">eegdash</span></code> connects to the public REST API at <code class="docutils literal notranslate"><span class="pre">https://data.eegdash.org</span></code>.
+You can customize this behavior using environment variables:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Override the default API URL (e.g., for testing)</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">EEGDASH_API_URL</span><span class="o">=</span><span class="s2">&quot;https://data.eegdash.org&quot;</span>
+
+<span class="c1"># For admin write operations (required for dataset ingestion)</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">EEGDASH_API_TOKEN</span><span class="o">=</span><span class="s2">&quot;your-admin-token&quot;</span>
+</pre></div>
+</div>
+<p>The API provides the following features:</p>
+<ul class="simple">
+<li><p><strong>Rate Limiting</strong>: Public endpoints are limited to 100 requests/minute per IP</p></li>
+<li><p><strong>Health Checks</strong>: Service status available at <code class="docutils literal notranslate"><span class="pre">/health</span></code></p></li>
+<li><p><strong>Request Tracing</strong>: All responses include <code class="docutils literal notranslate"><span class="pre">X-Request-ID</span></code> for debugging</p></li>
+</ul>
+<p>For more details about the API architecture, see <a class="reference internal" href="api/api_core.html"><span class="doc">API Core</span></a>.</p>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <p><a class="reference internal" href="developer_notes.html"><span class="doc">Developer Notes</span></a> captures contributor workflows for the core package.</p>
@@ -689,20 +710,20 @@
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="install/install_source.html"
+       href="dataset_summary.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Installing from sources</p>
+        <p class="prev-next-title">Datasets Catalog</p>
       </div>
     </a>
     <a class="right-next"
-       href="api/api.html"
+       href="install/install.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">API Reference</p>
+        <p class="prev-next-title">Installation</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -736,7 +757,7 @@
 
   <p class="copyright">
     
-      © Copyright 2025–2025, EEG Dash Developers.
+      © Copyright 2025-2026, EEG Dash Developers.
       <br/>
     
   </p>

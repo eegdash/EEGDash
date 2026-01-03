@@ -17,13 +17,14 @@ Submodules
    :maxdepth: 4
 
    eegdash.api
-   eegdash.bids_eeg_metadata
+   eegdash.bids_metadata
    eegdash.const
    eegdash.downloader
+   eegdash.http_api_client
+   eegdash.local_bids
    eegdash.logging
-   eegdash.mongodb
    eegdash.paths
-   eegdash.utils
+   eegdash.schemas
 
 Module contents
 ---------------

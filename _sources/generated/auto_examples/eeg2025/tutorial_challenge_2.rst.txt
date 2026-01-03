@@ -27,12 +27,26 @@ Challenge 2: Predicting the p-factor from EEG
    :local:
    :depth: 2
 
-.. GENERATED FROM PYTHON SOURCE LINES 12-27
+.. GENERATED FROM PYTHON SOURCE LINES 11-12
+
+.. code-block:: Python
+
+    #
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 13-30
 
 .. image:: https://colab.research.google.com/assets/colab-badge.svg
     :target: https://colab.research.google.com/github/eeg2025/startkit/blob/main/challenge_2.ipynb
     :alt: Open In Colab
+
 #####################################################################
+
  Preliminary notes
  -----------------
  Before we begin, I just want to make a deal with you, ok?
@@ -45,7 +59,20 @@ Challenge 2: Predicting the p-factor from EEG
  The entire decoding community will only go further when we stop
  solving the same problems over and over again, and it starts working together.
 
-.. GENERATED FROM PYTHON SOURCE LINES 29-80
+.. GENERATED FROM PYTHON SOURCE LINES 31-33
+
+.. code-block:: Python
+
+
+    #
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 34-91
 
 Overview
  --------
@@ -61,7 +88,9 @@ Overview
  and extrapolation. The goal is not only to minimize error on seen subjects, but also to transfer effectively to unseen data.
  Ensure the dataset is available locally. If not, see the
  `dataset download guide <https://eeg2025.github.io/data/#downloading-the-data>`__.
+
 #####################################################################
+
  Contents of this start kit
  --------------------------
  .. note:: If you need additional explanations on the
@@ -85,7 +114,9 @@ Overview
     - Some knowledge of PyTorch
     - Basic familiarity with EEG and preprocessing
     - An appreciation for open-source work :)
+
 #####################################################################
+
  Install dependencies on Colab
  -----------------------------
 
@@ -95,11 +126,13 @@ Overview
  .. code-block:: bash
 
     pip install eegdash
+
 #####################################################################
+
  Imports
  -------
 
-.. GENERATED FROM PYTHON SOURCE LINES 80-94
+.. GENERATED FROM PYTHON SOURCE LINES 92-109
 
 .. code-block:: Python
 
@@ -107,7 +140,8 @@ Overview
     import math
     import os
     import random
-    from joblib import Parallel, delayed
+
+
     import torch
     from torch.utils.data import DataLoader
     from torch import optim
@@ -116,6 +150,9 @@ Overview
     from braindecode.datasets.base import EEGWindowsDataset, BaseConcatDataset, BaseDataset
     from braindecode.models import EEGNeX
     from eegdash import EEGChallengeDataset
+    from eegdash.paths import get_default_cache_dir
+
+    #
 
 
 
@@ -123,19 +160,20 @@ Overview
 
 
 
-
-.. GENERATED FROM PYTHON SOURCE LINES 95-103
+.. GENERATED FROM PYTHON SOURCE LINES 110-120
 
 .. warning::
     In case of Colab, before starting, make sure you're on a GPU instance
     for faster training! If running on Google Colab, please request a GPU runtime
     by clicking `Runtime/Change runtime type` in the top bar menu, then selecting
     'T4 GPU' under 'Hardware accelerator'.
+
 #####################################################################
+
  Identify whether a CUDA-enabled GPU is available
  ------------------------------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 103-114
+.. GENERATED FROM PYTHON SOURCE LINES 121-133
 
 .. code-block:: Python
 
@@ -150,6 +188,7 @@ Overview
             "selecting 'T4 GPU'\nunder 'Hardware accelerator'."
         )
     print(msg)
+    #
 
 
 
@@ -167,7 +206,7 @@ Overview
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 115-138
+.. GENERATED FROM PYTHON SOURCE LINES 134-161
 
 Understanding the P-factor regression task.
  -------------------------------------------
@@ -183,21 +222,25 @@ Understanding the P-factor regression task.
  The solution may involve finding meaningful representations of the EEG data that correlate with the P-factor scores.
  The challenge encourages learning physiologically meaningful signal representations and discovery of reproducible biomarkers.
  If contestants are successful in this task, it could pave the way for more objective and efficient assessments of the P-factor in clinical settings.
+
 #####################################################################
+
  Define local path and (down)load the data
  -----------------------------------------
  In this challenge 2 example, we load the EEG 2025 release using
  :doc:`EEGChallengeDataset </api/dataset/eegdash.dataset.EEGChallengeDataset>`.
  **Note:** in this example notebook, we load the contrast change detection task from one mini release only as an example. Naturally, you are encouraged to train your models on all complete releases, using data from all the tasks you deem relevant.
+
 #####################################################################
+
  The first step is to define the cache folder!
  Match tests' cache layout under ~/eegdash_cache/eeg_challenge_cache
 
-.. GENERATED FROM PYTHON SOURCE LINES 138-165
+.. GENERATED FROM PYTHON SOURCE LINES 162-190
 
 .. code-block:: Python
 
-    DATA_DIR = (Path.home() / "eegdash_cache" / "eeg_challenge_cache").resolve()
+    DATA_DIR = Path(get_default_cache_dir()).resolve()
     # Creating the path if it does not exist
     DATA_DIR.mkdir(parents=True, exist_ok=True)
     # We define the list of releases to load.
@@ -224,6 +267,7 @@ Understanding the P-factor regression task.
     ]
     print("Datasets loaded")
     sub_rm = ["NDARWV769JM7"]
+    #
 
 
 
@@ -254,7 +298,7 @@ Understanding the P-factor regression task.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 166-171
+.. GENERATED FROM PYTHON SOURCE LINES 191-196
 
 Combine the datasets into a single one
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -262,15 +306,15 @@ Here, we combine the datasets from the different releases into a single
 ``BaseConcatDataset`` object.
 %%
 
-.. GENERATED FROM PYTHON SOURCE LINES 171-176
+.. GENERATED FROM PYTHON SOURCE LINES 197-202
 
 .. code-block:: Python
 
     all_datasets = BaseConcatDataset(all_datasets_list)
     print(all_datasets.description)
-    raws = Parallel(n_jobs=os.cpu_count())(
-        delayed(lambda d: d.raw)(d) for d in all_datasets.datasets
-    )
+    for ds in all_datasets_list:
+        ds.download_all(n_jobs=os.cpu_count())
+    #
 
 
 
@@ -279,74 +323,74 @@ Here, we combine the datasets from the different releases into a single
 
  .. code-block:: none
 
-             subject  run  ... seqlearning8target  symbolsearch
-    0   NDARAH793FBF    1  ...          available     available
-    1   NDARAH793FBF    2  ...          available     available
-    2   NDARAH793FBF    3  ...          available     available
-    3   NDARAJ689BVN    2  ...        unavailable     available
-    4   NDARAJ689BVN    3  ...        unavailable     available
-    5   NDARAJ689BVN    1  ...        unavailable     available
-    6   NDARAP785CTE    3  ...          available     available
-    7   NDARAP785CTE    1  ...          available     available
-    8   NDARAP785CTE    2  ...          available     available
-    9   NDARAU708TL8    1  ...          available     available
-    10  NDARAU708TL8    2  ...          available     available
-    11  NDARAU708TL8    3  ...          available     available
-    12  NDARBE091BGD    2  ...        unavailable     available
-    13  NDARBE091BGD    3  ...        unavailable     available
-    14  NDARBE091BGD    1  ...        unavailable     available
-    15  NDARBE103DHM    2  ...          available     available
-    16  NDARBE103DHM    3  ...          available     available
-    17  NDARBE103DHM    1  ...          available     available
-    18  NDARBF851NH6    2  ...          available     available
-    19  NDARBF851NH6    3  ...          available     available
-    20  NDARBF851NH6    1  ...          available     available
-    21  NDARBH228RDW    1  ...          available     available
-    22  NDARBH228RDW    3  ...          available     available
-    23  NDARBH228RDW    2  ...          available     available
-    24  NDARBJ674TVU    1  ...        unavailable     available
-    25  NDARBJ674TVU    2  ...        unavailable     available
-    26  NDARBJ674TVU    3  ...        unavailable     available
-    27  NDARBM433VER    2  ...          available     available
-    28  NDARBM433VER    1  ...          available     available
-    29  NDARBM433VER    3  ...          available     available
-    30  NDARCA740UC8    2  ...          available     available
-    31  NDARCA740UC8    3  ...          available     available
-    32  NDARCA740UC8    1  ...          available     available
-    33  NDARCU633GCZ    2  ...          available     available
-    34  NDARCU633GCZ    3  ...          available     available
-    35  NDARCU633GCZ    1  ...          available     available
-    36  NDARCU736GZ1    2  ...        unavailable     available
-    37  NDARCU736GZ1    3  ...        unavailable     available
-    38  NDARCU736GZ1    1  ...        unavailable     available
-    39  NDARCU744XWL    1  ...          available     available
-    40  NDARCU744XWL    2  ...          available     available
-    41  NDARCU744XWL    3  ...          available     available
-    42  NDARDC843HHM    2  ...          available     available
-    43  NDARDC843HHM    1  ...          available     available
-    44  NDARDC843HHM    3  ...          available     available
-    45  NDARDH086ZKK    3  ...          available     available
-    46  NDARDH086ZKK    2  ...          available     available
-    47  NDARDH086ZKK    1  ...          available     available
-    48  NDARDL305BT8    3  ...          available     available
-    49  NDARDL305BT8    1  ...          available     available
-    50  NDARDL305BT8    2  ...          available     available
-    51  NDARDU853XZ6    1  ...        unavailable     available
-    52  NDARDU853XZ6    3  ...        unavailable     available
-    53  NDARDU853XZ6    2  ...        unavailable     available
-    54  NDARDV245WJG    2  ...        unavailable     available
-    55  NDARDV245WJG    3  ...        unavailable     available
-    56  NDARDV245WJG    1  ...        unavailable     available
-    57  NDAREC480KFA    1  ...          available     available
-    58  NDAREC480KFA    3  ...          available     available
-    59  NDAREC480KFA    2  ...          available     available
+             subject run  ... seqlearning8target  symbolsearch
+    0   NDARAH793FBF   2  ...          available     available
+    1   NDARAH793FBF   3  ...          available     available
+    2   NDARAH793FBF   1  ...          available     available
+    3   NDARAJ689BVN   3  ...        unavailable     available
+    4   NDARAJ689BVN   2  ...        unavailable     available
+    5   NDARAJ689BVN   1  ...        unavailable     available
+    6   NDARAP785CTE   1  ...          available     available
+    7   NDARAP785CTE   3  ...          available     available
+    8   NDARAP785CTE   2  ...          available     available
+    9   NDARAU708TL8   1  ...          available     available
+    10  NDARAU708TL8   2  ...          available     available
+    11  NDARAU708TL8   3  ...          available     available
+    12  NDARBE091BGD   3  ...        unavailable     available
+    13  NDARBE091BGD   2  ...        unavailable     available
+    14  NDARBE091BGD   1  ...        unavailable     available
+    15  NDARBE103DHM   1  ...          available     available
+    16  NDARBE103DHM   2  ...          available     available
+    17  NDARBE103DHM   3  ...          available     available
+    18  NDARBF851NH6   3  ...          available     available
+    19  NDARBF851NH6   2  ...          available     available
+    20  NDARBF851NH6   1  ...          available     available
+    21  NDARBH228RDW   1  ...          available     available
+    22  NDARBH228RDW   2  ...          available     available
+    23  NDARBH228RDW   3  ...          available     available
+    24  NDARBJ674TVU   1  ...        unavailable     available
+    25  NDARBJ674TVU   3  ...        unavailable     available
+    26  NDARBJ674TVU   2  ...        unavailable     available
+    27  NDARBM433VER   1  ...          available     available
+    28  NDARBM433VER   2  ...          available     available
+    29  NDARBM433VER   3  ...          available     available
+    30  NDARCA740UC8   2  ...          available     available
+    31  NDARCA740UC8   3  ...          available     available
+    32  NDARCA740UC8   1  ...          available     available
+    33  NDARCU633GCZ   1  ...          available     available
+    34  NDARCU633GCZ   3  ...          available     available
+    35  NDARCU633GCZ   2  ...          available     available
+    36  NDARCU736GZ1   2  ...        unavailable     available
+    37  NDARCU736GZ1   3  ...        unavailable     available
+    38  NDARCU736GZ1   1  ...        unavailable     available
+    39  NDARCU744XWL   1  ...          available     available
+    40  NDARCU744XWL   3  ...          available     available
+    41  NDARCU744XWL   2  ...          available     available
+    42  NDARDC843HHM   3  ...          available     available
+    43  NDARDC843HHM   2  ...          available     available
+    44  NDARDC843HHM   1  ...          available     available
+    45  NDARDH086ZKK   2  ...          available     available
+    46  NDARDH086ZKK   3  ...          available     available
+    47  NDARDH086ZKK   1  ...          available     available
+    48  NDARDL305BT8   1  ...          available     available
+    49  NDARDL305BT8   2  ...          available     available
+    50  NDARDL305BT8   3  ...          available     available
+    51  NDARDU853XZ6   3  ...        unavailable     available
+    52  NDARDU853XZ6   2  ...        unavailable     available
+    53  NDARDU853XZ6   1  ...        unavailable     available
+    54  NDARDV245WJG   3  ...        unavailable     available
+    55  NDARDV245WJG   2  ...        unavailable     available
+    56  NDARDV245WJG   1  ...        unavailable     available
+    57  NDAREC480KFA   1  ...          available     available
+    58  NDAREC480KFA   2  ...          available     available
+    59  NDAREC480KFA   3  ...          available     available
 
     [60 rows x 26 columns]
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 177-186
+.. GENERATED FROM PYTHON SOURCE LINES 203-214
 
 Inspect your data
  -----------------
@@ -356,9 +400,11 @@ Inspect your data
  The following snippet, if uncommented, will show the first 10 seconds of the raw EEG signal.
  We can also inspect the data further by looking at the events and annotations.
  We strongly recommend you to take a look into the details and check how the events are structured.
+
 #####################################################################
 
-.. GENERATED FROM PYTHON SOURCE LINES 186-191
+
+.. GENERATED FROM PYTHON SOURCE LINES 215-221
 
 .. code-block:: Python
 
@@ -367,6 +413,7 @@ Inspect your data
     raw.plot(duration=10, scalings="auto", show=True)
     print(raw.annotations)
     SFREQ = 100
+    #
 
 
 
@@ -392,15 +439,15 @@ Inspect your data
      nchan: 129
      projs: []
      sfreq: 100.0 Hz
-     subject_info: <subject_info | his_id: sub-NDARAH793FBF, sex: 1, birthday: 2016-04-15>
+     subject_info: <subject_info | >
     >
     Using matplotlib as 2D backend.
-    <Annotations | 75 segments: 9999 (1), break cnt (2), ...>
+    <Annotations | 74 segments: 9999 (1), break cnt (1), ...>
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 192-197
+.. GENERATED FROM PYTHON SOURCE LINES 222-227
 
 Wrap the data into a PyTorch-compatible dataset
 --------------------------------------------------
@@ -408,7 +455,7 @@ The class below defines a dataset wrapper that will extract 2-second windows,
 uniformly sampled over the whole signal. In addition, it will add useful information
 about the extracted windows, such as the p-factor, the subject or the task.
 
-.. GENERATED FROM PYTHON SOURCE LINES 200-234
+.. GENERATED FROM PYTHON SOURCE LINES 231-265
 
 .. code-block:: Python
 
@@ -453,11 +500,11 @@ about the extracted windows, such as the p-factor, the subject or the task.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 235-236
+.. GENERATED FROM PYTHON SOURCE LINES 266-267
 
-Filter out recordings that are too short
+Filter out recordings that are too short or missing p_factor
 
-.. GENERATED FROM PYTHON SOURCE LINES 236-258
+.. GENERATED FROM PYTHON SOURCE LINES 267-292
 
 .. code-block:: Python
 
@@ -468,6 +515,8 @@ Filter out recordings that are too short
             if ds.description.subject not in sub_rm
             and ds.raw.n_times >= 4 * SFREQ
             and len(ds.raw.ch_names) == 129
+            and "p_factor" in ds.description
+            and ds.description["p_factor"] is not None
             and not math.isnan(ds.description["p_factor"])
         ]
     )
@@ -483,6 +532,7 @@ Filter out recordings that are too short
         [DatasetWrapper(ds, crop_size_samples=2 * SFREQ) for ds in windows_ds.datasets]
     )
 
+    #
 
 
 
@@ -490,13 +540,13 @@ Filter out recordings that are too short
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 259-262
+.. GENERATED FROM PYTHON SOURCE LINES 293-296
 
 Inspect the label distribution
 -------------------------------
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 262-276
+.. GENERATED FROM PYTHON SOURCE LINES 297-312
 
 .. code-block:: Python
 
@@ -514,6 +564,7 @@ Inspect the label distribution
     ax.set_ylabel("Count")
     plt.tight_layout()
     plt.show()
+    #
 
 
 
@@ -526,7 +577,7 @@ Inspect the label distribution
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 277-289
+.. GENERATED FROM PYTHON SOURCE LINES 313-326
 
 Define, train and save a model
  ---------------------------------
@@ -538,10 +589,11 @@ Define, train and save a model
  However, you can use any pytorch model you want.
 
 #####################################################################
+
  Initialize model
  -----------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 289-324
+.. GENERATED FROM PYTHON SOURCE LINES 327-362
 
 .. code-block:: Python
 
@@ -630,71 +682,71 @@ Define, train and save a model
     Params size (MB): 0.22
     Estimated Total Size (MB): 16.97
     ================================================================================================================================================================
-    Epoch 0 - step 0, loss: 0.6676626205444336
-    Epoch 0 - step 1, loss: 0.6518101692199707
-    Epoch 0 - step 2, loss: 0.6974589228630066
-    Epoch 0 - step 3, loss: 0.6749185919761658
-    Epoch 0 - step 4, loss: 0.6453626751899719
-    Epoch 0 - step 5, loss: 0.6343718767166138
-    Epoch 0 - step 6, loss: 0.6103938221931458
-    Epoch 0 - step 7, loss: 0.6795239448547363
-    Epoch 0 - step 8, loss: 0.728134036064148
-    Epoch 0 - step 9, loss: 0.7119305729866028
-    Epoch 0 - step 10, loss: 0.6542198657989502
-    Epoch 0 - step 11, loss: 0.6541609168052673
-    Epoch 0 - step 12, loss: 0.6396002173423767
-    Epoch 0 - step 13, loss: 0.607747495174408
-    Epoch 0 - step 14, loss: 0.6537308096885681
-    Epoch 0 - step 15, loss: 0.631443977355957
-    Epoch 0 - step 16, loss: 0.6329551935195923
-    Epoch 0 - step 17, loss: 0.6139699816703796
-    Epoch 0 - step 18, loss: 0.654875636100769
-    Epoch 0 - step 19, loss: 0.5803866386413574
-    Epoch 0 - step 20, loss: 0.6434575915336609
-    Epoch 0 - step 21, loss: 0.6968144774436951
-    Epoch 0 - step 22, loss: 0.6942139863967896
-    Epoch 0 - step 23, loss: 0.6773443222045898
-    Epoch 0 - step 24, loss: 0.655506432056427
-    Epoch 0 - step 25, loss: 0.6352086663246155
-    Epoch 0 - step 26, loss: 0.601359486579895
-    Epoch 0 - step 27, loss: 0.6007792949676514
-    Epoch 0 - step 28, loss: 0.6375516057014465
-    Epoch 0 - step 29, loss: 0.6212471723556519
-    Epoch 0 - step 30, loss: 0.6061965227127075
-    Epoch 0 - step 31, loss: 0.5768862962722778
-    Epoch 0 - step 32, loss: 0.6867731809616089
-    Epoch 0 - step 33, loss: 0.6728187203407288
-    Epoch 0 - step 34, loss: 0.6737156510353088
-    Epoch 0 - step 35, loss: 0.679058849811554
-    Epoch 0 - step 36, loss: 0.7063250541687012
-    Epoch 0 - step 37, loss: 0.6612131595611572
-    Epoch 0 - step 38, loss: 0.6514402627944946
-    Epoch 0 - step 39, loss: 0.6741136908531189
-    Epoch 0 - step 40, loss: 0.6916241645812988
-    Epoch 0 - step 41, loss: 0.599823534488678
-    Epoch 0 - step 42, loss: 0.686255693435669
-    Epoch 0 - step 43, loss: 0.6176645755767822
-    Epoch 0 - step 44, loss: 0.623833417892456
-    Epoch 0 - step 45, loss: 0.6365378499031067
-    Epoch 0 - step 46, loss: 0.7204575538635254
-    Epoch 0 - step 47, loss: 0.6362558007240295
-    Epoch 0 - step 48, loss: 0.6931027173995972
-    Epoch 0 - step 49, loss: 0.5977799892425537
-    Epoch 0 - step 50, loss: 0.6888841986656189
-    Epoch 0 - step 51, loss: 0.6705611348152161
-    Epoch 0 - step 52, loss: 0.6168780326843262
-    Epoch 0 - step 53, loss: 0.6124606132507324
-    Epoch 0 - step 54, loss: 0.6429015398025513
-    Epoch 0 - step 55, loss: 0.6188077926635742
-    Epoch 0 - step 56, loss: 0.6623728275299072
-    Epoch 0 - step 57, loss: 0.6707802414894104
-    Epoch 0 - step 58, loss: 0.661139965057373
-    Epoch 0 - step 59, loss: 0.6254875063896179
-    Epoch 0 - step 60, loss: 0.639103889465332
-    Epoch 0 - step 61, loss: 0.6316846609115601
-    Epoch 0 - step 62, loss: 0.5473432540893555
-    Epoch 0 - step 63, loss: 0.6192511320114136
-    Epoch 0 - step 64, loss: 0.6945983171463013
+    Epoch 0 - step 0, loss: 0.6448742151260376
+    Epoch 0 - step 1, loss: 0.6803330779075623
+    Epoch 0 - step 2, loss: 0.7203586101531982
+    Epoch 0 - step 3, loss: 0.6423789262771606
+    Epoch 0 - step 4, loss: 0.6533979177474976
+    Epoch 0 - step 5, loss: 0.6227086782455444
+    Epoch 0 - step 6, loss: 0.6195542216300964
+    Epoch 0 - step 7, loss: 0.6749468445777893
+    Epoch 0 - step 8, loss: 0.7282264828681946
+    Epoch 0 - step 9, loss: 0.7040787935256958
+    Epoch 0 - step 10, loss: 0.6473100185394287
+    Epoch 0 - step 11, loss: 0.641539454460144
+    Epoch 0 - step 12, loss: 0.655713677406311
+    Epoch 0 - step 13, loss: 0.5795360207557678
+    Epoch 0 - step 14, loss: 0.6502973437309265
+    Epoch 0 - step 15, loss: 0.6424912214279175
+    Epoch 0 - step 16, loss: 0.663212776184082
+    Epoch 0 - step 17, loss: 0.6072086691856384
+    Epoch 0 - step 18, loss: 0.653820812702179
+    Epoch 0 - step 19, loss: 0.592498242855072
+    Epoch 0 - step 20, loss: 0.6133705377578735
+    Epoch 0 - step 21, loss: 0.7126937508583069
+    Epoch 0 - step 22, loss: 0.7228960394859314
+    Epoch 0 - step 23, loss: 0.6635840535163879
+    Epoch 0 - step 24, loss: 0.6708407402038574
+    Epoch 0 - step 25, loss: 0.6393557190895081
+    Epoch 0 - step 26, loss: 0.6001095175743103
+    Epoch 0 - step 27, loss: 0.5863655805587769
+    Epoch 0 - step 28, loss: 0.6635791659355164
+    Epoch 0 - step 29, loss: 0.6231681704521179
+    Epoch 0 - step 30, loss: 0.6085596680641174
+    Epoch 0 - step 31, loss: 0.5609995126724243
+    Epoch 0 - step 32, loss: 0.6893256902694702
+    Epoch 0 - step 33, loss: 0.6745159029960632
+    Epoch 0 - step 34, loss: 0.6769422292709351
+    Epoch 0 - step 35, loss: 0.6724380254745483
+    Epoch 0 - step 36, loss: 0.706360399723053
+    Epoch 0 - step 37, loss: 0.6714577674865723
+    Epoch 0 - step 38, loss: 0.6592252254486084
+    Epoch 0 - step 39, loss: 0.6783802509307861
+    Epoch 0 - step 40, loss: 0.6757423281669617
+    Epoch 0 - step 41, loss: 0.6018081307411194
+    Epoch 0 - step 42, loss: 0.6736109852790833
+    Epoch 0 - step 43, loss: 0.6222211122512817
+    Epoch 0 - step 44, loss: 0.6400287747383118
+    Epoch 0 - step 45, loss: 0.6220184564590454
+    Epoch 0 - step 46, loss: 0.7028436064720154
+    Epoch 0 - step 47, loss: 0.6404609084129333
+    Epoch 0 - step 48, loss: 0.6793349385261536
+    Epoch 0 - step 49, loss: 0.5896750092506409
+    Epoch 0 - step 50, loss: 0.6913207769393921
+    Epoch 0 - step 51, loss: 0.6693230867385864
+    Epoch 0 - step 52, loss: 0.6181640625
+    Epoch 0 - step 53, loss: 0.6101175546646118
+    Epoch 0 - step 54, loss: 0.6398577094078064
+    Epoch 0 - step 55, loss: 0.6119527220726013
+    Epoch 0 - step 56, loss: 0.6888993382453918
+    Epoch 0 - step 57, loss: 0.6764092445373535
+    Epoch 0 - step 58, loss: 0.6768203377723694
+    Epoch 0 - step 59, loss: 0.6231564283370972
+    Epoch 0 - step 60, loss: 0.6447886228561401
+    Epoch 0 - step 61, loss: 0.6135135889053345
+    Epoch 0 - step 62, loss: 0.5691050291061401
+    Epoch 0 - step 63, loss: 0.6481919288635254
+    Epoch 0 - step 64, loss: 0.6816127896308899
     Model saved as 'weights_challenge_2.pt'
 
 
@@ -703,9 +755,9 @@ Define, train and save a model
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (6 minutes 31.792 seconds)
+   **Total running time of the script:** (6 minutes 46.981 seconds)
 
-**Estimated memory usage:**  2826 MB
+**Estimated memory usage:**  1917 MB
 
 
 .. _sphx_glr_download_generated_auto_examples_eeg2025_tutorial_challenge_2.py:

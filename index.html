@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>EEGDash - data-sharing resource for M/EEG (EEG, MEG, iEEG, MEG) &#8212; EEG Dash</title>
+    <title>EEGDash - Data-sharing interface for M/EEG and related (fNIRS, EMG) &#8212; EEG Dash</title>
   
   
   
@@ -42,8 +42,9 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css" />
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/select/1.7.0/css/select.dataTables.min.css" />
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/searchpanes/2.3.1/css/searchPanes.dataTables.min.css" />
-    <link rel="stylesheet" type="text/css" href="_static/custom.css?v=1449feac" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css?v=7021f170" />
     <link rel="stylesheet" type="text/css" href="_static/css/treemap.css?v=7131b20f" />
+    <link rel="stylesheet" type="text/css" href="_static/css/custom.css?v=d9bd6b14" />
   
   <!-- So that users can add custom icons -->
   <script src="_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
@@ -64,12 +65,13 @@
     <script src="https://cdn.datatables.net/select/1.7.0/js/dataTables.select.min.js"></script>
     <script src="https://cdn.datatables.net/searchpanes/2.3.1/js/dataTables.searchPanes.min.js"></script>
     <script src="_static/js/tag-palette.js?v=6f5eac9a"></script>
-    <script src="_static/js/datatables-init.js?v=42062302"></script>
+    <script src="_static/js/datatables-init.js?v=0986bc1f"></script>
+    <script src="_static/js/hero-search.js?v=d34ab722"></script>
     <link rel="canonical" href="https://eegdash.org/index.html" />
     <link rel="icon" href="_static/favicon.ico"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Installation" href="install/install.html" />
+    <link rel="next" title="Datasets Catalog" href="dataset_summary.html" />
   
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -164,8 +166,8 @@
   <ul class="bd-navbar-elements navbar-nav">
     
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="install/install.html">
-    Installing
+  <a class="nav-link nav-internal" href="dataset_summary.html">
+    Datasets
   </a>
 </li>
 
@@ -178,15 +180,8 @@
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="api/api.html">
-    API
-  </a>
-</li>
-
-
-<li class="nav-item ">
-  <a class="nav-link nav-internal" href="dataset_summary.html">
-    Dataset Catalog
+  <a class="nav-link nav-internal" href="install/install.html">
+    Install
   </a>
 </li>
 
@@ -194,6 +189,13 @@
 <li class="nav-item ">
   <a class="nav-link nav-internal" href="generated/auto_examples/index.html">
     Examples
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="api/api.html">
+    Docs
   </a>
 </li>
 
@@ -328,8 +330,8 @@
   <ul class="bd-navbar-elements navbar-nav">
     
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="install/install.html">
-    Installing
+  <a class="nav-link nav-internal" href="dataset_summary.html">
+    Datasets
   </a>
 </li>
 
@@ -342,15 +344,8 @@
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="api/api.html">
-    API
-  </a>
-</li>
-
-
-<li class="nav-item ">
-  <a class="nav-link nav-internal" href="dataset_summary.html">
-    Dataset Catalog
+  <a class="nav-link nav-internal" href="install/install.html">
+    Install
   </a>
 </li>
 
@@ -358,6 +353,13 @@
 <li class="nav-item ">
   <a class="nav-link nav-internal" href="generated/auto_examples/index.html">
     Examples
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="api/api.html">
+    Docs
   </a>
 </li>
 
@@ -470,22 +472,175 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <img alt="EEG Dash Logo" class="logo mainlogo only-dark align-center" src="_images/eegdash.svg" />
-<img alt="EEG Dash Logo" class="logo mainlogo only-light align-center" src="_images/eegdash.svg" />
-<p class="h4 text-center font-weight-light my-4">The EEG-DaSh data archive is a data-sharing resource for MEEG (EEG, MEG) data, enabling
-large-scale computational advancements to preserve and share scientific data from publicly funded
-research for machine learning and deep learning applications.</p>
-<p class="text-center">The “DaSh” in EEG-DaSh stands for <strong>Data Share</strong>.</p>
-<p class="text-center">The EEG-DaSh data archive is a collaborative effort led by the University of California, San Diego (UCSD) and Ben-Gurion University of the Negev (BGU) and partially funded by the National Science Foundation (NSF). All are welcome to contribute to the <a class="github reference external" href="https://github.com/eegdash/EEGDash">eegdash/EEGDash</a> project.</p>
-<p class="text-center">The archive is currently still in <span class="sd-sphinx-override sd-badge sd-bg-danger sd-bg-text-danger">beta testing</span> mode, so be kind.</p>
-<h2 style="text-align: center;">Institutions</h2><a class="logo mainlogo only-dark flex-logo reference internal image-reference" href="_images/ucsd_white.svg"><img alt="UCSD" class="logo mainlogo only-dark flex-logo align-left" src="_images/ucsd_white.svg" style="width: 45%;" />
+  <style type="text/css">
+/* Visually hide H1 but keep for metadata */
+h1 {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+</style><div class="hf-hero docutils container">
+<div class="sd-container-fluid sd-sphinx-override sd-mb-4 hf-hero-grid docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-1 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-4 sd-g-xs-4 sd-g-sm-4 sd-g-md-4 sd-g-lg-4 docutils">
+<div class="sd-col sd-d-flex-column hf-hero-copy hf-reveal hf-delay-1 docutils">
+<p class="hf-hero-title">Search and use 500+ EEG/MEG datasets - BIDS-first.</p>
+<p class="hf-hero-lede">Discover standardized metadata, run reproducible pipelines, and export
+model-ready features in minutes.</p>
+<form class="hf-search" action="dataset_summary.html" method="get" role="search" aria-label="Dataset search">
+  <label class="hf-sr-only" for="hf-search-input">Search datasets</label>
+  <div class="hf-search-input-wrap">
+    <span class="hf-search-icon" aria-hidden="true">&#128269;</span>
+    <input
+      id="hf-search-input"
+      class="hf-search-input"
+      type="search"
+      name="q"
+      placeholder="Search datasets (e.g., sleep, P300, resting-state, TUEG)"
+      autocomplete="off"
+    />
+    <button class="hf-search-submit" type="submit">Search</button>
+  </div>
+  <div class="hf-search-suggest">
+    <span class="hf-suggest-label">Suggested:</span>
+    <a class="hf-suggest-link" data-query="ds004504" href="api/dataset/eegdash.dataset.DS004504.html">ds004504</a>
+    <a class="hf-suggest-link" data-query="ds000117" href="api/dataset/eegdash.dataset.DS000117.html">ds000117</a>
+    <a class="hf-suggest-link" data-query="nm000107" href="api/dataset/eegdash.dataset.NM000107.html">nm000107</a>
+  </div>
+</form><div class="hf-hero-actions docutils container">
+<p><a class="sd-sphinx-override sd-btn sd-text-wrap sd-btn-primary sd-btn-lg hf-btn hf-btn-primary reference internal" href="dataset_summary.html"><span class="doc">Browse datasets</span></a></p>
+<p><a class="sd-sphinx-override sd-btn sd-text-wrap sd-btn-secondary sd-btn-lg hf-btn hf-btn-secondary reference internal" href="install/install.html"><span class="doc">Get started</span></a></p>
+</div>
+</div>
+<div class="sd-col sd-d-flex-column hf-hero-panel hf-reveal hf-delay-2 docutils">
+<div class="hf-hero-card hf-quickstart docutils container">
+<p class="hf-card-title">Quickstart</p>
+<div class="sd-tab-set hf-code-tabs docutils">
+<input checked="checked" id="sd-tab-item-0" name="sd-tab-set-0" type="radio">
+<label class="sd-tab-label" for="sd-tab-item-0">
+Install</label><div class="sd-tab-content docutils">
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>eegdash
+</pre></div>
+</div>
+</div>
+<input id="sd-tab-item-1" name="sd-tab-set-0" type="radio">
+<label class="sd-tab-label" for="sd-tab-item-1">
+First search</label><div class="sd-tab-content docutils">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">eegdash</span><span class="w"> </span><span class="kn">import</span> <span class="n">EEGDash</span>
+
+<span class="n">eegdash</span> <span class="o">=</span> <span class="n">EEGDash</span><span class="p">()</span>
+<span class="n">records</span> <span class="o">=</span> <span class="n">eegdash</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">dataset</span><span class="o">=</span><span class="s2">&quot;ds002718&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Found </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">records</span><span class="p">)</span><span class="si">}</span><span class="s2"> records.&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p class="hf-card-note">Works with Python 3.10+. BIDS-first. Runs locally.</p>
+<div class="hf-card-actions docutils container">
+<p><a class="sd-sphinx-override sd-btn sd-text-wrap sd-btn-primary sd-btn-sm hf-btn hf-btn-primary reference internal" href="user_guide.html"><span class="doc">Run your first search</span></a></p>
+<p><a class="sd-sphinx-override sd-btn sd-text-wrap sd-btn-secondary sd-btn-sm hf-btn hf-btn-ghost reference internal" href="api/api.html"><span class="doc">Read the Docs</span></a></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<h2 class="hf-section-title">At a glance</h2>
+<p class="hf-section-subtitle">Search-first discovery with reproducible pipelines and standardized metadata.</p><div class="hf-badges docutils container">
+<a class="reference external image-reference" href="https://github.com/eegdash/EEGDash/actions/workflows/tests.yml"><img alt="Test Status" src="https://github.com/eegdash/EEGDash/actions/workflows/tests.yml/badge.svg" />
 </a>
-<a class="logo mainlogo only-light flex-logo reference internal image-reference" href="_images/ucsd_dark.svg"><img alt="UCSD" class="logo mainlogo only-light flex-logo align-left" src="_images/ucsd_dark.svg" style="width: 45%;" />
+<a class="reference external image-reference" href="https://github.com/eegdash/EEGDash/actions/workflows/doc.yaml"><img alt="Doc Status" src="https://github.com/eegdash/EEGDash/actions/workflows/doc.yaml/badge.svg" />
 </a>
-<a class="logo mainlogo only-dark flex-logo reference internal image-reference" href="_images/bgu_dark.svg"><img alt="Ben-Gurion University of the Negev (BGU)" class="logo mainlogo only-dark flex-logo align-right" src="_images/bgu_dark.svg" style="width: 40%;" />
+<a class="reference external image-reference" href="https://pypi.org/project/eegdash/"><img alt="PyPI" src="https://img.shields.io/pypi/v/eegdash?color=blue&amp;style=flat-square" />
 </a>
-<a class="logo mainlogo only-light flex-logo reference internal image-reference" href="_images/bgu_white.svg"><img alt="Ben-Gurion University of the Negev (BGU)" class="logo mainlogo only-light flex-logo align-right" src="_images/bgu_white.svg" style="width: 40%;" />
+<a class="reference external image-reference" href="https://pypi.org/project/eegdash/"><img alt="Python Versions" src="https://img.shields.io/pypi/pyversions/eegdash?style=flat-square" />
 </a>
+<a class="reference external image-reference" href="https://pepy.tech/project/eegdash"><img alt="Downloads" src="https://pepy.tech/badge/eegdash" />
+</a>
+<a class="reference external image-reference" href="https://codecov.io/gh/eegdash/EEGDash"><img alt="Code Coverage" src="https://codecov.io/gh/eegdash/EEGDash/branch/main/graph/badge.svg" />
+</a>
+<a class="reference external image-reference" href="https://github.com/eegdash/EEGDash/blob/main/LICENSE"><img alt="License" src="https://img.shields.io/pypi/l/eegdash?style=flat-square" />
+</a>
+<a class="reference external image-reference" href="https://github.com/eegdash/EEGDash"><img alt="GitHub Stars" src="https://img.shields.io/github/stars/eegdash/eegdash?style=flat-square" />
+</a>
+</div>
+<div class="sd-container-fluid sd-sphinx-override sd-mb-4 hf-stat-grid docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-4 sd-row-cols-lg-4 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
+<div class="sd-col sd-d-flex-row docutils">
+<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm sd-card-hover sd-text-left hf-stat-card hf-reveal hf-delay-1 docutils">
+<div class="sd-card-body docutils">
+<div class="sd-card-title sd-font-weight-bold docutils">
+Datasets</div>
+<p class="hf-stat-value sd-card-text">500+</p>
+<p class="hf-stat-text sd-card-text">Curated and standardized metadata ready to explore.</p>
+</div>
+<a class="sd-stretched-link sd-hide-link-text reference internal" href="dataset_summary.html"><span class="doc">Datasets Catalog</span></a></div>
+</div>
+<div class="sd-col sd-d-flex-row docutils">
+<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm sd-card-hover sd-text-left hf-stat-card hf-reveal hf-delay-2 docutils">
+<div class="sd-card-body docutils">
+<div class="sd-card-title sd-font-weight-bold docutils">
+Modalities</div>
+<p class="hf-stat-value sd-card-text">5</p>
+<p class="hf-stat-text sd-card-text">EEG, MEG, fNIRS, EMG, and iEEG coverage.</p>
+</div>
+<a class="sd-stretched-link sd-hide-link-text reference internal" href="dataset_summary.html"><span class="doc">Datasets Catalog</span></a></div>
+</div>
+<div class="sd-col sd-d-flex-row docutils">
+<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm sd-card-hover sd-text-left hf-stat-card hf-reveal hf-delay-3 docutils">
+<div class="sd-card-body docutils">
+<div class="sd-card-title sd-font-weight-bold docutils">
+BIDS-first</div>
+<p class="hf-stat-value sd-card-text">BIDS</p>
+<p class="hf-stat-text sd-card-text">Interoperability and reproducibility baked in.</p>
+</div>
+<a class="sd-stretched-link sd-hide-link-text reference internal" href="user_guide.html"><span class="doc">User Guide</span></a></div>
+</div>
+<div class="sd-col sd-d-flex-row docutils">
+<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm sd-card-hover sd-text-left hf-stat-card hf-reveal hf-delay-3 docutils">
+<div class="sd-card-body docutils">
+<div class="sd-card-title sd-font-weight-bold docutils">
+Open source</div>
+<p class="hf-stat-value sd-card-text">GitHub</p>
+<p class="hf-stat-text sd-card-text">Community-driven datasets, pipelines, and benchmarks.</p>
+</div>
+<a class="sd-stretched-link sd-hide-link-text reference external" href="https://github.com/eegdash/EEGDash"><span>https://github.com/eegdash/EEGDash</span></a></div>
+</div>
+</div>
+</div>
+<div class="hf-callout hf-reveal hf-delay-2 docutils container">
+<p class="hf-callout-title">Build with the community</p>
+<p class="hf-callout-text">Share datasets, contribute pipelines, and help define open standards for EEG and MEG.</p>
+<div class="hf-callout-actions docutils container">
+<p><a class="sd-sphinx-override sd-btn sd-text-wrap sd-btn-secondary sd-btn-lg hf-btn hf-btn-secondary reference external" href="https://github.com/eegdash/EEGDash"><span>GitHub</span></a></p>
+<p><a class="sd-sphinx-override sd-btn sd-text-wrap sd-btn-primary sd-btn-lg hf-btn hf-btn-primary reference external" href="https://discord.gg/8jd7nVKwsc"><span>Join Discord</span></a></p>
+</div>
+<p class="hf-callout-support">Support Institutions</p>
+<div class="logos-container hf-logo-cloud docutils container">
+<div class="logo-item docutils container">
+<a class="can-zoom only-dark reference internal image-reference" href="_images/ucsd_white.svg"><img alt="UCSD" class="can-zoom only-dark" src="_images/ucsd_white.svg" style="width: 260px;" />
+</a>
+<a class="can-zoom only-light reference internal image-reference" href="_images/ucsd_dark.svg"><img alt="UCSD" class="can-zoom only-light" src="_images/ucsd_dark.svg" style="width: 260px;" />
+</a>
+</div>
+<div class="logo-item docutils container">
+<a class="can-zoom only-dark reference internal image-reference" href="_images/bgu_dark.svg"><img alt="Ben-Gurion University of the Negev (BGU)" class="can-zoom only-dark" src="_images/bgu_dark.svg" style="width: 260px;" />
+</a>
+<a class="can-zoom only-light reference internal image-reference" href="_images/bgu_white.svg"><img alt="Ben-Gurion University of the Negev (BGU)" class="can-zoom only-light" src="_images/bgu_white.svg" style="width: 260px;" />
+</a>
+</div>
+</div>
+<p class="hf-callout-funders">Funders</p>
+<div class="hf-supporter-line docutils container">
+<img alt="National Science Foundation (NSF)" class="hf-supporter-logo" src="_images/nsf_logo.png" />
+<p class="hf-supporter-text">AWS Open Data Sponsorship Program</p>
+</div>
+</div>
 <div class="toctree-wrapper compound">
 </div>
 
@@ -500,11 +655,11 @@ research for machine learning and deep learning applications.</p>
                   
 <div class="prev-next-area">
     <a class="right-next"
-       href="install/install.html"
+       href="dataset_summary.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Installation</p>
+        <p class="prev-next-title">Datasets Catalog</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -538,7 +693,7 @@ research for machine learning and deep learning applications.</p>
 
   <p class="copyright">
     
-      © Copyright 2025–2025, EEG Dash Developers.
+      © Copyright 2025-2026, EEG Dash Developers.
       <br/>
     
   </p>

@@ -352,7 +352,8 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
         if self._dedupe_records:
             seen: set[str] = set()
             deduped: list[dict[str, Any]] = []
-            for record in records:
+            # Reverse to keep the newest records (those inserted last)
+            for record in reversed(records):
                 key = (
                     record.get("bids_relpath")
                     or record.get("bidspath")
@@ -365,7 +366,8 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
                     continue
                 seen.add(key)
                 deduped.append(record)
-            return deduped
+            # Reverse back to maintain original relative order of successful records
+            return list(reversed(deduped))
 
         return records
 

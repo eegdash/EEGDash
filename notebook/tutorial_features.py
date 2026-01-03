@@ -4,7 +4,7 @@
 EEG Features for Sex Classification
 ===================================
 
-The code below provides an example of using the *EEGDash* library in combination with PyTorch to develop a deep learning model for detecting sex in a collection of 136 subjects.
+The code below provides an example of using the *EEGDash* library in combination with PyTorch to develop a deep learning model for detecting sex in a collection of subjects.
 
 1. **Data Retrieval Using EEGDash**: An instance of *EEGDashDataset* is created to search and retrieve resting state data for 136 subjects (dataset ds005505). At this step, only the metadata is transferred.
 
@@ -20,99 +20,101 @@ The code below provides an example of using the *EEGDash* library in combination
 # %% [markdown]
 # ## Data Retrieval Using EEGDash
 #
-# First we find one resting state dataset for a collection of subject. The dataset ds005505 contains 136 subjects with both male and female participants.
+# First we find one resting state dataset for a collection of subjects.
 
-# %%
-# from eegdash import EEGDashDataset
+from pathlib import Path
+import os
 
-# ds_sexdata = EEGDashDataset({'dataset': 'ds005505', 'task': 'RestingState'}, target_name='sex')
+os.environ.setdefault("NUMBA_DISABLE_JIT", "1")
+os.environ.setdefault("_MNE_FAKE_HOME_DIR", str(Path.cwd()))
+(Path(os.environ["_MNE_FAKE_HOME_DIR"]) / ".mne").mkdir(exist_ok=True)
 
-# %%
-# import os
-# os.makedirs('data/hbn_raw_restingstate', exist_ok=True)
-# ds_sexdata.save('data/hbn_raw_restingstate', overwrite=True)
-
-# %%
-# from braindecode.datautil import load_concat_dataset
-
-# print("Loading data from disk")
-# ds_sexdata = load_concat_dataset(path='data/hbn_raw_restingstate', preload=False)
-
-# %% [markdown]
-# ## Data Preprocessing Using Braindecode
-#
-# [BrainDecode](https://braindecode.org/stable/install/install.html) is a specialized library for preprocessing EEG and MEG data.
-#
-# We apply three preprocessing steps in Braindecode:
-# 1.	**Selection** of 24 specific EEG channels from the original 128.
-# 2.	**Resampling** the EEG data to a frequency of 128 Hz.
-# 3.	**Filtering** the EEG signals to retain frequencies between 1 Hz and 55 Hz.
-#
-# When calling the **preprocess** function, the data is retrieved from the remote repository.
-#
-# Finally, we use **create_windows_from_events** to extract 2-second epochs from the data. These epochs serve as the dataset samples.
-
-# %%
-# import os
-# from braindecode.preprocessing import (
-#     preprocess,
-#     Preprocessor,
-#     create_fixed_length_windows,
-# )
-
-# %% [markdown]
-# ### Alternatively, if you want to include this as a preprocessing step in a Braindecode pipeline:
-
-# %%
-# preprocessors = [
-#     Preprocessor(
-#         'pick_channels',
-#        ch_names=['E22', 'E9', 'E33', 'E24', 'E11', 'E124', 'E122', 'E29', 'E6', 'E111', 'E45', 'E36', 'E104', 'E108', 'E42', 'E55', 'E93', 'E58', 'E52', 'E62', 'E92', 'E96', 'E70', 'Cz'],
-#     ),
-#     Preprocessor('resample', sfreq=128),
-#     Preprocessor('filter', l_freq=1, h_freq=55),
-# ]
-# preprocess(ds_sexdata, preprocessors, n_jobs=-1)  # , save_dir='xxxx' will save and set preload to false
-
-# %% [markdown]
-# ### Extract windows and save to disk
-
-# %%
-# windows_ds = create_fixed_length_windows(
-#     ds_sexdata,
-#     start_offset_samples=0,
-#     stop_offset_samples=None,
-#     window_size_samples=int(30 * ds_sexdata.datasets[0].raw.info["sfreq"]),
-#     window_stride_samples=int(15 * ds_sexdata.datasets[0].raw.info["sfreq"]),
-#     drop_last_window=True,
-#     preload=False,
-# )
-# os.makedirs('data/hbn_preprocessed_restingstate', exist_ok=True)
-# windows_ds.save('data/hbn_preprocessed_restingstate', overwrite=True)
-
-# %% [markdown]
-# ## Plotting a Single Channel for One Sample
-#
-# It’s always a good practice to verify that the data has been properly loaded and processed. Here, we plot a single channel from one sample to ensure the signal is present and looks as expected.
-
-# %%
-# import matplotlib.pyplot as plt
-# plt.figure()
-# plt.plot(windows_ds[1000][0][0,:].transpose()) # first channel of first epoch
-# plt.show()
-
-# %% [markdown]
-# ## Load pre-saved data
-#
-# If you have run the previous steps before, the data should be saved and may be reloaded here. If you are simply running this notebook for the first time, there is no need to reload the data, and this step may be skipped. However, it is quick, so you might as well execute the cell; it will have no consequences and will allow you to check that the data was saved properly.
-
-# %%
+import numpy as np
 from braindecode.datautil import load_concat_dataset
+from braindecode.preprocessing import (
+    preprocess,
+    Preprocessor,
+    create_fixed_length_windows,
+)
+from eegdash import EEGDash, EEGDashDataset
+
+CACHE_DIR = Path(os.getenv("EEGDASH_CACHE_DIR", Path.cwd() / "eegdash_cache")).resolve()
+CACHE_DIR.mkdir(parents=True, exist_ok=True)
+DATASET_ID = os.getenv("EEGDASH_DATASET_ID", "ds005505")
+TASK = os.getenv("EEGDASH_TASK", "RestingState")
+RECORD_LIMIT = int(os.getenv("EEGDASH_RECORD_LIMIT", "80"))
+PREPARED_DIR = CACHE_DIR / "restingstate_windows"
+
+eegdash = EEGDash()
+records = eegdash.find({"dataset": DATASET_ID, "task": TASK}, limit=RECORD_LIMIT)
+records = [rec for rec in records if rec.get("sex") or rec.get("gender")]
+if not records:
+    records = eegdash.find({"sex": {"$ne": None}}, limit=RECORD_LIMIT)
+    if not records:
+        records = eegdash.find({"gender": {"$ne": None}}, limit=RECORD_LIMIT)
+if records:
+    dataset_id = records[0].get("dataset")
+    if dataset_id:
+        records = [rec for rec in records if rec.get("dataset") == dataset_id]
+if not records:
+    raise RuntimeError("No records with sex/gender metadata found from the API.")
+
+ds_sexdata = EEGDashDataset(
+    cache_dir=CACHE_DIR,
+    records=records,
+    description_fields=["subject", "session", "run", "task", "sex", "gender"],
+)
+
+if not PREPARED_DIR.exists():
+    preprocessors = [
+        Preprocessor(
+            "pick_channels",
+            ch_names=[
+                "E22",
+                "E9",
+                "E33",
+                "E24",
+                "E11",
+                "E124",
+                "E122",
+                "E29",
+                "E6",
+                "E111",
+                "E45",
+                "E36",
+                "E104",
+                "E108",
+                "E42",
+                "E55",
+                "E93",
+                "E58",
+                "E52",
+                "E62",
+                "E92",
+                "E96",
+                "E70",
+                "Cz",
+            ],
+        ),
+        Preprocessor("resample", sfreq=128),
+        Preprocessor("filter", l_freq=1, h_freq=55),
+    ]
+    preprocess(ds_sexdata, preprocessors, n_jobs=-1)
+
+    windows_ds = create_fixed_length_windows(
+        ds_sexdata,
+        start_offset_samples=0,
+        stop_offset_samples=None,
+        window_size_samples=256,
+        window_stride_samples=256,
+        drop_last_window=True,
+        preload=False,
+    )
+    PREPARED_DIR.mkdir(parents=True, exist_ok=True)
+    windows_ds.save(str(PREPARED_DIR), overwrite=True)
 
 print("Loading data from disk")
-windows_ds = load_concat_dataset(
-    path="data/hbn_preprocessed_restingstate", preload=False
-)
+windows_ds = load_concat_dataset(path=str(PREPARED_DIR), preload=False)
 
 # %% [markdown]
 # ## Feature Extraction
@@ -121,10 +123,23 @@ from functools import partial
 
 # %%
 from eegdash import features
-from eegdash.features import extract_features, fit_feature_extractors
+from eegdash.features import extract_features
 
 sfreq = windows_ds.datasets[0].raw.info["sfreq"]
-filter_freqs = dict(windows_ds.datasets[0].raw_preproc_kwargs)["filter"]
+
+
+def _get_filter_freqs(raw_preproc_kwargs):
+    if isinstance(raw_preproc_kwargs, list):
+        for item in raw_preproc_kwargs:
+            if isinstance(item, dict) and item.get("fn") == "filter":
+                return item.get("kwargs", {})
+            if hasattr(item, "fn") and getattr(item.fn, "__name__", "") == "filter":
+                return getattr(item, "kwargs", {})
+        return {}
+    return raw_preproc_kwargs.get("filter", {})
+
+
+filter_freqs = _get_filter_freqs(windows_ds.datasets[0].raw_preproc_kwargs)
 features_dict = {
     "sig": features.FeatureExtractor(
         {
@@ -193,8 +208,8 @@ features_dict = {
             ),
         },
         fs=sfreq,
-        f_min=filter_freqs["l_freq"],
-        f_max=filter_freqs["h_freq"],
+        f_min=filter_freqs.get("l_freq", 1.0),
+        f_max=filter_freqs.get("h_freq", sfreq / 2.0),
         nperseg=4 * sfreq,
         noverlap=3 * sfreq,
     ),

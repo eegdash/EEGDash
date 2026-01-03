@@ -1,0 +1,18 @@
+# Fetch SciDB datasets
+name: "1. Fetch: SciDB"
+
+on:
+  schedule:
+    - cron: '0 6 * * 1'  # Weekly on Monday
+  workflow_dispatch:
+
+jobs:
+  fetch:
+    uses: ./.github/workflows/fetch-source.yml
+    with:
+      source_name: "SciDB"
+      script_path: "scripts/ingestions/1_fetch_sources/scidb.py"
+      output_file: "scidb_datasets.json"
+      continue_on_error: true
+    secrets:
+      DATASET_LISTINGS_TOKEN: ${{ secrets.DATASET_LISTINGS_TOKEN }}

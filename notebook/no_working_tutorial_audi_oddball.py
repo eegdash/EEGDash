@@ -1,14 +1,14 @@
 # %% [markdown]
 """.. _auditory-oddball-tutorial:
 
-Auditory Oddball Classification
-===============================
+Oddball Classification (API-driven)
+==================================
 
-This tutorial demonstrates using the *EEGDash* library with PyTorch to classify EEG responses in an auditory oddball paradigm.
+This tutorial demonstrates using the *EEGDash* library with PyTorch to classify EEG responses in an oddball paradigm.
 
-1. **Data Description**: Dataset contains EEG recordings during an auditory oddball task with two stimulus types:
-   - Standard: 500 Hz tone
-   - Oddball: 1000 Hz tone
+1. **Data Description**: Dataset contains EEG recordings during an oddball task with two stimulus types:
+   - Standard (non-target)
+   - Oddball (target)
 
 2. **Data Preprocessing**:
    - Applies bandpass filtering (1-55 Hz)
@@ -28,24 +28,46 @@ This tutorial demonstrates using the *EEGDash* library with PyTorch to classify 
 
 5. **Training**:
    - Adamax optimizer with learning rate decay
-   - 5 training epochs
+   - A few training epochs (configurable)
    - Reports accuracy on train and test sets
 """
 
 # %% [markdown]
 # ## Data Retrieval Using EEGDash
 #
-# Data retrieved from https://nemar.org/dataexplorer/detail?dataset_id=ds003061.
-#
-# Download locally and change the path.
+# Data retrieved via the EEGDash API. Use EEGDASH_DATASET_ID/EEGDASH_TASK
+# to override the defaults.
 
 # %%
-from eegdash.data_utils import EEGBIDSDataset
+from pathlib import Path
+import os
 
-dataset = EEGBIDSDataset(dataset="ds003061")
+os.environ.setdefault("NUMBA_DISABLE_JIT", "1")
+os.environ.setdefault("_MNE_FAKE_HOME_DIR", str(Path.cwd()))
+(Path(os.environ["_MNE_FAKE_HOME_DIR"]) / ".mne").mkdir(exist_ok=True)
 
-all_files = dataset.get_files()
-test_files = all_files[0:3]
+from eegdash import EEGDash, EEGDashDataset
+
+CACHE_DIR = Path(os.getenv("EEGDASH_CACHE_DIR", Path.cwd() / "eegdash_cache")).resolve()
+CACHE_DIR.mkdir(parents=True, exist_ok=True)
+DATASET_ID = os.getenv("EEGDASH_DATASET_ID", "ds005863")
+TASK = os.getenv("EEGDASH_TASK", "visualoddball")
+RECORD_LIMIT = int(os.getenv("EEGDASH_RECORD_LIMIT", "20"))
+
+eegdash = EEGDash()
+records = eegdash.find({"dataset": DATASET_ID, "task": TASK}, limit=RECORD_LIMIT)
+if not records:
+    records = eegdash.find(
+        {"task": {"$regex": "oddball", "$options": "i"}}, limit=RECORD_LIMIT
+    )
+if records:
+    dataset_id = records[0].get("dataset")
+    if dataset_id:
+        records = [rec for rec in records if rec.get("dataset") == dataset_id]
+if not records:
+    raise RuntimeError("No oddball task records found from the API.")
+
+dataset_concat = EEGDashDataset(cache_dir=CACHE_DIR, records=records)
 
 # %% [markdown]
 # ## Data Preprocessing Using Braindecode
@@ -69,11 +91,8 @@ test_files = all_files[0:3]
 import logging
 import warnings
 
-import mne
 import numpy as np
-from mne.io import read_raw_eeglab
-
-from braindecode.datasets import BaseConcatDataset, BaseDataset
+import mne
 
 # %%
 from braindecode.preprocessing import (
@@ -87,52 +106,10 @@ logging.getLogger("joblib").setLevel(logging.ERROR)
 warnings.filterwarnings("ignore")
 
 
-class OddballPreprocessor(Preprocessor):
-    def __init__(self):
-        super().__init__(fn=self.transform, apply_on_array=False)
-
-    def transform(self, raw):
-        # Get events and event dictionary
-        events, _ = mne.events_from_annotations(raw)
-
-        # Remove last event to avoid time duration issues
-        events = events[:-1]
-
-        # Map events using boolean indexing
-        oddball_mask = np.isin(events[:, 2], [3, 4])
-        standard_mask = np.isin(events[:, 2], [6, 7])
-
-        # Create new events array using array operations
-        new_events = np.zeros_like(events)
-        valid_mask = oddball_mask | standard_mask
-        new_events[valid_mask, 0] = events[valid_mask, 0]
-        new_events[standard_mask, 2] = 1  # standard events -> 1
-
-        # Filter out invalid events
-        new_events = new_events[valid_mask]
-
-        # Create annotations from events
-        annot_from_events = mne.annotations_from_events(
-            events=new_events,
-            event_desc={0: "oddball", 1: "standard"},
-            sfreq=raw.info["sfreq"],
-        )
-        raw.set_annotations(annot_from_events)
-        return raw
-
-
-# Create dataset from all files
-all_datasets = [
-    BaseDataset(read_raw_eeglab(f, preload=False), target_name=None) for f in test_files
-]
-dataset_concat = BaseConcatDataset(all_datasets)
-
 # BrainDecode preprocessors
 preprocessors = [
-    OddballPreprocessor(),
     Preprocessor(
-        "pick_channels",
-        ch_names=read_raw_eeglab(test_files[0], preload=False).ch_names[:64],
+        "pick_channels", ch_names=dataset_concat.datasets[0].raw.ch_names[:64]
     ),
     Preprocessor("resample", sfreq=128),
     Preprocessor("filter", l_freq=1, h_freq=55),
@@ -140,11 +117,25 @@ preprocessors = [
 preprocess(dataset_concat, preprocessors)
 
 # Extract windows
+event_mapping = {
+    "Target": 1,
+    "NonTarget": 0,
+    "target": 1,
+    "standard": 0,
+    "oddball": 1,
+    "3": 1,
+    "4": 1,
+    "6": 0,
+    "7": 0,
+}
+
 windows_ds = create_windows_from_events(
     dataset_concat,
     trial_start_offset_samples=-128,
     trial_stop_offset_samples=128,
     preload=False,
+    drop_bad_windows=True,
+    mapping=event_mapping,
 )
 
 print(f"\nAll files processed, total number of windows: {len(windows_ds)}")
@@ -256,7 +247,7 @@ def normalize_data(x):
 
 
 print("\nStart training...")
-epochs = 5
+epochs = int(os.getenv("EEGDASH_EPOCHS", "2"))
 
 for e in range(epochs):
     model.train()

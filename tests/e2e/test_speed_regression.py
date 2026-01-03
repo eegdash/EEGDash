@@ -9,6 +9,9 @@ The tests verify:
 - Individual metadata query times are sub-millisecond
 - Batch metadata access patterns are performant
 - No functional regressions in metadata extraction
+
+Note: This module uses the shared `bids_mini_dataset_path` and `cache_dir` fixtures
+from conftest.py to ensure consistent caching and avoid redundant downloads.
 """
 
 import time
@@ -16,7 +19,6 @@ import time
 import pytest
 
 from eegdash.dataset.bids_dataset import EEGBIDSDataset
-from eegdash.paths import get_default_cache_dir
 
 # Performance thresholds (in seconds)
 INIT_TIME_THRESHOLD = 5.0  # Initialization should not exceed 5 seconds
@@ -24,14 +26,11 @@ SINGLE_QUERY_THRESHOLD = 0.1  # Individual queries should not exceed 100ms
 BATCH_QUERY_THRESHOLD = 0.5  # Batch of 10 queries should not exceed 500ms
 
 
+# Use the shared bids_mini_dataset_path fixture from conftest.py
 @pytest.fixture(scope="session")
-def bids_dataset_path():
-    """Get the path to the test BIDS dataset."""
-    # Use the mini dataset included in the repository for CI compatibility
-    path = get_default_cache_dir() / "ds005509-bdf-mini"
-    if not path.exists():
-        pytest.skip(f"BIDS dataset not found at {path}")
-    return path
+def bids_dataset_path(bids_mini_dataset_path):
+    """Alias for the shared bids_mini_dataset_path fixture from conftest.py."""
+    return bids_mini_dataset_path
 
 
 @pytest.fixture(scope="session")

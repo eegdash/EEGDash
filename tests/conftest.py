@@ -7,11 +7,47 @@ from eegdash.paths import get_default_cache_dir
 
 @pytest.fixture(scope="session")
 def cache_dir():
-    """Provide a shared cache directory for tests that need to cache datasets."""
+    """Provide a shared cache directory for tests that need to cache datasets.
+
+    This fixture ensures all tests use the same cache directory (via
+    get_default_cache_dir()) to avoid redundant downloads across test runs.
+    The directory is created if it doesn't exist.
+
+    Returns
+    -------
+    Path
+        The shared cache directory path.
+
+    """
     cache_dir = Path(get_default_cache_dir())
     cache_dir.mkdir(parents=True, exist_ok=True)
     print(f"Using cache directory: {cache_dir}")
     return cache_dir
+
+
+@pytest.fixture(scope="session")
+def bids_mini_dataset_path(cache_dir: Path):
+    """Get the path to the mini BIDS dataset for benchmark tests.
+
+    This fixture provides a consistent path to the ds005509-bdf-mini dataset
+    used in performance/benchmark tests. If the dataset doesn't exist,
+    the test will be skipped.
+
+    Parameters
+    ----------
+    cache_dir : Path
+        The shared cache directory from the cache_dir fixture.
+
+    Returns
+    -------
+    Path
+        Path to the mini BIDS dataset.
+
+    """
+    path = cache_dir / "ds005509-bdf-mini"
+    if not path.exists():
+        pytest.skip(f"BIDS dataset not found at {path}")
+    return path
 
 
 import numpy as np

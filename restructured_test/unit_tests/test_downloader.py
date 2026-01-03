@@ -99,3 +99,15 @@ def test_download_dependencies_handles_competition_paths(cache_dir: Path):
         local_path = dataset_subdir / rel
         assert local_path.exists()
         assert local_path.stat().st_size > 0
+
+
+def test_downloader_gap(tmp_path):
+    # Trigger downloader.py 99 (return local_path)
+    p = tmp_path / "dummy.txt"
+    p.write_text("hello")
+    # download_s3_file will return local_path if it exists and remote_size is None
+    from unittest.mock import patch
+
+    with patch("eegdash.downloader._remote_size", return_value=None):
+        res = downloader.download_s3_file("s3://bucket/dummy.txt", p)
+        assert res == p

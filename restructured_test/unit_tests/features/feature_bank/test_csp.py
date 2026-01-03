@@ -157,3 +157,54 @@ def test_csp_unbalanced_classes(csp):
     # Check that counts are correct
     assert csp._counts[0] == 200 * n_samples
     assert csp._counts[1] == 50 * n_samples
+
+
+def test_csp_preprocessor():
+    # Trigger CSP stats and _update_mean_cov
+    csp = CommonSpatialPattern()
+    data = np.random.randn(4, 4, 100)  # (epochs, channels, times)
+    y = np.array([0, 0, 1, 1])
+
+    # First fit
+    csp.partial_fit(data, y)
+    csp.fit()
+
+    # Second fit (trigger _update_mean_cov)
+    csp.partial_fit(data, y)
+    csp.fit()
+
+    # Call
+    res = csp(data)
+    assert len(res) > 0
+
+
+def test_csp_features_gaps():
+    from eegdash.features.feature_bank.csp import CommonSpatialPattern
+
+    csp = CommonSpatialPattern()
+    csp.clear()
+
+    # partial_fit
+    x = np.random.randn(2, 4, 100)
+    y = np.array([0, 1])
+    csp.partial_fit(x, y)
+
+    # fit
+    csp.fit()
+
+    # __call__ (92, 94-95, 97)
+    csp(x, n_select=1)
+    csp(x, crit_select=0.9)
+    with pytest.raises(RuntimeError, match="too strict"):
+        csp(x, crit_select=0.0001)
+
+
+def test_csp_update_mean_cov_gap():
+    from eegdash.features.feature_bank.csp import CommonSpatialPattern
+
+    csp = CommonSpatialPattern()
+    # Trigger _update_mean_cov (called in partial_fit if n_epochs > 0)
+    X = np.random.randn(2, 4, 100)
+    y = np.array([0, 1])
+    csp.partial_fit(X, y)  # First call initializes mean/cov
+    csp.partial_fit(X, y)  # Second call triggers _update_mean_cov

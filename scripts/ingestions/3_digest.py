@@ -516,6 +516,23 @@ def extract_record(
         digested_at=digested_at,
     )
 
+    # Restore participant_tsv metadata if available
+    participant_tsv = bids_dataset.subject_participant_tsv(bids_file)
+    if participant_tsv:
+        # Convert numeric strings to floats for better API/Client compatibility
+        # but preserve participant_id as string
+        for k, v in participant_tsv.items():
+            if k == "participant_id":
+                continue
+            if isinstance(v, str):
+                try:
+                    # Only convert if it's a simple number
+                    if v.strip():
+                        participant_tsv[k] = float(v)
+                except (ValueError, TypeError):
+                    pass
+        record["participant_tsv"] = participant_tsv
+
     return dict(record)
 
 

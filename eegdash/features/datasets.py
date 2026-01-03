@@ -338,8 +338,7 @@ class FeaturesConcatDataset(BaseConcatDataset):
                 f"does not match the number of existing "
                 f"subdirectories ({n_sub_dirs}). You may now "
                 f"encounter a mix of differently preprocessed "
-                f"datasets!",
-                UserWarning,
+                f"datasets!"
             )
         if path_contents:
             logger.warning(

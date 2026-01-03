@@ -18,40 +18,56 @@ The code below provides an example of using the *braindecode* and *EEGDash* libr
 # ## Data Retrieval Using EEGDash
 
 # %%
-from eegdash import EEGDashDataset
+from pathlib import Path
+import os
 
-# hbn_datasets_train = ['ds005505', 'ds005506', 'ds005507', 'ds005508', 'ds005510', 'ds005511', 'ds005512', 'ds005514', 'ds005515', 'ds005516']
-hbn_datasets_train = ["ds005505", "ds005506", "ds005507"]
-hbn_datasets_valid = ["ds005509"]
-desc_fields = ["subject", "session", "run", "task", "age", "gender", "sex", "p_factor"]
-task_name = "RestingState"
+os.environ.setdefault("NUMBA_DISABLE_JIT", "1")
+os.environ.setdefault("_MNE_FAKE_HOME_DIR", str(Path.cwd()))
+(Path(os.environ["_MNE_FAKE_HOME_DIR"]) / ".mne").mkdir(exist_ok=True)
+
+from eegdash import EEGDash, EEGDashDataset
+from sklearn.model_selection import train_test_split
+
+CACHE_DIR = Path(os.getenv("EEGDASH_CACHE_DIR", Path.cwd() / "eegdash_cache")).resolve()
+CACHE_DIR.mkdir(parents=True, exist_ok=True)
+DATASET_ID = os.getenv("EEGDASH_DATASET_ID", "EEG2025r5")
+task_name = os.getenv("EEGDASH_TASK", "").strip() or None
 target_name = "p_factor"
+desc_fields = ["subject", "session", "run", "task", "age", "gender", "sex", "p_factor"]
+RECORD_LIMIT = int(os.getenv("EEGDASH_RECORD_LIMIT", "100"))
 
-datasets_train = [
-    EEGDashDataset(
-        {"dataset": ds, "task": task_name},
-        description_fields=desc_fields,
-        target_name=target_name,
-    )
-    for ds in hbn_datasets_train
-]
-datasets_valid = [
-    EEGDashDataset(
-        {"dataset": ds, "task": task_name},
-        description_fields=desc_fields,
-        target_name=target_name,
-    )
-    for ds in hbn_datasets_valid
-]
+eegdash = EEGDash()
+query = {"dataset": DATASET_ID, "p_factor": {"$ne": None}}
+if task_name:
+    query["task"] = task_name
+records = eegdash.find(query, limit=RECORD_LIMIT)
+if not records:
+    records = eegdash.find({"p_factor": {"$ne": None}}, limit=RECORD_LIMIT)
+if records:
+    dataset_id = records[0].get("dataset")
+    if dataset_id:
+        records = [rec for rec in records if rec.get("dataset") == dataset_id]
+if not records:
+    raise RuntimeError("No records with p_factor metadata found from the API.")
+
+raw_all = EEGDashDataset(
+    cache_dir=CACHE_DIR,
+    records=records,
+    description_fields=desc_fields,
+)
 
 # %%
 from braindecode.datasets import BaseConcatDataset
 
+subjects = raw_all.description["subject"].unique()
+train_subj, valid_subj = train_test_split(
+    subjects, train_size=0.8, random_state=42, shuffle=True
+)
 raw_train = BaseConcatDataset(
-    [ds for dataset in datasets_train for ds in dataset.datasets]
+    [ds for ds in raw_all.datasets if ds.description.subject in train_subj]
 )
 raw_valid = BaseConcatDataset(
-    [ds for dataset in datasets_valid for ds in dataset.datasets]
+    [ds for ds in raw_all.datasets if ds.description.subject in valid_subj]
 )
 
 # %% [markdown]
@@ -114,6 +130,8 @@ def preprocess_and_window(raw_ds):
         Preprocessor("filter", l_freq=1, h_freq=55),
     ]
     preprocess(raw_ds, preprocessors, n_jobs=-1)
+    for ds in raw_ds.datasets:
+        ds.target_name = target_name
 
     # extract windows and save to disk
     sfreq = raw_ds.datasets[0].raw.info["sfreq"]
@@ -130,12 +148,14 @@ def preprocess_and_window(raw_ds):
 
 
 windows_train = preprocess_and_window(raw_train)
-os.makedirs(f"data/hbn_preprocessed_{task_name}_train", exist_ok=True)
-windows_train.save(f"data/hbn_preprocessed_{task_name}_train", overwrite=True)
+train_dir = CACHE_DIR / f"pfactor_{task_name or 'all'}_train"
+train_dir.mkdir(parents=True, exist_ok=True)
+windows_train.save(str(train_dir), overwrite=True)
 
 windows_valid = preprocess_and_window(raw_valid)
-os.makedirs(f"data/hbn_preprocessed_{task_name}_valid", exist_ok=True)
-windows_valid.save(f"data/hbn_preprocessed_{task_name}_valid", overwrite=True)
+valid_dir = CACHE_DIR / f"pfactor_{task_name or 'all'}_valid"
+valid_dir.mkdir(parents=True, exist_ok=True)
+windows_valid.save(str(valid_dir), overwrite=True)
 
 # %% [markdown]
 # ## Extracting EEG Features Using EEGDash.features
@@ -147,7 +167,20 @@ from eegdash import features
 from eegdash.features import extract_features
 
 sfreq = windows_train.datasets[0].raw.info["sfreq"]
-filter_freqs = dict(windows_train.datasets[0].raw_preproc_kwargs)["filter"]
+
+
+def _get_filter_freqs(raw_preproc_kwargs):
+    if isinstance(raw_preproc_kwargs, list):
+        for item in raw_preproc_kwargs:
+            if isinstance(item, dict) and item.get("fn") == "filter":
+                return item.get("kwargs", {})
+            if hasattr(item, "fn") and getattr(item.fn, "__name__", "") == "filter":
+                return getattr(item, "kwargs", {})
+        return {}
+    return raw_preproc_kwargs.get("filter", {})
+
+
+filter_freqs = _get_filter_freqs(windows_train.datasets[0].raw_preproc_kwargs)
 features_dict = {
     "sig": features.FeatureExtractor(
         {
@@ -174,8 +207,8 @@ features_dict = {
             ),
         },
         fs=sfreq,
-        f_min=filter_freqs["l_freq"],
-        f_max=filter_freqs["h_freq"],
+        f_min=filter_freqs.get("l_freq", 1.0),
+        f_max=filter_freqs.get("h_freq", sfreq / 2.0),
         nperseg=4 * sfreq,
         noverlap=3 * sfreq,
     ),
@@ -184,14 +217,16 @@ features_dict = {
 features_train = extract_features(
     windows_train, features_dict, batch_size=64, n_jobs=-1
 )
-os.makedirs(f"data/hbn_features_{task_name}_train", exist_ok=True)
-features_train.save(f"data/hbn_features_{task_name}_train", overwrite=True)
+train_feat_dir = CACHE_DIR / f"pfactor_features_{task_name or 'all'}_train"
+train_feat_dir.mkdir(parents=True, exist_ok=True)
+features_train.save(str(train_feat_dir), overwrite=True)
 
 features_valid = extract_features(
     windows_valid, features_dict, batch_size=64, n_jobs=-1
 )
-os.makedirs(f"data/hbn_features_{task_name}_valid", exist_ok=True)
-features_valid.save(f"data/hbn_features_{task_name}_valid", overwrite=True)
+valid_feat_dir = CACHE_DIR / f"pfactor_features_{task_name or 'all'}_valid"
+valid_feat_dir.mkdir(parents=True, exist_ok=True)
+features_valid.save(str(valid_feat_dir), overwrite=True)
 
 # %%
 features_train.to_dataframe()

@@ -1,0 +1,18 @@
+# Fetch data.ru.nl (Radboud RDM) datasets
+name: "1. Fetch: data.ru.nl"
+
+on:
+  schedule:
+    - cron: '0 2 * * 1'  # Weekly on Monday at 2 AM UTC
+  workflow_dispatch:
+
+jobs:
+  fetch:
+    uses: ./.github/workflows/fetch-source.yml
+    with:
+      source_name: "data.ru.nl"
+      script_path: "scripts/ingestions/1_fetch_sources/datarn.py"
+      output_file: "datarn_datasets.json"
+      continue_on_error: true
+    secrets:
+      DATASET_LISTINGS_TOKEN: ${{ secrets.DATASET_LISTINGS_TOKEN }}

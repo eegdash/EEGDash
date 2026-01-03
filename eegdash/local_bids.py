@@ -10,6 +10,7 @@ from pathlib import Path
 from typing import Any
 
 from mne_bids import find_matching_paths
+from mne_bids.config import ALLOWED_DATATYPE_EXTENSIONS
 
 from .schemas import create_record
 
@@ -89,19 +90,8 @@ def discover_local_bids_records(
     dataset_root_path = Path(dataset_root)
     records_out: list[dict[str, Any]] = []
 
-    # Valid raw extensions
     valid_raw_extensions = {
-        ".bdf",
-        ".edf",
-        ".vhdr",
-        ".set",
-        ".fif",
-        ".ds",
-        ".egimff",
-        ".cnt",
-        ".mef",
-        ".nwb",
-        ".snirf",
+        ext for m in modalities for ext in ALLOWED_DATATYPE_EXTENSIONS.get(m, [])
     }
 
     for bids_path in matched_paths:
@@ -145,6 +135,7 @@ def discover_local_bids_records(
         # (This is a simplified version for local discovery)
         current_rec = bids_path.fpath
         try:
+            # local import to avoid circular dependency
             from .dataset.bids_dataset import EEGBIDSDataset
 
             # Note: creating a dataset object per file is expensive, but this is local discovery

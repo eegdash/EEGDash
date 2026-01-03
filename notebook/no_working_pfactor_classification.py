@@ -1,178 +1,91 @@
 # %% [markdown]
 """.. _pfactor-classification:
 
-Sex Classification Example
-==========================
+P-factor Regression Example
+===========================
 
-The code below provides an example of using the *EEGDash* library in combination with PyTorch to develop a deep learning model for detecting sex in a collection of 136 subjects.
-
-1. **Data Retrieval Using EEGDash**: An instance of *EEGDashDataset* is created to search and retrieve resting state data for 136 subjects (dataset ds005505). At this step, only the metadata is transferred.
-
-2. **Data Preprocessing Using BrainDecode**: This process preprocesses EEG data using Braindecode by selecting specific channels, resampling, filtering, and extracting 2-second epochs. This takes about 2 minutes.
-
-3. **Creating a train and testing sets**: The dataset is split into training (80%) and testing (20%) sets with balanced labels--making sure also that we have as many males as females--converted into PyTorch tensors, and wrapped in DataLoader objects for efficient mini-batch training.
-
-4. **Model Definition**: The model is a custom convolutional neural network with 24 input channels (EEG channels), 2 output classes (male and female).
-
-5. **Model Training and Evaluation Process**: This section trains the neural network, normalizes input data, computes cross-entropy loss, updates model parameters, and evaluates classification accuracy over six epochs. This takes less than 10 seconds to a couple of minutes, depending on the device you use.
-
+A minimal EEGDash + Braindecode pipeline for predicting the p-factor.
 """
 
-# %% [markdown]
-# ## Data Retrieval Using EEGDash
-#
-# First we find one resting state dataset for a collection of subject. The dataset ds005505 contains 136 subjects with both male and female participants.
+from pathlib import Path
+import os
 
-# %%
-from eegdash import EEGDashDataset
+os.environ.setdefault("NUMBA_DISABLE_JIT", "1")
+os.environ.setdefault("_MNE_FAKE_HOME_DIR", str(Path.cwd()))
+(Path(os.environ["_MNE_FAKE_HOME_DIR"]) / ".mne").mkdir(exist_ok=True)
+os.environ.setdefault("MPLCONFIGDIR", str(Path.cwd() / ".matplotlib"))
+Path(os.environ["MPLCONFIGDIR"]).mkdir(exist_ok=True)
 
-ds_sexdata1 = EEGDashDataset(
-    {
-        "dataset": "ds005505",
-        "task": "RestingState",
-    },
-    target_name="sex",
+import numpy as np
+import pandas as pd
+from braindecode.datasets import BaseConcatDataset
+from braindecode.preprocessing import (
+    Preprocessor,
+    create_fixed_length_windows,
+    preprocess,
 )
+from eegdash import EEGDash, EEGDashDataset
+import matplotlib.pyplot as plt
 
-ds_sexdata2 = EEGDashDataset(
-    {"dataset": "ds005506", "task": "RestingState"}, target_name="sex"
-)
-ds_sexdata3 = EEGDashDataset(
-    {"dataset": "ds005507", "task": "RestingState"}, target_name="sex"
-)
-ds_sexdata4 = EEGDashDataset(
-    {"dataset": "ds005508", "task": "RestingState"}, target_name="sex"
-)
-ds_sexdata = EEGDashDataset(
-    {"dataset": "ds005510", "task": "RestingState"},
+CACHE_DIR = Path(os.getenv("EEGDASH_CACHE_DIR", Path.cwd() / "eegdash_cache")).resolve()
+CACHE_DIR.mkdir(parents=True, exist_ok=True)
+DATASET_ID = os.getenv("EEGDASH_DATASET_ID", "EEG2025r5")
+TASK = os.getenv("EEGDASH_TASK", "").strip() or None
+RECORD_LIMIT = int(os.getenv("EEGDASH_RECORD_LIMIT", "80"))
+WINDOW_DIR = CACHE_DIR / "pfactor_windows"
+
+eegdash = EEGDash()
+query = {"dataset": DATASET_ID, "p_factor": {"$ne": None}}
+if TASK:
+    query["task"] = TASK
+records = eegdash.find(query, limit=RECORD_LIMIT)
+if not records:
+    records = eegdash.find({"p_factor": {"$ne": None}}, limit=RECORD_LIMIT)
+if records:
+    dataset_id = records[0].get("dataset")
+    if dataset_id:
+        records = [rec for rec in records if rec.get("dataset") == dataset_id]
+if not records:
+    raise RuntimeError("No records with p_factor metadata found from the API.")
+
+raw_ds = EEGDashDataset(
+    cache_dir=CACHE_DIR,
+    records=records,
     description_fields=[
         "subject",
         "session",
         "run",
         "task",
         "age",
-        "gender",
         "sex",
+        "gender",
         "p_factor",
     ],
-    target_name="p_factor",
-)
-ds_sexdata6 = EEGDashDataset(
-    {"dataset": "ds005512", "task": "RestingState"}, target_name="sex"
-)
-ds_sexdata7 = EEGDashDataset(
-    {"dataset": "ds005514", "task": "RestingState"}, target_name="sex"
-)
-ds_sexdata8 = EEGDashDataset(
-    {"dataset": "ds005509", "task": "RestingState"}, target_name="sex"
-)  # fails
-
-ds_sexdata = EEGDashDataset(
-    {"dataset": "ds005511", "task": "RestingState"}, target_name="sex"
-)  # one dataset has 6 channels
-# import mne
-# raw = mne.io.read_raw_eeglab(input_fname='.eegdash_cache\ds005509\sub-NDARGX760NYV\eeg\sub-NDARGX760NYV_task-RestingState_eeg.set', preload=True, verbose=True)
-
-# %%
-import numpy as np
-import pandas as pd
-
-from braindecode.datasets import BaseConcatDataset
-
-res = ds_sexdata.description["p_factor"].isna()
-
-ds_sexdata2 = []
-for ds in ds_sexdata.datasets:
-    if not pd.isna(ds.description["p_factor"]):
-        ds_sexdata2.append(ds)
-ds_sexdata2 = BaseConcatDataset(ds_sexdata2)
-
-res = ds_sexdata2.description["p_factor"].isna()
-any(res)
-
-ds_sexdata = ds_sexdata2
-
-# %%
-# this likely does not work if the data is not already on disk
-from braindecode.datasets import BaseConcatDataset
-
-ds_sexdata = []
-for ds in ds_sexdata1.datasets:
-    ds_sexdata.append(ds)
-for ds in ds_sexdata2.datasets:
-    ds_sexdata.append(ds)
-for ds in ds_sexdata3.datasets:
-    ds_sexdata.append(ds)
-for ds in ds_sexdata4.datasets:
-    ds_sexdata.append(ds)
-for ds in ds_sexdata6.datasets:
-    ds_sexdata.append(ds)
-for ds in ds_sexdata7.datasets:
-    ds_sexdata.append(ds)
-for ds in ds_sexdata8.datasets:
-    ds_sexdata.append(ds)
-
-ds_sexdata = BaseConcatDataset(ds_sexdata)
-
-# %% [markdown]
-# ## Data Preprocessing Using Braindecode
-#
-# [BrainDecode](https://braindecode.org/stable/install/install.html) is a specialized library for preprocessing EEG and MEG data.
-#
-# We apply three preprocessing steps in Braindecode:
-# 1.	**Selection** of 24 specific EEG channels from the original 128.
-# 2.	**Resampling** the EEG data to a frequency of 128 Hz.
-# 3.	**Filtering** the EEG signals to retain frequencies between 1 Hz and 55 Hz.
-#
-# When calling the **preprocess** function, the data is retrieved from the remote repository.
-#
-# Finally, we use **create_windows_from_events** to extract 2-second epochs from the data. These epochs serve as the dataset samples.
-
-# %%
-
-# %%
-vars(ds_sexdata.datasets[0])
-
-ds_sexdata.datasets[0].record["participant_tsv"]["p_factor"]
-
-p_factor = []
-for ds in ds_sexdata.datasets:
-    p_factor.append(ds.record["participant_tsv"]["p_factor"])
-p_factor
-
-# %%
-p_factor = []
-for ds in ds_sexdata:
-    p_factor.append(ds.description)
-
-import os
-
-# %%
-from braindecode.preprocessing import (
-    Preprocessor,
-    create_fixed_length_windows,
-    preprocess,
 )
 
-# Alternatively, if you want to include this as a preprocessing step in a Braindecode pipeline:
-#    Preprocessor('pick_channels', ch_names=['E22', 'E9', 'E33', 'E24', 'E11', 'E124', 'E122', 'E29', 'E6', 'E111', 'E45', 'E36', 'E104', 'E108', 'E42', 'E55', 'E93', 'E58', 'E52', 'E62', 'E92', 'E96', 'E70', 'Cz']),
+filtered = []
+for ds in raw_ds.datasets:
+    val = ds.description.get("p_factor")
+    try:
+        if pd.isna(val):
+            continue
+        float(val)
+    except (TypeError, ValueError):
+        continue
+    filtered.append(ds)
+raw_ds = BaseConcatDataset(filtered)
+
 preprocessors = [
     Preprocessor("resample", sfreq=256),
     Preprocessor("filter", l_freq=1, h_freq=55),
 ]
-
-for ds in ds_sexdata.datasets:
+for ds in raw_ds.datasets:
     ds.target_name = "p_factor"
 
-#    shutil.rmtree('./tmpdata')
-preprocess(
-    ds_sexdata, preprocessors, n_jobs=-1, save_dir="./tmpdata", overwrite=True
-)  # , save_dir='xxxx'' will save and set preload to false
+preprocess(raw_ds, preprocessors, n_jobs=-1)
 
-# %%
-# extract windows and save to disk
 windows_ds = create_fixed_length_windows(
-    ds_sexdata,
+    raw_ds,
     start_offset_samples=0,
     stop_offset_samples=None,
     window_size_samples=256,
@@ -180,23 +93,15 @@ windows_ds = create_fixed_length_windows(
     drop_last_window=True,
     preload=False,
 )
-os.makedirs("data/hbn_preprocessed_restingstate", exist_ok=True)
+WINDOW_DIR.mkdir(parents=True, exist_ok=True)
+windows_ds.save(str(WINDOW_DIR), overwrite=True)
 
-windows_ds.save("data/hbn_preprocessed_restingstate_256", overwrite=True)
-
-# %%
-len(windows_ds.datasets)
-
-# %% [markdown]
-# ## Plotting a Single Channel for One Sample
-#
-# It’s always a good practice to verify that the data has been properly loaded and processed. Here, we plot a single channel from one sample to ensure the signal is present and looks as expected.
-
-# %%
-import matplotlib.pyplot as plt
+print(
+    f"Created {len(windows_ds)} windows across {len(windows_ds.datasets)} recordings."
+)
 
 plt.figure()
-plt.plot(windows_ds[1000][0][0, :].transpose())  # first channel of first epoch
+plt.plot(windows_ds[0][0][0, :].transpose())
 plt.show()
 
 # %% [markdown]

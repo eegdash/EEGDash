@@ -1,0 +1,19 @@
+# Clone and digest OpenNeuro datasets
+name: "2. Digest: OpenNeuro"
+
+on:
+  workflow_run:
+    workflows: ["1. Fetch: OpenNeuro"]
+    types: [completed]
+  workflow_dispatch:
+
+jobs:
+  digest:
+    if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch' }}
+    uses: ./.github/workflows/2-clone-digest.yml
+    with:
+      source_name: "OpenNeuro"
+      consolidated_file: "openneuro_datasets.json"
+      workers: 4
+    secrets:
+      DATASET_LISTINGS_TOKEN: ${{ secrets.DATASET_LISTINGS_TOKEN }}

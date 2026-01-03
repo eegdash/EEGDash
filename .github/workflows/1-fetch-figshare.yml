@@ -1,0 +1,18 @@
+# Fetch Figshare datasets
+name: "1. Fetch: Figshare"
+
+on:
+  schedule:
+    - cron: '0 4 * * 1'  # Weekly on Monday
+  workflow_dispatch:
+
+jobs:
+  fetch:
+    uses: ./.github/workflows/fetch-source.yml
+    with:
+      source_name: "Figshare"
+      script_path: "scripts/ingestions/1_fetch_sources/figshare.py"
+      output_file: "figshare_datasets.json"
+      continue_on_error: true
+    secrets:
+      DATASET_LISTINGS_TOKEN: ${{ secrets.DATASET_LISTINGS_TOKEN }}

@@ -511,8 +511,11 @@ class EEGBIDSDataset:
         if not channels_tsv_path.exists():
             raise FileNotFoundError(f"No channels.tsv found for {data_filepath}")
 
-        channels_tsv = pd.read_csv(channels_tsv_path, sep="\t")
-        return channels_tsv["name"].tolist()
+        try:
+            channels_tsv = pd.read_csv(channels_tsv_path, sep="\t")
+            return channels_tsv["name"].tolist()
+        except Exception:
+            return []
 
     def channel_types(self, data_filepath: str) -> list[str]:
         """Get a list of channel types from channels.tsv.
@@ -548,8 +551,11 @@ class EEGBIDSDataset:
         if not channels_tsv_path.exists():
             raise FileNotFoundError(f"No channels.tsv found for {data_filepath}")
 
-        channels_tsv = pd.read_csv(channels_tsv_path, sep="\t")
-        return channels_tsv["type"].tolist()
+        try:
+            channels_tsv = pd.read_csv(channels_tsv_path, sep="\t")
+            return channels_tsv["type"].tolist()
+        except Exception:
+            return []
 
     def num_times(self, data_filepath: str) -> int:
         """Get the number of time points in the recording.
@@ -596,12 +602,18 @@ class EEGBIDSDataset:
         # some variation like 'participantID'
         participants_tsv_path = participants_tsv_files[0]
         # Use dtype=str to avoid pandas auto-converting values (e.g., '5F' being interpreted as hex)
-        participants_tsv = pd.read_csv(participants_tsv_path, sep="\t", dtype=str)
+        try:
+            participants_tsv = pd.read_csv(participants_tsv_path, sep="\t", dtype=str)
+        except Exception:
+            return {}
+
         if participants_tsv.empty:
             return {}
         participants_tsv.set_index("participant_id", inplace=True)
 
         subj_val = self.get_bids_file_attribute("subject", data_filepath)
+        if subj_val is None:
+            return {}
         # Ensure 'sub-' prefix is handled cleanly
         if not subj_val.startswith("sub-"):
             subject = f"sub-{subj_val}"

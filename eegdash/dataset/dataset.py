@@ -338,10 +338,6 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
                     f"If you're working offline or with local data, set download=False and ensure "
                     f"the data exists at: {self.data_dir}"
                 )
-        else:
-            raise ValueError(
-                "You must provide either 'records', a 'data_dir', or a query/keyword arguments for filtering."
-            )
 
         super().__init__(datasets, lazy=True)
 

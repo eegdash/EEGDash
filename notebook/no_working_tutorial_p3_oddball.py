@@ -1,8 +1,8 @@
 # %% [markdown]
 """.. _p3-visual-oddball:
 
-P3 Visual Oddball Classification
-================================
+P3 Visual Oddball Classification (API-driven)
+=============================================
 
 This tutorial demonstrates using the *EEGDash* library with PyTorch to classify EEG responses from a visual P3 oddball paradigm.
 
@@ -17,15 +17,12 @@ This tutorial demonstrates using the *EEGDash* library with PyTorch to classify 
 
    - Applies bandpass filtering (1-55 Hz)
    - Selects first 30 EEG channels
-   - Downsamples from 1024Hz to 256Hz
+   - Downsamples to 256Hz
    - Creates event-based windows (0.1s to 0.6s post-stimulus)
 
 3. **Dataset Preparation**:
 
-   - Maps events into two classes:
-     * oddball: events where block target matches trial stimulus (11,22,33,44,55)
-     * standard: events where block target differs from trial stimulus
-     * Note: Response events (201, 202) are excluded
+   - Maps events into two classes (target vs. standard) using annotation names
    - Splits into training (80%) and test (20%) sets
    - Creates PyTorch DataLoaders
 
@@ -38,29 +35,44 @@ This tutorial demonstrates using the *EEGDash* library with PyTorch to classify 
 5. **Training**:
 
    - Adamax optimizer with learning rate decay
-   - 5 training epochs
+   - A few training epochs (configurable)
    - Reports accuracy on train and test sets
 """
 # %% [markdown]
 # ## Data Retrieval Using EEGDash
 #
-# The P3 Visual Oddball dataset is stored in BIDS format. We use EEGDash to load and manage the data efficiently.
+# The P3 oddball dataset is fetched from the EEGDash API.
 
 # %%
-from eegdash.data_utils import EEGBIDSDataset
+from pathlib import Path
+import os
 
-dataset = EEGBIDSDataset(
-    data_dir="d:/Users/vivian/Desktop/UCSD/EEG/P3 Raw Data BIDS-Compatible",
-    dataset="P3 Raw Data BIDS-Compatible",
-)
+os.environ.setdefault("NUMBA_DISABLE_JIT", "1")
+os.environ.setdefault("_MNE_FAKE_HOME_DIR", str(Path.cwd()))
+(Path(os.environ["_MNE_FAKE_HOME_DIR"]) / ".mne").mkdir(exist_ok=True)
 
-all_files = dataset.get_files()
+from eegdash import EEGDash, EEGDashDataset
 
-# Select files from subject-001
-subject_files = [f for f in all_files if "sub-001" in f]
-print("\nSelected files from subject-001:")
-for i, file in enumerate(subject_files):
-    print(f"{i + 1}. {file}")
+CACHE_DIR = Path(os.getenv("EEGDASH_CACHE_DIR", Path.cwd() / "eegdash_cache")).resolve()
+CACHE_DIR.mkdir(parents=True, exist_ok=True)
+DATASET_ID = os.getenv("EEGDASH_DATASET_ID", "ds005863")
+TASK = os.getenv("EEGDASH_TASK", "visualoddball")
+RECORD_LIMIT = int(os.getenv("EEGDASH_RECORD_LIMIT", "20"))
+
+eegdash = EEGDash()
+records = eegdash.find({"dataset": DATASET_ID, "task": TASK}, limit=RECORD_LIMIT)
+if not records:
+    records = eegdash.find(
+        {"task": {"$regex": "oddball", "$options": "i"}}, limit=RECORD_LIMIT
+    )
+if records:
+    dataset_id = records[0].get("dataset")
+    if dataset_id:
+        records = [rec for rec in records if rec.get("dataset") == dataset_id]
+if not records:
+    raise RuntimeError("No oddball task records found from the API.")
+
+dataset_concat = EEGDashDataset(cache_dir=CACHE_DIR, records=records)
 
 # %% [markdown]
 # ## Data Preprocessing Using Braindecode
@@ -73,13 +85,8 @@ for i, file in enumerate(subject_files):
 #    - Downsampling from 1024Hz to 256Hz
 #
 # 2. **Event Processing**:
-#    - Reading events from events.tsv file:
-#      * Block A: 11=oddball, 12-15=standard
-#      * Block B: 22=oddball, 21,23-25=standard
-#      * Block C: 33=oddball, 31-32,34-35=standard
-#      * Block D: 44=oddball, 41-43,45=standard
-#      * Block E: 55=oddball, 51-54=standard
-#      * Response events (201, 202) are excluded
+#    - Map target vs. standard events based on annotation labels (e.g., Target/NonTarget).
+#    - Response-only events are ignored by the mapping.
 #
 # 3. **Window Creation**:
 #
@@ -91,9 +98,6 @@ import warnings
 
 import mne
 import numpy as np
-from mne.io import read_raw_eeglab
-
-from braindecode.datasets import BaseConcatDataset, BaseDataset
 
 # %%
 from braindecode.preprocessing import (
@@ -107,66 +111,10 @@ logging.getLogger("joblib").setLevel(logging.ERROR)
 warnings.filterwarnings("ignore")
 
 
-class P3OddballPreprocessor(Preprocessor):
-    """A preprocessor that combines channel selection, filtering, and event mapping
-    for P3 oddball paradigm EEG data.
-
-    Maps events based on block target and trial stimulus:
-        Block A: 11=oddball, 12-15=standard
-        Block B: 22=oddball, 21,23-25=standard
-        Block C: 33=oddball, 31-32,34-35=standard
-        Block D: 44=oddball, 41-43,45=standard
-        Block E: 55=oddball, 51-54=standard
-        Response events (201, 202) are excluded
-    """
-
-    def __init__(self):
-        super().__init__(fn=self.transform, apply_on_array=False)
-
-    def transform(self, raw):
-        """Transform the raw data by selecting channels and mapping events."""
-        # Filter for stimulus events only
-        events, _ = mne.events_from_annotations(raw)
-
-        # Define oddball events (11,22,33,44,55)
-        oddball_codes = np.array([11, 22, 33, 44, 55])
-
-        # Map events: oddball=1, standard=0
-        oddball_mask = np.isin(events[:, 2], oddball_codes)
-        events[oddball_mask, 2] = 1
-        events[~oddball_mask, 2] = 0
-
-        # Print event counts for verification
-        oddball_count = np.sum(oddball_mask)
-        standard_count = len(events) - oddball_count
-        print("\nEvent distribution:")
-        print(f"Oddball events (11,22,33,44,55): {oddball_count}")
-        print(f"Standard events: {standard_count}")
-
-        # Create annotations from events
-        annot_from_events = mne.annotations_from_events(
-            events=events,
-            event_desc={0: "standard", 1: "oddball"},
-            sfreq=raw.info["sfreq"],
-        )
-        raw.set_annotations(annot_from_events)
-
-        return raw
-
-
-# Create dataset from all files
-all_datasets = [
-    BaseDataset(read_raw_eeglab(f, preload=False), target_name=None)
-    for f in subject_files
-]
-dataset_concat = BaseConcatDataset(all_datasets)
-
 # BrainDecode preprocessors
 preprocessors = [
-    P3OddballPreprocessor(),
     Preprocessor(
-        "pick_channels",
-        ch_names=read_raw_eeglab(subject_files[0], preload=False).ch_names[:30],
+        "pick_channels", ch_names=dataset_concat.datasets[0].raw.ch_names[:30]
     ),
     Preprocessor("resample", sfreq=256),
     Preprocessor("filter", l_freq=1, h_freq=55),
@@ -175,6 +123,18 @@ preprocessors = [
 preprocess(dataset_concat, preprocessors)
 
 # Extract windows
+event_mapping = {
+    "Target": 1,
+    "NonTarget": 0,
+    "target": 1,
+    "standard": 0,
+    "oddball": 1,
+    "3": 1,
+    "4": 1,
+    "6": 0,
+    "7": 0,
+}
+
 windows_ds = create_windows_from_events(
     dataset_concat,
     trial_start_offset_samples=26,
@@ -183,6 +143,7 @@ windows_ds = create_windows_from_events(
     window_size_samples=None,
     window_stride_samples=None,
     drop_bad_windows=True,
+    mapping=event_mapping,
 )
 
 print(f"\nAll files processed, total number of windows: {len(windows_ds)}")
@@ -308,7 +269,7 @@ def normalize_data(x):
 
 
 print("\nStart training...")
-epochs = 5
+epochs = int(os.getenv("EEGDASH_EPOCHS", "2"))
 
 for e in range(epochs):
     model.train()

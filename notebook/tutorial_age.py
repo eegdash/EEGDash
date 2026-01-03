@@ -6,6 +6,15 @@ A streamlined tutorial for training an EEG Conformer model to predict age from E
 Uses vanilla PyTorch (no Lightning framework) with a simple linear training script.
 """
 
+from pathlib import Path
+import os
+
+os.environ.setdefault("NUMBA_DISABLE_JIT", "1")
+os.environ.setdefault("_MNE_FAKE_HOME_DIR", str(Path.cwd()))
+(Path(os.environ["_MNE_FAKE_HOME_DIR"]) / ".mne").mkdir(exist_ok=True)
+os.environ.setdefault("MPLCONFIGDIR", str(Path.cwd() / ".matplotlib"))
+Path(os.environ["MPLCONFIGDIR"]).mkdir(exist_ok=True)
+
 import numpy as np
 import torch
 import torch.nn.functional as F
@@ -14,24 +23,26 @@ from braindecode.datautil import load_concat_dataset
 from braindecode.models import EEGConformer
 from sklearn.model_selection import train_test_split
 import matplotlib.pyplot as plt
-from pathlib import Path
-import os
+from eegdash import EEGDash, EEGDashDataset
 
 # ============================================================================
 # Configuration
 # ============================================================================
-CACHE_DIR_BASE = Path("/Users/arno/eegdash_data/eeg2025_competition_tmp")
-DATASET_NAME = "ds003775"
-TASK = "resteyesc"
+CACHE_DIR_BASE = Path(
+    os.getenv("EEGDASH_CACHE_DIR", Path.cwd() / "eegdash_cache")
+).resolve()
+CACHE_DIR_BASE.mkdir(parents=True, exist_ok=True)
+DATASET_NAME = os.getenv("EEGDASH_DATASET_ID", "EEG2025r5")
+TASK = os.getenv("EEGDASH_TASK", "").strip() or None
 TARGET_NAME = "age"
-CACHE_DIR = CACHE_DIR_BASE / f"reg_{DATASET_NAME}_{TASK}_{TARGET_NAME}"
+CACHE_DIR = CACHE_DIR_BASE / f"reg_{DATASET_NAME}_{TASK or 'all'}_{TARGET_NAME}"
 SFREQ = 100
-BATCH_SIZE = 128
+BATCH_SIZE = int(os.getenv("EEGDASH_BATCH_SIZE", "64"))
 LEARNING_RATE = 0.00002
 WEIGHT_DECAY = 1e-2
-NUM_EPOCHS = 30
+NUM_EPOCHS = int(os.getenv("EEGDASH_EPOCHS", "5"))
 RANDOM_SEED = 41
-OFFLINE_MODE = True  # Set to True to use local data (dataset ds003775 not in MongoDB)
+RECORD_LIMIT = int(os.getenv("EEGDASH_RECORD_LIMIT", "60"))
 
 # Set random seeds for reproducibility
 torch.manual_seed(RANDOM_SEED)
@@ -45,8 +56,8 @@ np.random.seed(RANDOM_SEED)
 
 PREPARE_DATA = True  # Set to True to prepare data from scratch
 
-if PREPARE_DATA:
-    from eegdash.api import EEGDashDataset
+if PREPARE_DATA or not CACHE_DIR.exists():
+    eegdash = EEGDash()
     from braindecode.preprocessing import (
         Preprocessor,
         create_fixed_length_windows,
@@ -56,13 +67,32 @@ if PREPARE_DATA:
 
     print(f"Preparing data for {DATASET_NAME} - {TASK} - {TARGET_NAME}...")
 
-    # Load raw dataset
+    query = {"dataset": DATASET_NAME, "age": {"$ne": None}}
+    if TASK:
+        query["task"] = TASK
+    records = eegdash.find(query, limit=RECORD_LIMIT)
+    if not records:
+        records = eegdash.find({"age": {"$ne": None}}, limit=RECORD_LIMIT)
+    if records:
+        dataset_id = records[0].get("dataset")
+        if dataset_id:
+            records = [rec for rec in records if rec.get("dataset") == dataset_id]
+    if not records:
+        raise RuntimeError("No records with age metadata found from the API.")
+
+    # Load raw dataset from API records
     ds_data = EEGDashDataset(
-        dataset=DATASET_NAME,
         cache_dir=CACHE_DIR_BASE,
-        task=[TASK],
-        download=not OFFLINE_MODE,
-        target_name=TARGET_NAME,
+        records=records,
+        description_fields=[
+            "subject",
+            "session",
+            "run",
+            "task",
+            "age",
+            "sex",
+            "gender",
+        ],
     )
 
     # Filter subjects: remove problematic subjects and ensure sufficient data
@@ -78,12 +108,21 @@ if PREPARE_DATA:
         "NDARBA381JGH",
         "041",  # Corrupted EDF file with invalid timestamp
     ]
+
+    def parse_age(value):
+        try:
+            age = float(value)
+        except (TypeError, ValueError):
+            return None
+        return age if age > 0 else None
+
     # First filter: remove problematic subjects and zero-length (corrupted) datasets
-    filtered_datasets = [
-        ds
-        for ds in ds_data.datasets
-        if ds.description.subject not in sub_rm and len(ds) > 0
-    ]
+    filtered_datasets = []
+    for ds in ds_data.datasets:
+        age = parse_age(ds.description.get("age"))
+        if ds.description.subject in sub_rm or age is None or len(ds) == 0:
+            continue
+        filtered_datasets.append(ds)
     # Second filter: check data quality (requires loading raw data)
     # ds003775 has 64 channels, not 129
     all_datasets = BaseConcatDataset(
@@ -142,6 +181,8 @@ if PREPARE_DATA:
         drop_last_window=True,
         preload=False,
     )
+    for ds in windows_ds.datasets:
+        ds.target_name = "age"
 
     # Save processed data
     os.makedirs(CACHE_DIR, exist_ok=True)
@@ -154,6 +195,18 @@ if PREPARE_DATA:
 print(f"Loading data from {CACHE_DIR}...")
 windows_ds = load_concat_dataset(path=str(CACHE_DIR), preload=False)
 print(f"Loaded {len(windows_ds.datasets)} subjects, {len(windows_ds)} windows total")
+
+
+def _to_float(val):
+    try:
+        return float(val)
+    except (TypeError, ValueError):
+        return np.nan
+
+
+windows_ds.description["age"] = windows_ds.description["age"].apply(_to_float)
+for ds in windows_ds.datasets:
+    ds.target_name = "age"
 
 # ============================================================================
 # Train/Validation Split (80/20)
@@ -169,14 +222,14 @@ train_ds = [
     for ds in windows_ds.datasets
     if ds.description.subject in train_subj
     and ds.description.age is not None
-    and abs(ds.description.age) > 0.5
+    and float(ds.description.age) > 0.5
 ]
 val_ds = [
     ds
     for ds in windows_ds.datasets
     if ds.description.subject in val_subj
     and ds.description.age is not None
-    and abs(ds.description.age) > 0.5
+    and float(ds.description.age) > 0.5
 ]
 
 from braindecode.datasets.base import BaseConcatDataset

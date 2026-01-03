@@ -28,8 +28,10 @@ This example uses the :mod:`eegdash` library in combination with PyTorch to deve
 # First we find one resting state dataset. This dataset contains both eyes open
 # and eyes closed data.
 from pathlib import Path
+from eegdash.paths import get_default_cache_dir
 
-cache_folder = Path.home() / "eegdash"
+cache_folder = Path(get_default_cache_dir()).resolve()
+cache_folder.mkdir(parents=True, exist_ok=True)
 # %%
 from eegdash import EEGDashDataset
 

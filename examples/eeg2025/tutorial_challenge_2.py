@@ -8,11 +8,15 @@
    :local:
    :depth: 2
 """
+#
 ######################################################################
+#
 # .. image:: https://colab.research.google.com/assets/colab-badge.svg
 #    :target: https://colab.research.google.com/github/eeg2025/startkit/blob/main/challenge_2.ipynb
 #    :alt: Open In Colab
+#
 ######################################################################
+#
 # Preliminary notes
 # -----------------
 # Before we begin, I just want to make a deal with you, ok?
@@ -25,7 +29,9 @@
 # The entire decoding community will only go further when we stop
 # solving the same problems over and over again, and it starts working together.
 
+#
 ######################################################################
+#
 # Overview
 # --------
 # The psychopathology factor (P-factor) is a widely recognized construct in mental health research, representing a common underlying dimension of psychopathology across various disorders.
@@ -40,7 +46,9 @@
 # and extrapolation. The goal is not only to minimize error on seen subjects, but also to transfer effectively to unseen data.
 # Ensure the dataset is available locally. If not, see the
 # `dataset download guide <https://eeg2025.github.io/data/#downloading-the-data>`__.
+#
 ######################################################################
+#
 # Contents of this start kit
 # --------------------------
 # .. note:: If you need additional explanations on the
@@ -64,7 +72,9 @@
 #    - Some knowledge of PyTorch
 #    - Basic familiarity with EEG and preprocessing
 #    - An appreciation for open-source work :)
+#
 ######################################################################
+#
 # Install dependencies on Colab
 # -----------------------------
 #
@@ -74,14 +84,17 @@
 # .. code-block:: bash
 #
 #    pip install eegdash
+#
 ######################################################################
+#
 # Imports
 # -------
 from pathlib import Path
 import math
 import os
 import random
-from joblib import Parallel, delayed
+
+
 import torch
 from torch.utils.data import DataLoader
 from torch import optim
@@ -90,14 +103,19 @@ from braindecode.preprocessing import create_fixed_length_windows
 from braindecode.datasets.base import EEGWindowsDataset, BaseConcatDataset, BaseDataset
 from braindecode.models import EEGNeX
 from eegdash import EEGChallengeDataset
+from eegdash.paths import get_default_cache_dir
 
+#
 ######################################################################
+#
 # .. warning::
 #    In case of Colab, before starting, make sure you're on a GPU instance
 #    for faster training! If running on Google Colab, please request a GPU runtime
 #    by clicking `Runtime/Change runtime type` in the top bar menu, then selecting
 #    'T4 GPU' under 'Hardware accelerator'.
+#
 ######################################################################
+#
 # Identify whether a CUDA-enabled GPU is available
 # ------------------------------------------------
 device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -111,7 +129,9 @@ else:
         "selecting 'T4 GPU'\nunder 'Hardware accelerator'."
     )
 print(msg)
+#
 ######################################################################
+#
 # Understanding the P-factor regression task.
 # -------------------------------------------
 #
@@ -126,16 +146,20 @@ print(msg)
 # The solution may involve finding meaningful representations of the EEG data that correlate with the P-factor scores.
 # The challenge encourages learning physiologically meaningful signal representations and discovery of reproducible biomarkers.
 # If contestants are successful in this task, it could pave the way for more objective and efficient assessments of the P-factor in clinical settings.
+#
 ######################################################################
+#
 # Define local path and (down)load the data
 # -----------------------------------------
 # In this challenge 2 example, we load the EEG 2025 release using
 # :doc:`EEGChallengeDataset </api/dataset/eegdash.dataset.EEGChallengeDataset>`.
 # **Note:** in this example notebook, we load the contrast change detection task from one mini release only as an example. Naturally, you are encouraged to train your models on all complete releases, using data from all the tasks you deem relevant.
+#
 ######################################################################
+#
 # The first step is to define the cache folder!
 # Match tests' cache layout under ~/eegdash_cache/eeg_challenge_cache
-DATA_DIR = (Path.home() / "eegdash_cache" / "eeg_challenge_cache").resolve()
+DATA_DIR = Path(get_default_cache_dir()).resolve()
 # Creating the path if it does not exist
 DATA_DIR.mkdir(parents=True, exist_ok=True)
 # We define the list of releases to load.
@@ -162,7 +186,9 @@ all_datasets_list = [
 ]
 print("Datasets loaded")
 sub_rm = ["NDARWV769JM7"]
+#
 ######################################################################
+#
 # Combine the datasets into a single one
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Here, we combine the datasets from the different releases into a single
@@ -170,10 +196,11 @@ sub_rm = ["NDARWV769JM7"]
 # %%
 all_datasets = BaseConcatDataset(all_datasets_list)
 print(all_datasets.description)
-raws = Parallel(n_jobs=os.cpu_count())(
-    delayed(lambda d: d.raw)(d) for d in all_datasets.datasets
-)
+for ds in all_datasets_list:
+    ds.download_all(n_jobs=os.cpu_count())
+#
 ######################################################################
+#
 # Inspect your data
 # -----------------
 # We can check what is inside the dataset consuming the
@@ -182,13 +209,17 @@ raws = Parallel(n_jobs=os.cpu_count())(
 # The following snippet, if uncommented, will show the first 10 seconds of the raw EEG signal.
 # We can also inspect the data further by looking at the events and annotations.
 # We strongly recommend you to take a look into the details and check how the events are structured.
+#
 ######################################################################
+#
 raw = all_datasets.datasets[0].raw  # mne.io.Raw object
 print(raw.info)
 raw.plot(duration=10, scalings="auto", show=True)
 print(raw.annotations)
 SFREQ = 100
+#
 ######################################################################
+#
 # Wrap the data into a PyTorch-compatible dataset
 # --------------------------------------------------
 # The class below defines a dataset wrapper that will extract 2-second windows,
@@ -232,7 +263,7 @@ class DatasetWrapper(BaseDataset):
 
 # We filter out certain recordings, create fixed length windows and finally make use of our `DatasetWrapper`.
 # %%
-# Filter out recordings that are too short
+# Filter out recordings that are too short or missing p_factor
 all_datasets = BaseConcatDataset(
     [
         ds
@@ -240,6 +271,8 @@ all_datasets = BaseConcatDataset(
         if ds.description.subject not in sub_rm
         and ds.raw.n_times >= 4 * SFREQ
         and len(ds.raw.ch_names) == 129
+        and "p_factor" in ds.description
+        and ds.description["p_factor"] is not None
         and not math.isnan(ds.description["p_factor"])
     ]
 )
@@ -255,7 +288,9 @@ windows_ds = BaseConcatDataset(
     [DatasetWrapper(ds, crop_size_samples=2 * SFREQ) for ds in windows_ds.datasets]
 )
 
+#
 ######################################################################
+#
 # Inspect the label distribution
 # -------------------------------
 #
@@ -273,7 +308,9 @@ ax.set_xlabel("Response Time (s)")
 ax.set_ylabel("Count")
 plt.tight_layout()
 plt.show()
+#
 ######################################################################
+#
 # Define, train and save a model
 # ---------------------------------
 # Now we have our pytorch dataset necessary for the training!
@@ -284,6 +321,7 @@ plt.show()
 # However, you can use any pytorch model you want.
 #
 ######################################################################
+#
 # Initialize model
 # -----------------
 model = EEGNeX(n_chans=129, n_outputs=1, n_times=2 * SFREQ).to(device)

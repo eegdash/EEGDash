@@ -32,48 +32,58 @@ By the end, you'll understand how to:
 # Part 1: Loading and Preprocessing Data
 # ========================================
 #
-# First, we load the datasets using EEGDashDataset. We'll use two public oddball
-# datasets:
-#
-# 1. **ERP CORE P3**: 40 participants with active visual oddball paradigm
-#    (Download: https://osf.io/etdkz/files → "P3 Raw Data BIDS-Compatible")
-#
-# 2. **AVO (ds005863)**: 127 participants, available on OpenNeuro
-#    (Download: https://openneuro.org/datasets/ds005863)
-#
-# These datasets differ in equipment, recording sites, and participant demographics,
-# making them ideal for testing domain adaptation.
+# First, we load two oddball datasets from the EEGDash API. You can override the
+# dataset IDs with EEGDASH_SOURCE_DATASET and EEGDASH_TARGET_DATASET.
 from pathlib import Path
-from eegdash.dataset import DS005863
-from braindecode.datasets import MOABBDataset
-# Here, we are using an dataset that it in osf and other in openneuro.
-# We are conveniently using EEGDashDataset and MOABBDataset to load them.
-# but you can directly download from osf and use only EEGDashDataset if you prefer.
+import os
 
-cache_folder = Path.home() / "eegdash"
+
+from eegdash import EEGDash, EEGDashDataset
+from eegdash.paths import get_default_cache_dir
+
+cache_folder = Path(get_default_cache_dir()).resolve()
 cache_folder.mkdir(parents=True, exist_ok=True)
-cache_config = dict(
-    use=True,
-    save_raw=True,
-    path=cache_folder,
-)
-# Load datasets
-ds_p3 = MOABBDataset(
-    dataset_name="ErpCore2021_P3",
-    subject_ids=[i for i in range(1, 3)],  # all 5 subjects
-    dataset_load_kwargs={"cache_config": cache_config},
-)
+eegdash = EEGDash()
+ODDBALL_TASK = os.getenv("EEGDASH_ODDBALL_TASK", "visualoddball")
+record_limit = int(os.getenv("EEGDASH_RECORD_LIMIT", "60"))
 
 
-ds_avo = DS005863(
-    cache_dir=cache_folder,
-    task="visualoddball",
-    subject=[f"{i:03d}" for i in range(1, 3)],
-    download=True,
-)
+def _fetch_records(dataset_id):
+    if ODDBALL_TASK:
+        records = eegdash.find(
+            {"dataset": dataset_id, "task": ODDBALL_TASK}, limit=record_limit
+        )
+        if records:
+            return records
+    return eegdash.find({"dataset": dataset_id}, limit=record_limit)
 
-print(f"P3: {len(ds_p3)} recordings")
-print(f"AVO: {len(ds_avo)} recordings")
+
+source_id = os.getenv("EEGDASH_SOURCE_DATASET", "ds005863")
+target_id = os.getenv("EEGDASH_TARGET_DATASET", "ds003061")
+
+source_records = _fetch_records(source_id)
+target_records = _fetch_records(target_id)
+if not source_records or not target_records:
+    records = eegdash.find({"task": {"$regex": "oddball", "$options": "i"}}, limit=200)
+    dataset_ids = []
+    for rec in records:
+        ds_id = rec.get("dataset")
+        if ds_id and ds_id not in dataset_ids:
+            dataset_ids.append(ds_id)
+    if dataset_ids:
+        source_id = dataset_ids[0]
+        target_id = dataset_ids[1] if len(dataset_ids) > 1 else dataset_ids[0]
+        source_records = _fetch_records(source_id)
+        target_records = _fetch_records(target_id)
+
+if not source_records or not target_records:
+    raise RuntimeError("Unable to find two oddball datasets from the API.")
+
+ds_p3 = EEGDashDataset(cache_dir=cache_folder, records=source_records)
+ds_avo = EEGDashDataset(cache_dir=cache_folder, records=target_records)
+
+print(f"Source ({source_id}): {len(ds_p3)} recordings")
+print(f"Target ({target_id}): {len(ds_avo)} recordings")
 
 # %%
 # Data Preprocessing Pipeline
@@ -132,12 +142,29 @@ def preprocess_dataset(dataset, channels, dataset_type="P3"):
     trial_start = int(TRIAL_START_OFFSET * RESAMPLE_FREQ)
     trial_stop = int((TRIAL_START_OFFSET + TRIAL_DURATION) * RESAMPLE_FREQ)
 
+    # Define event mapping to handle both datasets
+    # ErpCore uses "Target"/"NonTarget"
+    # ds005863 (AVO) uses "S 11", "S 21", etc. for targets and "S 12", "S 22" for nontargets
+    mapping = {
+        "Target": 1,
+        "NonTarget": 0,
+        "standard": 0,
+        "target": 1,
+    }
+    # Add AVO specific codes if they are missing
+    for i in range(1, 6):
+        mapping[f"S {i}1"] = 1  # Often S 11, S 21, ... are targets
+        mapping[f"S {i}2"] = 0  # Often S 12, S 22, ... are nontargets
+        mapping[f"S{i}1"] = 1
+        mapping[f"S{i}2"] = 0
+
     windows_ds = create_windows_from_events(
         dataset,
         trial_start_offset_samples=trial_start,
         trial_stop_offset_samples=trial_stop,
         preload=True,
         drop_bad_windows=True,
+        mapping=mapping,
     )
 
     X, y = [], []
@@ -151,17 +178,24 @@ def preprocess_dataset(dataset, channels, dataset_type="P3"):
 
 
 # Preprocess both datasets
-X_p3, y_p3 = preprocess_dataset(ds_p3, COMMON_CHANNELS, "P3")
-X_avo, y_avo = preprocess_dataset(ds_avo, COMMON_CHANNELS, "AVO")
+X_p3, y_p3 = preprocess_dataset(ds_p3, COMMON_CHANNELS, f"Source ({source_id})")
+X_avo, y_avo = preprocess_dataset(ds_avo, COMMON_CHANNELS, f"Target ({target_id})")
+
+# Ensure both have the same number of samples (cropping to the minimum)
+min_samples = min(X_p3.shape[2], X_avo.shape[2])
+if X_p3.shape[2] != X_avo.shape[2]:
+    print(f"\nCropping trials to {min_samples} samples for consistency...")
+    X_p3 = X_p3[:, :, :min_samples]
+    X_avo = X_avo[:, :, :min_samples]
 
 # Combine datasets for training
 X_all = np.vstack([X_p3, X_avo])
 y_all = np.hstack([y_p3, y_avo])
-src_all = np.array(["P3"] * len(X_p3) + ["AVO"] * len(X_avo))
+src_all = np.array([source_id] * len(X_p3) + [target_id] * len(X_avo))
 
 print(f"\nCombined dataset: {len(X_all)} trials ({X_all.shape})")
-print(f"  P3: {np.sum(src_all == 'P3')} trials")
-print(f"  AVO: {np.sum(src_all == 'AVO')} trials")
+print(f"  Source: {np.sum(src_all == source_id)} trials")
+print(f"  Target: {np.sum(src_all == target_id)} trials")
 
 
 # %%
@@ -386,8 +420,8 @@ def train_asmmd_model(
         pool_time_length=75,
         pool_time_stride=15,
         drop_prob=0.5,
-        att_depth=3,
-        att_heads=4,
+        num_layers=3,  # Corrected from att_depth
+        num_heads=4,  # Corrected from att_heads
         att_drop_prob=0.5,
     ).to(DEVICE)
 

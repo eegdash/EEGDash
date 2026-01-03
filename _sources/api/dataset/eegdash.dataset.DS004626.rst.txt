@@ -5,53 +5,134 @@
 eegdash.dataset.DS004626
 ========================
 
-.. currentmodule:: eegdash.dataset
+OpenNeuro dataset ``ds004626``. Access recordings and metadata through EEGDash.
 
-.. autoclass:: eegdash.dataset.DS004626
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :inherited-members:
-   :member-order: bysource
+.. rst-class:: sd-badges
+
+:bdg-light:`Modality: EEG` :bdg-light:`Tasks: 1` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 52` :bdg-light:`Recordings: 52` :bdg-light:`Source: OpenNeuro`
 
 Dataset Information
 -------------------
 
-- **Dataset ID:** ``DS004626``
-- **Summary:** Modality: Visual | Type: Attention | Subjects: Other
-- **Number of Subjects:** 52
-- **Number of Recordings:** 52
-- **Number of Tasks:** 1
-- **Number of Channels:** 68
-- **Sampling Frequencies:** 1000
-- **Total Duration (hours):** 21.359
-- **Dataset Size:** 19.87 GB
-- **OpenNeuro:** `ds004626 <https://openneuro.org/datasets/ds004626>`__
-- **NeMAR:** `ds004626 <https://nemar.org/dataexplorer/detail?dataset_id=ds004626>`__
+.. list-table::
+   :widths: 25 75
+   :header-rows: 0
 
-=========  =======  =======  ==========  ==========  =============  ========
-dataset      #Subj    #Chan    #Classes    Freq(Hz)    Duration(H)  Size
-=========  =======  =======  ==========  ==========  =============  ========
-ds004626        52       68           1        1000         21.359  19.87 GB
-=========  =======  =======  ==========  ==========  =============  ========
+   * - Dataset ID
+     - ``DS004626``
+   * - Title
+     - Unknown
+   * - Year
+     - Unknown
+   * - Authors
+     - Unknown
+   * - License
+     - Unknown
+   * - Citation / DOI
+     - Unknown
+   * - Source links
+     - `OpenNeuro <https://openneuro.org/datasets/ds004626>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004626>`__
 
+Highlights
+----------
 
-Usage Example
--------------
+.. grid:: 1 2 3 3
+   :gutter: 2
+
+   .. grid-item-card:: Subjects & recordings
+      :class-card: sd-border-1
+
+      - Subjects: 52
+      - Recordings: 52
+      - Tasks: 1
+
+   .. grid-item-card:: Channels & sampling rate
+      :class-card: sd-border-1
+
+      - Channels: 68
+      - Sampling rate (Hz): 1000
+      - Duration (hours): 21.359
+
+   .. grid-item-card:: Tasks & conditions
+      :class-card: sd-border-1
+
+      - Tasks: 1
+      - Experiment type: Attention
+      - Subject type: Other
+
+   .. grid-item-card:: Files & format
+      :class-card: sd-border-1
+
+      - Size on disk: 19.87 GB
+      - File count: 0
+      - Format: Unknown
+
+   .. grid-item-card:: License & citation
+      :class-card: sd-border-1
+
+      - License: Unknown
+      - DOI: Unknown
+
+   .. grid-item-card:: Provenance
+      :class-card: sd-border-1
+
+      - Source: OpenNeuro
+      - OpenNeuro: `ds004626 <https://openneuro.org/datasets/ds004626>`__
+      - NeMAR: `ds004626 <https://nemar.org/dataexplorer/detail?dataset_id=ds004626>`__
+
+Quickstart
+----------
+
+**Install**
+
+.. code-block:: bash
+
+   pip install eegdash
+
+**Load a recording**
 
 .. code-block:: python
 
    from eegdash.dataset import DS004626
 
    dataset = DS004626(cache_dir="./data")
+   recording = dataset[0]
+   raw = recording.load()
 
-   print(f"Number of recordings: {len(dataset)}")
+**Filter/query**
 
-   if len(dataset):
-       recording = dataset[0]
-       raw = recording.load()
-       print(f"Sampling rate: {raw.info['sfreq']} Hz")
-       print(f"Channels: {len(raw.ch_names)}")
+.. tab-set::
+
+   .. tab-item:: Basic
+
+      .. code-block:: python
+
+         dataset = DS004626(cache_dir="./data", subject="01")
+
+   .. tab-item:: Advanced
+
+      .. code-block:: python
+
+         dataset = DS004626(
+             cache_dir="./data",
+             query={"subject": {"$in": ["01", "02"]}},
+         )
+
+
+Quality & caveats
+-----------------
+
+- No dataset-specific caveats are listed in the available metadata.
+
+API
+---
+
+.. currentmodule:: eegdash.dataset
+
+.. autoclass:: eegdash.dataset.DS004626
+   :members: __init__, save
+   :show-inheritance:
+   :member-order: bysource
 
 
 See Also

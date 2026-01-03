@@ -42,8 +42,9 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css" />
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/select/1.7.0/css/select.dataTables.min.css" />
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/searchpanes/2.3.1/css/searchPanes.dataTables.min.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=1449feac" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=7021f170" />
     <link rel="stylesheet" type="text/css" href="../../../_static/css/treemap.css?v=7131b20f" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=d9bd6b14" />
   
   <!-- So that users can add custom icons -->
   <script src="../../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
@@ -64,7 +65,8 @@
     <script src="https://cdn.datatables.net/select/1.7.0/js/dataTables.select.min.js"></script>
     <script src="https://cdn.datatables.net/searchpanes/2.3.1/js/dataTables.searchPanes.min.js"></script>
     <script src="../../../_static/js/tag-palette.js?v=6f5eac9a"></script>
-    <script src="../../../_static/js/datatables-init.js?v=42062302"></script>
+    <script src="../../../_static/js/datatables-init.js?v=0986bc1f"></script>
+    <script src="../../../_static/js/hero-search.js?v=d34ab722"></script>
     <link rel="canonical" href="https://eegdash.org/generated/auto_examples/core/p300_transfer_learning.html" />
     <link rel="icon" href="../../../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -165,8 +167,8 @@
   <ul class="bd-navbar-elements navbar-nav">
     
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../../install/install.html">
-    Installing
+  <a class="nav-link nav-internal" href="../../../dataset_summary.html">
+    Datasets
   </a>
 </li>
 
@@ -179,15 +181,8 @@
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../../api/api.html">
-    API
-  </a>
-</li>
-
-
-<li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../../dataset_summary.html">
-    Dataset Catalog
+  <a class="nav-link nav-internal" href="../../../install/install.html">
+    Install
   </a>
 </li>
 
@@ -195,6 +190,13 @@
 <li class="nav-item current active">
   <a class="nav-link nav-internal" href="../index.html">
     Examples
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../api/api.html">
+    Docs
   </a>
 </li>
 
@@ -331,8 +333,8 @@
   <ul class="bd-navbar-elements navbar-nav">
     
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../../install/install.html">
-    Installing
+  <a class="nav-link nav-internal" href="../../../dataset_summary.html">
+    Datasets
   </a>
 </li>
 
@@ -345,15 +347,8 @@
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../../api/api.html">
-    API
-  </a>
-</li>
-
-
-<li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../../dataset_summary.html">
-    Dataset Catalog
+  <a class="nav-link nav-internal" href="../../../install/install.html">
+    Install
   </a>
 </li>
 
@@ -361,6 +356,13 @@
 <li class="nav-item current active">
   <a class="nav-link nav-internal" href="../index.html">
     Examples
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../api/api.html">
+    Docs
   </a>
 </li>
 
@@ -557,47 +559,58 @@ Cross-Dataset P300 EEG Classification. arXiv: <a class="reference external" href
 </section>
 <section id="part-1-loading-and-preprocessing-data">
 <h1>Part 1: Loading and Preprocessing Data<a class="headerlink" href="#part-1-loading-and-preprocessing-data" title="Link to this heading">#</a></h1>
-<p>First, we load the datasets using EEGDashDataset. We’ll use two public oddball
-datasets:</p>
-<ol class="arabic simple">
-<li><p><strong>ERP CORE P3</strong>: 40 participants with active visual oddball paradigm
-(Download: <a class="reference external" href="https://osf.io/etdkz/files">https://osf.io/etdkz/files</a> → “P3 Raw Data BIDS-Compatible”)</p></li>
-<li><p><strong>AVO (ds005863)</strong>: 127 participants, available on OpenNeuro
-(Download: <a class="reference external" href="https://openneuro.org/datasets/ds005863">https://openneuro.org/datasets/ds005863</a>)</p></li>
-</ol>
-<p>These datasets differ in equipment, recording sites, and participant demographics,
-making them ideal for testing domain adaptation.</p>
+<p>First, we load two oddball datasets from the EEGDash API. You can override the
+dataset IDs with EEGDASH_SOURCE_DATASET and EEGDASH_TARGET_DATASET.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">eegdash.dataset</span><span class="w"> </span><span class="kn">import</span> <a href="../../../api/dataset/eegdash.dataset.DS005863.html#eegdash.dataset.DS005863" title="eegdash.dataset.DS005863" class="sphx-glr-backref-module-eegdash-dataset sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">DS005863</span></a>
-<span class="kn">from</span><span class="w"> </span><span class="nn">braindecode.datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">MOABBDataset</span>
-<span class="c1"># Here, we are using an dataset that it in osf and other in openneuro.</span>
-<span class="c1"># We are conveniently using EEGDashDataset and MOABBDataset to load them.</span>
-<span class="c1"># but you can directly download from osf and use only EEGDashDataset if you prefer.</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 
-<span class="n">cache_folder</span> <span class="o">=</span> <span class="n">Path</span><span class="o">.</span><span class="n">home</span><span class="p">()</span> <span class="o">/</span> <span class="s2">&quot;eegdash&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">eegdash</span><span class="w"> </span><span class="kn">import</span> <span class="n">EEGDash</span><span class="p">,</span> <a href="../../../api/dataset/eegdash.EEGDashDataset.html#eegdash.EEGDashDataset" title="eegdash.EEGDashDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">EEGDashDataset</span></a>
+<span class="kn">from</span><span class="w"> </span><span class="nn">eegdash.paths</span><span class="w"> </span><span class="kn">import</span> <a href="../../../api/generated/api-core/eegdash.paths.html#eegdash.paths.get_default_cache_dir" title="eegdash.paths.get_default_cache_dir" class="sphx-glr-backref-module-eegdash-paths sphx-glr-backref-type-py-function"><span class="n">get_default_cache_dir</span></a>
+
+<span class="n">cache_folder</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><a href="../../../api/generated/api-core/eegdash.paths.html#eegdash.paths.get_default_cache_dir" title="eegdash.paths.get_default_cache_dir" class="sphx-glr-backref-module-eegdash-paths sphx-glr-backref-type-py-function"><span class="n">get_default_cache_dir</span></a><span class="p">())</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
 <span class="n">cache_folder</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">cache_config</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
-    <span class="n">use</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-    <span class="n">save_raw</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-    <span class="n">path</span><span class="o">=</span><span class="n">cache_folder</span><span class="p">,</span>
-<span class="p">)</span>
-<span class="c1"># Load datasets</span>
-<span class="n">ds_p3</span> <span class="o">=</span> <span class="n">MOABBDataset</span><span class="p">(</span>
-    <span class="n">dataset_name</span><span class="o">=</span><span class="s2">&quot;ErpCore2021_P3&quot;</span><span class="p">,</span>
-    <span class="n">subject_ids</span><span class="o">=</span><span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">)],</span>  <span class="c1"># all 5 subjects</span>
-    <span class="n">dataset_load_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;cache_config&quot;</span><span class="p">:</span> <span class="n">cache_config</span><span class="p">},</span>
-<span class="p">)</span>
+<span class="n">eegdash</span> <span class="o">=</span> <span class="n">EEGDash</span><span class="p">()</span>
+<span class="n">ODDBALL_TASK</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;EEGDASH_ODDBALL_TASK&quot;</span><span class="p">,</span> <span class="s2">&quot;visualoddball&quot;</span><span class="p">)</span>
+<span class="n">record_limit</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;EEGDASH_RECORD_LIMIT&quot;</span><span class="p">,</span> <span class="s2">&quot;60&quot;</span><span class="p">))</span>
 
 
-<span class="n">ds_avo</span> <span class="o">=</span> <a href="../../../api/dataset/eegdash.dataset.DS005863.html#eegdash.dataset.DS005863" title="eegdash.dataset.DS005863" class="sphx-glr-backref-module-eegdash-dataset sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">DS005863</span></a><span class="p">(</span>
-    <span class="n">cache_dir</span><span class="o">=</span><span class="n">cache_folder</span><span class="p">,</span>
-    <span class="n">task</span><span class="o">=</span><span class="s2">&quot;visualoddball&quot;</span><span class="p">,</span>
-    <span class="n">subject</span><span class="o">=</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">i</span><span class="si">:</span><span class="s2">03d</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">)],</span>
-    <span class="n">download</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-<span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_fetch_records</span><span class="p">(</span><span class="n">dataset_id</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">ODDBALL_TASK</span><span class="p">:</span>
+        <span class="n">records</span> <span class="o">=</span> <span class="n">eegdash</span><span class="o">.</span><span class="n">find</span><span class="p">(</span>
+            <span class="p">{</span><span class="s2">&quot;dataset&quot;</span><span class="p">:</span> <span class="n">dataset_id</span><span class="p">,</span> <span class="s2">&quot;task&quot;</span><span class="p">:</span> <span class="n">ODDBALL_TASK</span><span class="p">},</span> <span class="n">limit</span><span class="o">=</span><span class="n">record_limit</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">records</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">records</span>
+    <span class="k">return</span> <span class="n">eegdash</span><span class="o">.</span><span class="n">find</span><span class="p">({</span><span class="s2">&quot;dataset&quot;</span><span class="p">:</span> <span class="n">dataset_id</span><span class="p">},</span> <span class="n">limit</span><span class="o">=</span><span class="n">record_limit</span><span class="p">)</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;P3: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">ds_p3</span><span class="p">)</span><span class="si">}</span><span class="s2"> recordings&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;AVO: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">ds_avo</span><span class="p">)</span><span class="si">}</span><span class="s2"> recordings&quot;</span><span class="p">)</span>
+
+<span class="n">source_id</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;EEGDASH_SOURCE_DATASET&quot;</span><span class="p">,</span> <span class="s2">&quot;ds005863&quot;</span><span class="p">)</span>
+<span class="n">target_id</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;EEGDASH_TARGET_DATASET&quot;</span><span class="p">,</span> <span class="s2">&quot;ds003061&quot;</span><span class="p">)</span>
+
+<span class="n">source_records</span> <span class="o">=</span> <span class="n">_fetch_records</span><span class="p">(</span><span class="n">source_id</span><span class="p">)</span>
+<span class="n">target_records</span> <span class="o">=</span> <span class="n">_fetch_records</span><span class="p">(</span><span class="n">target_id</span><span class="p">)</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">source_records</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">target_records</span><span class="p">:</span>
+    <span class="n">records</span> <span class="o">=</span> <span class="n">eegdash</span><span class="o">.</span><span class="n">find</span><span class="p">({</span><span class="s2">&quot;task&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;$regex&quot;</span><span class="p">:</span> <span class="s2">&quot;oddball&quot;</span><span class="p">,</span> <span class="s2">&quot;$options&quot;</span><span class="p">:</span> <span class="s2">&quot;i&quot;</span><span class="p">}},</span> <span class="n">limit</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
+    <span class="n">dataset_ids</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">rec</span> <span class="ow">in</span> <span class="n">records</span><span class="p">:</span>
+        <span class="n">ds_id</span> <span class="o">=</span> <span class="n">rec</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;dataset&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">ds_id</span> <span class="ow">and</span> <span class="n">ds_id</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">dataset_ids</span><span class="p">:</span>
+            <span class="n">dataset_ids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ds_id</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">dataset_ids</span><span class="p">:</span>
+        <span class="n">source_id</span> <span class="o">=</span> <span class="n">dataset_ids</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">target_id</span> <span class="o">=</span> <span class="n">dataset_ids</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">dataset_ids</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="k">else</span> <span class="n">dataset_ids</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">source_records</span> <span class="o">=</span> <span class="n">_fetch_records</span><span class="p">(</span><span class="n">source_id</span><span class="p">)</span>
+        <span class="n">target_records</span> <span class="o">=</span> <span class="n">_fetch_records</span><span class="p">(</span><span class="n">target_id</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="ow">not</span> <span class="n">source_records</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">target_records</span><span class="p">:</span>
+    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Unable to find two oddball datasets from the API.&quot;</span><span class="p">)</span>
+
+<span class="n">ds_p3</span> <span class="o">=</span> <a href="../../../api/dataset/eegdash.EEGDashDataset.html#eegdash.EEGDashDataset" title="eegdash.EEGDashDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">EEGDashDataset</span></a><span class="p">(</span><span class="n">cache_dir</span><span class="o">=</span><span class="n">cache_folder</span><span class="p">,</span> <span class="n">records</span><span class="o">=</span><span class="n">source_records</span><span class="p">)</span>
+<span class="n">ds_avo</span> <span class="o">=</span> <a href="../../../api/dataset/eegdash.EEGDashDataset.html#eegdash.EEGDashDataset" title="eegdash.EEGDashDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">EEGDashDataset</span></a><span class="p">(</span><span class="n">cache_dir</span><span class="o">=</span><span class="n">cache_folder</span><span class="p">,</span> <span class="n">records</span><span class="o">=</span><span class="n">target_records</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Source (</span><span class="si">{</span><span class="n">source_id</span><span class="si">}</span><span class="s2">): </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">ds_p3</span><span class="p">)</span><span class="si">}</span><span class="s2"> recordings&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Target (</span><span class="si">{</span><span class="n">target_id</span><span class="si">}</span><span class="s2">): </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">ds_avo</span><span class="p">)</span><span class="si">}</span><span class="s2"> recordings&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <section id="data-preprocessing-pipeline">
@@ -655,12 +668,29 @@ making them ideal for testing domain adaptation.</p>
     <span class="n">trial_start</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">TRIAL_START_OFFSET</span> <span class="o">*</span> <span class="n">RESAMPLE_FREQ</span><span class="p">)</span>
     <span class="n">trial_stop</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="n">TRIAL_START_OFFSET</span> <span class="o">+</span> <span class="n">TRIAL_DURATION</span><span class="p">)</span> <span class="o">*</span> <span class="n">RESAMPLE_FREQ</span><span class="p">)</span>
 
+    <span class="c1"># Define event mapping to handle both datasets</span>
+    <span class="c1"># ErpCore uses &quot;Target&quot;/&quot;NonTarget&quot;</span>
+    <span class="c1"># ds005863 (AVO) uses &quot;S 11&quot;, &quot;S 21&quot;, etc. for targets and &quot;S 12&quot;, &quot;S 22&quot; for nontargets</span>
+    <span class="n">mapping</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;Target&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="s2">&quot;NonTarget&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="s2">&quot;standard&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="s2">&quot;target&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="c1"># Add AVO specific codes if they are missing</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">6</span><span class="p">):</span>
+        <span class="n">mapping</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;S </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">1&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># Often S 11, S 21, ... are targets</span>
+        <span class="n">mapping</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;S </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">2&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># Often S 12, S 22, ... are nontargets</span>
+        <span class="n">mapping</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;S</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">1&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">mapping</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;S</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">2&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+
     <span class="n">windows_ds</span> <span class="o">=</span> <span class="n">create_windows_from_events</span><span class="p">(</span>
         <span class="n">dataset</span><span class="p">,</span>
         <span class="n">trial_start_offset_samples</span><span class="o">=</span><span class="n">trial_start</span><span class="p">,</span>
         <span class="n">trial_stop_offset_samples</span><span class="o">=</span><span class="n">trial_stop</span><span class="p">,</span>
         <span class="n">preload</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="n">drop_bad_windows</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">mapping</span><span class="o">=</span><span class="n">mapping</span><span class="p">,</span>
     <span class="p">)</span>
 
     <span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
@@ -674,17 +704,24 @@ making them ideal for testing domain adaptation.</p>
 
 
 <span class="c1"># Preprocess both datasets</span>
-<span class="n">X_p3</span><span class="p">,</span> <span class="n">y_p3</span> <span class="o">=</span> <span class="n">preprocess_dataset</span><span class="p">(</span><span class="n">ds_p3</span><span class="p">,</span> <span class="n">COMMON_CHANNELS</span><span class="p">,</span> <span class="s2">&quot;P3&quot;</span><span class="p">)</span>
-<span class="n">X_avo</span><span class="p">,</span> <span class="n">y_avo</span> <span class="o">=</span> <span class="n">preprocess_dataset</span><span class="p">(</span><span class="n">ds_avo</span><span class="p">,</span> <span class="n">COMMON_CHANNELS</span><span class="p">,</span> <span class="s2">&quot;AVO&quot;</span><span class="p">)</span>
+<span class="n">X_p3</span><span class="p">,</span> <span class="n">y_p3</span> <span class="o">=</span> <span class="n">preprocess_dataset</span><span class="p">(</span><span class="n">ds_p3</span><span class="p">,</span> <span class="n">COMMON_CHANNELS</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Source (</span><span class="si">{</span><span class="n">source_id</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+<span class="n">X_avo</span><span class="p">,</span> <span class="n">y_avo</span> <span class="o">=</span> <span class="n">preprocess_dataset</span><span class="p">(</span><span class="n">ds_avo</span><span class="p">,</span> <span class="n">COMMON_CHANNELS</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Target (</span><span class="si">{</span><span class="n">target_id</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+
+<span class="c1"># Ensure both have the same number of samples (cropping to the minimum)</span>
+<span class="n">min_samples</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">X_p3</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">X_avo</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+<span class="k">if</span> <span class="n">X_p3</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">!=</span> <span class="n">X_avo</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Cropping trials to </span><span class="si">{</span><span class="n">min_samples</span><span class="si">}</span><span class="s2"> samples for consistency...&quot;</span><span class="p">)</span>
+    <span class="n">X_p3</span> <span class="o">=</span> <span class="n">X_p3</span><span class="p">[:,</span> <span class="p">:,</span> <span class="p">:</span><span class="n">min_samples</span><span class="p">]</span>
+    <span class="n">X_avo</span> <span class="o">=</span> <span class="n">X_avo</span><span class="p">[:,</span> <span class="p">:,</span> <span class="p">:</span><span class="n">min_samples</span><span class="p">]</span>
 
 <span class="c1"># Combine datasets for training</span>
 <span class="n">X_all</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="n">X_p3</span><span class="p">,</span> <span class="n">X_avo</span><span class="p">])</span>
 <span class="n">y_all</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="n">y_p3</span><span class="p">,</span> <span class="n">y_avo</span><span class="p">])</span>
-<span class="n">src_all</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="s2">&quot;P3&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">X_p3</span><span class="p">)</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;AVO&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">X_avo</span><span class="p">))</span>
+<span class="n">src_all</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">source_id</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">X_p3</span><span class="p">)</span> <span class="o">+</span> <span class="p">[</span><span class="n">target_id</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">X_avo</span><span class="p">))</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Combined dataset: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">X_all</span><span class="p">)</span><span class="si">}</span><span class="s2"> trials (</span><span class="si">{</span><span class="n">X_all</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  P3: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">src_all</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s1">&#39;P3&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2"> trials&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  AVO: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">src_all</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s1">&#39;AVO&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2"> trials&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Source: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">src_all</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">source_id</span><span class="p">)</span><span class="si">}</span><span class="s2"> trials&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Target: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">src_all</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">target_id</span><span class="p">)</span><span class="si">}</span><span class="s2"> trials&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>
@@ -903,8 +940,8 @@ The key idea in AS-MMD is to combine:</p>
         <span class="n">pool_time_length</span><span class="o">=</span><span class="mi">75</span><span class="p">,</span>
         <span class="n">pool_time_stride</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span>
         <span class="n">drop_prob</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
-        <span class="n">att_depth</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
-        <span class="n">att_heads</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+        <span class="n">num_layers</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>  <span class="c1"># Corrected from att_depth</span>
+        <span class="n">num_heads</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>  <span class="c1"># Corrected from att_heads</span>
         <span class="n">att_drop_prob</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
     <span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">DEVICE</span><span class="p">)</span>
 
@@ -1350,7 +1387,7 @@ The key idea in AS-MMD is to combine:</p>
 
   <p class="copyright">
     
-      © Copyright 2025–2025, EEG Dash Developers.
+      © Copyright 2025-2026, EEG Dash Developers.
       <br/>
     
   </p>

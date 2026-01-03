@@ -5,53 +5,134 @@
 eegdash.dataset.DS004980
 ========================
 
-.. currentmodule:: eegdash.dataset
+OpenNeuro dataset ``ds004980``. Access recordings and metadata through EEGDash.
 
-.. autoclass:: eegdash.dataset.DS004980
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :inherited-members:
-   :member-order: bysource
+.. rst-class:: sd-badges
+
+:bdg-light:`Modality: EEG` :bdg-light:`Tasks: 1` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 17` :bdg-light:`Recordings: 17` :bdg-light:`Source: OpenNeuro`
 
 Dataset Information
 -------------------
 
-- **Dataset ID:** ``DS004980``
-- **Summary:** Modality: Visual | Type: Perception | Subjects: Healthy
-- **Number of Subjects:** 17
-- **Number of Recordings:** 17
-- **Number of Tasks:** 1
-- **Number of Channels:** 64
-- **Sampling Frequencies:** 499.9911824,499.9912809,499.991385,499.9914353,499.9914553,499.9915179,499.9917272,499.9917286,499.9917378,499.9919292,499.9919367,499.9923017,499.9923795,500
-- **Total Duration (hours):** 36.846
-- **Dataset Size:** 15.82 GB
-- **OpenNeuro:** `ds004980 <https://openneuro.org/datasets/ds004980>`__
-- **NeMAR:** `ds004980 <https://nemar.org/dataexplorer/detail?dataset_id=ds004980>`__
+.. list-table::
+   :widths: 25 75
+   :header-rows: 0
 
-=========  =======  =======  ==========  ==============================================================================================================================================================  =============  ========
-dataset      #Subj    #Chan    #Classes  Freq(Hz)                                                                                                                                                          Duration(H)  Size
-=========  =======  =======  ==========  ==============================================================================================================================================================  =============  ========
-ds004980        17       64           1  499.9911824,499.9912809,499.991385,499.9914353,499.9914553,499.9915179,499.9917272,499.9917286,499.9917378,499.9919292,499.9919367,499.9923017,499.9923795,500         36.846  15.82 GB
-=========  =======  =======  ==========  ==============================================================================================================================================================  =============  ========
+   * - Dataset ID
+     - ``DS004980``
+   * - Title
+     - Unknown
+   * - Year
+     - Unknown
+   * - Authors
+     - Unknown
+   * - License
+     - Unknown
+   * - Citation / DOI
+     - Unknown
+   * - Source links
+     - `OpenNeuro <https://openneuro.org/datasets/ds004980>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004980>`__
 
+Highlights
+----------
 
-Usage Example
--------------
+.. grid:: 1 2 3 3
+   :gutter: 2
+
+   .. grid-item-card:: Subjects & recordings
+      :class-card: sd-border-1
+
+      - Subjects: 17
+      - Recordings: 17
+      - Tasks: 1
+
+   .. grid-item-card:: Channels & sampling rate
+      :class-card: sd-border-1
+
+      - Channels: 64
+      - Sampling rate (Hz): 499.9911824,499.9912809,499.991385,499.9914353,499.9914553,499.9915179,499.9917272,499.9917286,499.9917378,499.9919292,499.9919367,499.9923017,499.9923795,500
+      - Duration (hours): 36.846
+
+   .. grid-item-card:: Tasks & conditions
+      :class-card: sd-border-1
+
+      - Tasks: 1
+      - Experiment type: Perception
+      - Subject type: Healthy
+
+   .. grid-item-card:: Files & format
+      :class-card: sd-border-1
+
+      - Size on disk: 15.82 GB
+      - File count: 0
+      - Format: Unknown
+
+   .. grid-item-card:: License & citation
+      :class-card: sd-border-1
+
+      - License: Unknown
+      - DOI: Unknown
+
+   .. grid-item-card:: Provenance
+      :class-card: sd-border-1
+
+      - Source: OpenNeuro
+      - OpenNeuro: `ds004980 <https://openneuro.org/datasets/ds004980>`__
+      - NeMAR: `ds004980 <https://nemar.org/dataexplorer/detail?dataset_id=ds004980>`__
+
+Quickstart
+----------
+
+**Install**
+
+.. code-block:: bash
+
+   pip install eegdash
+
+**Load a recording**
 
 .. code-block:: python
 
    from eegdash.dataset import DS004980
 
    dataset = DS004980(cache_dir="./data")
+   recording = dataset[0]
+   raw = recording.load()
 
-   print(f"Number of recordings: {len(dataset)}")
+**Filter/query**
 
-   if len(dataset):
-       recording = dataset[0]
-       raw = recording.load()
-       print(f"Sampling rate: {raw.info['sfreq']} Hz")
-       print(f"Channels: {len(raw.ch_names)}")
+.. tab-set::
+
+   .. tab-item:: Basic
+
+      .. code-block:: python
+
+         dataset = DS004980(cache_dir="./data", subject="01")
+
+   .. tab-item:: Advanced
+
+      .. code-block:: python
+
+         dataset = DS004980(
+             cache_dir="./data",
+             query={"subject": {"$in": ["01", "02"]}},
+         )
+
+
+Quality & caveats
+-----------------
+
+- No dataset-specific caveats are listed in the available metadata.
+
+API
+---
+
+.. currentmodule:: eegdash.dataset
+
+.. autoclass:: eegdash.dataset.DS004980
+   :members: __init__, save
+   :show-inheritance:
+   :member-order: bysource
 
 
 See Also

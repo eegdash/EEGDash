@@ -5,53 +5,134 @@
 eegdash.dataset.DS005121
 ========================
 
-.. currentmodule:: eegdash.dataset
+OpenNeuro dataset ``ds005121``. Access recordings and metadata through EEGDash.
 
-.. autoclass:: eegdash.dataset.DS005121
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :inherited-members:
-   :member-order: bysource
+.. rst-class:: sd-badges
+
+:bdg-light:`Modality: EEG` :bdg-light:`Tasks: 1` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 34` :bdg-light:`Recordings: 39` :bdg-light:`Source: OpenNeuro`
 
 Dataset Information
 -------------------
 
-- **Dataset ID:** ``DS005121``
-- **Summary:** Modality: Sleep | Type: Memory | Subjects: Healthy
-- **Number of Subjects:** 34
-- **Number of Recordings:** 39
-- **Number of Tasks:** 1
-- **Number of Channels:** 58
-- **Sampling Frequencies:** 512
-- **Total Duration (hours):** 41.498
-- **Dataset Size:** 9.04 GB
-- **OpenNeuro:** `ds005121 <https://openneuro.org/datasets/ds005121>`__
-- **NeMAR:** `ds005121 <https://nemar.org/dataexplorer/detail?dataset_id=ds005121>`__
+.. list-table::
+   :widths: 25 75
+   :header-rows: 0
 
-=========  =======  =======  ==========  ==========  =============  =======
-dataset      #Subj    #Chan    #Classes    Freq(Hz)    Duration(H)  Size
-=========  =======  =======  ==========  ==========  =============  =======
-ds005121        34       58           1         512         41.498  9.04 GB
-=========  =======  =======  ==========  ==========  =============  =======
+   * - Dataset ID
+     - ``DS005121``
+   * - Title
+     - Unknown
+   * - Year
+     - Unknown
+   * - Authors
+     - Unknown
+   * - License
+     - Unknown
+   * - Citation / DOI
+     - Unknown
+   * - Source links
+     - `OpenNeuro <https://openneuro.org/datasets/ds005121>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005121>`__
 
+Highlights
+----------
 
-Usage Example
--------------
+.. grid:: 1 2 3 3
+   :gutter: 2
+
+   .. grid-item-card:: Subjects & recordings
+      :class-card: sd-border-1
+
+      - Subjects: 34
+      - Recordings: 39
+      - Tasks: 1
+
+   .. grid-item-card:: Channels & sampling rate
+      :class-card: sd-border-1
+
+      - Channels: 58
+      - Sampling rate (Hz): 512
+      - Duration (hours): 41.498
+
+   .. grid-item-card:: Tasks & conditions
+      :class-card: sd-border-1
+
+      - Tasks: 1
+      - Experiment type: Memory
+      - Subject type: Healthy
+
+   .. grid-item-card:: Files & format
+      :class-card: sd-border-1
+
+      - Size on disk: 9.04 GB
+      - File count: 0
+      - Format: Unknown
+
+   .. grid-item-card:: License & citation
+      :class-card: sd-border-1
+
+      - License: Unknown
+      - DOI: Unknown
+
+   .. grid-item-card:: Provenance
+      :class-card: sd-border-1
+
+      - Source: OpenNeuro
+      - OpenNeuro: `ds005121 <https://openneuro.org/datasets/ds005121>`__
+      - NeMAR: `ds005121 <https://nemar.org/dataexplorer/detail?dataset_id=ds005121>`__
+
+Quickstart
+----------
+
+**Install**
+
+.. code-block:: bash
+
+   pip install eegdash
+
+**Load a recording**
 
 .. code-block:: python
 
    from eegdash.dataset import DS005121
 
    dataset = DS005121(cache_dir="./data")
+   recording = dataset[0]
+   raw = recording.load()
 
-   print(f"Number of recordings: {len(dataset)}")
+**Filter/query**
 
-   if len(dataset):
-       recording = dataset[0]
-       raw = recording.load()
-       print(f"Sampling rate: {raw.info['sfreq']} Hz")
-       print(f"Channels: {len(raw.ch_names)}")
+.. tab-set::
+
+   .. tab-item:: Basic
+
+      .. code-block:: python
+
+         dataset = DS005121(cache_dir="./data", subject="01")
+
+   .. tab-item:: Advanced
+
+      .. code-block:: python
+
+         dataset = DS005121(
+             cache_dir="./data",
+             query={"subject": {"$in": ["01", "02"]}},
+         )
+
+
+Quality & caveats
+-----------------
+
+- No dataset-specific caveats are listed in the available metadata.
+
+API
+---
+
+.. currentmodule:: eegdash.dataset
+
+.. autoclass:: eegdash.dataset.DS005121
+   :members: __init__, save
+   :show-inheritance:
+   :member-order: bysource
 
 
 See Also

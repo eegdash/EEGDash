@@ -5,53 +5,134 @@
 eegdash.dataset.DS005305
 ========================
 
-.. currentmodule:: eegdash.dataset
+OpenNeuro dataset ``ds005305``. Access recordings and metadata through EEGDash.
 
-.. autoclass:: eegdash.dataset.DS005305
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :inherited-members:
-   :member-order: bysource
+.. rst-class:: sd-badges
+
+:bdg-light:`Modality: EEG` :bdg-light:`Tasks: 1` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 165` :bdg-light:`Recordings: 165` :bdg-light:`Source: OpenNeuro`
 
 Dataset Information
 -------------------
 
-- **Dataset ID:** ``DS005305``
-- **Summary:** Modality: Visual | Type: Decision-making | Subjects: Healthy
-- **Number of Subjects:** 165
-- **Number of Recordings:** 165
-- **Number of Tasks:** 1
-- **Number of Channels:** 64
-- **Sampling Frequencies:** 2048,512
-- **Total Duration (hours):** 14.136
-- **Dataset Size:** 6.41 GB
-- **OpenNeuro:** `ds005305 <https://openneuro.org/datasets/ds005305>`__
-- **NeMAR:** `ds005305 <https://nemar.org/dataexplorer/detail?dataset_id=ds005305>`__
+.. list-table::
+   :widths: 25 75
+   :header-rows: 0
 
-=========  =======  =======  ==========  ==========  =============  =======
-dataset      #Subj    #Chan    #Classes  Freq(Hz)      Duration(H)  Size
-=========  =======  =======  ==========  ==========  =============  =======
-ds005305       165       64           1  2048,512           14.136  6.41 GB
-=========  =======  =======  ==========  ==========  =============  =======
+   * - Dataset ID
+     - ``DS005305``
+   * - Title
+     - Unknown
+   * - Year
+     - Unknown
+   * - Authors
+     - Unknown
+   * - License
+     - Unknown
+   * - Citation / DOI
+     - Unknown
+   * - Source links
+     - `OpenNeuro <https://openneuro.org/datasets/ds005305>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005305>`__
 
+Highlights
+----------
 
-Usage Example
--------------
+.. grid:: 1 2 3 3
+   :gutter: 2
+
+   .. grid-item-card:: Subjects & recordings
+      :class-card: sd-border-1
+
+      - Subjects: 165
+      - Recordings: 165
+      - Tasks: 1
+
+   .. grid-item-card:: Channels & sampling rate
+      :class-card: sd-border-1
+
+      - Channels: 64
+      - Sampling rate (Hz): 2048,512
+      - Duration (hours): 14.136
+
+   .. grid-item-card:: Tasks & conditions
+      :class-card: sd-border-1
+
+      - Tasks: 1
+      - Experiment type: Decision-making
+      - Subject type: Healthy
+
+   .. grid-item-card:: Files & format
+      :class-card: sd-border-1
+
+      - Size on disk: 6.41 GB
+      - File count: 0
+      - Format: Unknown
+
+   .. grid-item-card:: License & citation
+      :class-card: sd-border-1
+
+      - License: Unknown
+      - DOI: Unknown
+
+   .. grid-item-card:: Provenance
+      :class-card: sd-border-1
+
+      - Source: OpenNeuro
+      - OpenNeuro: `ds005305 <https://openneuro.org/datasets/ds005305>`__
+      - NeMAR: `ds005305 <https://nemar.org/dataexplorer/detail?dataset_id=ds005305>`__
+
+Quickstart
+----------
+
+**Install**
+
+.. code-block:: bash
+
+   pip install eegdash
+
+**Load a recording**
 
 .. code-block:: python
 
    from eegdash.dataset import DS005305
 
    dataset = DS005305(cache_dir="./data")
+   recording = dataset[0]
+   raw = recording.load()
 
-   print(f"Number of recordings: {len(dataset)}")
+**Filter/query**
 
-   if len(dataset):
-       recording = dataset[0]
-       raw = recording.load()
-       print(f"Sampling rate: {raw.info['sfreq']} Hz")
-       print(f"Channels: {len(raw.ch_names)}")
+.. tab-set::
+
+   .. tab-item:: Basic
+
+      .. code-block:: python
+
+         dataset = DS005305(cache_dir="./data", subject="01")
+
+   .. tab-item:: Advanced
+
+      .. code-block:: python
+
+         dataset = DS005305(
+             cache_dir="./data",
+             query={"subject": {"$in": ["01", "02"]}},
+         )
+
+
+Quality & caveats
+-----------------
+
+- No dataset-specific caveats are listed in the available metadata.
+
+API
+---
+
+.. currentmodule:: eegdash.dataset
+
+.. autoclass:: eegdash.dataset.DS005305
+   :members: __init__, save
+   :show-inheritance:
+   :member-order: bysource
 
 
 See Also

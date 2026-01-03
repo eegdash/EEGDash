@@ -111,3 +111,307 @@ def test_downloader_gap(tmp_path):
     with patch("eegdash.downloader._remote_size", return_value=None):
         res = downloader.download_s3_file("s3://bucket/dummy.txt", p)
         assert res == p
+
+
+from unittest.mock import MagicMock, patch
+import pytest
+
+
+def test_download_s3_file_incomplete_raises_oserror(tmp_path):
+    """Test that incomplete download raises OSError (line 92-96)."""
+    from eegdash.downloader import download_s3_file
+
+    local_file = tmp_path / "test.txt"
+
+    mock_fs = MagicMock()
+    # Remote says file is 100 bytes
+    mock_fs.info.return_value = {"size": 100}
+
+    # Mock _filesystem_get to write fewer bytes than expected
+    def mock_get(filesystem, s3path, filepath, size):
+        filepath.write_bytes(b"short")  # Only 5 bytes, not 100
+
+    with patch("eegdash.downloader._filesystem_get", mock_get):
+        with pytest.raises(OSError, match="Incomplete download"):
+            download_s3_file(
+                s3_path="s3://bucket/test.txt",
+                local_path=local_file,
+                filesystem=mock_fs,
+            )
+
+
+def test_downloader_gap(tmp_path):
+    from eegdash.downloader import download_s3_file
+
+    # Trigger downloader.py 99 (return local_path)
+    p = tmp_path / "dummy.txt"
+    p.write_text("hello")
+    # download_s3_file will return local_path if it exists and remote_size is None
+    from unittest.mock import patch
+
+    with patch("eegdash.downloader._remote_size", return_value=None):
+        res = download_s3_file("s3://bucket/dummy.txt", p)
+        assert res == p
+
+
+def test_download_file_incomplete_error(tmp_path):
+    """Test that incomplete download raises OSError."""
+    from eegdash.downloader import download_s3_file
+    from unittest.mock import MagicMock, patch
+    import pytest
+
+    local_path = tmp_path / "incomplete_file.txt"
+
+    mock_fs = MagicMock()
+    mock_fs.info.return_value = {"size": 1000}  # Expected 1000 bytes
+
+    # Mock _filesystem_get to create a file with wrong size (simulates incomplete download)
+    def mock_get(*args, **kwargs):
+        local_path.write_bytes(b"short")  # Only 5 bytes, not 1000
+
+    with patch("eegdash.downloader._filesystem_get", side_effect=mock_get):
+        with pytest.raises(OSError, match="Incomplete download"):
+            download_s3_file("s3://bucket/file.txt", local_path, filesystem=mock_fs)
+
+
+def test_download_file_existing_with_unknown_remote_size(tmp_path):
+    """Test download when remote size is None and file exists."""
+    from eegdash.downloader import download_s3_file
+    from unittest.mock import MagicMock
+
+    local_file = tmp_path / "test.txt"
+    local_file.write_text("existing content")
+
+    mock_fs = MagicMock()
+    # Return None for remote size (line 84)
+    mock_fs.info.side_effect = Exception("No size info")
+
+    result = download_s3_file(
+        s3_path="s3://bucket/test.txt", local_path=local_file, filesystem=mock_fs
+    )
+    # Should return existing file since we can't verify size
+    assert result == local_file
+
+
+def test_download_files_skip_existing_with_matching_size(tmp_path):
+    """Test download_files skips files with matching size."""
+    from eegdash.downloader import download_files
+    from unittest.mock import MagicMock
+
+    local_file = tmp_path / "test.txt"
+    local_file.write_bytes(b"12345")  # 5 bytes
+
+    mock_fs = MagicMock()
+    mock_fs.info.return_value = {"size": 5}  # Remote size matches
+
+    # Line 130: skip existing file with matching size
+    result = download_files(
+        [("s3://bucket/test.txt", local_file)],
+        filesystem=mock_fs,
+        skip_existing=True,
+    )
+    # Should return empty since file was skipped
+    assert local_file not in result
+
+
+def test_download_files_skip_existing_false(tmp_path):
+    """Test download_files with skip_existing=False removes existing files."""
+    from eegdash.downloader import download_files
+    from unittest.mock import patch, MagicMock
+    import pytest
+
+    local_file = tmp_path / "test.txt"
+    local_file.write_bytes(b"old content")
+
+    mock_fs = MagicMock()
+    mock_fs.info.return_value = {"size": 10}
+
+    # Line 130: dest exists, skip_existing=False, unlinks file
+    with patch("eegdash.downloader._filesystem_get") as mock_get:
+        # Simulate new file being written
+        def write_new_content(*args, **kwargs):
+            local_file.write_bytes(b"new content!")  # 12 bytes != 10
+
+        mock_get.side_effect = write_new_content
+
+        # Lines 136-137: size mismatch raises OSError
+        with pytest.raises(OSError, match="Incomplete download"):
+            download_files(
+                [("s3://bucket/test.txt", local_file)],
+                filesystem=mock_fs,
+                skip_existing=False,
+            )
+
+
+def test_download_file_remote_size_none(tmp_path):
+    """Test download when remote size is None (line 84)."""
+    from eegdash.downloader import download_s3_file
+    from unittest.mock import MagicMock
+
+    local_path = tmp_path / "test.txt"
+    local_path.write_text("existing content")
+
+    mock_fs = MagicMock()
+    mock_fs.info.side_effect = Exception("No size info")
+
+    # File exists, remote size is None - should return early
+    result = download_s3_file("s3://bucket/key", local_path, filesystem=mock_fs)
+    assert result == local_path
+
+
+def test_download_file_incomplete(tmp_path):
+    """Test download raises on incomplete download (line 99)."""
+    from eegdash.downloader import download_s3_file
+    from pathlib import Path
+    from unittest.mock import MagicMock
+    import pytest
+
+    local_path = tmp_path / "test.txt"
+
+    mock_fs = MagicMock()
+    mock_fs.info.return_value = {"size": 1000}  # Expected size
+
+    def mock_get(rpath, lpath, **kwargs):
+        Path(lpath).write_text("short")  # Write less than expected
+
+    mock_fs.get = mock_get
+
+    with pytest.raises(OSError, match="Incomplete download"):
+        download_s3_file("s3://bucket/key", local_path, filesystem=mock_fs)
+
+
+def test_download_files_skip_existing(tmp_path):
+    """Test download_files with skip_existing (line 130)."""
+    from eegdash.downloader import download_files
+    from unittest.mock import MagicMock
+
+    existing_file = tmp_path / "existing.txt"
+    existing_file.write_text("existing content")
+
+    mock_fs = MagicMock()
+    mock_fs.info.return_value = {"size": len("existing content")}
+
+    files = [("s3://bucket/existing.txt", existing_file)]
+
+    result = download_files(files, filesystem=mock_fs, skip_existing=True)
+    # Should skip and return empty list
+    assert result == []
+
+
+def test_remote_size_returns_none_on_exception():
+    """Test _remote_size returns None on exception (lines 136-137)."""
+    from eegdash.downloader import _remote_size
+    from unittest.mock import MagicMock
+
+    mock_fs = MagicMock()
+    mock_fs.info.side_effect = Exception("Error")
+
+    result = _remote_size(mock_fs, "s3://bucket/key")
+    assert result is None
+
+
+def test_remote_size_invalid_size_type():
+    """Test _remote_size with non-integer size."""
+    from eegdash.downloader import _remote_size
+    from unittest.mock import MagicMock
+
+    mock_fs = MagicMock()
+    mock_fs.info.return_value = {"size": "not_a_number"}
+
+    result = _remote_size(mock_fs, "s3://bucket/key")
+    assert result is None
+
+
+def test_downloader_get_s3_util():
+    from eegdash import downloader
+    import s3fs
+
+    fs = downloader.get_s3_filesystem()
+    assert isinstance(fs, s3fs.S3FileSystem)
+    assert downloader.get_s3path("s3://bucket", "file") == "s3://bucket/file"
+    assert downloader.get_s3path("s3://bucket", "/file") == "s3://bucket/file"
+    assert downloader.get_s3path("s3://bucket", "") == "s3://bucket"
+
+
+def test_downloader_remote_size_errors():
+    from eegdash import downloader
+    from unittest.mock import MagicMock
+
+    mock_fs = MagicMock()
+    mock_fs.info.side_effect = Exception("S3 Error")
+    assert downloader._remote_size(mock_fs, "s3://b/f") is None
+
+    mock_fs.info.side_effect = None
+    mock_fs.info.return_value = {}  # No size key
+    assert downloader._remote_size(mock_fs, "s3://b/f") is None
+
+    mock_fs.info.return_value = {"Size": "not_int"}
+    assert downloader._remote_size(mock_fs, "s3://b/f") is None
+
+
+def test_downloader_download_s3_file_exists_match(tmp_path):
+    from eegdash import downloader
+    from unittest.mock import MagicMock
+
+    f = tmp_path / "test.txt"
+    f.write_text("content")
+
+    mock_fs = MagicMock()
+    # Remote size matches local (7 bytes)
+    mock_fs.info.return_value = {"size": 7}
+
+    res = downloader.download_s3_file("s3://b/test.txt", f, filesystem=mock_fs)
+    assert res == f
+    mock_fs.get.assert_not_called()
+
+
+def test_downloader_download_s3_file_incomplete(tmp_path):
+    from eegdash import downloader
+    from unittest.mock import MagicMock
+    from pathlib import Path
+    import pytest
+
+    f = tmp_path / "incomplete.txt"
+    f.touch()  # size 0
+
+    mock_fs = MagicMock()
+    mock_fs.info.return_value = {"size": 100}
+
+    # Mock get to recreate file but with wrong size
+    def mock_get(s3, local, **kwargs):
+        Path(local).write_text("b" * 50)  # only 50 bytes, expected 100
+
+    mock_fs.get.side_effect = mock_get
+
+    with pytest.raises(OSError, match="Incomplete download"):
+        downloader.download_s3_file("s3://b/f", f, filesystem=mock_fs)
+
+    assert not f.exists()  # Should remain unlinked
+
+
+def test_downloader_batch_skip_existing(tmp_path):
+    from eegdash import downloader
+    from unittest.mock import MagicMock
+    from pathlib import Path
+
+    f1 = tmp_path / "f1"
+    f1.write_text("a")
+    f2 = tmp_path / "f2"
+
+    mock_fs = MagicMock()
+    # f1 size 1 (matches "a"), f2 size 10 (needs DL)
+    mock_fs.info.side_effect = [{"size": 1}, {"size": 10}]
+
+    # For f2, assume 'get' writes the file
+    def mock_get(s3, local, **kwargs):
+        Path(local).write_text("b" * 10)
+
+    mock_fs.get.side_effect = mock_get
+
+    files = [("s3://b/f1", f1), ("s3://b/f2", f2)]
+    downloaded = downloader.download_files(
+        files, filesystem=mock_fs, skip_existing=True
+    )
+
+    assert len(downloaded) == 1
+    assert downloaded == [f2]

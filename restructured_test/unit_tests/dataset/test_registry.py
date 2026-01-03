@@ -8,7 +8,7 @@ class DummyBase:
 
 def test_register_openneuro_datasets(tmp_path: Path):
     module_path = (
-        Path(__file__).resolve().parents[1] / "eegdash" / "dataset" / "registry.py"
+        Path(__file__).resolve().parents[2] / "eegdash" / "dataset" / "registry.py"
     )
     spec = importlib.util.spec_from_file_location("registry", module_path)
     registry = importlib.util.module_from_spec(spec)

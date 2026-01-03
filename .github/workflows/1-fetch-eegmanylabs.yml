@@ -1,0 +1,18 @@
+# Fetch EEGManyLabs datasets
+name: "1. Fetch: EEGManyLabs"
+
+on:
+  schedule:
+    - cron: '0 2 * * 1'  # Weekly on Monday
+  workflow_dispatch:
+
+jobs:
+  fetch:
+    uses: ./.github/workflows/fetch-source.yml
+    with:
+      source_name: "EEGManyLabs"
+      script_path: "scripts/ingestions/1_fetch_sources/eegmanylabs.py"
+      output_file: "eegmanylabs_datasets.json"
+      continue_on_error: true
+    secrets:
+      DATASET_LISTINGS_TOKEN: ${{ secrets.DATASET_LISTINGS_TOKEN }}

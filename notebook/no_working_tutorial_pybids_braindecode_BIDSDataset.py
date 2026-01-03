@@ -8,20 +8,35 @@ Tests showing BIDSDataset not able to handle example EEGLAB dataset and slower t
 """
 
 # %%
+from pathlib import Path
+import os
+
+os.environ.setdefault("NUMBA_DISABLE_JIT", "1")
+os.environ.setdefault("_MNE_FAKE_HOME_DIR", str(Path.cwd()))
+(Path(os.environ["_MNE_FAKE_HOME_DIR"]) / ".mne").mkdir(exist_ok=True)
+
 from bids import BIDSLayout
-
 from braindecode.datasets import BIDSDataset
+from eegdash import EEGDash, EEGDashDataset
 
-# %%
-bids = BIDSDataset(root="/mnt/nemar/openneuro/ds003645", preload=False)
+CACHE_DIR = Path(os.getenv("EEGDASH_CACHE_DIR", Path.cwd() / "eegdash_cache")).resolve()
+CACHE_DIR.mkdir(parents=True, exist_ok=True)
+DATASET_ID = os.getenv("EEGDASH_DATASET_ID", "ds002718")
+
+eegdash = EEGDash()
+records = eegdash.find({"dataset": DATASET_ID}, limit=3)
+if not records:
+    raise RuntimeError(f"No records found for dataset {DATASET_ID}.")
+
+dataset = EEGDashDataset(cache_dir=CACHE_DIR, records=records)
+try:
+    _ = dataset.datasets[0].raw
+except RuntimeError as exc:
+    print(f"Raw read failed (likely missing coordsystem.json): {exc}")
+root = CACHE_DIR / DATASET_ID
+
+bids = BIDSDataset(root=str(root), preload=False)
 # Can't import regular EEGLAB dataset
-
-# %%
-# %time bids = BIDSDataset(root='/mnt/nemar/openneuro/ds002718', preload=False)
-
-# %%
-# %time layout = BIDSLayout('/mnt/nemar/openneuro/ds003645')
-# %time layout = BIDSLayout('/mnt/nemar/openneuro/ds002718')
 
 # %% [markdown]
 # Tests showing pybids utilities as well as limitations
@@ -49,16 +64,16 @@ def get_recordings(layout: BIDSLayout):
     return files
 
 
-print(get_recordings(BIDSLayout("/mnt/nemar/openneuro/ds002718")))
-print(get_recordings(BIDSLayout("/mnt/nemar/openneuro/ds004770")))
-print(get_recordings(BIDSLayout("/mnt/nemar/openneuro/ds004561")))
+print(get_recordings(BIDSLayout(str(root))))
 
 # %%
-layout = BIDSLayout("/mnt/nemar/openneuro/ds002718")
+layout = BIDSLayout(str(root))
 # get file from path
-entities = layout.parse_file_entities(
-    "/mnt/nemar/openneuro/ds002718/sub-002/eeg/sub-002_task-FaceRecognition_eeg.set"
-)
+recordings = get_recordings(layout)
+if not recordings:
+    raise RuntimeError(f"No EEG recordings found under {root}.")
+example_file = recordings[0]
+entities = layout.parse_file_entities(example_file)
 bidsfile = layout.get(**entities)[0]
 print(bidsfile)
 

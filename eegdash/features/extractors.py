@@ -53,6 +53,7 @@ class TrainableFeature(ABC):
 
     def __init__(self):
         self._is_trained = False
+        self._is_fitted = False
         self.clear()
 
     @abstractmethod

@@ -75,7 +75,7 @@ class CommonSpatialPattern(TrainableFeature):
         alphas = self._counts / self._counts.sum()
         self._mean = np.sum(alphas * self._means)
         for l in range(len(self._labels)):
-            self._covs[l] *= self._counts[l] / (self._counts[1] - 1)
+            self._covs[l] *= self._counts[l] / (self._counts[l] - 1)
         l, w = scipy.linalg.eig(self._covs[0], self._covs[0] + self._covs[1])
         l = l.real
         ind = l > 0

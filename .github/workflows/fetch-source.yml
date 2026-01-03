@@ -1,0 +1,99 @@
+# Reusable workflow for fetching datasets from a source
+name: Fetch Source (Reusable)
+
+on:
+  workflow_call:
+    inputs:
+      source_name:
+        description: 'Name of the source (e.g., openneuro, nemar)'
+        required: true
+        type: string
+      script_path:
+        description: 'Path to the fetch script'
+        required: true
+        type: string
+      output_file:
+        description: 'Output JSON filename'
+        required: true
+        type: string
+      script_args:
+        description: 'Additional arguments for the script'
+        required: false
+        type: string
+        default: ''
+      continue_on_error:
+        description: 'Continue if this source fails'
+        required: false
+        type: boolean
+        default: false
+    secrets:
+      DATASET_LISTINGS_TOKEN:
+        required: true
+
+jobs:
+  fetch:
+    name: Fetch ${{ inputs.source_name }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    continue-on-error: ${{ inputs.continue_on_error }}
+
+    steps:
+      - name: Checkout EEGDash
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
+          path: eegdash
+
+      - name: Checkout dataset listings repository
+        uses: actions/checkout@v4
+        with:
+          repository: eegdash/eegdash-dataset-listings
+          token: ${{ secrets.DATASET_LISTINGS_TOKEN }}
+          persist-credentials: true
+          fetch-depth: 1
+          path: eegdash-dataset-listings
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+          cache-dependency-path: 'eegdash/pyproject.toml'
+
+      - name: Install dependencies
+        run: |
+          cd eegdash
+          python -m pip install --upgrade pip
+          pip install -e .[digestion]
+
+      - name: Create consolidated directory
+        run: mkdir -p eegdash-dataset-listings/consolidated
+
+      - name: Fetch datasets
+        run: |
+          python eegdash/${{ inputs.script_path }} \
+            --output eegdash-dataset-listings/consolidated/${{ inputs.output_file }} \
+            ${{ inputs.script_args }}
+
+      - name: Verify and report
+        run: |
+          echo "### 📊 ${{ inputs.source_name }} Results" >> $GITHUB_STEP_SUMMARY
+          if [ -f eegdash-dataset-listings/consolidated/${{ inputs.output_file }} ]; then
+            TOTAL=$(python -c "import json; print(len(json.load(open('eegdash-dataset-listings/consolidated/${{ inputs.output_file }}'))))")
+            echo "- Total datasets: $TOTAL" >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - name: Commit and push
+        run: |
+          cd eegdash-dataset-listings
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add consolidated/${{ inputs.output_file }} || true
+          if ! git diff --cached --quiet; then
+            git commit -m "chore: update ${{ inputs.source_name }} listings [$(date -u +%Y-%m-%d)]"
+            git pull --rebase origin main
+            git push
+          fi

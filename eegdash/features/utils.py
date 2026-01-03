@@ -70,7 +70,9 @@ def _extract_features_from_windowsdataset(
             feature_extractor(X, _batch_size=X.shape[0], _ch_names=ch_names)
         )
         if not win_ds.targets_from == "metadata":
-            metadata.loc[crop_inds, "target"] = y
+            # Convert transposed crop_inds from DataLoader to list of tuples for MultiIndex
+            crop_inds_tuples = list(zip(*[idx.tolist() for idx in crop_inds]))
+            metadata.loc[crop_inds_tuples, "target"] = y
         for k, v in win_dict.items():
             if k not in features_dict:
                 features_dict[k] = []

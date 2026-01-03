@@ -1,0 +1,11 @@
+/* Layout width overrides for pydata-sphinx-theme */
+
+/* 1) Widen the article content (default is ~60em) */
+.bd-main .bd-content .bd-article-container {
+  max-width: clamp(70rem, 92vw, 110rem);
+}
+
+/* 2) Widen the overall page container (default is ~88rem) */
+.bd-page-width {
+  max-width: clamp(80rem, 96vw, 130rem);
+}

@@ -9,9 +9,8 @@ AWS S3 storage, with support for caching and progress tracking. It handles the c
 between the EEGDash metadata database and the actual EEG data stored in the cloud.
 """
 
-import re
 from pathlib import Path
-from typing import Any
+from typing import Iterable, Sequence
 
 import s3fs
 from fsspec.callbacks import TqdmCallback
@@ -48,10 +47,14 @@ def get_s3path(s3_bucket: str, filepath: str) -> str:
         The full S3 URI (e.g., "s3://my-bucket/path/to/file").
 
     """
-    return f"{s3_bucket}/{filepath}"
+    s3_bucket = str(s3_bucket).rstrip("/")
+    filepath = str(filepath).lstrip("/")
+    return f"{s3_bucket}/{filepath}" if filepath else s3_bucket
 
 
-def download_s3_file(s3_path: str, local_path: Path, s3_open_neuro: bool) -> Path:
+def download_s3_file(
+    s3_path: str, local_path: Path, *, filesystem: s3fs.S3FileSystem | None = None
+) -> Path:
     """Download a single file from S3 to a local path.
 
     Handles the download of a raw EEG data file from an S3 bucket, caching it
@@ -63,9 +66,8 @@ def download_s3_file(s3_path: str, local_path: Path, s3_open_neuro: bool) -> Pat
         The full S3 URI of the file to download.
     local_path : pathlib.Path
         The local file path where the downloaded file will be saved.
-    s3_open_neuro : bool
-        A flag indicating if the S3 bucket is the OpenNeuro main bucket, which
-        may affect path handling.
+    filesystem : s3fs.S3FileSystem | None
+        Optional pre-created filesystem to reuse across multiple downloads.
 
     Returns
     -------
@@ -73,79 +75,94 @@ def download_s3_file(s3_path: str, local_path: Path, s3_open_neuro: bool) -> Pat
         The local path to the downloaded file.
 
     """
-    filesystem = get_s3_filesystem()
-    if not s3_open_neuro:
-        s3_path = re.sub(r"(^|/)ds\d{6}/", r"\1", s3_path, count=1)
-        # TODO: remove this hack when competition is over
-        if s3_path.endswith(".set"):
-            s3_path = s3_path[:-4] + ".bdf"
-            local_path = local_path.with_suffix(".bdf")
-
+    filesystem = filesystem or get_s3_filesystem()
     local_path.parent.mkdir(parents=True, exist_ok=True)
-    _filesystem_get(filesystem=filesystem, s3path=s3_path, filepath=local_path)
+
+    remote_size = _remote_size(filesystem, s3_path)
+    if local_path.exists():
+        if remote_size is None:
+            return local_path
+        if local_path.stat().st_size == remote_size:
+            return local_path
+        local_path.unlink(missing_ok=True)
+
+    _filesystem_get(
+        filesystem=filesystem, s3path=s3_path, filepath=local_path, size=remote_size
+    )
+    if remote_size is not None and local_path.stat().st_size != remote_size:
+        local_path.unlink(missing_ok=True)
+        raise OSError(
+            f"Incomplete download for {s3_path} -> {local_path} "
+            f"(expected {remote_size} bytes)."
+        )
 
     return local_path
 
 
-def download_dependencies(
-    s3_bucket: str,
-    bids_dependencies: list[str],
-    bids_dependencies_original: list[str],
-    cache_dir: Path,
-    dataset_folder: Path,
-    record: dict[str, Any],
-    s3_open_neuro: bool,
-) -> None:
-    """Download all BIDS dependency files from S3.
-
-    Iterates through a list of BIDS dependency files, downloads each from the
-    specified S3 bucket, and caches them in the appropriate local directory
-    structure.
+def download_files(
+    files: Sequence[tuple[str, Path]] | Iterable[tuple[str, Path]],
+    *,
+    filesystem: s3fs.S3FileSystem | None = None,
+    skip_existing: bool = True,
+) -> list[Path]:
+    """Download multiple S3 URIs to local destinations.
 
     Parameters
     ----------
-    s3_bucket : str
-        The S3 bucket to download from.
-    bids_dependencies : list of str
-        A list of dependency file paths relative to the S3 bucket root.
-    bids_dependencies_original : list of str
-        The original dependency paths, used for resolving local cache paths.
-    cache_dir : pathlib.Path
-        The root directory for caching.
-    dataset_folder : pathlib.Path
-        The specific folder for the dataset within the cache directory.
-    record : dict
-        The metadata record for the main data file, used to resolve paths.
-    s3_open_neuro : bool
-        Flag for OpenNeuro-specific path handling.
+    files : iterable of (str, Path)
+        Pairs of (S3 URI, local destination path).
+    filesystem : s3fs.S3FileSystem | None
+        Optional pre-created filesystem to reuse across multiple downloads.
+    skip_existing : bool
+        If True, do not download files that already exist locally.
 
     """
-    filesystem = get_s3_filesystem()
-    for i, dep in enumerate(bids_dependencies):
-        if not s3_open_neuro:
-            if dep.endswith(".set"):
-                dep = dep[:-4] + ".bdf"
+    filesystem = filesystem or get_s3_filesystem()
+    downloaded: list[Path] = []
+    for uri, dest in files:
+        dest = Path(dest)
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        remote_size = _remote_size(filesystem, uri)
+        if dest.exists():
+            if skip_existing:
+                if remote_size is None or dest.stat().st_size == remote_size:
+                    continue
+            dest.unlink(missing_ok=True)
 
-        s3path = get_s3path(s3_bucket, dep)
-        if not s3_open_neuro:
-            dep = bids_dependencies_original[i]
+        _filesystem_get(
+            filesystem=filesystem, s3path=uri, filepath=dest, size=remote_size
+        )
+        if remote_size is not None and dest.stat().st_size != remote_size:
+            dest.unlink(missing_ok=True)
+            raise OSError(
+                f"Incomplete download for {uri} -> {dest} (expected {remote_size} bytes)."
+            )
 
-        dep_path = Path(dep)
-        if dep_path.parts and dep_path.parts[0] == record.get("dataset"):
-            dep_local = Path(dataset_folder, *dep_path.parts[1:])
-        else:
-            dep_local = Path(dataset_folder) / dep_path
-        filepath = cache_dir / dep_local
-        if not s3_open_neuro:
-            if filepath.suffix == ".set":
-                filepath = filepath.with_suffix(".bdf")
-
-        if not filepath.exists():
-            filepath.parent.mkdir(parents=True, exist_ok=True)
-            _filesystem_get(filesystem=filesystem, s3path=s3path, filepath=filepath)
+        downloaded.append(dest)
+    return downloaded
 
 
-def _filesystem_get(filesystem: s3fs.S3FileSystem, s3path: str, filepath: Path) -> Path:
+def _remote_size(filesystem: s3fs.S3FileSystem, s3path: str) -> int | None:
+    try:
+        info = filesystem.info(s3path)
+    except Exception:
+        return None
+    size = info.get("size") or info.get("Size")
+    if size is None:
+        return None
+    try:
+        return int(size)
+    except Exception:
+        return None
+
+
+def _filesystem_get(
+    filesystem: s3fs.S3FileSystem,
+    s3path: str,
+    filepath: Path,
+    *,
+    size: int | None = None,
+) -> Path:
     """Perform the file download using fsspec with a progress bar.
 
     Internal helper function that wraps the ``filesystem.get`` call to include
@@ -166,9 +183,6 @@ def _filesystem_get(filesystem: s3fs.S3FileSystem, s3path: str, filepath: Path) 
         The local path to the downloaded file.
 
     """
-    info = filesystem.info(s3path)
-    size = info.get("size") or info.get("Size")
-
     callback = TqdmCallback(
         size=size,
         tqdm_kwargs=dict(
@@ -191,7 +205,7 @@ def _filesystem_get(filesystem: s3fs.S3FileSystem, s3path: str, filepath: Path) 
 
 __all__ = [
     "download_s3_file",
-    "download_dependencies",
+    "download_files",
     "get_s3path",
     "get_s3_filesystem",
 ]

@@ -8,17 +8,24 @@
     }
     const div = document.createElement('div');
     div.innerHTML = html;
+
+    // Prefer finding explicit tags first
     const tags = Array.from(div.querySelectorAll('.tag'))
       .map((el) => el.textContent.trim())
       .filter(Boolean);
     if (tags.length) {
-      return tags;
+      return [...new Set(tags)]; // Unique values
     }
-    const text = div.textContent || '';
+
+    const text = (div.textContent || '').trim();
+    if (!text) return [];
+
+    // Fallback to splitting by common separators
     return text
-      .split(/,\s*|\s+/)
+      .split(/[,;|/\n\s]+/)
       .map((token) => token.trim())
-      .filter(Boolean);
+      .filter(Boolean)
+      .filter((token, index, self) => self.indexOf(token) === index);
   }
 
   function parseSizeToBytes(text) {
@@ -37,6 +44,24 @@
       TB: 1024 ** 4,
     }[unit] || 1;
     return value * factor;
+  }
+
+  function escapeRegex(text) {
+    return String(text).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  }
+
+  function findColumnIndex($table, matcher) {
+    const headerCells = $table.find('thead th');
+    let index = null;
+    headerCells.each(function (i) {
+      const text = ($(this).text() || '').trim().toLowerCase();
+      if (matcher(text)) {
+        index = i;
+        return false;
+      }
+      return undefined;
+    });
+    return index;
   }
 
   function ensureTotalRowInFoot($table) {
@@ -138,7 +163,7 @@
 
     ensureTotalRowInFoot($table);
 
-    const filterCols = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+    const filterCols = [1, 2, 3, 4, 5];
 
     const headerCells = $table.find('thead th');
     const sizeIndex = headerCells
@@ -155,8 +180,16 @@
     const columnDefs = [
       {
         targets: filterCols,
-        render: { _: (d) => d, sp: (d) => tagsArrayFromHtml(d) },
-        searchPanes: { show: true, orthogonal: 'sp' },
+        render: function (data, type, row) {
+          if (type === 'sp' || type === 'filter' || type === 'search') {
+            return tagsArrayFromHtml(data);
+          }
+          return data;
+        },
+        searchPanes: {
+          show: true,
+          orthogonal: 'sp',
+        },
       },
     ];
 
@@ -202,6 +235,38 @@
 
     initHeaderFilterShortcuts($table, dataTable, filterCols);
     applyTagPalette($table.closest('.dataTables_wrapper').get(0) || document);
+
+    const params = new URLSearchParams(window.location.search);
+    const query = params.get('q');
+    const modalities = params.getAll('modality').filter(Boolean);
+    const tasks = params.getAll('task').filter(Boolean);
+    let hasFilters = false;
+
+    if (query) {
+      dataTable.search(query);
+      hasFilters = true;
+    }
+
+    const modalityIndex = findColumnIndex($table, (text) => text === 'modality');
+    if (modalities.length && modalityIndex !== null) {
+      dataTable.column(modalityIndex).search(modalities.map(escapeRegex).join('|'), true, false);
+      hasFilters = true;
+    }
+
+    const typeIndex = findColumnIndex($table, (text) => text === 'type');
+    if (tasks.length) {
+      if (typeIndex !== null) {
+        dataTable.column(typeIndex).search(tasks.map(escapeRegex).join('|'), true, false);
+      } else {
+        const merged = [query, ...tasks].filter(Boolean).join(' ');
+        dataTable.search(merged);
+      }
+      hasFilters = true;
+    }
+
+    if (hasFilters) {
+      dataTable.draw();
+    }
   }
 
   function initialiseTables() {

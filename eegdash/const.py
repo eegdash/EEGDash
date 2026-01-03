@@ -329,6 +329,7 @@ config = {
     ],
     "accepted_query_fields": ["data_name", "dataset"],
 }
+
 """dict: A global configuration dictionary for the EEGDash package.
 
 Keys

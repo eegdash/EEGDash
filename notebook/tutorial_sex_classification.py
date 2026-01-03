@@ -4,7 +4,7 @@
 Sex Classification Tutorial
 ===========================
 
-The code below provides an example of using the *EEGDash* library in combination with PyTorch to develop a deep learning model for detecting sex in a collection of 136 subjects.
+The code below provides an example of using the *EEGDash* library in combination with PyTorch to develop a deep learning model for detecting sex in a collection of subjects.
 
 1. **Data Retrieval Using EEGDash**: An instance of *EEGDashDataset* is created to search and retrieve resting state data for 136 subjects (dataset ds005505). At this step, only the metadata is transferred.
 
@@ -14,40 +14,81 @@ The code below provides an example of using the *EEGDash* library in combination
 
 4. **Model Definition**: The model is a custom convolutional neural network with 24 input channels (EEG channels), 2 output classes (male and female).
 
-5. **Model Training and Evaluation Process**: This section trains the neural network, normalizes input data, computes cross-entropy loss, updates model parameters, and evaluates classification accuracy over six epochs. This takes less than 10 seconds to a couple of minutes, depending on the device you use.
+5. **Model Training and Evaluation Process**: This section trains the neural network, normalizes input data, computes cross-entropy loss, updates model parameters, and evaluates classification accuracy over a few epochs. This takes less than 10 seconds to a couple of minutes, depending on the device you use.
 """
 
 # %% [markdown]
 # ## Data Retrieval Using EEGDash
 #
-# First we find one resting state dataset for a collection of subject. The dataset ds005505 contains 136 subjects with both male and female participants.
+# First we find one resting state dataset for a collection of subjects.
+# The API returns candidate subjects with sex/gender metadata.
 
-query = {
-    "dataset": "ds005505",
-    "task": "RestingState",
-    "subject": {
-        "$in": [
-            "NDARCA153NKE",
-            "NDARXT792GY8",
-            "NDARVU683CTN",
-            "NDARJM828PAL",
-            "NDARBX121UM9",
-            "NDARLF616PBU",
-            "NDARPL306LC6",
-            "NDARAW320CGR",
-            "NDARPX219TW0",
-            "NDARWA513WM2",
-        ]
-    },
-}
+from pathlib import Path
+import os
 
-# %%
-from eegdash import EEGDashDataset
+os.environ.setdefault("NUMBA_DISABLE_JIT", "1")
+os.environ.setdefault("_MNE_FAKE_HOME_DIR", str(Path.cwd()))
+(Path(os.environ["_MNE_FAKE_HOME_DIR"]) / ".mne").mkdir(exist_ok=True)
+os.environ.setdefault("MPLCONFIGDIR", str(Path.cwd() / ".matplotlib"))
+Path(os.environ["MPLCONFIGDIR"]).mkdir(exist_ok=True)
+
+import numpy as np
+
+from eegdash import EEGDash, EEGDashDataset
+
+CACHE_DIR = Path(os.getenv("EEGDASH_CACHE_DIR", Path.cwd() / "eegdash_cache")).resolve()
+CACHE_DIR.mkdir(parents=True, exist_ok=True)
+DATASET_ID = os.getenv("EEGDASH_DATASET_ID", "ds005505")
+TASK = os.getenv("EEGDASH_TASK", "RestingState")
+RECORD_LIMIT = int(os.getenv("EEGDASH_RECORD_LIMIT", "80"))
+
+eegdash = EEGDash()
+records = eegdash.find({"dataset": DATASET_ID, "task": TASK}, limit=RECORD_LIMIT)
+records = [rec for rec in records if rec.get("sex") or rec.get("gender")]
+if not records:
+    records = eegdash.find({"sex": {"$ne": None}}, limit=RECORD_LIMIT)
+    if not records:
+        records = eegdash.find({"gender": {"$ne": None}}, limit=RECORD_LIMIT)
+if records:
+    dataset_id = records[0].get("dataset")
+    if dataset_id:
+        records = [rec for rec in records if rec.get("dataset") == dataset_id]
+if not records:
+    raise RuntimeError("No records with sex/gender metadata found from the API.")
 
 ds_sexdata = EEGDashDataset(
-    query=query,
-    target_name="sex",
+    cache_dir=CACHE_DIR,
+    records=records,
+    description_fields=["subject", "session", "run", "task", "sex", "gender"],
 )
+
+PREPARED_DIR = CACHE_DIR / "preprocessed_sex"
+
+
+def _normalize_sex(value):
+    if value is None:
+        return None
+    value = str(value).strip().lower()
+    if value in {"m", "male"}:
+        return "M"
+    if value in {"f", "female"}:
+        return "F"
+    return None
+
+
+def _apply_sex_label(windows):
+    sex_series = windows.description.get("sex")
+    gender_series = windows.description.get("gender")
+    if sex_series is None and gender_series is None:
+        raise RuntimeError("No sex/gender metadata available for labeling.")
+    merged = sex_series if sex_series is not None else gender_series
+    if gender_series is not None:
+        merged = merged.fillna(gender_series)
+    windows.description["sex_label"] = merged.apply(_normalize_sex)
+    for ds in windows.datasets:
+        ds.target_name = "sex_label"
+    return windows
+
 
 # %% [markdown]
 # ## Data Preprocessing Using Braindecode
@@ -62,8 +103,6 @@ ds_sexdata = EEGDashDataset(
 # When calling the **preprocess** function, the data is retrieved from the remote repository.
 #
 # Finally, we use **create_windows_from_events** to extract 2-second epochs from the data. These epochs serve as the dataset samples.
-
-import os
 
 # %%
 from braindecode.preprocessing import (
@@ -120,8 +159,9 @@ windows_ds = create_fixed_length_windows(
     drop_last_window=True,
     preload=False,
 )
-os.makedirs("data/hbn_preprocessed_restingstate", exist_ok=True)
-windows_ds.save("data/hbn_preprocessed_restingstate", overwrite=True)
+windows_ds = _apply_sex_label(windows_ds)
+os.makedirs(PREPARED_DIR, exist_ok=True)
+windows_ds.save(str(PREPARED_DIR), overwrite=True)
 
 # %% [markdown]
 # ## Plotting a Single Channel for One Sample
@@ -144,9 +184,8 @@ plt.show()
 from braindecode.datautil import load_concat_dataset
 
 print("Loading data from disk")
-windows_ds = load_concat_dataset(
-    path="data/hbn_preprocessed_restingstate", preload=False
-)
+windows_ds = load_concat_dataset(path=str(PREPARED_DIR), preload=False)
+windows_ds = _apply_sex_label(windows_ds)
 
 # %% [markdown]
 # ## Creating a Training and Test Set
@@ -173,9 +212,11 @@ np.random.seed(random_state)
 torch.manual_seed(random_state)
 
 # Get balanced indices for male and female subjects and create a balanced dataset
-male_subjects = windows_ds.description["subject"][windows_ds.description["sex"] == "M"]
+male_subjects = windows_ds.description["subject"][
+    windows_ds.description["sex_label"] == "M"
+]
 female_subjects = windows_ds.description["subject"][
-    windows_ds.description["sex"] == "F"
+    windows_ds.description["sex_label"] == "F"
 ]
 n_samples = min(len(male_subjects), len(female_subjects))
 balanced_subjects = np.concatenate(
@@ -272,7 +313,7 @@ print(summary(model, input_size=(1, 1, 24, 256)))
 # %% [markdown]
 # # Model Training and Evaluation Process
 #
-# This section trains the neural network using the Adamax optimizer, normalizes input data, computes cross-entropy loss, updates model parameters, and tracks accuracy across six epochs.
+# This section trains the neural network using the Adamax optimizer, normalizes input data, computes cross-entropy loss, updates model parameters, and tracks accuracy across a few epochs.
 #
 # 1. **Set Up Optimizer and Learning Rate Scheduler** – The `Adamax` optimizer initializes with a learning rate of 0.002 and weight decay of 0.001 for regularization.
 #
@@ -311,7 +352,7 @@ def normalize_data(x):
 # dictionary of genders for converting sample labels to numerical values
 gender_dict = {"M": 0, "F": 1}
 
-epochs = 2
+epochs = int(os.getenv("EEGDASH_EPOCHS", "2"))
 for e in range(epochs):
     # training
     correct_train = 0

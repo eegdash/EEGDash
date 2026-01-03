@@ -23,8 +23,24 @@ __all__ = ["generate_dataset_bubble"]
 
 
 def _to_numeric_median_list(val) -> float | None:
-    if pd.isna(val):
-        return None
+    # Handle literal collections first
+    if isinstance(val, (list, np.ndarray, pd.Series)):
+        if len(val) == 0:
+            return None
+        try:
+            return float(np.nanmedian(val))
+        except Exception:
+            pass
+
+    # Handle scalar NaNs safely
+    try:
+        if pd.isna(val):
+            return None
+    except (ValueError, TypeError):
+        # Fallback if val is array-like but not caught by isinstance
+        if np.asarray(pd.isna(val)).any():
+            return None
+
     try:
         return float(val)
     except Exception:
@@ -35,7 +51,9 @@ def _to_numeric_median_list(val) -> float | None:
         return None
 
     try:
-        nums = [float(x) for x in s.split(",") if str(x).strip()]
+        # Handle both comma-separated and space-separated values (from numpy str)
+        sep = "," if "," in s else None
+        nums = [float(x) for x in s.split(sep) if str(x).strip()]
         if not nums:
             return None
         return float(np.median(nums))

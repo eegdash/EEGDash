@@ -95,3 +95,121 @@ def test_update_many():
         m, mod = client.update_many({"a": 1}, {"$set": {"b": 2}})
         assert m == 2
         assert mod == 1
+
+
+def test_find_with_skip_parameter():
+    """Test find method with skip parameter."""
+    from eegdash.http_api_client import EEGDashAPIClient
+    from unittest.mock import patch, MagicMock
+
+    with patch("requests.Session") as MockSession:
+        mock_response = MagicMock()
+        mock_response.json.return_value = {"data": [{"id": 1}]}
+        mock_response.raise_for_status = MagicMock()
+        MockSession.return_value.get.return_value = mock_response
+
+        client = EEGDashAPIClient()
+        # Use skip parameter (line 73)
+        client.find({"test": "value"}, limit=10, skip=5)
+
+        # Verify skip was passed
+        call_args = MockSession.return_value.get.call_args
+        assert call_args[1]["params"]["skip"] == 5
+
+
+def test_find_none_returns_empty():
+    """Test find_one when no results found."""
+    from eegdash.http_api_client import EEGDashAPIClient
+    from unittest.mock import patch, MagicMock
+
+    with patch("requests.Session") as MockSession:
+        mock_response = MagicMock()
+        mock_response.json.return_value = {"data": []}
+        mock_response.raise_for_status = MagicMock()
+        MockSession.return_value.get.return_value = mock_response
+
+        client = EEGDashAPIClient()
+        # Lines 104-105: find_one returning None
+        result = client.find_one({"nonexistent": "query"})
+        assert result is None
+
+
+def test_find_with_skip_parameter_percent():
+    """Test find with skip parameter (line 73)."""
+    from eegdash.http_api_client import EEGDashAPIClient
+    from unittest.mock import patch, MagicMock
+
+    with patch("requests.Session") as mock_session_class:
+        mock_session = MagicMock()
+        mock_session_class.return_value = mock_session
+        mock_response = MagicMock()
+        mock_response.json.return_value = {"data": [{"id": 1}]}
+        mock_session.get.return_value = mock_response
+
+        client = EEGDashAPIClient()
+        client.find(query={"test": 1}, limit=10, skip=5)
+
+        # Check skip was passed
+        call_args = mock_session.get.call_args
+        assert call_args[1]["params"]["skip"] == 5
+
+
+def test_insert_many():
+    """Test insert_many method (lines 104-105)."""
+    from eegdash.http_api_client import EEGDashAPIClient
+    from unittest.mock import patch, MagicMock
+
+    with patch("requests.Session") as mock_session_class:
+        mock_session = MagicMock()
+        mock_session_class.return_value = mock_session
+        mock_response = MagicMock()
+        mock_response.json.return_value = {"insertedCount": 2}
+        mock_session.post.return_value = mock_response
+
+        client = EEGDashAPIClient()
+        result = client.insert_many([{"a": 1}, {"b": 2}])
+        assert result == 2
+
+
+def test_api_client_session_auth():
+    from eegdash.http_api_client import get_client
+    from unittest.mock import patch
+    import os
+
+    with patch.dict(os.environ, {"EEGDASH_ADMIN_TOKEN": "adm"}):
+        client = get_client(auth_token="usr")
+        assert client._session.headers["Authorization"] == "Bearer usr"
+        assert client._session.headers["X-EEGDASH-TOKEN"] == "adm"
+
+
+def test_api_pagination():
+    from eegdash.http_api_client import get_client
+    from unittest.mock import MagicMock
+
+    client = get_client()
+    mock_resp_1 = MagicMock()
+    mock_resp_1.json.return_value = {"data": [{"id": i} for i in range(1000)]}
+    mock_resp_2 = MagicMock()
+    mock_resp_2.json.return_value = {"data": [{"id": 1001}]}
+
+    client._session.get = MagicMock(side_effect=[mock_resp_1, mock_resp_2])
+
+    res = client.find(query={})
+    assert len(res) == 1001
+    assert client._session.get.call_count == 2
+
+
+def test_api_methods():
+    from eegdash.http_api_client import get_client
+    from unittest.mock import MagicMock
+
+    client = get_client()
+    client._session.post = MagicMock()
+    client._session.patch = MagicMock()
+
+    client.insert_one({"a": 1})
+    client.insert_many([{"a": 1}])
+    client.update_many({"a": 1}, {"b": 2})
+
+    assert client._session.post.call_count == 2
+    assert client._session.patch.call_count == 1

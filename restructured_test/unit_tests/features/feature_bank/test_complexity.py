@@ -188,3 +188,88 @@ def test_complexity_other_functions_gap():
 
     # SVD Entropy
     complexity_svd_entropy(x, m=2, tau=1)
+
+
+import numpy as np
+
+
+def test_complexity_lempel_ziv_gap():
+    from eegdash.features.feature_bank.complexity import complexity_lempel_ziv
+    # Ensure raw python execution if possible
+    # if it is a dispatcher, we might need to call py_func to trace coverage IF jit was supposed to be disabled but wasn't?
+    # But we want to fix the root cause (env var).
+
+    x = np.array([[1, 0, 1, 0, 1, 0]])  # Simple pattern
+    # Test branches:
+    # 81: threshold None vs not
+    lz = complexity_lempel_ziv(x, threshold=0.5)
+    lz_none = complexity_lempel_ziv(x, threshold=None)
+
+    # 105: normalize
+    lz_norm = complexity_lempel_ziv(x, normalize=True)
+    lz_raw = complexity_lempel_ziv(x, normalize=False)
+
+    # We need a complex signal to trigger the "else" branches in Lempel Ziv (lines 93-...)
+    # Random signal usually does it
+    rng = np.random.default_rng(42)
+    x_complex = rng.random((1, 50))
+    complexity_lempel_ziv(x_complex)
+
+
+def test_complexity_other_functions_gap():
+    from eegdash.features.feature_bank.complexity import (
+        complexity_approx_entropy,
+        complexity_sample_entropy,
+        complexity_svd_entropy,
+        complexity_entropy_preprocessor,
+    )
+
+    x = np.random.randn(1, 50)
+
+    # Preprocessor directly (usually called by decorators but good to test output)
+    c_m, c_mp1 = complexity_entropy_preprocessor(x)
+
+    # Approx Entropy
+    # The function expects counts, so we pass them.
+    complexity_approx_entropy(c_m, c_mp1)
+
+    # Sample Entropy
+    complexity_sample_entropy(c_m, c_mp1)
+
+    # SVD Entropy
+    complexity_svd_entropy(x, m=2, tau=1)
+
+
+def test_complexity_features(signal_2d):
+    from eegdash.features.feature_bank.complexity import (
+        complexity_approx_entropy,
+        complexity_entropy_preprocessor,
+        complexity_lempel_ziv,
+        complexity_sample_entropy,
+        complexity_svd_entropy,
+    )
+
+    # Test entropy preprocessor
+    counts_m, counts_mp1 = complexity_entropy_preprocessor(signal_2d, m=2, r=0.2, l=1)
+    assert counts_m.shape == (2, 99)
+    assert counts_mp1.shape == (2, 98)
+
+    # Test approx entropy
+    ae = complexity_approx_entropy(counts_m, counts_mp1)
+    assert ae.shape == (2,)
+
+    # Test sample entropy
+    se = complexity_sample_entropy(counts_m, counts_mp1)
+    assert se.shape == (2,)
+
+    # Test SVD entropy
+    svde = complexity_svd_entropy(signal_2d, m=10, tau=1)
+    assert svde.shape == (2,)
+
+    # Test Lempel-Ziv
+    lz = complexity_lempel_ziv(signal_2d, normalize=True)
+    assert lz.shape == (2,)
+
+    # Test Lempel-Ziv with threshold
+    lz_t = complexity_lempel_ziv(signal_2d, threshold=0.5, normalize=False)
+    assert lz_t.shape == (2,)

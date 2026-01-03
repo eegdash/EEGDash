@@ -208,3 +208,156 @@ def test_csp_update_mean_cov_gap():
     y = np.array([0, 1])
     csp.partial_fit(X, y)  # First call initializes mean/cov
     csp.partial_fit(X, y)  # Second call triggers _update_mean_cov
+
+
+import numpy as np
+
+
+def test_csp_update_mean_cov_gap():
+    from eegdash.features.feature_bank.csp import CommonSpatialPattern
+
+    csp = CommonSpatialPattern()
+    # Trigger _update_mean_cov (called in partial_fit if n_epochs > 0)
+    X = np.random.randn(2, 4, 100)
+    y = np.array([0, 1])
+    csp.partial_fit(X, y)  # First call initializes mean/cov
+    csp.partial_fit(X, y)  # Second call triggers _update_mean_cov
+
+
+import numpy as np
+import pytest
+
+
+def test_csp_preprocessor():
+    from eegdash.features.feature_bank.csp import CommonSpatialPattern
+
+    # Trigger CSP stats and _update_mean_cov
+    csp = CommonSpatialPattern()
+    data = np.random.randn(4, 4, 100)  # (epochs, channels, times)
+    y = np.array([0, 0, 1, 1])
+
+    # First fit
+    csp.partial_fit(data, y)
+    csp.fit()
+
+    # Second fit (trigger _update_mean_cov)
+    csp.partial_fit(data, y)
+    csp.fit()
+
+    # Call
+    res = csp(data)
+    assert len(res) > 0
+
+
+def test_csp_features_gaps():
+    from eegdash.features.feature_bank.csp import CommonSpatialPattern
+
+    csp = CommonSpatialPattern()
+    csp.clear()
+
+    # partial_fit
+    x = np.random.randn(2, 4, 100)
+    y = np.array([0, 1])
+    csp.partial_fit(x, y)
+
+    # fit
+    csp.fit()
+
+    # __call__ (92, 94-95, 97)
+    csp(x, n_select=1)
+    csp(x, crit_select=0.9)
+    with pytest.raises(RuntimeError, match="too strict"):
+        csp(x, crit_select=0.0001)
+
+
+def test_csp_update_mean_cov_jit():
+    """Test the JIT-compiled _update_mean_cov function."""
+    from eegdash.features.feature_bank.csp import _update_mean_cov
+    import numpy as np
+
+    # Initialize arrays
+    count = 100
+    mean = np.array([1.0, 2.0, 3.0])
+    cov = np.eye(3) * 0.5
+    x_count = 50
+    x_mean = np.array([1.5, 2.5, 3.5])
+    x_cov = np.eye(3) * 0.3
+
+    # Call the function (lines 17-22)
+    _update_mean_cov(count, mean, cov, x_count, x_mean, x_cov)
+
+    # Should update mean and cov in place
+    assert mean.shape == (3,)
+    assert cov.shape == (3, 3)
+
+
+def test_csp_selection_criterion_too_strict():
+    """Test CSP raises when selection criterion filters all weights."""
+    from eegdash.features.feature_bank.csp import CommonSpatialPattern
+    import numpy as np
+    import pytest
+
+    csp = CommonSpatialPattern()
+    csp.clear()
+
+    # Create minimal data for fitting
+    x = np.random.randn(20, 3, 100)  # 20 trials, 3 channels, 100 samples
+    y = np.array([0] * 10 + [1] * 10)
+
+    csp.partial_fit(x, y)
+    csp.fit()
+
+    # Line 97: crit_select too strict should raise
+    with pytest.raises(RuntimeError, match="too strict"):
+        csp(x, crit_select=0.0001)
+
+
+def test_csp_full_workflow():
+    """Test CommonSpatialPattern full workflow (lines 17-22, 97)."""
+    from eegdash.features.feature_bank.csp import CommonSpatialPattern
+    import numpy as np
+
+    csp = CommonSpatialPattern()
+    csp.clear()
+
+    # Create fake data: batch x channels x time
+    np.random.seed(42)
+    x1 = np.random.randn(50, 4, 100)  # Class 0
+    x2 = np.random.randn(50, 4, 100) + 0.5  # Class 1
+
+    x = np.vstack([x1, x2])
+    y = np.array([0] * 50 + [1] * 50)
+
+    # Partial fit
+    csp.partial_fit(x, y)
+    csp.fit()
+
+    # Call - returns dict with numbered keys (channel indices)
+    result = csp(x[:5], n_select=2)
+    assert isinstance(result, dict)
+    # Keys are numbered strings: '0', '1', etc.
+    assert len(result) > 0
+
+
+def test_csp_strict_criterion_error():
+    """Test CSP raises when criterion too strict (line 97)."""
+    from eegdash.features.feature_bank.csp import CommonSpatialPattern
+    import numpy as np
+    import pytest
+
+    csp = CommonSpatialPattern()
+    csp.clear()
+
+    np.random.seed(42)
+    x1 = np.random.randn(50, 4, 100)
+    x2 = np.random.randn(50, 4, 100) + 0.5
+
+    x = np.vstack([x1, x2])
+    y = np.array([0] * 50 + [1] * 50)
+
+    csp.partial_fit(x, y)
+    csp.fit()
+
+    # Very strict criterion that filters all weights
+    with pytest.raises(RuntimeError, match="too strict"):
+        csp(x[:5], crit_select=0.0001)

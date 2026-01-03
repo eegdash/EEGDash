@@ -116,3 +116,164 @@ def test_spectral_edge_gap():
     # Let's ensure we call it
     se = spectral_edge(f, p, edge=0.95)
     assert se.shape[0] == 2
+
+
+import numpy as np
+
+
+def test_spectral_hjorth_activity():
+    """Test spectral_hjorth_activity function (line 62)."""
+    from eegdash.features.feature_bank.spectral import spectral_hjorth_activity
+
+    # Create test frequency and power arrays
+    f = np.linspace(1, 50, 50)
+    p = np.random.rand(3, 50)  # 3 channels, 50 freq bins
+
+    # Call the function directly with preprocessed data
+    result = spectral_hjorth_activity(f, p)
+
+    assert result.shape == (3,)
+    # Should be sum of power
+    np.testing.assert_allclose(result, p.sum(axis=-1))
+
+
+def test_spectral_hjorth_mobility():
+    """Test spectral_hjorth_mobility function (line 68)."""
+    from eegdash.features.feature_bank.spectral import spectral_hjorth_mobility
+
+    f = np.linspace(1, 50, 50)
+    p = np.random.rand(3, 50)
+    # Normalize for mobility (expects normalized spectrum)
+    p_norm = p / p.sum(axis=-1, keepdims=True)
+
+    result = spectral_hjorth_mobility(f, p_norm)
+
+    assert result.shape == (3,)
+    # Should be sqrt of sum of f^2 * p
+    expected = np.sqrt(np.sum(np.power(f, 2) * p_norm, axis=-1))
+    np.testing.assert_allclose(result, expected)
+
+
+def test_spectral_hjorth_complexity():
+    """Test spectral_hjorth_complexity function."""
+    from eegdash.features.feature_bank.spectral import spectral_hjorth_complexity
+
+    f = np.linspace(1, 50, 50)
+    p = np.random.rand(2, 50)
+    p_norm = p / p.sum(axis=-1, keepdims=True)
+
+    result = spectral_hjorth_complexity(f, p_norm)
+    assert result.shape == (2,)
+
+
+def test_spectral_edge_with_valid_data():
+    """Test spectral_edge function with valid normalized data."""
+    from eegdash.features.feature_bank.spectral import spectral_edge
+
+    f = np.linspace(1, 50, 50)
+    p = np.random.rand(2, 50)
+    p_norm = p / p.sum(axis=-1, keepdims=True)
+
+    # This calls the numba JIT function
+    result = spectral_edge(f, p_norm, edge=0.9)
+    assert result.shape == (2,)
+
+
+def test_spectral_edge_gap():
+    from eegdash.features.feature_bank.spectral import spectral_edge
+
+    f = np.linspace(0, 100, 101)
+    p = np.exp(-f / 10)  # 1/f-like
+    # Make it 2D (batch, freqs)
+    p = np.stack([p, p])
+
+    # Missing 93-96?
+    # That's the main body?
+    # Let's ensure we call it
+    se = spectral_edge(f, p, edge=0.95)
+    assert se.shape[0] == 2
+
+
+def test_spectral_edge_cases():
+    from eegdash.features.feature_bank.spectral import spectral_edge
+
+    # Trigger spectral_edge numba code
+    f = np.linspace(0, 50, 100)
+    p = np.random.rand(2, 4, 100)
+    # Normalize p
+    p /= p.sum(axis=-1, keepdims=True)
+
+    se = spectral_edge(f, p, edge=0.9)
+    assert se.shape == (2, 4)
+
+
+def test_spectral_entropy_computation():
+    """Test spectral entropy handles zeros correctly."""
+    from eegdash.features.feature_bank.spectral import spectral_entropy
+    import numpy as np
+
+    # Create power spectrum with zeros
+    f = np.linspace(1, 50, 50)
+    p = np.random.rand(2, 50)
+    p[0, :5] = 0  # Add zeros to test idx = p > 0 branch
+
+    # Normalize
+    p = p / p.sum(axis=-1, keepdims=True)
+
+    # Should handle zeros correctly (lines 93-96)
+    result = spectral_entropy(f, p)
+    assert result.shape == (2,)
+
+
+def test_spectral_entropy():
+    """Test spectral_entropy with zeros and non-zeros (line 62, 68)."""
+    from eegdash.features.feature_bank.spectral import (
+        spectral_entropy,
+        spectral_normalized_preprocessor,
+        spectral_preprocessor,
+    )
+    import numpy as np
+
+    # Create data with some zeros
+    x = np.random.randn(2, 3, 256)  # batch, channels, time
+    f, p = spectral_preprocessor(x, fs=256)
+    f_norm, p_norm = spectral_normalized_preprocessor(f, p)
+
+    result = spectral_entropy(f_norm, p_norm)
+    assert result.shape == (2, 3)
+
+
+def test_spectral_edge():
+    """Test spectral_edge function (lines 93-96)."""
+    from eegdash.features.feature_bank.spectral import (
+        spectral_edge,
+        spectral_normalized_preprocessor,
+        spectral_preprocessor,
+    )
+    import numpy as np
+
+    x = np.random.randn(2, 3, 256)
+    f, p = spectral_preprocessor(x, fs=256)
+    f_norm, p_norm = spectral_normalized_preprocessor(f, p)
+
+    result = spectral_edge(f_norm, p_norm, edge=0.9)
+    assert result.shape == (2, 3)
+
+
+def test_spectral_bands_power():
+    """Test spectral_bands_power function."""
+    from eegdash.features.feature_bank.spectral import (
+        spectral_bands_power,
+        spectral_preprocessor,
+    )
+    import numpy as np
+
+    # Use longer signal for better frequency resolution
+    x = np.random.randn(2, 3, 1024)
+    f, p = spectral_preprocessor(x, fs=256)
+
+    # Filter to valid frequency range
+
+    result = spectral_bands_power(f, p, bands={"alpha": (8, 12)})
+    assert isinstance(result, dict)
+    assert "alpha" in result

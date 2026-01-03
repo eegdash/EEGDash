@@ -1,5 +1,4 @@
 import numpy as np
-import pytest
 import torch
 from sklearn.model_selection import train_test_split
 from sklearn.utils import check_random_state
@@ -30,7 +29,6 @@ def normalize_data(x):
     return x
 
 
-@pytest.mark.slow
 def test_complete_train(windows_ds):
     """Test the complete training process with the EEG dataset."""
     label_eye_open_closed = np.array(

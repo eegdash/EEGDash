@@ -16,9 +16,11 @@ __all__ = [
 
 @nb.njit(cache=True, fastmath=True)
 def _create_embedding(x, dim, lag):
-    y = np.empty(((x.shape[-1] - dim + 1) // lag, dim))
-    for i in range(0, x.shape[-1] - dim + 1, lag):
-        y[i] = x[i : i + dim]
+    n_epochs = (x.shape[-1] - dim + 1) // lag
+    y = np.empty((n_epochs, dim))
+    for i in range(n_epochs):
+        curr = i * lag
+        y[i] = x[curr : curr + dim]
     return y
 
 

@@ -1,0 +1,18 @@
+# Fetch OpenNeuro datasets
+name: "1. Fetch: OpenNeuro"
+
+on:
+  schedule:
+    - cron: '0 0 * * 1'  # Weekly on Monday
+  workflow_dispatch:
+
+jobs:
+  fetch:
+    uses: ./.github/workflows/fetch-source.yml
+    with:
+      source_name: "OpenNeuro"
+      script_path: "scripts/ingestions/1_fetch_sources/openneuro.py"
+      output_file: "openneuro_datasets.json"
+      script_args: "--page-size 100"
+    secrets:
+      DATASET_LISTINGS_TOKEN: ${{ secrets.DATASET_LISTINGS_TOKEN }}

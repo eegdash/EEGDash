@@ -15,7 +15,7 @@ authors = [
 description     = "EEG data for machine learning"
 readme          = "README.md"
 license         = "BSD-3-Clause"
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 
 classifiers = [
     "Operating System :: OS Independent",
@@ -33,10 +33,12 @@ classifiers = [
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
 ]
+
 dependencies = [
-  "braindecode>=1.0",
-  "mne_bids>=0.17.0",
+  "braindecode[hub]>=1.3.2",
+  "mne_bids>=0.18.0",
   "numba",
   "requests>=2.25.0",
   "s3fs",
@@ -47,6 +49,7 @@ dependencies = [
   "rich",
   "pyarrow",
   "pandas>=2.0",
+  "pydantic",
 ]
 
 [project.urls]
@@ -62,6 +65,7 @@ tests = [
     'codecov',
     'pytest_cases',
     'pytest-benchmark',
+    'pytest-xdist',
 ]
 dev = [
   "pre-commit",
@@ -97,6 +101,13 @@ digestion = [
   "gql[requests]",
   "requests_toolbelt",
   "beautifulsoup4",
+  "python-dotenv",
+  "selenium",
+  "httpx",
+  "tenacity",
+  "hishel",
+  "pydantic>=2",
+  "PyGithub>=2",
 ]
 
 all = [
@@ -138,7 +149,11 @@ ignore = ["E402", "E501", "D100", "D101", "D102", "D103", "D104", "D105", "D107"
 known-first-party = ["eegdash", "braindecode"]
 section-order = ["future", "standard-library", "third-party", "first-party", "local-folder"]
 
-[pytest]
+[tool.pytest.ini_options]
 testpaths        = ["tests"]
 python_files     = ["test_*.py", "*_test.py"]
 python_functions = ["test_*"]
+markers = [
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+]
+addopts = "-m 'not slow' -ra --durations=10"

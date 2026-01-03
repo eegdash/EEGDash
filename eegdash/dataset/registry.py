@@ -1,24 +1,28 @@
 from __future__ import annotations
 
+import json
+import urllib.request
 from pathlib import Path
 from typing import Any, Dict
 
 import pandas as pd
-from tabulate import tabulate
 
 
 def register_openneuro_datasets(
-    summary_file: str | Path,
+    summary_file: str | Path | None = None,
     *,
     base_class=None,
     namespace: Dict[str, Any] | None = None,
     add_to_all: bool = True,
+    from_api: bool = False,
+    api_url: str = "https://data.eegdash.org/api",
+    database: str = "eegdash",
 ) -> Dict[str, type]:
-    """Dynamically create and register dataset classes from a summary file.
+    """Dynamically create and register dataset classes from a summary file or API.
 
-    This function reads a CSV file containing summaries of OpenNeuro datasets
-    and dynamically creates a Python class for each dataset. These classes
-    inherit from a specified base class and are pre-configured with the
+    This function reads a CSV file or queries the API containing summaries of
+    datasets and dynamically creates a Python class for each dataset. These
+    classes inherit from a specified base class and are pre-configured with the
     dataset's ID.
 
     Parameters
@@ -46,12 +50,23 @@ def register_openneuro_datasets(
     if base_class is None:
         from ..api import EEGDashDataset as base_class  # lazy import
 
-    summary_path = Path(summary_file)
     namespace = namespace if namespace is not None else globals()
     module_name = namespace.get("__name__", __name__)
     registered: Dict[str, type] = {}
 
-    df = pd.read_csv(summary_path, comment="#", skip_blank_lines=True)
+    df = pd.DataFrame()
+    if from_api:
+        try:
+            df = _fetch_datasets_from_api(api_url, database)
+        except Exception:
+            # Fallback to CSV if API fails, or empty if no CSV provided
+            pass
+
+    if df.empty and summary_file:
+        summary_path = Path(summary_file)
+        if summary_path.exists():
+            df = pd.read_csv(summary_path, comment="#", skip_blank_lines=True)
+
     for _, row_series in df.iterrows():
         # Use the explicit 'dataset' column, not the CSV index.
         dataset_id = str(row_series.get("dataset", "")).strip()
@@ -134,154 +149,190 @@ def _generate_rich_docstring(
         A formatted docstring.
 
     """
-    # Extract metadata with safe defaults
-    n_subjects = row_series.get("n_subjects", "Unknown")
-    n_records = row_series.get("n_records", "Unknown")
-    n_tasks = row_series.get("n_tasks", "Unknown")
-    modality = row_series.get("modality of exp", "")
-    exp_type = row_series.get("type of exp", "")
-    subject_type = row_series.get("Type Subject", "")
-    duration = row_series.get("duration_hours_total", "Unknown")
-    size = row_series.get("size", "Unknown")
 
-    # Create description based on available metadata
-    description_parts = []
-    if modality and str(modality).strip():
-        description_parts.append(f"**Modality**: {modality}")
-    if exp_type and str(exp_type).strip():
-        description_parts.append(f"**Type**: {exp_type}")
-    if subject_type and str(subject_type).strip():
-        description_parts.append(f"**Subjects**: {subject_type}")
+    def _clean_optional(value: object) -> str:
+        text = str(value).strip() if value is not None else ""
+        if not text or text.lower() in {"nan", "none", "null"}:
+            return ""
+        return text
 
-    description = (
-        " | ".join(description_parts)
-        if description_parts
-        else "EEG dataset from OpenNeuro"
+    def _clean_or_unknown(value: object) -> str:
+        cleaned = _clean_optional(value)
+        return cleaned if cleaned else "Unknown"
+
+    n_subjects = _clean_or_unknown(row_series.get("n_subjects"))
+    n_records = _clean_or_unknown(row_series.get("n_records"))
+    n_tasks = _clean_or_unknown(row_series.get("n_tasks"))
+
+    modality = _clean_optional(row_series.get("record_modality"))
+    if not modality:
+        modality = _clean_optional(row_series.get("modality of exp"))
+    exp_type = _clean_optional(row_series.get("type of exp"))
+    subject_type = _clean_optional(row_series.get("Type Subject"))
+
+    summary_bits: list[str] = []
+    if modality:
+        summary_bits.append(f"Modality: ``{modality}``")
+    if exp_type:
+        summary_bits.append(f"Experiment type: ``{exp_type}``")
+    if subject_type:
+        summary_bits.append(f"Subject type: ``{subject_type}``")
+
+    summary_line = f"OpenNeuro dataset ``{dataset_id}``."
+    if summary_bits:
+        summary_line = f"{summary_line} {'; '.join(summary_bits)}."
+    summary_lines = [summary_line]
+    if any(value != "Unknown" for value in (n_subjects, n_records, n_tasks)):
+        summary_lines.append(
+            f"Subjects: {n_subjects}; recordings: {n_records}; tasks: {n_tasks}."
+        )
+
+    doi_raw = (
+        row_series.get("dataset_doi")
+        or row_series.get("DatasetDOI")
+        or row_series.get("doi")
     )
+    doi = _clean_optional(doi_raw)
+    doi_clean = doi.replace("doi:", "").strip() if doi else ""
 
-    # Generate the docstring
-    docstring = f"""OpenNeuro dataset ``{dataset_id}``.
+    openneuro_url = f"https://openneuro.org/datasets/{dataset_id}"
+    nemar_url = f"https://nemar.org/dataexplorer/detail?dataset_id={dataset_id}"
+    class_name = dataset_id.upper()
 
-{description}
+    references_lines = [
+        f"OpenNeuro dataset: {openneuro_url}",
+        f"NeMAR dataset: {nemar_url}",
+    ]
+    if doi_clean:
+        references_lines.append(f"DOI: https://doi.org/{doi_clean}")
 
-This dataset contains {n_subjects} subjects with {n_records} recordings across {n_tasks} tasks.
-Total duration: {duration} hours. Dataset size: {size}.
-
-{_markdown_table(row_series)}
-
-This dataset class provides convenient access to the ``{dataset_id}`` dataset through the EEGDash interface.
-It inherits all functionality from :class:`~{base_class.__module__}.{base_class.__name__}` with the dataset filter pre-configured.
+    docstring = f"""{chr(10).join(summary_lines)}
 
 Parameters
 ----------
-cache_dir : str
-    Directory to cache downloaded data.
-query : dict, optional
+cache_dir : str | Path
+    Directory where data are cached locally.
+query : dict | None
     Additional MongoDB-style filters to AND with the dataset selection.
     Must not contain the key ``dataset``.
-s3_bucket : str, optional
+s3_bucket : str | None
     Base S3 bucket used to locate the data.
-**kwargs
-    Additional arguments passed to the base dataset class.
+**kwargs : dict
+    Additional keyword arguments forwarded to :class:`~{base_class.__module__}.{base_class.__name__}`.
 
-Examples
---------
-Basic usage:
-
->>> from eegdash.dataset import {dataset_id.upper()}
->>> dataset = {dataset_id.upper()}(cache_dir="./data")
->>> print(f"Number of recordings: {{len(dataset)}}")
-
-Load a specific recording:
-
->>> if len(dataset) > 0:
-...     recording = dataset[0]
-...     raw = recording.load()
-...     print(f"Sampling rate: {{raw.info['sfreq']}} Hz")
-...     print(f"Number of channels: {{len(raw.ch_names)}}")
-
-Filter by additional criteria:
-
->>> # Get subset with specific task or subject
->>> filtered_dataset = {dataset_id.upper()}(
-...     cache_dir="./data",
-...     query={{"task": "RestingState"}}  # if applicable
-... )
+Attributes
+----------
+data_dir : Path
+    Local dataset cache directory (``cache_dir / dataset_id``).
+query : dict
+    Merged query with the dataset filter applied.
+records : list[dict] | None
+    Metadata records used to build the dataset, if pre-fetched.
 
 Notes
 -----
-More details available in the `NEMAR documentation <https://nemar.org/dataexplorer/detail?dataset_id={dataset_id}>`__.
+Each item is a recording; recording-level metadata are available via ``dataset.description``.
+``query`` supports MongoDB-style filters on fields in ``ALLOWED_QUERY_FIELDS`` and is combined with the dataset filter.
+Dataset-specific caveats are not provided in the summary metadata.
 
-See Also
+References
+----------
+{chr(10).join(references_lines)}
+
+Examples
 --------
-{base_class.__name__} : Base dataset class with full API documentation
+>>> from eegdash.dataset import {class_name}
+>>> dataset = {class_name}(cache_dir="./data")
+>>> recording = dataset[0]
+>>> raw = recording.load()
 """
 
     return docstring
 
 
-def _markdown_table(row_series: pd.Series) -> str:
-    """Create a reStructuredText grid table from a pandas Series.
+# Datasets to explicitly ignore (synced with rules in 3_digest.py)
+EXCLUDED_DATASETS = {
+    "ABUDUKADI",
+    "ABUDUKADI_2",
+    "ABUDUKADI_3",
+    "ABUDUKADI_4",
+    "AILIJIANG",
+    "AILIJIANG_3",
+    "AILIJIANG_4",
+    "AILIJIANG_5",
+    "AILIJIANG_7",
+    "AILIJIANG_8",
+    "BAIHETI",
+    "BAIHETI_2",
+    "BAIHETI_3",
+    "BIAN_3",
+    "BIN_27",
+    "BLIX",
+    "BOJIN",
+    "BOUSSAGOL",
+    "AISHENG",
+    "ACHOLA",
+    "ANASHKIN",
+    "ANJUM",
+    "BARBIERI",
+    "BIN_8",
+    "BIN_9",
+    "BING_4",
+    "BING_8",
+    "BOWEN_4",
+    "AZIZAH",
+    "BAO",
+    "BAO-YOU",
+    "BAO_2",
+    "BENABBOU",
+    "BING",
+    "BOXIN",
+    "test",
+    "ds003380",
+}
 
-    This helper function takes a pandas Series containing dataset metadata
-    and formats it into a reStructuredText grid table for inclusion in
-    docstrings.
 
-    Parameters
-    ----------
-    row_series : pandas.Series
-        A Series where each index is a metadata field and each value is the
-        corresponding metadata value.
+def _fetch_datasets_from_api(api_url: str, database: str) -> pd.DataFrame:
+    """Fetch dataset summaries from API and return as DataFrame matching CSV structure."""
+    import os
 
-    Returns
-    -------
-    str
-        A string containing the formatted reStructuredText table.
+    limit = int(os.environ.get("EEGDASH_DOC_LIMIT", 1000))
+    url = f"{api_url}/{database}/datasets/summary?limit={limit}"
+    try:
+        with urllib.request.urlopen(url, timeout=10) as response:
+            data = json.loads(response.read().decode("utf-8"))
+    except Exception:
+        return pd.DataFrame()
 
-    """
-    if row_series.empty:
-        return ""
-    dataset_id = row_series["dataset"]
+    if not data.get("success"):
+        return pd.DataFrame()
 
-    # Prepare the dataframe with user's suggested logic
-    df = (
-        row_series.to_frame()
-        .T.rename(
-            columns={
-                "n_subjects": "#Subj",
-                "nchans_set": "#Chan",
-                "n_tasks": "#Classes",
-                "sampling_freqs": "Freq(Hz)",
-                "duration_hours_total": "Duration(H)",
-                "size": "Size",
-            }
-        )
-        .reindex(
-            columns=[
-                "dataset",
-                "#Subj",
-                "#Chan",
-                "#Classes",
-                "Freq(Hz)",
-                "Duration(H)",
-                "Size",
-            ]
-        )
-        .infer_objects(copy=False)
-        .fillna("")
-    )
+    datasets = data.get("data", [])
+    rows = []
+    for ds in datasets:
+        ds_id = ds.get("dataset_id", "").strip()
+        # Filter test datasets and excluded ones
+        if (
+            ds_id.lower() in ("test", "test_dataset")
+            or ds_id.upper() in EXCLUDED_DATASETS
+        ):
+            continue
 
-    # Use tabulate for the final rst formatting
-    table = tabulate(df, headers="keys", tablefmt="rst", showindex=False)
+        meta = ds.get("metadata", {})
+        # Map API fields to expected CSV columns
+        row = {
+            "dataset": ds.get("dataset_id"),
+            "n_subjects": meta.get("subject_count", 0),
+            "n_records": ds.get("record_count", 0),
+            "n_tasks": len(meta.get("tasks", [])),
+            "modality of exp": ", ".join(meta.get("recording_modalities", []) or []),
+            "type of exp": meta.get("type", "Unknown"),
+            "Type Subject": meta.get("pathology", "Unknown"),
+            "duration_hours_total": round(meta.get("duration_hours_total", 0) or 0, 2),
+            "size": ds.get("size_human", "Unknown"),
+            # internal/extra fields
+            "source": ds.get("source", "unknown"),
+        }
+        rows.append(row)
 
-    # Add a caption for the table
-    # Use an anonymous external link (double underscore) to avoid duplicate
-    # target warnings when this docstring is repeated across many classes.
-    caption = (
-        f"Short overview of dataset {dataset_id} more details in the "
-        f"`NeMAR documentation <https://nemar.org/dataexplorer/detail?dataset_id={dataset_id}>`__."
-    )
-    # adding caption below the table
-    # Indent the table to fit within the admonition block
-    indented_table = "\n".join("    " + line for line in table.split("\n"))
-    return f"\n\n{indented_table}\n\n{caption}"
+    return pd.DataFrame(rows)

@@ -1,0 +1,18 @@
+# Fetch OSF datasets
+name: "1. Fetch: OSF"
+
+on:
+  schedule:
+    - cron: '0 5 * * 1'  # Weekly on Monday
+  workflow_dispatch:
+
+jobs:
+  fetch:
+    uses: ./.github/workflows/fetch-source.yml
+    with:
+      source_name: "OSF"
+      script_path: "scripts/ingestions/1_fetch_sources/osf.py"
+      output_file: "osf_datasets.json"
+      continue_on_error: true
+    secrets:
+      DATASET_LISTINGS_TOKEN: ${{ secrets.DATASET_LISTINGS_TOKEN }}

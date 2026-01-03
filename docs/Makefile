@@ -23,8 +23,15 @@ html: apidoc
 # Fast build: do NOT execute examples (sphinx-gallery)
 .PHONY: html-noplot
 html-noplot: apidoc 
-	@python prepare_summary_tables.py ../eegdash/ $(BUILDDIR)
+	@python prepare_summary_tables.py --target $(BUILDDIR)
 	@$(SPHINXBUILD) -M html "$(SOURCEDIR)" "$(BUILDDIR)" \
+		$(SPHINXOPTS) -D sphinx_gallery_conf.plot_gallery=0 $(O)
+
+# Very fast build: limit datasets to 5
+.PHONY: html-fast
+html-fast: apidoc
+	@EEGDASH_DOC_LIMIT=5 python prepare_summary_tables.py --target $(BUILDDIR)
+	@EEGDASH_DOC_LIMIT=5 $(SPHINXBUILD) -M html "$(SOURCEDIR)" "$(BUILDDIR)" \
 		$(SPHINXOPTS) -D sphinx_gallery_conf.plot_gallery=0 $(O)
 
 # Custom clean target to remove generated API docs and build files
@@ -47,5 +54,5 @@ clean:
 Makefile: ;          
 
 %: Makefile
-	@python prepare_summary_tables.py ../eegdash/ $(BUILDDIR)
+	@python prepare_summary_tables.py --target $(BUILDDIR)
 	@$(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)

@@ -28,10 +28,31 @@ The code below provides an example of using the *EEGDash* library in combination
 # First we find one resting state dataset. This dataset contains both eyes open and eyes closed data.
 
 # %%
-from eegdash import EEGDashDataset
+from pathlib import Path
+import os
+
+os.environ.setdefault("NUMBA_DISABLE_JIT", "1")
+os.environ.setdefault("_MNE_FAKE_HOME_DIR", str(Path.cwd()))
+(Path(os.environ["_MNE_FAKE_HOME_DIR"]) / ".mne").mkdir(exist_ok=True)
+os.environ.setdefault("MPLCONFIGDIR", str(Path.cwd() / ".matplotlib"))
+Path(os.environ["MPLCONFIGDIR"]).mkdir(exist_ok=True)
+
+from eegdash import EEGDash, EEGDashDataset
+
+CACHE_DIR = Path(os.getenv("EEGDASH_CACHE_DIR", Path.cwd() / "eegdash_cache")).resolve()
+CACHE_DIR.mkdir(parents=True, exist_ok=True)
+
+eegdash = EEGDash()
+records = eegdash.find({"dataset": "ds005514", "task": "RestingState"}, limit=20)
+if not records:
+    records = eegdash.find({"task": "RestingState"}, limit=20)
+subject_id = records[0]["subject"] if records else "NDARDB033FW5"
 
 ds_eoec = EEGDashDataset(
-    {"dataset": "ds005514", "task": "RestingState", "subject": "NDARDB033FW5"}
+    dataset="ds005514",
+    task="RestingState",
+    subject=subject_id,
+    cache_dir=CACHE_DIR,
 )
 
 # %% [markdown]
@@ -52,8 +73,6 @@ ds_eoec = EEGDashDataset(
 # Finally, we use **create_windows_from_events** to extract 5-second epochs from the data. These epochs serve as the dataset samples. At this stage, each sample is automatically labeled with the corresponding event type (eyes-open or eyes-closed). windows_ds is a PyTorch dataset, and when queried, it returns labels for eyes-open and eyes-closed (assigned as labels 0 and 1, corresponding to their respective event markers).
 
 import warnings
-
-import mne
 import numpy as np
 
 # %%
@@ -62,44 +81,9 @@ from braindecode.preprocessing import (
     create_windows_from_events,
     preprocess,
 )
+from eegdash.hbn.preprocessing import hbn_ec_ec_reannotation
 
 warnings.simplefilter("ignore", category=RuntimeWarning)
-
-
-class hbn_ec_ec_reannotation(Preprocessor):
-    def __init__(self):
-        super().__init__(
-            fn=self.transform, apply_on_array=False
-        )  # Pass the transform method as the function
-
-    def transform(self, raw):  # Changed from 'apply' to 'transform'
-        # Create events array from annotations
-        events, event_id = mne.events_from_annotations(raw)
-
-        print(event_id)
-
-        # Create new events array for 2-second segments
-        new_events = []
-        sfreq = raw.info["sfreq"]
-        for event in events[events[:, 2] == event_id["instructed_toCloseEyes"]]:
-            # For each original event, create events every 2 seconds from 15s to 29s after
-            start_times = event[0] + np.arange(15, 29, 2) * sfreq
-            new_events.extend([[int(t), 0, 1] for t in start_times])
-
-        for event in events[events[:, 2] == event_id["instructed_toOpenEyes"]]:
-            # For each original event, create events every 2 seconds from 5s to 19s after
-            start_times = event[0] + np.arange(5, 19, 2) * sfreq
-            new_events.extend([[int(t), 0, 2] for t in start_times])
-
-        # replace events in raw
-        new_events = np.array(new_events)
-        annot_from_events = mne.annotations_from_events(
-            events=new_events,
-            event_desc={1: "eyes_closed", 2: "eyes_open"},
-            sfreq=raw.info["sfreq"],
-        )
-        raw.set_annotations(annot_from_events)
-        return raw
 
 
 # BrainDecode preprocessors
@@ -179,11 +163,11 @@ from eegdash.features import extract_features
 
 
 @features.univariate_feature
-def signal_variaince_feature(x):
+def signal_variance_feature(x):
     return x.var(axis=-1)
 
 
-features_dict = {"sig_var": signal_variaince_feature}
+features_dict = {"sig_var": signal_variance_feature}
 
 features_ds = extract_features(windows_ds, features_dict, batch_size=512)
 
@@ -235,7 +219,7 @@ def spectral_power_bands_feature(x, bands=DEFAULT_FREQ_BANDS, **kwargs):
 
 
 features_dict = {
-    "sig_var": signal_variaince_feature,
+    "sig_var": signal_variance_feature,
     "spec_rtotpow": partial(spectral_root_total_power_feature, fs=sfreq),
     "sig_pband": partial(spectral_power_bands_feature, fs=sfreq),
 }
@@ -286,7 +270,7 @@ def spectral_power_bands_feature(f, p, bands=DEFAULT_FREQ_BANDS, **kwargs):
 
 
 features_dict = {
-    "sig_var": signal_variaince_feature,
+    "sig_var": signal_variance_feature,
     "spec": WelchFeatureExtractor(
         {
             "rtotpow": spectral_root_total_power_feature,
@@ -344,7 +328,20 @@ features.get_all_feature_extractors()
 
 # %%
 sfreq = windows_ds.datasets[0].raw.info["sfreq"]
-filter_freqs = dict(windows_ds.datasets[0].raw_preproc_kwargs)["filter"]
+
+
+def _get_filter_freqs(raw_preproc_kwargs):
+    if isinstance(raw_preproc_kwargs, list):
+        for item in raw_preproc_kwargs:
+            if isinstance(item, dict) and item.get("fn") == "filter":
+                return item.get("kwargs", {})
+            if hasattr(item, "fn") and getattr(item.fn, "__name__", "") == "filter":
+                return getattr(item, "kwargs", {})
+        return {}
+    return raw_preproc_kwargs.get("filter", {})
+
+
+filter_freqs = _get_filter_freqs(windows_ds.datasets[0].raw_preproc_kwargs)
 
 
 features_dict = {
@@ -369,8 +366,8 @@ features_dict = {
         fs=sfreq,
         nperseg=2 * sfreq,
         noverlap=int(1.5 * sfreq),
-        f_min=filter_freqs["l_freq"],
-        f_max=filter_freqs["h_freq"],
+        f_min=filter_freqs.get("l_freq", 1.0),
+        f_max=filter_freqs.get("h_freq", sfreq / 2.0),
     ),
 }
 

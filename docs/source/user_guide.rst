@@ -1,5 +1,3 @@
-.. _user_guide:
-
 :html_theme.sidebar_secondary.remove: true
 
 .. currentmodule:: eegdash.api

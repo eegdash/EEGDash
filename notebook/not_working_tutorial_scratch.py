@@ -10,85 +10,64 @@ A minimal exploration script using EEGDash utilities.
 # for preprocessor in preprocessors:
 #     raw = preprocessor.apply(raw)
 
-# %%
-# %load_ext autoreload
-# %autoreload 2
+from pathlib import Path
+import os
+
+os.environ.setdefault("NUMBA_DISABLE_JIT", "1")
+os.environ.setdefault("_MNE_FAKE_HOME_DIR", str(Path.cwd()))
+(Path(os.environ["_MNE_FAKE_HOME_DIR"]) / ".mne").mkdir(exist_ok=True)
+
 from eegdash import EEGDash, EEGDashDataset
-
-eegdashdata = EEGDash()
-
-# %%
-import mne_bids
-from mne_bids import (
-    BIDSPath,
-)
-
-# %%
-records = eegdashdata.find({"dataset": "ds002718", "subject": "012"})
-record = records[0]
-
-print(record)
-
-# Downloading with eegdash Dataset
-eegdashdata = EEGDashDataset(
-    query={"dataset": "ds002718", "subject": "012"}, cache_dir=".eegdash_cache"
-)
-
-eeg = eegdashdata.load_data()
-
-# %%
-bidspath = BIDSPath(
-    root=".eegdash_cache/ds002718",
-    datatype="eeg",
-    task=record["task"],
-    subject=record["subject"],
-    suffix="eeg",
-)
-
-# %%
-EEG = mne_bids.read_raw_bids(bidspath)
-
-# %%
-from braindecode.datasets import BaseDataset
-
-BaseDataset(None)
-
-# %%
-EEG.annotations
-
-# %%
-from eegdash.data_utils import BIDSDataset
-
-bids = BIDSDataset("/mnt/nemar/openneuro/ds002718", "ds002718")
-bids.files
-
-# %%
-from eegdash import EEGDash
-
-eegdashObj = EEGDash()
-record = eegdashObj.load_eeg_attrs_from_bids_file(
-    bids,
-    "/mnt/nemar/openneuro/ds002718/sub-018/eeg/sub-018_task-FaceRecognition_eeg.set",
-)
-
-# %%
-from eegdash.data_utils import EEGDashBaseDataset
-
-eegdashDataset = EEGDashBaseDataset(record, ".eegdash_cache")
-
-# %%
-len(eegdashDataset.raw)
-
-# %%
+from mne_bids import BIDSPath, read_raw_bids
 import mne
 
-raw = eegdashDataset.raw
+CACHE_DIR = Path(os.getenv("EEGDASH_CACHE_DIR", Path.cwd() / "eegdash_cache")).resolve()
+CACHE_DIR.mkdir(parents=True, exist_ok=True)
+
+eegdash = EEGDash()
+record_limit = int(os.getenv("EEGDASH_RECORD_LIMIT", "5"))
+records = eegdash.find({"dataset": "ds002718"}, limit=record_limit)
+if not records:
+    raise RuntimeError("No records found for dataset ds002718.")
+
+record = records[0]
+print("Record:", record)
+
+dataset = EEGDashDataset(cache_dir=CACHE_DIR, records=records)
+raw = None
+loaded_record = None
+for base_ds in dataset.datasets:
+    try:
+        raw = base_ds.raw
+        loaded_record = base_ds.record
+        break
+    except RuntimeError as exc:
+        raw_path = CACHE_DIR / base_ds.record["bidspath"]
+        if raw_path.suffix == ".set":
+            try:
+                raw = mne.io.read_raw_eeglab(raw_path, preload=False, verbose="ERROR")
+                loaded_record = base_ds.record
+                break
+            except Exception as fallback_exc:
+                print(f"Skipping record due to read error: {fallback_exc}")
+        else:
+            print(f"Skipping record due to read error: {exc}")
+
+if raw is None or loaded_record is None:
+    raise RuntimeError("Unable to load any recordings from the dataset.")
+
 events, event_id = mne.events_from_annotations(raw)
+print("Event IDs:", event_id)
 
-print(event_id)
-
-# %%
-ds = EEGDashDataset(query={"dataset": "ds005507"}, target_name="sex")
-
-# %%
-ds.datasets[2][0]
+bidspath = BIDSPath(
+    root=CACHE_DIR / loaded_record["dataset"],
+    datatype="eeg",
+    task=loaded_record.get("task"),
+    subject=loaded_record.get("subject"),
+    suffix="eeg",
+)
+try:
+    raw_bids = read_raw_bids(bidspath, verbose=False)
+    print("BIDS raw duration (s):", raw_bids.times[-1])
+except RuntimeError as exc:
+    print(f"BIDS read failed (missing coordsystem): {exc}")

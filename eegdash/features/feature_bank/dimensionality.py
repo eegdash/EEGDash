@@ -21,13 +21,29 @@ def dimensionality_higuchi_fractal_dim(x, /, k_max=10, eps=1e-7):
     N = x.shape[-1]
     hfd = np.empty(x.shape[:-1])
     log_k = np.vstack((-np.log(np.arange(1, k_max + 1)), np.ones(k_max))).T
-    L_km = np.empty(k_max)
     L_k = np.empty(k_max)
     for i in np.ndindex(x.shape[:-1]):
         for k in range(1, k_max + 1):
+            L_km = np.empty(k)
             for m in range(k):
-                L_km[m] = np.mean(np.abs(np.diff(x[i + (slice(m, None),)], n=k)))
-            L_k[k - 1] = (N - 1) * np.sum(L_km[:k]) / (k**3)
+                # Correct logic: subsample with stride k, then take linear diffs
+                # N_m = floor((N - m - 1) / k) * k
+                # We need length of curve for this k and m
+                # y = x[i, m::k]
+                # distinct points count is y.shape[0]
+                # normalization factor (N-1) / (floor(...) * k)
+
+                # y = x[i][m::k] is strided, make it contiguous for np.diff
+                y = np.ascontiguousarray(x[i][m::k])
+                if y.shape[0] < 2:
+                    L_km[m] = 0.0
+                    continue
+
+                n_max = ((N - m - 1) // k) * k
+                norm_factor = (N - 1) / (n_max * k) if n_max > 0 else 0
+                L_m = np.sum(np.abs(np.diff(y))) * norm_factor
+                L_km[m] = L_m
+            L_k[k - 1] = np.mean(L_km)
         L_k = np.maximum(L_k, eps)
         hfd[i] = np.linalg.lstsq(log_k, np.log(L_k))[0][0]
     return hfd
@@ -38,7 +54,7 @@ def dimensionality_higuchi_fractal_dim(x, /, k_max=10, eps=1e-7):
 def dimensionality_petrosian_fractal_dim(x, /):
     nd = signal_zero_crossings(np.diff(x, axis=-1))
     log_n = np.log(x.shape[-1])
-    return log_n / (np.log(nd) + log_n)
+    return log_n / (2 * log_n - np.log(nd))
 
 
 @FeaturePredecessor(*SIGNAL_PREDECESSORS)
@@ -104,7 +120,14 @@ def dimensionality_detrended_fluctuation_analysis(x, /):
         X = np.cumsum(x[i] - np.mean(x[i]))
         for j, n in enumerate(ns):
             n = int(n)
-            Z = np.reshape(X[: n * (X.shape[0] // n)], (n, X.shape[0] // n))
+            # Correct reshape to get windows as columns
+            # Take truncation
+            limit = n * (X.shape[0] // n)
+            # reshape(-1, n).T ensures [0..n-1] is col 0, [n..2n-1] is col 1
+            Z = np.reshape(X[:limit], (-1, n)).T
+            # a[:n] is (n, 2)
+            # Z is (n, num_windows)
+            # lstsq returns residuals sum of squares for each column
             Fni2 = np.linalg.lstsq(a[:n], Z)[1] / n
             Fn[j] = np.sqrt(np.mean(Fni2))
         alpha[i] = np.linalg.lstsq(log_n, np.log(Fn))[0][0]

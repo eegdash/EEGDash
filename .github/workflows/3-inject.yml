@@ -1,0 +1,110 @@
+# Reusable workflow for injecting digested data into MongoDB
+name: Inject to MongoDB (Reusable)
+
+on:
+  workflow_call:
+    inputs:
+      source_name:
+        description: 'Name of the source (e.g., openneuro, nemar, all)'
+        required: true
+        type: string
+      database:
+        description: 'Target database (eegdash, eegdash_staging, or eegdash_v1)'
+        required: true
+        type: string
+      dry_run:
+        description: 'Perform dry run only'
+        required: false
+        type: boolean
+        default: false
+    secrets:
+      DATASET_LISTINGS_TOKEN:
+        required: true
+      EEGDASH_ADMIN_TOKEN:
+        required: true
+    outputs:
+      datasets_injected:
+        description: 'Number of datasets injected'
+        value: ${{ jobs.inject.outputs.datasets_injected }}
+      records_injected:
+        description: 'Number of records injected'
+        value: ${{ jobs.inject.outputs.records_injected }}
+
+jobs:
+  inject:
+    name: Inject ${{ inputs.source_name }} to ${{ inputs.database }}
+    runs-on: ubuntu-latest
+    outputs:
+      datasets_injected: ${{ steps.inject.outputs.datasets }}
+      records_injected: ${{ steps.inject.outputs.records }}
+
+    steps:
+      - name: Checkout EEGDash
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
+          path: eegdash
+
+      - name: Checkout dataset listings repository
+        uses: actions/checkout@v4
+        with:
+          repository: eegdash/eegdash-dataset-listings
+          token: ${{ secrets.DATASET_LISTINGS_TOKEN }}
+          persist-credentials: true
+          fetch-depth: 1
+          path: eegdash-dataset-listings
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+          cache-dependency-path: 'eegdash/pyproject.toml'
+
+      - name: Install dependencies
+        run: |
+          cd eegdash
+          python -m pip install --upgrade pip
+          pip install -e .[digestion]
+
+      - name: Inject to MongoDB
+        id: inject
+        env:
+          EEGDASH_ADMIN_TOKEN: ${{ secrets.EEGDASH_ADMIN_TOKEN }}
+        run: |
+          if [ ! -d "eegdash-dataset-listings/digested" ] || [ -z "$(ls -A eegdash-dataset-listings/digested 2>/dev/null)" ]; then
+            echo "No digested datasets available, skipping injection"
+            echo "datasets=0" >> $GITHUB_OUTPUT
+            echo "records=0" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          ARGS="--input eegdash-dataset-listings/digested"
+          ARGS="$ARGS --database ${{ inputs.database }}"
+          
+          if [ "${{ inputs.dry_run }}" == "true" ]; then
+            ARGS="$ARGS --dry-run"
+          fi
+          
+          # Run injection and capture output
+          OUTPUT=$(python eegdash/scripts/ingestions/5_inject.py $ARGS 2>&1)
+          echo "$OUTPUT"
+          
+          # Parse results
+          DATASETS=$(echo "$OUTPUT" | grep -oP 'Datasets:\s+\K\d+' || echo "0")
+          RECORDS=$(echo "$OUTPUT" | grep -oP 'Records:\s+\K\d+' || echo "0")
+          
+          echo "datasets=$DATASETS" >> $GITHUB_OUTPUT
+          echo "records=$RECORDS" >> $GITHUB_OUTPUT
+
+      - name: Generate summary
+        run: |
+          echo "### 💉 ${{ inputs.source_name }} Injection Results" >> $GITHUB_STEP_SUMMARY
+          echo "- Database: \`${{ inputs.database }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- Datasets injected: ${{ steps.inject.outputs.datasets }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Records injected: ${{ steps.inject.outputs.records }}" >> $GITHUB_STEP_SUMMARY
+          if [ "${{ inputs.dry_run }}" == "true" ]; then
+            echo "- ⚠️ **DRY RUN** - no data was uploaded" >> $GITHUB_STEP_SUMMARY
+          fi

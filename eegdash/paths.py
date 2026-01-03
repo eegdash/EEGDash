@@ -24,10 +24,10 @@ def get_default_cache_dir() -> Path:
     priority order:
 
      1. The path specified by the ``EEGDASH_CACHE_DIR`` environment variable.
-     2. The path specified by the ``MNE_DATA`` configuration in the MNE-Python
-         config file.
-     3. A hidden directory named ``.eegdash_cache`` in the current working
+     2. A hidden directory named ``.eegdash_cache`` in the current working
          directory.
+     3. The path specified by the ``MNE_DATA`` configuration in the MNE-Python
+         config file (fallback).
 
     Returns
     -------
@@ -40,13 +40,21 @@ def get_default_cache_dir() -> Path:
     if env_dir:
         return Path(env_dir).expanduser().resolve()
 
-    # 2) Reuse MNE's data cache location if configured
+    # 2) Default to a project-local hidden folder (best for CI & reproducibility)
+    local = Path.cwd() / ".eegdash_cache"
+    try:
+        local.mkdir(exist_ok=True, parents=True)
+        return local
+    except Exception:
+        pass
+
+    # 3) Fall back to MNE's data cache location if configured
     mne_data = mne_get_config("MNE_DATA")
     if mne_data:
         return Path(mne_data).expanduser().resolve()
 
-    # 3) Default to a project-local hidden folder
-    return Path.cwd() / ".eegdash_cache"
+    # Last-resort: local path without pre-creating
+    return local
 
 
 __all__ = ["get_default_cache_dir"]

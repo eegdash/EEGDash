@@ -123,8 +123,9 @@ def test_challenge_dataset_subjects_logic(tmp_path):
                 mock_db.find.return_value = [
                     {
                         "dataset": "ds1",
-                        "data_name": "sub-01_task-rest_eeg.set",
-                        "bidspath": "sub-01/eeg/sub-01_task-rest_eeg.set",
+                        "data_name": "ds1_sub-01_task-rest_eeg.set",
+                        "bidspath": "ds1/sub-01/eeg/sub-01_task-rest_eeg.set",
+                        "bids_relpath": "sub-01/eeg/sub-01_task-rest_eeg.set",
                         "storage": {
                             "backend": "s3",
                             "base": "s3://bucket",

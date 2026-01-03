@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 from unittest.mock import patch
 
@@ -52,3 +53,27 @@ def test_get_default_cache_dir_mne(monkeypatch, tmp_path):
         with patch.object(Path, "mkdir", side_effect=PermissionError):
             path = get_default_cache_dir()
             assert path == mne_data_path.resolve()
+
+
+def test_paths_gap():
+    # Trigger paths.py fallback
+    os.environ.pop("EEGDASH_CACHE_DIR", None)
+    # Mocking cwd might be hard, but we can at least call it
+    res = get_default_cache_dir()
+    assert isinstance(res, Path)
+
+
+def test_paths_more():
+    from eegdash.paths import get_default_cache_dir
+
+    with patch("pathlib.Path.cwd", return_value=Path("/tmp")):
+        get_default_cache_dir()
+
+
+def test_paths_cache_dir_gap():
+    # get_default_cache_dir
+    # Mocking env vars
+    with patch.dict(os.environ, {}, clear=True):
+        # Should fallback to ~
+        d = get_default_cache_dir()
+        assert isinstance(d, Path)

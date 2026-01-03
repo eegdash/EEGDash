@@ -28,16 +28,9 @@ This example uses the :mod:`eegdash` library in combination with PyTorch to deve
 # First we find one resting state dataset. This dataset contains both eyes open
 # and eyes closed data.
 from pathlib import Path
-import os
+from eegdash.paths import get_default_cache_dir
 
-os.environ.setdefault("NUMBA_DISABLE_JIT", "1")
-os.environ.setdefault("MNE_USE_NUMBA", "false")
-os.environ.setdefault("_MNE_FAKE_HOME_DIR", str(Path.cwd()))
-(Path(os.environ["_MNE_FAKE_HOME_DIR"]) / ".mne").mkdir(exist_ok=True)
-
-cache_folder = Path(
-    os.getenv("EEGDASH_CACHE_DIR", Path.cwd() / "eegdash_cache")
-).resolve()
+cache_folder = Path(get_default_cache_dir()).resolve()
 cache_folder.mkdir(parents=True, exist_ok=True)
 # %%
 from eegdash import EEGDashDataset

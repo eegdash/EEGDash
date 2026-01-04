@@ -80,6 +80,8 @@ possible_paths = [
     CACHE_DIR / DATASET_ID / "participants.tsv",
     Path.home() / ".eegdash_cache" / DATASET_ID / "participants.tsv",
     Path.cwd() / ".eegdash_cache" / DATASET_ID / "participants.tsv",
+    # Add explicit path standard for downloaded datasets
+    CACHE_DIR / "data" / DATASET_ID / "participants.tsv",
 ]
 participants_path = None
 for p in possible_paths:
@@ -132,6 +134,7 @@ if not records:
     raise RuntimeError("No records matching valid subjects in participants.tsv found.")
 
 ds_sexdata = EEGDashDataset(
+    dataset=DATASET_ID,
     cache_dir=CACHE_DIR,
     records=records,
     description_fields=["subject", "session", "run", "task", "sex", "gender"],

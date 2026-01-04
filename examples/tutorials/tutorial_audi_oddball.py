@@ -66,6 +66,7 @@ if not records:
     raise RuntimeError("No oddball task records found from the API.")
 
 dataset_concat = EEGDashDataset(cache_dir=CACHE_DIR, records=records)
+dataset_concat.download_all()
 
 # %% [markdown]
 # ## Data Preprocessing Using Braindecode

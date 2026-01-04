@@ -42,7 +42,7 @@ To leverage recent and ongoing advancements in large-scale computational methods
 
         :octicon:`pulse;2em;sd-text-success`
         
-        **|recording_total|**
+        **|modalities_total|**
 
     .. grid-item-card::  Sources
         :class-card: dataset-counter-card

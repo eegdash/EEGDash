@@ -1066,7 +1066,7 @@ def _format_counter(key: str) -> str:
 
 
 _DATASET_COUNTER_PLACEHOLDERS = {
-    "|dataset_total|": _format_counter("datasets"),
+    "|datasets_total|": _format_counter("datasets"),
     "|subjects_total|": _format_counter("subjects"),
     "|recording_total|": _format_counter("recording"),
     "|modalities_total|": _format_counter("modalities"),

@@ -113,6 +113,8 @@ DATASET_CANONICAL_MAP = {
     },
 }
 
+_UNKNOWN_TOKENS = {"unknown", "nothing", "nan", "none", "null"}
+
 DATA_TABLE_TEMPLATE = textwrap.dedent(
     r"""
 <!-- jQuery + DataTables core -->
@@ -302,6 +304,8 @@ def _tag_normalizer(kind: str):
     def _normalise(token: str) -> str:
         text = " ".join(token.replace("_", " ").split())
         lowered = text.lower()
+        if lowered in _UNKNOWN_TOKENS:
+            return None
         if lowered in canonical:
             return canonical[lowered]
         return text
@@ -316,8 +320,43 @@ def prepare_table(df: pd.DataFrame):
 
     df["dataset"] = df["dataset"].apply(wrap_dataset_name)
     # changing the column order
+    if "dataset_title" not in df.columns:
+        df["dataset_title"] = ""
     if "source" not in df.columns:
         df["source"] = ""
+    if "record_modality" not in df.columns:
+        df["record_modality"] = df.get("record modality", "")
+    if "Type Subject" not in df.columns:
+        df["Type Subject"] = ""
+    if "modality of exp" not in df.columns:
+        df["modality of exp"] = ""
+    if "type of exp" not in df.columns:
+        df["type of exp"] = ""
+    if "license" not in df.columns:
+        df["license"] = ""
+    if "size" not in df.columns:
+        df["size"] = ""
+    if "size_bytes" not in df.columns:
+        df["size_bytes"] = 0
+    if "n_records" not in df.columns:
+        df["n_records"] = 0
+    if "n_subjects" not in df.columns:
+        df["n_subjects"] = 0
+    if "n_tasks" not in df.columns:
+        df["n_tasks"] = 0
+    if "nchans_set" not in df.columns:
+        df["nchans_set"] = ""
+    if "sampling_freqs" not in df.columns:
+        df["sampling_freqs"] = ""
+
+    def _strip_unknown(value: object) -> object:
+        if value is None:
+            return ""
+        if isinstance(value, float) and pd.isna(value):
+            return ""
+        if isinstance(value, str) and value.strip().lower() in _UNKNOWN_TOKENS:
+            return ""
+        return value
 
     df = df[
         [
@@ -338,6 +377,9 @@ def prepare_table(df: pd.DataFrame):
             "license",  # Added
         ]
     ]
+    obj_cols = df.select_dtypes(include="object").columns
+    for col in obj_cols:
+        df[col] = df[col].apply(_strip_unknown)
 
     # renaming time for something small
     df = df.rename(
@@ -642,6 +684,32 @@ def save_summary_stats(df_raw: pd.DataFrame):
     print(f"Generated summary stats: {stats_path}")
 
 
+def _load_local_dataset_summary() -> pd.DataFrame:
+    csv_path = (
+        Path(__file__).resolve().parents[1]
+        / "eegdash"
+        / "dataset"
+        / "dataset_summary.csv"
+    )
+    if not csv_path.exists():
+        return pd.DataFrame()
+    try:
+        return pd.read_csv(csv_path, index_col=False, header=0, skipinitialspace=True)
+    except Exception:
+        return pd.DataFrame()
+
+
+def _needs_csv_fallback(df_raw: pd.DataFrame) -> bool:
+    required_cols = ("n_subjects", "n_records", "n_tasks", "size_bytes")
+    if any(col not in df_raw.columns for col in required_cols):
+        return True
+    numeric = (
+        df_raw[list(required_cols)].apply(pd.to_numeric, errors="coerce").fillna(0)
+    )
+    totals = numeric.sum()
+    return any(totals.get(col, 0) == 0 for col in required_cols)
+
+
 def main_from_api(target_dir: str, database: str = DEFAULT_DATABASE, limit: int = 1000):
     """Generate summary tables from API data."""
     # Local import to avoid circular dependencies (depending on how this script is run)
@@ -661,9 +729,14 @@ def main_from_api(target_dir: str, database: str = DEFAULT_DATABASE, limit: int 
     print(f"Fetching data from API (database: {database})...")
     # Using registry's cached fetcher
     df_raw = fetch_datasets_from_api(API_BASE_URL, database)
+    if df_raw.empty or _needs_csv_fallback(df_raw):
+        fallback_df = _load_local_dataset_summary()
+        if not fallback_df.empty:
+            df_raw = fallback_df
+            print("API summary incomplete; using local dataset_summary.csv.")
 
     if df_raw.empty:
-        print("No datasets fetched from API!")
+        print("No datasets fetched from API or local CSV!")
         return
 
     # Generate bubble chart

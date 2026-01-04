@@ -1,3 +1,9 @@
+"""Minimal Tutorial
+================
+
+This is a minimal tutorial demonstrating how to use EEGDash with BrainDecode.
+"""
+
 import torch
 import torch.nn.functional as F
 from sklearn.model_selection import train_test_split
@@ -10,14 +16,21 @@ from braindecode.preprocessing import (
     preprocess,
 )
 from eegdash.dataset import EEGChallengeDataset
+from eegdash.paths import get_default_cache_dir
 
 # Load data
 dataset = EEGChallengeDataset(
     release="R1",
     task="contrastChangeDetection",
     description_fields=["p_factor"],
-    cache_dir="/Users/arno/eegdash_data/eeg2025_competition",
+    cache_dir=get_default_cache_dir(),
 )
+
+# Filter out any non-EEG files (e.g. .tsv/.json sidecars)
+valid_extensions = (".vhdr", ".edf", ".bdf", ".set")
+dataset.datasets = [
+    ds for ds in dataset.datasets if str(ds.bidspath).endswith(valid_extensions)
+]
 
 # Preprocess
 preprocess(
@@ -46,8 +59,8 @@ model = EEGConformer(
     n_chans=129,
     n_outputs=1,
     n_times=200,
-    att_depth=4,
-    att_heads=8,
+    num_layers=4,
+    num_heads=8,
 )
 optimizer = torch.optim.Adam(model.parameters(), lr=0.00002, weight_decay=1e-2)
 

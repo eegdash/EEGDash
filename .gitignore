@@ -12,6 +12,8 @@
 *.egg-info
 *.isorted
 *.json
+!coverage.json
+!coverage.xml
 *.npy
 *Hugging*
 *.py.isorted

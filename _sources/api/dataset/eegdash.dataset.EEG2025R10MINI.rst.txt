@@ -9,7 +9,7 @@ OpenNeuro dataset ``eeg2025r10mini``. Access recordings and metadata through EEG
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: Unknown` :bdg-light:`Tasks: Unknown` :bdg-light:`License: Unknown` :bdg-light:`Subjects: Unknown` :bdg-light:`Recordings: Unknown` :bdg-light:`Source: OpenNeuro`
+:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 8` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 20` :bdg-light:`Recordings: 220` :bdg-light:`Source: nemar`
 
 Dataset Information
 -------------------
@@ -42,28 +42,28 @@ Highlights
    .. grid-item-card:: Subjects & recordings
       :class-card: sd-border-1
 
-      - Subjects: Unknown
-      - Recordings: Unknown
-      - Tasks: Unknown
+      - Subjects: 20
+      - Recordings: 220
+      - Tasks: 8
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: Unknown
-      - Sampling rate (Hz): Unknown
+      - Channels: 129
+      - Sampling rate (Hz): 100
       - Duration (hours): Unknown
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
 
-      - Tasks: Unknown
+      - Tasks: 8
       - Experiment type: Unknown
       - Subject type: Unknown
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: Unknown
+      - Size on disk: 0B
       - File count: Unknown
       - Format: Unknown
 
@@ -76,7 +76,7 @@ Highlights
    .. grid-item-card:: Provenance
       :class-card: sd-border-1
 
-      - Source: OpenNeuro
+      - Source: nemar
       - OpenNeuro: `eeg2025r10mini <https://openneuro.org/datasets/eeg2025r10mini>`__
       - NeMAR: `eeg2025r10mini <https://nemar.org/dataexplorer/detail?dataset_id=eeg2025r10mini>`__
 

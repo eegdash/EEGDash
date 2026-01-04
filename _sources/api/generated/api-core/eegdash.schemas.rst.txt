@@ -6,14 +6,13 @@
    :undoc-members:
    :show-inheritance:
    :member-order: bysource
+   :no-index:
 
    
    .. rubric:: Functions
 
    .. autosummary::
    
-      Field
-      TypedDict
       create_dataset
       create_record
       validate_dataset
@@ -23,27 +22,21 @@
 
    .. autosummary::
    
-      Any
-      BaseModel
-      Clinical
-      ConfigDict
-      Dataset
       DatasetModel
-      Demographics
-      Entities
-      EntitiesModel
-      ExternalLinks
-      ManifestFileModel
-      ManifestModel
-      Paradigm
-      PurePosixPath
-      Record
       RecordModel
-      RepositoryStats
-      Storage
       StorageModel
+      EntitiesModel
+      ManifestModel
+      ManifestFileModel
+      Dataset
+      Record
+      Storage
+      Entities
+      Demographics
+      Clinical
+      Paradigm
+      ExternalLinks
+      RepositoryStats
       Timestamps
-      datetime
-      timezone
    
 

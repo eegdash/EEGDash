@@ -44,7 +44,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/searchpanes/2.3.1/css/searchPanes.dataTables.min.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=7021f170" />
     <link rel="stylesheet" type="text/css" href="../../../_static/css/treemap.css?v=7131b20f" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=d9bd6b14" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=b782d13e" />
   
   <!-- So that users can add custom icons -->
   <script src="../../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
@@ -462,6 +462,7 @@
 
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Eyes Open vs. Closed Classification</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorial_feature_extractor_open_close_eye.html">EEGDash Feature Extractor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_minimal.html">Minimal Tutorial</a></li>
 </ul>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../eeg2025/tutorial_challenge_1.html">Challenge 1: Cross-Task Transfer Learning!</a></li>
@@ -550,9 +551,9 @@ the metadata for the experiment before requesting any recordings.</p>
 <p>First we find one resting state dataset. This dataset contains both eyes open
 and eyes closed data.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">eegdash.paths</span><span class="w"> </span><span class="kn">import</span> <a href="../../../api/generated/api-core/eegdash.paths.html#eegdash.paths.get_default_cache_dir" title="eegdash.paths.get_default_cache_dir" class="sphx-glr-backref-module-eegdash-paths sphx-glr-backref-type-py-function"><span class="n">get_default_cache_dir</span></a>
+<span class="kn">from</span><span class="w"> </span><span class="nn">eegdash.paths</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_default_cache_dir</span>
 
-<span class="n">cache_folder</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><a href="../../../api/generated/api-core/eegdash.paths.html#eegdash.paths.get_default_cache_dir" title="eegdash.paths.get_default_cache_dir" class="sphx-glr-backref-module-eegdash-paths sphx-glr-backref-type-py-function"><span class="n">get_default_cache_dir</span></a><span class="p">())</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+<span class="n">cache_folder</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">get_default_cache_dir</span><span class="p">())</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
 <span class="n">cache_folder</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -598,9 +599,9 @@ indicating the start of a 20-second eyes-open period.</p>
 after the event onset. Similarly, for the eyes-open event, we extract data
 from 5 to 19 seconds after the event onset. This ensures an equal amount of
 data for both conditions. The event extraction is handled by the custom
-function <a class="reference internal" href="../../../api/generated/api-core/eegdash.hbn.html#eegdash.hbn.hbn_ec_ec_reannotation" title="eegdash.hbn.preprocessing.hbn_ec_ec_reannotation"><code class="xref py py-func docutils literal notranslate"><span class="pre">eegdash.hbn.preprocessing.hbn_ec_ec_reannotation()</span></code></a>.</p>
+function <code class="xref py py-func docutils literal notranslate"><span class="pre">eegdash.hbn.preprocessing.hbn_ec_ec_reannotation()</span></code>.</p>
 <p>Next, we apply four preprocessing steps in Braindecode:
-1. <strong>Reannotation</strong> of event markers using <a class="reference internal" href="../../../api/generated/api-core/eegdash.hbn.html#eegdash.hbn.hbn_ec_ec_reannotation" title="eegdash.hbn.preprocessing.hbn_ec_ec_reannotation"><code class="xref py py-func docutils literal notranslate"><span class="pre">eegdash.hbn.preprocessing.hbn_ec_ec_reannotation()</span></code></a>.
+1. <strong>Reannotation</strong> of event markers using <code class="xref py py-func docutils literal notranslate"><span class="pre">eegdash.hbn.preprocessing.hbn_ec_ec_reannotation()</span></code>.
 2. <strong>Selection</strong> of 24 specific EEG channels from the original 128.
 3. <strong>Resampling</strong> the EEG data to a frequency of 128 Hz.
 4. <strong>Filtering</strong> the EEG signals to retain frequencies between 1 Hz and 55 Hz.</p>
@@ -618,7 +619,7 @@ corresponding to their respective event markers).</p>
     <span class="n">create_windows_from_events</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">eegdash.hbn.preprocessing</span><span class="w"> </span><span class="kn">import</span> <a href="../../../api/generated/api-core/eegdash.hbn.html#eegdash.hbn.hbn_ec_ec_reannotation" title="eegdash.hbn.hbn_ec_ec_reannotation" class="sphx-glr-backref-module-eegdash-hbn sphx-glr-backref-type-py-class"><span class="n">hbn_ec_ec_reannotation</span></a>
+<span class="kn">from</span><span class="w"> </span><span class="nn">eegdash.hbn.preprocessing</span><span class="w"> </span><span class="kn">import</span> <span class="n">hbn_ec_ec_reannotation</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
 
 <span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">RuntimeWarning</span><span class="p">)</span>
@@ -626,7 +627,7 @@ corresponding to their respective event markers).</p>
 
 <span class="c1"># BrainDecode preprocessors</span>
 <span class="n">preprocessors</span> <span class="o">=</span> <span class="p">[</span>
-    <a href="../../../api/generated/api-core/eegdash.hbn.html#eegdash.hbn.hbn_ec_ec_reannotation" title="eegdash.hbn.hbn_ec_ec_reannotation" class="sphx-glr-backref-module-eegdash-hbn sphx-glr-backref-type-py-class"><span class="n">hbn_ec_ec_reannotation</span></a><span class="p">(),</span>
+    <span class="n">hbn_ec_ec_reannotation</span><span class="p">(),</span>
     <span class="n">Preprocessor</span><span class="p">(</span>
         <span class="s2">&quot;pick_channels&quot;</span><span class="p">,</span>
         <span class="n">ch_names</span><span class="o">=</span><span class="p">[</span>
@@ -673,7 +674,7 @@ corresponding to their respective event markers).</p>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/home/runner/work/EEGDash/EEGDash/.venv/lib/python3.11/site-packages/braindecode/preprocessing/preprocess.py:76: UserWarning: apply_on_array can only be True if fn is a callable function. Automatically correcting to apply_on_array=False.
   warn(
 Used Annotations descriptions: [np.str_(&#39;boundary&#39;), np.str_(&#39;break cnt&#39;), np.str_(&#39;instructed_toCloseEyes&#39;), np.str_(&#39;instructed_toOpenEyes&#39;), np.str_(&#39;resting_start&#39;)]
-[01/03/26 17:57:19] INFO     Original events found with ids: preprocessing.py:66
+[01/04/26 21:36:28] INFO     Original events found with ids: preprocessing.py:66
                              {np.str_(&#39;boundary&#39;): 1,
                              np.str_(&#39;break cnt&#39;): 2,
                              np.str_(&#39;instructed_toCloseEyes
@@ -960,8 +961,8 @@ Epoch 4, Train accuracy: 0.91, Test accuracy: 0.57
 Epoch 5, Train accuracy: 0.88, Test accuracy: 0.50
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 8.077 seconds)</p>
-<p><strong>Estimated memory usage:</strong>  549 MB</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 5.187 seconds)</p>
+<p><strong>Estimated memory usage:</strong>  553 MB</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-generated-auto-examples-core-tutorial-eoec-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/eegdash/EEGDash/main?urlpath=lab/tree/notebooks/generated/auto_examples/core/tutorial_eoec.ipynb"><img alt="Launch binder" src="../../../_images/binder_badge_logo.svg" style="width: 150px;" />

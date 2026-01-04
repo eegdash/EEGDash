@@ -9,7 +9,7 @@ OpenNeuro dataset ``ds003645``. Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: EEG, MEG, MRI` :bdg-light:`Tasks: 1` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 18` :bdg-light:`Recordings: 108` :bdg-light:`Source: OpenNeuro`
+:bdg-light:`Modality: eeg, meg` :bdg-light:`Tasks: 2` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 19` :bdg-light:`Recordings: 224` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -42,9 +42,9 @@ Highlights
    .. grid-item-card:: Subjects & recordings
       :class-card: sd-border-1
 
-      - Subjects: 18
-      - Recordings: 108
-      - Tasks: 1
+      - Subjects: 19
+      - Recordings: 224
+      - Tasks: 2
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
@@ -56,15 +56,15 @@ Highlights
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
 
-      - Tasks: 1
+      - Tasks: 2
       - Experiment type: Perception
       - Subject type: Healthy
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 105.89 GB
-      - File count: 0
+      - Size on disk: 106.32 GB
+      - File count: 0.0
       - Format: Unknown
 
    .. grid-item-card:: License & citation
@@ -76,7 +76,7 @@ Highlights
    .. grid-item-card:: Provenance
       :class-card: sd-border-1
 
-      - Source: OpenNeuro
+      - Source: openneuro
       - OpenNeuro: `ds003645 <https://openneuro.org/datasets/ds003645>`__
       - NeMAR: `ds003645 <https://nemar.org/dataexplorer/detail?dataset_id=ds003645>`__
 

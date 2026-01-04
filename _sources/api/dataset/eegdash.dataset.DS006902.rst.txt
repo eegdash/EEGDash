@@ -9,7 +9,7 @@ OpenNeuro dataset ``ds006902``. Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: Unknown` :bdg-light:`Tasks: Unknown` :bdg-light:`License: Unknown` :bdg-light:`Subjects: Unknown` :bdg-light:`Recordings: Unknown` :bdg-light:`Source: OpenNeuro`
+:bdg-light:`Modality: fnirs` :bdg-light:`Tasks: 1` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 43` :bdg-light:`Recordings: 260` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -42,9 +42,9 @@ Highlights
    .. grid-item-card:: Subjects & recordings
       :class-card: sd-border-1
 
-      - Subjects: Unknown
-      - Recordings: Unknown
-      - Tasks: Unknown
+      - Subjects: 43
+      - Recordings: 260
+      - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
@@ -56,14 +56,14 @@ Highlights
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
 
-      - Tasks: Unknown
+      - Tasks: 1
       - Experiment type: Unknown
-      - Subject type: Unknown
+      - Subject type: pain, exercise
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: Unknown
+      - Size on disk: 0B
       - File count: Unknown
       - Format: Unknown
 
@@ -76,7 +76,7 @@ Highlights
    .. grid-item-card:: Provenance
       :class-card: sd-border-1
 
-      - Source: OpenNeuro
+      - Source: openneuro
       - OpenNeuro: `ds006902 <https://openneuro.org/datasets/ds006902>`__
       - NeMAR: `ds006902 <https://nemar.org/dataexplorer/detail?dataset_id=ds006902>`__
 

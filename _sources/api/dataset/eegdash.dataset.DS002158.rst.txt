@@ -9,7 +9,7 @@ OpenNeuro dataset ``ds002158``. Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: MRI, EEG` :bdg-light:`Tasks: 1` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 20` :bdg-light:`Recordings: 117` :bdg-light:`Source: OpenNeuro`
+:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 20` :bdg-light:`Recordings: 117` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -63,8 +63,8 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 428.59 GB
-      - File count: 0
+      - Size on disk: 76.54 GB
+      - File count: 0.0
       - Format: Unknown
 
    .. grid-item-card:: License & citation
@@ -76,7 +76,7 @@ Highlights
    .. grid-item-card:: Provenance
       :class-card: sd-border-1
 
-      - Source: OpenNeuro
+      - Source: openneuro
       - OpenNeuro: `ds002158 <https://openneuro.org/datasets/ds002158>`__
       - NeMAR: `ds002158 <https://nemar.org/dataexplorer/detail?dataset_id=ds002158>`__
 

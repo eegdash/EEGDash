@@ -9,7 +9,7 @@ OpenNeuro dataset ``ds002720``. Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: EEG` :bdg-light:`Tasks: 10` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 18` :bdg-light:`Recordings: 165` :bdg-light:`Source: OpenNeuro`
+:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 10` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 18` :bdg-light:`Recordings: 165` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -64,7 +64,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 2.39 GB
-      - File count: 0
+      - File count: 0.0
       - Format: Unknown
 
    .. grid-item-card:: License & citation
@@ -76,7 +76,7 @@ Highlights
    .. grid-item-card:: Provenance
       :class-card: sd-border-1
 
-      - Source: OpenNeuro
+      - Source: openneuro
       - OpenNeuro: `ds002720 <https://openneuro.org/datasets/ds002720>`__
       - NeMAR: `ds002720 <https://nemar.org/dataexplorer/detail?dataset_id=ds002720>`__
 

@@ -9,7 +9,7 @@ OpenNeuro dataset ``ds005170``. Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: EEG` :bdg-light:`Tasks: 1` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 5` :bdg-light:`Recordings: 225` :bdg-light:`Source: OpenNeuro`
+:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 5` :bdg-light:`Recordings: 225` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -63,8 +63,8 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 261.77 GB
-      - File count: 0
+      - Size on disk: 90.73 GB
+      - File count: 0.0
       - Format: Unknown
 
    .. grid-item-card:: License & citation
@@ -76,7 +76,7 @@ Highlights
    .. grid-item-card:: Provenance
       :class-card: sd-border-1
 
-      - Source: OpenNeuro
+      - Source: openneuro
       - OpenNeuro: `ds005170 <https://openneuro.org/datasets/ds005170>`__
       - NeMAR: `ds005170 <https://nemar.org/dataexplorer/detail?dataset_id=ds005170>`__
 

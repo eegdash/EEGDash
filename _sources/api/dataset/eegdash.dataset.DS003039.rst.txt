@@ -9,7 +9,7 @@ OpenNeuro dataset ``ds003039``. Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: EEG` :bdg-light:`Tasks: 1` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 16` :bdg-light:`Recordings: 16` :bdg-light:`Source: OpenNeuro`
+:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 19` :bdg-light:`Recordings: 19` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -42,8 +42,8 @@ Highlights
    .. grid-item-card:: Subjects & recordings
       :class-card: sd-border-1
 
-      - Subjects: 16
-      - Recordings: 16
+      - Subjects: 19
+      - Recordings: 19
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -64,7 +64,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 7.82 GB
-      - File count: 0
+      - File count: 0.0
       - Format: Unknown
 
    .. grid-item-card:: License & citation
@@ -76,7 +76,7 @@ Highlights
    .. grid-item-card:: Provenance
       :class-card: sd-border-1
 
-      - Source: OpenNeuro
+      - Source: openneuro
       - OpenNeuro: `ds003039 <https://openneuro.org/datasets/ds003039>`__
       - NeMAR: `ds003039 <https://nemar.org/dataexplorer/detail?dataset_id=ds003039>`__
 

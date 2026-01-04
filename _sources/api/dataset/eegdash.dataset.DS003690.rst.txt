@@ -9,7 +9,7 @@ OpenNeuro dataset ``ds003690``. Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: EEG` :bdg-light:`Tasks: 3` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 75` :bdg-light:`Recordings: 375` :bdg-light:`Source: OpenNeuro`
+:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 3` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 75` :bdg-light:`Recordings: 375` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -49,7 +49,7 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 64,66
+      - Channels: 61
       - Sampling rate (Hz): 500
       - Duration (hours): 46.771
 
@@ -64,7 +64,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 21.46 GB
-      - File count: 0
+      - File count: 0.0
       - Format: Unknown
 
    .. grid-item-card:: License & citation
@@ -76,7 +76,7 @@ Highlights
    .. grid-item-card:: Provenance
       :class-card: sd-border-1
 
-      - Source: OpenNeuro
+      - Source: openneuro
       - OpenNeuro: `ds003690 <https://openneuro.org/datasets/ds003690>`__
       - NeMAR: `ds003690 <https://nemar.org/dataexplorer/detail?dataset_id=ds003690>`__
 

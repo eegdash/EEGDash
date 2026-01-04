@@ -9,7 +9,7 @@ OpenNeuro dataset ``ds003190``. Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: CHANNELS, EEG, EVENTS` :bdg-light:`Tasks: 1` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 19` :bdg-light:`Recordings: 280` :bdg-light:`Source: OpenNeuro`
+:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 2` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 19` :bdg-light:`Recordings: 384` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -43,28 +43,28 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 19
-      - Recordings: 280
-      - Tasks: 1
+      - Recordings: 384
+      - Tasks: 2
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 0
+      - Channels: 9*
       - Sampling rate (Hz): 256
       - Duration (hours): 29.891
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
 
-      - Tasks: 1
+      - Tasks: 2
       - Experiment type: Perception
       - Subject type: Healthy
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 1.27 GB
-      - File count: 0
+      - Size on disk: 1.01 GB
+      - File count: 0.0
       - Format: Unknown
 
    .. grid-item-card:: License & citation
@@ -76,7 +76,7 @@ Highlights
    .. grid-item-card:: Provenance
       :class-card: sd-border-1
 
-      - Source: OpenNeuro
+      - Source: openneuro
       - OpenNeuro: `ds003190 <https://openneuro.org/datasets/ds003190>`__
       - NeMAR: `ds003190 <https://nemar.org/dataexplorer/detail?dataset_id=ds003190>`__
 

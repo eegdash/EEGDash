@@ -44,7 +44,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/searchpanes/2.3.1/css/searchPanes.dataTables.min.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=7021f170" />
     <link rel="stylesheet" type="text/css" href="../../../_static/css/treemap.css?v=7131b20f" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=d9bd6b14" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=b782d13e" />
   
   <!-- So that users can add custom icons -->
   <script src="../../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
@@ -1071,52 +1071,52 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="module-eegdash.features.feature_bank.complexity">
-<span id="eegdash-features-feature-bank-complexity"></span><h1>eegdash.features.feature_bank.complexity<a class="headerlink" href="#module-eegdash.features.feature_bank.complexity" title="Link to this heading">#</a></h1>
+  <section id="eegdash-features-feature-bank-complexity">
+<h1>eegdash.features.feature_bank.complexity<a class="headerlink" href="#eegdash-features-feature-bank-complexity" title="Link to this heading">#</a></h1>
 <p class="rubric">Functions</p>
 <div class="pst-scrollable-table-container"><table class="autosummary longtable table">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#eegdash.features.feature_bank.complexity.complexity_entropy_preprocessor" title="eegdash.features.feature_bank.complexity.complexity_entropy_preprocessor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">complexity_entropy_preprocessor</span></code></a>(x, /[, m, r, l])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">complexity_entropy_preprocessor</span></code>(x, /[, m, r, l])</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#eegdash.features.feature_bank.complexity.complexity_approx_entropy" title="eegdash.features.feature_bank.complexity.complexity_approx_entropy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">complexity_approx_entropy</span></code></a>(counts_m, ...)</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">complexity_approx_entropy</span></code>(counts_m, ...)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#eegdash.features.feature_bank.complexity.complexity_sample_entropy" title="eegdash.features.feature_bank.complexity.complexity_sample_entropy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">complexity_sample_entropy</span></code></a>(counts_m, ...)</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">complexity_sample_entropy</span></code>(counts_m, ...)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#eegdash.features.feature_bank.complexity.complexity_svd_entropy" title="eegdash.features.feature_bank.complexity.complexity_svd_entropy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">complexity_svd_entropy</span></code></a>(x, /[, m, tau])</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">complexity_svd_entropy</span></code>(x, /[, m, tau])</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#eegdash.features.feature_bank.complexity.complexity_lempel_ziv" title="eegdash.features.feature_bank.complexity.complexity_lempel_ziv"><code class="xref py py-obj docutils literal notranslate"><span class="pre">complexity_lempel_ziv</span></code></a>(x, /[, threshold, ...])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">complexity_lempel_ziv</span></code>(x, /[, threshold, ...])</p></td>
 <td><p></p></td>
 </tr>
 </tbody>
 </table>
 </div>
 <dl class="py function">
-<dt class="sig sig-object py" id="eegdash.features.feature_bank.complexity.complexity_entropy_preprocessor">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.complexity.</span></span><span class="sig-name descname"><span class="pre">complexity_entropy_preprocessor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">m</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">l</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/main/eegdash/features/feature_bank/complexity.py#L33-L45"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.feature_bank.complexity.complexity_entropy_preprocessor" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.complexity.</span></span><span class="sig-name descname"><span class="pre">complexity_entropy_preprocessor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">m</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">l</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/main/eegdash/features/feature_bank/complexity.py#L33-L45"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="eegdash.features.feature_bank.complexity.complexity_approx_entropy">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.complexity.</span></span><span class="sig-name descname"><span class="pre">complexity_approx_entropy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">counts_m</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">counts_mp1</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/main/eegdash/features/feature_bank/complexity.py#L48-L53"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.feature_bank.complexity.complexity_approx_entropy" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.complexity.</span></span><span class="sig-name descname"><span class="pre">complexity_approx_entropy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">counts_m</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">counts_mp1</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/main/eegdash/features/feature_bank/complexity.py#L48-L53"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="eegdash.features.feature_bank.complexity.complexity_sample_entropy">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.complexity.</span></span><span class="sig-name descname"><span class="pre">complexity_sample_entropy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">counts_m</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">counts_mp1</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/main/eegdash/features/feature_bank/complexity.py#L56-L61"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.feature_bank.complexity.complexity_sample_entropy" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.complexity.</span></span><span class="sig-name descname"><span class="pre">complexity_sample_entropy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">counts_m</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">counts_mp1</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/main/eegdash/features/feature_bank/complexity.py#L56-L61"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="eegdash.features.feature_bank.complexity.complexity_svd_entropy">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.complexity.</span></span><span class="sig-name descname"><span class="pre">complexity_svd_entropy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">m</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/main/eegdash/features/feature_bank/complexity.py#L64-L72"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.feature_bank.complexity.complexity_svd_entropy" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.complexity.</span></span><span class="sig-name descname"><span class="pre">complexity_svd_entropy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">m</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/main/eegdash/features/feature_bank/complexity.py#L64-L72"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="eegdash.features.feature_bank.complexity.complexity_lempel_ziv">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.complexity.</span></span><span class="sig-name descname"><span class="pre">complexity_lempel_ziv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/main/eegdash/features/feature_bank/complexity.py#L75-L106"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.feature_bank.complexity.complexity_lempel_ziv" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.complexity.</span></span><span class="sig-name descname"><span class="pre">complexity_lempel_ziv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/main/eegdash/features/feature_bank/complexity.py#L75-L106"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd></dd></dl>
 
 </section>
@@ -1159,22 +1159,6 @@
                 <dialog id="pst-secondary-sidebar-modal"></dialog>
                 <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
-
-  <div class="sidebar-secondary-item">
-<div
-    id="pst-page-navigation-heading-2"
-    class="page-toc tocsection onthispage">
-    <i class="fa-solid fa-list"></i> On this page
-  </div>
-  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
-    <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.features.feature_bank.complexity.complexity_entropy_preprocessor"><code class="docutils literal notranslate"><span class="pre">complexity_entropy_preprocessor()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.features.feature_bank.complexity.complexity_approx_entropy"><code class="docutils literal notranslate"><span class="pre">complexity_approx_entropy()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.features.feature_bank.complexity.complexity_sample_entropy"><code class="docutils literal notranslate"><span class="pre">complexity_sample_entropy()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.features.feature_bank.complexity.complexity_svd_entropy"><code class="docutils literal notranslate"><span class="pre">complexity_svd_entropy()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.features.feature_bank.complexity.complexity_lempel_ziv"><code class="docutils literal notranslate"><span class="pre">complexity_lempel_ziv()</span></code></a></li>
-</ul>
-  </nav></div>
 
   <div class="sidebar-secondary-item">
 

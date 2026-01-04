@@ -9,7 +9,7 @@ OpenNeuro dataset ``ds002893``. Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: EEG` :bdg-light:`Tasks: 1` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 49` :bdg-light:`Recordings: 52` :bdg-light:`Source: OpenNeuro`
+:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 49` :bdg-light:`Recordings: 52` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -50,7 +50,7 @@ Highlights
       :class-card: sd-border-1
 
       - Channels: 33
-      - Sampling rate (Hz): 250,250.0293378038558
+      - Sampling rate (Hz): 250
       - Duration (hours): 36.114
 
    .. grid-item-card:: Tasks & conditions
@@ -63,8 +63,8 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 7.70 GB
-      - File count: 0
+      - Size on disk: 7.7 GB
+      - File count: 0.0
       - Format: Unknown
 
    .. grid-item-card:: License & citation
@@ -76,7 +76,7 @@ Highlights
    .. grid-item-card:: Provenance
       :class-card: sd-border-1
 
-      - Source: OpenNeuro
+      - Source: openneuro
       - OpenNeuro: `ds002893 <https://openneuro.org/datasets/ds002893>`__
       - NeMAR: `ds002893 <https://nemar.org/dataexplorer/detail?dataset_id=ds002893>`__
 

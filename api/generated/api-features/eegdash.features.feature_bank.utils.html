@@ -44,7 +44,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/searchpanes/2.3.1/css/searchPanes.dataTables.min.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=7021f170" />
     <link rel="stylesheet" type="text/css" href="../../../_static/css/treemap.css?v=7131b20f" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=d9bd6b14" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=b782d13e" />
   
   <!-- So that users can add custom icons -->
   <script src="../../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
@@ -1071,36 +1071,36 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="module-eegdash.features.feature_bank.utils">
-<span id="eegdash-features-feature-bank-utils"></span><h1>eegdash.features.feature_bank.utils<a class="headerlink" href="#module-eegdash.features.feature_bank.utils" title="Link to this heading">#</a></h1>
+  <section id="eegdash-features-feature-bank-utils">
+<h1>eegdash.features.feature_bank.utils<a class="headerlink" href="#eegdash-features-feature-bank-utils" title="Link to this heading">#</a></h1>
 <p class="rubric">Functions</p>
 <div class="pst-scrollable-table-container"><table class="autosummary longtable table">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#eegdash.features.feature_bank.utils.get_valid_freq_band" title="eegdash.features.feature_bank.utils.get_valid_freq_band"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_valid_freq_band</span></code></a>(fs, n[, f_min, f_max])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_valid_freq_band</span></code>(fs, n[, f_min, f_max])</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#eegdash.features.feature_bank.utils.reduce_freq_bands" title="eegdash.features.feature_bank.utils.reduce_freq_bands"><code class="xref py py-obj docutils literal notranslate"><span class="pre">reduce_freq_bands</span></code></a>(f, x, bands[, reduce_func])</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">reduce_freq_bands</span></code>(f, x, bands[, reduce_func])</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#eegdash.features.feature_bank.utils.slice_freq_band" title="eegdash.features.feature_bank.utils.slice_freq_band"><code class="xref py py-obj docutils literal notranslate"><span class="pre">slice_freq_band</span></code></a>(f, *x[, f_min, f_max])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">slice_freq_band</span></code>(f, *x[, f_min, f_max])</p></td>
 <td><p></p></td>
 </tr>
 </tbody>
 </table>
 </div>
 <dl class="py function">
-<dt class="sig sig-object py" id="eegdash.features.feature_bank.utils.get_valid_freq_band">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.utils.</span></span><span class="sig-name descname"><span class="pre">get_valid_freq_band</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f_min</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/main/eegdash/features/feature_bank/utils.py#L19-L30"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.feature_bank.utils.get_valid_freq_band" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.utils.</span></span><span class="sig-name descname"><span class="pre">get_valid_freq_band</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f_min</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/main/eegdash/features/feature_bank/utils.py#L19-L30"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="eegdash.features.feature_bank.utils.reduce_freq_bands">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.utils.</span></span><span class="sig-name descname"><span class="pre">reduce_freq_bands</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bands</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reduce_func=&lt;function</span> <span class="pre">sum&gt;</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/main/eegdash/features/feature_bank/utils.py#L47-L56"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.feature_bank.utils.reduce_freq_bands" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.utils.</span></span><span class="sig-name descname"><span class="pre">reduce_freq_bands</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bands</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reduce_func=&lt;function</span> <span class="pre">sum&gt;</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/main/eegdash/features/feature_bank/utils.py#L47-L56"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="eegdash.features.feature_bank.utils.slice_freq_band">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.utils.</span></span><span class="sig-name descname"><span class="pre">slice_freq_band</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f_min</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/main/eegdash/features/feature_bank/utils.py#L33-L44"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.feature_bank.utils.slice_freq_band" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.utils.</span></span><span class="sig-name descname"><span class="pre">slice_freq_band</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f_min</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/main/eegdash/features/feature_bank/utils.py#L33-L44"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd></dd></dl>
 
 </section>
@@ -1143,20 +1143,6 @@
                 <dialog id="pst-secondary-sidebar-modal"></dialog>
                 <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
-
-  <div class="sidebar-secondary-item">
-<div
-    id="pst-page-navigation-heading-2"
-    class="page-toc tocsection onthispage">
-    <i class="fa-solid fa-list"></i> On this page
-  </div>
-  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
-    <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.features.feature_bank.utils.get_valid_freq_band"><code class="docutils literal notranslate"><span class="pre">get_valid_freq_band()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.features.feature_bank.utils.reduce_freq_bands"><code class="docutils literal notranslate"><span class="pre">reduce_freq_bands()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.features.feature_bank.utils.slice_freq_band"><code class="docutils literal notranslate"><span class="pre">slice_freq_band()</span></code></a></li>
-</ul>
-  </nav></div>
 
   <div class="sidebar-secondary-item">
 

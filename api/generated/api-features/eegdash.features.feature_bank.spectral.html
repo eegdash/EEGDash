@@ -44,7 +44,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/searchpanes/2.3.1/css/searchPanes.dataTables.min.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=7021f170" />
     <link rel="stylesheet" type="text/css" href="../../../_static/css/treemap.css?v=7131b20f" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=d9bd6b14" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=b782d13e" />
   
   <!-- So that users can add custom icons -->
   <script src="../../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
@@ -1071,108 +1071,108 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="module-eegdash.features.feature_bank.spectral">
-<span id="eegdash-features-feature-bank-spectral"></span><h1>eegdash.features.feature_bank.spectral<a class="headerlink" href="#module-eegdash.features.feature_bank.spectral" title="Link to this heading">#</a></h1>
+  <section id="eegdash-features-feature-bank-spectral">
+<h1>eegdash.features.feature_bank.spectral<a class="headerlink" href="#eegdash-features-feature-bank-spectral" title="Link to this heading">#</a></h1>
 <p class="rubric">Functions</p>
 <div class="pst-scrollable-table-container"><table class="autosummary longtable table">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#eegdash.features.feature_bank.spectral.spectral_preprocessor" title="eegdash.features.feature_bank.spectral.spectral_preprocessor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">spectral_preprocessor</span></code></a>(x, /, **kwargs)</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">spectral_preprocessor</span></code>(x, /, **kwargs)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#eegdash.features.feature_bank.spectral.spectral_normalized_preprocessor" title="eegdash.features.feature_bank.spectral.spectral_normalized_preprocessor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">spectral_normalized_preprocessor</span></code></a>(f, p, /)</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">spectral_normalized_preprocessor</span></code>(f, p, /)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#eegdash.features.feature_bank.spectral.spectral_db_preprocessor" title="eegdash.features.feature_bank.spectral.spectral_db_preprocessor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">spectral_db_preprocessor</span></code></a>(f, p, /[, eps])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">spectral_db_preprocessor</span></code>(f, p, /[, eps])</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#eegdash.features.feature_bank.spectral.spectral_root_total_power" title="eegdash.features.feature_bank.spectral.spectral_root_total_power"><code class="xref py py-obj docutils literal notranslate"><span class="pre">spectral_root_total_power</span></code></a>(f, p, /)</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">spectral_root_total_power</span></code>(f, p, /)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#eegdash.features.feature_bank.spectral.spectral_moment" title="eegdash.features.feature_bank.spectral.spectral_moment"><code class="xref py py-obj docutils literal notranslate"><span class="pre">spectral_moment</span></code></a>(f, p, /)</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">spectral_moment</span></code>(f, p, /)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#eegdash.features.feature_bank.spectral.spectral_entropy" title="eegdash.features.feature_bank.spectral.spectral_entropy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">spectral_entropy</span></code></a>(f, p, /)</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">spectral_entropy</span></code>(f, p, /)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#eegdash.features.feature_bank.spectral.spectral_edge" title="eegdash.features.feature_bank.spectral.spectral_edge"><code class="xref py py-obj docutils literal notranslate"><span class="pre">spectral_edge</span></code></a>(f, p, /[, edge])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">spectral_edge</span></code>(f, p, /[, edge])</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#eegdash.features.feature_bank.spectral.spectral_slope" title="eegdash.features.feature_bank.spectral.spectral_slope"><code class="xref py py-obj docutils literal notranslate"><span class="pre">spectral_slope</span></code></a>(f, p, /)</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">spectral_slope</span></code>(f, p, /)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#eegdash.features.feature_bank.spectral.spectral_bands_power" title="eegdash.features.feature_bank.spectral.spectral_bands_power"><code class="xref py py-obj docutils literal notranslate"><span class="pre">spectral_bands_power</span></code></a>(f, p, /[, bands])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">spectral_bands_power</span></code>(f, p, /[, bands])</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#eegdash.features.feature_bank.spectral.spectral_hjorth_activity" title="eegdash.features.feature_bank.spectral.spectral_hjorth_activity"><code class="xref py py-obj docutils literal notranslate"><span class="pre">spectral_hjorth_activity</span></code></a>(f, p, /)</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">spectral_hjorth_activity</span></code>(f, p, /)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#eegdash.features.feature_bank.spectral.spectral_hjorth_mobility" title="eegdash.features.feature_bank.spectral.spectral_hjorth_mobility"><code class="xref py py-obj docutils literal notranslate"><span class="pre">spectral_hjorth_mobility</span></code></a>(f, p, /)</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">spectral_hjorth_mobility</span></code>(f, p, /)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#eegdash.features.feature_bank.spectral.spectral_hjorth_complexity" title="eegdash.features.feature_bank.spectral.spectral_hjorth_complexity"><code class="xref py py-obj docutils literal notranslate"><span class="pre">spectral_hjorth_complexity</span></code></a>(f, p, /)</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">spectral_hjorth_complexity</span></code>(f, p, /)</p></td>
 <td><p></p></td>
 </tr>
 </tbody>
 </table>
 </div>
 <dl class="py function">
-<dt class="sig sig-object py" id="eegdash.features.feature_bank.spectral.spectral_preprocessor">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.spectral.</span></span><span class="sig-name descname"><span class="pre">spectral_preprocessor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/main/eegdash/features/feature_bank/spectral.py#L25-L34"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.feature_bank.spectral.spectral_preprocessor" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.spectral.</span></span><span class="sig-name descname"><span class="pre">spectral_preprocessor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/main/eegdash/features/feature_bank/spectral.py#L25-L34"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="eegdash.features.feature_bank.spectral.spectral_normalized_preprocessor">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.spectral.</span></span><span class="sig-name descname"><span class="pre">spectral_normalized_preprocessor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/main/eegdash/features/feature_bank/spectral.py#L37-L39"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.feature_bank.spectral.spectral_normalized_preprocessor" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.spectral.</span></span><span class="sig-name descname"><span class="pre">spectral_normalized_preprocessor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/main/eegdash/features/feature_bank/spectral.py#L37-L39"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="eegdash.features.feature_bank.spectral.spectral_db_preprocessor">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.spectral.</span></span><span class="sig-name descname"><span class="pre">spectral_db_preprocessor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-15</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/main/eegdash/features/feature_bank/spectral.py#L42-L44"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.feature_bank.spectral.spectral_db_preprocessor" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.spectral.</span></span><span class="sig-name descname"><span class="pre">spectral_db_preprocessor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-15</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/main/eegdash/features/feature_bank/spectral.py#L42-L44"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="eegdash.features.feature_bank.spectral.spectral_root_total_power">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.spectral.</span></span><span class="sig-name descname"><span class="pre">spectral_root_total_power</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/main/eegdash/features/feature_bank/spectral.py#L47-L50"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.feature_bank.spectral.spectral_root_total_power" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.spectral.</span></span><span class="sig-name descname"><span class="pre">spectral_root_total_power</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/main/eegdash/features/feature_bank/spectral.py#L47-L50"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="eegdash.features.feature_bank.spectral.spectral_moment">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.spectral.</span></span><span class="sig-name descname"><span class="pre">spectral_moment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/main/eegdash/features/feature_bank/spectral.py#L53-L56"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.feature_bank.spectral.spectral_moment" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.spectral.</span></span><span class="sig-name descname"><span class="pre">spectral_moment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/main/eegdash/features/feature_bank/spectral.py#L53-L56"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="eegdash.features.feature_bank.spectral.spectral_entropy">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.spectral.</span></span><span class="sig-name descname"><span class="pre">spectral_entropy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/main/eegdash/features/feature_bank/spectral.py#L80-L86"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.feature_bank.spectral.spectral_entropy" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.spectral.</span></span><span class="sig-name descname"><span class="pre">spectral_entropy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/main/eegdash/features/feature_bank/spectral.py#L80-L86"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="eegdash.features.feature_bank.spectral.spectral_edge">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.spectral.</span></span><span class="sig-name descname"><span class="pre">spectral_edge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.9</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/main/eegdash/features/feature_bank/spectral.py#L89-L96"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.feature_bank.spectral.spectral_edge" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.spectral.</span></span><span class="sig-name descname"><span class="pre">spectral_edge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.9</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/main/eegdash/features/feature_bank/spectral.py#L89-L96"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="eegdash.features.feature_bank.spectral.spectral_slope">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.spectral.</span></span><span class="sig-name descname"><span class="pre">spectral_slope</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/main/eegdash/features/feature_bank/spectral.py#L99-L105"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.feature_bank.spectral.spectral_slope" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.spectral.</span></span><span class="sig-name descname"><span class="pre">spectral_slope</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/main/eegdash/features/feature_bank/spectral.py#L99-L105"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="eegdash.features.feature_bank.spectral.spectral_bands_power">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.spectral.</span></span><span class="sig-name descname"><span class="pre">spectral_bands_power</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">bands</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{'alpha':</span> <span class="pre">(8,</span> <span class="pre">12),</span> <span class="pre">'beta':</span> <span class="pre">(12,</span> <span class="pre">30),</span> <span class="pre">'delta':</span> <span class="pre">(1,</span> <span class="pre">4.5),</span> <span class="pre">'theta':</span> <span class="pre">(4.5,</span> <span class="pre">8)}</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/main/eegdash/features/feature_bank/spectral.py#L108-L115"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.feature_bank.spectral.spectral_bands_power" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.spectral.</span></span><span class="sig-name descname"><span class="pre">spectral_bands_power</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">bands</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{'alpha':</span> <span class="pre">(8,</span> <span class="pre">12),</span> <span class="pre">'beta':</span> <span class="pre">(12,</span> <span class="pre">30),</span> <span class="pre">'delta':</span> <span class="pre">(1,</span> <span class="pre">4.5),</span> <span class="pre">'theta':</span> <span class="pre">(4.5,</span> <span class="pre">8)}</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/main/eegdash/features/feature_bank/spectral.py#L108-L115"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="eegdash.features.feature_bank.spectral.spectral_hjorth_activity">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.spectral.</span></span><span class="sig-name descname"><span class="pre">spectral_hjorth_activity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/main/eegdash/features/feature_bank/spectral.py#L59-L62"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.feature_bank.spectral.spectral_hjorth_activity" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.spectral.</span></span><span class="sig-name descname"><span class="pre">spectral_hjorth_activity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/main/eegdash/features/feature_bank/spectral.py#L59-L62"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="eegdash.features.feature_bank.spectral.spectral_hjorth_mobility">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.spectral.</span></span><span class="sig-name descname"><span class="pre">spectral_hjorth_mobility</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/main/eegdash/features/feature_bank/spectral.py#L65-L68"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.feature_bank.spectral.spectral_hjorth_mobility" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.spectral.</span></span><span class="sig-name descname"><span class="pre">spectral_hjorth_mobility</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/main/eegdash/features/feature_bank/spectral.py#L65-L68"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="eegdash.features.feature_bank.spectral.spectral_hjorth_complexity">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.spectral.</span></span><span class="sig-name descname"><span class="pre">spectral_hjorth_complexity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/main/eegdash/features/feature_bank/spectral.py#L71-L77"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.feature_bank.spectral.spectral_hjorth_complexity" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.spectral.</span></span><span class="sig-name descname"><span class="pre">spectral_hjorth_complexity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/main/eegdash/features/feature_bank/spectral.py#L71-L77"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd></dd></dl>
 
 </section>
@@ -1215,29 +1215,6 @@
                 <dialog id="pst-secondary-sidebar-modal"></dialog>
                 <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
-
-  <div class="sidebar-secondary-item">
-<div
-    id="pst-page-navigation-heading-2"
-    class="page-toc tocsection onthispage">
-    <i class="fa-solid fa-list"></i> On this page
-  </div>
-  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
-    <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.features.feature_bank.spectral.spectral_preprocessor"><code class="docutils literal notranslate"><span class="pre">spectral_preprocessor()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.features.feature_bank.spectral.spectral_normalized_preprocessor"><code class="docutils literal notranslate"><span class="pre">spectral_normalized_preprocessor()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.features.feature_bank.spectral.spectral_db_preprocessor"><code class="docutils literal notranslate"><span class="pre">spectral_db_preprocessor()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.features.feature_bank.spectral.spectral_root_total_power"><code class="docutils literal notranslate"><span class="pre">spectral_root_total_power()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.features.feature_bank.spectral.spectral_moment"><code class="docutils literal notranslate"><span class="pre">spectral_moment()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.features.feature_bank.spectral.spectral_entropy"><code class="docutils literal notranslate"><span class="pre">spectral_entropy()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.features.feature_bank.spectral.spectral_edge"><code class="docutils literal notranslate"><span class="pre">spectral_edge()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.features.feature_bank.spectral.spectral_slope"><code class="docutils literal notranslate"><span class="pre">spectral_slope()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.features.feature_bank.spectral.spectral_bands_power"><code class="docutils literal notranslate"><span class="pre">spectral_bands_power()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.features.feature_bank.spectral.spectral_hjorth_activity"><code class="docutils literal notranslate"><span class="pre">spectral_hjorth_activity()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.features.feature_bank.spectral.spectral_hjorth_mobility"><code class="docutils literal notranslate"><span class="pre">spectral_hjorth_mobility()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.features.feature_bank.spectral.spectral_hjorth_complexity"><code class="docutils literal notranslate"><span class="pre">spectral_hjorth_complexity()</span></code></a></li>
-</ul>
-  </nav></div>
 
   <div class="sidebar-secondary-item">
 

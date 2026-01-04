@@ -248,18 +248,22 @@ sfreq = windows_ds.datasets[0].raw.info["sfreq"]
 
 
 class WelchFeatureExtractor(features.FeatureExtractor):
+    def __init__(self, feature_extractors, fs=None, **kwargs):
+        super().__init__(feature_extractors)
+        self.fs = fs
+        self.kwargs = kwargs
+
     def preprocess(self, x, **kwargs):
-        f, p = welch(x, **kwargs)
+        # use self.kwargs if needed, or just pass through
+        f, p = welch(x, fs=self.fs if self.fs else 128, **kwargs)
         return f, p
 
 
-@features.FeaturePredecessor(WelchFeatureExtractor)
 @features.univariate_feature
 def spectral_root_total_power_feature(f, p, **kwargs):
     return p.sum(axis=-1)
 
 
-@features.FeaturePredecessor(WelchFeatureExtractor)
 @features.univariate_feature
 def spectral_power_bands_feature(f, p, bands=DEFAULT_FREQ_BANDS, **kwargs):
     power_bands = dict()

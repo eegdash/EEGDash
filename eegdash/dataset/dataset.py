@@ -335,9 +335,18 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
                     f"  1. The dataset '{self.query.get('dataset', 'unknown')}' does not exist in the database\n"
                     f"  2. The specified filters (task, subject, etc.) are too restrictive\n"
                     f"  3. There is a connection issue with the MongoDB database\n"
-                    f"If you're working offline or with local data, set download=False and ensure "
-                    f"the data exists at: {self.data_dir}"
+                    f"The data exists at: {self.data_dir}"
                 )
+
+        # Attempt to fetch dataset-level metadata (for global files like participants.tsv)
+        self.dataset_doc = None
+        if self.download and self.eeg_dash_instance:
+            try:
+                self.dataset_doc = self.eeg_dash_instance.get_dataset(
+                    self.query.get("dataset")
+                )
+            except Exception:
+                pass
 
         super().__init__(datasets, lazy=True)
 
@@ -406,6 +415,61 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
         Parallel(n_jobs=n_jobs, prefer="threads")(
             delayed(EEGDashRaw._download_required_files)(ds) for ds in targets
         )
+
+        # Download global dataset files (participants.tsv, etc.)
+        self._download_dataset_files()
+
+    def _download_dataset_files(self) -> None:
+        """Download global dataset files defined in dataset metadata."""
+        if not self.dataset_doc or not self.download:
+            return
+
+        storage = self.dataset_doc.get("storage") or {}
+        base = storage.get("base")
+        backend = storage.get("backend")
+
+        if not base or backend not in ("s3", "https"):
+            return
+
+        # Prepare list of files to download
+        keys_to_download = set()
+        if raw_key := storage.get("raw_key"):
+            keys_to_download.add(raw_key)
+
+        # Extract task filter if present
+        task_filter = self.query.get("task")
+        allowed_tasks = set()
+        if isinstance(task_filter, str):
+            allowed_tasks.add(task_filter)
+        elif isinstance(task_filter, (list, tuple)):
+            allowed_tasks.update(str(t) for t in task_filter)
+
+        for key in storage.get("dep_keys", []):
+            if allowed_tasks and key.startswith("task-") and "_" in key:
+                # e.g. task-RestingState_events.json -> task_name="RestingState"
+                task_name = key.split("_", 1)[0][5:]
+                if task_name not in allowed_tasks:
+                    continue
+            keys_to_download.add(key)
+
+        if not keys_to_download:
+            return
+
+        filesystem = downloader.get_s3_filesystem()
+
+        # Download files that don't exist locally
+        files_to_download = []
+        for key in keys_to_download:
+            dest = self.data_dir / key
+            if not dest.exists():
+                files_to_download.append((f"{base}/{key}", dest))
+
+        if files_to_download:
+            downloader.download_files(
+                files_to_download,
+                filesystem=filesystem,
+                skip_existing=True,
+            )
 
     def _find_local_bids_records(
         self, dataset_root: Path, filters: dict[str, Any]

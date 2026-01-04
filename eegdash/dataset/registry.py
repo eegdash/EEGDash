@@ -57,7 +57,7 @@ def register_openneuro_datasets(
     df = pd.DataFrame()
     if from_api:
         try:
-            df = _fetch_datasets_from_api(api_url, database)
+            df = fetch_datasets_from_api(api_url, database)
         except Exception:
             # Fallback to CSV if API fails, or empty if no CSV provided
             pass
@@ -292,22 +292,53 @@ EXCLUDED_DATASETS = {
 }
 
 
-def _fetch_datasets_from_api(api_url: str, database: str) -> pd.DataFrame:
+def fetch_datasets_from_api(
+    api_url: str = "https://data.eegdash.org/api", database: str = "eegdash"
+) -> pd.DataFrame:
     """Fetch dataset summaries from API and return as DataFrame matching CSV structure."""
     import os
 
-    limit = int(os.environ.get("EEGDASH_DOC_LIMIT", 1000))
-    url = f"{api_url}/{database}/datasets/summary?limit={limit}"
+    from ..paths import get_default_cache_dir
+
+    cache_dir = get_default_cache_dir()
+    cache_file = cache_dir / "dataset_summary.csv"
+
+    # Try loading from cache first
     try:
-        with urllib.request.urlopen(url, timeout=10) as response:
+        if cache_file.exists():
+            return pd.read_csv(cache_file, comment="#", skip_blank_lines=True)
+    except Exception:
+        pass
+
+    limit = int(os.environ.get("EEGDASH_DOC_LIMIT", 1000))
+
+    # 1. Fetch Datasets Summary
+    url = f"{api_url}/{database}/datasets/summary?limit={limit}"
+    data: dict[str, Any] = {}
+    try:
+        with urllib.request.urlopen(url, timeout=30) as response:
             data = json.loads(response.read().decode("utf-8"))
     except Exception:
-        return pd.DataFrame()
+        pass
 
-    if not data.get("success"):
+    if not data or not data.get("success"):
         return pd.DataFrame()
 
     datasets = data.get("data", [])
+
+    # 2. Fetch Global Stats (nchans, sfreq)
+    # We collect IDs to optimize the query if needed, but the endpoint might just return all.
+    # The stats endpoint is /datasets/stats/records
+    stats_url = f"{api_url}/{database}/datasets/stats/records"
+    global_stats: dict[str, Any] = {}
+    try:
+        with urllib.request.urlopen(stats_url, timeout=60) as response:
+            resp_json = json.loads(response.read().decode("utf-8"))
+            global_stats = resp_json.get("data", {})
+    except Exception:
+        # Proceed without stats if this fails
+        pass
+
     rows = []
     for ds in datasets:
         ds_id = ds.get("dataset_id", "").strip()
@@ -319,9 +350,18 @@ def _fetch_datasets_from_api(api_url: str, database: str) -> pd.DataFrame:
             continue
 
         meta = ds.get("metadata", {})
+        ds_stats = global_stats.get(ds_id, {})
+        nchans_list = ds_stats.get("nchans_counts", [])
+        sfreq_list = ds_stats.get("sfreq_counts", [])
+
         # Map API fields to expected CSV columns
+        # Note: We serialize lists to JSON strings for CSV compatibility if they are complex
+        # But simple representation (string) works if downstream parsers handle it.
+        # registry.py readers (pd.read_csv) will see them as strings.
+        # prepare_summary_tables.py handles complex parsing.
+
         row = {
-            "dataset": ds.get("dataset_id"),
+            "dataset": ds_id,
             "n_subjects": meta.get("subject_count", 0),
             "n_records": ds.get("record_count", 0),
             "n_tasks": len(meta.get("tasks", [])),
@@ -330,9 +370,26 @@ def _fetch_datasets_from_api(api_url: str, database: str) -> pd.DataFrame:
             "Type Subject": meta.get("pathology", "Unknown"),
             "duration_hours_total": round(meta.get("duration_hours_total", 0) or 0, 2),
             "size": ds.get("size_human", "Unknown"),
-            # internal/extra fields
+            "size_bytes": ds.get("size_bytes", 0),
             "source": ds.get("source", "unknown"),
+            # Extended fields for docs/summary tables
+            "dataset_title": ds.get("name", ""),
+            "record_modality": ds.get("recording_modality", ""),
+            # We enforce JSON string for list/dict structures to survive CSV roundtrip reliably
+            "nchans_set": json.dumps(nchans_list),
+            "sampling_freqs": json.dumps(sfreq_list),
+            "license": ds.get("license", ""),
+            "doi": ds.get("dataset_doi", ""),
         }
         rows.append(row)
 
-    return pd.DataFrame(rows)
+    df = pd.DataFrame(rows)
+
+    # Save to cache if we got data
+    if not df.empty:
+        try:
+            df.to_csv(cache_file, index=False)
+        except Exception:
+            pass
+
+    return df

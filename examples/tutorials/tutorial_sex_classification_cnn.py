@@ -26,41 +26,38 @@ The code below provides an example of using the *EEGDash* library in combination
 from pathlib import Path
 import os
 
-os.environ.setdefault("NUMBA_DISABLE_JIT", "1")
-os.environ.setdefault("_MNE_FAKE_HOME_DIR", str(Path.cwd()))
-(Path(os.environ["_MNE_FAKE_HOME_DIR"]) / ".mne").mkdir(exist_ok=True)
-os.environ.setdefault("MPLCONFIGDIR", str(Path.cwd() / ".matplotlib"))
-Path(os.environ["MPLCONFIGDIR"]).mkdir(exist_ok=True)
 
 import numpy as np
 
-from eegdash import EEGDash, EEGDashDataset
+from eegdash import EEGDashDataset
 
 CACHE_DIR = Path(os.getenv("EEGDASH_CACHE_DIR", Path.cwd() / "eegdash_cache")).resolve()
 CACHE_DIR.mkdir(parents=True, exist_ok=True)
 DATASET_ID = os.getenv("EEGDASH_DATASET_ID", "ds005505")
 TASK = os.getenv("EEGDASH_TASK", "RestingState")
-RECORD_LIMIT = int(os.getenv("EEGDASH_RECORD_LIMIT", "80"))
+RECORD_LIMIT = 80
 
-eegdash = EEGDash()
-records = eegdash.find({"dataset": DATASET_ID, "task": TASK}, limit=RECORD_LIMIT)
-records = [rec for rec in records if rec.get("sex") or rec.get("gender")]
-if not records:
-    records = eegdash.find({"sex": {"$ne": None}}, limit=RECORD_LIMIT)
-    if not records:
-        records = eegdash.find({"gender": {"$ne": None}}, limit=RECORD_LIMIT)
-if records:
-    dataset_id = records[0].get("dataset")
-    if dataset_id:
-        records = [rec for rec in records if rec.get("dataset") == dataset_id]
-if not records:
-    raise RuntimeError("No records with sex/gender metadata found from the API.")
-
+# Fetch dataset directly, requesting sex/gender in description
 ds_sexdata = EEGDashDataset(
+    dataset=DATASET_ID,
+    task=TASK,
     cache_dir=CACHE_DIR,
-    records=records,
     description_fields=["subject", "session", "run", "task", "sex", "gender"],
 )
+
+# Filter datasets that have sex/gender info
+valid_datasets = []
+for ds in ds_sexdata.datasets:
+    if ds.description.get("sex") or ds.description.get("gender"):
+        valid_datasets.append(ds)
+
+if not valid_datasets:
+    raise RuntimeError("No records with sex/gender metadata found.")
+
+# Update the concat dataset with filtered list
+from braindecode.datasets import BaseConcatDataset
+
+ds_sexdata = BaseConcatDataset(valid_datasets)
 
 PREPARED_DIR = CACHE_DIR / "preprocessed_sex"
 
@@ -146,7 +143,7 @@ preprocessors = [
     Preprocessor("filter", l_freq=1, h_freq=55),
 ]
 preprocess(
-    ds_sexdata, preprocessors, n_jobs=-1
+    ds_sexdata, preprocessors, n_jobs=1
 )  # , save_dir='xxxx'' will save and set preload to false
 
 # extract windows and save to disk
@@ -173,6 +170,7 @@ import matplotlib.pyplot as plt
 
 plt.figure()
 plt.plot(windows_ds[150][0][0, :].transpose())  # first channel of first epoch
+plt.savefig(CACHE_DIR / "sample_channel.png")
 plt.show()
 
 # %% [markdown]
@@ -198,7 +196,6 @@ windows_ds = _apply_sex_label(windows_ds)
 # 4. **Create DataLoaders** – The datasets are wrapped in PyTorch `DataLoader` objects with a batch size of 100, allowing efficient mini-batch training and shuffling. Although there are only 136 subjects, the dataset contains more than 10,000 2-second samples.
 #
 
-import numpy as np
 import torch
 from sklearn.model_selection import train_test_split
 from torch.utils.data import DataLoader
@@ -352,7 +349,7 @@ def normalize_data(x):
 # dictionary of genders for converting sample labels to numerical values
 gender_dict = {"M": 0, "F": 1}
 
-epochs = int(os.getenv("EEGDASH_EPOCHS", "2"))
+epochs = 2
 for e in range(epochs):
     # training
     correct_train = 0

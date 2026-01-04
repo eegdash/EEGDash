@@ -104,6 +104,16 @@ class EEGDashAPIClient:
         results = self.find(query, limit=1)
         return results[0] if results else None
 
+    def get_dataset(self, dataset_id: str) -> dict[str, Any] | None:
+        """Fetch a dataset document by ID."""
+        resp = self._session.get(
+            f"{self.api_url}/api/{self.database}/datasets/{dataset_id}", timeout=30
+        )
+        if resp.status_code == 404:
+            return None
+        resp.raise_for_status()
+        return resp.json().get("data")
+
     def count_documents(self, query: dict[str, Any] | None = None, **kwargs) -> int:
         """Count documents matching query."""
         params = {"filter": json.dumps(query)} if query else {}

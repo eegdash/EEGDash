@@ -113,6 +113,8 @@ DATASET_CANONICAL_MAP = {
     },
 }
 
+_UNKNOWN_TOKENS = {"unknown", "nothing", "nan", "none", "null"}
+
 DATA_TABLE_TEMPLATE = textwrap.dedent(
     r"""
 <!-- jQuery + DataTables core -->
@@ -302,6 +304,8 @@ def _tag_normalizer(kind: str):
     def _normalise(token: str) -> str:
         text = " ".join(token.replace("_", " ").split())
         lowered = text.lower()
+        if lowered in _UNKNOWN_TOKENS:
+            return None
         if lowered in canonical:
             return canonical[lowered]
         return text
@@ -316,8 +320,43 @@ def prepare_table(df: pd.DataFrame):
 
     df["dataset"] = df["dataset"].apply(wrap_dataset_name)
     # changing the column order
+    if "dataset_title" not in df.columns:
+        df["dataset_title"] = ""
     if "source" not in df.columns:
         df["source"] = ""
+    if "record_modality" not in df.columns:
+        df["record_modality"] = df.get("record modality", "")
+    if "Type Subject" not in df.columns:
+        df["Type Subject"] = ""
+    if "modality of exp" not in df.columns:
+        df["modality of exp"] = ""
+    if "type of exp" not in df.columns:
+        df["type of exp"] = ""
+    if "license" not in df.columns:
+        df["license"] = ""
+    if "size" not in df.columns:
+        df["size"] = ""
+    if "size_bytes" not in df.columns:
+        df["size_bytes"] = 0
+    if "n_records" not in df.columns:
+        df["n_records"] = 0
+    if "n_subjects" not in df.columns:
+        df["n_subjects"] = 0
+    if "n_tasks" not in df.columns:
+        df["n_tasks"] = 0
+    if "nchans_set" not in df.columns:
+        df["nchans_set"] = ""
+    if "sampling_freqs" not in df.columns:
+        df["sampling_freqs"] = ""
+
+    def _strip_unknown(value: object) -> object:
+        if value is None:
+            return ""
+        if isinstance(value, float) and pd.isna(value):
+            return ""
+        if isinstance(value, str) and value.strip().lower() in _UNKNOWN_TOKENS:
+            return ""
+        return value
 
     df = df[
         [
@@ -338,6 +377,9 @@ def prepare_table(df: pd.DataFrame):
             "license",  # Added
         ]
     ]
+    obj_cols = df.select_dtypes(include="object").columns
+    for col in obj_cols:
+        df[col] = df[col].apply(_strip_unknown)
 
     # renaming time for something small
     df = df.rename(
@@ -525,10 +567,18 @@ def parse_freqs(value) -> str:
     - List of values: [64, 64, 64, 63]
     - List of dicts (from API aggregation): [{"val": 64, "count": 100}, {"val": 63, "count": 1}]
     - Single value: 64
-    - String: "[64, 63]"
+    - String: "[64, 63]" or JSON string '[{"val": 64, "count": 100}]'
     """
     if not value:
         return ""
+
+    # Try JSON parsing first if string
+    if isinstance(value, str):
+        value = value.strip()
+        try:
+            value = json.loads(value)
+        except (json.JSONDecodeError, TypeError):
+            pass
 
     counts = Counter()
 
@@ -622,6 +672,7 @@ def save_summary_stats(df_raw: pd.DataFrame):
         "datasets_total": len(df_raw),
         "subjects_total": subjects_total,
         "recording_total": recording_total,
+        "modalities_total": len(unique_modalities),
         "sources_total": df_raw["source"].nunique()
         if "source" in df_raw.columns
         else 0,
@@ -633,134 +684,59 @@ def save_summary_stats(df_raw: pd.DataFrame):
     print(f"Generated summary stats: {stats_path}")
 
 
-def fetch_datasets_from_api(
-    database: str = DEFAULT_DATABASE, limit: int = 1000
-) -> pd.DataFrame:
-    """Fetch all datasets from the EEGDash API and convert to DataFrame.
-
-    Args:
-        database: Database name (eegdash, eegdash_staging, eegdash_v1)
-        limit: Maximum number of datasets per request (max 1000)
-
-    Returns:
-        DataFrame with columns matching the expected format for prepare_table()
-    """
-    all_datasets = []
-    skip = 0
-    total = None
-
-    while True:
-        url = f"{API_BASE_URL}/{database}/datasets/summary?limit={limit}&skip={skip}"
-        print(f"Fetching: {url}")
-
-        try:
-            with urllib.request.urlopen(url, timeout=60) as response:
-                data = json.loads(response.read().decode("utf-8"))
-        except Exception as e:
-            print(f"Error fetching from API: {e}")
-            raise
-
-        if not data.get("success"):
-            raise ValueError(f"API returned error: {data}")
-
-        datasets = data.get("data", [])
-        all_datasets.extend(datasets)
-
-        if total is None:
-            total = data.get("total", len(datasets))
-            totals = data.get("totals", {})
-            print(f"Total datasets in DB: {total}")
-            print(
-                f"Total subjects: {totals.get('subjects', '?')}, Total files: {totals.get('files', '?')}"
-            )
-
-        # Check if we got all datasets or reached the limit
-        if len(datasets) < limit or len(all_datasets) >= limit:
-            break
-
-        skip += limit
-
-    print(f"Fetched {len(all_datasets)} datasets total")
-
-    # Fetch global stats once
-    # We collect IDs to potentially optimize the query
-    dataset_ids = {ds.get("dataset_id") for ds in all_datasets if ds.get("dataset_id")}
-    global_stats = fetch_global_record_stats(database, dataset_ids)
-
-    # Convert API response to DataFrame with expected columns
-    rows = []
-    for ds in all_datasets:
-        ds_id = ds.get("dataset_id", "").strip()
-        # Skip test datasets and excluded ones
-        if (
-            ds_id.lower() in ("test", "test_dataset")
-            or ds_id.upper() in EXCLUDED_DATASETS
-        ):
-            continue
-
-        # Get stats from global dict - now expecting counts dict or list of dicts
-        ds_stats = global_stats.get(ds_id, {})
-        nchans_list = ds_stats.get("nchans_counts", [])
-        sfreq_list = ds_stats.get("sfreq_counts", [])
-
-        row = {
-            "dataset": ds.get("dataset_id", ds.get("name", "")),
-            "record_modality": ds.get("recording_modality", ""),
-            "n_records": ds.get("total_files", 0) or 0,
-            "n_subjects": ds.get("demographics", {}).get("subjects_count", 0) or 0,
-            "n_tasks": len(ds.get("tasks", [])) or 0,
-            "nchans_set": nchans_list,
-            "sampling_freqs": sfreq_list,
-            "size": human_readable_size(ds.get("size_bytes") or 0),
-            "size_bytes": ds.get("size_bytes") or 0,
-            "dataset_title": ds.get("name", ""),
-            # Map to expected categorical columns (these may need enrichment)
-            "Type Subject": ds.get("study_domain", "") or "",
-            "modality of exp": ", ".join(ds.get("modalities", []))
-            if ds.get("modalities")
-            else "",
-            "type of exp": ds.get("study_design", "") or "",
-            # Extra fields for reference
-            "source": ds.get("source", ""),
-            "license": ds.get("license", ""),
-            "doi": ds.get("dataset_doi", ""),
-            "duration_hours_total": 0.0,  # Fallback for treemap
-        }
-        rows.append(row)
-
-    df = pd.DataFrame(rows)
-    print(f"Created DataFrame with {len(df)} datasets")
-    return df
-
-
-def fetch_global_record_stats(database: str, dataset_ids: set[str] = None):
-    """Fetch nchans and sfreq aggregated stats for all datasets."""
-    print("Fetching global record statistics (aggregated endpoint)...")
-    url = f"{API_BASE_URL}/{database}/datasets/stats/records"
-
+def _load_local_dataset_summary() -> pd.DataFrame:
+    csv_path = (
+        Path(__file__).resolve().parents[1]
+        / "eegdash"
+        / "dataset"
+        / "dataset_summary.csv"
+    )
+    if not csv_path.exists():
+        return pd.DataFrame()
     try:
-        with urllib.request.urlopen(url, timeout=120) as response:
-            resp_json = json.loads(response.read().decode("utf-8"))
-    except Exception as e:
-        print(f"Error fetching global stats: {e}")
-        return {}
+        return pd.read_csv(csv_path, index_col=False, header=0, skipinitialspace=True)
+    except Exception:
+        return pd.DataFrame()
 
-    data = resp_json.get("data", {})
-    print(f"Fetched stats for {len(data)} datasets")
-    return data
+
+def _needs_csv_fallback(df_raw: pd.DataFrame) -> bool:
+    required_cols = ("n_subjects", "n_records", "n_tasks", "size_bytes")
+    if any(col not in df_raw.columns for col in required_cols):
+        return True
+    numeric = (
+        df_raw[list(required_cols)].apply(pd.to_numeric, errors="coerce").fillna(0)
+    )
+    totals = numeric.sum()
+    return any(totals.get(col, 0) == 0 for col in required_cols)
 
 
 def main_from_api(target_dir: str, database: str = DEFAULT_DATABASE, limit: int = 1000):
     """Generate summary tables from API data."""
+    # Local import to avoid circular dependencies (depending on how this script is run)
+    try:
+        from eegdash.dataset.registry import fetch_datasets_from_api
+    except ImportError:
+        # Fallback if eegdash is not installed in editable mode but typically it is for docs
+        import sys
+
+        sys.path.insert(0, str(Path(__file__).parents[1]))
+        from eegdash.dataset.registry import fetch_datasets_from_api
+
     target_dir = Path(target_dir)
     target_dir.mkdir(parents=True, exist_ok=True)
     STATIC_DATASET_DIR.mkdir(parents=True, exist_ok=True)
 
     print(f"Fetching data from API (database: {database})...")
-    df_raw = fetch_datasets_from_api(database, limit=limit)
+    # Using registry's cached fetcher
+    df_raw = fetch_datasets_from_api(API_BASE_URL, database)
+    if df_raw.empty or _needs_csv_fallback(df_raw):
+        fallback_df = _load_local_dataset_summary()
+        if not fallback_df.empty:
+            df_raw = fallback_df
+            print("API summary incomplete; using local dataset_summary.csv.")
 
     if df_raw.empty:
-        print("No datasets fetched from API!")
+        print("No datasets fetched from API or local CSV!")
         return
 
     # Generate bubble chart

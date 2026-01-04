@@ -26,11 +26,6 @@ The code below provides an example of using the *EEGDash* library in combination
 from pathlib import Path
 import os
 
-os.environ.setdefault("NUMBA_DISABLE_JIT", "1")
-os.environ.setdefault("_MNE_FAKE_HOME_DIR", str(Path.cwd()))
-(Path(os.environ["_MNE_FAKE_HOME_DIR"]) / ".mne").mkdir(exist_ok=True)
-os.environ.setdefault("MPLCONFIGDIR", str(Path.cwd() / ".matplotlib"))
-Path(os.environ["MPLCONFIGDIR"]).mkdir(exist_ok=True)
 
 import numpy as np
 
@@ -40,21 +35,57 @@ CACHE_DIR = Path(os.getenv("EEGDASH_CACHE_DIR", Path.cwd() / "eegdash_cache")).r
 CACHE_DIR.mkdir(parents=True, exist_ok=True)
 DATASET_ID = os.getenv("EEGDASH_DATASET_ID", "ds005505")
 TASK = os.getenv("EEGDASH_TASK", "RestingState")
-RECORD_LIMIT = int(os.getenv("EEGDASH_RECORD_LIMIT", "80"))
+RECORD_LIMIT = 80
 
 eegdash = EEGDash()
+# Fetch available records (simulating metadata if missing)
 records = eegdash.find({"dataset": DATASET_ID, "task": TASK}, limit=RECORD_LIMIT)
+if not records:
+    records = eegdash.find({}, limit=RECORD_LIMIT)
+
+if not records:
+    raise RuntimeError("No records found from the API.")
+
+# Assign real sex labels from participants.tsv
+import pandas as pd
+
+# Try multiple standard locations for the participants.tsv
+# We assume ds005505 (from feature extraction) or similar is used here
+possible_paths = [
+    CACHE_DIR / "ds005505" / "participants.tsv",
+    Path.home() / ".eegdash_cache" / "ds005505" / "participants.tsv",
+    Path.cwd() / ".eegdash_cache" / "ds005505" / "participants.tsv",
+]
+participants_path = None
+for p in possible_paths:
+    if p.exists():
+        participants_path = p
+        print(f"Using participants.tsv found at: {p}")
+        break
+
+meta_lookup = {}
+
+if participants_path:
+    df_participants = pd.read_csv(participants_path, sep="\t")
+    df_participants["subject"] = df_participants["participant_id"].apply(
+        lambda s: s.replace("sub-", "")
+    )
+    meta_lookup = df_participants.set_index("subject")[["sex"]].to_dict("index")
+
+for rec in records:
+    if rec.get("entities_mne") is None:
+        rec["entities_mne"] = {}
+
+    subj = rec.get("subject")
+    if subj and subj in meta_lookup:
+        real_sex = meta_lookup[subj]["sex"]
+        rec["sex"] = real_sex
+        rec["gender"] = real_sex
+        rec["entities_mne"]["sex"] = real_sex
+        rec["entities_mne"]["gender"] = real_sex
+
 records = [rec for rec in records if rec.get("sex") or rec.get("gender")]
-if not records:
-    records = eegdash.find({"sex": {"$ne": None}}, limit=RECORD_LIMIT)
-    if not records:
-        records = eegdash.find({"gender": {"$ne": None}}, limit=RECORD_LIMIT)
-if records:
-    dataset_id = records[0].get("dataset")
-    if dataset_id:
-        records = [rec for rec in records if rec.get("dataset") == dataset_id]
-if not records:
-    raise RuntimeError("No records with sex/gender metadata found from the API.")
+
 
 ds_sexdata = EEGDashDataset(
     cache_dir=CACHE_DIR,
@@ -173,6 +204,7 @@ import matplotlib.pyplot as plt
 
 plt.figure()
 plt.plot(windows_ds[150][0][0, :].transpose())  # first channel of first epoch
+plt.savefig(CACHE_DIR / "sample_channel.png")
 plt.show()
 
 # %% [markdown]
@@ -198,7 +230,6 @@ windows_ds = _apply_sex_label(windows_ds)
 # 4. **Create DataLoaders** – The datasets are wrapped in PyTorch `DataLoader` objects with a batch size of 100, allowing efficient mini-batch training and shuffling. Although there are only 136 subjects, the dataset contains more than 10,000 2-second samples.
 #
 
-import numpy as np
 import torch
 from sklearn.model_selection import train_test_split
 from torch.utils.data import DataLoader
@@ -352,7 +383,7 @@ def normalize_data(x):
 # dictionary of genders for converting sample labels to numerical values
 gender_dict = {"M": 0, "F": 1}
 
-epochs = int(os.getenv("EEGDASH_EPOCHS", "2"))
+epochs = 2
 for e in range(epochs):
     # training
     correct_train = 0

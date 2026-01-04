@@ -1,20 +1,22 @@
-"""
-========================================================================================
-Minimal EEG Age Prediction Tutorial
-========================================================================================
-A streamlined tutorial for training an EEG Conformer model to predict age from EEG data.
-Uses vanilla PyTorch (no Lightning framework) with a simple linear training script.
+"""Age Prediction from EEG
+===========================
+
+**Objective**: Learn how to predict a continuous variable (Subject Age) from raw EEG data using a Convolutional Neural Network (Conformer).
+
+**What you will learn**:
+
+1.  **Data Retrieval**: How to fetch specific datasets (e.g., Healthy Brain Network) using `EEGDash`.
+2.  **Preprocessing**: Applying standard EEG cleaning techniques (filtering, resampling) with `BrainDecode`.
+3.  **Windowing**: cutting continuous EEG into fixed-length training windows.
+4.  **Modeling**: Training a Conformer model (Transformer-based) using PyTorch.
+5.  **Interpretation**: Visualizing training progress (MAE/RMSE).
+
+.. tip::
+    This tutorial assumes basic familiarity with PyTorch. If you are new to EEG, check out the `Minimal Tutorial` first.
 """
 
 from pathlib import Path
 import os
-
-os.environ.setdefault("NUMBA_DISABLE_JIT", "1")
-os.environ.setdefault("_MNE_FAKE_HOME_DIR", str(Path.cwd()))
-(Path(os.environ["_MNE_FAKE_HOME_DIR"]) / ".mne").mkdir(exist_ok=True)
-os.environ.setdefault("MPLCONFIGDIR", str(Path.cwd() / ".matplotlib"))
-Path(os.environ["MPLCONFIGDIR"]).mkdir(exist_ok=True)
-
 import numpy as np
 import torch
 import torch.nn.functional as F
@@ -25,6 +27,13 @@ from sklearn.model_selection import train_test_split
 import matplotlib.pyplot as plt
 from eegdash import EEGDash, EEGDashDataset
 
+# %%
+# Configuration & Setup
+# ---------------------
+# We start by defining our hyperparameters and caching paths.
+# Using a centralized ``CACHE_DIR`` ensures we don't re-download data unnecessarily.
+
+
 # ============================================================================
 # Configuration
 # ============================================================================
@@ -32,27 +41,34 @@ CACHE_DIR_BASE = Path(
     os.getenv("EEGDASH_CACHE_DIR", Path.cwd() / "eegdash_cache")
 ).resolve()
 CACHE_DIR_BASE.mkdir(parents=True, exist_ok=True)
-DATASET_NAME = os.getenv("EEGDASH_DATASET_ID", "EEG2025r5")
-TASK = os.getenv("EEGDASH_TASK", "").strip() or None
+DATASET_NAME = "ds005505"
 TARGET_NAME = "age"
-CACHE_DIR = CACHE_DIR_BASE / f"reg_{DATASET_NAME}_{TASK or 'all'}_{TARGET_NAME}"
+CACHE_DIR = CACHE_DIR_BASE / f"reg_{DATASET_NAME}_all_{TARGET_NAME}"
 SFREQ = 100
-BATCH_SIZE = int(os.getenv("EEGDASH_BATCH_SIZE", "64"))
+BATCH_SIZE = 64
 LEARNING_RATE = 0.00002
 WEIGHT_DECAY = 1e-2
-NUM_EPOCHS = int(os.getenv("EEGDASH_EPOCHS", "5"))
+NUM_EPOCHS = 5
 RANDOM_SEED = 41
-RECORD_LIMIT = int(os.getenv("EEGDASH_RECORD_LIMIT", "60"))
+RECORD_LIMIT = 60
 
 # Set random seeds for reproducibility
 torch.manual_seed(RANDOM_SEED)
 np.random.seed(RANDOM_SEED)
 
-# ============================================================================
-# Data Preparation (Optional - run once to prepare data)
-# ============================================================================
-# Uncomment this section to prepare data from raw EEG files.
-# This only needs to be run once - the processed data will be saved to CACHE_DIR.
+# %%
+# Data Preparation
+# ----------------
+# We need to fetch metadata from the EEGDash API and then download the corresponding raw files.
+# The ``EEGDash`` client handles the metadata query, allowing us to find subjects with valid "age" labels.
+#
+# .. note::
+#    For this tutorial, we limit the dataset to just 10 subjects to ensure quick execution.
+#    In a real scenario, you would use the full dataset.
+#
+# .. note::
+#    The ``PREPARE_DATA`` flag is a safety switch. In a real workflow, you usually process raw data once
+#    and then load the processed windows from disk for all subsequent experiments.
 
 PREPARE_DATA = True  # Set to True to prepare data from scratch
 
@@ -65,38 +81,17 @@ if PREPARE_DATA or not CACHE_DIR.exists():
     )
     from braindecode.datasets.base import BaseConcatDataset
 
-    print(f"Preparing data for {DATASET_NAME} - {TASK} - {TARGET_NAME}...")
+    print(f"Preparing data for {DATASET_NAME} - {TARGET_NAME}...")
 
-    query = {"dataset": DATASET_NAME, "age": {"$ne": None}}
-    if TASK:
-        query["task"] = TASK
-    records = eegdash.find(query, limit=RECORD_LIMIT)
-    if not records:
-        records = eegdash.find({"age": {"$ne": None}}, limit=RECORD_LIMIT)
-    if records:
-        dataset_id = records[0].get("dataset")
-        if dataset_id:
-            records = [rec for rec in records if rec.get("dataset") == dataset_id]
-    if not records:
-        raise RuntimeError("No records with age metadata found from the API.")
-
-    # Load raw dataset from API records
+    # Load raw dataset from API records, requesting age
     ds_data = EEGDashDataset(
+        dataset=DATASET_NAME,
         cache_dir=CACHE_DIR_BASE,
-        records=records,
-        description_fields=[
-            "subject",
-            "session",
-            "run",
-            "task",
-            "age",
-            "sex",
-            "gender",
-        ],
+        description_fields=["subject", "session", "run", "task", "age", "sex"],
     )
 
-    # Filter subjects: remove problematic subjects and ensure sufficient data
-    sub_rm = [
+    # Filter subjects: remove problematic subjects
+    sub_rm = {
         "NDARWV769JM7",
         "NDARME789TD2",
         "NDARUA442ZVF",
@@ -106,34 +101,75 @@ if PREPARE_DATA or not CACHE_DIR.exists():
         "NDARLD243KRE",
         "NDARUJ292JXV",
         "NDARBA381JGH",
-        "041",  # Corrupted EDF file with invalid timestamp
-    ]
+        "041",
+    }
 
-    def parse_age(value):
-        try:
-            age = float(value)
-        except (TypeError, ValueError):
-            return None
-        return age if age > 0 else None
-
-    # First filter: remove problematic subjects and zero-length (corrupted) datasets
     filtered_datasets = []
+
+    # Reconstruct datasets with valid description
     for ds in ds_data.datasets:
-        age = parse_age(ds.description.get("age"))
-        if ds.description.subject in sub_rm or age is None or len(ds) == 0:
+        subj = ds.description.get("subject", "")
+        if subj is None:
             continue
+        subj = str(subj).replace("sub-", "")
+
+        # Check exclusion list
+        if subj in sub_rm:
+            continue
+
+        # Check age validity
+        age_val = ds.description.get("age")
+        if age_val is None:
+            continue
+        try:
+            age = float(age_val)
+        except (ValueError, TypeError):
+            continue
+
+        if np.isnan(age):
+            continue
+
+        # Update description with clean values
+        ds.description["age"] = age
+        ds.description["subject"] = subj
+
+        # Check data is not empty
+        if len(ds) == 0:
+            continue
+
+        # Data quality checks (moved inside loop to ensure we get 10 VALID subjects)
+        # Note: accessing ds.raw triggers download if not cached
+        try:
+            if ds.raw.n_times < 4 * SFREQ:
+                print(f"Skipping {subj}: duration {ds.raw.n_times / SFREQ:.2f}s < 4s")
+                continue
+            if len(ds.raw.ch_names) != 64:
+                print(f"Skipping {subj}: channel count {len(ds.raw.ch_names)} != 64")
+                continue
+        except Exception as e:
+            print(f"Skipping {subj}: failed to load raw data ({e})")
+            continue
+
         filtered_datasets.append(ds)
-    # Second filter: check data quality (requires loading raw data)
-    # ds003775 has 64 channels, not 129
-    all_datasets = BaseConcatDataset(
-        [
-            ds
-            for ds in filtered_datasets
-            if ds.raw.n_times >= 4 * SFREQ and len(ds.raw.ch_names) == 64
-        ]
-    )
+
+        # LIMIT FOR TUTORIAL: Stop after 10 valid subjects
+        if len(filtered_datasets) >= 10:
+            print("Reached limit of 10 valid subjects for tutorial demonstration.")
+            break
+
+    if len(filtered_datasets) == 0:
+        raise RuntimeError(
+            "No valid datasets found (checked for metadata and data quality)."
+        )
+
+    all_datasets = BaseConcatDataset(filtered_datasets)
+
+    if len(all_datasets.datasets) == 0:
+        raise RuntimeError("No datasets remaining after quality checks.")
 
     # Define preprocessing pipeline - select a subset of standard 10-20 channels
+    # We downsample to 128Hz to reduce computational load while keeping relevant brain frequencies.
+    # We filter between 1-55Hz to remove DC drift (<1Hz) and line noise/high-freq artifacts (>55Hz).
     ch_names = [
         "Fp1",
         "Fp2",
@@ -242,6 +278,15 @@ val_loader = DataLoader(val_ds, batch_size=BATCH_SIZE, num_workers=0)
 
 print(f"Train: {len(train_ds)} windows, Val: {len(val_ds)} windows")
 
+# %%
+# Model Architecture: EEGConformer
+# --------------------------------
+# We use the **Conformer** architecture, which combines Convolutional Neural Networks (CNNs)
+# for local feature extraction with Transformers for capturing long-range global dependencies.
+#
+# * ``n_times=256``: Matches our window length (2 seconds @ 128Hz)
+# * ``n_outputs=1``: We are doing regression (predicting a single float value: age).
+
 # ============================================================================
 # Initialize Model (EEGConformerSimplified)
 # ============================================================================
@@ -262,8 +307,8 @@ model = EEGConformer(
     drop_prob=0.7,
     n_filters_time=32,
     filter_time_length=20,
-    att_depth=4,
-    att_heads=8,
+    num_layers=4,
+    num_heads=8,
     pool_time_stride=12,
     pool_time_length=64,
 ).to(device)

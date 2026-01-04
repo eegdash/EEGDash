@@ -63,6 +63,10 @@ np.random.seed(RANDOM_SEED)
 # The ``EEGDash`` client handles the metadata query, allowing us to find subjects with valid "age" labels.
 #
 # .. note::
+#    For this tutorial, we limit the dataset to just 10 subjects to ensure quick execution.
+#    In a real scenario, you would use the full dataset.
+#
+# .. note::
 #    The ``PREPARE_DATA`` flag is a safety switch. In a real workflow, you usually process raw data once
 #    and then load the processed windows from disk for all subsequent experiments.
 
@@ -133,26 +137,35 @@ if PREPARE_DATA or not CACHE_DIR.exists():
         if len(ds) == 0:
             continue
 
+        # Data quality checks (moved inside loop to ensure we get 10 VALID subjects)
+        # Note: accessing ds.raw triggers download if not cached
+        try:
+            if ds.raw.n_times < 4 * SFREQ:
+                print(f"Skipping {subj}: duration {ds.raw.n_times / SFREQ:.2f}s < 4s")
+                continue
+            if len(ds.raw.ch_names) != 64:
+                print(f"Skipping {subj}: channel count {len(ds.raw.ch_names)} != 64")
+                continue
+        except Exception as e:
+            print(f"Skipping {subj}: failed to load raw data ({e})")
+            continue
+
         filtered_datasets.append(ds)
-    # Second filter: check data quality (requires loading raw data)
-    # ds003775 has 64 channels, not 129
+
+        # LIMIT FOR TUTORIAL: Stop after 10 valid subjects
+        if len(filtered_datasets) >= 10:
+            print("Reached limit of 10 valid subjects for tutorial demonstration.")
+            break
+
     if len(filtered_datasets) == 0:
         raise RuntimeError(
-            "No datasets remaining after filtering. Check participants.tsv or subject limits."
+            "No valid datasets found (checked for metadata and data quality)."
         )
 
-    all_datasets = BaseConcatDataset(
-        [
-            ds
-            for ds in filtered_datasets
-            if ds.raw.n_times >= 4 * SFREQ and len(ds.raw.ch_names) == 64
-        ]
-    )
+    all_datasets = BaseConcatDataset(filtered_datasets)
 
     if len(all_datasets.datasets) == 0:
-        raise RuntimeError(
-            "No datasets remaining after quality checks (duration/channels)."
-        )
+        raise RuntimeError("No datasets remaining after quality checks.")
 
     # Define preprocessing pipeline - select a subset of standard 10-20 channels
     # We downsample to 128Hz to reduce computational load while keeping relevant brain frequencies.

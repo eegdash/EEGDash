@@ -163,8 +163,10 @@ class DatasetModel(BaseModel):
     )
     ingestion_fingerprint: str | None = None
     senior_author: str | None = None
+    senior_author: str | None = None
     contact_info: list[str] | None = None
     timestamps: dict[str, Any] | None = None
+    storage: StorageModel | None = None
 
 
 class ManifestFileModel(BaseModel):
@@ -452,6 +454,9 @@ class Dataset(TypedDict, total=False):
     # Timestamps
     timestamps: Timestamps
 
+    # Storage for global files (e.g., participants.tsv)
+    storage: Storage | None
+
 
 def create_dataset(
     *,
@@ -508,6 +513,8 @@ def create_dataset(
     digested_at: str | None = None,
     dataset_created_at: str | None = None,
     dataset_modified_at: str | None = None,
+    # Storage
+    storage: Storage | None = None,
 ) -> Dataset:
     """Create a Dataset document.
 
@@ -656,6 +663,7 @@ def create_dataset(
             dataset_created_at=dataset_created_at,
             dataset_modified_at=dataset_modified_at,
         ),
+        storage=storage,
     )
 
     # Add clinical if any field provided

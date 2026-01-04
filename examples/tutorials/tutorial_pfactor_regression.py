@@ -71,6 +71,7 @@ if not CACHE_DIR.exists():
     # Load real metadata from participants.tsv
     # Try multiple standard locations
     possible_paths = [
+        ds_data.data_dir / "participants.tsv",
         CACHE_DIR_BASE / DATASET_NAME / "participants.tsv",
         Path.home() / ".eegdash_cache" / DATASET_NAME / "participants.tsv",
         Path.cwd() / ".eegdash_cache" / DATASET_NAME / "participants.tsv",

@@ -173,6 +173,22 @@ class EEGDash:
         final_query = merge_query(query, require_query=True, **kwargs)
         return self._client.find_one(final_query)
 
+    def get_dataset(self, dataset_id: str) -> Mapping[str, Any] | None:
+        """Fetch metadata for a specific dataset.
+
+        Parameters
+        ----------
+        dataset_id : str
+            The unique identifier of the dataset (e.g., 'ds002718').
+
+        Returns
+        -------
+        dict or None
+            The dataset metadata document, or None if not found.
+
+        """
+        return self._client.get_dataset(dataset_id)
+
     def insert(self, records: dict[str, Any] | list[dict[str, Any]]) -> int:
         """Insert one or more records (requires auth_token).
 

@@ -88,6 +88,7 @@ records = [rec for rec in records if rec.get("sex") or rec.get("gender")]
 
 
 ds_sexdata = EEGDashDataset(
+    dataset=DATASET_ID,
     cache_dir=CACHE_DIR,
     records=records,
     description_fields=["subject", "session", "run", "task", "sex", "gender"],

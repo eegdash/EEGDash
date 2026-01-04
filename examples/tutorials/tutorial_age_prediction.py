@@ -121,6 +121,7 @@ if PREPARE_DATA or not CACHE_DIR.exists():
 
     # Try multiple standard locations for the participants.tsv
     possible_paths = [
+        ds_data.data_dir / "participants.tsv",
         CACHE_DIR_BASE / DATASET_NAME / "participants.tsv",
         Path.home() / ".eegdash_cache" / DATASET_NAME / "participants.tsv",
         Path.cwd() / ".eegdash_cache" / DATASET_NAME / "participants.tsv",
@@ -192,6 +193,11 @@ if PREPARE_DATA or not CACHE_DIR.exists():
         filtered_datasets.append(new_ds)
     # Second filter: check data quality (requires loading raw data)
     # ds003775 has 64 channels, not 129
+    if len(filtered_datasets) == 0:
+        raise RuntimeError(
+            "No datasets remaining after filtering. Check participants.tsv or subject limits."
+        )
+
     all_datasets = BaseConcatDataset(
         [
             ds
@@ -199,6 +205,11 @@ if PREPARE_DATA or not CACHE_DIR.exists():
             if ds.raw.n_times >= 4 * SFREQ and len(ds.raw.ch_names) == 64
         ]
     )
+
+    if len(all_datasets.datasets) == 0:
+        raise RuntimeError(
+            "No datasets remaining after quality checks (duration/channels)."
+        )
 
     # Define preprocessing pipeline - select a subset of standard 10-20 channels
     # We downsample to 128Hz to reduce computational load while keeping relevant brain frequencies.

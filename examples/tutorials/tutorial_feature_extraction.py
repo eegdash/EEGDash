@@ -53,11 +53,12 @@ from braindecode.preprocessing import (
     create_fixed_length_windows,
 )
 from eegdash import EEGDash, EEGDashDataset
+from eegdash.paths import get_default_cache_dir
 
-CACHE_DIR = Path(os.getenv("EEGDASH_CACHE_DIR", Path.cwd() / "eegdash_cache")).resolve()
+CACHE_DIR = Path(get_default_cache_dir()).resolve()
 CACHE_DIR.mkdir(parents=True, exist_ok=True)
-DATASET_ID = os.getenv("EEGDASH_DATASET_ID", "ds005505")
-TASK = os.getenv("EEGDASH_TASK", "RestingState")
+DATASET_ID = "ds005505"
+TASK = "RestingState"
 RECORD_LIMIT = 80
 PREPARED_DIR = CACHE_DIR / "restingstate_windows"
 
@@ -304,7 +305,6 @@ feature_ext = fit_feature_extractors(windows_ds, features_dict, batch_size=1024)
 features_ds = extract_features(windows_ds, feature_ext, batch_size=64, n_jobs=-1)
 
 # %%
-import os
 
 features_dir = CACHE_DIR / "hbn_features_restingstate"
 os.makedirs(features_dir, exist_ok=True)

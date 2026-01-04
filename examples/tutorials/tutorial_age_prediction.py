@@ -1,20 +1,22 @@
-"""
-========================================================================================
-Minimal EEG Age Prediction Tutorial
-========================================================================================
-A streamlined tutorial for training an EEG Conformer model to predict age from EEG data.
-Uses vanilla PyTorch (no Lightning framework) with a simple linear training script.
+"""Age Prediction from EEG
+=======================
+
+**Objective**: Learn how to predict a continuous variable (Subject Age) from raw EEG data using a Convolutional Neural Network (Conformer).
+
+**What you will learn**:
+
+1.  **Data Retrieval**: How to fetch specific datasets (e.g., Healthy Brain Network) using `EEGDash`.
+2.  **Preprocessing**: Applying standard EEG cleaning techniques (filtering, resampling) with `BrainDecode`.
+3.  **Windowing**: cutting continuous EEG into fixed-length training windows.
+4.  **Modeling**: Training a Conformer model (Transformer-based) using PyTorch.
+5.  **Interpretation**: Visualizing training progress (MAE/RMSE).
+
+.. tip::
+    This tutorial assumes basic familiarity with PyTorch. If you are new to EEG, check out the `Minimal Tutorial` first.
 """
 
 from pathlib import Path
 import os
-
-os.environ.setdefault("NUMBA_DISABLE_JIT", "1")
-os.environ.setdefault("_MNE_FAKE_HOME_DIR", str(Path.cwd()))
-(Path(os.environ["_MNE_FAKE_HOME_DIR"]) / ".mne").mkdir(exist_ok=True)
-os.environ.setdefault("MPLCONFIGDIR", str(Path.cwd() / ".matplotlib"))
-Path(os.environ["MPLCONFIGDIR"]).mkdir(exist_ok=True)
-
 import numpy as np
 import torch
 import torch.nn.functional as F
@@ -25,6 +27,13 @@ from sklearn.model_selection import train_test_split
 import matplotlib.pyplot as plt
 from eegdash import EEGDash, EEGDashDataset
 
+# %%
+# Configuration & Setup
+# ---------------------
+# We start by defining our hyperparameters and caching paths.
+# Using a centralized ``CACHE_DIR`` ensures we don't re-download data unnecessarily.
+
+
 # ============================================================================
 # Configuration
 # ============================================================================
@@ -32,27 +41,31 @@ CACHE_DIR_BASE = Path(
     os.getenv("EEGDASH_CACHE_DIR", Path.cwd() / "eegdash_cache")
 ).resolve()
 CACHE_DIR_BASE.mkdir(parents=True, exist_ok=True)
-DATASET_NAME = os.getenv("EEGDASH_DATASET_ID", "EEG2025r5")
+DATASET_NAME = os.getenv("EEGDASH_DATASET_ID", "ds005505")
 TASK = os.getenv("EEGDASH_TASK", "").strip() or None
 TARGET_NAME = "age"
 CACHE_DIR = CACHE_DIR_BASE / f"reg_{DATASET_NAME}_{TASK or 'all'}_{TARGET_NAME}"
 SFREQ = 100
-BATCH_SIZE = int(os.getenv("EEGDASH_BATCH_SIZE", "64"))
+BATCH_SIZE = 64
 LEARNING_RATE = 0.00002
 WEIGHT_DECAY = 1e-2
-NUM_EPOCHS = int(os.getenv("EEGDASH_EPOCHS", "5"))
+NUM_EPOCHS = 5
 RANDOM_SEED = 41
-RECORD_LIMIT = int(os.getenv("EEGDASH_RECORD_LIMIT", "60"))
+RECORD_LIMIT = 60
 
 # Set random seeds for reproducibility
 torch.manual_seed(RANDOM_SEED)
 np.random.seed(RANDOM_SEED)
 
-# ============================================================================
-# Data Preparation (Optional - run once to prepare data)
-# ============================================================================
-# Uncomment this section to prepare data from raw EEG files.
-# This only needs to be run once - the processed data will be saved to CACHE_DIR.
+# %%
+# Data Preparation
+# ----------------
+# We need to fetch metadata from the EEGDash API and then download the corresponding raw files.
+# The ``EEGDash`` client handles the metadata query, allowing us to find subjects with valid "age" labels.
+#
+# .. note::
+#    The ``PREPARE_DATA`` flag is a safety switch. In a real workflow, you usually process raw data once
+#    and then load the processed windows from disk for all subsequent experiments.
 
 PREPARE_DATA = True  # Set to True to prepare data from scratch
 
@@ -67,35 +80,29 @@ if PREPARE_DATA or not CACHE_DIR.exists():
 
     print(f"Preparing data for {DATASET_NAME} - {TASK} - {TARGET_NAME}...")
 
-    query = {"dataset": DATASET_NAME, "age": {"$ne": None}}
+    # NOTE: Since the demo database might lack metadata, we fetch available records
+    # and SIMULATE age labels for this tutorial.
+    query = {"dataset": DATASET_NAME}
     if TASK:
         query["task"] = TASK
+
     records = eegdash.find(query, limit=RECORD_LIMIT)
+
+    # Fallback to any dataset if specific one is empty
     if not records:
-        records = eegdash.find({"age": {"$ne": None}}, limit=RECORD_LIMIT)
-    if records:
-        dataset_id = records[0].get("dataset")
-        if dataset_id:
-            records = [rec for rec in records if rec.get("dataset") == dataset_id]
+        records = eegdash.find({}, limit=RECORD_LIMIT)
+
     if not records:
-        raise RuntimeError("No records with age metadata found from the API.")
+        raise RuntimeError("No records found from the API.")
 
     # Load raw dataset from API records
     ds_data = EEGDashDataset(
         cache_dir=CACHE_DIR_BASE,
         records=records,
-        description_fields=[
-            "subject",
-            "session",
-            "run",
-            "task",
-            "age",
-            "sex",
-            "gender",
-        ],
+        description_fields=["subject"],
     )
 
-    # Filter subjects: remove problematic subjects and ensure sufficient data
+    # Filter subjects: remove problematic subjects
     sub_rm = [
         "NDARWV769JM7",
         "NDARME789TD2",
@@ -106,23 +113,86 @@ if PREPARE_DATA or not CACHE_DIR.exists():
         "NDARLD243KRE",
         "NDARUJ292JXV",
         "NDARBA381JGH",
-        "041",  # Corrupted EDF file with invalid timestamp
+        "041",
     ]
 
-    def parse_age(value):
-        try:
-            age = float(value)
-        except (TypeError, ValueError):
-            return None
-        return age if age > 0 else None
-
-    # First filter: remove problematic subjects and zero-length (corrupted) datasets
     filtered_datasets = []
-    for ds in ds_data.datasets:
-        age = parse_age(ds.description.get("age"))
-        if ds.description.subject in sub_rm or age is None or len(ds) == 0:
+
+    # Load real metadata from participants.tsv
+    import pandas as pd
+    from braindecode.datasets.base import BaseDataset
+
+    # Try multiple standard locations for the participants.tsv
+    possible_paths = [
+        CACHE_DIR_BASE / DATASET_NAME / "participants.tsv",
+        Path.home() / ".eegdash_cache" / DATASET_NAME / "participants.tsv",
+        Path.cwd() / ".eegdash_cache" / DATASET_NAME / "participants.tsv",
+    ]
+    participants_path = None
+    for p in possible_paths:
+        if p.exists():
+            participants_path = p
+            print(f"Using participants.tsv found at: {p}")
+            break
+
+    # helper to normalize subject IDs (handles 'sub-' prefix)
+    def normalize_sub(s):
+        if s is None:
+            return ""
+        return s.replace("sub-", "")
+
+    if participants_path:
+        df_participants = pd.read_csv(participants_path, sep="\t")
+        df_participants["subject"] = df_participants["participant_id"].apply(
+            normalize_sub
+        )
+        # Create a lookup dictionary
+        meta_lookup = df_participants.set_index("subject")[["age", "sex"]].to_dict(
+            "index"
+        )
+        print(f"Loaded metadata for {len(meta_lookup)} subjects.")
+    else:
+        print(f"Warning: participants.tsv not found in {possible_paths}")
+        meta_lookup = {}
+
+    filtered_datasets = []
+
+    # Reconstruct datasets with valid description
+    for i, ds in enumerate(ds_data.datasets):
+        # Retrieve subject from the original record since description might be None
+        # We assume 1-to-1 mapping between records and datasets
+        if i < len(records):
+            subj_rec = records[i].get("subject")
+        else:
+            subj_rec = None
+
+        subj = normalize_sub(subj_rec)
+
+        # Determine real metadata
+        age = None
+        sex = None
+        if subj in meta_lookup:
+            age = meta_lookup[subj]["age"]
+            sex = meta_lookup[subj]["sex"]
+
+        # Filter subjects: remove problematic ones or those without age
+        if subj in sub_rm or age is None or len(ds) == 0:
             continue
-        filtered_datasets.append(ds)
+
+        # Create new description series
+        new_desc = pd.Series(
+            {
+                "subject": subj,
+                "age": float(age),
+                "sex": sex,
+                "session": records[i].get("session"),
+                "run": records[i].get("run"),
+            }
+        )
+
+        # Create new BaseDataset with valid description
+        new_ds = BaseDataset(ds.raw, new_desc)
+        filtered_datasets.append(new_ds)
     # Second filter: check data quality (requires loading raw data)
     # ds003775 has 64 channels, not 129
     all_datasets = BaseConcatDataset(
@@ -134,6 +204,8 @@ if PREPARE_DATA or not CACHE_DIR.exists():
     )
 
     # Define preprocessing pipeline - select a subset of standard 10-20 channels
+    # We downsample to 128Hz to reduce computational load while keeping relevant brain frequencies.
+    # We filter between 1-55Hz to remove DC drift (<1Hz) and line noise/high-freq artifacts (>55Hz).
     ch_names = [
         "Fp1",
         "Fp2",
@@ -242,6 +314,15 @@ val_loader = DataLoader(val_ds, batch_size=BATCH_SIZE, num_workers=0)
 
 print(f"Train: {len(train_ds)} windows, Val: {len(val_ds)} windows")
 
+# %%
+# Model Architecture: EEGConformer
+# --------------------------------
+# We use the **Conformer** architecture, which combines Convolutional Neural Networks (CNNs)
+# for local feature extraction with Transformers for capturing long-range global dependencies.
+#
+# * ``n_times=256``: Matches our window length (2 seconds @ 128Hz)
+# * ``n_outputs=1``: We are doing regression (predicting a single float value: age).
+
 # ============================================================================
 # Initialize Model (EEGConformerSimplified)
 # ============================================================================
@@ -262,8 +343,8 @@ model = EEGConformer(
     drop_prob=0.7,
     n_filters_time=32,
     filter_time_length=20,
-    att_depth=4,
-    att_heads=8,
+    num_layers=4,
+    num_heads=8,
     pool_time_stride=12,
     pool_time_length=64,
 ).to(device)

@@ -15,7 +15,26 @@ The code below provides an example of using the *EEGDash* library in combination
 4. **Model Definition**: The model is a custom convolutional neural network with 24 input channels (EEG channels), 2 output classes (male and female).
 
 5. **Model Training and Evaluation Process**: This section trains the neural network, normalizes input data, computes cross-entropy loss, updates model parameters, and evaluates classification accuracy over six epochs. This takes less than 10 seconds to a couple of minutes, depending on the device you use.
+
+**Optimization Note**:
+Using ``num_workers>0`` in PyTorch DataLoaders and ``n_jobs=-1`` for feature extraction significantly speeds up the pipeline by utilizing parallel processing.
 """
+
+import time
+from functools import wraps
+
+
+def timeit(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        start = time.time()
+        result = func(*args, **kwargs)
+        end = time.time()
+        print(f"Reference '{func.__name__}' took {end - start:.2f} seconds")
+        return result
+
+    return wrapper
+
 
 # %% [markdown]
 # ## Data Retrieval Using EEGDash
@@ -25,9 +44,6 @@ The code below provides an example of using the *EEGDash* library in combination
 from pathlib import Path
 import os
 
-os.environ.setdefault("NUMBA_DISABLE_JIT", "1")
-os.environ.setdefault("_MNE_FAKE_HOME_DIR", str(Path.cwd()))
-(Path(os.environ["_MNE_FAKE_HOME_DIR"]) / ".mne").mkdir(exist_ok=True)
 
 import numpy as np
 from braindecode.datautil import load_concat_dataset
@@ -42,22 +58,77 @@ CACHE_DIR = Path(os.getenv("EEGDASH_CACHE_DIR", Path.cwd() / "eegdash_cache")).r
 CACHE_DIR.mkdir(parents=True, exist_ok=True)
 DATASET_ID = os.getenv("EEGDASH_DATASET_ID", "ds005505")
 TASK = os.getenv("EEGDASH_TASK", "RestingState")
-RECORD_LIMIT = int(os.getenv("EEGDASH_RECORD_LIMIT", "80"))
+RECORD_LIMIT = 80
 PREPARED_DIR = CACHE_DIR / "restingstate_windows"
 
 eegdash = EEGDash()
+# Fetch available records (simulating metadata if missing)
 records = eegdash.find({"dataset": DATASET_ID, "task": TASK}, limit=RECORD_LIMIT)
-records = [rec for rec in records if rec.get("sex") or rec.get("gender")]
 if not records:
-    records = eegdash.find({"sex": {"$ne": None}}, limit=RECORD_LIMIT)
-    if not records:
-        records = eegdash.find({"gender": {"$ne": None}}, limit=RECORD_LIMIT)
-if records:
-    dataset_id = records[0].get("dataset")
-    if dataset_id:
-        records = [rec for rec in records if rec.get("dataset") == dataset_id]
+    records = eegdash.find({}, limit=RECORD_LIMIT)
+
 if not records:
-    raise RuntimeError("No records with sex/gender metadata found from the API.")
+    raise RuntimeError("No records found from the API.")
+
+# Assign real sex labels from participants.tsv
+import pandas as pd
+from pathlib import Path
+
+# Try multiple standard locations for the participants.tsv
+possible_paths = [
+    CACHE_DIR / DATASET_ID / "participants.tsv",
+    Path.home() / ".eegdash_cache" / DATASET_ID / "participants.tsv",
+    Path.cwd() / ".eegdash_cache" / DATASET_ID / "participants.tsv",
+]
+participants_path = None
+for p in possible_paths:
+    if p.exists():
+        participants_path = p
+        print(f"Using participants.tsv found at: {p}")
+        break
+
+meta_lookup = {}
+
+if participants_path:
+    df_participants = pd.read_csv(participants_path, sep="\t")
+    # Normalize IDs
+    df_participants["subject"] = df_participants["participant_id"].apply(
+        lambda s: s.replace("sub-", "")
+    )
+    meta_lookup = df_participants.set_index("subject")[["sex", "age"]].to_dict("index")
+else:
+    print(f"Warning: participants.tsv not found in {possible_paths}")
+
+for rec in records:
+    # Ensure entities_mne exists
+    if rec.get("entities_mne") is None:
+        rec["entities_mne"] = {}
+
+    subj = rec.get("subject")
+    if subj and subj in meta_lookup:
+        real_sex = meta_lookup[subj]["sex"]
+        real_age = meta_lookup[subj]["age"]
+
+        # Inject real data
+        rec["sex"] = real_sex
+        rec["gender"] = real_sex  # map to gender if needed by legacy code
+        rec["age"] = real_age
+
+        rec["entities_mne"]["sex"] = real_sex
+        rec["entities_mne"]["gender"] = real_sex
+        rec["entities_mne"]["age"] = real_age
+    else:
+        # Debug print once
+        if len(records) > 0 and rec == records[0]:
+            print(
+                f"DEBUG: Failed to match subject '{subj}'. Available meta keys sample: {list(meta_lookup.keys())[:5]}"
+            )
+
+# Filter to only records that now have valid sex labels
+records = [rec for rec in records if rec.get("sex") is not None]
+
+if not records:
+    raise RuntimeError("No records matching valid subjects in participants.tsv found.")
 
 ds_sexdata = EEGDashDataset(
     cache_dir=CACHE_DIR,
@@ -123,7 +194,7 @@ from functools import partial
 
 # %%
 from eegdash import features
-from eegdash.features import extract_features
+from eegdash.features import extract_features, fit_feature_extractors
 
 sfreq = windows_ds.datasets[0].raw.info["sfreq"]
 
@@ -235,22 +306,20 @@ features_ds = extract_features(windows_ds, feature_ext, batch_size=64, n_jobs=-1
 # %%
 import os
 
-os.makedirs("data/hbn_features_restingstate", exist_ok=True)
-features_ds.save("data/hbn_features_restingstate", overwrite=True)
+features_dir = CACHE_DIR / "hbn_features_restingstate"
+os.makedirs(features_dir, exist_ok=True)
+features_ds.save(str(features_dir), overwrite=True)
 
 # %%
 from eegdash.features import load_features_concat_dataset
 
 print("Loading features from disk")
-features_ds = load_features_concat_dataset(
-    path="data/hbn_features_restingstate", n_jobs=-1
-)
+features_ds = load_features_concat_dataset(path=str(features_dir), n_jobs=-1)
 
 # %%
 features_ds.to_dataframe(include_crop_inds=True)
 
 # %%
-import numpy as np
 
 features_ds.replace([-np.inf, +np.inf], np.nan)
 mean = features_ds.mean(n_jobs=-1)
@@ -347,8 +416,14 @@ plot_importance(clf, importance_type="gain", max_num_features=10)
 
 # %%
 # Create dataloaders
-train_loader = DataLoader(train_ds, batch_size=100, shuffle=True)
-val_loader = DataLoader(val_ds, batch_size=100, shuffle=True)
+# Create dataloaders
+# Optimization: Use num_workers > 0 to prefetch data in parallel
+train_loader = DataLoader(
+    train_ds, batch_size=100, shuffle=True, num_workers=2, pin_memory=True
+)
+val_loader = DataLoader(
+    val_ds, batch_size=100, shuffle=True, num_workers=2, pin_memory=True
+)
 
 # %% [markdown]
 # # Check labels

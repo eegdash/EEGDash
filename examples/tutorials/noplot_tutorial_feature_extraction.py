@@ -15,7 +15,26 @@ The code below provides an example of using the *EEGDash* library in combination
 4. **Model Definition**: The model is a custom convolutional neural network with 24 input channels (EEG channels), 2 output classes (male and female).
 
 5. **Model Training and Evaluation Process**: This section trains the neural network, normalizes input data, computes cross-entropy loss, updates model parameters, and evaluates classification accuracy over six epochs. This takes less than 10 seconds to a couple of minutes, depending on the device you use.
+
+**Optimization Note**:
+Using ``num_workers>0`` in PyTorch DataLoaders and ``n_jobs=-1`` for feature extraction significantly speeds up the pipeline by utilizing parallel processing.
 """
+
+import time
+from functools import wraps
+
+
+def timeit(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        start = time.time()
+        result = func(*args, **kwargs)
+        end = time.time()
+        print(f"Reference '{func.__name__}' took {end - start:.2f} seconds")
+        return result
+
+    return wrapper
+
 
 # %% [markdown]
 # ## Data Retrieval Using EEGDash
@@ -25,9 +44,6 @@ The code below provides an example of using the *EEGDash* library in combination
 from pathlib import Path
 import os
 
-os.environ.setdefault("NUMBA_DISABLE_JIT", "1")
-os.environ.setdefault("_MNE_FAKE_HOME_DIR", str(Path.cwd()))
-(Path(os.environ["_MNE_FAKE_HOME_DIR"]) / ".mne").mkdir(exist_ok=True)
 
 import numpy as np
 from braindecode.datautil import load_concat_dataset
@@ -36,34 +52,38 @@ from braindecode.preprocessing import (
     Preprocessor,
     create_fixed_length_windows,
 )
-from eegdash import EEGDash, EEGDashDataset
+from eegdash import EEGDashDataset
+from eegdash.paths import get_default_cache_dir
 
-CACHE_DIR = Path(os.getenv("EEGDASH_CACHE_DIR", Path.cwd() / "eegdash_cache")).resolve()
+CACHE_DIR = Path(get_default_cache_dir()).resolve()
 CACHE_DIR.mkdir(parents=True, exist_ok=True)
-DATASET_ID = os.getenv("EEGDASH_DATASET_ID", "ds005505")
-TASK = os.getenv("EEGDASH_TASK", "RestingState")
-RECORD_LIMIT = int(os.getenv("EEGDASH_RECORD_LIMIT", "80"))
+DATASET_ID = "ds005505"
+TASK = "RestingState"
+RECORD_LIMIT = 80
 PREPARED_DIR = CACHE_DIR / "restingstate_windows"
 
-eegdash = EEGDash()
-records = eegdash.find({"dataset": DATASET_ID, "task": TASK}, limit=RECORD_LIMIT)
-records = [rec for rec in records if rec.get("sex") or rec.get("gender")]
-if not records:
-    records = eegdash.find({"sex": {"$ne": None}}, limit=RECORD_LIMIT)
-    if not records:
-        records = eegdash.find({"gender": {"$ne": None}}, limit=RECORD_LIMIT)
-if records:
-    dataset_id = records[0].get("dataset")
-    if dataset_id:
-        records = [rec for rec in records if rec.get("dataset") == dataset_id]
-if not records:
-    raise RuntimeError("No records with sex/gender metadata found from the API.")
-
+# Fetch dataset directly
 ds_sexdata = EEGDashDataset(
+    dataset=DATASET_ID,
+    task=TASK,
     cache_dir=CACHE_DIR,
-    records=records,
-    description_fields=["subject", "session", "run", "task", "sex", "gender"],
+    description_fields=["subject", "session", "run", "task", "sex", "gender", "age"],
 )
+
+# Filter datasets that have sex/gender info
+valid_datasets = []
+from braindecode.datasets import BaseConcatDataset
+
+for ds in ds_sexdata.datasets:
+    # Check if sex is present (populated from DB)
+    if ds.description.get("sex") is not None:
+        valid_datasets.append(ds)
+
+if not valid_datasets:
+    raise RuntimeError("No records with sex/gender metadata found (API).")
+
+# Reconstitute BaseConcatDataset with valid datasets
+ds_sexdata = BaseConcatDataset(valid_datasets)
 
 if not PREPARED_DIR.exists():
     preprocessors = [
@@ -123,7 +143,7 @@ from functools import partial
 
 # %%
 from eegdash import features
-from eegdash.features import extract_features
+from eegdash.features import extract_features, fit_feature_extractors
 
 sfreq = windows_ds.datasets[0].raw.info["sfreq"]
 
@@ -233,24 +253,21 @@ feature_ext = fit_feature_extractors(windows_ds, features_dict, batch_size=1024)
 features_ds = extract_features(windows_ds, feature_ext, batch_size=64, n_jobs=-1)
 
 # %%
-import os
 
-os.makedirs("data/hbn_features_restingstate", exist_ok=True)
-features_ds.save("data/hbn_features_restingstate", overwrite=True)
+features_dir = CACHE_DIR / "hbn_features_restingstate"
+os.makedirs(features_dir, exist_ok=True)
+features_ds.save(str(features_dir), overwrite=True)
 
 # %%
 from eegdash.features import load_features_concat_dataset
 
 print("Loading features from disk")
-features_ds = load_features_concat_dataset(
-    path="data/hbn_features_restingstate", n_jobs=-1
-)
+features_ds = load_features_concat_dataset(path=str(features_dir), n_jobs=-1)
 
 # %%
 features_ds.to_dataframe(include_crop_inds=True)
 
 # %%
-import numpy as np
 
 features_ds.replace([-np.inf, +np.inf], np.nan)
 mean = features_ds.mean(n_jobs=-1)
@@ -347,8 +364,14 @@ plot_importance(clf, importance_type="gain", max_num_features=10)
 
 # %%
 # Create dataloaders
-train_loader = DataLoader(train_ds, batch_size=100, shuffle=True)
-val_loader = DataLoader(val_ds, batch_size=100, shuffle=True)
+# Create dataloaders
+# Optimization: Use num_workers > 0 to prefetch data in parallel
+train_loader = DataLoader(
+    train_ds, batch_size=100, shuffle=True, num_workers=2, pin_memory=True
+)
+val_loader = DataLoader(
+    val_ds, batch_size=100, shuffle=True, num_workers=2, pin_memory=True
+)
 
 # %% [markdown]
 # # Check labels

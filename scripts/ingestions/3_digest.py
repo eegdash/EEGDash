@@ -29,7 +29,7 @@ import pandas as pd
 from _fingerprint import fingerprint_from_files, fingerprint_from_manifest
 from tqdm import tqdm
 
-from eegdash.schemas import create_dataset, create_record
+from eegdash.schemas import Storage, create_dataset, create_record
 
 # Storage configuration per source
 # Each source has a backend type and base URL pattern
@@ -338,6 +338,89 @@ def extract_dataset_metadata(
 
     # Extract size_bytes
     size_bytes = metadata.get("size_bytes")
+    if size_bytes is None and bids_root.exists():
+        size_bytes = sum(f.stat().st_size for f in bids_root.rglob("*") if f.is_file())
+
+    # Build Storage info for global files
+    storage_info: Storage | None = None
+    if source in ("openneuro", "nemar", "gin") or source in STORAGE_CONFIGS:
+        storage_base = get_storage_base(dataset_id, source)
+        storage_backend = get_storage_backend(source)
+
+        # Core global files to look for (explicit list for ordering/priority)
+        explicit_global_files = [
+            "participants.tsv",
+            "participants.json",
+            "samples.tsv",
+            "samples.json",
+            "README",
+            "README.md",
+            "README.txt",
+            "CHANGES",
+            "CHANGES.md",
+            "LICENSE",
+            "authors.tsv",
+            "dataset_description.json",
+        ]
+
+        dep_keys = []
+        raw_key = "dataset_description.json"  # Default "main" file
+        found_files = set()
+
+        # 1. Check explicit list
+        for fname in explicit_global_files:
+            fpath = bids_root / fname
+            if fpath.exists():
+                found_files.add(fname)
+                if fname == "dataset_description.json":
+                    raw_key = fname
+                else:
+                    dep_keys.append(fname)
+            else:
+                # Case-insensitive fallback
+                try:
+                    found = next(
+                        x.name
+                        for x in bids_root.iterdir()
+                        if x.name.lower() == fname.lower()
+                    )
+                    found_files.add(found)
+                    if found.lower() == "dataset_description.json":
+                        raw_key = found
+                    else:
+                        dep_keys.append(found)
+                except StopIteration:
+                    pass
+
+        # 2. Scan for other root-level BIDS files (sidecars, etc.)
+        # Exclude directories, manifest.json, and files we already found
+        ignored_files = {"manifest.json", ".ds_store"}
+        for item in bids_root.iterdir():
+            if not item.is_file():
+                continue
+
+            name = item.name
+            if (
+                name in found_files
+                or name.lower() in ignored_files
+                or name.startswith(".")
+            ):
+                continue
+
+            # Include typical BIDS metadata extensions
+            if name.lower().endswith((".json", ".tsv", ".txt", ".md", ".yaml", ".yml")):
+                dep_keys.append(name)
+                found_files.add(name)
+
+        # Deduplicate keys and sort
+        dep_keys = sorted(list(set(dep_keys)))
+
+        storage_info = {
+            "backend": storage_backend,  # type: ignore
+            "base": storage_base,
+            "raw_key": raw_key,
+            "dep_keys": dep_keys,
+        }
 
     # Create Dataset document
     dataset = create_dataset(
@@ -370,6 +453,7 @@ def extract_dataset_metadata(
         dataset_modified_at=dataset_modified_at,
         senior_author=senior_author,
         contact_info=contact_info,
+        storage=storage_info,
     )
 
     return dict(dataset)

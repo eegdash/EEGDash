@@ -1,35 +1,124 @@
 # Authors: The EEGDash contributors.
 # License: BSD-3-Clause
-"""Pydantic models and TypedDict schemas for EEGDash documents.
+"""EEGDash Data Schemas
+====================
 
-This module contains both the Pydantic models (for validation) and TypedDict
-definitions (for fast loading/runtime) of EEGDash Dataset and Record objects.
+This module defines the core data structures used throughout EEGDash to represent
+neuroimaging datasets and individual recording files.
 
-Two-level hierarchy:
+It provides two types of schemas for each core object:
 
-- Dataset: per-dataset metadata (one per ds*, for discovery/filtering)
-  Contains: identity, demographics, clinical, paradigm, timestamps
-- Record: per-file metadata (many per dataset, optimized for fast loading)
-  Contains: dataset FK, storage location, BIDS entities only
+1.  **Pydantic Models** (``*Model``): Used for strict data validation, serialization,
+    and schema generation (e.g., for APIs).
+2.  **TypedDict Definitions**: Used for high-performance internal usage, static type
+    checking, and efficient loading of large metadata collections.
+
+Core Concepts
+-------------
+
+The data model is organized into a two-level hierarchy:
+
+*   **Dataset**: Represents a collection of data (e.g., "ds001785"). It contains
+    study-level metadata such as:
+    *   Identity (ID, name, source)
+    *   Demographics (subject ages, sex distribution)
+    *   Clinical (diagnosis, purpose)
+    *   Experiment Paradigm (tasks, stimuli)
+    *   Provenance (timestamps, authors)
+
+*   **Record**: Represents a single data file within a dataset (e.g., a specific
+    .vhdr or .edf file). It is optimized for fast access and contains:
+    *   File location (storage backend, path)
+    *   BIDS Entities (subject, session, task, run)
+    *   Basic signal properties (sampling rate, channel names)
+
+Usage
+-----
+
+Creating a Dataset:
+
+.. code-block:: python
+
+    from eegdash.schemas import create_dataset
+
+    ds = create_dataset(
+        dataset_id="ds001",
+        name="My Study",
+        subjects_count=20,
+        ages=[20, 25, 30],
+        recording_modality=["eeg"],
+    )
+
+Creating a Record:
+
+.. code-block:: python
+
+    from eegdash.schemas import create_record
+
+    rec = create_record(
+        dataset="ds001",
+        storage_base="https://my.storage.com",
+        bids_relpath="sub-01/eeg/sub-01_task-rest_eeg.edf",
+        subject="01",
+        task="rest",
+    )
+
 """
 
 from __future__ import annotations
 
-from typing import Any
+from datetime import datetime, timezone
+from pathlib import PurePosixPath
+from typing import Any, Literal, TypedDict
 
 from pydantic import BaseModel, ConfigDict, Field
 
+__all__ = [
+    # Pydantic Models ("Model" suffix)
+    "DatasetModel",
+    "RecordModel",
+    "StorageModel",
+    "EntitiesModel",
+    "ManifestModel",
+    "ManifestFileModel",
+    # TypedDicts (No suffix)
+    "Dataset",
+    "Record",
+    "Storage",
+    "Entities",
+    "Demographics",
+    "Clinical",
+    "Paradigm",
+    "ExternalLinks",
+    "RepositoryStats",
+    "Timestamps",
+    # Factory Functions
+    "create_dataset",
+    "create_record",
+    # Validation Functions
+    "validate_dataset",
+    "validate_record",
+]
+
 
 class StorageModel(BaseModel):
+    """Pydantic model for storage location details."""
+
     model_config = ConfigDict(extra="allow")
 
-    backend: str = Field(min_length=1)
-    base: str = Field(min_length=1)
-    raw_key: str = Field(min_length=1)
-    dep_keys: list[str] = Field(default_factory=list)
+    backend: str = Field(
+        min_length=1, description="Storage type (e.g., 's3', 'https', 'local')"
+    )
+    base: str = Field(min_length=1, description="Base URI of the storage location")
+    raw_key: str = Field(min_length=1, description="Relative path key to the raw file")
+    dep_keys: list[str] = Field(
+        default_factory=list, description="List of dependency file keys"
+    )
 
 
 class EntitiesModel(BaseModel):
+    """Pydantic model for BIDS entities."""
+
     model_config = ConfigDict(extra="allow")
 
     subject: str | None = None
@@ -39,12 +128,18 @@ class EntitiesModel(BaseModel):
 
 
 class RecordModel(BaseModel):
+    """Pydantic model for a single recording file."""
+
     model_config = ConfigDict(extra="allow")
 
-    dataset: str = Field(min_length=1)
-    bids_relpath: str = Field(min_length=1)
+    dataset: str = Field(min_length=1, description="ID of the parent dataset")
+    bids_relpath: str = Field(
+        min_length=1, description="BIDS-compliant relative path string"
+    )
     storage: StorageModel
-    recording_modality: list[str] = Field(min_length=1)
+    recording_modality: list[str] = Field(
+        min_length=1, description="List of modalities (e.g. ['eeg'])"
+    )
 
     datatype: str | None = None
     suffix: str | None = None
@@ -53,28 +148,43 @@ class RecordModel(BaseModel):
 
 
 class DatasetModel(BaseModel):
+    """Pydantic model for dataset-level metadata."""
+
     model_config = ConfigDict(extra="allow")
 
-    dataset_id: str = Field(min_length=1)
-    source: str = Field(min_length=1)
-    recording_modality: list[str] = Field(min_length=1)
+    dataset_id: str = Field(
+        min_length=1, description="Unique identifier for the dataset"
+    )
+    source: str = Field(
+        min_length=1, description="Source of the dataset (e.g., 'openneuro')"
+    )
+    recording_modality: list[str] = Field(
+        min_length=1, description="Recording modalities present in the dataset"
+    )
     ingestion_fingerprint: str | None = None
+    senior_author: str | None = None
     senior_author: str | None = None
     contact_info: list[str] | None = None
     timestamps: dict[str, Any] | None = None
+    storage: StorageModel | None = None
 
 
 class ManifestFileModel(BaseModel):
+    """Pydantic model for a file entry in a manifest."""
+
     model_config = ConfigDict(extra="allow")
 
     path: str | None = None
     name: str | None = None
 
     def path_or_name(self) -> str:
+        """Return the path or name of the file."""
         return (self.path or self.name or "").strip()
 
 
 class ManifestModel(BaseModel):
+    """Pydantic model for a dataset file manifest."""
+
     model_config = ConfigDict(extra="allow")
 
     source: str | None = None
@@ -85,17 +195,24 @@ class ManifestModel(BaseModel):
 # TypedDict Schemas (Optimized for fast loading/runtime usage)
 # =============================================================================
 
-from datetime import datetime, timezone
-from pathlib import PurePosixPath
-from typing import Literal, TypedDict
-
 
 class Timestamps(TypedDict, total=False):
-    """Processing timestamps."""
+    """Processing and lifecycle timestamps.
 
-    digested_at: str  # ISO 8601 timestamp of when digestion occurred
-    dataset_created_at: str | None  # ISO 8601 timestamp of when dataset was created
-    dataset_modified_at: str | None  # ISO 8601 timestamp of last dataset update
+    Attributes
+    ----------
+    digested_at : str
+        ISO 8601 timestamp of when the data was processed by EEGDash.
+    dataset_created_at : str | None
+        ISO 8601 timestamp of when the dataset was originally created.
+    dataset_modified_at : str | None
+        ISO 8601 timestamp of when the dataset was last updated.
+
+    """
+
+    digested_at: str
+    dataset_created_at: str | None
+    dataset_modified_at: str | None
 
 
 # =============================================================================
@@ -104,50 +221,109 @@ class Timestamps(TypedDict, total=False):
 
 
 class Demographics(TypedDict, total=False):
-    """Subject demographics for a dataset."""
+    """Subject demographics summary for a dataset.
+
+    Attributes
+    ----------
+    subjects_count : int
+        Total number of subjects.
+    ages : list[int]
+        List of all subject ages (if available).
+    age_min : int | None
+        Minimum age in the cohort.
+    age_max : int | None
+        Maximum age in the cohort.
+    age_mean : float | None
+        Mean age of subjects.
+    species : str | None
+        Species of subjects (e.g., "Human", "Mouse").
+    sex_distribution : dict[str, int] | None
+        Count of subjects by sex (e.g., {"m": 50, "f": 45}).
+    handedness_distribution : dict[str, int] | None
+        Count of subjects by handedness (e.g., {"r": 80, "l": 15}).
+
+    """
 
     subjects_count: int
     ages: list[int]
     age_min: int | None
     age_max: int | None
-    age_mean: float | None  # Mean age of subjects
-    species: str | None  # e.g., "Human", "Mouse"
-    sex_distribution: dict[str, int] | None  # e.g., {"m": 50, "f": 45, "o": 5}
-    handedness_distribution: dict[str, int] | None  # e.g., {"r": 80, "l": 15, "a": 5}
+    age_mean: float | None
+    species: str | None
+    sex_distribution: dict[str, int] | None
+    handedness_distribution: dict[str, int] | None
 
 
 class Clinical(TypedDict, total=False):
-    """Clinical classification (dataset-level)."""
+    """Clinical classification metadata (dataset-level).
 
-    is_clinical: bool  # Whether the dataset is clinical
-    purpose: (
-        str | None
-    )  # e.g., "epilepsy", "depression", "parkinson", "alzheimer", "sleep_disorder"
+    Attributes
+    ----------
+    is_clinical : bool
+        True if the dataset contains clinical population data.
+    purpose : str | None
+        The clinical condition or purpose (e.g., "epilepsy", "depression").
+
+    """
+
+    is_clinical: bool
+    purpose: str | None
 
 
 class Paradigm(TypedDict, total=False):
-    """Experimental paradigm classification (dataset-level)."""
+    """Experimental paradigm classification (dataset-level).
 
-    modality: (
-        str | None
-    )  # e.g., "visual", "auditory", "somatosensory", "multisensory", "resting_state"
-    cognitive_domain: (
-        str | None
-    )  # e.g., "attention", "memory", "learning", "motor", "language", "emotion"
-    is_10_20_system: bool | None  # Whether electrodes follow the 10-20 system
+    Attributes
+    ----------
+    modality : str | None
+        The sensory or experimental modality (e.g., "visual", "auditory", "resting_state").
+    cognitive_domain : str | None
+        The cognitive domain investigated (e.g., "memory", "language", "emotion").
+    is_10_20_system : bool | None
+        True if electrodes are positioned according to the standard 10-20 system.
+
+    """
+
+    modality: str | None
+    cognitive_domain: str | None
+    is_10_20_system: bool | None
 
 
 class ExternalLinks(TypedDict, total=False):
-    """External links to the dataset."""
+    """Relevant external hyperlinks for the dataset.
 
-    source_url: str | None  # Primary URL (OpenNeuro, GIN, etc.)
-    osf_url: str | None  # Open Science Framework link
-    github_url: str | None  # GitHub repository
-    paper_url: str | None  # Link to associated paper
+    Attributes
+    ----------
+    source_url : str | None
+        URL to the primary data source (e.g. OpenNeuro page).
+    osf_url : str | None
+        URL to the Open Science Framework project.
+    github_url : str | None
+        URL to the associated GitHub repository.
+    paper_url : str | None
+        URL to the primary publication.
+
+    """
+
+    source_url: str | None
+    osf_url: str | None
+    github_url: str | None
+    paper_url: str | None
 
 
 class RepositoryStats(TypedDict, total=False):
-    """Repository statistics (for git-based sources like GIN)."""
+    """Statistics for git-based repositories (e.g. GIN).
+
+    Attributes
+    ----------
+    stars : int
+        Number of stars.
+    forks : int
+        Number of forks.
+    watchers : int
+        Number of watchers.
+
+    """
 
     stars: int
     forks: int
@@ -155,22 +331,87 @@ class RepositoryStats(TypedDict, total=False):
 
 
 class Dataset(TypedDict, total=False):
-    """Dataset-level metadata (one per ds*)."""
+    """TypedDict schema for a full Dataset document.
+
+    This Dictionary represents all metadata available for a study/dataset.
+
+    Attributes
+    ----------
+    dataset_id : str
+        Unique identifier (e.g., "ds001785").
+    name : str
+        Descriptive title of the dataset.
+    source : str
+        Origin source (e.g., "openneuro", "nemar").
+    readme : str | None
+        Content of the dataset's README file.
+    recording_modality : list[str]
+        List of recording modalities (e.g., ["eeg", "meg"]).
+    datatypes : list[str]
+        BIDS datatypes present (e.g., ["eeg", "anat"]).
+    experimental_modalities : list[str] | None
+        Stimulus types used (e.g., ["visual", "auditory"]).
+    bids_version : str | None
+        Version of the BIDS standard used.
+    license : str | None
+        License string (e.g., "CC0").
+    authors : list[str]
+        List of author names.
+    funding : list[str]
+        List of funding sources.
+    dataset_doi : str | None
+        Digital Object Identifier for the dataset.
+    associated_paper_doi : str | None
+        DOI of the paper associated with the dataset.
+    tasks : list[str]
+        List of task names found in the dataset.
+    sessions : list[str]
+        List of session names.
+    total_files : int | None
+        Total file count.
+    size_bytes : int | None
+        Total dataset size in bytes.
+    data_processed : bool | None
+        Indicates if the data has been pre-processed.
+    study_domain : str | None
+        General domain of the study.
+    study_design : str | None
+        Description of the study design.
+    contributing_labs : list[str] | None
+        List of labs contributing to the dataset.
+    n_contributing_labs : int | None
+        Count of contributing labs.
+    demographics : Demographics
+        Summary of subject demographics.
+    clinical : Clinical
+        Clinical classification details.
+    paradigm : Paradigm
+        Experimental paradigm details.
+    external_links : ExternalLinks
+        Links to external resources.
+    repository_stats : RepositoryStats | None
+        Stats for the source repository (if applicable).
+    senior_author : str | None
+        Name of the senior author.
+    contact_info : list[str] | None
+        Contact emails or names.
+    timestamps : Timestamps
+        Timestamps for data processing and creation.
+
+    """
 
     # Identity
-    dataset_id: str  # e.g., "ds001785"
-    name: str  # Dataset title
-    source: str  # e.g., "openneuro", "nemar", "gin"
-    readme: str | None  # README content from dataset
+    dataset_id: str
+    name: str
+    source: str
+    readme: str | None
 
     # Recording info
-    recording_modality: list[str]  # Recording types: ["eeg", "meg", "ieeg"]
-    datatypes: list[str]  # BIDS datatypes present: ["eeg", "anat", "beh"]
+    recording_modality: list[str]
+    datatypes: list[str]
 
     # Experimental info
-    experimental_modalities: (
-        list[str] | None
-    )  # Stimulus types: ["visual", "auditory", "tactile"]
+    experimental_modalities: list[str] | None
 
     # BIDS metadata
     bids_version: str | None
@@ -188,11 +429,11 @@ class Dataset(TypedDict, total=False):
     data_processed: bool | None
 
     # Study classification
-    study_domain: str | None  # e.g., "Perceptual consciousness", "Motor control"
+    study_domain: str | None
     study_design: str | None
 
     # Multi-site studies
-    contributing_labs: list[str] | None  # Labs that contributed data
+    contributing_labs: list[str] | None
     n_contributing_labs: int | None
 
     # Demographics
@@ -204,14 +445,17 @@ class Dataset(TypedDict, total=False):
 
     # External resources
     external_links: ExternalLinks
-    repository_stats: RepositoryStats | None  # For git-based sources
+    repository_stats: RepositoryStats | None
 
     # Contact
     senior_author: str | None
-    contact_info: list[str] | None  # Admin users/emails
+    contact_info: list[str] | None
 
     # Timestamps
     timestamps: Timestamps
+
+    # Storage for global files (e.g., participants.tsv)
+    storage: Storage | None
 
 
 def create_dataset(
@@ -269,8 +513,14 @@ def create_dataset(
     digested_at: str | None = None,
     dataset_created_at: str | None = None,
     dataset_modified_at: str | None = None,
+    # Storage
+    storage: Storage | None = None,
 ) -> Dataset:
     """Create a Dataset document.
+
+    This helper function constructs a :class:`Dataset` TypedDict with default values
+    and logic to handle nested structures like demographics, clinical info, and
+    external links.
 
     Parameters
     ----------
@@ -358,7 +608,7 @@ def create_dataset(
     Returns
     -------
     Dataset
-        A Dataset document.
+        A fully populated Dataset document.
 
     """
     if not dataset_id:
@@ -413,6 +663,7 @@ def create_dataset(
             dataset_created_at=dataset_created_at,
             dataset_modified_at=dataset_modified_at,
         ),
+        storage=storage,
     )
 
     # Add clinical if any field provided
@@ -460,16 +711,42 @@ def create_dataset(
 
 
 class Storage(TypedDict):
-    """Remote storage location."""
+    """Remote storage location details.
+
+    Attributes
+    ----------
+    backend : {'s3', 'https', 'local'}
+        Storage backend protocol.
+    base : str
+        Base URI (e.g., "s3://openneuro.org/ds000001").
+    raw_key : str
+        Path relative to `base` to reach the file.
+    dep_keys : list[str]
+        Paths relative to `base` for sidecar files (e.g., .json, .vhdr).
+
+    """
 
     backend: Literal["s3", "https", "local"]
-    base: str  # e.g., "s3://openneuro.org/ds000001"
-    raw_key: str  # relative to base
-    dep_keys: list[str]  # relative to base
+    base: str
+    raw_key: str
+    dep_keys: list[str]
 
 
 class Entities(TypedDict, total=False):
-    """BIDS entities."""
+    """BIDS entities parsed from the file path.
+
+    Attributes
+    ----------
+    subject : str | None
+        Subject label (e.g., "01").
+    session : str | None
+        Session label (e.g., "pre").
+    task : str | None
+        Task label (e.g., "rest").
+    run : str | None
+        Run label (e.g., "1" or "01").
+
+    """
 
     subject: str | None
     session: str | None
@@ -478,27 +755,64 @@ class Entities(TypedDict, total=False):
 
 
 class Record(TypedDict, total=False):
-    """EEGDash record schema (per-file, optimized for fast loading).
+    """TypedDict schema for a Record document.
 
-    Minimal schema - clinical/paradigm info lives in Dataset.
+    Represents a single data file and its metadata. This structure is kept flat
+    and minimal to ensure fast loading times when querying millions of records.
+
+    Attributes
+    ----------
+    dataset : str
+        Foreign key matching :attr:`Dataset.dataset_id`.
+    data_name : str
+        Unique name for the data item (e.g., "ds001_sub-01_task-rest").
+    bidspath : str
+        Legacy path identifier (e.g., "ds001/sub-01/eeg/...").
+    bids_relpath : str
+        Standard BIDS relative path (e.g., "sub-01/eeg/...").
+    datatype : str
+        BIDS datatype (e.g., "eeg").
+    suffix : str
+        Filename suffix (e.g., "eeg").
+    extension : str
+        File extension (e.g., ".vhdr").
+    recording_modality : list[str] | None
+        Modality of the recording.
+    entities : Entities
+        BIDS entities dict (subject, session, etc.).
+    entities_mne : Entities
+        BIDS entities sanitized for compatibility with MNE-Python (e.g. numeric numeric runs).
+    storage : Storage
+        Storage location details.
+    ch_names : list[str] | None
+        List of channel names.
+    sampling_frequency : float | None
+        Sampling rate in Hz.
+    nchans : int | None
+        Channel count.
+    ntimes : int | None
+        Number of time points.
+    digested_at : str
+        Timestamp of when this record was processed.
+
     """
 
-    dataset: str  # FK to Dataset.dataset_id
+    dataset: str
     data_name: str
-    bidspath: str  # Legacy field, but used by tests/clients. Format: "{dataset}/{bids_relpath}"
+    bidspath: str
     bids_relpath: str
     datatype: str
     suffix: str
     extension: str
-    recording_modality: list[str] | None  # e.g., ["eeg", "meg", "ieeg"]
+    recording_modality: list[str] | None
     entities: Entities
-    entities_mne: Entities  # run sanitized for MNE-BIDS (numeric or None)
+    entities_mne: Entities
     storage: Storage
-    ch_names: list[str] | None  # List of channel names from channels.tsv or raw file
-    sampling_frequency: float | None  # Sampling rate in Hz
-    nchans: int | None  # Number of channels
-    ntimes: int | None  # Number of samples (duration in samples)
-    digested_at: str  # ISO 8601 timestamp
+    ch_names: list[str] | None
+    sampling_frequency: float | None
+    nchans: int | None
+    ntimes: int | None
+    digested_at: str
 
 
 def _sanitize_run_for_mne(value: Any) -> str | None:
@@ -536,6 +850,8 @@ def create_record(
     digested_at: str | None = None,
 ) -> Record:
     """Create an EEGDash record.
+
+    Helper to construct a valid :class:`Record` TypedDict.
 
     Parameters
     ----------

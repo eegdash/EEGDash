@@ -12,6 +12,9 @@
 *.egg-info
 *.isorted
 *.json
+!coverage.json
+!coverage.xml
+eegdash_cache/
 *.npy
 *Hugging*
 *.py.isorted
@@ -54,3 +57,5 @@ tags
 test_diggestion/
 tests/.testeegdash/
 tests/data/
+*/*/test_cache/*
+test_cache/*

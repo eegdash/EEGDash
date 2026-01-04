@@ -30,6 +30,7 @@ os.environ.setdefault("_MNE_FAKE_HOME_DIR", str(Path.cwd()))
 (Path(os.environ["_MNE_FAKE_HOME_DIR"]) / ".mne").mkdir(exist_ok=True)
 
 from eegdash import EEGDash, EEGDashDataset
+from eegdash.paths import get_default_cache_dir
 from braindecode.preprocessing import (
     preprocess,
     Preprocessor,
@@ -41,9 +42,7 @@ from eegdash.hbn.preprocessing import hbn_ec_ec_reannotation
 # -----------------------------
 # Config
 # -----------------------------
-cache_folder = Path(
-    os.getenv("EEGDASH_CACHE_DIR", Path.cwd() / "eegdash_cache")
-).resolve()
+cache_folder = get_default_cache_dir()
 cache_folder.mkdir(parents=True, exist_ok=True)
 dataset_id = "ds005514"
 task = "RestingState"

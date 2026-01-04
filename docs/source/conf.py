@@ -1006,6 +1006,7 @@ def _compute_dataset_counter_defaults() -> dict[str, int]:
                 "datasets": data.get("datasets_total", 0),
                 "subjects": data.get("subjects_total", 0),
                 "recording": data.get("recording_total", 0),
+                "modalities": data.get("modalities_total", 0),
                 "sources": data.get("sources_total", 0),
             }
         except Exception:
@@ -1046,7 +1047,8 @@ def _compute_dataset_counter_defaults() -> dict[str, int]:
     return {
         "datasets": len(dataset_ids),
         "subjects": subject_total,
-        "recording": len(modalities),
+        "recording": 0,
+        "modalities": len(modalities),
         "sources": len(sources),
     }
 
@@ -1067,6 +1069,7 @@ _DATASET_COUNTER_PLACEHOLDERS = {
     "|datasets_total|": _format_counter("datasets"),
     "|subjects_total|": _format_counter("subjects"),
     "|recording_total|": _format_counter("recording"),
+    "|modalities_total|": _format_counter("modalities"),
     "|sources_total|": _format_counter("sources"),
 }
 

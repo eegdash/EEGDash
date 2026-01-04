@@ -131,7 +131,8 @@ exclude    = []
 namespaces = false
 
 [tool.setuptools.package-data]
-eegdash = ["dataset_summary.csv"]
+"eegdash" = ["dataset_summary.csv"]
+"eegdash.dataset" = ["dataset_summary.csv"]
 
 [tool.ruff]
 line-length = 88

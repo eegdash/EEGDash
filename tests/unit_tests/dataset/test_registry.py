@@ -58,7 +58,7 @@ def test_dynamic_class_init_with_query_update(tmp_path):
     # Register with CSV (no API)
     ns = {}
     with patch(
-        "eegdash.dataset.registry._fetch_datasets_from_api",
+        "eegdash.dataset.registry.fetch_datasets_from_api",
         return_value=None,
     ):
         register_openneuro_datasets(
@@ -145,18 +145,25 @@ def test_api_returns_not_success():
     import json
     from unittest.mock import MagicMock, patch
 
-    from eegdash.dataset.registry import _fetch_datasets_from_api
+    from eegdash.dataset.registry import fetch_datasets_from_api
 
     mock_response_data = json.dumps({"success": False}).encode()
 
-    with patch("urllib.request.urlopen") as mock_urlopen:
+    with (
+        patch("urllib.request.urlopen") as mock_urlopen,
+        patch("eegdash.paths.get_default_cache_dir") as mock_cache_dir,
+    ):
+        # Ensure cache file does not exist
+        mock_cache_dir.return_value = MagicMock()
+        mock_cache_dir.return_value.__truediv__.return_value.exists.return_value = False
+
         mock_response = MagicMock()
         mock_response.read.return_value = mock_response_data
         mock_response.__enter__ = MagicMock(return_value=mock_response)
         mock_response.__exit__ = MagicMock(return_value=False)
         mock_urlopen.return_value = mock_response
 
-        result = _fetch_datasets_from_api("https://api.test.com", "testdb")
+        result = fetch_datasets_from_api("https://api.test.com", "testdb")
         assert result.empty
 
     pass
@@ -209,9 +216,19 @@ def test_registry_exclude_datasets():
         ],
     }
 
-    with patch("urllib.request.urlopen") as mock_urlopen:
+    with (
+        patch("urllib.request.urlopen") as mock_urlopen,
+        patch("eegdash.paths.get_default_cache_dir") as mock_cache_dir,
+    ):
+        # Ensure cache file does not exist
+        mock_cache_dir.return_value = MagicMock()
+        mock_cache_dir.return_value.__truediv__.return_value.exists.return_value = False
+
         mock_response = MagicMock()
-        mock_response.read.return_value = json.dumps(mock_data).encode("utf-8")
+        mock_response.read.side_effect = [
+            json.dumps(mock_data).encode("utf-8"),
+            json.dumps({"data": {}}).encode("utf-8"),
+        ]
         mock_urlopen.return_value.__enter__.return_value = mock_response
 
         namespace = {}
@@ -230,17 +247,20 @@ def test_registry_make_init_closure(tmp_path):
 
     mock_data = {"success": True, "data": [{"dataset_id": "ds_dyn", "metadata": {}}]}
 
-    with patch("urllib.request.urlopen") as mock_urlopen:
+    with (
+        patch("urllib.request.urlopen") as mock_urlopen,
+        patch("eegdash.paths.get_default_cache_dir") as mock_cache_dir,
+    ):
+        # Ensure cache file does not exist
+        mock_cache_dir.return_value = MagicMock()
+        mock_cache_dir.return_value.__truediv__.return_value.exists.return_value = False
+
         mock_response = MagicMock()
-        mock_response.read.return_value = json.dumps(mock_data).encode("utf-8")
+        mock_response.read.side_effect = [
+            json.dumps(mock_data).encode("utf-8"),
+            json.dumps({"data": {}}).encode("utf-8"),
+        ]
         mock_urlopen.return_value.__enter__.return_value = mock_response
-
-        ns = {}
-        register_openneuro_datasets(from_api=True, namespace=ns)
-
-        # Now instantiate it to trigger __init__
-        # It calls base_class.__init__
-        # We need to mock base_class or ensure it works
 
         # We can pass a dummy base class to register_openneuro_datasets to make it easier
         class DummyBase:

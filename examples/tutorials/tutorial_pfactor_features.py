@@ -19,42 +19,51 @@ The code below provides an example of using the *braindecode* and *EEGDash* libr
 
 # %%
 from pathlib import Path
-import os
+import pandas as pd
 
-os.environ.setdefault("NUMBA_DISABLE_JIT", "1")
-os.environ.setdefault("_MNE_FAKE_HOME_DIR", str(Path.cwd()))
-(Path(os.environ["_MNE_FAKE_HOME_DIR"]) / ".mne").mkdir(exist_ok=True)
 
-from eegdash import EEGDash, EEGDashDataset
+from eegdash import EEGDashDataset
 from sklearn.model_selection import train_test_split
+from eegdash.paths import get_default_cache_dir
 
-CACHE_DIR = Path(os.getenv("EEGDASH_CACHE_DIR", Path.cwd() / "eegdash_cache")).resolve()
+CACHE_DIR = Path(get_default_cache_dir()).resolve()
 CACHE_DIR.mkdir(parents=True, exist_ok=True)
-DATASET_ID = os.getenv("EEGDASH_DATASET_ID", "EEG2025r5")
-task_name = os.getenv("EEGDASH_TASK", "").strip() or None
+
+DATASET_ID = "EEG2025r5"
 target_name = "p_factor"
 desc_fields = ["subject", "session", "run", "task", "age", "gender", "sex", "p_factor"]
-RECORD_LIMIT = int(os.getenv("EEGDASH_RECORD_LIMIT", "100"))
+RECORD_LIMIT = 100
 
-eegdash = EEGDash()
-query = {"dataset": DATASET_ID, "p_factor": {"$ne": None}}
-if task_name:
-    query["task"] = task_name
-records = eegdash.find(query, limit=RECORD_LIMIT)
-if not records:
-    records = eegdash.find({"p_factor": {"$ne": None}}, limit=RECORD_LIMIT)
-if records:
-    dataset_id = records[0].get("dataset")
-    if dataset_id:
-        records = [rec for rec in records if rec.get("dataset") == dataset_id]
-if not records:
-    raise RuntimeError("No records with p_factor metadata found from the API.")
-
+# Fetch dataset directly
 raw_all = EEGDashDataset(
+    dataset=DATASET_ID,
     cache_dir=CACHE_DIR,
-    records=records,
     description_fields=desc_fields,
 )
+
+# Filter datasets that have p_factor
+filtered_datasets = []
+from braindecode.datasets import BaseConcatDataset
+
+for ds in raw_all.datasets:
+    # Check if p_factor is present in description (populated from DB)
+    p_val = ds.description.get("p_factor")
+    if p_val is not None:
+        try:
+            # Convert to float if not already
+            val = float(p_val)
+            if not pd.isna(val):
+                ds.description["p_factor"] = val
+                filtered_datasets.append(ds)
+        except (ValueError, TypeError):
+            pass
+
+if not filtered_datasets:
+    raise RuntimeError("No records with p_factor metadata found (API).")
+
+# Limit to requested number and reconstitute
+filtered_datasets = filtered_datasets[:RECORD_LIMIT]
+raw_all = BaseConcatDataset(filtered_datasets)
 
 # %%
 from braindecode.datasets import BaseConcatDataset
@@ -85,7 +94,6 @@ raw_valid = BaseConcatDataset(
 # Finally, we use **create_windows_from_events** to extract 10-second epochs from the data. These epochs serve as the dataset samples.
 
 # %%
-import os
 
 from braindecode.preprocessing import (
     Preprocessor,
@@ -129,7 +137,7 @@ def preprocess_and_window(raw_ds):
         Preprocessor("resample", sfreq=128),
         Preprocessor("filter", l_freq=1, h_freq=55),
     ]
-    preprocess(raw_ds, preprocessors, n_jobs=-1)
+    preprocess(raw_ds, preprocessors, n_jobs=1)
     for ds in raw_ds.datasets:
         ds.target_name = target_name
 
@@ -148,12 +156,12 @@ def preprocess_and_window(raw_ds):
 
 
 windows_train = preprocess_and_window(raw_train)
-train_dir = CACHE_DIR / f"pfactor_{task_name or 'all'}_train"
+train_dir = CACHE_DIR / "pfactor_all_train"
 train_dir.mkdir(parents=True, exist_ok=True)
 windows_train.save(str(train_dir), overwrite=True)
 
 windows_valid = preprocess_and_window(raw_valid)
-valid_dir = CACHE_DIR / f"pfactor_{task_name or 'all'}_valid"
+valid_dir = CACHE_DIR / "pfactor_all_valid"
 valid_dir.mkdir(parents=True, exist_ok=True)
 windows_valid.save(str(valid_dir), overwrite=True)
 
@@ -217,14 +225,14 @@ features_dict = {
 features_train = extract_features(
     windows_train, features_dict, batch_size=64, n_jobs=-1
 )
-train_feat_dir = CACHE_DIR / f"pfactor_features_{task_name or 'all'}_train"
+train_feat_dir = CACHE_DIR / "pfactor_features_all_train"
 train_feat_dir.mkdir(parents=True, exist_ok=True)
 features_train.save(str(train_feat_dir), overwrite=True)
 
 features_valid = extract_features(
     windows_valid, features_dict, batch_size=64, n_jobs=-1
 )
-valid_feat_dir = CACHE_DIR / f"pfactor_features_{task_name or 'all'}_valid"
+valid_feat_dir = CACHE_DIR / "pfactor_features_all_valid"
 valid_feat_dir.mkdir(parents=True, exist_ok=True)
 features_valid.save(str(valid_feat_dir), overwrite=True)
 

@@ -29,7 +29,7 @@ import os
 
 import numpy as np
 
-from eegdash import EEGDash, EEGDashDataset
+from eegdash import EEGDashDataset
 
 CACHE_DIR = Path(os.getenv("EEGDASH_CACHE_DIR", Path.cwd() / "eegdash_cache")).resolve()
 CACHE_DIR.mkdir(parents=True, exist_ok=True)
@@ -37,62 +37,27 @@ DATASET_ID = os.getenv("EEGDASH_DATASET_ID", "ds005505")
 TASK = os.getenv("EEGDASH_TASK", "RestingState")
 RECORD_LIMIT = 80
 
-eegdash = EEGDash()
-# Fetch available records (simulating metadata if missing)
-records = eegdash.find({"dataset": DATASET_ID, "task": TASK}, limit=RECORD_LIMIT)
-if not records:
-    records = eegdash.find({}, limit=RECORD_LIMIT)
-
-if not records:
-    raise RuntimeError("No records found from the API.")
-
-# Assign real sex labels from participants.tsv
-import pandas as pd
-
-# Try multiple standard locations for the participants.tsv
-# We assume ds005505 (from feature extraction) or similar is used here
-possible_paths = [
-    CACHE_DIR / "ds005505" / "participants.tsv",
-    Path.home() / ".eegdash_cache" / "ds005505" / "participants.tsv",
-    Path.cwd() / ".eegdash_cache" / "ds005505" / "participants.tsv",
-]
-participants_path = None
-for p in possible_paths:
-    if p.exists():
-        participants_path = p
-        print(f"Using participants.tsv found at: {p}")
-        break
-
-meta_lookup = {}
-
-if participants_path:
-    df_participants = pd.read_csv(participants_path, sep="\t")
-    df_participants["subject"] = df_participants["participant_id"].apply(
-        lambda s: s.replace("sub-", "")
-    )
-    meta_lookup = df_participants.set_index("subject")[["sex"]].to_dict("index")
-
-for rec in records:
-    if rec.get("entities_mne") is None:
-        rec["entities_mne"] = {}
-
-    subj = rec.get("subject")
-    if subj and subj in meta_lookup:
-        real_sex = meta_lookup[subj]["sex"]
-        rec["sex"] = real_sex
-        rec["gender"] = real_sex
-        rec["entities_mne"]["sex"] = real_sex
-        rec["entities_mne"]["gender"] = real_sex
-
-records = [rec for rec in records if rec.get("sex") or rec.get("gender")]
-
-
+# Fetch dataset directly, requesting sex/gender in description
 ds_sexdata = EEGDashDataset(
     dataset=DATASET_ID,
+    task=TASK,
     cache_dir=CACHE_DIR,
-    records=records,
     description_fields=["subject", "session", "run", "task", "sex", "gender"],
 )
+
+# Filter datasets that have sex/gender info
+valid_datasets = []
+for ds in ds_sexdata.datasets:
+    if ds.description.get("sex") or ds.description.get("gender"):
+        valid_datasets.append(ds)
+
+if not valid_datasets:
+    raise RuntimeError("No records with sex/gender metadata found.")
+
+# Update the concat dataset with filtered list
+from braindecode.datasets import BaseConcatDataset
+
+ds_sexdata = BaseConcatDataset(valid_datasets)
 
 PREPARED_DIR = CACHE_DIR / "preprocessed_sex"
 

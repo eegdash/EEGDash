@@ -6,7 +6,6 @@ A tutorial for training an EEG Conformer model to predict the "p-factor" (a psyc
 
 from pathlib import Path
 import numpy as np
-import pandas as pd
 import torch
 import torch.nn.functional as F
 from torch.utils.data import DataLoader
@@ -19,7 +18,7 @@ from braindecode.preprocessing import (
     create_fixed_length_windows,
     preprocess,
 )
-from braindecode.datasets.base import BaseConcatDataset, BaseDataset
+from braindecode.datasets.base import BaseConcatDataset
 
 from eegdash.paths import get_default_cache_dir
 
@@ -50,92 +49,40 @@ if not CACHE_DIR.exists():
     eegdash = EEGDash()
     print(f"Preparing data for {DATASET_NAME} - {TARGET_NAME}...")
 
-    # Fetch records (ignoring API metadata filter effectively, relying on local participants.tsv)
-    query = {"dataset": DATASET_NAME}
-
-    records = eegdash.find(query, limit=RECORD_LIMIT)
-
-    if not records:
-        # Fallback search if specific dataset returns nothing
-        records = eegdash.find({}, limit=RECORD_LIMIT)
-
-    if not records:
-        raise RuntimeError("No records found from the API.")
-
     ds_data = EEGDashDataset(
+        dataset=DATASET_NAME,
         cache_dir=CACHE_DIR_BASE,
-        records=records,
-        description_fields=["subject", "session", "run", "task"],
+        description_fields=["subject", "session", "run", "task", TARGET_NAME],
     )
 
-    # Load real metadata from participants.tsv
-    # Try multiple standard locations
-    possible_paths = [
-        ds_data.data_dir / "participants.tsv",
-        CACHE_DIR_BASE / DATASET_NAME / "participants.tsv",
-        Path.home() / ".eegdash_cache" / DATASET_NAME / "participants.tsv",
-        Path.cwd() / ".eegdash_cache" / DATASET_NAME / "participants.tsv",
-    ]
-    participants_path = None
-    for p in possible_paths:
-        if p.exists():
-            participants_path = p
-            print(f"Using participants.tsv found at: {p}")
-            break
-
-    meta_lookup = {}
-    if participants_path:
-        df_participants = pd.read_csv(participants_path, sep="\t")
-        df_participants["subject"] = df_participants["participant_id"].apply(
-            lambda s: s.replace("sub-", "")
-        )
-        # p_factor might be a string, convert to numeric
-        df_participants[TARGET_NAME] = pd.to_numeric(
-            df_participants[TARGET_NAME], errors="coerce"
-        )
-        # Create lookup: subject -> p_factor
-        meta_lookup = df_participants.set_index("subject")[TARGET_NAME].to_dict()
-        print(f"Loaded metadata for {len(meta_lookup)} subjects.")
-    else:
-        print(f"Warning: participants.tsv not found in {possible_paths}")
-
     filtered_datasets = []
-    for i, ds in enumerate(ds_data.datasets):
-        if i < len(records):
-            subj_rec = records[i].get("subject")
-        else:
-            continue  # excessive robustness
 
-        if not subj_rec:
-            if ds.description is not None:
-                subj_rec = str(ds.description.get("subject"))
-            else:
-                continue
+    for ds in ds_data.datasets:
+        subj = ds.description.get("subject", "")
+        if not subj:
+            continue
+        subj = str(subj).replace("sub-", "")
 
-        subj = subj_rec.replace("sub-", "")
+        # Check target validity
+        target_val = ds.description.get(TARGET_NAME)
+        if target_val is None:
+            continue
+        try:
+            target_val = float(target_val)
+        except (ValueError, TypeError):
+            continue
 
-        target_val = meta_lookup.get(subj)
-
-        # Check validity of target
-        if target_val is None or np.isnan(target_val):
+        if np.isnan(target_val):
             continue
 
         if len(ds) == 0:
             continue
 
-        # Create new description
-        new_desc = pd.Series(
-            {
-                "subject": subj,
-                TARGET_NAME: float(target_val),
-                "session": records[i].get("session"),
-                "run": records[i].get("run"),
-            }
-        )
+        # Update description with clean values
+        ds.description[TARGET_NAME] = target_val
+        ds.description["subject"] = subj
 
-        # New BaseDataset
-        new_ds = BaseDataset(ds.raw, new_desc)
-        filtered_datasets.append(new_ds)
+        filtered_datasets.append(ds)
 
     print(f"Retained {len(filtered_datasets)} datasets with valid {TARGET_NAME}.")
 

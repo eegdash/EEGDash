@@ -338,6 +338,8 @@ def extract_dataset_metadata(
 
     # Extract size_bytes
     size_bytes = metadata.get("size_bytes")
+    if size_bytes is None and bids_root.exists():
+        size_bytes = sum(f.stat().st_size for f in bids_root.rglob("*") if f.is_file())
 
     # Build Storage info for global files
     storage_info: Storage | None = None

@@ -19,9 +19,10 @@ The code below provides an example of using the *braindecode* and *EEGDash* libr
 
 # %%
 from pathlib import Path
+import pandas as pd
 
 
-from eegdash import EEGDash, EEGDashDataset
+from eegdash import EEGDashDataset
 from sklearn.model_selection import train_test_split
 from eegdash.paths import get_default_cache_dir
 
@@ -33,75 +34,35 @@ target_name = "p_factor"
 desc_fields = ["subject", "session", "run", "task", "age", "gender", "sex", "p_factor"]
 RECORD_LIMIT = 100
 
-eegdash = EEGDash()
-query = {"dataset": DATASET_ID}
-
-records = eegdash.find(query, limit=RECORD_LIMIT)
-if not records:
-    # fallback
-    records = eegdash.find({}, limit=RECORD_LIMIT)
-
-if not records:
-    raise RuntimeError("No records found from the API.")
-
+# Fetch dataset directly
 raw_all = EEGDashDataset(
+    dataset=DATASET_ID,
     cache_dir=CACHE_DIR,
-    records=records,
     description_fields=desc_fields,
 )
 
-# Load real metadata from participants.tsv
-import pandas as pd
-
-possible_paths = [
-    raw_all.data_dir / "participants.tsv",
-    CACHE_DIR / DATASET_ID / "participants.tsv",
-    Path.home() / ".eegdash_cache" / DATASET_ID / "participants.tsv",
-    Path.cwd() / ".eegdash_cache" / DATASET_ID / "participants.tsv",
-]
-participants_path = None
-for p in possible_paths:
-    if p.exists():
-        participants_path = p
-        print(f"Using participants.tsv found at: {p}")
-        break
-
-meta_lookup = {}
-if participants_path:
-    df_participants = pd.read_csv(participants_path, sep="\t")
-    df_participants["subject"] = df_participants["participant_id"].apply(
-        lambda s: s.replace("sub-", "")
-    )
-    # p_factor might be a string, convert to numeric
-    if "p_factor" in df_participants.columns:
-        df_participants["p_factor"] = pd.to_numeric(
-            df_participants["p_factor"], errors="coerce"
-        )
-        meta_lookup = df_participants.set_index("subject")["p_factor"].to_dict()
-        print(f"Loaded metadata for {len(meta_lookup)} subjects.")
-
-# Inject metadata into datasets
+# Filter datasets that have p_factor
 filtered_datasets = []
-for ds in raw_all.datasets:
-    subj = ds.description.get("subject", "")
-    if subj is None:
-        continue
-    subj = str(subj).replace("sub-", "")
-
-    # Update p_factor if missing
-    if "p_factor" not in ds.description or pd.isna(ds.description["p_factor"]):
-        if subj in meta_lookup:
-            ds.description["p_factor"] = meta_lookup[subj]
-
-    if "p_factor" in ds.description and not pd.isna(ds.description["p_factor"]):
-        filtered_datasets.append(ds)
-
-if not filtered_datasets:
-    raise RuntimeError("No records with p_factor metadata found (API or local).")
-
 from braindecode.datasets import BaseConcatDataset
 
-# Reconstitute BaseConcatDataset with valid datasets
+for ds in raw_all.datasets:
+    # Check if p_factor is present in description (populated from DB)
+    p_val = ds.description.get("p_factor")
+    if p_val is not None:
+        try:
+            # Convert to float if not already
+            val = float(p_val)
+            if not pd.isna(val):
+                ds.description["p_factor"] = val
+                filtered_datasets.append(ds)
+        except (ValueError, TypeError):
+            pass
+
+if not filtered_datasets:
+    raise RuntimeError("No records with p_factor metadata found (API).")
+
+# Limit to requested number and reconstitute
+filtered_datasets = filtered_datasets[:RECORD_LIMIT]
 raw_all = BaseConcatDataset(filtered_datasets)
 
 # %%

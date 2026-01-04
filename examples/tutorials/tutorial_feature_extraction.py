@@ -52,7 +52,7 @@ from braindecode.preprocessing import (
     Preprocessor,
     create_fixed_length_windows,
 )
-from eegdash import EEGDash, EEGDashDataset
+from eegdash import EEGDashDataset
 from eegdash.paths import get_default_cache_dir
 
 CACHE_DIR = Path(get_default_cache_dir()).resolve()
@@ -62,83 +62,28 @@ TASK = "RestingState"
 RECORD_LIMIT = 80
 PREPARED_DIR = CACHE_DIR / "restingstate_windows"
 
-eegdash = EEGDash()
-# Fetch available records (simulating metadata if missing)
-records = eegdash.find({"dataset": DATASET_ID, "task": TASK}, limit=RECORD_LIMIT)
-if not records:
-    records = eegdash.find({}, limit=RECORD_LIMIT)
-
-if not records:
-    raise RuntimeError("No records found from the API.")
-
-# Assign real sex labels from participants.tsv
-import pandas as pd
-from pathlib import Path
-
-# Try multiple standard locations for the participants.tsv
-possible_paths = [
-    CACHE_DIR / DATASET_ID / "participants.tsv",
-    Path.home() / ".eegdash_cache" / DATASET_ID / "participants.tsv",
-    Path.cwd() / ".eegdash_cache" / DATASET_ID / "participants.tsv",
-    # Add explicit path standard for downloaded datasets
-    CACHE_DIR / "data" / DATASET_ID / "participants.tsv",
-]
-participants_path = None
-for p in possible_paths:
-    if p.exists():
-        participants_path = p
-        print(f"Using participants.tsv found at: {p}")
-        break
-
-meta_lookup = {}
-
-if participants_path:
-    df_participants = pd.read_csv(participants_path, sep="\t")
-    # Normalize IDs
-    df_participants["subject"] = df_participants["participant_id"].apply(
-        lambda s: s.replace("sub-", "")
-    )
-    meta_lookup = df_participants.set_index("subject")[["sex", "age"]].to_dict("index")
-else:
-    print(f"Warning: participants.tsv not found in {possible_paths}")
-
-for rec in records:
-    # Ensure entities_mne exists
-    if rec.get("entities_mne") is None:
-        rec["entities_mne"] = {}
-
-    subj = rec.get("subject")
-    if subj and subj in meta_lookup:
-        real_sex = meta_lookup[subj]["sex"]
-        real_age = meta_lookup[subj]["age"]
-
-        # Inject real data
-        rec["sex"] = real_sex
-        rec["gender"] = real_sex  # map to gender if needed by legacy code
-        rec["age"] = real_age
-
-        rec["entities_mne"]["sex"] = real_sex
-        rec["entities_mne"]["gender"] = real_sex
-        rec["entities_mne"]["age"] = real_age
-    else:
-        # Debug print once
-        if len(records) > 0 and rec == records[0]:
-            print(
-                f"DEBUG: Failed to match subject '{subj}'. Available meta keys sample: {list(meta_lookup.keys())[:5]}"
-            )
-
-# Filter to only records that now have valid sex labels
-records = [rec for rec in records if rec.get("sex") is not None]
-
-if not records:
-    raise RuntimeError("No records matching valid subjects in participants.tsv found.")
-
+# Fetch dataset directly
 ds_sexdata = EEGDashDataset(
     dataset=DATASET_ID,
+    task=TASK,
     cache_dir=CACHE_DIR,
-    records=records,
-    description_fields=["subject", "session", "run", "task", "sex", "gender"],
+    description_fields=["subject", "session", "run", "task", "sex", "gender", "age"],
 )
+
+# Filter datasets that have sex/gender info
+valid_datasets = []
+from braindecode.datasets import BaseConcatDataset
+
+for ds in ds_sexdata.datasets:
+    # Check if sex is present (populated from DB)
+    if ds.description.get("sex") is not None:
+        valid_datasets.append(ds)
+
+if not valid_datasets:
+    raise RuntimeError("No records with sex/gender metadata found (API).")
+
+# Reconstitute BaseConcatDataset with valid datasets
+ds_sexdata = BaseConcatDataset(valid_datasets)
 
 if not PREPARED_DIR.exists():
     preprocessors = [

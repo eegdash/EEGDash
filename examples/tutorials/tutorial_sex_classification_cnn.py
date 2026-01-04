@@ -143,7 +143,7 @@ preprocessors = [
     Preprocessor("filter", l_freq=1, h_freq=55),
 ]
 preprocess(
-    ds_sexdata, preprocessors, n_jobs=-1
+    ds_sexdata, preprocessors, n_jobs=1
 )  # , save_dir='xxxx'' will save and set preload to false
 
 # extract windows and save to disk

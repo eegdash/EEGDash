@@ -259,13 +259,11 @@ class WelchFeatureExtractor(features.FeatureExtractor):
         return f, p
 
 
-@features.FeaturePredecessor(WelchFeatureExtractor)
 @features.univariate_feature
 def spectral_root_total_power_feature(f, p, **kwargs):
     return p.sum(axis=-1)
 
 
-@features.FeaturePredecessor(WelchFeatureExtractor)
 @features.univariate_feature
 def spectral_power_bands_feature(f, p, bands=DEFAULT_FREQ_BANDS, **kwargs):
     power_bands = dict()

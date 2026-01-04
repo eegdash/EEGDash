@@ -79,28 +79,15 @@ if PREPARE_DATA or not CACHE_DIR.exists():
 
     print(f"Preparing data for {DATASET_NAME} - {TARGET_NAME}...")
 
-    # NOTE: Since the demo database might lack metadata, we fetch available records
-    # and SIMULATE age labels for this tutorial.
-    query = {"dataset": DATASET_NAME}
-
-    records = eegdash.find(query, limit=RECORD_LIMIT)
-
-    # Fallback to any dataset if specific one is empty
-    if not records:
-        records = eegdash.find({}, limit=RECORD_LIMIT)
-
-    if not records:
-        raise RuntimeError("No records found from the API.")
-
-    # Load raw dataset from API records
+    # Load raw dataset from API records, requesting age
     ds_data = EEGDashDataset(
+        dataset=DATASET_NAME,
         cache_dir=CACHE_DIR_BASE,
-        records=records,
-        description_fields=["subject"],
+        description_fields=["subject", "session", "run", "task", "age", "sex"],
     )
 
     # Filter subjects: remove problematic subjects
-    sub_rm = [
+    sub_rm = {
         "NDARWV769JM7",
         "NDARME789TD2",
         "NDARUA442ZVF",
@@ -111,86 +98,42 @@ if PREPARE_DATA or not CACHE_DIR.exists():
         "NDARUJ292JXV",
         "NDARBA381JGH",
         "041",
-    ]
-
-    filtered_datasets = []
-
-    # Load real metadata from participants.tsv
-    import pandas as pd
-    from braindecode.datasets.base import BaseDataset
-
-    # Try multiple standard locations for the participants.tsv
-    possible_paths = [
-        ds_data.data_dir / "participants.tsv",
-        CACHE_DIR_BASE / DATASET_NAME / "participants.tsv",
-        Path.home() / ".eegdash_cache" / DATASET_NAME / "participants.tsv",
-        Path.cwd() / ".eegdash_cache" / DATASET_NAME / "participants.tsv",
-    ]
-    participants_path = None
-    for p in possible_paths:
-        if p.exists():
-            participants_path = p
-            print(f"Using participants.tsv found at: {p}")
-            break
-
-    # helper to normalize subject IDs (handles 'sub-' prefix)
-    def normalize_sub(s):
-        if s is None:
-            return ""
-        return s.replace("sub-", "")
-
-    if participants_path:
-        df_participants = pd.read_csv(participants_path, sep="\t")
-        df_participants["subject"] = df_participants["participant_id"].apply(
-            normalize_sub
-        )
-        # Create a lookup dictionary
-        meta_lookup = df_participants.set_index("subject")[["age", "sex"]].to_dict(
-            "index"
-        )
-        print(f"Loaded metadata for {len(meta_lookup)} subjects.")
-    else:
-        print(f"Warning: participants.tsv not found in {possible_paths}")
-        meta_lookup = {}
+    }
 
     filtered_datasets = []
 
     # Reconstruct datasets with valid description
-    for i, ds in enumerate(ds_data.datasets):
-        # Retrieve subject from the original record since description might be None
-        # We assume 1-to-1 mapping between records and datasets
-        if i < len(records):
-            subj_rec = records[i].get("subject")
-        else:
-            subj_rec = None
+    for ds in ds_data.datasets:
+        subj = ds.description.get("subject", "")
+        if subj is None:
+            continue
+        subj = str(subj).replace("sub-", "")
 
-        subj = normalize_sub(subj_rec)
-
-        # Determine real metadata
-        age = None
-        sex = None
-        if subj in meta_lookup:
-            age = meta_lookup[subj]["age"]
-            sex = meta_lookup[subj]["sex"]
-
-        # Filter subjects: remove problematic ones or those without age
-        if subj in sub_rm or age is None or len(ds) == 0:
+        # Check exclusion list
+        if subj in sub_rm:
             continue
 
-        # Create new description series
-        new_desc = pd.Series(
-            {
-                "subject": subj,
-                "age": float(age),
-                "sex": sex,
-                "session": records[i].get("session"),
-                "run": records[i].get("run"),
-            }
-        )
+        # Check age validity
+        age_val = ds.description.get("age")
+        if age_val is None:
+            continue
+        try:
+            age = float(age_val)
+        except (ValueError, TypeError):
+            continue
 
-        # Create new BaseDataset with valid description
-        new_ds = BaseDataset(ds.raw, new_desc)
-        filtered_datasets.append(new_ds)
+        if np.isnan(age):
+            continue
+
+        # Update description with clean values
+        ds.description["age"] = age
+        ds.description["subject"] = subj
+
+        # Check data is not empty
+        if len(ds) == 0:
+            continue
+
+        filtered_datasets.append(ds)
     # Second filter: check data quality (requires loading raw data)
     # ds003775 has 64 channels, not 129
     if len(filtered_datasets) == 0:

@@ -12,8 +12,10 @@ between the EEGDash metadata database and the actual EEG data stored in the clou
 from pathlib import Path
 from typing import Iterable, Sequence
 
+import rich.progress
 import s3fs
-from fsspec.callbacks import TqdmCallback
+from fsspec.callbacks import Callback, TqdmCallback
+from rich.console import Console
 
 
 def get_s3_filesystem() -> s3fs.S3FileSystem:
@@ -156,6 +158,34 @@ def _remote_size(filesystem: s3fs.S3FileSystem, s3path: str) -> int | None:
         return None
 
 
+class RichCallback(Callback):
+    """FSSpec callback using Rich Progress."""
+
+    def __init__(self, size: int | None = None, description: str = ""):
+        self.progress = rich.progress.Progress(
+            rich.progress.TextColumn("[bold blue]{task.description}"),
+            rich.progress.BarColumn(bar_width=None),
+            rich.progress.TaskProgressColumn(),
+            "•",
+            rich.progress.DownloadColumn(),
+            "•",
+            rich.progress.TransferSpeedColumn(),
+            "•",
+            rich.progress.TimeRemainingColumn(),
+        )
+        self.task_id = self.progress.add_task(description, total=size)
+        self.progress.start()
+
+    def set_size(self, size):
+        self.progress.update(self.task_id, total=size)
+
+    def relative_update(self, inc=1):
+        self.progress.update(self.task_id, advance=inc)
+
+    def close(self):
+        self.progress.stop()
+
+
 def _filesystem_get(
     filesystem: s3fs.S3FileSystem,
     s3path: str,
@@ -166,7 +196,7 @@ def _filesystem_get(
     """Perform the file download using fsspec with a progress bar.
 
     Internal helper function that wraps the ``filesystem.get`` call to include
-    a TQDM progress bar.
+    a progress bar (Rich if available/console, else TQDM).
 
     Parameters
     ----------
@@ -183,23 +213,46 @@ def _filesystem_get(
         The local path to the downloaded file.
 
     """
-    callback = TqdmCallback(
-        size=size,
-        tqdm_kwargs=dict(
-            desc=f"Downloading {Path(s3path).name}",
-            unit="B",
-            unit_scale=True,
-            unit_divisor=1024,
-            dynamic_ncols=True,
-            leave=True,
-            mininterval=0.2,
-            smoothing=0.1,
-            miniters=1,
-            bar_format="{desc}: {percentage:3.0f}%|{bar}| {n_fmt}/{total_fmt} "
-            "[{elapsed}<{remaining}, {rate_fmt}]",
-        ),
-    )
-    filesystem.get(s3path, str(filepath), callback=callback)
+    filename = Path(s3path).name
+    description = f"Downloading {filename}"
+
+    # Check if we should use Rich
+    use_rich = False
+    try:
+        # Check if console is available and interactive-ish
+        console = Console()
+        if console.is_terminal:  # or some other heuristic if needed
+            use_rich = True
+    except Exception:
+        pass
+
+    if use_rich:
+        callback = RichCallback(size=size, description=description)
+    else:
+        callback = TqdmCallback(
+            size=size,
+            tqdm_kwargs=dict(
+                desc=description,
+                unit="B",
+                unit_scale=True,
+                unit_divisor=1024,
+                dynamic_ncols=True,
+                leave=True,
+                mininterval=0.2,
+                smoothing=0.1,
+                miniters=1,
+                bar_format="{desc}: {percentage:3.0f}%|{bar}| {n_fmt}/{total_fmt} "
+                "[{elapsed}<{remaining}, {rate_fmt}]",
+            ),
+        )
+
+    try:
+        filesystem.get(s3path, str(filepath), callback=callback)
+    finally:
+        # Ensure callback is closed properly (important for Rich to clean up display)
+        if hasattr(callback, "close"):
+            callback.close()
+
     return filepath
 
 

@@ -137,7 +137,7 @@ def preprocess_and_window(raw_ds):
         Preprocessor("resample", sfreq=128),
         Preprocessor("filter", l_freq=1, h_freq=55),
     ]
-    preprocess(raw_ds, preprocessors, n_jobs=-1)
+    preprocess(raw_ds, preprocessors, n_jobs=1)
     for ds in raw_ds.datasets:
         ds.target_name = target_name
 

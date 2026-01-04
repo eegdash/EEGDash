@@ -48,7 +48,7 @@
                   class="hf-search-input"
                   type="search"
                   name="q"
-                  placeholder="Search datasets (e.g., sleep, P300, resting-state, TUEG)"
+                  placeholder="Search datasets (e.g., visual, P300, resting-state)"
                   autocomplete="off"
                 />
                 <button class="hf-search-submit" type="submit">Search</button>

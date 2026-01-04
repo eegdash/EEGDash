@@ -44,7 +44,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/searchpanes/2.3.1/css/searchPanes.dataTables.min.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=7021f170" />
     <link rel="stylesheet" type="text/css" href="../../../_static/css/treemap.css?v=7131b20f" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=d9bd6b14" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=b782d13e" />
   
   <!-- So that users can add custom icons -->
   <script src="../../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
@@ -71,7 +71,7 @@
     <link rel="icon" href="../../../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="Challenge 1: Cross-Task Transfer Learning!" href="../eeg2025/tutorial_challenge_1.html" />
+    <link rel="next" title="Minimal Tutorial" href="tutorial_minimal.html" />
     <link rel="prev" title="Eyes Open vs. Closed Classification" href="tutorial_eoec.html" />
   
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -462,6 +462,7 @@
 
 <li class="toctree-l1"><a class="reference internal" href="tutorial_eoec.html">Eyes Open vs. Closed Classification</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">EEGDash Feature Extractor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_minimal.html">Minimal Tutorial</a></li>
 </ul>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../eeg2025/tutorial_challenge_1.html">Challenge 1: Cross-Task Transfer Learning!</a></li>
@@ -552,9 +553,9 @@ and eyes closed data.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">eegdash</span><span class="w"> </span><span class="kn">import</span> <a href="../../../api/dataset/eegdash.EEGDashDataset.html#eegdash.EEGDashDataset" title="eegdash.EEGDashDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class"><span class="n">EEGDashDataset</span></a>
-<span class="kn">from</span><span class="w"> </span><span class="nn">eegdash.paths</span><span class="w"> </span><span class="kn">import</span> <a href="../../../api/generated/api-core/eegdash.paths.html#eegdash.paths.get_default_cache_dir" title="eegdash.paths.get_default_cache_dir" class="sphx-glr-backref-module-eegdash-paths sphx-glr-backref-type-py-function"><span class="n">get_default_cache_dir</span></a>
+<span class="kn">from</span><span class="w"> </span><span class="nn">eegdash.paths</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_default_cache_dir</span>
 
-<span class="n">cache_folder</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><a href="../../../api/generated/api-core/eegdash.paths.html#eegdash.paths.get_default_cache_dir" title="eegdash.paths.get_default_cache_dir" class="sphx-glr-backref-module-eegdash-paths sphx-glr-backref-type-py-function"><span class="n">get_default_cache_dir</span></a><span class="p">())</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+<span class="n">cache_folder</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">get_default_cache_dir</span><span class="p">())</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
 <span class="n">cache_folder</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
 <a href="../../../api/dataset/eegdash.EEGDashDataset.html#eegdash.EEGDashDataset" title="eegdash.EEGDashDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ds_eoec</span></a> <span class="o">=</span> <a href="../../../api/dataset/eegdash.EEGDashDataset.html#eegdash.EEGDashDataset" title="eegdash.EEGDashDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class"><span class="n">EEGDashDataset</span></a><span class="p">(</span>
@@ -599,9 +600,9 @@ indicating the start of a 20-second eyes-open period.</p>
 after the event onset. Similarly, for the eyes-open event, we extract data
 from 5 to 19 seconds after the event onset. This ensures an equal amount of
 data for both conditions. The event extraction is handled by the custom
-function <a class="reference internal" href="../../../api/generated/api-core/eegdash.hbn.html#eegdash.hbn.hbn_ec_ec_reannotation" title="eegdash.hbn.preprocessing.hbn_ec_ec_reannotation"><code class="xref py py-func docutils literal notranslate"><span class="pre">eegdash.hbn.preprocessing.hbn_ec_ec_reannotation()</span></code></a>.</p>
+function <code class="xref py py-func docutils literal notranslate"><span class="pre">eegdash.hbn.preprocessing.hbn_ec_ec_reannotation()</span></code>.</p>
 <p>Next, we apply four preprocessing steps in Braindecode:
-1. <strong>Reannotation</strong> of event markers using <a class="reference internal" href="../../../api/generated/api-core/eegdash.hbn.html#eegdash.hbn.hbn_ec_ec_reannotation" title="eegdash.hbn.preprocessing.hbn_ec_ec_reannotation"><code class="xref py py-func docutils literal notranslate"><span class="pre">eegdash.hbn.preprocessing.hbn_ec_ec_reannotation()</span></code></a>.
+1. <strong>Reannotation</strong> of event markers using <code class="xref py py-func docutils literal notranslate"><span class="pre">eegdash.hbn.preprocessing.hbn_ec_ec_reannotation()</span></code>.
 2. <strong>Selection</strong> of 24 specific EEG channels from the original 128.
 3. <strong>Resampling</strong> the EEG data to a frequency of 128 Hz.
 4. <strong>Filtering</strong> the EEG signals to retain frequencies between 1 Hz and 55 Hz.</p>
@@ -613,7 +614,7 @@ sample is automatically labeled with the corresponding event type (eyes-open
 or eyes-closed). <cite>windows_ds</cite> is a PyTorch dataset, and when queried, it
 returns labels for eyes-open and eyes-closed (assigned as labels 0 and 1,
 corresponding to their respective event markers).</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">eegdash.hbn.preprocessing</span><span class="w"> </span><span class="kn">import</span> <a href="../../../api/generated/api-core/eegdash.hbn.html#eegdash.hbn.hbn_ec_ec_reannotation" title="eegdash.hbn.hbn_ec_ec_reannotation" class="sphx-glr-backref-module-eegdash-hbn sphx-glr-backref-type-py-class"><span class="n">hbn_ec_ec_reannotation</span></a>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">eegdash.hbn.preprocessing</span><span class="w"> </span><span class="kn">import</span> <span class="n">hbn_ec_ec_reannotation</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">braindecode.preprocessing</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">preprocess</span><span class="p">,</span>
     <span class="n">Preprocessor</span><span class="p">,</span>
@@ -627,7 +628,7 @@ corresponding to their respective event markers).</p>
 
 <span class="c1"># BrainDecode preprocessors</span>
 <span class="n">preprocessors</span> <span class="o">=</span> <span class="p">[</span>
-    <a href="../../../api/generated/api-core/eegdash.hbn.html#eegdash.hbn.hbn_ec_ec_reannotation" title="eegdash.hbn.hbn_ec_ec_reannotation" class="sphx-glr-backref-module-eegdash-hbn sphx-glr-backref-type-py-class"><span class="n">hbn_ec_ec_reannotation</span></a><span class="p">(),</span>
+    <span class="n">hbn_ec_ec_reannotation</span><span class="p">(),</span>
     <span class="n">Preprocessor</span><span class="p">(</span>
         <span class="s2">&quot;pick_channels&quot;</span><span class="p">,</span>
         <span class="n">ch_names</span><span class="o">=</span><span class="p">[</span>
@@ -674,7 +675,7 @@ corresponding to their respective event markers).</p>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/home/runner/work/EEGDash/EEGDash/.venv/lib/python3.11/site-packages/braindecode/preprocessing/preprocess.py:76: UserWarning: apply_on_array can only be True if fn is a callable function. Automatically correcting to apply_on_array=False.
   warn(
 Used Annotations descriptions: [np.str_(&#39;boundary&#39;), np.str_(&#39;break cnt&#39;), np.str_(&#39;instructed_toCloseEyes&#39;), np.str_(&#39;instructed_toOpenEyes&#39;), np.str_(&#39;resting_start&#39;)]
-[01/03/26 17:57:23] INFO     Original events found with ids: preprocessing.py:66
+[01/04/26 21:36:32] INFO     Original events found with ids: preprocessing.py:66
                              {np.str_(&#39;boundary&#39;): 1,
                              np.str_(&#39;break cnt&#39;): 2,
                              np.str_(&#39;instructed_toCloseEyes
@@ -793,8 +794,8 @@ signal is present and looks as expected.</p>
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Extracting features:   0%|          | 0/1 [00:00&lt;?, ?it/s]
-Extracting features: 100%|██████████| 1/1 [00:00&lt;00:00,  1.10it/s]
-Extracting features: 100%|██████████| 1/1 [00:00&lt;00:00,  1.10it/s]
+Extracting features: 100%|██████████| 1/1 [00:00&lt;00:00,  1.25it/s]
+Extracting features: 100%|██████████| 1/1 [00:00&lt;00:00,  1.25it/s]
 </pre></div>
 </div>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">features_ds</span><span class="o">.</span><span class="n">to_dataframe</span><span class="p">(</span><span class="n">include_crop_inds</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -820,8 +821,8 @@ Extracting features: 100%|██████████| 1/1 [00:00&lt;00:00,  
     <tr style="text-align: right;">
       <th></th>
       <th>i_dataset</th>
-      <th>i_window_in_trial</th>
       <th>i_start_in_trial</th>
+      <th>i_window_in_trial</th>
       <th>i_stop_in_trial</th>
       <th>sig_mean_E22</th>
       <th>sig_mean_E9</th>
@@ -906,8 +907,8 @@ Extracting features: 100%|██████████| 1/1 [00:00&lt;00:00,  
     <tr>
       <th>0</th>
       <td>0</td>
-      <td>0</td>
       <td>8092</td>
+      <td>0</td>
       <td>8348</td>
       <td>5.647381e-07</td>
       <td>-2.509246e-06</td>
@@ -990,8 +991,8 @@ Extracting features: 100%|██████████| 1/1 [00:00&lt;00:00,  
     <tr>
       <th>1</th>
       <td>0</td>
-      <td>0</td>
       <td>8348</td>
+      <td>0</td>
       <td>8604</td>
       <td>1.130721e-06</td>
       <td>1.416919e-07</td>
@@ -1074,8 +1075,8 @@ Extracting features: 100%|██████████| 1/1 [00:00&lt;00:00,  
     <tr>
       <th>2</th>
       <td>0</td>
-      <td>0</td>
       <td>8604</td>
+      <td>0</td>
       <td>8860</td>
       <td>-8.737620e-07</td>
       <td>2.451451e-07</td>
@@ -1158,8 +1159,8 @@ Extracting features: 100%|██████████| 1/1 [00:00&lt;00:00,  
     <tr>
       <th>3</th>
       <td>0</td>
-      <td>0</td>
       <td>8860</td>
+      <td>0</td>
       <td>9116</td>
       <td>3.482372e-07</td>
       <td>-5.419446e-07</td>
@@ -1242,8 +1243,8 @@ Extracting features: 100%|██████████| 1/1 [00:00&lt;00:00,  
     <tr>
       <th>4</th>
       <td>0</td>
-      <td>0</td>
       <td>9116</td>
+      <td>0</td>
       <td>9372</td>
       <td>1.078094e-06</td>
       <td>2.234204e-06</td>
@@ -1410,8 +1411,8 @@ Extracting features: 100%|██████████| 1/1 [00:00&lt;00:00,  
     <tr>
       <th>65</th>
       <td>0</td>
-      <td>0</td>
       <td>43163</td>
+      <td>0</td>
       <td>43419</td>
       <td>2.604641e-06</td>
       <td>2.696607e-06</td>
@@ -1494,8 +1495,8 @@ Extracting features: 100%|██████████| 1/1 [00:00&lt;00:00,  
     <tr>
       <th>66</th>
       <td>0</td>
-      <td>0</td>
       <td>43419</td>
+      <td>0</td>
       <td>43675</td>
       <td>-1.158709e-06</td>
       <td>-9.353611e-07</td>
@@ -1578,8 +1579,8 @@ Extracting features: 100%|██████████| 1/1 [00:00&lt;00:00,  
     <tr>
       <th>67</th>
       <td>0</td>
-      <td>0</td>
       <td>43675</td>
+      <td>0</td>
       <td>43931</td>
       <td>9.350503e-07</td>
       <td>7.273056e-07</td>
@@ -1662,8 +1663,8 @@ Extracting features: 100%|██████████| 1/1 [00:00&lt;00:00,  
     <tr>
       <th>68</th>
       <td>0</td>
-      <td>0</td>
       <td>43931</td>
+      <td>0</td>
       <td>44187</td>
       <td>-1.334396e-04</td>
       <td>-4.969487e-05</td>
@@ -1746,8 +1747,8 @@ Extracting features: 100%|██████████| 1/1 [00:00&lt;00:00,  
     <tr>
       <th>69</th>
       <td>0</td>
-      <td>0</td>
       <td>44187</td>
+      <td>0</td>
       <td>44443</td>
       <td>1.370442e-04</td>
       <td>3.529626e-05</td>
@@ -8979,7 +8980,7 @@ Epoch 5, Train accuracy: 0.89, Test accuracy: 0.64
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[LightGBM] [Info] Number of positive: 28, number of negative: 28
-[LightGBM] [Info] Auto-choosing col-wise multi-threading, the overhead of testing was 0.000658 seconds.
+[LightGBM] [Info] Auto-choosing col-wise multi-threading, the overhead of testing was 0.000508 seconds.
 You can set `force_col_wise=true` to remove the overhead.
 [LightGBM] [Info] Total Bins 9205
 [LightGBM] [Info] Number of data points in the train set: 56, number of used features: 460
@@ -9101,8 +9102,8 @@ Train accuracy: 1.00, Validation accuracy: 0.86
 <img src="../../../_images/sphx_glr_tutorial_feature_extractor_open_close_eye_003.png" srcset="../../../_images/sphx_glr_tutorial_feature_extractor_open_close_eye_003.png" alt="Feature importance" class = "sphx-glr-single-img"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;Axes: title={&#39;center&#39;: &#39;Feature importance&#39;}, xlabel=&#39;Feature importance&#39;, ylabel=&#39;Features&#39;&gt;
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 7.547 seconds)</p>
-<p><strong>Estimated memory usage:</strong>  462 MB</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 6.614 seconds)</p>
+<p><strong>Estimated memory usage:</strong>  459 MB</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-generated-auto-examples-core-tutorial-feature-extractor-open-close-eye-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/eegdash/EEGDash/main?urlpath=lab/tree/notebooks/generated/auto_examples/core/tutorial_feature_extractor_open_close_eye.ipynb"><img alt="Launch binder" src="../../../_images/binder_badge_logo.svg" style="width: 150px;" />
@@ -9142,11 +9143,11 @@ Train accuracy: 1.00, Validation accuracy: 0.86
       </div>
     </a>
     <a class="right-next"
-       href="../eeg2025/tutorial_challenge_1.html"
+       href="tutorial_minimal.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Challenge 1: Cross-Task Transfer Learning!</p>
+        <p class="prev-next-title">Minimal Tutorial</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

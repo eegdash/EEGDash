@@ -82,6 +82,23 @@ Playing with eegdash!
     </div>
 
 
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="This is a minimal tutorial demonstrating how to use EEGDash with BrainDecode.">
+
+.. only:: html
+
+  .. image:: /generated/auto_examples/core/images/thumb/sphx_glr_tutorial_minimal_thumb.png
+    :alt:
+
+  :doc:`/generated/auto_examples/core/tutorial_minimal`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Minimal Tutorial</div>
+    </div>
+
+
 .. thumbnail-parent-div-close
 
 .. raw:: html
@@ -95,6 +112,7 @@ Playing with eegdash!
    /generated/auto_examples/core/p300_transfer_learning
    /generated/auto_examples/core/tutorial_eoec
    /generated/auto_examples/core/tutorial_feature_extractor_open_close_eye
+   /generated/auto_examples/core/tutorial_minimal
 
 EEG 2025 Foundation Challenge 
 =============================

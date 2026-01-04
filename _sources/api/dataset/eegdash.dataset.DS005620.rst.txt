@@ -9,7 +9,7 @@ OpenNeuro dataset ``ds005620``. Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: EEG` :bdg-light:`Tasks: 3` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 21` :bdg-light:`Recordings: 202` :bdg-light:`Source: OpenNeuro`
+:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 3` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 21` :bdg-light:`Recordings: 202` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -49,7 +49,7 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 64,65
+      - Channels: 64*
       - Sampling rate (Hz): 5000
       - Duration (hours): 21.811
 
@@ -63,8 +63,8 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 77.30 GB
-      - File count: 0
+      - Size on disk: 77.3 GB
+      - File count: 0.0
       - Format: Unknown
 
    .. grid-item-card:: License & citation
@@ -76,7 +76,7 @@ Highlights
    .. grid-item-card:: Provenance
       :class-card: sd-border-1
 
-      - Source: OpenNeuro
+      - Source: openneuro
       - OpenNeuro: `ds005620 <https://openneuro.org/datasets/ds005620>`__
       - NeMAR: `ds005620 <https://nemar.org/dataexplorer/detail?dataset_id=ds005620>`__
 

@@ -9,7 +9,7 @@ OpenNeuro dataset ``ds004577``. Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: EEG` :bdg-light:`Tasks: 1` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 103` :bdg-light:`Recordings: 130` :bdg-light:`Source: OpenNeuro`
+:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 103` :bdg-light:`Recordings: 130` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -49,7 +49,7 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 19,21,24
+      - Channels: 19*
       - Sampling rate (Hz): 200
       - Duration (hours): 22.974
 
@@ -63,8 +63,8 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 652.76 MB
-      - File count: 0
+      - Size on disk: 652.67 MB
+      - File count: 0.0
       - Format: Unknown
 
    .. grid-item-card:: License & citation
@@ -76,7 +76,7 @@ Highlights
    .. grid-item-card:: Provenance
       :class-card: sd-border-1
 
-      - Source: OpenNeuro
+      - Source: openneuro
       - OpenNeuro: `ds004577 <https://openneuro.org/datasets/ds004577>`__
       - NeMAR: `ds004577 <https://nemar.org/dataexplorer/detail?dataset_id=ds004577>`__
 

@@ -44,7 +44,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/searchpanes/2.3.1/css/searchPanes.dataTables.min.css" />
     <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=7021f170" />
     <link rel="stylesheet" type="text/css" href="../_static/css/treemap.css?v=7131b20f" />
-    <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=d9bd6b14" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=b782d13e" />
   
   <!-- So that users can add custom icons -->
   <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
@@ -1239,13 +1239,13 @@ the MongoDB database.</p>
 <h2>Core Modules<a class="headerlink" href="#core-modules" title="Link to this heading">#</a></h2>
 <p>The API is organized into focused modules that handle specific aspects of EEG data processing:</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="generated/api-core/eegdash.api.html#module-eegdash.api" title="eegdash.api"><code class="xref py py-mod docutils literal notranslate"><span class="pre">api</span></code></a> - Main <code class="docutils literal notranslate"><span class="pre">EEGDash</span></code> client for data access and querying</p></li>
-<li><p><a class="reference internal" href="generated/api-core/eegdash.schemas.html#module-eegdash.schemas" title="eegdash.schemas"><code class="xref py py-mod docutils literal notranslate"><span class="pre">schemas</span></code></a> - Schema definitions (<code class="docutils literal notranslate"><span class="pre">Dataset</span></code>, <code class="docutils literal notranslate"><span class="pre">Record</span></code> TypedDicts)</p></li>
-<li><p><a class="reference internal" href="generated/api-core/eegdash.http_api_client.html#module-eegdash.http_api_client" title="eegdash.http_api_client"><code class="xref py py-mod docutils literal notranslate"><span class="pre">http_api_client</span></code></a> - HTTP REST API client for database operations</p></li>
-<li><p><a class="reference internal" href="generated/api-core/eegdash.downloader.html#module-eegdash.downloader" title="eegdash.downloader"><code class="xref py py-mod docutils literal notranslate"><span class="pre">downloader</span></code></a> - S3 and HTTPS download utilities</p></li>
-<li><p><a class="reference internal" href="generated/api-core/eegdash.bids_metadata.html#module-eegdash.bids_metadata" title="eegdash.bids_metadata"><code class="xref py py-mod docutils literal notranslate"><span class="pre">bids_metadata</span></code></a> - BIDS-compliant metadata handling</p></li>
-<li><p><a class="reference internal" href="generated/api-core/eegdash.const.html#module-eegdash.const" title="eegdash.const"><code class="xref py py-mod docutils literal notranslate"><span class="pre">const</span></code></a> - Constants and configuration defaults</p></li>
-<li><p><a class="reference internal" href="generated/api-core/eegdash.paths.html#module-eegdash.paths" title="eegdash.paths"><code class="xref py py-mod docutils literal notranslate"><span class="pre">paths</span></code></a> - File system and storage path management</p></li>
+<li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">api</span></code> - Main <code class="docutils literal notranslate"><span class="pre">EEGDash</span></code> client for data access and querying</p></li>
+<li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">schemas</span></code> - Schema definitions (<code class="docutils literal notranslate"><span class="pre">Dataset</span></code>, <code class="docutils literal notranslate"><span class="pre">Record</span></code> TypedDicts)</p></li>
+<li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">http_api_client</span></code> - HTTP REST API client for database operations</p></li>
+<li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">downloader</span></code> - S3 and HTTPS download utilities</p></li>
+<li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">bids_metadata</span></code> - BIDS-compliant metadata handling</p></li>
+<li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">const</span></code> - Constants and configuration defaults</p></li>
+<li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">paths</span></code> - File system and storage path management</p></li>
 <li><p><a class="reference internal" href="dataset/api_dataset.html"><span class="doc">Datasets API</span></a> - Dataset classes and registry</p></li>
 </ul>
 </section>
@@ -1264,31 +1264,31 @@ the MongoDB database.</p>
 <h2>API Reference<a class="headerlink" href="#api-reference" title="Link to this heading">#</a></h2>
 <div class="pst-scrollable-table-container"><table class="autosummary longtable table">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/api-core/eegdash.api.html#module-eegdash.api" title="eegdash.api"><code class="xref py py-obj docutils literal notranslate"><span class="pre">api</span></code></a></p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">api</span></code></p></td>
 <td><p>High-level interface to the EEGDash metadata database.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/api-core/eegdash.schemas.html#module-eegdash.schemas" title="eegdash.schemas"><code class="xref py py-obj docutils literal notranslate"><span class="pre">schemas</span></code></a></p></td>
-<td><p>Pydantic models and TypedDict schemas for EEGDash documents.</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">schemas</span></code></p></td>
+<td><p>EEGDash Data Schemas</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/api-core/eegdash.http_api_client.html#module-eegdash.http_api_client" title="eegdash.http_api_client"><code class="xref py py-obj docutils literal notranslate"><span class="pre">http_api_client</span></code></a></p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">http_api_client</span></code></p></td>
 <td><p>HTTP API client for EEGDash REST API.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/api-core/eegdash.downloader.html#module-eegdash.downloader" title="eegdash.downloader"><code class="xref py py-obj docutils literal notranslate"><span class="pre">downloader</span></code></a></p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">downloader</span></code></p></td>
 <td><p>File downloading utilities for EEG data from cloud storage.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/api-core/eegdash.bids_metadata.html#module-eegdash.bids_metadata" title="eegdash.bids_metadata"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bids_metadata</span></code></a></p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">bids_metadata</span></code></p></td>
 <td><p>BIDS metadata processing and query building utilities.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/api-core/eegdash.const.html#module-eegdash.const" title="eegdash.const"><code class="xref py py-obj docutils literal notranslate"><span class="pre">const</span></code></a></p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">const</span></code></p></td>
 <td><p>Configuration constants and mappings for EEGDash.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/api-core/eegdash.logging.html#module-eegdash.logging" title="eegdash.logging"><code class="xref py py-obj docutils literal notranslate"><span class="pre">logging</span></code></a></p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">logging</span></code></p></td>
 <td><p>Logging configuration for EEGDash.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/api-core/eegdash.paths.html#module-eegdash.paths" title="eegdash.paths"><code class="xref py py-obj docutils literal notranslate"><span class="pre">paths</span></code></a></p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">paths</span></code></p></td>
 <td><p>Path utilities and cache directory management.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/api-core/eegdash.hbn.html#module-eegdash.hbn" title="eegdash.hbn"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hbn</span></code></a></p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">hbn</span></code></p></td>
 <td><p>Healthy Brain Network (HBN) specific utilities and preprocessing.</p></td>
 </tr>
 </tbody>

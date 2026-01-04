@@ -9,7 +9,7 @@ OpenNeuro dataset ``ds005540``. Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: EEG, BEH` :bdg-light:`Tasks: 1` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 59` :bdg-light:`Recordings: 103` :bdg-light:`Source: OpenNeuro`
+:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 59` :bdg-light:`Recordings: 103` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -50,7 +50,7 @@ Highlights
       :class-card: sd-border-1
 
       - Channels: 64
-      - Sampling rate (Hz): 1200,600
+      - Sampling rate (Hz): 600*
       - Duration (hours): 0.0
 
    .. grid-item-card:: Tasks & conditions
@@ -63,8 +63,8 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 70.40 GB
-      - File count: 0
+      - Size on disk: 47.31 GB
+      - File count: 0.0
       - Format: Unknown
 
    .. grid-item-card:: License & citation
@@ -76,7 +76,7 @@ Highlights
    .. grid-item-card:: Provenance
       :class-card: sd-border-1
 
-      - Source: OpenNeuro
+      - Source: openneuro
       - OpenNeuro: `ds005540 <https://openneuro.org/datasets/ds005540>`__
       - NeMAR: `ds005540 <https://nemar.org/dataexplorer/detail?dataset_id=ds005540>`__
 

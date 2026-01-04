@@ -9,7 +9,7 @@ OpenNeuro dataset ``ds006434``. Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: Unknown` :bdg-light:`Tasks: Unknown` :bdg-light:`License: Unknown` :bdg-light:`Subjects: Unknown` :bdg-light:`Recordings: Unknown` :bdg-light:`Source: OpenNeuro`
+:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 5` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 66` :bdg-light:`Recordings: 118` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -42,28 +42,28 @@ Highlights
    .. grid-item-card:: Subjects & recordings
       :class-card: sd-border-1
 
-      - Subjects: Unknown
-      - Recordings: Unknown
-      - Tasks: Unknown
+      - Subjects: 66
+      - Recordings: 118
+      - Tasks: 5
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: Unknown
-      - Sampling rate (Hz): Unknown
+      - Channels: 32*
+      - Sampling rate (Hz): 10000*
       - Duration (hours): Unknown
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
 
-      - Tasks: Unknown
+      - Tasks: 5
       - Experiment type: Unknown
       - Subject type: Unknown
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: Unknown
+      - Size on disk: 103.05 GB
       - File count: Unknown
       - Format: Unknown
 
@@ -76,7 +76,7 @@ Highlights
    .. grid-item-card:: Provenance
       :class-card: sd-border-1
 
-      - Source: OpenNeuro
+      - Source: openneuro
       - OpenNeuro: `ds006434 <https://openneuro.org/datasets/ds006434>`__
       - NeMAR: `ds006434 <https://nemar.org/dataexplorer/detail?dataset_id=ds006434>`__
 

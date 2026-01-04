@@ -44,7 +44,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/searchpanes/2.3.1/css/searchPanes.dataTables.min.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=7021f170" />
     <link rel="stylesheet" type="text/css" href="../../../_static/css/treemap.css?v=7131b20f" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=d9bd6b14" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=b782d13e" />
   
   <!-- So that users can add custom icons -->
   <script src="../../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
@@ -1071,8 +1071,8 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="module-eegdash.features.serialization">
-<span id="eegdash-features-serialization"></span><h1>eegdash.features.serialization<a class="headerlink" href="#module-eegdash.features.serialization" title="Link to this heading">#</a></h1>
+  <section id="eegdash-features-serialization">
+<h1>eegdash.features.serialization<a class="headerlink" href="#eegdash-features-serialization" title="Link to this heading">#</a></h1>
 <p>Convenience functions for storing and loading features datasets.</p>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
@@ -1084,19 +1084,19 @@
 <p class="rubric">Functions</p>
 <div class="pst-scrollable-table-container"><table class="autosummary longtable table">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#eegdash.features.serialization.load_features_concat_dataset" title="eegdash.features.serialization.load_features_concat_dataset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_features_concat_dataset</span></code></a>(path[, ...])</p></td>
-<td><p>Load a stored <a class="reference internal" href="eegdash.features.datasets.html#eegdash.features.datasets.FeaturesConcatDataset" title="eegdash.features.datasets.FeaturesConcatDataset"><code class="xref py py-class docutils literal notranslate"><span class="pre">FeaturesConcatDataset</span></code></a> from a directory.</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_features_concat_dataset</span></code>(path[, ...])</p></td>
+<td><p>Load a stored <code class="xref py py-class docutils literal notranslate"><span class="pre">FeaturesConcatDataset</span></code> from a directory.</p></td>
 </tr>
 </tbody>
 </table>
 </div>
 <dl class="py function">
-<dt class="sig sig-object py" id="eegdash.features.serialization.load_features_concat_dataset">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.serialization.</span></span><span class="sig-name descname"><span class="pre">load_features_concat_dataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ids_to_load</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="eegdash.features.datasets.html#eegdash.features.datasets.FeaturesConcatDataset" title="eegdash.features.datasets.FeaturesConcatDataset"><span class="pre">eegdash.features.datasets.FeaturesConcatDataset</span></a></span></span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/main/eegdash/features/serialization.py#L26-L67"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.serialization.load_features_concat_dataset" title="Link to this definition">#</a></dt>
-<dd><p>Load a stored <a class="reference internal" href="eegdash.features.datasets.html#eegdash.features.datasets.FeaturesConcatDataset" title="eegdash.features.datasets.FeaturesConcatDataset"><code class="xref py py-class docutils literal notranslate"><span class="pre">FeaturesConcatDataset</span></code></a> from a directory.</p>
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.serialization.</span></span><span class="sig-name descname"><span class="pre">load_features_concat_dataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ids_to_load</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">eegdash.features.datasets.FeaturesConcatDataset</span></span></span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/main/eegdash/features/serialization.py#L26-L67"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Load a stored <code class="xref py py-class docutils literal notranslate"><span class="pre">FeaturesConcatDataset</span></code> from a directory.</p>
 <p>This function reconstructs a
-<a class="reference internal" href="eegdash.features.datasets.html#eegdash.features.datasets.FeaturesConcatDataset" title="eegdash.features.datasets.FeaturesConcatDataset"><code class="xref py py-class docutils literal notranslate"><span class="pre">FeaturesConcatDataset</span></code></a> by loading
-individual <a class="reference internal" href="eegdash.features.datasets.html#eegdash.features.datasets.FeaturesDataset" title="eegdash.features.datasets.FeaturesDataset"><code class="xref py py-class docutils literal notranslate"><span class="pre">FeaturesDataset</span></code></a> instances
+<code class="xref py py-class docutils literal notranslate"><span class="pre">FeaturesConcatDataset</span></code> by loading
+individual <code class="xref py py-class docutils literal notranslate"><span class="pre">FeaturesDataset</span></code> instances
 from subdirectories within the given path. It uses joblib for parallel
 loading.</p>
 <dl class="field-list simple">
@@ -1113,10 +1113,10 @@ processors.</p></li>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>A concatenated dataset containing the loaded
-<a class="reference internal" href="eegdash.features.datasets.html#eegdash.features.datasets.FeaturesDataset" title="eegdash.features.datasets.FeaturesDataset"><code class="xref py py-class docutils literal notranslate"><span class="pre">FeaturesDataset</span></code></a> instances.</p>
+<code class="xref py py-class docutils literal notranslate"><span class="pre">FeaturesDataset</span></code> instances.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="eegdash.features.datasets.html#eegdash.features.datasets.FeaturesConcatDataset" title="eegdash.features.datasets.FeaturesConcatDataset">eegdash.features.datasets.FeaturesConcatDataset</a></p>
+<dd class="field-odd"><p>eegdash.features.datasets.FeaturesConcatDataset</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1161,18 +1161,6 @@ processors.</p></li>
                 <dialog id="pst-secondary-sidebar-modal"></dialog>
                 <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
-
-  <div class="sidebar-secondary-item">
-<div
-    id="pst-page-navigation-heading-2"
-    class="page-toc tocsection onthispage">
-    <i class="fa-solid fa-list"></i> On this page
-  </div>
-  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
-    <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.features.serialization.load_features_concat_dataset"><code class="docutils literal notranslate"><span class="pre">load_features_concat_dataset()</span></code></a></li>
-</ul>
-  </nav></div>
 
   <div class="sidebar-secondary-item">
 

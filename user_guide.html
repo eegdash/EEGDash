@@ -44,7 +44,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/searchpanes/2.3.1/css/searchPanes.dataTables.min.css" />
     <link rel="stylesheet" type="text/css" href="_static/custom.css?v=7021f170" />
     <link rel="stylesheet" type="text/css" href="_static/css/treemap.css?v=7131b20f" />
-    <link rel="stylesheet" type="text/css" href="_static/css/custom.css?v=d9bd6b14" />
+    <link rel="stylesheet" type="text/css" href="_static/css/custom.css?v=b782d13e" />
   
   <!-- So that users can add custom icons -->
   <script src="_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
@@ -509,7 +509,7 @@
 <p>This guide provides a comprehensive overview of the <code class="xref py py-mod docutils literal notranslate"><span class="pre">eegdash</span></code> library, focusing on its core data access object, <code class="xref py py-class docutils literal notranslate"><span class="pre">EEGDashDataset</span></code>. You will learn how to use this object to find, access, and manage EEG data for your research and analysis tasks.</p>
 <section id="the-eegdash-object">
 <h2>The EEGDash Object<a class="headerlink" href="#the-eegdash-object" title="Link to this heading">#</a></h2>
-<p>While <code class="xref py py-class docutils literal notranslate"><span class="pre">EEGDashDataset</span></code> is the main tool for loading data for machine learning, the <a class="reference internal" href="api/generated/api-core/eegdash.api.html#eegdash.api.EEGDash" title="eegdash.api.EEGDash"><code class="xref py py-class docutils literal notranslate"><span class="pre">EEGDash</span></code></a> object provides a lower-level interface for directly interacting with the metadata database. It is useful for exploring the available data, performing complex queries, or managing metadata records.</p>
+<p>While <code class="xref py py-class docutils literal notranslate"><span class="pre">EEGDashDataset</span></code> is the main tool for loading data for machine learning, the <code class="xref py py-class docutils literal notranslate"><span class="pre">EEGDash</span></code> object provides a lower-level interface for directly interacting with the metadata database. It is useful for exploring the available data, performing complex queries, or managing metadata records.</p>
 <section id="initializing-eegdash">
 <h3>Initializing EEGDash<a class="headerlink" href="#initializing-eegdash" title="Link to this heading">#</a></h3>
 <p>You can create a client to connect to the public database like this:</p>
@@ -538,7 +538,7 @@
 <h3>EEGDash vs. EEGDashDataset<a class="headerlink" href="#eegdash-vs-eegdashdataset" title="Link to this heading">#</a></h3>
 <p>It’s important to understand the distinction between these two objects:</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="api/generated/api-core/eegdash.api.html#eegdash.api.EEGDash" title="eegdash.api.EEGDash"><code class="xref py py-class docutils literal notranslate"><span class="pre">EEGDash</span></code></a>: Use this for querying and managing metadata. It returns a list of dictionaries, where each dictionary is a record from the database.</p></li>
+<li><p><code class="xref py py-class docutils literal notranslate"><span class="pre">EEGDash</span></code>: Use this for querying and managing metadata. It returns a list of dictionaries, where each dictionary is a record from the database.</p></li>
 <li><p><code class="xref py py-class docutils literal notranslate"><span class="pre">EEGDashDataset</span></code>: Use this when you need to load EEG data for analysis or machine learning. It returns a PyTorch-compatible dataset object where each item can load the actual EEG signal.</p></li>
 </ul>
 <p>In general, you will use <code class="xref py py-class docutils literal notranslate"><span class="pre">EEGDashDataset</span></code> for most of your data loading needs.</p>

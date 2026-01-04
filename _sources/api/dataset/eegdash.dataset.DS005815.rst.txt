@@ -9,7 +9,7 @@ OpenNeuro dataset ``ds005815``. Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: EEG` :bdg-light:`Tasks: 4` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 26` :bdg-light:`Recordings: 137` :bdg-light:`Source: OpenNeuro`
+:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 3` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 20` :bdg-light:`Recordings: 103` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -42,29 +42,29 @@ Highlights
    .. grid-item-card:: Subjects & recordings
       :class-card: sd-border-1
 
-      - Subjects: 26
-      - Recordings: 137
-      - Tasks: 4
+      - Subjects: 20
+      - Recordings: 103
+      - Tasks: 3
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
       - Channels: 30
-      - Sampling rate (Hz): 1000,500
+      - Sampling rate (Hz): 1000
       - Duration (hours): 38.618
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
 
-      - Tasks: 4
+      - Tasks: 3
       - Experiment type: Unknown
       - Subject type: Healthy
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 9.91 GB
-      - File count: 0
+      - Size on disk: 7.6 GB
+      - File count: 0.0
       - Format: Unknown
 
    .. grid-item-card:: License & citation
@@ -76,7 +76,7 @@ Highlights
    .. grid-item-card:: Provenance
       :class-card: sd-border-1
 
-      - Source: OpenNeuro
+      - Source: openneuro
       - OpenNeuro: `ds005815 <https://openneuro.org/datasets/ds005815>`__
       - NeMAR: `ds005815 <https://nemar.org/dataexplorer/detail?dataset_id=ds005815>`__
 

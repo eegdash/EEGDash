@@ -9,7 +9,7 @@ OpenNeuro dataset ``ds004000``. Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: EEG` :bdg-light:`Tasks: 2` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 43` :bdg-light:`Recordings: 86` :bdg-light:`Source: OpenNeuro`
+:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 2` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 43` :bdg-light:`Recordings: 86` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -63,8 +63,8 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 22.50 GB
-      - File count: 0
+      - Size on disk: 22.5 GB
+      - File count: 0.0
       - Format: Unknown
 
    .. grid-item-card:: License & citation
@@ -76,7 +76,7 @@ Highlights
    .. grid-item-card:: Provenance
       :class-card: sd-border-1
 
-      - Source: OpenNeuro
+      - Source: openneuro
       - OpenNeuro: `ds004000 <https://openneuro.org/datasets/ds004000>`__
       - NeMAR: `ds004000 <https://nemar.org/dataexplorer/detail?dataset_id=ds004000>`__
 

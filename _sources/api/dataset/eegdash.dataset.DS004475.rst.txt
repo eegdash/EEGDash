@@ -9,7 +9,7 @@ OpenNeuro dataset ``ds004475``. Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: EEG, MRI` :bdg-light:`Tasks: 1` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 30` :bdg-light:`Recordings: 30` :bdg-light:`Source: OpenNeuro`
+:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 30` :bdg-light:`Recordings: 30` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -49,7 +49,7 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 113,115,118,119,120,122,123,124,125,126,127,128
+      - Channels: 124*
       - Sampling rate (Hz): 512
       - Duration (hours): 26.899
 
@@ -63,8 +63,8 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 112.74 GB
-      - File count: 0
+      - Size on disk: 48.54 GB
+      - File count: 0.0
       - Format: Unknown
 
    .. grid-item-card:: License & citation
@@ -76,7 +76,7 @@ Highlights
    .. grid-item-card:: Provenance
       :class-card: sd-border-1
 
-      - Source: OpenNeuro
+      - Source: openneuro
       - OpenNeuro: `ds004475 <https://openneuro.org/datasets/ds004475>`__
       - NeMAR: `ds004475 <https://nemar.org/dataexplorer/detail?dataset_id=ds004475>`__
 

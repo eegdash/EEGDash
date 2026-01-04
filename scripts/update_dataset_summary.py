@@ -164,6 +164,7 @@ def main():
             # "duration_hours_total": 0.0, # Not readily available in summary?
             "size": human_readable_size(ds.get("size_bytes") or 0),
             "size_bytes": ds.get("size_bytes") or 0,
+            "source": ds.get("source", ""),
             "DatasetID": ds_id,  # Seems redundant but present in CSV
             "Type Subject": ds.get("study_domain", ""),
             "modality of exp": ", ".join(ds.get("modalities", []) or []),
@@ -235,6 +236,7 @@ def main():
         "duration_hours_total",
         "size",
         "size_bytes",
+        "source",
         "s3_item_count",
         "DatasetID",
         "Type Subject",

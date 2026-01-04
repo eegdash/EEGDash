@@ -5,7 +5,6 @@ A tutorial for training an EEG Conformer model to predict the "p-factor" (a psyc
 """
 
 from pathlib import Path
-import os
 import numpy as np
 import pandas as pd
 import torch
@@ -22,17 +21,16 @@ from braindecode.preprocessing import (
 )
 from braindecode.datasets.base import BaseConcatDataset, BaseDataset
 
+from eegdash.paths import get_default_cache_dir
+
 # ============================================================================
 # Configuration
 # ============================================================================
-CACHE_DIR_BASE = Path(
-    os.getenv("EEGDASH_CACHE_DIR", Path.cwd() / "eegdash_cache")
-).resolve()
+CACHE_DIR_BASE = Path(get_default_cache_dir()).resolve()
 CACHE_DIR_BASE.mkdir(parents=True, exist_ok=True)
-DATASET_NAME = os.getenv("EEGDASH_DATASET_ID", "ds005505")
-TASK = os.getenv("EEGDASH_TASK", "").strip() or None
+DATASET_NAME = "ds005505"
 TARGET_NAME = "p_factor"
-CACHE_DIR = CACHE_DIR_BASE / f"reg_{DATASET_NAME}_{TASK or 'all'}_{TARGET_NAME}"
+CACHE_DIR = CACHE_DIR_BASE / f"reg_{DATASET_NAME}_all_{TARGET_NAME}"
 SFREQ = 100
 BATCH_SIZE = 64
 LEARNING_RATE = 0.0001
@@ -50,12 +48,11 @@ np.random.seed(RANDOM_SEED)
 # ============================================================================
 if not CACHE_DIR.exists():
     eegdash = EEGDash()
-    print(f"Preparing data for {DATASET_NAME} - {TASK} - {TARGET_NAME}...")
+    print(f"Preparing data for {DATASET_NAME} - {TARGET_NAME}...")
 
     # Fetch records (ignoring API metadata filter effectively, relying on local participants.tsv)
     query = {"dataset": DATASET_NAME}
-    if TASK:
-        query["task"] = TASK
+
     records = eegdash.find(query, limit=RECORD_LIMIT)
 
     if not records:

@@ -1,5 +1,5 @@
 """Age Prediction from EEG
-=======================
+===========================
 
 **Objective**: Learn how to predict a continuous variable (Subject Age) from raw EEG data using a Convolutional Neural Network (Conformer).
 
@@ -41,10 +41,9 @@ CACHE_DIR_BASE = Path(
     os.getenv("EEGDASH_CACHE_DIR", Path.cwd() / "eegdash_cache")
 ).resolve()
 CACHE_DIR_BASE.mkdir(parents=True, exist_ok=True)
-DATASET_NAME = os.getenv("EEGDASH_DATASET_ID", "ds005505")
-TASK = os.getenv("EEGDASH_TASK", "").strip() or None
+DATASET_NAME = "ds005505"
 TARGET_NAME = "age"
-CACHE_DIR = CACHE_DIR_BASE / f"reg_{DATASET_NAME}_{TASK or 'all'}_{TARGET_NAME}"
+CACHE_DIR = CACHE_DIR_BASE / f"reg_{DATASET_NAME}_all_{TARGET_NAME}"
 SFREQ = 100
 BATCH_SIZE = 64
 LEARNING_RATE = 0.00002
@@ -78,13 +77,11 @@ if PREPARE_DATA or not CACHE_DIR.exists():
     )
     from braindecode.datasets.base import BaseConcatDataset
 
-    print(f"Preparing data for {DATASET_NAME} - {TASK} - {TARGET_NAME}...")
+    print(f"Preparing data for {DATASET_NAME} - {TARGET_NAME}...")
 
     # NOTE: Since the demo database might lack metadata, we fetch available records
     # and SIMULATE age labels for this tutorial.
     query = {"dataset": DATASET_NAME}
-    if TASK:
-        query["task"] = TASK
 
     records = eegdash.find(query, limit=RECORD_LIMIT)
 

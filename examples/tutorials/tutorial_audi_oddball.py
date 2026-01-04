@@ -1,8 +1,8 @@
 # %% [markdown]
 """.. _auditory-oddball-tutorial:
 
-Oddball Classification (API-driven)
-==================================
+Oddball Classification
+=======================
 
 This tutorial demonstrates using the *EEGDash* library with PyTorch to classify EEG responses in an oddball paradigm.
 
@@ -42,17 +42,15 @@ This tutorial demonstrates using the *EEGDash* library with PyTorch to classify 
 from pathlib import Path
 import os
 
-os.environ.setdefault("NUMBA_DISABLE_JIT", "1")
-os.environ.setdefault("_MNE_FAKE_HOME_DIR", str(Path.cwd()))
-(Path(os.environ["_MNE_FAKE_HOME_DIR"]) / ".mne").mkdir(exist_ok=True)
 
 from eegdash import EEGDash, EEGDashDataset
+from eegdash.paths import get_default_cache_dir
 
-CACHE_DIR = Path(os.getenv("EEGDASH_CACHE_DIR", Path.cwd() / "eegdash_cache")).resolve()
+CACHE_DIR = Path(get_default_cache_dir()).resolve()
 CACHE_DIR.mkdir(parents=True, exist_ok=True)
-DATASET_ID = os.getenv("EEGDASH_DATASET_ID", "ds005863")
-TASK = os.getenv("EEGDASH_TASK", "visualoddball")
-RECORD_LIMIT = int(os.getenv("EEGDASH_RECORD_LIMIT", "20"))
+DATASET_ID = "ds005863"
+TASK = "visualoddball"
+RECORD_LIMIT = 20
 
 eegdash = EEGDash()
 records = eegdash.find({"dataset": DATASET_ID, "task": TASK}, limit=RECORD_LIMIT)

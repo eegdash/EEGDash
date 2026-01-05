@@ -5,11 +5,11 @@
 eegdash.dataset.DS003498
 ========================
 
-OpenNeuro dataset ``ds003498``. Access recordings and metadata through EEGDash.
+interictal iEEG during slow-wave sleep with HFO markings (OpenNeuro ``ds003498``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: ieeg` :bdg-light:`Tasks: 0` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 20` :bdg-light:`Recordings: 385` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: ieeg` :bdg-light:`Tasks: 0` :bdg-light:`License: CC0` :bdg-light:`Subjects: 20` :bdg-light:`Recordings: 385` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,17 +21,30 @@ Dataset Information
    * - Dataset ID
      - ``DS003498``
    * - Title
-     - Unknown
+     - interictal iEEG during slow-wave sleep with HFO markings
    * - Year
-     - Unknown
+     - 2021
    * - Authors
-     - Unknown
+     - Fedele T, Krayenbühl N, Hilfiker P, Adam Li, Sarnthein J.
    * - License
-     - Unknown
+     - CC0
    * - Citation / DOI
-     - Unknown
+     - `10.18112/openneuro.ds003498.v1.0.1 <https://doi.org/10.18112/openneuro.ds003498.v1.0.1>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds003498>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003498>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds003498>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003498>`__ | `Source URL <https://openneuro.org/datasets/ds003498>`__
+
+.. dropdown:: Copy-paste BibTeX
+   :class-container: sd-shadow-sm
+   :class-title: sd-bg-light
+
+   .. code-block:: bibtex
+
+      @dataset{ds003498,
+        title = {interictal iEEG during slow-wave sleep with HFO markings},
+        author = {Fedele T and Krayenbühl N and Hilfiker P and Adam Li and Sarnthein J.},
+        doi = {10.18112/openneuro.ds003498.v1.0.1},
+        url = {https://doi.org/10.18112/openneuro.ds003498.v1.0.1},
+      }
 
 Highlights
 ----------
@@ -70,8 +83,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: Unknown
-      - DOI: Unknown
+      - License: CC0
+      - DOI: 10.18112/openneuro.ds003498.v1.0.1
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

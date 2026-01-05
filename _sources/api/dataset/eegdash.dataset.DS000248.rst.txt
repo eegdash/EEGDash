@@ -9,7 +9,7 @@ OpenNeuro dataset ``ds000248``. Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: meg` :bdg-light:`Tasks: 2` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 2` :bdg-light:`Recordings: 3` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: meg` :bdg-light:`Tasks: 2` :bdg-light:`License: CC0` :bdg-light:`Subjects: 2` :bdg-light:`Recordings: 3` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -23,15 +23,27 @@ Dataset Information
    * - Title
      - Unknown
    * - Year
-     - Unknown
+     - 2018
    * - Authors
-     - Unknown
+     - Alexandre Gramfort, Matti S Hämäläinen
    * - License
-     - Unknown
+     - CC0
    * - Citation / DOI
-     - Unknown
+     - `10.18112/openneuro.ds000248.v1.2.4 <https://doi.org/10.18112/openneuro.ds000248.v1.2.4>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds000248>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds000248>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds000248>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds000248>`__ | `Source URL <https://openneuro.org/datasets/ds000248>`__
+
+.. dropdown:: Copy-paste BibTeX
+   :class-container: sd-shadow-sm
+   :class-title: sd-bg-light
+
+   .. code-block:: bibtex
+
+      @dataset{ds000248,
+        author = {Alexandre Gramfort and Matti S Hämäläinen},
+        doi = {10.18112/openneuro.ds000248.v1.2.4},
+        url = {https://doi.org/10.18112/openneuro.ds000248.v1.2.4},
+      }
 
 Highlights
 ----------
@@ -70,8 +82,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: Unknown
-      - DOI: Unknown
+      - License: CC0
+      - DOI: 10.18112/openneuro.ds000248.v1.2.4
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

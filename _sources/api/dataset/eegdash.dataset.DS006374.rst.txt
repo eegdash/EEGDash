@@ -5,11 +5,11 @@
 eegdash.dataset.DS006374
 ========================
 
-OpenNeuro dataset ``ds006374``. Access recordings and metadata through EEGDash.
+Expectation effects on repetition suppression in nociception (OpenNeuro ``ds006374``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 2` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 36` :bdg-light:`Recordings: 358` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 2` :bdg-light:`License: CC0` :bdg-light:`Subjects: 36` :bdg-light:`Recordings: 358` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,17 +21,30 @@ Dataset Information
    * - Dataset ID
      - ``DS006374``
    * - Title
-     - Unknown
+     - Expectation effects on repetition suppression in nociception
    * - Year
-     - Unknown
+     - 2025
    * - Authors
-     - Unknown
+     - Lisa-Marie Pohle, Moritz Nickel, Birgit Nierula, Markus Ploner, Ulrike Horn, Falk Eippert
    * - License
-     - Unknown
+     - CC0
    * - Citation / DOI
-     - Unknown
+     - `doi:10.18112/openneuro.ds006374.v1.0.0 <https://doi.org/10.18112/openneuro.ds006374.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds006374>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006374>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds006374>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006374>`__ | `Source URL <https://openneuro.org/datasets/ds006374>`__
+
+.. dropdown:: Copy-paste BibTeX
+   :class-container: sd-shadow-sm
+   :class-title: sd-bg-light
+
+   .. code-block:: bibtex
+
+      @dataset{ds006374,
+        title = {Expectation effects on repetition suppression in nociception},
+        author = {Lisa-Marie Pohle and Moritz Nickel and Birgit Nierula and Markus Ploner and Ulrike Horn and Falk Eippert},
+        doi = {10.18112/openneuro.ds006374.v1.0.0},
+        url = {https://doi.org/10.18112/openneuro.ds006374.v1.0.0},
+      }
 
 Highlights
 ----------
@@ -70,8 +83,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: Unknown
-      - DOI: Unknown
+      - License: CC0
+      - DOI: doi:10.18112/openneuro.ds006374.v1.0.0
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

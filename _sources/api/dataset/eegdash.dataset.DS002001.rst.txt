@@ -5,11 +5,11 @@
 eegdash.dataset.DS002001
 ========================
 
-OpenNeuro dataset ``ds002001``. Access recordings and metadata through EEGDash.
+Rivalry_Tagging (OpenNeuro ``ds002001``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: meg` :bdg-light:`Tasks: 2` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 12` :bdg-light:`Recordings: 1007` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: meg` :bdg-light:`Tasks: 2` :bdg-light:`License: PD` :bdg-light:`Subjects: 12` :bdg-light:`Recordings: 1007` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,17 +21,30 @@ Dataset Information
    * - Dataset ID
      - ``DS002001``
    * - Title
-     - Unknown
+     - Rivalry_Tagging
    * - Year
      - Unknown
    * - Authors
-     - Unknown
+     - Janine Mendola, Elizabeth Bock
    * - License
-     - Unknown
+     - PD
    * - Citation / DOI
-     - Unknown
+     - `10.18112/openneuro.ds002001.v1.0.0 <https://doi.org/10.18112/openneuro.ds002001.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds002001>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds002001>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds002001>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds002001>`__ | `Source URL <https://openneuro.org/datasets/ds002001/versions/1.0.0>`__
+
+.. dropdown:: Copy-paste BibTeX
+   :class-container: sd-shadow-sm
+   :class-title: sd-bg-light
+
+   .. code-block:: bibtex
+
+      @dataset{ds002001,
+        title = {Rivalry_Tagging},
+        author = {Janine Mendola and Elizabeth Bock},
+        doi = {10.18112/openneuro.ds002001.v1.0.0},
+        url = {https://doi.org/10.18112/openneuro.ds002001.v1.0.0},
+      }
 
 Highlights
 ----------
@@ -70,8 +83,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: Unknown
-      - DOI: Unknown
+      - License: PD
+      - DOI: 10.18112/openneuro.ds002001.v1.0.0
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

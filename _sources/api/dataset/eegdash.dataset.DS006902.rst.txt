@@ -5,11 +5,11 @@
 eegdash.dataset.DS006902
 ========================
 
-OpenNeuro dataset ``ds006902``. Access recordings and metadata through EEGDash.
+Profound neuronal differences during Exercise-Induced Hypoalgesia between athletes and non-athletes revealed by functional near-infrared spectroscopy (OpenNeuro ``ds006902``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: fnirs` :bdg-light:`Tasks: 1` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 43` :bdg-light:`Recordings: 260` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: fnirs` :bdg-light:`Tasks: 1` :bdg-light:`License: CC0` :bdg-light:`Subjects: 43` :bdg-light:`Recordings: 260` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,17 +21,30 @@ Dataset Information
    * - Dataset ID
      - ``DS006902``
    * - Title
-     - Unknown
+     - Profound neuronal differences during Exercise-Induced Hypoalgesia between athletes and non-athletes revealed by functional near-infrared spectroscopy
    * - Year
      - Unknown
    * - Authors
-     - Unknown
+     - Maria Geisler, Marco Herbsleb, Feliberto de la Cruz, Sabrina von Au, Andy Schumann, Ilona Croy, Karl-Jürgen Bär
    * - License
-     - Unknown
+     - CC0
    * - Citation / DOI
-     - Unknown
+     - `doi:10.18112/openneuro.ds006902.v1.1.1 <https://doi.org/10.18112/openneuro.ds006902.v1.1.1>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds006902>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006902>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds006902>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006902>`__ | `Source URL <https://openneuro.org/datasets/ds006902/versions/1.1.1>`__
+
+.. dropdown:: Copy-paste BibTeX
+   :class-container: sd-shadow-sm
+   :class-title: sd-bg-light
+
+   .. code-block:: bibtex
+
+      @dataset{ds006902,
+        title = {Profound neuronal differences during Exercise-Induced Hypoalgesia between athletes and non-athletes revealed by functional near-infrared spectroscopy},
+        author = {Maria Geisler, Marco Herbsleb, Feliberto de la Cruz, Sabrina von Au, Andy Schumann, Ilona Croy, Karl-Jürgen Bär},
+        doi = {10.18112/openneuro.ds006902.v1.1.1},
+        url = {https://doi.org/10.18112/openneuro.ds006902.v1.1.1},
+      }
 
 Highlights
 ----------
@@ -70,8 +83,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: Unknown
-      - DOI: Unknown
+      - License: CC0
+      - DOI: doi:10.18112/openneuro.ds006902.v1.1.1
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

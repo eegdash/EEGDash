@@ -5,11 +5,11 @@
 eegdash.dataset.DS004860
 ========================
 
-OpenNeuro dataset ``ds004860``. Access recordings and metadata through EEGDash.
+Investigating the cognitive conflict triggered by moral judgment of accidental harm : an event-related potentials study (OpenNeuro ``ds004860``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 31` :bdg-light:`Recordings: 31` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: CC0` :bdg-light:`Subjects: 31` :bdg-light:`Recordings: 31` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,17 +21,30 @@ Dataset Information
    * - Dataset ID
      - ``DS004860``
    * - Title
-     - Unknown
+     - Investigating the cognitive conflict triggered by moral judgment of accidental harm : an event-related potentials study
    * - Year
-     - Unknown
+     - 2023
    * - Authors
-     - Unknown
+     - Flora Schwartz, Radouane El-Yagoubi, Julie Cayron, Pierre-Vincent Paubel, Bastien Tremoliere
    * - License
-     - Unknown
+     - CC0
    * - Citation / DOI
-     - Unknown
+     - `doi:10.18112/openneuro.ds004860.v1.0.0 <https://doi.org/10.18112/openneuro.ds004860.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004860>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004860>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004860>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004860>`__ | `Source URL <https://openneuro.org/datasets/ds004860>`__
+
+.. dropdown:: Copy-paste BibTeX
+   :class-container: sd-shadow-sm
+   :class-title: sd-bg-light
+
+   .. code-block:: bibtex
+
+      @dataset{ds004860,
+        title = {Investigating the cognitive conflict triggered by moral judgment of accidental harm : an event-related potentials study},
+        author = {Flora Schwartz and Radouane El-Yagoubi and Julie Cayron and Pierre-Vincent Paubel and Bastien Tremoliere},
+        doi = {10.18112/openneuro.ds004860.v1.0.0},
+        url = {https://doi.org/10.18112/openneuro.ds004860.v1.0.0},
+      }
 
 Highlights
 ----------
@@ -70,8 +83,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: Unknown
-      - DOI: Unknown
+      - License: CC0
+      - DOI: doi:10.18112/openneuro.ds004860.v1.0.0
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

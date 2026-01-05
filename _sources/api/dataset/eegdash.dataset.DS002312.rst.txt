@@ -5,11 +5,11 @@
 eegdash.dataset.DS002312
 ========================
 
-OpenNeuro dataset ``ds002312``. Access recordings and metadata through EEGDash.
+OcularLDT (OpenNeuro ``ds002312``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: meg` :bdg-light:`Tasks: 1` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 19` :bdg-light:`Recordings: 23` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: meg` :bdg-light:`Tasks: 1` :bdg-light:`License: CC0` :bdg-light:`Subjects: 19` :bdg-light:`Recordings: 23` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,17 +21,30 @@ Dataset Information
    * - Dataset ID
      - ``DS002312``
    * - Title
-     - Unknown
+     - OcularLDT
    * - Year
-     - Unknown
+     - 2019
    * - Authors
-     - Unknown
+     - Teon L Brooks, Laura Gwilliams, Alexandre Gramfort, Alec Marantz
    * - License
-     - Unknown
+     - CC0
    * - Citation / DOI
-     - Unknown
+     - `10.18112/openneuro.ds002312.v1.0.0 <https://doi.org/10.18112/openneuro.ds002312.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds002312>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds002312>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds002312>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds002312>`__ | `Source URL <https://openneuro.org/datasets/ds002312>`__
+
+.. dropdown:: Copy-paste BibTeX
+   :class-container: sd-shadow-sm
+   :class-title: sd-bg-light
+
+   .. code-block:: bibtex
+
+      @dataset{ds002312,
+        title = {OcularLDT},
+        author = {Teon L Brooks and Laura Gwilliams and Alexandre Gramfort and Alec Marantz},
+        doi = {10.18112/openneuro.ds002312.v1.0.0},
+        url = {https://doi.org/10.18112/openneuro.ds002312.v1.0.0},
+      }
 
 Highlights
 ----------
@@ -70,8 +83,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: Unknown
-      - DOI: Unknown
+      - License: CC0
+      - DOI: 10.18112/openneuro.ds002312.v1.0.0
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

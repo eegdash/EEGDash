@@ -5,11 +5,11 @@
 eegdash.dataset.DS004977
 ========================
 
-OpenNeuro dataset ``ds004977``. Access recordings and metadata through EEGDash.
+CARLA: Adjusted common average referencing for cortico-cortical evoked potential data (OpenNeuro ``ds004977``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: ieeg` :bdg-light:`Tasks: 1` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 5` :bdg-light:`Recordings: 4480` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: ieeg` :bdg-light:`Tasks: 1` :bdg-light:`License: CC0` :bdg-light:`Subjects: 5` :bdg-light:`Recordings: 4480` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,17 +21,30 @@ Dataset Information
    * - Dataset ID
      - ``DS004977``
    * - Title
-     - Unknown
+     - CARLA: Adjusted common average referencing for cortico-cortical evoked potential data
    * - Year
      - Unknown
    * - Authors
-     - Unknown
+     - Harvey Huang, Gabriela Ojeda Valencia, Nicholas M Gregg, Gamaleldin M Osman, Morgan N Montoya, Gregory A Worrell, Kai J Miller, Dora Hermes
    * - License
-     - Unknown
+     - CC0
    * - Citation / DOI
-     - Unknown
+     - `doi:10.18112/openneuro.ds004977.v1.2.0 <https://doi.org/10.18112/openneuro.ds004977.v1.2.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004977>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004977>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004977>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004977>`__ | `Source URL <https://openneuro.org/datasets/ds004977/versions/1.2.0>`__
+
+.. dropdown:: Copy-paste BibTeX
+   :class-container: sd-shadow-sm
+   :class-title: sd-bg-light
+
+   .. code-block:: bibtex
+
+      @dataset{ds004977,
+        title = {CARLA: Adjusted common average referencing for cortico-cortical evoked potential data},
+        author = {Harvey Huang and Gabriela Ojeda Valencia and Nicholas M Gregg and Gamaleldin M Osman and Morgan N Montoya and Gregory A Worrell and Kai J Miller and Dora Hermes},
+        doi = {10.18112/openneuro.ds004977.v1.2.0},
+        url = {https://doi.org/10.18112/openneuro.ds004977.v1.2.0},
+      }
 
 Highlights
 ----------
@@ -70,8 +83,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: Unknown
-      - DOI: Unknown
+      - License: CC0
+      - DOI: doi:10.18112/openneuro.ds004977.v1.2.0
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

@@ -5,11 +5,11 @@
 eegdash.dataset.DS004844
 ========================
 
-OpenNeuro dataset ``ds004844``. Access recordings and metadata through EEGDash.
+T22 (OpenNeuro ``ds004844``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 17` :bdg-light:`Recordings: 68` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: CC0` :bdg-light:`Subjects: 17` :bdg-light:`Recordings: 68` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,17 +21,30 @@ Dataset Information
    * - Dataset ID
      - ``DS004844``
    * - Title
-     - Unknown
+     - T22
    * - Year
-     - Unknown
+     - 2023
    * - Authors
-     - Unknown
+     - Jason S. Metcalfe, Victor Paul, Benamin Haynes, Corey Atwater, Amar Marathe, Gregory Gremillion, Kim Drnec, William Nothwang, Justin R. Estepp, Margaret Bowers, Jamie Lukos, Tony Johnson, Mike Dunkel, Stephen Gordon, Jon Touryan, Kevin King
    * - License
-     - Unknown
+     - CC0
    * - Citation / DOI
-     - Unknown
+     - `doi:10.18112/openneuro.ds004844.v1.0.0 <https://doi.org/10.18112/openneuro.ds004844.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004844>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004844>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004844>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004844>`__ | `Source URL <https://openneuro.org/datasets/ds004844>`__
+
+.. dropdown:: Copy-paste BibTeX
+   :class-container: sd-shadow-sm
+   :class-title: sd-bg-light
+
+   .. code-block:: bibtex
+
+      @dataset{ds004844,
+        title = {T22},
+        author = {Jason S. Metcalfe and Victor Paul and Benamin Haynes and Corey Atwater and Amar Marathe and Gregory Gremillion and Kim Drnec and William Nothwang and Justin R. Estepp and Margaret Bowers and Jamie Lukos and Tony Johnson and Mike Dunkel and Stephen Gordon and Jon Touryan and Kevin King},
+        doi = {10.18112/openneuro.ds004844.v1.0.0},
+        url = {https://doi.org/10.18112/openneuro.ds004844.v1.0.0},
+      }
 
 Highlights
 ----------
@@ -70,8 +83,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: Unknown
-      - DOI: Unknown
+      - License: CC0
+      - DOI: doi:10.18112/openneuro.ds004844.v1.0.0
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

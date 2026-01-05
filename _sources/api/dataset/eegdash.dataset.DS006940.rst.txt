@@ -5,11 +5,11 @@
 eegdash.dataset.DS006940
 ========================
 
-OpenNeuro dataset ``ds006940``. Access recordings and metadata through EEGDash.
+Dataset: EEG-Controlled Exoskeleton for Walking and Standing - A Longitudinal Study of Healthy Individuals (OpenNeuro ``ds006940``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 15` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 7` :bdg-light:`Recordings: 935` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 15` :bdg-light:`License: CC0` :bdg-light:`Subjects: 7` :bdg-light:`Recordings: 935` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,17 +21,30 @@ Dataset Information
    * - Dataset ID
      - ``DS006940``
    * - Title
-     - Unknown
+     - Dataset: EEG-Controlled Exoskeleton for Walking and Standing - A Longitudinal Study of Healthy Individuals
    * - Year
-     - Unknown
+     - 2025
    * - Authors
-     - Unknown
+     - Shantanu Sarkar, Kevin Nathan, Jose L. Contreras-Vidal
    * - License
-     - Unknown
+     - CC0
    * - Citation / DOI
-     - Unknown
+     - `doi:10.18112/openneuro.ds006940.v1.0.0 <https://doi.org/10.18112/openneuro.ds006940.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds006940>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006940>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds006940>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006940>`__ | `Source URL <https://openneuro.org/datasets/ds006940>`__
+
+.. dropdown:: Copy-paste BibTeX
+   :class-container: sd-shadow-sm
+   :class-title: sd-bg-light
+
+   .. code-block:: bibtex
+
+      @dataset{ds006940,
+        title = {Dataset: EEG-Controlled Exoskeleton for Walking and Standing - A Longitudinal Study of Healthy Individuals},
+        author = {Shantanu Sarkar and Kevin Nathan and Jose L. Contreras-Vidal},
+        doi = {10.18112/openneuro.ds006940.v1.0.0},
+        url = {https://doi.org/10.18112/openneuro.ds006940.v1.0.0},
+      }
 
 Highlights
 ----------
@@ -70,8 +83,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: Unknown
-      - DOI: Unknown
+      - License: CC0
+      - DOI: doi:10.18112/openneuro.ds006940.v1.0.0
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

@@ -5,11 +5,11 @@
 eegdash.dataset.DS004389
 ========================
 
-OpenNeuro dataset ``ds004389``. Access recordings and metadata through EEGDash.
+Somatosensory evoked potentials in the human spinal cord to mixed and sensory nerve stimulation (OpenNeuro ``ds004389``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 4` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 26` :bdg-light:`Recordings: 260` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 4` :bdg-light:`License: CC0` :bdg-light:`Subjects: 26` :bdg-light:`Recordings: 260` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,17 +21,30 @@ Dataset Information
    * - Dataset ID
      - ``DS004389``
    * - Title
-     - Unknown
+     - Somatosensory evoked potentials in the human spinal cord to mixed and sensory nerve stimulation
    * - Year
-     - Unknown
+     - 2023
    * - Authors
-     - Unknown
+     - Birgit Nierula, Tilman Stephani, Merve Kaptan, André Moruaux, Burkhard Maess, Gabriel Curio, Vadim V. Nikulin, Falk Eippert
    * - License
-     - Unknown
+     - CC0
    * - Citation / DOI
-     - Unknown
+     - `doi:10.18112/openneuro.ds004389.v1.0.0 <https://doi.org/10.18112/openneuro.ds004389.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004389>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004389>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004389>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004389>`__ | `Source URL <https://openneuro.org/datasets/ds004389>`__
+
+.. dropdown:: Copy-paste BibTeX
+   :class-container: sd-shadow-sm
+   :class-title: sd-bg-light
+
+   .. code-block:: bibtex
+
+      @dataset{ds004389,
+        title = {Somatosensory evoked potentials in the human spinal cord to mixed and sensory nerve stimulation},
+        author = {Birgit Nierula and Tilman Stephani and Merve Kaptan and André Moruaux and Burkhard Maess and Gabriel Curio and Vadim V. Nikulin and Falk Eippert},
+        doi = {10.18112/openneuro.ds004389.v1.0.0},
+        url = {https://doi.org/10.18112/openneuro.ds004389.v1.0.0},
+      }
 
 Highlights
 ----------
@@ -70,8 +83,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: Unknown
-      - DOI: Unknown
+      - License: CC0
+      - DOI: doi:10.18112/openneuro.ds004389.v1.0.0
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

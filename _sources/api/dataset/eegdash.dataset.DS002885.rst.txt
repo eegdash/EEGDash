@@ -5,11 +5,11 @@
 eegdash.dataset.DS002885
 ========================
 
-OpenNeuro dataset ``ds002885``. Access recordings and metadata through EEGDash.
+DBS Phantom Recordings (OpenNeuro ``ds002885``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: meg` :bdg-light:`Tasks: 4` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 2` :bdg-light:`Recordings: 7` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: meg` :bdg-light:`Tasks: 4` :bdg-light:`License: CC0` :bdg-light:`Subjects: 2` :bdg-light:`Recordings: 7` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,17 +21,30 @@ Dataset Information
    * - Dataset ID
      - ``DS002885``
    * - Title
-     - Unknown
+     - DBS Phantom Recordings
    * - Year
-     - Unknown
+     - 2020
    * - Authors
-     - Unknown
+     - Ahmet Levent Kandemir, Vladimir Litvak, Esther Florin
    * - License
-     - Unknown
+     - CC0
    * - Citation / DOI
-     - Unknown
+     - `10.18112/openneuro.ds002885.v1.0.1 <https://doi.org/10.18112/openneuro.ds002885.v1.0.1>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds002885>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds002885>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds002885>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds002885>`__ | `Source URL <https://openneuro.org/datasets/ds002885>`__
+
+.. dropdown:: Copy-paste BibTeX
+   :class-container: sd-shadow-sm
+   :class-title: sd-bg-light
+
+   .. code-block:: bibtex
+
+      @dataset{ds002885,
+        title = {DBS Phantom Recordings},
+        author = {Ahmet Levent Kandemir and Vladimir Litvak and Esther Florin},
+        doi = {10.18112/openneuro.ds002885.v1.0.1},
+        url = {https://doi.org/10.18112/openneuro.ds002885.v1.0.1},
+      }
 
 Highlights
 ----------
@@ -70,8 +83,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: Unknown
-      - DOI: Unknown
+      - License: CC0
+      - DOI: 10.18112/openneuro.ds002885.v1.0.1
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

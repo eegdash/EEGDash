@@ -5,11 +5,11 @@
 eegdash.dataset.DS004278
 ========================
 
-OpenNeuro dataset ``ds004278``. Access recordings and metadata through EEGDash.
+Sustained Neural Representations of Personally Familiar People and Places During Cued Recall (OpenNeuro ``ds004278``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: meg` :bdg-light:`Tasks: 1` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 31` :bdg-light:`Recordings: 877` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: meg` :bdg-light:`Tasks: 1` :bdg-light:`License: CC0` :bdg-light:`Subjects: 31` :bdg-light:`Recordings: 877` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,17 +21,30 @@ Dataset Information
    * - Dataset ID
      - ``DS004278``
    * - Title
-     - Unknown
+     - Sustained Neural Representations of Personally Familiar People and Places During Cued Recall
    * - Year
      - Unknown
    * - Authors
-     - Unknown
+     - Alexis Kidder(*), Anna Corriveau(*), Lina Teichmann, Susan Wardle, Chris Baker, [(*) = equal contribution]
    * - License
-     - Unknown
+     - CC0
    * - Citation / DOI
-     - Unknown
+     - `doi:10.18112/openneuro.ds004278.v1.0.1 <https://doi.org/10.18112/openneuro.ds004278.v1.0.1>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004278>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004278>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004278>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004278>`__ | `Source URL <https://openneuro.org/datasets/ds004278/versions/1.0.1>`__
+
+.. dropdown:: Copy-paste BibTeX
+   :class-container: sd-shadow-sm
+   :class-title: sd-bg-light
+
+   .. code-block:: bibtex
+
+      @dataset{ds004278,
+        title = {Sustained Neural Representations of Personally Familiar People and Places During Cued Recall},
+        author = {Alexis Kidder(*) and Anna Corriveau(*) and Lina Teichmann and Susan Wardle and Chris Baker and [(*) = equal contribution]},
+        doi = {10.18112/openneuro.ds004278.v1.0.1},
+        url = {https://doi.org/10.18112/openneuro.ds004278.v1.0.1},
+      }
 
 Highlights
 ----------
@@ -70,8 +83,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: Unknown
-      - DOI: Unknown
+      - License: CC0
+      - DOI: doi:10.18112/openneuro.ds004278.v1.0.1
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

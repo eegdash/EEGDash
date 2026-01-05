@@ -5,11 +5,11 @@
 eegdash.dataset.DS006817
 ========================
 
-OpenNeuro dataset ``ds006817``. Access recordings and metadata through EEGDash.
+Visual Attribute-Specific Contextual Trajectory Paradigm 2.0 (OpenNeuro ``ds006817``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 34` :bdg-light:`Recordings: 34` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: CC0` :bdg-light:`Subjects: 34` :bdg-light:`Recordings: 34` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,17 +21,30 @@ Dataset Information
    * - Dataset ID
      - ``DS006817``
    * - Title
-     - Unknown
+     - Visual Attribute-Specific Contextual Trajectory Paradigm 2.0
    * - Year
-     - Unknown
+     - 2025
    * - Authors
-     - Unknown
+     - Benjamin Lowe (ben.lowe@mq.edu.au), Naohide Yamamoto (naohide.yamamoto@qut.edu.au), Jonathan Robinson (jonathan.robinson@monash.edu), Patrick Johnston (dr.pat.johnston@icloud.com)
    * - License
-     - Unknown
+     - CC0
    * - Citation / DOI
-     - Unknown
+     - `doi:10.18112/openneuro.ds006817.v1.0.0 <https://doi.org/10.18112/openneuro.ds006817.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds006817>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006817>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds006817>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006817>`__ | `Source URL <https://openneuro.org/datasets/ds006817>`__
+
+.. dropdown:: Copy-paste BibTeX
+   :class-container: sd-shadow-sm
+   :class-title: sd-bg-light
+
+   .. code-block:: bibtex
+
+      @dataset{ds006817,
+        title = {Visual Attribute-Specific Contextual Trajectory Paradigm 2.0},
+        author = {Benjamin Lowe (ben.lowe@mq.edu.au) and Naohide Yamamoto (naohide.yamamoto@qut.edu.au) and Jonathan Robinson (jonathan.robinson@monash.edu) and Patrick Johnston (dr.pat.johnston@icloud.com)},
+        doi = {10.18112/openneuro.ds006817.v1.0.0},
+        url = {https://doi.org/10.18112/openneuro.ds006817.v1.0.0},
+      }
 
 Highlights
 ----------
@@ -70,8 +83,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: Unknown
-      - DOI: Unknown
+      - License: CC0
+      - DOI: doi:10.18112/openneuro.ds006817.v1.0.0
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

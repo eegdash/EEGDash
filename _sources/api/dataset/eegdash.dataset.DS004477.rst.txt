@@ -5,11 +5,11 @@
 eegdash.dataset.DS004477
 ========================
 
-OpenNeuro dataset ``ds004477``. Access recordings and metadata through EEGDash.
+PES - Pandemic Emergency Scenario (OpenNeuro ``ds004477``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 9` :bdg-light:`Recordings: 9` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: CC0` :bdg-light:`Subjects: 9` :bdg-light:`Recordings: 9` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,17 +21,30 @@ Dataset Information
    * - Dataset ID
      - ``DS004477``
    * - Title
-     - Unknown
+     - PES - Pandemic Emergency Scenario
    * - Year
-     - Unknown
+     - 2023
    * - Authors
-     - Unknown
+     - Tasos Papastylianou, Rodrigo Ramele, Luca Citi, Caterina Cinel, Riccardo Poli
    * - License
-     - Unknown
+     - CC0
    * - Citation / DOI
-     - Unknown
+     - `doi:10.18112/openneuro.ds004477.v1.0.2 <https://doi.org/10.18112/openneuro.ds004477.v1.0.2>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004477>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004477>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004477>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004477>`__ | `Source URL <https://openneuro.org/datasets/ds004477>`__
+
+.. dropdown:: Copy-paste BibTeX
+   :class-container: sd-shadow-sm
+   :class-title: sd-bg-light
+
+   .. code-block:: bibtex
+
+      @dataset{ds004477,
+        title = {PES - Pandemic Emergency Scenario},
+        author = {Tasos Papastylianou and Rodrigo Ramele and Luca Citi and Caterina Cinel and Riccardo Poli},
+        doi = {10.18112/openneuro.ds004477.v1.0.2},
+        url = {https://doi.org/10.18112/openneuro.ds004477.v1.0.2},
+      }
 
 Highlights
 ----------
@@ -70,8 +83,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: Unknown
-      - DOI: Unknown
+      - License: CC0
+      - DOI: doi:10.18112/openneuro.ds004477.v1.0.2
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

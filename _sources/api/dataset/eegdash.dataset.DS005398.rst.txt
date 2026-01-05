@@ -5,11 +5,11 @@
 eegdash.dataset.DS005398
 ========================
 
-OpenNeuro dataset ``ds005398``. Access recordings and metadata through EEGDash.
+Open iEEG Dataset (OpenNeuro ``ds005398``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: ieeg` :bdg-light:`Tasks: 1` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 185` :bdg-light:`Recordings: 185` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: ieeg` :bdg-light:`Tasks: 1` :bdg-light:`License: CC0` :bdg-light:`Subjects: 185` :bdg-light:`Recordings: 185` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,17 +21,30 @@ Dataset Information
    * - Dataset ID
      - ``DS005398``
    * - Title
-     - Unknown
+     - Open iEEG Dataset
    * - Year
-     - Unknown
+     - 2024
    * - Authors
-     - Unknown
+     - Yipeng Zhang, Atsuro Daida, Lawrence Liu, Naoto Kuroda, Yuanyi Ding, Shingo Oana, Tonmoy Monsoor, Chenda Duan, Shaun A. Hussain, Joe X Qiao, Noriko Salamon, Aria Fallah, Myung Shin Sim, Raman Sankar, Richard J. Staba, Jerome Engel Jr., Eishi Asano, Vwani Roychowdhury, Hiroki Nariai
    * - License
-     - Unknown
+     - CC0
    * - Citation / DOI
-     - Unknown
+     - `doi:10.18112/openneuro.ds005398.v1.0.1 <https://doi.org/10.18112/openneuro.ds005398.v1.0.1>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds005398>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005398>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds005398>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005398>`__ | `Source URL <https://openneuro.org/datasets/ds005398>`__
+
+.. dropdown:: Copy-paste BibTeX
+   :class-container: sd-shadow-sm
+   :class-title: sd-bg-light
+
+   .. code-block:: bibtex
+
+      @dataset{ds005398,
+        title = {Open iEEG Dataset},
+        author = {Yipeng Zhang and Atsuro Daida and Lawrence Liu and Naoto Kuroda and Yuanyi Ding and Shingo Oana and Tonmoy Monsoor and Chenda Duan and Shaun A. Hussain and Joe X Qiao and Noriko Salamon and Aria Fallah and Myung Shin Sim and Raman Sankar and Richard J. Staba and Jerome Engel Jr. and Eishi Asano and Vwani Roychowdhury and Hiroki Nariai},
+        doi = {10.18112/openneuro.ds005398.v1.0.1},
+        url = {https://doi.org/10.18112/openneuro.ds005398.v1.0.1},
+      }
 
 Highlights
 ----------
@@ -70,8 +83,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: Unknown
-      - DOI: Unknown
+      - License: CC0
+      - DOI: doi:10.18112/openneuro.ds005398.v1.0.1
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

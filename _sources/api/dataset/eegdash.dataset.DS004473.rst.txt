@@ -5,11 +5,11 @@
 eegdash.dataset.DS004473
 ========================
 
-OpenNeuro dataset ``ds004473``. Access recordings and metadata through EEGDash.
+sEEG Forced Two-Choice Task (OpenNeuro ``ds004473``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: ieeg` :bdg-light:`Tasks: 1` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 8` :bdg-light:`Recordings: 8` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: ieeg` :bdg-light:`Tasks: 1` :bdg-light:`License: CC0` :bdg-light:`Subjects: 8` :bdg-light:`Recordings: 8` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,17 +21,30 @@ Dataset Information
    * - Dataset ID
      - ``DS004473``
    * - Title
-     - Unknown
+     - sEEG Forced Two-Choice Task
    * - Year
-     - Unknown
+     - 2023
    * - Authors
-     - Unknown
+     - Alexander P. Rockhill, Alessandra Mantovani, Brittany Stedelin, Admed M. Raslan, Nicole C. Swann
    * - License
-     - Unknown
+     - CC0
    * - Citation / DOI
-     - Unknown
+     - `doi:10.18112/openneuro.ds004473.v1.0.1 <https://doi.org/10.18112/openneuro.ds004473.v1.0.1>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004473>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004473>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004473>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004473>`__ | `Source URL <https://openneuro.org/datasets/ds004473>`__
+
+.. dropdown:: Copy-paste BibTeX
+   :class-container: sd-shadow-sm
+   :class-title: sd-bg-light
+
+   .. code-block:: bibtex
+
+      @dataset{ds004473,
+        title = {sEEG Forced Two-Choice Task},
+        author = {Alexander P. Rockhill and Alessandra Mantovani and Brittany Stedelin and Admed M. Raslan and Nicole C. Swann},
+        doi = {10.18112/openneuro.ds004473.v1.0.1},
+        url = {https://doi.org/10.18112/openneuro.ds004473.v1.0.1},
+      }
 
 Highlights
 ----------
@@ -70,8 +83,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: Unknown
-      - DOI: Unknown
+      - License: CC0
+      - DOI: doi:10.18112/openneuro.ds004473.v1.0.1
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

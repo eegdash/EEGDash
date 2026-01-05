@@ -5,11 +5,11 @@
 eegdash.dataset.DS004408
 ========================
 
-OpenNeuro dataset ``ds004408``. Access recordings and metadata through EEGDash.
+EEG responses to continuous naturalistic speech (OpenNeuro ``ds004408``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 19` :bdg-light:`Recordings: 380` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: CC0` :bdg-light:`Subjects: 19` :bdg-light:`Recordings: 380` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,17 +21,30 @@ Dataset Information
    * - Dataset ID
      - ``DS004408``
    * - Title
-     - Unknown
+     - EEG responses to continuous naturalistic speech
    * - Year
-     - Unknown
+     - 2023
    * - Authors
-     - Unknown
+     - Giovanni M Di Liberto, Michael P Broderick, Ole Bialas, Edmund C Lalor
    * - License
-     - Unknown
+     - CC0
    * - Citation / DOI
-     - Unknown
+     - `doi:10.18112/openneuro.ds004408.v1.0.8 <https://doi.org/10.18112/openneuro.ds004408.v1.0.8>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004408>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004408>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004408>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004408>`__ | `Source URL <https://openneuro.org/datasets/ds004408>`__
+
+.. dropdown:: Copy-paste BibTeX
+   :class-container: sd-shadow-sm
+   :class-title: sd-bg-light
+
+   .. code-block:: bibtex
+
+      @dataset{ds004408,
+        title = {EEG responses to continuous naturalistic speech},
+        author = {Giovanni M Di Liberto and Michael P Broderick and Ole Bialas and Edmund C Lalor},
+        doi = {10.18112/openneuro.ds004408.v1.0.8},
+        url = {https://doi.org/10.18112/openneuro.ds004408.v1.0.8},
+      }
 
 Highlights
 ----------
@@ -70,8 +83,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: Unknown
-      - DOI: Unknown
+      - License: CC0
+      - DOI: doi:10.18112/openneuro.ds004408.v1.0.8
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

@@ -5,11 +5,11 @@
 eegdash.dataset.DS005385
 ========================
 
-OpenNeuro dataset ``ds005385``. Access recordings and metadata through EEGDash.
+Resting-state EEG data before and after cognitive activity across the adult lifespan and a 5-year follow-up (OpenNeuro ``ds005385``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 2` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 608` :bdg-light:`Recordings: 3264` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 2` :bdg-light:`License: CC0` :bdg-light:`Subjects: 608` :bdg-light:`Recordings: 3264` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,17 +21,30 @@ Dataset Information
    * - Dataset ID
      - ``DS005385``
    * - Title
-     - Unknown
+     - Resting-state EEG data before and after cognitive activity across the adult lifespan and a 5-year follow-up
    * - Year
-     - Unknown
+     - 2024
    * - Authors
-     - Unknown
+     - Edmund Wascher, Daniel Schneider, Patrick D. Gajewski, Stephan Getzmann
    * - License
-     - Unknown
+     - CC0
    * - Citation / DOI
-     - Unknown
+     - `doi:10.18112/openneuro.ds005385.v1.0.3 <https://doi.org/10.18112/openneuro.ds005385.v1.0.3>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds005385>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005385>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds005385>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005385>`__ | `Source URL <https://openneuro.org/datasets/ds005385>`__
+
+.. dropdown:: Copy-paste BibTeX
+   :class-container: sd-shadow-sm
+   :class-title: sd-bg-light
+
+   .. code-block:: bibtex
+
+      @dataset{ds005385,
+        title = {Resting-state EEG data before and after cognitive activity across the adult lifespan and a 5-year follow-up},
+        author = {Edmund Wascher and Daniel Schneider and Patrick D. Gajewski and Stephan Getzmann},
+        doi = {10.18112/openneuro.ds005385.v1.0.3},
+        url = {https://doi.org/10.18112/openneuro.ds005385.v1.0.3},
+      }
 
 Highlights
 ----------
@@ -70,8 +83,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: Unknown
-      - DOI: Unknown
+      - License: CC0
+      - DOI: doi:10.18112/openneuro.ds005385.v1.0.3
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

@@ -5,11 +5,11 @@
 eegdash.dataset.DS004840
 ========================
 
-OpenNeuro dataset ``ds004840``. Access recordings and metadata through EEGDash.
+Dataset of electrophysiological signals (EEG, ECG, EMG) during Music therapy with adult burn patients in the Intensive Care Unit. (OpenNeuro ``ds004840``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 3` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 9` :bdg-light:`Recordings: 51` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 3` :bdg-light:`License: CC0` :bdg-light:`Subjects: 9` :bdg-light:`Recordings: 51` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,17 +21,30 @@ Dataset Information
    * - Dataset ID
      - ``DS004840``
    * - Title
-     - Unknown
+     - Dataset of electrophysiological signals (EEG, ECG, EMG) during Music therapy with adult burn patients in the Intensive Care Unit.
    * - Year
-     - Unknown
+     - 2023
    * - Authors
-     - Unknown
+     - Jose Cordoba-Silva, Rafael Maya, Mario Valderrama, Luis Felipe Giraldo, William Betancourt-Zapata, Andrés Salgado-Vascob, Juliana Marín-Sánchez, Viviana Gómez-Ortega, Mark Ettenberger
    * - License
-     - Unknown
+     - CC0
    * - Citation / DOI
-     - Unknown
+     - `doi:10.18112/openneuro.ds004840.v1.0.1 <https://doi.org/10.18112/openneuro.ds004840.v1.0.1>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004840>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004840>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004840>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004840>`__ | `Source URL <https://openneuro.org/datasets/ds004840>`__
+
+.. dropdown:: Copy-paste BibTeX
+   :class-container: sd-shadow-sm
+   :class-title: sd-bg-light
+
+   .. code-block:: bibtex
+
+      @dataset{ds004840,
+        title = {Dataset of electrophysiological signals (EEG, ECG, EMG) during Music therapy with adult burn patients in the Intensive Care Unit.},
+        author = {Jose Cordoba-Silva and Rafael Maya and Mario Valderrama and Luis Felipe Giraldo and William Betancourt-Zapata and Andrés Salgado-Vascob and Juliana Marín-Sánchez and Viviana Gómez-Ortega and Mark Ettenberger},
+        doi = {10.18112/openneuro.ds004840.v1.0.1},
+        url = {https://doi.org/10.18112/openneuro.ds004840.v1.0.1},
+      }
 
 Highlights
 ----------
@@ -70,8 +83,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: Unknown
-      - DOI: Unknown
+      - License: CC0
+      - DOI: doi:10.18112/openneuro.ds004840.v1.0.1
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

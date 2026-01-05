@@ -5,11 +5,11 @@
 eegdash.dataset.DS002218
 ========================
 
-OpenNeuro dataset ``ds002218``. Access recordings and metadata through EEGDash.
+Auditory and Visual Rhythm Omission EEG (OpenNeuro ``ds002218``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 18` :bdg-light:`Recordings: 18` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: CC0` :bdg-light:`Subjects: 18` :bdg-light:`Recordings: 18` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,17 +21,30 @@ Dataset Information
    * - Dataset ID
      - ``DS002218``
    * - Title
-     - Unknown
+     - Auditory and Visual Rhythm Omission EEG
    * - Year
-     - Unknown
+     - 2019
    * - Authors
-     - Unknown
+     - Daniel C Comstock, Ramesh Balasubramaniam
    * - License
-     - Unknown
+     - CC0
    * - Citation / DOI
-     - Unknown
+     - `mockDOI <https://doi.org/mockDOI>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds002218>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds002218>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds002218>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds002218>`__ | `Source URL <https://openneuro.org/datasets/ds002218>`__
+
+.. dropdown:: Copy-paste BibTeX
+   :class-container: sd-shadow-sm
+   :class-title: sd-bg-light
+
+   .. code-block:: bibtex
+
+      @dataset{ds002218,
+        title = {Auditory and Visual Rhythm Omission EEG},
+        author = {Daniel C Comstock and Ramesh Balasubramaniam},
+        doi = {mockDOI},
+        url = {https://doi.org/mockDOI},
+      }
 
 Highlights
 ----------
@@ -70,8 +83,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: Unknown
-      - DOI: Unknown
+      - License: CC0
+      - DOI: mockDOI
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

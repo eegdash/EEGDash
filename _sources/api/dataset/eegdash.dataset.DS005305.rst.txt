@@ -5,11 +5,11 @@
 eegdash.dataset.DS005305
 ========================
 
-OpenNeuro dataset ``ds005305``. Access recordings and metadata through EEGDash.
+EEG Resting-state Microstates Correlates of Executive Functions (OpenNeuro ``ds005305``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 165` :bdg-light:`Recordings: 165` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: CC0` :bdg-light:`Subjects: 165` :bdg-light:`Recordings: 165` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,17 +21,30 @@ Dataset Information
    * - Dataset ID
      - ``DS005305``
    * - Title
-     - Unknown
+     - EEG Resting-state Microstates Correlates of Executive Functions
    * - Year
-     - Unknown
+     - 2024
    * - Authors
-     - Unknown
+     - Chenot Quentin, Hamery Caroline, Truninger Moritz, De Boissezon Xavier, Langer Nicolas, Scannella Sébastien
    * - License
-     - Unknown
+     - CC0
    * - Citation / DOI
-     - Unknown
+     - `doi:10.18112/openneuro.ds005305.v1.0.1 <https://doi.org/10.18112/openneuro.ds005305.v1.0.1>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds005305>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005305>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds005305>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005305>`__ | `Source URL <https://openneuro.org/datasets/ds005305>`__
+
+.. dropdown:: Copy-paste BibTeX
+   :class-container: sd-shadow-sm
+   :class-title: sd-bg-light
+
+   .. code-block:: bibtex
+
+      @dataset{ds005305,
+        title = {EEG Resting-state Microstates Correlates of Executive Functions},
+        author = {Chenot Quentin and Hamery Caroline and Truninger Moritz and De Boissezon Xavier and Langer Nicolas and Scannella Sébastien},
+        doi = {10.18112/openneuro.ds005305.v1.0.1},
+        url = {https://doi.org/10.18112/openneuro.ds005305.v1.0.1},
+      }
 
 Highlights
 ----------
@@ -70,8 +83,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: Unknown
-      - DOI: Unknown
+      - License: CC0
+      - DOI: doi:10.18112/openneuro.ds005305.v1.0.1
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

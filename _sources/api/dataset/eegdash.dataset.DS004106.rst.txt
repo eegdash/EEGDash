@@ -5,11 +5,11 @@
 eegdash.dataset.DS004106
 ========================
 
-OpenNeuro dataset ``ds004106``. Access recordings and metadata through EEGDash.
+BCIT Advanced Guard Duty (OpenNeuro ``ds004106``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 27` :bdg-light:`Recordings: 29` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: CC0` :bdg-light:`Subjects: 27` :bdg-light:`Recordings: 29` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,17 +21,30 @@ Dataset Information
    * - Dataset ID
      - ``DS004106``
    * - Title
-     - Unknown
+     - BCIT Advanced Guard Duty
    * - Year
-     - Unknown
+     - 2022
    * - Authors
-     - Unknown
+     - Jonathan Touryan (data and curation), Brent Lance (data), Scott Kerick (data), Anthony Ries (data), Kaleb McDowell(data), Tony Johnson (curation), Kay Robbins (curation)
    * - License
-     - Unknown
+     - CC0
    * - Citation / DOI
-     - Unknown
+     - `doi:10.18112/openneuro.ds004106.v1.0.0 <https://doi.org/10.18112/openneuro.ds004106.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004106>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004106>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004106>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004106>`__ | `Source URL <https://openneuro.org/datasets/ds004106>`__
+
+.. dropdown:: Copy-paste BibTeX
+   :class-container: sd-shadow-sm
+   :class-title: sd-bg-light
+
+   .. code-block:: bibtex
+
+      @dataset{ds004106,
+        title = {BCIT Advanced Guard Duty},
+        author = {Jonathan Touryan (data and curation) and Brent Lance (data) and Scott Kerick (data) and Anthony Ries (data) and Kaleb McDowell(data) and Tony Johnson (curation) and Kay Robbins (curation)},
+        doi = {10.18112/openneuro.ds004106.v1.0.0},
+        url = {https://doi.org/10.18112/openneuro.ds004106.v1.0.0},
+      }
 
 Highlights
 ----------
@@ -70,8 +83,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: Unknown
-      - DOI: Unknown
+      - License: CC0
+      - DOI: doi:10.18112/openneuro.ds004106.v1.0.0
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

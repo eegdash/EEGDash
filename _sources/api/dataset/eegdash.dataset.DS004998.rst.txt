@@ -5,11 +5,11 @@
 eegdash.dataset.DS004998
 ========================
 
-OpenNeuro dataset ``ds004998``. Access recordings and metadata through EEGDash.
+Exploring the electrophysiology of Parkinson's disease - magnetoencephalography combined with deep brain recordings from the subthalamic nucleus. (OpenNeuro ``ds004998``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: meg` :bdg-light:`Tasks: 6` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 20` :bdg-light:`Recordings: 145` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: meg` :bdg-light:`Tasks: 6` :bdg-light:`License: CC0` :bdg-light:`Subjects: 20` :bdg-light:`Recordings: 145` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,17 +21,30 @@ Dataset Information
    * - Dataset ID
      - ``DS004998``
    * - Title
-     - Unknown
+     - Exploring the electrophysiology of Parkinson's disease - magnetoencephalography combined with deep brain recordings from the subthalamic nucleus.
    * - Year
-     - Unknown
+     - 2024
    * - Authors
-     - Unknown
+     - Fayed Rassoulou, Alexandra Steina, Christian J. Hartmann, Jan Vesper, Markus Butz, Alfons Schnitzler, Jan Hirschmann
    * - License
-     - Unknown
+     - CC0
    * - Citation / DOI
-     - Unknown
+     - `doi:10.18112/openneuro.ds004998.v1.2.2 <https://doi.org/10.18112/openneuro.ds004998.v1.2.2>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004998>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004998>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004998>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004998>`__ | `Source URL <https://openneuro.org/datasets/ds004998>`__
+
+.. dropdown:: Copy-paste BibTeX
+   :class-container: sd-shadow-sm
+   :class-title: sd-bg-light
+
+   .. code-block:: bibtex
+
+      @dataset{ds004998,
+        title = {Exploring the electrophysiology of Parkinson's disease - magnetoencephalography combined with deep brain recordings from the subthalamic nucleus.},
+        author = {Fayed Rassoulou and Alexandra Steina and Christian J. Hartmann and Jan Vesper and Markus Butz and Alfons Schnitzler and Jan Hirschmann},
+        doi = {10.18112/openneuro.ds004998.v1.2.2},
+        url = {https://doi.org/10.18112/openneuro.ds004998.v1.2.2},
+      }
 
 Highlights
 ----------
@@ -70,8 +83,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: Unknown
-      - DOI: Unknown
+      - License: CC0
+      - DOI: doi:10.18112/openneuro.ds004998.v1.2.2
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

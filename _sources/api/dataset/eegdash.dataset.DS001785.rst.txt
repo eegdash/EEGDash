@@ -5,11 +5,11 @@
 eegdash.dataset.DS001785
 ========================
 
-OpenNeuro dataset ``ds001785``. Access recordings and metadata through EEGDash.
+Evidence accumulation relates to perceptual consciousness and monitoring (OpenNeuro ``ds001785``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 3` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 18` :bdg-light:`Recordings: 54` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 3` :bdg-light:`License: CC0` :bdg-light:`Subjects: 18` :bdg-light:`Recordings: 54` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,17 +21,30 @@ Dataset Information
    * - Dataset ID
      - ``DS001785``
    * - Title
-     - Unknown
+     - Evidence accumulation relates to perceptual consciousness and monitoring
    * - Year
-     - Unknown
+     - 2019
    * - Authors
-     - Unknown
+     - Michael Pereira, Pierre Mégevand, Mi Xue Tan, Wenwen Chang, Shuo Wang, Ali Rezai, Margitta Seeck, Marco Corniola, Shahan Momjian, Fosco Bernasconi, Olaf Blanke, Nathan Faivre
    * - License
-     - Unknown
+     - CC0
    * - Citation / DOI
-     - Unknown
+     - `10.18112/openneuro.ds001785.v1.1.1 <https://doi.org/10.18112/openneuro.ds001785.v1.1.1>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds001785>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds001785>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds001785>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds001785>`__ | `Source URL <https://openneuro.org/datasets/ds001785>`__
+
+.. dropdown:: Copy-paste BibTeX
+   :class-container: sd-shadow-sm
+   :class-title: sd-bg-light
+
+   .. code-block:: bibtex
+
+      @dataset{ds001785,
+        title = {Evidence accumulation relates to perceptual consciousness and monitoring},
+        author = {Michael Pereira and Pierre Mégevand and Mi Xue Tan and Wenwen Chang and Shuo Wang and Ali Rezai and Margitta Seeck and Marco Corniola and Shahan Momjian and Fosco Bernasconi and Olaf Blanke and Nathan Faivre},
+        doi = {10.18112/openneuro.ds001785.v1.1.1},
+        url = {https://doi.org/10.18112/openneuro.ds001785.v1.1.1},
+      }
 
 Highlights
 ----------
@@ -70,8 +83,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: Unknown
-      - DOI: Unknown
+      - License: CC0
+      - DOI: 10.18112/openneuro.ds001785.v1.1.1
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

@@ -5,11 +5,11 @@
 eegdash.dataset.DS005185
 ========================
 
-OpenNeuro dataset ``ds005185``. Access recordings and metadata through EEGDash.
+Ear-EEG Sleep Monitoring 2019 (EESM19) (OpenNeuro ``ds005185``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 3` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 20` :bdg-light:`Recordings: 356` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 3` :bdg-light:`License: CC0` :bdg-light:`Subjects: 20` :bdg-light:`Recordings: 356` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,17 +21,30 @@ Dataset Information
    * - Dataset ID
      - ``DS005185``
    * - Title
-     - Unknown
+     - Ear-EEG Sleep Monitoring 2019 (EESM19)
    * - Year
-     - Unknown
+     - 2024
    * - Authors
-     - Unknown
+     - Kaare B. Mikkelsen, Preben Kidmose, Yousef Rezaei Tabar
    * - License
-     - Unknown
+     - CC0
    * - Citation / DOI
-     - Unknown
+     - `doi:10.18112/openneuro.ds005185.v1.0.2 <https://doi.org/10.18112/openneuro.ds005185.v1.0.2>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds005185>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005185>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds005185>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005185>`__ | `Source URL <https://openneuro.org/datasets/ds005185>`__
+
+.. dropdown:: Copy-paste BibTeX
+   :class-container: sd-shadow-sm
+   :class-title: sd-bg-light
+
+   .. code-block:: bibtex
+
+      @dataset{ds005185,
+        title = {Ear-EEG Sleep Monitoring 2019 (EESM19)},
+        author = {Kaare B. Mikkelsen and Preben Kidmose and Yousef Rezaei Tabar},
+        doi = {10.18112/openneuro.ds005185.v1.0.2},
+        url = {https://doi.org/10.18112/openneuro.ds005185.v1.0.2},
+      }
 
 Highlights
 ----------
@@ -70,8 +83,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: Unknown
-      - DOI: Unknown
+      - License: CC0
+      - DOI: doi:10.18112/openneuro.ds005185.v1.0.2
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

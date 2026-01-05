@@ -5,11 +5,11 @@
 eegdash.dataset.DS004973
 ========================
 
-OpenNeuro dataset ``ds004973``. Access recordings and metadata through EEGDash.
+An fNIRS dataset for driving risk cognition of passengers in highly automated driving scenarios (OpenNeuro ``ds004973``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: fnirs` :bdg-light:`Tasks: 12` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 21` :bdg-light:`Recordings: 1178` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: fnirs` :bdg-light:`Tasks: 12` :bdg-light:`License: CC0` :bdg-light:`Subjects: 21` :bdg-light:`Recordings: 1178` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,17 +21,30 @@ Dataset Information
    * - Dataset ID
      - ``DS004973``
    * - Title
-     - Unknown
+     - An fNIRS dataset for driving risk cognition of passengers in highly automated driving scenarios
    * - Year
      - Unknown
    * - Authors
-     - Unknown
+     - Xiaofei Zhang, Qiaoya Wang, Jun Li, Xiaorong Gao, Bowen Li, Bingbing Nie, Jianqiang Wang, Ziyuan Zhou, Yingkai Yang, Hong Wang
    * - License
-     - Unknown
+     - CC0
    * - Citation / DOI
-     - Unknown
+     - `doi:10.18112/openneuro.ds004973.v1.0.1 <https://doi.org/10.18112/openneuro.ds004973.v1.0.1>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004973>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004973>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004973>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004973>`__ | `Source URL <https://openneuro.org/datasets/ds004973/versions/1.0.1>`__
+
+.. dropdown:: Copy-paste BibTeX
+   :class-container: sd-shadow-sm
+   :class-title: sd-bg-light
+
+   .. code-block:: bibtex
+
+      @dataset{ds004973,
+        title = {An fNIRS dataset for driving risk cognition of passengers in highly automated driving scenarios},
+        author = {Xiaofei Zhang and Qiaoya Wang and Jun Li and Xiaorong Gao and Bowen Li and Bingbing Nie and Jianqiang Wang and Ziyuan Zhou and Yingkai Yang and Hong Wang},
+        doi = {10.18112/openneuro.ds004973.v1.0.1},
+        url = {https://doi.org/10.18112/openneuro.ds004973.v1.0.1},
+      }
 
 Highlights
 ----------
@@ -70,8 +83,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: Unknown
-      - DOI: Unknown
+      - License: CC0
+      - DOI: doi:10.18112/openneuro.ds004973.v1.0.1
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

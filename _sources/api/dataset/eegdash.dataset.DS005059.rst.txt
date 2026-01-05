@@ -5,11 +5,11 @@
 eegdash.dataset.DS005059
 ========================
 
-OpenNeuro dataset ``ds005059``. Access recordings and metadata through EEGDash.
+Paired Associates Learning: Memory for Word Pairs in Cued Recall (OpenNeuro ``ds005059``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: ieeg` :bdg-light:`Tasks: 1` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 69` :bdg-light:`Recordings: 282` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: ieeg` :bdg-light:`Tasks: 1` :bdg-light:`License: CC0` :bdg-light:`Subjects: 69` :bdg-light:`Recordings: 282` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,17 +21,30 @@ Dataset Information
    * - Dataset ID
      - ``DS005059``
    * - Title
-     - Unknown
+     - Paired Associates Learning: Memory for Word Pairs in Cued Recall
    * - Year
-     - Unknown
+     - 2024
    * - Authors
-     - Unknown
+     - Haydn G. Herrema, Michael J. Kahana
    * - License
-     - Unknown
+     - CC0
    * - Citation / DOI
-     - Unknown
+     - `doi:10.18112/openneuro.ds005059.v1.0.6 <https://doi.org/10.18112/openneuro.ds005059.v1.0.6>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds005059>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005059>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds005059>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005059>`__ | `Source URL <https://openneuro.org/datasets/ds005059>`__
+
+.. dropdown:: Copy-paste BibTeX
+   :class-container: sd-shadow-sm
+   :class-title: sd-bg-light
+
+   .. code-block:: bibtex
+
+      @dataset{ds005059,
+        title = {Paired Associates Learning: Memory for Word Pairs in Cued Recall},
+        author = {Haydn G. Herrema and Michael J. Kahana},
+        doi = {10.18112/openneuro.ds005059.v1.0.6},
+        url = {https://doi.org/10.18112/openneuro.ds005059.v1.0.6},
+      }
 
 Highlights
 ----------
@@ -70,8 +83,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: Unknown
-      - DOI: Unknown
+      - License: CC0
+      - DOI: doi:10.18112/openneuro.ds005059.v1.0.6
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

@@ -5,11 +5,11 @@
 eegdash.dataset.DS005383
 ========================
 
-OpenNeuro dataset ``ds005383``. Access recordings and metadata through EEGDash.
+TMNRED, A Chinese Language EEG Dataset for Fuzzy Semantic Target Identification in Natural Reading Environments (OpenNeuro ``ds005383``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 30` :bdg-light:`Recordings: 240` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: CC0` :bdg-light:`Subjects: 30` :bdg-light:`Recordings: 240` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,17 +21,30 @@ Dataset Information
    * - Dataset ID
      - ``DS005383``
    * - Title
-     - Unknown
+     - TMNRED, A Chinese Language EEG Dataset for Fuzzy Semantic Target Identification in Natural Reading Environments
    * - Year
-     - Unknown
+     - 2024
    * - Authors
-     - Unknown
+     - Yanru Bai, Qi Tang, Ran Zhao, Hongxing Liu, Mingkun Guo, Shuming Zhang, Minghan Guo, Junjie Wang, Changjian Wang, Mu Xing, Guangjian Ni, Dong Ming
    * - License
-     - Unknown
+     - CC0
    * - Citation / DOI
-     - Unknown
+     - `doi:10.18112/openneuro.ds005383.v1.0.0 <https://doi.org/10.18112/openneuro.ds005383.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds005383>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005383>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds005383>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005383>`__ | `Source URL <https://openneuro.org/datasets/ds005383>`__
+
+.. dropdown:: Copy-paste BibTeX
+   :class-container: sd-shadow-sm
+   :class-title: sd-bg-light
+
+   .. code-block:: bibtex
+
+      @dataset{ds005383,
+        title = {TMNRED, A Chinese Language EEG Dataset for Fuzzy Semantic Target Identification in Natural Reading Environments},
+        author = {Yanru Bai and Qi Tang and Ran Zhao and Hongxing Liu and Mingkun Guo and Shuming Zhang and Minghan Guo and Junjie Wang and Changjian Wang and Mu Xing and Guangjian Ni and Dong Ming},
+        doi = {10.18112/openneuro.ds005383.v1.0.0},
+        url = {https://doi.org/10.18112/openneuro.ds005383.v1.0.0},
+      }
 
 Highlights
 ----------
@@ -70,8 +83,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: Unknown
-      - DOI: Unknown
+      - License: CC0
+      - DOI: doi:10.18112/openneuro.ds005383.v1.0.0
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

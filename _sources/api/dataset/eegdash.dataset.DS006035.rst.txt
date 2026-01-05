@@ -5,11 +5,11 @@
 eegdash.dataset.DS006035
 ========================
 
-OpenNeuro dataset ``ds006035``. Access recordings and metadata through EEGDash.
+somatomotor (OpenNeuro ``ds006035``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: meg` :bdg-light:`Tasks: 1` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 5` :bdg-light:`Recordings: 15` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: meg` :bdg-light:`Tasks: 1` :bdg-light:`License: CC0` :bdg-light:`Subjects: 5` :bdg-light:`Recordings: 15` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,17 +21,30 @@ Dataset Information
    * - Dataset ID
      - ``DS006035``
    * - Title
-     - Unknown
+     - somatomotor
    * - Year
-     - Unknown
+     - 2025
    * - Authors
-     - Unknown
+     - Fa-Hsuan Lin, Deirdre Foxe von Pechmann, Kaisu Lankinen, Seppo Ahlfors, Bruce Rosen, Jyrki Ahveninen, Matti Hämäläinen, Tommi Raij
    * - License
-     - Unknown
+     - CC0
    * - Citation / DOI
-     - Unknown
+     - `doi:10.18112/openneuro.ds006035.v1.0.0 <https://doi.org/10.18112/openneuro.ds006035.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds006035>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006035>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds006035>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006035>`__ | `Source URL <https://openneuro.org/datasets/ds006035>`__
+
+.. dropdown:: Copy-paste BibTeX
+   :class-container: sd-shadow-sm
+   :class-title: sd-bg-light
+
+   .. code-block:: bibtex
+
+      @dataset{ds006035,
+        title = {somatomotor},
+        author = {Fa-Hsuan Lin and Deirdre Foxe von Pechmann and Kaisu Lankinen and Seppo Ahlfors and Bruce Rosen and Jyrki Ahveninen and Matti Hämäläinen and Tommi Raij},
+        doi = {10.18112/openneuro.ds006035.v1.0.0},
+        url = {https://doi.org/10.18112/openneuro.ds006035.v1.0.0},
+      }
 
 Highlights
 ----------
@@ -70,8 +83,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: Unknown
-      - DOI: Unknown
+      - License: CC0
+      - DOI: doi:10.18112/openneuro.ds006035.v1.0.0
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

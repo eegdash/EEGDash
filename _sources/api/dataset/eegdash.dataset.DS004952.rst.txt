@@ -5,11 +5,11 @@
 eegdash.dataset.DS004952
 ========================
 
-OpenNeuro dataset ``ds004952``. Access recordings and metadata through EEGDash.
+ChineseEEG: A Chinese Linguistic Corpora EEG Dataset for Semantic Alignment and Neural Decoding (OpenNeuro ``ds004952``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 10` :bdg-light:`Recordings: 245` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: CC0` :bdg-light:`Subjects: 10` :bdg-light:`Recordings: 245` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,17 +21,30 @@ Dataset Information
    * - Dataset ID
      - ``DS004952``
    * - Title
-     - Unknown
+     - ChineseEEG: A Chinese Linguistic Corpora EEG Dataset for Semantic Alignment and Neural Decoding
    * - Year
-     - Unknown
+     - 2024
    * - Authors
-     - Unknown
+     - Xinyu Mou, Cuilin He, Liwei Tan, Junjie Yu, Huadong Liang, Jianyu Zhang, Tian Yan, Yu-Fang Yang, Ting Xu, Qing Wang, Miao Cao, Zijiao Chen, Chuan-Peng Hu, Xindi Wang, Quanying Liu, Haiyan Wu
    * - License
-     - Unknown
+     - CC0
    * - Citation / DOI
-     - Unknown
+     - `doi:10.18112/openneuro.ds004952.v1.2.2 <https://doi.org/10.18112/openneuro.ds004952.v1.2.2>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004952>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004952>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004952>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004952>`__ | `Source URL <https://openneuro.org/datasets/ds004952>`__
+
+.. dropdown:: Copy-paste BibTeX
+   :class-container: sd-shadow-sm
+   :class-title: sd-bg-light
+
+   .. code-block:: bibtex
+
+      @dataset{ds004952,
+        title = {ChineseEEG: A Chinese Linguistic Corpora EEG Dataset for Semantic Alignment and Neural Decoding},
+        author = {Xinyu Mou and Cuilin He and Liwei Tan and Junjie Yu and Huadong Liang and Jianyu Zhang and Tian Yan and Yu-Fang Yang and Ting Xu and Qing Wang and Miao Cao and Zijiao Chen and Chuan-Peng Hu and Xindi Wang and Quanying Liu and Haiyan Wu},
+        doi = {10.18112/openneuro.ds004952.v1.2.2},
+        url = {https://doi.org/10.18112/openneuro.ds004952.v1.2.2},
+      }
 
 Highlights
 ----------
@@ -70,8 +83,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: Unknown
-      - DOI: Unknown
+      - License: CC0
+      - DOI: doi:10.18112/openneuro.ds004952.v1.2.2
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

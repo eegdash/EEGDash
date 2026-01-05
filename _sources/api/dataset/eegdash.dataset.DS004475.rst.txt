@@ -5,11 +5,11 @@
 eegdash.dataset.DS004475
 ========================
 
-OpenNeuro dataset ``ds004475``. Access recordings and metadata through EEGDash.
+Mobile EEG split-belt walking study (OpenNeuro ``ds004475``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 30` :bdg-light:`Recordings: 30` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: CC0` :bdg-light:`Subjects: 30` :bdg-light:`Recordings: 30` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,17 +21,30 @@ Dataset Information
    * - Dataset ID
      - ``DS004475``
    * - Title
-     - Unknown
+     - Mobile EEG split-belt walking study
    * - Year
-     - Unknown
+     - 2023
    * - Authors
-     - Unknown
+     - Noelle A. Jacobsen, Daniel P. Ferris
    * - License
-     - Unknown
+     - CC0
    * - Citation / DOI
-     - Unknown
+     - `doi:10.18112/openneuro.ds004475.v1.0.3 <https://doi.org/10.18112/openneuro.ds004475.v1.0.3>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004475>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004475>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004475>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004475>`__ | `Source URL <https://openneuro.org/datasets/ds004475>`__
+
+.. dropdown:: Copy-paste BibTeX
+   :class-container: sd-shadow-sm
+   :class-title: sd-bg-light
+
+   .. code-block:: bibtex
+
+      @dataset{ds004475,
+        title = {Mobile EEG split-belt walking study},
+        author = {Noelle A. Jacobsen and Daniel P. Ferris},
+        doi = {10.18112/openneuro.ds004475.v1.0.3},
+        url = {https://doi.org/10.18112/openneuro.ds004475.v1.0.3},
+      }
 
 Highlights
 ----------
@@ -70,8 +83,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: Unknown
-      - DOI: Unknown
+      - License: CC0
+      - DOI: doi:10.18112/openneuro.ds004475.v1.0.3
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

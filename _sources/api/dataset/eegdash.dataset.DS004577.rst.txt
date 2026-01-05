@@ -5,11 +5,11 @@
 eegdash.dataset.DS004577
 ========================
 
-OpenNeuro dataset ``ds004577``. Access recordings and metadata through EEGDash.
+Dataset containing resting EEG for a sample of 103 normal infants in the first year of life (OpenNeuro ``ds004577``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 103` :bdg-light:`Recordings: 130` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: CC0` :bdg-light:`Subjects: 103` :bdg-light:`Recordings: 130` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,17 +21,30 @@ Dataset Information
    * - Dataset ID
      - ``DS004577``
    * - Title
-     - Unknown
+     - Dataset containing resting EEG for a sample of 103 normal infants in the first year of life
    * - Year
-     - Unknown
+     - 2023
    * - Authors
-     - Unknown
+     - Thalía Harmony (Neurodevelopment Research Unit; Instituto de Neurobiología; Universidad Nacional Autónoma de México), Gloria Otero-Ojeda (Facultad de Medicina; Universidad Autónoma del Estado de México), Eduardo Aubert (Centro de Neurociencias de Cuba), Thalía Fernández (Neurodevelopment Research Unit; Instituto de Neurobiología; Universidad Nacional Autónoma de México), Lourdes Cubero-Rego (Neurodevelopment Research Unit; Instituto de Neurobiología; Universidad Nacional Autónoma de México)
    * - License
-     - Unknown
+     - CC0
    * - Citation / DOI
-     - Unknown
+     - `doi:10.18112/openneuro.ds004577.v1.0.1 <https://doi.org/10.18112/openneuro.ds004577.v1.0.1>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004577>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004577>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004577>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004577>`__ | `Source URL <https://openneuro.org/datasets/ds004577>`__
+
+.. dropdown:: Copy-paste BibTeX
+   :class-container: sd-shadow-sm
+   :class-title: sd-bg-light
+
+   .. code-block:: bibtex
+
+      @dataset{ds004577,
+        title = {Dataset containing resting EEG for a sample of 103 normal infants in the first year of life},
+        author = {Thalía Harmony (Neurodevelopment Research Unit; Instituto de Neurobiología; Universidad Nacional Autónoma de México) and Gloria Otero-Ojeda (Facultad de Medicina; Universidad Autónoma del Estado de México) and Eduardo Aubert (Centro de Neurociencias de Cuba) and Thalía Fernández (Neurodevelopment Research Unit; Instituto de Neurobiología; Universidad Nacional Autónoma de México) and Lourdes Cubero-Rego (Neurodevelopment Research Unit; Instituto de Neurobiología; Universidad Nacional Autónoma de México)},
+        doi = {10.18112/openneuro.ds004577.v1.0.1},
+        url = {https://doi.org/10.18112/openneuro.ds004577.v1.0.1},
+      }
 
 Highlights
 ----------
@@ -70,8 +83,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: Unknown
-      - DOI: Unknown
+      - License: CC0
+      - DOI: doi:10.18112/openneuro.ds004577.v1.0.1
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

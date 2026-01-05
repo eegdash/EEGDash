@@ -5,11 +5,11 @@
 eegdash.dataset.DS004625
 ========================
 
-OpenNeuro dataset ``ds004625``. Access recordings and metadata through EEGDash.
+Mind in Motion Young Adults Walking Over Uneven Terrain (OpenNeuro ``ds004625``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 9` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 32` :bdg-light:`Recordings: 543` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 9` :bdg-light:`License: CC0` :bdg-light:`Subjects: 32` :bdg-light:`Recordings: 543` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,17 +21,30 @@ Dataset Information
    * - Dataset ID
      - ``DS004625``
    * - Title
-     - Unknown
+     - Mind in Motion Young Adults Walking Over Uneven Terrain
    * - Year
-     - Unknown
+     - 2023
    * - Authors
-     - Unknown
+     - Chang Liu, Ryan J. Downey, Jacob S. Salminen, Sofia Arvelo Rojas, Erika M. Pliner, Natalie Richer, Jungyun Hwang, Yenisel Cruz-Almeida, Todd M. Manini, Chris J. Hass, Rachael D. Seidler, David J. Clark, Daniel P. Ferris
    * - License
-     - Unknown
+     - CC0
    * - Citation / DOI
-     - Unknown
+     - `doi:10.18112/openneuro.ds004625.v1.0.2 <https://doi.org/10.18112/openneuro.ds004625.v1.0.2>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004625>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004625>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004625>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004625>`__ | `Source URL <https://openneuro.org/datasets/ds004625>`__
+
+.. dropdown:: Copy-paste BibTeX
+   :class-container: sd-shadow-sm
+   :class-title: sd-bg-light
+
+   .. code-block:: bibtex
+
+      @dataset{ds004625,
+        title = {Mind in Motion Young Adults Walking Over Uneven Terrain},
+        author = {Chang Liu and Ryan J. Downey and Jacob S. Salminen and Sofia Arvelo Rojas and Erika M. Pliner and Natalie Richer and Jungyun Hwang and Yenisel Cruz-Almeida and Todd M. Manini and Chris J. Hass and Rachael D. Seidler and David J. Clark and Daniel P. Ferris},
+        doi = {10.18112/openneuro.ds004625.v1.0.2},
+        url = {https://doi.org/10.18112/openneuro.ds004625.v1.0.2},
+      }
 
 Highlights
 ----------
@@ -70,8 +83,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: Unknown
-      - DOI: Unknown
+      - License: CC0
+      - DOI: doi:10.18112/openneuro.ds004625.v1.0.2
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

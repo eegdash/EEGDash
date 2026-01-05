@@ -5,11 +5,11 @@
 eegdash.dataset.DS005929
 ========================
 
-OpenNeuro dataset ``ds005929``. Access recordings and metadata through EEGDash.
+Motion-Yucel2014 (OpenNeuro ``ds005929``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: fnirs` :bdg-light:`Tasks: 1` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 8` :bdg-light:`Recordings: 78` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: fnirs` :bdg-light:`Tasks: 1` :bdg-light:`License: CC0` :bdg-light:`Subjects: 8` :bdg-light:`Recordings: 78` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,17 +21,30 @@ Dataset Information
    * - Dataset ID
      - ``DS005929``
    * - Title
-     - Unknown
+     - Motion-Yucel2014
    * - Year
      - Unknown
    * - Authors
-     - Unknown
+     - Yücel, Meryem, Selb, Juliette, Boas, David, Cash, Sydney, Cooper, Robert
    * - License
-     - Unknown
+     - CC0
    * - Citation / DOI
-     - Unknown
+     - `doi:10.18112/openneuro.ds005929.v1.0.1 <https://doi.org/10.18112/openneuro.ds005929.v1.0.1>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds005929>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005929>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds005929>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005929>`__ | `Source URL <https://openneuro.org/datasets/ds005929/versions/1.0.1>`__
+
+.. dropdown:: Copy-paste BibTeX
+   :class-container: sd-shadow-sm
+   :class-title: sd-bg-light
+
+   .. code-block:: bibtex
+
+      @dataset{ds005929,
+        title = {Motion-Yucel2014},
+        author = {Yücel, Meryem and Selb, Juliette and Boas, David and Cash, Sydney and Cooper, Robert},
+        doi = {10.18112/openneuro.ds005929.v1.0.1},
+        url = {https://doi.org/10.18112/openneuro.ds005929.v1.0.1},
+      }
 
 Highlights
 ----------
@@ -70,8 +83,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: Unknown
-      - DOI: Unknown
+      - License: CC0
+      - DOI: doi:10.18112/openneuro.ds005929.v1.0.1
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

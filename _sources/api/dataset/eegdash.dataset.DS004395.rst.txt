@@ -5,11 +5,11 @@
 eegdash.dataset.DS004395
 ========================
 
-OpenNeuro dataset ``ds004395``. Access recordings and metadata through EEGDash.
+Penn Electrophysiology of Encoding and Retrieval Study (PEERS) (OpenNeuro ``ds004395``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 3` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 364` :bdg-light:`Recordings: 6483` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 3` :bdg-light:`License: CC0` :bdg-light:`Subjects: 364` :bdg-light:`Recordings: 6483` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,17 +21,30 @@ Dataset Information
    * - Dataset ID
      - ``DS004395``
    * - Title
-     - Unknown
+     - Penn Electrophysiology of Encoding and Retrieval Study (PEERS)
    * - Year
-     - Unknown
+     - 2023
    * - Authors
-     - Unknown
+     - Michael J. Kahana, Joseph H. Rudoler, Lynn J. Lohnas, Karl Healey, Ada Aka, Adam Broitman, Elizabeth Crutchley, Patrick Crutchley, Kylie H. Alm, Brandon S. Katerman, Nicole E. Miller, Joel R. Kuhn, Yuxuan Li, Nicole M. Long, Jonathan Miller, Madison D. Paron, Jesse K. Pazdera, Isaac Pedisich, Christoph T. Weidemann
    * - License
-     - Unknown
+     - CC0
    * - Citation / DOI
-     - Unknown
+     - `doi:10.18112/openneuro.ds004395.v2.0.0 <https://doi.org/10.18112/openneuro.ds004395.v2.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004395>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004395>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004395>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004395>`__ | `Source URL <https://openneuro.org/datasets/ds004395>`__
+
+.. dropdown:: Copy-paste BibTeX
+   :class-container: sd-shadow-sm
+   :class-title: sd-bg-light
+
+   .. code-block:: bibtex
+
+      @dataset{ds004395,
+        title = {Penn Electrophysiology of Encoding and Retrieval Study (PEERS)},
+        author = {Michael J. Kahana and Joseph H. Rudoler and Lynn J. Lohnas and Karl Healey and Ada Aka and Adam Broitman and Elizabeth Crutchley and Patrick Crutchley and Kylie H. Alm and Brandon S. Katerman and Nicole E. Miller and Joel R. Kuhn and Yuxuan Li and Nicole M. Long and Jonathan Miller and Madison D. Paron and Jesse K. Pazdera and Isaac Pedisich and Christoph T. Weidemann},
+        doi = {10.18112/openneuro.ds004395.v2.0.0},
+        url = {https://doi.org/10.18112/openneuro.ds004395.v2.0.0},
+      }
 
 Highlights
 ----------
@@ -70,8 +83,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: Unknown
-      - DOI: Unknown
+      - License: CC0
+      - DOI: doi:10.18112/openneuro.ds004395.v2.0.0
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

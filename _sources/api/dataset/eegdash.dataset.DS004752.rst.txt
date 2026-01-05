@@ -5,11 +5,11 @@
 eegdash.dataset.DS004752
 ========================
 
-OpenNeuro dataset ``ds004752``. Access recordings and metadata through EEGDash.
+Dataset of intracranial EEG, scalp EEG and beamforming sources from epilepsy patients performing a verbal working memory task (OpenNeuro ``ds004752``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: eeg, ieeg` :bdg-light:`Tasks: 1` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 15` :bdg-light:`Recordings: 136` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: eeg, ieeg` :bdg-light:`Tasks: 1` :bdg-light:`License: CC0` :bdg-light:`Subjects: 15` :bdg-light:`Recordings: 136` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,17 +21,30 @@ Dataset Information
    * - Dataset ID
      - ``DS004752``
    * - Title
-     - Unknown
+     - Dataset of intracranial EEG, scalp EEG and beamforming sources from epilepsy patients performing a verbal working memory task
    * - Year
-     - Unknown
+     - 2023
    * - Authors
-     - Unknown
+     - Vasileios Dimakopoulos, Lennart Stieglitz, Lukas Imbach, Johannes Sarnthein
    * - License
-     - Unknown
+     - CC0
    * - Citation / DOI
-     - Unknown
+     - `doi:10.18112/openneuro.ds004752.v1.0.1 <https://doi.org/10.18112/openneuro.ds004752.v1.0.1>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004752>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004752>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004752>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004752>`__ | `Source URL <https://openneuro.org/datasets/ds004752>`__
+
+.. dropdown:: Copy-paste BibTeX
+   :class-container: sd-shadow-sm
+   :class-title: sd-bg-light
+
+   .. code-block:: bibtex
+
+      @dataset{ds004752,
+        title = {Dataset of intracranial EEG, scalp EEG and beamforming sources from epilepsy patients performing a verbal working memory task},
+        author = {Vasileios Dimakopoulos and Lennart Stieglitz and Lukas Imbach and Johannes Sarnthein},
+        doi = {10.18112/openneuro.ds004752.v1.0.1},
+        url = {https://doi.org/10.18112/openneuro.ds004752.v1.0.1},
+      }
 
 Highlights
 ----------
@@ -70,8 +83,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: Unknown
-      - DOI: Unknown
+      - License: CC0
+      - DOI: doi:10.18112/openneuro.ds004752.v1.0.1
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

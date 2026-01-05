@@ -5,11 +5,11 @@
 eegdash.dataset.DS002718
 ========================
 
-OpenNeuro dataset ``ds002718``. Access recordings and metadata through EEGDash.
+Face processing EEG dataset for EEGLAB (OpenNeuro ``ds002718``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 18` :bdg-light:`Recordings: 18` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: CC0` :bdg-light:`Subjects: 18` :bdg-light:`Recordings: 18` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,17 +21,30 @@ Dataset Information
    * - Dataset ID
      - ``DS002718``
    * - Title
-     - Unknown
+     - Face processing EEG dataset for EEGLAB
    * - Year
-     - Unknown
+     - 2020
    * - Authors
-     - Unknown
+     - Daniel G. Wakeman, Richard N Henson
    * - License
-     - Unknown
+     - CC0
    * - Citation / DOI
-     - Unknown
+     - `doi:10.18112/openneuro.ds002718.v1.1.0 <https://doi.org/10.18112/openneuro.ds002718.v1.1.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds002718>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds002718>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds002718>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds002718>`__ | `Source URL <https://openneuro.org/datasets/ds002718>`__
+
+.. dropdown:: Copy-paste BibTeX
+   :class-container: sd-shadow-sm
+   :class-title: sd-bg-light
+
+   .. code-block:: bibtex
+
+      @dataset{ds002718,
+        title = {Face processing EEG dataset for EEGLAB},
+        author = {Daniel G. Wakeman and Richard N Henson},
+        doi = {10.18112/openneuro.ds002718.v1.1.0},
+        url = {https://doi.org/10.18112/openneuro.ds002718.v1.1.0},
+      }
 
 Highlights
 ----------
@@ -70,8 +83,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: Unknown
-      - DOI: Unknown
+      - License: CC0
+      - DOI: doi:10.18112/openneuro.ds002718.v1.1.0
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

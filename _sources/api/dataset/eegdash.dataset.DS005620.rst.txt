@@ -5,11 +5,11 @@
 eegdash.dataset.DS005620
 ========================
 
-OpenNeuro dataset ``ds005620``. Access recordings and metadata through EEGDash.
+A repeated awakening study exploring the capacity of complexity measures to capture dreaming during propofol sedation (OpenNeuro ``ds005620``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 3` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 21` :bdg-light:`Recordings: 202` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 3` :bdg-light:`License: CC0` :bdg-light:`Subjects: 21` :bdg-light:`Recordings: 202` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,17 +21,30 @@ Dataset Information
    * - Dataset ID
      - ``DS005620``
    * - Title
-     - Unknown
+     - A repeated awakening study exploring the capacity of complexity measures to capture dreaming during propofol sedation
    * - Year
-     - Unknown
+     - 2024
    * - Authors
-     - Unknown
+     - Imad J. Bajwa1, Andre S. Nilsen1, René Skukies1,3, Arnfinn Aamodt1, Gernot Ernst2, Johan F. Storm1, Bjørn E. Juel1,2
    * - License
-     - Unknown
+     - CC0
    * - Citation / DOI
-     - Unknown
+     - `doi:10.18112/openneuro.ds005620.v1.0.0 <https://doi.org/10.18112/openneuro.ds005620.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds005620>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005620>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds005620>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005620>`__ | `Source URL <https://openneuro.org/datasets/ds005620>`__
+
+.. dropdown:: Copy-paste BibTeX
+   :class-container: sd-shadow-sm
+   :class-title: sd-bg-light
+
+   .. code-block:: bibtex
+
+      @dataset{ds005620,
+        title = {A repeated awakening study exploring the capacity of complexity measures to capture dreaming during propofol sedation},
+        author = {Imad J. Bajwa1 and Andre S. Nilsen1 and René Skukies1,3 and Arnfinn Aamodt1 and Gernot Ernst2 and Johan F. Storm1 and Bjørn E. Juel1,2},
+        doi = {10.18112/openneuro.ds005620.v1.0.0},
+        url = {https://doi.org/10.18112/openneuro.ds005620.v1.0.0},
+      }
 
 Highlights
 ----------
@@ -70,8 +83,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: Unknown
-      - DOI: Unknown
+      - License: CC0
+      - DOI: doi:10.18112/openneuro.ds005620.v1.0.0
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

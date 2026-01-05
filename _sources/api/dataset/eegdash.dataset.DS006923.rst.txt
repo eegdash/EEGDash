@@ -5,11 +5,11 @@
 eegdash.dataset.DS006923
 ========================
 
-OpenNeuro dataset ``ds006923``. Access recordings and metadata through EEGDash.
+Dataset of Electroencephalograms of Juvenile Offenders (OpenNeuro ``ds006923``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 140` :bdg-light:`Recordings: 280` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: CC0` :bdg-light:`Subjects: 140` :bdg-light:`Recordings: 280` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,17 +21,30 @@ Dataset Information
    * - Dataset ID
      - ``DS006923``
    * - Title
-     - Unknown
+     - Dataset of Electroencephalograms of Juvenile Offenders
    * - Year
-     - Unknown
+     - 2025
    * - Authors
-     - Unknown
+     - Aura Polo, Elmer León, Mariana Pino-Melgarejo, Julie Viloria-Porto
    * - License
-     - Unknown
+     - CC0
    * - Citation / DOI
-     - Unknown
+     - `doi:10.18112/openneuro.ds006923.v1.0.0 <https://doi.org/10.18112/openneuro.ds006923.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds006923>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006923>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds006923>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006923>`__ | `Source URL <https://openneuro.org/datasets/ds006923>`__
+
+.. dropdown:: Copy-paste BibTeX
+   :class-container: sd-shadow-sm
+   :class-title: sd-bg-light
+
+   .. code-block:: bibtex
+
+      @dataset{ds006923,
+        title = {Dataset of Electroencephalograms of Juvenile Offenders},
+        author = {Aura Polo and Elmer León and Mariana Pino-Melgarejo and Julie Viloria-Porto},
+        doi = {10.18112/openneuro.ds006923.v1.0.0},
+        url = {https://doi.org/10.18112/openneuro.ds006923.v1.0.0},
+      }
 
 Highlights
 ----------
@@ -70,8 +83,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: Unknown
-      - DOI: Unknown
+      - License: CC0
+      - DOI: doi:10.18112/openneuro.ds006923.v1.0.0
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

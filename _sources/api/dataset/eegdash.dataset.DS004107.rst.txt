@@ -5,11 +5,11 @@
 eegdash.dataset.DS004107
 ========================
 
-OpenNeuro dataset ``ds004107``. Access recordings and metadata through EEGDash.
+MIND DATA (OpenNeuro ``ds004107``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: meg` :bdg-light:`Tasks: 6` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 9` :bdg-light:`Recordings: 89` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: meg` :bdg-light:`Tasks: 6` :bdg-light:`License: CC0` :bdg-light:`Subjects: 9` :bdg-light:`Recordings: 89` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,17 +21,30 @@ Dataset Information
    * - Dataset ID
      - ``DS004107``
    * - Title
-     - Unknown
+     - MIND DATA
    * - Year
-     - Unknown
+     - 2022
    * - Authors
-     - Unknown
+     - M.P. Weisend, F.M. Hanlon, R. Montano, S.P. Ahlfors, A.C. Leuthold, D. Pantazis, J.C. Mosher, A.P. Georgopoulos, M.S. Hamalainen, C.J. Aine
    * - License
-     - Unknown
+     - CC0
    * - Citation / DOI
-     - Unknown
+     - `doi:10.18112/openneuro.ds004107.v1.0.0 <https://doi.org/10.18112/openneuro.ds004107.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004107>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004107>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004107>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004107>`__ | `Source URL <https://openneuro.org/datasets/ds004107>`__
+
+.. dropdown:: Copy-paste BibTeX
+   :class-container: sd-shadow-sm
+   :class-title: sd-bg-light
+
+   .. code-block:: bibtex
+
+      @dataset{ds004107,
+        title = {MIND DATA},
+        author = {M.P. Weisend and F.M. Hanlon and R. Montano and S.P. Ahlfors and A.C. Leuthold and D. Pantazis and J.C. Mosher and A.P. Georgopoulos and M.S. Hamalainen and C.J. Aine},
+        doi = {10.18112/openneuro.ds004107.v1.0.0},
+        url = {https://doi.org/10.18112/openneuro.ds004107.v1.0.0},
+      }
 
 Highlights
 ----------
@@ -70,8 +83,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: Unknown
-      - DOI: Unknown
+      - License: CC0
+      - DOI: doi:10.18112/openneuro.ds004107.v1.0.0
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

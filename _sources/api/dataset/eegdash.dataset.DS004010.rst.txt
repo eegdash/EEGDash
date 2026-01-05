@@ -5,11 +5,11 @@
 eegdash.dataset.DS004010
 ========================
 
-OpenNeuro dataset ``ds004010``. Access recordings and metadata through EEGDash.
+MAVIS (OpenNeuro ``ds004010``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 24` :bdg-light:`Recordings: 24` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: CC0` :bdg-light:`Subjects: 24` :bdg-light:`Recordings: 24` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,17 +21,30 @@ Dataset Information
    * - Dataset ID
      - ``DS004010``
    * - Title
-     - Unknown
+     - MAVIS
    * - Year
-     - Unknown
+     - 2022
    * - Authors
-     - Unknown
+     - Leonhard Waschke, Thomas Donoghue, Lorenz Fiedler, Sydney Smith, Douglas Garrett, Bradley Voytek, Jonas Obleser
    * - License
-     - Unknown
+     - CC0
    * - Citation / DOI
-     - Unknown
+     - `doi:10.18112/openneuro.ds004010.v1.0.0 <https://doi.org/10.18112/openneuro.ds004010.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004010>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004010>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004010>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004010>`__ | `Source URL <https://openneuro.org/datasets/ds004010>`__
+
+.. dropdown:: Copy-paste BibTeX
+   :class-container: sd-shadow-sm
+   :class-title: sd-bg-light
+
+   .. code-block:: bibtex
+
+      @dataset{ds004010,
+        title = {MAVIS},
+        author = {Leonhard Waschke and Thomas Donoghue and Lorenz Fiedler and Sydney Smith and Douglas Garrett and Bradley Voytek and Jonas Obleser},
+        doi = {10.18112/openneuro.ds004010.v1.0.0},
+        url = {https://doi.org/10.18112/openneuro.ds004010.v1.0.0},
+      }
 
 Highlights
 ----------
@@ -70,8 +83,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: Unknown
-      - DOI: Unknown
+      - License: CC0
+      - DOI: doi:10.18112/openneuro.ds004010.v1.0.0
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

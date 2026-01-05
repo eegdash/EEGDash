@@ -5,11 +5,11 @@
 eegdash.dataset.DS001849
 ========================
 
-OpenNeuro dataset ``ds001849``. Access recordings and metadata through EEGDash.
+RS_TMSEEG_Data (OpenNeuro ``ds001849``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 20` :bdg-light:`Recordings: 120` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: CC0` :bdg-light:`Subjects: 20` :bdg-light:`Recordings: 120` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,17 +21,30 @@ Dataset Information
    * - Dataset ID
      - ``DS001849``
    * - Title
-     - Unknown
+     - RS_TMSEEG_Data
    * - Year
-     - Unknown
+     - 2019
    * - Authors
-     - Unknown
+     - Michael Freedberg, Jack A. Reeves, Sara J. Hussain, Kareem A. Zaghloul, Eric M. Wassermann
    * - License
-     - Unknown
+     - CC0
    * - Citation / DOI
-     - Unknown
+     - `10.18112/openneuro.ds001849.v1.0.2 <https://doi.org/10.18112/openneuro.ds001849.v1.0.2>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds001849>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds001849>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds001849>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds001849>`__ | `Source URL <https://openneuro.org/datasets/ds001849>`__
+
+.. dropdown:: Copy-paste BibTeX
+   :class-container: sd-shadow-sm
+   :class-title: sd-bg-light
+
+   .. code-block:: bibtex
+
+      @dataset{ds001849,
+        title = {RS_TMSEEG_Data},
+        author = {Michael Freedberg and Jack A. Reeves and Sara J. Hussain and Kareem A. Zaghloul and Eric M. Wassermann},
+        doi = {10.18112/openneuro.ds001849.v1.0.2},
+        url = {https://doi.org/10.18112/openneuro.ds001849.v1.0.2},
+      }
 
 Highlights
 ----------
@@ -70,8 +83,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: Unknown
-      - DOI: Unknown
+      - License: CC0
+      - DOI: 10.18112/openneuro.ds001849.v1.0.2
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

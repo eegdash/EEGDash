@@ -5,11 +5,11 @@
 eegdash.dataset.DS006036
 ========================
 
-OpenNeuro dataset ``ds006036``. Access recordings and metadata through EEGDash.
+A complementary dataset of open-eyes EEG recordings in a photo-stimulation setting from: Alzheimer's disease, Frontotemporal dementia and Healthy subjects (OpenNeuro ``ds006036``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 88` :bdg-light:`Recordings: 88` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: CC0` :bdg-light:`Subjects: 88` :bdg-light:`Recordings: 88` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,17 +21,30 @@ Dataset Information
    * - Dataset ID
      - ``DS006036``
    * - Title
-     - Unknown
+     - A complementary dataset of open-eyes EEG recordings in a photo-stimulation setting from: Alzheimer's disease, Frontotemporal dementia and Healthy subjects
    * - Year
-     - Unknown
+     - 2025
    * - Authors
-     - Unknown
+     - Aimilia Ntetska, Andreas Miltiadous, Alexandros T. Tzallas, Katerina D. Tzimourta, Theodora Afrantou, Panagiotis Ioannidis, Dimitrios G. Tsalikakis, Nikolaos Grigoriadis, Pantelis Angelidis, Konstantinos Sakkas, Emmanouil D. Oikonomou, Nikolaos Giannakeas, Markos G. Tsipouras
    * - License
-     - Unknown
+     - CC0
    * - Citation / DOI
-     - Unknown
+     - `doi:10.18112/openneuro.ds006036.v1.0.5 <https://doi.org/10.18112/openneuro.ds006036.v1.0.5>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds006036>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006036>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds006036>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006036>`__ | `Source URL <https://openneuro.org/datasets/ds006036>`__
+
+.. dropdown:: Copy-paste BibTeX
+   :class-container: sd-shadow-sm
+   :class-title: sd-bg-light
+
+   .. code-block:: bibtex
+
+      @dataset{ds006036,
+        title = {A complementary dataset of open-eyes EEG recordings in a photo-stimulation setting from: Alzheimer's disease, Frontotemporal dementia and Healthy subjects},
+        author = {Aimilia Ntetska and Andreas Miltiadous and Alexandros T. Tzallas and Katerina D. Tzimourta and Theodora Afrantou and Panagiotis Ioannidis and Dimitrios G. Tsalikakis and Nikolaos Grigoriadis and Pantelis Angelidis and Konstantinos Sakkas and Emmanouil D. Oikonomou and Nikolaos Giannakeas and Markos G. Tsipouras},
+        doi = {10.18112/openneuro.ds006036.v1.0.5},
+        url = {https://doi.org/10.18112/openneuro.ds006036.v1.0.5},
+      }
 
 Highlights
 ----------
@@ -70,8 +83,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: Unknown
-      - DOI: Unknown
+      - License: CC0
+      - DOI: doi:10.18112/openneuro.ds006036.v1.0.5
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

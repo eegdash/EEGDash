@@ -5,11 +5,11 @@
 eegdash.dataset.DS005079
 ========================
 
-OpenNeuro dataset ``ds005079``. Access recordings and metadata through EEGDash.
+The Effects of Directed Therapeutic Intent on Live and Damaged Cells (OpenNeuro ``ds005079``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 15` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 1` :bdg-light:`Recordings: 60` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 15` :bdg-light:`License: CC0` :bdg-light:`Subjects: 1` :bdg-light:`Recordings: 60` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,17 +21,30 @@ Dataset Information
    * - Dataset ID
      - ``DS005079``
    * - Title
-     - Unknown
+     - The Effects of Directed Therapeutic Intent on Live and Damaged Cells
    * - Year
-     - Unknown
+     - 2024
    * - Authors
-     - Unknown
+     - Lorenzo Cohen, Arnaud Delorme, Peiying Yang, Andrew Cusimano, Sharmistha Chakraborty, Phuong Nguyen, Defeng Deng, Shafaqmuhammad Iqbal, Monica Nelson, Chris Fields
    * - License
-     - Unknown
+     - CC0
    * - Citation / DOI
-     - Unknown
+     - `doi:10.18112/openneuro.ds005079.v2.0.0 <https://doi.org/10.18112/openneuro.ds005079.v2.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds005079>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005079>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds005079>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005079>`__ | `Source URL <https://openneuro.org/datasets/ds005079>`__
+
+.. dropdown:: Copy-paste BibTeX
+   :class-container: sd-shadow-sm
+   :class-title: sd-bg-light
+
+   .. code-block:: bibtex
+
+      @dataset{ds005079,
+        title = {The Effects of Directed Therapeutic Intent on Live and Damaged Cells},
+        author = {Lorenzo Cohen and Arnaud Delorme and Peiying Yang and Andrew Cusimano and Sharmistha Chakraborty and Phuong Nguyen and Defeng Deng and Shafaqmuhammad Iqbal and Monica Nelson and Chris Fields},
+        doi = {10.18112/openneuro.ds005079.v2.0.0},
+        url = {https://doi.org/10.18112/openneuro.ds005079.v2.0.0},
+      }
 
 Highlights
 ----------
@@ -70,8 +83,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: Unknown
-      - DOI: Unknown
+      - License: CC0
+      - DOI: doi:10.18112/openneuro.ds005079.v2.0.0
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

@@ -5,11 +5,11 @@
 eegdash.dataset.DS004078
 ========================
 
-OpenNeuro dataset ``ds004078``. Access recordings and metadata through EEGDash.
+A synchronized multimodal neuroimaging dataset to study brain language processing (OpenNeuro ``ds004078``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: meg` :bdg-light:`Tasks: 1` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 12` :bdg-light:`Recordings: 720` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: meg` :bdg-light:`Tasks: 1` :bdg-light:`License: CC0` :bdg-light:`Subjects: 12` :bdg-light:`Recordings: 720` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,17 +21,30 @@ Dataset Information
    * - Dataset ID
      - ``DS004078``
    * - Title
-     - Unknown
+     - A synchronized multimodal neuroimaging dataset to study brain language processing
    * - Year
-     - Unknown
+     - 2022
    * - Authors
-     - Unknown
+     - Shaonan Wang, Xiaohan Zhang, Jiajun Zhang, Chengqing Zong
    * - License
-     - Unknown
+     - CC0
    * - Citation / DOI
-     - Unknown
+     - `doi:10.18112/openneuro.ds004078.v1.0.4 <https://doi.org/10.18112/openneuro.ds004078.v1.0.4>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004078>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004078>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004078>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004078>`__ | `Source URL <https://openneuro.org/datasets/ds004078>`__
+
+.. dropdown:: Copy-paste BibTeX
+   :class-container: sd-shadow-sm
+   :class-title: sd-bg-light
+
+   .. code-block:: bibtex
+
+      @dataset{ds004078,
+        title = {A synchronized multimodal neuroimaging dataset to study brain language processing},
+        author = {Shaonan Wang and Xiaohan Zhang and Jiajun Zhang and Chengqing Zong},
+        doi = {10.18112/openneuro.ds004078.v1.0.4},
+        url = {https://doi.org/10.18112/openneuro.ds004078.v1.0.4},
+      }
 
 Highlights
 ----------
@@ -70,8 +83,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: Unknown
-      - DOI: Unknown
+      - License: CC0
+      - DOI: doi:10.18112/openneuro.ds004078.v1.0.4
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

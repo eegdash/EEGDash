@@ -5,11 +5,11 @@
 eegdash.dataset.DS005178
 ========================
 
-OpenNeuro dataset ``ds005178``. Access recordings and metadata through EEGDash.
+Ear-EEG Sleep Monitoring 2023 (EESM23) (OpenNeuro ``ds005178``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 10` :bdg-light:`Recordings: 140` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: CC0` :bdg-light:`Subjects: 10` :bdg-light:`Recordings: 140` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,17 +21,30 @@ Dataset Information
    * - Dataset ID
      - ``DS005178``
    * - Title
-     - Unknown
+     - Ear-EEG Sleep Monitoring 2023 (EESM23)
    * - Year
-     - Unknown
+     - 2024
    * - Authors
-     - Unknown
+     - Yousef Rezaei Tabar, Kaare Mikkelsen, Laura Birch, Nelly Shenton, Simon L Kappel, Astrid R Bertelsen, Reza Nikbakht, Hans O Toft, Chris H Henriksen, Martin C Hemmsen, Mike L Rank, Marit Otto, Preben Kidmose
    * - License
-     - Unknown
+     - CC0
    * - Citation / DOI
-     - Unknown
+     - `doi:10.18112/openneuro.ds005178.v1.0.0 <https://doi.org/10.18112/openneuro.ds005178.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds005178>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005178>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds005178>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005178>`__ | `Source URL <https://openneuro.org/datasets/ds005178>`__
+
+.. dropdown:: Copy-paste BibTeX
+   :class-container: sd-shadow-sm
+   :class-title: sd-bg-light
+
+   .. code-block:: bibtex
+
+      @dataset{ds005178,
+        title = {Ear-EEG Sleep Monitoring 2023 (EESM23)},
+        author = {Yousef Rezaei Tabar and Kaare Mikkelsen and Laura Birch and Nelly Shenton and Simon L Kappel and Astrid R Bertelsen and Reza Nikbakht and Hans O Toft and Chris H Henriksen and Martin C Hemmsen and Mike L Rank and Marit Otto and Preben Kidmose},
+        doi = {10.18112/openneuro.ds005178.v1.0.0},
+        url = {https://doi.org/10.18112/openneuro.ds005178.v1.0.0},
+      }
 
 Highlights
 ----------
@@ -70,8 +83,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: Unknown
-      - DOI: Unknown
+      - License: CC0
+      - DOI: doi:10.18112/openneuro.ds005178.v1.0.0
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

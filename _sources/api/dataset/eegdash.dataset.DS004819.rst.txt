@@ -5,11 +5,11 @@
 eegdash.dataset.DS004819
 ========================
 
-OpenNeuro dataset ``ds004819``. Access recordings and metadata through EEGDash.
+Flexible, Scalable, High Channel Count Stereo-Electrode for Recording in the Human Brain (OpenNeuro ``ds004819``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: ieeg` :bdg-light:`Tasks: 1` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 1` :bdg-light:`Recordings: 8` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: ieeg` :bdg-light:`Tasks: 1` :bdg-light:`License: CC0` :bdg-light:`Subjects: 1` :bdg-light:`Recordings: 8` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,17 +21,30 @@ Dataset Information
    * - Dataset ID
      - ``DS004819``
    * - Title
-     - Unknown
+     - Flexible, Scalable, High Channel Count Stereo-Electrode for Recording in the Human Brain
    * - Year
-     - Unknown
+     - 2023
    * - Authors
-     - Unknown
+     - Keundong Lee, Angelique C. Paulk, Yun Goo Ro, Daniel R. Cleary, Karen J. Tonsfeldt, Yoav Kfir, John Pezaris, Youngbin Tchoe, Jihwan Lee, Andrew M. Bourhis, Ritwik Vatsyayan, Joel R. Martin, Samantha M. Russman, Jimmy C. Yang, Amy Baohan, R. Mark Richardson, Ziv M. Williams, Shelley I. Fried, Hoi Sang U, Ahmed M. Raslan, Sharona Ben-Haim, Eric Halgren, Sydney S. Cash, Shadi. A. Dayeh
    * - License
-     - Unknown
+     - CC0
    * - Citation / DOI
-     - Unknown
+     - `doi:10.18112/openneuro.ds004819.v1.0.0 <https://doi.org/10.18112/openneuro.ds004819.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004819>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004819>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004819>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004819>`__ | `Source URL <https://openneuro.org/datasets/ds004819>`__
+
+.. dropdown:: Copy-paste BibTeX
+   :class-container: sd-shadow-sm
+   :class-title: sd-bg-light
+
+   .. code-block:: bibtex
+
+      @dataset{ds004819,
+        title = {Flexible, Scalable, High Channel Count Stereo-Electrode for Recording in the Human Brain},
+        author = {Keundong Lee and Angelique C. Paulk and Yun Goo Ro and Daniel R. Cleary and Karen J. Tonsfeldt and Yoav Kfir and John Pezaris and Youngbin Tchoe and Jihwan Lee and Andrew M. Bourhis and Ritwik Vatsyayan and Joel R. Martin and Samantha M. Russman and Jimmy C. Yang and Amy Baohan and R. Mark Richardson and Ziv M. Williams and Shelley I. Fried and Hoi Sang U and Ahmed M. Raslan and Sharona Ben-Haim and Eric Halgren and Sydney S. Cash and Shadi. A. Dayeh},
+        doi = {10.18112/openneuro.ds004819.v1.0.0},
+        url = {https://doi.org/10.18112/openneuro.ds004819.v1.0.0},
+      }
 
 Highlights
 ----------
@@ -70,8 +83,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: Unknown
-      - DOI: Unknown
+      - License: CC0
+      - DOI: doi:10.18112/openneuro.ds004819.v1.0.0
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

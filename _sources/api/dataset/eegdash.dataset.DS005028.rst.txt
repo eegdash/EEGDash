@@ -5,11 +5,11 @@
 eegdash.dataset.DS005028
 ========================
 
-OpenNeuro dataset ``ds005028``. Access recordings and metadata through EEGDash.
+Comparing P300 Flashing paradigms in online typing with language models (OpenNeuro ``ds005028``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 3` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 11` :bdg-light:`Recordings: 105` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 3` :bdg-light:`License: CC0` :bdg-light:`Subjects: 11` :bdg-light:`Recordings: 105` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,17 +21,30 @@ Dataset Information
    * - Dataset ID
      - ``DS005028``
    * - Title
-     - Unknown
+     - Comparing P300 Flashing paradigms in online typing with language models
    * - Year
-     - Unknown
+     - 2024
    * - Authors
-     - Unknown
+     - Nand Chandravadia, Shrita Pendekanti, Dustin Roberts, Robert Tran, Saarang Panchavati, Corey Arnold, Nader Pouratian, William Speier
    * - License
-     - Unknown
+     - CC0
    * - Citation / DOI
-     - Unknown
+     - `doi:10.18112/openneuro.ds005028.v1.0.0 <https://doi.org/10.18112/openneuro.ds005028.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds005028>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005028>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds005028>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005028>`__ | `Source URL <https://openneuro.org/datasets/ds005028>`__
+
+.. dropdown:: Copy-paste BibTeX
+   :class-container: sd-shadow-sm
+   :class-title: sd-bg-light
+
+   .. code-block:: bibtex
+
+      @dataset{ds005028,
+        title = {Comparing P300 Flashing paradigms in online typing with language models},
+        author = {Nand Chandravadia and Shrita Pendekanti and Dustin Roberts and Robert Tran and Saarang Panchavati and Corey Arnold and Nader Pouratian and William Speier},
+        doi = {10.18112/openneuro.ds005028.v1.0.0},
+        url = {https://doi.org/10.18112/openneuro.ds005028.v1.0.0},
+      }
 
 Highlights
 ----------
@@ -70,8 +83,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: Unknown
-      - DOI: Unknown
+      - License: CC0
+      - DOI: doi:10.18112/openneuro.ds005028.v1.0.0
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

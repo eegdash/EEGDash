@@ -5,11 +5,11 @@
 eegdash.dataset.DS006866
 ========================
 
-OpenNeuro dataset ``ds006866``. Access recordings and metadata through EEGDash.
+Discrepancy between self-report and neurophysiological markers of socio-affective responses in lonely individuals (OpenNeuro ``ds006866``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 148` :bdg-light:`Recordings: 148` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: CC0` :bdg-light:`Subjects: 148` :bdg-light:`Recordings: 148` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,17 +21,30 @@ Dataset Information
    * - Dataset ID
      - ``DS006866``
    * - Title
-     - Unknown
+     - Discrepancy between self-report and neurophysiological markers of socio-affective responses in lonely individuals
    * - Year
-     - Unknown
+     - 2025
    * - Authors
-     - Unknown
+     - Szymon Mąka, Marta Chrustowicz, Łukasz Okruszek
    * - License
-     - Unknown
+     - CC0
    * - Citation / DOI
-     - Unknown
+     - `doi:10.18112/openneuro.ds006866.v1.0.0 <https://doi.org/10.18112/openneuro.ds006866.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds006866>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006866>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds006866>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006866>`__ | `Source URL <https://openneuro.org/datasets/ds006866>`__
+
+.. dropdown:: Copy-paste BibTeX
+   :class-container: sd-shadow-sm
+   :class-title: sd-bg-light
+
+   .. code-block:: bibtex
+
+      @dataset{ds006866,
+        title = {Discrepancy between self-report and neurophysiological markers of socio-affective responses in lonely individuals},
+        author = {Szymon Mąka and Marta Chrustowicz and Łukasz Okruszek},
+        doi = {10.18112/openneuro.ds006866.v1.0.0},
+        url = {https://doi.org/10.18112/openneuro.ds006866.v1.0.0},
+      }
 
 Highlights
 ----------
@@ -70,8 +83,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: Unknown
-      - DOI: Unknown
+      - License: CC0
+      - DOI: doi:10.18112/openneuro.ds006866.v1.0.0
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

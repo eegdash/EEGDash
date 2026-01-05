@@ -5,11 +5,11 @@
 eegdash.dataset.NM000106
 ========================
 
-OpenNeuro dataset ``nm000106``. Access recordings and metadata through EEGDash.
+FRL Handwriting: Handwriting Decoding from Surface Electromyography (OpenNeuro ``nm000106``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: emg` :bdg-light:`Tasks: 1` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 100` :bdg-light:`Recordings: 807` :bdg-light:`Source: nemar`
+:bdg-light:`Modality: emg` :bdg-light:`Tasks: 1` :bdg-light:`License: CC-BY-NC 4.0` :bdg-light:`Subjects: 100` :bdg-light:`Recordings: 807` :bdg-light:`Source: nemar`
 
 Dataset Information
 -------------------
@@ -21,17 +21,30 @@ Dataset Information
    * - Dataset ID
      - ``NM000106``
    * - Title
-     - Unknown
+     - FRL Handwriting: Handwriting Decoding from Surface Electromyography
    * - Year
      - Unknown
    * - Authors
-     - Unknown
+     - Patrick Kaifosh, Thomas R. Reardon, CTRL-labs at Reality Labs
    * - License
-     - Unknown
+     - CC-BY-NC 4.0
    * - Citation / DOI
-     - Unknown
+     - `10.5281/zenodo.17283865 <https://doi.org/10.5281/zenodo.17283865>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/nm000106>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=nm000106>`__
+     - `OpenNeuro <https://openneuro.org/datasets/nm000106>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=nm000106>`__ | `Source URL <https://nemar.org/dataexplorer/detail/nm000106>`__
+
+.. dropdown:: Copy-paste BibTeX
+   :class-container: sd-shadow-sm
+   :class-title: sd-bg-light
+
+   .. code-block:: bibtex
+
+      @dataset{nm000106,
+        title = {FRL Handwriting: Handwriting Decoding from Surface Electromyography},
+        author = {Patrick Kaifosh and Thomas R. Reardon and CTRL-labs at Reality Labs},
+        doi = {10.5281/zenodo.17283865},
+        url = {https://doi.org/10.5281/zenodo.17283865},
+      }
 
 Highlights
 ----------
@@ -70,8 +83,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: Unknown
-      - DOI: Unknown
+      - License: CC-BY-NC 4.0
+      - DOI: 10.5281/zenodo.17283865
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

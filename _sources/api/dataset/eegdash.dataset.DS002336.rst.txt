@@ -5,11 +5,11 @@
 eegdash.dataset.DS002336
 ========================
 
-OpenNeuro dataset ``ds002336``. Access recordings and metadata through EEGDash.
+A multi-modal human neuroimaging dataset for data integration: simultaneous EEG and fMRI acquisition during a motor imagery neurofeedback task: XP1 (OpenNeuro ``ds002336``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 6` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 10` :bdg-light:`Recordings: 54` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 6` :bdg-light:`License: CC0` :bdg-light:`Subjects: 10` :bdg-light:`Recordings: 54` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,17 +21,30 @@ Dataset Information
    * - Dataset ID
      - ``DS002336``
    * - Title
-     - Unknown
+     - A multi-modal human neuroimaging dataset for data integration: simultaneous EEG and fMRI acquisition during a motor imagery neurofeedback task: XP1
    * - Year
-     - Unknown
+     - 2019
    * - Authors
-     - Unknown
+     - Giulia Lioi, Claire Cury, Lorraine Perronnet, Marsel Mano, Elise Bannier, Anatole Lecuyer, Christian Barillot
    * - License
-     - Unknown
+     - CC0
    * - Citation / DOI
-     - Unknown
+     - `10.18112/openneuro.ds002336.v2.0.2 <https://doi.org/10.18112/openneuro.ds002336.v2.0.2>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds002336>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds002336>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds002336>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds002336>`__ | `Source URL <https://openneuro.org/datasets/ds002336>`__
+
+.. dropdown:: Copy-paste BibTeX
+   :class-container: sd-shadow-sm
+   :class-title: sd-bg-light
+
+   .. code-block:: bibtex
+
+      @dataset{ds002336,
+        title = {A multi-modal human neuroimaging dataset for data integration: simultaneous EEG and fMRI acquisition during a motor imagery neurofeedback task: XP1},
+        author = {Giulia Lioi and Claire Cury and Lorraine Perronnet and Marsel Mano and Elise Bannier and Anatole Lecuyer and Christian Barillot},
+        doi = {10.18112/openneuro.ds002336.v2.0.2},
+        url = {https://doi.org/10.18112/openneuro.ds002336.v2.0.2},
+      }
 
 Highlights
 ----------
@@ -70,8 +83,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: Unknown
-      - DOI: Unknown
+      - License: CC0
+      - DOI: 10.18112/openneuro.ds002336.v2.0.2
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

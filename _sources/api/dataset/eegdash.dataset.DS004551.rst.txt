@@ -5,11 +5,11 @@
 eegdash.dataset.DS004551
 ========================
 
-OpenNeuro dataset ``ds004551``. Access recordings and metadata through EEGDash.
+iEEG on children during slow wave sleep (OpenNeuro ``ds004551``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: ieeg` :bdg-light:`Tasks: 1` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 114` :bdg-light:`Recordings: 125` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: ieeg` :bdg-light:`Tasks: 1` :bdg-light:`License: CC0` :bdg-light:`Subjects: 114` :bdg-light:`Recordings: 125` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,17 +21,30 @@ Dataset Information
    * - Dataset ID
      - ``DS004551``
    * - Title
-     - Unknown
+     - iEEG on children during slow wave sleep
    * - Year
-     - Unknown
+     - 2023
    * - Authors
-     - Unknown
+     - Kazuki Sakakura, Naoto Kuroda, Masaki Sonoda, Takumi Mitsuhashi, Ethan Firestone, Aimee F. Luat, Neena I. Marupudi, Sandeep Sood, Eishi Asano
    * - License
-     - Unknown
+     - CC0
    * - Citation / DOI
-     - Unknown
+     - `doi:10.18112/openneuro.ds004551.v1.0.6 <https://doi.org/10.18112/openneuro.ds004551.v1.0.6>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004551>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004551>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004551>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004551>`__ | `Source URL <https://openneuro.org/datasets/ds004551>`__
+
+.. dropdown:: Copy-paste BibTeX
+   :class-container: sd-shadow-sm
+   :class-title: sd-bg-light
+
+   .. code-block:: bibtex
+
+      @dataset{ds004551,
+        title = {iEEG on children during slow wave sleep},
+        author = {Kazuki Sakakura and Naoto Kuroda and Masaki Sonoda and Takumi Mitsuhashi and Ethan Firestone and Aimee F. Luat and Neena I. Marupudi and Sandeep Sood and Eishi Asano},
+        doi = {10.18112/openneuro.ds004551.v1.0.6},
+        url = {https://doi.org/10.18112/openneuro.ds004551.v1.0.6},
+      }
 
 Highlights
 ----------
@@ -70,8 +83,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: Unknown
-      - DOI: Unknown
+      - License: CC0
+      - DOI: doi:10.18112/openneuro.ds004551.v1.0.6
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

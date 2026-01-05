@@ -5,11 +5,11 @@
 eegdash.dataset.DS005868
 ========================
 
-OpenNeuro dataset ``ds005868``. Access recordings and metadata through EEGDash.
+Flankers-FAR (OpenNeuro ``ds005868``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 48` :bdg-light:`Recordings: 48` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: CC0` :bdg-light:`Subjects: 48` :bdg-light:`Recordings: 48` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,17 +21,30 @@ Dataset Information
    * - Dataset ID
      - ``DS005868``
    * - Title
-     - Unknown
+     - Flankers-FAR
    * - Year
-     - Unknown
+     - 2025
    * - Authors
-     - Unknown
+     - Brennan Terhune-Cotter, Phillip J. Holcomb, Katherine J. Midgley, Sofia E. Ortega, Emily M. Akers, Karen Emmorey
    * - License
-     - Unknown
+     - CC0
    * - Citation / DOI
-     - Unknown
+     - `doi:10.18112/openneuro.ds005868.v1.0.1 <https://doi.org/10.18112/openneuro.ds005868.v1.0.1>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds005868>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005868>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds005868>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005868>`__ | `Source URL <https://openneuro.org/datasets/ds005868>`__
+
+.. dropdown:: Copy-paste BibTeX
+   :class-container: sd-shadow-sm
+   :class-title: sd-bg-light
+
+   .. code-block:: bibtex
+
+      @dataset{ds005868,
+        title = {Flankers-FAR},
+        author = {Brennan Terhune-Cotter and Phillip J. Holcomb and Katherine J. Midgley and Sofia E. Ortega and Emily M. Akers and Karen Emmorey},
+        doi = {10.18112/openneuro.ds005868.v1.0.1},
+        url = {https://doi.org/10.18112/openneuro.ds005868.v1.0.1},
+      }
 
 Highlights
 ----------
@@ -70,8 +83,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: Unknown
-      - DOI: Unknown
+      - License: CC0
+      - DOI: doi:10.18112/openneuro.ds005868.v1.0.1
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

@@ -5,11 +5,11 @@
 eegdash.dataset.DS002034
 ========================
 
-OpenNeuro dataset ``ds002034``. Access recordings and metadata through EEGDash.
+Real-time EEG feedback on alpha power lateralization leads to behavioral improvements in a covert attention task (OpenNeuro ``ds002034``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 4` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 14` :bdg-light:`Recordings: 167` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 4` :bdg-light:`License: CC0` :bdg-light:`Subjects: 14` :bdg-light:`Recordings: 167` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,17 +21,30 @@ Dataset Information
    * - Dataset ID
      - ``DS002034``
    * - Title
-     - Unknown
+     - Real-time EEG feedback on alpha power lateralization leads to behavioral improvements in a covert attention task
    * - Year
-     - Unknown
+     - 2019
    * - Authors
-     - Unknown
+     - Christoph Schneider, Michael Pereira, Luca Tonin, Jose del R. Millan
    * - License
-     - Unknown
+     - CC0
    * - Citation / DOI
-     - Unknown
+     - `doi:10.18112/openneuro.ds002034.v1.0.3 <https://doi.org/10.18112/openneuro.ds002034.v1.0.3>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds002034>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds002034>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds002034>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds002034>`__ | `Source URL <https://openneuro.org/datasets/ds002034>`__
+
+.. dropdown:: Copy-paste BibTeX
+   :class-container: sd-shadow-sm
+   :class-title: sd-bg-light
+
+   .. code-block:: bibtex
+
+      @dataset{ds002034,
+        title = {Real-time EEG feedback on alpha power lateralization leads to behavioral improvements in a covert attention task},
+        author = {Christoph Schneider and Michael Pereira and Luca Tonin and Jose del R. Millan},
+        doi = {10.18112/openneuro.ds002034.v1.0.3},
+        url = {https://doi.org/10.18112/openneuro.ds002034.v1.0.3},
+      }
 
 Highlights
 ----------
@@ -70,8 +83,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: Unknown
-      - DOI: Unknown
+      - License: CC0
+      - DOI: doi:10.18112/openneuro.ds002034.v1.0.3
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

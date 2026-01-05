@@ -5,11 +5,11 @@
 eegdash.dataset.DS002680
 ========================
 
-OpenNeuro dataset ``ds002680``. Access recordings and metadata through EEGDash.
+Go-nogo categorization and detection task (OpenNeuro ``ds002680``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 14` :bdg-light:`Recordings: 350` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: CC0` :bdg-light:`Subjects: 14` :bdg-light:`Recordings: 350` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,17 +21,30 @@ Dataset Information
    * - Dataset ID
      - ``DS002680``
    * - Title
-     - Unknown
+     - Go-nogo categorization and detection task
    * - Year
-     - Unknown
+     - 2020
    * - Authors
-     - Unknown
+     - Arnaud Delorme
    * - License
-     - Unknown
+     - CC0
    * - Citation / DOI
-     - Unknown
+     - `10.18112/openneuro.ds002680.v1.2.0 <https://doi.org/10.18112/openneuro.ds002680.v1.2.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds002680>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds002680>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds002680>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds002680>`__ | `Source URL <https://openneuro.org/datasets/ds002680>`__
+
+.. dropdown:: Copy-paste BibTeX
+   :class-container: sd-shadow-sm
+   :class-title: sd-bg-light
+
+   .. code-block:: bibtex
+
+      @dataset{ds002680,
+        title = {Go-nogo categorization and detection task},
+        author = {Arnaud Delorme},
+        doi = {10.18112/openneuro.ds002680.v1.2.0},
+        url = {https://doi.org/10.18112/openneuro.ds002680.v1.2.0},
+      }
 
 Highlights
 ----------
@@ -70,8 +83,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: Unknown
-      - DOI: Unknown
+      - License: CC0
+      - DOI: 10.18112/openneuro.ds002680.v1.2.0
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

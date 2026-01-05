@@ -5,11 +5,11 @@
 eegdash.dataset.DS005795
 ========================
 
-OpenNeuro dataset ``ds005795``. Access recordings and metadata through EEGDash.
+MULTI-CLARID (Multimodal Category Learning and Resting-state Imaging Data) (OpenNeuro ``ds005795``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 2` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 34` :bdg-light:`Recordings: 39` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 2` :bdg-light:`License: CC0` :bdg-light:`Subjects: 34` :bdg-light:`Recordings: 39` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,17 +21,30 @@ Dataset Information
    * - Dataset ID
      - ``DS005795``
    * - Title
-     - Unknown
+     - MULTI-CLARID (Multimodal Category Learning and Resting-state Imaging Data)
    * - Year
-     - Unknown
+     - 2025
    * - Authors
-     - Unknown
+     - Jörg Stadler, Torsten Stöter, Nicole Angenstein, Andreas Fügner, Marcel Lommerzheim, Artur Mathysiak, Anke Michalsky, Gabriele Schöps, Johann van der Meer, Susann Wolff, André Brechmann
    * - License
-     - Unknown
+     - CC0
    * - Citation / DOI
-     - Unknown
+     - `doi:10.18112/openneuro.ds005795.v1.0.0 <https://doi.org/10.18112/openneuro.ds005795.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds005795>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005795>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds005795>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005795>`__ | `Source URL <https://openneuro.org/datasets/ds005795>`__
+
+.. dropdown:: Copy-paste BibTeX
+   :class-container: sd-shadow-sm
+   :class-title: sd-bg-light
+
+   .. code-block:: bibtex
+
+      @dataset{ds005795,
+        title = {MULTI-CLARID (Multimodal Category Learning and Resting-state Imaging Data)},
+        author = {Jörg Stadler and Torsten Stöter and Nicole Angenstein and Andreas Fügner and Marcel Lommerzheim and Artur Mathysiak and Anke Michalsky and Gabriele Schöps and Johann van der Meer and Susann Wolff and André Brechmann},
+        doi = {10.18112/openneuro.ds005795.v1.0.0},
+        url = {https://doi.org/10.18112/openneuro.ds005795.v1.0.0},
+      }
 
 Highlights
 ----------
@@ -70,8 +83,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: Unknown
-      - DOI: Unknown
+      - License: CC0
+      - DOI: doi:10.18112/openneuro.ds005795.v1.0.0
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

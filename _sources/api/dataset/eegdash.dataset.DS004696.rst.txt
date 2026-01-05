@@ -5,11 +5,11 @@
 eegdash.dataset.DS004696
 ========================
 
-OpenNeuro dataset ``ds004696``. Access recordings and metadata through EEGDash.
+HAPwave_bids (OpenNeuro ``ds004696``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: ieeg` :bdg-light:`Tasks: 1` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 10` :bdg-light:`Recordings: 5244` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: ieeg` :bdg-light:`Tasks: 1` :bdg-light:`License: CC0` :bdg-light:`Subjects: 10` :bdg-light:`Recordings: 5244` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,17 +21,30 @@ Dataset Information
    * - Dataset ID
      - ``DS004696``
    * - Title
-     - Unknown
+     - HAPwave_bids
    * - Year
      - Unknown
    * - Authors
-     - Unknown
+     - Ojeda Valencia, G., Gregg, N., Huang, H., Lundstrom, B., Brinkmann, B., Pal Attia1, T., Van Gompel, J., Bernstein,M., In, M., Huston, J., Worrell1, G., Miller, K., Hermes, D.
    * - License
-     - Unknown
+     - CC0
    * - Citation / DOI
-     - Unknown
+     - `doi:10.18112/openneuro.ds004696.v1.0.1 <https://doi.org/10.18112/openneuro.ds004696.v1.0.1>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004696>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004696>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004696>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004696>`__ | `Source URL <https://openneuro.org/datasets/ds004696/versions/1.0.1>`__
+
+.. dropdown:: Copy-paste BibTeX
+   :class-container: sd-shadow-sm
+   :class-title: sd-bg-light
+
+   .. code-block:: bibtex
+
+      @dataset{ds004696,
+        title = {HAPwave_bids},
+        author = {Ojeda Valencia, G. and Gregg, N. and Huang, H. and Lundstrom, B. and Brinkmann, B. and Pal Attia1, T. and Van Gompel, J. and Bernstein,M. and In, M. and Huston, J. and Worrell1, G. and Miller, K. and Hermes, D.},
+        doi = {10.18112/openneuro.ds004696.v1.0.1},
+        url = {https://doi.org/10.18112/openneuro.ds004696.v1.0.1},
+      }
 
 Highlights
 ----------
@@ -70,8 +83,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: Unknown
-      - DOI: Unknown
+      - License: CC0
+      - DOI: doi:10.18112/openneuro.ds004696.v1.0.1
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

@@ -5,11 +5,11 @@
 eegdash.dataset.DS005516
 ========================
 
-OpenNeuro dataset ``ds005516``. Access recordings and metadata through EEGDash.
+Healthy Brain Network (HBN) EEG - Release 11 (OpenNeuro ``ds005516``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 8` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 430` :bdg-light:`Recordings: 3397` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 8` :bdg-light:`License: CC-BY-SA 4.0` :bdg-light:`Subjects: 430` :bdg-light:`Recordings: 3397` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,17 +21,30 @@ Dataset Information
    * - Dataset ID
      - ``DS005516``
    * - Title
-     - Unknown
+     - Healthy Brain Network (HBN) EEG - Release 11
    * - Year
-     - Unknown
+     - 2024
    * - Authors
-     - Unknown
+     - Seyed Yahya Shirazi, Alexandre Franco, Maurício Scopel Hoffmann, Nathalia B. Esper, Dung Truong, Arnaud Delorme, Michael Milham, Scott Makeig
    * - License
-     - Unknown
+     - CC-BY-SA 4.0
    * - Citation / DOI
-     - Unknown
+     - `doi:10.18112/openneuro.ds005516.v1.0.1 <https://doi.org/10.18112/openneuro.ds005516.v1.0.1>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds005516>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005516>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds005516>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005516>`__ | `Source URL <https://openneuro.org/datasets/ds005516>`__
+
+.. dropdown:: Copy-paste BibTeX
+   :class-container: sd-shadow-sm
+   :class-title: sd-bg-light
+
+   .. code-block:: bibtex
+
+      @dataset{ds005516,
+        title = {Healthy Brain Network (HBN) EEG - Release 11},
+        author = {Seyed Yahya Shirazi and Alexandre Franco and Maurício Scopel Hoffmann and Nathalia B. Esper and Dung Truong and Arnaud Delorme and Michael Milham and Scott Makeig},
+        doi = {10.18112/openneuro.ds005516.v1.0.1},
+        url = {https://doi.org/10.18112/openneuro.ds005516.v1.0.1},
+      }
 
 Highlights
 ----------
@@ -70,8 +83,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: Unknown
-      - DOI: Unknown
+      - License: CC-BY-SA 4.0
+      - DOI: doi:10.18112/openneuro.ds005516.v1.0.1
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

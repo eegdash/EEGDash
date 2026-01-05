@@ -5,11 +5,11 @@
 eegdash.dataset.DS004346
 ========================
 
-OpenNeuro dataset ``ds004346``. Access recordings and metadata through EEGDash.
+FLUX: A pipeline for MEG analysis (OpenNeuro ``ds004346``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: meg` :bdg-light:`Tasks: 1` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 1` :bdg-light:`Recordings: 3` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: meg` :bdg-light:`Tasks: 1` :bdg-light:`License: CC0` :bdg-light:`Subjects: 1` :bdg-light:`Recordings: 3` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,17 +21,30 @@ Dataset Information
    * - Dataset ID
      - ``DS004346``
    * - Title
-     - Unknown
+     - FLUX: A pipeline for MEG analysis
    * - Year
-     - Unknown
+     - 2022
    * - Authors
-     - Unknown
+     - Oscar Ferrante, Ling Liu, Tamas Minarik, Urszula Gorska, Tara Ghafari, Huan Luo, Ole Jensen
    * - License
-     - Unknown
+     - CC0
    * - Citation / DOI
-     - Unknown
+     - `doi:10.18112/openneuro.ds004346.v1.0.8 <https://doi.org/10.18112/openneuro.ds004346.v1.0.8>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004346>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004346>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004346>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004346>`__ | `Source URL <https://openneuro.org/datasets/ds004346>`__
+
+.. dropdown:: Copy-paste BibTeX
+   :class-container: sd-shadow-sm
+   :class-title: sd-bg-light
+
+   .. code-block:: bibtex
+
+      @dataset{ds004346,
+        title = {FLUX: A pipeline for MEG analysis},
+        author = {Oscar Ferrante and Ling Liu and Tamas Minarik and Urszula Gorska and Tara Ghafari and Huan Luo and Ole Jensen},
+        doi = {10.18112/openneuro.ds004346.v1.0.8},
+        url = {https://doi.org/10.18112/openneuro.ds004346.v1.0.8},
+      }
 
 Highlights
 ----------
@@ -70,8 +83,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: Unknown
-      - DOI: Unknown
+      - License: CC0
+      - DOI: doi:10.18112/openneuro.ds004346.v1.0.8
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

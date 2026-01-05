@@ -5,11 +5,11 @@
 eegdash.dataset.NM000104
 ========================
 
-OpenNeuro dataset ``nm000104``. Access recordings and metadata through EEGDash.
+emg2qwerty: A Large Dataset with Baselines for Touch Typing using Surface Electromyography (OpenNeuro ``nm000104``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: emg` :bdg-light:`Tasks: 1` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 108` :bdg-light:`Recordings: 1135` :bdg-light:`Source: nemar`
+:bdg-light:`Modality: emg` :bdg-light:`Tasks: 1` :bdg-light:`License: CC-BY-NC-SA-4.0` :bdg-light:`Subjects: 108` :bdg-light:`Recordings: 1135` :bdg-light:`Source: nemar`
 
 Dataset Information
 -------------------
@@ -21,17 +21,30 @@ Dataset Information
    * - Dataset ID
      - ``NM000104``
    * - Title
-     - Unknown
+     - emg2qwerty: A Large Dataset with Baselines for Touch Typing using Surface Electromyography
    * - Year
      - Unknown
    * - Authors
-     - Unknown
+     - Viswanath Sivakumar, Jeffrey Seely, Alan Du, Sean R. Bittner, Adam Berenzweig, Anuoluwapo Bolarinwa, Alexandre Gramfort, Michael I. Mandel
    * - License
-     - Unknown
+     - CC-BY-NC-SA-4.0
    * - Citation / DOI
-     - Unknown
+     - `10.5281/zenodo.17287903 <https://doi.org/10.5281/zenodo.17287903>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/nm000104>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=nm000104>`__
+     - `OpenNeuro <https://openneuro.org/datasets/nm000104>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=nm000104>`__ | `Source URL <https://nemar.org/dataexplorer/detail/nm000104>`__
+
+.. dropdown:: Copy-paste BibTeX
+   :class-container: sd-shadow-sm
+   :class-title: sd-bg-light
+
+   .. code-block:: bibtex
+
+      @dataset{nm000104,
+        title = {emg2qwerty: A Large Dataset with Baselines for Touch Typing using Surface Electromyography},
+        author = {Viswanath Sivakumar and Jeffrey Seely and Alan Du and Sean R. Bittner and Adam Berenzweig and Anuoluwapo Bolarinwa and Alexandre Gramfort and Michael I. Mandel},
+        doi = {10.5281/zenodo.17287903},
+        url = {https://doi.org/10.5281/zenodo.17287903},
+      }
 
 Highlights
 ----------
@@ -70,8 +83,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: Unknown
-      - DOI: Unknown
+      - License: CC-BY-NC-SA-4.0
+      - DOI: 10.5281/zenodo.17287903
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

@@ -5,11 +5,11 @@
 eegdash.dataset.DS004817
 ========================
 
-OpenNeuro dataset ``ds004817``. Access recordings and metadata through EEGDash.
+EEG-attention-rsvp-exp2 (OpenNeuro ``ds004817``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 20` :bdg-light:`Recordings: 20` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: CC0` :bdg-light:`Subjects: 20` :bdg-light:`Recordings: 20` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,17 +21,30 @@ Dataset Information
    * - Dataset ID
      - ``DS004817``
    * - Title
-     - Unknown
+     - EEG-attention-rsvp-exp2
    * - Year
-     - Unknown
+     - 2023
    * - Authors
-     - Unknown
+     - Grootswagers, Tijl, Robinson, Amanda, Shatek, Sofia, Carlson, Thomas
    * - License
-     - Unknown
+     - CC0
    * - Citation / DOI
-     - Unknown
+     - `doi:10.18112/openneuro.ds004817.v1.0.0 <https://doi.org/10.18112/openneuro.ds004817.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004817>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004817>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004817>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004817>`__ | `Source URL <https://openneuro.org/datasets/ds004817>`__
+
+.. dropdown:: Copy-paste BibTeX
+   :class-container: sd-shadow-sm
+   :class-title: sd-bg-light
+
+   .. code-block:: bibtex
+
+      @dataset{ds004817,
+        title = {EEG-attention-rsvp-exp2},
+        author = {Grootswagers, Tijl and Robinson, Amanda and Shatek, Sofia and Carlson, Thomas},
+        doi = {10.18112/openneuro.ds004817.v1.0.0},
+        url = {https://doi.org/10.18112/openneuro.ds004817.v1.0.0},
+      }
 
 Highlights
 ----------
@@ -70,8 +83,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: Unknown
-      - DOI: Unknown
+      - License: CC0
+      - DOI: doi:10.18112/openneuro.ds004817.v1.0.0
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

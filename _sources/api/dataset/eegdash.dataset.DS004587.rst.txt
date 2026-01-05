@@ -5,11 +5,11 @@
 eegdash.dataset.DS004587
 ========================
 
-OpenNeuro dataset ``ds004587``. Access recordings and metadata through EEGDash.
+IllusionGameEEG_data (OpenNeuro ``ds004587``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 103` :bdg-light:`Recordings: 114` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: CC0` :bdg-light:`Subjects: 103` :bdg-light:`Recordings: 114` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,17 +21,30 @@ Dataset Information
    * - Dataset ID
      - ``DS004587``
    * - Title
-     - Unknown
+     - IllusionGameEEG_data
    * - Year
-     - Unknown
+     - 2023
    * - Authors
-     - Unknown
+     - Makowski, Dominique, Te, An-Shu, Jiayi, Zhang, Kirk, Stephanie, Ngoi, Zi Liang
    * - License
-     - Unknown
+     - CC0
    * - Citation / DOI
-     - Unknown
+     - `doi:10.18112/openneuro.ds004587.v1.0.0 <https://doi.org/10.18112/openneuro.ds004587.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004587>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004587>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004587>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004587>`__ | `Source URL <https://openneuro.org/datasets/ds004587>`__
+
+.. dropdown:: Copy-paste BibTeX
+   :class-container: sd-shadow-sm
+   :class-title: sd-bg-light
+
+   .. code-block:: bibtex
+
+      @dataset{ds004587,
+        title = {IllusionGameEEG_data},
+        author = {Makowski, Dominique and Te, An-Shu and Jiayi, Zhang and Kirk, Stephanie and Ngoi, Zi Liang},
+        doi = {10.18112/openneuro.ds004587.v1.0.0},
+        url = {https://doi.org/10.18112/openneuro.ds004587.v1.0.0},
+      }
 
 Highlights
 ----------
@@ -70,8 +83,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: Unknown
-      - DOI: Unknown
+      - License: CC0
+      - DOI: doi:10.18112/openneuro.ds004587.v1.0.0
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

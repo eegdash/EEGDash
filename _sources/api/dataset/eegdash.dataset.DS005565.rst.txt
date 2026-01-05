@@ -5,11 +5,11 @@
 eegdash.dataset.DS005565
 ========================
 
-OpenNeuro dataset ``ds005565``. Access recordings and metadata through EEGDash.
+Neural associations between fingerspelling, print, and signs: An ERP priming study with deaf readers (OpenNeuro ``ds005565``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 24` :bdg-light:`Recordings: 24` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: CC0` :bdg-light:`Subjects: 24` :bdg-light:`Recordings: 24` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,17 +21,30 @@ Dataset Information
    * - Dataset ID
      - ``DS005565``
    * - Title
-     - Unknown
+     - Neural associations between fingerspelling, print, and signs: An ERP priming study with deaf readers
    * - Year
-     - Unknown
+     - 2024
    * - Authors
-     - Unknown
+     - Brittany Lee, Sofia E. Ortega, Priscilla M. Martinez, Katherine J. Midgley, Phillip J. Holcomb, Karen Emmorey
    * - License
-     - Unknown
+     - CC0
    * - Citation / DOI
-     - Unknown
+     - `doi:10.18112/openneuro.ds005565.v1.0.3 <https://doi.org/10.18112/openneuro.ds005565.v1.0.3>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds005565>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005565>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds005565>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005565>`__ | `Source URL <https://openneuro.org/datasets/ds005565>`__
+
+.. dropdown:: Copy-paste BibTeX
+   :class-container: sd-shadow-sm
+   :class-title: sd-bg-light
+
+   .. code-block:: bibtex
+
+      @dataset{ds005565,
+        title = {Neural associations between fingerspelling, print, and signs: An ERP priming study with deaf readers},
+        author = {Brittany Lee and Sofia E. Ortega and Priscilla M. Martinez and Katherine J. Midgley and Phillip J. Holcomb and Karen Emmorey},
+        doi = {10.18112/openneuro.ds005565.v1.0.3},
+        url = {https://doi.org/10.18112/openneuro.ds005565.v1.0.3},
+      }
 
 Highlights
 ----------
@@ -70,8 +83,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: Unknown
-      - DOI: Unknown
+      - License: CC0
+      - DOI: doi:10.18112/openneuro.ds005565.v1.0.3
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

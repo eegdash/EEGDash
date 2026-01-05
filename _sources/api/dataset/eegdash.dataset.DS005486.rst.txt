@@ -5,11 +5,11 @@
 eegdash.dataset.DS005486
 ========================
 
-OpenNeuro dataset ``ds005486``. Access recordings and metadata through EEGDash.
+PREDICT (OpenNeuro ``ds005486``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 159` :bdg-light:`Recordings: 445` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: CC0` :bdg-light:`Subjects: 159` :bdg-light:`Recordings: 445` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,17 +21,30 @@ Dataset Information
    * - Dataset ID
      - ``DS005486``
    * - Title
-     - Unknown
+     - PREDICT
    * - Year
-     - Unknown
+     - 2024
    * - Authors
-     - Unknown
+     - Nahian S. Chowdhury, Chuan Bi, Andrew J. Furman, Alan KI Chiang, Patrick Skippen, Emily Si, Samantha K Millard, Sarah M. Margerison, Darrah Spies, Michael L. Keaser, Joyce T. Da Silva, Shuo Chen, Siobhan M. Schabrun, David A. Seminowicz
    * - License
-     - Unknown
+     - CC0
    * - Citation / DOI
-     - Unknown
+     - `doi:10.18112/openneuro.ds005486.v1.0.1 <https://doi.org/10.18112/openneuro.ds005486.v1.0.1>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds005486>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005486>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds005486>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005486>`__ | `Source URL <https://openneuro.org/datasets/ds005486>`__
+
+.. dropdown:: Copy-paste BibTeX
+   :class-container: sd-shadow-sm
+   :class-title: sd-bg-light
+
+   .. code-block:: bibtex
+
+      @dataset{ds005486,
+        title = {PREDICT},
+        author = {Nahian S. Chowdhury and Chuan Bi and Andrew J. Furman and Alan KI Chiang and Patrick Skippen and Emily Si and Samantha K Millard and Sarah M. Margerison and Darrah Spies and Michael L. Keaser and Joyce T. Da Silva and Shuo Chen and Siobhan M. Schabrun and David A. Seminowicz},
+        doi = {10.18112/openneuro.ds005486.v1.0.1},
+        url = {https://doi.org/10.18112/openneuro.ds005486.v1.0.1},
+      }
 
 Highlights
 ----------
@@ -70,8 +83,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: Unknown
-      - DOI: Unknown
+      - License: CC0
+      - DOI: doi:10.18112/openneuro.ds005486.v1.0.1
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

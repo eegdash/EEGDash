@@ -5,11 +5,11 @@
 eegdash.dataset.DS004330
 ========================
 
-OpenNeuro dataset ``ds004330``. Access recordings and metadata through EEGDash.
+The spatiotemporal neural dynamics of object recognition for natural images and line drawings (MEG) (OpenNeuro ``ds004330``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: meg` :bdg-light:`Tasks: 1` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 30` :bdg-light:`Recordings: 270` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: meg` :bdg-light:`Tasks: 1` :bdg-light:`License: CC0` :bdg-light:`Subjects: 30` :bdg-light:`Recordings: 270` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,17 +21,30 @@ Dataset Information
    * - Dataset ID
      - ``DS004330``
    * - Title
-     - Unknown
+     - The spatiotemporal neural dynamics of object recognition for natural images and line drawings (MEG)
    * - Year
-     - Unknown
+     - 2022
    * - Authors
-     - Unknown
+     - Johannes J.D. Singer, Radoslaw M. Cichy, Martin N. Hebart
    * - License
-     - Unknown
+     - CC0
    * - Citation / DOI
-     - Unknown
+     - `doi:10.18112/openneuro.ds004330.v1.0.0 <https://doi.org/10.18112/openneuro.ds004330.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004330>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004330>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004330>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004330>`__ | `Source URL <https://openneuro.org/datasets/ds004330>`__
+
+.. dropdown:: Copy-paste BibTeX
+   :class-container: sd-shadow-sm
+   :class-title: sd-bg-light
+
+   .. code-block:: bibtex
+
+      @dataset{ds004330,
+        title = {The spatiotemporal neural dynamics of object recognition for natural images and line drawings (MEG)},
+        author = {Johannes J.D. Singer and Radoslaw M. Cichy and Martin N. Hebart},
+        doi = {10.18112/openneuro.ds004330.v1.0.0},
+        url = {https://doi.org/10.18112/openneuro.ds004330.v1.0.0},
+      }
 
 Highlights
 ----------
@@ -70,8 +83,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: Unknown
-      - DOI: Unknown
+      - License: CC0
+      - DOI: doi:10.18112/openneuro.ds004330.v1.0.0
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

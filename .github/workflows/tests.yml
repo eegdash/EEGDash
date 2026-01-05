@@ -109,7 +109,16 @@ jobs:
     # Show EEGDash Version
     - name: Show EEGDash Version
       run: python -c "import eegdash; print(eegdash.__version__)"
-    - name: Run Tests
-      env:
-        EEGDASH_API_TOKEN: ${{ secrets.EEGDASH_API_TOKEN }}
-      run: pytest -vvv -s --tb=long --durations=0 --log-cli-level=INFO --cov=eegdash --cov-report=xml tests --verbose 
+      - name: Run Tests
+        env:
+          EEGDASH_API_TOKEN: ${{ secrets.EEGDASH_API_TOKEN }}
+        run: pytest -vvv -s --tb=long --durations=0 --log-cli-level=INFO --cov=eegdash --cov-report=xml tests --verbose 
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./coverage.xml
+          flags: unittests
+          name: codecov-umbrella
+          fail_ci_if_error: true

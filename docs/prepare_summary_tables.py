@@ -703,14 +703,16 @@ def _load_local_dataset_summary() -> pd.DataFrame:
 
 
 def _needs_csv_fallback(df_raw: pd.DataFrame) -> bool:
-    required_cols = ("n_subjects", "n_records", "n_tasks", "size_bytes")
-    if any(col not in df_raw.columns for col in required_cols):
+    # Critical columns that MUST have data
+    critical_cols = ("n_subjects", "n_records", "n_tasks")
+    if any(col not in df_raw.columns for col in critical_cols):
         return True
     numeric = (
-        df_raw[list(required_cols)].apply(pd.to_numeric, errors="coerce").fillna(0)
+        df_raw[list(critical_cols)].apply(pd.to_numeric, errors="coerce").fillna(0)
     )
     totals = numeric.sum()
-    return any(totals.get(col, 0) == 0 for col in required_cols)
+    # Fallback only if all critical totals are zero (suggests a real API failure)
+    return all(totals.get(col, 0) == 0 for col in critical_cols)
 
 
 def fetch_datasets_from_api(

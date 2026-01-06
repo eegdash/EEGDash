@@ -5,11 +5,11 @@
 eegdash.dataset.DS003838
 ========================
 
-EEG, pupillometry, ECG and photoplethysmography, and behavioral data in the digit span task and rest (OpenNeuro ``ds003838``). Access recordings and metadata through EEGDash.
+OpenNeuro dataset ``ds003838``. Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 2` :bdg-light:`License: CC0` :bdg-light:`Subjects: 65` :bdg-light:`Recordings: 130` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 2` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 65` :bdg-light:`Recordings: 130` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,30 +21,17 @@ Dataset Information
    * - Dataset ID
      - ``DS003838``
    * - Title
-     - EEG, pupillometry, ECG and photoplethysmography, and behavioral data in the digit span task and rest
+     - Unknown
    * - Year
-     - 2021
+     - Unknown
    * - Authors
-     - Yuri G. Pavlov, Dauren Kasanov, Alexandra I. Kosachenko, Alexander I. Kotyusov
+     - Unknown
    * - License
-     - CC0
+     - Unknown
    * - Citation / DOI
-     - `doi:10.18112/openneuro.ds003838.v1.0.6 <https://doi.org/10.18112/openneuro.ds003838.v1.0.6>`__
+     - Unknown
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds003838>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003838>`__ | `Source URL <https://openneuro.org/datasets/ds003838>`__
-
-.. dropdown:: Copy-paste BibTeX
-   :class-container: sd-shadow-sm
-   :class-title: sd-bg-light
-
-   .. code-block:: bibtex
-
-      @dataset{ds003838,
-        title = {EEG, pupillometry, ECG and photoplethysmography, and behavioral data in the digit span task and rest},
-        author = {Yuri G. Pavlov and Dauren Kasanov and Alexandra I. Kosachenko and Alexander I. Kotyusov},
-        doi = {10.18112/openneuro.ds003838.v1.0.6},
-        url = {https://doi.org/10.18112/openneuro.ds003838.v1.0.6},
-      }
+     - `OpenNeuro <https://openneuro.org/datasets/ds003838>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003838>`__
 
 Highlights
 ----------
@@ -83,8 +70,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: CC0
-      - DOI: doi:10.18112/openneuro.ds003838.v1.0.6
+      - License: Unknown
+      - DOI: Unknown
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

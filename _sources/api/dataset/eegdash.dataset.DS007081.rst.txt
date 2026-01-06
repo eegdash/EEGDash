@@ -5,11 +5,11 @@
 eegdash.dataset.DS007081
 ========================
 
-Passive but accessible: Studied information is not actively stored in working memory, yet attended regardless of anticipated load (OpenNeuro ``ds007081``). Access recordings and metadata through EEGDash.
+OpenNeuro dataset ``ds007081``. Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: CC0` :bdg-light:`Subjects: 41` :bdg-light:`Recordings: 41` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 41` :bdg-light:`Recordings: 41` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,30 +21,17 @@ Dataset Information
    * - Dataset ID
      - ``DS007081``
    * - Title
-     - Passive but accessible: Studied information is not actively stored in working memory, yet attended regardless of anticipated load
+     - Unknown
    * - Year
-     - 2025
+     - Unknown
    * - Authors
-     - Yakup Yılmaz, Nursena Ataseven Özdemir, Wouter Kruijne, Elkan Akyürek, Eren Günseli
+     - Unknown
    * - License
-     - CC0
+     - Unknown
    * - Citation / DOI
-     - `doi:10.18112/openneuro.ds007081.v1.0.0 <https://doi.org/10.18112/openneuro.ds007081.v1.0.0>`__
+     - Unknown
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds007081>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds007081>`__ | `Source URL <https://openneuro.org/datasets/ds007081>`__
-
-.. dropdown:: Copy-paste BibTeX
-   :class-container: sd-shadow-sm
-   :class-title: sd-bg-light
-
-   .. code-block:: bibtex
-
-      @dataset{ds007081,
-        title = {Passive but accessible: Studied information is not actively stored in working memory, yet attended regardless of anticipated load},
-        author = {Yakup Yılmaz and Nursena Ataseven Özdemir and Wouter Kruijne and Elkan Akyürek and Eren Günseli},
-        doi = {10.18112/openneuro.ds007081.v1.0.0},
-        url = {https://doi.org/10.18112/openneuro.ds007081.v1.0.0},
-      }
+     - `OpenNeuro <https://openneuro.org/datasets/ds007081>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds007081>`__
 
 Highlights
 ----------
@@ -83,8 +70,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: CC0
-      - DOI: doi:10.18112/openneuro.ds007081.v1.0.0
+      - License: Unknown
+      - DOI: Unknown
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

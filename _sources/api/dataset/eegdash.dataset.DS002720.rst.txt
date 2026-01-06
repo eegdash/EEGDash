@@ -5,11 +5,11 @@
 eegdash.dataset.DS002720
 ========================
 
-A dataset recorded during development of a tempo-based brain-computer music interface (OpenNeuro ``ds002720``). Access recordings and metadata through EEGDash.
+OpenNeuro dataset ``ds002720``. Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 10` :bdg-light:`License: CC0` :bdg-light:`Subjects: 18` :bdg-light:`Recordings: 165` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 10` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 18` :bdg-light:`Recordings: 165` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,30 +21,17 @@ Dataset Information
    * - Dataset ID
      - ``DS002720``
    * - Title
-     - A dataset recorded during development of a tempo-based brain-computer music interface
+     - Unknown
    * - Year
-     - 2020
+     - Unknown
    * - Authors
-     - Ian Daly, Nicoletta Nicolaou, Duncan Williams, Faustina Hwang, Alexis Kirke, Eduardo Miranda, Slawomir J. Nasuto
+     - Unknown
    * - License
-     - CC0
+     - Unknown
    * - Citation / DOI
-     - `10.18112/openneuro.ds002720.v1.0.1 <https://doi.org/10.18112/openneuro.ds002720.v1.0.1>`__
+     - Unknown
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds002720>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds002720>`__ | `Source URL <https://openneuro.org/datasets/ds002720>`__
-
-.. dropdown:: Copy-paste BibTeX
-   :class-container: sd-shadow-sm
-   :class-title: sd-bg-light
-
-   .. code-block:: bibtex
-
-      @dataset{ds002720,
-        title = {A dataset recorded during development of a tempo-based brain-computer music interface},
-        author = {Ian Daly and Nicoletta Nicolaou and Duncan Williams and Faustina Hwang and Alexis Kirke and Eduardo Miranda and Slawomir J. Nasuto},
-        doi = {10.18112/openneuro.ds002720.v1.0.1},
-        url = {https://doi.org/10.18112/openneuro.ds002720.v1.0.1},
-      }
+     - `OpenNeuro <https://openneuro.org/datasets/ds002720>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds002720>`__
 
 Highlights
 ----------
@@ -83,8 +70,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: CC0
-      - DOI: 10.18112/openneuro.ds002720.v1.0.1
+      - License: Unknown
+      - DOI: Unknown
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

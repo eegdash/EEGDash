@@ -5,11 +5,11 @@
 eegdash.dataset.DS004306
 ========================
 
-EEG Semantic Imagination and Perception Dataset (OpenNeuro ``ds004306``). Access recordings and metadata through EEGDash.
+OpenNeuro dataset ``ds004306``. Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: CC0` :bdg-light:`Subjects: 12` :bdg-light:`Recordings: 15` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 12` :bdg-light:`Recordings: 15` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,30 +21,17 @@ Dataset Information
    * - Dataset ID
      - ``DS004306``
    * - Title
-     - EEG Semantic Imagination and Perception Dataset
+     - Unknown
    * - Year
-     - 2022
+     - Unknown
    * - Authors
-     - Holly Wilson, Mohammad Golbabaee, Michael Proulx, Eamonn O'Neill
+     - Unknown
    * - License
-     - CC0
+     - Unknown
    * - Citation / DOI
-     - `doi:10.18112/openneuro.ds004306.v1.0.2 <https://doi.org/10.18112/openneuro.ds004306.v1.0.2>`__
+     - Unknown
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004306>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004306>`__ | `Source URL <https://openneuro.org/datasets/ds004306>`__
-
-.. dropdown:: Copy-paste BibTeX
-   :class-container: sd-shadow-sm
-   :class-title: sd-bg-light
-
-   .. code-block:: bibtex
-
-      @dataset{ds004306,
-        title = {EEG Semantic Imagination and Perception Dataset},
-        author = {Holly Wilson and Mohammad Golbabaee and Michael Proulx and Eamonn O'Neill},
-        doi = {10.18112/openneuro.ds004306.v1.0.2},
-        url = {https://doi.org/10.18112/openneuro.ds004306.v1.0.2},
-      }
+     - `OpenNeuro <https://openneuro.org/datasets/ds004306>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004306>`__
 
 Highlights
 ----------
@@ -83,8 +70,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: CC0
-      - DOI: doi:10.18112/openneuro.ds004306.v1.0.2
+      - License: Unknown
+      - DOI: Unknown
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

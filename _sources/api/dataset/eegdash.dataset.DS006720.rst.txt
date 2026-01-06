@@ -5,11 +5,11 @@
 eegdash.dataset.DS006720
 ========================
 
-Alpha power indexes working memory load for durations (OpenNeuro ``ds006720``). Access recordings and metadata through EEGDash.
+OpenNeuro dataset ``ds006720``. Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: meg` :bdg-light:`Tasks: 3` :bdg-light:`License: CC0` :bdg-light:`Subjects: 24` :bdg-light:`Recordings: 246` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: meg` :bdg-light:`Tasks: 3` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 24` :bdg-light:`Recordings: 246` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,30 +21,17 @@ Dataset Information
    * - Dataset ID
      - ``DS006720``
    * - Title
-     - Alpha power indexes working memory load for durations
+     - Unknown
    * - Year
-     - 2025
+     - Unknown
    * - Authors
-     - Sophie K. Herbst [1], Izem Mangione [1], Charbel-Raphaël Segerie [2], Richard Höchenberger [2], Tadeusz Kononowicz [1, 3, 4], Alexandre Gramfort [2], Virginie van Wassenhove [1], [1] Cognitive Neuroimaging Unit, INSERM, CEA, Université Paris-Saclay, NeuroSpin, 91191 Gif/Yvette, France [2] Inria, CEA, Université Paris-Saclay, Palaiseau, France [3] Institute of Psychology, The Polish Academy of Sciences, ul. Jaracza 1, 00-378 Warsaw, Poland [4] Institut NeuroPSI - UMR9197 CNRS Université Paris-Saclay
+     - Unknown
    * - License
-     - CC0
+     - Unknown
    * - Citation / DOI
-     - `doi:10.18112/openneuro.ds006720.v1.0.0 <https://doi.org/10.18112/openneuro.ds006720.v1.0.0>`__
+     - Unknown
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds006720>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006720>`__ | `Source URL <https://openneuro.org/datasets/ds006720>`__
-
-.. dropdown:: Copy-paste BibTeX
-   :class-container: sd-shadow-sm
-   :class-title: sd-bg-light
-
-   .. code-block:: bibtex
-
-      @dataset{ds006720,
-        title = {Alpha power indexes working memory load for durations},
-        author = {Sophie K. Herbst [1] and Izem Mangione [1] and Charbel-Raphaël Segerie [2] and Richard Höchenberger [2] and Tadeusz Kononowicz [1, 3, 4] and Alexandre Gramfort [2] and Virginie van Wassenhove [1] and [1] Cognitive Neuroimaging Unit, INSERM, CEA, Université Paris-Saclay, NeuroSpin, 91191 Gif/Yvette, France [2] Inria, CEA, Université Paris-Saclay, Palaiseau, France [3] Institute of Psychology, The Polish Academy of Sciences, ul. Jaracza 1, 00-378 Warsaw, Poland [4] Institut NeuroPSI - UMR9197 CNRS Université Paris-Saclay},
-        doi = {10.18112/openneuro.ds006720.v1.0.0},
-        url = {https://doi.org/10.18112/openneuro.ds006720.v1.0.0},
-      }
+     - `OpenNeuro <https://openneuro.org/datasets/ds006720>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006720>`__
 
 Highlights
 ----------
@@ -83,8 +70,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: CC0
-      - DOI: doi:10.18112/openneuro.ds006720.v1.0.0
+      - License: Unknown
+      - DOI: Unknown
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

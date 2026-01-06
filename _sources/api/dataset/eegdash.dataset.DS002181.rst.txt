@@ -5,11 +5,11 @@
 eegdash.dataset.DS002181
 ========================
 
-CRYPTO and PROVIDE EEG Baseline Data (OpenNeuro ``ds002181``). Access recordings and metadata through EEGDash.
+OpenNeuro dataset ``ds002181``. Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: CC0` :bdg-light:`Subjects: 226` :bdg-light:`Recordings: 226` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 226` :bdg-light:`Recordings: 226` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,30 +21,17 @@ Dataset Information
    * - Dataset ID
      - ``DS002181``
    * - Title
-     - CRYPTO and PROVIDE EEG Baseline Data
+     - Unknown
    * - Year
-     - 2019
+     - Unknown
    * - Authors
-     - Wanze Xie, Sarah Jensen, Mark Wade, Swapna Kumar, Alissa Westerlund, Shahria Kakon, Rashidul Haque, William A Petri, Charles A Nelson
+     - Unknown
    * - License
-     - CC0
+     - Unknown
    * - Citation / DOI
-     - `mockDOI <https://doi.org/mockDOI>`__
+     - Unknown
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds002181>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds002181>`__ | `Source URL <https://openneuro.org/datasets/ds002181>`__
-
-.. dropdown:: Copy-paste BibTeX
-   :class-container: sd-shadow-sm
-   :class-title: sd-bg-light
-
-   .. code-block:: bibtex
-
-      @dataset{ds002181,
-        title = {CRYPTO and PROVIDE EEG Baseline Data},
-        author = {Wanze Xie and Sarah Jensen and Mark Wade and Swapna Kumar and Alissa Westerlund and Shahria Kakon and Rashidul Haque and William A Petri and Charles A Nelson},
-        doi = {mockDOI},
-        url = {https://doi.org/mockDOI},
-      }
+     - `OpenNeuro <https://openneuro.org/datasets/ds002181>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds002181>`__
 
 Highlights
 ----------
@@ -83,8 +70,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: CC0
-      - DOI: mockDOI
+      - License: Unknown
+      - DOI: Unknown
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

@@ -5,11 +5,11 @@
 eegdash.dataset.DS005473
 ========================
 
-29 By BP (OpenNeuro ``ds005473``). Access recordings and metadata through EEGDash.
+OpenNeuro dataset ``ds005473``. Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: CC0` :bdg-light:`Subjects: 29` :bdg-light:`Recordings: 58` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 29` :bdg-light:`Recordings: 58` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,30 +21,17 @@ Dataset Information
    * - Dataset ID
      - ``DS005473``
    * - Title
-     - 29 By BP
+     - Unknown
    * - Year
-     - 2024
+     - Unknown
    * - Authors
-     - Zhao Xiangyue, Zhou Jingyao, Zhang Libo, Duan Haoqing, Wei Shiyu, Bi Yanzhi, Hu Li
+     - Unknown
    * - License
-     - CC0
+     - Unknown
    * - Citation / DOI
-     - `doi:10.18112/openneuro.ds005473.v1.0.0 <https://doi.org/10.18112/openneuro.ds005473.v1.0.0>`__
+     - Unknown
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds005473>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005473>`__ | `Source URL <https://openneuro.org/datasets/ds005473>`__
-
-.. dropdown:: Copy-paste BibTeX
-   :class-container: sd-shadow-sm
-   :class-title: sd-bg-light
-
-   .. code-block:: bibtex
-
-      @dataset{ds005473,
-        title = {29 By BP},
-        author = {Zhao Xiangyue and Zhou Jingyao and Zhang Libo and Duan Haoqing and Wei Shiyu and Bi Yanzhi and Hu Li},
-        doi = {10.18112/openneuro.ds005473.v1.0.0},
-        url = {https://doi.org/10.18112/openneuro.ds005473.v1.0.0},
-      }
+     - `OpenNeuro <https://openneuro.org/datasets/ds005473>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005473>`__
 
 Highlights
 ----------
@@ -83,8 +70,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: CC0
-      - DOI: doi:10.18112/openneuro.ds005473.v1.0.0
+      - License: Unknown
+      - DOI: Unknown
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

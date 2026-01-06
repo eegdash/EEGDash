@@ -5,11 +5,11 @@
 eegdash.dataset.DS003519
 ========================
 
-EEG: Visual Working Memory + Cabergoline Challenge (OpenNeuro ``ds003519``). Access recordings and metadata through EEGDash.
+OpenNeuro dataset ``ds003519``. Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: CC0` :bdg-light:`Subjects: 27` :bdg-light:`Recordings: 54` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 27` :bdg-light:`Recordings: 54` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,30 +21,17 @@ Dataset Information
    * - Dataset ID
      - ``DS003519``
    * - Title
-     - EEG: Visual Working Memory + Cabergoline Challenge
+     - Unknown
    * - Year
-     - 2021
+     - Unknown
    * - Authors
-     - James F Cavanagh, Michael J Frank, James Broadway
+     - Unknown
    * - License
-     - CC0
+     - Unknown
    * - Citation / DOI
-     - `10.18112/openneuro.ds003519.v1.1.0 <https://doi.org/10.18112/openneuro.ds003519.v1.1.0>`__
+     - Unknown
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds003519>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003519>`__ | `Source URL <https://openneuro.org/datasets/ds003519>`__
-
-.. dropdown:: Copy-paste BibTeX
-   :class-container: sd-shadow-sm
-   :class-title: sd-bg-light
-
-   .. code-block:: bibtex
-
-      @dataset{ds003519,
-        title = {EEG: Visual Working Memory + Cabergoline Challenge},
-        author = {James F Cavanagh and Michael J Frank and James Broadway},
-        doi = {10.18112/openneuro.ds003519.v1.1.0},
-        url = {https://doi.org/10.18112/openneuro.ds003519.v1.1.0},
-      }
+     - `OpenNeuro <https://openneuro.org/datasets/ds003519>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003519>`__
 
 Highlights
 ----------
@@ -83,8 +70,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: CC0
-      - DOI: 10.18112/openneuro.ds003519.v1.1.0
+      - License: Unknown
+      - DOI: Unknown
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

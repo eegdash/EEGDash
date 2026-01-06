@@ -5,11 +5,11 @@
 eegdash.dataset.DS006394
 ========================
 
-Electrophysiological markers of surprise-induced failures of visual and auditory awareness (OpenNeuro ``ds006394``). Access recordings and metadata through EEGDash.
+OpenNeuro dataset ``ds006394``. Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 2` :bdg-light:`License: CC0` :bdg-light:`Subjects: 33` :bdg-light:`Recordings: 60` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 2` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 33` :bdg-light:`Recordings: 60` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,30 +21,17 @@ Dataset Information
    * - Dataset ID
      - ``DS006394``
    * - Title
-     - Electrophysiological markers of surprise-induced failures of visual and auditory awareness
+     - Unknown
    * - Year
-     - 2025
+     - Unknown
    * - Authors
-     - En-Lin Leong, Yun Da Chua, Takashi Obana, Christopher L. Asplund
+     - Unknown
    * - License
-     - CC0
+     - Unknown
    * - Citation / DOI
-     - `doi:10.18112/openneuro.ds006394.v1.0.3 <https://doi.org/10.18112/openneuro.ds006394.v1.0.3>`__
+     - Unknown
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds006394>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006394>`__ | `Source URL <https://openneuro.org/datasets/ds006394>`__
-
-.. dropdown:: Copy-paste BibTeX
-   :class-container: sd-shadow-sm
-   :class-title: sd-bg-light
-
-   .. code-block:: bibtex
-
-      @dataset{ds006394,
-        title = {Electrophysiological markers of surprise-induced failures of visual and auditory awareness},
-        author = {En-Lin Leong and Yun Da Chua and Takashi Obana and Christopher L. Asplund},
-        doi = {10.18112/openneuro.ds006394.v1.0.3},
-        url = {https://doi.org/10.18112/openneuro.ds006394.v1.0.3},
-      }
+     - `OpenNeuro <https://openneuro.org/datasets/ds006394>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006394>`__
 
 Highlights
 ----------
@@ -83,8 +70,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: CC0
-      - DOI: doi:10.18112/openneuro.ds006394.v1.0.3
+      - License: Unknown
+      - DOI: Unknown
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

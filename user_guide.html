@@ -44,7 +44,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/searchpanes/2.3.1/css/searchPanes.dataTables.min.css" />
     <link rel="stylesheet" type="text/css" href="_static/custom.css?v=7021f170" />
     <link rel="stylesheet" type="text/css" href="_static/css/treemap.css?v=7131b20f" />
-    <link rel="stylesheet" type="text/css" href="_static/css/custom.css?v=b782d13e" />
+    <link rel="stylesheet" type="text/css" href="_static/css/custom.css?v=c1455002" />
   
   <!-- So that users can add custom icons -->
   <script src="_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
@@ -664,12 +664,7 @@
     <span class="c1"># Get the first recording</span>
     <span class="n">recording</span> <span class="o">=</span> <span class="n">dataset</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
-    <span class="c1"># Load the EEG data as a raw MNE object</span>
-    <span class="n">raw</span> <span class="o">=</span> <span class="n">recording</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
-
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Loaded recording for subject: </span><span class="si">{</span><span class="n">recording</span><span class="o">.</span><span class="n">description</span><span class="p">[</span><span class="s1">&#39;subject&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Sampling frequency: </span><span class="si">{</span><span class="n">raw</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;sfreq&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> Hz&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Number of channels: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">raw</span><span class="o">.</span><span class="n">ch_names</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>This provides a powerful and flexible way to integrate <code class="docutils literal notranslate"><span class="pre">eegdash</span></code> into your data analysis pipelines, whether you are working with remote or local data. For contributor resources, see <a class="reference internal" href="developer_notes.html"><span class="doc">Developer Notes</span></a>.</p>

@@ -5,11 +5,11 @@
 eegdash.dataset.DS004520
 ========================
 
-Changes in behavioral priority influence the accessibility of working memory content - Experiment 2 (OpenNeuro ``ds004520``). Access recordings and metadata through EEGDash.
+OpenNeuro dataset ``ds004520``. Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: CC0` :bdg-light:`Subjects: 33` :bdg-light:`Recordings: 33` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 33` :bdg-light:`Recordings: 33` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,30 +21,17 @@ Dataset Information
    * - Dataset ID
      - ``DS004520``
    * - Title
-     - Changes in behavioral priority influence the accessibility of working memory content - Experiment 2
+     - Unknown
    * - Year
-     - 2023
+     - Unknown
    * - Authors
-     - Edward Ester, Paige Pytel
+     - Unknown
    * - License
-     - CC0
+     - Unknown
    * - Citation / DOI
-     - `doi:10.18112/openneuro.ds004520.v1.0.1 <https://doi.org/10.18112/openneuro.ds004520.v1.0.1>`__
+     - Unknown
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004520>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004520>`__ | `Source URL <https://openneuro.org/datasets/ds004520>`__
-
-.. dropdown:: Copy-paste BibTeX
-   :class-container: sd-shadow-sm
-   :class-title: sd-bg-light
-
-   .. code-block:: bibtex
-
-      @dataset{ds004520,
-        title = {Changes in behavioral priority influence the accessibility of working memory content - Experiment 2},
-        author = {Edward Ester and Paige Pytel},
-        doi = {10.18112/openneuro.ds004520.v1.0.1},
-        url = {https://doi.org/10.18112/openneuro.ds004520.v1.0.1},
-      }
+     - `OpenNeuro <https://openneuro.org/datasets/ds004520>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004520>`__
 
 Highlights
 ----------
@@ -83,8 +70,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: CC0
-      - DOI: doi:10.18112/openneuro.ds004520.v1.0.1
+      - License: Unknown
+      - DOI: Unknown
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

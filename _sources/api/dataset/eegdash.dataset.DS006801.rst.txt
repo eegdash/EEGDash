@@ -5,11 +5,11 @@
 eegdash.dataset.DS006801
 ========================
 
-Resting-state EEG before and after different study methods (OpenNeuro ``ds006801``). Access recordings and metadata through EEGDash.
+OpenNeuro dataset ``ds006801``. Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: CC0` :bdg-light:`Subjects: 21` :bdg-light:`Recordings: 42` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 21` :bdg-light:`Recordings: 42` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,30 +21,17 @@ Dataset Information
    * - Dataset ID
      - ``DS006801``
    * - Title
-     - Resting-state EEG before and after different study methods
+     - Unknown
    * - Year
-     - 2025
+     - Unknown
    * - Authors
-     - Paloma Victoria de Sales Alves, Antonio Simeão Sobrinho Neto, Carla Alexandra da Silva Moita Minervino
+     - Unknown
    * - License
-     - CC0
+     - Unknown
    * - Citation / DOI
-     - `doi:10.18112/openneuro.ds006801.v1.0.0 <https://doi.org/10.18112/openneuro.ds006801.v1.0.0>`__
+     - Unknown
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds006801>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006801>`__ | `Source URL <https://openneuro.org/datasets/ds006801>`__
-
-.. dropdown:: Copy-paste BibTeX
-   :class-container: sd-shadow-sm
-   :class-title: sd-bg-light
-
-   .. code-block:: bibtex
-
-      @dataset{ds006801,
-        title = {Resting-state EEG before and after different study methods},
-        author = {Paloma Victoria de Sales Alves and Antonio Simeão Sobrinho Neto and Carla Alexandra da Silva Moita Minervino},
-        doi = {10.18112/openneuro.ds006801.v1.0.0},
-        url = {https://doi.org/10.18112/openneuro.ds006801.v1.0.0},
-      }
+     - `OpenNeuro <https://openneuro.org/datasets/ds006801>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006801>`__
 
 Highlights
 ----------
@@ -83,8 +70,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: CC0
-      - DOI: doi:10.18112/openneuro.ds006801.v1.0.0
+      - License: Unknown
+      - DOI: Unknown
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

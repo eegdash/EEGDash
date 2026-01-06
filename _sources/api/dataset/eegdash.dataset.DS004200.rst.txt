@@ -5,11 +5,11 @@
 eegdash.dataset.DS004200
 ========================
 
-Temporal Scaling (OpenNeuro ``ds004200``). Access recordings and metadata through EEGDash.
+OpenNeuro dataset ``ds004200``. Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: CC0` :bdg-light:`Subjects: 20` :bdg-light:`Recordings: 20` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 20` :bdg-light:`Recordings: 20` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,30 +21,17 @@ Dataset Information
    * - Dataset ID
      - ``DS004200``
    * - Title
-     - Temporal Scaling
+     - Unknown
    * - Year
-     - 2022
+     - Unknown
    * - Authors
-     - Cameron D. Hassall, Jack Harley, Nils Kolling, Laurence T. Hunt
+     - Unknown
    * - License
-     - CC0
+     - Unknown
    * - Citation / DOI
-     - `doi:10.18112/openneuro.ds004200.v1.0.1 <https://doi.org/10.18112/openneuro.ds004200.v1.0.1>`__
+     - Unknown
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004200>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004200>`__ | `Source URL <https://openneuro.org/datasets/ds004200>`__
-
-.. dropdown:: Copy-paste BibTeX
-   :class-container: sd-shadow-sm
-   :class-title: sd-bg-light
-
-   .. code-block:: bibtex
-
-      @dataset{ds004200,
-        title = {Temporal Scaling},
-        author = {Cameron D. Hassall and Jack Harley and Nils Kolling and Laurence T. Hunt},
-        doi = {10.18112/openneuro.ds004200.v1.0.1},
-        url = {https://doi.org/10.18112/openneuro.ds004200.v1.0.1},
-      }
+     - `OpenNeuro <https://openneuro.org/datasets/ds004200>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004200>`__
 
 Highlights
 ----------
@@ -83,8 +70,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: CC0
-      - DOI: doi:10.18112/openneuro.ds004200.v1.0.1
+      - License: Unknown
+      - DOI: Unknown
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

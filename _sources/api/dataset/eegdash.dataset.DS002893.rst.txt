@@ -5,11 +5,11 @@
 eegdash.dataset.DS002893
 ========================
 
-Auditory-Visual Shift Study (OpenNeuro ``ds002893``). Access recordings and metadata through EEGDash.
+OpenNeuro dataset ``ds002893``. Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: CC0` :bdg-light:`Subjects: 49` :bdg-light:`Recordings: 52` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 49` :bdg-light:`Recordings: 52` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,30 +21,17 @@ Dataset Information
    * - Dataset ID
      - ``DS002893``
    * - Title
-     - Auditory-Visual Shift Study
+     - Unknown
    * - Year
-     - 2020
+     - Unknown
    * - Authors
-     - Marissa Westerfield (data, curation), Scott Makeig (data, curation), Dung Truong (curation), Kay Robbins (curation), Arno Delorme (curation)
+     - Unknown
    * - License
-     - CC0
+     - Unknown
    * - Citation / DOI
-     - `doi:10.18112/openneuro.ds002893.v2.0.0 <https://doi.org/10.18112/openneuro.ds002893.v2.0.0>`__
+     - Unknown
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds002893>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds002893>`__ | `Source URL <https://openneuro.org/datasets/ds002893>`__
-
-.. dropdown:: Copy-paste BibTeX
-   :class-container: sd-shadow-sm
-   :class-title: sd-bg-light
-
-   .. code-block:: bibtex
-
-      @dataset{ds002893,
-        title = {Auditory-Visual Shift Study},
-        author = {Marissa Westerfield (data, curation) and Scott Makeig (data, curation) and Dung Truong (curation) and Kay Robbins (curation) and Arno Delorme (curation)},
-        doi = {10.18112/openneuro.ds002893.v2.0.0},
-        url = {https://doi.org/10.18112/openneuro.ds002893.v2.0.0},
-      }
+     - `OpenNeuro <https://openneuro.org/datasets/ds002893>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds002893>`__
 
 Highlights
 ----------
@@ -83,8 +70,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: CC0
-      - DOI: doi:10.18112/openneuro.ds002893.v2.0.0
+      - License: Unknown
+      - DOI: Unknown
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

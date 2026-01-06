@@ -5,11 +5,11 @@
 eegdash.dataset.DS005777
 ========================
 
-Electrical_Morphine_Placebo_2018 (OpenNeuro ``ds005777``). Access recordings and metadata through EEGDash.
+OpenNeuro dataset ``ds005777``. Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: fnirs` :bdg-light:`Tasks: 1` :bdg-light:`License: CC0` :bdg-light:`Subjects: 15` :bdg-light:`Recordings: 699` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: fnirs` :bdg-light:`Tasks: 1` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 15` :bdg-light:`Recordings: 699` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,30 +21,17 @@ Dataset Information
    * - Dataset ID
      - ``DS005777``
    * - Title
-     - Electrical_Morphine_Placebo_2018
+     - Unknown
    * - Year
      - Unknown
    * - Authors
-     - Peng, Ke, Yücel, Meryem, Steele, Sarah, Bittner, Edward, Aasted, Christopher, Hoeft, Mark, Lee, Arielle, George, Edward, Boas, David, Becerra, Lino, Borsook, David
+     - Unknown
    * - License
-     - CC0
+     - Unknown
    * - Citation / DOI
-     - `doi:10.18112/openneuro.ds005777.v1.0.1 <https://doi.org/10.18112/openneuro.ds005777.v1.0.1>`__
+     - Unknown
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds005777>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005777>`__ | `Source URL <https://openneuro.org/datasets/ds005777/versions/1.0.1>`__
-
-.. dropdown:: Copy-paste BibTeX
-   :class-container: sd-shadow-sm
-   :class-title: sd-bg-light
-
-   .. code-block:: bibtex
-
-      @dataset{ds005777,
-        title = {Electrical_Morphine_Placebo_2018},
-        author = {Peng, Ke and Yücel, Meryem and Steele, Sarah and Bittner, Edward and Aasted, Christopher and Hoeft, Mark and Lee, Arielle and George, Edward and Boas, David and Becerra, Lino and Borsook, David},
-        doi = {10.18112/openneuro.ds005777.v1.0.1},
-        url = {https://doi.org/10.18112/openneuro.ds005777.v1.0.1},
-      }
+     - `OpenNeuro <https://openneuro.org/datasets/ds005777>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005777>`__
 
 Highlights
 ----------
@@ -83,8 +70,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: CC0
-      - DOI: doi:10.18112/openneuro.ds005777.v1.0.1
+      - License: Unknown
+      - DOI: Unknown
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

@@ -5,11 +5,11 @@
 eegdash.dataset.DS003574
 ========================
 
-Reward biases spontaneous neural reactivation during sleep (OpenNeuro ``ds003574``). Access recordings and metadata through EEGDash.
+OpenNeuro dataset ``ds003574``. Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: CC0` :bdg-light:`Subjects: 18` :bdg-light:`Recordings: 18` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 18` :bdg-light:`Recordings: 18` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,30 +21,17 @@ Dataset Information
    * - Dataset ID
      - ``DS003574``
    * - Title
-     - Reward biases spontaneous neural reactivation during sleep
+     - Unknown
    * - Year
-     - 2021
+     - Unknown
    * - Authors
-     - Virginie Sterpenich, Mojca KM van Schie, Maximilien Catsiyannis, Avinash Ramyead, Stephen Perrig, Hee-Deok Yang, Dimitri Van De Ville, Sophie Schwartz
+     - Unknown
    * - License
-     - CC0
+     - Unknown
    * - Citation / DOI
-     - `10.18112/openneuro.ds003574.v1.0.2 <https://doi.org/10.18112/openneuro.ds003574.v1.0.2>`__
+     - Unknown
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds003574>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003574>`__ | `Source URL <https://openneuro.org/datasets/ds003574>`__
-
-.. dropdown:: Copy-paste BibTeX
-   :class-container: sd-shadow-sm
-   :class-title: sd-bg-light
-
-   .. code-block:: bibtex
-
-      @dataset{ds003574,
-        title = {Reward biases spontaneous neural reactivation during sleep},
-        author = {Virginie Sterpenich and Mojca KM van Schie and Maximilien Catsiyannis and Avinash Ramyead and Stephen Perrig and Hee-Deok Yang and Dimitri Van De Ville and Sophie Schwartz},
-        doi = {10.18112/openneuro.ds003574.v1.0.2},
-        url = {https://doi.org/10.18112/openneuro.ds003574.v1.0.2},
-      }
+     - `OpenNeuro <https://openneuro.org/datasets/ds003574>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003574>`__
 
 Highlights
 ----------
@@ -83,8 +70,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: CC0
-      - DOI: 10.18112/openneuro.ds003574.v1.0.2
+      - License: Unknown
+      - DOI: Unknown
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

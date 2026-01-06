@@ -5,11 +5,11 @@
 eegdash.dataset.DS004519
 ========================
 
-Internal selective attention is delayed by competition between endogenous and exogenous factors (OpenNeuro ``ds004519``). Access recordings and metadata through EEGDash.
+OpenNeuro dataset ``ds004519``. Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: CC0` :bdg-light:`Subjects: 40` :bdg-light:`Recordings: 40` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 40` :bdg-light:`Recordings: 40` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,30 +21,17 @@ Dataset Information
    * - Dataset ID
      - ``DS004519``
    * - Title
-     - Internal selective attention is delayed by competition between endogenous and exogenous factors
+     - Unknown
    * - Year
-     - 2023
+     - Unknown
    * - Authors
-     - Edward Ester, Asal Nouri
+     - Unknown
    * - License
-     - CC0
+     - Unknown
    * - Citation / DOI
-     - `doi:10.18112/openneuro.ds004519.v1.0.1 <https://doi.org/10.18112/openneuro.ds004519.v1.0.1>`__
+     - Unknown
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004519>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004519>`__ | `Source URL <https://openneuro.org/datasets/ds004519>`__
-
-.. dropdown:: Copy-paste BibTeX
-   :class-container: sd-shadow-sm
-   :class-title: sd-bg-light
-
-   .. code-block:: bibtex
-
-      @dataset{ds004519,
-        title = {Internal selective attention is delayed by competition between endogenous and exogenous factors},
-        author = {Edward Ester and Asal Nouri},
-        doi = {10.18112/openneuro.ds004519.v1.0.1},
-        url = {https://doi.org/10.18112/openneuro.ds004519.v1.0.1},
-      }
+     - `OpenNeuro <https://openneuro.org/datasets/ds004519>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004519>`__
 
 Highlights
 ----------
@@ -83,8 +70,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: CC0
-      - DOI: doi:10.18112/openneuro.ds004519.v1.0.1
+      - License: Unknown
+      - DOI: Unknown
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

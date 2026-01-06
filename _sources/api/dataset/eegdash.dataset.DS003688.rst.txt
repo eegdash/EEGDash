@@ -5,11 +5,11 @@
 eegdash.dataset.DS003688
 ========================
 
-Open multimodal iEEG-fMRI dataset from naturalistic stimulation with a short audiovisual film (OpenNeuro ``ds003688``). Access recordings and metadata through EEGDash.
+OpenNeuro dataset ``ds003688``. Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: ieeg` :bdg-light:`Tasks: 2` :bdg-light:`License: CC0` :bdg-light:`Subjects: 51` :bdg-light:`Recordings: 107` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: ieeg` :bdg-light:`Tasks: 2` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 51` :bdg-light:`Recordings: 107` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,30 +21,17 @@ Dataset Information
    * - Dataset ID
      - ``DS003688``
    * - Title
-     - Open multimodal iEEG-fMRI dataset from naturalistic stimulation with a short audiovisual film
+     - Unknown
    * - Year
-     - 2021
+     - Unknown
    * - Authors
-     - Julia Berezutskaya, Mariska J. Vansteensel, Erik J. Aarnoutse, Zachary V. Freudenburg, Giovanni Piantoni, Mariana P. Branco, Nick F. Ramsey
+     - Unknown
    * - License
-     - CC0
+     - Unknown
    * - Citation / DOI
-     - `doi:10.18112/openneuro.ds003688.v1.0.7 <https://doi.org/10.18112/openneuro.ds003688.v1.0.7>`__
+     - Unknown
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds003688>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003688>`__ | `Source URL <https://openneuro.org/datasets/ds003688>`__
-
-.. dropdown:: Copy-paste BibTeX
-   :class-container: sd-shadow-sm
-   :class-title: sd-bg-light
-
-   .. code-block:: bibtex
-
-      @dataset{ds003688,
-        title = {Open multimodal iEEG-fMRI dataset from naturalistic stimulation with a short audiovisual film},
-        author = {Julia Berezutskaya and Mariska J. Vansteensel and Erik J. Aarnoutse and Zachary V. Freudenburg and Giovanni Piantoni and Mariana P. Branco and Nick F. Ramsey},
-        doi = {10.18112/openneuro.ds003688.v1.0.7},
-        url = {https://doi.org/10.18112/openneuro.ds003688.v1.0.7},
-      }
+     - `OpenNeuro <https://openneuro.org/datasets/ds003688>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003688>`__
 
 Highlights
 ----------
@@ -83,8 +70,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: CC0
-      - DOI: doi:10.18112/openneuro.ds003688.v1.0.7
+      - License: Unknown
+      - DOI: Unknown
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

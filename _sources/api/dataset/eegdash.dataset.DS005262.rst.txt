@@ -5,11 +5,11 @@
 eegdash.dataset.DS005262
 ========================
 
-ArEEG: Arabic Inner Speech EEG dataset (OpenNeuro ``ds005262``). Access recordings and metadata through EEGDash.
+OpenNeuro dataset ``ds005262``. Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: CC0` :bdg-light:`Subjects: 12` :bdg-light:`Recordings: 186` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 12` :bdg-light:`Recordings: 186` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,30 +21,17 @@ Dataset Information
    * - Dataset ID
      - ``DS005262``
    * - Title
-     - ArEEG: Arabic Inner Speech EEG dataset
+     - Unknown
    * - Year
-     - 2024
+     - Unknown
    * - Authors
-     - Donia Metwalli, Eslam Ahmed, Antony Emil, Yousef A. Radwan, Mariam Barakat, Anas Ahmed, Amro Omar, Sahar Selim
+     - Unknown
    * - License
-     - CC0
+     - Unknown
    * - Citation / DOI
-     - `doi:10.18112/openneuro.ds005262.v1.0.1 <https://doi.org/10.18112/openneuro.ds005262.v1.0.1>`__
+     - Unknown
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds005262>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005262>`__ | `Source URL <https://openneuro.org/datasets/ds005262>`__
-
-.. dropdown:: Copy-paste BibTeX
-   :class-container: sd-shadow-sm
-   :class-title: sd-bg-light
-
-   .. code-block:: bibtex
-
-      @dataset{ds005262,
-        title = {ArEEG: Arabic Inner Speech EEG dataset},
-        author = {Donia Metwalli and Eslam Ahmed and Antony Emil and Yousef A. Radwan and Mariam Barakat and Anas Ahmed and Amro Omar and Sahar Selim},
-        doi = {10.18112/openneuro.ds005262.v1.0.1},
-        url = {https://doi.org/10.18112/openneuro.ds005262.v1.0.1},
-      }
+     - `OpenNeuro <https://openneuro.org/datasets/ds005262>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005262>`__
 
 Highlights
 ----------
@@ -83,8 +70,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: CC0
-      - DOI: doi:10.18112/openneuro.ds005262.v1.0.1
+      - License: Unknown
+      - DOI: Unknown
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

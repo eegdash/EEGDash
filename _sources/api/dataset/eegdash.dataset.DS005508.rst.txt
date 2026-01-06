@@ -5,11 +5,11 @@
 eegdash.dataset.DS005508
 ========================
 
-Healthy Brain Network (HBN) EEG - Release 4 (OpenNeuro ``ds005508``). Access recordings and metadata through EEGDash.
+OpenNeuro dataset ``ds005508``. Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 10` :bdg-light:`License: CC-BY-SA 4.0` :bdg-light:`Subjects: 324` :bdg-light:`Recordings: 3342` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 10` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 324` :bdg-light:`Recordings: 3342` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,30 +21,17 @@ Dataset Information
    * - Dataset ID
      - ``DS005508``
    * - Title
-     - Healthy Brain Network (HBN) EEG - Release 4
+     - Unknown
    * - Year
-     - 2024
+     - Unknown
    * - Authors
-     - Seyed Yahya Shirazi, Alexandre Franco, Maurício Scopel Hoffmann, Nathalia B. Esper, Dung Truong, Arnaud Delorme, Michael Milham, Scott Makeig
+     - Unknown
    * - License
-     - CC-BY-SA 4.0
+     - Unknown
    * - Citation / DOI
-     - `doi:10.18112/openneuro.ds005508.v1.0.1 <https://doi.org/10.18112/openneuro.ds005508.v1.0.1>`__
+     - Unknown
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds005508>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005508>`__ | `Source URL <https://openneuro.org/datasets/ds005508>`__
-
-.. dropdown:: Copy-paste BibTeX
-   :class-container: sd-shadow-sm
-   :class-title: sd-bg-light
-
-   .. code-block:: bibtex
-
-      @dataset{ds005508,
-        title = {Healthy Brain Network (HBN) EEG - Release 4},
-        author = {Seyed Yahya Shirazi and Alexandre Franco and Maurício Scopel Hoffmann and Nathalia B. Esper and Dung Truong and Arnaud Delorme and Michael Milham and Scott Makeig},
-        doi = {10.18112/openneuro.ds005508.v1.0.1},
-        url = {https://doi.org/10.18112/openneuro.ds005508.v1.0.1},
-      }
+     - `OpenNeuro <https://openneuro.org/datasets/ds005508>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005508>`__
 
 Highlights
 ----------
@@ -83,8 +70,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: CC-BY-SA 4.0
-      - DOI: doi:10.18112/openneuro.ds005508.v1.0.1
+      - License: Unknown
+      - DOI: Unknown
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

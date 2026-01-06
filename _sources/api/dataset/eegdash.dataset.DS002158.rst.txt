@@ -5,11 +5,11 @@
 eegdash.dataset.DS002158
 ========================
 
-Disentangling the origins of confidence in speeded perceptual judgments through multimodal imaging (OpenNeuro ``ds002158``). Access recordings and metadata through EEGDash.
+OpenNeuro dataset ``ds002158``. Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: CC0` :bdg-light:`Subjects: 20` :bdg-light:`Recordings: 117` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 20` :bdg-light:`Recordings: 117` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,30 +21,17 @@ Dataset Information
    * - Dataset ID
      - ``DS002158``
    * - Title
-     - Disentangling the origins of confidence in speeded perceptual judgments through multimodal imaging
+     - Unknown
    * - Year
-     - 2019
+     - Unknown
    * - Authors
-     - Michael Pereira, Nathan Faivre, Inaki Iturrate, Marco Wirthlin, Luana Serafini, Stephanie Martin, Arnaud Desvachez, Olaf Blanke, Dimitri Van de Ville, Jose del R. Millan
+     - Unknown
    * - License
-     - CC0
+     - Unknown
    * - Citation / DOI
-     - `10.18112/openneuro.ds002158.v1.0.2 <https://doi.org/10.18112/openneuro.ds002158.v1.0.2>`__
+     - Unknown
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds002158>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds002158>`__ | `Source URL <https://openneuro.org/datasets/ds002158>`__
-
-.. dropdown:: Copy-paste BibTeX
-   :class-container: sd-shadow-sm
-   :class-title: sd-bg-light
-
-   .. code-block:: bibtex
-
-      @dataset{ds002158,
-        title = {Disentangling the origins of confidence in speeded perceptual judgments through multimodal imaging},
-        author = {Michael Pereira and Nathan Faivre and Inaki Iturrate and Marco Wirthlin and Luana Serafini and Stephanie Martin and Arnaud Desvachez and Olaf Blanke and Dimitri Van de Ville and Jose del R. Millan},
-        doi = {10.18112/openneuro.ds002158.v1.0.2},
-        url = {https://doi.org/10.18112/openneuro.ds002158.v1.0.2},
-      }
+     - `OpenNeuro <https://openneuro.org/datasets/ds002158>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds002158>`__
 
 Highlights
 ----------
@@ -83,8 +70,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: CC0
-      - DOI: 10.18112/openneuro.ds002158.v1.0.2
+      - License: Unknown
+      - DOI: Unknown
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

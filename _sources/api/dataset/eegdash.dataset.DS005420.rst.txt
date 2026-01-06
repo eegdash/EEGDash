@@ -5,11 +5,11 @@
 eegdash.dataset.DS005420
 ========================
 
-Resting state EEG with closed eyes and open eyes in females from 60 to 80 years old (OpenNeuro ``ds005420``). Access recordings and metadata through EEGDash.
+OpenNeuro dataset ``ds005420``. Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 2` :bdg-light:`License: CC0` :bdg-light:`Subjects: 37` :bdg-light:`Recordings: 72` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 2` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 37` :bdg-light:`Recordings: 72` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,30 +21,17 @@ Dataset Information
    * - Dataset ID
      - ``DS005420``
    * - Title
-     - Resting state EEG with closed eyes and open eyes in females from 60 to 80 years old
+     - Unknown
    * - Year
-     - 2024
+     - Unknown
    * - Authors
-     - Miriam de Jesús Sánchez Gama, Luis Alberto Barradas Chacón, Leticia Chacón Gutiérrez, Thalía Fernández Harmony, Carlos Augusto Novo Olivas, José María De La Roca Chiapas
+     - Unknown
    * - License
-     - CC0
+     - Unknown
    * - Citation / DOI
-     - `doi:10.18112/openneuro.ds005420.v1.0.0 <https://doi.org/10.18112/openneuro.ds005420.v1.0.0>`__
+     - Unknown
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds005420>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005420>`__ | `Source URL <https://openneuro.org/datasets/ds005420>`__
-
-.. dropdown:: Copy-paste BibTeX
-   :class-container: sd-shadow-sm
-   :class-title: sd-bg-light
-
-   .. code-block:: bibtex
-
-      @dataset{ds005420,
-        title = {Resting state EEG with closed eyes and open eyes in females from 60 to 80 years old},
-        author = {Miriam de Jesús Sánchez Gama and Luis Alberto Barradas Chacón and Leticia Chacón Gutiérrez and Thalía Fernández Harmony and Carlos Augusto Novo Olivas and José María De La Roca Chiapas},
-        doi = {10.18112/openneuro.ds005420.v1.0.0},
-        url = {https://doi.org/10.18112/openneuro.ds005420.v1.0.0},
-      }
+     - `OpenNeuro <https://openneuro.org/datasets/ds005420>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005420>`__
 
 Highlights
 ----------
@@ -83,8 +70,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: CC0
-      - DOI: doi:10.18112/openneuro.ds005420.v1.0.0
+      - License: Unknown
+      - DOI: Unknown
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

@@ -5,11 +5,11 @@
 eegdash.dataset.DS003633
 ========================
 
-ForrestGump-MEG (OpenNeuro ``ds003633``). Access recordings and metadata through EEGDash.
+OpenNeuro dataset ``ds003633``. Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: meg` :bdg-light:`Tasks: 2` :bdg-light:`License: CC0` :bdg-light:`Subjects: 12` :bdg-light:`Recordings: 96` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: meg` :bdg-light:`Tasks: 2` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 12` :bdg-light:`Recordings: 96` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,30 +21,17 @@ Dataset Information
    * - Dataset ID
      - ``DS003633``
    * - Title
-     - ForrestGump-MEG
+     - Unknown
    * - Year
-     - 2021
+     - Unknown
    * - Authors
-     - Xingyu Liu, Yuxuan Dai, Hailun Xie, Zonglei Zhen
+     - Unknown
    * - License
-     - CC0
+     - Unknown
    * - Citation / DOI
-     - `doi:10.18112/openneuro.ds003633.v1.0.3 <https://doi.org/10.18112/openneuro.ds003633.v1.0.3>`__
+     - Unknown
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds003633>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003633>`__ | `Source URL <https://openneuro.org/datasets/ds003633>`__
-
-.. dropdown:: Copy-paste BibTeX
-   :class-container: sd-shadow-sm
-   :class-title: sd-bg-light
-
-   .. code-block:: bibtex
-
-      @dataset{ds003633,
-        title = {ForrestGump-MEG},
-        author = {Xingyu Liu and Yuxuan Dai and Hailun Xie and Zonglei Zhen},
-        doi = {10.18112/openneuro.ds003633.v1.0.3},
-        url = {https://doi.org/10.18112/openneuro.ds003633.v1.0.3},
-      }
+     - `OpenNeuro <https://openneuro.org/datasets/ds003633>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003633>`__
 
 Highlights
 ----------
@@ -83,8 +70,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: CC0
-      - DOI: doi:10.18112/openneuro.ds003633.v1.0.3
+      - License: Unknown
+      - DOI: Unknown
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

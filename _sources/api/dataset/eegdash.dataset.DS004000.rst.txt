@@ -5,11 +5,11 @@
 eegdash.dataset.DS004000
 ========================
 
-Fribourg Ultimatum Game in Schizophrenia Study (OpenNeuro ``ds004000``). Access recordings and metadata through EEGDash.
+OpenNeuro dataset ``ds004000``. Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 2` :bdg-light:`License: CC0` :bdg-light:`Subjects: 43` :bdg-light:`Recordings: 86` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 2` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 43` :bdg-light:`Recordings: 86` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,30 +21,17 @@ Dataset Information
    * - Dataset ID
      - ``DS004000``
    * - Title
-     - Fribourg Ultimatum Game in Schizophrenia Study
+     - Unknown
    * - Year
-     - 2022
+     - Unknown
    * - Authors
-     - Anna Padée, Pascal Missonnier, Anne Prévot, Grégoire Favre, Isabelle Gothuey, Marco Merlo, Jonas Richiardi
+     - Unknown
    * - License
-     - CC0
+     - Unknown
    * - Citation / DOI
-     - `doi:10.18112/openneuro.ds004000.v1.0.0 <https://doi.org/10.18112/openneuro.ds004000.v1.0.0>`__
+     - Unknown
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004000>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004000>`__ | `Source URL <https://openneuro.org/datasets/ds004000>`__
-
-.. dropdown:: Copy-paste BibTeX
-   :class-container: sd-shadow-sm
-   :class-title: sd-bg-light
-
-   .. code-block:: bibtex
-
-      @dataset{ds004000,
-        title = {Fribourg Ultimatum Game in Schizophrenia Study},
-        author = {Anna Padée and Pascal Missonnier and Anne Prévot and Grégoire Favre and Isabelle Gothuey and Marco Merlo and Jonas Richiardi},
-        doi = {10.18112/openneuro.ds004000.v1.0.0},
-        url = {https://doi.org/10.18112/openneuro.ds004000.v1.0.0},
-      }
+     - `OpenNeuro <https://openneuro.org/datasets/ds004000>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004000>`__
 
 Highlights
 ----------
@@ -83,8 +70,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: CC0
-      - DOI: doi:10.18112/openneuro.ds004000.v1.0.0
+      - License: Unknown
+      - DOI: Unknown
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

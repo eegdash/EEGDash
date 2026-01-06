@@ -5,11 +5,11 @@
 eegdash.dataset.DS005429
 ========================
 
-Auditory oddball comparison (Optimum-1, Learning-oddball, and the local–global paradigm) (OpenNeuro ``ds005429``). Access recordings and metadata through EEGDash.
+OpenNeuro dataset ``ds005429``. Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 3` :bdg-light:`License: CC0` :bdg-light:`Subjects: 15` :bdg-light:`Recordings: 61` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 3` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 15` :bdg-light:`Recordings: 61` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,30 +21,17 @@ Dataset Information
    * - Dataset ID
      - ``DS005429``
    * - Title
-     - Auditory oddball comparison (Optimum-1, Learning-oddball, and the local–global paradigm)
+     - Unknown
    * - Year
-     - 2024
+     - Unknown
    * - Authors
-     - Renate Rutiku, Chiara Fiscone, Marcello Massimini, Simone Sarasso
+     - Unknown
    * - License
-     - CC0
+     - Unknown
    * - Citation / DOI
-     - `doi:10.18112/openneuro.ds005429.v1.0.0 <https://doi.org/10.18112/openneuro.ds005429.v1.0.0>`__
+     - Unknown
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds005429>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005429>`__ | `Source URL <https://openneuro.org/datasets/ds005429>`__
-
-.. dropdown:: Copy-paste BibTeX
-   :class-container: sd-shadow-sm
-   :class-title: sd-bg-light
-
-   .. code-block:: bibtex
-
-      @dataset{ds005429,
-        title = {Auditory oddball comparison (Optimum-1, Learning-oddball, and the local–global paradigm)},
-        author = {Renate Rutiku and Chiara Fiscone and Marcello Massimini and Simone Sarasso},
-        doi = {10.18112/openneuro.ds005429.v1.0.0},
-        url = {https://doi.org/10.18112/openneuro.ds005429.v1.0.0},
-      }
+     - `OpenNeuro <https://openneuro.org/datasets/ds005429>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005429>`__
 
 Highlights
 ----------
@@ -83,8 +70,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: CC0
-      - DOI: doi:10.18112/openneuro.ds005429.v1.0.0
+      - License: Unknown
+      - DOI: Unknown
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

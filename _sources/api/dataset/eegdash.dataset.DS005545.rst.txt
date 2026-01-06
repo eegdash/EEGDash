@@ -5,11 +5,11 @@
 eegdash.dataset.DS005545
 ========================
 
-Auditory naming (OpenNeuro ``ds005545``). Access recordings and metadata through EEGDash.
+OpenNeuro dataset ``ds005545``. Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: ieeg` :bdg-light:`Tasks: 1` :bdg-light:`License: CC0` :bdg-light:`Subjects: 106` :bdg-light:`Recordings: 336` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: ieeg` :bdg-light:`Tasks: 1` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 106` :bdg-light:`Recordings: 336` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,30 +21,17 @@ Dataset Information
    * - Dataset ID
      - ``DS005545``
    * - Title
-     - Auditory naming
+     - Unknown
    * - Year
-     - 2024
+     - Unknown
    * - Authors
-     - Aya Kanno, Ryuzaburo Kochi, Kazuki Sakakura, Yu Kitazawa, Hiroshi Uda, Riyo Ueda, Masaki Sonoda, Min-Hee Lee, Jeong-Won Jeong, Aimee F. Luat, Eishi Asano
+     - Unknown
    * - License
-     - CC0
+     - Unknown
    * - Citation / DOI
-     - `doi:10.18112/openneuro.ds005545.v1.0.3 <https://doi.org/10.18112/openneuro.ds005545.v1.0.3>`__
+     - Unknown
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds005545>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005545>`__ | `Source URL <https://openneuro.org/datasets/ds005545>`__
-
-.. dropdown:: Copy-paste BibTeX
-   :class-container: sd-shadow-sm
-   :class-title: sd-bg-light
-
-   .. code-block:: bibtex
-
-      @dataset{ds005545,
-        title = {Auditory naming},
-        author = {Aya Kanno and Ryuzaburo Kochi and Kazuki Sakakura and Yu Kitazawa and Hiroshi Uda and Riyo Ueda and Masaki Sonoda and Min-Hee Lee and Jeong-Won Jeong and Aimee F. Luat and Eishi Asano},
-        doi = {10.18112/openneuro.ds005545.v1.0.3},
-        url = {https://doi.org/10.18112/openneuro.ds005545.v1.0.3},
-      }
+     - `OpenNeuro <https://openneuro.org/datasets/ds005545>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005545>`__
 
 Highlights
 ----------
@@ -83,8 +70,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: CC0
-      - DOI: doi:10.18112/openneuro.ds005545.v1.0.3
+      - License: Unknown
+      - DOI: Unknown
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

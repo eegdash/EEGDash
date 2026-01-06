@@ -5,11 +5,11 @@
 eegdash.dataset.DS005574
 ========================
 
-The "Podcast" ECoG dataset (OpenNeuro ``ds005574``). Access recordings and metadata through EEGDash.
+OpenNeuro dataset ``ds005574``. Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: ieeg` :bdg-light:`Tasks: 1` :bdg-light:`License: CC0` :bdg-light:`Subjects: 9` :bdg-light:`Recordings: 9` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: ieeg` :bdg-light:`Tasks: 1` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 9` :bdg-light:`Recordings: 9` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,30 +21,17 @@ Dataset Information
    * - Dataset ID
      - ``DS005574``
    * - Title
-     - The "Podcast" ECoG dataset
+     - Unknown
    * - Year
-     - 2024
+     - Unknown
    * - Authors
-     - Zaid Zada, Samuel A. Nastase, Bobbi Aubrey, Itamar Jalon, Ariel Goldstein, Sebastian Michelmann, Haocheng Wang, Liat Hasenfratz, Werner Doyle, Daniel Friedman, Patricia Dugan, Lucia Melloni, Sasha Devore, Orrin Devinsky, Adeen Flinker, Uri Hasson
+     - Unknown
    * - License
-     - CC0
+     - Unknown
    * - Citation / DOI
-     - `doi:10.18112/openneuro.ds005574.v1.0.2 <https://doi.org/10.18112/openneuro.ds005574.v1.0.2>`__
+     - Unknown
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds005574>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005574>`__ | `Source URL <https://openneuro.org/datasets/ds005574>`__
-
-.. dropdown:: Copy-paste BibTeX
-   :class-container: sd-shadow-sm
-   :class-title: sd-bg-light
-
-   .. code-block:: bibtex
-
-      @dataset{ds005574,
-        title = {The "Podcast" ECoG dataset},
-        author = {Zaid Zada and Samuel A. Nastase and Bobbi Aubrey and Itamar Jalon and Ariel Goldstein and Sebastian Michelmann and Haocheng Wang and Liat Hasenfratz and Werner Doyle and Daniel Friedman and Patricia Dugan and Lucia Melloni and Sasha Devore and Orrin Devinsky and Adeen Flinker and Uri Hasson},
-        doi = {10.18112/openneuro.ds005574.v1.0.2},
-        url = {https://doi.org/10.18112/openneuro.ds005574.v1.0.2},
-      }
+     - `OpenNeuro <https://openneuro.org/datasets/ds005574>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005574>`__
 
 Highlights
 ----------
@@ -83,8 +70,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: CC0
-      - DOI: doi:10.18112/openneuro.ds005574.v1.0.2
+      - License: Unknown
+      - DOI: Unknown
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

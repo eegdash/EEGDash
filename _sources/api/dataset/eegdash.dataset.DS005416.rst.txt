@@ -5,11 +5,11 @@
 eegdash.dataset.DS005416
 ========================
 
-Fatigue Characterization of EEG under Mixed Reality Stereo Vision (OpenNeuro ``ds005416``). Access recordings and metadata through EEGDash.
+OpenNeuro dataset ``ds005416``. Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: CC0` :bdg-light:`Subjects: 23` :bdg-light:`Recordings: 23` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 23` :bdg-light:`Recordings: 23` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,30 +21,17 @@ Dataset Information
    * - Dataset ID
      - ``DS005416``
    * - Title
-     - Fatigue Characterization of EEG under Mixed Reality Stereo Vision
+     - Unknown
    * - Year
-     - 2024
+     - Unknown
    * - Authors
-     - Yan Wu, Chunguang Tao, Qi Li
+     - Unknown
    * - License
-     - CC0
+     - Unknown
    * - Citation / DOI
-     - `doi:10.18112/openneuro.ds005416.v1.0.1 <https://doi.org/10.18112/openneuro.ds005416.v1.0.1>`__
+     - Unknown
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds005416>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005416>`__ | `Source URL <https://openneuro.org/datasets/ds005416>`__
-
-.. dropdown:: Copy-paste BibTeX
-   :class-container: sd-shadow-sm
-   :class-title: sd-bg-light
-
-   .. code-block:: bibtex
-
-      @dataset{ds005416,
-        title = {Fatigue Characterization of EEG under Mixed Reality Stereo Vision},
-        author = {Yan Wu and Chunguang Tao and Qi Li},
-        doi = {10.18112/openneuro.ds005416.v1.0.1},
-        url = {https://doi.org/10.18112/openneuro.ds005416.v1.0.1},
-      }
+     - `OpenNeuro <https://openneuro.org/datasets/ds005416>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005416>`__
 
 Highlights
 ----------
@@ -83,8 +70,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: CC0
-      - DOI: doi:10.18112/openneuro.ds005416.v1.0.1
+      - License: Unknown
+      - DOI: Unknown
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

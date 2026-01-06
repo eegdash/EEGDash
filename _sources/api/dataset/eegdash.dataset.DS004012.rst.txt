@@ -5,11 +5,11 @@
 eegdash.dataset.DS004012
 ========================
 
-BRAR_NQ (OpenNeuro ``ds004012``). Access recordings and metadata through EEGDash.
+OpenNeuro dataset ``ds004012``. Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: meg` :bdg-light:`Tasks: 10` :bdg-light:`License: CC0` :bdg-light:`Subjects: 30` :bdg-light:`Recordings: 294` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: meg` :bdg-light:`Tasks: 10` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 30` :bdg-light:`Recordings: 294` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,30 +21,17 @@ Dataset Information
    * - Dataset ID
      - ``DS004012``
    * - Title
-     - BRAR_NQ
+     - Unknown
    * - Year
-     - 2022
+     - Unknown
    * - Authors
-     - Nur Syairah Ab Rani, Nurfaizatul Aisyah Ab Aziz, Mohammed Farouq Reza, Muzaimi Mustapha
+     - Unknown
    * - License
-     - CC0
+     - Unknown
    * - Citation / DOI
-     - `doi:10.18112/openneuro.ds004012.v1.0.0 <https://doi.org/10.18112/openneuro.ds004012.v1.0.0>`__
+     - Unknown
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004012>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004012>`__ | `Source URL <https://openneuro.org/datasets/ds004012>`__
-
-.. dropdown:: Copy-paste BibTeX
-   :class-container: sd-shadow-sm
-   :class-title: sd-bg-light
-
-   .. code-block:: bibtex
-
-      @dataset{ds004012,
-        title = {BRAR_NQ},
-        author = {Nur Syairah Ab Rani and Nurfaizatul Aisyah Ab Aziz and Mohammed Farouq Reza and Muzaimi Mustapha},
-        doi = {10.18112/openneuro.ds004012.v1.0.0},
-        url = {https://doi.org/10.18112/openneuro.ds004012.v1.0.0},
-      }
+     - `OpenNeuro <https://openneuro.org/datasets/ds004012>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004012>`__
 
 Highlights
 ----------
@@ -83,8 +70,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: CC0
-      - DOI: doi:10.18112/openneuro.ds004012.v1.0.0
+      - License: Unknown
+      - DOI: Unknown
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

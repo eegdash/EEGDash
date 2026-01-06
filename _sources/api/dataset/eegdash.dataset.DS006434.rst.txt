@@ -5,11 +5,11 @@
 eegdash.dataset.DS006434
 ========================
 
-The auditory brainstem response to natural speech is not affected by selective attention (OpenNeuro ``ds006434``). Access recordings and metadata through EEGDash.
+OpenNeuro dataset ``ds006434``. Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 5` :bdg-light:`License: CC0` :bdg-light:`Subjects: 66` :bdg-light:`Recordings: 118` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 5` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 66` :bdg-light:`Recordings: 118` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,30 +21,17 @@ Dataset Information
    * - Dataset ID
      - ``DS006434``
    * - Title
-     - The auditory brainstem response to natural speech is not affected by selective attention
+     - Unknown
    * - Year
-     - 2025
+     - Unknown
    * - Authors
-     - Thomas J Stoll, Nathan D Vandjelovic, Melissa J Polonenko, Nadja R S Li, Adrian K C Lee, Ross K Maddox
+     - Unknown
    * - License
-     - CC0
+     - Unknown
    * - Citation / DOI
-     - `doi:10.18112/openneuro.ds006434.v1.2.0 <https://doi.org/10.18112/openneuro.ds006434.v1.2.0>`__
+     - Unknown
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds006434>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006434>`__ | `Source URL <https://openneuro.org/datasets/ds006434>`__
-
-.. dropdown:: Copy-paste BibTeX
-   :class-container: sd-shadow-sm
-   :class-title: sd-bg-light
-
-   .. code-block:: bibtex
-
-      @dataset{ds006434,
-        title = {The auditory brainstem response to natural speech is not affected by selective attention},
-        author = {Thomas J Stoll and Nathan D Vandjelovic and Melissa J Polonenko and Nadja R S Li and Adrian K C Lee and Ross K Maddox},
-        doi = {10.18112/openneuro.ds006434.v1.2.0},
-        url = {https://doi.org/10.18112/openneuro.ds006434.v1.2.0},
-      }
+     - `OpenNeuro <https://openneuro.org/datasets/ds006434>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006434>`__
 
 Highlights
 ----------
@@ -83,8 +70,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: CC0
-      - DOI: doi:10.18112/openneuro.ds006434.v1.2.0
+      - License: Unknown
+      - DOI: Unknown
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

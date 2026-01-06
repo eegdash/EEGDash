@@ -8,7 +8,7 @@
 /* 2) Widen the overall page container (default is ~88rem) */
 .bd-page-width {
   max-width: clamp(80rem, 96vw, 130rem);
-}
+}x
 
 /* Copy button styling to match EEGDash surfaces */
 .highlight button.copybtn {

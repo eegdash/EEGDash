@@ -5,11 +5,11 @@
 eegdash.dataset.DS004276
 ========================
 
-Auditory single word recognition in MEG (OpenNeuro ``ds004276``). Access recordings and metadata through EEGDash.
+OpenNeuro dataset ``ds004276``. Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: meg` :bdg-light:`Tasks: 2` :bdg-light:`License: CC0` :bdg-light:`Subjects: 19` :bdg-light:`Recordings: 19` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: meg` :bdg-light:`Tasks: 2` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 19` :bdg-light:`Recordings: 19` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,30 +21,17 @@ Dataset Information
    * - Dataset ID
      - ``DS004276``
    * - Title
-     - Auditory single word recognition in MEG
+     - Unknown
    * - Year
-     - 2022
+     - Unknown
    * - Authors
-     - Phoebe Gaston, Christian Brodbeck, Colin Phillips, Ellen Lau
+     - Unknown
    * - License
-     - CC0
+     - Unknown
    * - Citation / DOI
-     - `doi:10.18112/openneuro.ds004276.v1.0.0 <https://doi.org/10.18112/openneuro.ds004276.v1.0.0>`__
+     - Unknown
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004276>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004276>`__ | `Source URL <https://openneuro.org/datasets/ds004276>`__
-
-.. dropdown:: Copy-paste BibTeX
-   :class-container: sd-shadow-sm
-   :class-title: sd-bg-light
-
-   .. code-block:: bibtex
-
-      @dataset{ds004276,
-        title = {Auditory single word recognition in MEG},
-        author = {Phoebe Gaston and Christian Brodbeck and Colin Phillips and Ellen Lau},
-        doi = {10.18112/openneuro.ds004276.v1.0.0},
-        url = {https://doi.org/10.18112/openneuro.ds004276.v1.0.0},
-      }
+     - `OpenNeuro <https://openneuro.org/datasets/ds004276>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004276>`__
 
 Highlights
 ----------
@@ -83,8 +70,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: CC0
-      - DOI: doi:10.18112/openneuro.ds004276.v1.0.0
+      - License: Unknown
+      - DOI: Unknown
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

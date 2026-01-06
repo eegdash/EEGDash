@@ -5,11 +5,11 @@
 eegdash.dataset.DS004022
 ========================
 
-Multimodal EEG and fNIRS Biosignal Acquisition during Motor Imagery Tasks in Patients with Orthopedic Impairment (OpenNeuro ``ds004022``). Access recordings and metadata through EEGDash.
+OpenNeuro dataset ``ds004022``. Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: CC0` :bdg-light:`Subjects: 7` :bdg-light:`Recordings: 21` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 7` :bdg-light:`Recordings: 21` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,30 +21,17 @@ Dataset Information
    * - Dataset ID
      - ``DS004022``
    * - Title
-     - Multimodal EEG and fNIRS Biosignal Acquisition during Motor Imagery Tasks in Patients with Orthopedic Impairment
+     - Unknown
    * - Year
-     - 2022
+     - Unknown
    * - Authors
-     - Seho Lee, Hee Ra Jung, In-Nea Wang, Min-Kyung Jung, Hakseung Kim, Dong-Joo Kim
+     - Unknown
    * - License
-     - CC0
+     - Unknown
    * - Citation / DOI
-     - `doi:10.18112/openneuro.ds004022.v1.0.0 <https://doi.org/10.18112/openneuro.ds004022.v1.0.0>`__
+     - Unknown
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004022>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004022>`__ | `Source URL <https://openneuro.org/datasets/ds004022>`__
-
-.. dropdown:: Copy-paste BibTeX
-   :class-container: sd-shadow-sm
-   :class-title: sd-bg-light
-
-   .. code-block:: bibtex
-
-      @dataset{ds004022,
-        title = {Multimodal EEG and fNIRS Biosignal Acquisition during Motor Imagery Tasks in Patients with Orthopedic Impairment},
-        author = {Seho Lee and Hee Ra Jung and In-Nea Wang and Min-Kyung Jung and Hakseung Kim and Dong-Joo Kim},
-        doi = {10.18112/openneuro.ds004022.v1.0.0},
-        url = {https://doi.org/10.18112/openneuro.ds004022.v1.0.0},
-      }
+     - `OpenNeuro <https://openneuro.org/datasets/ds004022>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004022>`__
 
 Highlights
 ----------
@@ -83,8 +70,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: CC0
-      - DOI: doi:10.18112/openneuro.ds004022.v1.0.0
+      - License: Unknown
+      - DOI: Unknown
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

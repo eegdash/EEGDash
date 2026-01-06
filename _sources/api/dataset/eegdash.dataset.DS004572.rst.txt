@@ -5,11 +5,11 @@
 eegdash.dataset.DS004572
 ========================
 
-The effects of sham hypnosis techniques (OpenNeuro ``ds004572``). Access recordings and metadata through EEGDash.
+OpenNeuro dataset ``ds004572``. Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 10` :bdg-light:`License: CC0` :bdg-light:`Subjects: 52` :bdg-light:`Recordings: 516` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 10` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 52` :bdg-light:`Recordings: 516` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,30 +21,17 @@ Dataset Information
    * - Dataset ID
      - ``DS004572``
    * - Title
-     - The effects of sham hypnosis techniques
+     - Unknown
    * - Year
-     - 2023
+     - Unknown
    * - Authors
-     - Zoltan Kekecs, Kyra Girán, Vanda Vizkievicz, Anna Lutoskin, Yeganeh Farahzadi
+     - Unknown
    * - License
-     - CC0
+     - Unknown
    * - Citation / DOI
-     - `doi:10.18112/openneuro.ds004572.v1.3.1 <https://doi.org/10.18112/openneuro.ds004572.v1.3.1>`__
+     - Unknown
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004572>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004572>`__ | `Source URL <https://openneuro.org/datasets/ds004572>`__
-
-.. dropdown:: Copy-paste BibTeX
-   :class-container: sd-shadow-sm
-   :class-title: sd-bg-light
-
-   .. code-block:: bibtex
-
-      @dataset{ds004572,
-        title = {The effects of sham hypnosis techniques},
-        author = {Zoltan Kekecs and Kyra Girán and Vanda Vizkievicz and Anna Lutoskin and Yeganeh Farahzadi},
-        doi = {10.18112/openneuro.ds004572.v1.3.1},
-        url = {https://doi.org/10.18112/openneuro.ds004572.v1.3.1},
-      }
+     - `OpenNeuro <https://openneuro.org/datasets/ds004572>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004572>`__
 
 Highlights
 ----------
@@ -83,8 +70,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: CC0
-      - DOI: doi:10.18112/openneuro.ds004572.v1.3.1
+      - License: Unknown
+      - DOI: Unknown
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

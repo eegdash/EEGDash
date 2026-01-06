@@ -5,11 +5,11 @@
 eegdash.dataset.DS003751
 ========================
 
-Dataset on Emotion with Naturalistic Stimuli (DENS) (OpenNeuro ``ds003751``). Access recordings and metadata through EEGDash.
+OpenNeuro dataset ``ds003751``. Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: CC0` :bdg-light:`Subjects: 38` :bdg-light:`Recordings: 38` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 38` :bdg-light:`Recordings: 38` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,30 +21,17 @@ Dataset Information
    * - Dataset ID
      - ``DS003751``
    * - Title
-     - Dataset on Emotion with Naturalistic Stimuli (DENS)
+     - Unknown
    * - Year
-     - 2021
+     - Unknown
    * - Authors
-     - Sudhakar Mishra, Md. Asif, Uma Shanker Tiwary, Narayanan Srinivasan
+     - Unknown
    * - License
-     - CC0
+     - Unknown
    * - Citation / DOI
-     - `10.18112/openneuro.ds003751.v1.0.2 <https://doi.org/10.18112/openneuro.ds003751.v1.0.2>`__
+     - Unknown
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds003751>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003751>`__ | `Source URL <https://openneuro.org/datasets/ds003751>`__
-
-.. dropdown:: Copy-paste BibTeX
-   :class-container: sd-shadow-sm
-   :class-title: sd-bg-light
-
-   .. code-block:: bibtex
-
-      @dataset{ds003751,
-        title = {Dataset on Emotion with Naturalistic Stimuli (DENS)},
-        author = {Sudhakar Mishra and Md. Asif and Uma Shanker Tiwary and Narayanan Srinivasan},
-        doi = {10.18112/openneuro.ds003751.v1.0.2},
-        url = {https://doi.org/10.18112/openneuro.ds003751.v1.0.2},
-      }
+     - `OpenNeuro <https://openneuro.org/datasets/ds003751>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003751>`__
 
 Highlights
 ----------
@@ -83,8 +70,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: CC0
-      - DOI: 10.18112/openneuro.ds003751.v1.0.2
+      - License: Unknown
+      - DOI: Unknown
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

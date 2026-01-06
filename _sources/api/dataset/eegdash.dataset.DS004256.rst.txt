@@ -5,11 +5,11 @@
 eegdash.dataset.DS004256
 ========================
 
-Encoding of Sound Source Elevation in Human Cortex (OpenNeuro ``ds004256``). Access recordings and metadata through EEGDash.
+OpenNeuro dataset ``ds004256``. Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 2` :bdg-light:`License: CC0` :bdg-light:`Subjects: 53` :bdg-light:`Recordings: 53` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 2` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 53` :bdg-light:`Recordings: 53` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,30 +21,17 @@ Dataset Information
    * - Dataset ID
      - ``DS004256``
    * - Title
-     - Encoding of Sound Source Elevation in Human Cortex
+     - Unknown
    * - Year
-     - 2022
+     - Unknown
    * - Authors
-     - Ole Bialas, Marc Schoenwiesner, Burkhard Maess
+     - Unknown
    * - License
-     - CC0
+     - Unknown
    * - Citation / DOI
-     - `doi:10.18112/openneuro.ds004256.v1.0.5 <https://doi.org/10.18112/openneuro.ds004256.v1.0.5>`__
+     - Unknown
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004256>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004256>`__ | `Source URL <https://openneuro.org/datasets/ds004256>`__
-
-.. dropdown:: Copy-paste BibTeX
-   :class-container: sd-shadow-sm
-   :class-title: sd-bg-light
-
-   .. code-block:: bibtex
-
-      @dataset{ds004256,
-        title = {Encoding of Sound Source Elevation in Human Cortex},
-        author = {Ole Bialas and Marc Schoenwiesner and Burkhard Maess},
-        doi = {10.18112/openneuro.ds004256.v1.0.5},
-        url = {https://doi.org/10.18112/openneuro.ds004256.v1.0.5},
-      }
+     - `OpenNeuro <https://openneuro.org/datasets/ds004256>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004256>`__
 
 Highlights
 ----------
@@ -83,8 +70,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: CC0
-      - DOI: doi:10.18112/openneuro.ds004256.v1.0.5
+      - License: Unknown
+      - DOI: Unknown
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

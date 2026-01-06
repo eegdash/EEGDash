@@ -5,11 +5,11 @@
 eegdash.dataset.DS002550
 ========================
 
-Differential brain mechanisms of selection and maintenance of information during working memory (MEG data) (OpenNeuro ``ds002550``). Access recordings and metadata through EEGDash.
+OpenNeuro dataset ``ds002550``. Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: meg` :bdg-light:`Tasks: 2` :bdg-light:`License: CC0` :bdg-light:`Subjects: 23` :bdg-light:`Recordings: 12755` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: meg` :bdg-light:`Tasks: 2` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 23` :bdg-light:`Recordings: 12755` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,30 +21,17 @@ Dataset Information
    * - Dataset ID
      - ``DS002550``
    * - Title
-     - Differential brain mechanisms of selection and maintenance of information during working memory (MEG data)
+     - Unknown
    * - Year
      - Unknown
    * - Authors
-     - Romain Quentin, Jean-Remi King, Etienne Sallard, Nathan Fishman, Ryan Thompson, Ethan Buch, Leonardo Cohen
+     - Unknown
    * - License
-     - CC0
+     - Unknown
    * - Citation / DOI
-     - `10.18112/openneuro.ds002550.v1.0.1 <https://doi.org/10.18112/openneuro.ds002550.v1.0.1>`__
+     - Unknown
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds002550>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds002550>`__ | `Source URL <https://openneuro.org/datasets/ds002550/versions/1.0.1>`__
-
-.. dropdown:: Copy-paste BibTeX
-   :class-container: sd-shadow-sm
-   :class-title: sd-bg-light
-
-   .. code-block:: bibtex
-
-      @dataset{ds002550,
-        title = {Differential brain mechanisms of selection and maintenance of information during working memory (MEG data)},
-        author = {Romain Quentin and Jean-Remi King and Etienne Sallard and Nathan Fishman and Ryan Thompson and Ethan Buch and Leonardo Cohen},
-        doi = {10.18112/openneuro.ds002550.v1.0.1},
-        url = {https://doi.org/10.18112/openneuro.ds002550.v1.0.1},
-      }
+     - `OpenNeuro <https://openneuro.org/datasets/ds002550>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds002550>`__
 
 Highlights
 ----------
@@ -83,8 +70,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: CC0
-      - DOI: 10.18112/openneuro.ds002550.v1.0.1
+      - License: Unknown
+      - DOI: Unknown
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

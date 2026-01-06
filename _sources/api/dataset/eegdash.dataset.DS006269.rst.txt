@@ -5,11 +5,11 @@
 eegdash.dataset.DS006269
 ========================
 
-Tethered EEG Recordings in Syngap1 rats (OpenNeuro ``ds006269``). Access recordings and metadata through EEGDash.
+OpenNeuro dataset ``ds006269``. Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 2` :bdg-light:`License: CC0` :bdg-light:`Subjects: 24` :bdg-light:`Recordings: 40` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 2` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 24` :bdg-light:`Recordings: 40` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,30 +21,17 @@ Dataset Information
    * - Dataset ID
      - ``DS006269``
    * - Title
-     - Tethered EEG Recordings in Syngap1 rats
+     - Unknown
    * - Year
-     - 2025
+     - Unknown
    * - Authors
-     - Lucy Pritchard, Ingrid Buller-Peralta, Sally M Till, Peter C Kind, Alfredo Gonzalez-Sulser
+     - Unknown
    * - License
-     - CC0
+     - Unknown
    * - Citation / DOI
-     - `doi:10.18112/openneuro.ds006269.v1.0.0 <https://doi.org/10.18112/openneuro.ds006269.v1.0.0>`__
+     - Unknown
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds006269>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006269>`__ | `Source URL <https://openneuro.org/datasets/ds006269>`__
-
-.. dropdown:: Copy-paste BibTeX
-   :class-container: sd-shadow-sm
-   :class-title: sd-bg-light
-
-   .. code-block:: bibtex
-
-      @dataset{ds006269,
-        title = {Tethered EEG Recordings in Syngap1 rats},
-        author = {Lucy Pritchard and Ingrid Buller-Peralta and Sally M Till and Peter C Kind and Alfredo Gonzalez-Sulser},
-        doi = {10.18112/openneuro.ds006269.v1.0.0},
-        url = {https://doi.org/10.18112/openneuro.ds006269.v1.0.0},
-      }
+     - `OpenNeuro <https://openneuro.org/datasets/ds006269>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006269>`__
 
 Highlights
 ----------
@@ -83,8 +70,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: CC0
-      - DOI: doi:10.18112/openneuro.ds006269.v1.0.0
+      - License: Unknown
+      - DOI: Unknown
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

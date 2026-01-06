@@ -5,11 +5,11 @@
 eegdash.dataset.DS005530
 ========================
 
-Depotentiation of emotional reactivity using TMR during REM sleep (OpenNeuro ``ds005530``). Access recordings and metadata through EEGDash.
+OpenNeuro dataset ``ds005530``. Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: CC0` :bdg-light:`Subjects: 17` :bdg-light:`Recordings: 21` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 17` :bdg-light:`Recordings: 21` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,30 +21,17 @@ Dataset Information
    * - Dataset ID
      - ``DS005530``
    * - Title
-     - Depotentiation of emotional reactivity using TMR during REM sleep
+     - Unknown
    * - Year
-     - 2024
+     - Unknown
    * - Authors
-     - Viviana Greco, Tamas A. Foldes, Neil A. Harrison, Kevin Murphy, Marta Wawrzuta, Mahmoud E. A. Abdellahi, Penelope A. Lewis
+     - Unknown
    * - License
-     - CC0
+     - Unknown
    * - Citation / DOI
-     - `doi:10.18112/openneuro.ds005530.v1.0.9 <https://doi.org/10.18112/openneuro.ds005530.v1.0.9>`__
+     - Unknown
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds005530>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005530>`__ | `Source URL <https://openneuro.org/datasets/ds005530>`__
-
-.. dropdown:: Copy-paste BibTeX
-   :class-container: sd-shadow-sm
-   :class-title: sd-bg-light
-
-   .. code-block:: bibtex
-
-      @dataset{ds005530,
-        title = {Depotentiation of emotional reactivity using TMR during REM sleep},
-        author = {Viviana Greco and Tamas A. Foldes and Neil A. Harrison and Kevin Murphy and Marta Wawrzuta and Mahmoud E. A. Abdellahi and Penelope A. Lewis},
-        doi = {10.18112/openneuro.ds005530.v1.0.9},
-        url = {https://doi.org/10.18112/openneuro.ds005530.v1.0.9},
-      }
+     - `OpenNeuro <https://openneuro.org/datasets/ds005530>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005530>`__
 
 Highlights
 ----------
@@ -83,8 +70,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: CC0
-      - DOI: doi:10.18112/openneuro.ds005530.v1.0.9
+      - License: Unknown
+      - DOI: Unknown
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

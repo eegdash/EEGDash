@@ -5,11 +5,11 @@
 eegdash.dataset.DS004369
 ========================
 
-Blink-Pause-Relation (Competing Speaker Paradigm) (OpenNeuro ``ds004369``). Access recordings and metadata through EEGDash.
+OpenNeuro dataset ``ds004369``. Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: CC0` :bdg-light:`Subjects: 41` :bdg-light:`Recordings: 41` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 41` :bdg-light:`Recordings: 41` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,30 +21,17 @@ Dataset Information
    * - Dataset ID
      - ``DS004369``
    * - Title
-     - Blink-Pause-Relation (Competing Speaker Paradigm)
+     - Unknown
    * - Year
-     - 2022
+     - Unknown
    * - Authors
-     - Bjoern Holtze, Marc Rosenkranz, Martin Bleichner, Stefan Debener
+     - Unknown
    * - License
-     - CC0
+     - Unknown
    * - Citation / DOI
-     - `doi:10.18112/openneuro.ds004369.v1.0.1 <https://doi.org/10.18112/openneuro.ds004369.v1.0.1>`__
+     - Unknown
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004369>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004369>`__ | `Source URL <https://openneuro.org/datasets/ds004369>`__
-
-.. dropdown:: Copy-paste BibTeX
-   :class-container: sd-shadow-sm
-   :class-title: sd-bg-light
-
-   .. code-block:: bibtex
-
-      @dataset{ds004369,
-        title = {Blink-Pause-Relation (Competing Speaker Paradigm)},
-        author = {Bjoern Holtze and Marc Rosenkranz and Martin Bleichner and Stefan Debener},
-        doi = {10.18112/openneuro.ds004369.v1.0.1},
-        url = {https://doi.org/10.18112/openneuro.ds004369.v1.0.1},
-      }
+     - `OpenNeuro <https://openneuro.org/datasets/ds004369>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004369>`__
 
 Highlights
 ----------
@@ -83,8 +70,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: CC0
-      - DOI: doi:10.18112/openneuro.ds004369.v1.0.1
+      - License: Unknown
+      - DOI: Unknown
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

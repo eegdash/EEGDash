@@ -5,11 +5,11 @@
 eegdash.dataset.DS004120
 ========================
 
-BCIT Baseline Driving (OpenNeuro ``ds004120``). Access recordings and metadata through EEGDash.
+OpenNeuro dataset ``ds004120``. Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: CC0` :bdg-light:`Subjects: 109` :bdg-light:`Recordings: 131` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 109` :bdg-light:`Recordings: 131` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,30 +21,17 @@ Dataset Information
    * - Dataset ID
      - ``DS004120``
    * - Title
-     - BCIT Baseline Driving
+     - Unknown
    * - Year
-     - 2022
+     - Unknown
    * - Authors
-     - Jonathan Touryan (data and curation), Greg Apker (data), Brent Lance (data), Scott Kerick (data), Anthony Ries (data), Kaleb McDowell (data), Tony Johnson (curation), Kay Robbins (curation)
+     - Unknown
    * - License
-     - CC0
+     - Unknown
    * - Citation / DOI
-     - `doi:10.18112/openneuro.ds004120.v1.0.0 <https://doi.org/10.18112/openneuro.ds004120.v1.0.0>`__
+     - Unknown
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004120>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004120>`__ | `Source URL <https://openneuro.org/datasets/ds004120>`__
-
-.. dropdown:: Copy-paste BibTeX
-   :class-container: sd-shadow-sm
-   :class-title: sd-bg-light
-
-   .. code-block:: bibtex
-
-      @dataset{ds004120,
-        title = {BCIT Baseline Driving},
-        author = {Jonathan Touryan (data and curation) and Greg Apker (data) and Brent Lance (data) and Scott Kerick (data) and Anthony Ries (data) and Kaleb McDowell (data) and Tony Johnson (curation) and Kay Robbins (curation)},
-        doi = {10.18112/openneuro.ds004120.v1.0.0},
-        url = {https://doi.org/10.18112/openneuro.ds004120.v1.0.0},
-      }
+     - `OpenNeuro <https://openneuro.org/datasets/ds004120>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004120>`__
 
 Highlights
 ----------
@@ -83,8 +70,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: CC0
-      - DOI: doi:10.18112/openneuro.ds004120.v1.0.0
+      - License: Unknown
+      - DOI: Unknown
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

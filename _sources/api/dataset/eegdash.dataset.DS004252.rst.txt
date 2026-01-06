@@ -5,11 +5,11 @@
 eegdash.dataset.DS004252
 ========================
 
-Rotation-tolerant representations elucidate the time course of high-level object processing (OpenNeuro ``ds004252``). Access recordings and metadata through EEGDash.
+OpenNeuro dataset ``ds004252``. Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: CC0` :bdg-light:`Subjects: 1` :bdg-light:`Recordings: 1` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 1` :bdg-light:`Recordings: 1` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,30 +21,17 @@ Dataset Information
    * - Dataset ID
      - ``DS004252``
    * - Title
-     - Rotation-tolerant representations elucidate the time course of high-level object processing
+     - Unknown
    * - Year
-     - 2022
+     - Unknown
    * - Authors
-     - Denise Moerel, Tijl Grootswagers, Amanda K. Robinson, Patrick Engeler, Alex O. Holcombe, Thomas A. Carlson
+     - Unknown
    * - License
-     - CC0
+     - Unknown
    * - Citation / DOI
-     - `doi:10.18112/openneuro.ds004252.v1.0.2 <https://doi.org/10.18112/openneuro.ds004252.v1.0.2>`__
+     - Unknown
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004252>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004252>`__ | `Source URL <https://openneuro.org/datasets/ds004252>`__
-
-.. dropdown:: Copy-paste BibTeX
-   :class-container: sd-shadow-sm
-   :class-title: sd-bg-light
-
-   .. code-block:: bibtex
-
-      @dataset{ds004252,
-        title = {Rotation-tolerant representations elucidate the time course of high-level object processing},
-        author = {Denise Moerel and Tijl Grootswagers and Amanda K. Robinson and Patrick Engeler and Alex O. Holcombe and Thomas A. Carlson},
-        doi = {10.18112/openneuro.ds004252.v1.0.2},
-        url = {https://doi.org/10.18112/openneuro.ds004252.v1.0.2},
-      }
+     - `OpenNeuro <https://openneuro.org/datasets/ds004252>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004252>`__
 
 Highlights
 ----------
@@ -83,8 +70,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: CC0
-      - DOI: doi:10.18112/openneuro.ds004252.v1.0.2
+      - License: Unknown
+      - DOI: Unknown
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

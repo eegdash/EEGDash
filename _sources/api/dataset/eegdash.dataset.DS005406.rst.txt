@@ -5,11 +5,11 @@
 eegdash.dataset.DS005406
 ========================
 
-EEG frequency tagging reveals the integration of dissimilar observed actions (OpenNeuro ``ds005406``). Access recordings and metadata through EEGDash.
+OpenNeuro dataset ``ds005406``. Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: CC0` :bdg-light:`Subjects: 29` :bdg-light:`Recordings: 29` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 29` :bdg-light:`Recordings: 29` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,30 +21,17 @@ Dataset Information
    * - Dataset ID
      - ``DS005406``
    * - Title
-     - EEG frequency tagging reveals the integration of dissimilar observed actions
+     - Unknown
    * - Year
-     - 2024
+     - Unknown
    * - Authors
-     - Silvia Formica, Anna Chaiken, Jan R. Wiersema, Emiel Cracco
+     - Unknown
    * - License
-     - CC0
+     - Unknown
    * - Citation / DOI
-     - `doi:10.18112/openneuro.ds005406.v1.0.0 <https://doi.org/10.18112/openneuro.ds005406.v1.0.0>`__
+     - Unknown
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds005406>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005406>`__ | `Source URL <https://openneuro.org/datasets/ds005406>`__
-
-.. dropdown:: Copy-paste BibTeX
-   :class-container: sd-shadow-sm
-   :class-title: sd-bg-light
-
-   .. code-block:: bibtex
-
-      @dataset{ds005406,
-        title = {EEG frequency tagging reveals the integration of dissimilar observed actions},
-        author = {Silvia Formica and Anna Chaiken and Jan R. Wiersema and Emiel Cracco},
-        doi = {10.18112/openneuro.ds005406.v1.0.0},
-        url = {https://doi.org/10.18112/openneuro.ds005406.v1.0.0},
-      }
+     - `OpenNeuro <https://openneuro.org/datasets/ds005406>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005406>`__
 
 Highlights
 ----------
@@ -83,8 +70,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: CC0
-      - DOI: doi:10.18112/openneuro.ds005406.v1.0.0
+      - License: Unknown
+      - DOI: Unknown
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

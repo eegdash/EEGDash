@@ -5,11 +5,11 @@
 eegdash.dataset.DS006377
 ========================
 
-InclusionStudy (OpenNeuro ``ds006377``). Access recordings and metadata through EEGDash.
+OpenNeuro dataset ``ds006377``. Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: fnirs` :bdg-light:`Tasks: 6` :bdg-light:`License: CC0` :bdg-light:`Subjects: 116` :bdg-light:`Recordings: 3953` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: fnirs` :bdg-light:`Tasks: 6` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 116` :bdg-light:`Recordings: 3953` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,30 +21,17 @@ Dataset Information
    * - Dataset ID
      - ``DS006377``
    * - Title
-     - InclusionStudy
+     - Unknown
    * - Year
      - Unknown
    * - Authors
-     - Meryem A. Yücel, Jessica E. Anderson, De'Ja Rogers, Parisa Hajirahimi, Parya Farzam, Yuanyuan Gao, Rini I. Kaplan, Emily J. Braun, Nishaat Mukadam, Sudan Duwadi, Laura Carlton, David Beeler, Lindsay K. Butler, Erin Carpenter, Jaimie Girnis, John Wilson, Vaibhav Tripathi, Yiwen Zhang, Bettina Sorger, Alexander von Lühmann, David C. Somers, Alice Cronin-Golomb, Swathi Kiran, Terry D. Ellis, David A. Boas
+     - Unknown
    * - License
-     - CC0
+     - Unknown
    * - Citation / DOI
-     - `doi:10.18112/openneuro.ds006377.v1.0.2 <https://doi.org/10.18112/openneuro.ds006377.v1.0.2>`__
+     - Unknown
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds006377>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006377>`__ | `Source URL <https://openneuro.org/datasets/ds006377/versions/1.0.2>`__
-
-.. dropdown:: Copy-paste BibTeX
-   :class-container: sd-shadow-sm
-   :class-title: sd-bg-light
-
-   .. code-block:: bibtex
-
-      @dataset{ds006377,
-        title = {InclusionStudy},
-        author = {Meryem A. Yücel and Jessica E. Anderson and De'Ja Rogers and Parisa Hajirahimi and Parya Farzam and Yuanyuan Gao and Rini I. Kaplan and Emily J. Braun and Nishaat Mukadam and Sudan Duwadi and Laura Carlton and David Beeler and Lindsay K. Butler and Erin Carpenter and Jaimie Girnis and John Wilson and Vaibhav Tripathi and Yiwen Zhang and Bettina Sorger and Alexander von Lühmann and David C. Somers and Alice Cronin-Golomb and Swathi Kiran and Terry D. Ellis and David A. Boas},
-        doi = {10.18112/openneuro.ds006377.v1.0.2},
-        url = {https://doi.org/10.18112/openneuro.ds006377.v1.0.2},
-      }
+     - `OpenNeuro <https://openneuro.org/datasets/ds006377>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006377>`__
 
 Highlights
 ----------
@@ -83,8 +70,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: CC0
-      - DOI: doi:10.18112/openneuro.ds006377.v1.0.2
+      - License: Unknown
+      - DOI: Unknown
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

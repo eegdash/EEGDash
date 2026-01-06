@@ -5,11 +5,11 @@
 eegdash.dataset.DS003887
 ========================
 
-Capacity for movement is an organisational principle in object representations: EEG data from Experiment 2 (OpenNeuro ``ds003887``). Access recordings and metadata through EEGDash.
+OpenNeuro dataset ``ds003887``. Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: CC0` :bdg-light:`Subjects: 24` :bdg-light:`Recordings: 24` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 24` :bdg-light:`Recordings: 24` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,30 +21,17 @@ Dataset Information
    * - Dataset ID
      - ``DS003887``
    * - Title
-     - Capacity for movement is an organisational principle in object representations: EEG data from Experiment 2
+     - Unknown
    * - Year
-     - 2021
+     - Unknown
    * - Authors
-     - Shatek, Sophia M., Robinson, Amanda K., Grootswagers, Tijl, Carlson, Thomas A.
+     - Unknown
    * - License
-     - CC0
+     - Unknown
    * - Citation / DOI
-     - `doi:10.18112/openneuro.ds003887.v1.2.2 <https://doi.org/10.18112/openneuro.ds003887.v1.2.2>`__
+     - Unknown
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds003887>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003887>`__ | `Source URL <https://openneuro.org/datasets/ds003887>`__
-
-.. dropdown:: Copy-paste BibTeX
-   :class-container: sd-shadow-sm
-   :class-title: sd-bg-light
-
-   .. code-block:: bibtex
-
-      @dataset{ds003887,
-        title = {Capacity for movement is an organisational principle in object representations: EEG data from Experiment 2},
-        author = {Shatek, Sophia M. and Robinson, Amanda K. and Grootswagers, Tijl and Carlson, Thomas A.},
-        doi = {10.18112/openneuro.ds003887.v1.2.2},
-        url = {https://doi.org/10.18112/openneuro.ds003887.v1.2.2},
-      }
+     - `OpenNeuro <https://openneuro.org/datasets/ds003887>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003887>`__
 
 Highlights
 ----------
@@ -83,8 +70,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: CC0
-      - DOI: doi:10.18112/openneuro.ds003887.v1.2.2
+      - License: Unknown
+      - DOI: Unknown
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

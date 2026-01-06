@@ -5,11 +5,11 @@
 eegdash.dataset.DS005121
 ========================
 
-Siefert2024 (OpenNeuro ``ds005121``). Access recordings and metadata through EEGDash.
+OpenNeuro dataset ``ds005121``. Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: CC0` :bdg-light:`Subjects: 34` :bdg-light:`Recordings: 39` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 34` :bdg-light:`Recordings: 39` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,30 +21,17 @@ Dataset Information
    * - Dataset ID
      - ``DS005121``
    * - Title
-     - Siefert2024
+     - Unknown
    * - Year
-     - 2024
+     - Unknown
    * - Authors
-     - Elizabeth M. Siefert, Sindhuja Uppuluri, Jianing Mu, Marlie C. Tandoc, James W. Antony, Anna C. Schapiro
+     - Unknown
    * - License
-     - CC0
+     - Unknown
    * - Citation / DOI
-     - `doi:10.18112/openneuro.ds005121.v1.0.2 <https://doi.org/10.18112/openneuro.ds005121.v1.0.2>`__
+     - Unknown
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds005121>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005121>`__ | `Source URL <https://openneuro.org/datasets/ds005121>`__
-
-.. dropdown:: Copy-paste BibTeX
-   :class-container: sd-shadow-sm
-   :class-title: sd-bg-light
-
-   .. code-block:: bibtex
-
-      @dataset{ds005121,
-        title = {Siefert2024},
-        author = {Elizabeth M. Siefert and Sindhuja Uppuluri and Jianing Mu and Marlie C. Tandoc and James W. Antony and Anna C. Schapiro},
-        doi = {10.18112/openneuro.ds005121.v1.0.2},
-        url = {https://doi.org/10.18112/openneuro.ds005121.v1.0.2},
-      }
+     - `OpenNeuro <https://openneuro.org/datasets/ds005121>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005121>`__
 
 Highlights
 ----------
@@ -83,8 +70,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: CC0
-      - DOI: doi:10.18112/openneuro.ds005121.v1.0.2
+      - License: Unknown
+      - DOI: Unknown
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

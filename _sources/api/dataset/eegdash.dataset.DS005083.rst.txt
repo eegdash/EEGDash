@@ -5,11 +5,11 @@
 eegdash.dataset.DS005083
 ========================
 
-Safety and Accuracy of Stereoelectroencephalography for Pediatric Patients with Prior Craniotomy (OpenNeuro ``ds005083``). Access recordings and metadata through EEGDash.
+OpenNeuro dataset ``ds005083``. Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: ieeg` :bdg-light:`Tasks: 3` :bdg-light:`License: CC0` :bdg-light:`Subjects: 61` :bdg-light:`Recordings: 1358` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: ieeg` :bdg-light:`Tasks: 3` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 61` :bdg-light:`Recordings: 1358` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,30 +21,17 @@ Dataset Information
    * - Dataset ID
      - ``DS005083``
    * - Title
-     - Safety and Accuracy of Stereoelectroencephalography for Pediatric Patients with Prior Craniotomy
+     - Unknown
    * - Year
      - Unknown
    * - Authors
-     - Peter H Yang, Nathan Wulfekammer, Amanda V. Jenson, Elliot Neal, Stuart Tomko, John Zempel, Peter Brunner, Sean D McEvoy, Matthew D Smyth, Jarod L Roland
+     - Unknown
    * - License
-     - CC0
+     - Unknown
    * - Citation / DOI
-     - `doi:10.18112/openneuro.ds005083.v1.0.0 <https://doi.org/10.18112/openneuro.ds005083.v1.0.0>`__
+     - Unknown
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds005083>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005083>`__ | `Source URL <https://openneuro.org/datasets/ds005083/versions/1.0.0>`__
-
-.. dropdown:: Copy-paste BibTeX
-   :class-container: sd-shadow-sm
-   :class-title: sd-bg-light
-
-   .. code-block:: bibtex
-
-      @dataset{ds005083,
-        title = {Safety and Accuracy of Stereoelectroencephalography for Pediatric Patients with Prior Craniotomy},
-        author = {Peter H Yang and Nathan Wulfekammer and Amanda V. Jenson and Elliot Neal and Stuart Tomko and John Zempel and Peter Brunner and Sean D McEvoy and Matthew D Smyth and Jarod L Roland},
-        doi = {10.18112/openneuro.ds005083.v1.0.0},
-        url = {https://doi.org/10.18112/openneuro.ds005083.v1.0.0},
-      }
+     - `OpenNeuro <https://openneuro.org/datasets/ds005083>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005083>`__
 
 Highlights
 ----------
@@ -83,8 +70,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: CC0
-      - DOI: doi:10.18112/openneuro.ds005083.v1.0.0
+      - License: Unknown
+      - DOI: Unknown
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

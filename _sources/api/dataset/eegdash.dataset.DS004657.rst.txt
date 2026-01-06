@@ -5,11 +5,11 @@
 eegdash.dataset.DS004657
 ========================
 
-Driving with Autonomous Aids (OpenNeuro ``ds004657``). Access recordings and metadata through EEGDash.
+OpenNeuro dataset ``ds004657``. Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: CC0` :bdg-light:`Subjects: 24` :bdg-light:`Recordings: 119` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 24` :bdg-light:`Recordings: 119` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,30 +21,17 @@ Dataset Information
    * - Dataset ID
      - ``DS004657``
    * - Title
-     - Driving with Autonomous Aids
+     - Unknown
    * - Year
-     - 2023
+     - Unknown
    * - Authors
-     - Jason Metcalfe, Amar Marathe, Tony Johnson, Stephen Gordon, Jon Touryan, Kevin King
+     - Unknown
    * - License
-     - CC0
+     - Unknown
    * - Citation / DOI
-     - `doi:10.18112/openneuro.ds004657.v1.0.3 <https://doi.org/10.18112/openneuro.ds004657.v1.0.3>`__
+     - Unknown
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004657>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004657>`__ | `Source URL <https://openneuro.org/datasets/ds004657>`__
-
-.. dropdown:: Copy-paste BibTeX
-   :class-container: sd-shadow-sm
-   :class-title: sd-bg-light
-
-   .. code-block:: bibtex
-
-      @dataset{ds004657,
-        title = {Driving with Autonomous Aids},
-        author = {Jason Metcalfe and Amar Marathe and Tony Johnson and Stephen Gordon and Jon Touryan and Kevin King},
-        doi = {10.18112/openneuro.ds004657.v1.0.3},
-        url = {https://doi.org/10.18112/openneuro.ds004657.v1.0.3},
-      }
+     - `OpenNeuro <https://openneuro.org/datasets/ds004657>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004657>`__
 
 Highlights
 ----------
@@ -83,8 +70,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: CC0
-      - DOI: doi:10.18112/openneuro.ds004657.v1.0.3
+      - License: Unknown
+      - DOI: Unknown
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

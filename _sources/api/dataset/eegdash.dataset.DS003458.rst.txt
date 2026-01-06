@@ -5,11 +5,11 @@
 eegdash.dataset.DS003458
 ========================
 
-EEG: Three armed bandit gambling task (OpenNeuro ``ds003458``). Access recordings and metadata through EEGDash.
+OpenNeuro dataset ``ds003458``. Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: CC0` :bdg-light:`Subjects: 23` :bdg-light:`Recordings: 23` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 23` :bdg-light:`Recordings: 23` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,30 +21,17 @@ Dataset Information
    * - Dataset ID
      - ``DS003458``
    * - Title
-     - EEG: Three armed bandit gambling task
+     - Unknown
    * - Year
-     - 2021
+     - Unknown
    * - Authors
-     - James F Cavanagh jcavanagh@unm.edu
+     - Unknown
    * - License
-     - CC0
+     - Unknown
    * - Citation / DOI
-     - `10.18112/openneuro.ds003458.v1.1.0 <https://doi.org/10.18112/openneuro.ds003458.v1.1.0>`__
+     - Unknown
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds003458>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003458>`__ | `Source URL <https://openneuro.org/datasets/ds003458>`__
-
-.. dropdown:: Copy-paste BibTeX
-   :class-container: sd-shadow-sm
-   :class-title: sd-bg-light
-
-   .. code-block:: bibtex
-
-      @dataset{ds003458,
-        title = {EEG: Three armed bandit gambling task},
-        author = {James F Cavanagh jcavanagh@unm.edu},
-        doi = {10.18112/openneuro.ds003458.v1.1.0},
-        url = {https://doi.org/10.18112/openneuro.ds003458.v1.1.0},
-      }
+     - `OpenNeuro <https://openneuro.org/datasets/ds003458>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003458>`__
 
 Highlights
 ----------
@@ -83,8 +70,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: CC0
-      - DOI: 10.18112/openneuro.ds003458.v1.1.0
+      - License: Unknown
+      - DOI: Unknown
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

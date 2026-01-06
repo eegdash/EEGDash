@@ -5,11 +5,11 @@
 eegdash.dataset.DS006367
 ========================
 
-Memory Reactivation Levels Remain Unaffected by Anticipated Interference (OpenNeuro ``ds006367``). Access recordings and metadata through EEGDash.
+OpenNeuro dataset ``ds006367``. Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: CC0` :bdg-light:`Subjects: 52` :bdg-light:`Recordings: 52` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 52` :bdg-light:`Recordings: 52` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,30 +21,17 @@ Dataset Information
    * - Dataset ID
      - ``DS006367``
    * - Title
-     - Memory Reactivation Levels Remain Unaffected by Anticipated Interference
+     - Unknown
    * - Year
-     - 2025
+     - Unknown
    * - Authors
-     - xx
+     - Unknown
    * - License
-     - CC0
+     - Unknown
    * - Citation / DOI
-     - `doi:10.18112/openneuro.ds006367.v1.0.1 <https://doi.org/10.18112/openneuro.ds006367.v1.0.1>`__
+     - Unknown
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds006367>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006367>`__ | `Source URL <https://openneuro.org/datasets/ds006367>`__
-
-.. dropdown:: Copy-paste BibTeX
-   :class-container: sd-shadow-sm
-   :class-title: sd-bg-light
-
-   .. code-block:: bibtex
-
-      @dataset{ds006367,
-        title = {Memory Reactivation Levels Remain Unaffected by Anticipated Interference},
-        author = {xx},
-        doi = {10.18112/openneuro.ds006367.v1.0.1},
-        url = {https://doi.org/10.18112/openneuro.ds006367.v1.0.1},
-      }
+     - `OpenNeuro <https://openneuro.org/datasets/ds006367>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006367>`__
 
 Highlights
 ----------
@@ -83,8 +70,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: CC0
-      - DOI: doi:10.18112/openneuro.ds006367.v1.0.1
+      - License: Unknown
+      - DOI: Unknown
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

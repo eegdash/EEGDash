@@ -5,11 +5,11 @@
 eegdash.dataset.DS003766
 ========================
 
-A resource for assessing dynamic binary choices in the adult brain using EEG and mouse-tracking (OpenNeuro ``ds003766``). Access recordings and metadata through EEGDash.
+OpenNeuro dataset ``ds003766``. Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 4` :bdg-light:`License: CC0` :bdg-light:`Subjects: 31` :bdg-light:`Recordings: 124` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 4` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 31` :bdg-light:`Recordings: 124` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,30 +21,17 @@ Dataset Information
    * - Dataset ID
      - ``DS003766``
    * - Title
-     - A resource for assessing dynamic binary choices in the adult brain using EEG and mouse-tracking
+     - Unknown
    * - Year
-     - 2021
+     - Unknown
    * - Authors
-     - Kun Chen, Ruien Wang, Jiamin Huang, Fei Gao, Zhen Yuan, Yanyan Qi, Haiyan Wu
+     - Unknown
    * - License
-     - CC0
+     - Unknown
    * - Citation / DOI
-     - `doi:10.18112/openneuro.ds003766.v2.0.3 <https://doi.org/10.18112/openneuro.ds003766.v2.0.3>`__
+     - Unknown
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds003766>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003766>`__ | `Source URL <https://openneuro.org/datasets/ds003766>`__
-
-.. dropdown:: Copy-paste BibTeX
-   :class-container: sd-shadow-sm
-   :class-title: sd-bg-light
-
-   .. code-block:: bibtex
-
-      @dataset{ds003766,
-        title = {A resource for assessing dynamic binary choices in the adult brain using EEG and mouse-tracking},
-        author = {Kun Chen and Ruien Wang and Jiamin Huang and Fei Gao and Zhen Yuan and Yanyan Qi and Haiyan Wu},
-        doi = {10.18112/openneuro.ds003766.v2.0.3},
-        url = {https://doi.org/10.18112/openneuro.ds003766.v2.0.3},
-      }
+     - `OpenNeuro <https://openneuro.org/datasets/ds003766>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003766>`__
 
 Highlights
 ----------
@@ -83,8 +70,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: CC0
-      - DOI: doi:10.18112/openneuro.ds003766.v2.0.3
+      - License: Unknown
+      - DOI: Unknown
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

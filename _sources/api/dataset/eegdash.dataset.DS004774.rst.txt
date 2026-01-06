@@ -5,11 +5,11 @@
 eegdash.dataset.DS004774
 ========================
 
-Automatic Evoked Response Detection (ER-Detect) dataset (OpenNeuro ``ds004774``). Access recordings and metadata through EEGDash.
+OpenNeuro dataset ``ds004774``. Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: ieeg` :bdg-light:`Tasks: 1` :bdg-light:`License: CC0` :bdg-light:`Subjects: 9` :bdg-light:`Recordings: 9` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: ieeg` :bdg-light:`Tasks: 1` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 9` :bdg-light:`Recordings: 9` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,30 +21,17 @@ Dataset Information
    * - Dataset ID
      - ``DS004774``
    * - Title
-     - Automatic Evoked Response Detection (ER-Detect) dataset
+     - Unknown
    * - Year
-     - 2023
+     - Unknown
    * - Authors
-     - M.A. van den Boom, N.M. Gregg, G.O. Valencia, B.N. Lundstrom, K.J. Miller, D. van Blooijs, G.J.M. Huiskamp, F.S.S. Leijten, G.A. Worrell, D. Hermes
+     - Unknown
    * - License
-     - CC0
+     - Unknown
    * - Citation / DOI
-     - `doi:10.18112/openneuro.ds004774.v1.0.0 <https://doi.org/10.18112/openneuro.ds004774.v1.0.0>`__
+     - Unknown
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004774>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004774>`__ | `Source URL <https://openneuro.org/datasets/ds004774>`__
-
-.. dropdown:: Copy-paste BibTeX
-   :class-container: sd-shadow-sm
-   :class-title: sd-bg-light
-
-   .. code-block:: bibtex
-
-      @dataset{ds004774,
-        title = {Automatic Evoked Response Detection (ER-Detect) dataset},
-        author = {M.A. van den Boom and N.M. Gregg and G.O. Valencia and B.N. Lundstrom and K.J. Miller and D. van Blooijs and G.J.M. Huiskamp and F.S.S. Leijten and G.A. Worrell and D. Hermes},
-        doi = {10.18112/openneuro.ds004774.v1.0.0},
-        url = {https://doi.org/10.18112/openneuro.ds004774.v1.0.0},
-      }
+     - `OpenNeuro <https://openneuro.org/datasets/ds004774>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004774>`__
 
 Highlights
 ----------
@@ -83,8 +70,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: CC0
-      - DOI: doi:10.18112/openneuro.ds004774.v1.0.0
+      - License: Unknown
+      - DOI: Unknown
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

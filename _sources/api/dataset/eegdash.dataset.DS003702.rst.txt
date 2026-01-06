@@ -5,11 +5,11 @@
 eegdash.dataset.DS003702
 ========================
 
-Social Memory cuing (OpenNeuro ``ds003702``). Access recordings and metadata through EEGDash.
+OpenNeuro dataset ``ds003702``. Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: CC0` :bdg-light:`Subjects: 47` :bdg-light:`Recordings: 47` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 47` :bdg-light:`Recordings: 47` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,30 +21,17 @@ Dataset Information
    * - Dataset ID
      - ``DS003702``
    * - Title
-     - Social Memory cuing
+     - Unknown
    * - Year
-     - 2021
+     - Unknown
    * - Authors
-     - Samantha Gregory, Hongfang Wang, Klaus Kessler
+     - Unknown
    * - License
-     - CC0
+     - Unknown
    * - Citation / DOI
-     - `10.18112/openneuro.ds003702.v1.0.1 <https://doi.org/10.18112/openneuro.ds003702.v1.0.1>`__
+     - Unknown
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds003702>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003702>`__ | `Source URL <https://openneuro.org/datasets/ds003702>`__
-
-.. dropdown:: Copy-paste BibTeX
-   :class-container: sd-shadow-sm
-   :class-title: sd-bg-light
-
-   .. code-block:: bibtex
-
-      @dataset{ds003702,
-        title = {Social Memory cuing},
-        author = {Samantha Gregory and Hongfang Wang and Klaus Kessler},
-        doi = {10.18112/openneuro.ds003702.v1.0.1},
-        url = {https://doi.org/10.18112/openneuro.ds003702.v1.0.1},
-      }
+     - `OpenNeuro <https://openneuro.org/datasets/ds003702>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003702>`__
 
 Highlights
 ----------
@@ -83,8 +70,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: CC0
-      - DOI: 10.18112/openneuro.ds003702.v1.0.1
+      - License: Unknown
+      - DOI: Unknown
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

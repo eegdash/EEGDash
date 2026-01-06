@@ -5,11 +5,11 @@
 eegdash.dataset.DS004448
 ========================
 
-The BMI-HDEEG dataset 4 (OpenNeuro ``ds004448``). Access recordings and metadata through EEGDash.
+OpenNeuro dataset ``ds004448``. Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: CC0` :bdg-light:`Subjects: 56` :bdg-light:`Recordings: 280` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 56` :bdg-light:`Recordings: 280` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,30 +21,17 @@ Dataset Information
    * - Dataset ID
      - ``DS004448``
    * - Title
-     - The BMI-HDEEG dataset 4
+     - Unknown
    * - Year
-     - 2023
+     - Unknown
    * - Authors
-     - Seitaro Iwama, Masumi Morishige, Yoshikazu Takahashi, Ryotaro Hirose, Midori Kodama, Junichi Ushiba
+     - Unknown
    * - License
-     - CC0
+     - Unknown
    * - Citation / DOI
-     - `doi:10.18112/openneuro.ds004448.v1.0.2 <https://doi.org/10.18112/openneuro.ds004448.v1.0.2>`__
+     - Unknown
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004448>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004448>`__ | `Source URL <https://openneuro.org/datasets/ds004448>`__
-
-.. dropdown:: Copy-paste BibTeX
-   :class-container: sd-shadow-sm
-   :class-title: sd-bg-light
-
-   .. code-block:: bibtex
-
-      @dataset{ds004448,
-        title = {The BMI-HDEEG dataset 4},
-        author = {Seitaro Iwama and Masumi Morishige and Yoshikazu Takahashi and Ryotaro Hirose and Midori Kodama and Junichi Ushiba},
-        doi = {10.18112/openneuro.ds004448.v1.0.2},
-        url = {https://doi.org/10.18112/openneuro.ds004448.v1.0.2},
-      }
+     - `OpenNeuro <https://openneuro.org/datasets/ds004448>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004448>`__
 
 Highlights
 ----------
@@ -83,8 +70,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: CC0
-      - DOI: doi:10.18112/openneuro.ds004448.v1.0.2
+      - License: Unknown
+      - DOI: Unknown
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

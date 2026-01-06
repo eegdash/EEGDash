@@ -5,11 +5,11 @@
 eegdash.dataset.DS002799
 ========================
 
-Human es-fMRI Resource: Concurrent deep-brain stimulation and whole-brain functional MRI (OpenNeuro ``ds002799``). Access recordings and metadata through EEGDash.
+OpenNeuro dataset ``ds002799``. Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: ieeg` :bdg-light:`Tasks: 2` :bdg-light:`License: CC0` :bdg-light:`Subjects: 27` :bdg-light:`Recordings: 16825` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: ieeg` :bdg-light:`Tasks: 2` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 27` :bdg-light:`Recordings: 16825` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,30 +21,17 @@ Dataset Information
    * - Dataset ID
      - ``DS002799``
    * - Title
-     - Human es-fMRI Resource: Concurrent deep-brain stimulation and whole-brain functional MRI
+     - Unknown
    * - Year
      - Unknown
    * - Authors
-     - Thompson WH*, Nair R*, Oya H*, Esteban O, Shine JM, Petkov CI, Poldrack RA, Howard M, Adolphs R†, *equally contributing, †corresponding author
+     - Unknown
    * - License
-     - CC0
+     - Unknown
    * - Citation / DOI
-     - `10.18112/openneuro.ds002799.v1.0.4 <https://doi.org/10.18112/openneuro.ds002799.v1.0.4>`__
+     - Unknown
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds002799>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds002799>`__ | `Source URL <https://openneuro.org/datasets/ds002799/versions/1.0.4>`__
-
-.. dropdown:: Copy-paste BibTeX
-   :class-container: sd-shadow-sm
-   :class-title: sd-bg-light
-
-   .. code-block:: bibtex
-
-      @dataset{ds002799,
-        title = {Human es-fMRI Resource: Concurrent deep-brain stimulation and whole-brain functional MRI},
-        author = {Thompson WH* and Nair R* and Oya H* and Esteban O and Shine JM and Petkov CI and Poldrack RA and Howard M and Adolphs R† and *equally contributing, †corresponding author},
-        doi = {10.18112/openneuro.ds002799.v1.0.4},
-        url = {https://doi.org/10.18112/openneuro.ds002799.v1.0.4},
-      }
+     - `OpenNeuro <https://openneuro.org/datasets/ds002799>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds002799>`__
 
 Highlights
 ----------
@@ -83,8 +70,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: CC0
-      - DOI: 10.18112/openneuro.ds002799.v1.0.4
+      - License: Unknown
+      - DOI: Unknown
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

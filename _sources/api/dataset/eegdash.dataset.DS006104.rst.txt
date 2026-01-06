@@ -5,11 +5,11 @@
 eegdash.dataset.DS006104
 ========================
 
-EEG dataset for speech decoding (OpenNeuro ``ds006104``). Access recordings and metadata through EEGDash.
+OpenNeuro dataset ``ds006104``. Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 3` :bdg-light:`License: CC0` :bdg-light:`Subjects: 24` :bdg-light:`Recordings: 56` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 3` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 24` :bdg-light:`Recordings: 56` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,30 +21,17 @@ Dataset Information
    * - Dataset ID
      - ``DS006104``
    * - Title
-     - EEG dataset for speech decoding
+     - Unknown
    * - Year
-     - 2025
+     - Unknown
    * - Authors
-     - João Pedro Carvalho Moreira, Vinícius Rezende Carvalho, Eduardo Mazoni Andrade Marçal Mendes, Ariah Fallah, Terrence J. Sejnowski, Claudia Lainscsek, Lindy Comstock
+     - Unknown
    * - License
-     - CC0
+     - Unknown
    * - Citation / DOI
-     - `doi:10.18112/openneuro.ds006104.v1.0.1 <https://doi.org/10.18112/openneuro.ds006104.v1.0.1>`__
+     - Unknown
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds006104>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006104>`__ | `Source URL <https://openneuro.org/datasets/ds006104>`__
-
-.. dropdown:: Copy-paste BibTeX
-   :class-container: sd-shadow-sm
-   :class-title: sd-bg-light
-
-   .. code-block:: bibtex
-
-      @dataset{ds006104,
-        title = {EEG dataset for speech decoding},
-        author = {João Pedro Carvalho Moreira and Vinícius Rezende Carvalho and Eduardo Mazoni Andrade Marçal Mendes and Ariah Fallah and Terrence J. Sejnowski and Claudia Lainscsek and Lindy Comstock},
-        doi = {10.18112/openneuro.ds006104.v1.0.1},
-        url = {https://doi.org/10.18112/openneuro.ds006104.v1.0.1},
-      }
+     - `OpenNeuro <https://openneuro.org/datasets/ds006104>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006104>`__
 
 Highlights
 ----------
@@ -83,8 +70,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: CC0
-      - DOI: doi:10.18112/openneuro.ds006104.v1.0.1
+      - License: Unknown
+      - DOI: Unknown
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

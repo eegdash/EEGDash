@@ -5,11 +5,11 @@
 eegdash.dataset.DS003374
 ========================
 
-Dataset of neurons and intracranial EEG from human amygdala during aversive dynamic visual stimulation (OpenNeuro ``ds003374``). Access recordings and metadata through EEGDash.
+OpenNeuro dataset ``ds003374``. Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: ieeg` :bdg-light:`Tasks: 1` :bdg-light:`License: CC0` :bdg-light:`Subjects: 9` :bdg-light:`Recordings: 18` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: ieeg` :bdg-light:`Tasks: 1` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 9` :bdg-light:`Recordings: 18` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,30 +21,17 @@ Dataset Information
    * - Dataset ID
      - ``DS003374``
    * - Title
-     - Dataset of neurons and intracranial EEG from human amygdala during aversive dynamic visual stimulation
+     - Unknown
    * - Year
-     - 2020
+     - Unknown
    * - Authors
-     - Tommaso Fedele, Ece Boran, Valeri Chirkov, Peter Hilfiker, Thomas Grunwald, Lennart Stieglitz, Hennric Jokeit, Johannes Sarnthein
+     - Unknown
    * - License
-     - CC0
+     - Unknown
    * - Citation / DOI
-     - `10.18112/openneuro.ds003374.v1.1.1 <https://doi.org/10.18112/openneuro.ds003374.v1.1.1>`__
+     - Unknown
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds003374>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003374>`__ | `Source URL <https://openneuro.org/datasets/ds003374>`__
-
-.. dropdown:: Copy-paste BibTeX
-   :class-container: sd-shadow-sm
-   :class-title: sd-bg-light
-
-   .. code-block:: bibtex
-
-      @dataset{ds003374,
-        title = {Dataset of neurons and intracranial EEG from human amygdala during aversive dynamic visual stimulation},
-        author = {Tommaso Fedele and Ece Boran and Valeri Chirkov and Peter Hilfiker and Thomas Grunwald and Lennart Stieglitz and Hennric Jokeit and Johannes Sarnthein},
-        doi = {10.18112/openneuro.ds003374.v1.1.1},
-        url = {https://doi.org/10.18112/openneuro.ds003374.v1.1.1},
-      }
+     - `OpenNeuro <https://openneuro.org/datasets/ds003374>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003374>`__
 
 Highlights
 ----------
@@ -83,8 +70,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: CC0
-      - DOI: 10.18112/openneuro.ds003374.v1.1.1
+      - License: Unknown
+      - DOI: Unknown
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

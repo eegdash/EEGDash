@@ -5,11 +5,11 @@
 eegdash.dataset.DS004362
 ========================
 
-EEG Motor Movement/Imagery Dataset (OpenNeuro ``ds004362``). Access recordings and metadata through EEGDash.
+OpenNeuro dataset ``ds004362``. Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: CC0` :bdg-light:`Subjects: 109` :bdg-light:`Recordings: 1526` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 109` :bdg-light:`Recordings: 1526` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,30 +21,17 @@ Dataset Information
    * - Dataset ID
      - ``DS004362``
    * - Title
-     - EEG Motor Movement/Imagery Dataset
+     - Unknown
    * - Year
-     - 2022
+     - Unknown
    * - Authors
-     - Gerwin Schalk, Dennis J McFarland, Thilo Hinterberger, Niels Birbaumer, Jonathan R Wolpaw
+     - Unknown
    * - License
-     - CC0
+     - Unknown
    * - Citation / DOI
-     - `doi:10.18112/openneuro.ds004362.v1.0.0 <https://doi.org/10.18112/openneuro.ds004362.v1.0.0>`__
+     - Unknown
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004362>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004362>`__ | `Source URL <https://openneuro.org/datasets/ds004362>`__
-
-.. dropdown:: Copy-paste BibTeX
-   :class-container: sd-shadow-sm
-   :class-title: sd-bg-light
-
-   .. code-block:: bibtex
-
-      @dataset{ds004362,
-        title = {EEG Motor Movement/Imagery Dataset},
-        author = {Gerwin Schalk and Dennis J McFarland and Thilo Hinterberger and Niels Birbaumer and Jonathan R Wolpaw},
-        doi = {10.18112/openneuro.ds004362.v1.0.0},
-        url = {https://doi.org/10.18112/openneuro.ds004362.v1.0.0},
-      }
+     - `OpenNeuro <https://openneuro.org/datasets/ds004362>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004362>`__
 
 Highlights
 ----------
@@ -83,8 +70,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: CC0
-      - DOI: doi:10.18112/openneuro.ds004362.v1.0.0
+      - License: Unknown
+      - DOI: Unknown
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

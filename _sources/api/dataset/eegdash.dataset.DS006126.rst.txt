@@ -5,11 +5,11 @@
 eegdash.dataset.DS006126
 ========================
 
-TDCS Modulation of Visual Cortex in Motor Imagery (OpenNeuro ``ds006126``). Access recordings and metadata through EEGDash.
+OpenNeuro dataset ``ds006126``. Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 6` :bdg-light:`License: CC0` :bdg-light:`Subjects: 5` :bdg-light:`Recordings: 90` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 6` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 5` :bdg-light:`Recordings: 90` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,30 +21,17 @@ Dataset Information
    * - Dataset ID
      - ``DS006126``
    * - Title
-     - TDCS Modulation of Visual Cortex in Motor Imagery
+     - Unknown
    * - Year
-     - 2025
+     - Unknown
    * - Authors
-     - Anthony Mensah, Gleb Perevoznyuk, Artyom Batov, Aleksandra S. Pleskovskaya
+     - Unknown
    * - License
-     - CC0
+     - Unknown
    * - Citation / DOI
-     - `doi:10.18112/openneuro.ds006126.v1.0.0 <https://doi.org/10.18112/openneuro.ds006126.v1.0.0>`__
+     - Unknown
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds006126>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006126>`__ | `Source URL <https://openneuro.org/datasets/ds006126>`__
-
-.. dropdown:: Copy-paste BibTeX
-   :class-container: sd-shadow-sm
-   :class-title: sd-bg-light
-
-   .. code-block:: bibtex
-
-      @dataset{ds006126,
-        title = {TDCS Modulation of Visual Cortex in Motor Imagery},
-        author = {Anthony Mensah and Gleb Perevoznyuk and Artyom Batov and Aleksandra S. Pleskovskaya},
-        doi = {10.18112/openneuro.ds006126.v1.0.0},
-        url = {https://doi.org/10.18112/openneuro.ds006126.v1.0.0},
-      }
+     - `OpenNeuro <https://openneuro.org/datasets/ds006126>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006126>`__
 
 Highlights
 ----------
@@ -83,8 +70,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: CC0
-      - DOI: doi:10.18112/openneuro.ds006126.v1.0.0
+      - License: Unknown
+      - DOI: Unknown
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

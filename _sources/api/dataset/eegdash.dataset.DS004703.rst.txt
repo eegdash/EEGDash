@@ -5,11 +5,11 @@
 eegdash.dataset.DS004703
 ========================
 
-sEEG Passive listening to natural speech (OpenNeuro ``ds004703``). Access recordings and metadata through EEGDash.
+OpenNeuro dataset ``ds004703``. Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: ieeg` :bdg-light:`Tasks: 1` :bdg-light:`License: CC0` :bdg-light:`Subjects: 10` :bdg-light:`Recordings: 11` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: ieeg` :bdg-light:`Tasks: 1` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 10` :bdg-light:`Recordings: 11` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,30 +21,17 @@ Dataset Information
    * - Dataset ID
      - ``DS004703``
    * - Title
-     - sEEG Passive listening to natural speech
+     - Unknown
    * - Year
-     - 2023
+     - Unknown
    * - Authors
-     - Anna Mai, Stephanie Ries, Sharona Ben-Haim, Jerry Shih, Timothy Gentner
+     - Unknown
    * - License
-     - CC0
+     - Unknown
    * - Citation / DOI
-     - `doi:10.18112/openneuro.ds004703.v1.1.0 <https://doi.org/10.18112/openneuro.ds004703.v1.1.0>`__
+     - Unknown
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004703>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004703>`__ | `Source URL <https://openneuro.org/datasets/ds004703>`__
-
-.. dropdown:: Copy-paste BibTeX
-   :class-container: sd-shadow-sm
-   :class-title: sd-bg-light
-
-   .. code-block:: bibtex
-
-      @dataset{ds004703,
-        title = {sEEG Passive listening to natural speech},
-        author = {Anna Mai and Stephanie Ries and Sharona Ben-Haim and Jerry Shih and Timothy Gentner},
-        doi = {10.18112/openneuro.ds004703.v1.1.0},
-        url = {https://doi.org/10.18112/openneuro.ds004703.v1.1.0},
-      }
+     - `OpenNeuro <https://openneuro.org/datasets/ds004703>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004703>`__
 
 Highlights
 ----------
@@ -83,8 +70,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: CC0
-      - DOI: doi:10.18112/openneuro.ds004703.v1.1.0
+      - License: Unknown
+      - DOI: Unknown
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

@@ -5,11 +5,11 @@
 eegdash.dataset.DS004809
 ========================
 
-Categorized Free Recall: Delayed Free Recall of Word Lists Organized by Semantic Categories (OpenNeuro ``ds004809``). Access recordings and metadata through EEGDash.
+OpenNeuro dataset ``ds004809``. Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: ieeg` :bdg-light:`Tasks: 1` :bdg-light:`License: CC0` :bdg-light:`Subjects: 252` :bdg-light:`Recordings: 889` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: ieeg` :bdg-light:`Tasks: 1` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 252` :bdg-light:`Recordings: 889` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,30 +21,17 @@ Dataset Information
    * - Dataset ID
      - ``DS004809``
    * - Title
-     - Categorized Free Recall: Delayed Free Recall of Word Lists Organized by Semantic Categories
+     - Unknown
    * - Year
-     - 2023
+     - Unknown
    * - Authors
-     - Haydn G. Herrema, Michael J. Kahana
+     - Unknown
    * - License
-     - CC0
+     - Unknown
    * - Citation / DOI
-     - `doi:10.18112/openneuro.ds004809.v2.2.0 <https://doi.org/10.18112/openneuro.ds004809.v2.2.0>`__
+     - Unknown
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004809>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004809>`__ | `Source URL <https://openneuro.org/datasets/ds004809>`__
-
-.. dropdown:: Copy-paste BibTeX
-   :class-container: sd-shadow-sm
-   :class-title: sd-bg-light
-
-   .. code-block:: bibtex
-
-      @dataset{ds004809,
-        title = {Categorized Free Recall: Delayed Free Recall of Word Lists Organized by Semantic Categories},
-        author = {Haydn G. Herrema and Michael J. Kahana},
-        doi = {10.18112/openneuro.ds004809.v2.2.0},
-        url = {https://doi.org/10.18112/openneuro.ds004809.v2.2.0},
-      }
+     - `OpenNeuro <https://openneuro.org/datasets/ds004809>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004809>`__
 
 Highlights
 ----------
@@ -83,8 +70,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: CC0
-      - DOI: doi:10.18112/openneuro.ds004809.v2.2.0
+      - License: Unknown
+      - DOI: Unknown
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

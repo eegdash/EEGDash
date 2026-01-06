@@ -5,11 +5,11 @@
 eegdash.dataset.DS005672
 ========================
 
-PerceiveImagine (OpenNeuro ``ds005672``). Access recordings and metadata through EEGDash.
+OpenNeuro dataset ``ds005672``. Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: CC0` :bdg-light:`Subjects: 3` :bdg-light:`Recordings: 3` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 3` :bdg-light:`Recordings: 3` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,30 +21,17 @@ Dataset Information
    * - Dataset ID
      - ``DS005672``
    * - Title
-     - PerceiveImagine
+     - Unknown
    * - Year
-     - 2024
+     - Unknown
    * - Authors
-     - Li Zhiyuan, Zhao Jiaxin
+     - Unknown
    * - License
-     - CC0
+     - Unknown
    * - Citation / DOI
-     - `doi:10.18112/openneuro.ds005672.v1.0.0 <https://doi.org/10.18112/openneuro.ds005672.v1.0.0>`__
+     - Unknown
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds005672>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005672>`__ | `Source URL <https://openneuro.org/datasets/ds005672>`__
-
-.. dropdown:: Copy-paste BibTeX
-   :class-container: sd-shadow-sm
-   :class-title: sd-bg-light
-
-   .. code-block:: bibtex
-
-      @dataset{ds005672,
-        title = {PerceiveImagine},
-        author = {Li Zhiyuan and Zhao Jiaxin},
-        doi = {10.18112/openneuro.ds005672.v1.0.0},
-        url = {https://doi.org/10.18112/openneuro.ds005672.v1.0.0},
-      }
+     - `OpenNeuro <https://openneuro.org/datasets/ds005672>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005672>`__
 
 Highlights
 ----------
@@ -83,8 +70,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: CC0
-      - DOI: doi:10.18112/openneuro.ds005672.v1.0.0
+      - License: Unknown
+      - DOI: Unknown
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

@@ -5,11 +5,11 @@
 eegdash.dataset.DS005340
 ========================
 
-Fundamental frequency predominantly drives talker differences in auditory brainstem responses to continuous speech (OpenNeuro ``ds005340``). Access recordings and metadata through EEGDash.
+OpenNeuro dataset ``ds005340``. Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: CC0` :bdg-light:`Subjects: 15` :bdg-light:`Recordings: 15` :bdg-light:`Source: openneuro`
+:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`License: Unknown` :bdg-light:`Subjects: 15` :bdg-light:`Recordings: 15` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,30 +21,17 @@ Dataset Information
    * - Dataset ID
      - ``DS005340``
    * - Title
-     - Fundamental frequency predominantly drives talker differences in auditory brainstem responses to continuous speech
+     - Unknown
    * - Year
-     - 2024
+     - Unknown
    * - Authors
-     - Melissa J. Polonenko, Ross K. Maddox
+     - Unknown
    * - License
-     - CC0
+     - Unknown
    * - Citation / DOI
-     - `doi:10.18112/openneuro.ds005340.v1.0.4 <https://doi.org/10.18112/openneuro.ds005340.v1.0.4>`__
+     - Unknown
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds005340>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005340>`__ | `Source URL <https://openneuro.org/datasets/ds005340>`__
-
-.. dropdown:: Copy-paste BibTeX
-   :class-container: sd-shadow-sm
-   :class-title: sd-bg-light
-
-   .. code-block:: bibtex
-
-      @dataset{ds005340,
-        title = {Fundamental frequency predominantly drives talker differences in auditory brainstem responses to continuous speech},
-        author = {Melissa J. Polonenko and Ross K. Maddox},
-        doi = {10.18112/openneuro.ds005340.v1.0.4},
-        url = {https://doi.org/10.18112/openneuro.ds005340.v1.0.4},
-      }
+     - `OpenNeuro <https://openneuro.org/datasets/ds005340>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005340>`__
 
 Highlights
 ----------
@@ -83,8 +70,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: CC0
-      - DOI: doi:10.18112/openneuro.ds005340.v1.0.4
+      - License: Unknown
+      - DOI: Unknown
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

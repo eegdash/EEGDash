@@ -244,7 +244,6 @@ Examples
 >>> from eegdash.dataset import {class_name}
 >>> dataset = {class_name}(cache_dir="./data")
 >>> recording = dataset[0]
->>> raw = recording.load()
 """
 
     return docstring

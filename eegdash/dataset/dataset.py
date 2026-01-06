@@ -61,6 +61,7 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
 
     >>> if len(dataset) > 0:
     ...     recording = dataset[0]
+    ...     raw = recording.load()
     ...     print(f"Sampling rate: {raw.info['sfreq']} Hz")
     ...     print(f"Number of channels: {len(raw.ch_names)}")
     ...     print(f"Duration: {raw.times[-1]:.1f} seconds")
@@ -82,6 +83,8 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
     ...     if i >= 2:  # limit output
     ...         break
     ...     print(f"Recording {i}: {recording.description}")
+    ...     raw = recording.load()
+    ...     print(f"  Channels: {len(raw.ch_names)}, Duration: {raw.times[-1]:.1f}s")
 
     Parameters
     ----------

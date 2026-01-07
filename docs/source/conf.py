@@ -606,6 +606,22 @@ def _load_dataset_details(dataset_id: str) -> dict[str, object]:
     return details
 
 
+def _clean_count(value: object) -> str:
+    """Format counts: remove decimals for whole numbers, hide 0s."""
+    if value is None:
+        return ""
+    text = str(value).strip()
+    try:
+        f_val = float(text)
+        if f_val == 0:
+            return ""
+        if f_val.is_integer():
+            return str(int(f_val))
+    except (ValueError, TypeError):
+        pass
+    return text
+
+
 def _build_dataset_context(
     class_name: str, row: Mapping[str, str] | None
 ) -> dict[str, object]:
@@ -620,6 +636,11 @@ def _build_dataset_context(
     source = _clean_value((row or {}).get("source"))
     if not source:
         source = "OpenNeuro"
+
+    dataset_format = ""
+    # Heuristic: OpenNeuro datasets are typically BIDS
+    if source.lower() == "openneuro":
+        dataset_format = "BIDS"
 
     return {
         "class_name": class_name,
@@ -639,11 +660,12 @@ def _build_dataset_context(
         "sampling_freqs": _clean_value((row or {}).get("sampling_freqs")),
         "duration_hours_total": _clean_value((row or {}).get("duration_hours_total")),
         "size": _clean_value((row or {}).get("size")),
-        "s3_item_count": _clean_value((row or {}).get("s3_item_count")),
+        "s3_item_count": _clean_value((row or {}).get("n_records")),
         "modality": modality,
         "exp_type": _clean_value((row or {}).get("type of exp")),
         "subject_type": _clean_value((row or {}).get("Type Subject")),
         "source": source,
+        "dataset_format": dataset_format,
         "openneuro_url": f"https://openneuro.org/datasets/{dataset_id}",
         "nemar_url": f"https://nemar.org/dataexplorer/detail?dataset_id={dataset_id}",
         "metadata_fields": DEFAULT_METADATA_FIELDS,
@@ -720,7 +742,7 @@ def _format_highlights_section(context: Mapping[str, object]) -> str:
             [
                 _stat_line("Size on disk", context.get("size")),
                 _stat_line("File count", context.get("s3_item_count")),
-                _stat_line("Format", ""),
+                _stat_line("Format", context.get("dataset_format")),
             ],
         ),
         (

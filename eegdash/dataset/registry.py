@@ -57,7 +57,7 @@ def register_openneuro_datasets(
     df = pd.DataFrame()
     if from_api:
         try:
-            df = _fetch_datasets_from_api(api_url, database)
+            df = fetch_datasets_from_api(api_url, database)
         except Exception:
             # Fallback to CSV if API fails, or empty if no CSV provided
             pass
@@ -393,49 +393,3 @@ def fetch_datasets_from_api(
             pass
 
     return df
-
-
-def _fetch_datasets_from_api(api_url: str, database: str) -> pd.DataFrame:
-    """Fetch dataset summaries from API and return as DataFrame matching CSV structure."""
-    import os
-
-    limit = int(os.environ.get("EEGDASH_DOC_LIMIT", 1000))
-    url = f"{api_url}/{database}/datasets/summary?limit={limit}"
-    try:
-        with urllib.request.urlopen(url, timeout=10) as response:
-            data = json.loads(response.read().decode("utf-8"))
-    except Exception:
-        return pd.DataFrame()
-
-    if not data.get("success"):
-        return pd.DataFrame()
-
-    datasets = data.get("data", [])
-    rows = []
-    for ds in datasets:
-        ds_id = ds.get("dataset_id", "").strip()
-        # Filter test datasets and excluded ones
-        if (
-            ds_id.lower() in ("test", "test_dataset")
-            or ds_id.upper() in EXCLUDED_DATASETS
-        ):
-            continue
-
-        meta = ds.get("metadata", {})
-        # Map API fields to expected CSV columns
-        row = {
-            "dataset": ds.get("dataset_id"),
-            "n_subjects": meta.get("subject_count", 0),
-            "n_records": ds.get("record_count", 0),
-            "n_tasks": len(meta.get("tasks", [])),
-            "modality of exp": ", ".join(meta.get("recording_modalities", []) or []),
-            "type of exp": meta.get("type", "Unknown"),
-            "Type Subject": meta.get("pathology", "Unknown"),
-            "duration_hours_total": round(meta.get("duration_hours_total", 0) or 0, 2),
-            "size": ds.get("size_human", "Unknown"),
-            # internal/extra fields
-            "source": ds.get("source", "unknown"),
-        }
-        rows.append(row)
-
-    return pd.DataFrame(rows)

@@ -571,9 +571,7 @@ def _normalize_doi(doi: str) -> str:
     return doi.replace("doi:", "").strip()
 
 
-def _load_dataset_details(
-    dataset_id: str, api_client: eegdash.EEGDash | None = None
-) -> dict[str, object]:
+def _load_dataset_details(dataset_id: str) -> dict[str, object]:
     dataset_id = dataset_id.lower()
     cached = _DATASET_DETAILS_CACHE.get(dataset_id)
     if cached is not None:
@@ -582,9 +580,6 @@ def _load_dataset_details(
     details: dict[str, object] = {}
     dataset_dir = CLONE_ROOT / dataset_id
     desc_path = dataset_dir / "dataset_description.json"
-    manifest_path = dataset_dir / "manifest.json"
-
-    # 1. Try local filesystem (ingestion artifacts)
     if desc_path.exists():
         try:
             data = json.loads(desc_path.read_text(encoding="utf-8"))
@@ -598,6 +593,7 @@ def _load_dataset_details(
         details["references"] = _normalize_list(data.get("ReferencesAndLinks"))
         details["funding"] = _normalize_list(data.get("Funding"))
 
+    manifest_path = dataset_dir / "manifest.json"
     if manifest_path.exists():
         try:
             data = json.loads(manifest_path.read_text(encoding="utf-8"))
@@ -606,52 +602,16 @@ def _load_dataset_details(
         details.setdefault("doi", _clean_value(data.get("dataset_doi")))
         details["source_url"] = _clean_value(data.get("source_url"))
 
-    # 2. Try API fallback (useful for CI builds where local files are missing)
-    if not details.get("title") and api_client:
-        try:
-            ds_api = api_client.get_dataset(dataset_id)
-            if ds_api:
-                details["title"] = _clean_value(ds_api.get("name"))
-                details["authors"] = _normalize_list(ds_api.get("authors"))
-                details["license"] = _clean_value(ds_api.get("license"))
-                details["doi"] = _clean_value(ds_api.get("dataset_doi"))
-                details["how_to_acknowledge"] = _clean_value(
-                    ds_api.get("how_to_acknowledge")
-                )
-                details["references"] = _normalize_list(
-                    ds_api.get("references_and_links")
-                )
-                details["funding"] = _normalize_list(ds_api.get("funding"))
-                details["source_url"] = _clean_value(
-                    ds_api.get("external_links", {}).get("source_url")
-                )
-
-                # Extract year from created_at
-                created_at = ds_api.get("timestamps", {}).get("dataset_created_at")
-                if created_at:
-                    try:
-                        dt = datetime.fromisoformat(created_at.replace("Z", "+00:00"))
-                        details["year"] = str(dt.year)
-                    except (ValueError, TypeError):
-                        pass
-
-        except Exception as exc:
-            LOGGER.warning(
-                "[dataset-docs] API detail fetch failed for %s: %s", dataset_id, exc
-            )
-
     _DATASET_DETAILS_CACHE[dataset_id] = details
     return details
 
 
 def _build_dataset_context(
-    class_name: str,
-    row: Mapping[str, str] | None,
-    api_client: eegdash.EEGDash | None = None,
+    class_name: str, row: Mapping[str, str] | None
 ) -> dict[str, object]:
     dataset_id = _clean_value(row.get("dataset") if row else "")
     dataset_id = dataset_id.lower() if dataset_id else class_name.lower()
-    details = _load_dataset_details(dataset_id, api_client=api_client)
+    details = _load_dataset_details(dataset_id)
 
     modality = _clean_value((row or {}).get("record_modality"))
     if not modality:
@@ -661,30 +621,14 @@ def _build_dataset_context(
     if not source:
         source = "OpenNeuro"
 
-    # Fallback to CSV summary if API/local details missed something
-    title = _collapse_whitespace(_clean_value(details.get("title")))
-    if not title and row:
-        title = _collapse_whitespace(_clean_value(row.get("dataset_title")))
-
-    license_text = _clean_value(details.get("license"))
-    if not license_text and row:
-        license_text = _clean_value(row.get("license"))
-
-    doi = _clean_value(details.get("doi"))
-    if not doi and row:
-        doi = _clean_value(row.get("doi"))
-
-    year = _clean_value(details.get("year", "Unknown"))
-
     return {
         "class_name": class_name,
         "dataset_id": dataset_id,
         "dataset_upper": dataset_id.upper(),
-        "title": title,
+        "title": _collapse_whitespace(_clean_value(details.get("title"))),
         "authors": details.get("authors", []),
-        "year": year,
-        "license": license_text,
-        "doi": doi,
+        "license": _clean_value(details.get("license")),
+        "doi": _clean_value(details.get("doi")),
         "source_url": _clean_value(details.get("source_url")),
         "references": details.get("references", []),
         "how_to_acknowledge": _clean_value(details.get("how_to_acknowledge")),
@@ -858,7 +802,7 @@ def _format_dataset_info_section(context: Mapping[str, object]) -> str:
     rows = [
         ("Dataset ID", f"``{dataset_upper}``"),
         ("Title", title),
-        ("Year", str(context.get("year", "Unknown"))),
+        ("Year", "Unknown"),
         ("Authors", authors_text),
         ("License", license_text),
         ("Citation / DOI", doi_text),
@@ -982,16 +926,6 @@ def _generate_dataset_docs(app) -> None:
     dataset_rows = _load_dataset_rows(dataset_names)
     toctree_entries = _render_toctree_entries(dataset_names)
     experiment_rows = _render_experiment_rows(_load_experiment_counts(dataset_names))
-
-    # Initialize API client for fallback metadata fetching in CI
-    api_client = None
-    try:
-        from eegdash import EEGDash
-
-        api_client = EEGDash()
-    except Exception as exc:
-        LOGGER.warning("[dataset-docs] Could not initialize EEGDash client: %s", exc)
-
     index_content = DATASET_INDEX_TEMPLATE.format(
         notice=AUTOGEN_NOTICE,
         dataset_count=len(dataset_names),
@@ -1017,7 +951,7 @@ def _generate_dataset_docs(app) -> None:
     for name in dataset_names:
         title = f"eegdash.dataset.{name}"
         row = dataset_rows.get(name)
-        context = _build_dataset_context(name, row, api_client=api_client)
+        context = _build_dataset_context(name, row)
         page_content = DATASET_PAGE_TEMPLATE.format(
             notice=AUTOGEN_NOTICE,
             title=title,

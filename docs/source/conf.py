@@ -278,6 +278,39 @@ LOGGER = logging.getLogger(__name__)
 REPO_ROOT = Path(__file__).resolve().parents[2]
 CLONE_ROOT = REPO_ROOT / "ingestions" / "clone"
 _DATASET_DETAILS_CACHE: dict[str, dict[str, object]] = {}
+_DATASET_SUMMARY_CACHE = None
+
+
+def _should_use_api_summary() -> bool:
+    return bool(os.environ.get("CI") or os.environ.get("GITHUB_ACTIONS"))
+
+
+def _load_dataset_summary_from_api():
+    if not _should_use_api_summary():
+        return None
+
+    global _DATASET_SUMMARY_CACHE
+    if _DATASET_SUMMARY_CACHE is not None:
+        return _DATASET_SUMMARY_CACHE
+
+    try:
+        from eegdash.dataset.registry import fetch_datasets_from_api
+    except Exception as exc:
+        LOGGER.info("[dataset-docs] API summary import failed: %s", exc)
+        return None
+
+    try:
+        df = fetch_datasets_from_api()
+    except Exception as exc:
+        LOGGER.info("[dataset-docs] API summary fetch failed: %s", exc)
+        df = None
+
+    if df is None or df.empty:
+        _DATASET_SUMMARY_CACHE = None
+    else:
+        _DATASET_SUMMARY_CACHE = df
+    return _DATASET_SUMMARY_CACHE
+
 
 DEFAULT_METADATA_FIELDS = [
     ("subject", "Subject identifier."),
@@ -462,6 +495,18 @@ def _iter_dataset_classes() -> Sequence[str]:
 
 def _load_experiment_counts(dataset_names: Iterable[str]) -> list[tuple[str, int]]:
     """Return a sorted list of (experiment_type, count) pairs."""
+    valid_names = {name.upper() for name in dataset_names}
+    df = _load_dataset_summary_from_api()
+    if df is not None and not df.empty:
+        counter: Counter[str] = Counter()
+        for _, row in df.iterrows():
+            dataset_id = str(row.get("dataset", "")).strip().upper()
+            if dataset_id not in valid_names:
+                continue
+            exp_type = str(row.get("type of exp") or "Unspecified").strip()
+            counter[exp_type or "Unspecified"] += 1
+        return sorted(counter.items(), key=lambda item: (-item[1], item[0]))
+
     csv_path = Path(importlib.import_module("eegdash.dataset").__file__).with_name(
         "dataset_summary.csv"
     )
@@ -469,7 +514,6 @@ def _load_experiment_counts(dataset_names: Iterable[str]) -> list[tuple[str, int
         return []
 
     counter: Counter[str] = Counter()
-    valid_names = {name.upper() for name in dataset_names}
 
     with csv_path.open(encoding="utf-8") as handle:
         filtered = (
@@ -504,13 +548,27 @@ def _render_toctree_entries(names: Sequence[str]) -> str:
 
 
 def _load_dataset_rows(dataset_names: Sequence[str]) -> Mapping[str, Mapping[str, str]]:
+    wanted = set(dataset_names)
+    df = _load_dataset_summary_from_api()
+    if df is not None and not df.empty:
+        rows: dict[str, Mapping[str, str]] = {}
+        for _, row in df.iterrows():
+            dataset_id = str(row.get("dataset", "")).strip()
+            if not dataset_id:
+                continue
+            class_name = dataset_id.upper()
+            if class_name not in wanted:
+                continue
+            rows[class_name] = row.to_dict()
+        if rows:
+            return rows
+
     csv_path = Path(importlib.import_module("eegdash.dataset").__file__).with_name(
         "dataset_summary.csv"
     )
     if not csv_path.exists():
         return {}
 
-    wanted = set(dataset_names)
     rows: dict[str, Mapping[str, str]] = {}
 
     with csv_path.open(encoding="utf-8") as handle:

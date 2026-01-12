@@ -12,6 +12,7 @@ on:
 
 permissions:
   contents: write
+  pull-requests: write
 
 jobs:
   docs:
@@ -114,7 +115,84 @@ jobs:
           cd docs
           uv run make html
 
-      # New step to deploy the docs to the gh-pages branch
+      # Upload documentation as artifact for all builds
+      - name: Upload documentation artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: documentation-html
+          path: ./docs/build/html
+          retention-days: 14
+
+      # Deploy PR preview to surge.sh (optional - requires SURGE_TOKEN secret)
+      - name: Deploy PR Preview
+        if: github.event_name == 'pull_request'
+        id: deploy-preview
+        continue-on-error: true
+        env:
+          SURGE_TOKEN: ${{ secrets.SURGE_TOKEN }}
+        run: |
+          if [ -z "$SURGE_TOKEN" ]; then
+            echo "SURGE_TOKEN not configured, skipping live preview deployment"
+            exit 0
+          fi
+          npm install -g surge
+          DEPLOY_DOMAIN="eegdash-pr-${{ github.event.pull_request.number }}.surge.sh"
+          surge ./docs/build/html $DEPLOY_DOMAIN --token $SURGE_TOKEN
+          echo "preview_url=https://$DEPLOY_DOMAIN" >> $GITHUB_OUTPUT
+
+      # Comment on PR with preview link
+      - name: Comment PR with Preview Link
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const previewUrl = '${{ steps.deploy-preview.outputs.preview_url }}' || '';
+            const artifactUrl = `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+            const surgeSuccess = '${{ steps.deploy-preview.outcome }}' === 'success';
+
+            let body = `## 📚 Documentation Preview\n\n`;
+
+            if (surgeSuccess && previewUrl) {
+              body += `| Resource | Link |\n`;
+              body += `|----------|------|\n`;
+              body += `| 🌐 **Live Preview** | [${previewUrl}](${previewUrl}) |\n`;
+              body += `| 📦 Download Artifact | [View Workflow Run](${artifactUrl}) |\n\n`;
+              body += `> This preview will be available for 14 days. The live preview updates with each push to this PR.`;
+            } else {
+              body += `📦 **[Download Documentation Artifact](${artifactUrl})**\n\n`;
+              body += `> Download the \`documentation-html\` artifact from the workflow run to view the docs locally.\n\n`;
+              body += `💡 *To enable live previews, add a \`SURGE_TOKEN\` secret to this repository. See [surge.sh](https://surge.sh) for setup instructions.*`;
+            }
+
+            // Find existing comment
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+
+            const botComment = comments.find(comment =>
+              comment.user.type === 'Bot' &&
+              comment.body.includes('Documentation Preview')
+            );
+
+            if (botComment) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: botComment.id,
+                body: body
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: body
+              });
+            }
+
+      # Deploy the docs to the gh-pages branch (main only)
       - name: Deploy to GitHub Pages
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: peaceiris/actions-gh-pages@v4

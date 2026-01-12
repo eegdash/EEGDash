@@ -282,7 +282,8 @@ _DATASET_SUMMARY_CACHE = None
 
 
 def _should_use_api_summary() -> bool:
-    return bool(os.environ.get("CI") or os.environ.get("GITHUB_ACTIONS"))
+    # Always try API first; set EEGDASH_NO_API=1 to disable
+    return not bool(os.environ.get("EEGDASH_NO_API"))
 
 
 def _load_dataset_summary_from_api():
@@ -679,14 +680,27 @@ def _build_dataset_context(
     if not source:
         source = "OpenNeuro"
 
+    # Fallback to row data for fields that might not be in local JSON files
+    title = _collapse_whitespace(_clean_value(details.get("title")))
+    if not title:
+        title = _collapse_whitespace(_clean_value((row or {}).get("dataset_title")))
+
+    license_text = _clean_value(details.get("license"))
+    if not license_text:
+        license_text = _clean_value((row or {}).get("license"))
+
+    doi = _clean_value(details.get("doi"))
+    if not doi:
+        doi = _clean_value((row or {}).get("doi"))
+
     return {
         "class_name": class_name,
         "dataset_id": dataset_id,
         "dataset_upper": dataset_id.upper(),
-        "title": _collapse_whitespace(_clean_value(details.get("title"))),
+        "title": title,
         "authors": details.get("authors", []),
-        "license": _clean_value(details.get("license")),
-        "doi": _clean_value(details.get("doi")),
+        "license": license_text,
+        "doi": doi,
         "source_url": _clean_value(details.get("source_url")),
         "references": details.get("references", []),
         "how_to_acknowledge": _clean_value(details.get("how_to_acknowledge")),

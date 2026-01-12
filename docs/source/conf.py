@@ -600,6 +600,60 @@ def _clean_value(value: object, default: str = "") -> str:
     return text
 
 
+def _format_stat_counts(value: object, default: str = "") -> str:
+    """Format JSON arrays of {val, count} objects into human-readable strings.
+
+    Handles formats like: [{"val": 64, "count": 30}, {"val": 32, "count": 24}]
+    Returns strings like: "64 (30), 32 (24)" or just "64" for single values.
+    """
+    if value is None:
+        return default
+
+    text = str(value).strip()
+    if not text or text.lower() in {"nan", "none", "null", "[]"}:
+        return default
+
+    # Try to parse as JSON if it looks like a JSON array
+    if text.startswith("["):
+        try:
+            import json
+
+            items = json.loads(text)
+            if not items:
+                return default
+
+            # Filter out null values and format
+            valid_items = []
+            for item in items:
+                if isinstance(item, dict):
+                    val = item.get("val")
+                    count = item.get("count", 0)
+                    if val is not None:
+                        # Format as "value (count)" or just "value" if count is 1
+                        if count > 1:
+                            valid_items.append(f"{val} ({count})")
+                        else:
+                            valid_items.append(str(val))
+
+            if not valid_items:
+                return default
+
+            # If all items have the same value, just show it once
+            unique_vals = set(
+                item.get("val") for item in items if isinstance(item, dict)
+            )
+            unique_vals.discard(None)
+            if len(unique_vals) == 1:
+                return str(unique_vals.pop())
+
+            return ", ".join(valid_items)
+        except (json.JSONDecodeError, TypeError, AttributeError):
+            pass
+
+    # Fall back to regular cleaning
+    return _clean_value(value, default)
+
+
 def _collapse_whitespace(text: str) -> str:
     if not text:
         return ""
@@ -630,6 +684,73 @@ def _normalize_doi(doi: str) -> str:
     return doi.replace("doi:", "").strip()
 
 
+def _fetch_dataset_details_from_api(dataset_id: str) -> dict[str, object]:
+    """Fetch detailed dataset information from the API.
+
+    Uses the endpoint: /datasets/summary/{dataset_id}
+    """
+    if not _should_use_api_summary():
+        return {}
+
+    import urllib.request
+
+    api_url = "https://data.eegdash.org/api/eegdash"
+
+    # Try original ID first, then variants (API may be case-sensitive)
+    ids_to_try = [dataset_id]
+    # Also try with common case variations for known patterns
+    if dataset_id.startswith("ds"):
+        # OpenNeuro datasets are typically lowercase
+        ids_to_try.append(dataset_id.lower())
+    elif dataset_id.lower().startswith("eeg2025"):
+        # EEG2025 datasets use mixed case in API
+        ids_to_try.append(f"EEG2025r{dataset_id.lower().replace('eeg2025r', '')}")
+
+    data = None
+    for try_id in ids_to_try:
+        url = f"{api_url}/datasets/summary/{try_id}"
+        try:
+            with urllib.request.urlopen(url, timeout=10) as response:
+                data = json.loads(response.read().decode("utf-8"))
+                if data.get("success"):
+                    break
+        except Exception as exc:
+            LOGGER.debug("[dataset-docs] API fetch for %s failed: %s", try_id, exc)
+            continue
+
+    if not data or not data.get("success"):
+        return {}
+
+    ds = data.get("data", {})
+    if not ds:
+        return {}
+
+    # Extract year from timestamps
+    year = ""
+    timestamps = ds.get("timestamps", {}) or {}
+    created_at = timestamps.get("dataset_created_at", "")
+    if created_at and len(created_at) >= 4:
+        year = created_at[:4]
+
+    # Map API fields to details structure
+    details: dict[str, object] = {
+        "title": _clean_value(ds.get("name")),
+        "authors": _normalize_list(ds.get("authors")),
+        "license": _clean_value(ds.get("license")),
+        "doi": _clean_value(ds.get("dataset_doi")),
+        "year": year,
+        "readme": _clean_value(ds.get("readme")),
+        "funding": _normalize_list(ds.get("funding")),
+        "senior_author": _clean_value(ds.get("senior_author")),
+    }
+
+    # Extract source URL from external_links
+    external_links = ds.get("external_links", {}) or {}
+    details["source_url"] = _clean_value(external_links.get("source_url"))
+
+    return details
+
+
 def _load_dataset_details(dataset_id: str) -> dict[str, object]:
     dataset_id = dataset_id.lower()
     cached = _DATASET_DETAILS_CACHE.get(dataset_id)
@@ -637,6 +758,8 @@ def _load_dataset_details(dataset_id: str) -> dict[str, object]:
         return cached
 
     details: dict[str, object] = {}
+
+    # Try local files first
     dataset_dir = CLONE_ROOT / dataset_id
     desc_path = dataset_dir / "dataset_description.json"
     if desc_path.exists():
@@ -660,6 +783,13 @@ def _load_dataset_details(dataset_id: str) -> dict[str, object]:
             data = {}
         details.setdefault("doi", _clean_value(data.get("dataset_doi")))
         details["source_url"] = _clean_value(data.get("source_url"))
+
+    # Fallback to API for missing fields
+    if not details.get("title") or not details.get("authors"):
+        api_details = _fetch_dataset_details_from_api(dataset_id)
+        for key, value in api_details.items():
+            if value and not details.get(key):
+                details[key] = value
 
     _DATASET_DETAILS_CACHE[dataset_id] = details
     return details
@@ -693,11 +823,15 @@ def _build_dataset_context(
     if not doi:
         doi = _clean_value((row or {}).get("doi"))
 
+    # Get year from details
+    year = _clean_value(details.get("year"))
+
     return {
         "class_name": class_name,
         "dataset_id": dataset_id,
         "dataset_upper": dataset_id.upper(),
         "title": title,
+        "year": year,
         "authors": details.get("authors", []),
         "license": license_text,
         "doi": doi,
@@ -707,8 +841,8 @@ def _build_dataset_context(
         "n_subjects": _clean_value((row or {}).get("n_subjects")),
         "n_records": _clean_value((row or {}).get("n_records")),
         "n_tasks": _clean_value((row or {}).get("n_tasks")),
-        "n_channels": _clean_value((row or {}).get("nchans_set")),
-        "sampling_freqs": _clean_value((row or {}).get("sampling_freqs")),
+        "n_channels": _format_stat_counts((row or {}).get("nchans_set")),
+        "sampling_freqs": _format_stat_counts((row or {}).get("sampling_freqs")),
         "duration_hours_total": _clean_value((row or {}).get("duration_hours_total")),
         "size": _clean_value((row or {}).get("size")),
         "s3_item_count": _clean_value((row or {}).get("s3_item_count")),
@@ -871,10 +1005,11 @@ def _format_dataset_info_section(context: Mapping[str, object]) -> str:
     if source_url:
         source_links.append(f"`Source URL <{source_url}>`__")
 
+    year = _value_or_unknown(_clean_value(context.get("year")))
     rows = [
         ("Dataset ID", f"``{dataset_upper}``"),
         ("Title", title),
-        ("Year", "Unknown"),
+        ("Year", year),
         ("Authors", authors_text),
         ("License", license_text),
         ("Citation / DOI", doi_text),

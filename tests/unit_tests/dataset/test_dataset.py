@@ -382,6 +382,53 @@ def test_dataset_normalize_records_dedupe(tmp_path):
     assert len(normalized) == 2
 
 
+def test_normalize_records_filters_invalid_extensions(tmp_path):
+    """Test _normalize_records filters out records with invalid extensions."""
+    d = tmp_path / "ds999"
+    d.mkdir()
+
+    valid_record = {
+        "dataset": "ds999",
+        "data_name": "sub-01_task-rest_eeg.set",
+        "bidspath": "ds999/sub-01/eeg/sub-01_task-rest_eeg.set",
+        "bids_relpath": "sub-01/eeg/sub-01_task-rest_eeg.set",
+        "subject": "01",
+        "task": "rest",
+        "storage": {"base": str(d), "backend": "local"},
+    }
+
+    with patch("eegdash.dataset.dataset.discover_local_bids_records") as mock_discover:
+        mock_discover.return_value = [valid_record]
+        ds = EEGDashDataset(
+            cache_dir=str(tmp_path),
+            dataset="ds999",
+            download=False,
+            _suppress_comp_warning=True,
+        )
+
+    # Records with various extensions - some valid, some invalid
+    records = [
+        {"data_name": "file1.set", "extension": ".set"},  # valid EEG
+        {"data_name": "file2.json", "extension": ".json"},  # invalid (sidecar)
+        {"data_name": "file3.tsv", "extension": ".tsv"},  # invalid (sidecar)
+        {"data_name": "file4.edf", "extension": ".edf"},  # valid EEG
+        {"data_name": "file5.EDF", "extension": ".EDF"},  # valid EEG (uppercase)
+        {"data_name": "file6", "extension": ""},  # no extension - kept
+        {"data_name": "file7"},  # no extension field - kept
+    ]
+
+    normalized = ds._normalize_records(records)
+
+    # Should filter out .json and .tsv, keep .set, .edf, .EDF, and no-extension
+    assert len(normalized) == 5
+    extensions = [r.get("extension", "") for r in normalized]
+    assert ".json" not in extensions
+    assert ".tsv" not in extensions
+    assert ".set" in extensions
+    assert ".edf" in extensions
+    assert ".EDF" in extensions
+
+
 def test_dataset_s3_bucket_injection(tmp_path):
     """Test S3 bucket injection."""
     from unittest.mock import patch

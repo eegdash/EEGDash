@@ -437,3 +437,44 @@ def test_fetch_api_handles_missing_demographics():
         assert row["n_subjects"] == 0  # Default when demographics missing
         assert row["n_records"] == 50
         assert row["modality of exp"] == "eeg"  # String converted properly
+
+
+def test_format_stat_counts():
+    """Test _format_stat_counts helper from docs/source/conf.py."""
+    import sys
+    from pathlib import Path
+
+    # Add docs/source to path to import conf
+    docs_source = Path(__file__).resolve().parents[3] / "docs" / "source"
+    sys.path.insert(0, str(docs_source))
+
+    try:
+        from conf import _format_stat_counts
+
+        # Test all-null values should return empty
+        assert _format_stat_counts('[{"val": null, "count": 54}]') == ""
+
+        # Test multiple values with counts
+        result = _format_stat_counts(
+            '[{"val": 64, "count": 30}, {"val": 32, "count": 24}]'
+        )
+        assert "64" in result
+        assert "32" in result
+
+        # Test single value
+        assert _format_stat_counts('[{"val": 250.0, "count": 54}]') == "250.0"
+
+        # Test empty array
+        assert _format_stat_counts("[]") == ""
+
+        # Test None
+        assert _format_stat_counts(None) == ""
+
+        # Test nan string
+        assert _format_stat_counts("nan") == ""
+
+        # Test single count
+        assert _format_stat_counts('[{"val": 64, "count": 1}]') == "64"
+
+    finally:
+        sys.path.remove(str(docs_source))

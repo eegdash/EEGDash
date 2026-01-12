@@ -432,20 +432,29 @@ def _fetch_datasets_from_api(api_url: str, database: str) -> pd.DataFrame:
         ):
             continue
 
-        meta = ds.get("metadata", {})
+        # Extract demographics
+        demographics = ds.get("demographics", {}) or {}
+        recording_modality = ds.get("recording_modality", []) or []
+        if isinstance(recording_modality, str):
+            recording_modality = [recording_modality]
+
         # Map API fields to expected CSV columns
         row = {
-            "dataset": ds.get("dataset_id"),
-            "n_subjects": meta.get("subject_count", 0),
-            "n_records": ds.get("record_count", 0),
-            "n_tasks": len(meta.get("tasks", [])),
-            "modality of exp": ", ".join(meta.get("recording_modalities", []) or []),
-            "type of exp": meta.get("type", "Unknown"),
-            "Type Subject": meta.get("pathology", "Unknown"),
-            "duration_hours_total": round(meta.get("duration_hours_total", 0) or 0, 2),
-            "size": ds.get("size_human", "Unknown"),
+            "dataset": ds_id,
+            "n_subjects": demographics.get("subjects_count", 0) or 0,
+            "n_records": ds.get("total_files", 0) or 0,
+            "n_tasks": len(ds.get("tasks", []) or []),
+            "modality of exp": ", ".join(recording_modality),
+            "type of exp": ds.get("study_design") or "Unknown",
+            "Type Subject": ds.get("study_domain") or "Unknown",
+            "duration_hours_total": 0.0,
+            "size": ds.get("size_human") or _human_readable_size(ds.get("size_bytes")),
+            "record_modality": ", ".join(recording_modality),
+            "dataset_title": ds.get("name", ""),
+            "license": ds.get("license", ""),
+            "doi": ds.get("dataset_doi", ""),
             # internal/extra fields
-            "source": ds.get("source", "unknown"),
+            "source": ds.get("source") or "unknown",
         }
         rows.append(row)
 

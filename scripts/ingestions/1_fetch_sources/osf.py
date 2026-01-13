@@ -47,7 +47,7 @@ from _serialize import (
 )
 
 setup_paths()
-from eegdash.records import Dataset, create_dataset
+from eegdash.schemas import Dataset, create_dataset
 
 OSF_API_URL = "https://api.osf.io/v2"
 

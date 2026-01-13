@@ -125,6 +125,7 @@ def download_files(
         dest = Path(dest)
         dest.parent.mkdir(parents=True, exist_ok=True)
         remote_size = _remote_size(filesystem, uri)
+
         if dest.exists():
             if skip_existing:
                 if remote_size is None or dest.stat().st_size == remote_size:

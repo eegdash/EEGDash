@@ -311,10 +311,11 @@ def inject_records(
             return [sanitize_for_json(i) for i in obj]
         return obj
 
-    for i in range(0, len(records), batch_size):
-        batch = records[i : i + batch_size]
+    from concurrent.futures import ThreadPoolExecutor, as_completed
+
+    def inject_batch(batch_idx, batch):
         try:
-            result, _response = request_json(
+            result, _ = request_json(
                 "post",
                 url,
                 json_body=sanitize_for_json(batch),
@@ -323,9 +324,25 @@ def inject_records(
                 raise_for_request=True,
                 client=session,
             )
-            inserted_count += (result or {}).get("inserted_count", len(batch))
+            return (result or {}).get("inserted_count", len(batch)), None
         except (RequestError, HTTPStatusError) as e:
-            errors.append(f"Batch {i // batch_size}: {e}")
+            return 0, f"Batch {batch_idx}: {e}"
+
+    with ThreadPoolExecutor(max_workers=16) as executor:
+        futures = {
+            executor.submit(
+                inject_batch, i // batch_size, records[i : i + batch_size]
+            ): i
+            for i in range(0, len(records), batch_size)
+        }
+
+        for future in tqdm(
+            as_completed(futures), total=len(futures), desc="Injecting batches"
+        ):
+            count, error = future.result()
+            inserted_count += count
+            if error:
+                errors.append(error)
 
     return {
         "inserted_count": inserted_count,
@@ -595,20 +612,15 @@ def main():
             print(f"\nInjecting {len(all_records)} records...")
             try:
                 with _make_session(admin_token) as client:
-                    for i in range(0, len(all_records), args.batch_size):
-                        batch = all_records[i : i + args.batch_size]
-                        result = inject_records(
-                            batch,
-                            args.api_url,
-                            args.database,
-                            admin_token,
-                            client=client,
-                        )
-                        stats["records_injected"] += result["inserted_count"]
-                        if (i // args.batch_size) % 10 == 0:
-                            print(
-                                f"  Progress: {i + len(batch)} / {len(all_records)} records"
-                            )
+                    result = inject_records(
+                        all_records,
+                        args.api_url,
+                        args.database,
+                        admin_token,
+                        batch_size=args.batch_size,
+                        client=client,
+                    )
+                    stats["records_injected"] += result["inserted_count"]
             except Exception as e:
                 stats["errors"] += 1
                 errors.append({"dataset": "records_collection", "error": str(e)})

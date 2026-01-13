@@ -9,6 +9,7 @@ including classes for individual recordings and collections of datasets. It inte
 braindecode for machine learning workflows and handles data loading from both local and remote sources.
 """
 
+import os
 from pathlib import Path
 from typing import Any
 
@@ -143,6 +144,40 @@ class EEGDashRaw(RawDataset):
     def _ensure_raw(self) -> None:
         """Ensure the raw data file and its dependencies are cached locally."""
         self._download_required_files()
+        # TODO: fix this
+        # Fix for MNE-BIDS strictness regarding coordsystem.json location
+        # If electrodes.tsv is in a subdir (e.g. eeg/) but coordsystem.json is in root,
+        # MNE-BIDS < 0.12 (and maybe newer) fails to find it. We symlink it.
+        try:
+            if self.filecache and self.filecache.parent.exists():
+                data_dir = self.filecache.parent
+                # Check if we have electrodes.tsv here
+                electrodes_files = list(data_dir.glob("*_electrodes.tsv"))
+                if electrodes_files:
+                    # Check if we lack coordsystem.json here
+                    coordsystem_files = list(data_dir.glob("*_coordsystem.json"))
+                    if not coordsystem_files:
+                        # Look for coordsystem in parent (subject root)
+                        # We assume the data_dir is sub-XX/eeg etc, so parent is sub-XX
+                        subject_root = data_dir.parent
+                        root_coordsystems = list(
+                            subject_root.glob("*_coordsystem.json")
+                        )
+                        if root_coordsystems:
+                            # Create symlink
+
+                            src = root_coordsystems[0]
+                            # match naming convention if possible, or just use src name
+                            dst = data_dir / src.name
+                            if not dst.exists():
+                                # Use relative path for portability
+                                rel_target = os.path.relpath(src, dst.parent)
+                                # Clean up potential broken symlink (FileExistsError otherwise)
+                                dst.unlink(missing_ok=True)
+                                dst.symlink_to(rel_target)
+        except Exception as e:
+            logger.warning(f"Failed to create coordsystem symlink: {e}")
+
         if self._raw is None:
             try:
                 self._raw = self._load_raw()

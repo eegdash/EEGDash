@@ -25,7 +25,7 @@ def setup_paths() -> None:
     Example:
         from _serialize import setup_paths, generate_dataset_id, save_datasets_deterministically
         setup_paths()
-        from eegdash.records import create_dataset
+        from eegdash.schemas import create_dataset
 
     """
     project_root_str = str(PROJECT_ROOT)

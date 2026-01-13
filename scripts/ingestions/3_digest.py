@@ -155,9 +155,8 @@ def extract_dataset_metadata(
         Dataset schema compliant metadata
 
     """
-    bids_root = Path(bids_dataset.bidsdir)
     metadata = metadata or {}
-
+    bids_root = Path(bids_dataset.bidsdir)
     # Read dataset_description.json
     description = {}
     desc_path = bids_root / "dataset_description.json"
@@ -539,20 +538,48 @@ def extract_record(
     base_name = bids_file_path.stem.rsplit("_", 1)[0]
 
     # BIDS sidecar files
-    for dep_suffix in [
-        "_channels.tsv",
-        "_events.tsv",
-        "_electrodes.tsv",
-        "_coordsystem.json",
-        "_eeg.json",
+    # Check both the file's directory and the subject root directory (for inheritance)
+    search_dirs = [parent_dir]
+
+    # Try to find subject root
+    # Assumption: path is usually sub-XX/ses-YY/mod/ or sub-XX/mod/
+    # We want sub-XX/
+    parts = bids_file_path.parts
+    for i, part in enumerate(parts):
+        if part.startswith("sub-"):
+            # Subject root relative to where we are? No, relative to system.
+            # bids_file_path is absolute if passed from get_files()? No, let's check.
+            # get_files() returns absolute paths usually in MNE-BIDS context or from Path.rglob
+            # let's assume bids_file_path is absolute.
+
+            # Actually, extract_record receives `bids_file` as str. eegdash/dataset/dataset.py calls it with file path.
+            # let's use relative components logic safely.
+            pass
+
+    # Simplified approach: Look in parent, and if 'eeg'/'meg' etc is parent, look one up.
+    if parent_dir.name in NEURO_MODALITIES or parent_dir.name in [
+        "eeg",
+        "meg",
+        "ieeg",
+        "beh",
     ]:
-        dep_file = parent_dir / f"{base_name}{dep_suffix}"
-        if dep_file.exists() or dep_file.is_symlink():
-            try:
-                dep_relpath = dep_file.relative_to(bids_dataset.bidsdir)
-                dep_keys.append(str(dep_relpath))
-            except ValueError:
-                pass
+        search_dirs.append(parent_dir.parent)
+
+    for search_dir in search_dirs:
+        for dep_suffix in [
+            "_channels.tsv",
+            "_events.tsv",
+            "_electrodes.tsv",
+            "_coordsystem.json",
+            "_eeg.json",
+        ]:
+            dep_file = search_dir / f"{base_name}{dep_suffix}"
+            if dep_file.exists() or dep_file.is_symlink():
+                try:
+                    dep_relpath = dep_file.relative_to(bids_dataset.bidsdir)
+                    dep_keys.append(str(dep_relpath))
+                except ValueError:
+                    pass
 
     # Format-specific companion files (e.g., .fdt for EEGLAB .set files)
     ext = bids_file_path.suffix.lower()

@@ -52,7 +52,7 @@ from _serialize import (
 from dotenv import load_dotenv
 
 setup_paths()
-from eegdash.records import create_dataset
+from eegdash.schemas import create_dataset
 
 # Zenodo REST API endpoint
 ZENODO_BASE_URL = "https://zenodo.org/api/records"

@@ -1,0 +1,27 @@
+﻿eegdash.bids\_metadata
+======================
+
+.. automodule:: eegdash.bids_metadata
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :member-order: bysource
+   :no-index:
+
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      build_query_from_kwargs
+      merge_query
+      normalize_key
+      merge_participants_fields
+      participants_row_for_subject
+      participants_extras_from_tsv
+      attach_participants_extras
+      enrich_from_participants
+      get_entity_from_record
+      get_entities_from_record
+   
+

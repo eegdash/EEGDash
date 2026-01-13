@@ -1,0 +1,21 @@
+﻿eegdash.features.feature\_bank.connectivity
+===========================================
+
+.. automodule:: eegdash.features.feature_bank.connectivity
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :member-order: bysource
+   :no-index:
+
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      connectivity_coherency_preprocessor
+      connectivity_magnitude_square_coherence
+      connectivity_imaginary_coherence
+      connectivity_lagged_coherence
+   
+

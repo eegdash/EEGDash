@@ -1,0 +1,1415 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../" data-theme="light">
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>EEG P3 Transfer Learning with AS-MMD &#8212; EEG Dash</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "light";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery.css?v=d2d258e8" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bm/dt-1.13.4/datatables.min.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/select/1.7.0/css/select.dataTables.min.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/searchpanes/2.3.1/css/searchPanes.dataTables.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=7021f170" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/treemap.css?v=7131b20f" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=c1455002" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../../../_static/documentation_options.js?v=1dd76d02"></script>
+    <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../_static/copybutton.js?v=8c005784"></script>
+    <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'generated/auto_examples/core/p300_transfer_learning';</script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.datatables.net/v/bm/dt-1.13.4/datatables.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/select/1.7.0/js/dataTables.select.min.js"></script>
+    <script src="https://cdn.datatables.net/searchpanes/2.3.1/js/dataTables.searchPanes.min.js"></script>
+    <script src="../../../_static/js/tag-palette.js?v=6f5eac9a"></script>
+    <script src="../../../_static/js/datatables-init.js?v=0986bc1f"></script>
+    <script src="../../../_static/js/hero-search.js?v=d34ab722"></script>
+    <link rel="canonical" href="https://eegdash.org/generated/auto_examples/core/p300_transfer_learning.html" />
+    <link rel="icon" href="../../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Eyes Open vs. Closed Classification" href="tutorial_eoec.html" />
+    <link rel="prev" title="Tutorials!" href="../index.html" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="0.5" />
+  <!-- Google Tag Manager -->
+  <script>
+    (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-MXC3DGL6');
+  </script>
+  <!-- End Google Tag Manager -->
+
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="light">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../index.html">
+  
+  
+  
+  
+  
+    
+    
+    
+    <img src="../../../_static/eegdash_long.svg" class="logo__image only-light" alt="EEG Dash Logo"/>
+    <img src="../../../_static/eegdash_long.svg" class="logo__image only-dark pst-js-only" alt="EEG Dash Logo"/>
+  
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../dataset_summary.html">
+    Datasets
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../user_guide.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../install/install.html">
+    Install
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    Examples
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../api/api.html">
+    Docs
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://eeg2025.github.io/">
+    EEG2025
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="External Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/eegdash/EEGDash" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://pypi.org/project/eegdash/" title="PyPI" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-box fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">PyPI</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://eegdash.org/EEGDash" title="Docs (Stable)" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-book fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Docs (Stable)</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://discord.gg/8jd7nVKwsc" title="Discord" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-discord fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Discord</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../dataset_summary.html">
+    Datasets
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../user_guide.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../install/install.html">
+    Install
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    Examples
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../api/api.html">
+    Docs
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://eeg2025.github.io/">
+    EEG2025
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="External Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/eegdash/EEGDash" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://pypi.org/project/eegdash/" title="PyPI" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-box fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">PyPI</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://eegdash.org/EEGDash" title="Docs (Stable)" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-book fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Docs (Stable)</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://discord.gg/8jd7nVKwsc" title="Discord" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-discord fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Discord</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">EEG P3 Transfer Learning with AS-MMD</a></li>
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="tutorial_eoec.html">Eyes Open vs. Closed Classification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_feature_extractor_open_close_eye.html">EEGDash Feature Extractor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_minimal.html">Minimal Tutorial</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../eeg2025/tutorial_challenge_1.html">Challenge 1: Cross-Task Transfer Learning!</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../eeg2025/tutorial_challenge_2.html">Challenge 2: Predicting the p-factor from EEG</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../eeg2025/tutorial_eegdash_offline.html">Working Offline with EEGDash</a></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">Tutorials!</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">EEG P3 Transfer Learning with AS-MMD</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p><a class="reference internal" href="#sphx-glr-download-generated-auto-examples-core-p300-transfer-learning-py"><span class="std std-ref">Go to the end</span></a>
+to download the full example code or to run this example in your browser via Binder.</p>
+</div>
+<section class="sphx-glr-example-title" id="eeg-p3-transfer-learning-with-as-mmd">
+<span id="tutorial-p3-transfer-learning"></span><span id="sphx-glr-generated-auto-examples-core-p300-transfer-learning-py"></span><h1>EEG P3 Transfer Learning with AS-MMD<a class="headerlink" href="#eeg-p3-transfer-learning-with-as-mmd" title="Link to this heading">#</a></h1><div class="eegdash-reading-time" role="note"><span class="eegdash-reading-time__label">Estimated reading time:</span><span class="eegdash-reading-time__value">5 minutes</span></div>
+<p>This tutorial demonstrates how to train a domain-adaptive deep learning model for
+EEG P3 component classification across two different datasets using Adaptive
+Symmetric Maximum Mean Discrepancy (AS-MMD).</p>
+<p><strong>Paper:</strong> Chen, W., Delorme, A. (2025). Adaptive Split-MMD Training for Small-Sample
+Cross-Dataset P300 EEG Classification. arXiv: <a class="reference external" href="https://arxiv.org/abs/2510.21969">2510.21969</a></p>
+</section>
+<section id="key-concepts">
+<h1>Key Concepts<a class="headerlink" href="#key-concepts" title="Link to this heading">#</a></h1>
+<p>This tutorial covers:</p>
+<ul class="simple">
+<li><p><strong>Domain Adaptation</strong>: Training on multiple datasets with different recording setups</p></li>
+<li><p><strong>Deep Learning</strong>: Using EEGConformer, a transformer-based model for EEG</p></li>
+<li><p><strong>AS-MMD</strong>: A technique that aligns feature distributions across datasets</p></li>
+<li><p><strong>Cross-Validation</strong>: Robust evaluation using nested stratified folds</p></li>
+</ul>
+<p>By the end, you’ll understand how to:</p>
+<ol class="arabic simple">
+<li><p>Load and preprocess multi-dataset EEG recordings</p></li>
+<li><p>Build a domain-adaptive classifier</p></li>
+<li><p>Evaluate performance across domains</p></li>
+<li><p>Apply the method to your own datasets</p></li>
+</ol>
+</section>
+<section id="part-1-loading-and-preprocessing-data">
+<h1>Part 1: Loading and Preprocessing Data<a class="headerlink" href="#part-1-loading-and-preprocessing-data" title="Link to this heading">#</a></h1>
+<p>First, we load two oddball datasets from the EEGDash API. You can override the
+dataset IDs with EEGDASH_SOURCE_DATASET and EEGDASH_TARGET_DATASET.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">eegdash</span><span class="w"> </span><span class="kn">import</span> <span class="n">EEGDash</span><span class="p">,</span> <a href="../../../api/dataset/eegdash.EEGDashDataset.html#eegdash.EEGDashDataset" title="eegdash.EEGDashDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">EEGDashDataset</span></a>
+<span class="kn">from</span><span class="w"> </span><span class="nn">eegdash.paths</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_default_cache_dir</span>
+
+<span class="n">cache_folder</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">get_default_cache_dir</span><span class="p">())</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+<span class="n">cache_folder</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">eegdash</span> <span class="o">=</span> <span class="n">EEGDash</span><span class="p">()</span>
+<span class="n">ODDBALL_TASK</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;EEGDASH_ODDBALL_TASK&quot;</span><span class="p">,</span> <span class="s2">&quot;visualoddball&quot;</span><span class="p">)</span>
+<span class="n">record_limit</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;EEGDASH_RECORD_LIMIT&quot;</span><span class="p">,</span> <span class="s2">&quot;60&quot;</span><span class="p">))</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_fetch_records</span><span class="p">(</span><span class="n">dataset_id</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">ODDBALL_TASK</span><span class="p">:</span>
+        <span class="n">records</span> <span class="o">=</span> <span class="n">eegdash</span><span class="o">.</span><span class="n">find</span><span class="p">(</span>
+            <span class="p">{</span><span class="s2">&quot;dataset&quot;</span><span class="p">:</span> <span class="n">dataset_id</span><span class="p">,</span> <span class="s2">&quot;task&quot;</span><span class="p">:</span> <span class="n">ODDBALL_TASK</span><span class="p">},</span> <span class="n">limit</span><span class="o">=</span><span class="n">record_limit</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">records</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">records</span>
+    <span class="k">return</span> <span class="n">eegdash</span><span class="o">.</span><span class="n">find</span><span class="p">({</span><span class="s2">&quot;dataset&quot;</span><span class="p">:</span> <span class="n">dataset_id</span><span class="p">},</span> <span class="n">limit</span><span class="o">=</span><span class="n">record_limit</span><span class="p">)</span>
+
+
+<span class="n">source_id</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;EEGDASH_SOURCE_DATASET&quot;</span><span class="p">,</span> <span class="s2">&quot;ds005863&quot;</span><span class="p">)</span>
+<span class="n">target_id</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;EEGDASH_TARGET_DATASET&quot;</span><span class="p">,</span> <span class="s2">&quot;ds003061&quot;</span><span class="p">)</span>
+
+<span class="n">source_records</span> <span class="o">=</span> <span class="n">_fetch_records</span><span class="p">(</span><span class="n">source_id</span><span class="p">)</span>
+<span class="n">target_records</span> <span class="o">=</span> <span class="n">_fetch_records</span><span class="p">(</span><span class="n">target_id</span><span class="p">)</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">source_records</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">target_records</span><span class="p">:</span>
+    <span class="n">records</span> <span class="o">=</span> <span class="n">eegdash</span><span class="o">.</span><span class="n">find</span><span class="p">({</span><span class="s2">&quot;task&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;$regex&quot;</span><span class="p">:</span> <span class="s2">&quot;oddball&quot;</span><span class="p">,</span> <span class="s2">&quot;$options&quot;</span><span class="p">:</span> <span class="s2">&quot;i&quot;</span><span class="p">}},</span> <span class="n">limit</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
+    <span class="n">dataset_ids</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">rec</span> <span class="ow">in</span> <span class="n">records</span><span class="p">:</span>
+        <span class="n">ds_id</span> <span class="o">=</span> <span class="n">rec</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;dataset&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">ds_id</span> <span class="ow">and</span> <span class="n">ds_id</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">dataset_ids</span><span class="p">:</span>
+            <span class="n">dataset_ids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ds_id</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">dataset_ids</span><span class="p">:</span>
+        <span class="n">source_id</span> <span class="o">=</span> <span class="n">dataset_ids</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">target_id</span> <span class="o">=</span> <span class="n">dataset_ids</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">dataset_ids</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="k">else</span> <span class="n">dataset_ids</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">source_records</span> <span class="o">=</span> <span class="n">_fetch_records</span><span class="p">(</span><span class="n">source_id</span><span class="p">)</span>
+        <span class="n">target_records</span> <span class="o">=</span> <span class="n">_fetch_records</span><span class="p">(</span><span class="n">target_id</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="ow">not</span> <span class="n">source_records</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">target_records</span><span class="p">:</span>
+    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Unable to find two oddball datasets from the API.&quot;</span><span class="p">)</span>
+
+<span class="n">ds_p3</span> <span class="o">=</span> <a href="../../../api/dataset/eegdash.EEGDashDataset.html#eegdash.EEGDashDataset" title="eegdash.EEGDashDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">EEGDashDataset</span></a><span class="p">(</span><span class="n">cache_dir</span><span class="o">=</span><span class="n">cache_folder</span><span class="p">,</span> <span class="n">records</span><span class="o">=</span><span class="n">source_records</span><span class="p">)</span>
+<span class="n">ds_avo</span> <span class="o">=</span> <a href="../../../api/dataset/eegdash.EEGDashDataset.html#eegdash.EEGDashDataset" title="eegdash.EEGDashDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">EEGDashDataset</span></a><span class="p">(</span><span class="n">cache_dir</span><span class="o">=</span><span class="n">cache_folder</span><span class="p">,</span> <span class="n">records</span><span class="o">=</span><span class="n">target_records</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Source (</span><span class="si">{</span><span class="n">source_id</span><span class="si">}</span><span class="s2">): </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">ds_p3</span><span class="p">)</span><span class="si">}</span><span class="s2"> recordings&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Target (</span><span class="si">{</span><span class="n">target_id</span><span class="si">}</span><span class="s2">): </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">ds_avo</span><span class="p">)</span><span class="si">}</span><span class="s2"> recordings&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<section id="data-preprocessing-pipeline">
+<h2>Data Preprocessing Pipeline<a class="headerlink" href="#data-preprocessing-pipeline" title="Link to this heading">#</a></h2>
+<p>Before training, we apply standard EEG preprocessing:</p>
+<ul class="simple">
+<li><p><strong>Event labeling</strong>: Identify oddball vs. standard stimuli</p></li>
+<li><p><strong>Filtering</strong>: 0.5-30 Hz bandpass to focus on relevant oscillations</p></li>
+<li><p><strong>Resampling</strong>: Downsample to 128 Hz to reduce computation</p></li>
+<li><p><strong>Channel selection</strong>: Keep Fz, Pz, P3, P4, Oz (standard P3 locations)</p></li>
+<li><p><strong>Windowing</strong>: Extract 1.2 sec epochs (-0.1s before to 1.1s after stimulus)</p></li>
+<li><p><strong>Normalization</strong>: Z-score normalization per trial</p></li>
+</ul>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">mne</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">braindecode.preprocessing</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">preprocess</span><span class="p">,</span>
+    <span class="n">Preprocessor</span><span class="p">,</span>
+    <span class="n">create_windows_from_events</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">mne</span><span class="o">.</span><span class="n">set_log_level</span><span class="p">(</span><span class="s2">&quot;ERROR&quot;</span><span class="p">)</span>
+
+<span class="c1"># Preprocessing parameters</span>
+<span class="n">LOW_FREQ</span> <span class="o">=</span> <span class="mf">0.5</span>
+<span class="n">HIGH_FREQ</span> <span class="o">=</span> <span class="mi">30</span>
+<span class="n">RESAMPLE_FREQ</span> <span class="o">=</span> <span class="mi">128</span>
+<span class="n">TRIAL_START_OFFSET</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.1</span>  <span class="c1"># 100 ms before stimulus</span>
+<span class="n">TRIAL_DURATION</span> <span class="o">=</span> <span class="mf">1.1</span>  <span class="c1"># Total window 1.1 seconds</span>
+<span class="n">COMMON_CHANNELS</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Fz&quot;</span><span class="p">,</span> <span class="s2">&quot;Pz&quot;</span><span class="p">,</span> <span class="s2">&quot;P3&quot;</span><span class="p">,</span> <span class="s2">&quot;P4&quot;</span><span class="p">,</span> <span class="s2">&quot;Oz&quot;</span><span class="p">]</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">preprocess_dataset</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">channels</span><span class="p">,</span> <span class="n">dataset_type</span><span class="o">=</span><span class="s2">&quot;P3&quot;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Apply preprocessing pipeline to an EEG dataset.</span>
+
+<span class="sd">    Returns numpy arrays: (n_trials, n_channels, n_times)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Preprocessing </span><span class="si">{</span><span class="n">dataset_type</span><span class="si">}</span><span class="s2"> dataset...&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Define preprocessing steps</span>
+    <span class="n">preprocessors</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">Preprocessor</span><span class="p">(</span><span class="s2">&quot;set_eeg_reference&quot;</span><span class="p">,</span> <span class="n">ref_channels</span><span class="o">=</span><span class="s2">&quot;average&quot;</span><span class="p">,</span> <span class="n">projection</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+        <span class="n">Preprocessor</span><span class="p">(</span><span class="s2">&quot;resample&quot;</span><span class="p">,</span> <span class="n">sfreq</span><span class="o">=</span><span class="n">RESAMPLE_FREQ</span><span class="p">),</span>
+        <span class="n">Preprocessor</span><span class="p">(</span><span class="s2">&quot;filter&quot;</span><span class="p">,</span> <span class="n">l_freq</span><span class="o">=</span><span class="n">LOW_FREQ</span><span class="p">,</span> <span class="n">h_freq</span><span class="o">=</span><span class="n">HIGH_FREQ</span><span class="p">),</span>
+        <span class="n">Preprocessor</span><span class="p">(</span>
+            <span class="s2">&quot;pick_channels&quot;</span><span class="p">,</span> <span class="n">ch_names</span><span class="o">=</span><span class="p">[</span><span class="n">ch</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">for</span> <span class="n">ch</span> <span class="ow">in</span> <span class="n">channels</span><span class="p">],</span> <span class="n">ordered</span><span class="o">=</span><span class="kc">False</span>
+        <span class="p">),</span>
+    <span class="p">]</span>
+
+    <span class="c1"># Apply preprocessing</span>
+    <span class="n">preprocess</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">preprocessors</span><span class="p">)</span>
+
+    <span class="c1"># Extract windowed trials around stimulus onset</span>
+    <span class="n">trial_start</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">TRIAL_START_OFFSET</span> <span class="o">*</span> <span class="n">RESAMPLE_FREQ</span><span class="p">)</span>
+    <span class="n">trial_stop</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="n">TRIAL_START_OFFSET</span> <span class="o">+</span> <span class="n">TRIAL_DURATION</span><span class="p">)</span> <span class="o">*</span> <span class="n">RESAMPLE_FREQ</span><span class="p">)</span>
+
+    <span class="c1"># Define event mapping to handle both datasets</span>
+    <span class="c1"># ErpCore uses &quot;Target&quot;/&quot;NonTarget&quot;</span>
+    <span class="c1"># ds005863 (AVO) uses &quot;S 11&quot;, &quot;S 21&quot;, etc. for targets and &quot;S 12&quot;, &quot;S 22&quot; for nontargets</span>
+    <span class="n">mapping</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;Target&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="s2">&quot;NonTarget&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="s2">&quot;standard&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="s2">&quot;target&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="c1"># Add AVO specific codes if they are missing</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">6</span><span class="p">):</span>
+        <span class="n">mapping</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;S </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">1&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># Often S 11, S 21, ... are targets</span>
+        <span class="n">mapping</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;S </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">2&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># Often S 12, S 22, ... are nontargets</span>
+        <span class="n">mapping</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;S</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">1&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">mapping</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;S</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">2&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="n">windows_ds</span> <span class="o">=</span> <span class="n">create_windows_from_events</span><span class="p">(</span>
+        <span class="n">dataset</span><span class="p">,</span>
+        <span class="n">trial_start_offset_samples</span><span class="o">=</span><span class="n">trial_start</span><span class="p">,</span>
+        <span class="n">trial_stop_offset_samples</span><span class="o">=</span><span class="n">trial_stop</span><span class="p">,</span>
+        <span class="n">preload</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">drop_bad_windows</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">mapping</span><span class="o">=</span><span class="n">mapping</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">windows_ds</span><span class="p">)):</span>
+        <span class="n">data</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span> <span class="o">=</span> <span class="n">windows_ds</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="n">X</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">y</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">label</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Extracted </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">)</span><span class="si">}</span><span class="s2"> trials from </span><span class="si">{</span><span class="n">dataset_type</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">X</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+
+
+<span class="c1"># Preprocess both datasets</span>
+<span class="n">X_p3</span><span class="p">,</span> <span class="n">y_p3</span> <span class="o">=</span> <span class="n">preprocess_dataset</span><span class="p">(</span><span class="n">ds_p3</span><span class="p">,</span> <span class="n">COMMON_CHANNELS</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Source (</span><span class="si">{</span><span class="n">source_id</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+<span class="n">X_avo</span><span class="p">,</span> <span class="n">y_avo</span> <span class="o">=</span> <span class="n">preprocess_dataset</span><span class="p">(</span><span class="n">ds_avo</span><span class="p">,</span> <span class="n">COMMON_CHANNELS</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Target (</span><span class="si">{</span><span class="n">target_id</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+
+<span class="c1"># Ensure both have the same number of samples (cropping to the minimum)</span>
+<span class="n">min_samples</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">X_p3</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">X_avo</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+<span class="k">if</span> <span class="n">X_p3</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">!=</span> <span class="n">X_avo</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Cropping trials to </span><span class="si">{</span><span class="n">min_samples</span><span class="si">}</span><span class="s2"> samples for consistency...&quot;</span><span class="p">)</span>
+    <span class="n">X_p3</span> <span class="o">=</span> <span class="n">X_p3</span><span class="p">[:,</span> <span class="p">:,</span> <span class="p">:</span><span class="n">min_samples</span><span class="p">]</span>
+    <span class="n">X_avo</span> <span class="o">=</span> <span class="n">X_avo</span><span class="p">[:,</span> <span class="p">:,</span> <span class="p">:</span><span class="n">min_samples</span><span class="p">]</span>
+
+<span class="c1"># Combine datasets for training</span>
+<span class="n">X_all</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="n">X_p3</span><span class="p">,</span> <span class="n">X_avo</span><span class="p">])</span>
+<span class="n">y_all</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="n">y_p3</span><span class="p">,</span> <span class="n">y_avo</span><span class="p">])</span>
+<span class="n">src_all</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">source_id</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">X_p3</span><span class="p">)</span> <span class="o">+</span> <span class="p">[</span><span class="n">target_id</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">X_avo</span><span class="p">))</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Combined dataset: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">X_all</span><span class="p">)</span><span class="si">}</span><span class="s2"> trials (</span><span class="si">{</span><span class="n">X_all</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Source: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">src_all</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">source_id</span><span class="p">)</span><span class="si">}</span><span class="s2"> trials&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Target: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">src_all</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">target_id</span><span class="p">)</span><span class="si">}</span><span class="s2"> trials&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="part-2-model-architecture-and-training">
+<h1>Part 2: Model Architecture and Training<a class="headerlink" href="#part-2-model-architecture-and-training" title="Link to this heading">#</a></h1>
+<section id="building-the-domain-adaptive-model">
+<h2>Building the Domain-Adaptive Model<a class="headerlink" href="#building-the-domain-adaptive-model" title="Link to this heading">#</a></h2>
+<p>We use <strong>EEGConformer</strong>, a transformer-based architecture designed for EEG signals.
+The key idea in AS-MMD is to combine:</p>
+<ol class="arabic simple">
+<li><p><strong>Classification loss</strong>: Standard cross-entropy on both domains</p></li>
+<li><p><strong>Domain alignment</strong>: MMD loss to match feature distributions</p></li>
+<li><p><strong>Prototype alignment</strong>: Align class centers across domains</p></li>
+<li><p><strong>Data augmentation</strong>: Mixup + Gaussian noise for regularization</p></li>
+</ol>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">braindecode.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">EEGConformer</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch.nn.functional</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">F</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">normalize_data</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">1e-7</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Normalize each trial independently.&quot;&quot;&quot;</span>
+    <span class="n">mean</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">keepdim</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">std</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">keepdim</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">std</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">clamp</span><span class="p">(</span><span class="n">std</span><span class="p">,</span> <span class="nb">min</span><span class="o">=</span><span class="n">eps</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">mean</span><span class="p">)</span> <span class="o">/</span> <span class="n">std</span>
+</pre></div>
+</div>
+</section>
+<section id="domain-adaptation-techniques">
+<h2>Domain Adaptation Techniques<a class="headerlink" href="#domain-adaptation-techniques" title="Link to this heading">#</a></h2>
+<p><strong>Mixup</strong>: Interpolates between sample pairs</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">mixup_data</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.4</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Mix samples from the same batch.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">alpha</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">lam</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">beta</span><span class="p">(</span><span class="n">alpha</span><span class="p">,</span> <span class="n">alpha</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">lam</span> <span class="o">=</span> <span class="mf">1.0</span>
+
+    <span class="n">batch_size</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">index</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randperm</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+    <span class="n">mixed_x</span> <span class="o">=</span> <span class="n">lam</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">lam</span><span class="p">)</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">mixed_x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">y</span><span class="p">[</span><span class="n">index</span><span class="p">],</span> <span class="n">lam</span>
+
+
+<span class="c1"># **Focal Loss**: Down-weights easy examples</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">compute_focal_loss</span><span class="p">(</span><span class="n">scores</span><span class="p">,</span> <span class="n">targets</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="mf">2.0</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.25</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Focal loss for class imbalance.&quot;&quot;&quot;</span>
+    <span class="n">ce_loss</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">cross_entropy</span><span class="p">(</span><span class="n">scores</span><span class="p">,</span> <span class="n">targets</span><span class="p">,</span> <span class="n">reduction</span><span class="o">=</span><span class="s2">&quot;none&quot;</span><span class="p">)</span>
+    <span class="n">pt</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">ce_loss</span><span class="p">)</span>
+    <span class="n">focal_loss</span> <span class="o">=</span> <span class="n">alpha</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">pt</span><span class="p">)</span> <span class="o">**</span> <span class="n">gamma</span> <span class="o">*</span> <span class="n">ce_loss</span>
+    <span class="k">return</span> <span class="n">focal_loss</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+
+
+<span class="c1"># **Maximum Mean Discrepancy**: Measures domain distribution mismatch</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">compute_mmd_rbf</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">1e-8</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;RBF-kernel MMD for distribution alignment.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">dim</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">y</span><span class="o">.</span><span class="n">dim</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">z</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">],</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">z</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">dists</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cdist</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mf">2.0</span><span class="p">)</span>
+        <span class="n">sigma</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">dists</span><span class="p">)</span>
+        <span class="n">sigma</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">clamp</span><span class="p">(</span><span class="n">sigma</span><span class="p">,</span> <span class="nb">min</span><span class="o">=</span><span class="n">eps</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">sigma</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">z</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+
+    <span class="n">gamma</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="mf">2.0</span> <span class="o">*</span> <span class="p">(</span><span class="n">sigma</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="n">eps</span><span class="p">)</span>
+    <span class="n">k_xx</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">gamma</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">cdist</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mf">2.0</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">k_yy</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">gamma</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">cdist</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mf">2.0</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">k_xy</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">gamma</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">cdist</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mf">2.0</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+
+    <span class="n">m</span><span class="p">,</span> <span class="n">n</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">y</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">m</span> <span class="o">&lt;=</span> <span class="mi">1</span> <span class="ow">or</span> <span class="n">n</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+
+    <span class="n">mmd</span> <span class="o">=</span> <span class="p">(</span><span class="n">k_xx</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">-</span> <span class="n">torch</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="n">k_xx</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="n">m</span> <span class="o">*</span> <span class="p">(</span><span class="n">m</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">eps</span><span class="p">)</span>
+    <span class="n">mmd</span> <span class="o">+=</span> <span class="p">(</span><span class="n">k_yy</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">-</span> <span class="n">torch</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="n">k_yy</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="n">n</span> <span class="o">*</span> <span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">eps</span><span class="p">)</span>
+    <span class="n">mmd</span> <span class="o">-=</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">k_xy</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">mmd</span>
+
+
+<span class="c1"># **Prototype Alignment**: Align class centers across domains</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">compute_prototypes</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">n_classes</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute mean feature vector per class.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">features</span><span class="o">.</span><span class="n">dim</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">features</span> <span class="o">=</span> <span class="n">features</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">features</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">prototypes</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_classes</span><span class="p">):</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">labels</span> <span class="o">==</span> <span class="n">c</span>
+        <span class="k">if</span> <span class="n">mask</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">proto</span> <span class="o">=</span> <span class="n">features</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">proto</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">features</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">device</span><span class="o">=</span><span class="n">features</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+        <span class="n">prototypes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">proto</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">prototypes</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">compute_prototype_loss</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">prototypes</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Align features to their class prototypes.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">features</span><span class="o">.</span><span class="n">dim</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">features</span> <span class="o">=</span> <span class="n">features</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">features</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">loss</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">label</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">labels</span><span class="p">):</span>
+        <span class="n">proto</span> <span class="o">=</span> <span class="n">prototypes</span><span class="p">[</span><span class="n">label</span><span class="p">]</span>
+        <span class="n">loss</span> <span class="o">+=</span> <span class="n">F</span><span class="o">.</span><span class="n">mse_loss</span><span class="p">(</span><span class="n">features</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">proto</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">loss</span> <span class="o">/</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">))</span>
+</pre></div>
+</div>
+</section>
+<section id="training-configuration">
+<h2>Training Configuration<a class="headerlink" href="#training-configuration" title="Link to this heading">#</a></h2>
+<p>Define hyperparameters for stable cross-domain training</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">BATCH_SIZE</span> <span class="o">=</span> <span class="mi">22</span>
+<span class="n">LEARNING_RATE</span> <span class="o">=</span> <span class="mf">0.001</span>
+<span class="n">WEIGHT_DECAY</span> <span class="o">=</span> <span class="mf">2.5e-4</span>
+<span class="n">MAX_EPOCHS</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">EARLY_STOPPING_PATIENCE</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">DEVICE</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">&quot;cuda&quot;</span> <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="k">else</span> <span class="s2">&quot;cpu&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="part-3-training-and-evaluation">
+<h1>Part 3: Training and Evaluation<a class="headerlink" href="#part-3-training-and-evaluation" title="Link to this heading">#</a></h1>
+<section id="the-training-loop">
+<h2>The Training Loop<a class="headerlink" href="#the-training-loop" title="Link to this heading">#</a></h2>
+<p>For each batch, we compute four loss components:</p>
+<ol class="arabic simple">
+<li><p><strong>Classification loss</strong> (source + target): Standard cross-entropy</p></li>
+<li><p><strong>Mixup loss</strong> (target domain): Interpolated samples for regularization</p></li>
+<li><p><strong>MMD loss</strong>: Aligns logit-space feature distributions</p></li>
+<li><p><strong>Prototype loss</strong>: Pulls small-domain features to large-domain class centers</p></li>
+</ol>
+<p>All losses are combined with domain-adaptive weights that increase during training.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">torch.utils.data</span><span class="w"> </span><span class="kn">import</span> <span class="n">TensorDataset</span><span class="p">,</span> <span class="n">DataLoader</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">roc_auc_score</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">evaluate_model</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">data_loader</span><span class="p">,</span> <span class="n">device</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Evaluate model on a dataset and compute metrics.&quot;&quot;&quot;</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+    <span class="n">all_preds</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">all_targets</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">all_probs</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+        <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">data_loader</span><span class="p">:</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">normalize_data</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+            <span class="n">scores</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+            <span class="n">all_preds</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">scores</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">())</span>
+            <span class="n">all_targets</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">())</span>
+            <span class="n">all_probs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">softmax</span><span class="p">(</span><span class="n">scores</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)[:,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">())</span>
+
+    <span class="n">preds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">all_preds</span><span class="p">)</span>
+    <span class="n">targets</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">all_targets</span><span class="p">)</span>
+    <span class="n">probs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">all_probs</span><span class="p">)</span>
+
+    <span class="n">accuracy</span> <span class="o">=</span> <span class="p">(</span><span class="n">preds</span> <span class="o">==</span> <span class="n">targets</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+    <span class="n">auc</span> <span class="o">=</span> <span class="n">roc_auc_score</span><span class="p">(</span><span class="n">targets</span><span class="p">,</span> <span class="n">probs</span><span class="p">)</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">targets</span><span class="p">))</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="k">else</span> <span class="mf">0.5</span>
+
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;accuracy&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">accuracy</span><span class="p">),</span> <span class="s2">&quot;auc&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">auc</span><span class="p">)}</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">make_loader</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="n">dataset</span> <span class="o">=</span> <span class="n">TensorDataset</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">FloatTensor</span><span class="p">(</span><span class="n">X</span><span class="p">),</span> <span class="n">torch</span><span class="o">.</span><span class="n">LongTensor</span><span class="p">(</span><span class="n">y</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">DataLoader</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="n">BATCH_SIZE</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="n">shuffle</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">train_asmmd_model</span><span class="p">(</span>
+    <span class="n">Xtr_p3</span><span class="p">,</span>
+    <span class="n">ytr_p3</span><span class="p">,</span>
+    <span class="n">Xva_p3</span><span class="p">,</span>
+    <span class="n">yva_p3</span><span class="p">,</span>
+    <span class="n">Xtr_avo</span><span class="p">,</span>
+    <span class="n">ytr_avo</span><span class="p">,</span>
+    <span class="n">Xva_avo</span><span class="p">,</span>
+    <span class="n">yva_avo</span><span class="p">,</span>
+    <span class="n">n_channels</span><span class="p">,</span>
+    <span class="n">n_times</span><span class="p">,</span>
+    <span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Train a single AS-MMD model.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    Xtr_*, ytr_* : numpy arrays</span>
+<span class="sd">        Training data and labels for each domain</span>
+<span class="sd">    Xva_*, yva_* : numpy arrays</span>
+<span class="sd">        Validation data and labels for each domain</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">manual_seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+
+    <span class="c1"># Create data loaders</span>
+
+    <span class="n">train_p3</span> <span class="o">=</span> <span class="n">make_loader</span><span class="p">(</span><span class="n">Xtr_p3</span><span class="p">,</span> <span class="n">ytr_p3</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">val_p3</span> <span class="o">=</span> <span class="n">make_loader</span><span class="p">(</span><span class="n">Xva_p3</span><span class="p">,</span> <span class="n">yva_p3</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">train_avo</span> <span class="o">=</span> <span class="n">make_loader</span><span class="p">(</span><span class="n">Xtr_avo</span><span class="p">,</span> <span class="n">ytr_avo</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">val_avo</span> <span class="o">=</span> <span class="n">make_loader</span><span class="p">(</span><span class="n">Xva_avo</span><span class="p">,</span> <span class="n">yva_avo</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="c1"># Initialize model</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">EEGConformer</span><span class="p">(</span>
+        <span class="n">n_chans</span><span class="o">=</span><span class="n">n_channels</span><span class="p">,</span>
+        <span class="n">n_outputs</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>  <span class="c1"># Binary: oddball vs. standard</span>
+        <span class="n">n_times</span><span class="o">=</span><span class="n">n_times</span><span class="p">,</span>
+        <span class="n">n_filters_time</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span>
+        <span class="n">filter_time_length</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span>
+        <span class="n">pool_time_length</span><span class="o">=</span><span class="mi">75</span><span class="p">,</span>
+        <span class="n">pool_time_stride</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span>
+        <span class="n">drop_prob</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+        <span class="n">num_layers</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>  <span class="c1"># Corrected from att_depth</span>
+        <span class="n">num_heads</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>  <span class="c1"># Corrected from att_heads</span>
+        <span class="n">att_drop_prob</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">DEVICE</span><span class="p">)</span>
+
+    <span class="n">optimizer</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Adamax</span><span class="p">(</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="n">LEARNING_RATE</span><span class="p">,</span> <span class="n">weight_decay</span><span class="o">=</span><span class="n">WEIGHT_DECAY</span>
+    <span class="p">)</span>
+    <span class="n">scheduler</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">lr_scheduler</span><span class="o">.</span><span class="n">CosineAnnealingLR</span><span class="p">(</span><span class="n">optimizer</span><span class="p">,</span> <span class="n">T_max</span><span class="o">=</span><span class="n">MAX_EPOCHS</span><span class="p">)</span>
+
+    <span class="c1"># Compute domain-specific weights</span>
+    <span class="n">n_p3</span><span class="p">,</span> <span class="n">n_avo</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">Xtr_p3</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">Xtr_avo</span><span class="p">)</span>
+    <span class="n">small_domain</span> <span class="o">=</span> <span class="s2">&quot;P3&quot;</span> <span class="k">if</span> <span class="n">n_p3</span> <span class="o">&lt;</span> <span class="n">n_avo</span> <span class="k">else</span> <span class="s2">&quot;AVO&quot;</span>
+    <span class="n">large_domain</span> <span class="o">=</span> <span class="s2">&quot;AVO&quot;</span> <span class="k">if</span> <span class="n">small_domain</span> <span class="o">==</span> <span class="s2">&quot;P3&quot;</span> <span class="k">else</span> <span class="s2">&quot;P3&quot;</span>
+
+    <span class="c1"># Training loop</span>
+    <span class="n">best_score</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="n">best_state</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">patience</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">for</span> <span class="n">epoch</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">MAX_EPOCHS</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">train</span><span class="p">()</span>
+
+        <span class="c1"># Warmup: gradually increase domain adaptation strength</span>
+        <span class="n">warmup_epoch</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">epoch</span> <span class="o">/</span> <span class="mi">20</span><span class="p">)</span>
+
+        <span class="n">loaders</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;P3&quot;</span><span class="p">:</span> <span class="n">train_p3</span><span class="p">,</span> <span class="s2">&quot;AVO&quot;</span><span class="p">:</span> <span class="n">train_avo</span><span class="p">}</span>
+        <span class="n">itr_small</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">(</span><span class="n">loaders</span><span class="p">[</span><span class="n">small_domain</span><span class="p">])</span>
+
+        <span class="k">for</span> <span class="n">xb_large</span><span class="p">,</span> <span class="n">yb_large</span> <span class="ow">in</span> <span class="n">loaders</span><span class="p">[</span><span class="n">large_domain</span><span class="p">]:</span>
+            <span class="c1"># Large domain batch</span>
+            <span class="n">x_large</span> <span class="o">=</span> <span class="n">normalize_data</span><span class="p">(</span><span class="n">xb_large</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">DEVICE</span><span class="p">)</span>
+            <span class="n">y_large</span> <span class="o">=</span> <span class="n">yb_large</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">DEVICE</span><span class="p">)</span>
+            <span class="n">scores_large</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">x_large</span><span class="p">)</span>
+            <span class="n">loss_cls</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">cross_entropy</span><span class="p">(</span><span class="n">scores_large</span><span class="p">,</span> <span class="n">y_large</span><span class="p">)</span>
+
+            <span class="c1"># Small domain batch</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">xb_small</span><span class="p">,</span> <span class="n">yb_small</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">itr_small</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">StopIteration</span><span class="p">:</span>
+                <span class="n">itr_small</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">(</span><span class="n">loaders</span><span class="p">[</span><span class="n">small_domain</span><span class="p">])</span>
+                <span class="n">xb_small</span><span class="p">,</span> <span class="n">yb_small</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">itr_small</span><span class="p">)</span>
+
+            <span class="n">x_small</span> <span class="o">=</span> <span class="n">normalize_data</span><span class="p">(</span><span class="n">xb_small</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">DEVICE</span><span class="p">)</span>
+            <span class="n">y_small</span> <span class="o">=</span> <span class="n">yb_small</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">DEVICE</span><span class="p">)</span>
+
+            <span class="c1"># Mixup on small domain</span>
+            <span class="n">x_mixed</span><span class="p">,</span> <span class="n">y_a</span><span class="p">,</span> <span class="n">y_b</span><span class="p">,</span> <span class="n">lam</span> <span class="o">=</span> <span class="n">mixup_data</span><span class="p">(</span><span class="n">x_small</span><span class="p">,</span> <span class="n">y_small</span><span class="p">)</span>
+            <span class="n">scores_mixed</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">x_mixed</span><span class="p">)</span>
+            <span class="n">loss_mixup</span> <span class="o">=</span> <span class="n">lam</span> <span class="o">*</span> <span class="n">compute_focal_loss</span><span class="p">(</span><span class="n">scores_mixed</span><span class="p">,</span> <span class="n">y_a</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span>
+                <span class="mi">1</span> <span class="o">-</span> <span class="n">lam</span>
+            <span class="p">)</span> <span class="o">*</span> <span class="n">compute_focal_loss</span><span class="p">(</span><span class="n">scores_mixed</span><span class="p">,</span> <span class="n">y_b</span><span class="p">)</span>
+
+            <span class="c1"># MMD alignment</span>
+            <span class="n">scores_orig</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">x_small</span><span class="p">)</span>
+            <span class="n">loss_mmd</span> <span class="o">=</span> <span class="n">warmup_epoch</span> <span class="o">*</span> <span class="n">compute_mmd_rbf</span><span class="p">(</span>
+                <span class="n">scores_large</span><span class="o">.</span><span class="n">detach</span><span class="p">(),</span> <span class="n">scores_orig</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span>
+            <span class="p">)</span>
+
+            <span class="c1"># Prototype alignment</span>
+            <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+                <span class="n">proto_large</span> <span class="o">=</span> <span class="n">compute_prototypes</span><span class="p">(</span>
+                    <span class="n">scores_large</span><span class="o">.</span><span class="n">detach</span><span class="p">(),</span> <span class="n">y_large</span><span class="p">,</span> <span class="n">n_classes</span><span class="o">=</span><span class="mi">2</span>
+                <span class="p">)</span>
+            <span class="n">loss_proto</span> <span class="o">=</span> <span class="n">warmup_epoch</span> <span class="o">*</span> <span class="n">compute_prototype_loss</span><span class="p">(</span>
+                <span class="n">scores_orig</span><span class="p">,</span> <span class="n">y_small</span><span class="p">,</span> <span class="n">proto_large</span>
+            <span class="p">)</span>
+
+            <span class="c1"># Combined loss</span>
+            <span class="n">loss</span> <span class="o">=</span> <span class="n">loss_cls</span> <span class="o">+</span> <span class="n">loss_mixup</span> <span class="o">+</span> <span class="mf">0.3</span> <span class="o">*</span> <span class="n">loss_mmd</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">loss_proto</span>
+
+            <span class="n">optimizer</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
+            <span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+            <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">clip_grad_norm_</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">max_norm</span><span class="o">=</span><span class="mf">5.0</span><span class="p">)</span>
+            <span class="n">optimizer</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+
+        <span class="n">scheduler</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+
+        <span class="c1"># Validation</span>
+        <span class="n">val_p3_metrics</span> <span class="o">=</span> <span class="n">evaluate_model</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">val_p3</span><span class="p">,</span> <span class="n">DEVICE</span><span class="p">)</span>
+        <span class="n">val_avo_metrics</span> <span class="o">=</span> <span class="n">evaluate_model</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">val_avo</span><span class="p">,</span> <span class="n">DEVICE</span><span class="p">)</span>
+
+        <span class="c1"># Track best model on small domain</span>
+        <span class="n">small_val</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">val_p3_metrics</span><span class="p">[</span><span class="s2">&quot;accuracy&quot;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">small_domain</span> <span class="o">==</span> <span class="s2">&quot;P3&quot;</span>
+            <span class="k">else</span> <span class="n">val_avo_metrics</span><span class="p">[</span><span class="s2">&quot;accuracy&quot;</span><span class="p">]</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">small_val</span> <span class="o">&gt;</span> <span class="n">best_score</span><span class="p">:</span>
+            <span class="n">best_score</span> <span class="o">=</span> <span class="n">small_val</span>
+            <span class="n">best_state</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">state_dict</span><span class="p">()</span>
+            <span class="n">patience</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">patience</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">epoch</span> <span class="o">%</span> <span class="mi">10</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">epoch</span> <span class="o">==</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Epoch </span><span class="si">{</span><span class="n">epoch</span><span class="si">:</span><span class="s2">3d</span><span class="si">}</span><span class="s2"> | P3 val: </span><span class="si">{</span><span class="n">val_p3_metrics</span><span class="p">[</span><span class="s1">&#39;accuracy&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> | &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;AVO val: </span><span class="si">{</span><span class="n">val_avo_metrics</span><span class="p">[</span><span class="s1">&#39;accuracy&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> | Score: </span><span class="si">{</span><span class="n">small_val</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">patience</span> <span class="o">&gt;=</span> <span class="n">EARLY_STOPPING_PATIENCE</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Early stopping at epoch </span><span class="si">{</span><span class="n">epoch</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">break</span>
+
+    <span class="c1"># Load best model</span>
+    <span class="k">if</span> <span class="n">best_state</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">load_state_dict</span><span class="p">(</span><span class="n">best_state</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">model</span>
+</pre></div>
+</div>
+</section>
+<section id="nested-cross-validation">
+<h2>Nested Cross-Validation<a class="headerlink" href="#nested-cross-validation" title="Link to this heading">#</a></h2>
+<p>We use nested CV to robustly estimate model performance:</p>
+<ul class="simple">
+<li><p><strong>Outer folds (5)</strong>: For test set evaluation</p></li>
+<li><p><strong>Inner split</strong>: Train/val split for hyperparameter tuning</p></li>
+<li><p><strong>Repeats (5)</strong>: Multiple random seeds for stability</p></li>
+</ul>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">StratifiedKFold</span><span class="p">,</span> <span class="n">train_test_split</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">run_nested_cv</span><span class="p">(</span><span class="n">X_all</span><span class="p">,</span> <span class="n">y_all</span><span class="p">,</span> <span class="n">src_all</span><span class="p">,</span> <span class="n">channels</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Run nested cross-validation with AS-MMD.&quot;&quot;&quot;</span>
+    <span class="n">n_channels</span> <span class="o">=</span> <span class="n">X_all</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">n_times</span> <span class="o">=</span> <span class="n">X_all</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+
+    <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">SEEDS</span> <span class="o">=</span> <span class="p">[</span><span class="mi">42</span><span class="p">,</span> <span class="mi">123</span><span class="p">,</span> <span class="mi">456</span><span class="p">,</span> <span class="mi">789</span><span class="p">,</span> <span class="mi">321</span><span class="p">]</span>
+
+    <span class="k">for</span> <span class="n">repeat</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">):</span>  <span class="c1"># 2 repeats for quick demo (use 5 for final results)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">{</span><span class="s1">&#39;=&#39;</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">60</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Repeat </span><span class="si">{</span><span class="n">repeat</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">/2&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">60</span><span class="p">)</span>
+
+        <span class="n">cv</span> <span class="o">=</span> <span class="n">StratifiedKFold</span><span class="p">(</span>
+            <span class="n">n_splits</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">SEEDS</span><span class="p">[</span><span class="n">repeat</span><span class="p">]</span>
+        <span class="p">)</span>  <span class="c1"># 3 folds for demo</span>
+
+        <span class="k">for</span> <span class="n">fold_idx</span><span class="p">,</span> <span class="p">(</span><span class="n">train_idx</span><span class="p">,</span> <span class="n">test_idx</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">cv</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">X_all</span><span class="p">,</span> <span class="n">y_all</span><span class="p">)):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Fold </span><span class="si">{</span><span class="n">fold_idx</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">/3&quot;</span><span class="p">)</span>
+
+            <span class="n">X_tr</span><span class="p">,</span> <span class="n">y_tr</span><span class="p">,</span> <span class="n">src_tr</span> <span class="o">=</span> <span class="n">X_all</span><span class="p">[</span><span class="n">train_idx</span><span class="p">],</span> <span class="n">y_all</span><span class="p">[</span><span class="n">train_idx</span><span class="p">],</span> <span class="n">src_all</span><span class="p">[</span><span class="n">train_idx</span><span class="p">]</span>
+            <span class="n">X_te</span><span class="p">,</span> <span class="n">y_te</span><span class="p">,</span> <span class="n">src_te</span> <span class="o">=</span> <span class="n">X_all</span><span class="p">[</span><span class="n">test_idx</span><span class="p">],</span> <span class="n">y_all</span><span class="p">[</span><span class="n">test_idx</span><span class="p">],</span> <span class="n">src_all</span><span class="p">[</span><span class="n">test_idx</span><span class="p">]</span>
+
+            <span class="c1"># Split train into train/val</span>
+            <span class="n">tr_idx</span><span class="p">,</span> <span class="n">va_idx</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">X_tr</span><span class="p">)),</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.15</span><span class="p">,</span> <span class="n">stratify</span><span class="o">=</span><span class="n">y_tr</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span>
+            <span class="p">)</span>
+
+            <span class="c1"># Extract per-domain data</span>
+            <span class="k">def</span><span class="w"> </span><span class="nf">get_domain</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">src</span><span class="p">,</span> <span class="n">idx</span><span class="p">,</span> <span class="n">domain</span><span class="p">):</span>
+                <span class="n">mask</span> <span class="o">=</span> <span class="n">src</span> <span class="o">==</span> <span class="n">domain</span>
+                <span class="n">indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">intersect1d</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">mask</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span> <span class="n">idx</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">X</span><span class="p">[</span><span class="n">indices</span><span class="p">],</span> <span class="n">y</span><span class="p">[</span><span class="n">indices</span><span class="p">]</span>
+
+            <span class="n">Xtr_p3</span><span class="p">,</span> <span class="n">ytr_p3</span> <span class="o">=</span> <span class="n">get_domain</span><span class="p">(</span><span class="n">X_tr</span><span class="p">,</span> <span class="n">y_tr</span><span class="p">,</span> <span class="n">src_tr</span><span class="p">,</span> <span class="n">tr_idx</span><span class="p">,</span> <span class="s2">&quot;P3&quot;</span><span class="p">)</span>
+            <span class="n">Xtr_avo</span><span class="p">,</span> <span class="n">ytr_avo</span> <span class="o">=</span> <span class="n">get_domain</span><span class="p">(</span><span class="n">X_tr</span><span class="p">,</span> <span class="n">y_tr</span><span class="p">,</span> <span class="n">src_tr</span><span class="p">,</span> <span class="n">tr_idx</span><span class="p">,</span> <span class="s2">&quot;AVO&quot;</span><span class="p">)</span>
+            <span class="n">Xva_p3</span><span class="p">,</span> <span class="n">yva_p3</span> <span class="o">=</span> <span class="n">get_domain</span><span class="p">(</span><span class="n">X_tr</span><span class="p">,</span> <span class="n">y_tr</span><span class="p">,</span> <span class="n">src_tr</span><span class="p">,</span> <span class="n">va_idx</span><span class="p">,</span> <span class="s2">&quot;P3&quot;</span><span class="p">)</span>
+            <span class="n">Xva_avo</span><span class="p">,</span> <span class="n">yva_avo</span> <span class="o">=</span> <span class="n">get_domain</span><span class="p">(</span><span class="n">X_tr</span><span class="p">,</span> <span class="n">y_tr</span><span class="p">,</span> <span class="n">src_tr</span><span class="p">,</span> <span class="n">va_idx</span><span class="p">,</span> <span class="s2">&quot;AVO&quot;</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">Xtr_p3</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">Xtr_avo</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;  Skipping: insufficient training samples&quot;</span><span class="p">)</span>
+                <span class="k">continue</span>
+
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Train: P3=</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">Xtr_p3</span><span class="p">)</span><span class="si">}</span><span class="s2">, AVO=</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">Xtr_avo</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Val:   P3=</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">Xva_p3</span><span class="p">)</span><span class="si">}</span><span class="s2">, AVO=</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">Xva_avo</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+            <span class="c1"># Train model</span>
+            <span class="n">model</span> <span class="o">=</span> <span class="n">train_asmmd_model</span><span class="p">(</span>
+                <span class="n">Xtr_p3</span><span class="p">,</span>
+                <span class="n">ytr_p3</span><span class="p">,</span>
+                <span class="n">Xva_p3</span><span class="p">,</span>
+                <span class="n">yva_p3</span><span class="p">,</span>
+                <span class="n">Xtr_avo</span><span class="p">,</span>
+                <span class="n">ytr_avo</span><span class="p">,</span>
+                <span class="n">Xva_avo</span><span class="p">,</span>
+                <span class="n">yva_avo</span><span class="p">,</span>
+                <span class="n">n_channels</span><span class="p">,</span>
+                <span class="n">n_times</span><span class="p">,</span>
+                <span class="n">seed</span><span class="o">=</span><span class="n">SEEDS</span><span class="p">[</span><span class="n">repeat</span><span class="p">],</span>
+            <span class="p">)</span>
+
+            <span class="c1"># Evaluate on test set</span>
+            <span class="k">def</span><span class="w"> </span><span class="nf">test_domain</span><span class="p">(</span><span class="n">domain_label</span><span class="p">):</span>
+                <span class="n">mask</span> <span class="o">=</span> <span class="n">src_te</span> <span class="o">==</span> <span class="n">domain_label</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">mask</span><span class="p">):</span>
+                    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;accuracy&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span> <span class="s2">&quot;auc&quot;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">},</span> <span class="mi">0</span>
+                <span class="n">loader</span> <span class="o">=</span> <span class="n">make_loader</span><span class="p">(</span><span class="n">X_te</span><span class="p">[</span><span class="n">mask</span><span class="p">],</span> <span class="n">y_te</span><span class="p">[</span><span class="n">mask</span><span class="p">])</span>
+                <span class="n">metrics</span> <span class="o">=</span> <span class="n">evaluate_model</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">loader</span><span class="p">,</span> <span class="n">DEVICE</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">metrics</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">mask</span><span class="p">)</span>
+
+            <span class="k">def</span><span class="w"> </span><span class="nf">make_loader</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+                <span class="k">return</span> <span class="n">DataLoader</span><span class="p">(</span>
+                    <span class="n">TensorDataset</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">FloatTensor</span><span class="p">(</span><span class="n">X</span><span class="p">),</span> <span class="n">torch</span><span class="o">.</span><span class="n">LongTensor</span><span class="p">(</span><span class="n">y</span><span class="p">)),</span>
+                    <span class="n">batch_size</span><span class="o">=</span><span class="n">BATCH_SIZE</span><span class="p">,</span>
+                    <span class="n">shuffle</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="p">)</span>
+
+            <span class="n">m_p3</span><span class="p">,</span> <span class="n">n_p3</span> <span class="o">=</span> <span class="n">test_domain</span><span class="p">(</span><span class="s2">&quot;P3&quot;</span><span class="p">)</span>
+            <span class="n">m_avo</span><span class="p">,</span> <span class="n">n_avo</span> <span class="o">=</span> <span class="n">test_domain</span><span class="p">(</span><span class="s2">&quot;AVO&quot;</span><span class="p">)</span>
+
+            <span class="n">overall_acc</span> <span class="o">=</span> <span class="p">(</span><span class="n">m_p3</span><span class="p">[</span><span class="s2">&quot;accuracy&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">n_p3</span> <span class="o">+</span> <span class="n">m_avo</span><span class="p">[</span><span class="s2">&quot;accuracy&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">n_avo</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span>
+                <span class="n">n_p3</span> <span class="o">+</span> <span class="n">n_avo</span> <span class="o">+</span> <span class="mf">1e-8</span>
+            <span class="p">)</span>
+
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;  Test: P3=</span><span class="si">{</span><span class="n">m_p3</span><span class="p">[</span><span class="s1">&#39;accuracy&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> (n=</span><span class="si">{</span><span class="n">n_p3</span><span class="si">}</span><span class="s2">), AVO=</span><span class="si">{</span><span class="n">m_avo</span><span class="p">[</span><span class="s1">&#39;accuracy&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> (n=</span><span class="si">{</span><span class="n">n_avo</span><span class="si">}</span><span class="s2">)&quot;</span>
+            <span class="p">)</span>
+
+            <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="p">{</span>
+                    <span class="s2">&quot;repeat&quot;</span><span class="p">:</span> <span class="n">repeat</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
+                    <span class="s2">&quot;fold&quot;</span><span class="p">:</span> <span class="n">fold_idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
+                    <span class="s2">&quot;p3_acc&quot;</span><span class="p">:</span> <span class="n">m_p3</span><span class="p">[</span><span class="s2">&quot;accuracy&quot;</span><span class="p">],</span>
+                    <span class="s2">&quot;p3_auc&quot;</span><span class="p">:</span> <span class="n">m_p3</span><span class="p">[</span><span class="s2">&quot;auc&quot;</span><span class="p">],</span>
+                    <span class="s2">&quot;avo_acc&quot;</span><span class="p">:</span> <span class="n">m_avo</span><span class="p">[</span><span class="s2">&quot;accuracy&quot;</span><span class="p">],</span>
+                    <span class="s2">&quot;avo_auc&quot;</span><span class="p">:</span> <span class="n">m_avo</span><span class="p">[</span><span class="s2">&quot;auc&quot;</span><span class="p">],</span>
+                    <span class="s2">&quot;overall_acc&quot;</span><span class="p">:</span> <span class="n">overall_acc</span><span class="p">,</span>
+                <span class="p">}</span>
+            <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="execute-training">
+<h2>Execute Training<a class="headerlink" href="#execute-training" title="Link to this heading">#</a></h2>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Starting AS-MMD Training with Nested Cross-Validation...&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">60</span><span class="p">)</span>
+
+<span class="n">results_df</span> <span class="o">=</span> <span class="n">run_nested_cv</span><span class="p">(</span><span class="n">X_all</span><span class="p">,</span> <span class="n">y_all</span><span class="p">,</span> <span class="n">src_all</span><span class="p">,</span> <span class="n">COMMON_CHANNELS</span><span class="p">)</span>
+
+<span class="c1"># Print summary</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">60</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;RESULTS SUMMARY&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">60</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span>
+    <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Overall Accuracy: </span><span class="si">{</span><span class="n">results_df</span><span class="p">[</span><span class="s1">&#39;overall_acc&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> ± </span><span class="si">{</span><span class="n">results_df</span><span class="p">[</span><span class="s1">&#39;overall_acc&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">std</span><span class="p">()</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">P3 Dataset:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span>
+    <span class="sa">f</span><span class="s2">&quot;  Accuracy: </span><span class="si">{</span><span class="n">results_df</span><span class="p">[</span><span class="s1">&#39;p3_acc&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> ± </span><span class="si">{</span><span class="n">results_df</span><span class="p">[</span><span class="s1">&#39;p3_acc&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">std</span><span class="p">()</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  AUC: </span><span class="si">{</span><span class="n">results_df</span><span class="p">[</span><span class="s1">&#39;p3_auc&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> ± </span><span class="si">{</span><span class="n">results_df</span><span class="p">[</span><span class="s1">&#39;p3_auc&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">std</span><span class="p">()</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">AVO Dataset:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span>
+    <span class="sa">f</span><span class="s2">&quot;  Accuracy: </span><span class="si">{</span><span class="n">results_df</span><span class="p">[</span><span class="s1">&#39;avo_acc&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> ± </span><span class="si">{</span><span class="n">results_df</span><span class="p">[</span><span class="s1">&#39;avo_acc&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">std</span><span class="p">()</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  AUC: </span><span class="si">{</span><span class="n">results_df</span><span class="p">[</span><span class="s1">&#39;avo_auc&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> ± </span><span class="si">{</span><span class="n">results_df</span><span class="p">[</span><span class="s1">&#39;avo_auc&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">std</span><span class="p">()</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">60</span><span class="p">)</span>
+
+<span class="c1"># Save results</span>
+<span class="n">results_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s2">&quot;asmmd_results.csv&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Results saved to: asmmd_results.csv&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="key-takeaways">
+<h1>Key Takeaways<a class="headerlink" href="#key-takeaways" title="Link to this heading">#</a></h1>
+<p><strong>Main Components of AS-MMD:</strong></p>
+<ol class="arabic simple">
+<li><p><strong>Classification Loss</strong>: Standard cross-entropy on both datasets</p></li>
+<li><p><strong>Mixup Regularization</strong>: Interpolate between samples for better generalization</p></li>
+<li><p><strong>MMD Alignment</strong>: Match feature distributions across domains</p></li>
+<li><p><strong>Prototype Alignment</strong>: Pull small-domain features toward large-domain class centers</p></li>
+<li><p><strong>Warmup Schedule</strong>: Gradually introduce domain adaptation during training</p></li>
+</ol>
+<p><strong>When to Use This Method:</strong></p>
+<ul class="simple">
+<li><p>You have limited data from your target domain</p></li>
+<li><p>You have access to a related source domain (different equipment/site)</p></li>
+<li><p>You want a single model that performs well on both domains</p></li>
+<li><p>You need robust cross-dataset performance</p></li>
+</ul>
+<p><strong>Tips for Your Own Data:</strong></p>
+<ul class="simple">
+<li><p>Verify channel names match between datasets (case-insensitive lowercasing helps)</p></li>
+<li><p>Adjust BATCH_SIZE if memory is limited (try 16 or 32)</p></li>
+<li><p>Increase MAX_EPOCHS if curves haven’t plateaued</p></li>
+<li><p>Tune MMD weight (0.2-0.5) and prototype weight (0.5-0.8) based on domain similarity</p></li>
+<li><p>Use more CV folds (5-10) for final results</p></li>
+</ul>
+<p><strong>References:</strong></p>
+<ul class="simple">
+<li><p>Chen, W., Delorme, A. (2025). Adaptive Split-MMD Training for Small-Sample Cross-Dataset P300 Classification.</p></li>
+<li><p>Song et al. (2019). “EEGConformer: Convolutional Transformer for EEG Decoding”</p></li>
+<li><p>Long et al. (2015). “Learning Transferable Features with Deep Adaptation Networks”</p></li>
+</ul>
+</section>
+<section id="next-steps">
+<h1>Next Steps<a class="headerlink" href="#next-steps" title="Link to this heading">#</a></h1>
+<ul class="simple">
+<li><p>Try different EEG components (e.g., N1, P2, N2 instead of P3)</p></li>
+<li><p>Extend to multi-class classification (e.g., oddball paradigm variants)</p></li>
+<li><p>Apply to other tasks (motor imagery, sleep staging, seizure detection)</p></li>
+<li><p>Experiment with other backbones (ResNet, LSTM) instead of EEGConformer</p></li>
+<li><p>Implement subject-independent vs. subject-specific models</p></li>
+</ul>
+<p><strong>Estimated memory usage:</strong>  0 MB</p>
+<div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-generated-auto-examples-core-p300-transfer-learning-py">
+<div class="binder-badge docutils container">
+<a class="reference external image-reference" href="https://mybinder.org/v2/gh/eegdash/EEGDash/main?urlpath=lab/tree/notebooks/generated/auto_examples/core/p300_transfer_learning.ipynb"><img alt="Launch binder" src="../../../_images/binder_badge_logo.svg" style="width: 150px;" />
+</a>
+</div>
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="../../../_downloads/8f438cbeb9f31020d8557da48a30f881/p300_transfer_learning.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">p300_transfer_learning.ipynb</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../../../_downloads/ea680a3c334b46d98cb7ee24fe2ba1a6/p300_transfer_learning.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">p300_transfer_learning.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-zip docutils container">
+<p><a class="reference download internal" download="" href="../../../_downloads/2cfe5bd87d0efbadaa46365fc173518c/p300_transfer_learning.zip"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">zipped:</span> <span class="pre">p300_transfer_learning.zip</span></code></a></p>
+</div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../index.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Tutorials!</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="tutorial_eoec.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Eyes Open vs. Closed Classification</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">EEG P3 Transfer Learning with AS-MMD</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#key-concepts">Key Concepts</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#part-1-loading-and-preprocessing-data">Part 1: Loading and Preprocessing Data</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-preprocessing-pipeline">Data Preprocessing Pipeline</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#part-2-model-architecture-and-training">Part 2: Model Architecture and Training</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#building-the-domain-adaptive-model">Building the Domain-Adaptive Model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#domain-adaptation-techniques">Domain Adaptation Techniques</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#training-configuration">Training Configuration</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#part-3-training-and-evaluation">Part 3: Training and Evaluation</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-training-loop">The Training Loop</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#nested-cross-validation">Nested Cross-Validation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#execute-training">Execute Training</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#key-takeaways">Key Takeaways</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#next-steps">Next Steps</a></li>
+</ul>
+
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+
+  
+  <div class="tocsection editthispage">
+    <a href="https://github.com/eegdash/EEGDash/edit/main/docs/source/generated/auto_examples/core/p300_transfer_learning.rst">
+      <i class="fa-solid fa-pencil"></i>
+      
+      
+        
+          Edit on GitHub
+        
+      
+    </a>
+  </div>
+</div>
+
+  <div class="sidebar-secondary-item">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../_sources/generated/auto_examples/core/p300_transfer_learning.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2025-2026, EEG Dash Developers.
+      <br/>
+    
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

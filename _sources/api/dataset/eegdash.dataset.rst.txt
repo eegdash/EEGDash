@@ -1,0 +1,23 @@
+eegdash.dataset package
+=======================
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 4
+
+   eegdash.dataset.base
+   eegdash.dataset.bids_dataset
+   eegdash.dataset.dataset
+   eegdash.dataset.io
+   eegdash.dataset.registry
+
+Module contents
+---------------
+
+.. automodule:: eegdash.dataset
+   :members:
+   :noindex:
+   :show-inheritance:
+   :undoc-members:

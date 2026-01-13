@@ -6,6 +6,7 @@ on:
   push:
     branches:
       - "main"
+      - "develop"
   pull_request:
     branches:
       - '*' # all branches, including forks
@@ -192,11 +193,20 @@ jobs:
               });
             }
 
-      # Deploy the docs to the gh-pages branch (main only)
-      - name: Deploy to GitHub Pages
+      # Deploy the docs to the gh-pages branch (main and develop)
+      - name: Deploy to GitHub Pages (main)
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./docs/build/html
           cname: eegdash.org
+
+      - name: Deploy to GitHub Pages (develop)
+        if: github.event_name == 'push' && github.ref == 'refs/heads/develop'
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs/build/html
+          destination_dir: develop
+          keep_files: true

@@ -422,3 +422,39 @@ def test_downloader_batch_skip_existing(tmp_path):
 
     assert len(downloaded) == 1
     assert downloaded == [f2]
+
+
+def test_filesystem_get_rich_fallback(tmp_path):
+    """Test _filesystem_get uses TQDM or Rich."""
+    from unittest.mock import MagicMock, patch
+
+    import eegdash.downloader as downloader
+
+    mock_fs = MagicMock()
+    dest = tmp_path / "test.txt"
+
+    # Force NO Rich
+    with patch("eegdash.downloader.Console") as mock_console:
+        mock_console.return_value.is_terminal = False
+        with patch("eegdash.downloader.TqdmCallback") as mock_tqdm:
+            downloader._filesystem_get(mock_fs, "s3://b/f", dest)
+            mock_tqdm.assert_called()
+
+
+def test_download_files_skip_existing_check_explicit(tmp_path):
+    """Test download_files checks remote size for skipping."""
+    from unittest.mock import MagicMock, patch
+
+    import eegdash.downloader as downloader
+
+    mock_fs = MagicMock()
+    dest = tmp_path / "existing.txt"
+    dest.write_text("content")
+
+    # Remote size = local size -> skip
+    with patch("eegdash.downloader._remote_size", return_value=7):
+        downloader.download_files(
+            [("s3://b/f", dest)], filesystem=mock_fs, skip_existing=True
+        )
+        # Should NOT call get
+        mock_fs.get.assert_not_called()

@@ -37,7 +37,9 @@ def bids_dataset_path(bids_mini_dataset_path):
 def bids_dataset(bids_dataset_path):
     """Load the BIDS dataset once for all tests in the session."""
     dataset = EEGBIDSDataset(
-        data_dir=str(bids_dataset_path), dataset=bids_dataset_path.name
+        data_dir=str(bids_dataset_path),
+        dataset=bids_dataset_path.name,
+        allow_symlinks=True,
     )
     return dataset
 
@@ -295,7 +297,11 @@ def performance_report(bids_dataset, bids_dataset_path):
 
     # Measure initialization (on new instance)
     start = time.time()
-    _ = EEGBIDSDataset(data_dir=str(bids_dataset_path), dataset=bids_dataset_path.name)
+    _ = EEGBIDSDataset(
+        data_dir=str(bids_dataset_path),
+        dataset=bids_dataset_path.name,
+        allow_symlinks=True,
+    )
     report["init_time"] = time.time() - start
 
     # Measure query times

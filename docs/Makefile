@@ -22,8 +22,8 @@ apidoc:
 
 # Standard build runs examples
 html: apidoc
-	@python prepare_summary_tables.py --target $(BUILDDIR)
-	@$(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
+	python prepare_summary_tables.py --target $(BUILDDIR)
+	$(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
 
 # Fast build: do NOT execute examples (sphinx-gallery)
 html-noplot: apidoc

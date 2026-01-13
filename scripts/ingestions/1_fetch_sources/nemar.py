@@ -24,7 +24,7 @@ from _github import (
 from _serialize import save_datasets_deterministically, setup_paths
 
 setup_paths()
-from eegdash.records import Dataset, create_dataset
+from eegdash.schemas import Dataset, create_dataset
 
 
 def fetch_bids_description(

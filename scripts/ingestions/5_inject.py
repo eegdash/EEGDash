@@ -292,9 +292,11 @@ def inject_records(
 
     """
     session = client or _make_session(admin_token)
-    url = f"{api_url}/admin/{database}/records/bulk"
+    # Use the new upsert endpoint
+    url = f"{api_url}/admin/{database}/records/upsert"
 
     inserted_count = 0
+    updated_count = 0
     errors = []
 
     # Batch insert records
@@ -311,24 +313,50 @@ def inject_records(
             return [sanitize_for_json(i) for i in obj]
         return obj
 
-    for i in range(0, len(records), batch_size):
-        batch = records[i : i + batch_size]
+    from concurrent.futures import ThreadPoolExecutor, as_completed
+
+    def inject_batch(batch_idx, batch):
         try:
-            result, _response = request_json(
+            result, _ = request_json(
                 "post",
                 url,
                 json_body=sanitize_for_json(batch),
-                timeout=120,
+                timeout=60,
                 raise_for_status=True,
                 raise_for_request=True,
                 client=session,
             )
-            inserted_count += (result or {}).get("inserted_count", len(batch))
+            return {
+                "inserted": (result or {}).get("inserted_count", 0),
+                "updated": (result or {}).get("updated_count", 0),
+                "error": None,
+            }
         except (RequestError, HTTPStatusError) as e:
-            errors.append(f"Batch {i // batch_size}: {e}")
+            return {"inserted": 0, "updated": 0, "error": f"Batch {batch_idx}: {e}"}
+
+    # Prepare batches
+    batches = []
+    for i in range(0, len(records), batch_size):
+        batches.append((i // batch_size, records[i : i + batch_size]))
+
+    # Parallel execution
+    with ThreadPoolExecutor(max_workers=4) as executor:
+        futures = {
+            executor.submit(inject_batch, idx, batch): idx for idx, batch in batches
+        }
+        for future in tqdm(
+            as_completed(futures), total=len(batches), desc="Injecting batches"
+        ):
+            res = future.result()
+            if res["error"]:
+                errors.append(res["error"])
+            else:
+                inserted_count += res["inserted"]
+                updated_count += res["updated"]
 
     return {
         "inserted_count": inserted_count,
+        "updated_count": updated_count,
         "errors": errors,
     }
 
@@ -570,10 +598,12 @@ def main():
         # Inject datasets
         if all_datasets and not args.only_records:
             print(f"\nInjecting {len(all_datasets)} datasets...")
-            try:
-                with _make_session(admin_token) as client:
-                    for i in range(0, len(all_datasets), args.batch_size):
-                        batch = all_datasets[i : i + args.batch_size]
+            with _make_session(admin_token) as client:
+                # Use smaller batch size for datasets to avoid timeouts
+                ds_batch_size = 20
+                for i in range(0, len(all_datasets), ds_batch_size):
+                    try:
+                        batch = all_datasets[i : i + ds_batch_size]
                         result = inject_datasets(
                             batch,
                             args.api_url,
@@ -581,34 +611,36 @@ def main():
                             admin_token,
                             client=client,
                         )
-                        stats["datasets_injected"] += result["inserted_count"]
+                        stats["datasets_injected"] += result.get("inserted_count", 0)
                         print(
-                            f"  Batch {i // args.batch_size + 1}: {result['inserted_count']} datasets"
+                            f"  Batch {i // ds_batch_size + 1}: {result.get('inserted_count', 0)} datasets"
                         )
-            except Exception as e:
-                stats["errors"] += 1
-                errors.append({"dataset": "datasets_collection", "error": str(e)})
-                print(f"  Error injecting datasets: {e}", file=sys.stderr)
+                    except Exception as e:
+                        stats["errors"] += 1
+                        errors.append({"dataset": "datasets_batch", "error": str(e)})
+                        print(
+                            f"  Error injecting dataset batch {i // ds_batch_size + 1}: {e}",
+                            file=sys.stderr,
+                        )
 
         # Inject records
         if all_records and not args.only_datasets:
             print(f"\nInjecting {len(all_records)} records...")
             try:
                 with _make_session(admin_token) as client:
-                    for i in range(0, len(all_records), args.batch_size):
-                        batch = all_records[i : i + args.batch_size]
-                        result = inject_records(
-                            batch,
-                            args.api_url,
-                            args.database,
-                            admin_token,
-                            client=client,
-                        )
-                        stats["records_injected"] += result["inserted_count"]
-                        if (i // args.batch_size) % 10 == 0:
-                            print(
-                                f"  Progress: {i + len(batch)} / {len(all_records)} records"
-                            )
+                    result = inject_records(
+                        all_records,
+                        args.api_url,
+                        args.database,
+                        admin_token,
+                        batch_size=args.batch_size,
+                        client=client,
+                    )
+                    stats["records_injected"] += result.get("inserted_count", 0)
+                    stats["records_updated"] = stats.get(
+                        "records_updated", 0
+                    ) + result.get("updated_count", 0)
+
             except Exception as e:
                 stats["errors"] += 1
                 errors.append({"dataset": "records_collection", "error": str(e)})
@@ -620,7 +652,8 @@ def main():
     print("=" * 60)
     print(f"  Database:   {args.database}")
     print(f"  Datasets:   {stats['datasets_injected']}")
-    print(f"  Records:    {stats['records_injected']}")
+    print(f"  Records Ins:{stats['records_injected']}")
+    print(f"  Records Upd:{stats.get('records_updated', 0)}")
     print(f"  Skipped:    {stats['datasets_skipped']}")
     print(f"  Errors:     {stats['errors']}")
 

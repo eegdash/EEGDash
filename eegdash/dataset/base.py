@@ -21,6 +21,7 @@ from braindecode.datasets.base import RawDataset
 from .. import downloader
 from ..logging import logger
 from ..schemas import validate_record
+from .io import _ensure_coordsystem_symlink, _repair_vhdr_pointers
 
 
 class EEGDashRaw(RawDataset):
@@ -143,6 +144,15 @@ class EEGDashRaw(RawDataset):
     def _ensure_raw(self) -> None:
         """Ensure the raw data file and its dependencies are cached locally."""
         self._download_required_files()
+
+        # Helper: Fix MNE-BIDS strictness regarding coordsystem.json location
+        if self.filecache and self.filecache.parent.exists():
+            _ensure_coordsystem_symlink(self.filecache.parent)
+
+        # Helper: Auto-Repair broken VHDR pointers (common in OpenNeuro exports)
+        if self.filecache:
+            _repair_vhdr_pointers(self.filecache)
+
         if self._raw is None:
             try:
                 self._raw = self._load_raw()

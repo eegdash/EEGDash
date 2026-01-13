@@ -28,7 +28,7 @@ setup_paths()
 # Third-party
 from bs4 import BeautifulSoup
 
-from eegdash.records import Dataset, create_dataset
+from eegdash.schemas import Dataset, create_dataset
 
 GIN_BASE_URL = "https://gin.g-node.org"
 GIN_API_URL = f"{GIN_BASE_URL}/api/v1"

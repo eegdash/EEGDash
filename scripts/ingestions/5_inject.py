@@ -292,9 +292,11 @@ def inject_records(
 
     """
     session = client or _make_session(admin_token)
-    url = f"{api_url}/admin/{database}/records/bulk"
+    # Use the new upsert endpoint
+    url = f"{api_url}/admin/{database}/records/upsert"
 
     inserted_count = 0
+    updated_count = 0
     errors = []
 
     # Batch insert records
@@ -319,33 +321,42 @@ def inject_records(
                 "post",
                 url,
                 json_body=sanitize_for_json(batch),
-                timeout=120,
+                timeout=60,
                 raise_for_status=True,
                 raise_for_request=True,
                 client=session,
             )
-            return (result or {}).get("inserted_count", len(batch)), None
+            return {
+                "inserted": (result or {}).get("inserted_count", 0),
+                "updated": (result or {}).get("updated_count", 0),
+                "error": None,
+            }
         except (RequestError, HTTPStatusError) as e:
-            return 0, f"Batch {batch_idx}: {e}"
+            return {"inserted": 0, "updated": 0, "error": f"Batch {batch_idx}: {e}"}
 
-    with ThreadPoolExecutor(max_workers=16) as executor:
+    # Prepare batches
+    batches = []
+    for i in range(0, len(records), batch_size):
+        batches.append((i // batch_size, records[i : i + batch_size]))
+
+    # Parallel execution
+    with ThreadPoolExecutor(max_workers=4) as executor:
         futures = {
-            executor.submit(
-                inject_batch, i // batch_size, records[i : i + batch_size]
-            ): i
-            for i in range(0, len(records), batch_size)
+            executor.submit(inject_batch, idx, batch): idx for idx, batch in batches
         }
-
         for future in tqdm(
-            as_completed(futures), total=len(futures), desc="Injecting batches"
+            as_completed(futures), total=len(batches), desc="Injecting batches"
         ):
-            count, error = future.result()
-            inserted_count += count
-            if error:
-                errors.append(error)
+            res = future.result()
+            if res["error"]:
+                errors.append(res["error"])
+            else:
+                inserted_count += res["inserted"]
+                updated_count += res["updated"]
 
     return {
         "inserted_count": inserted_count,
+        "updated_count": updated_count,
         "errors": errors,
     }
 
@@ -620,7 +631,11 @@ def main():
                         batch_size=args.batch_size,
                         client=client,
                     )
-                    stats["records_injected"] += result["inserted_count"]
+                    stats["records_injected"] += result.get("inserted_count", 0)
+                    stats["records_updated"] = stats.get(
+                        "records_updated", 0
+                    ) + result.get("updated_count", 0)
+
             except Exception as e:
                 stats["errors"] += 1
                 errors.append({"dataset": "records_collection", "error": str(e)})
@@ -632,7 +647,8 @@ def main():
     print("=" * 60)
     print(f"  Database:   {args.database}")
     print(f"  Datasets:   {stats['datasets_injected']}")
-    print(f"  Records:    {stats['records_injected']}")
+    print(f"  Records Ins:{stats['records_injected']}")
+    print(f"  Records Upd:{stats.get('records_updated', 0)}")
     print(f"  Skipped:    {stats['datasets_skipped']}")
     print(f"  Errors:     {stats['errors']}")
 

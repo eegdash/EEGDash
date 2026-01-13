@@ -458,3 +458,135 @@ def test_download_files_skip_existing_check_explicit(tmp_path):
         )
         # Should NOT call get
         mock_fs.get.assert_not_called()
+
+
+def test_rich_callback_methods():
+    """Test RichCallback set_size, relative_update, and close methods."""
+    from eegdash.downloader import RichCallback
+
+    callback = RichCallback(size=100, description="Test download")
+
+    # Test set_size updates the total
+    callback.set_size(200)
+    assert callback.progress.tasks[callback.task_id].total == 200
+
+    # Test relative_update advances progress
+    callback.relative_update(50)
+    assert callback.progress.tasks[callback.task_id].completed == 50
+
+    # Test close stops the progress
+    callback.close()
+    assert not callback.progress.live.is_started
+
+
+def test_filesystem_get_with_rich_console(tmp_path):
+    """Test _filesystem_get uses Rich when console is terminal."""
+    from unittest.mock import MagicMock, patch
+
+    import eegdash.downloader as downloader
+
+    mock_fs = MagicMock()
+    dest = tmp_path / "rich_test.txt"
+
+    # Force Rich path by mocking Console to return is_terminal=True
+    with patch("eegdash.downloader.Console") as mock_console:
+        mock_console.return_value.is_terminal = True
+        with patch("eegdash.downloader.RichCallback") as mock_rich:
+            mock_rich.return_value.close = MagicMock()
+            downloader._filesystem_get(mock_fs, "s3://b/f", dest, size=100)
+            mock_rich.assert_called_once()
+            mock_fs.get.assert_called_once()
+
+
+def test_filesystem_get_rich_exception_fallback(tmp_path):
+    """Test _filesystem_get falls back to TQDM when Console raises."""
+    from unittest.mock import MagicMock, patch
+
+    import eegdash.downloader as downloader
+
+    mock_fs = MagicMock()
+    dest = tmp_path / "fallback_test.txt"
+
+    # Force Console to raise exception
+    with patch("eegdash.downloader.Console", side_effect=Exception("No console")):
+        with patch("eegdash.downloader.TqdmCallback") as mock_tqdm:
+            mock_tqdm.return_value.close = MagicMock()
+            downloader._filesystem_get(mock_fs, "s3://b/f", dest, size=100)
+            mock_tqdm.assert_called_once()
+
+
+def test_download_files_incomplete_download_raises(tmp_path):
+    """Test download_files raises OSError on incomplete download (lines 138-142)."""
+    from unittest.mock import MagicMock, patch
+
+    import pytest
+
+    from eegdash.downloader import download_files
+
+    dest = tmp_path / "incomplete.txt"
+
+    mock_fs = MagicMock()
+    mock_fs.info.return_value = {"size": 100}
+
+    # Mock _filesystem_get to write wrong size
+    def mock_get(*args, **kwargs):
+        dest.write_bytes(b"short")  # 5 bytes, expected 100
+
+    with patch("eegdash.downloader._filesystem_get", side_effect=mock_get):
+        with pytest.raises(OSError, match="Incomplete download"):
+            download_files([("s3://b/f", dest)], filesystem=mock_fs)
+
+
+def test_download_files_success_path(tmp_path):
+    """Test download_files returns downloaded files on success."""
+    from unittest.mock import MagicMock, patch
+
+    from eegdash.downloader import download_files
+
+    dest = tmp_path / "success.txt"
+
+    mock_fs = MagicMock()
+    mock_fs.info.return_value = {"size": 10}
+
+    # Mock _filesystem_get to write correct size
+    def mock_get(*args, **kwargs):
+        dest.write_bytes(b"0123456789")  # 10 bytes
+
+    with patch("eegdash.downloader._filesystem_get", side_effect=mock_get):
+        result = download_files([("s3://b/f", dest)], filesystem=mock_fs)
+        assert dest in result
+
+
+def test_remote_size_returns_size_from_Size_key():
+    """Test _remote_size extracts size from 'Size' key (capital S)."""
+    from unittest.mock import MagicMock
+
+    from eegdash.downloader import _remote_size
+
+    mock_fs = MagicMock()
+    mock_fs.info.return_value = {"Size": 42}  # Capital S
+
+    result = _remote_size(mock_fs, "s3://bucket/key")
+    assert result == 42
+
+
+def test_download_s3_file_replaces_mismatched_local(tmp_path):
+    """Test download_s3_file deletes and re-downloads when size mismatches."""
+    from unittest.mock import MagicMock, patch
+
+    from eegdash.downloader import download_s3_file
+
+    local_file = tmp_path / "mismatch.txt"
+    local_file.write_bytes(b"old")  # 3 bytes
+
+    mock_fs = MagicMock()
+    mock_fs.info.return_value = {"size": 10}
+
+    # Mock _filesystem_get to write correct size (using kwargs)
+    def mock_get(filesystem, s3path, filepath, size=None):
+        filepath.write_bytes(b"0123456789")  # 10 bytes
+
+    with patch("eegdash.downloader._filesystem_get", side_effect=mock_get):
+        result = download_s3_file("s3://b/f", local_file, filesystem=mock_fs)
+        assert result == local_file
+        assert local_file.stat().st_size == 10

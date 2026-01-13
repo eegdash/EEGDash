@@ -12,8 +12,8 @@ coverage:
         target: 60%
     patch:
       default:
-        # New code should have at least 50% coverage
-        target: 50%
+        # New code should have at least 70% coverage
+        target: 70%
         # Allow some flexibility for patches
         threshold: 10%
 

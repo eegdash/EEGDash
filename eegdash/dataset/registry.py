@@ -8,6 +8,17 @@ from typing import Any, Dict
 import pandas as pd
 
 
+def _human_readable_size(num_bytes: int | float | None) -> str:
+    """Convert bytes to human-readable string."""
+    if num_bytes is None or num_bytes == 0:
+        return "Unknown"
+    for unit in ("B", "KB", "MB", "GB", "TB"):
+        if abs(num_bytes) < 1024.0:
+            return f"{num_bytes:.1f} {unit}"
+        num_bytes /= 1024.0
+    return f"{num_bytes:.1f} PB"
+
+
 def register_openneuro_datasets(
     summary_file: str | Path | None = None,
     *,
@@ -349,32 +360,32 @@ def fetch_datasets_from_api(
         ):
             continue
 
-        meta = ds.get("metadata", {})
         ds_stats = global_stats.get(ds_id, {})
         nchans_list = ds_stats.get("nchans_counts", [])
         sfreq_list = ds_stats.get("sfreq_counts", [])
 
-        # Map API fields to expected CSV columns
-        # Note: We serialize lists to JSON strings for CSV compatibility if they are complex
-        # But simple representation (string) works if downstream parsers handle it.
-        # registry.py readers (pd.read_csv) will see them as strings.
-        # prepare_summary_tables.py handles complex parsing.
+        # Extract demographics
+        demographics = ds.get("demographics", {}) or {}
+        recording_modality = ds.get("recording_modality", []) or []
+        if isinstance(recording_modality, str):
+            recording_modality = [recording_modality]
 
+        # Map API fields to expected CSV columns
         row = {
             "dataset": ds_id,
-            "n_subjects": meta.get("subject_count", 0),
-            "n_records": ds.get("record_count", 0),
-            "n_tasks": len(meta.get("tasks", [])),
-            "modality of exp": ", ".join(meta.get("recording_modalities", []) or []),
-            "type of exp": meta.get("type", "Unknown"),
-            "Type Subject": meta.get("pathology", "Unknown"),
-            "duration_hours_total": round(meta.get("duration_hours_total", 0) or 0, 2),
-            "size": ds.get("size_human", "Unknown"),
-            "size_bytes": ds.get("size_bytes", 0),
-            "source": ds.get("source", "unknown"),
+            "n_subjects": demographics.get("subjects_count", 0) or 0,
+            "n_records": ds.get("total_files", 0) or 0,
+            "n_tasks": len(ds.get("tasks", []) or []),
+            "modality of exp": ", ".join(recording_modality),
+            "type of exp": ds.get("study_design") or "Unknown",
+            "Type Subject": ds.get("study_domain") or "Unknown",
+            "duration_hours_total": 0.0,  # Not available in summary endpoint
+            "size_bytes": ds.get("size_bytes") or 0,
+            "size": ds.get("size_human") or _human_readable_size(ds.get("size_bytes")),
+            "source": ds.get("source") or "unknown",
             # Extended fields for docs/summary tables
             "dataset_title": ds.get("name", ""),
-            "record_modality": ds.get("recording_modality", ""),
+            "record_modality": ", ".join(recording_modality),
             # We enforce JSON string for list/dict structures to survive CSV roundtrip reliably
             "nchans_set": json.dumps(nchans_list),
             "sampling_freqs": json.dumps(sfreq_list),
@@ -421,20 +432,29 @@ def _fetch_datasets_from_api(api_url: str, database: str) -> pd.DataFrame:
         ):
             continue
 
-        meta = ds.get("metadata", {})
+        # Extract demographics
+        demographics = ds.get("demographics", {}) or {}
+        recording_modality = ds.get("recording_modality", []) or []
+        if isinstance(recording_modality, str):
+            recording_modality = [recording_modality]
+
         # Map API fields to expected CSV columns
         row = {
-            "dataset": ds.get("dataset_id"),
-            "n_subjects": meta.get("subject_count", 0),
-            "n_records": ds.get("record_count", 0),
-            "n_tasks": len(meta.get("tasks", [])),
-            "modality of exp": ", ".join(meta.get("recording_modalities", []) or []),
-            "type of exp": meta.get("type", "Unknown"),
-            "Type Subject": meta.get("pathology", "Unknown"),
-            "duration_hours_total": round(meta.get("duration_hours_total", 0) or 0, 2),
-            "size": ds.get("size_human", "Unknown"),
+            "dataset": ds_id,
+            "n_subjects": demographics.get("subjects_count", 0) or 0,
+            "n_records": ds.get("total_files", 0) or 0,
+            "n_tasks": len(ds.get("tasks", []) or []),
+            "modality of exp": ", ".join(recording_modality),
+            "type of exp": ds.get("study_design") or "Unknown",
+            "Type Subject": ds.get("study_domain") or "Unknown",
+            "duration_hours_total": 0.0,
+            "size": ds.get("size_human") or _human_readable_size(ds.get("size_bytes")),
+            "record_modality": ", ".join(recording_modality),
+            "dataset_title": ds.get("name", ""),
+            "license": ds.get("license", ""),
+            "doi": ds.get("dataset_doi", ""),
             # internal/extra fields
-            "source": ds.get("source", "unknown"),
+            "source": ds.get("source") or "unknown",
         }
         rows.append(row)
 

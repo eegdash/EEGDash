@@ -1,0 +1,23 @@
+coverage:
+  precision: 2
+  round: down
+  range: "60...100"
+
+  status:
+    project:
+      default:
+        # Allow coverage to drop by up to 5% before failing
+        threshold: 5%
+        # Only fail if coverage drops below 60%
+        target: 60%
+    patch:
+      default:
+        # New code should have at least 70% coverage
+        target: 70%
+        # Allow some flexibility for patches
+        threshold: 10%
+
+comment:
+  layout: "reach,diff,flags,files"
+  behavior: default
+  require_changes: false

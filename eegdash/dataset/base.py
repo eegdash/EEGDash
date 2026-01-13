@@ -10,6 +10,7 @@ braindecode for machine learning workflows and handles data loading from both lo
 """
 
 import os
+import re
 from pathlib import Path
 from typing import Any
 
@@ -178,6 +179,13 @@ class EEGDashRaw(RawDataset):
         except Exception as e:
             logger.warning(f"Failed to create coordsystem symlink: {e}")
 
+        # Auto-Repair: Check for broken VHDR pointers (common in OpenNeuro exports)
+        try:
+            if self.filecache and self.filecache.suffix == ".vhdr":
+                self._patch_vhdr_pointers()
+        except Exception as e:
+            logger.warning(f"Failed to auto-repair VHDR pointers: {e}")
+
         if self._raw is None:
             try:
                 self._raw = self._load_raw()
@@ -186,6 +194,54 @@ class EEGDashRaw(RawDataset):
                     f"Error reading {self.bidspath}: {e}. Try `rm -rf {self.bids_root}`"
                 )
                 raise
+
+    def _patch_vhdr_pointers(self) -> None:
+        """Fix VHDR file pointing to internal filenames instead of BIDS filenames."""
+        if not self.filecache.exists():
+            return
+
+        content = self.filecache.read_text(encoding="utf-8", errors="ignore")
+        data_dir = self.filecache.parent
+
+        # Regex to find DataFile and MarkerFile entries
+        # e.g. DataFile=COCOA_033_TONE.eeg
+        changes = False
+
+        def replace_pointer(match):
+            nonlocal changes
+            key = match.group(1)  # DataFile or MarkerFile
+            old_val = match.group(2).strip()
+
+            # If the pointed file exists, do nothing
+            if (data_dir / old_val).exists():
+                return match.group(0)
+
+            # If it doesn't exist, check if BIDS filename exists
+            # BIDS name for .eeg is same as .vhdr but with .eeg extension
+            ext = ".vmrk" if key == "MarkerFile" else ".eeg"
+            bids_name = self.filecache.with_suffix(ext).name
+
+            if (data_dir / bids_name).exists():
+                # Fix found!
+                changes = True
+                logger.info(
+                    f"Auto-repairing {self.filecache.name}: {key}={old_val} -> {bids_name}"
+                )
+                return f"{key}={bids_name}"
+
+            return match.group(0)
+
+        # Common section for VHDR
+        # Case insensitive keys, value until end of line
+        new_content = re.sub(
+            r"(DataFile|MarkerFile)\s*=\s*(.*)",
+            replace_pointer,
+            content,
+            flags=re.IGNORECASE,
+        )
+
+        if changes:
+            self.filecache.write_text(new_content, encoding="utf-8")
 
     def _load_raw(self) -> BaseRaw:
         """Load raw data, preferring MNE-BIDS if BIDSPath resolves."""

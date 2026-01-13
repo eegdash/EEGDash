@@ -437,3 +437,42 @@ def test_fetch_api_handles_missing_demographics():
         assert row["n_subjects"] == 0  # Default when demographics missing
         assert row["n_records"] == 50
         assert row["modality of exp"] == "eeg"  # String converted properly
+
+
+def test_fetch_api_error():
+    """Test API fetch failure returns empty DataFrame."""
+    from unittest.mock import patch
+
+    from eegdash.dataset.registry import _fetch_datasets_from_api
+
+    with patch("urllib.request.urlopen", side_effect=Exception("Network down")):
+        df = _fetch_datasets_from_api("url", "db")
+        assert df.empty
+
+
+def test_register_fallback_to_csv(tmp_path):
+    """Test fallback to CSV if API fails."""
+    from eegdash.dataset.registry import register_openneuro_datasets
+
+    # Create a simple summary CSV
+    csv_path = tmp_path / "summary.csv"
+    csv_path.write_text("dataset,n_subjects\nds001,5")
+
+    with patch("eegdash.dataset.registry._fetch_datasets_from_api") as mock_fetch:
+        mock_fetch.side_effect = Exception("API Error")
+
+        # Should read from CSV
+        registered = register_openneuro_datasets(summary_file=csv_path, from_api=True)
+        assert "DS001" in registered
+
+
+def test_register_api_success():
+    """Test success path from API."""
+    import pandas as pd
+
+    from eegdash.dataset.registry import register_openneuro_datasets
+
+    df = pd.DataFrame([{"dataset": "ds002", "n_subjects": 10}])
+    with patch("eegdash.dataset.registry._fetch_datasets_from_api", return_value=df):
+        registered = register_openneuro_datasets(from_api=True)
+        assert "DS002" in registered

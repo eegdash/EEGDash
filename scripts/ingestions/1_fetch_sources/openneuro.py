@@ -11,7 +11,7 @@ from _http import request_json
 from _serialize import save_datasets_deterministically, setup_paths
 
 setup_paths()
-from eegdash.records import Dataset, create_dataset
+from eegdash.schemas import Dataset, create_dataset
 
 GRAPHQL_URL = "https://openneuro.org/crn/graphql"
 

@@ -6,6 +6,22 @@ class DummyBase:
     pass
 
 
+def test_human_readable_size():
+    """Test _human_readable_size helper function."""
+    from eegdash.dataset.registry import _human_readable_size
+
+    assert _human_readable_size(None) == "Unknown"
+    assert _human_readable_size(0) == "Unknown"
+    assert _human_readable_size(500) == "500.0 B"
+    assert _human_readable_size(1024) == "1.0 KB"
+    assert _human_readable_size(1024 * 1024) == "1.0 MB"
+    assert _human_readable_size(1024 * 1024 * 1024) == "1.0 GB"
+    assert _human_readable_size(1024 * 1024 * 1024 * 1024) == "1.0 TB"
+    assert _human_readable_size(1024 * 1024 * 1024 * 1024 * 1024) == "1.0 PB"
+    # Test with actual size from API (87.6 GB)
+    assert "GB" in _human_readable_size(94108833435)
+
+
 def test_register_openneuro_datasets(tmp_path: Path):
     module_path = (
         Path(__file__).resolve().parents[3] / "eegdash" / "dataset" / "registry.py"
@@ -274,3 +290,189 @@ def test_registry_make_init_closure(tmp_path):
         obj = DS_Class2(cache_dir="/tmp")
         assert obj.kwargs["query"] == {"dataset": "ds_dyn"}
         assert obj.kwargs["cache_dir"] == "/tmp"
+
+
+def test_fetch_datasets_from_api_field_mappings():
+    """Test that fetch_datasets_from_api correctly maps API fields."""
+    import json
+    from unittest.mock import MagicMock, patch
+
+    from eegdash.dataset.registry import fetch_datasets_from_api
+
+    mock_api_response = {
+        "success": True,
+        "data": [
+            {
+                "dataset_id": "ds000247",
+                "name": "Test Dataset",
+                "demographics": {"subjects_count": 7},
+                "total_files": 283,
+                "tasks": ["rest", "noise"],
+                "recording_modality": ["meg"],
+                "study_design": "observational",
+                "study_domain": "healthy",
+                "size_bytes": 1024 * 1024 * 100,  # 100 MB
+                "source": "openneuro",
+                "license": "CC0",
+                "dataset_doi": "doi:10.1234/test",
+            }
+        ],
+    }
+
+    mock_stats_response = {"data": {}}
+
+    with (
+        patch("urllib.request.urlopen") as mock_urlopen,
+        patch("eegdash.paths.get_default_cache_dir") as mock_cache_dir,
+    ):
+        mock_cache_dir.return_value = MagicMock()
+        mock_cache_dir.return_value.__truediv__.return_value.exists.return_value = False
+
+        mock_response = MagicMock()
+        mock_response.read.side_effect = [
+            json.dumps(mock_api_response).encode("utf-8"),
+            json.dumps(mock_stats_response).encode("utf-8"),
+        ]
+        mock_response.__enter__ = MagicMock(return_value=mock_response)
+        mock_response.__exit__ = MagicMock(return_value=False)
+        mock_urlopen.return_value = mock_response
+
+        df = fetch_datasets_from_api("https://api.test.com", "testdb")
+
+        assert len(df) == 1
+        row = df.iloc[0]
+        assert row["dataset"] == "ds000247"
+        assert row["n_subjects"] == 7
+        assert row["n_records"] == 283
+        assert row["n_tasks"] == 2
+        assert row["modality of exp"] == "meg"
+        assert row["type of exp"] == "observational"
+        assert row["Type Subject"] == "healthy"
+        assert "MB" in row["size"]
+        assert row["license"] == "CC0"
+        assert row["doi"] == "doi:10.1234/test"
+
+
+def test_internal_fetch_datasets_from_api_field_mappings():
+    """Test that _fetch_datasets_from_api correctly maps API fields."""
+    import json
+    from unittest.mock import MagicMock, patch
+
+    from eegdash.dataset.registry import _fetch_datasets_from_api
+
+    mock_api_response = {
+        "success": True,
+        "data": [
+            {
+                "dataset_id": "ds000117",
+                "name": "Multisubject face processing",
+                "demographics": {"subjects_count": 17},
+                "total_files": 104,
+                "tasks": ["facerecognition", "rest"],
+                "recording_modality": ["meg", "eeg"],
+                "study_design": "experimental",
+                "study_domain": "cognitive",
+                "size_bytes": 94108833435,
+                "source": "openneuro",
+                "license": "CC0",
+                "dataset_doi": "doi:10.18112/openneuro.ds000117.v1.1.0",
+            }
+        ],
+    }
+
+    with patch("urllib.request.urlopen") as mock_urlopen:
+        mock_response = MagicMock()
+        mock_response.read.return_value = json.dumps(mock_api_response).encode("utf-8")
+        mock_response.__enter__ = MagicMock(return_value=mock_response)
+        mock_response.__exit__ = MagicMock(return_value=False)
+        mock_urlopen.return_value = mock_response
+
+        df = _fetch_datasets_from_api("https://api.test.com", "testdb")
+
+        assert len(df) == 1
+        row = df.iloc[0]
+        assert row["dataset"] == "ds000117"
+        assert row["n_subjects"] == 17
+        assert row["n_records"] == 104
+        assert row["n_tasks"] == 2
+        assert "meg" in row["modality of exp"]
+        assert row["type of exp"] == "experimental"
+        assert row["Type Subject"] == "cognitive"
+        assert "GB" in row["size"]
+        assert row["license"] == "CC0"
+        assert row["doi"] == "doi:10.18112/openneuro.ds000117.v1.1.0"
+
+
+def test_fetch_api_handles_missing_demographics():
+    """Test API fetch handles missing demographics gracefully."""
+    import json
+    from unittest.mock import MagicMock, patch
+
+    from eegdash.dataset.registry import _fetch_datasets_from_api
+
+    mock_api_response = {
+        "success": True,
+        "data": [
+            {
+                "dataset_id": "ds_nodemo",
+                "demographics": None,  # Missing demographics
+                "total_files": 50,
+                "tasks": ["task1"],
+                "recording_modality": "eeg",  # String instead of list
+            }
+        ],
+    }
+
+    with patch("urllib.request.urlopen") as mock_urlopen:
+        mock_response = MagicMock()
+        mock_response.read.return_value = json.dumps(mock_api_response).encode("utf-8")
+        mock_response.__enter__ = MagicMock(return_value=mock_response)
+        mock_response.__exit__ = MagicMock(return_value=False)
+        mock_urlopen.return_value = mock_response
+
+        df = _fetch_datasets_from_api("https://api.test.com", "testdb")
+
+        assert len(df) == 1
+        row = df.iloc[0]
+        assert row["n_subjects"] == 0  # Default when demographics missing
+        assert row["n_records"] == 50
+        assert row["modality of exp"] == "eeg"  # String converted properly
+
+
+def test_fetch_api_error():
+    """Test API fetch failure returns empty DataFrame."""
+    from unittest.mock import patch
+
+    from eegdash.dataset.registry import _fetch_datasets_from_api
+
+    with patch("urllib.request.urlopen", side_effect=Exception("Network down")):
+        df = _fetch_datasets_from_api("url", "db")
+        assert df.empty
+
+
+def test_register_fallback_to_csv(tmp_path):
+    """Test fallback to CSV if API fails."""
+    from eegdash.dataset.registry import register_openneuro_datasets
+
+    # Create a simple summary CSV
+    csv_path = tmp_path / "summary.csv"
+    csv_path.write_text("dataset,n_subjects\nds001,5")
+
+    with patch("eegdash.dataset.registry._fetch_datasets_from_api") as mock_fetch:
+        mock_fetch.side_effect = Exception("API Error")
+
+        # Should read from CSV
+        registered = register_openneuro_datasets(summary_file=csv_path, from_api=True)
+        assert "DS001" in registered
+
+
+def test_register_api_success():
+    """Test success path from API."""
+    import pandas as pd
+
+    from eegdash.dataset.registry import register_openneuro_datasets
+
+    df = pd.DataFrame([{"dataset": "ds002", "n_subjects": 10}])
+    with patch("eegdash.dataset.registry._fetch_datasets_from_api", return_value=df):
+        registered = register_openneuro_datasets(from_api=True)
+        assert "DS002" in registered

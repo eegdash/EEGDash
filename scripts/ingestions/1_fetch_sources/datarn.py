@@ -33,7 +33,7 @@ from _serialize import (
 )
 
 setup_paths()
-from eegdash.records import create_dataset
+from eegdash.schemas import create_dataset
 
 # Base URL and API endpoint
 DATARN_BASE_URL = "https://data.ru.nl"

@@ -167,6 +167,23 @@ class EEGDashAPIClient:
         data = resp.json()
         return data.get("matched_count", 0), data.get("modified_count", 0)
 
+    def upsert_many(self, records: list[dict[str, Any]]) -> dict[str, int]:
+        """Upsert multiple records (requires auth).
+
+        New endpoint that uses bulk upsert based on dataset+bidspath.
+        """
+        resp = self._session.post(
+            f"{self.api_url}/admin/{self.database}/records/upsert",
+            json=records,
+            timeout=60,
+        )
+        resp.raise_for_status()
+        data = resp.json()
+        return {
+            "inserted_count": data.get("inserted_count", 0),
+            "updated_count": data.get("updated_count", 0),
+        }
+
 
 def get_client(
     api_url: str | None = None, database: str = "eegdash", auth_token: str | None = None

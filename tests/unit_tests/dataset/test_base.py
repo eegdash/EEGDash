@@ -1,4 +1,4 @@
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, patch
 
 import pytest
 
@@ -120,3 +120,103 @@ def test_base_len_from_metadata(tmp_path):
     with patch("eegdash.dataset.base.validate_record", return_value=[]):
         ds = EEGDashRaw(record, str(tmp_path))
         assert len(ds) == 1000
+
+
+@patch("eegdash.dataset.base.validate_record")
+def test_len_error_handling(mock_validate, tmp_path):
+    from eegdash.dataset.base import EEGDashRaw
+
+    mock_validate.return_value = None  # Simulate valid record
+    record = {
+        "dataset": "ds002",
+        "bids_relpath": "sub-02/eeg.vhdr",
+        # Missing ntimes/sfreq to trigger _ensure_raw
+    }
+    dataset = EEGDashRaw(record, cache_dir=str(tmp_path))
+
+    # Mock _ensure_raw to raise exception
+    dataset._ensure_raw = MagicMock(side_effect=Exception("Download failed"))
+
+    # Trigger __len__
+    length = len(dataset)
+    assert length == 0  # Should fallback to 0 on error
+
+
+@patch("eegdash.dataset.base.validate_record")
+@patch("eegdash.dataset.base._repair_vhdr_pointers")
+@patch("eegdash.dataset.base._ensure_coordsystem_symlink")
+@patch("eegdash.dataset.base.mne_bids")
+def test_ensure_raw_integrity(
+    mock_mne_bids, mock_ensure_symlink, mock_repair, mock_validate, tmp_path
+):
+    """Test that _ensure_raw calls the appropriate IO helpers."""
+    from eegdash.dataset.base import EEGDashRaw
+
+    mock_validate.return_value = None
+
+    dataset_id = "ds_test"
+    record = {
+        "dataset": dataset_id,
+        "bids_relpath": "sub-01/eeg/sub-01_task-rest_eeg.vhdr",
+        "storage": {"backend": "local", "base": str(tmp_path), "raw_key": "dummy"},
+    }
+
+    # Setup directory structure so checks pass
+    eeg_dir = tmp_path / dataset_id / "sub-01" / "eeg"
+    eeg_dir.mkdir(parents=True)
+
+    # Init dataset
+    dataset = EEGDashRaw(record, cache_dir=str(tmp_path))
+
+    # Mock _load_raw to prevent actual loading
+    dataset._load_raw = MagicMock()
+
+    # Run _ensure_raw
+    dataset._ensure_raw()
+
+    # Check delegation
+    mock_ensure_symlink.assert_called_once()
+    mock_repair.assert_called_once()
+
+    # Validation: the argument passed should be related to filecache
+    args, _ = mock_repair.call_args
+    assert args[0] == dataset.filecache
+
+
+def test_eegdashraw_backend_logic(tmp_path):
+    """Test INIT logic for different storage backends."""
+    from eegdash.dataset.base import EEGDashRaw
+
+    # Case 1: Local backend logic
+    record = {
+        "dataset": "ds1",
+        "bids_relpath": "sub-01/eeg.vhdr",
+        "storage": {
+            "backend": "local",
+            "base": str(tmp_path),
+            "raw_key": "raw",
+            "dep_keys": ["dep1"],
+        },
+    }
+    with patch("eegdash.dataset.base.validate_record", return_value=None):
+        ds = EEGDashRaw(record, cache_dir=str(tmp_path))
+        # Should point to local base
+        assert ds.bids_root == tmp_path
+        assert ds._raw_uri is None
+        assert len(ds._dep_paths) == 1
+
+    # Case 2: S3 backend logic
+    record_s3 = {
+        "dataset": "ds1",
+        "bids_relpath": "sub-01/eeg.vhdr",
+        "storage": {
+            "backend": "s3",
+            "base": "s3://bucket",
+            "raw_key": "raw",
+            "dep_keys": ["dep1"],
+        },
+    }
+    with patch("eegdash.dataset.base.validate_record", return_value=None):
+        ds = EEGDashRaw(record_s3, cache_dir=str(tmp_path))
+        assert ds._raw_uri == "s3://bucket/raw"
+        assert len(ds._dep_uris) == 1

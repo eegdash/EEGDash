@@ -9,8 +9,6 @@ including classes for individual recordings and collections of datasets. It inte
 braindecode for machine learning workflows and handles data loading from both local and remote sources.
 """
 
-import os
-import re
 from pathlib import Path
 from typing import Any
 
@@ -23,6 +21,7 @@ from braindecode.datasets.base import RawDataset
 from .. import downloader
 from ..logging import logger
 from ..schemas import validate_record
+from .io import _ensure_coordsystem_symlink, _repair_vhdr_pointers
 
 
 class EEGDashRaw(RawDataset):
@@ -145,46 +144,14 @@ class EEGDashRaw(RawDataset):
     def _ensure_raw(self) -> None:
         """Ensure the raw data file and its dependencies are cached locally."""
         self._download_required_files()
-        # TODO: fix this
-        # Fix for MNE-BIDS strictness regarding coordsystem.json location
-        # If electrodes.tsv is in a subdir (e.g. eeg/) but coordsystem.json is in root,
-        # MNE-BIDS < 0.12 (and maybe newer) fails to find it. We symlink it.
-        try:
-            if self.filecache and self.filecache.parent.exists():
-                data_dir = self.filecache.parent
-                # Check if we have electrodes.tsv here
-                electrodes_files = list(data_dir.glob("*_electrodes.tsv"))
-                if electrodes_files:
-                    # Check if we lack coordsystem.json here
-                    coordsystem_files = list(data_dir.glob("*_coordsystem.json"))
-                    if not coordsystem_files:
-                        # Look for coordsystem in parent (subject root)
-                        # We assume the data_dir is sub-XX/eeg etc, so parent is sub-XX
-                        subject_root = data_dir.parent
-                        root_coordsystems = list(
-                            subject_root.glob("*_coordsystem.json")
-                        )
-                        if root_coordsystems:
-                            # Create symlink
 
-                            src = root_coordsystems[0]
-                            # match naming convention if possible, or just use src name
-                            dst = data_dir / src.name
-                            if not dst.exists():
-                                # Use relative path for portability
-                                rel_target = os.path.relpath(src, dst.parent)
-                                # Clean up potential broken symlink (FileExistsError otherwise)
-                                dst.unlink(missing_ok=True)
-                                dst.symlink_to(rel_target)
-        except Exception as e:
-            logger.warning(f"Failed to create coordsystem symlink: {e}")
+        # Helper: Fix MNE-BIDS strictness regarding coordsystem.json location
+        if self.filecache and self.filecache.parent.exists():
+            _ensure_coordsystem_symlink(self.filecache.parent)
 
-        # Auto-Repair: Check for broken VHDR pointers (common in OpenNeuro exports)
-        try:
-            if self.filecache and self.filecache.suffix == ".vhdr":
-                self._patch_vhdr_pointers()
-        except Exception as e:
-            logger.warning(f"Failed to auto-repair VHDR pointers: {e}")
+        # Helper: Auto-Repair broken VHDR pointers (common in OpenNeuro exports)
+        if self.filecache:
+            _repair_vhdr_pointers(self.filecache)
 
         if self._raw is None:
             try:
@@ -194,54 +161,6 @@ class EEGDashRaw(RawDataset):
                     f"Error reading {self.bidspath}: {e}. Try `rm -rf {self.bids_root}`"
                 )
                 raise
-
-    def _patch_vhdr_pointers(self) -> None:
-        """Fix VHDR file pointing to internal filenames instead of BIDS filenames."""
-        if not self.filecache.exists():
-            return
-
-        content = self.filecache.read_text(encoding="utf-8", errors="ignore")
-        data_dir = self.filecache.parent
-
-        # Regex to find DataFile and MarkerFile entries
-        # e.g. DataFile=COCOA_033_TONE.eeg
-        changes = False
-
-        def replace_pointer(match):
-            nonlocal changes
-            key = match.group(1)  # DataFile or MarkerFile
-            old_val = match.group(2).strip()
-
-            # If the pointed file exists, do nothing
-            if (data_dir / old_val).exists():
-                return match.group(0)
-
-            # If it doesn't exist, check if BIDS filename exists
-            # BIDS name for .eeg is same as .vhdr but with .eeg extension
-            ext = ".vmrk" if key == "MarkerFile" else ".eeg"
-            bids_name = self.filecache.with_suffix(ext).name
-
-            if (data_dir / bids_name).exists():
-                # Fix found!
-                changes = True
-                logger.info(
-                    f"Auto-repairing {self.filecache.name}: {key}={old_val} -> {bids_name}"
-                )
-                return f"{key}={bids_name}"
-
-            return match.group(0)
-
-        # Common section for VHDR
-        # Case insensitive keys, value until end of line
-        new_content = re.sub(
-            r"(DataFile|MarkerFile)\s*=\s*(.*)",
-            replace_pointer,
-            content,
-            flags=re.IGNORECASE,
-        )
-
-        if changes:
-            self.filecache.write_text(new_content, encoding="utf-8")
 
     def _load_raw(self) -> BaseRaw:
         """Load raw data, preferring MNE-BIDS if BIDSPath resolves."""

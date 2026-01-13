@@ -51,6 +51,6 @@ clean:
 	@echo "Clean completed."
 
 # Catch-all target for other sphinx-build formats
-%: Makefile
+%:
 	@python prepare_summary_tables.py --target $(BUILDDIR)
 	@$(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)

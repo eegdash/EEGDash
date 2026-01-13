@@ -61,3 +61,49 @@ def test_len_error_handling(mock_validate, tmp_path):
     # Trigger __len__
     length = len(dataset)
     assert length == 0  # Should fallback to 0 on error
+
+
+@patch("eegdash.dataset.base.validate_record")
+def test_vhdr_auto_repair(mock_validate, tmp_path):
+    mock_validate.return_value = None
+
+    # Setup dataset structure
+    dataset_id = "ds_bad_vhdr"
+    record = {
+        "dataset": dataset_id,
+        "bids_relpath": "sub-01/eeg/sub-01_task-rest_eeg.vhdr",
+        "storage": {
+            "backend": "s3",
+            "base": "s3://bucket",
+            "raw_key": "sub-01/eeg/sub-01_task-rest_eeg.vhdr",
+        },
+    }
+
+    eeg_dir = tmp_path / dataset_id / "sub-01" / "eeg"
+    eeg_dir.mkdir(parents=True)
+
+    # Create the BIDS files (what we want to point to)
+    (eeg_dir / "sub-01_task-rest_eeg.eeg").touch()
+    (eeg_dir / "sub-01_task-rest_eeg.vmrk").touch()
+
+    # Create the VHDR with BAD pointers
+    vhdr_path = eeg_dir / "sub-01_task-rest_eeg.vhdr"
+    vhdr_content = """Brain Vision Data Exchange Header File Version 1.0
+[Common Infos]
+DataFile=INTERNAL_NAME.eeg
+MarkerFile=INTERNAL_NAME.vmrk
+"""
+    vhdr_path.write_text(vhdr_content)
+
+    # Init dataset
+    dataset = EEGDashRaw(record, cache_dir=str(tmp_path))
+
+    # Trigger repair manually or via _ensure_raw
+    # We'll call _patch_vhdr_pointers directly to test logic
+    dataset._patch_vhdr_pointers()
+
+    # Verify content updated
+    new_content = vhdr_path.read_text()
+    assert "DataFile=sub-01_task-rest_eeg.eeg" in new_content
+    assert "MarkerFile=sub-01_task-rest_eeg.vmrk" in new_content
+    assert "INTERNAL_NAME" not in new_content

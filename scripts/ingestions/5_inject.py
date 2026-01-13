@@ -598,10 +598,12 @@ def main():
         # Inject datasets
         if all_datasets and not args.only_records:
             print(f"\nInjecting {len(all_datasets)} datasets...")
-            try:
-                with _make_session(admin_token) as client:
-                    for i in range(0, len(all_datasets), args.batch_size):
-                        batch = all_datasets[i : i + args.batch_size]
+            with _make_session(admin_token) as client:
+                # Use smaller batch size for datasets to avoid timeouts
+                ds_batch_size = 20
+                for i in range(0, len(all_datasets), ds_batch_size):
+                    try:
+                        batch = all_datasets[i : i + ds_batch_size]
                         result = inject_datasets(
                             batch,
                             args.api_url,
@@ -609,14 +611,17 @@ def main():
                             admin_token,
                             client=client,
                         )
-                        stats["datasets_injected"] += result["inserted_count"]
+                        stats["datasets_injected"] += result.get("inserted_count", 0)
                         print(
-                            f"  Batch {i // args.batch_size + 1}: {result['inserted_count']} datasets"
+                            f"  Batch {i // ds_batch_size + 1}: {result.get('inserted_count', 0)} datasets"
                         )
-            except Exception as e:
-                stats["errors"] += 1
-                errors.append({"dataset": "datasets_collection", "error": str(e)})
-                print(f"  Error injecting datasets: {e}", file=sys.stderr)
+                    except Exception as e:
+                        stats["errors"] += 1
+                        errors.append({"dataset": "datasets_batch", "error": str(e)})
+                        print(
+                            f"  Error injecting dataset batch {i // ds_batch_size + 1}: {e}",
+                            file=sys.stderr,
+                        )
 
         # Inject records
         if all_records and not args.only_datasets:

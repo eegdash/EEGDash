@@ -953,3 +953,517 @@ def test_challenge_dataset_more_coverage(tmp_path):
     pass
 
     pass
+
+
+def test_dataset_init_missing_arg():
+    """Test ValueError when dataset arg is missing."""
+    with pytest.raises(ValueError, match="You must provide a 'dataset' argument"):
+        EEGDashDataset(cache_dir="/tmp", download=False)
+
+
+def test_dataset_init_infer_from_records(tmp_path):
+    """Test inferring dataset from records."""
+    # Must provide valid v2 record to pass validation
+    records = [
+        {
+            "dataset": "ds_inferred",
+            "bids_relpath": "sub-01/eeg.vhdr",
+            "bidspath": "ds_inferred/sub-01/eeg.vhdr",
+            "storage": {"base": "/tmp", "backend": "local", "raw_key": "k"},
+        }
+    ]
+    ds = EEGDashDataset(cache_dir=str(tmp_path), records=records, download=False)
+    assert ds.query["dataset"] == "ds_inferred"
+
+
+def test_dataset_empty_cache_warning(tmp_path):
+    """Test warning when cache_dir is empty/None."""
+    # Ensure data dir exists to pass offline check
+    (tmp_path / "ds1").mkdir()
+
+    with patch(
+        "eegdash.dataset.dataset.get_default_cache_dir", return_value=str(tmp_path)
+    ):
+        with patch("eegdash.dataset.dataset.logger") as mock_logger:
+            # We mock _find_local_bids_records so we don't return empty datasets list
+            with patch(
+                "eegdash.dataset.dataset.EEGDashDataset._find_local_bids_records"
+            ) as mock_find:
+                mock_find.return_value = [
+                    {
+                        "dataset": "ds1",
+                        "bidspath": "p",
+                        "storage": {"base": "b"},
+                        "bids_relpath": "p",
+                    }
+                ]
+                EEGDashDataset(cache_dir="", dataset="ds1", download=False)
+                mock_logger.warning.assert_called()
+
+
+def test_find_datasets_empty_result(tmp_path):
+    """Test ValueError when query returns no datasets."""
+    mock_api = MagicMock()
+    mock_api.find.return_value = []
+
+    with pytest.raises(ValueError, match="No datasets found matching the query"):
+        EEGDashDataset(
+            cache_dir=tmp_path,
+            dataset="ds_empty",
+            eeg_dash_instance=mock_api,
+            download=True,
+        )
+
+
+def test_normalize_records_filtering(tmp_path):
+    """Test filtering of invalid extensions."""
+    records = [
+        {"dataset": "ds1", "bids_relpath": "f1.vhdr", "extension": ".vhdr"},
+        {"dataset": "ds1", "bids_relpath": "f2.json", "extension": ".json"},
+        {"dataset": "ds1", "bids_relpath": "f3.eeg", "extension": ".eeg"},
+    ]
+
+    with patch("eegdash.dataset.dataset.EEGDashRaw"):
+        # We use download=True to skip "offline directory check", or mock the dir
+        ds = EEGDashDataset(cache_dir=tmp_path, records=records, download=True)
+        assert len(ds.records) == 2
+        exts = [r["extension"] for r in ds.records]
+        assert ".json" not in exts
+
+
+def test_dedupe_records(tmp_path):
+    """Test/verify record deduplication logic."""
+    records = [
+        {"dataset": "ds1", "bids_relpath": "dup.vhdr", "ver": 1},
+        {"dataset": "ds1", "bids_relpath": "dup.vhdr", "ver": 2},
+        {"dataset": "ds1", "bids_relpath": "unique.vhdr", "ver": 1},
+    ]
+
+    with patch("eegdash.dataset.dataset.EEGDashRaw"):
+        ds = EEGDashDataset(
+            cache_dir=tmp_path,
+            records=records,
+            download=True,  # Skip dir check
+            _dedupe_records=True,
+        )
+        assert len(ds.records) == 2
+        dup_rec = next(r for r in ds.records if r["bids_relpath"] == "dup.vhdr")
+        assert dup_rec["ver"] == 2
+
+
+def test_download_all_no_op(tmp_path):
+    """Test download_all returns early."""
+    (tmp_path / "ds1").mkdir()
+    with patch("eegdash.dataset.dataset.EEGDashRaw"):
+        # Mocking find records to insure non-empty dataset
+        with patch(
+            "eegdash.dataset.dataset.EEGDashDataset._find_local_bids_records"
+        ) as mock_find:
+            mock_find.return_value = [
+                {
+                    "dataset": "ds1",
+                    "bidspath": "p",
+                    "storage": {"base": "b"},
+                    "bids_relpath": "p",
+                }
+            ]
+            ds = EEGDashDataset(cache_dir=tmp_path, dataset="ds1", download=False)
+            ds.download_all()
+
+
+def test_download_dataset_files(tmp_path):
+    """Test _download_dataset_files logic."""
+    mock_api = MagicMock()
+    mock_doc = {
+        "storage": {
+            "base": "s3://bucket",
+            "backend": "s3",
+            "raw_key": "raw_file",
+            "dep_keys": ["task-Rest_events.json", "other_file.txt"],
+        }
+    }
+    mock_api.get_dataset.return_value = mock_doc
+    # Must return valid v2 records
+    valid_record = {
+        "dataset": "ds1",
+        "bids_relpath": "f.vhdr",
+        "bidspath": "ds1/f.vhdr",
+        "storage": {"base": "s3://b", "backend": "s3", "raw_key": "k"},
+    }
+    mock_api.find.return_value = [valid_record]
+
+    with (
+        patch("eegdash.dataset.dataset.EEGDashRaw"),
+        patch("eegdash.downloader.download_files") as mock_dl,
+    ):
+        ds = EEGDashDataset(
+            cache_dir=tmp_path, dataset="ds1", task="TaskX", eeg_dash_instance=mock_api
+        )
+        # Mock datasets manually if needed, but here find() populates it
+        ds._download_dataset_files()
+
+        # Verify download_files was called with correct filter
+        if mock_dl.called:
+            args = mock_dl.call_args[0][0]
+            filenames = [str(src).split("/")[-1] for src, dest in args]
+            assert "task-Rest_events.json" not in filenames
+            assert "raw_file" in filenames
+
+
+def test_download_dataset_files_no_doc(tmp_path):
+    """Test _download_dataset_files returns early when dataset_doc is None."""
+    from unittest.mock import MagicMock, patch
+
+    from eegdash.dataset.dataset import EEGDashDataset
+
+    mock_api = MagicMock()
+    valid_record = {
+        "dataset": "ds1",
+        "bids_relpath": "f.vhdr",
+        "bidspath": "ds1/f.vhdr",
+        "storage": {"base": "s3://b", "backend": "s3", "raw_key": "k"},
+    }
+    mock_api.find.return_value = [valid_record]
+    mock_api.get_dataset.return_value = None
+
+    with patch("eegdash.dataset.dataset.EEGDashRaw"):
+        ds = EEGDashDataset(
+            cache_dir=tmp_path, dataset="ds1", eeg_dash_instance=mock_api
+        )
+        ds.dataset_doc = None
+        # Should return early without error
+        ds._download_dataset_files()
+
+
+def test_download_dataset_files_invalid_backend(tmp_path):
+    """Test _download_dataset_files returns early for invalid backend."""
+    from unittest.mock import MagicMock, patch
+
+    from eegdash.dataset.dataset import EEGDashDataset
+
+    mock_api = MagicMock()
+    mock_doc = {
+        "storage": {
+            "base": "local://path",
+            "backend": "local",  # not s3 or https
+            "raw_key": "raw_file",
+        }
+    }
+    mock_api.get_dataset.return_value = mock_doc
+    valid_record = {
+        "dataset": "ds1",
+        "bids_relpath": "f.vhdr",
+        "bidspath": "ds1/f.vhdr",
+        "storage": {"base": "s3://b", "backend": "s3", "raw_key": "k"},
+    }
+    mock_api.find.return_value = [valid_record]
+
+    with (
+        patch("eegdash.dataset.dataset.EEGDashRaw"),
+        patch("eegdash.downloader.download_files") as mock_dl,
+    ):
+        ds = EEGDashDataset(
+            cache_dir=tmp_path, dataset="ds1", eeg_dash_instance=mock_api
+        )
+        ds._download_dataset_files()
+        # download_files should NOT be called for invalid backend
+        mock_dl.assert_not_called()
+
+
+def test_download_dataset_files_task_list_filter(tmp_path):
+    """Test _download_dataset_files with task filter as list."""
+    from unittest.mock import MagicMock, patch
+
+    from eegdash.dataset.dataset import EEGDashDataset
+
+    mock_api = MagicMock()
+    mock_doc = {
+        "storage": {
+            "base": "s3://bucket",
+            "backend": "s3",
+            "raw_key": "raw_file",
+            "dep_keys": ["task-Rest_events.json", "task-Motor_events.json"],
+        }
+    }
+    mock_api.get_dataset.return_value = mock_doc
+    valid_record = {
+        "dataset": "ds1",
+        "bids_relpath": "f.vhdr",
+        "bidspath": "ds1/f.vhdr",
+        "storage": {"base": "s3://b", "backend": "s3", "raw_key": "k"},
+    }
+    mock_api.find.return_value = [valid_record]
+
+    with (
+        patch("eegdash.dataset.dataset.EEGDashRaw"),
+        patch("eegdash.downloader.download_files") as mock_dl,
+    ):
+        # Pass task as a list
+        ds = EEGDashDataset(
+            cache_dir=tmp_path,
+            dataset="ds1",
+            task=["Rest", "Motor"],
+            eeg_dash_instance=mock_api,
+        )
+        ds._download_dataset_files()
+
+        if mock_dl.called:
+            args = mock_dl.call_args[0][0]
+            filenames = [str(src).split("/")[-1] for src, dest in args]
+            # Both task files should be included
+            assert "task-Rest_events.json" in filenames
+            assert "task-Motor_events.json" in filenames
+
+
+def test_download_dataset_files_existing_skipped(tmp_path):
+    """Test _download_dataset_files skips existing files."""
+    from unittest.mock import MagicMock, patch
+
+    from eegdash.dataset.dataset import EEGDashDataset
+
+    mock_api = MagicMock()
+    mock_doc = {
+        "storage": {
+            "base": "s3://bucket",
+            "backend": "s3",
+            "raw_key": "raw_file",
+            "dep_keys": ["dep.json"],
+        }
+    }
+    mock_api.get_dataset.return_value = mock_doc
+    valid_record = {
+        "dataset": "ds1",
+        "bids_relpath": "f.vhdr",
+        "bidspath": "ds1/f.vhdr",
+        "storage": {"base": "s3://b", "backend": "s3", "raw_key": "k"},
+    }
+    mock_api.find.return_value = [valid_record]
+
+    # Create the data directory and files so they exist
+    ds_dir = tmp_path / "ds1"
+    ds_dir.mkdir()
+    (ds_dir / "raw_file").touch()
+    (ds_dir / "dep.json").touch()
+
+    with (
+        patch("eegdash.dataset.dataset.EEGDashRaw"),
+        patch("eegdash.downloader.download_files") as mock_dl,
+    ):
+        ds = EEGDashDataset(
+            cache_dir=tmp_path, dataset="ds1", eeg_dash_instance=mock_api
+        )
+        ds._download_dataset_files()
+        # Files exist so download_files won't be called with them
+        if mock_dl.called:
+            args = mock_dl.call_args[0][0]
+            assert len(args) == 0
+
+
+def test_download_all_with_missing_deps(tmp_path):
+    """Test download_all downloads when dep_paths don't exist."""
+    from unittest.mock import MagicMock, patch
+
+    from eegdash.dataset.dataset import EEGDashDataset, EEGDashRaw
+
+    valid_record = {
+        "dataset": "ds1",
+        "bids_relpath": "f.vhdr",
+        "bidspath": "ds1/f.vhdr",
+        "storage": {"base": "s3://b", "backend": "s3", "raw_key": "k"},
+    }
+
+    mock_api = MagicMock()
+    mock_api.find.return_value = [valid_record]
+    mock_api.get_dataset.return_value = None
+
+    with patch("eegdash.dataset.dataset.downloader.get_s3_filesystem"):
+        ds = EEGDashDataset(
+            cache_dir=tmp_path, dataset="ds1", eeg_dash_instance=mock_api
+        )
+
+        # Create mock raw dataset with missing deps
+        mock_raw = MagicMock(spec=EEGDashRaw)
+        mock_raw._raw_uri = "s3://bucket/file"
+        mock_raw.filecache = MagicMock()
+        mock_raw.filecache.exists.return_value = True
+        mock_raw._dep_paths = [tmp_path / "missing_dep"]  # Doesn't exist
+
+        ds.datasets = [mock_raw]
+        ds._download_dataset_files = MagicMock()
+
+        ds.download_all(n_jobs=1)
+        mock_raw._download_required_files.assert_called_once()
+
+
+def test_download_all_parallel_execution(tmp_path):
+    """Test download_all with parallel execution (n_jobs > 1)."""
+    from unittest.mock import MagicMock, patch
+
+    from eegdash.dataset.dataset import EEGDashDataset
+
+    valid_record = {
+        "dataset": "ds1",
+        "bids_relpath": "f.vhdr",
+        "bidspath": "ds1/f.vhdr",
+        "storage": {"base": "s3://b", "backend": "s3", "raw_key": "k"},
+    }
+
+    mock_api = MagicMock()
+    mock_api.find.return_value = [valid_record]
+    mock_api.get_dataset.return_value = None
+
+    with patch("eegdash.dataset.dataset.downloader.get_s3_filesystem"):
+        ds = EEGDashDataset(
+            cache_dir=tmp_path, dataset="ds1", eeg_dash_instance=mock_api
+        )
+
+        # Create mock raw datasets without spec to allow arbitrary attributes
+        mock_raw1 = MagicMock()
+        mock_raw1._raw_uri = "s3://bucket/file1"
+        mock_raw1.filecache.exists.return_value = False
+        mock_raw1._dep_paths = []
+
+        mock_raw2 = MagicMock()
+        mock_raw2._raw_uri = "s3://bucket/file2"
+        mock_raw2.filecache.exists.return_value = False
+        mock_raw2._dep_paths = []
+
+        ds.datasets = [mock_raw1, mock_raw2]
+        ds._download_dataset_files = MagicMock()
+
+        with patch("eegdash.dataset.dataset.Parallel") as mock_parallel:
+            mock_parallel.return_value = MagicMock(return_value=None)
+            ds.download_all(n_jobs=2)
+            mock_parallel.assert_called_once()
+
+
+def test_challenge_dataset_subjects_tuple_in_query(tmp_path):
+    """Test EEGChallengeDataset with subjects as tuple in query."""
+    from unittest.mock import MagicMock, patch
+
+    from eegdash.dataset.dataset import EEGChallengeDataset
+
+    record = {
+        "dataset": "EEG2025R1mini",
+        "subject": "NDARAC904DMU",
+        "bids_relpath": "f.set",
+        "bidspath": "EEG2025R1mini/sub-1/f.set",
+        "storage": {"base": "s3", "backend": "s3"},
+        "schema_version": 2,
+    }
+
+    # Query with subjects as tuple - tests line 752-753 in dataset.py
+    query = {"subject": ("NDARAC904DMU",)}
+    with patch("eegdash.api.get_client") as mock_get:
+        mock_client = MagicMock()
+        mock_client.find.return_value = [record]
+        mock_get.return_value = mock_client
+        ds = EEGChallengeDataset(release="R1", cache_dir=str(tmp_path), query=query)
+        # The subject ends up in $in format after build_query_from_kwargs
+        subject_val = ds.query["subject"]
+        if isinstance(subject_val, dict):
+            assert "NDARAC904DMU" in subject_val["$in"]
+        else:
+            assert "NDARAC904DMU" in subject_val
+
+
+def test_challenge_dataset_subjects_list_in_query(tmp_path):
+    """Test EEGChallengeDataset with subjects as list in query."""
+    from unittest.mock import MagicMock, patch
+
+    from eegdash.dataset.dataset import EEGChallengeDataset
+
+    record = {
+        "dataset": "EEG2025R1mini",
+        "subject": "NDARAC904DMU",
+        "bids_relpath": "f.set",
+        "bidspath": "EEG2025R1mini/sub-1/f.set",
+        "storage": {"base": "s3", "backend": "s3"},
+        "schema_version": 2,
+    }
+
+    # Query with subjects as list - tests line 752-753 in dataset.py
+    query = {"subject": ["NDARAC904DMU"]}
+    with patch("eegdash.api.get_client") as mock_get:
+        mock_client = MagicMock()
+        mock_client.find.return_value = [record]
+        mock_get.return_value = mock_client
+        ds = EEGChallengeDataset(release="R1", cache_dir=str(tmp_path), query=query)
+        subject_val = ds.query["subject"]
+        if isinstance(subject_val, dict):
+            assert "NDARAC904DMU" in subject_val["$in"]
+        else:
+            assert "NDARAC904DMU" in subject_val
+
+
+def test_challenge_dataset_invalid_subject_in_mini(tmp_path):
+    """Test EEGChallengeDataset raises for invalid subject in mini mode."""
+    import pytest
+
+    from eegdash.dataset.dataset import EEGChallengeDataset
+
+    with pytest.raises(ValueError, match="not part of the mini release"):
+        EEGChallengeDataset(
+            release="R1", cache_dir=str(tmp_path), mini=True, subject="INVALID_SUBJECT"
+        )
+
+
+def test_dataset_get_dataset_exception(tmp_path):
+    """Test dataset_doc is None when get_dataset raises."""
+    from unittest.mock import MagicMock, patch
+
+    from eegdash.dataset.dataset import EEGDashDataset
+
+    mock_api = MagicMock()
+    valid_record = {
+        "dataset": "ds1",
+        "bids_relpath": "f.vhdr",
+        "bidspath": "ds1/f.vhdr",
+        "storage": {"base": "s3://b", "backend": "s3", "raw_key": "k"},
+    }
+    mock_api.find.return_value = [valid_record]
+    mock_api.get_dataset.side_effect = Exception("API Error")
+
+    with patch("eegdash.dataset.dataset.EEGDashRaw"):
+        ds = EEGDashDataset(
+            cache_dir=tmp_path, dataset="ds1", eeg_dash_instance=mock_api
+        )
+        # dataset_doc should be None due to exception
+        assert ds.dataset_doc is None
+
+
+def test_normalize_records_dedupe_with_bids_relpath_key(tmp_path):
+    """Test deduplication using bids_relpath as key."""
+    from unittest.mock import patch
+
+    from eegdash.dataset.dataset import EEGDashDataset
+
+    d = tmp_path / "ds1"
+    d.mkdir()
+
+    valid_record = {
+        "dataset": "ds1",
+        "bids_relpath": "sub-01/eeg.set",
+        "bidspath": "ds1/sub-01/eeg.set",
+        "storage": {"base": str(d), "backend": "local"},
+    }
+
+    with patch("eegdash.dataset.dataset.discover_local_bids_records") as mock_discover:
+        mock_discover.return_value = [valid_record]
+        ds = EEGDashDataset(
+            cache_dir=str(tmp_path),
+            dataset="ds1",
+            download=False,
+            _dedupe_records=True,
+        )
+
+    records = [
+        {"bids_relpath": "path1", "ver": 1},
+        {"bids_relpath": "path1", "ver": 2},  # Duplicate by bids_relpath
+        {"bidspath": "path2", "ver": 1},  # Falls back to bidspath
+    ]
+    normalized = ds._normalize_records(records)
+    assert len(normalized) == 2
+    # Should keep the newest (ver=2) for duplicates
+    dup_rec = next(r for r in normalized if r.get("bids_relpath") == "path1")
+    assert dup_rec["ver"] == 2

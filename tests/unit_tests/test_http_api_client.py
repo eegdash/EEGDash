@@ -220,3 +220,28 @@ def test_api_methods():
 
     assert client._session.post.call_count == 2
     assert client._session.patch.call_count == 1
+
+
+def test_upsert_many():
+    """Test upsert_many method."""
+    from unittest.mock import MagicMock, patch
+
+    from eegdash.http_api_client import EEGDashAPIClient
+
+    with patch("requests.Session") as mock_session_cls:
+        session = mock_session_cls.return_value
+        client = EEGDashAPIClient()
+
+        r_upsert = MagicMock()
+        r_upsert.json.return_value = {"inserted_count": 10, "updated_count": 5}
+        session.post.return_value = r_upsert
+
+        result = client.upsert_many([{"a": 1}])
+        assert result["inserted_count"] == 10
+        assert result["updated_count"] == 5
+
+        # Verify call arguments
+        session.post.assert_called_once()
+        args, kwargs = session.post.call_args
+        assert kwargs["json"] == [{"a": 1}]
+        assert "records/upsert" in args[0]

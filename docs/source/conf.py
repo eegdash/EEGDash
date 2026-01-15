@@ -1,3 +1,4 @@
+import concurrent.futures
 import csv
 import importlib
 import inspect
@@ -595,7 +596,7 @@ def _clean_value(value: object, default: str = "") -> str:
     if value is None:
         return default
     text = str(value).strip()
-    if not text or text.lower() in {"nan", "none", "null"}:
+    if not text or text.lower() in {"nan", "none", "null", "unknown"}:
         return default
     return text
 
@@ -675,7 +676,7 @@ def _normalize_list(value: object) -> list[str]:
 
 
 def _value_or_unknown(value: str) -> str:
-    return value if value else "Unknown"
+    return value if value else "—"
 
 
 def _normalize_doi(doi: str) -> str:
@@ -733,8 +734,21 @@ def _fetch_dataset_details_from_api(dataset_id: str) -> dict[str, object]:
         year = created_at[:4]
 
     # Map API fields to details structure
+    title = _clean_value(ds.get("name"))
+    if title and (
+        title.lower().endswith((".tsv", ".json", ".csv", ".md"))
+        or title.lower() == "readme"
+    ):
+        # Try to find a better title in the readme
+        readme = _clean_value(ds.get("readme", ""))
+        if readme.startswith("# "):
+            title = readme.split("\n")[0][2:].strip()
+            # Still check for sub-H1 patterns
+            if title.lower().startswith("wrist:"):
+                title = title.split(":", 1)[1].strip()
+
     details: dict[str, object] = {
-        "title": _clean_value(ds.get("name")),
+        "title": title,
         "authors": _normalize_list(ds.get("authors")),
         "license": _clean_value(ds.get("license")),
         "doi": _clean_value(ds.get("dataset_doi")),
@@ -742,6 +756,12 @@ def _fetch_dataset_details_from_api(dataset_id: str) -> dict[str, object]:
         "readme": _clean_value(ds.get("readme")),
         "funding": _normalize_list(ds.get("funding")),
         "senior_author": _clean_value(ds.get("senior_author")),
+        "n_subjects": ds.get("demographics", {}).get("subjects_count"),
+        "total_files": ds.get("total_files"),
+        "n_tasks": len(ds.get("tasks", []) or []),
+        "recording_modality": ds.get("recording_modality", []),
+        "size_bytes": ds.get("size_bytes"),
+        "source": _clean_value(ds.get("source")),
     }
 
     # Extract source URL from external_links
@@ -804,6 +824,12 @@ def _build_dataset_context(
 
     modality = _clean_value((row or {}).get("record_modality"))
     if not modality:
+        modality_raw = details.get("recording_modality", [])
+        if isinstance(modality_raw, list):
+            modality = ", ".join(str(m) for m in modality_raw)
+        else:
+            modality = _clean_value(modality_raw)
+    if not modality:
         modality = _clean_value((row or {}).get("modality of exp"))
 
     source = _clean_value((row or {}).get("source"))
@@ -812,7 +838,7 @@ def _build_dataset_context(
 
     # Fallback to row data for fields that might not be in local JSON files
     title = _collapse_whitespace(_clean_value(details.get("title")))
-    if not title:
+    if not title or title.lower().endswith((".tsv", ".json")):
         title = _collapse_whitespace(_clean_value((row or {}).get("dataset_title")))
 
     license_text = _clean_value(details.get("license"))
@@ -825,6 +851,62 @@ def _build_dataset_context(
 
     # Get year from details
     year = _clean_value(details.get("year"))
+    if not year or year == "—":
+        # Try to find year in references
+        import re
+
+        refs = details.get("references", [])
+        if not refs:
+            # Try to find in authors/citations in details if references is empty
+            readme = str(details.get("readme", ""))
+            # Look for 4 digits in parentheses or after author name
+            years = re.findall(r"\((\d{4})\)", readme)
+            if not years:
+                years = re.findall(r"\b(19|20)\d{2}\b", readme)
+            if years:
+                year = years[0]
+
+    n_subjects = _clean_value((row or {}).get("n_subjects"))
+    if not n_subjects or n_subjects == "0":
+        n_subjects = _clean_value(details.get("n_subjects"))
+
+    n_records = _clean_value((row or {}).get("n_records"))
+    if not n_records or n_records == "0":
+        n_records = _clean_value(details.get("total_files"))
+
+    n_tasks = _clean_value((row or {}).get("n_tasks"))
+    if not n_tasks or n_tasks == "0":
+        n_tasks = _clean_value(details.get("n_tasks"))
+
+    # Size on disk
+    size = _clean_value((row or {}).get("size"))
+    if not size or size == "Unknown":
+        size_bytes = details.get("size_bytes")
+        if size_bytes:
+            # Simple human readable size if utils is not easily importable here
+            # or just copy-paste the logic for simplicity in conf.py
+            try:
+                s = float(size_bytes)
+                for unit in ["B", "KB", "MB", "GB", "TB"]:
+                    if s < 1024.0:
+                        size = (
+                            f"{s:.2f} {unit}"
+                            if unit not in ["B", "KB"]
+                            else f"{int(s)} {unit}"
+                        )
+                        break
+                    s /= 1024.0
+            except (ValueError, TypeError):
+                pass
+
+    # Format
+    dataset_format = "—"
+    if source.lower() in ["openneuro", "nemar"]:
+        dataset_format = "BIDS"
+
+    s3_item_count = _clean_value((row or {}).get("s3_item_count"))
+    if not s3_item_count or s3_item_count == "0":
+        s3_item_count = _clean_value(details.get("total_files"))
 
     return {
         "class_name": class_name,
@@ -838,14 +920,14 @@ def _build_dataset_context(
         "source_url": _clean_value(details.get("source_url")),
         "references": details.get("references", []),
         "how_to_acknowledge": _clean_value(details.get("how_to_acknowledge")),
-        "n_subjects": _clean_value((row or {}).get("n_subjects")),
-        "n_records": _clean_value((row or {}).get("n_records")),
-        "n_tasks": _clean_value((row or {}).get("n_tasks")),
+        "n_subjects": n_subjects,
+        "n_records": n_records,
+        "n_tasks": n_tasks,
         "n_channels": _format_stat_counts((row or {}).get("nchans_set")),
         "sampling_freqs": _format_stat_counts((row or {}).get("sampling_freqs")),
         "duration_hours_total": _clean_value((row or {}).get("duration_hours_total")),
-        "size": _clean_value((row or {}).get("size")),
-        "s3_item_count": _clean_value((row or {}).get("s3_item_count")),
+        "size": size,
+        "s3_item_count": s3_item_count,
         "modality": modality,
         "exp_type": _clean_value((row or {}).get("type of exp")),
         "subject_type": _clean_value((row or {}).get("Type Subject")),
@@ -853,6 +935,7 @@ def _build_dataset_context(
         "openneuro_url": f"https://openneuro.org/datasets/{dataset_id}",
         "nemar_url": f"https://nemar.org/dataexplorer/detail?dataset_id={dataset_id}",
         "metadata_fields": DEFAULT_METADATA_FIELDS,
+        "format": dataset_format,
     }
 
 
@@ -872,17 +955,21 @@ def _format_hero_section(context: Mapping[str, object]) -> str:
         tagline = f"OpenNeuro dataset ``{dataset_id}``."
     tagline = f"{tagline} Access recordings and metadata through EEGDash."
 
-    badges = _format_badges(
+    badges_line_1 = _format_badges(
         [
             ("Modality", str(context.get("modality", ""))),
             ("Tasks", str(context.get("n_tasks", ""))),
-            ("License", str(context.get("license", ""))),
             ("Subjects", str(context.get("n_subjects", ""))),
             ("Recordings", str(context.get("n_records", ""))),
+        ]
+    )
+    badges_line_2 = _format_badges(
+        [
+            ("License", str(context.get("license", ""))),
             ("Source", str(context.get("source", ""))),
         ]
     )
-    return f"{tagline}\n\n{badges}"
+    return f"{tagline}\n\n{badges_line_1}\n\n{badges_line_2}"
 
 
 def _format_highlights_section(context: Mapping[str, object]) -> str:
@@ -926,7 +1013,7 @@ def _format_highlights_section(context: Mapping[str, object]) -> str:
             [
                 _stat_line("Size on disk", context.get("size")),
                 _stat_line("File count", context.get("s3_item_count")),
-                _stat_line("Format", ""),
+                _stat_line("Format", context.get("format")),
             ],
         ),
         (
@@ -989,7 +1076,10 @@ def _format_dataset_info_section(context: Mapping[str, object]) -> str:
     dataset_upper = str(context.get("dataset_upper", ""))
     title = _value_or_unknown(_clean_value(context.get("title")))
     authors = context.get("authors") or []
-    authors_text = ", ".join(authors) if authors else "Unknown"
+    # Escape asterisks for RST (they would otherwise be interpreted as emphasis)
+    authors_text = (
+        ", ".join(a.replace("*", r"\*") for a in authors) if authors else "Unknown"
+    )
     license_text = _value_or_unknown(_clean_value(context.get("license")))
     doi = _clean_value(context.get("doi"))
     doi_clean = _normalize_doi(doi)
@@ -1125,6 +1215,30 @@ def _cleanup_stale_dataset_pages(dataset_dir: Path, expected: set[Path]) -> None
         path.unlink()
 
 
+def _process_dataset_item(
+    name: str, dataset_dir: Path, row: Mapping[str, str] | None, srcdir: Path
+) -> Path:
+    title = f"eegdash.dataset.{name}"
+    context = _build_dataset_context(name, row)
+    page_content = DATASET_PAGE_TEMPLATE.format(
+        notice=AUTOGEN_NOTICE,
+        title=title,
+        underline="=" * len(title),
+        hero_section=_format_hero_section(context),
+        dataset_info_section=_format_dataset_info_section(context),
+        highlights_section=_format_highlights_section(context),
+        quickstart_section=_format_quickstart_section(context),
+        quality_section=_format_quality_section(context),
+        api_section=_format_api_section(name),
+        see_also_section=_format_see_also_section(str(context.get("dataset_id", ""))),
+    )
+    page_path = dataset_dir / f"eegdash.dataset.{name}.rst"
+    if _write_if_changed(page_path, page_content):
+        rel = page_path.relative_to(srcdir)
+        LOGGER.info("[dataset-docs] Updated %s", rel)
+    return page_path
+
+
 def _generate_dataset_docs(app) -> None:
     dataset_dir = Path(app.srcdir) / "api" / "dataset"
     dataset_dir.mkdir(parents=True, exist_ok=True)
@@ -1155,28 +1269,21 @@ def _generate_dataset_docs(app) -> None:
         LOGGER.info("[dataset-docs] Updated %s", primary_path.relative_to(app.srcdir))
 
     generated_paths: set[Path] = set()
-    for name in dataset_names:
-        title = f"eegdash.dataset.{name}"
-        row = dataset_rows.get(name)
-        context = _build_dataset_context(name, row)
-        page_content = DATASET_PAGE_TEMPLATE.format(
-            notice=AUTOGEN_NOTICE,
-            title=title,
-            underline="=" * len(title),
-            hero_section=_format_hero_section(context),
-            dataset_info_section=_format_dataset_info_section(context),
-            highlights_section=_format_highlights_section(context),
-            quickstart_section=_format_quickstart_section(context),
-            quality_section=_format_quality_section(context),
-            api_section=_format_api_section(name),
-            see_also_section=_format_see_also_section(
-                str(context.get("dataset_id", ""))
-            ),
-        )
-        page_path = dataset_dir / f"eegdash.dataset.{name}.rst"
-        if _write_if_changed(page_path, page_content):
-            LOGGER.info("[dataset-docs] Updated %s", page_path.relative_to(app.srcdir))
-        generated_paths.add(page_path)
+    srcdir = Path(app.srcdir)
+
+    with concurrent.futures.ThreadPoolExecutor(max_workers=8) as executor:
+        futures = {
+            executor.submit(
+                _process_dataset_item, name, dataset_dir, dataset_rows.get(name), srcdir
+            ): name
+            for name in dataset_names
+        }
+        for future in concurrent.futures.as_completed(futures):
+            try:
+                path = future.result()
+                generated_paths.add(path)
+            except Exception as exc:
+                LOGGER.warning(f"Failed to generate doc for {futures[future]}: {exc}")
 
     _cleanup_stale_dataset_pages(dataset_dir, generated_paths)
 

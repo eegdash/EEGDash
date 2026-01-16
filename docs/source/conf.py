@@ -6,7 +6,7 @@ import json
 import os
 import shutil
 import sys
-from collections import Counter
+from collections import Counter, defaultdict
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Iterable, Mapping, Sequence
@@ -113,7 +113,7 @@ html_theme_options = {
     # Show an "Edit this page" button linking to GitHub
     "use_edit_page_button": True,
     "navigation_with_keys": False,
-    "collapse_navigation": False,
+    "collapse_navigation": True,
     "header_links_before_dropdown": 6,
     "navigation_depth": 6,
     "show_nav_level": 2,
@@ -940,10 +940,23 @@ def _build_dataset_context(
 
 
 def _format_badges(items: Sequence[tuple[str, str]]) -> str:
-    badges = " ".join(
-        f":bdg-light:`{label}: {_value_or_unknown(value)}`" for label, value in items
-    )
-    return "\n".join([".. rst-class:: sd-badges", "", badges]).rstrip()
+    # Map labels to badge colors
+    color_map = {
+        "Modality": "primary",
+        "Tasks": "info",
+        "Subjects": "secondary",
+        "Recordings": "secondary",
+        "License": "success",
+        "Source": "warning",
+    }
+    badges = []
+    for label, value in items:
+        color = color_map.get(label, "light")
+        val_text = _value_or_unknown(value)
+        badges.append(f":bdg-{color}:`{label}: {val_text}`")
+
+    badges_str = " ".join(badges)
+    return "\n".join([".. rst-class:: sd-badges", "", badges_str]).rstrip()
 
 
 def _format_hero_section(context: Mapping[str, object]) -> str:
@@ -1245,13 +1258,53 @@ def _generate_dataset_docs(app) -> None:
 
     dataset_names = _iter_dataset_classes()
     dataset_rows = _load_dataset_rows(dataset_names)
-    toctree_entries = _render_toctree_entries(dataset_names)
+
+    # Group datasets by source
+    datasets_by_source = defaultdict(list)
+    for name in dataset_names:
+        row = dataset_rows.get(name) or {}
+        source = _clean_value(row.get("source")) or "Other"
+        datasets_by_source[source].append(name)
+
+    # Generate group pages
+    group_toctree_entries = []
+    for source, names in datasets_by_source.items():
+        safe_source = "".join(c if c.isalnum() else "_" for c in source).lower()
+        if not safe_source:
+            safe_source = "other"
+        group_filename = f"source_{safe_source}.rst"
+        group_path = dataset_dir / group_filename
+
+        group_toctree = _render_toctree_entries(sorted(names))
+        # Title case the source for the header
+        source_title = source.title() if source.islower() else source
+
+        group_content = f"""{AUTOGEN_NOTICE}
+{source_title} Datasets
+{"=" * (len(source_title) + 9)}
+
+.. toctree::
+   :maxdepth: 1
+
+{group_toctree}
+"""
+        if _write_if_changed(group_path, group_content):
+            LOGGER.info("[dataset-docs] Updated group page %s", group_filename)
+
+        group_toctree_entries.append(
+            group_filename
+        )  # Just filename, relative to api/dataset
+
+    toctree_entries_str = "\n".join(
+        f"   {entry}" for entry in sorted(group_toctree_entries)
+    )
+
     experiment_rows = _render_experiment_rows(_load_experiment_counts(dataset_names))
     index_content = DATASET_INDEX_TEMPLATE.format(
         notice=AUTOGEN_NOTICE,
         dataset_count=len(dataset_names),
         experiment_rows=experiment_rows,
-        toctree_entries=toctree_entries,
+        toctree_entries=toctree_entries_str,
     )
 
     index_path = dataset_dir / "api_dataset.rst"
@@ -1284,6 +1337,13 @@ def _generate_dataset_docs(app) -> None:
                 generated_paths.add(path)
             except Exception as exc:
                 LOGGER.warning(f"Failed to generate doc for {futures[future]}: {exc}")
+
+    # Add group files to expected paths so they aren't deleted
+    for source in datasets_by_source:
+        safe_source = "".join(c if c.isalnum() else "_" for c in source).lower()
+        if not safe_source:
+            safe_source = "other"
+        generated_paths.add(dataset_dir / f"source_{safe_source}.rst")
 
     _cleanup_stale_dataset_pages(dataset_dir, generated_paths)
 

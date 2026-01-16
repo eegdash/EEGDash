@@ -1068,8 +1068,9 @@ def _format_quickstart_section(context: Mapping[str, object]) -> str:
         ".. code-block:: python\n\n"
         f"    from eegdash.dataset import {class_name}\n\n"
         f'    dataset = {class_name}(cache_dir="./data")\n'
-        "    recording = dataset[0]\n"
-        "    raw = recording.load()\n\n"
+        "    # Get the raw object of the first recording\n"
+        "    raw = dataset[0].raw\n"
+        "    print(raw.info)\n\n"
         "**Filter/query**\n\n"
         ".. tab-set::\n\n"
         "   .. tab-item:: Basic\n\n"

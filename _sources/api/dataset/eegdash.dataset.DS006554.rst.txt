@@ -5,11 +5,15 @@
 eegdash.dataset.DS006554
 ========================
 
-participants.tsv (OpenNeuro ``ds006554``). Access recordings and metadata through EEGDash.
+README (OpenNeuro ``ds006554``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: ['eeg']` :bdg-light:`Tasks: 0` :bdg-light:`License: CC0` :bdg-light:`Subjects: 0` :bdg-light:`Recordings: 0` :bdg-light:`Source: openneuro`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 47` :bdg-secondary:`Recordings: 47`
+
+.. rst-class:: sd-badges
+
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,7 +25,7 @@ Dataset Information
    * - Dataset ID
      - ``DS006554``
    * - Title
-     - participants.tsv
+     - README
    * - Year
      - 2025
    * - Authors
@@ -40,7 +44,7 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds006554,
-        title = {participants.tsv},
+        title = {README},
         author = {Yaner Su},
         doi = {10.18112/openneuro.ds006554.v1.0.0},
         url = {https://doi.org/10.18112/openneuro.ds006554.v1.0.0},
@@ -55,30 +59,30 @@ Highlights
    .. grid-item-card:: Subjects & recordings
       :class-card: sd-border-1
 
-      - Subjects: 0
-      - Recordings: 0
-      - Tasks: 0
+      - Subjects: 47
+      - Recordings: 47
+      - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
       - Channels: 62
       - Sampling rate (Hz): 500.0
-      - Duration (hours): 0
+      - Duration (hours): 0.0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
 
-      - Tasks: 0
-      - Experiment type: Unknown
-      - Subject type: Unknown
+      - Tasks: 1
+      - Experiment type: —
+      - Subject type: —
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: Unknown
-      - File count: Unknown
-      - Format: Unknown
+      - Size on disk: 12.1 GB
+      - File count: 47
+      - Format: BIDS
 
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
@@ -100,17 +104,18 @@ Quickstart
 
 .. code-block:: bash
 
-   pip install eegdash
+    pip install eegdash
 
-**Load a recording**
+**Access the data**
 
 .. code-block:: python
 
-   from eegdash.dataset import DS006554
+    from eegdash.dataset import DS006554
 
-   dataset = DS006554(cache_dir="./data")
-   recording = dataset[0]
-   raw = recording.load()
+    dataset = DS006554(cache_dir="./data")
+    # Get the raw object of the first recording
+    raw = dataset.datasets[0].raw
+    print(raw.info)
 
 **Filter/query**
 

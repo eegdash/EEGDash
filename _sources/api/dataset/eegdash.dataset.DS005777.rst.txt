@@ -9,7 +9,11 @@ Electrical_Morphine_Placebo_2018 (OpenNeuro ``ds005777``). Access recordings and
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: ['fnirs']` :bdg-light:`Tasks: 0` :bdg-light:`License: CC0` :bdg-light:`Subjects: 0` :bdg-light:`Recordings: 0` :bdg-light:`Source: openneuro`
+:bdg-primary:`Modality: fnirs` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 15` :bdg-secondary:`Recordings: 698`
+
+.. rst-class:: sd-badges
+
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -23,7 +27,7 @@ Dataset Information
    * - Title
      - Electrical_Morphine_Placebo_2018
    * - Year
-     - Unknown
+     - —
    * - Authors
      - Peng, Ke, Yücel, Meryem, Steele, Sarah, Bittner, Edward, Aasted, Christopher, Hoeft, Mark, Lee, Arielle, George, Edward, Boas, David, Becerra, Lino, Borsook, David
    * - License
@@ -55,30 +59,30 @@ Highlights
    .. grid-item-card:: Subjects & recordings
       :class-card: sd-border-1
 
-      - Subjects: 0
-      - Recordings: 0
-      - Tasks: 0
+      - Subjects: 15
+      - Recordings: 698
+      - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: Unknown
-      - Sampling rate (Hz): Unknown
-      - Duration (hours): 0
+      - Channels: —
+      - Sampling rate (Hz): —
+      - Duration (hours): 0.0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
 
-      - Tasks: 0
-      - Experiment type: Unknown
-      - Subject type: Unknown
+      - Tasks: 1
+      - Experiment type: —
+      - Subject type: Sensory Neuroscience
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: Unknown
-      - File count: Unknown
-      - Format: Unknown
+      - Size on disk: —
+      - File count: 698
+      - Format: BIDS
 
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
@@ -100,17 +104,18 @@ Quickstart
 
 .. code-block:: bash
 
-   pip install eegdash
+    pip install eegdash
 
-**Load a recording**
+**Access the data**
 
 .. code-block:: python
 
-   from eegdash.dataset import DS005777
+    from eegdash.dataset import DS005777
 
-   dataset = DS005777(cache_dir="./data")
-   recording = dataset[0]
-   raw = recording.load()
+    dataset = DS005777(cache_dir="./data")
+    # Get the raw object of the first recording
+    raw = dataset.datasets[0].raw
+    print(raw.info)
 
 **Filter/query**
 

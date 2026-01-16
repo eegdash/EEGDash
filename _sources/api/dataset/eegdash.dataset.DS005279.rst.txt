@@ -9,7 +9,11 @@ Picture-Word Interference Dataset (OpenNeuro ``ds005279``). Access recordings an
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: ['meg']` :bdg-light:`Tasks: 0` :bdg-light:`License: CC0` :bdg-light:`Subjects: 0` :bdg-light:`Recordings: 0` :bdg-light:`Source: openneuro`
+:bdg-primary:`Modality: meg` :bdg-info:`Tasks: 54` :bdg-secondary:`Subjects: 31` :bdg-secondary:`Recordings: 1632`
+
+.. rst-class:: sd-badges
+
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -23,7 +27,7 @@ Dataset Information
    * - Title
      - Picture-Word Interference Dataset
    * - Year
-     - Unknown
+     - —
    * - Authors
      - Hsi T. Wei, Farhan B. Faisal, Tamara Beck, Claire Shao, Jed A. Meltzer
    * - License
@@ -55,30 +59,30 @@ Highlights
    .. grid-item-card:: Subjects & recordings
       :class-card: sd-border-1
 
-      - Subjects: 0
-      - Recordings: 0
-      - Tasks: 0
+      - Subjects: 31
+      - Recordings: 1632
+      - Tasks: 54
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: Unknown
-      - Sampling rate (Hz): Unknown
-      - Duration (hours): 0
+      - Channels: —
+      - Sampling rate (Hz): —
+      - Duration (hours): 0.0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
 
-      - Tasks: 0
-      - Experiment type: Unknown
-      - Subject type: Unknown
+      - Tasks: 54
+      - Experiment type: —
+      - Subject type: Neurolingusitics
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: Unknown
-      - File count: Unknown
-      - Format: Unknown
+      - Size on disk: —
+      - File count: 1632
+      - Format: BIDS
 
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
@@ -100,17 +104,18 @@ Quickstart
 
 .. code-block:: bash
 
-   pip install eegdash
+    pip install eegdash
 
-**Load a recording**
+**Access the data**
 
 .. code-block:: python
 
-   from eegdash.dataset import DS005279
+    from eegdash.dataset import DS005279
 
-   dataset = DS005279(cache_dir="./data")
-   recording = dataset[0]
-   raw = recording.load()
+    dataset = DS005279(cache_dir="./data")
+    # Get the raw object of the first recording
+    raw = dataset.datasets[0].raw
+    print(raw.info)
 
 **Filter/query**
 

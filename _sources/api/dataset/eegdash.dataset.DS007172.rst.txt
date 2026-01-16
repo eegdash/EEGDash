@@ -9,7 +9,11 @@ participants.tsv (OpenNeuro ``ds007172``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: Unknown` :bdg-light:`Tasks: Unknown` :bdg-light:`License: CC0` :bdg-light:`Subjects: Unknown` :bdg-light:`Recordings: Unknown` :bdg-light:`Source: OpenNeuro`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 6` :bdg-secondary:`Subjects: 100` :bdg-secondary:`Recordings: 501`
+
+.. rst-class:: sd-badges
+
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -55,30 +59,30 @@ Highlights
    .. grid-item-card:: Subjects & recordings
       :class-card: sd-border-1
 
-      - Subjects: Unknown
-      - Recordings: Unknown
-      - Tasks: Unknown
+      - Subjects: 100
+      - Recordings: 501
+      - Tasks: 6
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: Unknown
-      - Sampling rate (Hz): Unknown
-      - Duration (hours): Unknown
+      - Channels: 29 (5), 32 (496)
+      - Sampling rate (Hz): 1000.0 (5), 500.0 (496)
+      - Duration (hours): 0.0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
 
-      - Tasks: Unknown
-      - Experiment type: Unknown
-      - Subject type: Unknown
+      - Tasks: 6
+      - Experiment type: —
+      - Subject type: —
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: Unknown
-      - File count: Unknown
-      - Format: Unknown
+      - Size on disk: 11.0 GB
+      - File count: 501
+      - Format: BIDS
 
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
@@ -89,7 +93,7 @@ Highlights
    .. grid-item-card:: Provenance
       :class-card: sd-border-1
 
-      - Source: OpenNeuro
+      - Source: openneuro
       - OpenNeuro: `ds007172 <https://openneuro.org/datasets/ds007172>`__
       - NeMAR: `ds007172 <https://nemar.org/dataexplorer/detail?dataset_id=ds007172>`__
 
@@ -100,17 +104,18 @@ Quickstart
 
 .. code-block:: bash
 
-   pip install eegdash
+    pip install eegdash
 
-**Load a recording**
+**Access the data**
 
 .. code-block:: python
 
-   from eegdash.dataset import DS007172
+    from eegdash.dataset import DS007172
 
-   dataset = DS007172(cache_dir="./data")
-   recording = dataset[0]
-   raw = recording.load()
+    dataset = DS007172(cache_dir="./data")
+    # Get the raw object of the first recording
+    raw = dataset.datasets[0].raw
+    print(raw.info)
 
 **Filter/query**
 

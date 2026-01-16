@@ -9,7 +9,11 @@ participants.tsv (OpenNeuro ``ds005169``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: ['ieeg']` :bdg-light:`Tasks: 0` :bdg-light:`License: CC0` :bdg-light:`Subjects: 0` :bdg-light:`Recordings: 0` :bdg-light:`Source: openneuro`
+:bdg-primary:`Modality: ieeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 20` :bdg-secondary:`Recordings: 112`
+
+.. rst-class:: sd-badges
+
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -55,30 +59,30 @@ Highlights
    .. grid-item-card:: Subjects & recordings
       :class-card: sd-border-1
 
-      - Subjects: 0
-      - Recordings: 0
-      - Tasks: 0
+      - Subjects: 20
+      - Recordings: 112
+      - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 86, 113, 94 (9), 83 (3), 82 (19), 99, 81, 38, 102 (5), 80, 88, 92, 105, 109, 114, 69, 95 (5), 193 (5), 58 (2), 184 (3), 40 (4), 103, 85 (3), 106 (2), 188, 136 (5), 70 (4), 98, 39, 96, 76, 89, 101 (6), 79 (3), 144, 186, 104 (2), 100, 160, 91 (2), 29, 71, 84 (3), 143 (2)
+      - Channels: 70 (8), 136 (10), 106 (4), 188 (2), 85 (6), 103 (2), 89 (2), 76 (2), 96 (2), 39 (2), 98 (2), 91 (4), 160 (2), 100 (2), 104 (4), 186 (2), 144 (2), 79 (6), 101 (12), 143 (4), 84 (6), 71 (2), 29 (2), 99 (2), 82 (38), 83 (6), 94 (18), 113 (2), 86 (2), 105 (2), 92 (2), 88 (2), 80 (2), 102 (10), 38 (2), 81 (2), 69 (2), 114 (2), 109 (2), 40 (8), 184 (6), 58 (4), 193 (10), 95 (10)
       - Sampling rate (Hz): 4096.0
-      - Duration (hours): 0
+      - Duration (hours): 0.0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
 
-      - Tasks: 0
-      - Experiment type: Unknown
-      - Subject type: Unknown
+      - Tasks: 1
+      - Experiment type: —
+      - Subject type: —
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: Unknown
-      - File count: Unknown
-      - Format: Unknown
+      - Size on disk: 4.0 GB
+      - File count: 112
+      - Format: BIDS
 
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
@@ -100,17 +104,18 @@ Quickstart
 
 .. code-block:: bash
 
-   pip install eegdash
+    pip install eegdash
 
-**Load a recording**
+**Access the data**
 
 .. code-block:: python
 
-   from eegdash.dataset import DS005169
+    from eegdash.dataset import DS005169
 
-   dataset = DS005169(cache_dir="./data")
-   recording = dataset[0]
-   raw = recording.load()
+    dataset = DS005169(cache_dir="./data")
+    # Get the raw object of the first recording
+    raw = dataset.datasets[0].raw
+    print(raw.info)
 
 **Filter/query**
 

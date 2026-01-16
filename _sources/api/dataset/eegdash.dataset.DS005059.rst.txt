@@ -9,7 +9,11 @@ participants.tsv (OpenNeuro ``ds005059``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: ['ieeg']` :bdg-light:`Tasks: 0` :bdg-light:`License: CC0` :bdg-light:`Subjects: 0` :bdg-light:`Recordings: 0` :bdg-light:`Source: openneuro`
+:bdg-primary:`Modality: ieeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 69` :bdg-secondary:`Recordings: 282`
+
+.. rst-class:: sd-badges
+
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -55,30 +59,30 @@ Highlights
    .. grid-item-card:: Subjects & recordings
       :class-card: sd-border-1
 
-      - Subjects: 0
-      - Recordings: 0
-      - Tasks: 0
+      - Subjects: 69
+      - Recordings: 282
+      - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 84 (3), 110 (10), 146, 177, 133, 90, 107 (3), 149 (2), 52, 55 (3), 67, 130 (4), 116 (7), 188 (3), 117 (3), 115 (2), 112 (22), 98, 140 (4), 87 (3), 77, 94 (5), 99, 72 (8), 58 (3), 73 (2), 122 (2), 139 (4), 173 (3), 76, 118 (2), 60, 96 (4), 68 (4), 141 (2), 108 (3), 92 (6), 138 (2), 119 (5), 100 (9), 120 (3), 93, 14, 123 (4), 114 (3), 121 (7), 126 (15), 53, 142 (6), 64 (8), 88 (9), 86 (4), 97 (5), 111 (2), 80 (3), 104 (9), 128 (10), 16, 85 (11), 95 (5), 83 (3), 74 (3), 124 (4), 46, 186 (8), 102 (7), 106 (4)
-      - Sampling rate (Hz): 1000.0 (193), 499.7071 (6), 500.0 (71), 1600.0 (4), 1024.0 (8)
-      - Duration (hours): 0
+      - Channels: 120 (6), 119 (10), 100 (18), 138 (4), 92 (12), 108 (6), 88 (18), 86 (8), 142 (12), 64 (16), 53 (2), 126 (30), 121 (14), 114 (6), 14 (2), 123 (8), 93 (2), 111 (4), 97 (10), 106 (8), 102 (14), 186 (16), 46 (2), 124 (8), 74 (6), 95 (10), 83 (6), 85 (22), 128 (20), 16 (2), 104 (18), 80 (6), 133 (2), 177 (2), 146 (2), 84 (6), 110 (20), 117 (6), 115 (4), 188 (6), 116 (14), 130 (8), 67 (2), 55 (6), 52 (2), 149 (4), 107 (6), 90 (2), 72 (16), 99 (2), 94 (10), 77 (2), 87 (6), 140 (8), 98 (2), 112 (44), 141 (4), 68 (8), 96 (8), 60 (2), 173 (6), 139 (8), 118 (4), 76 (2), 122 (4), 73 (4), 58 (6)
+      - Sampling rate (Hz): 1600.0 (8), 1024.0 (16), 499.7071 (12), 1000.0 (386), 500.0 (142)
+      - Duration (hours): 0.0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
 
-      - Tasks: 0
-      - Experiment type: Unknown
-      - Subject type: Unknown
+      - Tasks: 1
+      - Experiment type: —
+      - Subject type: —
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: Unknown
-      - File count: Unknown
-      - Format: Unknown
+      - Size on disk: 167.3 GB
+      - File count: 282
+      - Format: BIDS
 
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
@@ -100,17 +104,18 @@ Quickstart
 
 .. code-block:: bash
 
-   pip install eegdash
+    pip install eegdash
 
-**Load a recording**
+**Access the data**
 
 .. code-block:: python
 
-   from eegdash.dataset import DS005059
+    from eegdash.dataset import DS005059
 
-   dataset = DS005059(cache_dir="./data")
-   recording = dataset[0]
-   raw = recording.load()
+    dataset = DS005059(cache_dir="./data")
+    # Get the raw object of the first recording
+    raw = dataset.datasets[0].raw
+    print(raw.info)
 
 **Filter/query**
 

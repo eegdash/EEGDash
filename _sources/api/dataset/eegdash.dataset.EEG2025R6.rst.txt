@@ -9,7 +9,11 @@ Healthy Brain Network (HBN) EEG - Release 6 (BDF Converted) (OpenNeuro ``eeg2025
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: ['eeg']` :bdg-light:`Tasks: 0` :bdg-light:`License: CC-BY-SA 4.0` :bdg-light:`Subjects: 0` :bdg-light:`Recordings: 0` :bdg-light:`Source: nemar`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 10` :bdg-secondary:`Subjects: 135` :bdg-secondary:`Recordings: 1227`
+
+.. rst-class:: sd-badges
+
+:bdg-success:`License: CC-BY-SA 4.0` :bdg-warning:`Source: nemar`
 
 Dataset Information
 -------------------
@@ -23,7 +27,7 @@ Dataset Information
    * - Title
      - Healthy Brain Network (HBN) EEG - Release 6 (BDF Converted)
    * - Year
-     - Unknown
+     - 20
    * - Authors
      - Seyed Yahya Shirazi, Alexandre Franco, Maurício Scopel Hoffmann, Nathalia B. Esper, Dung Truong, Arnaud Delorme, Michael Milham, Scott Makeig
    * - License
@@ -55,30 +59,30 @@ Highlights
    .. grid-item-card:: Subjects & recordings
       :class-card: sd-border-1
 
-      - Subjects: 0
-      - Recordings: 0
-      - Tasks: 0
+      - Subjects: 135
+      - Recordings: 1227
+      - Tasks: 10
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
       - Channels: 129
       - Sampling rate (Hz): 100.0
-      - Duration (hours): 0
+      - Duration (hours): 0.0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
 
-      - Tasks: 0
-      - Experiment type: Unknown
-      - Subject type: Unknown
+      - Tasks: 10
+      - Experiment type: —
+      - Subject type: —
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: Unknown
-      - File count: Unknown
-      - Format: Unknown
+      - Size on disk: —
+      - File count: 1227
+      - Format: BIDS
 
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
@@ -100,17 +104,18 @@ Quickstart
 
 .. code-block:: bash
 
-   pip install eegdash
+    pip install eegdash
 
-**Load a recording**
+**Access the data**
 
 .. code-block:: python
 
-   from eegdash.dataset import EEG2025R6
+    from eegdash.dataset import EEG2025R6
 
-   dataset = EEG2025R6(cache_dir="./data")
-   recording = dataset[0]
-   raw = recording.load()
+    dataset = EEG2025R6(cache_dir="./data")
+    # Get the raw object of the first recording
+    raw = dataset.datasets[0].raw
+    print(raw.info)
 
 **Filter/query**
 

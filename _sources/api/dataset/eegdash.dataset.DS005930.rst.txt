@@ -9,7 +9,11 @@ BallSqueezingHD_Gao2023 (OpenNeuro ``ds005930``). Access recordings and metadata
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: ['fnirs']` :bdg-light:`Tasks: 0` :bdg-light:`License: CC0` :bdg-light:`Subjects: 0` :bdg-light:`Recordings: 0` :bdg-light:`Source: openneuro`
+:bdg-primary:`Modality: fnirs` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 13` :bdg-secondary:`Recordings: 233`
+
+.. rst-class:: sd-badges
+
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -23,7 +27,7 @@ Dataset Information
    * - Title
      - BallSqueezingHD_Gao2023
    * - Year
-     - Unknown
+     - —
    * - Authors
      - Yuanyuan Gao, De'Ja Rogers, Alexander von Lühmann, Antonio Ortega-Martinez, David A. Boas, Meryem A. Yücel
    * - License
@@ -55,30 +59,30 @@ Highlights
    .. grid-item-card:: Subjects & recordings
       :class-card: sd-border-1
 
-      - Subjects: 0
-      - Recordings: 0
-      - Tasks: 0
+      - Subjects: 13
+      - Recordings: 233
+      - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: Unknown
-      - Sampling rate (Hz): Unknown
-      - Duration (hours): 0
+      - Channels: —
+      - Sampling rate (Hz): —
+      - Duration (hours): 0.0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
 
-      - Tasks: 0
-      - Experiment type: Unknown
-      - Subject type: Unknown
+      - Tasks: 1
+      - Experiment type: —
+      - Subject type: Motor
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: Unknown
-      - File count: Unknown
-      - Format: Unknown
+      - Size on disk: —
+      - File count: 233
+      - Format: BIDS
 
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
@@ -100,17 +104,18 @@ Quickstart
 
 .. code-block:: bash
 
-   pip install eegdash
+    pip install eegdash
 
-**Load a recording**
+**Access the data**
 
 .. code-block:: python
 
-   from eegdash.dataset import DS005930
+    from eegdash.dataset import DS005930
 
-   dataset = DS005930(cache_dir="./data")
-   recording = dataset[0]
-   raw = recording.load()
+    dataset = DS005930(cache_dir="./data")
+    # Get the raw object of the first recording
+    raw = dataset.datasets[0].raw
+    print(raw.info)
 
 **Filter/query**
 

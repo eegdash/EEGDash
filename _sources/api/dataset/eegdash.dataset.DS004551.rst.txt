@@ -9,7 +9,11 @@ participants.tsv (OpenNeuro ``ds004551``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: ['ieeg']` :bdg-light:`Tasks: 0` :bdg-light:`License: CC0` :bdg-light:`Subjects: 0` :bdg-light:`Recordings: 0` :bdg-light:`Source: openneuro`
+:bdg-primary:`Modality: ieeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 114` :bdg-secondary:`Recordings: 125`
+
+.. rst-class:: sd-badges
+
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -55,30 +59,30 @@ Highlights
    .. grid-item-card:: Subjects & recordings
       :class-card: sd-border-1
 
-      - Subjects: 0
-      - Recordings: 0
-      - Tasks: 0
+      - Subjects: 114
+      - Recordings: 125
+      - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 120, 128 (82), 110 (2), 106, 102 (2), 122 (2), 112 (5), 116, 118 (3), 148 (2), 130 (2), 136, 138 (3), 124 (2), 58, 96, 144 (2), 108 (2), 126, 142 (2), 132, 134 (2), 104 (2), 146, 84
+      - Channels: 136 (2), 130 (4), 148 (4), 96 (2), 58 (2), 124 (4), 138 (6), 134 (4), 132 (2), 142 (4), 126 (2), 108 (4), 144 (4), 84 (2), 146 (2), 104 (4), 106 (2), 128 (164), 110 (4), 120 (2), 122 (4), 102 (4), 118 (6), 116 (2), 112 (10)
       - Sampling rate (Hz): 1000.0
-      - Duration (hours): 0
+      - Duration (hours): 0.0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
 
-      - Tasks: 0
-      - Experiment type: Unknown
-      - Subject type: Unknown
+      - Tasks: 1
+      - Experiment type: —
+      - Subject type: —
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: Unknown
-      - File count: Unknown
-      - Format: Unknown
+      - Size on disk: 68.9 GB
+      - File count: 125
+      - Format: BIDS
 
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
@@ -100,17 +104,18 @@ Quickstart
 
 .. code-block:: bash
 
-   pip install eegdash
+    pip install eegdash
 
-**Load a recording**
+**Access the data**
 
 .. code-block:: python
 
-   from eegdash.dataset import DS004551
+    from eegdash.dataset import DS004551
 
-   dataset = DS004551(cache_dir="./data")
-   recording = dataset[0]
-   raw = recording.load()
+    dataset = DS004551(cache_dir="./data")
+    # Get the raw object of the first recording
+    raw = dataset.datasets[0].raw
+    print(raw.info)
 
 **Filter/query**
 

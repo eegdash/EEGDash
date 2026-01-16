@@ -5,11 +5,15 @@
 eegdash.dataset.DS005514
 ========================
 
-task-seqLearning6target_events.json (OpenNeuro ``ds005514``). Access recordings and metadata through EEGDash.
+The HBN-EEG Dataset (OpenNeuro ``ds005514``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: ['eeg']` :bdg-light:`Tasks: 0` :bdg-light:`License: CC-BY-SA 4.0` :bdg-light:`Subjects: 0` :bdg-light:`Recordings: 0` :bdg-light:`Source: openneuro`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 10` :bdg-secondary:`Subjects: 295` :bdg-secondary:`Recordings: 2885`
+
+.. rst-class:: sd-badges
+
+:bdg-success:`License: CC-BY-SA 4.0` :bdg-warning:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,7 +25,7 @@ Dataset Information
    * - Dataset ID
      - ``DS005514``
    * - Title
-     - task-seqLearning6target_events.json
+     - The HBN-EEG Dataset
    * - Year
      - 2024
    * - Authors
@@ -40,7 +44,7 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds005514,
-        title = {task-seqLearning6target_events.json},
+        title = {The HBN-EEG Dataset},
         author = {Seyed Yahya Shirazi and Alexandre Franco and Maurício Scopel Hoffmann and Nathalia B. Esper and Dung Truong and Arnaud Delorme and Michael Milham and Scott Makeig},
         doi = {10.18112/openneuro.ds005514.v1.0.1},
         url = {https://doi.org/10.18112/openneuro.ds005514.v1.0.1},
@@ -55,30 +59,30 @@ Highlights
    .. grid-item-card:: Subjects & recordings
       :class-card: sd-border-1
 
-      - Subjects: 0
-      - Recordings: 0
-      - Tasks: 0
+      - Subjects: 295
+      - Recordings: 2885
+      - Tasks: 10
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
       - Channels: 129
       - Sampling rate (Hz): 500.0
-      - Duration (hours): 0
+      - Duration (hours): 0.0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
 
-      - Tasks: 0
-      - Experiment type: Unknown
-      - Subject type: Unknown
+      - Tasks: 10
+      - Experiment type: —
+      - Subject type: —
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: Unknown
-      - File count: Unknown
-      - Format: Unknown
+      - Size on disk: 185.0 GB
+      - File count: 2885
+      - Format: BIDS
 
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
@@ -100,17 +104,18 @@ Quickstart
 
 .. code-block:: bash
 
-   pip install eegdash
+    pip install eegdash
 
-**Load a recording**
+**Access the data**
 
 .. code-block:: python
 
-   from eegdash.dataset import DS005514
+    from eegdash.dataset import DS005514
 
-   dataset = DS005514(cache_dir="./data")
-   recording = dataset[0]
-   raw = recording.load()
+    dataset = DS005514(cache_dir="./data")
+    # Get the raw object of the first recording
+    raw = dataset.datasets[0].raw
+    print(raw.info)
 
 **Filter/query**
 

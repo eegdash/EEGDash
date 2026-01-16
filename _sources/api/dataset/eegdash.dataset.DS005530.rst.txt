@@ -5,11 +5,15 @@
 eegdash.dataset.DS005530
 ========================
 
-participants.tsv (OpenNeuro ``ds005530``). Access recordings and metadata through EEGDash.
+Disarming emotional memories using Targeted Memory Reactivation during Rapid Eye Movement sleep (OpenNeuro ``ds005530``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: ['eeg']` :bdg-light:`Tasks: 0` :bdg-light:`License: CC0` :bdg-light:`Subjects: 0` :bdg-light:`Recordings: 0` :bdg-light:`Source: openneuro`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 17` :bdg-secondary:`Recordings: 21`
+
+.. rst-class:: sd-badges
+
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,7 +25,7 @@ Dataset Information
    * - Dataset ID
      - ``DS005530``
    * - Title
-     - participants.tsv
+     - Disarming emotional memories using Targeted Memory Reactivation during Rapid Eye Movement sleep
    * - Year
      - 2024
    * - Authors
@@ -40,7 +44,7 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds005530,
-        title = {participants.tsv},
+        title = {Disarming emotional memories using Targeted Memory Reactivation during Rapid Eye Movement sleep},
         author = {Viviana Greco and Tamas A. Foldes and Neil A. Harrison and Kevin Murphy and Marta Wawrzuta and Mahmoud E. A. Abdellahi and Penelope A. Lewis},
         doi = {10.18112/openneuro.ds005530.v1.0.9},
         url = {https://doi.org/10.18112/openneuro.ds005530.v1.0.9},
@@ -55,30 +59,30 @@ Highlights
    .. grid-item-card:: Subjects & recordings
       :class-card: sd-border-1
 
-      - Subjects: 0
-      - Recordings: 0
-      - Tasks: 0
+      - Subjects: 17
+      - Recordings: 21
+      - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
       - Channels: 10
       - Sampling rate (Hz): 500.0
-      - Duration (hours): 0
+      - Duration (hours): 0.0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
 
-      - Tasks: 0
-      - Experiment type: Unknown
-      - Subject type: Unknown
+      - Tasks: 1
+      - Experiment type: —
+      - Subject type: —
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: Unknown
-      - File count: Unknown
-      - Format: Unknown
+      - Size on disk: 6.5 GB
+      - File count: 21
+      - Format: BIDS
 
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
@@ -100,17 +104,18 @@ Quickstart
 
 .. code-block:: bash
 
-   pip install eegdash
+    pip install eegdash
 
-**Load a recording**
+**Access the data**
 
 .. code-block:: python
 
-   from eegdash.dataset import DS005530
+    from eegdash.dataset import DS005530
 
-   dataset = DS005530(cache_dir="./data")
-   recording = dataset[0]
-   raw = recording.load()
+    dataset = DS005530(cache_dir="./data")
+    # Get the raw object of the first recording
+    raw = dataset.datasets[0].raw
+    print(raw.info)
 
 **Filter/query**
 

@@ -5,11 +5,15 @@
 eegdash.dataset.DS006126
 ========================
 
-participants.tsv (OpenNeuro ``ds006126``). Access recordings and metadata through EEGDash.
+TDCS Neuromodulated Motor Imagery TMS Dataset (OpenNeuro ``ds006126``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: ['eeg']` :bdg-light:`Tasks: 0` :bdg-light:`License: CC0` :bdg-light:`Subjects: 0` :bdg-light:`Recordings: 0` :bdg-light:`Source: openneuro`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 6` :bdg-secondary:`Subjects: 5` :bdg-secondary:`Recordings: 90`
+
+.. rst-class:: sd-badges
+
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,9 +25,9 @@ Dataset Information
    * - Dataset ID
      - ``DS006126``
    * - Title
-     - participants.tsv
+     - TDCS Neuromodulated Motor Imagery TMS Dataset
    * - Year
-     - Unknown
+     - 2019
    * - Authors
      - Anthony Mensah, Gleb Perevoznyuk, Artyom Batov, Aleksandra S. Pleskovskaya
    * - License
@@ -40,7 +44,7 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds006126,
-        title = {participants.tsv},
+        title = {TDCS Neuromodulated Motor Imagery TMS Dataset},
         author = {Anthony Mensah and Gleb Perevoznyuk and Artyom Batov and Aleksandra S. Pleskovskaya},
         doi = {10.18112/openneuro.ds006126.v1.0.0},
         url = {https://doi.org/10.18112/openneuro.ds006126.v1.0.0},
@@ -55,30 +59,30 @@ Highlights
    .. grid-item-card:: Subjects & recordings
       :class-card: sd-border-1
 
-      - Subjects: 0
-      - Recordings: 0
-      - Tasks: 0
+      - Subjects: 5
+      - Recordings: 90
+      - Tasks: 6
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
       - Channels: 3
       - Sampling rate (Hz): 5000.0
-      - Duration (hours): 0
+      - Duration (hours): 0.0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
 
-      - Tasks: 0
-      - Experiment type: Unknown
-      - Subject type: Unknown
+      - Tasks: 6
+      - Experiment type: —
+      - Subject type: —
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: Unknown
-      - File count: Unknown
-      - Format: Unknown
+      - Size on disk: 773.3 KB
+      - File count: 90
+      - Format: BIDS
 
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
@@ -100,17 +104,18 @@ Quickstart
 
 .. code-block:: bash
 
-   pip install eegdash
+    pip install eegdash
 
-**Load a recording**
+**Access the data**
 
 .. code-block:: python
 
-   from eegdash.dataset import DS006126
+    from eegdash.dataset import DS006126
 
-   dataset = DS006126(cache_dir="./data")
-   recording = dataset[0]
-   raw = recording.load()
+    dataset = DS006126(cache_dir="./data")
+    # Get the raw object of the first recording
+    raw = dataset.datasets[0].raw
+    print(raw.info)
 
 **Filter/query**
 

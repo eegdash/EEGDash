@@ -5,11 +5,15 @@
 eegdash.dataset.DS004212
 ========================
 
-task-main_events.json (OpenNeuro ``ds004212``). Access recordings and metadata through EEGDash.
+THINGS-MEG (OpenNeuro ``ds004212``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: ['meg']` :bdg-light:`Tasks: 0` :bdg-light:`License: CC0` :bdg-light:`Subjects: 0` :bdg-light:`Recordings: 0` :bdg-light:`Source: openneuro`
+:bdg-primary:`Modality: meg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 5` :bdg-secondary:`Recordings: 500`
+
+.. rst-class:: sd-badges
+
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,9 +25,9 @@ Dataset Information
    * - Dataset ID
      - ``DS004212``
    * - Title
-     - task-main_events.json
+     - THINGS-MEG
    * - Year
-     - Unknown
+     - 20
    * - Authors
      - Martin N. Hebart, Oliver Contier, Lina Teichmann, Adam H. Rockter, Charles Zheng, Alexis Kidder, Anna Corriveau, Maryam Vaziri-Pashkam, Chris I. Baker
    * - License
@@ -40,7 +44,7 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds004212,
-        title = {task-main_events.json},
+        title = {THINGS-MEG},
         author = {Martin N. Hebart and Oliver Contier and Lina Teichmann and Adam H. Rockter and Charles Zheng and Alexis Kidder and Anna Corriveau and Maryam Vaziri-Pashkam and Chris I. Baker},
         doi = {10.18112/openneuro.ds004212.v3.0.0},
         url = {https://doi.org/10.18112/openneuro.ds004212.v3.0.0},
@@ -55,30 +59,30 @@ Highlights
    .. grid-item-card:: Subjects & recordings
       :class-card: sd-border-1
 
-      - Subjects: 0
-      - Recordings: 0
-      - Tasks: 0
+      - Subjects: 5
+      - Recordings: 500
+      - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 272 (468), 310 (2)
+      - Channels: 310 (4), 272 (936)
       - Sampling rate (Hz): 1200.0
-      - Duration (hours): 0
+      - Duration (hours): 0.0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
 
-      - Tasks: 0
-      - Experiment type: Unknown
-      - Subject type: Unknown
+      - Tasks: 1
+      - Experiment type: —
+      - Subject type: —
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: Unknown
-      - File count: Unknown
-      - Format: Unknown
+      - Size on disk: 28.6 MB
+      - File count: 500
+      - Format: BIDS
 
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
@@ -100,17 +104,18 @@ Quickstart
 
 .. code-block:: bash
 
-   pip install eegdash
+    pip install eegdash
 
-**Load a recording**
+**Access the data**
 
 .. code-block:: python
 
-   from eegdash.dataset import DS004212
+    from eegdash.dataset import DS004212
 
-   dataset = DS004212(cache_dir="./data")
-   recording = dataset[0]
-   raw = recording.load()
+    dataset = DS004212(cache_dir="./data")
+    # Get the raw object of the first recording
+    raw = dataset.datasets[0].raw
+    print(raw.info)
 
 **Filter/query**
 

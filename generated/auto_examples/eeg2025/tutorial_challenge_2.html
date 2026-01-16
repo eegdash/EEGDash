@@ -45,7 +45,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/searchpanes/2.3.1/css/searchPanes.dataTables.min.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=7021f170" />
     <link rel="stylesheet" type="text/css" href="../../../_static/css/treemap.css?v=7131b20f" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=c1455002" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=75d7bb15" />
   
   <!-- So that users can add custom icons -->
   <script src="../../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
@@ -536,17 +536,6 @@ to download the full example code or to run this example in your browser via Bin
 </div>
 <section class="sphx-glr-example-title" id="challenge-2-predicting-the-p-factor-from-eeg">
 <span id="sphx-glr-generated-auto-examples-eeg2025-tutorial-challenge-2-py"></span><h1>Challenge 2: Predicting the p-factor from EEG<a class="headerlink" href="#challenge-2-predicting-the-p-factor-from-eeg" title="Link to this heading">#</a></h1><div class="eegdash-reading-time" role="note"><span class="eegdash-reading-time__label">Estimated reading time:</span><span class="eegdash-reading-time__value">6 minutes</span></div>
-<nav class="contents local" id="this-example-covers">
-<span id="challenge-2"></span><p class="topic-title">This example covers:</p>
-<ul class="simple">
-<li><p><a class="reference internal" href="#combine-the-datasets-into-a-single-one" id="id1">Combine the datasets into a single one</a></p>
-<ul>
-<li><p><a class="reference internal" href="#wrap-the-data-into-a-pytorch-compatible-dataset" id="id2">Wrap the data into a PyTorch-compatible dataset</a></p></li>
-<li><p><a class="reference internal" href="#inspect-the-label-distribution" id="id3">Inspect the label distribution</a></p></li>
-</ul>
-</li>
-</ul>
-</nav>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1">#</span>
 </pre></div>
 </div>
@@ -554,7 +543,8 @@ to download the full example code or to run this example in your browser via Bin
 </a>
 <hr class="docutils" />
 <blockquote>
-<div><p>Before we begin, I just want to make a deal with you, ok?
+<div><p><strong>Preliminary notes</strong></p>
+<p>Before we begin, I just want to make a deal with you, ok?
 This is a community competition with a strong open-source foundation.
 When I say open-source, I mean volunteer work.</p>
 <p>So, if you see something that does not work or could be improved, first, <strong>please be kind</strong>, and
@@ -565,8 +555,9 @@ solving the same problems over and over again, and it starts working together.</
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1">#</span>
 </pre></div>
 </div>
-<dl>
-<dt>Overview</dt><dd><p>The psychopathology factor (P-factor) is a widely recognized construct in mental health research, representing a common underlying dimension of psychopathology across various disorders.
+<p><strong>Overview</strong></p>
+<blockquote>
+<div><p>The psychopathology factor (P-factor) is a widely recognized construct in mental health research, representing a common underlying dimension of psychopathology across various disorders.
 Currently, the P-factor is often assessed using self-report questionnaires or clinician ratings, which can be subjective, prone to bias, and time-consuming.
 <strong>The Challenge 2</strong> consists of developing a model to predict the P-factor from EEG recordings.</p>
 <p>The challenge encourages learning physiologically meaningful signal representations and discovery of reproducible biomarkers.
@@ -576,11 +567,11 @@ sessions, and acquisition sites.</p>
 and extrapolation. The goal is not only to minimize error on seen subjects, but also to transfer effectively to unseen data.
 Ensure the dataset is available locally. If not, see the
 <a class="reference external" href="https://eeg2025.github.io/data/#downloading-the-data">dataset download guide</a>.</p>
-</dd>
-</dl>
+</div></blockquote>
 <hr class="docutils" />
 <blockquote>
-<div><div class="admonition note">
+<div><p><strong>Contents of this start kit</strong></p>
+<div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>If you need additional explanations on the
 <a class="reference internal" href="../../../api/dataset/eegdash.dataset.EEGChallengeDataset.html"><span class="doc">EEGChallengeDataset</span></a> class, dataloading,
@@ -605,7 +596,8 @@ start-kit of challenge 1 which delves deeper into these topics.</p>
 </div></blockquote>
 <hr class="docutils" />
 <blockquote>
-<div><div class="admonition note">
+<div><p><strong>Install dependencies on Colab</strong></p>
+<div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>These installs are optional; skip on local environments
 where you already have the dependencies installed.</p>
@@ -616,7 +608,8 @@ where you already have the dependencies installed.</p>
 </div></blockquote>
 <hr class="docutils" />
 <blockquote>
-<div></div></blockquote>
+<div><p><strong>Imports</strong></p>
+</div></blockquote>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
@@ -645,7 +638,8 @@ by clicking <cite>Runtime/Change runtime type</cite> in the top bar menu, then s
 </div>
 <hr class="docutils" />
 <blockquote>
-<div></div></blockquote>
+<div><p><strong>Identify whether a CUDA-enabled GPU is available</strong></p>
+</div></blockquote>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">device</span> <span class="o">=</span> <span class="s2">&quot;cuda&quot;</span> <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="k">else</span> <span class="s2">&quot;cpu&quot;</span>
 <span class="k">if</span> <span class="n">device</span> <span class="o">==</span> <span class="s2">&quot;cuda&quot;</span><span class="p">:</span>
     <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;CUDA-enabled GPU found. Training should be faster.&quot;</span>
@@ -667,8 +661,9 @@ If running on Google Colab, you can request a GPU runtime by clicking
 under &#39;Hardware accelerator&#39;.
 </pre></div>
 </div>
-<dl>
-<dt>Understanding the P-factor regression task.</dt><dd><p>The psychopathology factor (P-factor) is a widely recognized construct in mental health research, representing a common underlying dimension of psychopathology across various disorders.
+<p><strong>Understanding the P-factor regression task</strong></p>
+<blockquote>
+<div><p>The psychopathology factor (P-factor) is a widely recognized construct in mental health research, representing a common underlying dimension of psychopathology across various disorders.
 The P-factor is thought to reflect the shared variance among different psychiatric conditions, suggesting that individuals with higher P-factor scores may be more vulnerable to a range of mental health issues.
 Currently, the P-factor is often assessed using self-report questionnaires or clinician ratings, which can be subjective, prone to bias, and time-consuming.
 In the dataset of this challenge, the P-factor was assessed using the Child
@@ -678,11 +673,11 @@ Behavior Checklist (CBCL) <a class="reference external" href="https://doi.org/10
 The solution may involve finding meaningful representations of the EEG data that correlate with the P-factor scores.
 The challenge encourages learning physiologically meaningful signal representations and discovery of reproducible biomarkers.
 If contestants are successful in this task, it could pave the way for more objective and efficient assessments of the P-factor in clinical settings.</p>
-</dd>
-</dl>
+</div></blockquote>
 <hr class="docutils" />
 <blockquote>
-<div><p>In this challenge 2 example, we load the EEG 2025 release using
+<div><p><strong>Define local path and (down)load the data</strong></p>
+<p>In this challenge 2 example, we load the EEG 2025 release using
 <a class="reference internal" href="../../../api/dataset/eegdash.dataset.EEGChallengeDataset.html"><span class="doc">EEGChallengeDataset</span></a>.
 <strong>Note:</strong> in this example notebook, we load the contrast change detection task from one mini release only as an example. Naturally, you are encouraged to train your models on all complete releases, using data from all the tasks you deem relevant.</p>
 </div></blockquote>
@@ -741,8 +736,7 @@ Match tests’ cache layout under ~/eegdash_cache/eeg_challenge_cache</p>
 Datasets loaded
 </pre></div>
 </div>
-<section id="combine-the-datasets-into-a-single-one">
-<h2><a class="toc-backref" href="#id1" role="doc-backlink">Combine the datasets into a single one</a><a class="headerlink" href="#combine-the-datasets-into-a-single-one" title="Link to this heading">#</a></h2>
+<p><strong>Combine the datasets into a single one</strong></p>
 <p>Here, we combine the datasets from the different releases into a single
 <code class="docutils literal notranslate"><span class="pre">BaseConcatDataset</span></code> object.
 %%</p>
@@ -818,14 +812,14 @@ Datasets loaded
 [60 rows x 26 columns]
 </pre></div>
 </div>
-<dl>
-<dt>Inspect your data</dt><dd><p>We can check what is inside the dataset consuming the
+<p><strong>Inspect your data</strong></p>
+<blockquote>
+<div><p>We can check what is inside the dataset consuming the
 MNE-object inside the Braindecode dataset.</p>
 <p>The following snippet, if uncommented, will show the first 10 seconds of the raw EEG signal.
 We can also inspect the data further by looking at the events and annotations.
 We strongly recommend you to take a look into the details and check how the events are structured.</p>
-</dd>
-</dl>
+</div></blockquote>
 <hr class="docutils" />
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">raw</span> <span class="o">=</span> <span class="n">all_datasets</span><span class="o">.</span><span class="n">datasets</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">raw</span>  <span class="c1"># mne.io.Raw object</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">raw</span><span class="o">.</span><span class="n">info</span><span class="p">)</span>
@@ -853,8 +847,7 @@ Using matplotlib as 2D backend.
 &lt;Annotations | 74 segments: 9999 (1), break cnt (1), ...&gt;
 </pre></div>
 </div>
-<section id="wrap-the-data-into-a-pytorch-compatible-dataset">
-<h3><a class="toc-backref" href="#id2" role="doc-backlink">Wrap the data into a PyTorch-compatible dataset</a><a class="headerlink" href="#wrap-the-data-into-a-pytorch-compatible-dataset" title="Link to this heading">#</a></h3>
+<p><strong>Wrap the data into a PyTorch-compatible dataset</strong></p>
 <p>The class below defines a dataset wrapper that will extract 2-second windows,
 uniformly sampled over the whole signal. In addition, it will add useful information
 about the extracted windows, such as the p-factor, the subject or the task.</p>
@@ -922,9 +915,7 @@ about the extracted windows, such as the p-factor, the subject or the task.</p>
 <span class="c1">#</span>
 </pre></div>
 </div>
-</section>
-<section id="inspect-the-label-distribution">
-<h3><a class="toc-backref" href="#id3" role="doc-backlink">Inspect the label distribution</a><a class="headerlink" href="#inspect-the-label-distribution" title="Link to this heading">#</a></h3>
+<p><strong>Inspect the label distribution</strong></p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">skorch.helper</span><span class="w"> </span><span class="kn">import</span> <span class="n">SliceDataset</span>
 
@@ -942,17 +933,18 @@ about the extracted windows, such as the p-factor, the subject or the task.</p>
 <span class="c1">#</span>
 </pre></div>
 </div>
-<img src="../../../_images/sphx_glr_tutorial_challenge_2_002.png" srcset="../../../_images/sphx_glr_tutorial_challenge_2_002.png" alt="Response Time Distribution" class = "sphx-glr-single-img"/><dl>
-<dt>Define, train and save a model</dt><dd><p>Now we have our pytorch dataset necessary for the training!</p>
+<img src="../../../_images/sphx_glr_tutorial_challenge_2_002.png" srcset="../../../_images/sphx_glr_tutorial_challenge_2_002.png" alt="Response Time Distribution" class = "sphx-glr-single-img"/><p><strong>Define, train and save a model</strong></p>
+<blockquote>
+<div><p>Now we have our pytorch dataset necessary for the training!</p>
 <p>Below, we define a simple EEGNeX model from Braindecode.
 All the braindecode models expect the input to be of shape (batch_size, n_channels, n_times)
 and have a test coverage about the behavior of the model.
 However, you can use any pytorch model you want.</p>
-</dd>
-</dl>
+</div></blockquote>
 <hr class="docutils" />
 <blockquote>
-<div></div></blockquote>
+<div><p><strong>Initialize model</strong></p>
+</div></blockquote>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">EEGNeX</span><span class="p">(</span><span class="n">n_chans</span><span class="o">=</span><span class="mi">129</span><span class="p">,</span> <span class="n">n_outputs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_times</span><span class="o">=</span><span class="mi">2</span> <span class="o">*</span> <span class="n">SFREQ</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
 <span class="c1"># Specify optimizer</span>
 <span class="n">optimizer</span> <span class="o">=</span> <span class="n">optim</span><span class="o">.</span><span class="n">Adamax</span><span class="p">(</span><span class="n">params</span><span class="o">=</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="mf">0.002</span><span class="p">)</span>
@@ -1032,76 +1024,76 @@ Forward/backward pass size (MB): 16.65
 Params size (MB): 0.22
 Estimated Total Size (MB): 16.97
 ================================================================================================================================================================
-Epoch 0 - step 0, loss: 0.656139612197876
-Epoch 0 - step 1, loss: 0.6533026695251465
-Epoch 0 - step 2, loss: 0.7502583265304565
-Epoch 0 - step 3, loss: 0.6575856804847717
-Epoch 0 - step 4, loss: 0.6453011631965637
-Epoch 0 - step 5, loss: 0.6212361454963684
-Epoch 0 - step 6, loss: 0.6813085675239563
-Epoch 0 - step 7, loss: 0.6928183436393738
-Epoch 0 - step 8, loss: 0.6714701652526855
-Epoch 0 - step 9, loss: 0.645720362663269
-Epoch 0 - step 10, loss: 0.6093734502792358
-Epoch 0 - step 11, loss: 0.6163627505302429
-Epoch 0 - step 12, loss: 0.5873340368270874
-Epoch 0 - step 13, loss: 0.6893396973609924
-Epoch 0 - step 14, loss: 0.6442437171936035
-Epoch 0 - step 15, loss: 0.6556761264801025
-Epoch 0 - step 16, loss: 0.5832200050354004
-Epoch 0 - step 17, loss: 0.6035456657409668
-Epoch 0 - step 18, loss: 0.5959171056747437
-Epoch 0 - step 19, loss: 0.6417571306228638
-Epoch 0 - step 20, loss: 0.6956071853637695
-Epoch 0 - step 21, loss: 0.7015976309776306
-Epoch 0 - step 22, loss: 0.6501666307449341
-Epoch 0 - step 23, loss: 0.7002213001251221
-Epoch 0 - step 24, loss: 0.5879963636398315
-Epoch 0 - step 25, loss: 0.5653626322746277
-Epoch 0 - step 26, loss: 0.6610434651374817
-Epoch 0 - step 27, loss: 0.7255240678787231
-Epoch 0 - step 28, loss: 0.6703923940658569
-Epoch 0 - step 29, loss: 0.6865461468696594
-Epoch 0 - step 30, loss: 0.6020792722702026
-Epoch 0 - step 31, loss: 0.7030159831047058
-Epoch 0 - step 32, loss: 0.7325024008750916
-Epoch 0 - step 33, loss: 0.6056413054466248
-Epoch 0 - step 34, loss: 0.6068878769874573
-Epoch 0 - step 35, loss: 0.680727481842041
-Epoch 0 - step 36, loss: 0.6319593191146851
-Epoch 0 - step 37, loss: 0.6823565363883972
-Epoch 0 - step 38, loss: 0.612535297870636
-Epoch 0 - step 39, loss: 0.6497724056243896
-Epoch 0 - step 40, loss: 0.6914169788360596
-Epoch 0 - step 41, loss: 0.6475271582603455
-Epoch 0 - step 42, loss: 0.6152868270874023
-Epoch 0 - step 43, loss: 0.6985635161399841
-Epoch 0 - step 44, loss: 0.5881229639053345
-Epoch 0 - step 45, loss: 0.6591322422027588
-Epoch 0 - step 46, loss: 0.6252793669700623
-Epoch 0 - step 47, loss: 0.6304113268852234
-Epoch 0 - step 48, loss: 0.6247724294662476
-Epoch 0 - step 49, loss: 0.6433749198913574
-Epoch 0 - step 50, loss: 0.7002766132354736
-Epoch 0 - step 51, loss: 0.6452944278717041
-Epoch 0 - step 52, loss: 0.611687958240509
-Epoch 0 - step 53, loss: 0.6557807922363281
-Epoch 0 - step 54, loss: 0.6162194013595581
-Epoch 0 - step 55, loss: 0.6343532204627991
-Epoch 0 - step 56, loss: 0.6166172623634338
-Epoch 0 - step 57, loss: 0.6579504013061523
-Epoch 0 - step 58, loss: 0.6487537622451782
-Epoch 0 - step 59, loss: 0.6236114501953125
-Epoch 0 - step 60, loss: 0.650632917881012
-Epoch 0 - step 61, loss: 0.6356716156005859
-Epoch 0 - step 62, loss: 0.651103675365448
-Epoch 0 - step 63, loss: 0.6732502579689026
-Epoch 0 - step 64, loss: 0.7526602149009705
+Epoch 0 - step 0, loss: 0.673090398311615
+Epoch 0 - step 1, loss: 0.6620791554450989
+Epoch 0 - step 2, loss: 0.7310603260993958
+Epoch 0 - step 3, loss: 0.6936084628105164
+Epoch 0 - step 4, loss: 0.664543628692627
+Epoch 0 - step 5, loss: 0.6227476596832275
+Epoch 0 - step 6, loss: 0.7038652300834656
+Epoch 0 - step 7, loss: 0.7005952000617981
+Epoch 0 - step 8, loss: 0.6653218269348145
+Epoch 0 - step 9, loss: 0.6617343425750732
+Epoch 0 - step 10, loss: 0.5914176106452942
+Epoch 0 - step 11, loss: 0.5925564765930176
+Epoch 0 - step 12, loss: 0.5738714933395386
+Epoch 0 - step 13, loss: 0.6869903802871704
+Epoch 0 - step 14, loss: 0.623184084892273
+Epoch 0 - step 15, loss: 0.6350137591362
+Epoch 0 - step 16, loss: 0.5635753870010376
+Epoch 0 - step 17, loss: 0.6301625967025757
+Epoch 0 - step 18, loss: 0.5914137363433838
+Epoch 0 - step 19, loss: 0.6354702711105347
+Epoch 0 - step 20, loss: 0.7176755666732788
+Epoch 0 - step 21, loss: 0.6956347227096558
+Epoch 0 - step 22, loss: 0.6659114956855774
+Epoch 0 - step 23, loss: 0.6966089010238647
+Epoch 0 - step 24, loss: 0.5995492339134216
+Epoch 0 - step 25, loss: 0.5572233200073242
+Epoch 0 - step 26, loss: 0.6616798639297485
+Epoch 0 - step 27, loss: 0.7303711175918579
+Epoch 0 - step 28, loss: 0.6685574054718018
+Epoch 0 - step 29, loss: 0.6874097585678101
+Epoch 0 - step 30, loss: 0.6016374826431274
+Epoch 0 - step 31, loss: 0.7061875462532043
+Epoch 0 - step 32, loss: 0.7386363744735718
+Epoch 0 - step 33, loss: 0.6043643355369568
+Epoch 0 - step 34, loss: 0.6140740513801575
+Epoch 0 - step 35, loss: 0.668877124786377
+Epoch 0 - step 36, loss: 0.6527726054191589
+Epoch 0 - step 37, loss: 0.6655396223068237
+Epoch 0 - step 38, loss: 0.6161550283432007
+Epoch 0 - step 39, loss: 0.6493500471115112
+Epoch 0 - step 40, loss: 0.6830413937568665
+Epoch 0 - step 41, loss: 0.6496636867523193
+Epoch 0 - step 42, loss: 0.6173610687255859
+Epoch 0 - step 43, loss: 0.6966049671173096
+Epoch 0 - step 44, loss: 0.595790445804596
+Epoch 0 - step 45, loss: 0.6541643738746643
+Epoch 0 - step 46, loss: 0.6379714012145996
+Epoch 0 - step 47, loss: 0.6258562803268433
+Epoch 0 - step 48, loss: 0.620151162147522
+Epoch 0 - step 49, loss: 0.6391966342926025
+Epoch 0 - step 50, loss: 0.7020273208618164
+Epoch 0 - step 51, loss: 0.6593890190124512
+Epoch 0 - step 52, loss: 0.6072112917900085
+Epoch 0 - step 53, loss: 0.6374081373214722
+Epoch 0 - step 54, loss: 0.6435114741325378
+Epoch 0 - step 55, loss: 0.6491461396217346
+Epoch 0 - step 56, loss: 0.6122912168502808
+Epoch 0 - step 57, loss: 0.6644113063812256
+Epoch 0 - step 58, loss: 0.6489386558532715
+Epoch 0 - step 59, loss: 0.6318053603172302
+Epoch 0 - step 60, loss: 0.6478019952774048
+Epoch 0 - step 61, loss: 0.6434122920036316
+Epoch 0 - step 62, loss: 0.647297203540802
+Epoch 0 - step 63, loss: 0.6720426678657532
+Epoch 0 - step 64, loss: 0.751721203327179
 Model saved as &#39;weights_challenge_2.pt&#39;
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (6 minutes 38.483 seconds)</p>
-<p><strong>Estimated memory usage:</strong>  1213 MB</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (6 minutes 45.534 seconds)</p>
+<p><strong>Estimated memory usage:</strong>  1283 MB</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-generated-auto-examples-eeg2025-tutorial-challenge-2-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/eegdash/EEGDash/main?urlpath=lab/tree/notebooks/generated/auto_examples/eeg2025/tutorial_challenge_2.ipynb"><img alt="Launch binder" src="../../../_images/binder_badge_logo1.svg" style="width: 150px;" />
@@ -1118,8 +1110,6 @@ Model saved as &#39;weights_challenge_2.pt&#39;
 </div>
 </div>
 <p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
-</section>
-</section>
 </section>
 
 
@@ -1162,26 +1152,10 @@ Model saved as &#39;weights_challenge_2.pt&#39;
 
 
   <div class="sidebar-secondary-item">
-<div
-    id="pst-page-navigation-heading-2"
-    class="page-toc tocsection onthispage">
-    <i class="fa-solid fa-list"></i> On this page
-  </div>
-  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
-    <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#combine-the-datasets-into-a-single-one">Combine the datasets into a single one</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#wrap-the-data-into-a-pytorch-compatible-dataset">Wrap the data into a PyTorch-compatible dataset</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inspect-the-label-distribution">Inspect the label distribution</a></li>
-</ul>
-</li>
-</ul>
-  </nav></div>
-
-  <div class="sidebar-secondary-item">
 
   
   <div class="tocsection editthispage">
-    <a href="https://github.com/eegdash/EEGDash/edit/main/docs/source/generated/auto_examples/eeg2025/tutorial_challenge_2.rst">
+    <a href="https://github.com/eegdash/EEGDash/edit/develop/docs/source/generated/auto_examples/eeg2025/tutorial_challenge_2.rst">
       <i class="fa-solid fa-pencil"></i>
       
       

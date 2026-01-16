@@ -5,11 +5,15 @@
 eegdash.dataset.DS004381
 ========================
 
-participants.tsv (OpenNeuro ``ds004381``). Access recordings and metadata through EEGDash.
+Intraoperative EEG dataset during medianus-tibialis stimulation with 8 different rates (OpenNeuro ``ds004381``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: ['eeg']` :bdg-light:`Tasks: 0` :bdg-light:`License: CC0` :bdg-light:`Subjects: 0` :bdg-light:`Recordings: 0` :bdg-light:`Source: openneuro`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 18` :bdg-secondary:`Recordings: 437`
+
+.. rst-class:: sd-badges
+
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,7 +25,7 @@ Dataset Information
    * - Dataset ID
      - ``DS004381``
    * - Title
-     - participants.tsv
+     - Intraoperative EEG dataset during medianus-tibialis stimulation with 8 different rates
    * - Year
      - 2022
    * - Authors
@@ -40,7 +44,7 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds004381,
-        title = {participants.tsv},
+        title = {Intraoperative EEG dataset during medianus-tibialis stimulation with 8 different rates},
         author = {Giorgio Selmin and Vasileios Dimakopoulos and Niklaus Krayenbühl and Luca Regli and Johannes Sarnthein},
         doi = {10.18112/openneuro.ds004381.v1.0.2},
         url = {https://doi.org/10.18112/openneuro.ds004381.v1.0.2},
@@ -55,30 +59,30 @@ Highlights
    .. grid-item-card:: Subjects & recordings
       :class-card: sd-border-1
 
-      - Subjects: 0
-      - Recordings: 0
-      - Tasks: 0
+      - Subjects: 18
+      - Recordings: 437
+      - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 8 (47), 4 (333), 5 (26), 10 (5), 7 (26)
+      - Channels: 5 (52), 7 (52), 10 (10), 8 (94), 4 (666)
       - Sampling rate (Hz): 20000.0
-      - Duration (hours): 0
+      - Duration (hours): 0.0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
 
-      - Tasks: 0
-      - Experiment type: Unknown
-      - Subject type: Unknown
+      - Tasks: 1
+      - Experiment type: —
+      - Subject type: —
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: Unknown
-      - File count: Unknown
-      - Format: Unknown
+      - Size on disk: 7.7 GB
+      - File count: 437
+      - Format: BIDS
 
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
@@ -100,17 +104,18 @@ Quickstart
 
 .. code-block:: bash
 
-   pip install eegdash
+    pip install eegdash
 
-**Load a recording**
+**Access the data**
 
 .. code-block:: python
 
-   from eegdash.dataset import DS004381
+    from eegdash.dataset import DS004381
 
-   dataset = DS004381(cache_dir="./data")
-   recording = dataset[0]
-   raw = recording.load()
+    dataset = DS004381(cache_dir="./data")
+    # Get the raw object of the first recording
+    raw = dataset.datasets[0].raw
+    print(raw.info)
 
 **Filter/query**
 

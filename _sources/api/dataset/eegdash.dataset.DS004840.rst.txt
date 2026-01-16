@@ -5,11 +5,15 @@
 eegdash.dataset.DS004840
 ========================
 
-participants.tsv (OpenNeuro ``ds004840``). Access recordings and metadata through EEGDash.
+Dataset of electrophysiological signals (EEG, ECG, EMG) during Music therapy with adult burn patients in the Intensive Care Unit - README (OpenNeuro ``ds004840``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: ['eeg']` :bdg-light:`Tasks: 0` :bdg-light:`License: CC0` :bdg-light:`Subjects: 0` :bdg-light:`Recordings: 0` :bdg-light:`Source: openneuro`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 3` :bdg-secondary:`Subjects: 9` :bdg-secondary:`Recordings: 51`
+
+.. rst-class:: sd-badges
+
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -21,7 +25,7 @@ Dataset Information
    * - Dataset ID
      - ``DS004840``
    * - Title
-     - participants.tsv
+     - Dataset of electrophysiological signals (EEG, ECG, EMG) during Music therapy with adult burn patients in the Intensive Care Unit - README
    * - Year
      - 2023
    * - Authors
@@ -40,7 +44,7 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds004840,
-        title = {participants.tsv},
+        title = {Dataset of electrophysiological signals (EEG, ECG, EMG) during Music therapy with adult burn patients in the Intensive Care Unit - README},
         author = {Jose Cordoba-Silva and Rafael Maya and Mario Valderrama and Luis Felipe Giraldo and William Betancourt-Zapata and Andrés Salgado-Vascob and Juliana Marín-Sánchez and Viviana Gómez-Ortega and Mark Ettenberger},
         doi = {10.18112/openneuro.ds004840.v1.0.1},
         url = {https://doi.org/10.18112/openneuro.ds004840.v1.0.1},
@@ -55,30 +59,30 @@ Highlights
    .. grid-item-card:: Subjects & recordings
       :class-card: sd-border-1
 
-      - Subjects: 0
-      - Recordings: 0
-      - Tasks: 0
+      - Subjects: 9
+      - Recordings: 51
+      - Tasks: 3
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
       - Channels: 8
-      - Sampling rate (Hz): 256.0 (3), 512.0 (15), 1024.0 (33)
-      - Duration (hours): 0
+      - Sampling rate (Hz): 256.0 (6), 1024.0 (66), 512.0 (30)
+      - Duration (hours): 0.0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
 
-      - Tasks: 0
-      - Experiment type: Unknown
-      - Subject type: Unknown
+      - Tasks: 3
+      - Experiment type: —
+      - Subject type: —
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: Unknown
-      - File count: Unknown
-      - Format: Unknown
+      - Size on disk: 599.5 MB
+      - File count: 51
+      - Format: BIDS
 
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
@@ -100,17 +104,18 @@ Quickstart
 
 .. code-block:: bash
 
-   pip install eegdash
+    pip install eegdash
 
-**Load a recording**
+**Access the data**
 
 .. code-block:: python
 
-   from eegdash.dataset import DS004840
+    from eegdash.dataset import DS004840
 
-   dataset = DS004840(cache_dir="./data")
-   recording = dataset[0]
-   raw = recording.load()
+    dataset = DS004840(cache_dir="./data")
+    # Get the raw object of the first recording
+    raw = dataset.datasets[0].raw
+    print(raw.info)
 
 **Filter/query**
 

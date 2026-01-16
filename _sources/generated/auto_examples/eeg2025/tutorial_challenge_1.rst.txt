@@ -48,8 +48,8 @@ Challenge 1: Cross-Task Transfer Learning!
 
 #####################################################################
 
- Preliminary notes
- -----------------
+ **Preliminary notes**
+
  Before we begin, I just want to make a deal with you, ok?
  This is a community competition with a strong open-source foundation.
  When I say open-source, I mean volunteer work.
@@ -62,8 +62,8 @@ Challenge 1: Cross-Task Transfer Learning!
 
 #####################################################################
 
- How can we use the knowledge from one EEG Decoding task into another?
- ---------------------------------------------------------------------
+ **How can we use the knowledge from one EEG Decoding task into another?**
+
  Transfer learning is a widespread technique used in deep learning. It
  uses knowledge learned from one source task/domain in another target
  task/domain. It has been studied in depth in computer vision, natural
@@ -94,16 +94,16 @@ Challenge 1: Cross-Task Transfer Learning!
 
 #####################################################################
 
- __________
+ .. note::
 
- Note: For simplicity purposes, we will only show how to do the decoding
- directly in our target task, and it is up to the teams to think about
- how to use the passive task to perform the pre-training.
+    For simplicity purposes, we will only show how to do the decoding
+    directly in our target task, and it is up to the teams to think about
+    how to use the passive task to perform the pre-training.
 
 ######################################################################
 
- Install dependencies
- --------------------
+ **Install dependencies**
+
  For the challenge, we will need two significant dependencies:
  `braindecode` and `eegdash`. The libraries will install PyTorch,
  Pytorch Audio, Scikit-learn, MNE, MNE-BIDS, and many other packages
@@ -115,8 +115,8 @@ Challenge 1: Cross-Task Transfer Learning!
 
 #####################################################################
 
- Imports and setup
- -----------------
+ **Imports and setup**
+
 
 .. GENERATED FROM PYTHON SOURCE LINES 90-110
 
@@ -149,10 +149,9 @@ Challenge 1: Cross-Task Transfer Learning!
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 111-119
+.. GENERATED FROM PYTHON SOURCE LINES 111-118
 
-Check GPU availability
-----------------------
+**Check GPU availability**
 
 Identify whether a CUDA-enabled GPU is available
 and set the device accordingly.
@@ -160,7 +159,7 @@ If using Google Colab, ensure that the runtime is set to use a GPU.
 This can be done by navigating to `Runtime` > `Change runtime type` and selecting
 `GPU` as the hardware accelerator.
 
-.. GENERATED FROM PYTHON SOURCE LINES 120-132
+.. GENERATED FROM PYTHON SOURCE LINES 119-131
 
 .. code-block:: Python
 
@@ -193,18 +192,16 @@ This can be done by navigating to `Runtime` > `Change runtime type` and selectin
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 133-231
+.. GENERATED FROM PYTHON SOURCE LINES 132-228
 
-What are we decoding?
- ---------------------
+**What are we decoding?**
 
  To start to talk about what we want to analyse, the important thing
  is to understand some basic concepts.
 
 #####################################################################
 
- The brain decodes the problem
- -----------------------------
+ **The brain decodes the problem**
 
  Broadly speaking, here *brain decoding* is the following problem:
  given brain time-series signals :math:`X \in \mathbb{R}^{C \times T}` with
@@ -227,8 +224,8 @@ What are we decoding?
  is the temporal window length/epoch size over the interval of interest.
  Here, :math:`\theta` denotes the parameters learned by the neural network.
 
- Input/Output definition
- ---------------------------
+ **Input/Output definition**
+
  For the competition, the HBN-EEG (Healthy Brain Network EEG Datasets)
  dataset has ``n_chans = 129`` with the last channels as a `reference channel <https://mne.tools/stable/auto_tutorials/preprocessing/55_setting_eeg_reference.html>`_,
  and we define the window length as ``n_times = 200``, corresponding to 2-second windows.
@@ -242,8 +239,8 @@ What are we decoding?
 
 #####################################################################
 
- Understand the task: Contrast Change Detection (CCD)
- --------------------------------------------------------
+ **Understand the task: Contrast Change Detection (CCD)**
+
  If you are interested to get more neuroscience insight, we recommend these two references, `HBN-EEG <https://www.biorxiv.org/content/10.1101/2024.10.03.615261v2.full.pdf>`__ and `Langer, N et al. (2017) <https://www.nature.com/articles/sdata201740#Sec2>`__.
  Your task (**label**) is to predict the response time for the subject during this windows.
 
@@ -275,8 +272,8 @@ What are we decoding?
 
 #####################################################################
 
- Stimulus demonstration
- ----------------------
+ **Stimulus demonstration**
+
  .. raw:: html
 
     <div class="video-wrapper">
@@ -288,13 +285,13 @@ What are we decoding?
 
 #####################################################################
 
- PyTorch Dataset for the competition
- -----------------------------------
+ **PyTorch Dataset for the competition**
+
  Now, we have a Pytorch Dataset object that contains the set of recordings for the task
  `contrastChangeDetection`.
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 232-264
+.. GENERATED FROM PYTHON SOURCE LINES 229-261
 
 .. code-block:: Python
 
@@ -357,14 +354,602 @@ What are we decoding?
     ╰──────────────────────── Source: EEGChallengeDataset ─────────────────────────╯
     Number of recordings in the dataset: 60
     Number of unique subjects in the dataset: 20
+    Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-3_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+    Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-1_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+
+    Downloading sub-NDARAJ689BVN_task-contrastChangeDetection_run-3_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+
+
+    Downloading sub-NDARAJ689BVN_task-contrastChangeDetection_run-2_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 12.5B/s]
+    Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 12.6B/s]
+    Downloading sub-NDARAJ689BVN_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.1B/s]
+    Downloading sub-NDARAJ689BVN_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 8.83B/s]
+    Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-3_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+    Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-1_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+
+    Downloading sub-NDARAJ689BVN_task-contrastChangeDetection_run-2_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+
+
+    Downloading sub-NDARAJ689BVN_task-contrastChangeDetection_run-3_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 13.0B/s]
+    Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 12.0B/s]
+    Downloading sub-NDARAJ689BVN_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 12.3B/s]
+    Downloading sub-NDARAJ689BVN_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 12.1B/s]
+    Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-3_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+    Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-1_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+
+    Downloading sub-NDARAJ689BVN_task-contrastChangeDetection_run-2_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+
+
+    Downloading sub-NDARAJ689BVN_task-contrastChangeDetection_run-3_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 10.5B/s]
+    Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 12.5B/s]
+    Downloading sub-NDARAJ689BVN_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 13.1B/s]
+    Downloading sub-NDARAJ689BVN_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 13.0B/s]
+    Downloading sub-NDARAJ689BVN_task-contrastChangeDetection_run-2_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+    Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-3_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+
+    Downloading sub-NDARAJ689BVN_task-contrastChangeDetection_run-3_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+
+
+    Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-1_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+
+    Downloading sub-NDARAJ689BVN_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 1.72B/s]    Downloading sub-NDARAJ689BVN_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 1.72B/s]
+    Downloading sub-NDARAJ689BVN_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 1.61B/s]    Downloading sub-NDARAJ689BVN_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 1.60B/s]
+
+
+
+    Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 1.62B/s]    Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 1.62B/s]
+
+    Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 1.50B/s]    Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 1.50B/s]
+    Downloading sub-NDARAJ689BVN_task-contrastChangeDetection_run-1_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+    Downloading sub-NDARAP785CTE_task-contrastChangeDetection_run-1_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+
+    Downloading sub-NDARAP785CTE_task-contrastChangeDetection_run-3_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+
+
+    Downloading sub-NDARAP785CTE_task-contrastChangeDetection_run-2_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAJ689BVN_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 10.1B/s]
+    Downloading sub-NDARAP785CTE_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.0B/s]
+    Downloading sub-NDARAP785CTE_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 7.82B/s]
+    Downloading sub-NDARAP785CTE_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 10.4B/s]
+    Downloading sub-NDARAJ689BVN_task-contrastChangeDetection_run-1_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+    Downloading sub-NDARAP785CTE_task-contrastChangeDetection_run-3_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+
+    Downloading sub-NDARAP785CTE_task-contrastChangeDetection_run-1_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+
+
+    Downloading sub-NDARAP785CTE_task-contrastChangeDetection_run-2_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAJ689BVN_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 10.5B/s]
+    Downloading sub-NDARAP785CTE_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 13.2B/s]
+    Downloading sub-NDARAP785CTE_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 12.6B/s]
+    Downloading sub-NDARAP785CTE_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.5B/s]
+    Downloading sub-NDARAJ689BVN_task-contrastChangeDetection_run-1_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+    Downloading sub-NDARAP785CTE_task-contrastChangeDetection_run-1_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+
+    Downloading sub-NDARAP785CTE_task-contrastChangeDetection_run-3_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+
+
+    Downloading sub-NDARAP785CTE_task-contrastChangeDetection_run-2_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAJ689BVN_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 12.7B/s]
+    Downloading sub-NDARAP785CTE_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 12.9B/s]
+    Downloading sub-NDARAP785CTE_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 13.5B/s]
+    Downloading sub-NDARAP785CTE_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 12.0B/s]
+    Downloading sub-NDARAJ689BVN_task-contrastChangeDetection_run-1_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+    Downloading sub-NDARAP785CTE_task-contrastChangeDetection_run-1_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+
+    Downloading sub-NDARAP785CTE_task-contrastChangeDetection_run-3_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+
+
+    Downloading sub-NDARAP785CTE_task-contrastChangeDetection_run-2_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAJ689BVN_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.90B/s]    Downloading sub-NDARAJ689BVN_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.89B/s]
+
+
+    Downloading sub-NDARAP785CTE_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.42B/s]    Downloading sub-NDARAP785CTE_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.41B/s]
+
+    Downloading sub-NDARAP785CTE_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.00B/s]    Downloading sub-NDARAP785CTE_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.00B/s]
+
+
+
+    Downloading sub-NDARAP785CTE_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.35B/s]    Downloading sub-NDARAP785CTE_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.35B/s]
+    Downloading sub-NDARAU708TL8_task-contrastChangeDetection_run-1_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+    Downloading sub-NDARAU708TL8_task-contrastChangeDetection_run-2_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAU708TL8_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 12.3B/s]
+    Downloading sub-NDARBE091BGD_task-contrastChangeDetection_run-3_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+
+    Downloading sub-NDARAU708TL8_task-contrastChangeDetection_run-3_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAU708TL8_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 10.1B/s]
+    Downloading sub-NDARAU708TL8_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 12.9B/s]
+    Downloading sub-NDARBE091BGD_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.3B/s]
+    Downloading sub-NDARAU708TL8_task-contrastChangeDetection_run-1_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+    Downloading sub-NDARAU708TL8_task-contrastChangeDetection_run-2_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+
+    Downloading sub-NDARAU708TL8_task-contrastChangeDetection_run-3_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+
+
+    Downloading sub-NDARBE091BGD_task-contrastChangeDetection_run-3_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAU708TL8_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 10.9B/s]
+    Downloading sub-NDARAU708TL8_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 12.9B/s]
+    Downloading sub-NDARAU708TL8_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 10.6B/s]
+    Downloading sub-NDARBE091BGD_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.2B/s]
+    Downloading sub-NDARAU708TL8_task-contrastChangeDetection_run-1_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+    Downloading sub-NDARAU708TL8_task-contrastChangeDetection_run-3_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+
+    Downloading sub-NDARAU708TL8_task-contrastChangeDetection_run-2_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+
+
+    Downloading sub-NDARBE091BGD_task-contrastChangeDetection_run-3_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAU708TL8_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 12.4B/s]
+    Downloading sub-NDARAU708TL8_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 12.9B/s]
+    Downloading sub-NDARAU708TL8_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 13.0B/s]
+    Downloading sub-NDARBE091BGD_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.9B/s]
+    Downloading sub-NDARAU708TL8_task-contrastChangeDetection_run-1_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+    Downloading sub-NDARAU708TL8_task-contrastChangeDetection_run-3_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+
+    Downloading sub-NDARBE091BGD_task-contrastChangeDetection_run-3_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+
+
+    Downloading sub-NDARAU708TL8_task-contrastChangeDetection_run-2_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAU708TL8_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 4.10B/s]    Downloading sub-NDARAU708TL8_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 4.10B/s]
+
+
+
+    Downloading sub-NDARAU708TL8_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.98B/s]
+
+    Downloading sub-NDARBE091BGD_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.92B/s]    Downloading sub-NDARBE091BGD_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.92B/s]
+    Downloading sub-NDARAU708TL8_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.96B/s]
+
+    Downloading sub-NDARAU708TL8_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.49B/s]    Downloading sub-NDARAU708TL8_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.49B/s]
+    Downloading sub-NDARBE091BGD_task-contrastChangeDetection_run-2_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+    Downloading sub-NDARBE103DHM_task-contrastChangeDetection_run-1_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+
+    Downloading sub-NDARBE091BGD_task-contrastChangeDetection_run-1_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+
+
+    Downloading sub-NDARBE103DHM_task-contrastChangeDetection_run-2_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARBE091BGD_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 6.99B/s]
+    Downloading sub-NDARBE103DHM_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 13.0B/s]
+    Downloading sub-NDARBE103DHM_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 9.55B/s]
+    Downloading sub-NDARBE091BGD_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 8.90B/s]
+    Downloading sub-NDARBE091BGD_task-contrastChangeDetection_run-2_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+    Downloading sub-NDARBE103DHM_task-contrastChangeDetection_run-2_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+
+    Downloading sub-NDARBE103DHM_task-contrastChangeDetection_run-1_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+
+
+    Downloading sub-NDARBE091BGD_task-contrastChangeDetection_run-1_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARBE091BGD_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.8B/s]
+    Downloading sub-NDARBE103DHM_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.0B/s]
+    Downloading sub-NDARBE103DHM_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 9.95B/s]
+    Downloading sub-NDARBE091BGD_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.7B/s]
+    Downloading sub-NDARBE091BGD_task-contrastChangeDetection_run-2_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+    Downloading sub-NDARBE103DHM_task-contrastChangeDetection_run-2_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+
+    Downloading sub-NDARBE103DHM_task-contrastChangeDetection_run-1_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+
+
+    Downloading sub-NDARBE091BGD_task-contrastChangeDetection_run-1_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARBE091BGD_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 12.3B/s]
+    Downloading sub-NDARBE103DHM_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 13.3B/s]
+    Downloading sub-NDARBE103DHM_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 12.7B/s]
+    Downloading sub-NDARBE091BGD_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 12.9B/s]
+    Downloading sub-NDARBE091BGD_task-contrastChangeDetection_run-2_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+    Downloading sub-NDARBE103DHM_task-contrastChangeDetection_run-2_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+
+    Downloading sub-NDARBE103DHM_task-contrastChangeDetection_run-1_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+
+
+    Downloading sub-NDARBE091BGD_task-contrastChangeDetection_run-1_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+    Downloading sub-NDARBE103DHM_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.77B/s]    Downloading sub-NDARBE103DHM_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.77B/s]
+    Downloading sub-NDARBE091BGD_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.33B/s]    Downloading sub-NDARBE091BGD_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.32B/s]
+
+
+    Downloading sub-NDARBE103DHM_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.85B/s]    Downloading sub-NDARBE103DHM_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.83B/s]
+
+
+
+    Downloading sub-NDARBE091BGD_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.96B/s]    Downloading sub-NDARBE091BGD_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.95B/s]
+    Downloading sub-NDARBE103DHM_task-contrastChangeDetection_run-3_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+    Downloading sub-NDARBF851NH6_task-contrastChangeDetection_run-3_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+
+    Downloading sub-NDARBF851NH6_task-contrastChangeDetection_run-2_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+
+
+    Downloading sub-NDARBF851NH6_task-contrastChangeDetection_run-1_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARBF851NH6_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 9.59B/s]
+    Downloading sub-NDARBF851NH6_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.3B/s]
+    Downloading sub-NDARBF851NH6_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 9.58B/s]
+    Downloading sub-NDARBE103DHM_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 5.31B/s]
+    Downloading sub-NDARBF851NH6_task-contrastChangeDetection_run-3_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+    Downloading sub-NDARBF851NH6_task-contrastChangeDetection_run-2_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+
+    Downloading sub-NDARBF851NH6_task-contrastChangeDetection_run-1_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+
+
+    Downloading sub-NDARBE103DHM_task-contrastChangeDetection_run-3_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARBF851NH6_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 12.1B/s]
+    Downloading sub-NDARBF851NH6_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 10.5B/s]
+    Downloading sub-NDARBF851NH6_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 10.0B/s]
+    Downloading sub-NDARBF851NH6_task-contrastChangeDetection_run-1_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+    Downloading sub-NDARBF851NH6_task-contrastChangeDetection_run-2_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+
+    Downloading sub-NDARBF851NH6_task-contrastChangeDetection_run-3_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARBE103DHM_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 6.06B/s]
+    Downloading sub-NDARBF851NH6_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 12.7B/s]
+    Downloading sub-NDARBF851NH6_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.5B/s]
+    Downloading sub-NDARBF851NH6_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 10.5B/s]
+    Downloading sub-NDARBE103DHM_task-contrastChangeDetection_run-3_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+    Downloading sub-NDARBF851NH6_task-contrastChangeDetection_run-2_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+
+    Downloading sub-NDARBF851NH6_task-contrastChangeDetection_run-3_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+
+
+    Downloading sub-NDARBF851NH6_task-contrastChangeDetection_run-1_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARBE103DHM_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 7.82B/s]
+    Downloading sub-NDARBE103DHM_task-contrastChangeDetection_run-3_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+
+    Downloading sub-NDARBF851NH6_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.21B/s]    Downloading sub-NDARBF851NH6_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.17B/s]
+
+
+
+    Downloading sub-NDARBF851NH6_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.18B/s]    Downloading sub-NDARBF851NH6_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.15B/s]
+
+    Downloading sub-NDARBF851NH6_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 2.60B/s]    Downloading sub-NDARBF851NH6_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 2.59B/s]
+    Downloading sub-NDARBE103DHM_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.94B/s]    Downloading sub-NDARBE103DHM_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.94B/s]
+    Downloading sub-NDARBH228RDW_task-contrastChangeDetection_run-1_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+    Downloading sub-NDARBH228RDW_task-contrastChangeDetection_run-2_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+
+    Downloading sub-NDARBH228RDW_task-contrastChangeDetection_run-3_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARBH228RDW_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 12.7B/s]
+    Downloading sub-NDARBJ674TVU_task-contrastChangeDetection_run-1_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARBH228RDW_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 7.74B/s]
+    Downloading sub-NDARBH228RDW_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 10.3B/s]
+    Downloading sub-NDARBJ674TVU_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 12.1B/s]
+    Downloading sub-NDARBH228RDW_task-contrastChangeDetection_run-1_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+    Downloading sub-NDARBH228RDW_task-contrastChangeDetection_run-3_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+
+    Downloading sub-NDARBH228RDW_task-contrastChangeDetection_run-2_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARBH228RDW_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.8B/s]
+    Downloading sub-NDARBJ674TVU_task-contrastChangeDetection_run-1_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARBH228RDW_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.1B/s]
+    Downloading sub-NDARBJ674TVU_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 12.4B/s]
+    Downloading sub-NDARBH228RDW_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 6.34B/s]
+    Downloading sub-NDARBH228RDW_task-contrastChangeDetection_run-3_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+    Downloading sub-NDARBH228RDW_task-contrastChangeDetection_run-1_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+
+    Downloading sub-NDARBJ674TVU_task-contrastChangeDetection_run-1_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARBH228RDW_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 13.4B/s]
+    Downloading sub-NDARBH228RDW_task-contrastChangeDetection_run-2_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARBH228RDW_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.8B/s]
+    Downloading sub-NDARBJ674TVU_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.2B/s]
+    Downloading sub-NDARBH228RDW_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 10.8B/s]
+    Downloading sub-NDARBH228RDW_task-contrastChangeDetection_run-3_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+    Downloading sub-NDARBH228RDW_task-contrastChangeDetection_run-1_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+
+    Downloading sub-NDARBH228RDW_task-contrastChangeDetection_run-2_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+
+
+    Downloading sub-NDARBJ674TVU_task-contrastChangeDetection_run-1_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARBH228RDW_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 5.35B/s]
+    Downloading sub-NDARBJ674TVU_task-contrastChangeDetection_run-3_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+
+    Downloading sub-NDARBH228RDW_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 4.18B/s]    Downloading sub-NDARBH228RDW_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 4.17B/s]
+
+
+
+    Downloading sub-NDARBJ674TVU_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.78B/s]    Downloading sub-NDARBJ674TVU_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.78B/s]
+    Downloading sub-NDARBJ674TVU_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 12.5B/s]
+
+    Downloading sub-NDARBH228RDW_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 2.34B/s]    Downloading sub-NDARBH228RDW_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 2.34B/s]
+    Downloading sub-NDARBJ674TVU_task-contrastChangeDetection_run-2_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+    Downloading sub-NDARBM433VER_task-contrastChangeDetection_run-1_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+
+    Downloading sub-NDARBJ674TVU_task-contrastChangeDetection_run-3_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARBJ674TVU_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 10.5B/s]
+    Downloading sub-NDARBM433VER_task-contrastChangeDetection_run-2_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARBM433VER_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 12.4B/s]
+    Downloading sub-NDARBJ674TVU_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 12.3B/s]
+    Downloading sub-NDARBM433VER_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 8.42B/s]
+    Downloading sub-NDARBJ674TVU_task-contrastChangeDetection_run-2_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+    Downloading sub-NDARBM433VER_task-contrastChangeDetection_run-1_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+
+    Downloading sub-NDARBJ674TVU_task-contrastChangeDetection_run-3_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARBM433VER_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 10.8B/s]
+    Downloading sub-NDARBJ674TVU_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 12.8B/s]
+    Downloading sub-NDARBJ674TVU_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 9.32B/s]
+    Downloading sub-NDARBM433VER_task-contrastChangeDetection_run-2_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARBM433VER_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.1B/s]
+    Downloading sub-NDARBM433VER_task-contrastChangeDetection_run-1_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+    Downloading sub-NDARBJ674TVU_task-contrastChangeDetection_run-3_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+
+    Downloading sub-NDARBJ674TVU_task-contrastChangeDetection_run-2_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARBM433VER_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 13.3B/s]
+    Downloading sub-NDARBJ674TVU_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 12.6B/s]
+    Downloading sub-NDARBM433VER_task-contrastChangeDetection_run-2_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+
+    Downloading sub-NDARBM433VER_task-contrastChangeDetection_run-1_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARBM433VER_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.0B/s]
+    Downloading sub-NDARBJ674TVU_task-contrastChangeDetection_run-2_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+    Downloading sub-NDARBJ674TVU_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 4.15B/s]    Downloading sub-NDARBJ674TVU_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 4.15B/s]
+
+    Downloading sub-NDARBM433VER_task-contrastChangeDetection_run-2_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+
+
+    Downloading sub-NDARBM433VER_task-contrastChangeDetection_run-3_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARBM433VER_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 12.0B/s]
+    Downloading sub-NDARBJ674TVU_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.70B/s]    Downloading sub-NDARBJ674TVU_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.70B/s]
+    Downloading sub-NDARBM433VER_task-contrastChangeDetection_run-3_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+    Downloading sub-NDARBM433VER_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.76B/s]    Downloading sub-NDARBM433VER_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.75B/s]
+
+
+    Downloading sub-NDARBM433VER_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 2.43B/s]    Downloading sub-NDARBM433VER_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 2.43B/s]
+
+    Downloading sub-NDARCA740UC8_task-contrastChangeDetection_run-2_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARBM433VER_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 12.4B/s]
+    Downloading sub-NDARCA740UC8_task-contrastChangeDetection_run-3_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCA740UC8_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 9.38B/s]
+
+    Downloading sub-NDARCA740UC8_task-contrastChangeDetection_run-1_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+
+    Downloading sub-NDARBM433VER_task-contrastChangeDetection_run-3_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCA740UC8_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 12.3B/s]
+    Downloading sub-NDARCA740UC8_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 12.8B/s]
+    Downloading sub-NDARBM433VER_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.7B/s]
+    Downloading sub-NDARCA740UC8_task-contrastChangeDetection_run-2_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+    Downloading sub-NDARCA740UC8_task-contrastChangeDetection_run-1_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+
+    Downloading sub-NDARCA740UC8_task-contrastChangeDetection_run-3_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCA740UC8_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.7B/s]
+    Downloading sub-NDARBM433VER_task-contrastChangeDetection_run-3_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCA740UC8_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 12.5B/s]
+    Downloading sub-NDARCA740UC8_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.1B/s]
+
+    Downloading sub-NDARCA740UC8_task-contrastChangeDetection_run-2_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+
+    Downloading sub-NDARCA740UC8_task-contrastChangeDetection_run-3_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+
+
+    Downloading sub-NDARCA740UC8_task-contrastChangeDetection_run-1_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCA740UC8_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 13.0B/s]
+    Downloading sub-NDARCA740UC8_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 12.3B/s]
+    Downloading sub-NDARCA740UC8_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 10.9B/s]
+
+    Downloading sub-NDARCA740UC8_task-contrastChangeDetection_run-2_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARBM433VER_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.26B/s]    Downloading sub-NDARBM433VER_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.26B/s]
+    Downloading sub-NDARCA740UC8_task-contrastChangeDetection_run-1_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+
+    Downloading sub-NDARCA740UC8_task-contrastChangeDetection_run-3_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+
+
+    Downloading sub-NDARCU633GCZ_task-contrastChangeDetection_run-1_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCU633GCZ_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 10.0B/s]
+
+    Downloading sub-NDARCA740UC8_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.33B/s]    Downloading sub-NDARCA740UC8_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.33B/s]
+
+
+    Downloading sub-NDARCA740UC8_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.28B/s]    Downloading sub-NDARCA740UC8_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.28B/s]
+    Downloading sub-NDARCA740UC8_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 2.89B/s]    Downloading sub-NDARCA740UC8_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 2.88B/s]
+    Downloading sub-NDARCU633GCZ_task-contrastChangeDetection_run-3_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+    Downloading sub-NDARCU633GCZ_task-contrastChangeDetection_run-1_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+
+    Downloading sub-NDARCU633GCZ_task-contrastChangeDetection_run-2_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCU633GCZ_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 10.8B/s]
+    Downloading sub-NDARCU736GZ1_task-contrastChangeDetection_run-2_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCU633GCZ_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.5B/s]
+    Downloading sub-NDARCU633GCZ_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 12.6B/s]
+    Downloading sub-NDARCU736GZ1_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 12.2B/s]
+    Downloading sub-NDARCU633GCZ_task-contrastChangeDetection_run-1_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCU633GCZ_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 13.6B/s]
+    Downloading sub-NDARCU633GCZ_task-contrastChangeDetection_run-3_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+    Downloading sub-NDARCU633GCZ_task-contrastChangeDetection_run-2_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCU633GCZ_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 12.9B/s]
+    Downloading sub-NDARCU736GZ1_task-contrastChangeDetection_run-2_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+
+    Downloading sub-NDARCU633GCZ_task-contrastChangeDetection_run-1_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCU633GCZ_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.7B/s]
+    Downloading sub-NDARCU736GZ1_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 10.7B/s]
+    Downloading sub-NDARCU633GCZ_task-contrastChangeDetection_run-3_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+    Downloading sub-NDARCU633GCZ_task-contrastChangeDetection_run-2_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+
+
+    Downloading sub-NDARCU736GZ1_task-contrastChangeDetection_run-2_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCU633GCZ_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 7.91B/s]
+    Downloading sub-NDARCU633GCZ_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 12.9B/s]
+    Downloading sub-NDARCU736GZ1_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 14.0B/s]
+    Downloading sub-NDARCU633GCZ_task-contrastChangeDetection_run-3_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+    Downloading sub-NDARCU633GCZ_task-contrastChangeDetection_run-2_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+
+
+    Downloading sub-NDARCU736GZ1_task-contrastChangeDetection_run-2_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+
+    Downloading sub-NDARCU633GCZ_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 1.70B/s]    Downloading sub-NDARCU633GCZ_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 1.70B/s]
+
+
+    Downloading sub-NDARCU736GZ1_task-contrastChangeDetection_run-3_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCU736GZ1_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 12.1B/s]
+    Downloading sub-NDARCU633GCZ_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 1.79B/s]    Downloading sub-NDARCU633GCZ_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 1.79B/s]
+
+    Downloading sub-NDARCU633GCZ_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 1.83B/s]    Downloading sub-NDARCU633GCZ_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 1.83B/s]
+    Downloading sub-NDARCU736GZ1_task-contrastChangeDetection_run-3_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+
+
+    Downloading sub-NDARCU736GZ1_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 1.83B/s]    Downloading sub-NDARCU736GZ1_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 1.83B/s]
+
+    Downloading sub-NDARCU736GZ1_task-contrastChangeDetection_run-1_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCU736GZ1_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.6B/s]
+    Downloading sub-NDARCU744XWL_task-contrastChangeDetection_run-1_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+
+    Downloading sub-NDARCU744XWL_task-contrastChangeDetection_run-3_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCU736GZ1_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 8.60B/s]
+
+    Downloading sub-NDARCU736GZ1_task-contrastChangeDetection_run-3_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCU744XWL_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.6B/s]
+    Downloading sub-NDARCU744XWL_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 9.88B/s]
+    Downloading sub-NDARCU736GZ1_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 10.2B/s]
+    Downloading sub-NDARCU736GZ1_task-contrastChangeDetection_run-1_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+    Downloading sub-NDARCU744XWL_task-contrastChangeDetection_run-1_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+
+    Downloading sub-NDARCU744XWL_task-contrastChangeDetection_run-3_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCU736GZ1_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 13.0B/s]
+    Downloading sub-NDARCU744XWL_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.4B/s]
+    Downloading sub-NDARCU744XWL_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.5B/s]
+    Downloading sub-NDARCU736GZ1_task-contrastChangeDetection_run-3_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+    Downloading sub-NDARCU736GZ1_task-contrastChangeDetection_run-1_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+
+    Downloading sub-NDARCU744XWL_task-contrastChangeDetection_run-1_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+
+
+    Downloading sub-NDARCU744XWL_task-contrastChangeDetection_run-3_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCU736GZ1_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 10.6B/s]
+    Downloading sub-NDARCU744XWL_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 12.6B/s]
+    Downloading sub-NDARCU744XWL_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.0B/s]
+
+    Downloading sub-NDARCU736GZ1_task-contrastChangeDetection_run-1_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+
+    Downloading sub-NDARCU744XWL_task-contrastChangeDetection_run-1_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCU736GZ1_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.12B/s]    Downloading sub-NDARCU736GZ1_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.11B/s]
+    Downloading sub-NDARCU744XWL_task-contrastChangeDetection_run-3_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+
+
+    Downloading sub-NDARCU744XWL_task-contrastChangeDetection_run-2_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCU744XWL_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 10.7B/s]
+    Downloading sub-NDARCU744XWL_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 4.29B/s]    Downloading sub-NDARCU744XWL_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 4.29B/s]
+
+    Downloading sub-NDARCU736GZ1_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.49B/s]    Downloading sub-NDARCU736GZ1_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.49B/s]
+    Downloading sub-NDARCU744XWL_task-contrastChangeDetection_run-2_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+    Downloading sub-NDARDC843HHM_task-contrastChangeDetection_run-3_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+
+
+    Downloading sub-NDARDC843HHM_task-contrastChangeDetection_run-2_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCU744XWL_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 12.6B/s]
+
+
+    Downloading sub-NDARCU744XWL_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 2.14B/s]    Downloading sub-NDARCU744XWL_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 2.13B/s]
+    Downloading sub-NDARDC843HHM_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.3B/s]
+    Downloading sub-NDARDC843HHM_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 10.9B/s]
+    Downloading sub-NDARCU744XWL_task-contrastChangeDetection_run-2_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+    Downloading sub-NDARDC843HHM_task-contrastChangeDetection_run-1_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+
+    Downloading sub-NDARDC843HHM_task-contrastChangeDetection_run-3_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+
+
+    Downloading sub-NDARDC843HHM_task-contrastChangeDetection_run-2_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCU744XWL_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 13.5B/s]
+    Downloading sub-NDARDC843HHM_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 12.8B/s]
+    Downloading sub-NDARDC843HHM_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 10.8B/s]
+    Downloading sub-NDARDC843HHM_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 10.8B/s]
+    Downloading sub-NDARCU744XWL_task-contrastChangeDetection_run-2_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+    Downloading sub-NDARDC843HHM_task-contrastChangeDetection_run-1_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+
+    Downloading sub-NDARDC843HHM_task-contrastChangeDetection_run-3_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+
+
+    Downloading sub-NDARDC843HHM_task-contrastChangeDetection_run-2_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARDC843HHM_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 13.9B/s]
+    Downloading sub-NDARDC843HHM_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 13.0B/s]
+    Downloading sub-NDARDC843HHM_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.8B/s]
+
+    Downloading sub-NDARDC843HHM_task-contrastChangeDetection_run-1_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCU744XWL_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 4.05B/s]
+
+    Downloading sub-NDARDC843HHM_task-contrastChangeDetection_run-3_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCU744XWL_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 4.03B/s]
+    Downloading sub-NDARDC843HHM_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 13.2B/s]
+    Downloading sub-NDARDC843HHM_task-contrastChangeDetection_run-2_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+    Downloading sub-NDARDH086ZKK_task-contrastChangeDetection_run-2_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+
+
+    Downloading sub-NDARDC843HHM_task-contrastChangeDetection_run-1_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARDH086ZKK_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 12.2B/s]
+
+
+    Downloading sub-NDARDC843HHM_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.24B/s]    Downloading sub-NDARDC843HHM_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.21B/s]
+
+    Downloading sub-NDARDH086ZKK_task-contrastChangeDetection_run-2_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+
+
+    Downloading sub-NDARDC843HHM_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 4.48B/s]    Downloading sub-NDARDC843HHM_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 4.48B/s]
+    Downloading sub-NDARDC843HHM_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 2.89B/s]    Downloading sub-NDARDC843HHM_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 2.89B/s]
+    Downloading sub-NDARDH086ZKK_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.4B/s]
+    Downloading sub-NDARDH086ZKK_task-contrastChangeDetection_run-3_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+    Downloading sub-NDARDH086ZKK_task-contrastChangeDetection_run-1_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARDH086ZKK_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.2B/s]
+    Downloading sub-NDARDL305BT8_task-contrastChangeDetection_run-1_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+
+    Downloading sub-NDARDH086ZKK_task-contrastChangeDetection_run-2_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARDL305BT8_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 12.9B/s]
+    Downloading sub-NDARDH086ZKK_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.3B/s]
+    Downloading sub-NDARDH086ZKK_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 12.7B/s]
+    Downloading sub-NDARDH086ZKK_task-contrastChangeDetection_run-3_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+    Downloading sub-NDARDL305BT8_task-contrastChangeDetection_run-1_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+
+    Downloading sub-NDARDH086ZKK_task-contrastChangeDetection_run-1_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARDH086ZKK_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.6B/s]
+    Downloading sub-NDARDH086ZKK_task-contrastChangeDetection_run-2_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARDL305BT8_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 12.6B/s]
+    Downloading sub-NDARDH086ZKK_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 12.8B/s]
+
+    Downloading sub-NDARDH086ZKK_task-contrastChangeDetection_run-3_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+
+    Downloading sub-NDARDL305BT8_task-contrastChangeDetection_run-1_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+
+
+    Downloading sub-NDARDH086ZKK_task-contrastChangeDetection_run-1_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARDH086ZKK_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.6B/s]
+    Downloading sub-NDARDH086ZKK_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 12.2B/s]
+    Downloading sub-NDARDL305BT8_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 10.8B/s]
+    Downloading sub-NDARDH086ZKK_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.25B/s]    Downloading sub-NDARDH086ZKK_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.24B/s]
+    Downloading sub-NDARDH086ZKK_task-contrastChangeDetection_run-3_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+    Downloading sub-NDARDH086ZKK_task-contrastChangeDetection_run-1_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+
+    Downloading sub-NDARDL305BT8_task-contrastChangeDetection_run-1_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+
+
+    Downloading sub-NDARDL305BT8_task-contrastChangeDetection_run-2_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARDL305BT8_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 12.0B/s]
+    Downloading sub-NDARDH086ZKK_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 4.64B/s]    Downloading sub-NDARDH086ZKK_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 4.63B/s]
+
+    Downloading sub-NDARDH086ZKK_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 4.10B/s]    Downloading sub-NDARDH086ZKK_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 4.10B/s]
+    Downloading sub-NDARDL305BT8_task-contrastChangeDetection_run-2_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+    Downloading sub-NDARDL305BT8_task-contrastChangeDetection_run-3_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+
+    Downloading sub-NDARDL305BT8_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 2.80B/s]    Downloading sub-NDARDL305BT8_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 2.80B/s]
+    Downloading sub-NDARDL305BT8_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 10.1B/s]
+    Downloading sub-NDARDL305BT8_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 10.1B/s]
+    Downloading sub-NDARDU853XZ6_task-contrastChangeDetection_run-3_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARDU853XZ6_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.5B/s]
+    Downloading sub-NDARDU853XZ6_task-contrastChangeDetection_run-2_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+    Downloading sub-NDARDL305BT8_task-contrastChangeDetection_run-3_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+
+    Downloading sub-NDARDL305BT8_task-contrastChangeDetection_run-2_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARDU853XZ6_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 13.1B/s]
+    Downloading sub-NDARDU853XZ6_task-contrastChangeDetection_run-3_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARDL305BT8_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 9.63B/s]
+    Downloading sub-NDARDL305BT8_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 8.67B/s]
+    Downloading sub-NDARDU853XZ6_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 10.2B/s]
+    Downloading sub-NDARDU853XZ6_task-contrastChangeDetection_run-2_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+    Downloading sub-NDARDL305BT8_task-contrastChangeDetection_run-3_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+
+    Downloading sub-NDARDL305BT8_task-contrastChangeDetection_run-2_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARDU853XZ6_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 9.33B/s]
+    Downloading sub-NDARDU853XZ6_task-contrastChangeDetection_run-3_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARDL305BT8_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.9B/s]
+    Downloading sub-NDARDU853XZ6_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.6B/s]
+    Downloading sub-NDARDU853XZ6_task-contrastChangeDetection_run-2_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+    Downloading sub-NDARDL305BT8_task-contrastChangeDetection_run-3_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARDU853XZ6_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.9B/s]
+    Downloading sub-NDARDU853XZ6_task-contrastChangeDetection_run-3_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+
+    Downloading sub-NDARDL305BT8_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.30B/s]    Downloading sub-NDARDL305BT8_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.30B/s]
+
+
+    Downloading sub-NDARDU853XZ6_task-contrastChangeDetection_run-2_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+
+
+    Downloading sub-NDARDU853XZ6_task-contrastChangeDetection_run-1_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARDU853XZ6_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.8B/s]
+    Downloading sub-NDARDU853XZ6_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.13B/s]    Downloading sub-NDARDU853XZ6_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.13B/s]
+    Downloading sub-NDARDU853XZ6_task-contrastChangeDetection_run-1_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+
+    Downloading sub-NDARDU853XZ6_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.88B/s]    Downloading sub-NDARDU853XZ6_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.88B/s]
+
+    Downloading sub-NDARDL305BT8_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 2.11B/s]    Downloading sub-NDARDL305BT8_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 2.11B/s]
+    Downloading sub-NDARDU853XZ6_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 12.4B/s]
+    Downloading sub-NDARDV245WJG_task-contrastChangeDetection_run-3_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+    Downloading sub-NDARDV245WJG_task-contrastChangeDetection_run-2_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+
+    Downloading sub-NDARDV245WJG_task-contrastChangeDetection_run-1_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARDV245WJG_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 13.4B/s]
+    Downloading sub-NDARDU853XZ6_task-contrastChangeDetection_run-1_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARDV245WJG_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 10.6B/s]
+    Downloading sub-NDARDV245WJG_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 10.2B/s]
+    Downloading sub-NDARDU853XZ6_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.8B/s]
+    Downloading sub-NDARDV245WJG_task-contrastChangeDetection_run-3_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+    Downloading sub-NDARDV245WJG_task-contrastChangeDetection_run-2_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARDV245WJG_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 13.0B/s]
+    Downloading sub-NDARDV245WJG_task-contrastChangeDetection_run-1_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+
+    Downloading sub-NDARDU853XZ6_task-contrastChangeDetection_run-1_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARDV245WJG_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.4B/s]
+    Downloading sub-NDARDV245WJG_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 13.3B/s]
+    Downloading sub-NDARDV245WJG_task-contrastChangeDetection_run-3_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+    Downloading sub-NDARDV245WJG_task-contrastChangeDetection_run-2_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+
+
+    Downloading sub-NDARDV245WJG_task-contrastChangeDetection_run-1_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARDV245WJG_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 12.3B/s]
+    Downloading sub-NDARDV245WJG_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 12.1B/s]
+    Downloading sub-NDARDV245WJG_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.6B/s]
+
+
+    Downloading sub-NDARDU853XZ6_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.93B/s]    Downloading sub-NDARDU853XZ6_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.93B/s]
+    Downloading sub-NDARDV245WJG_task-contrastChangeDetection_run-3_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+    Downloading sub-NDARDV245WJG_task-contrastChangeDetection_run-2_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+
+    Downloading sub-NDAREC480KFA_task-contrastChangeDetection_run-1_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+
+
+    Downloading sub-NDARDV245WJG_task-contrastChangeDetection_run-1_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDAREC480KFA_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 13.0B/s]
+
+
+    Downloading sub-NDAREC480KFA_task-contrastChangeDetection_run-1_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARDV245WJG_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.10B/s]    Downloading sub-NDARDV245WJG_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.09B/s]
+
+    Downloading sub-NDARDV245WJG_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.94B/s]    Downloading sub-NDARDV245WJG_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.94B/s]
+
+
+
+    Downloading sub-NDARDV245WJG_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 4.16B/s]    Downloading sub-NDARDV245WJG_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 4.16B/s]
+    Downloading sub-NDAREC480KFA_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 8.84B/s]
+    Downloading sub-NDAREC480KFA_task-contrastChangeDetection_run-2_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+    Downloading sub-NDAREC480KFA_task-contrastChangeDetection_run-3_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+
+    Downloading sub-NDAREC480KFA_task-contrastChangeDetection_run-1_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDAREC480KFA_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 10.9B/s]
+    Downloading sub-NDAREC480KFA_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 9.24B/s]
+    Downloading sub-NDAREC480KFA_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 12.0B/s]
+    Downloading sub-NDAREC480KFA_task-contrastChangeDetection_run-3_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+    Downloading sub-NDAREC480KFA_task-contrastChangeDetection_run-2_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+
+    Downloading sub-NDAREC480KFA_task-contrastChangeDetection_run-1_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDAREC480KFA_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 13.1B/s]
+    Downloading sub-NDAREC480KFA_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 10.8B/s]
+    Downloading sub-NDAREC480KFA_task-contrastChangeDetection_run-2_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+    Downloading sub-NDAREC480KFA_task-contrastChangeDetection_run-3_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDAREC480KFA_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 12.0B/s]
+    Downloading sub-NDAREC480KFA_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 10.3B/s]
+    Downloading sub-NDAREC480KFA_task-contrastChangeDetection_run-3_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+    Downloading sub-NDAREC480KFA_task-contrastChangeDetection_run-2_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
+
+    Downloading sub-NDAREC480KFA_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 2.74B/s]    Downloading sub-NDAREC480KFA_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 2.73B/s]
+    Downloading sub-NDAREC480KFA_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 4.43B/s]    Downloading sub-NDAREC480KFA_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 4.42B/s]
+
+    Downloading sub-NDAREC480KFA_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.88B/s]    Downloading sub-NDAREC480KFA_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.88B/s]
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 265-279
+.. GENERATED FROM PYTHON SOURCE LINES 262-275
 
-Alternatives for Downloading the data
--------------------------------------
+**Alternatives for Downloading the data**
 
 You can also perform this operation with wget or the aws cli.
 These options will probably be faster!
@@ -378,7 +963,7 @@ Example of AWS CLI for release R1
 
    aws s3 sync s3://nmdatasets/NeurIPS25/R1_L100_bdf data/R1_L100_bdf --no-sign-request
 
-.. GENERATED FROM PYTHON SOURCE LINES 280-282
+.. GENERATED FROM PYTHON SOURCE LINES 276-278
 
 .. code-block:: Python
 
@@ -391,13 +976,13 @@ Example of AWS CLI for release R1
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 283-286
+.. GENERATED FROM PYTHON SOURCE LINES 279-282
 
-Create windows of interest
------------------------------
+**Create windows of interest**
+
 So we epoch after the stimulus moment with a beginning shift of 500 ms.
 
-.. GENERATED FROM PYTHON SOURCE LINES 287-332
+.. GENERATED FROM PYTHON SOURCE LINES 283-328
 
 .. code-block:: Python
 
@@ -453,12 +1038,12 @@ So we epoch after the stimulus moment with a beginning shift of 500 ms.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 333-335
+.. GENERATED FROM PYTHON SOURCE LINES 329-331
 
-Inspect the label distribution
--------------------------------
+**Inspect the label distribution**
 
-.. GENERATED FROM PYTHON SOURCE LINES 336-352
+
+.. GENERATED FROM PYTHON SOURCE LINES 332-348
 
 .. code-block:: Python
 
@@ -490,13 +1075,13 @@ Inspect the label distribution
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 353-356
+.. GENERATED FROM PYTHON SOURCE LINES 349-352
 
-Split the data
----------------
+**Split the data**
+
 Extract meta information
 
-.. GENERATED FROM PYTHON SOURCE LINES 357-396
+.. GENERATED FROM PYTHON SOURCE LINES 353-392
 
 .. code-block:: Python
 
@@ -555,12 +1140,12 @@ Extract meta information
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 397-399
+.. GENERATED FROM PYTHON SOURCE LINES 393-395
 
-Create dataloaders
--------------------
+**Create dataloaders**
 
-.. GENERATED FROM PYTHON SOURCE LINES 400-413
+
+.. GENERATED FROM PYTHON SOURCE LINES 396-409
 
 .. code-block:: Python
 
@@ -584,10 +1169,10 @@ Create dataloaders
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 414-422
+.. GENERATED FROM PYTHON SOURCE LINES 410-418
 
-Build the model
------------------
+**Build the model**
+
 For neural network models, **to start**, we suggest using `braindecode models <https://braindecode.org/1.2/models/models_table.html>`__ zoo.
 We have implemented several different models for decoding the brain timeseries.
 Your team's responsibility is to develop a PyTorch module that receives the three-dimensional (`batch`, `n_chans`, `n_times`)
@@ -595,7 +1180,7 @@ input and outputs the contrastive response time.
 **You can use any model you want**, as long as it follows the input/output
 definitions above.
 
-.. GENERATED FROM PYTHON SOURCE LINES 423-433
+.. GENERATED FROM PYTHON SOURCE LINES 419-429
 
 .. code-block:: Python
 
@@ -710,16 +1295,16 @@ definitions above.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 434-440
+.. GENERATED FROM PYTHON SOURCE LINES 430-436
 
-Define training and validation functions
--------------------------------------------
+**Define training and validation functions**
+
 The rest is our classic PyTorch/torch lighting/skorch training pipeline,
 you can use any training framework you want.
 We provide a simple training and validation loop below.
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 441-528
+.. GENERATED FROM PYTHON SOURCE LINES 437-524
 
 .. code-block:: Python
 
@@ -817,12 +1402,12 @@ We provide a simple training and validation loop below.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 529-531
+.. GENERATED FROM PYTHON SOURCE LINES 525-527
 
-Train the model
-------------------
+**Train the model**
 
-.. GENERATED FROM PYTHON SOURCE LINES 532-573
+
+.. GENERATED FROM PYTHON SOURCE LINES 528-569
 
 .. code-block:: Python
 
@@ -875,27 +1460,27 @@ Train the model
 
  .. code-block:: none
 
-    Epoch 1/5:       0%|          | 0/8 [00:00<?, ?it/s]    Epoch 1, Batch 1/8, Loss: 2.865798, RMSE: 1.692867:   0%|          | 0/8 [00:07<?, ?it/s]    Epoch 1, Batch 1/8, Loss: 2.865798, RMSE: 1.692867:  12%|█▎        | 1/8 [00:07<00:49,  7.11s/it]    Epoch 1, Batch 2/8, Loss: 3.107690, RMSE: 1.728220:  12%|█▎        | 1/8 [00:12<00:49,  7.11s/it]    Epoch 1, Batch 2/8, Loss: 3.107690, RMSE: 1.728220:  25%|██▌       | 2/8 [00:12<00:38,  6.37s/it]    Epoch 1, Batch 3/8, Loss: 2.842419, RMSE: 1.714245:  25%|██▌       | 2/8 [00:18<00:38,  6.37s/it]    Epoch 1, Batch 3/8, Loss: 2.842419, RMSE: 1.714245:  38%|███▊      | 3/8 [00:18<00:30,  6.14s/it]    Epoch 1, Batch 4/8, Loss: 3.125806, RMSE: 1.727839:  38%|███▊      | 3/8 [00:24<00:30,  6.14s/it]    Epoch 1, Batch 4/8, Loss: 3.125806, RMSE: 1.727839:  50%|█████     | 4/8 [00:24<00:23,  5.98s/it]    Epoch 1, Batch 5/8, Loss: 2.688427, RMSE: 1.710564:  50%|█████     | 4/8 [00:30<00:23,  5.98s/it]    Epoch 1, Batch 5/8, Loss: 2.688427, RMSE: 1.710564:  62%|██████▎   | 5/8 [00:30<00:17,  5.89s/it]    Epoch 1, Batch 6/8, Loss: 3.003493, RMSE: 1.714333:  62%|██████▎   | 5/8 [00:36<00:17,  5.89s/it]    Epoch 1, Batch 6/8, Loss: 3.003493, RMSE: 1.714333:  75%|███████▌  | 6/8 [00:36<00:11,  5.84s/it]    Epoch 1, Batch 7/8, Loss: 2.825849, RMSE: 1.709615:  75%|███████▌  | 6/8 [00:41<00:11,  5.84s/it]    Epoch 1, Batch 7/8, Loss: 2.825849, RMSE: 1.709615:  88%|████████▊ | 7/8 [00:41<00:05,  5.79s/it]    Epoch 1, Batch 8/8, Loss: 2.677914, RMSE: 1.703398:  88%|████████▊ | 7/8 [00:45<00:05,  5.79s/it]    Epoch 1, Batch 8/8, Loss: 2.677914, RMSE: 1.703398: 100%|██████████| 8/8 [00:45<00:00,  5.15s/it]    Epoch 1, Batch 8/8, Loss: 2.677914, RMSE: 1.703398: 100%|██████████| 8/8 [00:45<00:00,  5.69s/it]
-      0%|          | 0/1 [00:00<?, ?it/s]    Val Batch 1/1, Loss: 3.005738, RMSE: 1.733706:   0%|          | 0/1 [00:00<?, ?it/s]    Val Batch 1/1, Loss: 3.005738, RMSE: 1.733706: 100%|██████████| 1/1 [00:00<00:00,  1.85it/s]    Val Batch 1/1, Loss: 3.005738, RMSE: 1.733706: 100%|██████████| 1/1 [00:00<00:00,  1.85it/s]
+    Epoch 1/5:       0%|          | 0/8 [00:00<?, ?it/s]    Epoch 1, Batch 1/8, Loss: 2.865798, RMSE: 1.692867:   0%|          | 0/8 [00:07<?, ?it/s]    Epoch 1, Batch 1/8, Loss: 2.865798, RMSE: 1.692867:  12%|█▎        | 1/8 [00:07<00:51,  7.40s/it]    Epoch 1, Batch 2/8, Loss: 3.107690, RMSE: 1.728220:  12%|█▎        | 1/8 [00:13<00:51,  7.40s/it]    Epoch 1, Batch 2/8, Loss: 3.107690, RMSE: 1.728220:  25%|██▌       | 2/8 [00:13<00:38,  6.49s/it]    Epoch 1, Batch 3/8, Loss: 2.842419, RMSE: 1.714245:  25%|██▌       | 2/8 [00:18<00:38,  6.49s/it]    Epoch 1, Batch 3/8, Loss: 2.842419, RMSE: 1.714245:  38%|███▊      | 3/8 [00:18<00:30,  6.11s/it]    Epoch 1, Batch 4/8, Loss: 3.125806, RMSE: 1.727839:  38%|███▊      | 3/8 [00:24<00:30,  6.11s/it]    Epoch 1, Batch 4/8, Loss: 3.125806, RMSE: 1.727839:  50%|█████     | 4/8 [00:24<00:23,  5.93s/it]    Epoch 1, Batch 5/8, Loss: 2.688427, RMSE: 1.710564:  50%|█████     | 4/8 [00:30<00:23,  5.93s/it]    Epoch 1, Batch 5/8, Loss: 2.688427, RMSE: 1.710564:  62%|██████▎   | 5/8 [00:30<00:17,  5.83s/it]    Epoch 1, Batch 6/8, Loss: 3.003493, RMSE: 1.714333:  62%|██████▎   | 5/8 [00:35<00:17,  5.83s/it]    Epoch 1, Batch 6/8, Loss: 3.003493, RMSE: 1.714333:  75%|███████▌  | 6/8 [00:35<00:11,  5.77s/it]    Epoch 1, Batch 7/8, Loss: 2.825849, RMSE: 1.709615:  75%|███████▌  | 6/8 [00:41<00:11,  5.77s/it]    Epoch 1, Batch 7/8, Loss: 2.825849, RMSE: 1.709615:  88%|████████▊ | 7/8 [00:41<00:05,  5.73s/it]    Epoch 1, Batch 8/8, Loss: 2.677914, RMSE: 1.703398:  88%|████████▊ | 7/8 [00:45<00:05,  5.73s/it]    Epoch 1, Batch 8/8, Loss: 2.677914, RMSE: 1.703398: 100%|██████████| 8/8 [00:45<00:00,  5.09s/it]    Epoch 1, Batch 8/8, Loss: 2.677914, RMSE: 1.703398: 100%|██████████| 8/8 [00:45<00:00,  5.66s/it]
+      0%|          | 0/1 [00:00<?, ?it/s]    Val Batch 1/1, Loss: 3.005738, RMSE: 1.733706:   0%|          | 0/1 [00:00<?, ?it/s]    Val Batch 1/1, Loss: 3.005738, RMSE: 1.733706: 100%|██████████| 1/1 [00:00<00:00,  1.84it/s]    Val Batch 1/1, Loss: 3.005738, RMSE: 1.733706: 100%|██████████| 1/1 [00:00<00:00,  1.84it/s]
     Val RMSE: 1.733706, Val Loss: 3.005738
 
     Train RMSE: 1.703398, Average Train Loss: 2.892175, Val RMSE: 1.733706, Average Val Loss: 3.005738
-    Epoch 2/5:       0%|          | 0/8 [00:00<?, ?it/s]    Epoch 2, Batch 1/8, Loss: 2.650901, RMSE: 1.628159:   0%|          | 0/8 [00:05<?, ?it/s]    Epoch 2, Batch 1/8, Loss: 2.650901, RMSE: 1.628159:  12%|█▎        | 1/8 [00:05<00:40,  5.72s/it]    Epoch 2, Batch 2/8, Loss: 2.551030, RMSE: 1.612751:  12%|█▎        | 1/8 [00:11<00:40,  5.72s/it]    Epoch 2, Batch 2/8, Loss: 2.551030, RMSE: 1.612751:  25%|██▌       | 2/8 [00:11<00:34,  5.70s/it]    Epoch 2, Batch 3/8, Loss: 2.515422, RMSE: 1.603886:  25%|██▌       | 2/8 [00:17<00:34,  5.70s/it]    Epoch 2, Batch 3/8, Loss: 2.515422, RMSE: 1.603886:  38%|███▊      | 3/8 [00:17<00:28,  5.71s/it]    Epoch 2, Batch 4/8, Loss: 2.396224, RMSE: 1.590093:  38%|███▊      | 3/8 [00:22<00:28,  5.71s/it]    Epoch 2, Batch 4/8, Loss: 2.396224, RMSE: 1.590093:  50%|█████     | 4/8 [00:22<00:22,  5.71s/it]    Epoch 2, Batch 5/8, Loss: 2.289994, RMSE: 1.575028:  50%|█████     | 4/8 [00:28<00:22,  5.71s/it]    Epoch 2, Batch 5/8, Loss: 2.289994, RMSE: 1.575028:  62%|██████▎   | 5/8 [00:28<00:17,  5.74s/it]    Epoch 2, Batch 6/8, Loss: 2.055214, RMSE: 1.552352:  62%|██████▎   | 5/8 [00:34<00:17,  5.74s/it]    Epoch 2, Batch 6/8, Loss: 2.055214, RMSE: 1.552352:  75%|███████▌  | 6/8 [00:34<00:11,  5.73s/it]    Epoch 2, Batch 7/8, Loss: 2.011049, RMSE: 1.533895:  75%|███████▌  | 6/8 [00:40<00:11,  5.73s/it]    Epoch 2, Batch 7/8, Loss: 2.011049, RMSE: 1.533895:  88%|████████▊ | 7/8 [00:40<00:05,  5.72s/it]    Epoch 2, Batch 8/8, Loss: 1.783163, RMSE: 1.517720:  88%|████████▊ | 7/8 [00:43<00:05,  5.72s/it]    Epoch 2, Batch 8/8, Loss: 1.783163, RMSE: 1.517720: 100%|██████████| 8/8 [00:43<00:00,  5.11s/it]    Epoch 2, Batch 8/8, Loss: 1.783163, RMSE: 1.517720: 100%|██████████| 8/8 [00:43<00:00,  5.48s/it]
-      0%|          | 0/1 [00:00<?, ?it/s]    Val Batch 1/1, Loss: 2.664739, RMSE: 1.632403:   0%|          | 0/1 [00:00<?, ?it/s]    Val Batch 1/1, Loss: 2.664739, RMSE: 1.632403: 100%|██████████| 1/1 [00:00<00:00,  1.86it/s]    Val Batch 1/1, Loss: 2.664739, RMSE: 1.632403: 100%|██████████| 1/1 [00:00<00:00,  1.86it/s]
+    Epoch 2/5:       0%|          | 0/8 [00:00<?, ?it/s]    Epoch 2, Batch 1/8, Loss: 2.650901, RMSE: 1.628159:   0%|          | 0/8 [00:05<?, ?it/s]    Epoch 2, Batch 1/8, Loss: 2.650901, RMSE: 1.628159:  12%|█▎        | 1/8 [00:05<00:39,  5.65s/it]    Epoch 2, Batch 2/8, Loss: 2.551030, RMSE: 1.612751:  12%|█▎        | 1/8 [00:11<00:39,  5.65s/it]    Epoch 2, Batch 2/8, Loss: 2.551030, RMSE: 1.612751:  25%|██▌       | 2/8 [00:11<00:33,  5.65s/it]    Epoch 2, Batch 3/8, Loss: 2.515422, RMSE: 1.603886:  25%|██▌       | 2/8 [00:16<00:33,  5.65s/it]    Epoch 2, Batch 3/8, Loss: 2.515422, RMSE: 1.603886:  38%|███▊      | 3/8 [00:16<00:28,  5.66s/it]    Epoch 2, Batch 4/8, Loss: 2.396224, RMSE: 1.590093:  38%|███▊      | 3/8 [00:22<00:28,  5.66s/it]    Epoch 2, Batch 4/8, Loss: 2.396224, RMSE: 1.590093:  50%|█████     | 4/8 [00:22<00:22,  5.66s/it]    Epoch 2, Batch 5/8, Loss: 2.289994, RMSE: 1.575028:  50%|█████     | 4/8 [00:28<00:22,  5.66s/it]    Epoch 2, Batch 5/8, Loss: 2.289994, RMSE: 1.575028:  62%|██████▎   | 5/8 [00:28<00:17,  5.67s/it]    Epoch 2, Batch 6/8, Loss: 2.055214, RMSE: 1.552352:  62%|██████▎   | 5/8 [00:33<00:17,  5.67s/it]    Epoch 2, Batch 6/8, Loss: 2.055214, RMSE: 1.552352:  75%|███████▌  | 6/8 [00:33<00:11,  5.66s/it]    Epoch 2, Batch 7/8, Loss: 2.011049, RMSE: 1.533895:  75%|███████▌  | 6/8 [00:39<00:11,  5.66s/it]    Epoch 2, Batch 7/8, Loss: 2.011049, RMSE: 1.533895:  88%|████████▊ | 7/8 [00:39<00:05,  5.66s/it]    Epoch 2, Batch 8/8, Loss: 1.783163, RMSE: 1.517720:  88%|████████▊ | 7/8 [00:43<00:05,  5.66s/it]    Epoch 2, Batch 8/8, Loss: 1.783163, RMSE: 1.517720: 100%|██████████| 8/8 [00:43<00:00,  5.04s/it]    Epoch 2, Batch 8/8, Loss: 1.783163, RMSE: 1.517720: 100%|██████████| 8/8 [00:43<00:00,  5.42s/it]
+      0%|          | 0/1 [00:00<?, ?it/s]    Val Batch 1/1, Loss: 2.664739, RMSE: 1.632403:   0%|          | 0/1 [00:00<?, ?it/s]    Val Batch 1/1, Loss: 2.664739, RMSE: 1.632403: 100%|██████████| 1/1 [00:00<00:00,  1.74it/s]    Val Batch 1/1, Loss: 2.664739, RMSE: 1.632403: 100%|██████████| 1/1 [00:00<00:00,  1.74it/s]
     Val RMSE: 1.632403, Val Loss: 2.664739
 
     Train RMSE: 1.517720, Average Train Loss: 2.281625, Val RMSE: 1.632403, Average Val Loss: 2.664739
-    Epoch 3/5:       0%|          | 0/8 [00:00<?, ?it/s]    Epoch 3, Batch 1/8, Loss: 1.785226, RMSE: 1.336124:   0%|          | 0/8 [00:05<?, ?it/s]    Epoch 3, Batch 1/8, Loss: 1.785226, RMSE: 1.336124:  12%|█▎        | 1/8 [00:05<00:39,  5.71s/it]    Epoch 3, Batch 2/8, Loss: 1.636416, RMSE: 1.307984:  12%|█▎        | 1/8 [00:11<00:39,  5.71s/it]    Epoch 3, Batch 2/8, Loss: 1.636416, RMSE: 1.307984:  25%|██▌       | 2/8 [00:11<00:34,  5.71s/it]    Epoch 3, Batch 3/8, Loss: 1.488442, RMSE: 1.279334:  25%|██▌       | 2/8 [00:17<00:34,  5.71s/it]    Epoch 3, Batch 3/8, Loss: 1.488442, RMSE: 1.279334:  38%|███▊      | 3/8 [00:17<00:28,  5.70s/it]    Epoch 3, Batch 4/8, Loss: 1.378155, RMSE: 1.253818:  38%|███▊      | 3/8 [00:22<00:28,  5.70s/it]    Epoch 3, Batch 4/8, Loss: 1.378155, RMSE: 1.253818:  50%|█████     | 4/8 [00:22<00:22,  5.71s/it]    Epoch 3, Batch 5/8, Loss: 1.291762, RMSE: 1.231260:  50%|█████     | 4/8 [00:28<00:22,  5.71s/it]    Epoch 3, Batch 5/8, Loss: 1.291762, RMSE: 1.231260:  62%|██████▎   | 5/8 [00:28<00:17,  5.70s/it]    Epoch 3, Batch 6/8, Loss: 1.009056, RMSE: 1.196457:  62%|██████▎   | 5/8 [00:34<00:17,  5.70s/it]    Epoch 3, Batch 6/8, Loss: 1.009056, RMSE: 1.196457:  75%|███████▌  | 6/8 [00:34<00:11,  5.73s/it]    Epoch 3, Batch 7/8, Loss: 1.001247, RMSE: 1.170489:  75%|███████▌  | 6/8 [00:40<00:11,  5.73s/it]    Epoch 3, Batch 7/8, Loss: 1.001247, RMSE: 1.170489:  88%|████████▊ | 7/8 [00:40<00:05,  5.72s/it]    Epoch 3, Batch 8/8, Loss: 1.037062, RMSE: 1.158098:  88%|████████▊ | 7/8 [00:43<00:05,  5.72s/it]    Epoch 3, Batch 8/8, Loss: 1.037062, RMSE: 1.158098: 100%|██████████| 8/8 [00:43<00:00,  5.11s/it]    Epoch 3, Batch 8/8, Loss: 1.037062, RMSE: 1.158098: 100%|██████████| 8/8 [00:43<00:00,  5.48s/it]
+    Epoch 3/5:       0%|          | 0/8 [00:00<?, ?it/s]    Epoch 3, Batch 1/8, Loss: 1.785226, RMSE: 1.336124:   0%|          | 0/8 [00:05<?, ?it/s]    Epoch 3, Batch 1/8, Loss: 1.785226, RMSE: 1.336124:  12%|█▎        | 1/8 [00:05<00:39,  5.67s/it]    Epoch 3, Batch 2/8, Loss: 1.636416, RMSE: 1.307984:  12%|█▎        | 1/8 [00:11<00:39,  5.67s/it]    Epoch 3, Batch 2/8, Loss: 1.636416, RMSE: 1.307984:  25%|██▌       | 2/8 [00:11<00:34,  5.69s/it]    Epoch 3, Batch 3/8, Loss: 1.488442, RMSE: 1.279334:  25%|██▌       | 2/8 [00:17<00:34,  5.69s/it]    Epoch 3, Batch 3/8, Loss: 1.488442, RMSE: 1.279334:  38%|███▊      | 3/8 [00:17<00:28,  5.69s/it]    Epoch 3, Batch 4/8, Loss: 1.378155, RMSE: 1.253818:  38%|███▊      | 3/8 [00:22<00:28,  5.69s/it]    Epoch 3, Batch 4/8, Loss: 1.378155, RMSE: 1.253818:  50%|█████     | 4/8 [00:22<00:22,  5.69s/it]    Epoch 3, Batch 5/8, Loss: 1.291762, RMSE: 1.231260:  50%|█████     | 4/8 [00:28<00:22,  5.69s/it]    Epoch 3, Batch 5/8, Loss: 1.291762, RMSE: 1.231260:  62%|██████▎   | 5/8 [00:28<00:17,  5.71s/it]    Epoch 3, Batch 6/8, Loss: 1.009056, RMSE: 1.196457:  62%|██████▎   | 5/8 [00:34<00:17,  5.71s/it]    Epoch 3, Batch 6/8, Loss: 1.009056, RMSE: 1.196457:  75%|███████▌  | 6/8 [00:34<00:11,  5.71s/it]    Epoch 3, Batch 7/8, Loss: 1.001247, RMSE: 1.170489:  75%|███████▌  | 6/8 [00:39<00:11,  5.71s/it]    Epoch 3, Batch 7/8, Loss: 1.001247, RMSE: 1.170489:  88%|████████▊ | 7/8 [00:39<00:05,  5.70s/it]    Epoch 3, Batch 8/8, Loss: 1.037062, RMSE: 1.158098:  88%|████████▊ | 7/8 [00:43<00:05,  5.70s/it]    Epoch 3, Batch 8/8, Loss: 1.037062, RMSE: 1.158098: 100%|██████████| 8/8 [00:43<00:00,  5.08s/it]    Epoch 3, Batch 8/8, Loss: 1.037062, RMSE: 1.158098: 100%|██████████| 8/8 [00:43<00:00,  5.45s/it]
       0%|          | 0/1 [00:00<?, ?it/s]    Val Batch 1/1, Loss: 1.848508, RMSE: 1.359599:   0%|          | 0/1 [00:00<?, ?it/s]    Val Batch 1/1, Loss: 1.848508, RMSE: 1.359599: 100%|██████████| 1/1 [00:00<00:00,  1.86it/s]    Val Batch 1/1, Loss: 1.848508, RMSE: 1.359599: 100%|██████████| 1/1 [00:00<00:00,  1.86it/s]
     Val RMSE: 1.359599, Val Loss: 1.848508
 
     Train RMSE: 1.158098, Average Train Loss: 1.328421, Val RMSE: 1.359599, Average Val Loss: 1.848508
-    Epoch 4/5:       0%|          | 0/8 [00:00<?, ?it/s]    Epoch 4, Batch 1/8, Loss: 0.735030, RMSE: 0.857339:   0%|          | 0/8 [00:05<?, ?it/s]    Epoch 4, Batch 1/8, Loss: 0.735030, RMSE: 0.857339:  12%|█▎        | 1/8 [00:05<00:40,  5.72s/it]    Epoch 4, Batch 2/8, Loss: 0.836717, RMSE: 0.886495:  12%|█▎        | 1/8 [00:11<00:40,  5.72s/it]    Epoch 4, Batch 2/8, Loss: 0.836717, RMSE: 0.886495:  25%|██▌       | 2/8 [00:11<00:34,  5.75s/it]    Epoch 4, Batch 3/8, Loss: 0.777364, RMSE: 0.884894:  25%|██▌       | 2/8 [00:17<00:34,  5.75s/it]    Epoch 4, Batch 3/8, Loss: 0.777364, RMSE: 0.884894:  38%|███▊      | 3/8 [00:17<00:28,  5.73s/it]    Epoch 4, Batch 4/8, Loss: 0.796759, RMSE: 0.886830:  38%|███▊      | 3/8 [00:22<00:28,  5.73s/it]    Epoch 4, Batch 4/8, Loss: 0.796759, RMSE: 0.886830:  50%|█████     | 4/8 [00:22<00:22,  5.70s/it]    Epoch 4, Batch 5/8, Loss: 0.776555, RMSE: 0.885711:  50%|█████     | 4/8 [00:28<00:22,  5.70s/it]    Epoch 4, Batch 5/8, Loss: 0.776555, RMSE: 0.885711:  62%|██████▎   | 5/8 [00:28<00:17,  5.71s/it]    Epoch 4, Batch 6/8, Loss: 0.716889, RMSE: 0.879329:  62%|██████▎   | 5/8 [00:34<00:17,  5.71s/it]    Epoch 4, Batch 6/8, Loss: 0.716889, RMSE: 0.879329:  75%|███████▌  | 6/8 [00:34<00:11,  5.72s/it]    Epoch 4, Batch 7/8, Loss: 0.715888, RMSE: 0.874659:  75%|███████▌  | 6/8 [00:40<00:11,  5.72s/it]    Epoch 4, Batch 7/8, Loss: 0.715888, RMSE: 0.874659:  88%|████████▊ | 7/8 [00:40<00:05,  5.71s/it]    Epoch 4, Batch 8/8, Loss: 0.698003, RMSE: 0.871333:  88%|████████▊ | 7/8 [00:43<00:05,  5.71s/it]    Epoch 4, Batch 8/8, Loss: 0.698003, RMSE: 0.871333: 100%|██████████| 8/8 [00:43<00:00,  5.10s/it]    Epoch 4, Batch 8/8, Loss: 0.698003, RMSE: 0.871333: 100%|██████████| 8/8 [00:43<00:00,  5.48s/it]
-      0%|          | 0/1 [00:00<?, ?it/s]    Val Batch 1/1, Loss: 1.255778, RMSE: 1.120615:   0%|          | 0/1 [00:00<?, ?it/s]    Val Batch 1/1, Loss: 1.255778, RMSE: 1.120615: 100%|██████████| 1/1 [00:00<00:00,  1.84it/s]    Val Batch 1/1, Loss: 1.255778, RMSE: 1.120615: 100%|██████████| 1/1 [00:00<00:00,  1.84it/s]
+    Epoch 4/5:       0%|          | 0/8 [00:00<?, ?it/s]    Epoch 4, Batch 1/8, Loss: 0.735030, RMSE: 0.857339:   0%|          | 0/8 [00:05<?, ?it/s]    Epoch 4, Batch 1/8, Loss: 0.735030, RMSE: 0.857339:  12%|█▎        | 1/8 [00:05<00:39,  5.70s/it]    Epoch 4, Batch 2/8, Loss: 0.836717, RMSE: 0.886495:  12%|█▎        | 1/8 [00:11<00:39,  5.70s/it]    Epoch 4, Batch 2/8, Loss: 0.836717, RMSE: 0.886495:  25%|██▌       | 2/8 [00:11<00:34,  5.71s/it]    Epoch 4, Batch 3/8, Loss: 0.777364, RMSE: 0.884894:  25%|██▌       | 2/8 [00:17<00:34,  5.71s/it]    Epoch 4, Batch 3/8, Loss: 0.777364, RMSE: 0.884894:  38%|███▊      | 3/8 [00:17<00:28,  5.72s/it]    Epoch 4, Batch 4/8, Loss: 0.796759, RMSE: 0.886830:  38%|███▊      | 3/8 [00:22<00:28,  5.72s/it]    Epoch 4, Batch 4/8, Loss: 0.796759, RMSE: 0.886830:  50%|█████     | 4/8 [00:22<00:22,  5.70s/it]    Epoch 4, Batch 5/8, Loss: 0.776555, RMSE: 0.885711:  50%|█████     | 4/8 [00:28<00:22,  5.70s/it]    Epoch 4, Batch 5/8, Loss: 0.776555, RMSE: 0.885711:  62%|██████▎   | 5/8 [00:28<00:17,  5.69s/it]    Epoch 4, Batch 6/8, Loss: 0.716889, RMSE: 0.879329:  62%|██████▎   | 5/8 [00:34<00:17,  5.69s/it]    Epoch 4, Batch 6/8, Loss: 0.716889, RMSE: 0.879329:  75%|███████▌  | 6/8 [00:34<00:11,  5.69s/it]    Epoch 4, Batch 7/8, Loss: 0.715888, RMSE: 0.874659:  75%|███████▌  | 6/8 [00:39<00:11,  5.69s/it]    Epoch 4, Batch 7/8, Loss: 0.715888, RMSE: 0.874659:  88%|████████▊ | 7/8 [00:39<00:05,  5.68s/it]    Epoch 4, Batch 8/8, Loss: 0.698003, RMSE: 0.871333:  88%|████████▊ | 7/8 [00:43<00:05,  5.68s/it]    Epoch 4, Batch 8/8, Loss: 0.698003, RMSE: 0.871333: 100%|██████████| 8/8 [00:43<00:00,  5.06s/it]    Epoch 4, Batch 8/8, Loss: 0.698003, RMSE: 0.871333: 100%|██████████| 8/8 [00:43<00:00,  5.45s/it]
+      0%|          | 0/1 [00:00<?, ?it/s]    Val Batch 1/1, Loss: 1.255778, RMSE: 1.120615:   0%|          | 0/1 [00:00<?, ?it/s]    Val Batch 1/1, Loss: 1.255778, RMSE: 1.120615: 100%|██████████| 1/1 [00:00<00:00,  1.85it/s]    Val Batch 1/1, Loss: 1.255778, RMSE: 1.120615: 100%|██████████| 1/1 [00:00<00:00,  1.85it/s]
     Val RMSE: 1.120615, Val Loss: 1.255778
 
     Train RMSE: 0.871333, Average Train Loss: 0.756650, Val RMSE: 1.120615, Average Val Loss: 1.255778
-    Epoch 5/5:       0%|          | 0/8 [00:00<?, ?it/s]    Epoch 5, Batch 1/8, Loss: 0.652287, RMSE: 0.807643:   0%|          | 0/8 [00:05<?, ?it/s]    Epoch 5, Batch 1/8, Loss: 0.652287, RMSE: 0.807643:  12%|█▎        | 1/8 [00:05<00:40,  5.79s/it]    Epoch 5, Batch 2/8, Loss: 0.691337, RMSE: 0.819641:  12%|█▎        | 1/8 [00:11<00:40,  5.79s/it]    Epoch 5, Batch 2/8, Loss: 0.691337, RMSE: 0.819641:  25%|██▌       | 2/8 [00:11<00:34,  5.74s/it]    Epoch 5, Batch 3/8, Loss: 0.694481, RMSE: 0.824238:  25%|██▌       | 2/8 [00:17<00:34,  5.74s/it]    Epoch 5, Batch 3/8, Loss: 0.694481, RMSE: 0.824238:  38%|███▊      | 3/8 [00:17<00:28,  5.74s/it]    Epoch 5, Batch 4/8, Loss: 0.682651, RMSE: 0.824736:  38%|███▊      | 3/8 [00:22<00:28,  5.74s/it]    Epoch 5, Batch 4/8, Loss: 0.682651, RMSE: 0.824736:  50%|█████     | 4/8 [00:22<00:22,  5.73s/it]    Epoch 5, Batch 5/8, Loss: 0.604054, RMSE: 0.815452:  50%|█████     | 4/8 [00:28<00:22,  5.73s/it]    Epoch 5, Batch 5/8, Loss: 0.604054, RMSE: 0.815452:  62%|██████▎   | 5/8 [00:28<00:17,  5.73s/it]    Epoch 5, Batch 6/8, Loss: 0.625973, RMSE: 0.811458:  62%|██████▎   | 5/8 [00:34<00:17,  5.73s/it]    Epoch 5, Batch 6/8, Loss: 0.625973, RMSE: 0.811458:  75%|███████▌  | 6/8 [00:34<00:11,  5.73s/it]    Epoch 5, Batch 7/8, Loss: 0.678745, RMSE: 0.813241:  75%|███████▌  | 6/8 [00:40<00:11,  5.73s/it]    Epoch 5, Batch 7/8, Loss: 0.678745, RMSE: 0.813241:  88%|████████▊ | 7/8 [00:40<00:05,  5.74s/it]    Epoch 5, Batch 8/8, Loss: 0.645114, RMSE: 0.812375:  88%|████████▊ | 7/8 [00:43<00:05,  5.74s/it]    Epoch 5, Batch 8/8, Loss: 0.645114, RMSE: 0.812375: 100%|██████████| 8/8 [00:43<00:00,  5.13s/it]    Epoch 5, Batch 8/8, Loss: 0.645114, RMSE: 0.812375: 100%|██████████| 8/8 [00:43<00:00,  5.50s/it]
+    Epoch 5/5:       0%|          | 0/8 [00:00<?, ?it/s]    Epoch 5, Batch 1/8, Loss: 0.652287, RMSE: 0.807643:   0%|          | 0/8 [00:05<?, ?it/s]    Epoch 5, Batch 1/8, Loss: 0.652287, RMSE: 0.807643:  12%|█▎        | 1/8 [00:05<00:39,  5.66s/it]    Epoch 5, Batch 2/8, Loss: 0.691337, RMSE: 0.819641:  12%|█▎        | 1/8 [00:11<00:39,  5.66s/it]    Epoch 5, Batch 2/8, Loss: 0.691337, RMSE: 0.819641:  25%|██▌       | 2/8 [00:11<00:34,  5.70s/it]    Epoch 5, Batch 3/8, Loss: 0.694481, RMSE: 0.824238:  25%|██▌       | 2/8 [00:17<00:34,  5.70s/it]    Epoch 5, Batch 3/8, Loss: 0.694481, RMSE: 0.824238:  38%|███▊      | 3/8 [00:17<00:28,  5.70s/it]    Epoch 5, Batch 4/8, Loss: 0.682651, RMSE: 0.824736:  38%|███▊      | 3/8 [00:22<00:28,  5.70s/it]    Epoch 5, Batch 4/8, Loss: 0.682651, RMSE: 0.824736:  50%|█████     | 4/8 [00:22<00:22,  5.69s/it]    Epoch 5, Batch 5/8, Loss: 0.604054, RMSE: 0.815452:  50%|█████     | 4/8 [00:28<00:22,  5.69s/it]    Epoch 5, Batch 5/8, Loss: 0.604054, RMSE: 0.815452:  62%|██████▎   | 5/8 [00:28<00:17,  5.68s/it]    Epoch 5, Batch 6/8, Loss: 0.625973, RMSE: 0.811458:  62%|██████▎   | 5/8 [00:34<00:17,  5.68s/it]    Epoch 5, Batch 6/8, Loss: 0.625973, RMSE: 0.811458:  75%|███████▌  | 6/8 [00:34<00:11,  5.68s/it]    Epoch 5, Batch 7/8, Loss: 0.678745, RMSE: 0.813241:  75%|███████▌  | 6/8 [00:39<00:11,  5.68s/it]    Epoch 5, Batch 7/8, Loss: 0.678745, RMSE: 0.813241:  88%|████████▊ | 7/8 [00:39<00:05,  5.69s/it]    Epoch 5, Batch 8/8, Loss: 0.645114, RMSE: 0.812375:  88%|████████▊ | 7/8 [00:43<00:05,  5.69s/it]    Epoch 5, Batch 8/8, Loss: 0.645114, RMSE: 0.812375: 100%|██████████| 8/8 [00:43<00:00,  5.06s/it]    Epoch 5, Batch 8/8, Loss: 0.645114, RMSE: 0.812375: 100%|██████████| 8/8 [00:43<00:00,  5.44s/it]
       0%|          | 0/1 [00:00<?, ?it/s]    Val Batch 1/1, Loss: 1.279076, RMSE: 1.130963:   0%|          | 0/1 [00:00<?, ?it/s]    Val Batch 1/1, Loss: 1.279076, RMSE: 1.130963: 100%|██████████| 1/1 [00:00<00:00,  1.85it/s]    Val Batch 1/1, Loss: 1.279076, RMSE: 1.130963: 100%|██████████| 1/1 [00:00<00:00,  1.85it/s]
     Val RMSE: 1.130963, Val Loss: 1.279076
 
@@ -904,12 +1489,12 @@ Train the model
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 574-576
+.. GENERATED FROM PYTHON SOURCE LINES 570-572
 
-Save the model
------------------
+**Save the model**
 
-.. GENERATED FROM PYTHON SOURCE LINES 577-579
+
+.. GENERATED FROM PYTHON SOURCE LINES 573-575
 
 .. code-block:: Python
 
@@ -931,9 +1516,9 @@ Save the model
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (4 minutes 2.341 seconds)
+   **Total running time of the script:** (4 minutes 30.220 seconds)
 
-**Estimated memory usage:**  903 MB
+**Estimated memory usage:**  1357 MB
 
 
 .. _sphx_glr_download_generated_auto_examples_eeg2025_tutorial_challenge_1.py:

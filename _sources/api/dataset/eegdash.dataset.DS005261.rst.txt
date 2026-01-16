@@ -9,7 +9,11 @@ participants.tsv (OpenNeuro ``ds005261``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: ['meg']` :bdg-light:`Tasks: 0` :bdg-light:`License: CC0` :bdg-light:`Subjects: 0` :bdg-light:`Recordings: 0` :bdg-light:`Source: openneuro`
+:bdg-primary:`Modality: meg` :bdg-info:`Tasks: 2` :bdg-secondary:`Subjects: 17` :bdg-secondary:`Recordings: 128`
+
+.. rst-class:: sd-badges
+
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -55,30 +59,30 @@ Highlights
    .. grid-item-card:: Subjects & recordings
       :class-card: sd-border-1
 
-      - Subjects: 0
-      - Recordings: 0
-      - Tasks: 0
+      - Subjects: 17
+      - Recordings: 128
+      - Tasks: 2
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 248 (66), 240 (2), 245 (22), 243 (36)
-      - Sampling rate (Hz): 2034.5101318359375 (7), 2034.5100996195154 (31)
-      - Duration (hours): 0
+      - Channels: 240 (4), 245 (44), 243 (72), 248 (132)
+      - Sampling rate (Hz): 2034.5100996195154 (62), 2034.5101318359375 (14)
+      - Duration (hours): 0.0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
 
-      - Tasks: 0
-      - Experiment type: Unknown
-      - Subject type: Unknown
+      - Tasks: 2
+      - Experiment type: —
+      - Subject type: —
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: Unknown
-      - File count: Unknown
-      - Format: Unknown
+      - Size on disk: 137.2 GB
+      - File count: 128
+      - Format: BIDS
 
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
@@ -100,17 +104,18 @@ Quickstart
 
 .. code-block:: bash
 
-   pip install eegdash
+    pip install eegdash
 
-**Load a recording**
+**Access the data**
 
 .. code-block:: python
 
-   from eegdash.dataset import DS005261
+    from eegdash.dataset import DS005261
 
-   dataset = DS005261(cache_dir="./data")
-   recording = dataset[0]
-   raw = recording.load()
+    dataset = DS005261(cache_dir="./data")
+    # Get the raw object of the first recording
+    raw = dataset.datasets[0].raw
+    print(raw.info)
 
 **Filter/query**
 

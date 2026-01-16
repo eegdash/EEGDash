@@ -173,7 +173,7 @@ html_context = {
     "github_user": "eegdash",
     "github_repo": "EEGDash",
     # Branch used to build and host the docs
-    "github_version": "main",
+    "github_version": "develop",
     # Path to the documentation root within the repo
     "doc_path": "docs/source",
     "default_mode": "light",

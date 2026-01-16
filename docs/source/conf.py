@@ -1063,13 +1063,13 @@ def _format_quickstart_section(context: Mapping[str, object]) -> str:
     return (
         "**Install**\n\n"
         ".. code-block:: bash\n\n"
-        "   pip install eegdash\n\n"
+        "    pip install eegdash\n\n"
         "**Load a recording**\n\n"
         ".. code-block:: python\n\n"
-        f"   from eegdash.dataset import {class_name}\n\n"
-        f'   dataset = {class_name}(cache_dir="./data")\n'
-        "   recording = dataset[0]\n"
-        "   raw = recording.load()\n\n"
+        f"    from eegdash.dataset import {class_name}\n\n"
+        f'    dataset = {class_name}(cache_dir="./data")\n'
+        "    recording = dataset[0]\n"
+        "    raw = recording.load()\n\n"
         "**Filter/query**\n\n"
         ".. tab-set::\n\n"
         "   .. tab-item:: Basic\n\n"

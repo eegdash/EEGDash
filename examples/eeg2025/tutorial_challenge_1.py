@@ -18,8 +18,8 @@
 #
 ######################################################################
 #
-# Preliminary notes
-# -----------------
+# **Preliminary notes**
+#
 # Before we begin, I just want to make a deal with you, ok?
 # This is a community competition with a strong open-source foundation.
 # When I say open-source, I mean volunteer work.
@@ -32,8 +32,8 @@
 #
 ######################################################################
 #
-# How can we use the knowledge from one EEG Decoding task into another?
-# ---------------------------------------------------------------------
+# **How can we use the knowledge from one EEG Decoding task into another?**
+#
 # Transfer learning is a widespread technique used in deep learning. It
 # uses knowledge learned from one source task/domain in another target
 # task/domain. It has been studied in depth in computer vision, natural
@@ -64,16 +64,16 @@
 #
 ######################################################################
 #
-# __________
+# .. note::
 #
-# Note: For simplicity purposes, we will only show how to do the decoding
-# directly in our target task, and it is up to the teams to think about
-# how to use the passive task to perform the pre-training.
+#    For simplicity purposes, we will only show how to do the decoding
+#    directly in our target task, and it is up to the teams to think about
+#    how to use the passive task to perform the pre-training.
 #
 #######################################################################
 #
-# Install dependencies
-# --------------------
+# **Install dependencies**
+#
 # For the challenge, we will need two significant dependencies:
 # `braindecode` and `eegdash`. The libraries will install PyTorch,
 # Pytorch Audio, Scikit-learn, MNE, MNE-BIDS, and many other packages
@@ -85,8 +85,8 @@
 #
 ######################################################################
 #
-# Imports and setup
-# -----------------
+# **Imports and setup**
+#
 from pathlib import Path
 
 import torch
@@ -109,8 +109,7 @@ import copy
 #
 ######################################################################
 #
-# Check GPU availability
-# ----------------------
+# **Check GPU availability**
 #
 # Identify whether a CUDA-enabled GPU is available
 # and set the device accordingly.
@@ -131,16 +130,14 @@ print(msg)
 #
 ######################################################################
 #
-# What are we decoding?
-# ---------------------
+# **What are we decoding?**
 #
 # To start to talk about what we want to analyse, the important thing
 # is to understand some basic concepts.
 #
 ######################################################################
 #
-# The brain decodes the problem
-# -----------------------------
+# **The brain decodes the problem**
 #
 # Broadly speaking, here *brain decoding* is the following problem:
 # given brain time-series signals :math:`X \in \mathbb{R}^{C \times T}` with
@@ -163,8 +160,8 @@ print(msg)
 # is the temporal window length/epoch size over the interval of interest.
 # Here, :math:`\theta` denotes the parameters learned by the neural network.
 #
-# Input/Output definition
-# ---------------------------
+# **Input/Output definition**
+#
 # For the competition, the HBN-EEG (Healthy Brain Network EEG Datasets)
 # dataset has ``n_chans = 129`` with the last channels as a `reference channel <https://mne.tools/stable/auto_tutorials/preprocessing/55_setting_eeg_reference.html>`_,
 # and we define the window length as ``n_times = 200``, corresponding to 2-second windows.
@@ -178,8 +175,8 @@ print(msg)
 #
 ######################################################################
 #
-# Understand the task: Contrast Change Detection (CCD)
-# --------------------------------------------------------
+# **Understand the task: Contrast Change Detection (CCD)**
+#
 # If you are interested to get more neuroscience insight, we recommend these two references, `HBN-EEG <https://www.biorxiv.org/content/10.1101/2024.10.03.615261v2.full.pdf>`__ and `Langer, N et al. (2017) <https://www.nature.com/articles/sdata201740#Sec2>`__.
 # Your task (**label**) is to predict the response time for the subject during this windows.
 #
@@ -211,8 +208,8 @@ print(msg)
 #
 ######################################################################
 #
-# Stimulus demonstration
-# ----------------------
+# **Stimulus demonstration**
+#
 # .. raw:: html
 #
 #    <div class="video-wrapper">
@@ -224,8 +221,8 @@ print(msg)
 #
 ######################################################################
 #
-# PyTorch Dataset for the competition
-# -----------------------------------
+# **PyTorch Dataset for the competition**
+#
 # Now, we have a Pytorch Dataset object that contains the set of recordings for the task
 # `contrastChangeDetection`.
 #
@@ -263,8 +260,7 @@ dataset_ccd.download_all(n_jobs=-1)
 #
 ######################################################################
 #
-# Alternatives for Downloading the data
-# -------------------------------------
+# **Alternatives for Downloading the data**
 #
 # You can also perform this operation with wget or the aws cli.
 # These options will probably be faster!
@@ -281,8 +277,8 @@ dataset_ccd.download_all(n_jobs=-1)
 #
 ######################################################################
 #
-# Create windows of interest
-# -----------------------------
+# **Create windows of interest**
+#
 # So we epoch after the stimulus moment with a beginning shift of 500 ms.
 EPOCH_LEN_S = 2.0
 SFREQ = 100  # by definition here
@@ -331,8 +327,8 @@ single_windows = add_extras_columns(
 #
 ######################################################################
 #
-# Inspect the label distribution
-# -------------------------------
+# **Inspect the label distribution**
+#
 import numpy as np
 from skorch.helper import SliceDataset
 
@@ -351,8 +347,8 @@ plt.show()
 #
 ######################################################################
 #
-# Split the data
-# ---------------
+# **Split the data**
+#
 # Extract meta information
 meta_information = single_windows.get_metadata()
 valid_frac = 0.1
@@ -395,8 +391,8 @@ print(f"Test:\t{len(test_set)}")
 #
 ######################################################################
 #
-# Create dataloaders
-# -------------------
+# **Create dataloaders**
+#
 batch_size = 128
 # Set num_workers to 0 to avoid multiprocessing issues in notebooks/tutorials
 num_workers = 0
@@ -412,8 +408,8 @@ test_loader = DataLoader(
 #
 ######################################################################
 #
-# Build the model
-# -----------------
+# **Build the model**
+#
 # For neural network models, **to start**, we suggest using `braindecode models <https://braindecode.org/1.2/models/models_table.html>`__ zoo.
 # We have implemented several different models for decoding the brain timeseries.
 # Your team's responsibility is to develop a PyTorch module that receives the three-dimensional (`batch`, `n_chans`, `n_times`)
@@ -432,8 +428,8 @@ model.to(device)
 #
 ######################################################################
 #
-# Define training and validation functions
-# -------------------------------------------
+# **Define training and validation functions**
+#
 # The rest is our classic PyTorch/torch lighting/skorch training pipeline,
 # you can use any training framework you want.
 # We provide a simple training and validation loop below.
@@ -527,8 +523,8 @@ def valid_model(
 #
 ######################################################################
 #
-# Train the model
-# ------------------
+# **Train the model**
+#
 lr = 1e-3
 weight_decay = 1e-5
 n_epochs = (
@@ -572,7 +568,7 @@ if best_state is not None:
 #
 ######################################################################
 #
-# Save the model
-# -----------------
+# **Save the model**
+#
 torch.save(model.state_dict(), "weights_challenge_1.pt")
 print("Model saved as 'weights_challenge_1.pt'")

@@ -395,9 +395,14 @@ def fetch_datasets_from_api(
         ):
             continue
 
-        ds_stats = global_stats.get(ds_id, {})
-        nchans_list = ds_stats.get("nchans_counts", [])
-        sfreq_list = ds_stats.get("sfreq_counts", [])
+        # Use computed stats from datasets collection (populated by compute-stats endpoint)
+        # Fallback to global_stats for backwards compatibility
+        nchans_list = ds.get("nchans_counts") or global_stats.get(ds_id, {}).get(
+            "nchans_counts", []
+        )
+        sfreq_list = ds.get("sfreq_counts") or global_stats.get(ds_id, {}).get(
+            "sfreq_counts", []
+        )
 
         # Extract demographics
         demographics = ds.get("demographics", {}) or {}
@@ -452,7 +457,8 @@ def fetch_datasets_from_api(
             "size": ds.get("size_human") or _human_readable_size(ds.get("size_bytes")),
             "source": ds.get("source") or "unknown",
             # Extended fields for docs/summary tables
-            "dataset_title": ds.get("name", ""),
+            # Use computed_title if available (populated by compute-stats endpoint)
+            "dataset_title": ds.get("computed_title") or ds.get("name", ""),
             "record_modality": ", ".join(recording_modality),
             # We enforce JSON string for list/dict structures to survive CSV roundtrip reliably
             "nchans_set": json.dumps(nchans_list),
@@ -553,7 +559,8 @@ def _fetch_datasets_from_api(api_url: str, database: str) -> pd.DataFrame:
             "duration_hours_total": 0.0,
             "size": ds.get("size_human") or _human_readable_size(ds.get("size_bytes")),
             "record_modality": ", ".join(recording_modality),
-            "dataset_title": ds.get("name", ""),
+            # Use computed_title if available (populated by compute-stats endpoint)
+            "dataset_title": ds.get("computed_title") or ds.get("name", ""),
             "license": ds.get("license", ""),
             "doi": ds.get("dataset_doi", ""),
             # internal/extra fields

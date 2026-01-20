@@ -342,6 +342,11 @@ Dataset Information
 
 {dataset_info_section}
 
+Description
+-----------
+
+{readme_section}
+
 Highlights
 ----------
 
@@ -936,6 +941,7 @@ def _build_dataset_context(
         "nemar_url": f"https://nemar.org/dataexplorer/detail?dataset_id={dataset_id}",
         "metadata_fields": DEFAULT_METADATA_FIELDS,
         "format": dataset_format,
+        "readme": _clean_value(details.get("readme")),
     }
 
 
@@ -1178,6 +1184,114 @@ def _format_bibtex_dropdown(dataset_id: str, context: Mapping[str, object]) -> s
     return "\n".join(dropdown_lines)
 
 
+def _convert_readme_to_rst(text: str) -> str:
+    """Convert README content to RST (headers become bold, not section headers).
+
+    Handles markdown (#) headers, RST-style underline headers, and decorative
+    box-style headers (em-dash lines) to avoid messing up the document structure.
+    """
+    import re
+
+    # Remove BOM if present
+    text = text.lstrip("\ufeff")
+
+    lines = text.split("\n")
+    result = []
+    i = 0
+
+    def is_decorative_line(s: str) -> bool:
+        """Check if line is purely decorative (em-dashes, dashes, equals, etc.)."""
+        s = s.strip()
+        if len(s) < 3:
+            return False
+        # Check for lines made of repeated chars: —, -, =, _, *, #
+        return bool(re.match(r"^[—\-=_*#~]+$", s)) and len(set(s)) <= 2
+
+    while i < len(lines):
+        line = lines[i]
+
+        # Skip purely decorative lines (em-dashes, repeated dashes, etc.)
+        if is_decorative_line(line):
+            # Check if this is a box-style header: decorative -> TITLE -> decorative
+            if i + 2 < len(lines):
+                potential_title = lines[i + 1].strip()
+                next_decorative = lines[i + 2]
+                if potential_title and is_decorative_line(next_decorative):
+                    # This is a box-style header
+                    result.append("")
+                    result.append(f"**{potential_title}**")
+                    result.append("")
+                    i += 3  # Skip decorative, title, decorative
+                    continue
+            # Just a decorative line by itself - skip it
+            i += 1
+            continue
+
+        # Check for markdown headers (# Title)
+        header_match = re.match(r"^(#{1,6})\s+(.+)$", line.strip())
+        if header_match:
+            title = header_match.group(2).strip()
+            result.append("")
+            result.append(f"**{title}**")
+            result.append("")
+            i += 1
+            continue
+
+        # Check for RST-style underline headers (Title followed by ==== or ----)
+        # Only match if title is reasonably short (< 80 chars) to avoid matching paragraphs
+        if i + 1 < len(lines) and len(line.strip()) < 80:
+            next_line = lines[i + 1]
+            # Check if next line is an underline (all same char, at least 3 chars)
+            underline_match = re.match(r"^([=\-~^\"\'`—]+)$", next_line.strip())
+            if (
+                underline_match
+                and len(next_line.strip()) >= 3
+                and line.strip()
+                and len(set(next_line.strip())) == 1
+            ):
+                title = line.strip()
+                result.append("")
+                result.append(f"**{title}**")
+                result.append("")
+                i += 2  # Skip both the title and underline
+                continue
+
+        # Convert markdown links [text](url) -> `text <url>`__
+        line = re.sub(r"\[([^\]]+)\]\(([^)]+)\)", r"`\1 <\2>`__", line)
+
+        result.append(line)
+        i += 1
+
+    return "\n".join(result)
+
+
+def _format_readme_section(context: Mapping[str, object]) -> str:
+    """Format the README content for RST display."""
+    readme = _clean_value(context.get("readme"))
+
+    if not readme:
+        return "No README content is available for this dataset."
+
+    # Convert README content to RST (headers become bold)
+    content = _convert_readme_to_rst(readme)
+    lines = content.split("\n")
+
+    # For long READMEs (>30 lines), wrap in dropdown
+    if len(lines) > 30:
+        preview_lines = lines[:10]
+        preview = "\n".join(preview_lines)
+        indented = "\n".join(f"   {line}" for line in lines)
+        return f"""{preview}
+
+.. dropdown:: View full README
+   :class-container: sd-shadow-sm
+
+{indented}
+"""
+
+    return content
+
+
 def _format_schema_section(context: Mapping[str, object]) -> str:
     lines = [
         "``dataset[i]`` returns an :class:`eegdash.dataset.EEGDashRaw` recording.",
@@ -1255,6 +1369,7 @@ def _process_dataset_item(
         underline="=" * len(title),
         hero_section=_format_hero_section(context),
         dataset_info_section=_format_dataset_info_section(context),
+        readme_section=_format_readme_section(context),
         highlights_section=_format_highlights_section(context),
         quickstart_section=_format_quickstart_section(context),
         quality_section=_format_quality_section(context),

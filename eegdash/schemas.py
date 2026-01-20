@@ -276,7 +276,7 @@ class Paradigm(TypedDict, total=False):
     Attributes
     ----------
     modality : str | None
-        The sensory or experimental modality (e.g., "visual", "auditory", "resting_state").
+        The sensory or experimental modality (e.g., "visual", "auditory", "text", "multisensory", "resting_state").
     cognitive_domain : str | None
         The cognitive domain investigated (e.g., "memory", "language", "emotion").
     is_10_20_system : bool | None
@@ -397,6 +397,8 @@ class Dataset(TypedDict, total=False):
         Contact emails or names.
     timestamps : Timestamps
         Timestamps for data processing and creation.
+    nemar_citation_count : int | None
+        Number of papers citing this dataset (from NEMAR citations repository).
 
     """
 
@@ -456,6 +458,11 @@ class Dataset(TypedDict, total=False):
 
     # Storage for global files (e.g., participants.tsv)
     storage: Storage | None
+
+    # Citation metrics
+    nemar_citation_count: (
+        int | None
+    )  # Number of papers citing this dataset (from NEMAR)
 
 
 def create_dataset(
@@ -581,7 +588,7 @@ def create_dataset(
     clinical_purpose : str, optional
         Clinical purpose (e.g., "epilepsy", "depression").
     paradigm_modality : str, optional
-        Experimental modality (e.g., "visual", "auditory", "resting_state").
+        Experimental modality (e.g., "visual", "auditory", "text", "multisensory", "resting_state").
     cognitive_domain : str, optional
         Cognitive domain (e.g., "attention", "memory", "motor").
     is_10_20_system : bool, optional

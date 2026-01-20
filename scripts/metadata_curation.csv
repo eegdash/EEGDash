@@ -1,0 +1,505 @@
+dataset_id,is_clinical,clinical_purpose,paradigm_modality,cognitive_domain
+ds000117,True,depression,visual,emotion
+ds000246,False,,auditory,other
+ds000247,False,,resting_state,emotion
+ds000248,False,,visual,emotion
+ds001785,True,epilepsy,visual,motor
+ds001787,False,,other,other
+ds001810,False,,tactile,attention
+ds001849,False,,other,other
+ds001971,False,,auditory,other
+ds002001,False,,other,other
+ds002034,False,,motor,attention
+ds002094,False,,other,other
+ds002158,False,,motor,other
+ds002181,False,,visual,other
+ds002218,False,,visual,perception
+ds002312,False,,other,other
+ds002336,False,,motor,motor
+ds002338,True,Unspecified Clinical,motor,motor
+ds002550,False,,motor,memory
+ds002578,False,,visual,attention
+ds002680,False,,visual,attention
+ds002691,False,,other,attention
+ds002712,False,,other,other
+ds002718,False,,motor,emotion
+ds002720,False,,visual,emotion
+ds002721,False,,auditory,emotion
+ds002722,False,,visual,emotion
+ds002723,False,,visual,emotion
+ds002724,False,,visual,emotion
+ds002725,False,,auditory,emotion
+ds002761,False,,visual,memory
+ds002778,True,parkinson,resting_state,executive
+ds002791,False,,other,other
+ds002799,True,epilepsy,resting_state,other
+ds002814,False,,visual,other
+ds002833,False,,other,other
+ds002885,False,,visual,motor
+ds002893,True,dementia,multisensory,attention
+ds002908,False,,other,other
+ds003004,False,,motor,emotion
+ds003029,True,epilepsy,visual,other
+ds003039,False,,motor,other
+ds003061,False,,auditory,attention
+ds003078,False,,motor,other
+ds003082,False,,auditory,perception
+ds003104,False,,visual,emotion
+ds003190,False,,visual,attention
+ds003194,True,parkinson,resting_state,other
+ds003195,True,parkinson,resting_state,other
+ds003343,False,,tactile,perception
+ds003352,False,,visual,language
+ds003374,True,epilepsy,visual,emotion
+ds003380,False,,visual,executive
+ds003392,False,,visual,motor
+ds003420,False,,visual,language
+ds003421,False,,visual,memory
+ds003458,False,,other,language
+ds003474,True,depression,motor,language
+ds003478,True,depression,resting_state,language
+ds003483,False,,other,other
+ds003490,True,parkinson,resting_state,attention
+ds003498,True,Unspecified Clinical,tactile,language
+ds003505,False,,visual,emotion
+ds003506,True,parkinson,motor,language
+ds003509,True,parkinson,motor,language
+ds003516,False,,auditory,other
+ds003517,False,,visual,attention
+ds003518,False,,other,language
+ds003519,False,,visual,memory
+ds003522,False,,auditory,attention
+ds003523,False,,visual,memory
+ds003555,True,epilepsy,resting_state,other
+ds003568,False,,resting_state,emotion
+ds003570,False,,auditory,other
+ds003574,False,,visual,memory
+ds003602,False,,visual,other
+ds003620,False,,auditory,attention
+ds003626,False,,visual,language
+ds003633,False,,multisensory,emotion
+ds003638,False,,other,other
+ds003645,False,,motor,emotion
+ds003655,False,,other,memory
+ds003670,False,,visual,attention
+ds003682,False,,other,other
+ds003688,False,,multisensory,other
+ds003690,False,,auditory,attention
+ds003694,False,,other,other
+ds003702,False,,visual,memory
+ds003703,False,,other,other
+ds003708,True,Unspecified Clinical,motor,motor
+ds003710,False,,other,other
+ds003739,False,,visual,motor
+ds003751,False,,visual,emotion
+ds003753,False,,other,emotion
+ds003766,False,,resting_state,language
+ds003768,False,,resting_state,motor
+ds003774,False,,auditory,other
+ds003775,False,,resting_state,executive
+ds003800,True,dementia,auditory,other
+ds003801,False,,auditory,attention
+ds003805,True,alzheimer,multisensory,perception
+ds003810,False,,motor,motor
+ds003822,False,,resting_state,emotion
+ds003825,False,,visual,other
+ds003838,False,,resting_state,memory
+ds003844,True,epilepsy,visual,language
+ds003846,False,,tactile,attention
+ds003848,True,epilepsy,visual,language
+ds003876,True,epilepsy,resting_state,other
+ds003885,False,,visual,motor
+ds003887,False,,visual,motor
+ds003922,False,,multisensory,memory
+ds003944,True,Unspecified Clinical,resting_state,executive
+ds003947,True,Unspecified Clinical,resting_state,executive
+ds003969,False,,resting_state,executive
+ds003987,False,,auditory,other
+ds004000,True,schizophrenia,other,executive
+ds004010,False,,multisensory,attention
+ds004011,False,,visual,other
+ds004012,False,,other,other
+ds004015,False,,auditory,other
+ds004017,False,,visual,attention
+ds004018,False,,visual,other
+ds004019,False,,motor,other
+ds004022,True,Unspecified Clinical,visual,motor
+ds004024,False,,tactile,other
+ds004033,False,,auditory,attention
+ds004040,False,,resting_state,other
+ds004043,False,,other,attention
+ds004067,False,,other,other
+ds004075,False,,other,other
+ds004078,True,Unspecified Clinical,auditory,language
+ds004080,True,epilepsy,visual,emotion
+ds004100,True,epilepsy,other,other
+ds004105,False,,auditory,attention
+ds004106,False,,visual,attention
+ds004107,False,,other,other
+ds004117,False,,motor,memory
+ds004118,False,,visual,executive
+ds004119,False,,visual,attention
+ds004120,False,,visual,executive
+ds004121,False,,motor,attention
+ds004122,False,,visual,executive
+ds004123,False,,visual,executive
+ds004127,False,,tactile,perception
+ds004147,False,,other,other
+ds004148,False,,resting_state,memory
+ds004151,False,,other,executive
+ds004152,False,,motor,attention
+ds004166,False,,motor,memory
+ds004194,True,epilepsy,visual,emotion
+ds004196,True,Unspecified Clinical,auditory,language
+ds004200,False,,visual,perception
+ds004212,False,,visual,language
+ds004229,True,Unspecified Clinical,visual,language
+ds004252,False,,resting_state,other
+ds004256,False,,auditory,memory
+ds004262,False,,other,other
+ds004264,False,,motor,attention
+ds004276,False,,auditory,language
+ds004278,False,,other,memory
+ds004279,True,Unspecified Clinical,auditory,language
+ds004284,False,,other,other
+ds004295,False,,other,other
+ds004306,False,,auditory,language
+ds004315,False,,other,language
+ds004317,False,,other,emotion
+ds004324,False,,visual,emotion
+ds004330,False,,visual,other
+ds004346,False,,visual,other
+ds004347,False,,other,emotion
+ds004348,False,,visual,other
+ds004350,False,,motor,memory
+ds004356,False,,auditory,language
+ds004357,False,,visual,perception
+ds004362,False,,motor,motor
+ds004367,True,schizophrenia,visual,attention
+ds004368,False,,other,other
+ds004369,False,,auditory,other
+ds004370,True,Unspecified Clinical,visual,emotion
+ds004381,True,Unspecified Clinical,tactile,other
+ds004388,False,,resting_state,perception
+ds004389,False,,tactile,perception
+ds004395,False,,other,memory
+ds004398,False,,visual,other
+ds004408,False,,auditory,language
+ds004444,False,,motor,motor
+ds004446,False,,motor,motor
+ds004447,False,,motor,motor
+ds004448,False,,motor,motor
+ds004457,True,Unspecified Clinical,resting_state,other
+ds004460,False,,motor,motor
+ds004473,True,epilepsy,visual,motor
+ds004475,False,,other,other
+ds004477,False,,motor,perception
+ds004483,False,,auditory,memory
+ds004502,False,,other,attention
+ds004504,True,dementia,resting_state,language
+ds004505,False,,visual,other
+ds004511,False,,resting_state,executive
+ds004514,False,,visual,perception
+ds004515,False,,visual,emotion
+ds004517,False,,visual,motor
+ds004519,False,,other,attention
+ds004520,False,,other,memory
+ds004521,False,,other,memory
+ds004532,False,,other,language
+ds004551,False,,other,other
+ds004554,True,Unspecified Clinical,visual,other
+ds004561,False,,motor,motor
+ds004563,False,,tactile,attention
+ds004572,False,,resting_state,language
+ds004574,True,parkinson,visual,attention
+ds004577,False,,resting_state,other
+ds004579,True,parkinson,visual,attention
+ds004580,True,parkinson,motor,executive
+ds004582,False,,visual,emotion
+ds004584,True,parkinson,resting_state,executive
+ds004587,False,,auditory,attention
+ds004588,False,,other,other
+ds004595,False,,other,other
+ds004598,False,,other,other
+ds004602,True,Unspecified Clinical,visual,executive
+ds004603,True,Unspecified Clinical,visual,executive
+ds004621,False,,resting_state,attention
+ds004624,False,,other,other
+ds004625,False,,visual,other
+ds004626,False,,other,attention
+ds004635,False,,visual,attention
+ds004642,True,Unspecified Clinical,visual,other
+ds004657,False,,motor,attention
+ds004660,False,,other,other
+ds004661,False,,visual,attention
+ds004696,True,Unspecified Clinical,resting_state,other
+ds004703,True,Unspecified Clinical,auditory,language
+ds004706,False,,tactile,memory
+ds004718,False,,auditory,language
+ds004738,False,,other,other
+ds004745,False,,tactile,motor
+ds004752,True,epilepsy,visual,memory
+ds004770,True,epilepsy,resting_state,memory
+ds004771,False,,resting_state,language
+ds004774,False,,other,other
+ds004784,False,,resting_state,other
+ds004785,False,,motor,executive
+ds004789,True,Unspecified Clinical,visual,memory
+ds004796,True,dementia,resting_state,memory
+ds004802,False,,other,other
+ds004809,True,Unspecified Clinical,visual,memory
+ds004816,False,,other,attention
+ds004817,False,,other,attention
+ds004819,False,,tactile,other
+ds004830,False,,other,attention
+ds004837,True,schizophrenia,other,attention
+ds004840,True,depression,resting_state,perception
+ds004841,False,,visual,attention
+ds004842,False,,other,other
+ds004843,False,,other,other
+ds004844,False,,motor,executive
+ds004849,False,,other,other
+ds004850,False,,other,other
+ds004851,False,,other,other
+ds004852,False,,other,other
+ds004853,False,,other,other
+ds004854,False,,other,other
+ds004855,False,,other,other
+ds004859,False,,other,executive
+ds004860,False,,other,other
+ds004865,True,Unspecified Clinical,visual,memory
+ds004883,True,Unspecified Clinical,visual,executive
+ds004902,False,,resting_state,other
+ds004917,False,,tactile,other
+ds004929,False,,other,other
+ds004940,True,Unspecified Clinical,auditory,language
+ds004942,False,,other,memory
+ds004944,True,epilepsy,other,memory
+ds004951,False,,motor,perception
+ds004952,False,,visual,language
+ds004973,False,,visual,emotion
+ds004977,True,epilepsy,resting_state,other
+ds004980,False,,other,other
+ds004993,True,epilepsy,multisensory,language
+ds004995,False,,other,other
+ds004998,True,parkinson,resting_state,motor
+ds005007,False,,auditory,other
+ds005021,False,,visual,attention
+ds005028,False,,visual,attention
+ds005034,False,,resting_state,memory
+ds005048,True,dementia,auditory,other
+ds005059,True,Unspecified Clinical,visual,memory
+ds005065,False,,visual,other
+ds005079,False,,motor,executive
+ds005083,True,Unspecified Clinical,other,other
+ds005087,False,,visual,attention
+ds005089,False,,other,attention
+ds005095,False,,motor,memory
+ds005106,False,,visual,other
+ds005107,False,,visual,emotion
+ds005114,False,,other,language
+ds005121,False,,auditory,memory
+ds005131,False,,auditory,attention
+ds005169,True,epilepsy,visual,other
+ds005170,False,,auditory,language
+ds005178,True,Unspecified Clinical,visual,other
+ds005185,False,,motor,motor
+ds005189,False,,visual,memory
+ds005207,True,Unspecified Clinical,visual,other
+ds005241,False,,other,other
+ds005261,False,,resting_state,language
+ds005262,False,,auditory,language
+ds005273,False,,other,other
+ds005274,False,,other,other
+ds005279,False,,motor,language
+ds005280,False,,visual,other
+ds005284,False,,visual,perception
+ds005285,False,,visual,attention
+ds005286,False,,visual,other
+ds005289,False,,visual,attention
+ds005291,False,,visual,other
+ds005292,False,,visual,other
+ds005293,False,,tactile,attention
+ds005296,False,,visual,language
+ds005305,True,Unspecified Clinical,resting_state,executive
+ds005307,False,,other,other
+ds005340,False,,auditory,language
+ds005342,False,,visual,motor
+ds005343,False,,visual,attention
+ds005345,True,Unspecified Clinical,visual,motor
+ds005346,True,Unspecified Clinical,visual,memory
+ds005356,True,depression,resting_state,executive
+ds005363,False,,visual,emotion
+ds005383,False,,visual,language
+ds005385,False,,resting_state,other
+ds005397,False,,resting_state,other
+ds005398,True,epilepsy,other,other
+ds005403,False,,auditory,language
+ds005406,False,,other,other
+ds005407,False,,auditory,language
+ds005408,False,,auditory,language
+ds005410,False,,other,language
+ds005411,True,Unspecified Clinical,visual,memory
+ds005415,True,epilepsy,visual,other
+ds005416,False,,resting_state,motor
+ds005420,False,,resting_state,other
+ds005429,False,,auditory,attention
+ds005448,True,epilepsy,visual,other
+ds005473,False,,tactile,other
+ds005486,False,,other,other
+ds005489,True,Unspecified Clinical,visual,memory
+ds005491,True,Unspecified Clinical,visual,memory
+ds005494,True,Unspecified Clinical,visual,memory
+ds005505,True,Unspecified Clinical,visual,attention
+ds005506,True,Unspecified Clinical,visual,attention
+ds005507,True,Unspecified Clinical,visual,attention
+ds005508,True,Unspecified Clinical,visual,attention
+ds005509,True,Unspecified Clinical,visual,attention
+ds005510,True,Unspecified Clinical,visual,attention
+ds005512,True,Unspecified Clinical,visual,attention
+ds005514,True,Unspecified Clinical,visual,attention
+ds005515,True,Unspecified Clinical,visual,attention
+ds005516,True,Unspecified Clinical,visual,attention
+ds005520,False,,resting_state,other
+ds005522,True,Unspecified Clinical,motor,memory
+ds005523,True,Unspecified Clinical,motor,memory
+ds005530,False,,visual,emotion
+ds005540,False,,other,emotion
+ds005545,True,Unspecified Clinical,auditory,other
+ds005555,True,Unspecified Clinical,visual,motor
+ds005557,True,Unspecified Clinical,visual,memory
+ds005558,True,Unspecified Clinical,visual,memory
+ds005565,False,,visual,attention
+ds005571,False,,other,other
+ds005574,False,,auditory,language
+ds005586,False,,visual,motor
+ds005594,False,,motor,other
+ds005620,False,,other,other
+ds005624,False,,other,other
+ds005628,False,,multisensory,attention
+ds005642,False,,visual,perception
+ds005648,False,,other,other
+ds005662,False,,visual,perception
+ds005670,True,epilepsy,resting_state,other
+ds005672,False,,visual,other
+ds005688,False,,other,other
+ds005691,True,Unspecified Clinical,auditory,perception
+ds005692,False,,motor,perception
+ds005697,False,,visual,other
+ds005752,True,depression,visual,executive
+ds005776,False,,tactile,other
+ds005777,False,,other,other
+ds005779,False,,tactile,other
+ds005787,False,,other,other
+ds005795,False,,auditory,attention
+ds005810,False,,visual,other
+ds005811,False,,visual,other
+ds005815,False,,multisensory,perception
+ds005841,False,,visual,other
+ds005857,False,,other,other
+ds005863,True,adhd,visual,attention
+ds005866,False,,visual,executive
+ds005868,False,,visual,executive
+ds005872,False,,other,other
+ds005873,True,epilepsy,visual,motor
+ds005876,False,,auditory,other
+ds005907,False,,other,other
+ds005929,False,,other,other
+ds005930,False,,other,other
+ds005931,True,epilepsy,motor,motor
+ds005932,False,,visual,language
+ds005935,False,,other,other
+ds005946,False,,visual,language
+ds005953,False,,visual,memory
+ds005960,False,,visual,attention
+ds005963,False,,motor,motor
+ds005964,False,,auditory,other
+ds006012,False,,visual,emotion
+ds006018,False,,other,other
+ds006033,False,,auditory,language
+ds006035,True,depression,motor,perception
+ds006036,True,dementia,resting_state,language
+ds006040,False,,resting_state,attention
+ds006065,False,,tactile,memory
+ds006095,False,,resting_state,other
+ds006104,False,,auditory,language
+ds006107,False,,other,other
+ds006126,False,,visual,motor
+ds006142,False,,visual,memory
+ds006159,False,,other,other
+ds006171,False,,visual,other
+ds006233,True,Unspecified Clinical,visual,other
+ds006234,True,Unspecified Clinical,auditory,other
+ds006253,True,epilepsy,motor,attention
+ds006260,False,,other,other
+ds006269,False,,other,other
+ds006317,False,,auditory,language
+ds006334,False,,multisensory,memory
+ds006366,False,,other,other
+ds006367,False,,motor,memory
+ds006370,False,,visual,memory
+ds006374,False,,motor,other
+ds006377,False,,other,other
+ds006392,True,Unspecified Clinical,tactile,other
+ds006394,False,,visual,other
+ds006434,False,,auditory,attention
+ds006437,False,,visual,motor
+ds006446,False,,other,other
+ds006459,False,,other,language
+ds006460,False,,other,language
+ds006465,False,,auditory,language
+ds006466,False,,resting_state,attention
+ds006468,False,,auditory,language
+ds006480,False,,resting_state,attention
+ds006502,True,Unspecified Clinical,motor,attention
+ds006519,True,epilepsy,tactile,motor
+ds006525,False,,resting_state,motor
+ds006545,False,,other,other
+ds006547,False,,visual,other
+ds006554,True,Unspecified Clinical,motor,language
+ds006563,True,Unspecified Clinical,visual,attention
+ds006576,False,,other,other
+ds006593,False,,other,other
+ds006629,False,,auditory,attention
+ds006647,False,,visual,language
+ds006648,False,,visual,language
+ds006673,False,,other,other
+ds006695,False,,visual,motor
+ds006720,False,,other,memory
+ds006735,False,,auditory,memory
+ds006761,False,,other,other
+ds006768,False,,visual,other
+ds006801,False,,resting_state,memory
+ds006802,False,,other,other
+ds006803,False,,resting_state,emotion
+ds006817,False,,visual,other
+ds006839,False,,resting_state,attention
+ds006840,False,,motor,other
+ds006848,False,,resting_state,memory
+ds006850,True,Unspecified Clinical,visual,language
+ds006861,False,,other,attention
+ds006866,False,,other,emotion
+ds006890,False,,other,other
+ds006902,False,,other,other
+ds006903,False,,other,other
+ds006910,False,,auditory,language
+ds006914,False,,visual,language
+ds006921,False,,resting_state,executive
+ds006923,False,,other,other
+ds006940,False,,other,executive
+ds006945,False,,visual,motor
+ds006963,False,,motor,memory
+ds007006,True,Unspecified Clinical,auditory,other
+ds007020,True,parkinson,other,other
+ds007028,False,,auditory,other
+ds007081,False,,visual,memory
+ds007095,True,epilepsy,tactile,other
+ds007118,False,,other,other
+ds007119,False,,other,other
+ds007120,False,,other,other
+ds007162,False,,visual,executive
+ds007172,True,Unspecified Clinical,visual,emotion
+ds007175,False,,auditory,other
+ds007176,False,,other,other
+ds007180,False,,other,other
+ds007181,False,,resting_state,other

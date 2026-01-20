@@ -328,6 +328,13 @@ def extract_dataset_metadata(
     senior_author = metadata.get("senior_author")
     contact_info = metadata.get("contact_info")
 
+    # Extract new metadata fields
+    is_clinical = metadata.get("is_clinical")
+    clinical_purpose = metadata.get("clinical_purpose")
+    paradigm_modality = metadata.get("paradigm_modality")
+    cognitive_domain = metadata.get("cognitive_domain")
+    is_10_20_system = metadata.get("is_10_20_system")
+
     if not dataset_modified_at:
         # Try to get from manifest timestamps dict if present
         ts = metadata.get("timestamps", {})
@@ -453,6 +460,12 @@ def extract_dataset_metadata(
         senior_author=senior_author,
         contact_info=contact_info,
         storage=storage_info,
+        # New fields
+        is_clinical=is_clinical,
+        clinical_purpose=clinical_purpose,
+        paradigm_modality=paradigm_modality,
+        cognitive_domain=cognitive_domain,
+        is_10_20_system=is_10_20_system,
     )
 
     return dict(dataset)

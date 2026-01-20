@@ -181,6 +181,13 @@ def _generate_rich_docstring(
     exp_type = _clean_optional(row_series.get("type of exp"))
     subject_type = _clean_optional(row_series.get("Type Subject"))
 
+    # Citation count from NEMAR
+    citation_count = row_series.get("nemar_citation_count")
+    if citation_count is not None and not pd.isna(citation_count):
+        citation_count = int(citation_count)
+    else:
+        citation_count = None
+
     summary_bits: list[str] = []
     if modality:
         summary_bits.append(f"Modality: ``{modality}``")
@@ -193,10 +200,36 @@ def _generate_rich_docstring(
     if summary_bits:
         summary_line = f"{summary_line} {'; '.join(summary_bits)}."
     summary_lines = [summary_line]
-    if any(value != "Unknown" for value in (n_subjects, n_records, n_tasks)):
-        summary_lines.append(
-            f"Subjects: {n_subjects}; recordings: {n_records}; tasks: {n_tasks}."
-        )
+
+    # Build the subjects/recordings/tasks line with optional citation badge
+    stats_parts = []
+    if n_subjects != "Unknown":
+        stats_parts.append(f"Subjects: {n_subjects}")
+    if n_records != "Unknown":
+        stats_parts.append(f"recordings: {n_records}")
+    if n_tasks != "Unknown":
+        stats_parts.append(f"tasks: {n_tasks}")
+
+    if stats_parts:
+        stats_line = "; ".join(stats_parts) + "."
+        # Add citation badge inline if available
+        if citation_count is not None:
+            badge_color = (
+                "blue"
+                if citation_count == 0
+                else "green"
+                if citation_count < 10
+                else "brightgreen"
+            )
+            badge_url = f"https://img.shields.io/badge/citations-{citation_count}-{badge_color}.svg"
+            stats_line = f"{stats_line} |citations_badge|"
+            summary_lines.append(stats_line)
+            # Add the badge definition after
+            summary_lines.append("")
+            summary_lines.append(f".. |citations_badge| image:: {badge_url}")
+            summary_lines.append(f"   :alt: NEMAR Citations: {citation_count}")
+        else:
+            summary_lines.append(stats_line)
 
     doi_raw = (
         row_series.get("dataset_doi")
@@ -216,6 +249,8 @@ def _generate_rich_docstring(
     ]
     if doi_clean:
         references_lines.append(f"DOI: https://doi.org/{doi_clean}")
+    if citation_count is not None:
+        references_lines.append(f"NEMAR citation count: {citation_count}")
 
     docstring = f"""{chr(10).join(summary_lines)}
 
@@ -391,6 +426,8 @@ def fetch_datasets_from_api(
             "sampling_freqs": json.dumps(sfreq_list),
             "license": ds.get("license", ""),
             "doi": ds.get("dataset_doi", ""),
+            # Citation metrics from NEMAR
+            "nemar_citation_count": ds.get("nemar_citation_count"),
         }
         rows.append(row)
 
@@ -455,6 +492,8 @@ def _fetch_datasets_from_api(api_url: str, database: str) -> pd.DataFrame:
             "doi": ds.get("dataset_doi", ""),
             # internal/extra fields
             "source": ds.get("source") or "unknown",
+            # Citation metrics from NEMAR
+            "nemar_citation_count": ds.get("nemar_citation_count"),
         }
         rows.append(row)
 

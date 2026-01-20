@@ -8,8 +8,18 @@ from urllib.parse import quote
 from argparse import ArgumentParser
 from datetime import datetime
 from pathlib import Path
-from shutil import copyfile
+from shutil import copyfile as _copyfile
 from tqdm import tqdm
+
+
+def copyfile(src, dst):
+    """Robust copyfile that ignores SameFileError."""
+    try:
+        _copyfile(src, dst)
+    except Exception as exc:
+        if "are the same file" not in str(exc):
+            raise exc
+
 
 import numpy as np
 import pandas as pd
@@ -18,6 +28,8 @@ from plot_dataset import (
     generate_dataset_sankey,
     generate_dataset_treemap,
     generate_modality_ridgeline,
+    generate_dataset_growth,
+    generate_clinical_stacked_bar,
 )
 from plot_dataset.utils import get_dataset_url, human_readable_size
 from table_tag_utils import _normalize_values, wrap_tags
@@ -494,6 +506,24 @@ def main(source_dir: str, target_dir: str):
         except Exception as exc:
             print(f"[dataset Treemap] Skipped due to error: {exc}")
 
+        # Generate Dataset Growth Plot
+        try:
+            growth_path = target_dir / "dataset_growth.html"
+            growth_output = generate_dataset_growth(df_raw, growth_path)
+            copyfile(growth_output, STATIC_DATASET_DIR / growth_output.name)
+            print(f"Generated: {growth_output.name}")
+        except Exception as exc:
+            print(f"[dataset Growth] Skipped due to error: {exc}")
+
+        # Generate Clinical Stacked Bar
+        try:
+            clinical_path = target_dir / "dataset_clinical.html"
+            clinical_output = generate_clinical_stacked_bar(df_raw, clinical_path)
+            copyfile(clinical_output, STATIC_DATASET_DIR / clinical_output.name)
+            print(f"Generated: {clinical_output.name}")
+        except Exception as exc:
+            print(f"[dataset Clinical] Skipped due to error: {exc}")
+
         df = prepare_table(df_raw)
         # preserve int values
         df["n_subjects"] = df["n_subjects"].astype(int)
@@ -729,11 +759,81 @@ def main_from_api(target_dir: str, database: str = DEFAULT_DATABASE, limit: int 
     print(f"Fetching data from API (database: {database})...")
     # Using registry's cached fetcher
     df_raw = fetch_datasets_from_api(API_BASE_URL, database)
+
+    # Always try to load local summary to enrich API data (better modality tags)
+    fallback_df = _load_local_dataset_summary()
+
     if df_raw.empty or _needs_csv_fallback(df_raw):
-        fallback_df = _load_local_dataset_summary()
         if not fallback_df.empty:
             df_raw = fallback_df
             print("API summary incomplete; using local dataset_summary.csv.")
+    elif not fallback_df.empty:
+        # Merge modality info from CSV if API checks passed but CSV exists
+        print("Enriching API data with local dataset_summary.csv modality info...")
+        # CSV uses 'dataset' (id) and 'record_modality'
+        # API uses 'dataset_id' or 'dataset'
+
+        # Ensure ID column match
+        if "dataset" not in df_raw.columns and "dataset_id" in df_raw.columns:
+            df_raw["dataset"] = df_raw["dataset_id"]
+
+        # Select relevant columns from CSV
+        # We trust CSV 'record_modality' more than API 'experimental_modalities'
+        enrich_cols = ["dataset", "record_modality", "modality of exp"]
+        enrich_df = fallback_df[
+            [c for c in enrich_cols if c in fallback_df.columns]
+        ].copy()
+
+        if not enrich_df.empty and "dataset" in enrich_df.columns:
+            # Merge
+            df_raw = df_raw.merge(
+                enrich_df, on="dataset", how="left", suffixes=("", "_csv")
+            )
+
+            # Overwrite/Prioritize CSV modality
+            if "record_modality_csv" in df_raw.columns:
+                if "recording_modality" not in df_raw.columns:
+                    df_raw["recording_modality"] = pd.Series(
+                        index=df_raw.index, dtype="object"
+                    )
+                df_raw["recording_modality"] = df_raw[
+                    "record_modality_csv"
+                ].combine_first(df_raw["recording_modality"])
+                # Also ensure our plotting scripts see it
+                df_raw["record_modality"] = df_raw["record_modality_csv"]
+
+    # Attempt to backfill timestamps from local consolidated JSON if missing
+    if "dataset_created_at" not in df_raw.columns:
+        json_backfill_path = (
+            Path(__file__).resolve().parents[1]
+            / "consolidated"
+            / "openneuro_datasets.json"
+        )
+        if json_backfill_path.exists():
+            try:
+                print(f"Backfilling timestamps from {json_backfill_path}...")
+                with open(json_backfill_path) as f:
+                    local_data = json.load(f)
+
+                # Create a mapping of dataset -> created_at
+                # Handle both list of records or dict structure
+                date_map = {}
+                if isinstance(local_data, list):
+                    for item in local_data:
+                        ds = item.get("dataset_id") or item.get("dataset")
+                        # Timestamps might be in 'timestamps' dict or top level
+                        ts = item.get("dataset_created_at") or item.get(
+                            "timestamps", {}
+                        ).get("dataset_created_at")
+                        if ds and ts:
+                            date_map[ds] = ts
+
+                if date_map:
+                    # Map to df_raw
+                    # Ensure join column is consistent (df_raw has 'dataset')
+                    df_raw["dataset_created_at"] = df_raw["dataset"].map(date_map)
+            except Exception as e:
+                print(f"Failed to backfill timestamps: {e}")
 
     if df_raw.empty:
         print("No datasets fetched from API or local CSV!")
@@ -772,6 +872,24 @@ def main_from_api(target_dir: str, database: str = DEFAULT_DATABASE, limit: int 
         print(f"Generated: {treemap_output.name}")
     except Exception as exc:
         print(f"[dataset Treemap] Skipped due to error: {exc}")
+
+    # Generate Dataset Growth Plot
+    try:
+        growth_path = target_dir / "dataset_growth.html"
+        growth_output = generate_dataset_growth(df_raw, growth_path)
+        copyfile(growth_output, STATIC_DATASET_DIR / growth_output.name)
+        print(f"Generated: {growth_output.name}")
+    except Exception as exc:
+        print(f"[dataset Growth] Skipped due to error: {exc}")
+
+    # Generate Clinical Stacked Bar
+    try:
+        clinical_path = target_dir / "dataset_clinical.html"
+        clinical_output = generate_clinical_stacked_bar(df_raw, clinical_path)
+        copyfile(clinical_output, STATIC_DATASET_DIR / clinical_output.name)
+        print(f"Generated: {clinical_output.name}")
+    except Exception as exc:
+        print(f"[dataset Clinical] Skipped due to error: {exc}")
 
     # Prepare and generate HTML table
     df = prepare_table(df_raw)

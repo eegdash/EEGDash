@@ -19,6 +19,15 @@ MODALITY_COLOR_MAP = {
     "Sleep": "#7c3aed",
     "Other": "#14b8a6",
     "Unknown": "#94a3b8",
+    "EEG": "#3b82f6",  # blue-500
+    "iEEG": "#1d4ed8",  # blue-700
+    "MEG": "#a855f7",  # purple-500
+    "fNIRS": "#ef4444",  # red-500
+    "EMG": "#f97316",  # orange-500
+    "fMRI": "#06b6d4",  # cyan-500
+    "MRI": "#0891b2",  # cyan-600
+    "ECG": "#be123c",  # rose-700
+    "Behavior": "#84cc16",  # lime-500
 }
 
 MODALITY_EMOJI = {
@@ -32,6 +41,15 @@ MODALITY_EMOJI = {
     "Rest": "🧘",
     "Other": "🧭",
     "Unknown": "❔",
+    "EEG": "🧠",
+    "iEEG": "⚡",
+    "MEG": "🧲",
+    "fNIRS": "💡",
+    "EMG": "💪",
+    "fMRI": "🧠",
+    "MRI": "📷",
+    "ECG": "❤️",
+    "Behavior": "📝",
 }
 
 PATHOLOGY_PASTEL_OVERRIDES = {
@@ -86,6 +104,15 @@ CANONICAL_MAP = {
         "resting-state": "Resting State",
         "sleep": "Sleep",
         "other": "Other",
+        "eeg": "EEG",
+        "ieeg": "iEEG",
+        "meg": "MEG",
+        "fnirs": "fNIRS",
+        "emg": "EMG",
+        "fmri": "fMRI",
+        "mri": "MRI",
+        "ecg": "ECG",
+        "behavior": "Behavior",
     },
     "type of exp": {
         "perception": "Perception",

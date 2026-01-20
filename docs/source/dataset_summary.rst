@@ -75,6 +75,14 @@ To leverage recent and ongoing advancements in large-scale computational methods
 
       .. include:: dataset_summary/treemap.rst
 
+   .. tab-item:: Clinical Breakdown
+
+      .. include:: dataset_summary/clinical.rst
+
+   .. tab-item:: Dataset Growth
+
+      .. include:: dataset_summary/growth.rst
+
    .. tab-item:: Scatter of Sample Size vs. Recording Duration
 
       .. include:: dataset_summary/bubble.rst

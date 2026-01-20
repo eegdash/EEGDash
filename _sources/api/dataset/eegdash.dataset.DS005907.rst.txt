@@ -66,7 +66,7 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 56 (22), 59 (8), 52 (2), 54 (4), 33 (2), 53 (2), 58 (26), 57 (26), 61 (2), 55 (12)
+      - Channels: 52 (2), 54 (4), 33 (2), 53 (2), 56 (22), 59 (8), 61 (2), 55 (12), 58 (26), 57 (26)
       - Sampling rate (Hz): 500.0
       - Duration (hours): 0.0
 

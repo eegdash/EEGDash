@@ -200,7 +200,8 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./docs/_build/html
-          cname: eegdash.org
+          destination_dir: archive
+          keep_files: true
 
       - name: Deploy to GitHub Pages (develop)
         if: github.event_name == 'push' && github.ref == 'refs/heads/develop'
@@ -208,5 +209,4 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./docs/_build/html
-          destination_dir: develop
-          keep_files: true
+          cname: eegdash.org

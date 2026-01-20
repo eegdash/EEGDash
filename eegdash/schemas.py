@@ -254,8 +254,36 @@ class Demographics(TypedDict, total=False):
     handedness_distribution: dict[str, int] | None
 
 
+class Tags(TypedDict, total=False):
+    """Classification tags for the dataset.
+
+    Each tag category can contain multiple values as a list of strings.
+
+    Attributes
+    ----------
+    pathology : list[str] | None
+        Health/clinical conditions (e.g., ["Healthy"], ["Epilepsy", "Drug-resistant"]).
+        Use "Healthy" for neurotypical/control subjects.
+    modality : list[str] | None
+        Sensory or stimulus modalities (e.g., ["Visual"], ["Auditory", "Tactile"]).
+        Includes "Resting State" for resting-state paradigms.
+    type : list[str] | None
+        Experimental paradigm types (e.g., ["Perception"], ["Memory"], ["BCI"]).
+        Describes the cognitive domain or task category.
+
+    """
+
+    pathology: list[str] | None
+    modality: list[str] | None
+    type: list[str] | None
+
+
+# Legacy aliases for backwards compatibility
 class Clinical(TypedDict, total=False):
     """Clinical classification metadata (dataset-level).
+
+    .. deprecated::
+        Use the ``tags`` field with ``pathology`` key instead.
 
     Attributes
     ----------
@@ -272,6 +300,9 @@ class Clinical(TypedDict, total=False):
 
 class Paradigm(TypedDict, total=False):
     """Experimental paradigm classification (dataset-level).
+
+    .. deprecated::
+        Use the ``tags`` field with ``modality`` and ``type`` keys instead.
 
     Attributes
     ----------
@@ -383,10 +414,12 @@ class Dataset(TypedDict, total=False):
         Count of contributing labs.
     demographics : Demographics
         Summary of subject demographics.
+    tags : Tags
+        Classification tags (pathology, modality, type).
     clinical : Clinical
-        Clinical classification details.
+        Clinical classification details (deprecated, use tags instead).
     paradigm : Paradigm
-        Experimental paradigm details.
+        Experimental paradigm details (deprecated, use tags instead).
     external_links : ExternalLinks
         Links to external resources.
     repository_stats : RepositoryStats | None
@@ -441,7 +474,10 @@ class Dataset(TypedDict, total=False):
     # Demographics
     demographics: Demographics
 
-    # Classification
+    # Classification (new)
+    tags: Tags
+
+    # Classification (legacy - deprecated, use tags instead)
     clinical: Clinical
     paradigm: Paradigm
 
@@ -497,10 +533,14 @@ def create_dataset(
     handedness_distribution: dict[str, int] | None = None,
     # Multi-site studies
     contributing_labs: list[str] | None = None,
-    # Clinical classification
+    # Tags classification (new)
+    tags_pathology: list[str] | None = None,
+    tags_modality: list[str] | None = None,
+    tags_type: list[str] | None = None,
+    # Clinical classification (legacy - use tags instead)
     is_clinical: bool | None = None,
     clinical_purpose: str | None = None,
-    # Paradigm classification
+    # Paradigm classification (legacy - use tags instead)
     paradigm_modality: str | None = None,
     cognitive_domain: str | None = None,
     is_10_20_system: bool | None = None,
@@ -673,14 +713,22 @@ def create_dataset(
         storage=storage,
     )
 
-    # Add clinical if any field provided
+    # Add tags if any field provided (new structure)
+    if tags_pathology or tags_modality or tags_type:
+        dataset["tags"] = Tags(
+            pathology=tags_pathology,
+            modality=tags_modality,
+            type=tags_type,
+        )
+
+    # Add clinical if any field provided (legacy - deprecated, use tags instead)
     if is_clinical is not None or clinical_purpose is not None:
         dataset["clinical"] = Clinical(
             is_clinical=is_clinical if is_clinical is not None else False,
             purpose=clinical_purpose,
         )
 
-    # Add paradigm if any field provided
+    # Add paradigm if any field provided (legacy - deprecated, use tags instead)
     if (
         paradigm_modality is not None
         or cognitive_domain is not None

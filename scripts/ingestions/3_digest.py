@@ -405,18 +405,20 @@ def extract_dataset_metadata(
             if not item.is_file():
                 continue
 
-            name = item.name
+            item_name = item.name
             if (
-                name in found_files
-                or name.lower() in ignored_files
-                or name.startswith(".")
+                item_name in found_files
+                or item_name.lower() in ignored_files
+                or item_name.startswith(".")
             ):
                 continue
 
             # Include typical BIDS metadata extensions
-            if name.lower().endswith((".json", ".tsv", ".txt", ".md", ".yaml", ".yml")):
-                dep_keys.append(name)
-                found_files.add(name)
+            if item_name.lower().endswith(
+                (".json", ".tsv", ".txt", ".md", ".yaml", ".yml")
+            ):
+                dep_keys.append(item_name)
+                found_files.add(item_name)
 
         # Deduplicate keys and sort
         dep_keys = sorted(list(set(dep_keys)))
@@ -540,9 +542,159 @@ def extract_record(
     except Exception:
         pass
 
-    # Fallback for nchans if not in sidecar but we have channel names
-    if not nchans and ch_names:
+    # Prefer channel_labels count over sidecar nchans
+    # channels.tsv is the authoritative source for channel information
+    # Sidecar JSON may only have partial counts (e.g., only EEGChannelCount)
+    if ch_names:
         nchans = len(ch_names)
+    elif not nchans:
+        # Fallback: no channels.tsv and no sidecar nchans
+        nchans = None
+
+    # ===========================================================
+    # FALLBACK: Read from BIDS sidecar files directly
+    # This handles MEG/iEEG datasets where primary extraction fails
+    # BIDS uses inheritance - sidecars can be in parent directories
+    # and may not include run/acquisition entities
+    # ===========================================================
+    bids_file_path = Path(bids_file)
+
+    # Try to find and read the modality-specific JSON sidecar (e.g., _meg.json, _eeg.json)
+    if not sampling_frequency or not nchans:
+        # Parse entities from the file name
+        # e.g., "sub-13_ses-meg_task-facerecognition_run-05_meg.fif"
+        stem = bids_file_path.stem  # "sub-13_ses-meg_task-facerecognition_run-05_meg"
+        parts = stem.split("_")
+
+        # Build different base name variants for BIDS inheritance
+        # Full base: sub-13_ses-meg_task-facerecognition_run-05
+        # Without run: sub-13_ses-meg_task-facerecognition
+        # Without run and acq: sub-13_ses-meg_task-facerecognition
+        base_names_to_try = []
+
+        # Get base without the modality suffix (last part)
+        full_base = "_".join(parts[:-1]) if len(parts) > 1 else stem
+
+        # Add full base first
+        base_names_to_try.append(full_base)
+
+        # Try without run-XX
+        if "_run-" in full_base:
+            without_run = "_".join(p for p in parts[:-1] if not p.startswith("run-"))
+            base_names_to_try.append(without_run)
+
+        # Try without acquisition too
+        if "_acq-" in full_base:
+            without_acq_run = "_".join(
+                p
+                for p in parts[:-1]
+                if not p.startswith("run-") and not p.startswith("acq-")
+            )
+            base_names_to_try.append(without_acq_run)
+
+        # Directories to search (current + parent for inheritance)
+        parent_dir = bids_file_path.parent
+        dirs_to_try = [parent_dir, parent_dir.parent]
+
+        # Try modality-specific sidecars
+        for search_dir in dirs_to_try:
+            if sampling_frequency and nchans:
+                break
+            for base_name in base_names_to_try:
+                if sampling_frequency and nchans:
+                    break
+                for sidecar_suffix in ["_meg.json", "_eeg.json", "_ieeg.json"]:
+                    sidecar_path = search_dir / f"{base_name}{sidecar_suffix}"
+                    if sidecar_path.exists():
+                        try:
+                            with open(sidecar_path) as f:
+                                sidecar_data = json.load(f)
+
+                            # Extract SamplingFrequency
+                            if (
+                                not sampling_frequency
+                                and "SamplingFrequency" in sidecar_data
+                            ):
+                                sampling_frequency = float(
+                                    sidecar_data["SamplingFrequency"]
+                                )
+
+                            # Extract channel count from various BIDS fields
+                            if not nchans:
+                                # Sum all channel type counts if available
+                                channel_count_fields = [
+                                    "MEGChannelCount",
+                                    "EEGChannelCount",
+                                    "EOGChannelCount",
+                                    "ECGChannelCount",
+                                    "EMGChannelCount",
+                                    "MiscChannelCount",
+                                    "TriggerChannelCount",
+                                    "iEEGChannelCount",
+                                    "SEEGChannelCount",
+                                    "ECOGChannelCount",
+                                ]
+                                total_channels = sum(
+                                    sidecar_data.get(field, 0) or 0
+                                    for field in channel_count_fields
+                                )
+                                if total_channels > 0:
+                                    nchans = total_channels
+                            break  # Found a valid sidecar in this dir
+                        except Exception:
+                            pass
+
+    # Try to read from channels.tsv if still missing
+    if not sampling_frequency or not nchans:
+        stem = bids_file_path.stem
+        parts = stem.split("_")
+        full_base = "_".join(parts[:-1]) if len(parts) > 1 else stem
+
+        base_names_to_try = [full_base]
+        if "_run-" in full_base:
+            without_run = "_".join(p for p in parts[:-1] if not p.startswith("run-"))
+            base_names_to_try.append(without_run)
+
+        parent_dir = bids_file_path.parent
+        dirs_to_try = [parent_dir, parent_dir.parent]
+
+        for search_dir in dirs_to_try:
+            if sampling_frequency and nchans:
+                break
+            for base_name in base_names_to_try:
+                if sampling_frequency and nchans:
+                    break
+                channels_path = search_dir / f"{base_name}_channels.tsv"
+                if channels_path.exists():
+                    try:
+                        channels_df = pd.read_csv(
+                            channels_path,
+                            sep="\t",
+                            dtype="string",
+                            keep_default_na=False,
+                        )
+
+                        # Get nchans from row count
+                        if not nchans:
+                            nchans = len(channels_df)
+
+                        # Get sampling_frequency from the first valid row
+                        if not sampling_frequency:
+                            for col in ["sampling_frequency", "SamplingFrequency"]:
+                                if col in channels_df.columns:
+                                    for val in channels_df[col]:
+                                        try:
+                                            sfreq_val = float(val)
+                                            if sfreq_val > 0:
+                                                sampling_frequency = sfreq_val
+                                                break
+                                        except (ValueError, TypeError):
+                                            pass
+                                    if sampling_frequency:
+                                        break
+                        break  # Found a valid channels file
+                    except Exception:
+                        pass
 
     # Find dependency files (channels.tsv, events.tsv, etc.) for storage manifest
     dep_keys = []
@@ -1619,13 +1771,14 @@ def digest_dataset(
     manifest_path = dataset_dir / "manifest.json"
     has_manifest = manifest_path.exists()
 
-    # Check if there are actual EEG files or symlinks (git-annex uses broken symlinks)
+    # Check if there are actual EEG/MEG files or symlinks (git-annex uses broken symlinks)
     # We accept both real files and symlinks for metadata extraction
+    # Include .ds directories for CTF MEG format
     has_actual_files = any(
         f.suffix in [".set", ".edf", ".bdf", ".vhdr", ".fif", ".cnt"]
         for f in dataset_dir.rglob("*")
         if f.is_file() or f.is_symlink()  # Include symlinks for git-annex
-    )
+    ) or any(f.suffix == ".ds" and f.is_dir() for f in dataset_dir.rglob("*.ds"))
 
     # For API-only sources, use manifest-based digestion
     if has_manifest and not has_actual_files:

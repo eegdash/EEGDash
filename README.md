@@ -8,7 +8,7 @@
 [![Downloads](https://pepy.tech/badge/eegdash)](https://pepy.tech/project/eegdash)
 [![Coverage](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Feegdash%2FEEGDash%2Fmain%2Fcoverage.json&query=%24.totals.percent_covered_display&suffix=%25&label=coverage)](https://github.com/eegdash/EEGDash/blob/main/coverage.json)
 
-To leverage recent and ongoing advancements in large-scale computational methods and to ensure the preservation of scientific data generated from publicly funded research, the EEG-DaSh data archive will create a data-sharing resource for MEEG (EEG, MEG) data contributed by collaborators for machine learning (ML) and deep learning (DL) applications. 
+To leverage recent and ongoing advancements in large-scale computational methods and to ensure the preservation of scientific data generated from publicly funded research, the EEG-DaSh data archive will create a data-sharing resource for MEEG (EEG, MEG) data contributed by collaborators for machine learning (ML) and deep learning (DL) applications
 
 ## Data source
 

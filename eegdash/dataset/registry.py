@@ -405,15 +405,29 @@ def fetch_datasets_from_api(
         if isinstance(recording_modality, str):
             recording_modality = [recording_modality]
 
+        # Extract clinical and paradigm info
+        clinical = ds.get("clinical", {}) or {}
+        paradigm = ds.get("paradigm", {}) or {}
+
+        # Determine pathology/Type Subject based on clinical info
+        if clinical.get("is_clinical") and clinical.get("purpose"):
+            type_subject = clinical.get("purpose")
+        else:
+            type_subject = ds.get("study_domain") or "Unknown"
+
+        # Determine modality and type from paradigm info
+        paradigm_modality = paradigm.get("modality") or ""
+        cognitive_domain = paradigm.get("cognitive_domain") or ""
+
         # Map API fields to expected CSV columns
         row = {
             "dataset": ds_id,
             "n_subjects": demographics.get("subjects_count", 0) or 0,
             "n_records": ds.get("total_files", 0) or 0,
             "n_tasks": len(ds.get("tasks", []) or []),
-            "modality of exp": ", ".join(recording_modality),
-            "type of exp": ds.get("study_design") or "Unknown",
-            "Type Subject": ds.get("study_domain") or "Unknown",
+            "modality of exp": paradigm_modality or ", ".join(recording_modality),
+            "type of exp": cognitive_domain or ds.get("study_design") or "Unknown",
+            "Type Subject": type_subject,
             "duration_hours_total": 0.0,  # Not available in summary endpoint
             "size_bytes": ds.get("size_bytes") or 0,
             "size": ds.get("size_human") or _human_readable_size(ds.get("size_bytes")),
@@ -475,15 +489,29 @@ def _fetch_datasets_from_api(api_url: str, database: str) -> pd.DataFrame:
         if isinstance(recording_modality, str):
             recording_modality = [recording_modality]
 
+        # Extract clinical and paradigm info
+        clinical = ds.get("clinical", {}) or {}
+        paradigm = ds.get("paradigm", {}) or {}
+
+        # Determine pathology/Type Subject based on clinical info
+        if clinical.get("is_clinical") and clinical.get("purpose"):
+            type_subject = clinical.get("purpose")
+        else:
+            type_subject = ds.get("study_domain") or "Unknown"
+
+        # Determine modality and type from paradigm info
+        paradigm_modality = paradigm.get("modality") or ""
+        cognitive_domain = paradigm.get("cognitive_domain") or ""
+
         # Map API fields to expected CSV columns
         row = {
             "dataset": ds_id,
             "n_subjects": demographics.get("subjects_count", 0) or 0,
             "n_records": ds.get("total_files", 0) or 0,
             "n_tasks": len(ds.get("tasks", []) or []),
-            "modality of exp": ", ".join(recording_modality),
-            "type of exp": ds.get("study_design") or "Unknown",
-            "Type Subject": ds.get("study_domain") or "Unknown",
+            "modality of exp": paradigm_modality or ", ".join(recording_modality),
+            "type of exp": cognitive_domain or ds.get("study_design") or "Unknown",
+            "Type Subject": type_subject,
             "duration_hours_total": 0.0,
             "size": ds.get("size_human") or _human_readable_size(ds.get("size_bytes")),
             "record_modality": ", ".join(recording_modality),

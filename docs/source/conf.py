@@ -968,6 +968,21 @@ def _format_hero_section(context: Mapping[str, object]) -> str:
         tagline = f"OpenNeuro dataset ``{dataset_id}``."
     tagline = f"{tagline} Access recordings and metadata through EEGDash."
 
+    # Format citation
+    authors = context.get("authors") or []
+    authors_text = (
+        ", ".join(a.replace("*", r"\*") for a in authors) if authors else "Unknown"
+    )
+    year = _value_or_unknown(str(context.get("year", "")).strip())
+    doi = str(context.get("doi", "")).strip()
+    doi_clean = _normalize_doi(doi)
+    if doi_clean:
+        doi_link = f"`{doi_clean} <https://doi.org/{doi_clean}>`__"
+    else:
+        doi_link = ""
+
+    citation_block = f"**Citation:** {authors_text} ({year}). *{title}*. {doi_link}"
+
     badges_line_1 = _format_badges(
         [
             ("Modality", str(context.get("modality", ""))),
@@ -982,7 +997,7 @@ def _format_hero_section(context: Mapping[str, object]) -> str:
             ("Source", str(context.get("source", ""))),
         ]
     )
-    return f"{tagline}\n\n{badges_line_1}\n\n{badges_line_2}"
+    return f"{tagline}\n\n{citation_block}\n\n{badges_line_1}\n\n{badges_line_2}"
 
 
 def _format_highlights_section(context: Mapping[str, object]) -> str:

@@ -3,6 +3,9 @@
 
 Upload Dataset and Record documents from digested datasets into separate MongoDB collections.
 
+IMPORTANT: Validation is run automatically before injection to ensure data quality.
+Use --skip-validation to bypass this check (not recommended).
+
 Usage:
     # Inject all digested datasets to development
     python 5_inject.py --input digestion_output --database eegdash_dev
@@ -24,6 +27,9 @@ Usage:
 
     # Force injection even if unchanged
     python 5_inject.py --input digestion_output --database eegdash_dev --force
+
+    # Skip validation (not recommended)
+    python 5_inject.py --input digestion_output --database eegdash_dev --skip-validation
 """
 
 import argparse
@@ -41,6 +47,7 @@ from _http import (
     make_retry_client,
     request_json,
 )
+from _validate import validate_digestion_output
 from tqdm import tqdm
 
 # Datasets to explicitly ignore during ingestion
@@ -479,6 +486,17 @@ def main():
         action="store_true",
         help="Inject even if ingestion_fingerprint matches existing dataset",
     )
+    parser.add_argument(
+        "--skip-validation",
+        action="store_true",
+        help="Skip validation before injection (not recommended)",
+    )
+    parser.add_argument(
+        "--data-quality-threshold",
+        type=float,
+        default=10.0,
+        help="Max percentage of records with missing nchans/sampling_frequency before warning (default: 10%%)",
+    )
 
     args = parser.parse_args()
 
@@ -491,6 +509,59 @@ def main():
 
     # Get admin token (validated later if injection is needed)
     admin_token = args.token or os.environ.get("EEGDASH_ADMIN_TOKEN")
+
+    # Run validation first (unless explicitly skipped)
+    if not args.skip_validation:
+        print("Running validation...")
+        validation_result = validate_digestion_output(args.input, verbose=False)
+        print(validation_result.summary())
+
+        # Check for critical errors
+        if not validation_result.is_valid():
+            print(
+                "\nValidation FAILED - fix errors before injection or use --skip-validation",
+                file=sys.stderr,
+            )
+            return 1
+
+        # Check data quality threshold
+        total_records = validation_result.stats["records_checked"]
+        missing_nchans = validation_result.stats["missing_nchans"]
+        missing_sampling_frequency = validation_result.stats[
+            "missing_sampling_frequency"
+        ]
+
+        if total_records > 0:
+            nchans_pct = missing_nchans / total_records * 100
+            sampling_frequency_pct = missing_sampling_frequency / total_records * 100
+
+            if nchans_pct > args.data_quality_threshold:
+                print(
+                    f"\nWARNING: {nchans_pct:.1f}% of records missing nchans "
+                    f"(threshold: {args.data_quality_threshold}%)",
+                    file=sys.stderr,
+                )
+                if not args.dry_run:
+                    print(
+                        "Use --skip-validation to proceed anyway, or fix the data first.",
+                        file=sys.stderr,
+                    )
+                    return 1
+
+            if sampling_frequency_pct > args.data_quality_threshold:
+                print(
+                    f"\nWARNING: {sampling_frequency_pct:.1f}% of records missing sampling_frequency "
+                    f"(threshold: {args.data_quality_threshold}%)",
+                    file=sys.stderr,
+                )
+                if not args.dry_run:
+                    print(
+                        "Use --skip-validation to proceed anyway, or fix the data first.",
+                        file=sys.stderr,
+                    )
+                    return 1
+
+        print("\nValidation PASSED - proceeding with injection\n")
 
     # Find dataset directories
     dataset_dirs = find_digested_datasets(args.input, args.datasets)

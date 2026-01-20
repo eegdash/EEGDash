@@ -5,15 +5,15 @@
 eegdash.dataset.DS005522
 ========================
 
-participants.tsv (OpenNeuro ``ds005522``). Access recordings and metadata through EEGDash.
+Spatial Navigation Memory of Object Locations (OpenNeuro ``ds005522``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: ieeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 55` :bdg-secondary:`Recordings: 176`
+:bdg-light:`Modality: ['ieeg']` :bdg-light:`Tasks: 1` :bdg-light:`Subjects: 55` :bdg-light:`Recordings: 176`
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-light:`License: CC0` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -25,7 +25,7 @@ Dataset Information
    * - Dataset ID
      - ``DS005522``
    * - Title
-     - participants.tsv
+     - Spatial Navigation Memory of Object Locations
    * - Year
      - 2024
    * - Authors
@@ -44,7 +44,7 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds005522,
-        title = {participants.tsv},
+        title = {Spatial Navigation Memory of Object Locations},
         author = {Haydn G. Herrema and Michael J. Kahana},
         doi = {10.18112/openneuro.ds005522.v1.0.0},
         url = {https://doi.org/10.18112/openneuro.ds005522.v1.0.0},
@@ -66,9 +66,9 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 96 (4), 59 (4), 130 (4), 123 (6), 128 (8), 125 (2), 72 (12), 84 (2), 50 (6), 112 (8), 86 (6), 158 (4), 94 (2), 188 (12), 136 (2), 88 (14), 144 (6), 165 (2), 80 (2), 100 (4), 118 (4), 172 (2), 122 (2), 140 (4), 146 (6), 70 (4), 170 (4), 138 (4), 160 (4), 151 (2), 90 (2), 64 (8), 109 (2), 124 (6), 56 (10), 60 (2), 186 (6), 116 (2), 75 (4), 104 (6), 166 (4), 85 (4), 76 (2), 78 (2), 120 (14), 182 (6), 63 (4), 68 (8), 46 (8), 54 (2), 126 (12), 174 (2), 169 (2), 127 (8), 110 (16), 163 (4), 173 (12), 149 (2), 92 (6), 133 (16), 180 (4), 108 (10), 178 (2), 177 (2), 111 (4), 105 (2)
-      - Sampling rate (Hz): 999.0 (26), 500.0 (122), 1600.0 (52), 1999.0 (4), 1000.0 (140), 2000.0 (8)
-      - Duration (hours): 0.0
+      - Channels: 54, 126 (6), 174, 169, 68 (4), 46 (4), 173 (6), 163 (2), 127 (4), 110 (8), 63 (2), 178, 108 (5), 180 (2), 105, 177, 111 (2), 133 (8), 149, 92 (3), 60, 75 (2), 116, 186 (3), 64 (4), 90, 151, 170 (2), 138 (2), 160 (2), 109, 124 (3), 56 (5), 78, 120 (7), 182 (3), 76, 104 (3), 166 (2), 85 (2), 80, 100 (2), 118 (2), 165, 88 (7), 188 (6), 136, 144 (3), 70 (2), 146 (3), 122, 172, 140 (2), 130 (2), 128 (4), 123 (3), 59 (2), 96 (2), 86 (3), 158 (2), 94, 84, 125, 72 (6), 112 (4), 50 (3)
+      - Sampling rate (Hz): 1000.0 (70), 2000.0 (4), 1999.0 (2), 1600.0 (26), 500.0 (61), 999.0 (13)
+      - Duration (hours): 0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
@@ -80,7 +80,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 107.5 GB
+      - Size on disk: 107.47 GB
       - File count: 176
       - Format: BIDS
 
@@ -104,18 +104,17 @@ Quickstart
 
 .. code-block:: bash
 
-    pip install eegdash
+   pip install eegdash
 
-**Access the data**
+**Load a recording**
 
 .. code-block:: python
 
-    from eegdash.dataset import DS005522
+   from eegdash.dataset import DS005522
 
-    dataset = DS005522(cache_dir="./data")
-    # Get the raw object of the first recording
-    raw = dataset.datasets[0].raw
-    print(raw.info)
+   dataset = DS005522(cache_dir="./data")
+   recording = dataset[0]
+   raw = recording.load()
 
 **Filter/query**
 

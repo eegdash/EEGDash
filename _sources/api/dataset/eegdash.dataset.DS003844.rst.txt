@@ -5,15 +5,15 @@
 eegdash.dataset.DS003844
 ========================
 
-participants.tsv (OpenNeuro ``ds003844``). Access recordings and metadata through EEGDash.
+Dataset Clinical Epilepsy iEEG to BIDS -RESPect_intraoperative_iEEG (OpenNeuro ``ds003844``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: ieeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 6` :bdg-secondary:`Recordings: 38`
+:bdg-light:`Modality: ['ieeg']` :bdg-light:`Tasks: 1` :bdg-light:`Subjects: 6` :bdg-light:`Recordings: 38`
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-light:`License: CC0` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -25,7 +25,7 @@ Dataset Information
    * - Dataset ID
      - ``DS003844``
    * - Title
-     - participants.tsv
+     - Dataset Clinical Epilepsy iEEG to BIDS -RESPect_intraoperative_iEEG
    * - Year
      - 2021
    * - Authors
@@ -44,7 +44,7 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds003844,
-        title = {participants.tsv},
+        title = {Dataset Clinical Epilepsy iEEG to BIDS -RESPect_intraoperative_iEEG},
         author = {Zweiphenning W. and Demuru M. and van Blooijs D. and Leijten F and Zijlmans M.},
         doi = {10.18112/openneuro.ds003844.v1.0.1},
         url = {https://doi.org/10.18112/openneuro.ds003844.v1.0.1},
@@ -66,9 +66,9 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 64 (18), 33 (48), 32 (10)
-      - Sampling rate (Hz): 2048.0 (66), 256.0 (10)
-      - Duration (hours): 0.0
+      - Channels: 32 (5), 64 (9), 33 (24)
+      - Sampling rate (Hz): 256.0 (5), 2048.0 (33)
+      - Duration (hours): 0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
@@ -80,7 +80,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 2.6 GB
+      - Size on disk: 2.60 GB
       - File count: 38
       - Format: BIDS
 
@@ -104,18 +104,17 @@ Quickstart
 
 .. code-block:: bash
 
-    pip install eegdash
+   pip install eegdash
 
-**Access the data**
+**Load a recording**
 
 .. code-block:: python
 
-    from eegdash.dataset import DS003844
+   from eegdash.dataset import DS003844
 
-    dataset = DS003844(cache_dir="./data")
-    # Get the raw object of the first recording
-    raw = dataset.datasets[0].raw
-    print(raw.info)
+   dataset = DS003844(cache_dir="./data")
+   recording = dataset[0]
+   raw = recording.load()
 
 **Filter/query**
 

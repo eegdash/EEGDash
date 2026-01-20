@@ -5,15 +5,15 @@
 eegdash.dataset.DS003753
 ========================
 
-participants.tsv (OpenNeuro ``ds003753``). Access recordings and metadata through EEGDash.
+EEG: Probabilistic Learning with Affective Feedback: Exp (OpenNeuro ``ds003753``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 25` :bdg-secondary:`Recordings: 25`
+:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 1` :bdg-light:`Subjects: 25` :bdg-light:`Recordings: 25`
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-light:`License: CC0` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -25,7 +25,7 @@ Dataset Information
    * - Dataset ID
      - ``DS003753``
    * - Title
-     - participants.tsv
+     - EEG: Probabilistic Learning with Affective Feedback: Exp
    * - Year
      - 2021
    * - Authors
@@ -44,7 +44,7 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds003753,
-        title = {participants.tsv},
+        title = {EEG: Probabilistic Learning with Affective Feedback: Exp},
         author = {Darin R. Brown and Trevor Jackson and James F Cavanagh},
         doi = {10.18112/openneuro.ds003753.v1.1.0},
         url = {https://doi.org/10.18112/openneuro.ds003753.v1.1.0},
@@ -66,9 +66,9 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 64
-      - Sampling rate (Hz): 500.0
-      - Duration (hours): 0.0
+      - Channels: —
+      - Sampling rate (Hz): —
+      - Duration (hours): 0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
@@ -80,7 +80,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 4.6 GB
+      - Size on disk: 4.62 GB
       - File count: 25
       - Format: BIDS
 
@@ -104,18 +104,17 @@ Quickstart
 
 .. code-block:: bash
 
-    pip install eegdash
+   pip install eegdash
 
-**Access the data**
+**Load a recording**
 
 .. code-block:: python
 
-    from eegdash.dataset import DS003753
+   from eegdash.dataset import DS003753
 
-    dataset = DS003753(cache_dir="./data")
-    # Get the raw object of the first recording
-    raw = dataset.datasets[0].raw
-    print(raw.info)
+   dataset = DS003753(cache_dir="./data")
+   recording = dataset[0]
+   raw = recording.load()
 
 **Filter/query**
 

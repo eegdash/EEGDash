@@ -5,15 +5,15 @@
 eegdash.dataset.DS003483
 ========================
 
-participants.tsv (OpenNeuro ``ds003483``). Access recordings and metadata through EEGDash.
+Logical reasoning study (OpenNeuro ``ds003483``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: meg` :bdg-info:`Tasks: 2` :bdg-secondary:`Subjects: 21` :bdg-secondary:`Recordings: 41`
+:bdg-light:`Modality: ['meg']` :bdg-light:`Tasks: 2` :bdg-light:`Subjects: 21` :bdg-light:`Recordings: 41`
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-light:`License: CC0` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -25,7 +25,7 @@ Dataset Information
    * - Dataset ID
      - ``DS003483``
    * - Title
-     - participants.tsv
+     - Logical reasoning study
    * - Year
      - 2021
    * - Authors
@@ -44,7 +44,7 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds003483,
-        title = {participants.tsv},
+        title = {Logical reasoning study},
         author = {Cognitive and Computational Neuroscience Laboratory (UPM - UCM). and PI: Fernando Maestu. and PI: Carmen Requena and PI: Francisco Salto Alemany},
         doi = {10.18112/openneuro.ds003483.v1.0.2},
         url = {https://doi.org/10.18112/openneuro.ds003483.v1.0.2},
@@ -68,7 +68,7 @@ Highlights
 
       - Channels: 306
       - Sampling rate (Hz): 1000.0
-      - Duration (hours): 0.0
+      - Duration (hours): 0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
@@ -80,7 +80,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 24.5 GB
+      - Size on disk: 24.48 GB
       - File count: 41
       - Format: BIDS
 
@@ -104,18 +104,17 @@ Quickstart
 
 .. code-block:: bash
 
-    pip install eegdash
+   pip install eegdash
 
-**Access the data**
+**Load a recording**
 
 .. code-block:: python
 
-    from eegdash.dataset import DS003483
+   from eegdash.dataset import DS003483
 
-    dataset = DS003483(cache_dir="./data")
-    # Get the raw object of the first recording
-    raw = dataset.datasets[0].raw
-    print(raw.info)
+   dataset = DS003483(cache_dir="./data")
+   recording = dataset[0]
+   raw = recording.load()
 
 **Filter/query**
 

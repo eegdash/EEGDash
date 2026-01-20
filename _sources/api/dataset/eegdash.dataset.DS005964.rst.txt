@@ -9,11 +9,11 @@ FRESH Audio Dataset (OpenNeuro ``ds005964``). Access recordings and metadata thr
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: fnirs` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 18` :bdg-secondary:`Recordings: 139`
+:bdg-light:`Modality: ['fnirs']` :bdg-light:`Tasks: 1` :bdg-light:`Subjects: 18` :bdg-light:`Recordings: 139`
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-light:`License: CC0` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -68,7 +68,7 @@ Highlights
 
       - Channels: —
       - Sampling rate (Hz): —
-      - Duration (hours): 0.0
+      - Duration (hours): 0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
@@ -104,18 +104,17 @@ Quickstart
 
 .. code-block:: bash
 
-    pip install eegdash
+   pip install eegdash
 
-**Access the data**
+**Load a recording**
 
 .. code-block:: python
 
-    from eegdash.dataset import DS005964
+   from eegdash.dataset import DS005964
 
-    dataset = DS005964(cache_dir="./data")
-    # Get the raw object of the first recording
-    raw = dataset.datasets[0].raw
-    print(raw.info)
+   dataset = DS005964(cache_dir="./data")
+   recording = dataset[0]
+   raw = recording.load()
 
 **Filter/query**
 

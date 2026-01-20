@@ -5,15 +5,15 @@
 eegdash.dataset.DS004598
 ========================
 
-participants.tsv (OpenNeuro ``ds004598``). Access recordings and metadata through EEGDash.
+LFP during linear track in 6-month old TgF344-AD rats (OpenNeuro ``ds004598``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 9` :bdg-secondary:`Recordings: 20`
+:bdg-light:`Modality: ['eeg']` :bdg-light:`Tasks: 1` :bdg-light:`Subjects: 9` :bdg-light:`Recordings: 20`
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-light:`License: CC0` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -25,7 +25,7 @@ Dataset Information
    * - Dataset ID
      - ``DS004598``
    * - Title
-     - participants.tsv
+     - LFP during linear track in 6-month old TgF344-AD rats
    * - Year
      - 2023
    * - Authors
@@ -44,7 +44,7 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds004598,
-        title = {participants.tsv},
+        title = {LFP during linear track in 6-month old TgF344-AD rats},
         author = {Moradi Faraz and van den Berg Monica and Mirjebreili Morteza and Kosten Lauren and Verhoye Marleen and Amiri Mahmood and Keliris A. Georgios},
         doi = {10.18112/openneuro.ds004598.v1.0.0},
         url = {https://doi.org/10.18112/openneuro.ds004598.v1.0.0},
@@ -68,7 +68,7 @@ Highlights
 
       - Channels: —
       - Sampling rate (Hz): 10000.0
-      - Duration (hours): 0.0
+      - Duration (hours): 0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
@@ -80,7 +80,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 9.9 GB
+      - Size on disk: 9.94 GB
       - File count: 20
       - Format: BIDS
 
@@ -104,18 +104,17 @@ Quickstart
 
 .. code-block:: bash
 
-    pip install eegdash
+   pip install eegdash
 
-**Access the data**
+**Load a recording**
 
 .. code-block:: python
 
-    from eegdash.dataset import DS004598
+   from eegdash.dataset import DS004598
 
-    dataset = DS004598(cache_dir="./data")
-    # Get the raw object of the first recording
-    raw = dataset.datasets[0].raw
-    print(raw.info)
+   dataset = DS004598(cache_dir="./data")
+   recording = dataset[0]
+   raw = recording.load()
 
 **Filter/query**
 

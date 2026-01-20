@@ -9,11 +9,11 @@ The NIMH Healthy Research Volunteer Dataset (OpenNeuro ``ds005752``). Access rec
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: meg` :bdg-info:`Tasks: 14` :bdg-secondary:`Subjects: 253` :bdg-secondary:`Recordings: 22385`
+:bdg-light:`Modality: ['meg']` :bdg-light:`Tasks: 14` :bdg-light:`Subjects: 253` :bdg-light:`Recordings: 22385`
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-light:`License: CC0` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -68,7 +68,7 @@ Highlights
 
       - Channels: —
       - Sampling rate (Hz): —
-      - Duration (hours): 0.0
+      - Duration (hours): 0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
@@ -104,18 +104,17 @@ Quickstart
 
 .. code-block:: bash
 
-    pip install eegdash
+   pip install eegdash
 
-**Access the data**
+**Load a recording**
 
 .. code-block:: python
 
-    from eegdash.dataset import DS005752
+   from eegdash.dataset import DS005752
 
-    dataset = DS005752(cache_dir="./data")
-    # Get the raw object of the first recording
-    raw = dataset.datasets[0].raw
-    print(raw.info)
+   dataset = DS005752(cache_dir="./data")
+   recording = dataset[0]
+   raw = recording.load()
 
 **Filter/query**
 

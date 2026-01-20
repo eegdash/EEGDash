@@ -5,15 +5,15 @@
 eegdash.dataset.DS003474
 ========================
 
-participants.tsv (OpenNeuro ``ds003474``). Access recordings and metadata through EEGDash.
+EEG: Probabilistic Selection and Depression (OpenNeuro ``ds003474``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 122` :bdg-secondary:`Recordings: 122`
+:bdg-light:`Modality: ['eeg']` :bdg-light:`Tasks: 1` :bdg-light:`Subjects: 122` :bdg-light:`Recordings: 122`
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-light:`License: CC0` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -25,7 +25,7 @@ Dataset Information
    * - Dataset ID
      - ``DS003474``
    * - Title
-     - participants.tsv
+     - EEG: Probabilistic Selection and Depression
    * - Year
      - 2021
    * - Authors
@@ -44,7 +44,7 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds003474,
-        title = {participants.tsv},
+        title = {EEG: Probabilistic Selection and Depression},
         author = {James F Cavanagh jcavanagh@unm.edu},
         doi = {10.18112/openneuro.ds003474.v1.1.0},
         url = {https://doi.org/10.18112/openneuro.ds003474.v1.1.0},
@@ -68,7 +68,7 @@ Highlights
 
       - Channels: 64
       - Sampling rate (Hz): 500.0
-      - Duration (hours): 0.0
+      - Duration (hours): 0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
@@ -80,7 +80,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 16.6 GB
+      - Size on disk: 16.64 GB
       - File count: 122
       - Format: BIDS
 
@@ -104,18 +104,17 @@ Quickstart
 
 .. code-block:: bash
 
-    pip install eegdash
+   pip install eegdash
 
-**Access the data**
+**Load a recording**
 
 .. code-block:: python
 
-    from eegdash.dataset import DS003474
+   from eegdash.dataset import DS003474
 
-    dataset = DS003474(cache_dir="./data")
-    # Get the raw object of the first recording
-    raw = dataset.datasets[0].raw
-    print(raw.info)
+   dataset = DS003474(cache_dir="./data")
+   recording = dataset[0]
+   raw = recording.load()
 
 **Filter/query**
 

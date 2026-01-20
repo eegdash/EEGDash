@@ -5,15 +5,15 @@
 eegdash.dataset.DS004642
 ========================
 
-participants.tsv (OpenNeuro ``ds004642``). Access recordings and metadata through EEGDash.
+Intraoperative recordings of medianus stimulation with low and high impedance ECoG (OpenNeuro ``ds004642``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: ieeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 10` :bdg-secondary:`Recordings: 10`
+:bdg-light:`Modality: ['ieeg']` :bdg-light:`Tasks: 1` :bdg-light:`Subjects: 10` :bdg-light:`Recordings: 10`
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-light:`License: CC0` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -25,7 +25,7 @@ Dataset Information
    * - Dataset ID
      - ``DS004642``
    * - Title
-     - participants.tsv
+     - Intraoperative recordings of medianus stimulation with low and high impedance ECoG
    * - Year
      - 2023
    * - Authors
@@ -44,7 +44,7 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds004642,
-        title = {participants.tsv},
+        title = {Intraoperative recordings of medianus stimulation with low and high impedance ECoG},
         author = {Vasileios Dimakopoulos and Marian Neidert and Johannes Sarnthein},
         doi = {10.18112/openneuro.ds004642.v1.0.1},
         url = {https://doi.org/10.18112/openneuro.ds004642.v1.0.1},
@@ -66,9 +66,9 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 1 (4), 8 (14), 2 (2)
+      - Channels: 2, 8 (7), 1 (2)
       - Sampling rate (Hz): 20000.0
-      - Duration (hours): 0.0
+      - Duration (hours): 0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
@@ -80,7 +80,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 1.2 GB
+      - Size on disk: 1.20 GB
       - File count: 10
       - Format: BIDS
 
@@ -104,18 +104,17 @@ Quickstart
 
 .. code-block:: bash
 
-    pip install eegdash
+   pip install eegdash
 
-**Access the data**
+**Load a recording**
 
 .. code-block:: python
 
-    from eegdash.dataset import DS004642
+   from eegdash.dataset import DS004642
 
-    dataset = DS004642(cache_dir="./data")
-    # Get the raw object of the first recording
-    raw = dataset.datasets[0].raw
-    print(raw.info)
+   dataset = DS004642(cache_dir="./data")
+   recording = dataset[0]
+   raw = recording.load()
 
 **Filter/query**
 

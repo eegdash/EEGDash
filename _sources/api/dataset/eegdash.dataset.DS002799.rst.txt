@@ -9,11 +9,11 @@ Human es-fMRI Resource: Concurrent deep-brain stimulation and whole-brain functi
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: ieeg` :bdg-info:`Tasks: 2` :bdg-secondary:`Subjects: 27` :bdg-secondary:`Recordings: 16824`
+:bdg-light:`Modality: ['ieeg']` :bdg-light:`Tasks: 2` :bdg-light:`Subjects: 27` :bdg-light:`Recordings: 16824`
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-light:`License: CC0` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -68,7 +68,7 @@ Highlights
 
       - Channels: —
       - Sampling rate (Hz): —
-      - Duration (hours): 0.0
+      - Duration (hours): 0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
@@ -104,18 +104,17 @@ Quickstart
 
 .. code-block:: bash
 
-    pip install eegdash
+   pip install eegdash
 
-**Access the data**
+**Load a recording**
 
 .. code-block:: python
 
-    from eegdash.dataset import DS002799
+   from eegdash.dataset import DS002799
 
-    dataset = DS002799(cache_dir="./data")
-    # Get the raw object of the first recording
-    raw = dataset.datasets[0].raw
-    print(raw.info)
+   dataset = DS002799(cache_dir="./data")
+   recording = dataset[0]
+   raw = recording.load()
 
 **Filter/query**
 

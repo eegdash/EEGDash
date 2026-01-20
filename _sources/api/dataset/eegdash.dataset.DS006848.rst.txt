@@ -5,15 +5,15 @@
 eegdash.dataset.DS006848
 ========================
 
-participants.tsv (OpenNeuro ``ds006848``). Access recordings and metadata through EEGDash.
+AlphaDirection1: EEG, ECG, PPG in the resting state and working memory for sequentially and simultaneously presented digits (OpenNeuro ``ds006848``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 2` :bdg-secondary:`Subjects: 30` :bdg-secondary:`Recordings: 52`
+:bdg-light:`Modality: ['eeg']` :bdg-light:`Tasks: 2` :bdg-light:`Subjects: 30` :bdg-light:`Recordings: 52`
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-light:`License: CC0` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -25,7 +25,7 @@ Dataset Information
    * - Dataset ID
      - ``DS006848``
    * - Title
-     - participants.tsv
+     - AlphaDirection1: EEG, ECG, PPG in the resting state and working memory for sequentially and simultaneously presented digits
    * - Year
      - 2025
    * - Authors
@@ -44,7 +44,7 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds006848,
-        title = {participants.tsv},
+        title = {AlphaDirection1: EEG, ECG, PPG in the resting state and working memory for sequentially and simultaneously presented digits},
         author = {Alexandra I. Kosachenko and Danil I. Syttykov and Dmitry A. Tarasov and Alexander I. Kotyusov and Yuri G. Pavlov},
         doi = {10.18112/openneuro.ds006848.v1.0.0},
         url = {https://doi.org/10.18112/openneuro.ds006848.v1.0.0},
@@ -68,7 +68,7 @@ Highlights
 
       - Channels: 63
       - Sampling rate (Hz): 1000.0
-      - Duration (hours): 0.0
+      - Duration (hours): 0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
@@ -80,7 +80,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 41.4 GB
+      - Size on disk: 41.37 GB
       - File count: 52
       - Format: BIDS
 
@@ -104,18 +104,17 @@ Quickstart
 
 .. code-block:: bash
 
-    pip install eegdash
+   pip install eegdash
 
-**Access the data**
+**Load a recording**
 
 .. code-block:: python
 
-    from eegdash.dataset import DS006848
+   from eegdash.dataset import DS006848
 
-    dataset = DS006848(cache_dir="./data")
-    # Get the raw object of the first recording
-    raw = dataset.datasets[0].raw
-    print(raw.info)
+   dataset = DS006848(cache_dir="./data")
+   recording = dataset[0]
+   raw = recording.load()
 
 **Filter/query**
 

@@ -9,11 +9,11 @@ Mirror Neuron Study (OpenNeuro ``ds005935``). Access recordings and metadata thr
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: fnirs` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 22` :bdg-secondary:`Recordings: 430`
+:bdg-light:`Modality: ['fnirs']` :bdg-light:`Tasks: 1` :bdg-light:`Subjects: 22` :bdg-light:`Recordings: 430`
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-light:`License: CC0` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -68,14 +68,14 @@ Highlights
 
       - Channels: —
       - Sampling rate (Hz): —
-      - Duration (hours): 0.0
+      - Duration (hours): 0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
 
       - Tasks: 1
       - Experiment type: —
-      - Subject type: Mirror Neuron System
+      - Subject type: —
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
@@ -104,18 +104,17 @@ Quickstart
 
 .. code-block:: bash
 
-    pip install eegdash
+   pip install eegdash
 
-**Access the data**
+**Load a recording**
 
 .. code-block:: python
 
-    from eegdash.dataset import DS005935
+   from eegdash.dataset import DS005935
 
-    dataset = DS005935(cache_dir="./data")
-    # Get the raw object of the first recording
-    raw = dataset.datasets[0].raw
-    print(raw.info)
+   dataset = DS005935(cache_dir="./data")
+   recording = dataset[0]
+   raw = recording.load()
 
 **Filter/query**
 

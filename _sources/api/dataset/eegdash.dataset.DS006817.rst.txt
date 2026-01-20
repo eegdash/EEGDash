@@ -5,15 +5,15 @@
 eegdash.dataset.DS006817
 ========================
 
-manifest.json (OpenNeuro ``ds006817``). Access recordings and metadata through EEGDash.
+Visual Attribute-Specific Contextual Trajectory Paradigm 2.0 (OpenNeuro ``ds006817``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 34` :bdg-secondary:`Recordings: 34`
+:bdg-light:`Modality: ['eeg']` :bdg-light:`Tasks: 1` :bdg-light:`Subjects: 34` :bdg-light:`Recordings: 34`
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-light:`License: CC0` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -25,7 +25,7 @@ Dataset Information
    * - Dataset ID
      - ``DS006817``
    * - Title
-     - manifest.json
+     - Visual Attribute-Specific Contextual Trajectory Paradigm 2.0
    * - Year
      - 2025
    * - Authors
@@ -44,7 +44,7 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds006817,
-        title = {manifest.json},
+        title = {Visual Attribute-Specific Contextual Trajectory Paradigm 2.0},
         author = {Benjamin Lowe (ben.lowe@mq.edu.au) and Naohide Yamamoto (naohide.yamamoto@qut.edu.au) and Jonathan Robinson (jonathan.robinson@monash.edu) and Patrick Johnston (dr.pat.johnston@icloud.com)},
         doi = {10.18112/openneuro.ds006817.v1.0.0},
         url = {https://doi.org/10.18112/openneuro.ds006817.v1.0.0},
@@ -68,7 +68,7 @@ Highlights
 
       - Channels: —
       - Sampling rate (Hz): —
-      - Duration (hours): 0.0
+      - Duration (hours): 0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
@@ -80,7 +80,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 9.7 GB
+      - Size on disk: 9.69 GB
       - File count: 34
       - Format: BIDS
 
@@ -104,18 +104,17 @@ Quickstart
 
 .. code-block:: bash
 
-    pip install eegdash
+   pip install eegdash
 
-**Access the data**
+**Load a recording**
 
 .. code-block:: python
 
-    from eegdash.dataset import DS006817
+   from eegdash.dataset import DS006817
 
-    dataset = DS006817(cache_dir="./data")
-    # Get the raw object of the first recording
-    raw = dataset.datasets[0].raw
-    print(raw.info)
+   dataset = DS006817(cache_dir="./data")
+   recording = dataset[0]
+   raw = recording.load()
 
 **Filter/query**
 

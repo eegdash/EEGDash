@@ -9,11 +9,11 @@ Electrical_Morphine_Placebo_2018 (OpenNeuro ``ds005777``). Access recordings and
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: fnirs` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 15` :bdg-secondary:`Recordings: 698`
+:bdg-light:`Modality: ['fnirs']` :bdg-light:`Tasks: 1` :bdg-light:`Subjects: 15` :bdg-light:`Recordings: 698`
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-light:`License: CC0` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -68,14 +68,14 @@ Highlights
 
       - Channels: —
       - Sampling rate (Hz): —
-      - Duration (hours): 0.0
+      - Duration (hours): 0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
 
       - Tasks: 1
       - Experiment type: —
-      - Subject type: Sensory Neuroscience
+      - Subject type: —
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
@@ -104,18 +104,17 @@ Quickstart
 
 .. code-block:: bash
 
-    pip install eegdash
+   pip install eegdash
 
-**Access the data**
+**Load a recording**
 
 .. code-block:: python
 
-    from eegdash.dataset import DS005777
+   from eegdash.dataset import DS005777
 
-    dataset = DS005777(cache_dir="./data")
-    # Get the raw object of the first recording
-    raw = dataset.datasets[0].raw
-    print(raw.info)
+   dataset = DS005777(cache_dir="./data")
+   recording = dataset[0]
+   raw = recording.load()
 
 **Filter/query**
 

@@ -5,15 +5,15 @@
 eegdash.dataset.DS004703
 ========================
 
-participants.tsv (OpenNeuro ``ds004703``). Access recordings and metadata through EEGDash.
+sEEG Passive listening to natural speech (OpenNeuro ``ds004703``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: ieeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 10` :bdg-secondary:`Recordings: 11`
+:bdg-light:`Modality: ['ieeg']` :bdg-light:`Tasks: 1` :bdg-light:`Subjects: 10` :bdg-light:`Recordings: 11`
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-light:`License: CC0` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -25,7 +25,7 @@ Dataset Information
    * - Dataset ID
      - ``DS004703``
    * - Title
-     - participants.tsv
+     - sEEG Passive listening to natural speech
    * - Year
      - 2023
    * - Authors
@@ -44,7 +44,7 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds004703,
-        title = {participants.tsv},
+        title = {sEEG Passive listening to natural speech},
         author = {Anna Mai and Stephanie Ries and Sharona Ben-Haim and Jerry Shih and Timothy Gentner},
         doi = {10.18112/openneuro.ds004703.v1.1.0},
         url = {https://doi.org/10.18112/openneuro.ds004703.v1.1.0},
@@ -66,9 +66,9 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 280 (2), 279 (4), 276 (4), 277 (4), 148 (8)
-      - Sampling rate (Hz): 512.0 (8), 1024.0 (14)
-      - Duration (hours): 0.0
+      - Channels: 148 (4), 277 (2), 276 (2), 279 (2), 280
+      - Sampling rate (Hz): 1024.0 (7), 512.0 (4)
+      - Duration (hours): 0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
@@ -80,7 +80,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 12.4 GB
+      - Size on disk: 12.37 GB
       - File count: 11
       - Format: BIDS
 
@@ -104,18 +104,17 @@ Quickstart
 
 .. code-block:: bash
 
-    pip install eegdash
+   pip install eegdash
 
-**Access the data**
+**Load a recording**
 
 .. code-block:: python
 
-    from eegdash.dataset import DS004703
+   from eegdash.dataset import DS004703
 
-    dataset = DS004703(cache_dir="./data")
-    # Get the raw object of the first recording
-    raw = dataset.datasets[0].raw
-    print(raw.info)
+   dataset = DS004703(cache_dir="./data")
+   recording = dataset[0]
+   raw = recording.load()
 
 **Filter/query**
 

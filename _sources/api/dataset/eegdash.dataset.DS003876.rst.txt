@@ -5,15 +5,15 @@
 eegdash.dataset.DS003876
 ========================
 
-participants.tsv (OpenNeuro ``ds003876``). Access recordings and metadata through EEGDash.
+Epilepsy-iEEG-Interictal-Multicenter-Dataset (OpenNeuro ``ds003876``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: ieeg` :bdg-info:`Tasks: 3` :bdg-secondary:`Subjects: 39` :bdg-secondary:`Recordings: 54`
+:bdg-light:`Modality: ['ieeg']` :bdg-light:`Tasks: 3` :bdg-light:`Subjects: 39` :bdg-light:`Recordings: 54`
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-light:`License: CC0` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -25,7 +25,7 @@ Dataset Information
    * - Dataset ID
      - ``DS003876``
    * - Title
-     - participants.tsv
+     - Epilepsy-iEEG-Interictal-Multicenter-Dataset
    * - Year
      - 2021
    * - Authors
@@ -44,7 +44,7 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds003876,
-        title = {participants.tsv},
+        title = {Epilepsy-iEEG-Interictal-Multicenter-Dataset},
         author = {Gunnarsdottir, Kristin and Li, Adam and Smith, Rachel and Kang, Joon and Korzeniewska, Anna and Crone, Nathan and Rouse, Adam and Cheng, Jennifer and Kinsman, Michael and Landazuri, Patrick and Uysal, Utku and Ulloa, Carol and Cameron, Nathaniel and Cajigas, Iahn and Jagid, Jonathan and Kanner, Andres and Elarjani, Turki and Bicchi, Manuel and Inati, Sara and Zaghloul, Kareem and Boerwinkle, Varina and Wyckoff, Sarah and Barot, Niravkumar and Gonzalez-Martinez, Jorge and Sarma, Sridevi},
         doi = {10.18112/openneuro.ds003876.v1.0.2},
         url = {https://doi.org/10.18112/openneuro.ds003876.v1.0.2},
@@ -66,9 +66,9 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 146 (2), 98 (8), 182 (2), 147 (2), 125 (2), 110 (4), 128 (20), 193 (2), 135 (8), 186 (2), 190 (2), 114 (2), 95 (2), 86 (8), 107 (2), 118 (2), 111 (4), 168 (2), 101 (4), 47 (4), 129 (16), 134 (2), 121 (2), 46 (2), 170 (2)
-      - Sampling rate (Hz): 1024.5997950800408 (4), 512.0 (2), 1024.0 (10), 999.9999999999999 (8), 500.0 (4), 2000.0 (14), 1000.0 (50), 499.7071044492829 (4), 999.4121105232217 (12)
-      - Duration (hours): 0.0
+      - Channels: 46, 134, 129 (8), 121, 170, 111 (2), 168, 47 (2), 101 (2), 95, 186, 114, 190, 86 (4), 118, 107, 146, 98 (4), 125, 110 (2), 128 (10), 135 (4), 193, 182, 147
+      - Sampling rate (Hz): 999.4121105232217 (6), 499.7071044492829 (2), 1000.0 (25), 2000.0 (7), 500.0 (2), 1024.0 (5), 999.9999999999999 (4), 512.0, 1024.5997950800408 (2)
+      - Duration (hours): 0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
@@ -80,7 +80,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 5.0 GB
+      - Size on disk: 5.00 GB
       - File count: 54
       - Format: BIDS
 
@@ -104,18 +104,17 @@ Quickstart
 
 .. code-block:: bash
 
-    pip install eegdash
+   pip install eegdash
 
-**Access the data**
+**Load a recording**
 
 .. code-block:: python
 
-    from eegdash.dataset import DS003876
+   from eegdash.dataset import DS003876
 
-    dataset = DS003876(cache_dir="./data")
-    # Get the raw object of the first recording
-    raw = dataset.datasets[0].raw
-    print(raw.info)
+   dataset = DS003876(cache_dir="./data")
+   recording = dataset[0]
+   raw = recording.load()
 
 **Filter/query**
 

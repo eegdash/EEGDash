@@ -5,15 +5,15 @@
 eegdash.dataset.DS006374
 ========================
 
-participants.tsv (OpenNeuro ``ds006374``). Access recordings and metadata through EEGDash.
+Expectation effects on repetition suppression in nociception (OpenNeuro ``ds006374``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 2` :bdg-secondary:`Subjects: 36` :bdg-secondary:`Recordings: 358`
+:bdg-light:`Modality: ['eeg']` :bdg-light:`Tasks: 2` :bdg-light:`Subjects: 36` :bdg-light:`Recordings: 358`
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-light:`License: CC0` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -25,7 +25,7 @@ Dataset Information
    * - Dataset ID
      - ``DS006374``
    * - Title
-     - participants.tsv
+     - Expectation effects on repetition suppression in nociception
    * - Year
      - 2025
    * - Authors
@@ -44,7 +44,7 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds006374,
-        title = {participants.tsv},
+        title = {Expectation effects on repetition suppression in nociception},
         author = {Lisa-Marie Pohle and Moritz Nickel and Birgit Nierula and Markus Ploner and Ulrike Horn and Falk Eippert},
         doi = {10.18112/openneuro.ds006374.v1.0.0},
         url = {https://doi.org/10.18112/openneuro.ds006374.v1.0.0},
@@ -68,7 +68,7 @@ Highlights
 
       - Channels: 32
       - Sampling rate (Hz): 2000.0
-      - Duration (hours): 0.0
+      - Duration (hours): 0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
@@ -80,7 +80,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 31.1 GB
+      - Size on disk: 31.12 GB
       - File count: 358
       - Format: BIDS
 
@@ -104,18 +104,17 @@ Quickstart
 
 .. code-block:: bash
 
-    pip install eegdash
+   pip install eegdash
 
-**Access the data**
+**Load a recording**
 
 .. code-block:: python
 
-    from eegdash.dataset import DS006374
+   from eegdash.dataset import DS006374
 
-    dataset = DS006374(cache_dir="./data")
-    # Get the raw object of the first recording
-    raw = dataset.datasets[0].raw
-    print(raw.info)
+   dataset = DS006374(cache_dir="./data")
+   recording = dataset[0]
+   raw = recording.load()
 
 **Filter/query**
 

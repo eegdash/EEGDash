@@ -5,15 +5,15 @@
 eegdash.dataset.DS004022
 ========================
 
-participants.tsv (OpenNeuro ``ds004022``). Access recordings and metadata through EEGDash.
+Multimodal EEG and fNIRS Biosignal Acquisition during Motor Imagery Tasks in Patients with Orthopedic Impairment (OpenNeuro ``ds004022``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 7` :bdg-secondary:`Recordings: 21`
+:bdg-light:`Modality: ['eeg']` :bdg-light:`Tasks: 1` :bdg-light:`Subjects: 7` :bdg-light:`Recordings: 21`
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-light:`License: CC0` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -25,7 +25,7 @@ Dataset Information
    * - Dataset ID
      - ``DS004022``
    * - Title
-     - participants.tsv
+     - Multimodal EEG and fNIRS Biosignal Acquisition during Motor Imagery Tasks in Patients with Orthopedic Impairment
    * - Year
      - 2022
    * - Authors
@@ -44,7 +44,7 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds004022,
-        title = {participants.tsv},
+        title = {Multimodal EEG and fNIRS Biosignal Acquisition during Motor Imagery Tasks in Patients with Orthopedic Impairment},
         author = {Seho Lee and Hee Ra Jung and In-Nea Wang and Min-Kyung Jung and Hakseung Kim and Dong-Joo Kim},
         doi = {10.18112/openneuro.ds004022.v1.0.0},
         url = {https://doi.org/10.18112/openneuro.ds004022.v1.0.0},
@@ -66,9 +66,9 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 16 (4), 18 (38)
+      - Channels: 18 (19), 16 (2)
       - Sampling rate (Hz): 500.0
-      - Duration (hours): 0.0
+      - Duration (hours): 0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
@@ -80,7 +80,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 616.6 MB
+      - Size on disk: 616.57 MB
       - File count: 21
       - Format: BIDS
 
@@ -104,18 +104,17 @@ Quickstart
 
 .. code-block:: bash
 
-    pip install eegdash
+   pip install eegdash
 
-**Access the data**
+**Load a recording**
 
 .. code-block:: python
 
-    from eegdash.dataset import DS004022
+   from eegdash.dataset import DS004022
 
-    dataset = DS004022(cache_dir="./data")
-    # Get the raw object of the first recording
-    raw = dataset.datasets[0].raw
-    print(raw.info)
+   dataset = DS004022(cache_dir="./data")
+   recording = dataset[0]
+   raw = recording.load()
 
 **Filter/query**
 

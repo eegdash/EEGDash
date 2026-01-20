@@ -5,15 +5,15 @@
 eegdash.dataset.DS003518
 ========================
 
-participants.tsv (OpenNeuro ``ds003518``). Access recordings and metadata through EEGDash.
+EEG: Simon Conflict w/ Reinforcement + Cabergoline Challenge (OpenNeuro ``ds003518``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 110` :bdg-secondary:`Recordings: 137`
+:bdg-light:`Modality: ['eeg']` :bdg-light:`Tasks: 1` :bdg-light:`Subjects: 110` :bdg-light:`Recordings: 137`
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-light:`License: CC0` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -25,7 +25,7 @@ Dataset Information
    * - Dataset ID
      - ``DS003518``
    * - Title
-     - participants.tsv
+     - EEG: Simon Conflict w/ Reinforcement + Cabergoline Challenge
    * - Year
      - 2021
    * - Authors
@@ -44,7 +44,7 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds003518,
-        title = {participants.tsv},
+        title = {EEG: Simon Conflict w/ Reinforcement + Cabergoline Challenge},
         author = {James F Cavanagh and Michael J Frank},
         doi = {10.18112/openneuro.ds003518.v1.1.0},
         url = {https://doi.org/10.18112/openneuro.ds003518.v1.1.0},
@@ -68,7 +68,7 @@ Highlights
 
       - Channels: 64
       - Sampling rate (Hz): 500.0
-      - Duration (hours): 0.0
+      - Duration (hours): 0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
@@ -80,7 +80,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 39.5 GB
+      - Size on disk: 39.51 GB
       - File count: 137
       - Format: BIDS
 
@@ -104,18 +104,17 @@ Quickstart
 
 .. code-block:: bash
 
-    pip install eegdash
+   pip install eegdash
 
-**Access the data**
+**Load a recording**
 
 .. code-block:: python
 
-    from eegdash.dataset import DS003518
+   from eegdash.dataset import DS003518
 
-    dataset = DS003518(cache_dir="./data")
-    # Get the raw object of the first recording
-    raw = dataset.datasets[0].raw
-    print(raw.info)
+   dataset = DS003518(cache_dir="./data")
+   recording = dataset[0]
+   raw = recording.load()
 
 **Filter/query**
 

@@ -5,15 +5,15 @@
 eegdash.dataset.DS004346
 ========================
 
-participants.tsv (OpenNeuro ``ds004346``). Access recordings and metadata through EEGDash.
+FLUX: A pipeline for MEG analysis (OpenNeuro ``ds004346``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: meg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 1` :bdg-secondary:`Recordings: 3`
+:bdg-light:`Modality: ['meg']` :bdg-light:`Tasks: 1` :bdg-light:`Subjects: 1` :bdg-light:`Recordings: 3`
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-light:`License: CC0` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -25,7 +25,7 @@ Dataset Information
    * - Dataset ID
      - ``DS004346``
    * - Title
-     - participants.tsv
+     - FLUX: A pipeline for MEG analysis
    * - Year
      - 2022
    * - Authors
@@ -44,7 +44,7 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds004346,
-        title = {participants.tsv},
+        title = {FLUX: A pipeline for MEG analysis},
         author = {Oscar Ferrante and Ling Liu and Tamas Minarik and Urszula Gorska and Tara Ghafari and Huan Luo and Ole Jensen},
         doi = {10.18112/openneuro.ds004346.v1.0.8},
         url = {https://doi.org/10.18112/openneuro.ds004346.v1.0.8},
@@ -68,7 +68,7 @@ Highlights
 
       - Channels: 306
       - Sampling rate (Hz): 1000.0
-      - Duration (hours): 0.0
+      - Duration (hours): 0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
@@ -80,7 +80,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 3.6 GB
+      - Size on disk: 3.59 GB
       - File count: 3
       - Format: BIDS
 
@@ -104,18 +104,17 @@ Quickstart
 
 .. code-block:: bash
 
-    pip install eegdash
+   pip install eegdash
 
-**Access the data**
+**Load a recording**
 
 .. code-block:: python
 
-    from eegdash.dataset import DS004346
+   from eegdash.dataset import DS004346
 
-    dataset = DS004346(cache_dir="./data")
-    # Get the raw object of the first recording
-    raw = dataset.datasets[0].raw
-    print(raw.info)
+   dataset = DS004346(cache_dir="./data")
+   recording = dataset[0]
+   raw = recording.load()
 
 **Filter/query**
 

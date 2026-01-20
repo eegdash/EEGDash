@@ -5,15 +5,15 @@
 eegdash.dataset.DS005624
 ========================
 
-participants.tsv (OpenNeuro ``ds005624``). Access recordings and metadata through EEGDash.
+Color Change Detection Task (OpenNeuro ``ds005624``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: ieeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 24` :bdg-secondary:`Recordings: 35`
+:bdg-light:`Modality: ['ieeg']` :bdg-light:`Tasks: 1` :bdg-light:`Subjects: 24` :bdg-light:`Recordings: 35`
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-light:`License: CC0` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -25,7 +25,7 @@ Dataset Information
    * - Dataset ID
      - ``DS005624``
    * - Title
-     - participants.tsv
+     - Color Change Detection Task
    * - Year
      - 2024
    * - Authors
@@ -44,7 +44,7 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds005624,
-        title = {participants.tsv},
+        title = {Color Change Detection Task},
         author = {[Unspecified]},
         doi = {10.18112/openneuro.ds005624.v1.0.0},
         url = {https://doi.org/10.18112/openneuro.ds005624.v1.0.0},
@@ -66,9 +66,9 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 95 (4), 152 (4), 101 (2), 172 (6), 74 (8), 123 (2), 166 (2), 128 (2), 173 (2), 191 (2), 115 (4), 151 (4), 205 (2), 127 (2), 228 (2), 100 (4), 118 (2), 223 (6), 189 (2), 162 (4), 111 (4)
-      - Sampling rate (Hz): 1024.0 (18), 512.0 (52)
-      - Duration (hours): 0.0
+      - Channels: 118, 223 (3), 162 (2), 111 (2), 189, 205, 127, 115 (2), 151 (2), 100 (2), 228, 123, 166, 74 (4), 191, 128, 173, 101, 95 (2), 152 (2), 172 (3)
+      - Sampling rate (Hz): 512.0 (26), 1024.0 (9)
+      - Duration (hours): 0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
@@ -80,7 +80,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 13.8 GB
+      - Size on disk: 13.75 GB
       - File count: 35
       - Format: BIDS
 
@@ -104,18 +104,17 @@ Quickstart
 
 .. code-block:: bash
 
-    pip install eegdash
+   pip install eegdash
 
-**Access the data**
+**Load a recording**
 
 .. code-block:: python
 
-    from eegdash.dataset import DS005624
+   from eegdash.dataset import DS005624
 
-    dataset = DS005624(cache_dir="./data")
-    # Get the raw object of the first recording
-    raw = dataset.datasets[0].raw
-    print(raw.info)
+   dataset = DS005624(cache_dir="./data")
+   recording = dataset[0]
+   raw = recording.load()
 
 **Filter/query**
 

@@ -5,15 +5,15 @@
 eegdash.dataset.DS004603
 ========================
 
-participants.tsv (OpenNeuro ``ds004603``). Access recordings and metadata through EEGDash.
+Visual Attribute-Specific Contextual Trajectory Paradigm (OpenNeuro ``ds004603``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 37` :bdg-secondary:`Recordings: 37`
+:bdg-light:`Modality: ['eeg']` :bdg-light:`Tasks: 1` :bdg-light:`Subjects: 37` :bdg-light:`Recordings: 37`
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-light:`License: CC0` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -25,7 +25,7 @@ Dataset Information
    * - Dataset ID
      - ``DS004603``
    * - Title
-     - participants.tsv
+     - Visual Attribute-Specific Contextual Trajectory Paradigm
    * - Year
      - 2023
    * - Authors
@@ -44,7 +44,7 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds004603,
-        title = {participants.tsv},
+        title = {Visual Attribute-Specific Contextual Trajectory Paradigm},
         author = {Benjamin Lowe (ben.lowe@mq.edu.au) and Jonathan Robinson (jonathan.robinson@monash.edu) and Naohide Yamamoto (naohide.yamamoto@qut.edu.au) and Hinze Hogendoorn (hinze.hogendoorn@qut.edu.au) and Patrick Johnston (dr.pat.johnston@icloud.com)},
         doi = {10.18112/openneuro.ds004603.v1.1.0},
         url = {https://doi.org/10.18112/openneuro.ds004603.v1.1.0},
@@ -68,7 +68,7 @@ Highlights
 
       - Channels: 64
       - Sampling rate (Hz): 1024.0
-      - Duration (hours): 0.0
+      - Duration (hours): 0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
@@ -80,7 +80,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 27.4 GB
+      - Size on disk: 27.37 GB
       - File count: 37
       - Format: BIDS
 
@@ -104,18 +104,17 @@ Quickstart
 
 .. code-block:: bash
 
-    pip install eegdash
+   pip install eegdash
 
-**Access the data**
+**Load a recording**
 
 .. code-block:: python
 
-    from eegdash.dataset import DS004603
+   from eegdash.dataset import DS004603
 
-    dataset = DS004603(cache_dir="./data")
-    # Get the raw object of the first recording
-    raw = dataset.datasets[0].raw
-    print(raw.info)
+   dataset = DS004603(cache_dir="./data")
+   recording = dataset[0]
+   raw = recording.load()
 
 **Filter/query**
 

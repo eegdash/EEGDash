@@ -5,15 +5,15 @@
 eegdash.dataset.DS003682
 ========================
 
-manifest.json (OpenNeuro ``ds003682``). Access recordings and metadata through EEGDash.
+Model-based aversive learning in humans is supported by preferential task state reactivation (OpenNeuro ``ds003682``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: meg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 28` :bdg-secondary:`Recordings: 336`
+:bdg-light:`Modality: ['meg']` :bdg-light:`Tasks: 1` :bdg-light:`Subjects: 28` :bdg-light:`Recordings: 336`
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-light:`License: CC0` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -25,7 +25,7 @@ Dataset Information
    * - Dataset ID
      - ``DS003682``
    * - Title
-     - manifest.json
+     - Model-based aversive learning in humans is supported by preferential task state reactivation
    * - Year
      - 2021
    * - Authors
@@ -44,7 +44,7 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds003682,
-        title = {manifest.json},
+        title = {Model-based aversive learning in humans is supported by preferential task state reactivation},
         author = {Toby Wise and Yunzhe Liu and Fatima Chowdhury and Raymond J. Dolan},
         doi = {10.18112/openneuro.ds003682.v1.0.0},
         url = {https://doi.org/10.18112/openneuro.ds003682.v1.0.0},
@@ -68,7 +68,7 @@ Highlights
 
       - Channels: 272
       - Sampling rate (Hz): 1200.0
-      - Duration (hours): 0.0
+      - Duration (hours): 0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
@@ -80,7 +80,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 211.6 GB
+      - Size on disk: 211.62 GB
       - File count: 336
       - Format: BIDS
 
@@ -104,18 +104,17 @@ Quickstart
 
 .. code-block:: bash
 
-    pip install eegdash
+   pip install eegdash
 
-**Access the data**
+**Load a recording**
 
 .. code-block:: python
 
-    from eegdash.dataset import DS003682
+   from eegdash.dataset import DS003682
 
-    dataset = DS003682(cache_dir="./data")
-    # Get the raw object of the first recording
-    raw = dataset.datasets[0].raw
-    print(raw.info)
+   dataset = DS003682(cache_dir="./data")
+   recording = dataset[0]
+   raw = recording.load()
 
 **Filter/query**
 

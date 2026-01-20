@@ -44,7 +44,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/searchpanes/2.3.1/css/searchPanes.dataTables.min.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=7021f170" />
     <link rel="stylesheet" type="text/css" href="../../_static/css/treemap.css?v=7131b20f" />
-    <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=75d7bb15" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=c1455002" />
   
   <!-- So that users can add custom icons -->
   <script src="../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
@@ -518,7 +518,7 @@ HBN EEG data, including specialized annotation handling for eyes-open/eyes-close
 paradigms and other HBN-specific preprocessing steps.</p>
 <dl class="py class">
 <dt class="sig sig-object py">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">eegdash.hbn.preprocessing.</span></span><span class="sig-name descname"><span class="pre">hbn_ec_ec_reannotation</span></span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/hbn/preprocessing.py#L20-L105"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">eegdash.hbn.preprocessing.</span></span><span class="sig-name descname"><span class="pre">hbn_ec_ec_reannotation</span></span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/main/eegdash/hbn/preprocessing.py#L20-L105"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Preprocessor</span></code></p>
 <p>Preprocessor to reannotate HBN data for eyes-open/eyes-closed events.</p>
 <p>This preprocessor is specifically designed for Healthy Brain Network (HBN)
@@ -532,7 +532,7 @@ precise event markers.</p>
 and is intended to be used within a braindecode preprocessing pipeline.</p>
 <dl class="py method">
 <dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">raw</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Raw</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Raw</span></span></span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/hbn/preprocessing.py#L41-L105"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-name descname"><span class="pre">transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">raw</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Raw</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Raw</span></span></span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/main/eegdash/hbn/preprocessing.py#L41-L105"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Create new annotations for eyes-open and eyes-closed periods.</p>
 <p>This function finds the original “instructed_to…” annotations and
 generates new annotations every 2 seconds within specific time ranges
@@ -583,7 +583,7 @@ this new set of annotations.</p>
 
   
   <div class="tocsection editthispage">
-    <a href="https://github.com/eegdash/EEGDash/edit/develop/docs/source/api/dataset/eegdash.hbn.preprocessing.rst">
+    <a href="https://github.com/eegdash/EEGDash/edit/main/docs/source/api/dataset/eegdash.hbn.preprocessing.rst">
       <i class="fa-solid fa-pencil"></i>
       
       

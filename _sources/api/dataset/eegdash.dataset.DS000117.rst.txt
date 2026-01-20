@@ -5,15 +5,15 @@
 eegdash.dataset.DS000117
 ========================
 
-run-2_echo-1_FLASH.json (OpenNeuro ``ds000117``). Access recordings and metadata through EEGDash.
+Multisubject, multimodal face processing (OpenNeuro ``ds000117``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: meg` :bdg-info:`Tasks: 2` :bdg-secondary:`Subjects: 17` :bdg-secondary:`Recordings: 104`
+:bdg-light:`Modality: ['meg']` :bdg-light:`Tasks: 2` :bdg-light:`Subjects: 17` :bdg-light:`Recordings: 104`
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-light:`License: CC0` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -25,7 +25,7 @@ Dataset Information
    * - Dataset ID
      - ``DS000117``
    * - Title
-     - run-2_echo-1_FLASH.json
+     - Multisubject, multimodal face processing
    * - Year
      - 2018
    * - Authors
@@ -44,7 +44,7 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds000117,
-        title = {run-2_echo-1_FLASH.json},
+        title = {Multisubject, multimodal face processing},
         author = {Wakeman, DG and Henson, RN},
         doi = {10.18112/openneuro.ds000117.v1.1.0},
         url = {https://doi.org/10.18112/openneuro.ds000117.v1.1.0},
@@ -68,7 +68,7 @@ Highlights
 
       - Channels: —
       - Sampling rate (Hz): —
-      - Duration (hours): 0.0
+      - Duration (hours): 0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
@@ -80,7 +80,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 87.6 GB
+      - Size on disk: 87.65 GB
       - File count: 104
       - Format: BIDS
 
@@ -104,18 +104,17 @@ Quickstart
 
 .. code-block:: bash
 
-    pip install eegdash
+   pip install eegdash
 
-**Access the data**
+**Load a recording**
 
 .. code-block:: python
 
-    from eegdash.dataset import DS000117
+   from eegdash.dataset import DS000117
 
-    dataset = DS000117(cache_dir="./data")
-    # Get the raw object of the first recording
-    raw = dataset.datasets[0].raw
-    print(raw.info)
+   dataset = DS000117(cache_dir="./data")
+   recording = dataset[0]
+   raw = recording.load()
 
 **Filter/query**
 

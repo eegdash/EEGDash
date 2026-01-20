@@ -5,15 +5,15 @@
 eegdash.dataset.DS006269
 ========================
 
-participants.tsv (OpenNeuro ``ds006269``). Access recordings and metadata through EEGDash.
+Tethered EEG Recordings in Syngap1 rats (OpenNeuro ``ds006269``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 2` :bdg-secondary:`Subjects: 24` :bdg-secondary:`Recordings: 40`
+:bdg-light:`Modality: ['eeg']` :bdg-light:`Tasks: 2` :bdg-light:`Subjects: 24` :bdg-light:`Recordings: 40`
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-light:`License: CC0` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -25,7 +25,7 @@ Dataset Information
    * - Dataset ID
      - ``DS006269``
    * - Title
-     - participants.tsv
+     - Tethered EEG Recordings in Syngap1 rats
    * - Year
      - 2025
    * - Authors
@@ -44,7 +44,7 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds006269,
-        title = {participants.tsv},
+        title = {Tethered EEG Recordings in Syngap1 rats},
         author = {Lucy Pritchard and Ingrid Buller-Peralta and Sally M Till and Peter C Kind and Alfredo Gonzalez-Sulser},
         doi = {10.18112/openneuro.ds006269.v1.0.0},
         url = {https://doi.org/10.18112/openneuro.ds006269.v1.0.0},
@@ -68,7 +68,7 @@ Highlights
 
       - Channels: 32
       - Sampling rate (Hz): 1000.0
-      - Duration (hours): 0.0
+      - Duration (hours): 0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
@@ -80,7 +80,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 106.7 GB
+      - Size on disk: 106.67 GB
       - File count: 40
       - Format: BIDS
 
@@ -104,18 +104,17 @@ Quickstart
 
 .. code-block:: bash
 
-    pip install eegdash
+   pip install eegdash
 
-**Access the data**
+**Load a recording**
 
 .. code-block:: python
 
-    from eegdash.dataset import DS006269
+   from eegdash.dataset import DS006269
 
-    dataset = DS006269(cache_dir="./data")
-    # Get the raw object of the first recording
-    raw = dataset.datasets[0].raw
-    print(raw.info)
+   dataset = DS006269(cache_dir="./data")
+   recording = dataset[0]
+   raw = recording.load()
 
 **Filter/query**
 

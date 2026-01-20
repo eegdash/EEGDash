@@ -5,15 +5,15 @@
 eegdash.dataset.DS001810
 ========================
 
-task-attentionalblink_events.json (OpenNeuro ``ds001810``). Access recordings and metadata through EEGDash.
+EEG study of the attentional blink; before, during, and after transcranial Direct Current Stimulation (tDCS) (OpenNeuro ``ds001810``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 47` :bdg-secondary:`Recordings: 263`
+:bdg-light:`Modality: ['eeg']` :bdg-light:`Tasks: 1` :bdg-light:`Subjects: 47` :bdg-light:`Recordings: 263`
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-light:`License: CC0` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -25,7 +25,7 @@ Dataset Information
    * - Dataset ID
      - ``DS001810``
    * - Title
-     - task-attentionalblink_events.json
+     - EEG study of the attentional blink; before, during, and after transcranial Direct Current Stimulation (tDCS)
    * - Year
      - 2019
    * - Authors
@@ -44,7 +44,7 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds001810,
-        title = {task-attentionalblink_events.json},
+        title = {EEG study of the attentional blink; before, during, and after transcranial Direct Current Stimulation (tDCS)},
         author = {Leon C. Reteig and Lionel A. Newman and K. Richard Ridderinkhof and Heleen A. Slagter},
         doi = {10.18112/openneuro.ds001810.v1.1.0},
         url = {https://doi.org/10.18112/openneuro.ds001810.v1.1.0},
@@ -68,7 +68,7 @@ Highlights
 
       - Channels: 64
       - Sampling rate (Hz): 512.0
-      - Duration (hours): 0.0
+      - Duration (hours): 0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
@@ -80,7 +80,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 45.7 GB
+      - Size on disk: 45.74 GB
       - File count: 263
       - Format: BIDS
 
@@ -104,18 +104,17 @@ Quickstart
 
 .. code-block:: bash
 
-    pip install eegdash
+   pip install eegdash
 
-**Access the data**
+**Load a recording**
 
 .. code-block:: python
 
-    from eegdash.dataset import DS001810
+   from eegdash.dataset import DS001810
 
-    dataset = DS001810(cache_dir="./data")
-    # Get the raw object of the first recording
-    raw = dataset.datasets[0].raw
-    print(raw.info)
+   dataset = DS001810(cache_dir="./data")
+   recording = dataset[0]
+   raw = recording.load()
 
 **Filter/query**
 

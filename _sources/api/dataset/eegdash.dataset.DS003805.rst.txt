@@ -5,15 +5,15 @@
 eegdash.dataset.DS003805
 ========================
 
-participants.tsv (OpenNeuro ``ds003805``). Access recordings and metadata through EEGDash.
+Multisensory Gamma Entrainment (OpenNeuro ``ds003805``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 1` :bdg-secondary:`Recordings: 1`
+:bdg-light:`Modality: ['eeg']` :bdg-light:`Tasks: 1` :bdg-light:`Subjects: 1` :bdg-light:`Recordings: 1`
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-light:`License: CC0` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -25,7 +25,7 @@ Dataset Information
    * - Dataset ID
      - ``DS003805``
    * - Title
-     - participants.tsv
+     - Multisensory Gamma Entrainment
    * - Year
      - 2021
    * - Authors
@@ -44,7 +44,7 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds003805,
-        title = {participants.tsv},
+        title = {Multisensory Gamma Entrainment},
         author = {Mojtaba Lahijanian and Mohammad Javad Sedghizadeh and Hamid Aghajan},
         doi = {10.18112/openneuro.ds003805.v1.0.0},
         url = {https://doi.org/10.18112/openneuro.ds003805.v1.0.0},
@@ -68,7 +68,7 @@ Highlights
 
       - Channels: 19
       - Sampling rate (Hz): 500.0
-      - Duration (hours): 0.0
+      - Duration (hours): 0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
@@ -80,7 +80,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 8.8 MB
+      - Size on disk: 8.80 MB
       - File count: 1
       - Format: BIDS
 
@@ -104,18 +104,17 @@ Quickstart
 
 .. code-block:: bash
 
-    pip install eegdash
+   pip install eegdash
 
-**Access the data**
+**Load a recording**
 
 .. code-block:: python
 
-    from eegdash.dataset import DS003805
+   from eegdash.dataset import DS003805
 
-    dataset = DS003805(cache_dir="./data")
-    # Get the raw object of the first recording
-    raw = dataset.datasets[0].raw
-    print(raw.info)
+   dataset = DS003805(cache_dir="./data")
+   recording = dataset[0]
+   raw = recording.load()
 
 **Filter/query**
 

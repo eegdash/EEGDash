@@ -5,15 +5,15 @@
 eegdash.dataset.DS004802
 ========================
 
-task-roddball_eeg.json (OpenNeuro ``ds004802``). Access recordings and metadata through EEGDash.
+Pilot data for Loneliness in the Brain: Distinguishing Between Hypersensitivity and Hyperalertness (OpenNeuro ``ds004802``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 39` :bdg-secondary:`Recordings: 79`
+:bdg-light:`Modality: ['eeg']` :bdg-light:`Tasks: 1` :bdg-light:`Subjects: 39` :bdg-light:`Recordings: 79`
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-light:`License: CC0` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -25,7 +25,7 @@ Dataset Information
    * - Dataset ID
      - ``DS004802``
    * - Title
-     - task-roddball_eeg.json
+     - Pilot data for Loneliness in the Brain: Distinguishing Between Hypersensitivity and Hyperalertness
    * - Year
      - 2023
    * - Authors
@@ -44,7 +44,7 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds004802,
-        title = {task-roddball_eeg.json},
+        title = {Pilot data for Loneliness in the Brain: Distinguishing Between Hypersensitivity and Hyperalertness},
         author = {Joe Bathelt and Marte Otten},
         doi = {10.18112/openneuro.ds004802.v1.0.0},
         url = {https://doi.org/10.18112/openneuro.ds004802.v1.0.0},
@@ -67,8 +67,8 @@ Highlights
       :class-card: sd-border-1
 
       - Channels: 65
-      - Sampling rate (Hz): 512.0 (54), 2048.0 (22)
-      - Duration (hours): 0.0
+      - Sampling rate (Hz): 2048.0 (11), 512.0 (27)
+      - Duration (hours): 0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
@@ -80,7 +80,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 10.1 GB
+      - Size on disk: 10.07 GB
       - File count: 79
       - Format: BIDS
 
@@ -104,18 +104,17 @@ Quickstart
 
 .. code-block:: bash
 
-    pip install eegdash
+   pip install eegdash
 
-**Access the data**
+**Load a recording**
 
 .. code-block:: python
 
-    from eegdash.dataset import DS004802
+   from eegdash.dataset import DS004802
 
-    dataset = DS004802(cache_dir="./data")
-    # Get the raw object of the first recording
-    raw = dataset.datasets[0].raw
-    print(raw.info)
+   dataset = DS004802(cache_dir="./data")
+   recording = dataset[0]
+   raw = recording.load()
 
 **Filter/query**
 

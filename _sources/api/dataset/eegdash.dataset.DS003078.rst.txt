@@ -5,15 +5,15 @@
 eegdash.dataset.DS003078
 ========================
 
-manifest.json (OpenNeuro ``ds003078``). Access recordings and metadata through EEGDash.
+PROBE iEEG (OpenNeuro ``ds003078``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: ieeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 6` :bdg-secondary:`Recordings: 72`
+:bdg-light:`Modality: ['ieeg']` :bdg-light:`Tasks: 1` :bdg-light:`Subjects: 6` :bdg-light:`Recordings: 72`
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-light:`License: CC0` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -25,7 +25,7 @@ Dataset Information
    * - Dataset ID
      - ``DS003078``
    * - Title
-     - manifest.json
+     - PROBE iEEG
    * - Year
      - 2020
    * - Authors
@@ -44,7 +44,7 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds003078,
-        title = {manifest.json},
+        title = {PROBE iEEG},
         author = {Philippe DOMENECH and Sylvain RHEIMS and Etienne KOECHLIN},
         doi = {10.18112/openneuro.ds003078.v1.0.0},
         url = {https://doi.org/10.18112/openneuro.ds003078.v1.0.0},
@@ -68,7 +68,7 @@ Highlights
 
       - Channels: —
       - Sampling rate (Hz): —
-      - Duration (hours): 0.0
+      - Duration (hours): 0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
@@ -80,7 +80,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 11.0 GB
+      - Size on disk: 10.95 GB
       - File count: 72
       - Format: BIDS
 
@@ -104,18 +104,17 @@ Quickstart
 
 .. code-block:: bash
 
-    pip install eegdash
+   pip install eegdash
 
-**Access the data**
+**Load a recording**
 
 .. code-block:: python
 
-    from eegdash.dataset import DS003078
+   from eegdash.dataset import DS003078
 
-    dataset = DS003078(cache_dir="./data")
-    # Get the raw object of the first recording
-    raw = dataset.datasets[0].raw
-    print(raw.info)
+   dataset = DS003078(cache_dir="./data")
+   recording = dataset[0]
+   raw = recording.load()
 
 **Filter/query**
 

@@ -5,15 +5,15 @@
 eegdash.dataset.DS005558
 ========================
 
-participants.tsv (OpenNeuro ``ds005558``). Access recordings and metadata through EEGDash.
+Categorized Free Recall with Closed-Loop Stimulation at Encoding (Encoding Classifier) (OpenNeuro ``ds005558``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: ieeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 7` :bdg-secondary:`Recordings: 22`
+:bdg-light:`Modality: ['ieeg']` :bdg-light:`Tasks: 1` :bdg-light:`Subjects: 7` :bdg-light:`Recordings: 22`
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-light:`License: CC0` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -25,7 +25,7 @@ Dataset Information
    * - Dataset ID
      - ``DS005558``
    * - Title
-     - participants.tsv
+     - Categorized Free Recall with Closed-Loop Stimulation at Encoding (Encoding Classifier)
    * - Year
      - 2024
    * - Authors
@@ -44,7 +44,7 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds005558,
-        title = {participants.tsv},
+        title = {Categorized Free Recall with Closed-Loop Stimulation at Encoding (Encoding Classifier)},
         author = {Haydn G. Herrema and Michael J. Kahana},
         doi = {10.18112/openneuro.ds005558.v1.0.0},
         url = {https://doi.org/10.18112/openneuro.ds005558.v1.0.0},
@@ -66,9 +66,9 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 68 (4), 56 (2), 156 (4), 90 (2), 64 (2), 110 (2), 113 (4), 122 (2), 114 (4), 128 (4), 126 (6), 78 (4), 124 (4)
+      - Channels: 78 (2), 126 (3), 124 (2), 122, 114 (2), 128 (2), 64, 110, 113 (2), 56, 68 (2), 90, 156 (2)
       - Sampling rate (Hz): 1000.0
-      - Duration (hours): 0.0
+      - Duration (hours): 0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
@@ -80,7 +80,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 12.2 GB
+      - Size on disk: 12.19 GB
       - File count: 22
       - Format: BIDS
 
@@ -104,18 +104,17 @@ Quickstart
 
 .. code-block:: bash
 
-    pip install eegdash
+   pip install eegdash
 
-**Access the data**
+**Load a recording**
 
 .. code-block:: python
 
-    from eegdash.dataset import DS005558
+   from eegdash.dataset import DS005558
 
-    dataset = DS005558(cache_dir="./data")
-    # Get the raw object of the first recording
-    raw = dataset.datasets[0].raw
-    print(raw.info)
+   dataset = DS005558(cache_dir="./data")
+   recording = dataset[0]
+   raw = recording.load()
 
 **Filter/query**
 

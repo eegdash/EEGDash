@@ -5,15 +5,15 @@
 eegdash.dataset.DS005189
 ========================
 
-participants.tsv (OpenNeuro ``ds005189``). Access recordings and metadata through EEGDash.
+Search Superiority Recollection Familiarity (OpenNeuro ``ds005189``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 30` :bdg-secondary:`Recordings: 30`
+:bdg-light:`Modality: ['eeg']` :bdg-light:`Tasks: 1` :bdg-light:`Subjects: 30` :bdg-light:`Recordings: 30`
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-light:`License: CC0` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -25,7 +25,7 @@ Dataset Information
    * - Dataset ID
      - ``DS005189``
    * - Title
-     - participants.tsv
+     - Search Superiority Recollection Familiarity
    * - Year
      - 2024
    * - Authors
@@ -44,7 +44,7 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds005189,
-        title = {participants.tsv},
+        title = {Search Superiority Recollection Familiarity},
         author = {Jason Helbing and Dejan Draschkow and Melissa L.-H. Võ},
         doi = {10.18112/openneuro.ds005189.v1.0.1},
         url = {https://doi.org/10.18112/openneuro.ds005189.v1.0.1},
@@ -68,7 +68,7 @@ Highlights
 
       - Channels: 61
       - Sampling rate (Hz): 1000.0
-      - Duration (hours): 0.0
+      - Duration (hours): 0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
@@ -80,7 +80,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 16.1 GB
+      - Size on disk: 16.07 GB
       - File count: 30
       - Format: BIDS
 
@@ -104,18 +104,17 @@ Quickstart
 
 .. code-block:: bash
 
-    pip install eegdash
+   pip install eegdash
 
-**Access the data**
+**Load a recording**
 
 .. code-block:: python
 
-    from eegdash.dataset import DS005189
+   from eegdash.dataset import DS005189
 
-    dataset = DS005189(cache_dir="./data")
-    # Get the raw object of the first recording
-    raw = dataset.datasets[0].raw
-    print(raw.info)
+   dataset = DS005189(cache_dir="./data")
+   recording = dataset[0]
+   raw = recording.load()
 
 **Filter/query**
 

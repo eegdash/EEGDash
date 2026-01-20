@@ -5,15 +5,15 @@
 eegdash.dataset.DS004993
 ========================
 
-participants.tsv (OpenNeuro ``ds004993``). Access recordings and metadata through EEGDash.
+WIRED ICM Sample Dataset - Workshop on Intracranial Recordings in Humans, Epilepsy, DBS (OpenNeuro ``ds004993``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: ieeg` :bdg-info:`Tasks: 3` :bdg-secondary:`Subjects: 3` :bdg-secondary:`Recordings: 3`
+:bdg-light:`Modality: ['ieeg']` :bdg-light:`Tasks: 3` :bdg-light:`Subjects: 3` :bdg-light:`Recordings: 3`
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-light:`License: CC0` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -25,7 +25,7 @@ Dataset Information
    * - Dataset ID
      - ``DS004993``
    * - Title
-     - participants.tsv
+     - WIRED ICM Sample Dataset - Workshop on Intracranial Recordings in Humans, Epilepsy, DBS
    * - Year
      - 2024
    * - Authors
@@ -44,7 +44,7 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds004993,
-        title = {participants.tsv},
+        title = {WIRED ICM Sample Dataset - Workshop on Intracranial Recordings in Humans, Epilepsy, DBS},
         author = {Liberty S. Hamilton and Maansi Desai and Alyssa Field},
         doi = {10.18112/openneuro.ds004993.v1.1.2},
         url = {https://doi.org/10.18112/openneuro.ds004993.v1.1.2},
@@ -66,9 +66,9 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 160 (2), 148 (2), 106 (2)
-      - Sampling rate (Hz): 512.0 (4), 2048.0 (2)
-      - Duration (hours): 0.0
+      - Channels: 106, 160, 148
+      - Sampling rate (Hz): 2048.0, 512.0 (2)
+      - Duration (hours): 0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
@@ -80,7 +80,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 305.1 MB
+      - Size on disk: 305.11 MB
       - File count: 3
       - Format: BIDS
 
@@ -104,18 +104,17 @@ Quickstart
 
 .. code-block:: bash
 
-    pip install eegdash
+   pip install eegdash
 
-**Access the data**
+**Load a recording**
 
 .. code-block:: python
 
-    from eegdash.dataset import DS004993
+   from eegdash.dataset import DS004993
 
-    dataset = DS004993(cache_dir="./data")
-    # Get the raw object of the first recording
-    raw = dataset.datasets[0].raw
-    print(raw.info)
+   dataset = DS004993(cache_dir="./data")
+   recording = dataset[0]
+   raw = recording.load()
 
 **Filter/query**
 

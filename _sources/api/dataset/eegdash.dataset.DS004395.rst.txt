@@ -5,15 +5,15 @@
 eegdash.dataset.DS004395
 ========================
 
-participants.tsv (OpenNeuro ``ds004395``). Access recordings and metadata through EEGDash.
+Penn Electrophysiology of Encoding and Retrieval Study (PEERS) (OpenNeuro ``ds004395``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 3` :bdg-secondary:`Subjects: 364` :bdg-secondary:`Recordings: 6483`
+:bdg-light:`Modality: ['eeg']` :bdg-light:`Tasks: 3` :bdg-light:`Subjects: 364` :bdg-light:`Recordings: 6483`
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-light:`License: CC0` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -25,7 +25,7 @@ Dataset Information
    * - Dataset ID
      - ``DS004395``
    * - Title
-     - participants.tsv
+     - Penn Electrophysiology of Encoding and Retrieval Study (PEERS)
    * - Year
      - 2023
    * - Authors
@@ -44,7 +44,7 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds004395,
-        title = {participants.tsv},
+        title = {Penn Electrophysiology of Encoding and Retrieval Study (PEERS)},
         author = {Michael J. Kahana and Joseph H. Rudoler and Lynn J. Lohnas and Karl Healey and Ada Aka and Adam Broitman and Elizabeth Crutchley and Patrick Crutchley and Kylie H. Alm and Brandon S. Katerman and Nicole E. Miller and Joel R. Kuhn and Yuxuan Li and Nicole M. Long and Jonathan Miller and Madison D. Paron and Jesse K. Pazdera and Isaac Pedisich and Christoph T. Weidemann},
         doi = {10.18112/openneuro.ds004395.v2.0.0},
         url = {https://doi.org/10.18112/openneuro.ds004395.v2.0.0},
@@ -66,9 +66,9 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 136 (74), 125 (9956), 128 (2910), 143 (2), 263 (4), 135 (20)
-      - Sampling rate (Hz): 1024.0 (22), 250.0 (34), 512.0 (56), 1000.0 (30), 2048.0 (2932), 500.0 (9892)
-      - Duration (hours): 0.0
+      - Channels: 135 (10), 263 (2), 128 (1455), 125 (4978), 143, 136 (37)
+      - Sampling rate (Hz): 500.0 (4946), 2048.0 (1466), 512.0 (28), 1000.0 (15), 250.0 (17), 1024.0 (11)
+      - Duration (hours): 0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
@@ -80,7 +80,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 8.7 TB
+      - Size on disk: 8.72 TB
       - File count: 6483
       - Format: BIDS
 
@@ -104,18 +104,17 @@ Quickstart
 
 .. code-block:: bash
 
-    pip install eegdash
+   pip install eegdash
 
-**Access the data**
+**Load a recording**
 
 .. code-block:: python
 
-    from eegdash.dataset import DS004395
+   from eegdash.dataset import DS004395
 
-    dataset = DS004395(cache_dir="./data")
-    # Get the raw object of the first recording
-    raw = dataset.datasets[0].raw
-    print(raw.info)
+   dataset = DS004395(cache_dir="./data")
+   recording = dataset[0]
+   raw = recording.load()
 
 **Filter/query**
 

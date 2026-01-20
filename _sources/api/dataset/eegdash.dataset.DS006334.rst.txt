@@ -5,15 +5,15 @@
 eegdash.dataset.DS006334
 ========================
 
-participants.tsv (OpenNeuro ``ds006334``). Access recordings and metadata through EEGDash.
+Neocortical and Hippocampal Theta Oscillations Track Audiovisual Integration and Replay of Speech Memories (OpenNeuro ``ds006334``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: meg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 30` :bdg-secondary:`Recordings: 128`
+:bdg-light:`Modality: ['meg']` :bdg-light:`Tasks: 1` :bdg-light:`Subjects: 30` :bdg-light:`Recordings: 128`
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-light:`License: CC0` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -25,7 +25,7 @@ Dataset Information
    * - Dataset ID
      - ``DS006334``
    * - Title
-     - participants.tsv
+     - Neocortical and Hippocampal Theta Oscillations Track Audiovisual Integration and Replay of Speech Memories
    * - Year
      - 2025
    * - Authors
@@ -44,7 +44,7 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds006334,
-        title = {participants.tsv},
+        title = {Neocortical and Hippocampal Theta Oscillations Track Audiovisual Integration and Replay of Speech Memories},
         author = {Biau E and Wang D and Park H and Jensen O and Hanslmayr S},
         doi = {10.18112/openneuro.ds006334.v1.0.0},
         url = {https://doi.org/10.18112/openneuro.ds006334.v1.0.0},
@@ -68,7 +68,7 @@ Highlights
 
       - Channels: 306
       - Sampling rate (Hz): 1000.0
-      - Duration (hours): 0.0
+      - Duration (hours): 0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
@@ -80,7 +80,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 166.2 GB
+      - Size on disk: 166.20 GB
       - File count: 128
       - Format: BIDS
 
@@ -104,18 +104,17 @@ Quickstart
 
 .. code-block:: bash
 
-    pip install eegdash
+   pip install eegdash
 
-**Access the data**
+**Load a recording**
 
 .. code-block:: python
 
-    from eegdash.dataset import DS006334
+   from eegdash.dataset import DS006334
 
-    dataset = DS006334(cache_dir="./data")
-    # Get the raw object of the first recording
-    raw = dataset.datasets[0].raw
-    print(raw.info)
+   dataset = DS006334(cache_dir="./data")
+   recording = dataset[0]
+   raw = recording.load()
 
 **Filter/query**
 

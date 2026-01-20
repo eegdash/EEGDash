@@ -5,15 +5,15 @@
 eegdash.dataset.DS002893
 ========================
 
-participants.tsv (OpenNeuro ``ds002893``). Access recordings and metadata through EEGDash.
+Auditory-Visual Shift Study (OpenNeuro ``ds002893``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 49` :bdg-secondary:`Recordings: 52`
+:bdg-light:`Modality: ['eeg']` :bdg-light:`Tasks: 1` :bdg-light:`Subjects: 49` :bdg-light:`Recordings: 52`
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-light:`License: CC0` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -25,7 +25,7 @@ Dataset Information
    * - Dataset ID
      - ``DS002893``
    * - Title
-     - participants.tsv
+     - Auditory-Visual Shift Study
    * - Year
      - 2020
    * - Authors
@@ -44,7 +44,7 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds002893,
-        title = {participants.tsv},
+        title = {Auditory-Visual Shift Study},
         author = {Marissa Westerfield (data, curation) and Scott Makeig (data, curation) and Dung Truong (curation) and Kay Robbins (curation) and Arno Delorme (curation)},
         doi = {10.18112/openneuro.ds002893.v2.0.0},
         url = {https://doi.org/10.18112/openneuro.ds002893.v2.0.0},
@@ -67,8 +67,8 @@ Highlights
       :class-card: sd-border-1
 
       - Channels: 33
-      - Sampling rate (Hz): 250.0293378038558 (20), 250.0 (84)
-      - Duration (hours): 0.0
+      - Sampling rate (Hz): 250.0 (42), 250.0293378038558 (10)
+      - Duration (hours): 0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
@@ -80,7 +80,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 7.7 GB
+      - Size on disk: 7.70 GB
       - File count: 52
       - Format: BIDS
 
@@ -104,18 +104,17 @@ Quickstart
 
 .. code-block:: bash
 
-    pip install eegdash
+   pip install eegdash
 
-**Access the data**
+**Load a recording**
 
 .. code-block:: python
 
-    from eegdash.dataset import DS002893
+   from eegdash.dataset import DS002893
 
-    dataset = DS002893(cache_dir="./data")
-    # Get the raw object of the first recording
-    raw = dataset.datasets[0].raw
-    print(raw.info)
+   dataset = DS002893(cache_dir="./data")
+   recording = dataset[0]
+   raw = recording.load()
 
 **Filter/query**
 

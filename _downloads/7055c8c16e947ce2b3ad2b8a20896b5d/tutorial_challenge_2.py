@@ -17,8 +17,8 @@
 #
 ######################################################################
 #
-# **Preliminary notes**
-#
+# Preliminary notes
+# -----------------
 # Before we begin, I just want to make a deal with you, ok?
 # This is a community competition with a strong open-source foundation.
 # When I say open-source, I mean volunteer work.
@@ -32,8 +32,8 @@
 #
 ######################################################################
 #
-# **Overview**
-#
+# Overview
+# --------
 # The psychopathology factor (P-factor) is a widely recognized construct in mental health research, representing a common underlying dimension of psychopathology across various disorders.
 # Currently, the P-factor is often assessed using self-report questionnaires or clinician ratings, which can be subjective, prone to bias, and time-consuming.
 # **The Challenge 2** consists of developing a model to predict the P-factor from EEG recordings.
@@ -49,8 +49,8 @@
 #
 ######################################################################
 #
-# **Contents of this start kit**
-#
+# Contents of this start kit
+# --------------------------
 # .. note:: If you need additional explanations on the
 #    :doc:`EEGChallengeDataset
 #    </api/dataset/eegdash.dataset.EEGChallengeDataset>` class, dataloading,
@@ -75,7 +75,8 @@
 #
 ######################################################################
 #
-# **Install dependencies on Colab**
+# Install dependencies on Colab
+# -----------------------------
 #
 # .. note:: These installs are optional; skip on local environments
 #    where you already have the dependencies installed.
@@ -86,8 +87,8 @@
 #
 ######################################################################
 #
-# **Imports**
-#
+# Imports
+# -------
 from pathlib import Path
 import math
 import os
@@ -115,8 +116,8 @@ from eegdash.paths import get_default_cache_dir
 #
 ######################################################################
 #
-# **Identify whether a CUDA-enabled GPU is available**
-#
+# Identify whether a CUDA-enabled GPU is available
+# ------------------------------------------------
 device = "cuda" if torch.cuda.is_available() else "cpu"
 if device == "cuda":
     msg = "CUDA-enabled GPU found. Training should be faster."
@@ -131,7 +132,8 @@ print(msg)
 #
 ######################################################################
 #
-# **Understanding the P-factor regression task**
+# Understanding the P-factor regression task.
+# -------------------------------------------
 #
 # The psychopathology factor (P-factor) is a widely recognized construct in mental health research, representing a common underlying dimension of psychopathology across various disorders.
 # The P-factor is thought to reflect the shared variance among different psychiatric conditions, suggesting that individuals with higher P-factor scores may be more vulnerable to a range of mental health issues.
@@ -147,8 +149,8 @@ print(msg)
 #
 ######################################################################
 #
-# **Define local path and (down)load the data**
-#
+# Define local path and (down)load the data
+# -----------------------------------------
 # In this challenge 2 example, we load the EEG 2025 release using
 # :doc:`EEGChallengeDataset </api/dataset/eegdash.dataset.EEGChallengeDataset>`.
 # **Note:** in this example notebook, we load the contrast change detection task from one mini release only as an example. Naturally, you are encouraged to train your models on all complete releases, using data from all the tasks you deem relevant.
@@ -187,8 +189,8 @@ sub_rm = ["NDARWV769JM7"]
 #
 ######################################################################
 #
-# **Combine the datasets into a single one**
-#
+# Combine the datasets into a single one
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Here, we combine the datasets from the different releases into a single
 # ``BaseConcatDataset`` object.
 # %%
@@ -199,8 +201,8 @@ for ds in all_datasets_list:
 #
 ######################################################################
 #
-# **Inspect your data**
-#
+# Inspect your data
+# -----------------
 # We can check what is inside the dataset consuming the
 # MNE-object inside the Braindecode dataset.
 #
@@ -218,8 +220,8 @@ SFREQ = 100
 #
 ######################################################################
 #
-# **Wrap the data into a PyTorch-compatible dataset**
-#
+# Wrap the data into a PyTorch-compatible dataset
+# --------------------------------------------------
 # The class below defines a dataset wrapper that will extract 2-second windows,
 # uniformly sampled over the whole signal. In addition, it will add useful information
 # about the extracted windows, such as the p-factor, the subject or the task.
@@ -289,7 +291,8 @@ windows_ds = BaseConcatDataset(
 #
 ######################################################################
 #
-# **Inspect the label distribution**
+# Inspect the label distribution
+# -------------------------------
 #
 import numpy as np
 from skorch.helper import SliceDataset
@@ -308,8 +311,8 @@ plt.show()
 #
 ######################################################################
 #
-# **Define, train and save a model**
-#
+# Define, train and save a model
+# ---------------------------------
 # Now we have our pytorch dataset necessary for the training!
 #
 # Below, we define a simple EEGNeX model from Braindecode.
@@ -319,8 +322,8 @@ plt.show()
 #
 ######################################################################
 #
-# **Initialize model**
-#
+# Initialize model
+# -----------------
 model = EEGNeX(n_chans=129, n_outputs=1, n_times=2 * SFREQ).to(device)
 # Specify optimizer
 optimizer = optim.Adamax(params=model.parameters(), lr=0.002)

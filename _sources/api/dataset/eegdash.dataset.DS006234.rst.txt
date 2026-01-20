@@ -5,15 +5,15 @@
 eegdash.dataset.DS006234
 ========================
 
-participants.tsv (OpenNeuro ``ds006234``). Access recordings and metadata through EEGDash.
+Auditory naming (OpenNeuro ``ds006234``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: ieeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 119` :bdg-secondary:`Recordings: 378`
+:bdg-light:`Modality: ['ieeg']` :bdg-light:`Tasks: 1` :bdg-light:`Subjects: 119` :bdg-light:`Recordings: 378`
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-light:`License: CC0` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -25,7 +25,7 @@ Dataset Information
    * - Dataset ID
      - ``DS006234``
    * - Title
-     - participants.tsv
+     - Auditory naming
    * - Year
      - 2025
    * - Authors
@@ -44,7 +44,7 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds006234,
-        title = {participants.tsv},
+        title = {Auditory naming},
         author = {Ryuzaburo Kochi and Aya Kanno and Hiroshi Uda and Keisuke Hatano and Hidenori Endo and Michael Cools and Robert Rothermel and Aimee F. Luat and Eishi Asano},
         doi = {10.18112/openneuro.ds006234.v1.0.0},
         url = {https://doi.org/10.18112/openneuro.ds006234.v1.0.0},
@@ -66,9 +66,9 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 84 (6), 152 (6), 148 (8), 144 (8), 58 (2), 132 (8), 136 (22), 128 (538), 150 (10), 164 (16), 118 (6), 156 (10), 110 (12), 140 (16), 96 (6), 142 (10), 112 (18), 64 (4), 130 (8), 134 (14), 138 (28)
+      - Channels: 134 (7), 138 (14), 130 (4), 96 (3), 64 (2), 112 (9), 142 (5), 150 (5), 164 (8), 128 (269), 118 (3), 136 (11), 140 (8), 110 (6), 156 (5), 148 (4), 84 (3), 152 (3), 132 (4), 58, 144 (4)
       - Sampling rate (Hz): 1000.0
-      - Duration (hours): 0.0
+      - Duration (hours): 0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
@@ -80,7 +80,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 43.9 GB
+      - Size on disk: 43.93 GB
       - File count: 378
       - Format: BIDS
 
@@ -104,18 +104,17 @@ Quickstart
 
 .. code-block:: bash
 
-    pip install eegdash
+   pip install eegdash
 
-**Access the data**
+**Load a recording**
 
 .. code-block:: python
 
-    from eegdash.dataset import DS006234
+   from eegdash.dataset import DS006234
 
-    dataset = DS006234(cache_dir="./data")
-    # Get the raw object of the first recording
-    raw = dataset.datasets[0].raw
-    print(raw.info)
+   dataset = DS006234(cache_dir="./data")
+   recording = dataset[0]
+   raw = recording.load()
 
 **Filter/query**
 

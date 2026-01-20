@@ -5,15 +5,15 @@
 eegdash.dataset.DS003969
 ========================
 
-participants.tsv (OpenNeuro ``ds003969``). Access recordings and metadata through EEGDash.
+Meditation vs thinking task (OpenNeuro ``ds003969``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 4` :bdg-secondary:`Subjects: 98` :bdg-secondary:`Recordings: 392`
+:bdg-light:`Modality: ['eeg']` :bdg-light:`Tasks: 4` :bdg-light:`Subjects: 98` :bdg-light:`Recordings: 392`
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-light:`License: CC0` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -25,7 +25,7 @@ Dataset Information
    * - Dataset ID
      - ``DS003969``
    * - Title
-     - participants.tsv
+     - Meditation vs thinking task
    * - Year
      - 2021
    * - Authors
@@ -44,7 +44,7 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds003969,
-        title = {participants.tsv},
+        title = {Meditation vs thinking task},
         author = {Arnaud Delorme and Claire Braboszcz},
         doi = {10.18112/openneuro.ds003969.v1.0.0},
         url = {https://doi.org/10.18112/openneuro.ds003969.v1.0.0},
@@ -67,8 +67,8 @@ Highlights
       :class-card: sd-border-1
 
       - Channels: 64
-      - Sampling rate (Hz): 2048.0 (12), 1024.0 (772)
-      - Duration (hours): 0.0
+      - Sampling rate (Hz): 1024.0 (386), 2048.0 (6)
+      - Duration (hours): 0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
@@ -80,7 +80,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 54.5 GB
+      - Size on disk: 54.46 GB
       - File count: 392
       - Format: BIDS
 
@@ -104,18 +104,17 @@ Quickstart
 
 .. code-block:: bash
 
-    pip install eegdash
+   pip install eegdash
 
-**Access the data**
+**Load a recording**
 
 .. code-block:: python
 
-    from eegdash.dataset import DS003969
+   from eegdash.dataset import DS003969
 
-    dataset = DS003969(cache_dir="./data")
-    # Get the raw object of the first recording
-    raw = dataset.datasets[0].raw
-    print(raw.info)
+   dataset = DS003969(cache_dir="./data")
+   recording = dataset[0]
+   raw = recording.load()
 
 **Filter/query**
 

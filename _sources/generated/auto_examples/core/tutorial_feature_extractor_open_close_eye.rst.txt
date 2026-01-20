@@ -205,7 +205,7 @@ corresponding to their respective event markers).
     /home/runner/work/EEGDash/EEGDash/.venv/lib/python3.11/site-packages/braindecode/preprocessing/preprocess.py:76: UserWarning: apply_on_array can only be True if fn is a callable function. Automatically correcting to apply_on_array=False.
       warn(
     Used Annotations descriptions: [np.str_('boundary'), np.str_('break cnt'), np.str_('instructed_toCloseEyes'), np.str_('instructed_toOpenEyes'), np.str_('resting_start')]
-    [01/20/26 14:02:01] INFO     Original events found with ids: preprocessing.py:66
+    [01/20/26 18:11:48] INFO     Original events found with ids: preprocessing.py:66
                                  {np.str_('boundary'): 1,                           
                                  np.str_('break cnt'): 2,                           
                                  np.str_('instructed_toCloseEyes                    
@@ -229,7 +229,7 @@ corresponding to their respective event markers).
     - Filter length: 423 samples (3.305 s)
 
     Used Annotations descriptions: [np.str_('boundary'), np.str_('break cnt'), np.str_('instructed_toCloseEyes'), np.str_('instructed_toOpenEyes'), np.str_('resting_start')]
-    [01/20/26 14:02:03] INFO     Original events found with ids: preprocessing.py:66
+    [01/20/26 18:11:49] INFO     Original events found with ids: preprocessing.py:66
                                  {np.str_('boundary'): 1,                           
                                  np.str_('break cnt'): 2,                           
                                  np.str_('instructed_toCloseEyes                    
@@ -382,7 +382,7 @@ Features
 
  .. code-block:: none
 
-    Extracting features:   0%|          | 0/2 [00:00<?, ?it/s]    Extracting features:  50%|█████     | 1/2 [00:00<00:00,  1.19it/s]    Extracting features: 100%|██████████| 2/2 [00:00<00:00,  2.23it/s]
+    Extracting features:   0%|          | 0/2 [00:00<?, ?it/s]    Extracting features:  50%|█████     | 1/2 [00:00<00:00,  1.31it/s]    Extracting features: 100%|██████████| 2/2 [00:00<00:00,  2.44it/s]
 
 
 
@@ -420,9 +420,9 @@ Features
         <tr style="text-align: right;">
           <th></th>
           <th>i_dataset</th>
-          <th>i_stop_in_trial</th>
-          <th>i_start_in_trial</th>
           <th>i_window_in_trial</th>
+          <th>i_start_in_trial</th>
+          <th>i_stop_in_trial</th>
           <th>sig_mean_E22</th>
           <th>sig_mean_E9</th>
           <th>sig_mean_E33</th>
@@ -506,9 +506,9 @@ Features
         <tr>
           <th>0</th>
           <td>0</td>
-          <td>8348</td>
-          <td>8092</td>
           <td>0</td>
+          <td>8092</td>
+          <td>8348</td>
           <td>5.647381e-07</td>
           <td>-2.509246e-06</td>
           <td>8.135321e-06</td>
@@ -590,9 +590,9 @@ Features
         <tr>
           <th>1</th>
           <td>0</td>
-          <td>8604</td>
-          <td>8348</td>
           <td>0</td>
+          <td>8348</td>
+          <td>8604</td>
           <td>1.130721e-06</td>
           <td>1.416919e-07</td>
           <td>-6.768836e-07</td>
@@ -674,9 +674,9 @@ Features
         <tr>
           <th>2</th>
           <td>0</td>
-          <td>8860</td>
-          <td>8604</td>
           <td>0</td>
+          <td>8604</td>
+          <td>8860</td>
           <td>-8.737620e-07</td>
           <td>2.451451e-07</td>
           <td>3.854794e-07</td>
@@ -758,9 +758,9 @@ Features
         <tr>
           <th>3</th>
           <td>0</td>
-          <td>9116</td>
-          <td>8860</td>
           <td>0</td>
+          <td>8860</td>
+          <td>9116</td>
           <td>3.482372e-07</td>
           <td>-5.419446e-07</td>
           <td>-7.257668e-08</td>
@@ -842,9 +842,9 @@ Features
         <tr>
           <th>4</th>
           <td>0</td>
-          <td>9372</td>
-          <td>9116</td>
           <td>0</td>
+          <td>9116</td>
+          <td>9372</td>
           <td>1.078094e-06</td>
           <td>2.234204e-06</td>
           <td>8.322080e-07</td>
@@ -1010,9 +1010,9 @@ Features
         <tr>
           <th>135</th>
           <td>1</td>
-          <td>43419</td>
-          <td>43163</td>
           <td>0</td>
+          <td>43163</td>
+          <td>43419</td>
           <td>2.604641e-06</td>
           <td>2.696607e-06</td>
           <td>3.207271e-07</td>
@@ -1094,9 +1094,9 @@ Features
         <tr>
           <th>136</th>
           <td>1</td>
-          <td>43675</td>
-          <td>43419</td>
           <td>0</td>
+          <td>43419</td>
+          <td>43675</td>
           <td>-1.158709e-06</td>
           <td>-9.353611e-07</td>
           <td>6.243006e-07</td>
@@ -1178,9 +1178,9 @@ Features
         <tr>
           <th>137</th>
           <td>1</td>
-          <td>43931</td>
-          <td>43675</td>
           <td>0</td>
+          <td>43675</td>
+          <td>43931</td>
           <td>9.350503e-07</td>
           <td>7.273056e-07</td>
           <td>-3.974258e-07</td>
@@ -1262,9 +1262,9 @@ Features
         <tr>
           <th>138</th>
           <td>1</td>
-          <td>44187</td>
-          <td>43931</td>
           <td>0</td>
+          <td>43931</td>
+          <td>44187</td>
           <td>-1.334396e-04</td>
           <td>-4.969487e-05</td>
           <td>-2.251352e-06</td>
@@ -1346,9 +1346,9 @@ Features
         <tr>
           <th>139</th>
           <td>1</td>
-          <td>44443</td>
-          <td>44187</td>
           <td>0</td>
+          <td>44187</td>
+          <td>44443</td>
           <td>1.370442e-04</td>
           <td>3.529626e-05</td>
           <td>3.354098e-06</td>
@@ -14536,7 +14536,7 @@ accuracy across six epochs.
  .. code-block:: none
 
     [LightGBM] [Info] Number of positive: 56, number of negative: 56
-    [LightGBM] [Info] Auto-choosing col-wise multi-threading, the overhead of testing was 0.000864 seconds.
+    [LightGBM] [Info] Auto-choosing col-wise multi-threading, the overhead of testing was 0.000998 seconds.
     You can set `force_col_wise=true` to remove the overhead.
     [LightGBM] [Info] Total Bins 15006
     [LightGBM] [Info] Number of data points in the train set: 112, number of used features: 460
@@ -14699,9 +14699,9 @@ accuracy across six epochs.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 10.066 seconds)
+   **Total running time of the script:** (0 minutes 8.328 seconds)
 
-**Estimated memory usage:**  524 MB
+**Estimated memory usage:**  531 MB
 
 
 .. _sphx_glr_download_generated_auto_examples_core_tutorial_feature_extractor_open_close_eye.py:

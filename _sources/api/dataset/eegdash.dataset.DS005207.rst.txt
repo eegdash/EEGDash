@@ -5,15 +5,15 @@
 eegdash.dataset.DS005207
 ========================
 
-task-sleep_acq-cEEGridScoring_events.json (OpenNeuro ``ds005207``). Access recordings and metadata through EEGDash.
+Surrey cEEGrid sleep data set (OpenNeuro ``ds005207``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 20` :bdg-secondary:`Recordings: 39`
+:bdg-light:`Modality: ['eeg']` :bdg-light:`Tasks: 1` :bdg-light:`Subjects: 20` :bdg-light:`Recordings: 39`
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-light:`License: CC0` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -25,7 +25,7 @@ Dataset Information
    * - Dataset ID
      - ``DS005207``
    * - Title
-     - task-sleep_acq-cEEGridScoring_events.json
+     - Surrey cEEGrid sleep data set
    * - Year
      - 2024
    * - Authors
@@ -44,7 +44,7 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds005207,
-        title = {task-sleep_acq-cEEGridScoring_events.json},
+        title = {Surrey cEEGrid sleep data set},
         author = {Kaare B. Mikkelsen and James K Ebajemito and Maria A Bonmati-Carrion and Nayantara Santhi and Victoria L Revell and Giuseppe Atzori and Laura Birch and Ciro Della Monica and Stefan Debener and Derk-Jan Dijk and Annette Sterr and Maarten De Vos},
         doi = {10.18112/openneuro.ds005207.v1.0.0},
         url = {https://doi.org/10.18112/openneuro.ds005207.v1.0.0},
@@ -66,9 +66,9 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 6 (14), 16 (10), 12 (6), 17 (4), 14 (12), 10 (16), 15 (6), 18 (10)
-      - Sampling rate (Hz): 128.0 (40), 250.0 (38)
-      - Duration (hours): 0.0
+      - Channels: 18 (5), 10 (8), 14 (6), 17 (2), 15 (3), 12 (3), 16 (5), 6 (7)
+      - Sampling rate (Hz): 250.0 (19), 128.0 (20)
+      - Duration (hours): 0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
@@ -80,7 +80,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 28.5 GB
+      - Size on disk: 28.52 GB
       - File count: 39
       - Format: BIDS
 
@@ -104,18 +104,17 @@ Quickstart
 
 .. code-block:: bash
 
-    pip install eegdash
+   pip install eegdash
 
-**Access the data**
+**Load a recording**
 
 .. code-block:: python
 
-    from eegdash.dataset import DS005207
+   from eegdash.dataset import DS005207
 
-    dataset = DS005207(cache_dir="./data")
-    # Get the raw object of the first recording
-    raw = dataset.datasets[0].raw
-    print(raw.info)
+   dataset = DS005207(cache_dir="./data")
+   recording = dataset[0]
+   raw = recording.load()
 
 **Filter/query**
 

@@ -5,15 +5,15 @@
 eegdash.dataset.DS002723
 ========================
 
-participants.tsv (OpenNeuro ``ds002723``). Access recordings and metadata through EEGDash.
+A dataset recorded during development of an affective brain-computer music interface: testing session (OpenNeuro ``ds002723``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 6` :bdg-secondary:`Subjects: 8` :bdg-secondary:`Recordings: 44`
+:bdg-light:`Modality: ['eeg']` :bdg-light:`Tasks: 6` :bdg-light:`Subjects: 8` :bdg-light:`Recordings: 44`
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-light:`License: CC0` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -25,7 +25,7 @@ Dataset Information
    * - Dataset ID
      - ``DS002723``
    * - Title
-     - participants.tsv
+     - A dataset recorded during development of an affective brain-computer music interface: testing session
    * - Year
      - 2020
    * - Authors
@@ -44,7 +44,7 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds002723,
-        title = {participants.tsv},
+        title = {A dataset recorded during development of an affective brain-computer music interface: testing session},
         author = {Ian Daly and Nicoletta Nicolaou and Duncan Williams and Faustina Hwang and Alexis Kirke and Eduardo Miranda and Slawomir J. Nasuto},
         doi = {10.18112/openneuro.ds002723.v1.1.0},
         url = {https://doi.org/10.18112/openneuro.ds002723.v1.1.0},
@@ -68,7 +68,7 @@ Highlights
 
       - Channels: 32
       - Sampling rate (Hz): 1000.0
-      - Duration (hours): 0.0
+      - Duration (hours): 0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
@@ -80,7 +80,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 2.6 GB
+      - Size on disk: 2.60 GB
       - File count: 44
       - Format: BIDS
 
@@ -104,18 +104,17 @@ Quickstart
 
 .. code-block:: bash
 
-    pip install eegdash
+   pip install eegdash
 
-**Access the data**
+**Load a recording**
 
 .. code-block:: python
 
-    from eegdash.dataset import DS002723
+   from eegdash.dataset import DS002723
 
-    dataset = DS002723(cache_dir="./data")
-    # Get the raw object of the first recording
-    raw = dataset.datasets[0].raw
-    print(raw.info)
+   dataset = DS002723(cache_dir="./data")
+   recording = dataset[0]
+   raw = recording.load()
 
 **Filter/query**
 

@@ -5,15 +5,15 @@
 eegdash.dataset.DS004865
 ========================
 
-participants.tsv (OpenNeuro ``ds004865``). Access recordings and metadata through EEGDash.
+pyFR: Delayed Free Recall of Word Lists, Preliminary Cognitive Electrophysiology Study (OpenNeuro ``ds004865``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: ieeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 42` :bdg-secondary:`Recordings: 172`
+:bdg-light:`Modality: ['ieeg']` :bdg-light:`Tasks: 1` :bdg-light:`Subjects: 42` :bdg-light:`Recordings: 172`
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-light:`License: CC0` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -25,7 +25,7 @@ Dataset Information
    * - Dataset ID
      - ``DS004865``
    * - Title
-     - participants.tsv
+     - pyFR: Delayed Free Recall of Word Lists, Preliminary Cognitive Electrophysiology Study
    * - Year
      - 2023
    * - Authors
@@ -44,7 +44,7 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds004865,
-        title = {participants.tsv},
+        title = {pyFR: Delayed Free Recall of Word Lists, Preliminary Cognitive Electrophysiology Study},
         author = {Haydn G. Herrema and Michael J. Kahana},
         doi = {10.18112/openneuro.ds004865.v2.0.1},
         url = {https://doi.org/10.18112/openneuro.ds004865.v2.0.1},
@@ -66,9 +66,9 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 27 (6), 68 (4), 123 (6), 48 (6), 54 (8), 52 (4), 149 (4), 109 (6), 153 (4), 85 (8), 108 (8), 119 (4), 47 (6), 142 (4), 84 (6), 88 (6), 91 (6), 130 (4), 126 (4), 98 (2), 46 (8), 42 (6), 121 (6), 102 (4), 111 (4), 120 (2), 81 (2), 53 (8), 55 (6), 116 (6), 168 (6), 187 (2), 82 (6), 101 (2), 75 (6), 62 (8), 97 (2), 58 (4), 74 (10), 105 (6), 150 (6), 76 (4), 131 (10), 64 (2), 100 (14), 96 (6), 144 (4), 160 (2), 94 (2), 72 (6), 86 (8), 32 (6), 36 (4), 57 (4), 56 (2), 80 (10), 63 (4), 104 (6), 78 (6), 203 (2), 70 (6), 87 (4), 124 (4), 110 (8), 95 (2), 90 (2)
-      - Sampling rate (Hz): 2000.0 (32), 499.7071 (12), 512.0 (80), 400.0 (16), 1000.0 (204)
-      - Duration (hours): 0.0
+      - Channels: 203, 104 (3), 78 (3), 56, 80 (5), 63 (2), 57 (2), 90, 70 (3), 95, 87 (2), 110 (4), 124 (2), 74 (5), 64, 131 (5), 105 (3), 150 (3), 76 (2), 101, 82 (3), 97, 58 (2), 75 (3), 62 (4), 86 (4), 72 (3), 94, 160, 32 (3), 36 (2), 100 (7), 96 (3), 144 (2), 46 (4), 42 (3), 98, 121 (3), 111 (2), 102 (2), 88 (3), 91 (3), 130 (2), 126 (2), 187, 168 (3), 116 (3), 55 (3), 81, 120, 53 (4), 54 (4), 48 (3), 123 (3), 27 (3), 68 (2), 119 (2), 142 (2), 47 (3), 108 (4), 84 (3), 52 (2), 149 (2), 85 (4), 109 (3), 153 (2)
+      - Sampling rate (Hz): 512.0 (40), 400.0 (8), 1000.0 (102), 499.7071 (6), 2000.0 (16)
+      - Duration (hours): 0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
@@ -80,7 +80,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 97.8 GB
+      - Size on disk: 97.79 GB
       - File count: 172
       - Format: BIDS
 
@@ -104,18 +104,17 @@ Quickstart
 
 .. code-block:: bash
 
-    pip install eegdash
+   pip install eegdash
 
-**Access the data**
+**Load a recording**
 
 .. code-block:: python
 
-    from eegdash.dataset import DS004865
+   from eegdash.dataset import DS004865
 
-    dataset = DS004865(cache_dir="./data")
-    # Get the raw object of the first recording
-    raw = dataset.datasets[0].raw
-    print(raw.info)
+   dataset = DS004865(cache_dir="./data")
+   recording = dataset[0]
+   raw = recording.load()
 
 **Filter/query**
 

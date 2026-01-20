@@ -5,15 +5,15 @@
 eegdash.dataset.DS007172
 ========================
 
-participants.tsv (OpenNeuro ``ds007172``). Access recordings and metadata through EEGDash.
+OpenNeuro dataset ``ds007172``. Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 6` :bdg-secondary:`Subjects: 100` :bdg-secondary:`Recordings: 501`
+:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 6` :bdg-light:`Subjects: 100` :bdg-light:`Recordings: 501`
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-light:`License: CC0` :bdg-light:`Source: OpenNeuro`
 
 Dataset Information
 -------------------
@@ -25,7 +25,7 @@ Dataset Information
    * - Dataset ID
      - ``DS007172``
    * - Title
-     - participants.tsv
+     - —
    * - Year
      - 2026
    * - Authors
@@ -44,7 +44,6 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds007172,
-        title = {participants.tsv},
         author = {Petunia Reinke and Lisa Deneke and Sebastian Ocklenburg},
         doi = {10.18112/openneuro.ds007172.v1.0.0},
         url = {https://doi.org/10.18112/openneuro.ds007172.v1.0.0},
@@ -66,9 +65,9 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 29 (5), 32 (496)
-      - Sampling rate (Hz): 500.0 (496), 1000.0 (5)
-      - Duration (hours): 0.0
+      - Channels: —
+      - Sampling rate (Hz): —
+      - Duration (hours): —
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
@@ -80,7 +79,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 11.0 GB
+      - Size on disk: 11.04 GB
       - File count: 501
       - Format: BIDS
 
@@ -93,7 +92,7 @@ Highlights
    .. grid-item-card:: Provenance
       :class-card: sd-border-1
 
-      - Source: openneuro
+      - Source: OpenNeuro
       - OpenNeuro: `ds007172 <https://openneuro.org/datasets/ds007172>`__
       - NeMAR: `ds007172 <https://nemar.org/dataexplorer/detail?dataset_id=ds007172>`__
 
@@ -104,18 +103,17 @@ Quickstart
 
 .. code-block:: bash
 
-    pip install eegdash
+   pip install eegdash
 
-**Access the data**
+**Load a recording**
 
 .. code-block:: python
 
-    from eegdash.dataset import DS007172
+   from eegdash.dataset import DS007172
 
-    dataset = DS007172(cache_dir="./data")
-    # Get the raw object of the first recording
-    raw = dataset.datasets[0].raw
-    print(raw.info)
+   dataset = DS007172(cache_dir="./data")
+   recording = dataset[0]
+   raw = recording.load()
 
 **Filter/query**
 

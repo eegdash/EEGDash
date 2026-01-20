@@ -5,15 +5,15 @@
 eegdash.dataset.DS003688
 ========================
 
-participants.tsv (OpenNeuro ``ds003688``). Access recordings and metadata through EEGDash.
+Open multimodal iEEG-fMRI dataset from naturalistic stimulation with a short audiovisual film (OpenNeuro ``ds003688``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: ieeg` :bdg-info:`Tasks: 2` :bdg-secondary:`Subjects: 51` :bdg-secondary:`Recordings: 107`
+:bdg-light:`Modality: ['ieeg']` :bdg-light:`Tasks: 2` :bdg-light:`Subjects: 51` :bdg-light:`Recordings: 107`
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-light:`License: CC0` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -25,7 +25,7 @@ Dataset Information
    * - Dataset ID
      - ``DS003688``
    * - Title
-     - participants.tsv
+     - Open multimodal iEEG-fMRI dataset from naturalistic stimulation with a short audiovisual film
    * - Year
      - 2021
    * - Authors
@@ -44,7 +44,7 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds003688,
-        title = {participants.tsv},
+        title = {Open multimodal iEEG-fMRI dataset from naturalistic stimulation with a short audiovisual film},
         author = {Julia Berezutskaya and Mariska J. Vansteensel and Erik J. Aarnoutse and Zachary V. Freudenburg and Giovanni Piantoni and Mariana P. Branco and Nick F. Ramsey},
         doi = {10.18112/openneuro.ds003688.v1.0.7},
         url = {https://doi.org/10.18112/openneuro.ds003688.v1.0.7},
@@ -66,9 +66,9 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 67 (6), 109 (10), 118 (6), 91 (2), 65 (2), 74 (12), 102 (4), 107 (8), 54 (4), 100 (4), 110 (4), 86 (4), 125 (8), 122 (4), 81 (6), 62 (10), 85 (8), 72 (8), 64 (4), 113 (4), 71 (6), 94 (2), 92 (2), 88 (8), 87 (4), 121 (4), 126 (4), 60 (4), 115 (6), 95 (6), 97 (2), 128 (4), 116 (4), 80 (4), 111 (6), 69 (2), 84 (6), 75 (4), 76 (6), 112 (4), 89 (4), 177 (4)
-      - Sampling rate (Hz): 2000.0 (8), 2048.0 (64), 512.0 (142)
-      - Duration (hours): 0.0
+      - Channels: 69, 111 (3), 84 (3), 80 (2), 112 (2), 89 (2), 177 (2), 76 (3), 75 (2), 115 (3), 126 (2), 60 (2), 97, 95 (3), 116 (2), 128 (2), 62 (5), 85 (4), 72 (4), 64 (2), 122 (2), 81 (3), 88 (4), 92, 121 (2), 87 (2), 71 (3), 113 (2), 94, 118 (3), 67 (3), 109 (5), 65, 91, 102 (2), 107 (4), 54 (2), 110 (2), 86 (2), 125 (4), 100 (2), 74 (6)
+      - Sampling rate (Hz): 512.0 (71), 2048.0 (32), 2000.0 (4)
+      - Duration (hours): 0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
@@ -80,7 +80,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 15.2 GB
+      - Size on disk: 15.21 GB
       - File count: 107
       - Format: BIDS
 
@@ -104,18 +104,17 @@ Quickstart
 
 .. code-block:: bash
 
-    pip install eegdash
+   pip install eegdash
 
-**Access the data**
+**Load a recording**
 
 .. code-block:: python
 
-    from eegdash.dataset import DS003688
+   from eegdash.dataset import DS003688
 
-    dataset = DS003688(cache_dir="./data")
-    # Get the raw object of the first recording
-    raw = dataset.datasets[0].raw
-    print(raw.info)
+   dataset = DS003688(cache_dir="./data")
+   recording = dataset[0]
+   raw = recording.load()
 
 **Filter/query**
 

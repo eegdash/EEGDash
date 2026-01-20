@@ -9,11 +9,11 @@ Dataset description (OpenNeuro ``ds004370``). Access recordings and metadata thr
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: ieeg` :bdg-info:`Tasks: 2` :bdg-secondary:`Subjects: 7` :bdg-secondary:`Recordings: 15`
+:bdg-light:`Modality: ['ieeg']` :bdg-light:`Tasks: 2` :bdg-light:`Subjects: 7` :bdg-light:`Recordings: 15`
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-light:`License: CC0` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -66,9 +66,9 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 133 (14), 64 (4), 68 (12)
+      - Channels: 68 (6), 64 (2), 133 (7)
       - Sampling rate (Hz): 2048.0
-      - Duration (hours): 0.0
+      - Duration (hours): 0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
@@ -80,7 +80,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 27.6 GB
+      - Size on disk: 27.55 GB
       - File count: 15
       - Format: BIDS
 
@@ -104,18 +104,17 @@ Quickstart
 
 .. code-block:: bash
 
-    pip install eegdash
+   pip install eegdash
 
-**Access the data**
+**Load a recording**
 
 .. code-block:: python
 
-    from eegdash.dataset import DS004370
+   from eegdash.dataset import DS004370
 
-    dataset = DS004370(cache_dir="./data")
-    # Get the raw object of the first recording
-    raw = dataset.datasets[0].raw
-    print(raw.info)
+   dataset = DS004370(cache_dir="./data")
+   recording = dataset[0]
+   raw = recording.load()
 
 **Filter/query**
 

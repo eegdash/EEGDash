@@ -5,15 +5,15 @@
 eegdash.dataset.DS004706
 ========================
 
-participants.tsv (OpenNeuro ``ds004706``). Access recordings and metadata through EEGDash.
+Spatial memory and non-invasive closed-loop stimulus timing (OpenNeuro ``ds004706``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 2` :bdg-secondary:`Subjects: 34` :bdg-secondary:`Recordings: 298`
+:bdg-light:`Modality: ['eeg']` :bdg-light:`Tasks: 2` :bdg-light:`Subjects: 34` :bdg-light:`Recordings: 298`
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-light:`License: CC0` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -25,7 +25,7 @@ Dataset Information
    * - Dataset ID
      - ``DS004706``
    * - Title
-     - participants.tsv
+     - Spatial memory and non-invasive closed-loop stimulus timing
    * - Year
      - 2023
    * - Authors
@@ -44,7 +44,7 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds004706,
-        title = {participants.tsv},
+        title = {Spatial memory and non-invasive closed-loop stimulus timing},
         author = {Joseph H. Rudoler and Matthew R. Dougherty and Brandon S. Katerman and James P. Bruska and Woohyeuk Chang and David J. Halpern and Nicholas B. Diamond and Michael J. Kahana},
         doi = {10.18112/openneuro.ds004706.v1.0.0},
         url = {https://doi.org/10.18112/openneuro.ds004706.v1.0.0},
@@ -68,7 +68,7 @@ Highlights
 
       - Channels: 128
       - Sampling rate (Hz): 2048.0
-      - Duration (hours): 0.0
+      - Duration (hours): 0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
@@ -80,7 +80,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 1.3 TB
+      - Size on disk: 1.30 TB
       - File count: 298
       - Format: BIDS
 
@@ -104,18 +104,17 @@ Quickstart
 
 .. code-block:: bash
 
-    pip install eegdash
+   pip install eegdash
 
-**Access the data**
+**Load a recording**
 
 .. code-block:: python
 
-    from eegdash.dataset import DS004706
+   from eegdash.dataset import DS004706
 
-    dataset = DS004706(cache_dir="./data")
-    # Get the raw object of the first recording
-    raw = dataset.datasets[0].raw
-    print(raw.info)
+   dataset = DS004706(cache_dir="./data")
+   recording = dataset[0]
+   raw = recording.load()
 
 **Filter/query**
 

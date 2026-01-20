@@ -47,8 +47,8 @@ Challenge 2: Predicting the p-factor from EEG
 
 #####################################################################
 
- **Preliminary notes**
-
+ Preliminary notes
+ -----------------
  Before we begin, I just want to make a deal with you, ok?
  This is a community competition with a strong open-source foundation.
  When I say open-source, I mean volunteer work.
@@ -72,10 +72,10 @@ Challenge 2: Predicting the p-factor from EEG
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 34-90
+.. GENERATED FROM PYTHON SOURCE LINES 34-91
 
-**Overview**
-
+Overview
+ --------
  The psychopathology factor (P-factor) is a widely recognized construct in mental health research, representing a common underlying dimension of psychopathology across various disorders.
  Currently, the P-factor is often assessed using self-report questionnaires or clinician ratings, which can be subjective, prone to bias, and time-consuming.
  **The Challenge 2** consists of developing a model to predict the P-factor from EEG recordings.
@@ -91,8 +91,8 @@ Challenge 2: Predicting the p-factor from EEG
 
 #####################################################################
 
- **Contents of this start kit**
-
+ Contents of this start kit
+ --------------------------
  .. note:: If you need additional explanations on the
     :doc:`EEGChallengeDataset
     </api/dataset/eegdash.dataset.EEGChallengeDataset>` class, dataloading,
@@ -117,7 +117,8 @@ Challenge 2: Predicting the p-factor from EEG
 
 #####################################################################
 
- **Install dependencies on Colab**
+ Install dependencies on Colab
+ -----------------------------
 
  .. note:: These installs are optional; skip on local environments
     where you already have the dependencies installed.
@@ -128,10 +129,10 @@ Challenge 2: Predicting the p-factor from EEG
 
 #####################################################################
 
- **Imports**
+ Imports
+ -------
 
-
-.. GENERATED FROM PYTHON SOURCE LINES 91-108
+.. GENERATED FROM PYTHON SOURCE LINES 92-109
 
 .. code-block:: Python
 
@@ -159,7 +160,7 @@ Challenge 2: Predicting the p-factor from EEG
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 109-119
+.. GENERATED FROM PYTHON SOURCE LINES 110-120
 
 .. warning::
     In case of Colab, before starting, make sure you're on a GPU instance
@@ -169,10 +170,10 @@ Challenge 2: Predicting the p-factor from EEG
 
 #####################################################################
 
- **Identify whether a CUDA-enabled GPU is available**
+ Identify whether a CUDA-enabled GPU is available
+ ------------------------------------------------
 
-
-.. GENERATED FROM PYTHON SOURCE LINES 120-132
+.. GENERATED FROM PYTHON SOURCE LINES 121-133
 
 .. code-block:: Python
 
@@ -205,9 +206,10 @@ Challenge 2: Predicting the p-factor from EEG
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 133-159
+.. GENERATED FROM PYTHON SOURCE LINES 134-161
 
-**Understanding the P-factor regression task**
+Understanding the P-factor regression task.
+ -------------------------------------------
 
  The psychopathology factor (P-factor) is a widely recognized construct in mental health research, representing a common underlying dimension of psychopathology across various disorders.
  The P-factor is thought to reflect the shared variance among different psychiatric conditions, suggesting that individuals with higher P-factor scores may be more vulnerable to a range of mental health issues.
@@ -223,8 +225,8 @@ Challenge 2: Predicting the p-factor from EEG
 
 #####################################################################
 
- **Define local path and (down)load the data**
-
+ Define local path and (down)load the data
+ -----------------------------------------
  In this challenge 2 example, we load the EEG 2025 release using
  :doc:`EEGChallengeDataset </api/dataset/eegdash.dataset.EEGChallengeDataset>`.
  **Note:** in this example notebook, we load the contrast change detection task from one mini release only as an example. Naturally, you are encouraged to train your models on all complete releases, using data from all the tasks you deem relevant.
@@ -234,7 +236,7 @@ Challenge 2: Predicting the p-factor from EEG
  The first step is to define the cache folder!
  Match tests' cache layout under ~/eegdash_cache/eeg_challenge_cache
 
-.. GENERATED FROM PYTHON SOURCE LINES 160-188
+.. GENERATED FROM PYTHON SOURCE LINES 162-190
 
 .. code-block:: Python
 
@@ -296,15 +298,15 @@ Challenge 2: Predicting the p-factor from EEG
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 189-194
+.. GENERATED FROM PYTHON SOURCE LINES 191-196
 
-**Combine the datasets into a single one**
-
+Combine the datasets into a single one
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Here, we combine the datasets from the different releases into a single
 ``BaseConcatDataset`` object.
 %%
 
-.. GENERATED FROM PYTHON SOURCE LINES 195-200
+.. GENERATED FROM PYTHON SOURCE LINES 197-202
 
 .. code-block:: Python
 
@@ -388,10 +390,10 @@ Here, we combine the datasets from the different releases into a single
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 201-212
+.. GENERATED FROM PYTHON SOURCE LINES 203-214
 
-**Inspect your data**
-
+Inspect your data
+ -----------------
  We can check what is inside the dataset consuming the
  MNE-object inside the Braindecode dataset.
 
@@ -402,7 +404,7 @@ Here, we combine the datasets from the different releases into a single
 #####################################################################
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 213-219
+.. GENERATED FROM PYTHON SOURCE LINES 215-221
 
 .. code-block:: Python
 
@@ -445,15 +447,15 @@ Here, we combine the datasets from the different releases into a single
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 220-225
+.. GENERATED FROM PYTHON SOURCE LINES 222-227
 
-**Wrap the data into a PyTorch-compatible dataset**
-
+Wrap the data into a PyTorch-compatible dataset
+--------------------------------------------------
 The class below defines a dataset wrapper that will extract 2-second windows,
 uniformly sampled over the whole signal. In addition, it will add useful information
 about the extracted windows, such as the p-factor, the subject or the task.
 
-.. GENERATED FROM PYTHON SOURCE LINES 229-263
+.. GENERATED FROM PYTHON SOURCE LINES 231-265
 
 .. code-block:: Python
 
@@ -498,11 +500,11 @@ about the extracted windows, such as the p-factor, the subject or the task.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 264-265
+.. GENERATED FROM PYTHON SOURCE LINES 266-267
 
 Filter out recordings that are too short or missing p_factor
 
-.. GENERATED FROM PYTHON SOURCE LINES 265-290
+.. GENERATED FROM PYTHON SOURCE LINES 267-292
 
 .. code-block:: Python
 
@@ -538,12 +540,13 @@ Filter out recordings that are too short or missing p_factor
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 291-293
+.. GENERATED FROM PYTHON SOURCE LINES 293-296
 
-**Inspect the label distribution**
+Inspect the label distribution
+-------------------------------
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 294-309
+.. GENERATED FROM PYTHON SOURCE LINES 297-312
 
 .. code-block:: Python
 
@@ -574,10 +577,10 @@ Filter out recordings that are too short or missing p_factor
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 310-323
+.. GENERATED FROM PYTHON SOURCE LINES 313-326
 
-**Define, train and save a model**
-
+Define, train and save a model
+ ---------------------------------
  Now we have our pytorch dataset necessary for the training!
 
  Below, we define a simple EEGNeX model from Braindecode.
@@ -587,10 +590,10 @@ Filter out recordings that are too short or missing p_factor
 
 #####################################################################
 
- **Initialize model**
+ Initialize model
+ -----------------
 
-
-.. GENERATED FROM PYTHON SOURCE LINES 324-359
+.. GENERATED FROM PYTHON SOURCE LINES 327-362
 
 .. code-block:: Python
 
@@ -679,71 +682,71 @@ Filter out recordings that are too short or missing p_factor
     Params size (MB): 0.22
     Estimated Total Size (MB): 16.97
     ================================================================================================================================================================
-    Epoch 0 - step 0, loss: 0.657098650932312
-    Epoch 0 - step 1, loss: 0.6704187393188477
-    Epoch 0 - step 2, loss: 0.7245672941207886
-    Epoch 0 - step 3, loss: 0.6703627109527588
-    Epoch 0 - step 4, loss: 0.6609511375427246
-    Epoch 0 - step 5, loss: 0.610906720161438
-    Epoch 0 - step 6, loss: 0.6812177896499634
-    Epoch 0 - step 7, loss: 0.6840649247169495
-    Epoch 0 - step 8, loss: 0.6603714227676392
-    Epoch 0 - step 9, loss: 0.6757074594497681
-    Epoch 0 - step 10, loss: 0.5967772006988525
-    Epoch 0 - step 11, loss: 0.6123988032341003
-    Epoch 0 - step 12, loss: 0.5899437665939331
-    Epoch 0 - step 13, loss: 0.6918148398399353
-    Epoch 0 - step 14, loss: 0.6227266788482666
-    Epoch 0 - step 15, loss: 0.6469689011573792
-    Epoch 0 - step 16, loss: 0.5838574171066284
-    Epoch 0 - step 17, loss: 0.6386113166809082
-    Epoch 0 - step 18, loss: 0.5924684405326843
-    Epoch 0 - step 19, loss: 0.6333062052726746
-    Epoch 0 - step 20, loss: 0.7121192216873169
-    Epoch 0 - step 21, loss: 0.6898258924484253
-    Epoch 0 - step 22, loss: 0.6708648800849915
-    Epoch 0 - step 23, loss: 0.6978942155838013
-    Epoch 0 - step 24, loss: 0.5927152633666992
-    Epoch 0 - step 25, loss: 0.5676190257072449
-    Epoch 0 - step 26, loss: 0.6578320264816284
-    Epoch 0 - step 27, loss: 0.7161096334457397
-    Epoch 0 - step 28, loss: 0.6676843762397766
-    Epoch 0 - step 29, loss: 0.695060670375824
-    Epoch 0 - step 30, loss: 0.613991916179657
-    Epoch 0 - step 31, loss: 0.7011196613311768
-    Epoch 0 - step 32, loss: 0.7394522428512573
-    Epoch 0 - step 33, loss: 0.6018479466438293
-    Epoch 0 - step 34, loss: 0.6059529781341553
-    Epoch 0 - step 35, loss: 0.6762487888336182
-    Epoch 0 - step 36, loss: 0.6488667130470276
-    Epoch 0 - step 37, loss: 0.683654248714447
-    Epoch 0 - step 38, loss: 0.6076833009719849
-    Epoch 0 - step 39, loss: 0.646670401096344
-    Epoch 0 - step 40, loss: 0.698401927947998
-    Epoch 0 - step 41, loss: 0.6557444334030151
-    Epoch 0 - step 42, loss: 0.618317723274231
-    Epoch 0 - step 43, loss: 0.6990057826042175
-    Epoch 0 - step 44, loss: 0.5908011198043823
-    Epoch 0 - step 45, loss: 0.6488205194473267
-    Epoch 0 - step 46, loss: 0.6228641271591187
-    Epoch 0 - step 47, loss: 0.6261610388755798
-    Epoch 0 - step 48, loss: 0.63655024766922
-    Epoch 0 - step 49, loss: 0.6338820457458496
-    Epoch 0 - step 50, loss: 0.69303959608078
-    Epoch 0 - step 51, loss: 0.6642738580703735
-    Epoch 0 - step 52, loss: 0.6072778105735779
-    Epoch 0 - step 53, loss: 0.6621224880218506
-    Epoch 0 - step 54, loss: 0.6357537508010864
-    Epoch 0 - step 55, loss: 0.6323084831237793
-    Epoch 0 - step 56, loss: 0.6248722672462463
-    Epoch 0 - step 57, loss: 0.663311779499054
-    Epoch 0 - step 58, loss: 0.6410481929779053
-    Epoch 0 - step 59, loss: 0.6265797019004822
-    Epoch 0 - step 60, loss: 0.6456649303436279
-    Epoch 0 - step 61, loss: 0.6382055282592773
-    Epoch 0 - step 62, loss: 0.6518747210502625
-    Epoch 0 - step 63, loss: 0.6750596761703491
-    Epoch 0 - step 64, loss: 0.7443365454673767
+    Epoch 0 - step 0, loss: 0.6560230255126953
+    Epoch 0 - step 1, loss: 0.6482066512107849
+    Epoch 0 - step 2, loss: 0.7336461544036865
+    Epoch 0 - step 3, loss: 0.657962441444397
+    Epoch 0 - step 4, loss: 0.6543681621551514
+    Epoch 0 - step 5, loss: 0.6191096901893616
+    Epoch 0 - step 6, loss: 0.6988828182220459
+    Epoch 0 - step 7, loss: 0.705501914024353
+    Epoch 0 - step 8, loss: 0.6608931422233582
+    Epoch 0 - step 9, loss: 0.6415733098983765
+    Epoch 0 - step 10, loss: 0.6070398688316345
+    Epoch 0 - step 11, loss: 0.6006799936294556
+    Epoch 0 - step 12, loss: 0.5973581671714783
+    Epoch 0 - step 13, loss: 0.6841371655464172
+    Epoch 0 - step 14, loss: 0.5975494980812073
+    Epoch 0 - step 15, loss: 0.645840048789978
+    Epoch 0 - step 16, loss: 0.5911701917648315
+    Epoch 0 - step 17, loss: 0.6079208850860596
+    Epoch 0 - step 18, loss: 0.6007547378540039
+    Epoch 0 - step 19, loss: 0.6392340064048767
+    Epoch 0 - step 20, loss: 0.6961415410041809
+    Epoch 0 - step 21, loss: 0.6828975677490234
+    Epoch 0 - step 22, loss: 0.6429280638694763
+    Epoch 0 - step 23, loss: 0.6882270574569702
+    Epoch 0 - step 24, loss: 0.5896689891815186
+    Epoch 0 - step 25, loss: 0.5733474493026733
+    Epoch 0 - step 26, loss: 0.6465574502944946
+    Epoch 0 - step 27, loss: 0.7411229014396667
+    Epoch 0 - step 28, loss: 0.6586751341819763
+    Epoch 0 - step 29, loss: 0.6697522401809692
+    Epoch 0 - step 30, loss: 0.6021322011947632
+    Epoch 0 - step 31, loss: 0.7126051783561707
+    Epoch 0 - step 32, loss: 0.7397840619087219
+    Epoch 0 - step 33, loss: 0.611700713634491
+    Epoch 0 - step 34, loss: 0.6230219006538391
+    Epoch 0 - step 35, loss: 0.6760416030883789
+    Epoch 0 - step 36, loss: 0.6554318070411682
+    Epoch 0 - step 37, loss: 0.6773474812507629
+    Epoch 0 - step 38, loss: 0.6060082316398621
+    Epoch 0 - step 39, loss: 0.6393986940383911
+    Epoch 0 - step 40, loss: 0.6993407011032104
+    Epoch 0 - step 41, loss: 0.6654567718505859
+    Epoch 0 - step 42, loss: 0.6227295994758606
+    Epoch 0 - step 43, loss: 0.7055524587631226
+    Epoch 0 - step 44, loss: 0.5897036790847778
+    Epoch 0 - step 45, loss: 0.6563524603843689
+    Epoch 0 - step 46, loss: 0.6369321346282959
+    Epoch 0 - step 47, loss: 0.6205565929412842
+    Epoch 0 - step 48, loss: 0.6260940432548523
+    Epoch 0 - step 49, loss: 0.6380009651184082
+    Epoch 0 - step 50, loss: 0.701532781124115
+    Epoch 0 - step 51, loss: 0.6443430185317993
+    Epoch 0 - step 52, loss: 0.6078376173973083
+    Epoch 0 - step 53, loss: 0.6530850529670715
+    Epoch 0 - step 54, loss: 0.639721155166626
+    Epoch 0 - step 55, loss: 0.6328643560409546
+    Epoch 0 - step 56, loss: 0.6427159309387207
+    Epoch 0 - step 57, loss: 0.671690821647644
+    Epoch 0 - step 58, loss: 0.6557308435440063
+    Epoch 0 - step 59, loss: 0.6332845091819763
+    Epoch 0 - step 60, loss: 0.6541590094566345
+    Epoch 0 - step 61, loss: 0.6187975406646729
+    Epoch 0 - step 62, loss: 0.6321622133255005
+    Epoch 0 - step 63, loss: 0.6800143122673035
+    Epoch 0 - step 64, loss: 0.7870965600013733
     Model saved as 'weights_challenge_2.pt'
 
 
@@ -752,9 +755,9 @@ Filter out recordings that are too short or missing p_factor
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (6 minutes 53.590 seconds)
+   **Total running time of the script:** (6 minutes 42.870 seconds)
 
-**Estimated memory usage:**  903 MB
+**Estimated memory usage:**  901 MB
 
 
 .. _sphx_glr_download_generated_auto_examples_eeg2025_tutorial_challenge_2.py:

@@ -5,15 +5,15 @@
 eegdash.dataset.DS005007
 ========================
 
-participants.tsv (OpenNeuro ``ds005007``). Access recordings and metadata through EEGDash.
+Auditory naming task with questions that begin or end with a wh-interrogative (OpenNeuro ``ds005007``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: ieeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 40` :bdg-secondary:`Recordings: 42`
+:bdg-light:`Modality: ['ieeg']` :bdg-light:`Tasks: 1` :bdg-light:`Subjects: 40` :bdg-light:`Recordings: 42`
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-light:`License: CC0` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -25,7 +25,7 @@ Dataset Information
    * - Dataset ID
      - ``DS005007``
    * - Title
-     - participants.tsv
+     - Auditory naming task with questions that begin or end with a wh-interrogative
    * - Year
      - 2024
    * - Authors
@@ -44,7 +44,7 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds005007,
-        title = {participants.tsv},
+        title = {Auditory naming task with questions that begin or end with a wh-interrogative},
         author = {Yu Kitazawa and Eishi Asano},
         doi = {10.18112/openneuro.ds005007.v1.0.0},
         url = {https://doi.org/10.18112/openneuro.ds005007.v1.0.0},
@@ -66,9 +66,9 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 140 (2), 156 (4), 74 (4), 163 (2), 127 (2), 120 (2), 68 (2), 142 (2), 82 (4), 51 (2), 128 (2), 116 (4), 48 (2), 94 (2), 129 (2), 138 (2), 155 (2), 72 (2), 184 (2), 154 (2), 124 (2), 66 (4), 78 (4), 137 (2), 91 (2), 114 (2), 58 (4), 122 (2), 88 (2), 100 (6), 102 (2), 86 (4)
+      - Channels: 88, 58 (2), 122, 86 (2), 102, 100 (3), 72, 155, 138, 129, 137, 91, 114, 124, 154, 184, 66 (2), 78 (2), 142, 68, 82 (2), 116 (2), 48, 94, 51, 128, 156 (2), 140, 163, 127, 120, 74 (2)
       - Sampling rate (Hz): 1000.0
-      - Duration (hours): 0.0
+      - Duration (hours): 0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
@@ -80,7 +80,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 8.3 GB
+      - Size on disk: 8.29 GB
       - File count: 42
       - Format: BIDS
 
@@ -104,18 +104,17 @@ Quickstart
 
 .. code-block:: bash
 
-    pip install eegdash
+   pip install eegdash
 
-**Access the data**
+**Load a recording**
 
 .. code-block:: python
 
-    from eegdash.dataset import DS005007
+   from eegdash.dataset import DS005007
 
-    dataset = DS005007(cache_dir="./data")
-    # Get the raw object of the first recording
-    raw = dataset.datasets[0].raw
-    print(raw.info)
+   dataset = DS005007(cache_dir="./data")
+   recording = dataset[0]
+   raw = recording.load()
 
 **Filter/query**
 

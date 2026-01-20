@@ -5,15 +5,15 @@
 eegdash.dataset.DS004017
 ========================
 
-participants.tsv (OpenNeuro ``ds004017``). Access recordings and metadata through EEGDash.
+Embodied Learning for Literacy EEG (OpenNeuro ``ds004017``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: —` :bdg-secondary:`Subjects: 21` :bdg-secondary:`Recordings: 63`
+:bdg-light:`Modality: ['eeg']` :bdg-light:`Tasks: —` :bdg-light:`Subjects: 21` :bdg-light:`Recordings: 63`
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-light:`License: CC0` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -25,7 +25,7 @@ Dataset Information
    * - Dataset ID
      - ``DS004017``
    * - Title
-     - participants.tsv
+     - Embodied Learning for Literacy EEG
    * - Year
      - 2022
    * - Authors
@@ -44,7 +44,7 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds004017,
-        title = {participants.tsv},
+        title = {Embodied Learning for Literacy EEG},
         author = {Linn Damsgaard and Marta Topor and Anne-Mette Veber Nielsen and Anne Kær Gejl and Anne Sofie Bøgh Malling and Mark Schram Christensen and Rasmus Ahmt Hansen and Søren Kildahl and Jacob Wienecke},
         doi = {10.18112/openneuro.ds004017.v1.0.3},
         url = {https://doi.org/10.18112/openneuro.ds004017.v1.0.3},
@@ -68,7 +68,7 @@ Highlights
 
       - Channels: 64
       - Sampling rate (Hz): 2048.0
-      - Duration (hours): 0.0
+      - Duration (hours): 0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
@@ -80,7 +80,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 20.9 GB
+      - Size on disk: 20.93 GB
       - File count: 63
       - Format: BIDS
 
@@ -104,18 +104,17 @@ Quickstart
 
 .. code-block:: bash
 
-    pip install eegdash
+   pip install eegdash
 
-**Access the data**
+**Load a recording**
 
 .. code-block:: python
 
-    from eegdash.dataset import DS004017
+   from eegdash.dataset import DS004017
 
-    dataset = DS004017(cache_dir="./data")
-    # Get the raw object of the first recording
-    raw = dataset.datasets[0].raw
-    print(raw.info)
+   dataset = DS004017(cache_dir="./data")
+   recording = dataset[0]
+   raw = recording.load()
 
 **Filter/query**
 

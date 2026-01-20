@@ -5,15 +5,15 @@
 eegdash.dataset.DS005662
 ========================
 
-participants.tsv (OpenNeuro ``ds005662``). Access recordings and metadata through EEGDash.
+A high-quality EEG dataset for studying visual touch perception (OpenNeuro ``ds005662``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 80` :bdg-secondary:`Recordings: 80`
+:bdg-light:`Modality: ['eeg']` :bdg-light:`Tasks: 1` :bdg-light:`Subjects: 80` :bdg-light:`Recordings: 80`
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-light:`License: CC0` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -25,7 +25,7 @@ Dataset Information
    * - Dataset ID
      - ``DS005662``
    * - Title
-     - participants.tsv
+     - A high-quality EEG dataset for studying visual touch perception
    * - Year
      - 2024
    * - Authors
@@ -44,7 +44,7 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds005662,
-        title = {participants.tsv},
+        title = {A high-quality EEG dataset for studying visual touch perception},
         author = {Sophie Smit and Almudena Ramírez-Haro and Manuel Varlet and Denise Moerel and Genevieve L. Quek and Tijl Grootswagers},
         doi = {10.18112/openneuro.ds005662.v2.0.0},
         url = {https://doi.org/10.18112/openneuro.ds005662.v2.0.0},
@@ -68,7 +68,7 @@ Highlights
 
       - Channels: —
       - Sampling rate (Hz): —
-      - Duration (hours): 0.0
+      - Duration (hours): 0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
@@ -80,7 +80,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 107.8 GB
+      - Size on disk: 107.81 GB
       - File count: 80
       - Format: BIDS
 
@@ -104,18 +104,17 @@ Quickstart
 
 .. code-block:: bash
 
-    pip install eegdash
+   pip install eegdash
 
-**Access the data**
+**Load a recording**
 
 .. code-block:: python
 
-    from eegdash.dataset import DS005662
+   from eegdash.dataset import DS005662
 
-    dataset = DS005662(cache_dir="./data")
-    # Get the raw object of the first recording
-    raw = dataset.datasets[0].raw
-    print(raw.info)
+   dataset = DS005662(cache_dir="./data")
+   recording = dataset[0]
+   raw = recording.load()
 
 **Filter/query**
 

@@ -5,15 +5,15 @@
 eegdash.dataset.DS002336
 ========================
 
-task-fmriNF_channels.tsv (OpenNeuro ``ds002336``). Access recordings and metadata through EEGDash.
+A multi-modal human neuroimaging dataset for data integration: simultaneous EEG and fMRI acquisition during a motor imagery neurofeedback task: XP1 (OpenNeuro ``ds002336``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 6` :bdg-secondary:`Subjects: 10` :bdg-secondary:`Recordings: 54`
+:bdg-light:`Modality: ['eeg']` :bdg-light:`Tasks: 6` :bdg-light:`Subjects: 10` :bdg-light:`Recordings: 54`
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-light:`License: CC0` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -25,7 +25,7 @@ Dataset Information
    * - Dataset ID
      - ``DS002336``
    * - Title
-     - task-fmriNF_channels.tsv
+     - A multi-modal human neuroimaging dataset for data integration: simultaneous EEG and fMRI acquisition during a motor imagery neurofeedback task: XP1
    * - Year
      - 2019
    * - Authors
@@ -44,7 +44,7 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds002336,
-        title = {task-fmriNF_channels.tsv},
+        title = {A multi-modal human neuroimaging dataset for data integration: simultaneous EEG and fMRI acquisition during a motor imagery neurofeedback task: XP1},
         author = {Giulia Lioi and Claire Cury and Lorraine Perronnet and Marsel Mano and Elise Bannier and Anatole Lecuyer and Christian Barillot},
         doi = {10.18112/openneuro.ds002336.v2.0.2},
         url = {https://doi.org/10.18112/openneuro.ds002336.v2.0.2},
@@ -68,7 +68,7 @@ Highlights
 
       - Channels: —
       - Sampling rate (Hz): —
-      - Duration (hours): 0.0
+      - Duration (hours): 0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
@@ -80,7 +80,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 16.8 GB
+      - Size on disk: 16.81 GB
       - File count: 54
       - Format: BIDS
 
@@ -104,18 +104,17 @@ Quickstart
 
 .. code-block:: bash
 
-    pip install eegdash
+   pip install eegdash
 
-**Access the data**
+**Load a recording**
 
 .. code-block:: python
 
-    from eegdash.dataset import DS002336
+   from eegdash.dataset import DS002336
 
-    dataset = DS002336(cache_dir="./data")
-    # Get the raw object of the first recording
-    raw = dataset.datasets[0].raw
-    print(raw.info)
+   dataset = DS002336(cache_dir="./data")
+   recording = dataset[0]
+   raw = recording.load()
 
 **Filter/query**
 

@@ -5,15 +5,15 @@
 eegdash.dataset.DS002338
 ========================
 
-task-1dNF_channels.tsv (OpenNeuro ``ds002338``). Access recordings and metadata through EEGDash.
+A multi-modal human neuroimaging dataset for data integration: simultaneous EEG and fMRI acquisition during a motor imagery neurofeedback task: XP2 (OpenNeuro ``ds002338``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 4` :bdg-secondary:`Subjects: 17` :bdg-secondary:`Recordings: 85`
+:bdg-light:`Modality: ['eeg']` :bdg-light:`Tasks: 4` :bdg-light:`Subjects: 17` :bdg-light:`Recordings: 85`
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-light:`License: CC0` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -25,7 +25,7 @@ Dataset Information
    * - Dataset ID
      - ``DS002338``
    * - Title
-     - task-1dNF_channels.tsv
+     - A multi-modal human neuroimaging dataset for data integration: simultaneous EEG and fMRI acquisition during a motor imagery neurofeedback task: XP2
    * - Year
      - 2019
    * - Authors
@@ -44,7 +44,7 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds002338,
-        title = {task-1dNF_channels.tsv},
+        title = {A multi-modal human neuroimaging dataset for data integration: simultaneous EEG and fMRI acquisition during a motor imagery neurofeedback task: XP2},
         author = {Giulia Lioi and Claire Cury and Lorraine Perronnet and Marsel Mano and Elise Bannier and Anatole Lecuyer and Christian Barillot},
         doi = {10.18112/openneuro.ds002338.v2.0.1},
         url = {https://doi.org/10.18112/openneuro.ds002338.v2.0.1},
@@ -68,7 +68,7 @@ Highlights
 
       - Channels: —
       - Sampling rate (Hz): —
-      - Duration (hours): 0.0
+      - Duration (hours): 0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
@@ -80,7 +80,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 24.2 GB
+      - Size on disk: 24.24 GB
       - File count: 85
       - Format: BIDS
 
@@ -104,18 +104,17 @@ Quickstart
 
 .. code-block:: bash
 
-    pip install eegdash
+   pip install eegdash
 
-**Access the data**
+**Load a recording**
 
 .. code-block:: python
 
-    from eegdash.dataset import DS002338
+   from eegdash.dataset import DS002338
 
-    dataset = DS002338(cache_dir="./data")
-    # Get the raw object of the first recording
-    raw = dataset.datasets[0].raw
-    print(raw.info)
+   dataset = DS002338(cache_dir="./data")
+   recording = dataset[0]
+   raw = recording.load()
 
 **Filter/query**
 

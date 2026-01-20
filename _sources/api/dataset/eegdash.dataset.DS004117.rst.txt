@@ -5,15 +5,15 @@
 eegdash.dataset.DS004117
 ========================
 
-participants.tsv (OpenNeuro ``ds004117``). Access recordings and metadata through EEGDash.
+Sternberg Working Memory (OpenNeuro ``ds004117``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 23` :bdg-secondary:`Recordings: 85`
+:bdg-light:`Modality: ['eeg']` :bdg-light:`Tasks: 1` :bdg-light:`Subjects: 23` :bdg-light:`Recordings: 85`
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-light:`License: CC0` :bdg-light:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -25,7 +25,7 @@ Dataset Information
    * - Dataset ID
      - ``DS004117``
    * - Title
-     - participants.tsv
+     - Sternberg Working Memory
    * - Year
      - 2022
    * - Authors
@@ -44,7 +44,7 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds004117,
-        title = {participants.tsv},
+        title = {Sternberg Working Memory},
         author = {Julie Onton (data) and Scott Makeig (data and curation) and Arnaud Delorme (data and curation) and Dung Truong (curation) and Kay Robbins (curation)},
         doi = {10.18112/openneuro.ds004117.v1.0.1},
         url = {https://doi.org/10.18112/openneuro.ds004117.v1.0.1},
@@ -67,8 +67,8 @@ Highlights
       :class-card: sd-border-1
 
       - Channels: 69
-      - Sampling rate (Hz): 500.059 (22), 500.0 (48), 1000.0 (6), 250.0 (94)
-      - Duration (hours): 0.0
+      - Sampling rate (Hz): 250.0 (47), 1000.0 (3), 500.0 (24), 500.059 (11)
+      - Duration (hours): 0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
@@ -80,7 +80,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 5.8 GB
+      - Size on disk: 5.80 GB
       - File count: 85
       - Format: BIDS
 
@@ -104,18 +104,17 @@ Quickstart
 
 .. code-block:: bash
 
-    pip install eegdash
+   pip install eegdash
 
-**Access the data**
+**Load a recording**
 
 .. code-block:: python
 
-    from eegdash.dataset import DS004117
+   from eegdash.dataset import DS004117
 
-    dataset = DS004117(cache_dir="./data")
-    # Get the raw object of the first recording
-    raw = dataset.datasets[0].raw
-    print(raw.info)
+   dataset = DS004117(cache_dir="./data")
+   recording = dataset[0]
+   raw = recording.load()
 
 **Filter/query**
 

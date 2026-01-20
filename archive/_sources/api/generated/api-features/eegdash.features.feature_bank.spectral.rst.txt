@@ -1,0 +1,29 @@
+﻿eegdash.features.feature\_bank.spectral
+=======================================
+
+.. automodule:: eegdash.features.feature_bank.spectral
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :member-order: bysource
+   :no-index:
+
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      spectral_preprocessor
+      spectral_normalized_preprocessor
+      spectral_db_preprocessor
+      spectral_root_total_power
+      spectral_moment
+      spectral_entropy
+      spectral_edge
+      spectral_slope
+      spectral_bands_power
+      spectral_hjorth_activity
+      spectral_hjorth_mobility
+      spectral_hjorth_complexity
+   
+

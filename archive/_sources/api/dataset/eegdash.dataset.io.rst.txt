@@ -1,0 +1,8 @@
+eegdash.dataset.io module
+=========================
+
+.. automodule:: eegdash.dataset.io
+   :members:
+   :noindex:
+   :show-inheritance:
+   :undoc-members:

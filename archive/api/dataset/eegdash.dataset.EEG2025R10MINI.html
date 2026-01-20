@@ -1,0 +1,968 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" data-theme="light">
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>eegdash.dataset.EEG2025R10MINI &#8212; EEG Dash</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "light";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=d2d258e8" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bm/dt-1.13.4/datatables.min.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/select/1.7.0/css/select.dataTables.min.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/searchpanes/2.3.1/css/searchPanes.dataTables.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=7021f170" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/treemap.css?v=7131b20f" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=75d7bb15" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../../_static/documentation_options.js?v=1dd76d02"></script>
+    <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=8c005784"></script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'api/dataset/eegdash.dataset.EEG2025R10MINI';</script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.datatables.net/v/bm/dt-1.13.4/datatables.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/select/1.7.0/js/dataTables.select.min.js"></script>
+    <script src="https://cdn.datatables.net/searchpanes/2.3.1/js/dataTables.searchPanes.min.js"></script>
+    <script src="../../_static/js/tag-palette.js?v=6f5eac9a"></script>
+    <script src="../../_static/js/datatables-init.js?v=0986bc1f"></script>
+    <script src="../../_static/js/hero-search.js?v=d34ab722"></script>
+    <link rel="canonical" href="https://eegdash.org/api/dataset/eegdash.dataset.EEG2025R10MINI.html" />
+    <link rel="icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="eegdash.dataset.EEG2025R11" href="eegdash.dataset.EEG2025R11.html" />
+    <link rel="prev" title="eegdash.dataset.EEG2025R10" href="eegdash.dataset.EEG2025R10.html" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="0.5" />
+  <!-- Google Tag Manager -->
+  <script>
+    (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-MXC3DGL6');
+  </script>
+  <!-- End Google Tag Manager -->
+
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="light">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+    
+    
+    
+    <img src="../../_static/eegdash_long.svg" class="logo__image only-light" alt="EEG Dash Logo"/>
+    <img src="../../_static/eegdash_long.svg" class="logo__image only-dark pst-js-only" alt="EEG Dash Logo"/>
+  
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../dataset_summary.html">
+    Datasets
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../user_guide.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../install/install.html">
+    Install
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../generated/auto_examples/index.html">
+    Examples
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../api.html">
+    Docs
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://eeg2025.github.io/">
+    EEG2025
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="External Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/eegdash/EEGDash" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://pypi.org/project/eegdash/" title="PyPI" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-box fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">PyPI</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://eegdash.org/EEGDash" title="Docs (Stable)" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-book fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Docs (Stable)</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://discord.gg/8jd7nVKwsc" title="Discord" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-discord fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Discord</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../dataset_summary.html">
+    Datasets
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../user_guide.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../install/install.html">
+    Install
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../generated/auto_examples/index.html">
+    Examples
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../api.html">
+    Docs
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://eeg2025.github.io/">
+    EEG2025
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="External Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/eegdash/EEGDash" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://pypi.org/project/eegdash/" title="PyPI" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-box fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">PyPI</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://eegdash.org/EEGDash" title="Docs (Stable)" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-book fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Docs (Stable)</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://discord.gg/8jd7nVKwsc" title="Discord" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-discord fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Discord</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../api_core.html">Core API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_features.html">Feature API</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="api_dataset.html">Datasets API</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="eegdash.EEGDashDataset.html">EEGDashDataset</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.dataset.EEGChallengeDataset.html">EEGChallengeDataset</a></li>
+<li class="toctree-l2 current active has-children"><a class="reference internal" href="source_nemar.html">Nemar Datasets</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="eegdash.dataset.EEG2025R1.html">eegdash.dataset.EEG2025R1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eegdash.dataset.EEG2025R10.html">eegdash.dataset.EEG2025R10</a></li>
+<li class="toctree-l3 current active"><a class="current reference internal" href="#">eegdash.dataset.EEG2025R10MINI</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eegdash.dataset.EEG2025R11.html">eegdash.dataset.EEG2025R11</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eegdash.dataset.EEG2025R11MINI.html">eegdash.dataset.EEG2025R11MINI</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eegdash.dataset.EEG2025R1MINI.html">eegdash.dataset.EEG2025R1MINI</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eegdash.dataset.EEG2025R2.html">eegdash.dataset.EEG2025R2</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eegdash.dataset.EEG2025R2MINI.html">eegdash.dataset.EEG2025R2MINI</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eegdash.dataset.EEG2025R3.html">eegdash.dataset.EEG2025R3</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eegdash.dataset.EEG2025R3MINI.html">eegdash.dataset.EEG2025R3MINI</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eegdash.dataset.EEG2025R4.html">eegdash.dataset.EEG2025R4</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eegdash.dataset.EEG2025R4MINI.html">eegdash.dataset.EEG2025R4MINI</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eegdash.dataset.EEG2025R5.html">eegdash.dataset.EEG2025R5</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eegdash.dataset.EEG2025R5MINI.html">eegdash.dataset.EEG2025R5MINI</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eegdash.dataset.EEG2025R6.html">eegdash.dataset.EEG2025R6</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eegdash.dataset.EEG2025R6MINI.html">eegdash.dataset.EEG2025R6MINI</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eegdash.dataset.EEG2025R7.html">eegdash.dataset.EEG2025R7</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eegdash.dataset.EEG2025R7MINI.html">eegdash.dataset.EEG2025R7MINI</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eegdash.dataset.EEG2025R8.html">eegdash.dataset.EEG2025R8</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eegdash.dataset.EEG2025R8MINI.html">eegdash.dataset.EEG2025R8MINI</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eegdash.dataset.EEG2025R9.html">eegdash.dataset.EEG2025R9</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eegdash.dataset.EEG2025R9MINI.html">eegdash.dataset.EEG2025R9MINI</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eegdash.dataset.NM000103.html">eegdash.dataset.NM000103</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eegdash.dataset.NM000104.html">eegdash.dataset.NM000104</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eegdash.dataset.NM000105.html">eegdash.dataset.NM000105</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eegdash.dataset.NM000106.html">eegdash.dataset.NM000106</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eegdash.dataset.NM000107.html">eegdash.dataset.NM000107</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="source_openneuro.html">Openneuro Datasets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="source_other.html">Other Datasets</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer_notes.html">Developer Notes</a></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../api.html" class="nav-link">API Reference</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="api_dataset.html" class="nav-link">Datasets API</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="source_nemar.html" class="nav-link">Nemar Datasets</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">eegdash.dataset.EEG2025R10MINI</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="eegdash-dataset-eeg2025r10mini">
+<h1>eegdash.dataset.EEG2025R10MINI<a class="headerlink" href="#eegdash-dataset-eeg2025r10mini" title="Link to this heading">#</a></h1>
+<p>Healthy Brain Network (HBN) EEG - Release 10 (BDF Converted) (OpenNeuro <code class="docutils literal notranslate"><span class="pre">eeg2025r10mini</span></code>). Access recordings and metadata through EEGDash.</p>
+<p class="sd-badges"><span class="sd-sphinx-override sd-badge sd-bg-primary sd-bg-text-primary">Modality: [‘eeg’]</span> <span class="sd-sphinx-override sd-badge sd-bg-info sd-bg-text-info">Tasks: 8</span> <span class="sd-sphinx-override sd-badge sd-bg-secondary sd-bg-text-secondary">Subjects: 20</span> <span class="sd-sphinx-override sd-badge sd-bg-secondary sd-bg-text-secondary">Recordings: 220</span></p>
+<p class="sd-badges"><span class="sd-sphinx-override sd-badge sd-bg-success sd-bg-text-success">License: CC-BY-SA 4.0</span> <span class="sd-sphinx-override sd-badge sd-bg-warning sd-bg-text-warning">Source: nemar</span></p>
+<section id="dataset-information">
+<h2>Dataset Information<a class="headerlink" href="#dataset-information" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="table">
+<colgroup>
+<col style="width: 25.0%" />
+<col style="width: 75.0%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Dataset ID</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">EEG2025R10MINI</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>Title</p></td>
+<td><p>Healthy Brain Network (HBN) EEG - Release 10 (BDF Converted)</p></td>
+</tr>
+<tr class="row-odd"><td><p>Year</p></td>
+<td><p>20</p></td>
+</tr>
+<tr class="row-even"><td><p>Authors</p></td>
+<td><p>Seyed Yahya Shirazi, Alexandre Franco, Maurício Scopel Hoffmann, Nathalia B. Esper, Dung Truong, Arnaud Delorme, Michael Milham, Scott Makeig</p></td>
+</tr>
+<tr class="row-odd"><td><p>License</p></td>
+<td><p>CC-BY-SA 4.0</p></td>
+</tr>
+<tr class="row-even"><td><p>Citation / DOI</p></td>
+<td><p>Unknown</p></td>
+</tr>
+<tr class="row-odd"><td><p>Source links</p></td>
+<td><p><a class="reference external" href="https://openneuro.org/datasets/eeg2025r10mini">OpenNeuro</a> | <a class="reference external" href="https://nemar.org/dataexplorer/detail?dataset_id=eeg2025r10mini">NeMAR</a> | <a class="reference external" href="https://nemar.org/dataexplorer/detail/EEG2025r10mini">Source URL</a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="highlights">
+<h2>Highlights<a class="headerlink" href="#highlights" title="Link to this heading">#</a></h2>
+<div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-3 sd-row-cols-lg-3 sd-g-2 sd-g-xs-2 sd-g-sm-2 sd-g-md-2 sd-g-lg-2 docutils">
+<div class="sd-col sd-d-flex-row docutils">
+<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm sd-border-1 docutils">
+<div class="sd-card-body docutils">
+<div class="sd-card-title sd-font-weight-bold docutils">
+Subjects &amp; recordings</div>
+<ul class="simple">
+<li><p class="sd-card-text">Subjects: 20</p></li>
+<li><p class="sd-card-text">Recordings: 220</p></li>
+<li><p class="sd-card-text">Tasks: 8</p></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sd-col sd-d-flex-row docutils">
+<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm sd-border-1 docutils">
+<div class="sd-card-body docutils">
+<div class="sd-card-title sd-font-weight-bold docutils">
+Channels &amp; sampling rate</div>
+<ul class="simple">
+<li><p class="sd-card-text">Channels: 129</p></li>
+<li><p class="sd-card-text">Sampling rate (Hz): 100.0</p></li>
+<li><p class="sd-card-text">Duration (hours): 0</p></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sd-col sd-d-flex-row docutils">
+<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm sd-border-1 docutils">
+<div class="sd-card-body docutils">
+<div class="sd-card-title sd-font-weight-bold docutils">
+Tasks &amp; conditions</div>
+<ul class="simple">
+<li><p class="sd-card-text">Tasks: 8</p></li>
+<li><p class="sd-card-text">Experiment type: —</p></li>
+<li><p class="sd-card-text">Subject type: —</p></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sd-col sd-d-flex-row docutils">
+<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm sd-border-1 docutils">
+<div class="sd-card-body docutils">
+<div class="sd-card-title sd-font-weight-bold docutils">
+Files &amp; format</div>
+<ul class="simple">
+<li><p class="sd-card-text">Size on disk: —</p></li>
+<li><p class="sd-card-text">File count: 220</p></li>
+<li><p class="sd-card-text">Format: BIDS</p></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sd-col sd-d-flex-row docutils">
+<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm sd-border-1 docutils">
+<div class="sd-card-body docutils">
+<div class="sd-card-title sd-font-weight-bold docutils">
+License &amp; citation</div>
+<ul class="simple">
+<li><p class="sd-card-text">License: CC-BY-SA 4.0</p></li>
+<li><p class="sd-card-text">DOI: —</p></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sd-col sd-d-flex-row docutils">
+<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm sd-border-1 docutils">
+<div class="sd-card-body docutils">
+<div class="sd-card-title sd-font-weight-bold docutils">
+Provenance</div>
+<ul class="simple">
+<li><p class="sd-card-text">Source: nemar</p></li>
+<li><p class="sd-card-text">OpenNeuro: <a class="reference external" href="https://openneuro.org/datasets/eeg2025r10mini">eeg2025r10mini</a></p></li>
+<li><p class="sd-card-text">NeMAR: <a class="reference external" href="https://nemar.org/dataexplorer/detail?dataset_id=eeg2025r10mini">eeg2025r10mini</a></p></li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="quickstart">
+<h2>Quickstart<a class="headerlink" href="#quickstart" title="Link to this heading">#</a></h2>
+<p><strong>Install</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>eegdash
+</pre></div>
+</div>
+<p><strong>Access the data</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">eegdash.dataset</span><span class="w"> </span><span class="kn">import</span> <span class="n">EEG2025R10MINI</span>
+
+<span class="n">dataset</span> <span class="o">=</span> <span class="n">EEG2025R10MINI</span><span class="p">(</span><span class="n">cache_dir</span><span class="o">=</span><span class="s2">&quot;./data&quot;</span><span class="p">)</span>
+<span class="c1"># Get the raw object of the first recording</span>
+<span class="n">raw</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">datasets</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">raw</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">raw</span><span class="o">.</span><span class="n">info</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Filter/query</strong></p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-0" name="sd-tab-set-0" type="radio">
+<label class="sd-tab-label" for="sd-tab-item-0">
+Basic</label><div class="sd-tab-content docutils">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">dataset</span> <span class="o">=</span> <span class="n">EEG2025R10MINI</span><span class="p">(</span><span class="n">cache_dir</span><span class="o">=</span><span class="s2">&quot;./data&quot;</span><span class="p">,</span> <span class="n">subject</span><span class="o">=</span><span class="s2">&quot;01&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<input id="sd-tab-item-1" name="sd-tab-set-0" type="radio">
+<label class="sd-tab-label" for="sd-tab-item-1">
+Advanced</label><div class="sd-tab-content docutils">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">dataset</span> <span class="o">=</span> <span class="n">EEG2025R10MINI</span><span class="p">(</span>
+    <span class="n">cache_dir</span><span class="o">=</span><span class="s2">&quot;./data&quot;</span><span class="p">,</span>
+    <span class="n">query</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;subject&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;$in&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;01&quot;</span><span class="p">,</span> <span class="s2">&quot;02&quot;</span><span class="p">]}},</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="quality-caveats">
+<h2>Quality &amp; caveats<a class="headerlink" href="#quality-caveats" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>No dataset-specific caveats are listed in the available metadata.</p></li>
+</ul>
+</section>
+<section id="api">
+<h2>API<a class="headerlink" href="#api" title="Link to this heading">#</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="eegdash.dataset.EEG2025R10MINI">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">eegdash.dataset.</span></span><span class="sig-name descname"><span class="pre">EEG2025R10MINI</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cache_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">query</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s3_bucket</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/dataset/dataset.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.dataset.EEG2025R10MINI" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="eegdash.EEGDashDataset.html#eegdash.EEGDashDataset" title="eegdash.dataset.dataset.EEGDashDataset"><code class="xref py py-class docutils literal notranslate"><span class="pre">EEGDashDataset</span></code></a></p>
+<p>OpenNeuro dataset <code class="docutils literal notranslate"><span class="pre">EEG2025r10mini</span></code>. Modality: <code class="docutils literal notranslate"><span class="pre">eeg</span></code>; Experiment type: <code class="docutils literal notranslate"><span class="pre">Unknown</span></code>; Subject type: <code class="docutils literal notranslate"><span class="pre">Unknown</span></code>.
+Subjects: 20; recordings: 220; tasks: 8.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cache_dir</strong> (<em>str</em><em> | </em><em>Path</em>) – Directory where data are cached locally.</p></li>
+<li><p><strong>query</strong> (<em>dict</em><em> | </em><em>None</em>) – Additional MongoDB-style filters to AND with the dataset selection.
+Must not contain the key <code class="docutils literal notranslate"><span class="pre">dataset</span></code>.</p></li>
+<li><p><strong>s3_bucket</strong> (<em>str</em><em> | </em><em>None</em>) – Base S3 bucket used to locate the data.</p></li>
+<li><p><strong>**kwargs</strong> (<em>dict</em>) – Additional keyword arguments forwarded to <a class="reference internal" href="eegdash.EEGDashDataset.html#eegdash.EEGDashDataset" title="eegdash.dataset.dataset.EEGDashDataset"><code class="xref py py-class docutils literal notranslate"><span class="pre">EEGDashDataset</span></code></a>.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="eegdash.dataset.EEG2025R10MINI.data_dir">
+<span class="sig-name descname"><span class="pre">data_dir</span></span><a class="headerlink" href="#eegdash.dataset.EEG2025R10MINI.data_dir" title="Link to this definition">#</a></dt>
+<dd><p>Local dataset cache directory (<code class="docutils literal notranslate"><span class="pre">cache_dir</span> <span class="pre">/</span> <span class="pre">dataset_id</span></code>).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Path</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="eegdash.dataset.EEG2025R10MINI.query">
+<span class="sig-name descname"><span class="pre">query</span></span><a class="headerlink" href="#eegdash.dataset.EEG2025R10MINI.query" title="Link to this definition">#</a></dt>
+<dd><p>Merged query with the dataset filter applied.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="eegdash.dataset.EEG2025R10MINI.records">
+<span class="sig-name descname"><span class="pre">records</span></span><a class="headerlink" href="#eegdash.dataset.EEG2025R10MINI.records" title="Link to this definition">#</a></dt>
+<dd><p>Metadata records used to build the dataset, if pre-fetched.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[dict] | None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<p class="rubric">Notes</p>
+<p>Each item is a recording; recording-level metadata are available via <code class="docutils literal notranslate"><span class="pre">dataset.description</span></code>.
+<code class="docutils literal notranslate"><span class="pre">query</span></code> supports MongoDB-style filters on fields in <code class="docutils literal notranslate"><span class="pre">ALLOWED_QUERY_FIELDS</span></code> and is combined with the dataset filter.
+Dataset-specific caveats are not provided in the summary metadata.</p>
+<p class="rubric">References</p>
+<p>OpenNeuro dataset: <a class="reference external" href="https://openneuro.org/datasets/EEG2025r10mini">https://openneuro.org/datasets/EEG2025r10mini</a>
+NeMAR dataset: <a class="reference external" href="https://nemar.org/dataexplorer/detail?dataset_id=EEG2025r10mini">https://nemar.org/dataexplorer/detail?dataset_id=EEG2025r10mini</a></p>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">eegdash.dataset</span><span class="w"> </span><span class="kn">import</span> <span class="n">EEG2025R10MINI</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dataset</span> <span class="o">=</span> <span class="n">EEG2025R10MINI</span><span class="p">(</span><span class="n">cache_dir</span><span class="o">=</span><span class="s2">&quot;./data&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">recording</span> <span class="o">=</span> <span class="n">dataset</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">raw</span> <span class="o">=</span> <span class="n">recording</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="eegdash.dataset.EEG2025R10MINI.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cache_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">query</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s3_bucket</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/dataset/registry.py#L91-L108"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.dataset.EEG2025R10MINI.__init__" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eegdash.dataset.EEG2025R10MINI.save">
+<span class="sig-name descname"><span class="pre">save</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/dataset/dataset.py#L632-L647"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.dataset.EEG2025R10MINI.save" title="Link to this definition">#</a></dt>
+<dd><p>Save the dataset to disk.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> (<em>str</em><em> or </em><em>Path</em>) – Destination file path.</p></li>
+<li><p><strong>overwrite</strong> (<em>bool</em><em>, </em><em>default False</em>) – If True, overwrite existing file.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="see-also">
+<h2>See Also<a class="headerlink" href="#see-also" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><code class="xref py py-class docutils literal notranslate"><span class="pre">eegdash.dataset.EEGDashDataset</span></code></p></li>
+<li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">eegdash.dataset</span></code></p></li>
+<li><p><a class="reference external" href="https://openneuro.org/datasets/eeg2025r10mini">OpenNeuro dataset page</a></p></li>
+<li><p><a class="reference external" href="https://nemar.org/dataexplorer/detail?dataset_id=eeg2025r10mini">NeMAR dataset page</a></p></li>
+</ul>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="eegdash.dataset.EEG2025R10.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">eegdash.dataset.EEG2025R10</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="eegdash.dataset.EEG2025R11.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">eegdash.dataset.EEG2025R11</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dataset-information">Dataset Information</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#highlights">Highlights</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#quickstart">Quickstart</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#quality-caveats">Quality &amp; caveats</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#api">API</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.dataset.EEG2025R10MINI"><code class="docutils literal notranslate"><span class="pre">EEG2025R10MINI</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.dataset.EEG2025R10MINI.data_dir"><code class="docutils literal notranslate"><span class="pre">EEG2025R10MINI.data_dir</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.dataset.EEG2025R10MINI.query"><code class="docutils literal notranslate"><span class="pre">EEG2025R10MINI.query</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.dataset.EEG2025R10MINI.records"><code class="docutils literal notranslate"><span class="pre">EEG2025R10MINI.records</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.dataset.EEG2025R10MINI.__init__"><code class="docutils literal notranslate"><span class="pre">EEG2025R10MINI.__init__()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.dataset.EEG2025R10MINI.save"><code class="docutils literal notranslate"><span class="pre">EEG2025R10MINI.save()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#see-also">See Also</a></li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+
+  
+  <div class="tocsection editthispage">
+    <a href="https://github.com/eegdash/EEGDash/edit/develop/docs/source/api/dataset/eegdash.dataset.EEG2025R10MINI.rst">
+      <i class="fa-solid fa-pencil"></i>
+      
+      
+        
+          Edit on GitHub
+        
+      
+    </a>
+  </div>
+</div>
+
+  <div class="sidebar-secondary-item">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/api/dataset/eegdash.dataset.EEG2025R10MINI.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2025-2026, EEG Dash Developers.
+      <br/>
+    
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

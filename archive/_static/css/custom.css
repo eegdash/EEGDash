@@ -1,0 +1,64 @@
+/* Layout width overrides for pydata-sphinx-theme */
+
+/* 1) Widen the article content (default is ~60em) */
+.bd-main .bd-content .bd-article-container {
+  max-width: clamp(70rem, 92vw, 110rem);
+}
+
+/* 2) Widen the overall page container (default is ~88rem) */
+.bd-page-width {
+  max-width: clamp(80rem, 96vw, 130rem);
+}x
+
+/* Copy button styling to match EEGDash surfaces */
+.highlight button.copybtn {
+  background-color: rgba(0, 108, 163, 0.08);
+  border-color: rgba(0, 108, 163, 0.25);
+  color: var(--eegdash-primary);
+}
+
+.highlight button.copybtn:hover {
+  background-color: rgba(0, 108, 163, 0.15);
+}
+
+html[data-theme="dark"] .highlight button.copybtn {
+  background-color: rgba(15, 23, 42, 0.85);
+  border-color: rgba(148, 163, 184, 0.4);
+  color: #e2e8f0;
+}
+
+
+/* Card Height Fix - Ensure cards in grids stretch to full height */
+.sd-card {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+.sd-card-body {
+    flex: 1 1 auto;
+}
+.sd-card-footer {
+    margin-top: auto;
+}
+
+/* Navbar Wrapping Fix for mid-sized screens */
+@media (min-width: 960px) and (max-width: 1250px) {
+    .navbar-brand {
+        margin-right: 0.5rem;
+    }
+    .navbar-nav {
+        font-size: 0.9rem;
+        gap: 0.5rem;
+    }
+    .bd-header .navbar-nav .nav-link {
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+    }
+}
+
+/* Badge Tweaks */
+.sd-badges .sd-badge {
+    font-weight: 500;
+    letter-spacing: 0.02em;
+}
+

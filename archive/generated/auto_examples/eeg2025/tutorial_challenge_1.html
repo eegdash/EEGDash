@@ -1,0 +1,1460 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../" data-theme="light">
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta content="true" name="html_theme.sidebar_secondary.remove" />
+
+    <title>Challenge 1: Cross-Task Transfer Learning! &#8212; EEG Dash</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "light";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery.css?v=d2d258e8" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bm/dt-1.13.4/datatables.min.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/select/1.7.0/css/select.dataTables.min.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/searchpanes/2.3.1/css/searchPanes.dataTables.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=7021f170" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/treemap.css?v=7131b20f" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=75d7bb15" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../../../_static/documentation_options.js?v=1dd76d02"></script>
+    <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../_static/copybutton.js?v=8c005784"></script>
+    <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'generated/auto_examples/eeg2025/tutorial_challenge_1';</script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.datatables.net/v/bm/dt-1.13.4/datatables.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/select/1.7.0/js/dataTables.select.min.js"></script>
+    <script src="https://cdn.datatables.net/searchpanes/2.3.1/js/dataTables.searchPanes.min.js"></script>
+    <script src="../../../_static/js/tag-palette.js?v=6f5eac9a"></script>
+    <script src="../../../_static/js/datatables-init.js?v=0986bc1f"></script>
+    <script src="../../../_static/js/hero-search.js?v=d34ab722"></script>
+    <link rel="canonical" href="https://eegdash.org/generated/auto_examples/eeg2025/tutorial_challenge_1.html" />
+    <link rel="icon" href="../../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Challenge 2: Predicting the p-factor from EEG" href="tutorial_challenge_2.html" />
+    <link rel="prev" title="Minimal Tutorial" href="../core/tutorial_minimal.html" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="0.5" />
+  <!-- Google Tag Manager -->
+  <script>
+    (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-MXC3DGL6');
+  </script>
+  <!-- End Google Tag Manager -->
+
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="light">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../index.html">
+  
+  
+  
+  
+  
+    
+    
+    
+    <img src="../../../_static/eegdash_long.svg" class="logo__image only-light" alt="EEG Dash Logo"/>
+    <img src="../../../_static/eegdash_long.svg" class="logo__image only-dark pst-js-only" alt="EEG Dash Logo"/>
+  
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../dataset_summary.html">
+    Datasets
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../user_guide.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../install/install.html">
+    Install
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    Examples
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../api/api.html">
+    Docs
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://eeg2025.github.io/">
+    EEG2025
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="External Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/eegdash/EEGDash" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://pypi.org/project/eegdash/" title="PyPI" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-box fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">PyPI</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://eegdash.org/EEGDash" title="Docs (Stable)" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-book fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Docs (Stable)</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://discord.gg/8jd7nVKwsc" title="Discord" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-discord fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Discord</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../dataset_summary.html">
+    Datasets
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../user_guide.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../install/install.html">
+    Install
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    Examples
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../api/api.html">
+    Docs
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://eeg2025.github.io/">
+    EEG2025
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="External Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/eegdash/EEGDash" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://pypi.org/project/eegdash/" title="PyPI" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-box fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">PyPI</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://eegdash.org/EEGDash" title="Docs (Stable)" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-book fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Docs (Stable)</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://discord.gg/8jd7nVKwsc" title="Discord" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-discord fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Discord</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../core/p300_transfer_learning.html">EEG P3 Transfer Learning with AS-MMD</a></li>
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../core/tutorial_eoec.html">Eyes Open vs. Closed Classification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../core/tutorial_feature_extractor_open_close_eye.html">EEGDash Feature Extractor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../core/tutorial_minimal.html">Minimal Tutorial</a></li>
+</ul>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Challenge 1: Cross-Task Transfer Learning!</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_challenge_2.html">Challenge 2: Predicting the p-factor from EEG</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_eegdash_offline.html">Working Offline with EEGDash</a></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">Tutorials!</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Challenge 1: Cross-Task Transfer Learning!</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p><a class="reference internal" href="#sphx-glr-download-generated-auto-examples-eeg2025-tutorial-challenge-1-py"><span class="std std-ref">Go to the end</span></a>
+to download the full example code or to run this example in your browser via Binder.</p>
+</div>
+<section class="sphx-glr-example-title" id="challenge-1-cross-task-transfer-learning">
+<span id="sphx-glr-generated-auto-examples-eeg2025-tutorial-challenge-1-py"></span><h1>Challenge 1: Cross-Task Transfer Learning!<a class="headerlink" href="#challenge-1-cross-task-transfer-learning" title="Link to this heading">#</a></h1><div class="eegdash-reading-time" role="note"><span class="eegdash-reading-time__label">Estimated reading time:</span><span class="eegdash-reading-time__value">8 minutes</span></div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1">#</span>
+</pre></div>
+</div>
+<a class="reference external image-reference" href="https://colab.research.google.com/github/eeg2025/startkit/blob/main/challenge_1.ipynb"><img alt="Open In Colab" src="https://colab.research.google.com/assets/colab-badge.svg" />
+</a>
+<hr class="docutils" />
+<blockquote>
+<div><p><strong>Preliminary notes</strong></p>
+<p>Before we begin, I just want to make a deal with you, ok?
+This is a community competition with a strong open-source foundation.
+When I say open-source, I mean volunteer work.</p>
+<p>So, if you see something that does not work or could be improved, first, <strong>please be kind</strong>, and
+we will fix it together on GitHub, okay?</p>
+<p>The entire decoding community will only go further when we stop
+solving the same problems over and over again, and it starts working together.</p>
+</div></blockquote>
+<hr class="docutils" />
+<blockquote>
+<div><p><strong>How can we use the knowledge from one EEG Decoding task into another?</strong></p>
+<p>Transfer learning is a widespread technique used in deep learning. It
+uses knowledge learned from one source task/domain in another target
+task/domain. It has been studied in depth in computer vision, natural
+language processing, and speech, but what about EEG brain decoding?</p>
+<p>The cross-task transfer learning scenario in EEG decoding is remarkably
+underexplored compared to the development of new models,
+<a class="reference external" href="https://arxiv.org/abs/2308.02408">Aristimunha et al. (2023)</a>, even
+though it can be much more useful for real applications, see
+<a class="reference external" href="https://arxiv.org/abs/2502.06828">Wimpff et al. (2025)</a>,
+<a class="reference external" href="https://arxiv.org/abs/2507.09882">Wu et al. (2025)</a>.</p>
+<p>Our Challenge 1 addresses a key goal in neurotechnology: decoding
+cognitive function from EEG using the pre-trained knowledge from another.
+In other words, developing models that can effectively
+transfer/adapt/adjust/fine-tune knowledge from passive EEG tasks to
+active tasks.</p>
+<p>The ability to generalize and transfer is something critical that we
+believe should be focused on. To go beyond just comparing metrics numbers
+that are often not comparable, given the specificities of EEG, such as
+pre-processing, inter-subject variability, and many other unique
+components of this type of data.</p>
+<p>This means your submitted model might be trained on a subset of tasks
+and fine-tuned on data from another condition, evaluating its capacity to
+generalize with task-specific fine-tuning.</p>
+</div></blockquote>
+<hr class="docutils" />
+<blockquote>
+<div><div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For simplicity purposes, we will only show how to do the decoding
+directly in our target task, and it is up to the teams to think about
+how to use the passive task to perform the pre-training.</p>
+</div>
+</div></blockquote>
+<hr class="docutils" />
+<blockquote>
+<div><p><strong>Install dependencies</strong></p>
+<p>For the challenge, we will need two significant dependencies:
+<cite>braindecode</cite> and <cite>eegdash</cite>. The libraries will install PyTorch,
+Pytorch Audio, Scikit-learn, MNE, MNE-BIDS, and many other packages
+necessary for the many functions.</p>
+<p>Install dependencies on colab or your local machine, as eegdash
+have braindecode as a dependency.
+you can just run <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">eegdash</span></code>.</p>
+</div></blockquote>
+<hr class="docutils" />
+<blockquote>
+<div><p><strong>Imports and setup</strong></p>
+</div></blockquote>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">braindecode.datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseConcatDataset</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">braindecode.preprocessing</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">preprocess</span><span class="p">,</span>
+    <span class="n">Preprocessor</span><span class="p">,</span>
+    <span class="n">create_windows_from_events</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">braindecode.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">EEGNeX</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">torch.utils.data</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataLoader</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">train_test_split</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">check_random_state</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">torch.nn</span><span class="w"> </span><span class="kn">import</span> <span class="n">Module</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">torch.optim.lr_scheduler</span><span class="w"> </span><span class="kn">import</span> <span class="n">LRScheduler</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tqdm</span><span class="w"> </span><span class="kn">import</span> <span class="n">tqdm</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">copy</span>
+
+<span class="c1">#</span>
+</pre></div>
+</div>
+<p><strong>Check GPU availability</strong></p>
+<p>Identify whether a CUDA-enabled GPU is available
+and set the device accordingly.
+If using Google Colab, ensure that the runtime is set to use a GPU.
+This can be done by navigating to <cite>Runtime</cite> &gt; <cite>Change runtime type</cite> and selecting
+<cite>GPU</cite> as the hardware accelerator.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">device</span> <span class="o">=</span> <span class="s2">&quot;cuda&quot;</span> <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="k">else</span> <span class="s2">&quot;cpu&quot;</span>
+<span class="k">if</span> <span class="n">device</span> <span class="o">==</span> <span class="s2">&quot;cuda&quot;</span><span class="p">:</span>
+    <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;CUDA-enabled GPU found. Training should be faster.&quot;</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">msg</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;No GPU found. Training will be carried out on CPU, which might be &quot;</span>
+        <span class="s2">&quot;slower.</span><span class="se">\n\n</span><span class="s2">If running on Google Colab, you can request a GPU runtime by&quot;</span>
+        <span class="s2">&quot; clicking</span><span class="se">\n</span><span class="s2">`Runtime/Change runtime type` in the top bar menu, then &quot;</span>
+        <span class="s2">&quot;selecting &#39;T4 GPU&#39;</span><span class="se">\n</span><span class="s2">under &#39;Hardware accelerator&#39;.&quot;</span>
+    <span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+<span class="c1">#</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>No GPU found. Training will be carried out on CPU, which might be slower.
+
+If running on Google Colab, you can request a GPU runtime by clicking
+`Runtime/Change runtime type` in the top bar menu, then selecting &#39;T4 GPU&#39;
+under &#39;Hardware accelerator&#39;.
+</pre></div>
+</div>
+<p><strong>What are we decoding?</strong></p>
+<blockquote>
+<div><p>To start to talk about what we want to analyse, the important thing
+is to understand some basic concepts.</p>
+</div></blockquote>
+<hr class="docutils" />
+<blockquote>
+<div><p><strong>The brain decodes the problem</strong></p>
+<p>Broadly speaking, here <em>brain decoding</em> is the following problem:
+given brain time-series signals <span class="math notranslate nohighlight">\(X \in \mathbb{R}^{C \times T}\)</span> with
+labels <span class="math notranslate nohighlight">\(y \in \mathcal{Y}\)</span>, we implement a neural network <span class="math notranslate nohighlight">\(f\)</span> that
+<strong>decodes/translates</strong> brain activity into the target label.</p>
+<p>We aim to translate recorded brain activity into its originating
+stimulus, behavior, or mental state, <a class="reference external" href="https://lauragwilliams.github.io/d/m/CognitionAlgorithm.pdf">King, J-R. et al. (2020)</a>.</p>
+<p>The neural network <span class="math notranslate nohighlight">\(f\)</span> applies a series of transformation layers
+(e.g., <code class="docutils literal notranslate"><span class="pre">torch.nn.Conv2d</span></code>, <code class="docutils literal notranslate"><span class="pre">torch.nn.Linear</span></code>, <code class="docutils literal notranslate"><span class="pre">torch.nn.ELU</span></code>, <code class="docutils literal notranslate"><span class="pre">torch.nn.BatchNorm2d</span></code>)
+to the data to filter, extract features, and learn embeddings
+relevant to the optimization objective—in other words:</p>
+<div class="math notranslate nohighlight">
+\[f_{\theta}: X \to y,\]</div>
+<p>where <span class="math notranslate nohighlight">\(C\)</span> (<code class="docutils literal notranslate"><span class="pre">n_chans</span></code>) is the number of channels/electrodes and <span class="math notranslate nohighlight">\(T\)</span> (<code class="docutils literal notranslate"><span class="pre">n_times</span></code>)
+is the temporal window length/epoch size over the interval of interest.
+Here, <span class="math notranslate nohighlight">\(\theta\)</span> denotes the parameters learned by the neural network.</p>
+<p><strong>Input/Output definition</strong></p>
+<p>For the competition, the HBN-EEG (Healthy Brain Network EEG Datasets)
+dataset has <code class="docutils literal notranslate"><span class="pre">n_chans</span> <span class="pre">=</span> <span class="pre">129</span></code> with the last channels as a <a class="reference external" href="https://mne.tools/stable/auto_tutorials/preprocessing/55_setting_eeg_reference.html">reference channel</a>,
+and we define the window length as <code class="docutils literal notranslate"><span class="pre">n_times</span> <span class="pre">=</span> <span class="pre">200</span></code>, corresponding to 2-second windows.</p>
+<p>Your model should follow this definition exactly; any specific selection of channels,
+filtering, or domain-adaptation technique must be performed <strong>within the layers of the neural network model</strong>.</p>
+<p>In this tutorial, we will use the <code class="docutils literal notranslate"><span class="pre">EEGNeX</span></code> model from <code class="docutils literal notranslate"><span class="pre">braindecode</span></code> as an example.
+You can use any model you want, as long as it follows the input/output
+definitions above.</p>
+</div></blockquote>
+<hr class="docutils" />
+<blockquote>
+<div><p><strong>Understand the task: Contrast Change Detection (CCD)</strong></p>
+<p>If you are interested to get more neuroscience insight, we recommend these two references, <a class="reference external" href="https://www.biorxiv.org/content/10.1101/2024.10.03.615261v2.full.pdf">HBN-EEG</a> and <a class="reference external" href="https://www.nature.com/articles/sdata201740#Sec2">Langer, N et al. (2017)</a>.
+Your task (<strong>label</strong>) is to predict the response time for the subject during this windows.</p>
+<p>In the Video, we have an example of recording cognitive activity:</p>
+<p>The Contrast Change Detection (CCD) task relates to
+<a class="reference external" href="https://en.wikipedia.org/wiki/Steady-state_visually_evoked_potential">Steady-State Visual Evoked Potentials (SSVEP)</a>
+and <a class="reference external" href="https://en.wikipedia.org/wiki/Event-related_potential">Event-Related Potentials (ERP)</a>.</p>
+<p>Algorithmically, what the subject sees during recording is:</p>
+<ul class="simple">
+<li><p>Two flickering striped discs: one tilted left, one tilted right.</p></li>
+<li><p>After a variable delay, <strong>one disc’s contrast gradually increases</strong> <strong>while the other decreases</strong>.</p></li>
+<li><p>They <strong>press left or right</strong> to indicate which disc got stronger.</p></li>
+<li><p>They receive <strong>feedback</strong> (🙂 correct / 🙁 incorrect).</p></li>
+</ul>
+<p><strong>The task parallels SSVEP and ERP:</strong></p>
+<ul class="simple">
+<li><p>The continuous flicker <strong>tags the EEG at fixed frequencies (and harmonics)</strong> → SSVEP-like signals.</p></li>
+<li><p>The <strong>ramp onset</strong>, the <strong>button press</strong>, and the <strong>feedback</strong> are <strong>time-locked events</strong> that yield ERP-like components.</p></li>
+</ul>
+<p>Your task (<strong>label</strong>) is to predict the response time for the subject during this windows.</p>
+</div></blockquote>
+<hr class="docutils" />
+<blockquote>
+<div><p>In the figure below, we have the timeline representation of the cognitive task:</p>
+<img alt="https://eeg2025.github.io/assets/img/image-2.jpg" src="https://eeg2025.github.io/assets/img/image-2.jpg" />
+</div></blockquote>
+<hr class="docutils" />
+<blockquote>
+<div><p><strong>Stimulus demonstration</strong></p>
+<div class="video-wrapper">
+  <iframe src="https://www.youtube.com/embed/tOW2Vu2zHoU?start=1630"
+          title="Contrast Change Detection (CCD) task demo"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowfullscreen></iframe>
+</div></div></blockquote>
+<hr class="docutils" />
+<blockquote>
+<div><p><strong>PyTorch Dataset for the competition</strong></p>
+<p>Now, we have a Pytorch Dataset object that contains the set of recordings for the task
+<cite>contrastChangeDetection</cite>.</p>
+</div></blockquote>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">eegdash.dataset</span><span class="w"> </span><span class="kn">import</span> <a href="../../../api/dataset/eegdash.EEGDashDataset.html#eegdash.EEGDashDataset" title="eegdash.EEGDashDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class"><span class="n">EEGChallengeDataset</span></a>
+<span class="kn">from</span><span class="w"> </span><span class="nn">eegdash.hbn.windows</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">annotate_trials_with_target</span><span class="p">,</span>
+    <span class="n">add_aux_anchors</span><span class="p">,</span>
+    <span class="n">keep_only_recordings_with</span><span class="p">,</span>
+    <span class="n">add_extras_columns</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">eegdash.paths</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_default_cache_dir</span>
+
+<span class="c1"># Match tests&#39; cache layout under ~/eegdash_cache/eeg_challenge_cache</span>
+<span class="n">DATA_DIR</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">get_default_cache_dir</span><span class="p">())</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+<span class="n">DATA_DIR</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">dataset_ccd</span> <span class="o">=</span> <a href="../../../api/dataset/eegdash.EEGDashDataset.html#eegdash.EEGDashDataset" title="eegdash.EEGDashDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class"><span class="n">EEGChallengeDataset</span></a><span class="p">(</span>
+    <span class="n">task</span><span class="o">=</span><span class="s2">&quot;contrastChangeDetection&quot;</span><span class="p">,</span> <span class="n">release</span><span class="o">=</span><span class="s2">&quot;R5&quot;</span><span class="p">,</span> <span class="n">cache_dir</span><span class="o">=</span><span class="n">DATA_DIR</span><span class="p">,</span> <span class="n">mini</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+<span class="c1"># The dataset contains 20 subjects in the minirelease, and each subject has multiple recordings</span>
+<span class="c1"># (sessions). Each recording is represented as a dataset object within the `dataset_ccd.datasets` list.</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Number of recordings in the dataset: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">dataset_ccd</span><span class="o">.</span><span class="n">datasets</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span>
+    <span class="sa">f</span><span class="s2">&quot;Number of unique subjects in the dataset: </span><span class="si">{</span><a href="../../../api/dataset/eegdash.EEGDashDataset.html#eegdash.EEGDashDataset.description" title="eegdash.EEGDashDataset.description" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-property"><span class="n">dataset_ccd</span><span class="o">.</span><span class="n">description</span></a><span class="p">[</span><span class="s1">&#39;subject&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">nunique</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="p">)</span>
+<span class="c1">#</span>
+<span class="c1"># This dataset object have very rich Raw object details that can help you to</span>
+<span class="c1"># understand better the data. The framework behind this is braindecode,</span>
+<span class="c1"># and if you want to understand in depth what is happening, we recommend the</span>
+<span class="c1"># braindecode github itself.</span>
+<span class="c1">#</span>
+<span class="c1"># We can also access the Raw object for visualization purposes, we will see just one object.</span>
+<span class="n">raw</span> <span class="o">=</span> <span class="n">dataset_ccd</span><span class="o">.</span><span class="n">datasets</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">raw</span>  <span class="c1"># get the Raw object of the first recording</span>
+<span class="c1"># And to download all the data all data directly, you can do:</span>
+<a href="../../../api/dataset/eegdash.EEGDashDataset.html#eegdash.EEGDashDataset.download_all" title="eegdash.EEGDashDataset.download_all" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-method"><span class="n">dataset_ccd</span><span class="o">.</span><span class="n">download_all</span></a><span class="p">(</span><span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+<span class="c1">#</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>╭────────────────────── EEG 2025 Competition Data Notice ──────────────────────╮
+│ This object loads the HBN dataset that has been preprocessed for the EEG     │
+│ Challenge:                                                                   │
+│   * Downsampled from 500Hz to 100Hz                                          │
+│   * Bandpass filtered (0.5-50 Hz)                                            │
+│                                                                              │
+│ For full preprocessing applied for competition details, see:                 │
+│   https://github.com/eeg2025/downsample-datasets                             │
+│                                                                              │
+│ The HBN dataset have some preprocessing applied by the HBN team:             │
+│   * Re-reference (Cz Channel)                                                │
+│                                                                              │
+│ IMPORTANT: The data accessed via `EEGChallengeDataset` is NOT identical to   │
+│ what you get from EEGDashDataset directly.                                   │
+│ If you are participating in the competition, always use                      │
+│ `EEGChallengeDataset` to ensure consistency with the challenge data.         │
+╰──────────────────────── Source: EEGChallengeDataset ─────────────────────────╯
+Number of recordings in the dataset: 60
+Number of unique subjects in the dataset: 20
+</pre></div>
+</div>
+<p><strong>Alternatives for Downloading the data</strong></p>
+<p>You can also perform this operation with wget or the aws cli.
+These options will probably be faster!
+Please check more details in the <cite>HBN</cite> data webpage <a class="reference external" href="https://neuromechanist.github.io/data/hbn/">HBN-EEG</a>.
+You need to download the 100Hz preprocessed data in BDF format.</p>
+<dl class="simple">
+<dt>Example of wget for release R1</dt><dd><p>wget <a class="reference external" href="https://sccn.ucsd.edu/download/eeg2025/R1_L100_bdf.zip">https://sccn.ucsd.edu/download/eeg2025/R1_L100_bdf.zip</a> -O R1_L100_bdf.zip</p>
+</dd>
+</dl>
+<p>Example of AWS CLI for release R1</p>
+<blockquote>
+<div><p>aws s3 sync s3://nmdatasets/NeurIPS25/R1_L100_bdf data/R1_L100_bdf –no-sign-request</p>
+</div></blockquote>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1">#</span>
+</pre></div>
+</div>
+<p><strong>Create windows of interest</strong></p>
+<p>So we epoch after the stimulus moment with a beginning shift of 500 ms.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">EPOCH_LEN_S</span> <span class="o">=</span> <span class="mf">2.0</span>
+<span class="n">SFREQ</span> <span class="o">=</span> <span class="mi">100</span>  <span class="c1"># by definition here</span>
+<span class="n">transformation_offline</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">Preprocessor</span><span class="p">(</span>
+        <span class="n">annotate_trials_with_target</span><span class="p">,</span>
+        <span class="n">target_field</span><span class="o">=</span><span class="s2">&quot;rt_from_stimulus&quot;</span><span class="p">,</span>
+        <span class="n">epoch_length</span><span class="o">=</span><span class="n">EPOCH_LEN_S</span><span class="p">,</span>
+        <span class="n">require_stimulus</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">require_response</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">apply_on_array</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">),</span>
+    <span class="n">Preprocessor</span><span class="p">(</span><span class="n">add_aux_anchors</span><span class="p">,</span> <span class="n">apply_on_array</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+<span class="p">]</span>
+<span class="n">preprocess</span><span class="p">(</span><span class="n">dataset_ccd</span><span class="p">,</span> <span class="n">transformation_offline</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">ANCHOR</span> <span class="o">=</span> <span class="s2">&quot;stimulus_anchor&quot;</span>
+<span class="n">SHIFT_AFTER_STIM</span> <span class="o">=</span> <span class="mf">0.5</span>
+<span class="n">WINDOW_LEN</span> <span class="o">=</span> <span class="mf">2.0</span>
+<span class="c1"># Keep only recordings that actually contain stimulus anchors</span>
+<span class="n">dataset</span> <span class="o">=</span> <span class="n">keep_only_recordings_with</span><span class="p">(</span><span class="n">ANCHOR</span><span class="p">,</span> <span class="n">dataset_ccd</span><span class="p">)</span>
+<span class="c1"># Create single-interval windows (stim-locked, long enough to include the response)</span>
+<span class="n">single_windows</span> <span class="o">=</span> <span class="n">create_windows_from_events</span><span class="p">(</span>
+    <span class="n">dataset</span><span class="p">,</span>
+    <span class="n">mapping</span><span class="o">=</span><span class="p">{</span><span class="n">ANCHOR</span><span class="p">:</span> <span class="mi">0</span><span class="p">},</span>
+    <span class="n">trial_start_offset_samples</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">SHIFT_AFTER_STIM</span> <span class="o">*</span> <span class="n">SFREQ</span><span class="p">),</span>  <span class="c1"># +0.5 s</span>
+    <span class="n">trial_stop_offset_samples</span><span class="o">=</span><span class="nb">int</span><span class="p">((</span><span class="n">SHIFT_AFTER_STIM</span> <span class="o">+</span> <span class="n">WINDOW_LEN</span><span class="p">)</span> <span class="o">*</span> <span class="n">SFREQ</span><span class="p">),</span>  <span class="c1"># +2.5 s</span>
+    <span class="n">window_size_samples</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">EPOCH_LEN_S</span> <span class="o">*</span> <span class="n">SFREQ</span><span class="p">),</span>
+    <span class="n">window_stride_samples</span><span class="o">=</span><span class="n">SFREQ</span><span class="p">,</span>
+    <span class="n">preload</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="c1"># Injecting metadata into the extra mne annotation.</span>
+<span class="n">single_windows</span> <span class="o">=</span> <span class="n">add_extras_columns</span><span class="p">(</span>
+    <span class="n">single_windows</span><span class="p">,</span>
+    <span class="n">dataset</span><span class="p">,</span>
+    <span class="n">desc</span><span class="o">=</span><span class="n">ANCHOR</span><span class="p">,</span>
+    <span class="n">keys</span><span class="o">=</span><span class="p">(</span>
+        <span class="s2">&quot;target&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;rt_from_stimulus&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;rt_from_trialstart&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;stimulus_onset&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;response_onset&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;correct&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;response_type&quot;</span><span class="p">,</span>
+    <span class="p">),</span>
+<span class="p">)</span>
+<span class="c1">#</span>
+</pre></div>
+</div>
+<p><strong>Inspect the label distribution</strong></p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">skorch.helper</span><span class="w"> </span><span class="kn">import</span> <span class="n">SliceDataset</span>
+
+<span class="n">y_label</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">SliceDataset</span><span class="p">(</span><span class="n">single_windows</span><span class="p">,</span> <span class="mi">1</span><span class="p">)))</span>
+<span class="c1"># Plot histogram of the response times with matplotlib</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">y_label</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Response Time Distribution&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Response Time (s)&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Count&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="c1">#</span>
+</pre></div>
+</div>
+<img src="../../../_images/sphx_glr_tutorial_challenge_1_001.png" srcset="../../../_images/sphx_glr_tutorial_challenge_1_001.png" alt="Response Time Distribution" class = "sphx-glr-single-img"/><p><strong>Split the data</strong></p>
+<p>Extract meta information</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">meta_information</span> <span class="o">=</span> <span class="n">single_windows</span><span class="o">.</span><span class="n">get_metadata</span><span class="p">()</span>
+<span class="n">valid_frac</span> <span class="o">=</span> <span class="mf">0.1</span>
+<span class="n">test_frac</span> <span class="o">=</span> <span class="mf">0.1</span>
+<span class="n">seed</span> <span class="o">=</span> <span class="mi">2025</span>
+<span class="n">subjects</span> <span class="o">=</span> <span class="n">meta_information</span><span class="p">[</span><span class="s2">&quot;subject&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span>
+<span class="n">train_subj</span><span class="p">,</span> <span class="n">valid_test_subject</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span>
+    <span class="n">subjects</span><span class="p">,</span>
+    <span class="n">test_size</span><span class="o">=</span><span class="p">(</span><span class="n">valid_frac</span> <span class="o">+</span> <span class="n">test_frac</span><span class="p">),</span>
+    <span class="n">random_state</span><span class="o">=</span><span class="n">check_random_state</span><span class="p">(</span><span class="n">seed</span><span class="p">),</span>
+    <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">valid_subj</span><span class="p">,</span> <span class="n">test_subj</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span>
+    <span class="n">valid_test_subject</span><span class="p">,</span>
+    <span class="n">test_size</span><span class="o">=</span><span class="n">test_frac</span><span class="p">,</span>
+    <span class="n">random_state</span><span class="o">=</span><span class="n">check_random_state</span><span class="p">(</span><span class="n">seed</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="c1"># Sanity check</span>
+<span class="k">assert</span> <span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">valid_subj</span><span class="p">)</span> <span class="o">|</span> <span class="nb">set</span><span class="p">(</span><span class="n">test_subj</span><span class="p">)</span> <span class="o">|</span> <span class="nb">set</span><span class="p">(</span><span class="n">train_subj</span><span class="p">))</span> <span class="o">==</span> <span class="nb">set</span><span class="p">(</span><span class="n">subjects</span><span class="p">)</span>
+<span class="c1"># Create train/valid/test splits for the windows</span>
+<span class="n">subject_split</span> <span class="o">=</span> <span class="n">single_windows</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;subject&quot;</span><span class="p">)</span>
+<span class="n">train_set</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">valid_set</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">test_set</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">subject_split</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">train_subj</span><span class="p">:</span>
+        <span class="n">train_set</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">subject_split</span><span class="p">[</span><span class="n">s</span><span class="p">])</span>
+    <span class="k">elif</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">valid_subj</span><span class="p">:</span>
+        <span class="n">valid_set</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">subject_split</span><span class="p">[</span><span class="n">s</span><span class="p">])</span>
+    <span class="k">elif</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">test_subj</span><span class="p">:</span>
+        <span class="n">test_set</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">subject_split</span><span class="p">[</span><span class="n">s</span><span class="p">])</span>
+<span class="n">train_set</span> <span class="o">=</span> <span class="n">BaseConcatDataset</span><span class="p">(</span><span class="n">train_set</span><span class="p">)</span>
+<span class="n">valid_set</span> <span class="o">=</span> <span class="n">BaseConcatDataset</span><span class="p">(</span><span class="n">valid_set</span><span class="p">)</span>
+<span class="n">test_set</span> <span class="o">=</span> <span class="n">BaseConcatDataset</span><span class="p">(</span><span class="n">test_set</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Number of examples in each split in the minirelease&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Train:</span><span class="se">\t</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">train_set</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Valid:</span><span class="se">\t</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">valid_set</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Test:</span><span class="se">\t</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">test_set</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="c1">#</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Number of examples in each split in the minirelease
+Train:  981
+Valid:  183
+Test:   50
+</pre></div>
+</div>
+<p><strong>Create dataloaders</strong></p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">batch_size</span> <span class="o">=</span> <span class="mi">128</span>
+<span class="c1"># Set num_workers to 0 to avoid multiprocessing issues in notebooks/tutorials</span>
+<span class="n">num_workers</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">train_loader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span>
+    <span class="n">train_set</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">num_workers</span><span class="o">=</span><span class="n">num_workers</span>
+<span class="p">)</span>
+<span class="n">valid_loader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span>
+    <span class="n">valid_set</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">num_workers</span><span class="o">=</span><span class="n">num_workers</span>
+<span class="p">)</span>
+<span class="n">test_loader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span>
+    <span class="n">test_set</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">num_workers</span><span class="o">=</span><span class="n">num_workers</span>
+<span class="p">)</span>
+<span class="c1">#</span>
+</pre></div>
+</div>
+<p><strong>Build the model</strong></p>
+<p>For neural network models, <strong>to start</strong>, we suggest using <a class="reference external" href="https://braindecode.org/1.2/models/models_table.html">braindecode models</a> zoo.
+We have implemented several different models for decoding the brain timeseries.
+Your team’s responsibility is to develop a PyTorch module that receives the three-dimensional (<cite>batch</cite>, <cite>n_chans</cite>, <cite>n_times</cite>)
+input and outputs the contrastive response time.
+<strong>You can use any model you want</strong>, as long as it follows the input/output
+definitions above.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">EEGNeX</span><span class="p">(</span>
+    <span class="n">n_chans</span><span class="o">=</span><span class="mi">129</span><span class="p">,</span>  <span class="c1"># 129 channels</span>
+    <span class="n">n_outputs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>  <span class="c1"># 1 output for regression</span>
+    <span class="n">n_times</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span>  <span class="c1"># 2 seconds</span>
+    <span class="n">sfreq</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>  <span class="c1"># sample frequency 100 Hz</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+<span class="n">model</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+
+<span class="c1">#</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/home/runner/work/EEGDash/EEGDash/.venv/lib/python3.11/site-packages/torch/nn/modules/conv.py:543: UserWarning: Using padding=&#39;same&#39; with even kernel lengths and odd dilation may require a zero-padded copy of the input be created (Triggered internally at /pytorch/aten/src/ATen/native/Convolution.cpp:1031.)
+  return F.conv2d(
+================================================================================================================================================================
+Layer (type (var_name):depth-idx)                            Input Shape               Output Shape              Param #                   Kernel Shape
+================================================================================================================================================================
+EEGNeX (EEGNeX)                                              [1, 129, 200]             [1, 1]                    --                        --
+├─Sequential (block_1): 1-1                                  [1, 129, 200]             [1, 8, 129, 200]          --                        --
+│    └─Rearrange (0): 2-1                                    [1, 129, 200]             [1, 1, 129, 200]          --                        --
+│    └─Conv2d (1): 2-2                                       [1, 1, 129, 200]          [1, 8, 129, 200]          512                       [1, 64]
+│    └─BatchNorm2d (2): 2-3                                  [1, 8, 129, 200]          [1, 8, 129, 200]          16                        --
+├─Sequential (block_2): 1-2                                  [1, 8, 129, 200]          [1, 32, 129, 200]         --                        --
+│    └─Conv2d (0): 2-4                                       [1, 8, 129, 200]          [1, 32, 129, 200]         16,384                    [1, 64]
+│    └─BatchNorm2d (1): 2-5                                  [1, 32, 129, 200]         [1, 32, 129, 200]         64                        --
+├─Sequential (block_3): 1-3                                  [1, 32, 129, 200]         [1, 64, 1, 50]            --                        --
+│    └─ParametrizedConv2dWithConstraint (0): 2-6             [1, 32, 129, 200]         [1, 64, 1, 200]           --                        [129, 1]
+│    │    └─ModuleDict (parametrizations): 3-1               --                        --                        8,256                     --
+│    └─BatchNorm2d (1): 2-7                                  [1, 64, 1, 200]           [1, 64, 1, 200]           128                       --
+│    └─ELU (2): 2-8                                          [1, 64, 1, 200]           [1, 64, 1, 200]           --                        --
+│    └─AvgPool2d (3): 2-9                                    [1, 64, 1, 200]           [1, 64, 1, 50]            --                        [1, 4]
+│    └─Dropout (4): 2-10                                     [1, 64, 1, 50]            [1, 64, 1, 50]            --                        --
+├─Sequential (block_4): 1-4                                  [1, 64, 1, 50]            [1, 32, 1, 50]            --                        --
+│    └─Conv2d (0): 2-11                                      [1, 64, 1, 50]            [1, 32, 1, 50]            32,768                    [1, 16]
+│    └─BatchNorm2d (1): 2-12                                 [1, 32, 1, 50]            [1, 32, 1, 50]            64                        --
+├─Sequential (block_5): 1-5                                  [1, 32, 1, 50]            [1, 48]                   --                        --
+│    └─Conv2d (0): 2-13                                      [1, 32, 1, 50]            [1, 8, 1, 50]             4,096                     [1, 16]
+│    └─BatchNorm2d (1): 2-14                                 [1, 8, 1, 50]             [1, 8, 1, 50]             16                        --
+│    └─ELU (2): 2-15                                         [1, 8, 1, 50]             [1, 8, 1, 50]             --                        --
+│    └─AvgPool2d (3): 2-16                                   [1, 8, 1, 50]             [1, 8, 1, 6]              --                        [1, 8]
+│    └─Dropout (4): 2-17                                     [1, 8, 1, 6]              [1, 8, 1, 6]              --                        --
+│    └─Flatten (5): 2-18                                     [1, 8, 1, 6]              [1, 48]                   --                        --
+├─ParametrizedLinearWithConstraint (final_layer): 1-6        [1, 48]                   [1, 1]                    1                         --
+│    └─ModuleDict (parametrizations): 2-19                   --                        --                        --                        --
+│    │    └─ParametrizationList (weight): 3-2                --                        [1, 48]                   48                        --
+================================================================================================================================================================
+Total params: 62,353
+Trainable params: 62,353
+Non-trainable params: 0
+Total mult-adds (Units.MEGABYTES): 437.76
+================================================================================================================================================================
+Input size (MB): 0.10
+Forward/backward pass size (MB): 16.65
+Params size (MB): 0.22
+Estimated Total Size (MB): 16.97
+================================================================================================================================================================
+
+EEGNeX(
+  (block_1): Sequential(
+    (0): Rearrange(&#39;batch ch time -&gt; batch 1 ch time&#39;)
+    (1): Conv2d(1, 8, kernel_size=(1, 64), stride=(1, 1), padding=same, bias=False)
+    (2): BatchNorm2d(8, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  )
+  (block_2): Sequential(
+    (0): Conv2d(8, 32, kernel_size=(1, 64), stride=(1, 1), padding=same, bias=False)
+    (1): BatchNorm2d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  )
+  (block_3): Sequential(
+    (0): ParametrizedConv2dWithConstraint(
+      32, 64, kernel_size=(129, 1), stride=(1, 1), groups=32, bias=False
+      (parametrizations): ModuleDict(
+        (weight): ParametrizationList(
+          (0): MaxNormParametrize()
+        )
+      )
+    )
+    (1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (2): ELU(alpha=1.0)
+    (3): AvgPool2d(kernel_size=(1, 4), stride=(1, 4), padding=(0, 1))
+    (4): Dropout(p=0.5, inplace=False)
+  )
+  (block_4): Sequential(
+    (0): Conv2d(64, 32, kernel_size=(1, 16), stride=(1, 1), padding=same, dilation=(1, 2), bias=False)
+    (1): BatchNorm2d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  )
+  (block_5): Sequential(
+    (0): Conv2d(32, 8, kernel_size=(1, 16), stride=(1, 1), padding=same, dilation=(1, 4), bias=False)
+    (1): BatchNorm2d(8, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (2): ELU(alpha=1.0)
+    (3): AvgPool2d(kernel_size=(1, 8), stride=(1, 8), padding=(0, 1))
+    (4): Dropout(p=0.5, inplace=False)
+    (5): Flatten(start_dim=1, end_dim=-1)
+  )
+  (final_layer): ParametrizedLinearWithConstraint(
+    in_features=48, out_features=1, bias=True
+    (parametrizations): ModuleDict(
+      (weight): ParametrizationList(
+        (0): MaxNormParametrize()
+      )
+    )
+  )
+)
+</pre></div>
+</div>
+<p><strong>Define training and validation functions</strong></p>
+<p>The rest is our classic PyTorch/torch lighting/skorch training pipeline,
+you can use any training framework you want.
+We provide a simple training and validation loop below.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">train_one_epoch</span><span class="p">(</span>
+    <span class="n">dataloader</span><span class="p">:</span> <span class="n">DataLoader</span><span class="p">,</span>
+    <span class="n">model</span><span class="p">:</span> <span class="n">Module</span><span class="p">,</span>
+    <span class="n">loss_fn</span><span class="p">,</span>
+    <span class="n">optimizer</span><span class="p">,</span>
+    <span class="n">scheduler</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">LRScheduler</span><span class="p">],</span>
+    <span class="n">epoch</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">device</span><span class="p">,</span>
+    <span class="n">print_batch_stats</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">train</span><span class="p">()</span>
+    <span class="n">total_loss</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="n">sum_sq_err</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="n">n_samples</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">progress_bar</span> <span class="o">=</span> <span class="n">tqdm</span><span class="p">(</span>
+        <span class="nb">enumerate</span><span class="p">(</span><span class="n">dataloader</span><span class="p">),</span> <span class="n">total</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">dataloader</span><span class="p">),</span> <span class="n">disable</span><span class="o">=</span><span class="ow">not</span> <span class="n">print_batch_stats</span>
+    <span class="p">)</span>
+    <span class="k">for</span> <span class="n">batch_idx</span><span class="p">,</span> <span class="n">batch</span> <span class="ow">in</span> <span class="n">progress_bar</span><span class="p">:</span>
+        <span class="c1"># Support datasets that may return (X, y) or (X, y, ...)</span>
+        <span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">batch</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">batch</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span><span class="o">.</span><span class="n">float</span><span class="p">(),</span> <span class="n">y</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span><span class="o">.</span><span class="n">float</span><span class="p">()</span>
+        <span class="n">optimizer</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">(</span><span class="n">set_to_none</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">preds</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+        <span class="n">loss</span> <span class="o">=</span> <span class="n">loss_fn</span><span class="p">(</span><span class="n">preds</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+        <span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+        <span class="n">optimizer</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+        <span class="n">total_loss</span> <span class="o">+=</span> <span class="n">loss</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+        <span class="c1"># Flatten to 1D for regression metrics and accumulate squared error</span>
+        <span class="n">preds_flat</span> <span class="o">=</span> <span class="n">preds</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">y_flat</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">sum_sq_err</span> <span class="o">+=</span> <span class="n">torch</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">preds_flat</span> <span class="o">-</span> <span class="n">y_flat</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+        <span class="n">n_samples</span> <span class="o">+=</span> <span class="n">y_flat</span><span class="o">.</span><span class="n">numel</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">print_batch_stats</span><span class="p">:</span>
+            <span class="n">running_rmse</span> <span class="o">=</span> <span class="p">(</span><span class="n">sum_sq_err</span> <span class="o">/</span> <span class="nb">max</span><span class="p">(</span><span class="n">n_samples</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span> <span class="o">**</span> <span class="mf">0.5</span>
+            <span class="n">progress_bar</span><span class="o">.</span><span class="n">set_description</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Epoch </span><span class="si">{</span><span class="n">epoch</span><span class="si">}</span><span class="s2">, Batch </span><span class="si">{</span><span class="n">batch_idx</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">dataloader</span><span class="p">)</span><span class="si">}</span><span class="s2">, &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;Loss: </span><span class="si">{</span><span class="n">loss</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">, RMSE: </span><span class="si">{</span><span class="n">running_rmse</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+    <span class="k">if</span> <span class="n">scheduler</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">scheduler</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+    <span class="n">avg_loss</span> <span class="o">=</span> <span class="n">total_loss</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">dataloader</span><span class="p">)</span>
+    <span class="n">rmse</span> <span class="o">=</span> <span class="p">(</span><span class="n">sum_sq_err</span> <span class="o">/</span> <span class="nb">max</span><span class="p">(</span><span class="n">n_samples</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span> <span class="o">**</span> <span class="mf">0.5</span>
+    <span class="k">return</span> <span class="n">avg_loss</span><span class="p">,</span> <span class="n">rmse</span>
+
+
+<span class="nd">@torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">()</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">valid_model</span><span class="p">(</span>
+    <span class="n">dataloader</span><span class="p">:</span> <span class="n">DataLoader</span><span class="p">,</span>
+    <span class="n">model</span><span class="p">:</span> <span class="n">Module</span><span class="p">,</span>
+    <span class="n">loss_fn</span><span class="p">,</span>
+    <span class="n">device</span><span class="p">,</span>
+    <span class="n">print_batch_stats</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+    <span class="n">total_loss</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="n">sum_sq_err</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="n">n_batches</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">dataloader</span><span class="p">)</span>
+    <span class="n">n_samples</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">iterator</span> <span class="o">=</span> <span class="n">tqdm</span><span class="p">(</span>
+        <span class="nb">enumerate</span><span class="p">(</span><span class="n">dataloader</span><span class="p">),</span> <span class="n">total</span><span class="o">=</span><span class="n">n_batches</span><span class="p">,</span> <span class="n">disable</span><span class="o">=</span><span class="ow">not</span> <span class="n">print_batch_stats</span>
+    <span class="p">)</span>
+    <span class="k">for</span> <span class="n">batch_idx</span><span class="p">,</span> <span class="n">batch</span> <span class="ow">in</span> <span class="n">iterator</span><span class="p">:</span>
+        <span class="c1"># Supports (X, y) or (X, y, ...)</span>
+        <span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">batch</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">batch</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span><span class="o">.</span><span class="n">float</span><span class="p">(),</span> <span class="n">y</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span><span class="o">.</span><span class="n">float</span><span class="p">()</span>
+        <span class="n">preds</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+        <span class="n">batch_loss</span> <span class="o">=</span> <span class="n">loss_fn</span><span class="p">(</span><span class="n">preds</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+        <span class="n">total_loss</span> <span class="o">+=</span> <span class="n">batch_loss</span>
+        <span class="n">preds_flat</span> <span class="o">=</span> <span class="n">preds</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">y_flat</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">sum_sq_err</span> <span class="o">+=</span> <span class="n">torch</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">preds_flat</span> <span class="o">-</span> <span class="n">y_flat</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+        <span class="n">n_samples</span> <span class="o">+=</span> <span class="n">y_flat</span><span class="o">.</span><span class="n">numel</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">print_batch_stats</span><span class="p">:</span>
+            <span class="n">running_rmse</span> <span class="o">=</span> <span class="p">(</span><span class="n">sum_sq_err</span> <span class="o">/</span> <span class="nb">max</span><span class="p">(</span><span class="n">n_samples</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span> <span class="o">**</span> <span class="mf">0.5</span>
+            <span class="n">iterator</span><span class="o">.</span><span class="n">set_description</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Val Batch </span><span class="si">{</span><span class="n">batch_idx</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">n_batches</span><span class="si">}</span><span class="s2">, &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;Loss: </span><span class="si">{</span><span class="n">batch_loss</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">, RMSE: </span><span class="si">{</span><span class="n">running_rmse</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+    <span class="n">avg_loss</span> <span class="o">=</span> <span class="n">total_loss</span> <span class="o">/</span> <span class="n">n_batches</span> <span class="k">if</span> <span class="n">n_batches</span> <span class="k">else</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;nan&quot;</span><span class="p">)</span>
+    <span class="n">rmse</span> <span class="o">=</span> <span class="p">(</span><span class="n">sum_sq_err</span> <span class="o">/</span> <span class="nb">max</span><span class="p">(</span><span class="n">n_samples</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span> <span class="o">**</span> <span class="mf">0.5</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Val RMSE: </span><span class="si">{</span><span class="n">rmse</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">, Val Loss: </span><span class="si">{</span><span class="n">avg_loss</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">avg_loss</span><span class="p">,</span> <span class="n">rmse</span>
+
+
+<span class="c1">#</span>
+</pre></div>
+</div>
+<p><strong>Train the model</strong></p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">lr</span> <span class="o">=</span> <span class="mf">1e-3</span>
+<span class="n">weight_decay</span> <span class="o">=</span> <span class="mf">1e-5</span>
+<span class="n">n_epochs</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="mi">5</span>  <span class="c1"># For demonstration purposes, we use just 5 epochs here. You can increase this.</span>
+<span class="p">)</span>
+<span class="n">early_stopping_patience</span> <span class="o">=</span> <span class="mi">50</span>
+<span class="n">optimizer</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">AdamW</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="n">lr</span><span class="p">,</span> <span class="n">weight_decay</span><span class="o">=</span><span class="n">weight_decay</span><span class="p">)</span>
+<span class="n">scheduler</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">lr_scheduler</span><span class="o">.</span><span class="n">CosineAnnealingLR</span><span class="p">(</span><span class="n">optimizer</span><span class="p">,</span> <span class="n">T_max</span><span class="o">=</span><span class="n">n_epochs</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">loss_fn</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">MSELoss</span><span class="p">()</span>
+<span class="n">patience</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="n">min_delta</span> <span class="o">=</span> <span class="mf">1e-4</span>
+<span class="n">best_rmse</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;inf&quot;</span><span class="p">)</span>
+<span class="n">epochs_no_improve</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">best_state</span><span class="p">,</span> <span class="n">best_epoch</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
+<span class="k">for</span> <span class="n">epoch</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_epochs</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Epoch </span><span class="si">{</span><span class="n">epoch</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">n_epochs</span><span class="si">}</span><span class="s2">: &quot;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+    <span class="n">train_loss</span><span class="p">,</span> <span class="n">train_rmse</span> <span class="o">=</span> <span class="n">train_one_epoch</span><span class="p">(</span>
+        <span class="n">train_loader</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">loss_fn</span><span class="p">,</span> <span class="n">optimizer</span><span class="p">,</span> <span class="n">scheduler</span><span class="p">,</span> <span class="n">epoch</span><span class="p">,</span> <span class="n">device</span>
+    <span class="p">)</span>
+    <span class="n">val_loss</span><span class="p">,</span> <span class="n">val_rmse</span> <span class="o">=</span> <span class="n">valid_model</span><span class="p">(</span><span class="n">test_loader</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">loss_fn</span><span class="p">,</span> <span class="n">device</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;Train RMSE: </span><span class="si">{</span><span class="n">train_rmse</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">, &quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;Average Train Loss: </span><span class="si">{</span><span class="n">train_loss</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">, &quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;Val RMSE: </span><span class="si">{</span><span class="n">val_rmse</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">, &quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;Average Val Loss: </span><span class="si">{</span><span class="n">val_loss</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="p">)</span>
+    <span class="k">if</span> <span class="n">val_rmse</span> <span class="o">&lt;</span> <span class="n">best_rmse</span> <span class="o">-</span> <span class="n">min_delta</span><span class="p">:</span>
+        <span class="n">best_rmse</span> <span class="o">=</span> <span class="n">val_rmse</span>
+        <span class="n">best_state</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">state_dict</span><span class="p">())</span>
+        <span class="n">best_epoch</span> <span class="o">=</span> <span class="n">epoch</span>
+        <span class="n">epochs_no_improve</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">epochs_no_improve</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="n">epochs_no_improve</span> <span class="o">&gt;=</span> <span class="n">patience</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Early stopping at epoch </span><span class="si">{</span><span class="n">epoch</span><span class="si">}</span><span class="s2">. Best Val RMSE: </span><span class="si">{</span><span class="n">best_rmse</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2"> (epoch </span><span class="si">{</span><span class="n">best_epoch</span><span class="si">}</span><span class="s2">)&quot;</span>
+            <span class="p">)</span>
+            <span class="k">break</span>
+<span class="k">if</span> <span class="n">best_state</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">load_state_dict</span><span class="p">(</span><span class="n">best_state</span><span class="p">)</span>
+<span class="c1">#</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Epoch 1/5:
+  0%|          | 0/8 [00:00&lt;?, ?it/s]
+Epoch 1, Batch 1/8, Loss: 2.865798, RMSE: 1.692867:   0%|          | 0/8 [00:07&lt;?, ?it/s]
+Epoch 1, Batch 1/8, Loss: 2.865798, RMSE: 1.692867:  12%|█▎        | 1/8 [00:07&lt;00:50,  7.22s/it]
+Epoch 1, Batch 2/8, Loss: 3.107690, RMSE: 1.728220:  12%|█▎        | 1/8 [00:13&lt;00:50,  7.22s/it]
+Epoch 1, Batch 2/8, Loss: 3.107690, RMSE: 1.728220:  25%|██▌       | 2/8 [00:13&lt;00:38,  6.49s/it]
+Epoch 1, Batch 3/8, Loss: 2.842419, RMSE: 1.714245:  25%|██▌       | 2/8 [00:18&lt;00:38,  6.49s/it]
+Epoch 1, Batch 3/8, Loss: 2.842419, RMSE: 1.714245:  38%|███▊      | 3/8 [00:18&lt;00:30,  6.13s/it]
+Epoch 1, Batch 4/8, Loss: 3.125806, RMSE: 1.727839:  38%|███▊      | 3/8 [00:24&lt;00:30,  6.13s/it]
+Epoch 1, Batch 4/8, Loss: 3.125806, RMSE: 1.727839:  50%|█████     | 4/8 [00:24&lt;00:23,  5.96s/it]
+Epoch 1, Batch 5/8, Loss: 2.688427, RMSE: 1.710564:  50%|█████     | 4/8 [00:30&lt;00:23,  5.96s/it]
+Epoch 1, Batch 5/8, Loss: 2.688427, RMSE: 1.710564:  62%|██████▎   | 5/8 [00:30&lt;00:17,  5.86s/it]
+Epoch 1, Batch 6/8, Loss: 3.003493, RMSE: 1.714333:  62%|██████▎   | 5/8 [00:35&lt;00:17,  5.86s/it]
+Epoch 1, Batch 6/8, Loss: 3.003493, RMSE: 1.714333:  75%|███████▌  | 6/8 [00:35&lt;00:11,  5.81s/it]
+Epoch 1, Batch 7/8, Loss: 2.825849, RMSE: 1.709615:  75%|███████▌  | 6/8 [00:41&lt;00:11,  5.81s/it]
+Epoch 1, Batch 7/8, Loss: 2.825849, RMSE: 1.709615:  88%|████████▊ | 7/8 [00:41&lt;00:05,  5.77s/it]
+Epoch 1, Batch 8/8, Loss: 2.677914, RMSE: 1.703398:  88%|████████▊ | 7/8 [00:45&lt;00:05,  5.77s/it]
+Epoch 1, Batch 8/8, Loss: 2.677914, RMSE: 1.703398: 100%|██████████| 8/8 [00:45&lt;00:00,  5.12s/it]
+Epoch 1, Batch 8/8, Loss: 2.677914, RMSE: 1.703398: 100%|██████████| 8/8 [00:45&lt;00:00,  5.67s/it]
+
+  0%|          | 0/1 [00:00&lt;?, ?it/s]
+Val Batch 1/1, Loss: 3.005738, RMSE: 1.733706:   0%|          | 0/1 [00:00&lt;?, ?it/s]
+Val Batch 1/1, Loss: 3.005738, RMSE: 1.733706: 100%|██████████| 1/1 [00:00&lt;00:00,  1.81it/s]
+Val Batch 1/1, Loss: 3.005738, RMSE: 1.733706: 100%|██████████| 1/1 [00:00&lt;00:00,  1.81it/s]
+Val RMSE: 1.733706, Val Loss: 3.005738
+
+Train RMSE: 1.703398, Average Train Loss: 2.892175, Val RMSE: 1.733706, Average Val Loss: 3.005738
+Epoch 2/5:
+  0%|          | 0/8 [00:00&lt;?, ?it/s]
+Epoch 2, Batch 1/8, Loss: 2.650901, RMSE: 1.628159:   0%|          | 0/8 [00:05&lt;?, ?it/s]
+Epoch 2, Batch 1/8, Loss: 2.650901, RMSE: 1.628159:  12%|█▎        | 1/8 [00:05&lt;00:40,  5.74s/it]
+Epoch 2, Batch 2/8, Loss: 2.551030, RMSE: 1.612751:  12%|█▎        | 1/8 [00:11&lt;00:40,  5.74s/it]
+Epoch 2, Batch 2/8, Loss: 2.551030, RMSE: 1.612751:  25%|██▌       | 2/8 [00:11&lt;00:34,  5.75s/it]
+Epoch 2, Batch 3/8, Loss: 2.515422, RMSE: 1.603886:  25%|██▌       | 2/8 [00:17&lt;00:34,  5.75s/it]
+Epoch 2, Batch 3/8, Loss: 2.515422, RMSE: 1.603886:  38%|███▊      | 3/8 [00:17&lt;00:28,  5.72s/it]
+Epoch 2, Batch 4/8, Loss: 2.396224, RMSE: 1.590093:  38%|███▊      | 3/8 [00:22&lt;00:28,  5.72s/it]
+Epoch 2, Batch 4/8, Loss: 2.396224, RMSE: 1.590093:  50%|█████     | 4/8 [00:22&lt;00:22,  5.72s/it]
+Epoch 2, Batch 5/8, Loss: 2.289994, RMSE: 1.575028:  50%|█████     | 4/8 [00:28&lt;00:22,  5.72s/it]
+Epoch 2, Batch 5/8, Loss: 2.289994, RMSE: 1.575028:  62%|██████▎   | 5/8 [00:28&lt;00:17,  5.71s/it]
+Epoch 2, Batch 6/8, Loss: 2.055214, RMSE: 1.552352:  62%|██████▎   | 5/8 [00:34&lt;00:17,  5.71s/it]
+Epoch 2, Batch 6/8, Loss: 2.055214, RMSE: 1.552352:  75%|███████▌  | 6/8 [00:34&lt;00:11,  5.71s/it]
+Epoch 2, Batch 7/8, Loss: 2.011049, RMSE: 1.533895:  75%|███████▌  | 6/8 [00:39&lt;00:11,  5.71s/it]
+Epoch 2, Batch 7/8, Loss: 2.011049, RMSE: 1.533895:  88%|████████▊ | 7/8 [00:39&lt;00:05,  5.71s/it]
+Epoch 2, Batch 8/8, Loss: 1.783163, RMSE: 1.517720:  88%|████████▊ | 7/8 [00:43&lt;00:05,  5.71s/it]
+Epoch 2, Batch 8/8, Loss: 1.783163, RMSE: 1.517720: 100%|██████████| 8/8 [00:43&lt;00:00,  5.08s/it]
+Epoch 2, Batch 8/8, Loss: 1.783163, RMSE: 1.517720: 100%|██████████| 8/8 [00:43&lt;00:00,  5.47s/it]
+
+  0%|          | 0/1 [00:00&lt;?, ?it/s]
+Val Batch 1/1, Loss: 2.664739, RMSE: 1.632403:   0%|          | 0/1 [00:00&lt;?, ?it/s]
+Val Batch 1/1, Loss: 2.664739, RMSE: 1.632403: 100%|██████████| 1/1 [00:00&lt;00:00,  1.85it/s]
+Val Batch 1/1, Loss: 2.664739, RMSE: 1.632403: 100%|██████████| 1/1 [00:00&lt;00:00,  1.85it/s]
+Val RMSE: 1.632403, Val Loss: 2.664739
+
+Train RMSE: 1.517720, Average Train Loss: 2.281625, Val RMSE: 1.632403, Average Val Loss: 2.664739
+Epoch 3/5:
+  0%|          | 0/8 [00:00&lt;?, ?it/s]
+Epoch 3, Batch 1/8, Loss: 1.785226, RMSE: 1.336124:   0%|          | 0/8 [00:05&lt;?, ?it/s]
+Epoch 3, Batch 1/8, Loss: 1.785226, RMSE: 1.336124:  12%|█▎        | 1/8 [00:05&lt;00:39,  5.69s/it]
+Epoch 3, Batch 2/8, Loss: 1.636416, RMSE: 1.307984:  12%|█▎        | 1/8 [00:11&lt;00:39,  5.69s/it]
+Epoch 3, Batch 2/8, Loss: 1.636416, RMSE: 1.307984:  25%|██▌       | 2/8 [00:11&lt;00:34,  5.69s/it]
+Epoch 3, Batch 3/8, Loss: 1.488442, RMSE: 1.279334:  25%|██▌       | 2/8 [00:17&lt;00:34,  5.69s/it]
+Epoch 3, Batch 3/8, Loss: 1.488442, RMSE: 1.279334:  38%|███▊      | 3/8 [00:17&lt;00:28,  5.70s/it]
+Epoch 3, Batch 4/8, Loss: 1.378155, RMSE: 1.253818:  38%|███▊      | 3/8 [00:22&lt;00:28,  5.70s/it]
+Epoch 3, Batch 4/8, Loss: 1.378155, RMSE: 1.253818:  50%|█████     | 4/8 [00:22&lt;00:22,  5.70s/it]
+Epoch 3, Batch 5/8, Loss: 1.291762, RMSE: 1.231260:  50%|█████     | 4/8 [00:28&lt;00:22,  5.70s/it]
+Epoch 3, Batch 5/8, Loss: 1.291762, RMSE: 1.231260:  62%|██████▎   | 5/8 [00:28&lt;00:17,  5.70s/it]
+Epoch 3, Batch 6/8, Loss: 1.009056, RMSE: 1.196457:  62%|██████▎   | 5/8 [00:34&lt;00:17,  5.70s/it]
+Epoch 3, Batch 6/8, Loss: 1.009056, RMSE: 1.196457:  75%|███████▌  | 6/8 [00:34&lt;00:11,  5.69s/it]
+Epoch 3, Batch 7/8, Loss: 1.001247, RMSE: 1.170489:  75%|███████▌  | 6/8 [00:39&lt;00:11,  5.69s/it]
+Epoch 3, Batch 7/8, Loss: 1.001247, RMSE: 1.170489:  88%|████████▊ | 7/8 [00:39&lt;00:05,  5.69s/it]
+Epoch 3, Batch 8/8, Loss: 1.037062, RMSE: 1.158098:  88%|████████▊ | 7/8 [00:43&lt;00:05,  5.69s/it]
+Epoch 3, Batch 8/8, Loss: 1.037062, RMSE: 1.158098: 100%|██████████| 8/8 [00:43&lt;00:00,  5.07s/it]
+Epoch 3, Batch 8/8, Loss: 1.037062, RMSE: 1.158098: 100%|██████████| 8/8 [00:43&lt;00:00,  5.45s/it]
+
+  0%|          | 0/1 [00:00&lt;?, ?it/s]
+Val Batch 1/1, Loss: 1.848508, RMSE: 1.359599:   0%|          | 0/1 [00:00&lt;?, ?it/s]
+Val Batch 1/1, Loss: 1.848508, RMSE: 1.359599: 100%|██████████| 1/1 [00:00&lt;00:00,  1.85it/s]
+Val Batch 1/1, Loss: 1.848508, RMSE: 1.359599: 100%|██████████| 1/1 [00:00&lt;00:00,  1.85it/s]
+Val RMSE: 1.359599, Val Loss: 1.848508
+
+Train RMSE: 1.158098, Average Train Loss: 1.328421, Val RMSE: 1.359599, Average Val Loss: 1.848508
+Epoch 4/5:
+  0%|          | 0/8 [00:00&lt;?, ?it/s]
+Epoch 4, Batch 1/8, Loss: 0.735030, RMSE: 0.857339:   0%|          | 0/8 [00:05&lt;?, ?it/s]
+Epoch 4, Batch 1/8, Loss: 0.735030, RMSE: 0.857339:  12%|█▎        | 1/8 [00:05&lt;00:39,  5.69s/it]
+Epoch 4, Batch 2/8, Loss: 0.836717, RMSE: 0.886495:  12%|█▎        | 1/8 [00:11&lt;00:39,  5.69s/it]
+Epoch 4, Batch 2/8, Loss: 0.836717, RMSE: 0.886495:  25%|██▌       | 2/8 [00:11&lt;00:34,  5.69s/it]
+Epoch 4, Batch 3/8, Loss: 0.777364, RMSE: 0.884894:  25%|██▌       | 2/8 [00:17&lt;00:34,  5.69s/it]
+Epoch 4, Batch 3/8, Loss: 0.777364, RMSE: 0.884894:  38%|███▊      | 3/8 [00:17&lt;00:28,  5.69s/it]
+Epoch 4, Batch 4/8, Loss: 0.796759, RMSE: 0.886830:  38%|███▊      | 3/8 [00:22&lt;00:28,  5.69s/it]
+Epoch 4, Batch 4/8, Loss: 0.796759, RMSE: 0.886830:  50%|█████     | 4/8 [00:22&lt;00:22,  5.69s/it]
+Epoch 4, Batch 5/8, Loss: 0.776555, RMSE: 0.885711:  50%|█████     | 4/8 [00:28&lt;00:22,  5.69s/it]
+Epoch 4, Batch 5/8, Loss: 0.776555, RMSE: 0.885711:  62%|██████▎   | 5/8 [00:28&lt;00:17,  5.69s/it]
+Epoch 4, Batch 6/8, Loss: 0.716889, RMSE: 0.879329:  62%|██████▎   | 5/8 [00:34&lt;00:17,  5.69s/it]
+Epoch 4, Batch 6/8, Loss: 0.716889, RMSE: 0.879329:  75%|███████▌  | 6/8 [00:34&lt;00:11,  5.68s/it]
+Epoch 4, Batch 7/8, Loss: 0.715888, RMSE: 0.874659:  75%|███████▌  | 6/8 [00:39&lt;00:11,  5.68s/it]
+Epoch 4, Batch 7/8, Loss: 0.715888, RMSE: 0.874659:  88%|████████▊ | 7/8 [00:39&lt;00:05,  5.69s/it]
+Epoch 4, Batch 8/8, Loss: 0.698003, RMSE: 0.871333:  88%|████████▊ | 7/8 [00:43&lt;00:05,  5.69s/it]
+Epoch 4, Batch 8/8, Loss: 0.698003, RMSE: 0.871333: 100%|██████████| 8/8 [00:43&lt;00:00,  5.08s/it]
+Epoch 4, Batch 8/8, Loss: 0.698003, RMSE: 0.871333: 100%|██████████| 8/8 [00:43&lt;00:00,  5.45s/it]
+
+  0%|          | 0/1 [00:00&lt;?, ?it/s]
+Val Batch 1/1, Loss: 1.255778, RMSE: 1.120615:   0%|          | 0/1 [00:00&lt;?, ?it/s]
+Val Batch 1/1, Loss: 1.255778, RMSE: 1.120615: 100%|██████████| 1/1 [00:00&lt;00:00,  1.85it/s]
+Val Batch 1/1, Loss: 1.255778, RMSE: 1.120615: 100%|██████████| 1/1 [00:00&lt;00:00,  1.85it/s]
+Val RMSE: 1.120615, Val Loss: 1.255778
+
+Train RMSE: 0.871333, Average Train Loss: 0.756650, Val RMSE: 1.120615, Average Val Loss: 1.255778
+Epoch 5/5:
+  0%|          | 0/8 [00:00&lt;?, ?it/s]
+Epoch 5, Batch 1/8, Loss: 0.652287, RMSE: 0.807643:   0%|          | 0/8 [00:05&lt;?, ?it/s]
+Epoch 5, Batch 1/8, Loss: 0.652287, RMSE: 0.807643:  12%|█▎        | 1/8 [00:05&lt;00:39,  5.69s/it]
+Epoch 5, Batch 2/8, Loss: 0.691337, RMSE: 0.819641:  12%|█▎        | 1/8 [00:11&lt;00:39,  5.69s/it]
+Epoch 5, Batch 2/8, Loss: 0.691337, RMSE: 0.819641:  25%|██▌       | 2/8 [00:11&lt;00:34,  5.68s/it]
+Epoch 5, Batch 3/8, Loss: 0.694481, RMSE: 0.824238:  25%|██▌       | 2/8 [00:17&lt;00:34,  5.68s/it]
+Epoch 5, Batch 3/8, Loss: 0.694481, RMSE: 0.824238:  38%|███▊      | 3/8 [00:17&lt;00:28,  5.68s/it]
+Epoch 5, Batch 4/8, Loss: 0.682651, RMSE: 0.824736:  38%|███▊      | 3/8 [00:22&lt;00:28,  5.68s/it]
+Epoch 5, Batch 4/8, Loss: 0.682651, RMSE: 0.824736:  50%|█████     | 4/8 [00:22&lt;00:22,  5.67s/it]
+Epoch 5, Batch 5/8, Loss: 0.604054, RMSE: 0.815452:  50%|█████     | 4/8 [00:28&lt;00:22,  5.67s/it]
+Epoch 5, Batch 5/8, Loss: 0.604054, RMSE: 0.815452:  62%|██████▎   | 5/8 [00:28&lt;00:17,  5.68s/it]
+Epoch 5, Batch 6/8, Loss: 0.625973, RMSE: 0.811458:  62%|██████▎   | 5/8 [00:34&lt;00:17,  5.68s/it]
+Epoch 5, Batch 6/8, Loss: 0.625973, RMSE: 0.811458:  75%|███████▌  | 6/8 [00:34&lt;00:11,  5.68s/it]
+Epoch 5, Batch 7/8, Loss: 0.678745, RMSE: 0.813241:  75%|███████▌  | 6/8 [00:39&lt;00:11,  5.68s/it]
+Epoch 5, Batch 7/8, Loss: 0.678745, RMSE: 0.813241:  88%|████████▊ | 7/8 [00:39&lt;00:05,  5.68s/it]
+Epoch 5, Batch 8/8, Loss: 0.645114, RMSE: 0.812375:  88%|████████▊ | 7/8 [00:43&lt;00:05,  5.68s/it]
+Epoch 5, Batch 8/8, Loss: 0.645114, RMSE: 0.812375: 100%|██████████| 8/8 [00:43&lt;00:00,  5.06s/it]
+Epoch 5, Batch 8/8, Loss: 0.645114, RMSE: 0.812375: 100%|██████████| 8/8 [00:43&lt;00:00,  5.44s/it]
+
+  0%|          | 0/1 [00:00&lt;?, ?it/s]
+Val Batch 1/1, Loss: 1.279076, RMSE: 1.130963:   0%|          | 0/1 [00:00&lt;?, ?it/s]
+Val Batch 1/1, Loss: 1.279076, RMSE: 1.130963: 100%|██████████| 1/1 [00:00&lt;00:00,  1.85it/s]
+Val Batch 1/1, Loss: 1.279076, RMSE: 1.130963: 100%|██████████| 1/1 [00:00&lt;00:00,  1.85it/s]
+Val RMSE: 1.130963, Val Loss: 1.279076
+
+Train RMSE: 0.812375, Average Train Loss: 0.659330, Val RMSE: 1.130963, Average Val Loss: 1.279076
+</pre></div>
+</div>
+<p><strong>Save the model</strong></p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">torch</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">state_dict</span><span class="p">(),</span> <span class="s2">&quot;weights_challenge_1.pt&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Model saved as &#39;weights_challenge_1.pt&#39;&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Model saved as &#39;weights_challenge_1.pt&#39;
+</pre></div>
+</div>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (4 minutes 11.939 seconds)</p>
+<p><strong>Estimated memory usage:</strong>  1308 MB</p>
+<div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-generated-auto-examples-eeg2025-tutorial-challenge-1-py">
+<div class="binder-badge docutils container">
+<a class="reference external image-reference" href="https://mybinder.org/v2/gh/eegdash/EEGDash/main?urlpath=lab/tree/notebooks/generated/auto_examples/eeg2025/tutorial_challenge_1.ipynb"><img alt="Launch binder" src="../../../_images/binder_badge_logo1.svg" style="width: 150px;" />
+</a>
+</div>
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="../../../_downloads/9f4f54b7e99e554f34ea4efcf2a8337e/tutorial_challenge_1.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">tutorial_challenge_1.ipynb</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../../../_downloads/5044305b05a7be55ecd07d164d2ff80f/tutorial_challenge_1.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">tutorial_challenge_1.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-zip docutils container">
+<p><a class="reference download internal" download="" href="../../../_downloads/641a93ccb7e404d3efff847582d2daf4/tutorial_challenge_1.zip"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">zipped:</span> <span class="pre">tutorial_challenge_1.zip</span></code></a></p>
+</div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../core/tutorial_minimal.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Minimal Tutorial</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="tutorial_challenge_2.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Challenge 2: Predicting the p-factor from EEG</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+
+  
+  <div class="tocsection editthispage">
+    <a href="https://github.com/eegdash/EEGDash/edit/develop/docs/source/generated/auto_examples/eeg2025/tutorial_challenge_1.rst">
+      <i class="fa-solid fa-pencil"></i>
+      
+      
+        
+          Edit on GitHub
+        
+      
+    </a>
+  </div>
+</div>
+
+  <div class="sidebar-secondary-item">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../_sources/generated/auto_examples/eeg2025/tutorial_challenge_1.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2025-2026, EEG Dash Developers.
+      <br/>
+    
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

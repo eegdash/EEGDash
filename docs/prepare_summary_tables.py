@@ -338,12 +338,26 @@ def prepare_table(df: pd.DataFrame):
         df["source"] = ""
     if "record_modality" not in df.columns:
         df["record_modality"] = df.get("record modality", "")
+    # Handle tags columns (new structure) or legacy column names
     if "Type Subject" not in df.columns:
-        df["Type Subject"] = ""
+        # Try to get from tags.pathology or default to empty
+        if "pathology" in df.columns:
+            df["Type Subject"] = df["pathology"]
+        else:
+            df["Type Subject"] = ""
     if "modality of exp" not in df.columns:
-        df["modality of exp"] = ""
+        # Try to get from tags.modality or default to empty
+        if "modality" in df.columns and "Type Subject" in df.columns:
+            # Only use if it's the experimental modality, not recording modality
+            df["modality of exp"] = df["modality"]
+        else:
+            df["modality of exp"] = ""
     if "type of exp" not in df.columns:
-        df["type of exp"] = ""
+        # Try to get from tags.type or default to empty
+        if "type" in df.columns:
+            df["type of exp"] = df["type"]
+        else:
+            df["type of exp"] = ""
     if "license" not in df.columns:
         df["license"] = ""
     if "size" not in df.columns:
@@ -991,6 +1005,38 @@ def main_from_json(source_dir: str, target_dir: str):
             elif rec_mod is None:
                 rec_mod = ""
 
+            # Extract tags (new structure) or fallback to legacy fields
+            tags = ds.get("tags", {}) or {}
+            clinical = ds.get("clinical", {}) or {}
+            paradigm = ds.get("paradigm", {}) or {}
+
+            # Use tags.pathology if available, otherwise fallback
+            pathology_list = tags.get("pathology", [])
+            if pathology_list and isinstance(pathology_list, list):
+                type_subject = ", ".join(pathology_list)
+            elif clinical.get("is_clinical"):
+                type_subject = clinical.get("purpose") or "Clinical"
+            elif clinical.get("is_clinical") is False:
+                type_subject = "Healthy"
+            else:
+                type_subject = ds.get("study_domain", "") or ""
+
+            # Use tags.modality if available
+            modality_list = tags.get("modality", [])
+            if modality_list and isinstance(modality_list, list):
+                modality_of_exp = ", ".join(modality_list)
+            else:
+                modality_of_exp = paradigm.get("modality") or ""
+
+            # Use tags.type if available
+            type_list = tags.get("type", [])
+            if type_list and isinstance(type_list, list):
+                type_of_exp = ", ".join(type_list)
+            else:
+                type_of_exp = (
+                    paradigm.get("cognitive_domain") or ds.get("study_design", "") or ""
+                )
+
             row = {
                 "dataset": ds_id,
                 "dataset_title": ds.get("name", ""),  # New field
@@ -1003,10 +1049,10 @@ def main_from_json(source_dir: str, target_dir: str):
                 "sampling_freqs": "",  # Not easily available
                 "size": human_readable_size(ds.get("size_bytes") or 0),
                 "size_bytes": ds.get("size_bytes") or 0,
-                # Mappings
-                "Type Subject": ds.get("study_domain", "") or "",
-                "modality of exp": "",  # 'experimental_modalities' is null in my sample
-                "type of exp": ds.get("study_design", "") or "",
+                # Mappings from tags
+                "Type Subject": type_subject,
+                "modality of exp": modality_of_exp,
+                "type of exp": type_of_exp,
                 # Extra
                 "source": ds.get("source", ""),
                 "license": ds.get("license", ""),

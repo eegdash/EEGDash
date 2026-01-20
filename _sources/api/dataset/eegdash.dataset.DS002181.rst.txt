@@ -5,15 +5,15 @@
 eegdash.dataset.DS002181
 ========================
 
-CRYPTO and PROVIDE EEG Baseline Data (OpenNeuro ``ds002181``). Access recordings and metadata through EEGDash.
+participants.tsv (OpenNeuro ``ds002181``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: ['eeg']` :bdg-light:`Tasks: 1` :bdg-light:`Subjects: 226` :bdg-light:`Recordings: 226`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 226` :bdg-secondary:`Recordings: 226`
 
 .. rst-class:: sd-badges
 
-:bdg-light:`License: CC0` :bdg-light:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -25,7 +25,7 @@ Dataset Information
    * - Dataset ID
      - ``DS002181``
    * - Title
-     - CRYPTO and PROVIDE EEG Baseline Data
+     - participants.tsv
    * - Year
      - 2019
    * - Authors
@@ -44,7 +44,7 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds002181,
-        title = {CRYPTO and PROVIDE EEG Baseline Data},
+        title = {participants.tsv},
         author = {Wanze Xie and Sarah Jensen and Mark Wade and Swapna Kumar and Alissa Westerlund and Shahria Kakon and Rashidul Haque and William A Petri and Charles A Nelson},
         doi = {mockDOI},
         url = {https://doi.org/mockDOI},
@@ -68,7 +68,7 @@ Highlights
 
       - Channels: 124
       - Sampling rate (Hz): 500.0
-      - Duration (hours): 0
+      - Duration (hours): 0.0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
@@ -80,7 +80,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 150.89 MB
+      - Size on disk: 150.9 MB
       - File count: 226
       - Format: BIDS
 
@@ -104,17 +104,18 @@ Quickstart
 
 .. code-block:: bash
 
-   pip install eegdash
+    pip install eegdash
 
-**Load a recording**
+**Access the data**
 
 .. code-block:: python
 
-   from eegdash.dataset import DS002181
+    from eegdash.dataset import DS002181
 
-   dataset = DS002181(cache_dir="./data")
-   recording = dataset[0]
-   raw = recording.load()
+    dataset = DS002181(cache_dir="./data")
+    # Get the raw object of the first recording
+    raw = dataset.datasets[0].raw
+    print(raw.info)
 
 **Filter/query**
 

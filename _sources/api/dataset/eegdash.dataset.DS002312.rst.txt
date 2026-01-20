@@ -5,15 +5,15 @@
 eegdash.dataset.DS002312
 ========================
 
-OcularLDT (OpenNeuro ``ds002312``). Access recordings and metadata through EEGDash.
+participants.tsv (OpenNeuro ``ds002312``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: ['meg']` :bdg-light:`Tasks: 1` :bdg-light:`Subjects: 19` :bdg-light:`Recordings: 23`
+:bdg-primary:`Modality: meg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 19` :bdg-secondary:`Recordings: 23`
 
 .. rst-class:: sd-badges
 
-:bdg-light:`License: CC0` :bdg-light:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -25,7 +25,7 @@ Dataset Information
    * - Dataset ID
      - ``DS002312``
    * - Title
-     - OcularLDT
+     - participants.tsv
    * - Year
      - 2019
    * - Authors
@@ -44,7 +44,7 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds002312,
-        title = {OcularLDT},
+        title = {participants.tsv},
         author = {Teon L Brooks and Laura Gwilliams and Alexandre Gramfort and Alec Marantz},
         doi = {10.18112/openneuro.ds002312.v1.0.0},
         url = {https://doi.org/10.18112/openneuro.ds002312.v1.0.0},
@@ -66,9 +66,9 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 208 (15), 257 (8)
+      - Channels: 208 (30), 257 (16)
       - Sampling rate (Hz): 1000.0
-      - Duration (hours): 0
+      - Duration (hours): 0.0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
@@ -80,7 +80,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 34.09 GB
+      - Size on disk: 34.1 GB
       - File count: 23
       - Format: BIDS
 
@@ -104,17 +104,18 @@ Quickstart
 
 .. code-block:: bash
 
-   pip install eegdash
+    pip install eegdash
 
-**Load a recording**
+**Access the data**
 
 .. code-block:: python
 
-   from eegdash.dataset import DS002312
+    from eegdash.dataset import DS002312
 
-   dataset = DS002312(cache_dir="./data")
-   recording = dataset[0]
-   raw = recording.load()
+    dataset = DS002312(cache_dir="./data")
+    # Get the raw object of the first recording
+    raw = dataset.datasets[0].raw
+    print(raw.info)
 
 **Filter/query**
 

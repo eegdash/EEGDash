@@ -5,15 +5,15 @@
 eegdash.dataset.DS007020
 ========================
 
-EEG Mortality Dataset in Parkinson's Disease (OpenNeuro ``ds007020``). Access recordings and metadata through EEGDash.
+participants.tsv (OpenNeuro ``ds007020``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: ['eeg']` :bdg-light:`Tasks: 1` :bdg-light:`Subjects: 94` :bdg-light:`Recordings: 94`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 94` :bdg-secondary:`Recordings: 94`
 
 .. rst-class:: sd-badges
 
-:bdg-light:`License: CC0` :bdg-light:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -25,7 +25,7 @@ Dataset Information
    * - Dataset ID
      - ``DS007020``
    * - Title
-     - EEG Mortality Dataset in Parkinson's Disease
+     - participants.tsv
    * - Year
      - 2025
    * - Authors
@@ -44,7 +44,7 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds007020,
-        title = {EEG Mortality Dataset in Parkinson's Disease},
+        title = {participants.tsv},
         author = {Simin Jamshidi and Arturo Espinoza and Soura Dasgupta and Nandakumar Narayanan},
         doi = {10.18112/openneuro.ds007020.v1.0.0},
         url = {https://doi.org/10.18112/openneuro.ds007020.v1.0.0},
@@ -68,7 +68,7 @@ Highlights
 
       - Channels: 63
       - Sampling rate (Hz): 500.0
-      - Duration (hours): 0
+      - Duration (hours): 0.0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
@@ -80,7 +80,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 1.74 GB
+      - Size on disk: 1.7 GB
       - File count: 94
       - Format: BIDS
 
@@ -104,17 +104,18 @@ Quickstart
 
 .. code-block:: bash
 
-   pip install eegdash
+    pip install eegdash
 
-**Load a recording**
+**Access the data**
 
 .. code-block:: python
 
-   from eegdash.dataset import DS007020
+    from eegdash.dataset import DS007020
 
-   dataset = DS007020(cache_dir="./data")
-   recording = dataset[0]
-   raw = recording.load()
+    dataset = DS007020(cache_dir="./data")
+    # Get the raw object of the first recording
+    raw = dataset.datasets[0].raw
+    print(raw.info)
 
 **Filter/query**
 

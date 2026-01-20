@@ -5,15 +5,15 @@
 eegdash.dataset.DS005178
 ========================
 
-Ear-EEG Sleep Monitoring 2023 (EESM23) (OpenNeuro ``ds005178``). Access recordings and metadata through EEGDash.
+manifest.json (OpenNeuro ``ds005178``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: ['eeg']` :bdg-light:`Tasks: 1` :bdg-light:`Subjects: 10` :bdg-light:`Recordings: 140`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 10` :bdg-secondary:`Recordings: 140`
 
 .. rst-class:: sd-badges
 
-:bdg-light:`License: CC0` :bdg-light:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -25,7 +25,7 @@ Dataset Information
    * - Dataset ID
      - ``DS005178``
    * - Title
-     - Ear-EEG Sleep Monitoring 2023 (EESM23)
+     - manifest.json
    * - Year
      - 2024
    * - Authors
@@ -44,7 +44,7 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds005178,
-        title = {Ear-EEG Sleep Monitoring 2023 (EESM23)},
+        title = {manifest.json},
         author = {Yousef Rezaei Tabar and Kaare Mikkelsen and Laura Birch and Nelly Shenton and Simon L Kappel and Astrid R Bertelsen and Reza Nikbakht and Hans O Toft and Chris H Henriksen and Martin C Hemmsen and Mike L Rank and Marit Otto and Preben Kidmose},
         doi = {10.18112/openneuro.ds005178.v1.0.0},
         url = {https://doi.org/10.18112/openneuro.ds005178.v1.0.0},
@@ -66,9 +66,9 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 4 (120), 13 (20)
+      - Channels: 4 (240), 13 (40)
       - Sampling rate (Hz): 250.0
-      - Duration (hours): 0
+      - Duration (hours): 0.0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
@@ -80,7 +80,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 25.74 GB
+      - Size on disk: 25.7 GB
       - File count: 140
       - Format: BIDS
 
@@ -104,17 +104,18 @@ Quickstart
 
 .. code-block:: bash
 
-   pip install eegdash
+    pip install eegdash
 
-**Load a recording**
+**Access the data**
 
 .. code-block:: python
 
-   from eegdash.dataset import DS005178
+    from eegdash.dataset import DS005178
 
-   dataset = DS005178(cache_dir="./data")
-   recording = dataset[0]
-   raw = recording.load()
+    dataset = DS005178(cache_dir="./data")
+    # Get the raw object of the first recording
+    raw = dataset.datasets[0].raw
+    print(raw.info)
 
 **Filter/query**
 

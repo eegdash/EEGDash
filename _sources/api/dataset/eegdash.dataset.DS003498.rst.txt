@@ -5,15 +5,15 @@
 eegdash.dataset.DS003498
 ========================
 
-interictal iEEG during slow-wave sleep with HFO markings (OpenNeuro ``ds003498``). Access recordings and metadata through EEGDash.
+participants.tsv (OpenNeuro ``ds003498``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: ['ieeg']` :bdg-light:`Tasks: —` :bdg-light:`Subjects: 20` :bdg-light:`Recordings: 385`
+:bdg-primary:`Modality: ieeg` :bdg-info:`Tasks: —` :bdg-secondary:`Subjects: 20` :bdg-secondary:`Recordings: 385`
 
 .. rst-class:: sd-badges
 
-:bdg-light:`License: CC0` :bdg-light:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -25,7 +25,7 @@ Dataset Information
    * - Dataset ID
      - ``DS003498``
    * - Title
-     - interictal iEEG during slow-wave sleep with HFO markings
+     - participants.tsv
    * - Year
      - 2021
    * - Authors
@@ -44,7 +44,7 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds003498,
-        title = {interictal iEEG during slow-wave sleep with HFO markings},
+        title = {participants.tsv},
         author = {Fedele T and Krayenbühl N and Hilfiker P and Adam Li and Sarnthein J.},
         doi = {10.18112/openneuro.ds003498.v1.0.1},
         url = {https://doi.org/10.18112/openneuro.ds003498.v1.0.1},
@@ -66,9 +66,9 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 40 (73), 16 (29), 50 (28), 42 (43), 30 (5), 48 (13), 52 (13), 64 (146), 74 (35)
+      - Channels: 40 (146), 30 (10), 16 (58), 42 (86), 50 (56), 48 (26), 52 (26), 64 (292), 74 (70)
       - Sampling rate (Hz): 2000.0
-      - Duration (hours): 0
+      - Duration (hours): 0.0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
@@ -80,7 +80,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 44.73 GB
+      - Size on disk: 44.7 GB
       - File count: 385
       - Format: BIDS
 
@@ -104,17 +104,18 @@ Quickstart
 
 .. code-block:: bash
 
-   pip install eegdash
+    pip install eegdash
 
-**Load a recording**
+**Access the data**
 
 .. code-block:: python
 
-   from eegdash.dataset import DS003498
+    from eegdash.dataset import DS003498
 
-   dataset = DS003498(cache_dir="./data")
-   recording = dataset[0]
-   raw = recording.load()
+    dataset = DS003498(cache_dir="./data")
+    # Get the raw object of the first recording
+    raw = dataset.datasets[0].raw
+    print(raw.info)
 
 **Filter/query**
 

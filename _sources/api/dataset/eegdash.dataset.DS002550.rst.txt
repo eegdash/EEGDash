@@ -9,11 +9,11 @@ Differential brain mechanisms of selection and maintenance of information during
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: ['meg']` :bdg-light:`Tasks: 2` :bdg-light:`Subjects: 23` :bdg-light:`Recordings: 12754`
+:bdg-primary:`Modality: meg` :bdg-info:`Tasks: 2` :bdg-secondary:`Subjects: 23` :bdg-secondary:`Recordings: 12754`
 
 .. rst-class:: sd-badges
 
-:bdg-light:`License: CC0` :bdg-light:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -68,14 +68,14 @@ Highlights
 
       - Channels: —
       - Sampling rate (Hz): —
-      - Duration (hours): 0
+      - Duration (hours): 0.0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
 
       - Tasks: 2
       - Experiment type: —
-      - Subject type: —
+      - Subject type: Working memory
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
@@ -104,17 +104,18 @@ Quickstart
 
 .. code-block:: bash
 
-   pip install eegdash
+    pip install eegdash
 
-**Load a recording**
+**Access the data**
 
 .. code-block:: python
 
-   from eegdash.dataset import DS002550
+    from eegdash.dataset import DS002550
 
-   dataset = DS002550(cache_dir="./data")
-   recording = dataset[0]
-   raw = recording.load()
+    dataset = DS002550(cache_dir="./data")
+    # Get the raw object of the first recording
+    raw = dataset.datasets[0].raw
+    print(raw.info)
 
 **Filter/query**
 

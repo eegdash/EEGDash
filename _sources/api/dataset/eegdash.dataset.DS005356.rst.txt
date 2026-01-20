@@ -5,15 +5,15 @@
 eegdash.dataset.DS005356
 ========================
 
-MEG: Major Depression & Probabilistic Learning Task (OpenNeuro ``ds005356``). Access recordings and metadata through EEGDash.
+participants.tsv (OpenNeuro ``ds005356``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: ['meg']` :bdg-light:`Tasks: 1` :bdg-light:`Subjects: 85` :bdg-light:`Recordings: 116`
+:bdg-primary:`Modality: meg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 85` :bdg-secondary:`Recordings: 116`
 
 .. rst-class:: sd-badges
 
-:bdg-light:`License: CC0` :bdg-light:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -25,7 +25,7 @@ Dataset Information
    * - Dataset ID
      - ``DS005356``
    * - Title
-     - MEG: Major Depression & Probabilistic Learning Task
+     - participants.tsv
    * - Year
      - 2024
    * - Authors
@@ -44,7 +44,7 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds005356,
-        title = {MEG: Major Depression & Probabilistic Learning Task},
+        title = {participants.tsv},
         author = {[Unspecified]},
         doi = {10.18112/openneuro.ds005356.v1.5.0},
         url = {https://doi.org/10.18112/openneuro.ds005356.v1.5.0},
@@ -66,9 +66,9 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 396 (60), 71 (53), 125 (2)
+      - Channels: 125 (4), 71 (106), 396 (120)
       - Sampling rate (Hz): 1000.0
-      - Duration (hours): 0
+      - Duration (hours): 0.0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
@@ -80,7 +80,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 161.57 GB
+      - Size on disk: 161.6 GB
       - File count: 116
       - Format: BIDS
 
@@ -104,17 +104,18 @@ Quickstart
 
 .. code-block:: bash
 
-   pip install eegdash
+    pip install eegdash
 
-**Load a recording**
+**Access the data**
 
 .. code-block:: python
 
-   from eegdash.dataset import DS005356
+    from eegdash.dataset import DS005356
 
-   dataset = DS005356(cache_dir="./data")
-   recording = dataset[0]
-   raw = recording.load()
+    dataset = DS005356(cache_dir="./data")
+    # Get the raw object of the first recording
+    raw = dataset.datasets[0].raw
+    print(raw.info)
 
 **Filter/query**
 

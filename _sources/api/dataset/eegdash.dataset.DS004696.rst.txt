@@ -9,11 +9,11 @@ HAPwave_bids (OpenNeuro ``ds004696``). Access recordings and metadata through EE
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: ['ieeg']` :bdg-light:`Tasks: 1` :bdg-light:`Subjects: 10` :bdg-light:`Recordings: 5243`
+:bdg-primary:`Modality: ieeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 10` :bdg-secondary:`Recordings: 5243`
 
 .. rst-class:: sd-badges
 
-:bdg-light:`License: CC0` :bdg-light:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -68,14 +68,14 @@ Highlights
 
       - Channels: —
       - Sampling rate (Hz): —
-      - Duration (hours): 0
+      - Duration (hours): 0.0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
 
       - Tasks: 1
       - Experiment type: —
-      - Subject type: —
+      - Subject type: Single pulse electrical stimulation, limbic circuitry
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
@@ -104,17 +104,18 @@ Quickstart
 
 .. code-block:: bash
 
-   pip install eegdash
+    pip install eegdash
 
-**Load a recording**
+**Access the data**
 
 .. code-block:: python
 
-   from eegdash.dataset import DS004696
+    from eegdash.dataset import DS004696
 
-   dataset = DS004696(cache_dir="./data")
-   recording = dataset[0]
-   raw = recording.load()
+    dataset = DS004696(cache_dir="./data")
+    # Get the raw object of the first recording
+    raw = dataset.datasets[0].raw
+    print(raw.info)
 
 **Filter/query**
 

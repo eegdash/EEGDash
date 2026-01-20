@@ -5,15 +5,15 @@
 eegdash.dataset.DS003519
 ========================
 
-EEG: Visual Working Memory + Cabergoline Challenge (OpenNeuro ``ds003519``). Access recordings and metadata through EEGDash.
+participants.tsv (OpenNeuro ``ds003519``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: ['eeg']` :bdg-light:`Tasks: 1` :bdg-light:`Subjects: 27` :bdg-light:`Recordings: 54`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 27` :bdg-secondary:`Recordings: 54`
 
 .. rst-class:: sd-badges
 
-:bdg-light:`License: CC0` :bdg-light:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -25,7 +25,7 @@ Dataset Information
    * - Dataset ID
      - ``DS003519``
    * - Title
-     - EEG: Visual Working Memory + Cabergoline Challenge
+     - participants.tsv
    * - Year
      - 2021
    * - Authors
@@ -44,7 +44,7 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds003519,
-        title = {EEG: Visual Working Memory + Cabergoline Challenge},
+        title = {participants.tsv},
         author = {James F Cavanagh and Michael J Frank and James Broadway},
         doi = {10.18112/openneuro.ds003519.v1.1.0},
         url = {https://doi.org/10.18112/openneuro.ds003519.v1.1.0},
@@ -68,7 +68,7 @@ Highlights
 
       - Channels: 64
       - Sampling rate (Hz): 500.0
-      - Duration (hours): 0
+      - Duration (hours): 0.0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
@@ -80,7 +80,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 8.96 GB
+      - Size on disk: 9.0 GB
       - File count: 54
       - Format: BIDS
 
@@ -104,17 +104,18 @@ Quickstart
 
 .. code-block:: bash
 
-   pip install eegdash
+    pip install eegdash
 
-**Load a recording**
+**Access the data**
 
 .. code-block:: python
 
-   from eegdash.dataset import DS003519
+    from eegdash.dataset import DS003519
 
-   dataset = DS003519(cache_dir="./data")
-   recording = dataset[0]
-   raw = recording.load()
+    dataset = DS003519(cache_dir="./data")
+    # Get the raw object of the first recording
+    raw = dataset.datasets[0].raw
+    print(raw.info)
 
 **Filter/query**
 

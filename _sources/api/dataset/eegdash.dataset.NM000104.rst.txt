@@ -9,11 +9,11 @@ emg2qwerty: Touch Typing from Surface Electromyography (OpenNeuro ``nm000104``).
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: ['emg']` :bdg-light:`Tasks: 1` :bdg-light:`Subjects: 108` :bdg-light:`Recordings: 1135`
+:bdg-primary:`Modality: emg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 108` :bdg-secondary:`Recordings: 1135`
 
 .. rst-class:: sd-badges
 
-:bdg-light:`License: CC-BY-NC-SA-4.0` :bdg-light:`Source: nemar`
+:bdg-success:`License: CC-BY-NC-SA-4.0` :bdg-warning:`Source: nemar`
 
 Dataset Information
 -------------------
@@ -66,9 +66,9 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: —
-      - Sampling rate (Hz): —
-      - Duration (hours): 0
+      - Channels: 32
+      - Sampling rate (Hz): 2000.0
+      - Duration (hours): 0.0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
@@ -80,7 +80,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 290.48 MB
+      - Size on disk: 290.5 MB
       - File count: 1135
       - Format: BIDS
 
@@ -104,17 +104,18 @@ Quickstart
 
 .. code-block:: bash
 
-   pip install eegdash
+    pip install eegdash
 
-**Load a recording**
+**Access the data**
 
 .. code-block:: python
 
-   from eegdash.dataset import NM000104
+    from eegdash.dataset import NM000104
 
-   dataset = NM000104(cache_dir="./data")
-   recording = dataset[0]
-   raw = recording.load()
+    dataset = NM000104(cache_dir="./data")
+    # Get the raw object of the first recording
+    raw = dataset.datasets[0].raw
+    print(raw.info)
 
 **Filter/query**
 

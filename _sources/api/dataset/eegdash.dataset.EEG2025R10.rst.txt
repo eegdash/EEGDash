@@ -9,11 +9,11 @@ Healthy Brain Network (HBN) EEG - Release 10 (BDF Converted) (OpenNeuro ``eeg202
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: ['eeg']` :bdg-light:`Tasks: 8` :bdg-light:`Subjects: 533` :bdg-light:`Recordings: 2516`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 8` :bdg-secondary:`Subjects: 533` :bdg-secondary:`Recordings: 2516`
 
 .. rst-class:: sd-badges
 
-:bdg-light:`License: CC-BY-SA 4.0` :bdg-light:`Source: nemar`
+:bdg-success:`License: CC-BY-SA 4.0` :bdg-warning:`Source: nemar`
 
 Dataset Information
 -------------------
@@ -55,7 +55,7 @@ Highlights
 
       - Channels: 129
       - Sampling rate (Hz): 100.0
-      - Duration (hours): 0
+      - Duration (hours): 0.0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
@@ -91,17 +91,18 @@ Quickstart
 
 .. code-block:: bash
 
-   pip install eegdash
+    pip install eegdash
 
-**Load a recording**
+**Access the data**
 
 .. code-block:: python
 
-   from eegdash.dataset import EEG2025R10
+    from eegdash.dataset import EEG2025R10
 
-   dataset = EEG2025R10(cache_dir="./data")
-   recording = dataset[0]
-   raw = recording.load()
+    dataset = EEG2025R10(cache_dir="./data")
+    # Get the raw object of the first recording
+    raw = dataset.datasets[0].raw
+    print(raw.info)
 
 **Filter/query**
 

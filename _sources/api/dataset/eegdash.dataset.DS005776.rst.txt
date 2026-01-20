@@ -9,11 +9,11 @@ Electrical_Thermal_FingerTapping_2015 (OpenNeuro ``ds005776``). Access recording
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: ['fnirs']` :bdg-light:`Tasks: 5` :bdg-light:`Subjects: 12` :bdg-light:`Recordings: 293`
+:bdg-primary:`Modality: fnirs` :bdg-info:`Tasks: 5` :bdg-secondary:`Subjects: 12` :bdg-secondary:`Recordings: 293`
 
 .. rst-class:: sd-badges
 
-:bdg-light:`License: CC0` :bdg-light:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -68,14 +68,14 @@ Highlights
 
       - Channels: —
       - Sampling rate (Hz): —
-      - Duration (hours): 0
+      - Duration (hours): 0.0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
 
       - Tasks: 5
       - Experiment type: —
-      - Subject type: —
+      - Subject type: Sensory Neuroscience
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
@@ -104,17 +104,18 @@ Quickstart
 
 .. code-block:: bash
 
-   pip install eegdash
+    pip install eegdash
 
-**Load a recording**
+**Access the data**
 
 .. code-block:: python
 
-   from eegdash.dataset import DS005776
+    from eegdash.dataset import DS005776
 
-   dataset = DS005776(cache_dir="./data")
-   recording = dataset[0]
-   raw = recording.load()
+    dataset = DS005776(cache_dir="./data")
+    # Get the raw object of the first recording
+    raw = dataset.datasets[0].raw
+    print(raw.info)
 
 **Filter/query**
 

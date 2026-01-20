@@ -5,15 +5,15 @@
 eegdash.dataset.DS004460
 ========================
 
-EEG and motion capture data set for a full-body/joystick rotation task (OpenNeuro ``ds004460``). Access recordings and metadata through EEGDash.
+task-Rotation_events.json (OpenNeuro ``ds004460``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: ['eeg']` :bdg-light:`Tasks: 1` :bdg-light:`Subjects: 20` :bdg-light:`Recordings: 40`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 20` :bdg-secondary:`Recordings: 40`
 
 .. rst-class:: sd-badges
 
-:bdg-light:`License: CC0` :bdg-light:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -25,7 +25,7 @@ Dataset Information
    * - Dataset ID
      - ``DS004460``
    * - Title
-     - EEG and motion capture data set for a full-body/joystick rotation task
+     - task-Rotation_events.json
    * - Year
      - 2023
    * - Authors
@@ -44,7 +44,7 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds004460,
-        title = {EEG and motion capture data set for a full-body/joystick rotation task},
+        title = {task-Rotation_events.json},
         author = {Gramann, K. and Hohlefeld, F.U. and Gehrke, L. and Klug, M},
         doi = {10.18112/openneuro.ds004460.v1.1.0},
         url = {https://doi.org/10.18112/openneuro.ds004460.v1.1.0},
@@ -68,7 +68,7 @@ Highlights
 
       - Channels: 160
       - Sampling rate (Hz): 1000.0
-      - Duration (hours): 0
+      - Duration (hours): 0.0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
@@ -80,7 +80,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 59.07 GB
+      - Size on disk: 59.1 GB
       - File count: 40
       - Format: BIDS
 
@@ -104,17 +104,18 @@ Quickstart
 
 .. code-block:: bash
 
-   pip install eegdash
+    pip install eegdash
 
-**Load a recording**
+**Access the data**
 
 .. code-block:: python
 
-   from eegdash.dataset import DS004460
+    from eegdash.dataset import DS004460
 
-   dataset = DS004460(cache_dir="./data")
-   recording = dataset[0]
-   raw = recording.load()
+    dataset = DS004460(cache_dir="./data")
+    # Get the raw object of the first recording
+    raw = dataset.datasets[0].raw
+    print(raw.info)
 
 **Filter/query**
 

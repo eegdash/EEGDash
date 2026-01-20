@@ -5,15 +5,15 @@
 eegdash.dataset.DS006036
 ========================
 
-A complementary dataset of open-eyes EEG recordings in a photo-stimulation setting from: Alzheimer's disease, Frontotemporal dementia and Healthy subjects (OpenNeuro ``ds006036``). Access recordings and metadata through EEGDash.
+task-photomark_events.json (OpenNeuro ``ds006036``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: ['eeg']` :bdg-light:`Tasks: 1` :bdg-light:`Subjects: 88` :bdg-light:`Recordings: 88`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 88` :bdg-secondary:`Recordings: 88`
 
 .. rst-class:: sd-badges
 
-:bdg-light:`License: CC0` :bdg-light:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -25,7 +25,7 @@ Dataset Information
    * - Dataset ID
      - ``DS006036``
    * - Title
-     - A complementary dataset of open-eyes EEG recordings in a photo-stimulation setting from: Alzheimer's disease, Frontotemporal dementia and Healthy subjects
+     - task-photomark_events.json
    * - Year
      - 2025
    * - Authors
@@ -44,7 +44,7 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds006036,
-        title = {A complementary dataset of open-eyes EEG recordings in a photo-stimulation setting from: Alzheimer's disease, Frontotemporal dementia and Healthy subjects},
+        title = {task-photomark_events.json},
         author = {Aimilia Ntetska and Andreas Miltiadous and Alexandros T. Tzallas and Katerina D. Tzimourta and Theodora Afrantou and Panagiotis Ioannidis and Dimitrios G. Tsalikakis and Nikolaos Grigoriadis and Pantelis Angelidis and Konstantinos Sakkas and Emmanouil D. Oikonomou and Nikolaos Giannakeas and Markos G. Tsipouras},
         doi = {10.18112/openneuro.ds006036.v1.0.5},
         url = {https://doi.org/10.18112/openneuro.ds006036.v1.0.5},
@@ -68,7 +68,7 @@ Highlights
 
       - Channels: 19
       - Sampling rate (Hz): 500.0
-      - Duration (hours): 0
+      - Duration (hours): 0.0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
@@ -80,7 +80,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 1.05 GB
+      - Size on disk: 1.0 GB
       - File count: 88
       - Format: BIDS
 
@@ -104,17 +104,18 @@ Quickstart
 
 .. code-block:: bash
 
-   pip install eegdash
+    pip install eegdash
 
-**Load a recording**
+**Access the data**
 
 .. code-block:: python
 
-   from eegdash.dataset import DS006036
+    from eegdash.dataset import DS006036
 
-   dataset = DS006036(cache_dir="./data")
-   recording = dataset[0]
-   raw = recording.load()
+    dataset = DS006036(cache_dir="./data")
+    # Get the raw object of the first recording
+    raw = dataset.datasets[0].raw
+    print(raw.info)
 
 **Filter/query**
 

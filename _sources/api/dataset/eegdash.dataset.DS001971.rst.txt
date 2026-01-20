@@ -5,15 +5,15 @@
 eegdash.dataset.DS001971
 ========================
 
-Audiocue walking study (OpenNeuro ``ds001971``). Access recordings and metadata through EEGDash.
+participants.tsv (OpenNeuro ``ds001971``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: ['eeg']` :bdg-light:`Tasks: 1` :bdg-light:`Subjects: 20` :bdg-light:`Recordings: 273`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 20` :bdg-secondary:`Recordings: 273`
 
 .. rst-class:: sd-badges
 
-:bdg-light:`License: Creative commons` :bdg-light:`Source: openneuro`
+:bdg-success:`License: Creative commons` :bdg-warning:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -25,7 +25,7 @@ Dataset Information
    * - Dataset ID
      - ``DS001971``
    * - Title
-     - Audiocue walking study
+     - participants.tsv
    * - Year
      - 2019
    * - Authors
@@ -44,7 +44,7 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds001971,
-        title = {Audiocue walking study},
+        title = {participants.tsv},
         author = {Johanna Wagner and Ramon Martinez-Cancino and Scott Makeig and Arnaud Delorme and Christa Neuper and Teodoro Solis-Escalante and Gernot Mueller-Putz},
         doi = {10.18112/openneuro.ds001971.v1.1.1},
         url = {https://doi.org/10.18112/openneuro.ds001971.v1.1.1},
@@ -68,7 +68,7 @@ Highlights
 
       - Channels: 108
       - Sampling rate (Hz): 512.0
-      - Duration (hours): 0
+      - Duration (hours): 0.0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
@@ -80,7 +80,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 31.98 GB
+      - Size on disk: 32.0 GB
       - File count: 273
       - Format: BIDS
 
@@ -104,17 +104,18 @@ Quickstart
 
 .. code-block:: bash
 
-   pip install eegdash
+    pip install eegdash
 
-**Load a recording**
+**Access the data**
 
 .. code-block:: python
 
-   from eegdash.dataset import DS001971
+    from eegdash.dataset import DS001971
 
-   dataset = DS001971(cache_dir="./data")
-   recording = dataset[0]
-   raw = recording.load()
+    dataset = DS001971(cache_dir="./data")
+    # Get the raw object of the first recording
+    raw = dataset.datasets[0].raw
+    print(raw.info)
 
 **Filter/query**
 

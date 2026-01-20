@@ -5,15 +5,15 @@
 eegdash.dataset.DS004580
 ========================
 
-Simon-conflict Task. (OpenNeuro ``ds004580``). Access recordings and metadata through EEGDash.
+task-Simon_events.json (OpenNeuro ``ds004580``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: ['eeg']` :bdg-light:`Tasks: 1` :bdg-light:`Subjects: 147` :bdg-light:`Recordings: 147`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 147` :bdg-secondary:`Recordings: 147`
 
 .. rst-class:: sd-badges
 
-:bdg-light:`License: CC0` :bdg-light:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -25,7 +25,7 @@ Dataset Information
    * - Dataset ID
      - ``DS004580``
    * - Title
-     - Simon-conflict Task.
+     - task-Simon_events.json
    * - Year
      - 2023
    * - Authors
@@ -44,7 +44,7 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds004580,
-        title = {Simon-conflict Task.},
+        title = {task-Simon_events.json},
         author = {Arun Singh arun.singh@usd.edu and Rachel Cole rachel-cole@uiowa.edu and Arturo Espinoza arturo-espinoza@uiowa.edu and Jan R Wessel jan-wessel@uiowa.edu and Jim Cavanagh jcavanagh@unm.edu and Nandakumar Narayanan nandakumar-narayanan@uiowa.edu},
         doi = {10.18112/openneuro.ds004580.v1.0.0},
         url = {https://doi.org/10.18112/openneuro.ds004580.v1.0.0},
@@ -66,9 +66,9 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 66, 63 (118), 64 (28)
+      - Channels: 63 (236), 66 (2), 64 (56)
       - Sampling rate (Hz): 500.0
-      - Duration (hours): 0
+      - Duration (hours): 0.0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
@@ -80,7 +80,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 15.84 GB
+      - Size on disk: 15.8 GB
       - File count: 147
       - Format: BIDS
 
@@ -104,17 +104,18 @@ Quickstart
 
 .. code-block:: bash
 
-   pip install eegdash
+    pip install eegdash
 
-**Load a recording**
+**Access the data**
 
 .. code-block:: python
 
-   from eegdash.dataset import DS004580
+    from eegdash.dataset import DS004580
 
-   dataset = DS004580(cache_dir="./data")
-   recording = dataset[0]
-   raw = recording.load()
+    dataset = DS004580(cache_dir="./data")
+    # Get the raw object of the first recording
+    raw = dataset.datasets[0].raw
+    print(raw.info)
 
 **Filter/query**
 

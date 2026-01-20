@@ -5,15 +5,15 @@
 eegdash.dataset.DS005420
 ========================
 
-Resting state EEG with closed eyes and open eyes in females from 60 to 80 years old (OpenNeuro ``ds005420``). Access recordings and metadata through EEGDash.
+participants.tsv (OpenNeuro ``ds005420``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: ['eeg']` :bdg-light:`Tasks: 2` :bdg-light:`Subjects: 37` :bdg-light:`Recordings: 72`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 2` :bdg-secondary:`Subjects: 37` :bdg-secondary:`Recordings: 72`
 
 .. rst-class:: sd-badges
 
-:bdg-light:`License: CC0` :bdg-light:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -25,7 +25,7 @@ Dataset Information
    * - Dataset ID
      - ``DS005420``
    * - Title
-     - Resting state EEG with closed eyes and open eyes in females from 60 to 80 years old
+     - participants.tsv
    * - Year
      - 2024
    * - Authors
@@ -44,7 +44,7 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds005420,
-        title = {Resting state EEG with closed eyes and open eyes in females from 60 to 80 years old},
+        title = {participants.tsv},
         author = {Miriam de Jesús Sánchez Gama and Luis Alberto Barradas Chacón and Leticia Chacón Gutiérrez and Thalía Fernández Harmony and Carlos Augusto Novo Olivas and José María De La Roca Chiapas},
         doi = {10.18112/openneuro.ds005420.v1.0.0},
         url = {https://doi.org/10.18112/openneuro.ds005420.v1.0.0},
@@ -68,7 +68,7 @@ Highlights
 
       - Channels: 20
       - Sampling rate (Hz): 500.0
-      - Duration (hours): 0
+      - Duration (hours): 0.0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
@@ -80,7 +80,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 372.11 MB
+      - Size on disk: 372.1 MB
       - File count: 72
       - Format: BIDS
 
@@ -104,17 +104,18 @@ Quickstart
 
 .. code-block:: bash
 
-   pip install eegdash
+    pip install eegdash
 
-**Load a recording**
+**Access the data**
 
 .. code-block:: python
 
-   from eegdash.dataset import DS005420
+    from eegdash.dataset import DS005420
 
-   dataset = DS005420(cache_dir="./data")
-   recording = dataset[0]
-   raw = recording.load()
+    dataset = DS005420(cache_dir="./data")
+    # Get the raw object of the first recording
+    raw = dataset.datasets[0].raw
+    print(raw.info)
 
 **Filter/query**
 

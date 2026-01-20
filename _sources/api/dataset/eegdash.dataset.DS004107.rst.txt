@@ -5,15 +5,15 @@
 eegdash.dataset.DS004107
 ========================
 
-MIND DATA (OpenNeuro ``ds004107``). Access recordings and metadata through EEGDash.
+participants.tsv (OpenNeuro ``ds004107``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: ['meg']` :bdg-light:`Tasks: 6` :bdg-light:`Subjects: 9` :bdg-light:`Recordings: 89`
+:bdg-primary:`Modality: meg` :bdg-info:`Tasks: 6` :bdg-secondary:`Subjects: 9` :bdg-secondary:`Recordings: 89`
 
 .. rst-class:: sd-badges
 
-:bdg-light:`License: CC0` :bdg-light:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -25,7 +25,7 @@ Dataset Information
    * - Dataset ID
      - ``DS004107``
    * - Title
-     - MIND DATA
+     - participants.tsv
    * - Year
      - 2022
    * - Authors
@@ -44,7 +44,7 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds004107,
-        title = {MIND DATA},
+        title = {participants.tsv},
         author = {M.P. Weisend and F.M. Hanlon and R. Montano and S.P. Ahlfors and A.C. Leuthold and D. Pantazis and J.C. Mosher and A.P. Georgopoulos and M.S. Hamalainen and C.J. Aine},
         doi = {10.18112/openneuro.ds004107.v1.0.0},
         url = {https://doi.org/10.18112/openneuro.ds004107.v1.0.0},
@@ -67,8 +67,8 @@ Highlights
       :class-card: sd-border-1
 
       - Channels: 306
-      - Sampling rate (Hz): 1792.8858642578125 (57), 1250.0 (32)
-      - Duration (hours): 0
+      - Sampling rate (Hz): 1250.0 (64), 1792.8858642578125 (114)
+      - Duration (hours): 0.0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
@@ -80,7 +80,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 77.21 GB
+      - Size on disk: 77.2 GB
       - File count: 89
       - Format: BIDS
 
@@ -104,17 +104,18 @@ Quickstart
 
 .. code-block:: bash
 
-   pip install eegdash
+    pip install eegdash
 
-**Load a recording**
+**Access the data**
 
 .. code-block:: python
 
-   from eegdash.dataset import DS004107
+    from eegdash.dataset import DS004107
 
-   dataset = DS004107(cache_dir="./data")
-   recording = dataset[0]
-   raw = recording.load()
+    dataset = DS004107(cache_dir="./data")
+    # Get the raw object of the first recording
+    raw = dataset.datasets[0].raw
+    print(raw.info)
 
 **Filter/query**
 

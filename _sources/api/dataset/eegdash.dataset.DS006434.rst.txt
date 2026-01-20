@@ -5,15 +5,15 @@
 eegdash.dataset.DS006434
 ========================
 
-The auditory brainstem response to natural speech is not affected by selective attention (OpenNeuro ``ds006434``). Access recordings and metadata through EEGDash.
+participants.tsv (OpenNeuro ``ds006434``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: ['eeg']` :bdg-light:`Tasks: 5` :bdg-light:`Subjects: 66` :bdg-light:`Recordings: 118`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 5` :bdg-secondary:`Subjects: 66` :bdg-secondary:`Recordings: 118`
 
 .. rst-class:: sd-badges
 
-:bdg-light:`License: CC0` :bdg-light:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -25,7 +25,7 @@ Dataset Information
    * - Dataset ID
      - ``DS006434``
    * - Title
-     - The auditory brainstem response to natural speech is not affected by selective attention
+     - participants.tsv
    * - Year
      - 2025
    * - Authors
@@ -44,7 +44,7 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds006434,
-        title = {The auditory brainstem response to natural speech is not affected by selective attention},
+        title = {participants.tsv},
         author = {Thomas J Stoll and Nathan D Vandjelovic and Melissa J Polonenko and Nadja R S Li and Adrian K C Lee and Ross K Maddox},
         doi = {10.18112/openneuro.ds006434.v1.2.0},
         url = {https://doi.org/10.18112/openneuro.ds006434.v1.2.0},
@@ -66,9 +66,9 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 2 (28), 1 (24), 3 (14), 32 (52)
-      - Sampling rate (Hz): 10000.0 (52), 500.0 (24), 1000.0 (28), 25000.0 (14)
-      - Duration (hours): 0
+      - Channels: 3 (28), 2 (56), 1 (48), 32 (104)
+      - Sampling rate (Hz): 25000.0 (28), 1000.0 (56), 500.0 (48), 10000.0 (104)
+      - Duration (hours): 0.0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
@@ -80,7 +80,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 5.45 MB
+      - Size on disk: 5.4 MB
       - File count: 118
       - Format: BIDS
 
@@ -104,17 +104,18 @@ Quickstart
 
 .. code-block:: bash
 
-   pip install eegdash
+    pip install eegdash
 
-**Load a recording**
+**Access the data**
 
 .. code-block:: python
 
-   from eegdash.dataset import DS006434
+    from eegdash.dataset import DS006434
 
-   dataset = DS006434(cache_dir="./data")
-   recording = dataset[0]
-   raw = recording.load()
+    dataset = DS006434(cache_dir="./data")
+    # Get the raw object of the first recording
+    raw = dataset.datasets[0].raw
+    print(raw.info)
 
 **Filter/query**
 

@@ -5,15 +5,15 @@
 eegdash.dataset.DS005489
 ========================
 
-Free Recall with Open-Loop Stimulation at Encoding (OpenNeuro ``ds005489``). Access recordings and metadata through EEGDash.
+participants.tsv (OpenNeuro ``ds005489``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: ['ieeg']` :bdg-light:`Tasks: 1` :bdg-light:`Subjects: 37` :bdg-light:`Recordings: 154`
+:bdg-primary:`Modality: ieeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 37` :bdg-secondary:`Recordings: 154`
 
 .. rst-class:: sd-badges
 
-:bdg-light:`License: CC0` :bdg-light:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -25,7 +25,7 @@ Dataset Information
    * - Dataset ID
      - ``DS005489``
    * - Title
-     - Free Recall with Open-Loop Stimulation at Encoding
+     - participants.tsv
    * - Year
      - 2024
    * - Authors
@@ -44,7 +44,7 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds005489,
-        title = {Free Recall with Open-Loop Stimulation at Encoding},
+        title = {participants.tsv},
         author = {Haydn G. Herrema and Michael J. Kahana},
         doi = {10.18112/openneuro.ds005489.v1.0.3},
         url = {https://doi.org/10.18112/openneuro.ds005489.v1.0.3},
@@ -66,9 +66,9 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 112 (2), 101, 88 (6), 74 (3), 68 (6), 163, 72 (6), 97, 80 (2), 20, 141 (9), 100 (12), 16, 126 (4), 56 (4), 96 (8), 93 (3), 18, 14, 76 (3), 177, 109 (7), 83, 136 (7), 108 (2), 64 (10), 156 (3), 87 (4), 128 (2), 118 (8), 58 (3), 123 (2), 75 (4), 124 (2), 85 (3), 99 (2), 104 (2), 134 (2), 138 (2), 70 (4), 114, 120 (3), 110 (4)
-      - Sampling rate (Hz): 1600.0 (10), 499.7071 (2), 513.0 (4), 256.0 (2), 1000.0 (46), 500.0 (90)
-      - Duration (hours): 0
+      - Channels: 20 (2), 72 (12), 163 (2), 97 (2), 80 (4), 141 (18), 112 (4), 68 (12), 101 (2), 88 (12), 74 (6), 93 (6), 76 (6), 177 (2), 18 (2), 14 (2), 100 (24), 56 (8), 96 (16), 16 (2), 126 (8), 58 (6), 118 (16), 87 (8), 128 (4), 85 (6), 123 (4), 75 (8), 124 (4), 109 (14), 83 (2), 64 (20), 156 (6), 136 (14), 108 (4), 120 (6), 70 (8), 114 (2), 110 (8), 99 (4), 138 (4), 134 (4), 104 (4)
+      - Sampling rate (Hz): 500.0 (180), 1000.0 (92), 256.0 (4), 1600.0 (20), 499.7071 (4), 513.0 (8)
+      - Duration (hours): 0.0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
@@ -80,7 +80,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 64.94 GB
+      - Size on disk: 64.9 GB
       - File count: 154
       - Format: BIDS
 
@@ -104,17 +104,18 @@ Quickstart
 
 .. code-block:: bash
 
-   pip install eegdash
+    pip install eegdash
 
-**Load a recording**
+**Access the data**
 
 .. code-block:: python
 
-   from eegdash.dataset import DS005489
+    from eegdash.dataset import DS005489
 
-   dataset = DS005489(cache_dir="./data")
-   recording = dataset[0]
-   raw = recording.load()
+    dataset = DS005489(cache_dir="./data")
+    # Get the raw object of the first recording
+    raw = dataset.datasets[0].raw
+    print(raw.info)
 
 **Filter/query**
 

@@ -5,15 +5,15 @@
 eegdash.dataset.DS003574
 ========================
 
-Reward biases spontaneous neural reactivation during sleep (OpenNeuro ``ds003574``). Access recordings and metadata through EEGDash.
+task-game_run-2_events.json (OpenNeuro ``ds003574``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: ['eeg']` :bdg-light:`Tasks: 1` :bdg-light:`Subjects: 18` :bdg-light:`Recordings: 18`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 18` :bdg-secondary:`Recordings: 18`
 
 .. rst-class:: sd-badges
 
-:bdg-light:`License: CC0` :bdg-light:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -25,7 +25,7 @@ Dataset Information
    * - Dataset ID
      - ``DS003574``
    * - Title
-     - Reward biases spontaneous neural reactivation during sleep
+     - task-game_run-2_events.json
    * - Year
      - 2021
    * - Authors
@@ -44,7 +44,7 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds003574,
-        title = {Reward biases spontaneous neural reactivation during sleep},
+        title = {task-game_run-2_events.json},
         author = {Virginie Sterpenich and Mojca KM van Schie and Maximilien Catsiyannis and Avinash Ramyead and Stephen Perrig and Hee-Deok Yang and Dimitri Van De Ville and Sophie Schwartz},
         doi = {10.18112/openneuro.ds003574.v1.0.2},
         url = {https://doi.org/10.18112/openneuro.ds003574.v1.0.2},
@@ -68,7 +68,7 @@ Highlights
 
       - Channels: 64
       - Sampling rate (Hz): 500.0
-      - Duration (hours): 0
+      - Duration (hours): 0.0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
@@ -80,7 +80,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 17.95 GB
+      - Size on disk: 18.0 GB
       - File count: 18
       - Format: BIDS
 
@@ -104,17 +104,18 @@ Quickstart
 
 .. code-block:: bash
 
-   pip install eegdash
+    pip install eegdash
 
-**Load a recording**
+**Access the data**
 
 .. code-block:: python
 
-   from eegdash.dataset import DS003574
+    from eegdash.dataset import DS003574
 
-   dataset = DS003574(cache_dir="./data")
-   recording = dataset[0]
-   raw = recording.load()
+    dataset = DS003574(cache_dir="./data")
+    # Get the raw object of the first recording
+    raw = dataset.datasets[0].raw
+    print(raw.info)
 
 **Filter/query**
 

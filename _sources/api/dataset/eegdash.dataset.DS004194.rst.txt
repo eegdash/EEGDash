@@ -5,15 +5,15 @@
 eegdash.dataset.DS004194
 ========================
 
-Visual ECoG dataset (OpenNeuro ``ds004194``). Access recordings and metadata through EEGDash.
+task-prf_events.json (OpenNeuro ``ds004194``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: ['ieeg']` :bdg-light:`Tasks: 7` :bdg-light:`Subjects: 14` :bdg-light:`Recordings: 209`
+:bdg-primary:`Modality: ieeg` :bdg-info:`Tasks: 7` :bdg-secondary:`Subjects: 14` :bdg-secondary:`Recordings: 209`
 
 .. rst-class:: sd-badges
 
-:bdg-light:`License: CC0` :bdg-light:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -25,7 +25,7 @@ Dataset Information
    * - Dataset ID
      - ``DS004194``
    * - Title
-     - Visual ECoG dataset
+     - task-prf_events.json
    * - Year
      - 2022
    * - Authors
@@ -44,7 +44,7 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds004194,
-        title = {Visual ECoG dataset},
+        title = {task-prf_events.json},
         author = {Iris Groen and Kenichi Yuasa and Amber Brands and Giovanni Piantoni and Stephanie Montenegro and Adeen Flinker and Sasha Devore and Orrin Devinsky and Werner Doyle and Patricia Dugan and Daniel Friedman and Nick Ramsey and Natalia Petridou and Jonathan Winawer},
         doi = {10.18112/openneuro.ds004194.v3.0.0},
         url = {https://doi.org/10.18112/openneuro.ds004194.v3.0.0},
@@ -66,9 +66,9 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 160 (10), 173 (20), 129 (10), 74 (12), 16 (14), 133 (20), 61 (6), 206 (12), 106 (7), 111 (10), 91 (10), 265 (66), 140 (12)
-      - Sampling rate (Hz): 2048.0 (12), 512.0 (197)
-      - Duration (hours): 0
+      - Channels: 129 (20), 173 (40), 160 (20), 133 (40), 16 (28), 74 (24), 106 (14), 111 (20), 91 (20), 206 (24), 61 (12), 265 (132), 140 (24)
+      - Sampling rate (Hz): 512.0 (394), 2048.0 (24)
+      - Duration (hours): 0.0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
@@ -80,7 +80,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 7.83 GB
+      - Size on disk: 7.8 GB
       - File count: 209
       - Format: BIDS
 
@@ -104,17 +104,18 @@ Quickstart
 
 .. code-block:: bash
 
-   pip install eegdash
+    pip install eegdash
 
-**Load a recording**
+**Access the data**
 
 .. code-block:: python
 
-   from eegdash.dataset import DS004194
+    from eegdash.dataset import DS004194
 
-   dataset = DS004194(cache_dir="./data")
-   recording = dataset[0]
-   raw = recording.load()
+    dataset = DS004194(cache_dir="./data")
+    # Get the raw object of the first recording
+    raw = dataset.datasets[0].raw
+    print(raw.info)
 
 **Filter/query**
 

@@ -5,15 +5,15 @@
 eegdash.dataset.DS007176
 ========================
 
-OpenNeuro dataset ``ds007176``. Access recordings and metadata through EEGDash.
+participants.tsv (OpenNeuro ``ds007176``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: eeg` :bdg-light:`Tasks: 2` :bdg-light:`Subjects: 45` :bdg-light:`Recordings: 300`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 2` :bdg-secondary:`Subjects: 45` :bdg-secondary:`Recordings: 300`
 
 .. rst-class:: sd-badges
 
-:bdg-light:`License: CC0` :bdg-light:`Source: OpenNeuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -25,7 +25,7 @@ Dataset Information
    * - Dataset ID
      - ``DS007176``
    * - Title
-     - —
+     - participants.tsv
    * - Year
      - 2026
    * - Authors
@@ -44,6 +44,7 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds007176,
+        title = {participants.tsv},
         author = {Verónica Henao Isaza and Valeria Cadavid Castro and Luisa María Zapata Saldarriaga and Yorguin-Jose Mantilla-Ramos and Jazmín Ximena Suarez Revelo and Carlos Andrés Tobón Quintero and John Fredy Ochoa Gómez},
         doi = {10.18112/openneuro.ds007176.v1.0.1},
         url = {https://doi.org/10.18112/openneuro.ds007176.v1.0.1},
@@ -65,9 +66,9 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: —
-      - Sampling rate (Hz): —
-      - Duration (hours): —
+      - Channels: 60
+      - Sampling rate (Hz): 1000.0
+      - Duration (hours): 0.0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
@@ -79,7 +80,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 21.06 GB
+      - Size on disk: 21.1 GB
       - File count: 300
       - Format: BIDS
 
@@ -92,7 +93,7 @@ Highlights
    .. grid-item-card:: Provenance
       :class-card: sd-border-1
 
-      - Source: OpenNeuro
+      - Source: openneuro
       - OpenNeuro: `ds007176 <https://openneuro.org/datasets/ds007176>`__
       - NeMAR: `ds007176 <https://nemar.org/dataexplorer/detail?dataset_id=ds007176>`__
 
@@ -103,17 +104,18 @@ Quickstart
 
 .. code-block:: bash
 
-   pip install eegdash
+    pip install eegdash
 
-**Load a recording**
+**Access the data**
 
 .. code-block:: python
 
-   from eegdash.dataset import DS007176
+    from eegdash.dataset import DS007176
 
-   dataset = DS007176(cache_dir="./data")
-   recording = dataset[0]
-   raw = recording.load()
+    dataset = DS007176(cache_dir="./data")
+    # Get the raw object of the first recording
+    raw = dataset.datasets[0].raw
+    print(raw.info)
 
 **Filter/query**
 

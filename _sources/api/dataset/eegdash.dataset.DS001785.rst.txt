@@ -5,15 +5,15 @@
 eegdash.dataset.DS001785
 ========================
 
-Evidence accumulation relates to perceptual consciousness and monitoring (OpenNeuro ``ds001785``). Access recordings and metadata through EEGDash.
+task-thrup_events.json (OpenNeuro ``ds001785``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: ['eeg']` :bdg-light:`Tasks: 3` :bdg-light:`Subjects: 18` :bdg-light:`Recordings: 54`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 3` :bdg-secondary:`Subjects: 18` :bdg-secondary:`Recordings: 54`
 
 .. rst-class:: sd-badges
 
-:bdg-light:`License: CC0` :bdg-light:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -25,7 +25,7 @@ Dataset Information
    * - Dataset ID
      - ``DS001785``
    * - Title
-     - Evidence accumulation relates to perceptual consciousness and monitoring
+     - task-thrup_events.json
    * - Year
      - 2019
    * - Authors
@@ -44,7 +44,7 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds001785,
-        title = {Evidence accumulation relates to perceptual consciousness and monitoring},
+        title = {task-thrup_events.json},
         author = {Michael Pereira and Pierre Mégevand and Mi Xue Tan and Wenwen Chang and Shuo Wang and Ali Rezai and Margitta Seeck and Marco Corniola and Shahan Momjian and Fosco Bernasconi and Olaf Blanke and Nathan Faivre},
         doi = {10.18112/openneuro.ds001785.v1.1.1},
         url = {https://doi.org/10.18112/openneuro.ds001785.v1.1.1},
@@ -68,7 +68,7 @@ Highlights
 
       - Channels: 71
       - Sampling rate (Hz): —
-      - Duration (hours): 0
+      - Duration (hours): 0.0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
@@ -80,7 +80,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 24.87 GB
+      - Size on disk: 24.9 GB
       - File count: 54
       - Format: BIDS
 
@@ -104,17 +104,18 @@ Quickstart
 
 .. code-block:: bash
 
-   pip install eegdash
+    pip install eegdash
 
-**Load a recording**
+**Access the data**
 
 .. code-block:: python
 
-   from eegdash.dataset import DS001785
+    from eegdash.dataset import DS001785
 
-   dataset = DS001785(cache_dir="./data")
-   recording = dataset[0]
-   raw = recording.load()
+    dataset = DS001785(cache_dir="./data")
+    # Get the raw object of the first recording
+    raw = dataset.datasets[0].raw
+    print(raw.info)
 
 **Filter/query**
 

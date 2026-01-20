@@ -5,15 +5,15 @@
 eegdash.dataset.DS005594
 ========================
 
-Alphabetic Decision Task (Arial Light Font) (OpenNeuro ``ds005594``). Access recordings and metadata through EEGDash.
+participants.tsv (OpenNeuro ``ds005594``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: ['eeg']` :bdg-light:`Tasks: 1` :bdg-light:`Subjects: 16` :bdg-light:`Recordings: 16`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 16` :bdg-secondary:`Recordings: 16`
 
 .. rst-class:: sd-badges
 
-:bdg-light:`License: CC0` :bdg-light:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -25,7 +25,7 @@ Dataset Information
    * - Dataset ID
      - ``DS005594``
    * - Title
-     - Alphabetic Decision Task (Arial Light Font)
+     - participants.tsv
    * - Year
      - 2024
    * - Authors
@@ -44,7 +44,7 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds005594,
-        title = {Alphabetic Decision Task (Arial Light Font)},
+        title = {participants.tsv},
         author = {Jack E. Taylor and Rasmus Sinn and Cosimo Iaia and Christian J. Fiebach},
         doi = {10.18112/openneuro.ds005594.v1.0.3},
         url = {https://doi.org/10.18112/openneuro.ds005594.v1.0.3},
@@ -68,7 +68,7 @@ Highlights
 
       - Channels: 64
       - Sampling rate (Hz): 1000.0
-      - Duration (hours): 0
+      - Duration (hours): 0.0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
@@ -80,7 +80,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 10.89 GB
+      - Size on disk: 10.9 GB
       - File count: 16
       - Format: BIDS
 
@@ -104,17 +104,18 @@ Quickstart
 
 .. code-block:: bash
 
-   pip install eegdash
+    pip install eegdash
 
-**Load a recording**
+**Access the data**
 
 .. code-block:: python
 
-   from eegdash.dataset import DS005594
+    from eegdash.dataset import DS005594
 
-   dataset = DS005594(cache_dir="./data")
-   recording = dataset[0]
-   raw = recording.load()
+    dataset = DS005594(cache_dir="./data")
+    # Get the raw object of the first recording
+    raw = dataset.datasets[0].raw
+    print(raw.info)
 
 **Filter/query**
 

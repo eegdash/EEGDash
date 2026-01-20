@@ -5,15 +5,15 @@
 eegdash.dataset.DS004514
 ========================
 
-Simultaneous EEG and fNIRS recordings for semantic decoding of imagined animals and tools (OpenNeuro ``ds004514``). Access recordings and metadata through EEGDash.
+participants.tsv (OpenNeuro ``ds004514``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: ['eeg', 'fnirs']` :bdg-light:`Tasks: 2` :bdg-light:`Subjects: 12` :bdg-light:`Recordings: 24`
+:bdg-primary:`Modality: eeg, fnirs` :bdg-info:`Tasks: 2` :bdg-secondary:`Subjects: 12` :bdg-secondary:`Recordings: 24`
 
 .. rst-class:: sd-badges
 
-:bdg-light:`License: CC0` :bdg-light:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -25,7 +25,7 @@ Dataset Information
    * - Dataset ID
      - ``DS004514``
    * - Title
-     - Simultaneous EEG and fNIRS recordings for semantic decoding of imagined animals and tools
+     - participants.tsv
    * - Year
      - 2023
    * - Authors
@@ -44,7 +44,7 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds004514,
-        title = {Simultaneous EEG and fNIRS recordings for semantic decoding of imagined animals and tools},
+        title = {participants.tsv},
         author = {Milan Rybář and Riccardo Poli and Ian Daly},
         doi = {10.18112/openneuro.ds004514.v1.1.2},
         url = {https://doi.org/10.18112/openneuro.ds004514.v1.1.2},
@@ -66,9 +66,9 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 64 (12), 22 (6), 28 (6)
-      - Sampling rate (Hz): 2048.0 (12), 8.928571428571429 (6), 7.8125 (6)
-      - Duration (hours): 0
+      - Channels: 64 (24), 22 (12), 28 (12)
+      - Sampling rate (Hz): 7.8125 (12), 8.928571428571429 (12), 2048.0 (24)
+      - Duration (hours): 0.0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
@@ -80,7 +80,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 24.15 GB
+      - Size on disk: 24.1 GB
       - File count: 24
       - Format: BIDS
 
@@ -104,17 +104,18 @@ Quickstart
 
 .. code-block:: bash
 
-   pip install eegdash
+    pip install eegdash
 
-**Load a recording**
+**Access the data**
 
 .. code-block:: python
 
-   from eegdash.dataset import DS004514
+    from eegdash.dataset import DS004514
 
-   dataset = DS004514(cache_dir="./data")
-   recording = dataset[0]
-   raw = recording.load()
+    dataset = DS004514(cache_dir="./data")
+    # Get the raw object of the first recording
+    raw = dataset.datasets[0].raw
+    print(raw.info)
 
 **Filter/query**
 

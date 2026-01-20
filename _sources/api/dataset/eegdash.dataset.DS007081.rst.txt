@@ -5,15 +5,15 @@
 eegdash.dataset.DS007081
 ========================
 
-Passive but accessible: Studied information is not actively stored in working memory, yet attended regardless of anticipated load (OpenNeuro ``ds007081``). Access recordings and metadata through EEGDash.
+participants.tsv (OpenNeuro ``ds007081``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: ['eeg']` :bdg-light:`Tasks: 1` :bdg-light:`Subjects: 41` :bdg-light:`Recordings: 41`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 41` :bdg-secondary:`Recordings: 41`
 
 .. rst-class:: sd-badges
 
-:bdg-light:`License: CC0` :bdg-light:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -25,7 +25,7 @@ Dataset Information
    * - Dataset ID
      - ``DS007081``
    * - Title
-     - Passive but accessible: Studied information is not actively stored in working memory, yet attended regardless of anticipated load
+     - participants.tsv
    * - Year
      - 2025
    * - Authors
@@ -44,7 +44,7 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds007081,
-        title = {Passive but accessible: Studied information is not actively stored in working memory, yet attended regardless of anticipated load},
+        title = {participants.tsv},
         author = {Yakup Yılmaz and Nursena Ataseven Özdemir and Wouter Kruijne and Elkan Akyürek and Eren Günseli},
         doi = {10.18112/openneuro.ds007081.v1.0.0},
         url = {https://doi.org/10.18112/openneuro.ds007081.v1.0.0},
@@ -68,7 +68,7 @@ Highlights
 
       - Channels: 32
       - Sampling rate (Hz): 1000.0
-      - Duration (hours): 0
+      - Duration (hours): 0.0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
@@ -80,7 +80,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 11.30 GB
+      - Size on disk: 11.3 GB
       - File count: 41
       - Format: BIDS
 
@@ -104,17 +104,18 @@ Quickstart
 
 .. code-block:: bash
 
-   pip install eegdash
+    pip install eegdash
 
-**Load a recording**
+**Access the data**
 
 .. code-block:: python
 
-   from eegdash.dataset import DS007081
+    from eegdash.dataset import DS007081
 
-   dataset = DS007081(cache_dir="./data")
-   recording = dataset[0]
-   raw = recording.load()
+    dataset = DS007081(cache_dir="./data")
+    # Get the raw object of the first recording
+    raw = dataset.datasets[0].raw
+    print(raw.info)
 
 **Filter/query**
 

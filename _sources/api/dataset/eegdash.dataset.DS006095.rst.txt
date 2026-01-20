@@ -5,15 +5,15 @@
 eegdash.dataset.DS006095
 ========================
 
-Mind in Motion Older Adults Walking Over Uneven Terrain (OpenNeuro ``ds006095``). Access recordings and metadata through EEGDash.
+participants.tsv (OpenNeuro ``ds006095``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: ['eeg']` :bdg-light:`Tasks: 9` :bdg-light:`Subjects: 71` :bdg-light:`Recordings: 1182`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 9` :bdg-secondary:`Subjects: 71` :bdg-secondary:`Recordings: 1182`
 
 .. rst-class:: sd-badges
 
-:bdg-light:`License: CC0` :bdg-light:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -25,7 +25,7 @@ Dataset Information
    * - Dataset ID
      - ``DS006095``
    * - Title
-     - Mind in Motion Older Adults Walking Over Uneven Terrain
+     - participants.tsv
    * - Year
      - 2025
    * - Authors
@@ -44,7 +44,7 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds006095,
-        title = {Mind in Motion Older Adults Walking Over Uneven Terrain},
+        title = {participants.tsv},
         author = {Chang Liu and Erika M. Pliner and Jacob S. Salminen and Ryan Downey and Jungyun Hwang and Akraprava Roy and Ryland Swearinger and Natalie Richer and Chris J. Hass and David J. Clark and Todd M. Manini and Yenisel Cruz-Almeida and Rachael D. Seidler and Daniel P. Ferris},
         doi = {10.18112/openneuro.ds006095.v1.0.0},
         url = {https://doi.org/10.18112/openneuro.ds006095.v1.0.0},
@@ -66,9 +66,9 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 310 (115), 284 (1053), 336 (14)
+      - Channels: 310 (230), 284 (2106), 336 (28)
       - Sampling rate (Hz): 500.0
-      - Duration (hours): 0
+      - Duration (hours): 0.0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
@@ -80,7 +80,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 129.84 GB
+      - Size on disk: 129.8 GB
       - File count: 1182
       - Format: BIDS
 
@@ -104,17 +104,18 @@ Quickstart
 
 .. code-block:: bash
 
-   pip install eegdash
+    pip install eegdash
 
-**Load a recording**
+**Access the data**
 
 .. code-block:: python
 
-   from eegdash.dataset import DS006095
+    from eegdash.dataset import DS006095
 
-   dataset = DS006095(cache_dir="./data")
-   recording = dataset[0]
-   raw = recording.load()
+    dataset = DS006095(cache_dir="./data")
+    # Get the raw object of the first recording
+    raw = dataset.datasets[0].raw
+    print(raw.info)
 
 **Filter/query**
 

@@ -5,15 +5,15 @@
 eegdash.dataset.DS004809
 ========================
 
-Categorized Free Recall: Delayed Free Recall of Word Lists Organized by Semantic Categories (OpenNeuro ``ds004809``). Access recordings and metadata through EEGDash.
+participants.tsv (OpenNeuro ``ds004809``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: ['ieeg']` :bdg-light:`Tasks: 1` :bdg-light:`Subjects: 252` :bdg-light:`Recordings: 889`
+:bdg-primary:`Modality: ieeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 252` :bdg-secondary:`Recordings: 889`
 
 .. rst-class:: sd-badges
 
-:bdg-light:`License: CC0` :bdg-light:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -25,7 +25,7 @@ Dataset Information
    * - Dataset ID
      - ``DS004809``
    * - Title
-     - Categorized Free Recall: Delayed Free Recall of Word Lists Organized by Semantic Categories
+     - participants.tsv
    * - Year
      - 2023
    * - Authors
@@ -44,7 +44,7 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds004809,
-        title = {Categorized Free Recall: Delayed Free Recall of Word Lists Organized by Semantic Categories},
+        title = {participants.tsv},
         author = {Haydn G. Herrema and Michael J. Kahana},
         doi = {10.18112/openneuro.ds004809.v2.2.0},
         url = {https://doi.org/10.18112/openneuro.ds004809.v2.2.0},
@@ -66,9 +66,9 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 37, 196 (14), 95 (3), 206, 238 (4), 92 (10), 93 (2), 89 (4), 52, 120 (16), 111, 220 (3), 84 (2), 160 (3), 148 (15), 177 (2), 183 (8), 100 (6), 224 (4), 239, 124 (30), 56 (5), 150 (6), 192 (4), 113 (10), 141 (4), 243, 146, 164 (4), 247 (8), 112 (14), 122 (7), 96 (2), 139 (19), 163, 63, 36, 119 (2), 76 (6), 152 (9), 168 (5), 104 (8), 169 (2), 102, 115 (9), 105 (9), 182, 136, 133 (11), 162 (3), 134 (4), 109 (6), 46 (3), 176 (2), 107, 72 (4), 202, 106 (7), 180 (4), 207 (3), 209 (3), 108 (26), 26, 193 (2), 218, 88 (17), 94 (10), 200 (8), 203 (2), 110 (13), 198 (9), 159 (11), 185 (4), 70 (4), 127 (16), 50, 78 (6), 116 (15), 240 (6), 145 (15), 241 (6), 219 (4), 165 (5), 86, 251 (11), 121 (11), 98 (7), 131 (15), 126 (70), 143, 158 (9), 99, 212 (7), 14, 154 (5), 213, 167 (3), 60 (3), 16, 172 (2), 83 (3), 175 (4), 188 (4), 125 (20), 155 (12), 208 (5), 68 (7), 189 (4), 118 (12), 250 (5), 178 (10), 179 (13), 123 (2), 156 (8), 64 (14), 132 (2), 187 (2), 75, 130 (3), 97 (4), 153, 114 (11), 161 (2), 62, 90 (11), 184 (6), 67 (2), 151 (2), 140 (3), 80, 128 (19), 166 (7), 229 (3), 173 (4), 142 (13), 53 (2), 186 (10), 85
-      - Sampling rate (Hz): 1600.0 (10), 1023.999 (6), 1024.0 (4), 499.7071 (2), 500.0 (93), 1000.0 (766), 999.0 (8)
-      - Duration (hours): 0
+      - Channels: 243 (2), 64 (28), 146 (2), 164 (8), 247 (16), 113 (20), 141 (8), 163 (2), 63 (2), 36 (2), 119 (4), 76 (12), 152 (18), 112 (28), 122 (14), 96 (4), 139 (38), 89 (8), 120 (32), 111 (2), 52 (2), 220 (6), 84 (4), 160 (6), 148 (30), 177 (4), 37 (2), 196 (28), 95 (6), 206 (2), 238 (8), 92 (20), 93 (4), 224 (8), 56 (10), 124 (60), 239 (2), 150 (12), 192 (8), 183 (16), 100 (12), 180 (8), 207 (6), 108 (52), 209 (6), 26 (2), 193 (4), 202 (2), 106 (14), 203 (4), 218 (2), 88 (34), 94 (20), 200 (16), 136 (2), 133 (22), 168 (10), 104 (16), 169 (4), 115 (18), 102 (2), 105 (18), 182 (2), 176 (4), 107 (2), 72 (8), 162 (6), 134 (8), 109 (12), 46 (6), 143 (2), 158 (18), 14 (2), 99 (2), 212 (14), 251 (22), 121 (22), 98 (14), 131 (30), 126 (140), 175 (8), 188 (8), 125 (40), 155 (24), 208 (10), 154 (10), 213 (2), 167 (6), 60 (6), 16 (2), 172 (4), 83 (6), 70 (8), 127 (32), 50 (2), 78 (12), 116 (30), 240 (12), 110 (26), 198 (18), 159 (22), 185 (8), 86 (2), 145 (30), 241 (12), 219 (8), 165 (10), 62 (2), 90 (22), 184 (12), 67 (4), 151 (4), 153 (2), 97 (8), 114 (22), 161 (4), 229 (6), 173 (8), 53 (4), 142 (26), 186 (20), 85 (2), 140 (6), 80 (2), 128 (38), 166 (14), 250 (10), 178 (20), 68 (14), 118 (24), 189 (8), 132 (4), 187 (4), 75 (2), 130 (6), 179 (26), 123 (4), 156 (16)
+      - Sampling rate (Hz): 999.0 (16), 500.0 (186), 1000.0 (1532), 499.7071 (4), 1024.0 (8), 1600.0 (20), 1023.999 (12)
+      - Duration (hours): 0.0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
@@ -80,7 +80,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 477.18 GB
+      - Size on disk: 477.2 GB
       - File count: 889
       - Format: BIDS
 
@@ -104,17 +104,18 @@ Quickstart
 
 .. code-block:: bash
 
-   pip install eegdash
+    pip install eegdash
 
-**Load a recording**
+**Access the data**
 
 .. code-block:: python
 
-   from eegdash.dataset import DS004809
+    from eegdash.dataset import DS004809
 
-   dataset = DS004809(cache_dir="./data")
-   recording = dataset[0]
-   raw = recording.load()
+    dataset = DS004809(cache_dir="./data")
+    # Get the raw object of the first recording
+    raw = dataset.datasets[0].raw
+    print(raw.info)
 
 **Filter/query**
 

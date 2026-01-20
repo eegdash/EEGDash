@@ -5,15 +5,15 @@
 eegdash.dataset.DS003825
 ========================
 
-Human electroencephalography recordings from 50 subjects for 22,248 images from 1,854 object concepts (OpenNeuro ``ds003825``). Access recordings and metadata through EEGDash.
+task-rsvp_events.json (OpenNeuro ``ds003825``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: ['eeg']` :bdg-light:`Tasks: 1` :bdg-light:`Subjects: 50` :bdg-light:`Recordings: 50`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 50` :bdg-secondary:`Recordings: 50`
 
 .. rst-class:: sd-badges
 
-:bdg-light:`License: CC0` :bdg-light:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -25,7 +25,7 @@ Dataset Information
    * - Dataset ID
      - ``DS003825``
    * - Title
-     - Human electroencephalography recordings from 50 subjects for 22,248 images from 1,854 object concepts
+     - task-rsvp_events.json
    * - Year
      - 2021
    * - Authors
@@ -44,7 +44,7 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds003825,
-        title = {Human electroencephalography recordings from 50 subjects for 22,248 images from 1,854 object concepts},
+        title = {task-rsvp_events.json},
         author = {Grootswagers, Tijl and Zhou, Ivy and Robinson, Amanda and Hebart, Martin and Carlson, Thomas},
         doi = {10.18112/openneuro.ds003825.v1.1.0},
         url = {https://doi.org/10.18112/openneuro.ds003825.v1.1.0},
@@ -66,9 +66,9 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 63 (48), 128 (2)
+      - Channels: 63 (96), 128 (4)
       - Sampling rate (Hz): 1000.0
-      - Duration (hours): 0
+      - Duration (hours): 0.0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
@@ -80,7 +80,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 41.22 GB
+      - Size on disk: 41.2 GB
       - File count: 50
       - Format: BIDS
 
@@ -104,17 +104,18 @@ Quickstart
 
 .. code-block:: bash
 
-   pip install eegdash
+    pip install eegdash
 
-**Load a recording**
+**Access the data**
 
 .. code-block:: python
 
-   from eegdash.dataset import DS003825
+    from eegdash.dataset import DS003825
 
-   dataset = DS003825(cache_dir="./data")
-   recording = dataset[0]
-   raw = recording.load()
+    dataset = DS003825(cache_dir="./data")
+    # Get the raw object of the first recording
+    raw = dataset.datasets[0].raw
+    print(raw.info)
 
 **Filter/query**
 

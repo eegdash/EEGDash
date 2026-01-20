@@ -5,15 +5,15 @@
 eegdash.dataset.DS004752
 ========================
 
-Dataset of intracranial EEG, scalp EEG and beamforming sources from epilepsy patients performing a verbal working memory task (OpenNeuro ``ds004752``). Access recordings and metadata through EEGDash.
+participants.tsv (OpenNeuro ``ds004752``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: ['eeg', 'ieeg']` :bdg-light:`Tasks: 1` :bdg-light:`Subjects: 15` :bdg-light:`Recordings: 136`
+:bdg-primary:`Modality: eeg, ieeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 15` :bdg-secondary:`Recordings: 136`
 
 .. rst-class:: sd-badges
 
-:bdg-light:`License: CC0` :bdg-light:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -25,7 +25,7 @@ Dataset Information
    * - Dataset ID
      - ``DS004752``
    * - Title
-     - Dataset of intracranial EEG, scalp EEG and beamforming sources from epilepsy patients performing a verbal working memory task
+     - participants.tsv
    * - Year
      - 2023
    * - Authors
@@ -44,7 +44,7 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds004752,
-        title = {Dataset of intracranial EEG, scalp EEG and beamforming sources from epilepsy patients performing a verbal working memory task},
+        title = {participants.tsv},
         author = {Vasileios Dimakopoulos and Lennart Stieglitz and Lukas Imbach and Johannes Sarnthein},
         doi = {10.18112/openneuro.ds004752.v1.0.1},
         url = {https://doi.org/10.18112/openneuro.ds004752.v1.0.1},
@@ -66,9 +66,9 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 46 (6), 40 (3), 64 (34), 10 (7), 48 (4), 20 (15), 62 (4), 23 (6), 32 (3), 19 (10), 21 (14), 36 (6), 80 (2), 68 (6), 8 (16)
-      - Sampling rate (Hz): 4000.0 (40), 2000.0 (40), 200.0 (36), 4096.0 (20)
-      - Duration (hours): 0
+      - Channels: 64 (68), 40 (6), 46 (12), 10 (14), 48 (8), 20 (30), 32 (6), 19 (20), 23 (12), 62 (8), 68 (12), 80 (4), 8 (32), 36 (12), 21 (28)
+      - Sampling rate (Hz): 4096.0 (40), 4000.0 (80), 2000.0 (80), 200.0 (72)
+      - Duration (hours): 0.0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
@@ -80,7 +80,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 10.23 GB
+      - Size on disk: 10.2 GB
       - File count: 136
       - Format: BIDS
 
@@ -104,17 +104,18 @@ Quickstart
 
 .. code-block:: bash
 
-   pip install eegdash
+    pip install eegdash
 
-**Load a recording**
+**Access the data**
 
 .. code-block:: python
 
-   from eegdash.dataset import DS004752
+    from eegdash.dataset import DS004752
 
-   dataset = DS004752(cache_dir="./data")
-   recording = dataset[0]
-   raw = recording.load()
+    dataset = DS004752(cache_dir="./data")
+    # Get the raw object of the first recording
+    raw = dataset.datasets[0].raw
+    print(raw.info)
 
 **Filter/query**
 

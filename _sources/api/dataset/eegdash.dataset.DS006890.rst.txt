@@ -5,15 +5,15 @@
 eegdash.dataset.DS006890
 ========================
 
-Longitudinal Multitask Wireless ECoG Data from Two Fully Implanted Macaca fuscata (OpenNeuro ``ds006890``). Access recordings and metadata through EEGDash.
+participants.tsv (OpenNeuro ``ds006890``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: ['ieeg']` :bdg-light:`Tasks: 5` :bdg-light:`Subjects: 2` :bdg-light:`Recordings: 870`
+:bdg-primary:`Modality: ieeg` :bdg-info:`Tasks: 5` :bdg-secondary:`Subjects: 2` :bdg-secondary:`Recordings: 870`
 
 .. rst-class:: sd-badges
 
-:bdg-light:`License: CC0` :bdg-light:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -25,7 +25,7 @@ Dataset Information
    * - Dataset ID
      - ``DS006890``
    * - Title
-     - Longitudinal Multitask Wireless ECoG Data from Two Fully Implanted Macaca fuscata
+     - participants.tsv
    * - Year
      - —
    * - Authors
@@ -44,7 +44,7 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds006890,
-        title = {Longitudinal Multitask Wireless ECoG Data from Two Fully Implanted Macaca fuscata},
+        title = {participants.tsv},
         author = {Huixiang Yang and Ryohei Fukuma and Tomoyuki Namima and Kotaro Okuda and Asaya Nishi and Takamitsu Iwata and Abdi Reza and Kota S Sasaki and Taro Kaiju and Gurlal Gill and Haruhiko Kishima and Shinji Nishimoto and Takufumi Yanagisawa},
         doi = {10.18112/openneuro.ds006890.v1.0.0},
         url = {https://doi.org/10.18112/openneuro.ds006890.v1.0.0},
@@ -66,9 +66,9 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 66 (399), 50 (471)
+      - Channels: 66 (798), 50 (942)
       - Sampling rate (Hz): 1000.0
-      - Duration (hours): 0
+      - Duration (hours): 0.0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
@@ -80,7 +80,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 10.20 MB
+      - Size on disk: 10.2 MB
       - File count: 870
       - Format: BIDS
 
@@ -104,17 +104,18 @@ Quickstart
 
 .. code-block:: bash
 
-   pip install eegdash
+    pip install eegdash
 
-**Load a recording**
+**Access the data**
 
 .. code-block:: python
 
-   from eegdash.dataset import DS006890
+    from eegdash.dataset import DS006890
 
-   dataset = DS006890(cache_dir="./data")
-   recording = dataset[0]
-   raw = recording.load()
+    dataset = DS006890(cache_dir="./data")
+    # Get the raw object of the first recording
+    raw = dataset.datasets[0].raw
+    print(raw.info)
 
 **Filter/query**
 

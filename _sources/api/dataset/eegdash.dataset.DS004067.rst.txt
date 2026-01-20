@@ -5,15 +5,15 @@
 eegdash.dataset.DS004067
 ========================
 
-Moral conviction and metacognitive ability shape multiple stages of information processing (OpenNeuro ``ds004067``). Access recordings and metadata through EEGDash.
+manifest.json (OpenNeuro ``ds004067``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: ['eeg']` :bdg-light:`Tasks: 1` :bdg-light:`Subjects: 80` :bdg-light:`Recordings: 84`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 80` :bdg-secondary:`Recordings: 84`
 
 .. rst-class:: sd-badges
 
-:bdg-light:`License: CC0` :bdg-light:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -25,7 +25,7 @@ Dataset Information
    * - Dataset ID
      - ``DS004067``
    * - Title
-     - Moral conviction and metacognitive ability shape multiple stages of information processing
+     - manifest.json
    * - Year
      - 2022
    * - Authors
@@ -44,7 +44,7 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds004067,
-        title = {Moral conviction and metacognitive ability shape multiple stages of information processing},
+        title = {manifest.json},
         author = {Yoder, Keith J and Decety, Jean},
         doi = {10.18112/openneuro.ds004067.v1.0.1},
         url = {https://doi.org/10.18112/openneuro.ds004067.v1.0.1},
@@ -68,7 +68,7 @@ Highlights
 
       - Channels: —
       - Sampling rate (Hz): —
-      - Duration (hours): 0
+      - Duration (hours): 0.0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
@@ -80,7 +80,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 100.79 GB
+      - Size on disk: 100.8 GB
       - File count: 84
       - Format: BIDS
 
@@ -104,17 +104,18 @@ Quickstart
 
 .. code-block:: bash
 
-   pip install eegdash
+    pip install eegdash
 
-**Load a recording**
+**Access the data**
 
 .. code-block:: python
 
-   from eegdash.dataset import DS004067
+    from eegdash.dataset import DS004067
 
-   dataset = DS004067(cache_dir="./data")
-   recording = dataset[0]
-   raw = recording.load()
+    dataset = DS004067(cache_dir="./data")
+    # Get the raw object of the first recording
+    raw = dataset.datasets[0].raw
+    print(raw.info)
 
 **Filter/query**
 

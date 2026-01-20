@@ -5,15 +5,15 @@
 eegdash.dataset.DS004357
 ========================
 
-Features-EEG (OpenNeuro ``ds004357``). Access recordings and metadata through EEGDash.
+task-rsvp_events.json (OpenNeuro ``ds004357``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: ['eeg']` :bdg-light:`Tasks: 1` :bdg-light:`Subjects: 16` :bdg-light:`Recordings: 16`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 16` :bdg-secondary:`Recordings: 16`
 
 .. rst-class:: sd-badges
 
-:bdg-light:`License: CC0` :bdg-light:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -25,7 +25,7 @@ Dataset Information
    * - Dataset ID
      - ``DS004357``
    * - Title
-     - Features-EEG
+     - task-rsvp_events.json
    * - Year
      - 2022
    * - Authors
@@ -44,7 +44,7 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds004357,
-        title = {Features-EEG},
+        title = {task-rsvp_events.json},
         author = {Grootswagers, Tijl and Robinson, Amanda and Shatek, Sofia and Carlson, Thomas},
         doi = {10.18112/openneuro.ds004357.v1.0.1},
         url = {https://doi.org/10.18112/openneuro.ds004357.v1.0.1},
@@ -68,7 +68,7 @@ Highlights
 
       - Channels: —
       - Sampling rate (Hz): —
-      - Duration (hours): 0
+      - Duration (hours): 0.0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
@@ -80,7 +80,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 19.34 GB
+      - Size on disk: 19.3 GB
       - File count: 16
       - Format: BIDS
 
@@ -104,17 +104,18 @@ Quickstart
 
 .. code-block:: bash
 
-   pip install eegdash
+    pip install eegdash
 
-**Load a recording**
+**Access the data**
 
 .. code-block:: python
 
-   from eegdash.dataset import DS004357
+    from eegdash.dataset import DS004357
 
-   dataset = DS004357(cache_dir="./data")
-   recording = dataset[0]
-   raw = recording.load()
+    dataset = DS004357(cache_dir="./data")
+    # Get the raw object of the first recording
+    raw = dataset.datasets[0].raw
+    print(raw.info)
 
 **Filter/query**
 

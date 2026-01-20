@@ -5,15 +5,15 @@
 eegdash.dataset.DS006647
 ========================
 
-Poetry Assessment EEG Dataset 2 (OpenNeuro ``ds006647``). Access recordings and metadata through EEGDash.
+participants.tsv (OpenNeuro ``ds006647``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: ['eeg']` :bdg-light:`Tasks: 1` :bdg-light:`Subjects: 4` :bdg-light:`Recordings: 4`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 4` :bdg-secondary:`Recordings: 4`
 
 .. rst-class:: sd-badges
 
-:bdg-light:`License: CC0` :bdg-light:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -25,7 +25,7 @@ Dataset Information
    * - Dataset ID
      - ``DS006647``
    * - Title
-     - Poetry Assessment EEG Dataset 2
+     - participants.tsv
    * - Year
      - 2025
    * - Authors
@@ -44,7 +44,7 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds006647,
-        title = {Poetry Assessment EEG Dataset 2},
+        title = {participants.tsv},
         author = {Soma Chaudhuri and Joydeep Bhattacharya},
         doi = {10.18112/openneuro.ds006647.v1.0.1},
         url = {https://doi.org/10.18112/openneuro.ds006647.v1.0.1},
@@ -68,7 +68,7 @@ Highlights
 
       - Channels: 70
       - Sampling rate (Hz): 512.0
-      - Duration (hours): 0
+      - Duration (hours): 0.0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
@@ -80,7 +80,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 4.29 GB
+      - Size on disk: 4.3 GB
       - File count: 4
       - Format: BIDS
 
@@ -104,17 +104,18 @@ Quickstart
 
 .. code-block:: bash
 
-   pip install eegdash
+    pip install eegdash
 
-**Load a recording**
+**Access the data**
 
 .. code-block:: python
 
-   from eegdash.dataset import DS006647
+    from eegdash.dataset import DS006647
 
-   dataset = DS006647(cache_dir="./data")
-   recording = dataset[0]
-   raw = recording.load()
+    dataset = DS006647(cache_dir="./data")
+    # Get the raw object of the first recording
+    raw = dataset.datasets[0].raw
+    print(raw.info)
 
 **Filter/query**
 

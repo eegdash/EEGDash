@@ -5,15 +5,15 @@
 eegdash.dataset.DS006107
 ========================
 
-iEEG_Neural_spatial_volatility (OpenNeuro ``ds006107``). Access recordings and metadata through EEGDash.
+participants.tsv (OpenNeuro ``ds006107``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: ['ieeg']` :bdg-light:`Tasks: 1` :bdg-light:`Subjects: 166` :bdg-light:`Recordings: 167`
+:bdg-primary:`Modality: ieeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 166` :bdg-secondary:`Recordings: 167`
 
 .. rst-class:: sd-badges
 
-:bdg-light:`License: CC0` :bdg-light:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -25,7 +25,7 @@ Dataset Information
    * - Dataset ID
      - ``DS006107``
    * - Title
-     - iEEG_Neural_spatial_volatility
+     - participants.tsv
    * - Year
      - 2025
    * - Authors
@@ -44,7 +44,7 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds006107,
-        title = {iEEG_Neural_spatial_volatility},
+        title = {participants.tsv},
         author = {Naoto Kuroda and Eishi Asano and Nobukazu Nakasato},
         doi = {10.18112/openneuro.ds006107.v1.0.0},
         url = {https://doi.org/10.18112/openneuro.ds006107.v1.0.0},
@@ -66,9 +66,9 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 150 (2), 134, 109, 122, 64 (2), 82, 78, 88, 34 (2), 84 (2), 52, 156, 90, 140 (3), 124 (5), 58 (4), 46, 138 (4), 44, 114 (2), 106 (5), 116 (3), 118 (6), 100 (5), 72 (2), 48, 86 (2), 132 (5), 104 (7), 108 (6), 110 (3), 164, 144 (2), 128 (30), 69, 120 (5), 56, 126 (2), 94, 98 (2), 70, 28, 54, 96, 38, 68, 130 (4), 133, 80, 112 (19), 136 (2), 74, 102 (5), 73
+      - Channels: 88 (2), 82 (2), 78 (2), 84 (4), 34 (4), 134 (2), 150 (4), 122 (2), 64 (4), 109 (2), 114 (4), 106 (10), 116 (6), 44 (2), 72 (4), 48 (2), 86 (4), 118 (12), 100 (10), 90 (2), 140 (6), 124 (10), 52 (2), 156 (2), 46 (2), 138 (8), 58 (8), 69 (2), 128 (60), 120 (10), 132 (10), 144 (4), 104 (14), 108 (12), 110 (6), 164 (2), 80 (2), 112 (38), 136 (4), 130 (8), 133 (2), 74 (2), 73 (2), 102 (10), 94 (2), 70 (2), 98 (4), 28 (2), 54 (2), 56 (2), 126 (4), 68 (2), 96 (2), 38 (2)
       - Sampling rate (Hz): 1000.0
-      - Duration (hours): 0
+      - Duration (hours): 0.0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
@@ -80,7 +80,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 11.90 GB
+      - Size on disk: 11.9 GB
       - File count: 167
       - Format: BIDS
 
@@ -104,17 +104,18 @@ Quickstart
 
 .. code-block:: bash
 
-   pip install eegdash
+    pip install eegdash
 
-**Load a recording**
+**Access the data**
 
 .. code-block:: python
 
-   from eegdash.dataset import DS006107
+    from eegdash.dataset import DS006107
 
-   dataset = DS006107(cache_dir="./data")
-   recording = dataset[0]
-   raw = recording.load()
+    dataset = DS006107(cache_dir="./data")
+    # Get the raw object of the first recording
+    raw = dataset.datasets[0].raw
+    print(raw.info)
 
 **Filter/query**
 

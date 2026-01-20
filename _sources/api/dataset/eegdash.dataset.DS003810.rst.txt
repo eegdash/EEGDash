@@ -5,15 +5,15 @@
 eegdash.dataset.DS003810
 ========================
 
-Motor Imagery vs Rest - Low-Cost EEG System (OpenNeuro ``ds003810``). Access recordings and metadata through EEGDash.
+task-MIvsRest_channels.tsv (OpenNeuro ``ds003810``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: ['eeg']` :bdg-light:`Tasks: 1` :bdg-light:`Subjects: 10` :bdg-light:`Recordings: 50`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 10` :bdg-secondary:`Recordings: 50`
 
 .. rst-class:: sd-badges
 
-:bdg-light:`License: CC0` :bdg-light:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -25,7 +25,7 @@ Dataset Information
    * - Dataset ID
      - ``DS003810``
    * - Title
-     - Motor Imagery vs Rest - Low-Cost EEG System
+     - task-MIvsRest_channels.tsv
    * - Year
      - 2021
    * - Authors
@@ -44,7 +44,7 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds003810,
-        title = {Motor Imagery vs Rest - Low-Cost EEG System},
+        title = {task-MIvsRest_channels.tsv},
         author = {Victoria Peterson and Catalina Maria Galvan and Hugo Sacha Hernadez and Ruben Spies},
         doi = {10.18112/openneuro.ds003810.v2.0.2},
         url = {https://doi.org/10.18112/openneuro.ds003810.v2.0.2},
@@ -68,7 +68,7 @@ Highlights
 
       - Channels: 15
       - Sampling rate (Hz): 125.0
-      - Duration (hours): 0
+      - Duration (hours): 0.0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
@@ -80,7 +80,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 69.01 MB
+      - Size on disk: 69.0 MB
       - File count: 50
       - Format: BIDS
 
@@ -104,17 +104,18 @@ Quickstart
 
 .. code-block:: bash
 
-   pip install eegdash
+    pip install eegdash
 
-**Load a recording**
+**Access the data**
 
 .. code-block:: python
 
-   from eegdash.dataset import DS003810
+    from eegdash.dataset import DS003810
 
-   dataset = DS003810(cache_dir="./data")
-   recording = dataset[0]
-   raw = recording.load()
+    dataset = DS003810(cache_dir="./data")
+    # Get the raw object of the first recording
+    raw = dataset.datasets[0].raw
+    print(raw.info)
 
 **Filter/query**
 

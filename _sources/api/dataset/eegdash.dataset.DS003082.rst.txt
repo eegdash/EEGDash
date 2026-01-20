@@ -9,11 +9,11 @@ ds003082 (OpenNeuro ``ds003082``). Access recordings and metadata through EEGDas
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: ['meg']` :bdg-light:`Tasks: 6` :bdg-light:`Subjects: 3` :bdg-light:`Recordings: 82`
+:bdg-primary:`Modality: meg` :bdg-info:`Tasks: 6` :bdg-secondary:`Subjects: 3` :bdg-secondary:`Recordings: 82`
 
 .. rst-class:: sd-badges
 
-:bdg-light:`License: CC0` :bdg-light:`Source: openneuro`
+:bdg-success:`License: —` :bdg-warning:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -31,23 +31,11 @@ Dataset Information
    * - Authors
      - Unknown
    * - License
-     - CC0
+     - —
    * - Citation / DOI
-     - `doi:10.18112/openneuro.ds003082.v1.0.1 <https://doi.org/10.18112/openneuro.ds003082.v1.0.1>`__
+     - Unknown
    * - Source links
      - `OpenNeuro <https://openneuro.org/datasets/ds003082>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003082>`__ | `Source URL <https://openneuro.org/datasets/ds003082/versions/1.0.1>`__
-
-.. dropdown:: Copy-paste BibTeX
-   :class-container: sd-shadow-sm
-   :class-title: sd-bg-light
-
-   .. code-block:: bibtex
-
-      @dataset{ds003082,
-        title = {ds003082},
-        doi = {10.18112/openneuro.ds003082.v1.0.1},
-        url = {https://doi.org/10.18112/openneuro.ds003082.v1.0.1},
-      }
 
 Highlights
 ----------
@@ -67,7 +55,7 @@ Highlights
 
       - Channels: —
       - Sampling rate (Hz): —
-      - Duration (hours): 0
+      - Duration (hours): 0.0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
@@ -86,8 +74,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: CC0
-      - DOI: doi:10.18112/openneuro.ds003082.v1.0.1
+      - License: —
+      - DOI: —
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1
@@ -103,17 +91,18 @@ Quickstart
 
 .. code-block:: bash
 
-   pip install eegdash
+    pip install eegdash
 
-**Load a recording**
+**Access the data**
 
 .. code-block:: python
 
-   from eegdash.dataset import DS003082
+    from eegdash.dataset import DS003082
 
-   dataset = DS003082(cache_dir="./data")
-   recording = dataset[0]
-   raw = recording.load()
+    dataset = DS003082(cache_dir="./data")
+    # Get the raw object of the first recording
+    raw = dataset.datasets[0].raw
+    print(raw.info)
 
 **Filter/query**
 

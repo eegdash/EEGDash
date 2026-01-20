@@ -5,15 +5,15 @@
 eegdash.dataset.DS006035
 ========================
 
-somatomotor (OpenNeuro ``ds006035``). Access recordings and metadata through EEGDash.
+participants.tsv (OpenNeuro ``ds006035``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: ['meg']` :bdg-light:`Tasks: 1` :bdg-light:`Subjects: 5` :bdg-light:`Recordings: 15`
+:bdg-primary:`Modality: meg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 5` :bdg-secondary:`Recordings: 15`
 
 .. rst-class:: sd-badges
 
-:bdg-light:`License: CC0` :bdg-light:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -25,7 +25,7 @@ Dataset Information
    * - Dataset ID
      - ``DS006035``
    * - Title
-     - somatomotor
+     - participants.tsv
    * - Year
      - 2025
    * - Authors
@@ -44,7 +44,7 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds006035,
-        title = {somatomotor},
+        title = {participants.tsv},
         author = {Fa-Hsuan Lin and Deirdre Foxe von Pechmann and Kaisu Lankinen and Seppo Ahlfors and Bruce Rosen and Jyrki Ahveninen and Matti Hämäläinen and Tommi Raij},
         doi = {10.18112/openneuro.ds006035.v1.0.0},
         url = {https://doi.org/10.18112/openneuro.ds006035.v1.0.0},
@@ -68,7 +68,7 @@ Highlights
 
       - Channels: 70
       - Sampling rate (Hz): 1004.01611328125
-      - Duration (hours): 0
+      - Duration (hours): 0.0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
@@ -80,7 +80,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 3.07 GB
+      - Size on disk: 3.1 GB
       - File count: 15
       - Format: BIDS
 
@@ -104,17 +104,18 @@ Quickstart
 
 .. code-block:: bash
 
-   pip install eegdash
+    pip install eegdash
 
-**Load a recording**
+**Access the data**
 
 .. code-block:: python
 
-   from eegdash.dataset import DS006035
+    from eegdash.dataset import DS006035
 
-   dataset = DS006035(cache_dir="./data")
-   recording = dataset[0]
-   raw = recording.load()
+    dataset = DS006035(cache_dir="./data")
+    # Get the raw object of the first recording
+    raw = dataset.datasets[0].raw
+    print(raw.info)
 
 **Filter/query**
 

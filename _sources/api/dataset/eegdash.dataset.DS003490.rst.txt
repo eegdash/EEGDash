@@ -5,15 +5,15 @@
 eegdash.dataset.DS003490
 ========================
 
-EEG: 3-Stim Auditory Oddball and Rest in Parkinson's (OpenNeuro ``ds003490``). Access recordings and metadata through EEGDash.
+participants.tsv (OpenNeuro ``ds003490``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: ['eeg']` :bdg-light:`Tasks: 1` :bdg-light:`Subjects: 50` :bdg-light:`Recordings: 75`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 50` :bdg-secondary:`Recordings: 75`
 
 .. rst-class:: sd-badges
 
-:bdg-light:`License: CC0` :bdg-light:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -25,7 +25,7 @@ Dataset Information
    * - Dataset ID
      - ``DS003490``
    * - Title
-     - EEG: 3-Stim Auditory Oddball and Rest in Parkinson's
+     - participants.tsv
    * - Year
      - 2021
    * - Authors
@@ -44,7 +44,7 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds003490,
-        title = {EEG: 3-Stim Auditory Oddball and Rest in Parkinson's},
+        title = {participants.tsv},
         author = {James F Cavanagh jcavanagh@unm.edu},
         doi = {10.18112/openneuro.ds003490.v1.1.0},
         url = {https://doi.org/10.18112/openneuro.ds003490.v1.1.0},
@@ -68,7 +68,7 @@ Highlights
 
       - Channels: 64
       - Sampling rate (Hz): 500.0
-      - Duration (hours): 0
+      - Duration (hours): 0.0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
@@ -80,7 +80,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 5.85 GB
+      - Size on disk: 5.8 GB
       - File count: 75
       - Format: BIDS
 
@@ -104,17 +104,18 @@ Quickstart
 
 .. code-block:: bash
 
-   pip install eegdash
+    pip install eegdash
 
-**Load a recording**
+**Access the data**
 
 .. code-block:: python
 
-   from eegdash.dataset import DS003490
+    from eegdash.dataset import DS003490
 
-   dataset = DS003490(cache_dir="./data")
-   recording = dataset[0]
-   raw = recording.load()
+    dataset = DS003490(cache_dir="./data")
+    # Get the raw object of the first recording
+    raw = dataset.datasets[0].raw
+    print(raw.info)
 
 **Filter/query**
 

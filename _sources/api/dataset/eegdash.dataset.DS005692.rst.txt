@@ -5,15 +5,15 @@
 eegdash.dataset.DS005692
 ========================
 
-SpinalExpect_NonInvasive (OpenNeuro ``ds005692``). Access recordings and metadata through EEGDash.
+participants.tsv (OpenNeuro ``ds005692``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: ['eeg']` :bdg-light:`Tasks: 1` :bdg-light:`Subjects: 30` :bdg-light:`Recordings: 59`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 30` :bdg-secondary:`Recordings: 59`
 
 .. rst-class:: sd-badges
 
-:bdg-light:`License: CC0` :bdg-light:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -25,7 +25,7 @@ Dataset Information
    * - Dataset ID
      - ``DS005692``
    * - Title
-     - SpinalExpect_NonInvasive
+     - participants.tsv
    * - Year
      - 2024
    * - Authors
@@ -44,7 +44,7 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds005692,
-        title = {SpinalExpect_NonInvasive},
+        title = {participants.tsv},
         author = {Max-Philipp Stenner and Cindy Marquez Nossa and Tino Zaehle and Elena Azanon and Hans-Jochen Heinze and Matthias Deliano and Lars Buentjen},
         doi = {10.18112/openneuro.ds005692.v1.0.0},
         url = {https://doi.org/10.18112/openneuro.ds005692.v1.0.0},
@@ -68,7 +68,7 @@ Highlights
 
       - Channels: 24
       - Sampling rate (Hz): 5000.0
-      - Duration (hours): 0
+      - Duration (hours): 0.0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
@@ -80,7 +80,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 92.81 GB
+      - Size on disk: 92.8 GB
       - File count: 59
       - Format: BIDS
 
@@ -104,17 +104,18 @@ Quickstart
 
 .. code-block:: bash
 
-   pip install eegdash
+    pip install eegdash
 
-**Load a recording**
+**Access the data**
 
 .. code-block:: python
 
-   from eegdash.dataset import DS005692
+    from eegdash.dataset import DS005692
 
-   dataset = DS005692(cache_dir="./data")
-   recording = dataset[0]
-   raw = recording.load()
+    dataset = DS005692(cache_dir="./data")
+    # Get the raw object of the first recording
+    raw = dataset.datasets[0].raw
+    print(raw.info)
 
 **Filter/query**
 

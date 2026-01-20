@@ -5,15 +5,15 @@
 eegdash.dataset.DS003029
 ========================
 
-Epilepsy-iEEG-Multicenter-Dataset (OpenNeuro ``ds003029``). Access recordings and metadata through EEGDash.
+participants.tsv (OpenNeuro ``ds003029``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: ['ieeg']` :bdg-light:`Tasks: 1` :bdg-light:`Subjects: 35` :bdg-light:`Recordings: 106`
+:bdg-primary:`Modality: ieeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 35` :bdg-secondary:`Recordings: 106`
 
 .. rst-class:: sd-badges
 
-:bdg-light:`License: CC0` :bdg-light:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -25,7 +25,7 @@ Dataset Information
    * - Dataset ID
      - ``DS003029``
    * - Title
-     - Epilepsy-iEEG-Multicenter-Dataset
+     - participants.tsv
    * - Year
      - 2020
    * - Authors
@@ -44,7 +44,7 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds003029,
-        title = {Epilepsy-iEEG-Multicenter-Dataset},
+        title = {participants.tsv},
         author = {Adam Li and Sara Inati and Kareem Zaghloul and Nathan Crone and William Anderson and Emily Johnson and Iahn Cajigas and Damian Brusko and Jonathan Jagid and Angel Claudio and Andres Kanner and Jennifer Hopp and Stephanie Chen and Jennifer Haagensen and Sridevi Sarma},
         doi = {10.18112/openneuro.ds003029.v1.0.5},
         url = {https://doi.org/10.18112/openneuro.ds003029.v1.0.5},
@@ -66,9 +66,9 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 86 (3), 60 (3), 135 (6), 99 (3), 132 (8), 129 (30), 216, 47, 98 (4), 81 (3), 147 (6), 111 (3), 88 (6), 53 (3), 91 (4), 89 (3), 101 (5), 80 (3), 110 (3), 123 (6), 65 (2)
-      - Sampling rate (Hz): 1024.5997950800408, 1000.0000000000001 (7), 1000.0 (56), 2000.0000000000002 (3), 249.85355222464145 (10), 499.7071044492829 (7), 999.9999999999999 (9), 999.4121105232217 (13)
-      - Duration (hours): 0
+      - Channels: 99 (6), 132 (16), 86 (6), 135 (12), 60 (6), 111 (6), 147 (12), 88 (12), 129 (60), 216 (2), 98 (8), 81 (6), 47 (2), 91 (8), 53 (6), 101 (10), 80 (6), 110 (6), 123 (12), 65 (4), 89 (6)
+      - Sampling rate (Hz): 999.9999999999999 (18), 999.4121105232217 (26), 499.7071044492829 (14), 1000.0000000000001 (14), 1000.0 (112), 2000.0000000000002 (6), 249.85355222464145 (20), 1024.5997950800408 (2)
+      - Duration (hours): 0.0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
@@ -80,7 +80,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 10.32 GB
+      - Size on disk: 10.3 GB
       - File count: 106
       - Format: BIDS
 
@@ -104,17 +104,18 @@ Quickstart
 
 .. code-block:: bash
 
-   pip install eegdash
+    pip install eegdash
 
-**Load a recording**
+**Access the data**
 
 .. code-block:: python
 
-   from eegdash.dataset import DS003029
+    from eegdash.dataset import DS003029
 
-   dataset = DS003029(cache_dir="./data")
-   recording = dataset[0]
-   raw = recording.load()
+    dataset = DS003029(cache_dir="./data")
+    # Get the raw object of the first recording
+    raw = dataset.datasets[0].raw
+    print(raw.info)
 
 **Filter/query**
 

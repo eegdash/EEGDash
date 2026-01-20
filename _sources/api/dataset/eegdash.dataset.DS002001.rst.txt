@@ -9,11 +9,11 @@ Rivalry_Tagging (OpenNeuro ``ds002001``). Access recordings and metadata through
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: ['meg']` :bdg-light:`Tasks: 2` :bdg-light:`Subjects: 12` :bdg-light:`Recordings: 1006`
+:bdg-primary:`Modality: meg` :bdg-info:`Tasks: 2` :bdg-secondary:`Subjects: 12` :bdg-secondary:`Recordings: 1006`
 
 .. rst-class:: sd-badges
 
-:bdg-light:`License: PD` :bdg-light:`Source: openneuro`
+:bdg-success:`License: PD` :bdg-warning:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -68,7 +68,7 @@ Highlights
 
       - Channels: —
       - Sampling rate (Hz): —
-      - Duration (hours): 0
+      - Duration (hours): 0.0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
@@ -104,17 +104,18 @@ Quickstart
 
 .. code-block:: bash
 
-   pip install eegdash
+    pip install eegdash
 
-**Load a recording**
+**Access the data**
 
 .. code-block:: python
 
-   from eegdash.dataset import DS002001
+    from eegdash.dataset import DS002001
 
-   dataset = DS002001(cache_dir="./data")
-   recording = dataset[0]
-   raw = recording.load()
+    dataset = DS002001(cache_dir="./data")
+    # Get the raw object of the first recording
+    raw = dataset.datasets[0].raw
+    print(raw.info)
 
 **Filter/query**
 

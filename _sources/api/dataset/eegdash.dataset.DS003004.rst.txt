@@ -5,15 +5,15 @@
 eegdash.dataset.DS003004
 ========================
 
-Imagined Emotion Study (OpenNeuro ``ds003004``). Access recordings and metadata through EEGDash.
+participants.tsv (OpenNeuro ``ds003004``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: ['eeg']` :bdg-light:`Tasks: 1` :bdg-light:`Subjects: 34` :bdg-light:`Recordings: 34`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 34` :bdg-secondary:`Recordings: 34`
 
 .. rst-class:: sd-badges
 
-:bdg-light:`License: CC0` :bdg-light:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -25,7 +25,7 @@ Dataset Information
    * - Dataset ID
      - ``DS003004``
    * - Title
-     - Imagined Emotion Study
+     - participants.tsv
    * - Year
      - 2020
    * - Authors
@@ -44,7 +44,7 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds003004,
-        title = {Imagined Emotion Study},
+        title = {participants.tsv},
         author = {Julie Onton and Scott Makeig},
         doi = {10.18112/openneuro.ds003004.v1.1.1},
         url = {https://doi.org/10.18112/openneuro.ds003004.v1.1.1},
@@ -66,9 +66,9 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 208, 180, 211, 207, 232, 218, 215, 220, 189, 196, 224 (3), 209, 226, 222, 212 (2), 227, 206, 219 (3), 231, 201, 223, 229, 213, 134, 235, 221 (2), 214 (2)
+      - Channels: 232 (2), 208 (2), 180 (2), 207 (2), 211 (2), 224 (6), 189 (2), 196 (2), 226 (2), 222 (2), 209 (2), 215 (2), 218 (2), 220 (2), 206 (2), 231 (2), 219 (6), 227 (2), 212 (4), 221 (4), 214 (4), 229 (2), 201 (2), 223 (2), 213 (2), 134 (2), 235 (2)
       - Sampling rate (Hz): 256.0
-      - Duration (hours): 0
+      - Duration (hours): 0.0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
@@ -80,7 +80,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 36.05 GB
+      - Size on disk: 36.0 GB
       - File count: 34
       - Format: BIDS
 
@@ -104,17 +104,18 @@ Quickstart
 
 .. code-block:: bash
 
-   pip install eegdash
+    pip install eegdash
 
-**Load a recording**
+**Access the data**
 
 .. code-block:: python
 
-   from eegdash.dataset import DS003004
+    from eegdash.dataset import DS003004
 
-   dataset = DS003004(cache_dir="./data")
-   recording = dataset[0]
-   raw = recording.load()
+    dataset = DS003004(cache_dir="./data")
+    # Get the raw object of the first recording
+    raw = dataset.datasets[0].raw
+    print(raw.info)
 
 **Filter/query**
 

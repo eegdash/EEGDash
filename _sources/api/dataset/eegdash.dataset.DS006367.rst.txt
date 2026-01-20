@@ -5,15 +5,15 @@
 eegdash.dataset.DS006367
 ========================
 
-Memory Reactivation Levels Remain Unaffected by Anticipated Interference (OpenNeuro ``ds006367``). Access recordings and metadata through EEGDash.
+participants.tsv (OpenNeuro ``ds006367``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: ['eeg']` :bdg-light:`Tasks: 1` :bdg-light:`Subjects: 52` :bdg-light:`Recordings: 52`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 52` :bdg-secondary:`Recordings: 52`
 
 .. rst-class:: sd-badges
 
-:bdg-light:`License: CC0` :bdg-light:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -25,7 +25,7 @@ Dataset Information
    * - Dataset ID
      - ``DS006367``
    * - Title
-     - Memory Reactivation Levels Remain Unaffected by Anticipated Interference
+     - participants.tsv
    * - Year
      - 2025
    * - Authors
@@ -44,7 +44,7 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds006367,
-        title = {Memory Reactivation Levels Remain Unaffected by Anticipated Interference},
+        title = {participants.tsv},
         author = {xx},
         doi = {10.18112/openneuro.ds006367.v1.0.1},
         url = {https://doi.org/10.18112/openneuro.ds006367.v1.0.1},
@@ -68,7 +68,7 @@ Highlights
 
       - Channels: 28
       - Sampling rate (Hz): 1000.0
-      - Duration (hours): 0
+      - Duration (hours): 0.0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
@@ -80,7 +80,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 27.76 GB
+      - Size on disk: 27.8 GB
       - File count: 52
       - Format: BIDS
 
@@ -104,17 +104,18 @@ Quickstart
 
 .. code-block:: bash
 
-   pip install eegdash
+    pip install eegdash
 
-**Load a recording**
+**Access the data**
 
 .. code-block:: python
 
-   from eegdash.dataset import DS006367
+    from eegdash.dataset import DS006367
 
-   dataset = DS006367(cache_dir="./data")
-   recording = dataset[0]
-   raw = recording.load()
+    dataset = DS006367(cache_dir="./data")
+    # Get the raw object of the first recording
+    raw = dataset.datasets[0].raw
+    print(raw.info)
 
 **Filter/query**
 

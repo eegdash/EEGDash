@@ -5,15 +5,15 @@
 eegdash.dataset.DS004473
 ========================
 
-sEEG Forced Two-Choice Task (OpenNeuro ``ds004473``). Access recordings and metadata through EEGDash.
+participants.tsv (OpenNeuro ``ds004473``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: ['ieeg']` :bdg-light:`Tasks: 1` :bdg-light:`Subjects: 8` :bdg-light:`Recordings: 8`
+:bdg-primary:`Modality: ieeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 8` :bdg-secondary:`Recordings: 8`
 
 .. rst-class:: sd-badges
 
-:bdg-light:`License: CC0` :bdg-light:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -25,7 +25,7 @@ Dataset Information
    * - Dataset ID
      - ``DS004473``
    * - Title
-     - sEEG Forced Two-Choice Task
+     - participants.tsv
    * - Year
      - 2023
    * - Authors
@@ -44,7 +44,7 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds004473,
-        title = {sEEG Forced Two-Choice Task},
+        title = {participants.tsv},
         author = {Alexander P. Rockhill and Alessandra Mantovani and Brittany Stedelin and Admed M. Raslan and Nicole C. Swann},
         doi = {10.18112/openneuro.ds004473.v1.0.1},
         url = {https://doi.org/10.18112/openneuro.ds004473.v1.0.1},
@@ -68,7 +68,7 @@ Highlights
 
       - Channels: 129
       - Sampling rate (Hz): 999.4121105232217
-      - Duration (hours): 0
+      - Duration (hours): 0.0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
@@ -80,7 +80,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 6.30 GB
+      - Size on disk: 6.3 GB
       - File count: 8
       - Format: BIDS
 
@@ -104,17 +104,18 @@ Quickstart
 
 .. code-block:: bash
 
-   pip install eegdash
+    pip install eegdash
 
-**Load a recording**
+**Access the data**
 
 .. code-block:: python
 
-   from eegdash.dataset import DS004473
+    from eegdash.dataset import DS004473
 
-   dataset = DS004473(cache_dir="./data")
-   recording = dataset[0]
-   raw = recording.load()
+    dataset = DS004473(cache_dir="./data")
+    # Get the raw object of the first recording
+    raw = dataset.datasets[0].raw
+    print(raw.info)
 
 **Filter/query**
 

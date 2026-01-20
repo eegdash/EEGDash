@@ -5,15 +5,15 @@
 eegdash.dataset.DS004998
 ========================
 
-Exploring the electrophysiology of Parkinson's disease - magnetoencephalography combined with deep brain recordings from the subthalamic nucleus. (OpenNeuro ``ds004998``). Access recordings and metadata through EEGDash.
+participants.tsv (OpenNeuro ``ds004998``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: ['meg']` :bdg-light:`Tasks: 6` :bdg-light:`Subjects: 20` :bdg-light:`Recordings: 145`
+:bdg-primary:`Modality: meg` :bdg-info:`Tasks: 6` :bdg-secondary:`Subjects: 20` :bdg-secondary:`Recordings: 145`
 
 .. rst-class:: sd-badges
 
-:bdg-light:`License: CC0` :bdg-light:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -25,7 +25,7 @@ Dataset Information
    * - Dataset ID
      - ``DS004998``
    * - Title
-     - Exploring the electrophysiology of Parkinson's disease - magnetoencephalography combined with deep brain recordings from the subthalamic nucleus.
+     - participants.tsv
    * - Year
      - 2024
    * - Authors
@@ -44,7 +44,7 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds004998,
-        title = {Exploring the electrophysiology of Parkinson's disease - magnetoencephalography combined with deep brain recordings from the subthalamic nucleus.},
+        title = {participants.tsv},
         author = {Fayed Rassoulou and Alexandra Steina and Christian J. Hartmann and Jan Vesper and Markus Butz and Alfons Schnitzler and Jan Hirschmann},
         doi = {10.18112/openneuro.ds004998.v1.2.2},
         url = {https://doi.org/10.18112/openneuro.ds004998.v1.2.2},
@@ -66,9 +66,9 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 18 (2), 323 (46), 16 (2), 4, 333 (4), 324 (4), 326 (4), 347 (2), 8 (80)
+      - Channels: 18 (4), 4 (2), 323 (92), 16 (4), 324 (8), 333 (8), 8 (160), 347 (4), 326 (8)
       - Sampling rate (Hz): 2000.0
-      - Duration (hours): 0
+      - Duration (hours): 0.0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
@@ -80,7 +80,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 161.76 GB
+      - Size on disk: 161.8 GB
       - File count: 145
       - Format: BIDS
 
@@ -104,17 +104,18 @@ Quickstart
 
 .. code-block:: bash
 
-   pip install eegdash
+    pip install eegdash
 
-**Load a recording**
+**Access the data**
 
 .. code-block:: python
 
-   from eegdash.dataset import DS004998
+    from eegdash.dataset import DS004998
 
-   dataset = DS004998(cache_dir="./data")
-   recording = dataset[0]
-   raw = recording.load()
+    dataset = DS004998(cache_dir="./data")
+    # Get the raw object of the first recording
+    raw = dataset.datasets[0].raw
+    print(raw.info)
 
 **Filter/query**
 

@@ -5,15 +5,15 @@
 eegdash.dataset.DS005048
 ========================
 
-40Hz Auditory Entrainment (OpenNeuro ``ds005048``). Access recordings and metadata through EEGDash.
+participants.tsv (OpenNeuro ``ds005048``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: ['eeg']` :bdg-light:`Tasks: 1` :bdg-light:`Subjects: 35` :bdg-light:`Recordings: 35`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 35` :bdg-secondary:`Recordings: 35`
 
 .. rst-class:: sd-badges
 
-:bdg-light:`License: CC0` :bdg-light:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -25,7 +25,7 @@ Dataset Information
    * - Dataset ID
      - ``DS005048``
    * - Title
-     - 40Hz Auditory Entrainment
+     - participants.tsv
    * - Year
      - 2024
    * - Authors
@@ -44,7 +44,7 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds005048,
-        title = {40Hz Auditory Entrainment},
+        title = {participants.tsv},
         author = {Mojtaba Lahijanian and Hamid Aghajan and Zahra Vahabi},
         doi = {10.18112/openneuro.ds005048.v1.0.1},
         url = {https://doi.org/10.18112/openneuro.ds005048.v1.0.1},
@@ -68,7 +68,7 @@ Highlights
 
       - Channels: 19
       - Sampling rate (Hz): 250.0
-      - Duration (hours): 0
+      - Duration (hours): 0.0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
@@ -80,7 +80,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 355.91 MB
+      - Size on disk: 355.9 MB
       - File count: 35
       - Format: BIDS
 
@@ -104,17 +104,18 @@ Quickstart
 
 .. code-block:: bash
 
-   pip install eegdash
+    pip install eegdash
 
-**Load a recording**
+**Access the data**
 
 .. code-block:: python
 
-   from eegdash.dataset import DS005048
+    from eegdash.dataset import DS005048
 
-   dataset = DS005048(cache_dir="./data")
-   recording = dataset[0]
-   raw = recording.load()
+    dataset = DS005048(cache_dir="./data")
+    # Get the raw object of the first recording
+    raw = dataset.datasets[0].raw
+    print(raw.info)
 
 **Filter/query**
 

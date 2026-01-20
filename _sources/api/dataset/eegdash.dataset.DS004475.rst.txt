@@ -5,15 +5,15 @@
 eegdash.dataset.DS004475
 ========================
 
-Mobile EEG split-belt walking study (OpenNeuro ``ds004475``). Access recordings and metadata through EEGDash.
+participants.tsv (OpenNeuro ``ds004475``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: ['eeg']` :bdg-light:`Tasks: 1` :bdg-light:`Subjects: 30` :bdg-light:`Recordings: 30`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 30` :bdg-secondary:`Recordings: 30`
 
 .. rst-class:: sd-badges
 
-:bdg-light:`License: CC0` :bdg-light:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -25,7 +25,7 @@ Dataset Information
    * - Dataset ID
      - ``DS004475``
    * - Title
-     - Mobile EEG split-belt walking study
+     - participants.tsv
    * - Year
      - 2023
    * - Authors
@@ -44,7 +44,7 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds004475,
-        title = {Mobile EEG split-belt walking study},
+        title = {participants.tsv},
         author = {Noelle A. Jacobsen and Daniel P. Ferris},
         doi = {10.18112/openneuro.ds004475.v1.0.3},
         url = {https://doi.org/10.18112/openneuro.ds004475.v1.0.3},
@@ -66,9 +66,9 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 122 (2), 119, 118, 115, 126, 125 (3), 120, 128 (3), 127 (6), 113, 124 (6), 123 (4)
+      - Channels: 115 (2), 126 (2), 125 (6), 120 (2), 119 (2), 118 (2), 122 (4), 128 (6), 127 (12), 113 (2), 124 (12), 123 (8)
       - Sampling rate (Hz): 512.0
-      - Duration (hours): 0
+      - Duration (hours): 0.0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
@@ -80,7 +80,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 48.54 GB
+      - Size on disk: 48.5 GB
       - File count: 30
       - Format: BIDS
 
@@ -104,17 +104,18 @@ Quickstart
 
 .. code-block:: bash
 
-   pip install eegdash
+    pip install eegdash
 
-**Load a recording**
+**Access the data**
 
 .. code-block:: python
 
-   from eegdash.dataset import DS004475
+    from eegdash.dataset import DS004475
 
-   dataset = DS004475(cache_dir="./data")
-   recording = dataset[0]
-   raw = recording.load()
+    dataset = DS004475(cache_dir="./data")
+    # Get the raw object of the first recording
+    raw = dataset.datasets[0].raw
+    print(raw.info)
 
 **Filter/query**
 

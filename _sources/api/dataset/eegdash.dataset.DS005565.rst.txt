@@ -5,15 +5,15 @@
 eegdash.dataset.DS005565
 ========================
 
-Neural associations between fingerspelling, print, and signs: An ERP priming study with deaf readers (OpenNeuro ``ds005565``). Access recordings and metadata through EEGDash.
+participants.tsv (OpenNeuro ``ds005565``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: ['eeg']` :bdg-light:`Tasks: 1` :bdg-light:`Subjects: 24` :bdg-light:`Recordings: 24`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 24` :bdg-secondary:`Recordings: 24`
 
 .. rst-class:: sd-badges
 
-:bdg-light:`License: CC0` :bdg-light:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -25,7 +25,7 @@ Dataset Information
    * - Dataset ID
      - ``DS005565``
    * - Title
-     - Neural associations between fingerspelling, print, and signs: An ERP priming study with deaf readers
+     - participants.tsv
    * - Year
      - 2024
    * - Authors
@@ -44,7 +44,7 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds005565,
-        title = {Neural associations between fingerspelling, print, and signs: An ERP priming study with deaf readers},
+        title = {participants.tsv},
         author = {Brittany Lee and Sofia E. Ortega and Priscilla M. Martinez and Katherine J. Midgley and Phillip J. Holcomb and Karen Emmorey},
         doi = {10.18112/openneuro.ds005565.v1.0.3},
         url = {https://doi.org/10.18112/openneuro.ds005565.v1.0.3},
@@ -68,7 +68,7 @@ Highlights
 
       - Channels: 32
       - Sampling rate (Hz): 500.0
-      - Duration (hours): 0
+      - Duration (hours): 0.0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
@@ -80,7 +80,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 2.62 GB
+      - Size on disk: 2.6 GB
       - File count: 24
       - Format: BIDS
 
@@ -104,17 +104,18 @@ Quickstart
 
 .. code-block:: bash
 
-   pip install eegdash
+    pip install eegdash
 
-**Load a recording**
+**Access the data**
 
 .. code-block:: python
 
-   from eegdash.dataset import DS005565
+    from eegdash.dataset import DS005565
 
-   dataset = DS005565(cache_dir="./data")
-   recording = dataset[0]
-   raw = recording.load()
+    dataset = DS005565(cache_dir="./data")
+    # Get the raw object of the first recording
+    raw = dataset.datasets[0].raw
+    print(raw.info)
 
 **Filter/query**
 

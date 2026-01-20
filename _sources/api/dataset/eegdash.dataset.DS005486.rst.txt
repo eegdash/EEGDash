@@ -5,15 +5,15 @@
 eegdash.dataset.DS005486
 ========================
 
-PREDICT (OpenNeuro ``ds005486``). Access recordings and metadata through EEGDash.
+manifest.json (OpenNeuro ``ds005486``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: ['eeg']` :bdg-light:`Tasks: 1` :bdg-light:`Subjects: 159` :bdg-light:`Recordings: 445`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 159` :bdg-secondary:`Recordings: 445`
 
 .. rst-class:: sd-badges
 
-:bdg-light:`License: CC0` :bdg-light:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -25,7 +25,7 @@ Dataset Information
    * - Dataset ID
      - ``DS005486``
    * - Title
-     - PREDICT
+     - manifest.json
    * - Year
      - 2024
    * - Authors
@@ -44,7 +44,7 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds005486,
-        title = {PREDICT},
+        title = {manifest.json},
         author = {Nahian S. Chowdhury and Chuan Bi and Andrew J. Furman and Alan KI Chiang and Patrick Skippen and Emily Si and Samantha K Millard and Sarah M. Margerison and Darrah Spies and Michael L. Keaser and Joyce T. Da Silva and Shuo Chen and Siobhan M. Schabrun and David A. Seminowicz},
         doi = {10.18112/openneuro.ds005486.v1.0.1},
         url = {https://doi.org/10.18112/openneuro.ds005486.v1.0.1},
@@ -67,8 +67,8 @@ Highlights
       :class-card: sd-border-1
 
       - Channels: —
-      - Sampling rate (Hz): 5000.0 (399), 25000.0 (46)
-      - Duration (hours): 0
+      - Sampling rate (Hz): 25000.0 (92), 5000.0 (798)
+      - Duration (hours): 0.0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
@@ -80,7 +80,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 371.04 GB
+      - Size on disk: 371.0 GB
       - File count: 445
       - Format: BIDS
 
@@ -104,17 +104,18 @@ Quickstart
 
 .. code-block:: bash
 
-   pip install eegdash
+    pip install eegdash
 
-**Load a recording**
+**Access the data**
 
 .. code-block:: python
 
-   from eegdash.dataset import DS005486
+    from eegdash.dataset import DS005486
 
-   dataset = DS005486(cache_dir="./data")
-   recording = dataset[0]
-   raw = recording.load()
+    dataset = DS005486(cache_dir="./data")
+    # Get the raw object of the first recording
+    raw = dataset.datasets[0].raw
+    print(raw.info)
 
 **Filter/query**
 

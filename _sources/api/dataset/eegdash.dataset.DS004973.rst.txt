@@ -9,11 +9,11 @@ An fNIRS dataset for driving risk cognition of passengers in highly automated dr
 
 .. rst-class:: sd-badges
 
-:bdg-light:`Modality: ['fnirs']` :bdg-light:`Tasks: 12` :bdg-light:`Subjects: 21` :bdg-light:`Recordings: 1177`
+:bdg-primary:`Modality: fnirs` :bdg-info:`Tasks: 12` :bdg-secondary:`Subjects: 21` :bdg-secondary:`Recordings: 1177`
 
 .. rst-class:: sd-badges
 
-:bdg-light:`License: CC0` :bdg-light:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
 
 Dataset Information
 -------------------
@@ -68,14 +68,14 @@ Highlights
 
       - Channels: —
       - Sampling rate (Hz): —
-      - Duration (hours): 0
+      - Duration (hours): 0.0
 
    .. grid-item-card:: Tasks & conditions
       :class-card: sd-border-1
 
       - Tasks: 12
       - Experiment type: —
-      - Subject type: —
+      - Subject type: Highly automated driving  vehicles
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
@@ -104,17 +104,18 @@ Quickstart
 
 .. code-block:: bash
 
-   pip install eegdash
+    pip install eegdash
 
-**Load a recording**
+**Access the data**
 
 .. code-block:: python
 
-   from eegdash.dataset import DS004973
+    from eegdash.dataset import DS004973
 
-   dataset = DS004973(cache_dir="./data")
-   recording = dataset[0]
-   raw = recording.load()
+    dataset = DS004973(cache_dir="./data")
+    # Get the raw object of the first recording
+    raw = dataset.datasets[0].raw
+    print(raw.info)
 
 **Filter/query**
 

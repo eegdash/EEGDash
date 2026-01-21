@@ -739,7 +739,8 @@ def _fetch_dataset_details_from_api(dataset_id: str) -> dict[str, object]:
         year = created_at[:4]
 
     # Map API fields to details structure
-    title = _clean_value(ds.get("name"))
+    # Use computed_title if available (populated by compute-stats endpoint)
+    title = _clean_value(ds.get("computed_title")) or _clean_value(ds.get("name"))
     if title and (
         title.lower().endswith((".tsv", ".json", ".csv", ".md"))
         or title.lower() == "readme"

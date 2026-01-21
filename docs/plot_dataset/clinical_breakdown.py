@@ -174,7 +174,6 @@ def generate_clinical_stacked_bar(df: pd.DataFrame, out_html: str | Path) -> Pat
         barmode="stack",
         template="plotly_white",
         font=dict(size=14),
-        title="Clinical Breakdown by Modality",
         yaxis_title="Number of Studies",
         xaxis_title="Electrophysiology Modality",
         height=600,

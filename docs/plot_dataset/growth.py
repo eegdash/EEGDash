@@ -221,7 +221,6 @@ def generate_dataset_growth(df: pd.DataFrame, out_html: str | Path) -> Path:
 
     # Responsive layout
     fig.update_layout(
-        title="Cumulative Growth of Open Data",
         yaxis_title="Number of Datasets",
         xaxis_title="Publication Date",
         template="plotly_white",

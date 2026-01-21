@@ -213,10 +213,26 @@ def _flatten_entities(record: dict) -> dict:
 
     The EEGDash API expects subject, task, session, run at the top level,
     not nested in an entities dict.
+
+    Conflict Resolution:
+    -------------------
+    If a key exists both at the top level AND in the entities dict, the
+    top-level value takes precedence (the entity value is NOT overwritten).
+    This ensures that explicitly set values from the digestion pipeline
+    are preserved, while nested entities serve as fallback values.
+
+    Example:
+        record = {
+            "subject": "01",           # Explicit top-level value
+            "entities": {"subject": "1", "task": "rest"}  # Nested values
+        }
+        Result: {"subject": "01", "task": "rest"}  # top-level "subject" preserved
+
     """
     result = record.copy()
 
     # Extract entities to top level if present
+    # Only copy if key doesn't already exist at top level (no overwrite)
     entities = result.pop("entities", {})
     if entities:
         for key in ("subject", "task", "session", "run"):
@@ -497,6 +513,11 @@ def main():
         default=10.0,
         help="Max percentage of records with missing nchans/sampling_frequency before warning (default: 10%%)",
     )
+    parser.add_argument(
+        "--compute-stats",
+        action="store_true",
+        help="Automatically recompute dataset stats (nchans_counts, sfreq_counts) after injection",
+    )
 
     args = parser.parse_args()
 
@@ -717,6 +738,35 @@ def main():
                 errors.append({"dataset": "records_collection", "error": str(e)})
                 print(f"  Error injecting records: {e}", file=sys.stderr)
 
+        # Compute stats for affected datasets if requested
+        if args.compute_stats and not args.only_datasets:
+            # Get unique dataset IDs from injected records
+            affected_datasets = sorted(
+                set(r.get("dataset") for r in all_records if r.get("dataset"))
+            )
+            if affected_datasets:
+                print(f"\nComputing stats for {len(affected_datasets)} datasets...")
+                try:
+                    datasets_param = ",".join(affected_datasets)
+                    url = f"{args.api_url}/admin/{args.database}/datasets/compute-stats?datasets={datasets_param}"
+                    with _make_session(admin_token) as client:
+                        result, response = request_json(
+                            "post",
+                            url,
+                            timeout=120,
+                            raise_for_status=True,
+                            raise_for_request=True,
+                            client=client,
+                        )
+                        stats["stats_computed"] = (result or {}).get(
+                            "datasets_updated", 0
+                        )
+                        print(
+                            f"  Stats computed for {stats['stats_computed']} datasets"
+                        )
+                except Exception as e:
+                    print(f"  Warning: Failed to compute stats: {e}", file=sys.stderr)
+
     # Print summary
     print("\n" + "=" * 60)
     print("INJECTION SUMMARY")
@@ -725,6 +775,8 @@ def main():
     print(f"  Datasets:   {stats['datasets_injected']}")
     print(f"  Records Ins:{stats['records_injected']}")
     print(f"  Records Upd:{stats.get('records_updated', 0)}")
+    if stats.get("stats_computed"):
+        print(f"  Stats Comp: {stats['stats_computed']}")
     print(f"  Skipped:    {stats['datasets_skipped']}")
     print(f"  Errors:     {stats['errors']}")
 

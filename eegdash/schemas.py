@@ -998,15 +998,23 @@ def create_record(
 
 
 def validate_record(record: dict[str, Any]) -> list[str]:
-    """Validate a record has required fields. Returns list of errors."""
+    """Validate a record has required fields. Returns list of errors.
+
+    Notes
+    -----
+    - `bids_relpath` is the canonical unique identifier for records
+    - `bidspath` is a computed field (dataset + "/" + bids_relpath) and not strictly required
+    - `storage.raw_key` always equals `bids_relpath` when created via `create_record`
+
+    """
     errors: list[str] = []
 
     if not record.get("dataset"):
         errors.append("missing: dataset")
     if not record.get("bids_relpath"):
         errors.append("missing: bids_relpath")
-    if not record.get("bidspath"):
-        errors.append("missing: bidspath")
+    # Note: bidspath is optional - it's computed from (dataset + "/" + bids_relpath)
+    # and maintained for backwards compatibility
 
     storage = record.get("storage")
     if not storage:

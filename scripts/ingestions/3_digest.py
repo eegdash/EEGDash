@@ -592,9 +592,23 @@ def extract_record(
             )
             base_names_to_try.append(without_acq_run)
 
-        # Directories to search (current + parent for inheritance)
+        # Build task-only base name for BIDS inheritance
+        # e.g., task-MIpost from sub-xp108_task-MIpost_eeg
+        task_part = next((p for p in parts if p.startswith("task-")), None)
+        if task_part and task_part not in base_names_to_try:
+            base_names_to_try.append(task_part)
+
+        # Directories to search - walk up to BIDS root for proper inheritance
+        # BIDS inheritance: sidecars can be at any level from root to file's directory
         parent_dir = bids_file_path.parent
-        dirs_to_try = [parent_dir, parent_dir.parent]
+        dirs_to_try = [parent_dir]
+        bids_root = Path(bids_dataset.bidsdir)
+        current = parent_dir
+        while current != bids_root and current.parent != current:
+            current = current.parent
+            dirs_to_try.append(current)
+            if current == bids_root:
+                break
 
         # Try modality-specific sidecars
         for search_dir in dirs_to_try:
@@ -655,8 +669,21 @@ def extract_record(
             without_run = "_".join(p for p in parts[:-1] if not p.startswith("run-"))
             base_names_to_try.append(without_run)
 
+        # Add task-only base name for BIDS inheritance
+        task_part = next((p for p in parts if p.startswith("task-")), None)
+        if task_part and task_part not in base_names_to_try:
+            base_names_to_try.append(task_part)
+
+        # Walk up to BIDS root for proper inheritance
         parent_dir = bids_file_path.parent
-        dirs_to_try = [parent_dir, parent_dir.parent]
+        dirs_to_try = [parent_dir]
+        bids_root = Path(bids_dataset.bidsdir)
+        current = parent_dir
+        while current != bids_root and current.parent != current:
+            current = current.parent
+            dirs_to_try.append(current)
+            if current == bids_root:
+                break
 
         for search_dir in dirs_to_try:
             if sampling_frequency and nchans:

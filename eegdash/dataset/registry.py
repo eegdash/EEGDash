@@ -212,24 +212,7 @@ def _generate_rich_docstring(
 
     if stats_parts:
         stats_line = "; ".join(stats_parts) + "."
-        # Add citation badge inline if available
-        if citation_count is not None:
-            badge_color = (
-                "blue"
-                if citation_count == 0
-                else "green"
-                if citation_count < 10
-                else "brightgreen"
-            )
-            badge_url = f"https://img.shields.io/badge/citations-{citation_count}-{badge_color}.svg"
-            stats_line = f"{stats_line} |citations_badge|"
-            summary_lines.append(stats_line)
-            # Add the badge definition after
-            summary_lines.append("")
-            summary_lines.append(f".. |citations_badge| image:: {badge_url}")
-            summary_lines.append(f"   :alt: NEMAR Citations: {citation_count}")
-        else:
-            summary_lines.append(stats_line)
+        summary_lines.append(stats_line)
 
     doi_raw = (
         row_series.get("dataset_doi")

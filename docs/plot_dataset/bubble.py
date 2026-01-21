@@ -407,6 +407,10 @@ document.addEventListener('DOMContentLoaded', function() {{
         }}
         if (plot) {{
             plot.style.display = 'block';
+            // Force Plotly to resize to fit the container
+            if (typeof Plotly !== 'undefined') {{
+                Plotly.Plots.resize(plot);
+            }}
         }}
     }}
 
@@ -425,6 +429,12 @@ document.addEventListener('DOMContentLoaded', function() {{
             }}
         }});
         showPlot();
+        // Additional resize after a short delay to ensure proper rendering
+        window.setTimeout(function() {{
+            if (typeof Plotly !== 'undefined' && plot) {{
+                Plotly.Plots.resize(plot);
+            }}
+        }}, 100);
     }}
 
     hookPlotlyClick(0);

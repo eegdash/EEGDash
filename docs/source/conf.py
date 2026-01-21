@@ -943,6 +943,7 @@ def _build_dataset_context(
         "metadata_fields": DEFAULT_METADATA_FIELDS,
         "format": dataset_format,
         "readme": _clean_value(details.get("readme")),
+        "nemar_citation_count": _clean_value((row or {}).get("nemar_citation_count")),
     }
 
 
@@ -955,6 +956,7 @@ def _format_badges(items: Sequence[tuple[str, str]]) -> str:
         "Recordings": "secondary",
         "License": "success",
         "Source": "warning",
+        "Citations": "info",
     }
     badges = []
     for label, value in items:
@@ -998,10 +1000,12 @@ def _format_hero_section(context: Mapping[str, object]) -> str:
             ("Recordings", str(context.get("n_records", ""))),
         ]
     )
+    citation_count = context.get("nemar_citation_count", "")
     badges_line_2 = _format_badges(
         [
             ("License", str(context.get("license", ""))),
             ("Source", str(context.get("source", ""))),
+            ("Citations", str(citation_count) if citation_count else ""),
         ]
     )
     return f"{tagline}\n\n{citation_block}\n\n{badges_line_1}\n\n{badges_line_2}"

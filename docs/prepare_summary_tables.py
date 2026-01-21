@@ -21,6 +21,25 @@ def copyfile(src, dst):
             raise exc
 
 
+def copy_to_static(src: Path, filename: str = None):
+    """Copy file to both source and build static directories.
+
+    This ensures files are available both for:
+    - Sphinx source builds (STATIC_DATASET_DIR)
+    - Direct browsing of _build/html (BUILD_STATIC_DIR)
+    """
+    if filename is None:
+        filename = Path(src).name
+
+    # Copy to source static (for Sphinx builds)
+    copyfile(src, STATIC_DATASET_DIR / filename)
+
+    # Copy to build static (for direct browsing, bypasses Sphinx copy step)
+    # Always create directory if it doesn't exist
+    BUILD_STATIC_DIR.mkdir(parents=True, exist_ok=True)
+    copyfile(src, BUILD_STATIC_DIR / filename)
+
+
 import numpy as np
 import pandas as pd
 from plot_dataset import (
@@ -36,6 +55,8 @@ from table_tag_utils import _normalize_values, wrap_tags
 
 DOCS_DIR = Path(__file__).resolve().parent
 STATIC_DATASET_DIR = DOCS_DIR / "source" / "_static" / "dataset_generated"
+# Build output directory - files here are served directly without Sphinx copy step
+BUILD_STATIC_DIR = DOCS_DIR / "_build" / "html" / "_static" / "dataset_generated"
 
 # API Configuration
 API_BASE_URL = "https://data.eegdash.org/api"
@@ -485,6 +506,7 @@ def main(source_dir: str, target_dir: str):
     target_dir = Path(target_dir)
     target_dir.mkdir(parents=True, exist_ok=True)
     STATIC_DATASET_DIR.mkdir(parents=True, exist_ok=True)
+    BUILD_STATIC_DIR.mkdir(parents=True, exist_ok=True)
     files = glob.glob(str(Path(source_dir) / "dataset" / "*.csv"))
     for f in files:
         target_file = target_dir / Path(f).name
@@ -499,7 +521,7 @@ def main(source_dir: str, target_dir: str):
             bubble_path,
             x_var="subjects",
         )
-        copyfile(bubble_output, STATIC_DATASET_DIR / bubble_output.name)
+        copy_to_static(bubble_output)
         print(f"Generated: {bubble_output.name}")
 
         # Save summary stats for documentation cards
@@ -509,14 +531,14 @@ def main(source_dir: str, target_dir: str):
         try:
             sankey_path = target_dir / "dataset_sankey.html"
             sankey_output = generate_dataset_sankey(df_raw, sankey_path)
-            copyfile(sankey_output, STATIC_DATASET_DIR / sankey_output.name)
+            copy_to_static(sankey_output)
         except Exception as exc:
             print(f"[dataset Sankey] Skipped due to error: {exc}")
 
         try:
             treemap_path = target_dir / "dataset_treemap.html"
             treemap_output = generate_dataset_treemap(df_raw, treemap_path)
-            copyfile(treemap_output, STATIC_DATASET_DIR / treemap_output.name)
+            copy_to_static(treemap_output)
         except Exception as exc:
             print(f"[dataset Treemap] Skipped due to error: {exc}")
 
@@ -524,7 +546,7 @@ def main(source_dir: str, target_dir: str):
         try:
             growth_path = target_dir / "dataset_growth.html"
             growth_output = generate_dataset_growth(df_raw, growth_path)
-            copyfile(growth_output, STATIC_DATASET_DIR / growth_output.name)
+            copy_to_static(growth_output)
             print(f"Generated: {growth_output.name}")
         except Exception as exc:
             print(f"[dataset Growth] Skipped due to error: {exc}")
@@ -533,7 +555,7 @@ def main(source_dir: str, target_dir: str):
         try:
             clinical_path = target_dir / "dataset_clinical.html"
             clinical_output = generate_clinical_stacked_bar(df_raw, clinical_path)
-            copyfile(clinical_output, STATIC_DATASET_DIR / clinical_output.name)
+            copy_to_static(clinical_output)
             print(f"Generated: {clinical_output.name}")
         except Exception as exc:
             print(f"[dataset Clinical] Skipped due to error: {exc}")
@@ -592,14 +614,14 @@ def main(source_dir: str, target_dir: str):
         table_path = target_dir / "dataset_summary_table.html"
         with open(table_path, "w", encoding="utf-8") as f:
             f.write(html_table)
-        copyfile(table_path, STATIC_DATASET_DIR / table_path.name)
+        copy_to_static(table_path)
 
         # Generate KDE ridgeline plot for modality participant distributions
         try:
             kde_path = target_dir / "dataset_kde_modalities.html"
             kde_output = generate_modality_ridgeline(df_raw, kde_path)
             if kde_output:
-                copyfile(kde_output, STATIC_DATASET_DIR / kde_output.name)
+                copy_to_static(kde_output)
         except Exception as exc:
             print(f"[dataset KDE] Skipped due to error: {exc}")
 
@@ -722,10 +744,17 @@ def save_summary_stats(df_raw: pd.DataFrame):
         else 0,
     }
 
+    # Write to source static directory
     stats_path = STATIC_DATASET_DIR / "summary_stats.json"
     with open(stats_path, "w") as f:
         json.dump(summary_stats, f)
     print(f"Generated summary stats: {stats_path}")
+
+    # Also write to build static directory if it exists
+    if BUILD_STATIC_DIR.exists():
+        build_stats_path = BUILD_STATIC_DIR / "summary_stats.json"
+        with open(build_stats_path, "w") as f:
+            json.dump(summary_stats, f)
 
 
 def _load_local_dataset_summary() -> pd.DataFrame:
@@ -769,6 +798,7 @@ def main_from_api(target_dir: str, database: str = DEFAULT_DATABASE, limit: int 
     target_dir = Path(target_dir)
     target_dir.mkdir(parents=True, exist_ok=True)
     STATIC_DATASET_DIR.mkdir(parents=True, exist_ok=True)
+    BUILD_STATIC_DIR.mkdir(parents=True, exist_ok=True)
 
     print(f"Fetching data from API (database: {database})...")
     # Using registry's cached fetcher
@@ -856,12 +886,12 @@ def main_from_api(target_dir: str, database: str = DEFAULT_DATABASE, limit: int 
     # Generate bubble chart
     try:
         bubble_path = target_dir / "dataset_bubble.html"
-        # Rename columns for bubble chart compatibility
-        df_bubble = df_raw.rename(columns={"n_subjects": "subjects"})
+        # generate_dataset_bubble handles column transformation internally
+        df_bubble = df_raw.copy()
         bubble_output = generate_dataset_bubble(
             df_bubble, bubble_path, x_var="subjects"
         )
-        copyfile(bubble_output, STATIC_DATASET_DIR / bubble_output.name)
+        copy_to_static(bubble_output)
         print(f"Generated: {bubble_output.name}")
     except Exception as exc:
         print(f"[dataset Bubble] Skipped due to error: {exc}")
@@ -873,7 +903,7 @@ def main_from_api(target_dir: str, database: str = DEFAULT_DATABASE, limit: int 
     try:
         sankey_path = target_dir / "dataset_sankey.html"
         sankey_output = generate_dataset_sankey(df_raw, sankey_path)
-        copyfile(sankey_output, STATIC_DATASET_DIR / sankey_output.name)
+        copy_to_static(sankey_output)
         print(f"Generated: {sankey_output.name}")
     except Exception as exc:
         print(f"[dataset Sankey] Skipped due to error: {exc}")
@@ -882,7 +912,7 @@ def main_from_api(target_dir: str, database: str = DEFAULT_DATABASE, limit: int 
     try:
         treemap_path = target_dir / "dataset_treemap.html"
         treemap_output = generate_dataset_treemap(df_raw, treemap_path)
-        copyfile(treemap_output, STATIC_DATASET_DIR / treemap_output.name)
+        copy_to_static(treemap_output)
         print(f"Generated: {treemap_output.name}")
     except Exception as exc:
         print(f"[dataset Treemap] Skipped due to error: {exc}")
@@ -891,7 +921,7 @@ def main_from_api(target_dir: str, database: str = DEFAULT_DATABASE, limit: int 
     try:
         growth_path = target_dir / "dataset_growth.html"
         growth_output = generate_dataset_growth(df_raw, growth_path)
-        copyfile(growth_output, STATIC_DATASET_DIR / growth_output.name)
+        copy_to_static(growth_output)
         print(f"Generated: {growth_output.name}")
     except Exception as exc:
         print(f"[dataset Growth] Skipped due to error: {exc}")
@@ -900,7 +930,7 @@ def main_from_api(target_dir: str, database: str = DEFAULT_DATABASE, limit: int 
     try:
         clinical_path = target_dir / "dataset_clinical.html"
         clinical_output = generate_clinical_stacked_bar(df_raw, clinical_path)
-        copyfile(clinical_output, STATIC_DATASET_DIR / clinical_output.name)
+        copy_to_static(clinical_output)
         print(f"Generated: {clinical_output.name}")
     except Exception as exc:
         print(f"[dataset Clinical] Skipped due to error: {exc}")
@@ -956,7 +986,7 @@ def main_from_api(target_dir: str, database: str = DEFAULT_DATABASE, limit: int 
     table_path = target_dir / "dataset_summary_table.html"
     with open(table_path, "w", encoding="utf-8") as f:
         f.write(html_table)
-    copyfile(table_path, STATIC_DATASET_DIR / table_path.name)
+    copy_to_static(table_path)
     print(f"Generated: {table_path.name}")
 
     # Generate KDE ridgeline plot
@@ -964,13 +994,14 @@ def main_from_api(target_dir: str, database: str = DEFAULT_DATABASE, limit: int 
         kde_path = target_dir / "dataset_kde_modalities.html"
         kde_output = generate_modality_ridgeline(df_raw, kde_path)
         if kde_output:
-            copyfile(kde_output, STATIC_DATASET_DIR / kde_output.name)
+            copy_to_static(kde_output)
             print(f"Generated: {kde_output.name}")
     except Exception as exc:
         print(f"[dataset KDE] Skipped due to error: {exc}")
 
     print(f"\nAll outputs saved to: {target_dir}")
     print(f"Static files copied to: {STATIC_DATASET_DIR}")
+    print(f"Build files copied to: {BUILD_STATIC_DIR}")
 
 
 def main_from_json(source_dir: str, target_dir: str):
@@ -979,6 +1010,7 @@ def main_from_json(source_dir: str, target_dir: str):
     target_dir = Path(target_dir)
     target_dir.mkdir(parents=True, exist_ok=True)
     STATIC_DATASET_DIR.mkdir(parents=True, exist_ok=True)
+    BUILD_STATIC_DIR.mkdir(parents=True, exist_ok=True)
 
     print(f"Reading datasets from {source_dir}...")
     dataset_files = list(source_dir.glob("*/ds*_dataset.json"))
@@ -1098,7 +1130,7 @@ def main_from_json(source_dir: str, target_dir: str):
         if "records" not in df_bubble.columns and "n_records" in df_bubble.columns:
             df_bubble["records"] = df_bubble["n_records"]
         bubble_output = generate_dataset_bubble(df_bubble, bubble_path, x_var="records")
-        copyfile(bubble_output, STATIC_DATASET_DIR / bubble_output.name)
+        copy_to_static(bubble_output)
         print(f"Generated: {bubble_output.name}")
     except Exception as exc:
         print(f"[dataset Bubble] Skipped due to error: {exc}")
@@ -1110,7 +1142,7 @@ def main_from_json(source_dir: str, target_dir: str):
     try:
         sankey_path = target_dir / "dataset_sankey.html"
         sankey_output = generate_dataset_sankey(df_raw, sankey_path)
-        copyfile(sankey_output, STATIC_DATASET_DIR / sankey_output.name)
+        copy_to_static(sankey_output)
         print(f"Generated: {sankey_output.name}")
     except Exception as exc:
         print(f"[dataset Sankey] Skipped due to error: {exc}")
@@ -1119,7 +1151,7 @@ def main_from_json(source_dir: str, target_dir: str):
     try:
         treemap_path = target_dir / "dataset_treemap.html"
         treemap_output = generate_dataset_treemap(df_raw, treemap_path)
-        copyfile(treemap_output, STATIC_DATASET_DIR / treemap_output.name)
+        copy_to_static(treemap_output)
         print(f"Generated: {treemap_output.name}")
     except Exception as exc:
         print(f"[dataset Treemap] Skipped due to error: {exc}")
@@ -1128,7 +1160,7 @@ def main_from_json(source_dir: str, target_dir: str):
     try:
         growth_path = target_dir / "dataset_growth.html"
         growth_output = generate_dataset_growth(df_raw, growth_path)
-        copyfile(growth_output, STATIC_DATASET_DIR / growth_output.name)
+        copy_to_static(growth_output)
         print(f"Generated: {growth_output.name}")
     except Exception as exc:
         print(f"[dataset Growth] Skipped due to error: {exc}")
@@ -1137,7 +1169,7 @@ def main_from_json(source_dir: str, target_dir: str):
     try:
         clinical_path = target_dir / "dataset_clinical.html"
         clinical_output = generate_clinical_stacked_bar(df_raw, clinical_path)
-        copyfile(clinical_output, STATIC_DATASET_DIR / clinical_output.name)
+        copy_to_static(clinical_output)
         print(f"Generated: {clinical_output.name}")
     except Exception as exc:
         print(f"[dataset Clinical] Skipped due to error: {exc}")
@@ -1204,7 +1236,7 @@ def main_from_json(source_dir: str, target_dir: str):
     table_path = target_dir / "dataset_summary_table.html"
     with open(table_path, "w", encoding="utf-8") as f:
         f.write(html_table)
-    copyfile(table_path, STATIC_DATASET_DIR / table_path.name)
+    copy_to_static(table_path)
     print(f"Generated: {table_path.name}")
 
     # KDE
@@ -1212,12 +1244,14 @@ def main_from_json(source_dir: str, target_dir: str):
         kde_path = target_dir / "dataset_kde_modalities.html"
         kde_output = generate_modality_ridgeline(df_raw, kde_path)
         if kde_output:
-            copyfile(kde_output, STATIC_DATASET_DIR / kde_output.name)
+            copy_to_static(kde_output)
             print(f"Generated: {kde_output.name}")
     except Exception as exc:
         print(f"[dataset KDE] Skipped due to error: {exc}")
 
     print(f"\nAll outputs saved to: {target_dir}")
+    print(f"Static files copied to: {STATIC_DATASET_DIR}")
+    print(f"Build files copied to: {BUILD_STATIC_DIR}")
 
 
 if __name__ == "__main__":

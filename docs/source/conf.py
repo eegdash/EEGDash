@@ -342,6 +342,8 @@ Dataset Information
 
 {dataset_info_section}
 
+{feedback_section}
+
 Description
 -----------
 
@@ -372,7 +374,6 @@ See Also
 
 {see_also_section}
 
-{feedback_section}
 """
 
 
@@ -936,8 +937,9 @@ def _build_dataset_context(
         "size": size,
         "s3_item_count": s3_item_count,
         "modality": modality,
-        "exp_type": _clean_value((row or {}).get("type of exp")),
-        "subject_type": _clean_value((row or {}).get("Type Subject")),
+        "pathology": _clean_value((row or {}).get("Type Subject")),
+        "tag_modality": _clean_value((row or {}).get("modality of exp")),
+        "tag_type": _clean_value((row or {}).get("type of exp")),
         "source": source,
         "openneuro_url": f"https://openneuro.org/datasets/{dataset_id}",
         "nemar_url": f"https://nemar.org/dataexplorer/detail?dataset_id={dataset_id}",
@@ -1041,11 +1043,11 @@ def _format_highlights_section(context: Mapping[str, object]) -> str:
             ],
         ),
         (
-            "Tasks & conditions",
+            "Tags",
             [
-                _stat_line("Tasks", context.get("n_tasks")),
-                _stat_line("Experiment type", context.get("exp_type")),
-                _stat_line("Subject type", context.get("subject_type")),
+                _stat_line("Pathology", context.get("pathology")),
+                _stat_line("Modality", context.get("tag_modality")),
+                _stat_line("Type", context.get("tag_type")),
             ],
         ),
         (

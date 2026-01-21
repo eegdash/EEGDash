@@ -377,7 +377,6 @@ def generate_dataset_bubble(
 <style>
 #dataset-bubble {{
     width: 100% !important;
-    max-width: {max_width}px;
     height: {height}px !important;
     min-height: {height}px;
     margin: 0 auto;

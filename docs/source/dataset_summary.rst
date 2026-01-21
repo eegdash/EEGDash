@@ -83,7 +83,7 @@ To leverage recent and ongoing advancements in large-scale computational methods
 
       .. include:: dataset_summary/growth.rst
 
-   .. tab-item:: Scatter of Sample Size vs. Recording Duration
+   .. tab-item:: Dataset Landscape
 
       .. include:: dataset_summary/bubble.rst
 

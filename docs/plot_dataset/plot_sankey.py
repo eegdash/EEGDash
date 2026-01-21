@@ -299,7 +299,17 @@ def generate_dataset_sankey(
         },
     )
 
-    out_path.write_text(html_content, encoding="utf-8")
+    styled_html = f"""
+<div id="dataset-sankey-wrapper" style="width: 100%; height: 100%;">
+    {html_content}
+</div>
+<script>
+    window.addEventListener('load', function() {{
+        window.dispatchEvent(new Event('resize'));
+    }});
+</script>
+"""
+    out_path.write_text(styled_html, encoding="utf-8")
     return out_path
 
 

@@ -219,6 +219,7 @@ def generate_dataset_growth(df: pd.DataFrame, out_html: str | Path) -> Path:
         ]
     )
 
+    # Responsive layout
     fig.update_layout(
         title="Cumulative Growth of Open Data",
         yaxis_title="Number of Datasets",
@@ -226,10 +227,31 @@ def generate_dataset_growth(df: pd.DataFrame, out_html: str | Path) -> Path:
         template="plotly_white",
         font=dict(size=14),
         legend=dict(x=1.02, y=1),
-        margin=dict(t=100),  # Give space for buttons
+        margin=dict(t=100, l=40, r=40, b=40),
+        height=600,
+        autosize=True,
     )
 
     out_path = Path(out_html)
     out_path.parent.mkdir(parents=True, exist_ok=True)
-    fig.write_html(out_path, include_plotlyjs="cdn", full_html=True)
+
+    html_content = fig.to_html(
+        full_html=False,
+        include_plotlyjs=False,
+        config={"responsive": True, "displaylogo": False},
+        div_id="dataset-growth-plot",
+    )
+
+    styled_html = f"""
+<div id="dataset-growth-wrapper" style="width: 100%; height: 100%;">
+    {html_content}
+</div>
+<script>
+    // Force resize on load to ensure fit
+    window.addEventListener('load', function() {{
+        window.dispatchEvent(new Event('resize'));
+    }});
+</script>
+"""
+    out_path.write_text(styled_html, encoding="utf-8")
     return out_path

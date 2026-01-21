@@ -1021,12 +1021,21 @@ def main_from_json(source_dir: str, target_dir: str):
             else:
                 type_subject = ds.get("study_domain", "") or ""
 
-            # Use tags.modality if available
+            # Use tags.modality if available, otherwise fallback to recording_modality
             modality_list = tags.get("modality", [])
             if modality_list and isinstance(modality_list, list):
                 modality_of_exp = ", ".join(modality_list)
+            elif paradigm.get("modality"):
+                modality_of_exp = paradigm.get("modality")
             else:
-                modality_of_exp = paradigm.get("modality") or ""
+                # Fallback to recording_modality for bubble chart compatibility
+                rec_mod = ds.get("recording_modality")
+                if isinstance(rec_mod, list) and rec_mod:
+                    modality_of_exp = rec_mod[0].upper() if rec_mod[0] else ""
+                elif rec_mod:
+                    modality_of_exp = str(rec_mod).upper()
+                else:
+                    modality_of_exp = ""
 
             # Use tags.type if available
             type_list = tags.get("type", [])
@@ -1037,10 +1046,15 @@ def main_from_json(source_dir: str, target_dir: str):
                     paradigm.get("cognitive_domain") or ds.get("study_design", "") or ""
                 )
 
+            # Get timestamps for growth chart
+            timestamps = ds.get("timestamps", {}) or {}
+            dataset_created_at = timestamps.get("dataset_created_at") or ""
+
             row = {
                 "dataset": ds_id,
                 "dataset_title": ds.get("name", ""),  # New field
                 "record_modality": rec_mod,
+                "recording_modality": rec_mod,  # Alias for clinical/growth charts
                 "n_records": ds.get("total_files", 0) or 0,
                 # Demographics might be empty or null
                 "n_subjects": ds.get("demographics", {}).get("subjects_count", 0) or 0,
@@ -1049,6 +1063,7 @@ def main_from_json(source_dir: str, target_dir: str):
                 "sampling_freqs": "",  # Not easily available
                 "size": human_readable_size(ds.get("size_bytes") or 0),
                 "size_bytes": ds.get("size_bytes") or 0,
+                "duration_hours_total": 0,  # Not available in JSON, use 0
                 # Mappings from tags
                 "Type Subject": type_subject,
                 "modality of exp": modality_of_exp,
@@ -1056,6 +1071,8 @@ def main_from_json(source_dir: str, target_dir: str):
                 # Extra
                 "source": ds.get("source", ""),
                 "license": ds.get("license", ""),
+                # Timestamps for growth chart
+                "dataset_created_at": dataset_created_at,
             }
             rows.append(row)
         except Exception as e:
@@ -1071,13 +1088,16 @@ def main_from_json(source_dir: str, target_dir: str):
     # Generate visualizations (Bubble, Sankey, Treemap, KDE)
     # Reusing fetch_datasets logic...
 
-    # Bubble
+    # Bubble (Dataset Landscape)
     try:
         bubble_path = target_dir / "dataset_bubble.html"
-        df_bubble = df_raw.rename(columns={"n_subjects": "subjects"})
-        bubble_output = generate_dataset_bubble(
-            df_bubble, bubble_path, x_var="subjects"
-        )
+        df_bubble = df_raw.copy()
+        # Ensure required columns exist for bubble chart
+        if "subjects" not in df_bubble.columns and "n_subjects" in df_bubble.columns:
+            df_bubble["subjects"] = df_bubble["n_subjects"]
+        if "records" not in df_bubble.columns and "n_records" in df_bubble.columns:
+            df_bubble["records"] = df_bubble["n_records"]
+        bubble_output = generate_dataset_bubble(df_bubble, bubble_path, x_var="records")
         copyfile(bubble_output, STATIC_DATASET_DIR / bubble_output.name)
         print(f"Generated: {bubble_output.name}")
     except Exception as exc:
@@ -1103,6 +1123,24 @@ def main_from_json(source_dir: str, target_dir: str):
         print(f"Generated: {treemap_output.name}")
     except Exception as exc:
         print(f"[dataset Treemap] Skipped due to error: {exc}")
+
+    # Growth Chart
+    try:
+        growth_path = target_dir / "dataset_growth.html"
+        growth_output = generate_dataset_growth(df_raw, growth_path)
+        copyfile(growth_output, STATIC_DATASET_DIR / growth_output.name)
+        print(f"Generated: {growth_output.name}")
+    except Exception as exc:
+        print(f"[dataset Growth] Skipped due to error: {exc}")
+
+    # Clinical Stacked Bar
+    try:
+        clinical_path = target_dir / "dataset_clinical.html"
+        clinical_output = generate_clinical_stacked_bar(df_raw, clinical_path)
+        copyfile(clinical_output, STATIC_DATASET_DIR / clinical_output.name)
+        print(f"Generated: {clinical_output.name}")
+    except Exception as exc:
+        print(f"[dataset Clinical] Skipped due to error: {exc}")
 
     # Table Generation
     df = prepare_table(df_raw)

@@ -71,7 +71,11 @@ def generate_clinical_stacked_bar(df: pd.DataFrame, out_html: str | Path) -> Pat
         df["modality"] = df["modality of exp"]
 
     if "population_type" not in df.columns:
-        if "clinical" in df.columns:
+        if "Type Subject" in df.columns:
+            df["population_type"] = (
+                df["Type Subject"].fillna("Unknown").replace("", "Unknown")
+            )
+        elif "clinical" in df.columns:
             df["population_type"] = df.apply(
                 lambda r: r.get("clinical", {}).get("purpose", "Healthy")
                 if r.get("clinical", {}).get("is_clinical")
@@ -173,6 +177,7 @@ def generate_clinical_stacked_bar(df: pd.DataFrame, out_html: str | Path) -> Pat
         title="Clinical Breakdown by Modality",
         yaxis_title="Number of Studies",
         xaxis_title="Electrophysiology Modality",
+        height=600,
         updatemenus=[
             dict(
                 type="buttons",
@@ -205,10 +210,29 @@ def generate_clinical_stacked_bar(df: pd.DataFrame, out_html: str | Path) -> Pat
                 yanchor="top",
             ),
         ],
-        margin=dict(t=100),
+        margin=dict(t=100, l=40, r=40, b=40),
+        autosize=True,
     )
 
     out_path = Path(out_html)
     out_path.parent.mkdir(parents=True, exist_ok=True)
-    fig.write_html(out_path, include_plotlyjs="cdn", full_html=True)
+
+    html_content = fig.to_html(
+        full_html=False,
+        include_plotlyjs=False,
+        config={"responsive": True, "displaylogo": False},
+        div_id="dataset-clinical-plot",
+    )
+
+    styled_html = f"""
+<div id="dataset-clinical-wrapper" style="width: 100%; height: 100%;">
+    {html_content}
+</div>
+<script>
+    window.addEventListener('load', function() {{
+        window.dispatchEvent(new Event('resize'));
+    }});
+</script>
+"""
+    out_path.write_text(styled_html, encoding="utf-8")
     return out_path

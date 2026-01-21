@@ -12,9 +12,11 @@ except ImportError:
 
 
 def _normalize_modality(mod):
-    if not isinstance(mod, str):
+    if not isinstance(mod, str) or pd.isna(mod):
         return "Unknown"
-    l = mod.lower()
+    l = mod.lower().strip()
+    if l in ("nan", "none", ""):
+        return "Unknown"
 
     # Priority checks - consistent with growth.py
     if "ieeg" in l or "intracranial" in l:
@@ -85,8 +87,16 @@ def generate_clinical_stacked_bar(df: pd.DataFrame, out_html: str | Path) -> Pat
         else:
             df["population_type"] = "Unknown"
 
-    # Normalize
+    # Clean up population_type: handle nan strings and empty values
+    df["population_type"] = df["population_type"].apply(
+        lambda x: "Unknown"
+        if (pd.isna(x) or str(x).lower() in ("nan", "none", ""))
+        else str(x)
+    )
+
+    # Normalize modality and filter out invalid values
     df["Modality"] = df["modality"].apply(_normalize_modality)
+    df = df[df["Modality"] != "Unknown"]  # Remove rows with unknown modality
 
     # Group by Modality and Population
     summary = (

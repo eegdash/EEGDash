@@ -53,17 +53,42 @@ MODALITY_EMOJI = {
 }
 
 PATHOLOGY_PASTEL_OVERRIDES = {
-    "Healthy": "#bbf7d0",
-    "Unknown": "#d0d7df",
-    "Dementia": "#fcd4d4",
-    "Schizophrenia": "#f9d0e7",
-    "Psychosis": "#f9d0e7",
-    "Epilepsy": "#f9d7c4",
-    "Parkinson's": "#f8c8c8",
-    "TBI": "#f9cabd",
-    "Surgery": "#f7d9b8",
-    "Other": "#f8cbdc",
-    "Clinical": "#f8d0d0",
+    # Healthy / Control
+    "Healthy": "#86efac",  # green-300
+    "healthy": "#86efac",
+    # Unknown / Unspecified
+    "Unknown": "#cbd5e1",  # slate-300
+    "unknown": "#cbd5e1",
+    "Unspecified Clinical": "#e2e8f0",  # slate-200
+    "unspecified clinical": "#e2e8f0",
+    # Neurological conditions - warm colors
+    "Epilepsy": "#fdba74",  # orange-300
+    "epilepsy": "#fdba74",
+    "Parkinson's": "#f9a8d4",  # pink-300
+    "parkinson's": "#f9a8d4",
+    "parkinson": "#f9a8d4",
+    "Alzheimer": "#c4b5fd",  # violet-300
+    "alzheimer": "#c4b5fd",
+    "Dementia": "#ddd6fe",  # violet-200
+    "dementia": "#ddd6fe",
+    "TBI": "#fca5a5",  # red-300
+    "tbi": "#fca5a5",
+    # Psychiatric conditions - cool colors
+    "Schizophrenia": "#7dd3fc",  # sky-300
+    "schizophrenia": "#7dd3fc",
+    "Psychosis": "#67e8f9",  # cyan-300
+    "psychosis": "#67e8f9",
+    "Depression": "#a5b4fc",  # indigo-300
+    "depression": "#a5b4fc",
+    "ADHD": "#fcd34d",  # amber-300
+    "adhd": "#fcd34d",
+    # Other clinical
+    "Surgery": "#fed7aa",  # orange-200
+    "surgery": "#fed7aa",
+    "Clinical": "#fecaca",  # red-200
+    "clinical": "#fecaca",
+    "Other": "#e5e7eb",  # gray-200
+    "other": "#e5e7eb",
 }
 
 

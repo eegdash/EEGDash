@@ -372,6 +372,7 @@ See Also
 
 {see_also_section}
 
+{feedback_section}
 """
 
 
@@ -1351,6 +1352,41 @@ def _format_see_also_section(dataset_id: str) -> str:
     )
 
 
+def _format_feedback_section(dataset_id: str, title: str) -> str:
+    """Generate a feedback section with a button to report issues on GitHub."""
+    from urllib.parse import quote
+
+    dataset_upper = dataset_id.upper()
+    issue_title = quote(f"[Dataset] Issue with {dataset_upper}")
+    issue_body = quote(
+        f"## Dataset\n\n"
+        f"- **Dataset ID:** {dataset_upper}\n"
+        f"- **Title:** {title}\n\n"
+        f"## Issue Description\n\n"
+        f"Please describe the issue you encountered with this dataset:\n\n"
+        f"## Steps to Reproduce\n\n"
+        f"1. \n2. \n3. \n\n"
+        f"## Expected Behavior\n\n\n"
+        f"## Additional Context\n\n"
+    )
+    github_url = (
+        f"https://github.com/eegdash/EEGDash/issues/new"
+        f"?title={issue_title}&body={issue_body}&labels=dataset"
+    )
+
+    return f""".. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: {github_url}
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub"""
+
+
 def _cleanup_stale_dataset_pages(dataset_dir: Path, expected: set[Path]) -> None:
     for path in dataset_dir.glob("eegdash.dataset.DS*.rst"):
         if path in expected:
@@ -1368,6 +1404,8 @@ def _process_dataset_item(
 ) -> Path:
     title = f"eegdash.dataset.{name}"
     context = _build_dataset_context(name, row)
+    dataset_id = str(context.get("dataset_id", ""))
+    dataset_title = str(context.get("title", ""))
     page_content = DATASET_PAGE_TEMPLATE.format(
         notice=AUTOGEN_NOTICE,
         title=title,
@@ -1379,7 +1417,8 @@ def _process_dataset_item(
         quickstart_section=_format_quickstart_section(context),
         quality_section=_format_quality_section(context),
         api_section=_format_api_section(name),
-        see_also_section=_format_see_also_section(str(context.get("dataset_id", ""))),
+        see_also_section=_format_see_also_section(dataset_id),
+        feedback_section=_format_feedback_section(dataset_id, dataset_title),
     )
     page_path = dataset_dir / f"eegdash.dataset.{name}.rst"
     if _write_if_changed(page_path, page_content):

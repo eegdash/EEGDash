@@ -14,6 +14,7 @@ __all__ = [
     "get_dataset_url",
     "human_readable_size",
     "primary_modality",
+    "primary_recording_modality",
     "safe_int",
 ]
 
@@ -51,6 +52,51 @@ def primary_modality(value: Any) -> str:
     title_variant = first.title()
     if title_variant in MODALITY_COLOR_MAP:
         return title_variant
+
+    return "Other"
+
+
+# Canonical recording modality order and mapping
+RECORDING_MODALITY_MAP = {
+    "eeg": "EEG",
+    "ieeg": "iEEG",
+    "meg": "MEG",
+    "fnirs": "fNIRS",
+    "emg": "EMG",
+    "ecg": "ECG",
+    "fmri": "fMRI",
+    "mri": "MRI",
+}
+
+
+def primary_recording_modality(value: Any) -> str:
+    """Return the canonical recording modality label (EEG, MEG, iEEG, etc.)."""
+    if value is None:
+        return "Unknown"
+    if isinstance(value, float) and pd.isna(value):
+        return "Unknown"
+
+    text = str(value).strip().lower()
+    if not text:
+        return "Unknown"
+
+    # Handle multi-modality entries (e.g., "eeg, meg") - take the first
+    for sep in _SEPARATORS:
+        text = text.replace(sep, ",")
+    tokens = [tok.strip() for tok in text.split(",") if tok.strip()]
+    if not tokens:
+        return "Unknown"
+
+    first = tokens[0].lower()
+
+    # Map to canonical form
+    canonical = RECORDING_MODALITY_MAP.get(first)
+    if canonical:
+        return canonical
+
+    # Try direct match in color map
+    if first.upper() in MODALITY_COLOR_MAP:
+        return first.upper()
 
     return "Other"
 

@@ -102,6 +102,7 @@ CANONICAL_MAP = {
         "rest": "Resting State",
         "resting state": "Resting State",
         "resting-state": "Resting State",
+        "resting_state": "Resting State",
         "sleep": "Sleep",
         "other": "Other",
         "eeg": "EEG",

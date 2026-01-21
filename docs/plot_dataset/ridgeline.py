@@ -85,11 +85,17 @@ def _build_ridgeline_traces(
         color = MODALITY_COLOR_MAP.get(label, "#6b7280")
         fill = hex_to_rgba(color, 0.28)
 
+        # Convert numpy arrays to lists to avoid Plotly binary encoding
+        x_fill = np.concatenate([x_curve, x_curve[::-1]]).tolist()
+        y_fill = np.concatenate([y_curve, np.full_like(y_curve, baseline)]).tolist()
+        x_line = x_curve.tolist()
+        y_line = y_curve.tolist()
+
         # Fill trace
         traces.append(
             go.Scatter(
-                x=np.concatenate([x_curve, x_curve[::-1]]),
-                y=np.concatenate([y_curve, np.full_like(y_curve, baseline)]),
+                x=x_fill,
+                y=y_fill,
                 name=label,
                 fill="toself",
                 fillcolor=fill,
@@ -104,8 +110,8 @@ def _build_ridgeline_traces(
         # Line trace
         traces.append(
             go.Scatter(
-                x=x_curve,
-                y=y_curve,
+                x=x_line,
+                y=y_line,
                 mode="lines",
                 name=label,
                 line=dict(color=color, width=2),
@@ -121,11 +127,13 @@ def _build_ridgeline_traces(
         median_val = float(median_participants.get(label, np.nan))
         custom_data = np.column_stack(
             [subset["dataset"].to_numpy(), subset["dataset_url"].to_numpy()]
-        )
+        ).tolist()
+        x_scatter = values.tolist()
+        y_scatter = (np.full_like(values, baseline) + jitter).tolist()
         traces.append(
             go.Scatter(
-                x=values,
-                y=np.full_like(values, baseline) + jitter,
+                x=x_scatter,
+                y=y_scatter,
                 mode="markers",
                 name=label,
                 marker=dict(color=color, size=8, opacity=0.6),

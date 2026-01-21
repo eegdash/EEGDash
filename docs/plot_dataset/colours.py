@@ -59,8 +59,8 @@ PATHOLOGY_PASTEL_OVERRIDES = {
     # Unknown / Unspecified
     "Unknown": "#cbd5e1",  # slate-300
     "unknown": "#cbd5e1",
-    "Unspecified Clinical": "#e2e8f0",  # slate-200
-    "unspecified clinical": "#e2e8f0",
+    "Unspecified Clinical": "#fda4af",  # rose-300 - more visible clinical indicator
+    "unspecified clinical": "#fda4af",
     # Neurological conditions - warm colors
     "Epilepsy": "#fdba74",  # orange-300
     "epilepsy": "#fdba74",
@@ -155,8 +155,10 @@ CANONICAL_MAP = {
 }
 
 # Map column names to their color maps
+# Use PATHOLOGY_PASTEL_OVERRIDES for Type Subject to have consistent colors
+# for specific conditions (epilepsy, schizophrenia, etc.) across all plots
 COLUMN_COLOR_MAPS = {
-    "Type Subject": PATHOLOGY_COLOR_MAP,
+    "Type Subject": PATHOLOGY_PASTEL_OVERRIDES,
     "modality of exp": MODALITY_COLOR_MAP,
     "type of exp": TYPE_COLOR_MAP,
 }

@@ -574,14 +574,19 @@ def generate_dataset_treemap(
     )
 
     styled_html = f"""
-<div id="dataset-treemap-wrapper" style="width: 100%; height: 100%;">
-    {html_content}
-</div>
-<script>
-    window.addEventListener('load', function() {{
-        window.dispatchEvent(new Event('resize'));
-    }});
-</script>
+<style>
+#dataset-treemap-plot {{
+    width: 100% !important;
+    height: 880px !important;
+    min-height: 880px;
+    margin: 0 auto;
+}}
+#dataset-treemap-plot .plotly-graph-div {{
+    width: 100% !important;
+    height: 100% !important;
+}}
+</style>
+{html_content}
 """
     out_path.write_text(styled_html, encoding="utf-8")
     return out_path

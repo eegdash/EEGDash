@@ -103,10 +103,8 @@ def _build_sankey_data(df: pd.DataFrame, columns: Sequence[str]):
                 node_index[(col, val)] = len(node_labels)
                 node_labels.append(val)
 
-                # Use "Clinical" color for specific pathologies
+                # Get color from map - each condition has its own color
                 node_color = color_map.get(val, "#94a3b8")
-                if col == "Type Subject" and val not in ["Healthy", "Unknown"]:
-                    node_color = color_map.get("Clinical", "#94a3b8")
                 node_colors.append(node_color)
 
     sources: list[int] = []
@@ -153,11 +151,6 @@ def _build_sankey_data(df: pd.DataFrame, columns: Sequence[str]):
 
                 # Assign color to the link based on the source node
                 source_color = source_color_map.get(source_val, "#94a3b8")
-                if col_from == "Type Subject" and source_val not in [
-                    "Healthy",
-                    "Unknown",
-                ]:
-                    source_color = source_color_map.get("Clinical", "#94a3b8")
                 link_colors.append(hex_to_rgba(source_color))
 
     # Add counts (subjects and datasets) and percentages to the first column labels

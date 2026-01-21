@@ -227,7 +227,7 @@ def generate_dataset_growth(df: pd.DataFrame, out_html: str | Path) -> Path:
         font=dict(size=14),
         legend=dict(x=1.02, y=1),
         margin=dict(t=100, l=40, r=40, b=40),
-        height=600,
+        height=1000,
         autosize=True,
     )
 
@@ -242,15 +242,19 @@ def generate_dataset_growth(df: pd.DataFrame, out_html: str | Path) -> Path:
     )
 
     styled_html = f"""
-<div id="dataset-growth-wrapper" style="width: 100%; height: 100%;">
-    {html_content}
-</div>
-<script>
-    // Force resize on load to ensure fit
-    window.addEventListener('load', function() {{
-        window.dispatchEvent(new Event('resize'));
-    }});
-</script>
+<style>
+#dataset-growth-plot {{
+    width: 100% !important;
+    height: 1000px !important;
+    min-height: 1000px;
+    margin: 0 auto;
+}}
+#dataset-growth-plot .plotly-graph-div {{
+    width: 100% !important;
+    height: 100% !important;
+}}
+</style>
+{html_content}
 """
     out_path.write_text(styled_html, encoding="utf-8")
     return out_path

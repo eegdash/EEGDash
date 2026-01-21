@@ -186,7 +186,7 @@ def generate_clinical_stacked_bar(df: pd.DataFrame, out_html: str | Path) -> Pat
         font=dict(size=14),
         yaxis_title="Number of Studies",
         xaxis_title="Electrophysiology Modality",
-        height=600,
+        height=1000,
         updatemenus=[
             dict(
                 type="buttons",
@@ -234,14 +234,19 @@ def generate_clinical_stacked_bar(df: pd.DataFrame, out_html: str | Path) -> Pat
     )
 
     styled_html = f"""
-<div id="dataset-clinical-wrapper" style="width: 100%; height: 100%;">
-    {html_content}
-</div>
-<script>
-    window.addEventListener('load', function() {{
-        window.dispatchEvent(new Event('resize'));
-    }});
-</script>
+<style>
+#dataset-clinical-plot {{
+    width: 100% !important;
+    height: 1000px !important;
+    min-height: 1000px;
+    margin: 0 auto;
+}}
+#dataset-clinical-plot .plotly-graph-div {{
+    width: 100% !important;
+    height: 100% !important;
+}}
+</style>
+{html_content}
 """
     out_path.write_text(styled_html, encoding="utf-8")
     return out_path

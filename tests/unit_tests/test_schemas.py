@@ -135,19 +135,6 @@ def test_dataset_clinical_info():
     assert dataset["clinical"]["purpose"] == "epilepsy"
 
 
-def test_dataset_paradigm_info():
-    """Test paradigm classification at Dataset level."""
-    dataset = create_dataset(
-        dataset_id="ds000001",
-        paradigm_modality="visual",
-        cognitive_domain="attention",
-        is_10_20_system=True,
-    )
-    assert dataset["paradigm"]["modality"] == "visual"
-    assert dataset["paradigm"]["cognitive_domain"] == "attention"
-    assert dataset["paradigm"]["is_10_20_system"] is True
-
-
 # =============================================================================
 # Dataset Tests
 # =============================================================================

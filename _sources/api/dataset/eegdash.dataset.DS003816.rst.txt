@@ -5,17 +5,17 @@
 eegdash.dataset.DS003816
 ========================
 
-OpenNeuro dataset ``ds003816``. Access recordings and metadata through EEGDash.
+The Effect of Buddhism Derived Loving Kindness Meditation on Modulating EEG: Long-term and Short-term Effect (OpenNeuro ``ds003816``). Access recordings and metadata through EEGDash.
 
-**Citation:** Unknown (—). **. 
-
-.. rst-class:: sd-badges
-
-:bdg-primary:`Modality: —` :bdg-info:`Tasks: —` :bdg-secondary:`Subjects: —` :bdg-secondary:`Recordings: —`
+**Citation:** SUN, Rui, Ven WONG, Goon Fui, GAO, Jungling (—). *The Effect of Buddhism Derived Loving Kindness Meditation on Modulating EEG: Long-term and Short-term Effect*. `10.18112/openneuro.ds003816.v1.0.1 <https://doi.org/10.18112/openneuro.ds003816.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: —` :bdg-warning:`Source: OpenNeuro` :bdg-info:`Citations: —`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 8` :bdg-secondary:`Subjects: 48` :bdg-secondary:`Recordings: 1077`
+
+.. rst-class:: sd-badges
+
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: —`
 
 Dataset Information
 -------------------
@@ -27,17 +27,30 @@ Dataset Information
    * - Dataset ID
      - ``DS003816``
    * - Title
-     - —
+     - The Effect of Buddhism Derived Loving Kindness Meditation on Modulating EEG: Long-term and Short-term Effect
    * - Year
      - —
    * - Authors
-     - Unknown
+     - SUN, Rui, Ven WONG, Goon Fui, GAO, Jungling
    * - License
-     - —
+     - CC0
    * - Citation / DOI
-     - Unknown
+     - `10.18112/openneuro.ds003816.v1.0.1 <https://doi.org/10.18112/openneuro.ds003816.v1.0.1>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds003816>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003816>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds003816>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003816>`__ | `Source URL <https://openneuro.org/datasets/ds003816>`__
+
+.. dropdown:: Copy-paste BibTeX
+   :class-container: sd-shadow-sm
+   :class-title: sd-bg-light
+
+   .. code-block:: bibtex
+
+      @dataset{ds003816,
+        title = {The Effect of Buddhism Derived Loving Kindness Meditation on Modulating EEG: Long-term and Short-term Effect},
+        author = {SUN, Rui and Ven WONG, Goon Fui and GAO, Jungling},
+        doi = {10.18112/openneuro.ds003816.v1.0.1},
+        url = {https://doi.org/10.18112/openneuro.ds003816.v1.0.1},
+      }
 
 .. admonition:: Found an issue with this dataset?
    :class: tip
@@ -45,7 +58,7 @@ Dataset Information
    If you encounter any problems with this dataset (missing files, incorrect metadata,
    loading errors, etc.), please let us know!
 
-   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS003816&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS003816%0A-%20%2A%2ATitle%3A%2A%2A%20%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS003816&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS003816%0A-%20%2A%2ATitle%3A%2A%2A%20The%20Effect%20of%20Buddhism%20Derived%20Loving%20Kindness%20Meditation%20on%20Modulating%20EEG%3A%20Long-term%20and%20Short-term%20Effect%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
       :color: primary
       :outline:
 
@@ -54,7 +67,8 @@ Dataset Information
 Description
 -----------
 
-No README content is available for this dataset.
+This dataset contains Pre-rest ; Post-rest; Radiating LKM to Self; Radiating LKM to Other; Visualize Self and Visualize Other (eyes closed) states EEG and ECG recordings with 48 participants. Among of 48 participants, 15 participants were interested to participate as long-term practitioner. They were able to participate EEG and ECG data recording more than 10 times within two-month. For the rest of the participants recorded only once respectively.
+High-density EEG and one channel ECG were collected simultaneously by a bio-signal amplifier (actiCHamp, Brain Products, German) from the 48 participants during the whole LKM training session with a sampling frequency of 1000 Hz. 128 EEG electrodes were fixed on the participant’s scalp according to the International 10-20 System. One ECG electrode was fixed on V3 lead. All Electrodes’ impedance was kept under 20kohm to maintain a good signal- to-noise ratio.
 
 Highlights
 ----------
@@ -65,16 +79,16 @@ Highlights
    .. grid-item-card:: Subjects & recordings
       :class-card: sd-border-1
 
-      - Subjects: —
-      - Recordings: —
-      - Tasks: —
+      - Subjects: 48
+      - Recordings: 1077
+      - Tasks: 8
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: —
-      - Sampling rate (Hz): —
-      - Duration (hours): —
+      - Channels: 128 (1068), 127 (8)
+      - Sampling rate (Hz): 1000.0
+      - Duration (hours): 0.0
 
    .. grid-item-card:: Tags
       :class-card: sd-border-1
@@ -86,20 +100,20 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: —
-      - File count: —
+      - Size on disk: 4.1 MB
+      - File count: 1077
       - Format: BIDS
 
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: —
-      - DOI: —
+      - License: CC0
+      - DOI: 10.18112/openneuro.ds003816.v1.0.1
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1
 
-      - Source: OpenNeuro
+      - Source: openneuro
       - OpenNeuro: `ds003816 <https://openneuro.org/datasets/ds003816>`__
       - NeMAR: `ds003816 <https://nemar.org/dataexplorer/detail?dataset_id=ds003816>`__
 

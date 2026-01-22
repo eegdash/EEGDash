@@ -100,9 +100,9 @@ Highlights
    .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Pathology: Healthy
-      - Modality: Tactile
-      - Type: Perception
+      - Pathology: —
+      - Modality: —
+      - Type: —
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

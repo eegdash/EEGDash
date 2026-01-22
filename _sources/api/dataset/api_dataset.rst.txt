@@ -14,7 +14,7 @@ classes. See :doc:`eegdash.dataset` for the module-level API, including
 Dataset Overview
 ----------------
 
-EEGDash currently exposes **522 OpenNeuro EEG datasets** that are
+EEGDash currently exposes **533 OpenNeuro EEG datasets** that are
 registered dynamically from mongo database. The table below summarises
 the distribution by experimental type as tracked in the summary file.
 
@@ -34,17 +34,17 @@ Base Dataset API
    * - Experimental Type
      - Datasets
    * - Unspecified
-     - 187
+     - 198
    * - Unknown
-     - 69
+     - 70
    * - Clinical/Intervention
      - 67
    * - Perception
-     - 53
+     - 51
+   * - Attention
+     - 30
    * - Memory
      - 30
-   * - Attention
-     - 29
    * - Other
      - 25
    * - Motor
@@ -54,7 +54,7 @@ Base Dataset API
    * - Learning
      - 12
    * - Resting-state
-     - 8
+     - 9
    * - Sleep
      - 7
    * - Decision-making

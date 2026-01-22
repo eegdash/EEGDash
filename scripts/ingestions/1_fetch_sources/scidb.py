@@ -30,7 +30,7 @@ from _serialize import (
 )
 
 setup_paths()
-from eegdash.records import create_dataset
+from eegdash.schemas import create_dataset
 
 # File tree API endpoint
 FILETREE_API_URL = (

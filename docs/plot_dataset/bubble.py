@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import argparse
 from pathlib import Path
 
 import numpy as np
@@ -9,10 +10,17 @@ import plotly.graph_objects as go
 
 try:  # Allow execution as a script or module
     from .colours import MODALITY_COLOR_MAP
-    from .utils import get_dataset_url, human_readable_size, primary_modality, safe_int
+    from .utils import (
+        build_and_export_html,
+        get_dataset_url,
+        human_readable_size,
+        primary_modality,
+        safe_int,
+    )
 except ImportError:  # pragma: no cover - fallback for direct script execution
     from colours import MODALITY_COLOR_MAP  # type: ignore
     from utils import (  # type: ignore
+        build_and_export_html,
         get_dataset_url,
         human_readable_size,
         primary_modality,
@@ -355,10 +363,73 @@ def generate_dataset_bubble(
         dtick=1,
     )
 
-    html_content = fig.to_html(
-        full_html=False,
-        include_plotlyjs=False,
+    extra_style = f""".dataset-loading {{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: {height}px;
+    font-family: Inter, system-ui, sans-serif;
+    color: #6b7280;
+}}"""
+
+    pre_html = '<div class="dataset-loading" id="dataset-loading">Loading dataset landscape...</div>\n'
+
+    extra_html = """
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const loading = document.getElementById('dataset-loading');
+    const plot = document.getElementById('dataset-bubble');
+
+    function showPlot() {
+        if (loading) {
+            loading.style.display = 'none';
+        }
+        if (plot) {
+            plot.style.display = 'block';
+            // Force Plotly to resize to fit the container
+            if (typeof Plotly !== 'undefined') {
+                Plotly.Plots.resize(plot);
+            }
+        }
+    }
+
+    function hookPlotlyClick(attempts) {
+        if (!plot || typeof plot.on !== 'function') {
+            if (attempts < 40) {
+                window.setTimeout(function() { hookPlotlyClick(attempts + 1); }, 60);
+            }
+            return;
+        }
+        plot.on('plotly_click', function(evt) {
+            const point = evt && evt.points && evt.points[0];
+            const url = point && point.customdata && point.customdata[8];
+            if (url) {
+                window.open(url, '_blank', 'noopener');
+            }
+        });
+        showPlot();
+        // Additional resize after a short delay to ensure proper rendering
+        window.setTimeout(function() {
+            if (typeof Plotly !== 'undefined' && plot) {
+                Plotly.Plots.resize(plot);
+            }
+        }, 100);
+    }
+
+    hookPlotlyClick(0);
+    showPlot();
+});
+</script>
+"""
+
+    return build_and_export_html(
+        fig,
+        out_path,
         div_id="dataset-bubble",
+        height=height,
+        extra_style=extra_style,
+        pre_html=pre_html,
+        extra_html=extra_html,
         config={
             "responsive": True,
             "displaylogo": False,
@@ -373,78 +444,12 @@ def generate_dataset_bubble(
         },
     )
 
-    styled_html = f"""
-<style>
-#dataset-bubble {{
-    width: 100% !important;
-    max-width: {max_width}px;
-    height: {height}px !important;
-    min-height: {height}px;
-    margin: 0 auto;
-}}
-#dataset-bubble .plotly-graph-div {{
-    width: 100% !important;
-    height: 100% !important;
-}}
-.dataset-loading {{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: {height}px;
-    font-family: Inter, system-ui, sans-serif;
-    color: #6b7280;
-}}
-</style>
-<div class="dataset-loading" id="dataset-loading">Loading dataset landscape...</div>
-{html_content}
-<script>
-document.addEventListener('DOMContentLoaded', function() {{
-    const loading = document.getElementById('dataset-loading');
-    const plot = document.getElementById('dataset-bubble');
-
-    function showPlot() {{
-        if (loading) {{
-            loading.style.display = 'none';
-        }}
-        if (plot) {{
-            plot.style.display = 'block';
-        }}
-    }}
-
-    function hookPlotlyClick(attempts) {{
-        if (!plot || typeof plot.on !== 'function') {{
-            if (attempts < 40) {{
-                window.setTimeout(function() {{ hookPlotlyClick(attempts + 1); }}, 60);
-            }}
-            return;
-        }}
-        plot.on('plotly_click', function(evt) {{
-            const point = evt && evt.points && evt.points[0];
-            const url = point && point.customdata && point.customdata[8];
-            if (url) {{
-                window.open(url, '_blank', 'noopener');
-            }}
-        }});
-        showPlot();
-    }}
-
-    hookPlotlyClick(0);
-    showPlot();
-}});
-</script>
-"""
-
-    out_path.write_text(styled_html, encoding="utf-8")
-    return out_path
-
 
 def _read_dataset(path: Path) -> pd.DataFrame:
     return pd.read_csv(path, index_col=False, header=0, skipinitialspace=True)
 
 
 def main() -> None:
-    import argparse
-
     parser = argparse.ArgumentParser(description="Generate the dataset bubble chart.")
     parser.add_argument("source", type=Path, help="Path to dataset summary CSV")
     parser.add_argument(

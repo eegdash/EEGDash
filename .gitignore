@@ -33,9 +33,11 @@ cover
 data/
 digestion_output/
 dist/
+# Documentation
+docs/_build/
+docs/build/
 docs/auto_examples/
 docs/auto_tutorials/
-docs/build/
 docs/modules/generated/
 docs/source/_static/dataset_generated/
 docs/source/api/api_dataset.rst
@@ -59,3 +61,5 @@ tests/.testeegdash/
 tests/data/
 */*/test_cache/*
 test_cache/*
+CLAUDE.md
+.claude/

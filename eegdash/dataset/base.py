@@ -21,6 +21,7 @@ from braindecode.datasets.base import RawDataset
 from .. import downloader
 from ..logging import logger
 from ..schemas import validate_record
+from .io import _ensure_coordsystem_symlink, _repair_vhdr_pointers
 
 
 class EEGDashRaw(RawDataset):
@@ -143,6 +144,15 @@ class EEGDashRaw(RawDataset):
     def _ensure_raw(self) -> None:
         """Ensure the raw data file and its dependencies are cached locally."""
         self._download_required_files()
+
+        # Helper: Fix MNE-BIDS strictness regarding coordsystem.json location
+        if self.filecache and self.filecache.parent.exists():
+            _ensure_coordsystem_symlink(self.filecache.parent)
+
+        # Helper: Auto-Repair broken VHDR pointers (common in OpenNeuro exports)
+        if self.filecache:
+            _repair_vhdr_pointers(self.filecache)
+
         if self._raw is None:
             try:
                 self._raw = self._load_raw()
@@ -161,22 +171,18 @@ class EEGDashRaw(RawDataset):
         """Return the number of samples in the dataset."""
         if self._raw is None:
             ntimes = self.record.get("ntimes")
-            sfreq = self.record.get("sampling_frequency")
-            if ntimes is None or sfreq is None:
-                try:
-                    self._ensure_raw()
-                except Exception as e:
-                    # If we can't load the raw data (corrupted file, etc.),
-                    # return 0 to mark this dataset as invalid
-                    logger.warning(
-                        f"Could not load raw data for {self.bidspath}, "
-                        f"marking as invalid (length=0). Error: {e}"
-                    )
-                    return 0
-            else:
-                # FIXME: this is a bit strange and should definitely not change as a side effect
-                #  of accessing the data (which it will, since ntimes is the actual length but rounded down)
-                return int(ntimes * sfreq)
+            if ntimes is not None:
+                return int(ntimes)
+            try:
+                self._ensure_raw()
+            except Exception as e:
+                # If we can't load the raw data (corrupted file, etc.),
+                # return 0 to mark this dataset as invalid
+                logger.warning(
+                    f"Could not load raw data for {self.bidspath}, "
+                    f"marking as invalid (length=0). Error: {e}"
+                )
+                return 0
         return len(self._raw)
 
     @property

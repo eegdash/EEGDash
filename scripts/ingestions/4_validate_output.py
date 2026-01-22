@@ -51,6 +51,9 @@ RECOMMENDED_DATASET_FIELDS = [
     "ingestion_fingerprint",
 ]
 
+# Data quality fields - these should have values for usable records
+DATA_QUALITY_FIELDS = ["nchans", "sampling_frequency"]
+
 # Valid sources
 VALID_SOURCES = {
     "openneuro",
@@ -96,11 +99,14 @@ class ValidationResult:
             "empty_datasets": 0,
             "invalid_source": 0,
             "zip_placeholders": 0,
+            "missing_nchans": 0,
+            "missing_sampling_frequency": 0,
         }
         self.source_distribution = {}
         self.modality_distribution = {}
         self.empty_datasets = []
         self.zip_placeholder_datasets = []
+        self.data_quality_issues = []  # Datasets with missing nchans/sampling_frequency
 
     def add_error(self, dataset: str, message: str, field: str = None):
         self.errors.append(
@@ -124,6 +130,16 @@ class ValidationResult:
         return len(self.errors) == 0
 
     def summary(self) -> str:
+        total_records = self.stats["records_checked"]
+        missing_nchans = self.stats["missing_nchans"]
+        missing_sampling_frequency = self.stats["missing_sampling_frequency"]
+        nchans_pct = (missing_nchans / total_records * 100) if total_records > 0 else 0
+        sampling_frequency_pct = (
+            (missing_sampling_frequency / total_records * 100)
+            if total_records > 0
+            else 0
+        )
+
         lines = [
             "=" * 60,
             "VALIDATION SUMMARY",
@@ -140,6 +156,10 @@ class ValidationResult:
             f"  - Empty datasets (0 records): {self.stats['empty_datasets']}",
             f"  - Missing recommended fields: {self.stats['missing_recommended']}",
             f"  - ZIP placeholders (needs extraction): {self.stats['zip_placeholders']}",
+            "",
+            "Data Quality:",
+            f"  - Records missing nchans: {missing_nchans} ({nchans_pct:.1f}%)",
+            f"  - Records missing sampling_frequency: {missing_sampling_frequency} ({sampling_frequency_pct:.1f}%)",
         ]
 
         if self.empty_datasets:
@@ -149,6 +169,16 @@ class ValidationResult:
                 lines.append(f"  - {ds}")
             if len(self.empty_datasets) > 10:
                 lines.append(f"  ... and {len(self.empty_datasets) - 10} more")
+
+        if self.data_quality_issues:
+            lines.append("")
+            lines.append(
+                f"Data quality issues ({len(self.data_quality_issues)} datasets):"
+            )
+            for issue in self.data_quality_issues[:10]:
+                lines.append(f"  - {issue}")
+            if len(self.data_quality_issues) > 10:
+                lines.append(f"  ... and {len(self.data_quality_issues) - 10} more")
 
         if self.errors:
             lines.append("")
@@ -231,6 +261,14 @@ def validate_record(
                     field=field,
                 )
                 result.stats["missing_recommended"] += 1
+
+    # Check data quality fields (nchans, sampling_frequency) - critical for usability
+    nchans = record.get("nchans")
+    sampling_frequency = record.get("sampling_frequency")
+    if nchans is None or nchans == 0:
+        result.stats["missing_nchans"] += 1
+    if sampling_frequency is None or sampling_frequency == 0:
+        result.stats["missing_sampling_frequency"] += 1
 
 
 def validate_dataset(dataset: dict, result: ValidationResult):
@@ -323,6 +361,8 @@ def validate_digestion_output(
                 result.stats["records_checked"] += record_count
 
                 has_zip_placeholder = False
+                has_missing_nchans = False
+                has_missing_sampling_frequency = False
                 for idx, record in enumerate(records):
                     validate_record(record, dataset_id, source, result, idx)
                     mods = record.get("recording_modality", ["unknown"])
@@ -336,6 +376,25 @@ def validate_digestion_output(
                         "zip_contains_bids"
                     ):
                         has_zip_placeholder = True
+
+                    # Track data quality at dataset level
+                    if record.get("nchans") is None or record.get("nchans") == 0:
+                        has_missing_nchans = True
+                    if (
+                        record.get("sampling_frequency") is None
+                        or record.get("sampling_frequency") == 0
+                    ):
+                        has_missing_sampling_frequency = True
+
+                if has_missing_nchans or has_missing_sampling_frequency:
+                    issue_parts = []
+                    if has_missing_nchans:
+                        issue_parts.append("nchans")
+                    if has_missing_sampling_frequency:
+                        issue_parts.append("sampling_frequency")
+                    result.data_quality_issues.append(
+                        f"{dataset_id} ({source}): missing {', '.join(issue_parts)}"
+                    )
 
                 if has_zip_placeholder:
                     result.stats["zip_placeholders"] += 1

@@ -67,7 +67,7 @@ def complexity_svd_entropy(x, /, m=10, tau=1):
     x_emb = np.empty((*x.shape[:-1], (x.shape[-1] - m + 1) // tau, m))
     for i in np.ndindex(x.shape[:-1]):
         x_emb[i + (slice(None), slice(None))] = _create_embedding(x[i], m, tau)
-    s = np.linalg.svdvals(x_emb)
+    s = np.linalg.svd(x_emb, compute_uv=False)
     s /= s.sum(axis=-1, keepdims=True)
     return -np.sum(s * np.log(s), axis=-1)
 

@@ -48,7 +48,7 @@ dependencies = [
   "tabulate",
   "rich",
   "pyarrow",
-  "pandas>=2.0",
+  "pandas>=2.0,<2.2",  # Pin <2.2 due to wfdb ArrowStringArray compatibility
   "pydantic",
 ]
 

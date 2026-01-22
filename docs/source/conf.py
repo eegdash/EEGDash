@@ -1,14 +1,18 @@
+import concurrent.futures
 import csv
 import importlib
 import inspect
 import json
 import os
+import re
 import shutil
 import sys
-from collections import Counter
+import urllib.request
+from collections import Counter, defaultdict
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Iterable, Mapping, Sequence
+from urllib.parse import quote
 
 from sphinx.util import logging
 from sphinx_gallery.sorting import ExplicitOrder, FileNameSortKey
@@ -16,6 +20,9 @@ from sphinx_gallery.sorting import ExplicitOrder, FileNameSortKey
 sys.path.insert(0, os.path.abspath(".."))
 
 import eegdash
+import eegdash.dataset as dataset_module
+from eegdash.dataset import EEGDashDataset
+from eegdash.dataset.registry import fetch_datasets_from_api
 
 # -- Project information -----------------------------------------------------
 
@@ -112,7 +119,7 @@ html_theme_options = {
     # Show an "Edit this page" button linking to GitHub
     "use_edit_page_button": True,
     "navigation_with_keys": False,
-    "collapse_navigation": False,
+    "collapse_navigation": True,
     "header_links_before_dropdown": 6,
     "navigation_depth": 6,
     "show_nav_level": 2,
@@ -172,7 +179,7 @@ html_context = {
     "github_user": "eegdash",
     "github_repo": "EEGDash",
     # Branch used to build and host the docs
-    "github_version": "main",
+    "github_version": "develop",
     # Path to the documentation root within the repo
     "doc_path": "docs/source",
     "default_mode": "light",
@@ -278,6 +285,34 @@ LOGGER = logging.getLogger(__name__)
 REPO_ROOT = Path(__file__).resolve().parents[2]
 CLONE_ROOT = REPO_ROOT / "ingestions" / "clone"
 _DATASET_DETAILS_CACHE: dict[str, dict[str, object]] = {}
+_DATASET_SUMMARY_CACHE = None
+
+
+def _should_use_api_summary() -> bool:
+    # Always try API first; set EEGDASH_NO_API=1 to disable
+    return not bool(os.environ.get("EEGDASH_NO_API"))
+
+
+def _load_dataset_summary_from_api():
+    if not _should_use_api_summary():
+        return None
+
+    global _DATASET_SUMMARY_CACHE
+    if _DATASET_SUMMARY_CACHE is not None:
+        return _DATASET_SUMMARY_CACHE
+
+    try:
+        df = fetch_datasets_from_api()
+    except Exception as exc:
+        LOGGER.info("[dataset-docs] API summary fetch failed: %s", exc)
+        df = None
+
+    if df is None or df.empty:
+        _DATASET_SUMMARY_CACHE = None
+    else:
+        _DATASET_SUMMARY_CACHE = df
+    return _DATASET_SUMMARY_CACHE
+
 
 DEFAULT_METADATA_FIELDS = [
     ("subject", "Subject identifier."),
@@ -306,6 +341,13 @@ Dataset Information
 -------------------
 
 {dataset_info_section}
+
+{feedback_section}
+
+Description
+-----------
+
+{readme_section}
 
 Highlights
 ----------
@@ -441,9 +483,6 @@ def _write_if_changed(path: Path, content: str) -> bool:
 
 def _iter_dataset_classes() -> Sequence[str]:
     """Return the sorted dataset class names exported by ``eegdash.dataset``."""
-    import eegdash.dataset as dataset_module  # local import for clarity
-    from eegdash.dataset import EEGDashDataset
-
     class_names: list[str] = []
     for name in getattr(dataset_module, "__all__", []):
         if name == "EEGChallengeDataset":
@@ -462,6 +501,18 @@ def _iter_dataset_classes() -> Sequence[str]:
 
 def _load_experiment_counts(dataset_names: Iterable[str]) -> list[tuple[str, int]]:
     """Return a sorted list of (experiment_type, count) pairs."""
+    valid_names = {name.upper() for name in dataset_names}
+    df = _load_dataset_summary_from_api()
+    if df is not None and not df.empty:
+        counter: Counter[str] = Counter()
+        for _, row in df.iterrows():
+            dataset_id = str(row.get("dataset", "")).strip().upper()
+            if dataset_id not in valid_names:
+                continue
+            exp_type = str(row.get("type of exp") or "Unspecified").strip()
+            counter[exp_type or "Unspecified"] += 1
+        return sorted(counter.items(), key=lambda item: (-item[1], item[0]))
+
     csv_path = Path(importlib.import_module("eegdash.dataset").__file__).with_name(
         "dataset_summary.csv"
     )
@@ -469,7 +520,6 @@ def _load_experiment_counts(dataset_names: Iterable[str]) -> list[tuple[str, int
         return []
 
     counter: Counter[str] = Counter()
-    valid_names = {name.upper() for name in dataset_names}
 
     with csv_path.open(encoding="utf-8") as handle:
         filtered = (
@@ -504,13 +554,27 @@ def _render_toctree_entries(names: Sequence[str]) -> str:
 
 
 def _load_dataset_rows(dataset_names: Sequence[str]) -> Mapping[str, Mapping[str, str]]:
+    wanted = set(dataset_names)
+    df = _load_dataset_summary_from_api()
+    if df is not None and not df.empty:
+        rows: dict[str, Mapping[str, str]] = {}
+        for _, row in df.iterrows():
+            dataset_id = str(row.get("dataset", "")).strip()
+            if not dataset_id:
+                continue
+            class_name = dataset_id.upper()
+            if class_name not in wanted:
+                continue
+            rows[class_name] = row.to_dict()
+        if rows:
+            return rows
+
     csv_path = Path(importlib.import_module("eegdash.dataset").__file__).with_name(
         "dataset_summary.csv"
     )
     if not csv_path.exists():
         return {}
 
-    wanted = set(dataset_names)
     rows: dict[str, Mapping[str, str]] = {}
 
     with csv_path.open(encoding="utf-8") as handle:
@@ -536,9 +600,61 @@ def _clean_value(value: object, default: str = "") -> str:
     if value is None:
         return default
     text = str(value).strip()
-    if not text or text.lower() in {"nan", "none", "null"}:
+    if not text or text.lower() in {"nan", "none", "null", "unknown"}:
         return default
     return text
+
+
+def _format_stat_counts(value: object, default: str = "") -> str:
+    """Format JSON arrays of {val, count} objects into human-readable strings.
+
+    Handles formats like: [{"val": 64, "count": 30}, {"val": 32, "count": 24}]
+    Returns strings like: "64 (30), 32 (24)" or just "64" for single values.
+    """
+    if value is None:
+        return default
+
+    text = str(value).strip()
+    if not text or text.lower() in {"nan", "none", "null", "[]"}:
+        return default
+
+    # Try to parse as JSON if it looks like a JSON array
+    if text.startswith("["):
+        try:
+            items = json.loads(text)
+            if not items:
+                return default
+
+            # Filter out null values and format
+            valid_items = []
+            for item in items:
+                if isinstance(item, dict):
+                    val = item.get("val")
+                    count = item.get("count", 0)
+                    if val is not None:
+                        # Format as "value (count)" or just "value" if count is 1
+                        if count > 1:
+                            valid_items.append(f"{val} ({count})")
+                        else:
+                            valid_items.append(str(val))
+
+            if not valid_items:
+                return default
+
+            # If all items have the same value, just show it once
+            unique_vals = set(
+                item.get("val") for item in items if isinstance(item, dict)
+            )
+            unique_vals.discard(None)
+            if len(unique_vals) == 1:
+                return str(unique_vals.pop())
+
+            return ", ".join(valid_items)
+        except (json.JSONDecodeError, TypeError, AttributeError):
+            pass
+
+    # Fall back to regular cleaning
+    return _clean_value(value, default)
 
 
 def _collapse_whitespace(text: str) -> str:
@@ -562,13 +678,98 @@ def _normalize_list(value: object) -> list[str]:
 
 
 def _value_or_unknown(value: str) -> str:
-    return value if value else "Unknown"
+    return value if value else "—"
 
 
 def _normalize_doi(doi: str) -> str:
     if not doi:
         return ""
     return doi.replace("doi:", "").strip()
+
+
+def _fetch_dataset_details_from_api(dataset_id: str) -> dict[str, object]:
+    """Fetch detailed dataset information from the API.
+
+    Uses the endpoint: /datasets/summary/{dataset_id}
+    """
+    if not _should_use_api_summary():
+        return {}
+
+    api_url = "https://data.eegdash.org/api/eegdash"
+
+    # Try original ID first, then variants (API may be case-sensitive)
+    ids_to_try = [dataset_id]
+    # Also try with common case variations for known patterns
+    if dataset_id.startswith("ds"):
+        # OpenNeuro datasets are typically lowercase
+        ids_to_try.append(dataset_id.lower())
+    elif dataset_id.lower().startswith("eeg2025"):
+        # EEG2025 datasets use mixed case in API
+        ids_to_try.append(f"EEG2025r{dataset_id.lower().replace('eeg2025r', '')}")
+
+    data = None
+    for try_id in ids_to_try:
+        url = f"{api_url}/datasets/summary/{try_id}"
+        try:
+            with urllib.request.urlopen(url, timeout=10) as response:
+                data = json.loads(response.read().decode("utf-8"))
+                if data.get("success"):
+                    break
+        except Exception as exc:
+            LOGGER.debug("[dataset-docs] API fetch for %s failed: %s", try_id, exc)
+            continue
+
+    if not data or not data.get("success"):
+        return {}
+
+    ds = data.get("data", {})
+    if not ds:
+        return {}
+
+    # Extract year from timestamps
+    year = ""
+    timestamps = ds.get("timestamps", {}) or {}
+    created_at = timestamps.get("dataset_created_at", "")
+    if created_at and len(created_at) >= 4:
+        year = created_at[:4]
+
+    # Map API fields to details structure
+    # Use computed_title if available (populated by compute-stats endpoint)
+    title = _clean_value(ds.get("computed_title")) or _clean_value(ds.get("name"))
+    if title and (
+        title.lower().endswith((".tsv", ".json", ".csv", ".md"))
+        or title.lower() == "readme"
+    ):
+        # Try to find a better title in the readme
+        readme = _clean_value(ds.get("readme", ""))
+        if readme.startswith("# "):
+            title = readme.split("\n")[0][2:].strip()
+            # Still check for sub-H1 patterns
+            if title.lower().startswith("wrist:"):
+                title = title.split(":", 1)[1].strip()
+
+    details: dict[str, object] = {
+        "title": title,
+        "authors": _normalize_list(ds.get("authors")),
+        "license": _clean_value(ds.get("license")),
+        "doi": _clean_value(ds.get("dataset_doi")),
+        "year": year,
+        "readme": _clean_value(ds.get("readme")),
+        "funding": _normalize_list(ds.get("funding")),
+        "senior_author": _clean_value(ds.get("senior_author")),
+        "n_subjects": ds.get("demographics", {}).get("subjects_count"),
+        "total_files": ds.get("total_files"),
+        "n_tasks": len(ds.get("tasks", []) or []),
+        "recording_modality": ds.get("recording_modality", []),
+        "size_bytes": ds.get("size_bytes"),
+        "source": _clean_value(ds.get("source")),
+    }
+
+    # Extract source URL from external_links
+    external_links = ds.get("external_links", {}) or {}
+    details["source_url"] = _clean_value(external_links.get("source_url"))
+
+    return details
 
 
 def _load_dataset_details(dataset_id: str) -> dict[str, object]:
@@ -578,6 +779,8 @@ def _load_dataset_details(dataset_id: str) -> dict[str, object]:
         return cached
 
     details: dict[str, object] = {}
+
+    # Try local files first
     dataset_dir = CLONE_ROOT / dataset_id
     desc_path = dataset_dir / "dataset_description.json"
     if desc_path.exists():
@@ -602,6 +805,13 @@ def _load_dataset_details(dataset_id: str) -> dict[str, object]:
         details.setdefault("doi", _clean_value(data.get("dataset_doi")))
         details["source_url"] = _clean_value(data.get("source_url"))
 
+    # Fallback to API for missing fields
+    if not details.get("title") or not details.get("authors"):
+        api_details = _fetch_dataset_details_from_api(dataset_id)
+        for key, value in api_details.items():
+            if value and not details.get(key):
+                details[key] = value
+
     _DATASET_DETAILS_CACHE[dataset_id] = details
     return details
 
@@ -615,46 +825,141 @@ def _build_dataset_context(
 
     modality = _clean_value((row or {}).get("record_modality"))
     if not modality:
+        modality_raw = details.get("recording_modality", [])
+        if isinstance(modality_raw, list):
+            modality = ", ".join(str(m) for m in modality_raw)
+        else:
+            modality = _clean_value(modality_raw)
+    if not modality:
         modality = _clean_value((row or {}).get("modality of exp"))
 
     source = _clean_value((row or {}).get("source"))
     if not source:
         source = "OpenNeuro"
 
+    # Fallback to row data for fields that might not be in local JSON files
+    title = _collapse_whitespace(_clean_value(details.get("title")))
+    if not title or title.lower().endswith((".tsv", ".json")):
+        title = _collapse_whitespace(_clean_value((row or {}).get("dataset_title")))
+
+    license_text = _clean_value(details.get("license"))
+    if not license_text:
+        license_text = _clean_value((row or {}).get("license"))
+
+    doi = _clean_value(details.get("doi"))
+    if not doi:
+        doi = _clean_value((row or {}).get("doi"))
+
+    # Get year from details
+    year = _clean_value(details.get("year"))
+    if not year or year == "—":
+        # Try to find year in references
+        refs = details.get("references", [])
+        if not refs:
+            # Try to find in authors/citations in details if references is empty
+            readme = str(details.get("readme", ""))
+            # Look for 4 digits in parentheses or after author name
+            years = re.findall(r"\((\d{4})\)", readme)
+            if not years:
+                years = re.findall(r"\b(19|20)\d{2}\b", readme)
+            if years:
+                year = years[0]
+
+    n_subjects = _clean_value((row or {}).get("n_subjects"))
+    if not n_subjects or n_subjects == "0":
+        n_subjects = _clean_value(details.get("n_subjects"))
+
+    n_records = _clean_value((row or {}).get("n_records"))
+    if not n_records or n_records == "0":
+        n_records = _clean_value(details.get("total_files"))
+
+    n_tasks = _clean_value((row or {}).get("n_tasks"))
+    if not n_tasks or n_tasks == "0":
+        n_tasks = _clean_value(details.get("n_tasks"))
+
+    # Size on disk
+    size = _clean_value((row or {}).get("size"))
+    if not size or size == "Unknown":
+        size_bytes = details.get("size_bytes")
+        if size_bytes:
+            # Simple human readable size if utils is not easily importable here
+            # or just copy-paste the logic for simplicity in conf.py
+            try:
+                s = float(size_bytes)
+                for unit in ["B", "KB", "MB", "GB", "TB"]:
+                    if s < 1024.0:
+                        size = (
+                            f"{s:.2f} {unit}"
+                            if unit not in ["B", "KB"]
+                            else f"{int(s)} {unit}"
+                        )
+                        break
+                    s /= 1024.0
+            except (ValueError, TypeError):
+                pass
+
+    # Format
+    dataset_format = "—"
+    if source.lower() in ["openneuro", "nemar"]:
+        dataset_format = "BIDS"
+
+    s3_item_count = _clean_value((row or {}).get("s3_item_count"))
+    if not s3_item_count or s3_item_count == "0":
+        s3_item_count = _clean_value(details.get("total_files"))
+
     return {
         "class_name": class_name,
         "dataset_id": dataset_id,
         "dataset_upper": dataset_id.upper(),
-        "title": _collapse_whitespace(_clean_value(details.get("title"))),
+        "title": title,
+        "year": year,
         "authors": details.get("authors", []),
-        "license": _clean_value(details.get("license")),
-        "doi": _clean_value(details.get("doi")),
+        "license": license_text,
+        "doi": doi,
         "source_url": _clean_value(details.get("source_url")),
         "references": details.get("references", []),
         "how_to_acknowledge": _clean_value(details.get("how_to_acknowledge")),
-        "n_subjects": _clean_value((row or {}).get("n_subjects")),
-        "n_records": _clean_value((row or {}).get("n_records")),
-        "n_tasks": _clean_value((row or {}).get("n_tasks")),
-        "n_channels": _clean_value((row or {}).get("nchans_set")),
-        "sampling_freqs": _clean_value((row or {}).get("sampling_freqs")),
+        "n_subjects": n_subjects,
+        "n_records": n_records,
+        "n_tasks": n_tasks,
+        "n_channels": _format_stat_counts((row or {}).get("nchans_set")),
+        "sampling_freqs": _format_stat_counts((row or {}).get("sampling_freqs")),
         "duration_hours_total": _clean_value((row or {}).get("duration_hours_total")),
-        "size": _clean_value((row or {}).get("size")),
-        "s3_item_count": _clean_value((row or {}).get("s3_item_count")),
+        "size": size,
+        "s3_item_count": s3_item_count,
         "modality": modality,
-        "exp_type": _clean_value((row or {}).get("type of exp")),
-        "subject_type": _clean_value((row or {}).get("Type Subject")),
+        "pathology": _clean_value((row or {}).get("Type Subject")),
+        "tag_modality": _clean_value((row or {}).get("modality of exp")),
+        "tag_type": _clean_value((row or {}).get("type of exp")),
         "source": source,
         "openneuro_url": f"https://openneuro.org/datasets/{dataset_id}",
         "nemar_url": f"https://nemar.org/dataexplorer/detail?dataset_id={dataset_id}",
         "metadata_fields": DEFAULT_METADATA_FIELDS,
+        "format": dataset_format,
+        "readme": _clean_value(details.get("readme")),
+        "nemar_citation_count": _clean_value((row or {}).get("nemar_citation_count")),
     }
 
 
 def _format_badges(items: Sequence[tuple[str, str]]) -> str:
-    badges = " ".join(
-        f":bdg-light:`{label}: {_value_or_unknown(value)}`" for label, value in items
-    )
-    return "\n".join([".. rst-class:: sd-badges", "", badges]).rstrip()
+    # Map labels to badge colors
+    color_map = {
+        "Modality": "primary",
+        "Tasks": "info",
+        "Subjects": "secondary",
+        "Recordings": "secondary",
+        "License": "success",
+        "Source": "warning",
+        "Citations": "info",
+    }
+    badges = []
+    for label, value in items:
+        color = color_map.get(label, "light")
+        val_text = _value_or_unknown(value)
+        badges.append(f":bdg-{color}:`{label}: {val_text}`")
+
+    badges_str = " ".join(badges)
+    return "\n".join([".. rst-class:: sd-badges", "", badges_str]).rstrip()
 
 
 def _format_hero_section(context: Mapping[str, object]) -> str:
@@ -666,26 +971,49 @@ def _format_hero_section(context: Mapping[str, object]) -> str:
         tagline = f"OpenNeuro dataset ``{dataset_id}``."
     tagline = f"{tagline} Access recordings and metadata through EEGDash."
 
-    badges = _format_badges(
+    # Format citation
+    authors = context.get("authors") or []
+    authors_text = (
+        ", ".join(a.replace("*", r"\*") for a in authors) if authors else "Unknown"
+    )
+    year = _value_or_unknown(str(context.get("year", "")).strip())
+    doi = str(context.get("doi", "")).strip()
+    doi_clean = _normalize_doi(doi)
+    if doi_clean:
+        doi_link = f"`{doi_clean} <https://doi.org/{doi_clean}>`__"
+    else:
+        doi_link = ""
+
+    citation_block = f"**Citation:** {authors_text} ({year}). *{title}*. {doi_link}"
+
+    badges_line_1 = _format_badges(
         [
             ("Modality", str(context.get("modality", ""))),
             ("Tasks", str(context.get("n_tasks", ""))),
-            ("License", str(context.get("license", ""))),
             ("Subjects", str(context.get("n_subjects", ""))),
             ("Recordings", str(context.get("n_records", ""))),
-            ("Source", str(context.get("source", ""))),
         ]
     )
-    return f"{tagline}\n\n{badges}"
+    citation_count = context.get("nemar_citation_count", "")
+    badges_line_2 = _format_badges(
+        [
+            ("License", str(context.get("license", ""))),
+            ("Source", str(context.get("source", ""))),
+            ("Citations", str(citation_count) if citation_count else ""),
+        ]
+    )
+    return f"{tagline}\n\n{citation_block}\n\n{badges_line_1}\n\n{badges_line_2}"
+
+
+def _stat_line(label: str, value: object, suffix: str = "") -> str:
+    """Format a statistic line with label and value."""
+    text = _value_or_unknown(_clean_value(value))
+    if text != "Unknown" and suffix:
+        text = f"{text}{suffix}"
+    return f"{label}: {text}"
 
 
 def _format_highlights_section(context: Mapping[str, object]) -> str:
-    def _stat_line(label: str, value: object, suffix: str = "") -> str:
-        text = _value_or_unknown(_clean_value(value))
-        if text != "Unknown" and suffix:
-            text = f"{text}{suffix}"
-        return f"{label}: {text}"
-
     openneuro_url = str(context.get("openneuro_url", ""))
     nemar_url = str(context.get("nemar_url", ""))
     dataset_id = str(context.get("dataset_id", ""))
@@ -708,11 +1036,11 @@ def _format_highlights_section(context: Mapping[str, object]) -> str:
             ],
         ),
         (
-            "Tasks & conditions",
+            "Tags",
             [
-                _stat_line("Tasks", context.get("n_tasks")),
-                _stat_line("Experiment type", context.get("exp_type")),
-                _stat_line("Subject type", context.get("subject_type")),
+                _stat_line("Pathology", context.get("pathology")),
+                _stat_line("Modality", context.get("tag_modality")),
+                _stat_line("Type", context.get("tag_type")),
             ],
         ),
         (
@@ -720,7 +1048,7 @@ def _format_highlights_section(context: Mapping[str, object]) -> str:
             [
                 _stat_line("Size on disk", context.get("size")),
                 _stat_line("File count", context.get("s3_item_count")),
-                _stat_line("Format", ""),
+                _stat_line("Format", context.get("format")),
             ],
         ),
         (
@@ -757,13 +1085,14 @@ def _format_quickstart_section(context: Mapping[str, object]) -> str:
     return (
         "**Install**\n\n"
         ".. code-block:: bash\n\n"
-        "   pip install eegdash\n\n"
-        "**Load a recording**\n\n"
+        "    pip install eegdash\n\n"
+        "**Access the data**\n\n"
         ".. code-block:: python\n\n"
-        f"   from eegdash.dataset import {class_name}\n\n"
-        f'   dataset = {class_name}(cache_dir="./data")\n'
-        "   recording = dataset[0]\n"
-        "   raw = recording.load()\n\n"
+        f"    from eegdash.dataset import {class_name}\n\n"
+        f'    dataset = {class_name}(cache_dir="./data")\n'
+        "    # Get the raw object of the first recording\n"
+        "    raw = dataset.datasets[0].raw\n"
+        "    print(raw.info)\n\n"
         "**Filter/query**\n\n"
         ".. tab-set::\n\n"
         "   .. tab-item:: Basic\n\n"
@@ -783,7 +1112,10 @@ def _format_dataset_info_section(context: Mapping[str, object]) -> str:
     dataset_upper = str(context.get("dataset_upper", ""))
     title = _value_or_unknown(_clean_value(context.get("title")))
     authors = context.get("authors") or []
-    authors_text = ", ".join(authors) if authors else "Unknown"
+    # Escape asterisks for RST (they would otherwise be interpreted as emphasis)
+    authors_text = (
+        ", ".join(a.replace("*", r"\*") for a in authors) if authors else "Unknown"
+    )
     license_text = _value_or_unknown(_clean_value(context.get("license")))
     doi = _clean_value(context.get("doi"))
     doi_clean = _normalize_doi(doi)
@@ -799,10 +1131,11 @@ def _format_dataset_info_section(context: Mapping[str, object]) -> str:
     if source_url:
         source_links.append(f"`Source URL <{source_url}>`__")
 
+    year = _value_or_unknown(_clean_value(context.get("year")))
     rows = [
         ("Dataset ID", f"``{dataset_upper}``"),
         ("Title", title),
-        ("Year", "Unknown"),
+        ("Year", year),
         ("Authors", authors_text),
         ("License", license_text),
         ("Citation / DOI", doi_text),
@@ -850,6 +1183,113 @@ def _format_bibtex_dropdown(dataset_id: str, context: Mapping[str, object]) -> s
     ]
     dropdown_lines.extend([f"      {line}" for line in bibtex_lines])
     return "\n".join(dropdown_lines)
+
+
+def _is_decorative_line(s: str) -> bool:
+    """Check if line is purely decorative (em-dashes, dashes, equals, etc.)."""
+    s = s.strip()
+    if len(s) < 3:
+        return False
+    # Check for lines made of repeated chars: —, -, =, _, *, #
+    return bool(re.match(r"^[—\-=_*#~]+$", s)) and len(set(s)) <= 2
+
+
+def _convert_readme_to_rst(text: str) -> str:
+    """Convert README content to RST (headers become bold, not section headers).
+
+    Handles markdown (#) headers, RST-style underline headers, and decorative
+    box-style headers (em-dash lines) to avoid messing up the document structure.
+    """
+    # Remove BOM if present
+    text = text.lstrip("\ufeff")
+
+    lines = text.split("\n")
+    result = []
+    i = 0
+
+    while i < len(lines):
+        line = lines[i]
+
+        # Skip purely decorative lines (em-dashes, repeated dashes, etc.)
+        if _is_decorative_line(line):
+            # Check if this is a box-style header: decorative -> TITLE -> decorative
+            if i + 2 < len(lines):
+                potential_title = lines[i + 1].strip()
+                next_decorative = lines[i + 2]
+                if potential_title and _is_decorative_line(next_decorative):
+                    # This is a box-style header
+                    result.append("")
+                    result.append(f"**{potential_title}**")
+                    result.append("")
+                    i += 3  # Skip decorative, title, decorative
+                    continue
+            # Just a decorative line by itself - skip it
+            i += 1
+            continue
+
+        # Check for markdown headers (# Title)
+        header_match = re.match(r"^(#{1,6})\s+(.+)$", line.strip())
+        if header_match:
+            title = header_match.group(2).strip()
+            result.append("")
+            result.append(f"**{title}**")
+            result.append("")
+            i += 1
+            continue
+
+        # Check for RST-style underline headers (Title followed by ==== or ----)
+        # Only match if title is reasonably short (< 80 chars) to avoid matching paragraphs
+        if i + 1 < len(lines) and len(line.strip()) < 80:
+            next_line = lines[i + 1]
+            # Check if next line is an underline (all same char, at least 3 chars)
+            underline_match = re.match(r"^([=\-~^\"\'`—]+)$", next_line.strip())
+            if (
+                underline_match
+                and len(next_line.strip()) >= 3
+                and line.strip()
+                and len(set(next_line.strip())) == 1
+            ):
+                title = line.strip()
+                result.append("")
+                result.append(f"**{title}**")
+                result.append("")
+                i += 2  # Skip both the title and underline
+                continue
+
+        # Convert markdown links [text](url) -> `text <url>`__
+        line = re.sub(r"\[([^\]]+)\]\(([^)]+)\)", r"`\1 <\2>`__", line)
+
+        result.append(line)
+        i += 1
+
+    return "\n".join(result)
+
+
+def _format_readme_section(context: Mapping[str, object]) -> str:
+    """Format the README content for RST display."""
+    readme = _clean_value(context.get("readme"))
+
+    if not readme:
+        return "No README content is available for this dataset."
+
+    # Convert README content to RST (headers become bold)
+    content = _convert_readme_to_rst(readme)
+    lines = content.split("\n")
+
+    # For long READMEs (>30 lines), wrap in dropdown
+    if len(lines) > 30:
+        preview_lines = lines[:10]
+        preview = "\n".join(preview_lines)
+        indented = "\n".join(f"   {line}" for line in lines)
+        return f"""{preview}
+
+.. dropdown:: View full README
+   :class-container: sd-shadow-sm
+
+{indented}
+"""
+
+    return content
 
 
 def _format_schema_section(context: Mapping[str, object]) -> str:
@@ -906,6 +1346,39 @@ def _format_see_also_section(dataset_id: str) -> str:
     )
 
 
+def _format_feedback_section(dataset_id: str, title: str) -> str:
+    """Generate a feedback section with a button to report issues on GitHub."""
+    dataset_upper = dataset_id.upper()
+    issue_title = quote(f"[Dataset] Issue with {dataset_upper}")
+    issue_body = quote(
+        f"## Dataset\n\n"
+        f"- **Dataset ID:** {dataset_upper}\n"
+        f"- **Title:** {title}\n\n"
+        f"## Issue Description\n\n"
+        f"Please describe the issue you encountered with this dataset:\n\n"
+        f"## Steps to Reproduce\n\n"
+        f"1. \n2. \n3. \n\n"
+        f"## Expected Behavior\n\n\n"
+        f"## Additional Context\n\n"
+    )
+    github_url = (
+        f"https://github.com/eegdash/EEGDash/issues/new"
+        f"?title={issue_title}&body={issue_body}&labels=dataset"
+    )
+
+    return f""".. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: {github_url}
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub"""
+
+
 def _cleanup_stale_dataset_pages(dataset_dir: Path, expected: set[Path]) -> None:
     for path in dataset_dir.glob("eegdash.dataset.DS*.rst"):
         if path in expected:
@@ -918,19 +1391,87 @@ def _cleanup_stale_dataset_pages(dataset_dir: Path, expected: set[Path]) -> None
         path.unlink()
 
 
+def _process_dataset_item(
+    name: str, dataset_dir: Path, row: Mapping[str, str] | None, srcdir: Path
+) -> Path:
+    title = f"eegdash.dataset.{name}"
+    context = _build_dataset_context(name, row)
+    dataset_id = str(context.get("dataset_id", ""))
+    dataset_title = str(context.get("title", ""))
+    page_content = DATASET_PAGE_TEMPLATE.format(
+        notice=AUTOGEN_NOTICE,
+        title=title,
+        underline="=" * len(title),
+        hero_section=_format_hero_section(context),
+        dataset_info_section=_format_dataset_info_section(context),
+        readme_section=_format_readme_section(context),
+        highlights_section=_format_highlights_section(context),
+        quickstart_section=_format_quickstart_section(context),
+        quality_section=_format_quality_section(context),
+        api_section=_format_api_section(name),
+        see_also_section=_format_see_also_section(dataset_id),
+        feedback_section=_format_feedback_section(dataset_id, dataset_title),
+    )
+    page_path = dataset_dir / f"eegdash.dataset.{name}.rst"
+    if _write_if_changed(page_path, page_content):
+        rel = page_path.relative_to(srcdir)
+        LOGGER.info("[dataset-docs] Updated %s", rel)
+    return page_path
+
+
 def _generate_dataset_docs(app) -> None:
     dataset_dir = Path(app.srcdir) / "api" / "dataset"
     dataset_dir.mkdir(parents=True, exist_ok=True)
 
     dataset_names = _iter_dataset_classes()
     dataset_rows = _load_dataset_rows(dataset_names)
-    toctree_entries = _render_toctree_entries(dataset_names)
+
+    # Group datasets by source
+    datasets_by_source = defaultdict(list)
+    for name in dataset_names:
+        row = dataset_rows.get(name) or {}
+        source = _clean_value(row.get("source")) or "Other"
+        datasets_by_source[source].append(name)
+
+    # Generate group pages
+    group_toctree_entries = []
+    for source, names in datasets_by_source.items():
+        safe_source = "".join(c if c.isalnum() else "_" for c in source).lower()
+        if not safe_source:
+            safe_source = "other"
+        group_filename = f"source_{safe_source}.rst"
+        group_path = dataset_dir / group_filename
+
+        group_toctree = _render_toctree_entries(sorted(names))
+        # Title case the source for the header
+        source_title = source.title() if source.islower() else source
+
+        group_content = f"""{AUTOGEN_NOTICE}
+{source_title} Datasets
+{"=" * (len(source_title) + 9)}
+
+.. toctree::
+   :maxdepth: 1
+
+{group_toctree}
+"""
+        if _write_if_changed(group_path, group_content):
+            LOGGER.info("[dataset-docs] Updated group page %s", group_filename)
+
+        group_toctree_entries.append(
+            group_filename
+        )  # Just filename, relative to api/dataset
+
+    toctree_entries_str = "\n".join(
+        f"   {entry}" for entry in sorted(group_toctree_entries)
+    )
+
     experiment_rows = _render_experiment_rows(_load_experiment_counts(dataset_names))
     index_content = DATASET_INDEX_TEMPLATE.format(
         notice=AUTOGEN_NOTICE,
         dataset_count=len(dataset_names),
         experiment_rows=experiment_rows,
-        toctree_entries=toctree_entries,
+        toctree_entries=toctree_entries_str,
     )
 
     index_path = dataset_dir / "api_dataset.rst"
@@ -948,28 +1489,28 @@ def _generate_dataset_docs(app) -> None:
         LOGGER.info("[dataset-docs] Updated %s", primary_path.relative_to(app.srcdir))
 
     generated_paths: set[Path] = set()
-    for name in dataset_names:
-        title = f"eegdash.dataset.{name}"
-        row = dataset_rows.get(name)
-        context = _build_dataset_context(name, row)
-        page_content = DATASET_PAGE_TEMPLATE.format(
-            notice=AUTOGEN_NOTICE,
-            title=title,
-            underline="=" * len(title),
-            hero_section=_format_hero_section(context),
-            dataset_info_section=_format_dataset_info_section(context),
-            highlights_section=_format_highlights_section(context),
-            quickstart_section=_format_quickstart_section(context),
-            quality_section=_format_quality_section(context),
-            api_section=_format_api_section(name),
-            see_also_section=_format_see_also_section(
-                str(context.get("dataset_id", ""))
-            ),
-        )
-        page_path = dataset_dir / f"eegdash.dataset.{name}.rst"
-        if _write_if_changed(page_path, page_content):
-            LOGGER.info("[dataset-docs] Updated %s", page_path.relative_to(app.srcdir))
-        generated_paths.add(page_path)
+    srcdir = Path(app.srcdir)
+
+    with concurrent.futures.ThreadPoolExecutor(max_workers=8) as executor:
+        futures = {
+            executor.submit(
+                _process_dataset_item, name, dataset_dir, dataset_rows.get(name), srcdir
+            ): name
+            for name in dataset_names
+        }
+        for future in concurrent.futures.as_completed(futures):
+            try:
+                path = future.result()
+                generated_paths.add(path)
+            except Exception as exc:
+                LOGGER.warning(f"Failed to generate doc for {futures[future]}: {exc}")
+
+    # Add group files to expected paths so they aren't deleted
+    for source in datasets_by_source:
+        safe_source = "".join(c if c.isalnum() else "_" for c in source).lower()
+        if not safe_source:
+            safe_source = "other"
+        generated_paths.add(dataset_dir / f"source_{safe_source}.rst")
 
     _cleanup_stale_dataset_pages(dataset_dir, generated_paths)
 

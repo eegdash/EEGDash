@@ -62,7 +62,7 @@ def test_competition_warning(tmp_path, capsys):
 
 def test_normalize_records_dedupe(tmp_path):
     # Add entities_mne to satisfy EEGDashRaw and BIDSPath validation
-    # Add ntimes/sfreq to bypass _ensure_raw() -> load() in __len__
+    # Add ntimes to bypass _ensure_raw() -> load() in __len__
     entities = {"subject": "01", "task": "rest"}
     common = {
         "storage": {"backend": "local", "base": str(tmp_path)},
@@ -117,7 +117,7 @@ def test_bids_dataset_init_validation(tmp_path):
     dummy_dir = tmp_path / "dsWrongName"
     dummy_dir.mkdir()
     with pytest.raises(
-        AssertionError, match="BIDS directory 'dsWrongName' does not correspond"
+        ValueError, match="BIDS directory 'dsWrongName' does not correspond"
     ):
         EEGBIDSDataset(data_dir=dummy_dir, dataset="dsCorrect")
 

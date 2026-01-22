@@ -28,6 +28,11 @@ def get_s3_dataset_info(dataset: str, fs: S3FileSystem | None = None) -> dict:
     return {"total_size": total_size}
 
 
+def _s3_size_worker(ds: str, fs: S3FileSystem) -> tuple[str, dict]:
+    """Worker function for parallel S3 size queries."""
+    return ds, get_s3_dataset_info(ds, fs=fs)
+
+
 def human_readable_size(num_bytes: int) -> str:
     """Format bytes using the closest unit among MB, GB, TB (fallback to KB/B).
 
@@ -89,8 +94,8 @@ def _safe_duration_seconds(rec: Dict[str, Any]) -> float | None:
     nt = rec.get("ntimes")
     if isinstance(nt, (int, float)):
         if isinstance(sf, (int, float)) and sf:
-            return float(nt) / float(sf) if nt > 24 * 3600 else float(nt)
-        return float(nt)
+            return float(nt) / float(sf)
+        return None
     return None
 
 
@@ -323,14 +328,11 @@ def enrich_with_s3_size(
 
     fs = S3FileSystem(anon=True, client_kwargs={"region_name": "us-east-2"})
 
-    def worker(ds: str) -> tuple[str, dict]:
-        return ds, get_s3_dataset_info(ds, fs=fs)
-
     datasets = list(dataset_json.keys())
     # Bound workers to avoid overwhelming the network
     workers = max(1, min(max_workers, len(datasets)))
     with ThreadPoolExecutor(max_workers=workers) as ex:
-        futures = {ex.submit(worker, ds): ds for ds in datasets}
+        futures = {ex.submit(_s3_size_worker, ds, fs): ds for ds in datasets}
         for fut in as_completed(futures):
             ds, info = fut.result()
             blob = dataset_json.get(ds, {})

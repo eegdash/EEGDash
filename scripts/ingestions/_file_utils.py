@@ -8,13 +8,137 @@ This module provides unified functions for:
 Uses fsspec for unified filesystem access where possible.
 """
 
+import json
+import os
+import re
 import struct
 import time
+import xml.etree.ElementTree as ET
 from functools import wraps
 from pathlib import Path
-from urllib.parse import urljoin, urlparse
+from urllib.parse import unquote, urljoin, urlparse
 
 from _http import HTTPStatusError, RequestError, request_response
+
+
+def _fetch_scidb_path(
+    path: str,
+    dataset_id: str,
+    version: str,
+    api_url: str,
+    headers: dict,
+    max_depth: int,
+    depth: int = 0,
+) -> list[dict]:
+    """Recursively fetch files from SciDB path."""
+    if depth > max_depth:
+        return []
+
+    body = {
+        "dataSetId": dataset_id,
+        "version": version,
+        "path": path,
+        "lastIndex": 0,
+        "pageSize": 1000,
+    }
+
+    try:
+        resp = request_response(
+            "post", api_url, json_body=body, headers=headers, timeout=30
+        )
+        if not resp or resp.status_code != 200:
+            return []
+        data = resp.json()
+
+        if data.get("code") != 20000:
+            return []
+
+        files = []
+        for item in data.get("data", []):
+            item_path = item.get("path", "")
+            is_dir = item.get("dir", False)
+
+            if is_dir:
+                files.extend(
+                    _fetch_scidb_path(
+                        item_path,
+                        dataset_id,
+                        version,
+                        api_url,
+                        headers,
+                        max_depth,
+                        depth + 1,
+                    )
+                )
+            else:
+                # Strip version prefix from path
+                rel_path = item_path.lstrip(f"/{version}/")
+                files.append(
+                    {
+                        "name": rel_path,
+                        "size": item.get("size", 0),
+                        "md5": item.get("md5", ""),
+                    }
+                )
+
+        return files
+
+    except Exception:
+        return []
+
+
+def _propfind_datarn(url: str, result: list, visited: set, depth: int = 0):
+    """Recursively list files via WebDAV PROPFIND."""
+    if depth > 10 or url in visited:
+        return
+    visited.add(url)
+
+    try:
+        resp = request_response(
+            "PROPFIND",
+            url,
+            headers={"Depth": "1"},
+            timeout=30,
+        )
+        if not resp or resp.status_code not in (200, 207):
+            return
+
+        root = ET.fromstring(resp.content)
+        ns = {"d": "DAV:"}
+
+        for response in root.findall(".//d:response", ns):
+            href_elem = response.find("d:href", ns)
+            if href_elem is None:
+                continue
+            href = unquote(href_elem.text or "")
+
+            # Check if this is a collection (directory)
+            is_collection = response.find(".//d:collection", ns) is not None
+
+            if is_collection:
+                # Recurse into subdirectory
+                sub_url = urljoin(url, href)
+                if sub_url != url:
+                    _propfind_datarn(sub_url, result, visited, depth + 1)
+            else:
+                # Extract file info
+                size_elem = response.find(".//d:getcontentlength", ns)
+                size = int(size_elem.text or 0) if size_elem is not None else 0
+
+                # Get relative path
+                parsed = urlparse(href)
+                path = parsed.path.lstrip("/")
+
+                result.append(
+                    {
+                        "name": path,
+                        "size": size,
+                    }
+                )
+
+    except Exception:
+        pass
+
 
 # BIDS file detection patterns
 BIDS_ROOT_FILES = {
@@ -401,77 +525,23 @@ def list_scidb_files(
         "Accept": "application/json, text/plain, */*",
     }
 
-    result = []
-
-    def fetch_path(path: str, depth: int = 0) -> list[dict]:
-        if depth > max_depth:
-            return []
-
-        body = {
-            "dataSetId": dataset_id,
-            "version": version,
-            "path": path,
-            "lastIndex": 0,
-            "pageSize": 1000,
-        }
-
-        try:
-            resp = request_response(
-                "post", api_url, json_body=body, headers=headers, timeout=30
-            )
-            if not resp or resp.status_code != 200:
-                return []
-            data = resp.json()
-
-            if data.get("code") != 20000:
-                return []
-
-            files = []
-            for item in data.get("data", []):
-                item_path = item.get("path", "")
-                is_dir = item.get("dir", False)
-
-                if is_dir:
-                    files.extend(fetch_path(item_path, depth + 1))
-                else:
-                    # Strip version prefix from path
-                    rel_path = item_path.lstrip(f"/{version}/")
-                    files.append(
-                        {
-                            "name": rel_path,
-                            "size": item.get("size", 0),
-                            "md5": item.get("md5", ""),
-                        }
-                    )
-
-            return files
-
-        except Exception:
-            return []
-
-    result = fetch_path(f"/{version}")
-    return result
+    return _fetch_scidb_path(
+        f"/{version}", dataset_id, version, api_url, headers, max_depth
+    )
 
 
 def list_datarn_files(source_url: str) -> list[dict]:
     """List files from data.ru.nl using WebDAV PROPFIND."""
-    import xml.etree.ElementTree as ET
-    from urllib.parse import unquote
-
     # Try to get WebDAV URL from page JSON-LD
     webdav_url = None
 
     try:
         resp = request_response("get", source_url, timeout=30)
         if resp and resp.status_code == 200:
-            import re
-
             ld_match = re.search(
                 r'<script type="application/ld\+json">([^<]+)</script>', resp.text
             )
             if ld_match:
-                import json
-
                 ld_data = json.loads(ld_match.group(1))
                 dist = ld_data.get("distribution", {})
                 if isinstance(dist, dict):
@@ -485,58 +555,7 @@ def list_datarn_files(source_url: str) -> list[dict]:
     # List files via PROPFIND
     result = []
     visited = set()
-
-    def propfind(url: str, depth: int = 0):
-        if depth > 10 or url in visited:
-            return
-        visited.add(url)
-
-        try:
-            resp = request_response(
-                "PROPFIND",
-                url,
-                headers={"Depth": "1"},
-                timeout=30,
-            )
-            if not resp or resp.status_code not in (200, 207):
-                return
-
-            root = ET.fromstring(resp.content)
-            ns = {"d": "DAV:"}
-
-            for response in root.findall(".//d:response", ns):
-                href = response.find("d:href", ns)
-                if href is None:
-                    continue
-
-                path = unquote(href.text or "")
-                is_collection = (
-                    response.find(".//d:collection", ns) is not None
-                    or response.find(".//d:resourcetype/d:collection", ns) is not None
-                )
-
-                if is_collection:
-                    # Recurse into directory
-                    child_url = urljoin(url, path)
-                    if child_url != url:
-                        propfind(child_url, depth + 1)
-                else:
-                    # Get file size
-                    size_elem = response.find(".//d:getcontentlength", ns)
-                    size = int(size_elem.text) if size_elem is not None else 0
-
-                    # Extract relative path
-                    parsed = urlparse(url)
-                    base_path = parsed.path.rstrip("/")
-                    rel_path = path.replace(base_path, "").lstrip("/")
-
-                    if rel_path:
-                        result.append({"name": rel_path, "size": size})
-
-        except Exception:
-            pass
-
-    propfind(webdav_url)
+    _propfind_datarn(webdav_url, result, visited)
     return result
 
 
@@ -662,8 +681,6 @@ def build_manifest(
 
 def save_manifest(manifest: dict, output_dir: Path) -> Path:
     """Save manifest to disk."""
-    import json
-
     manifest_dir = output_dir / manifest["dataset_id"]
     manifest_dir.mkdir(parents=True, exist_ok=True)
     manifest_path = manifest_dir / "manifest.json"
@@ -684,8 +701,6 @@ def list_local_bids_files(local_path: str | Path) -> list[dict]:
         List of file dicts with {name, size} for each file
 
     """
-    import os
-
     local_path = Path(local_path)
     if not local_path.exists():
         return []

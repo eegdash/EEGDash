@@ -311,7 +311,7 @@ config = {
         "sampling_frequency": "float",
         "modality": "str",
         "nchans": "int",
-        "ntimes": "int",  # note: this is really the number of seconds in the data, rounded down
+        "ntimes": "int",  # number of time points (samples) in the recording
     },
     # queryable descriptive fields for a given recording
     "description_fields": ["subject", "session", "run", "task", "age", "gender", "sex"],

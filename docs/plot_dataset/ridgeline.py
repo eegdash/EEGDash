@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import argparse
 import json
 from datetime import datetime
 from pathlib import Path
@@ -7,53 +8,81 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 import plotly.graph_objects as go
-from plotly.utils import PlotlyJSONEncoder
 from scipy.stats import gaussian_kde
 
 try:  # Allow execution as a script or module
     from .colours import MODALITY_COLOR_MAP, hex_to_rgba
-    from .utils import get_dataset_url, primary_modality
+    from .utils import (
+        build_and_export_html,
+        get_dataset_url,
+        primary_modality,
+        primary_recording_modality,
+    )
 except ImportError:  # pragma: no cover - fallback for direct script execution
     from colours import MODALITY_COLOR_MAP, hex_to_rgba  # type: ignore
-    from utils import get_dataset_url, primary_modality  # type: ignore
+    from utils import (  # type: ignore
+        build_and_export_html,
+        get_dataset_url,
+        primary_modality,
+        primary_recording_modality,
+    )
 
 __all__ = ["generate_modality_ridgeline"]
 
 
-def generate_modality_ridgeline(
-    df: pd.DataFrame,
-    out_html: str | Path,
-    *,
-    rng_seed: int = 42,
-) -> Path | None:
-    """Generate a ridgeline (KDE) plot showing participants per modality."""
-    data = df[df["dataset"].str.lower() != "test"].copy()
-    data["modality_label"] = data["modality of exp"].apply(primary_modality)
-    data["n_subjects"] = pd.to_numeric(data["n_subjects"], errors="coerce")
-    data = data.dropna(subset=["n_subjects"])
-    data = data[data["modality_label"] != "Other"]
+def _convert_arrays(obj):
+    """Recursively convert numpy arrays to lists for JSON serialization."""
+    if isinstance(obj, np.ndarray):
+        return obj.tolist()
+    elif isinstance(obj, dict):
+        return {k: _convert_arrays(v) for k, v in obj.items()}
+    elif isinstance(obj, (list, tuple)):
+        return [_convert_arrays(item) for item in obj]
+    return obj
 
-    if data.empty:
-        return None
+
+def _build_ridgeline_traces(
+    data: pd.DataFrame,
+    modality_column: str,
+    modality_func: callable,
+    rng: np.random.Generator,
+    trace_group: str,
+) -> tuple[list[go.Scatter], list[str], dict[str, float]]:
+    """Build ridgeline traces for a given modality type.
+
+    Returns:
+        traces: List of Plotly Scatter traces
+        order: List of modality labels in order
+        medians: Dict mapping label -> median participant count
+
+    """
+    amplitude = 0.6
+    row_spacing = 0.95
+
+    work = data.copy()
+    work["modality_label"] = work[modality_column].apply(modality_func)
+    work = work[work["modality_label"] != "Other"]
+    work = work[work["modality_label"] != "Unknown"]
+    # Filter out datasets with 0 or negative participants (causes log10 issues)
+    work = work[work["n_subjects"] > 0]
+
+    if work.empty:
+        return [], [], {}
 
     median_participants = (
-        data.groupby("modality_label")["n_subjects"].median().sort_values()
+        work.groupby("modality_label")["n_subjects"].median().sort_values()
     )
     order = [
         label
         for label in median_participants.index
-        if label in data["modality_label"].unique()
+        if label in work["modality_label"].unique()
     ]
     if not order:
-        return None
+        return [], [], {}
 
-    fig = go.Figure()
-    rng = np.random.default_rng(rng_seed)
-    amplitude = 0.6
-    row_spacing = 0.95
-
+    traces = []
     for idx, label in enumerate(order):
-        subset = data[data["modality_label"] == label].copy()
+        subset = work[work["modality_label"] == label].copy()
         values = subset["n_subjects"].astype(float).dropna()
         if len(values) < 3:
             continue
@@ -74,51 +103,69 @@ def generate_modality_ridgeline(
         color = MODALITY_COLOR_MAP.get(label, "#6b7280")
         fill = hex_to_rgba(color, 0.28)
 
-        fig.add_trace(
+        # Convert numpy arrays to lists to avoid Plotly binary encoding
+        x_fill = np.concatenate([x_curve, x_curve[::-1]]).tolist()
+        y_fill = np.concatenate([y_curve, np.full_like(y_curve, baseline)]).tolist()
+        x_line = x_curve.tolist()
+        y_line = y_curve.tolist()
+
+        # Fill trace
+        traces.append(
             go.Scatter(
-                x=np.concatenate([x_curve, x_curve[::-1]]),
-                y=np.concatenate([y_curve, np.full_like(y_curve, baseline)]),
+                x=x_fill,
+                y=y_fill,
                 name=label,
                 fill="toself",
                 fillcolor=fill,
                 line=dict(color="rgba(0,0,0,0)"),
                 hoverinfo="skip",
                 showlegend=False,
+                visible=True,
+                meta={"group": trace_group},
             )
         )
 
-        fig.add_trace(
+        # Line trace
+        traces.append(
             go.Scatter(
-                x=x_curve,
-                y=y_curve,
+                x=x_line,
+                y=y_line,
                 mode="lines",
                 name=label,
                 line=dict(color=color, width=2),
                 hovertemplate=f"<b>{label}</b><br>#Participants: %{{x:.0f}}<extra></extra>",
                 showlegend=False,
+                visible=True,
+                meta={"group": trace_group},
             )
         )
 
+        # Scatter points
         jitter = rng.uniform(0.02, amplitude * 0.5, size=len(values))
         median_val = float(median_participants.get(label, np.nan))
         custom_data = np.column_stack(
             [subset["dataset"].to_numpy(), subset["dataset_url"].to_numpy()]
-        )
-        fig.add_trace(
+        ).tolist()
+        x_scatter = values.tolist()
+        y_scatter = (np.full_like(values, baseline) + jitter).tolist()
+        traces.append(
             go.Scatter(
-                x=values,
-                y=np.full_like(values, baseline) + jitter,
+                x=x_scatter,
+                y=y_scatter,
                 mode="markers",
                 name=label,
                 marker=dict(color=color, size=8, opacity=0.6),
                 customdata=custom_data,
                 hovertemplate="<b><a href='%{customdata[1]}' target='_parent'>%{customdata[0]}</a></b><br>#Participants: %{x}<br><i>Click to view dataset details</i><extra></extra>",
                 showlegend=False,
+                visible=True,
+                meta={"group": trace_group},
             )
         )
 
+        # Median line
         if np.isfinite(median_val) and median_val > 0:
-            fig.add_trace(
+            traces.append(
                 go.Scatter(
                     x=[median_val, median_val],
                     y=[baseline, baseline + amplitude],
@@ -128,19 +175,148 @@ def generate_modality_ridgeline(
                         f"<b>{label}</b><br>Median participants: {median_val:.0f}<extra></extra>"
                     ),
                     showlegend=False,
+                    visible=True,
+                    meta={"group": trace_group},
                 )
             )
 
-    if not fig.data:
+    return traces, order, dict(median_participants)
+
+
+def generate_modality_ridgeline(
+    df: pd.DataFrame,
+    out_html: str | Path,
+    *,
+    rng_seed: int = 42,
+) -> Path | None:
+    """Generate a ridgeline (KDE) plot showing participants per modality.
+
+    Includes a toggle button to switch between:
+    - Recording Modality (EEG, MEG, iEEG, fNIRS, EMG)
+    - Experiment Modality (Visual, Auditory, Motor, Resting State, etc.)
+    """
+    data = df[df["dataset"].str.lower() != "test"].copy()
+    data["n_subjects"] = pd.to_numeric(data["n_subjects"], errors="coerce")
+    data = data.dropna(subset=["n_subjects"])
+
+    if data.empty:
         return None
 
-    kde_height = max(650, 150 * len(order))
+    rng = np.random.default_rng(rng_seed)
+
+    # Build traces for experiment modality (default view)
+    exp_traces, exp_order, _ = _build_ridgeline_traces(
+        data, "modality of exp", primary_modality, rng, "experiment"
+    )
+
+    # Build traces for recording modality
+    rec_traces, rec_order, _ = _build_ridgeline_traces(
+        data, "record_modality", primary_recording_modality, rng, "recording"
+    )
+
+    if not exp_traces and not rec_traces:
+        return None
+
+    # Create figure with experiment modality visible by default
+    fig = go.Figure()
+
+    # Track trace counts for visibility toggling
+    n_exp_traces = len(exp_traces)
+    n_rec_traces = len(rec_traces)
+
+    # Add experiment modality traces (visible by default)
+    for trace in exp_traces:
+        trace.visible = True
+        fig.add_trace(trace)
+
+    # Add recording modality traces (hidden by default)
+    for trace in rec_traces:
+        trace.visible = False
+        fig.add_trace(trace)
+
+    # Use the longer order for height calculation
+    max_order = max(len(exp_order), len(rec_order))
+    kde_height = max(650, 150 * max_order)
+    amplitude = 0.6
+    row_spacing = 0.95
     date_stamp = datetime.now().strftime("%d/%m/%Y")
+
+    # Build visibility arrays for toggle buttons
+    # [True for exp traces] + [False for rec traces] = show experiment
+    # [False for exp traces] + [True for rec traces] = show recording
+    exp_visible = [True] * n_exp_traces + [False] * n_rec_traces
+    rec_visible = [False] * n_exp_traces + [True] * n_rec_traces
+
+    # Create update menus (toggle buttons)
+    updatemenus = [
+        dict(
+            type="buttons",
+            direction="right",
+            active=0,
+            x=0.0,
+            xanchor="left",
+            y=1.12,
+            yanchor="top",
+            buttons=[
+                dict(
+                    label="Experiment Modality",
+                    method="update",
+                    args=[
+                        {"visible": exp_visible},
+                        {
+                            "yaxis.tickvals": [
+                                idx * row_spacing for idx in range(len(exp_order))
+                            ],
+                            "yaxis.ticktext": exp_order,
+                            "yaxis.range": [
+                                -0.25,
+                                max(
+                                    0.35,
+                                    (len(exp_order) - 1) * row_spacing
+                                    + amplitude
+                                    + 0.25,
+                                ),
+                            ],
+                        },
+                    ],
+                ),
+                dict(
+                    label="Recording Modality",
+                    method="update",
+                    args=[
+                        {"visible": rec_visible},
+                        {
+                            "yaxis.tickvals": [
+                                idx * row_spacing for idx in range(len(rec_order))
+                            ],
+                            "yaxis.ticktext": rec_order,
+                            "yaxis.range": [
+                                -0.25,
+                                max(
+                                    0.35,
+                                    (len(rec_order) - 1) * row_spacing
+                                    + amplitude
+                                    + 0.25,
+                                ),
+                            ],
+                        },
+                    ],
+                ),
+            ],
+            pad={"r": 10, "t": 10},
+            showactive=True,
+            bgcolor="white",
+            bordercolor="#d1d5db",
+            font=dict(size=13),
+        )
+    ]
+
     fig.update_layout(
         height=kde_height,
         width=None,
         autosize=True,
         template="plotly_white",
+        updatemenus=updatemenus,
         xaxis=dict(
             type="log",
             title=dict(text="Number of Participants (Log Scale)", font=dict(size=18)),
@@ -154,14 +330,17 @@ def generate_modality_ridgeline(
         yaxis=dict(
             title=dict(text="Modality", font=dict(size=18)),
             tickmode="array",
-            tickvals=[idx * row_spacing for idx in range(len(order))],
-            ticktext=order,
+            tickvals=[idx * row_spacing for idx in range(len(exp_order))],
+            ticktext=exp_order,
             showgrid=False,
-            range=[-0.25, max(0.35, (len(order) - 1) * row_spacing + amplitude + 0.25)],
+            range=[
+                -0.25,
+                max(0.35, (len(exp_order) - 1) * row_spacing + amplitude + 0.25),
+            ],
             tickfont=dict(size=14),
         ),
         showlegend=False,
-        margin=dict(l=120, r=40, t=108, b=80),
+        margin=dict(l=120, r=40, t=130, b=80),
         title=dict(
             text=f"<br><sub>Based on EEG-Dash datasets available at {date_stamp}.</sub>",
             x=0.5,
@@ -202,12 +381,17 @@ def generate_modality_ridgeline(
         },
     }
 
-    fig_spec = fig.to_plotly_json()
-    data_json = json.dumps(fig_spec.get("data", []), cls=PlotlyJSONEncoder)
-    layout_json = json.dumps(fig_spec.get("layout", {}), cls=PlotlyJSONEncoder)
-    config_json = json.dumps(plot_config, cls=PlotlyJSONEncoder)
+    # Convert figure to dict and ensure arrays are lists (not binary encoded)
+    fig_dict = fig.to_dict()
 
-    styled_html = f"""
+    fig_data = _convert_arrays(fig_dict.get("data", []))
+    fig_layout = _convert_arrays(fig_dict.get("layout", {}))
+
+    data_json = json.dumps(fig_data)
+    layout_json = json.dumps(fig_layout)
+    config_json = json.dumps(plot_config)
+
+    extra_style = f"""
 <style>
 #dataset-kde-modalities {{
     width: 100% !important;
@@ -230,8 +414,12 @@ def generate_modality_ridgeline(
     color: #6b7280;
 }}
 </style>
-<div class="kde-loading" id="kde-loading">Loading participant distribution...</div>
-<div id="dataset-kde-modalities" class="plotly-graph-div"></div>
+"""
+
+    pre_html = '<div class="kde-loading" id="kde-loading">Loading participant distribution...</div>\n'
+    plot_div = '<div id="dataset-kde-modalities" class="plotly-graph-div"></div>'
+
+    extra_html = f"""
 <script>
 (function() {{
   const TARGET_ID = 'dataset-kde-modalities';
@@ -288,10 +476,17 @@ def generate_modality_ridgeline(
 </script>
 """
 
-    out_path = Path(out_html)
-    out_path.parent.mkdir(parents=True, exist_ok=True)
-    out_path.write_text(styled_html, encoding="utf-8")
-    return out_path
+    return build_and_export_html(
+        fig=None,
+        out_path=out_html,
+        div_id="dataset-kde-modalities",
+        height=kde_height,
+        extra_style=extra_style,
+        pre_html=pre_html,
+        extra_html=extra_html,
+        include_default_style=False,
+        html_content=plot_div,
+    )
 
 
 def _read_dataset(path: Path) -> pd.DataFrame:
@@ -299,8 +494,6 @@ def _read_dataset(path: Path) -> pd.DataFrame:
 
 
 def main() -> None:
-    import argparse
-
     parser = argparse.ArgumentParser(
         description="Generate the modality ridgeline plot from a dataset summary CSV."
     )

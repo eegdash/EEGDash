@@ -79,6 +79,13 @@ def fetch_global_record_stats(database: str, dataset_ids: set[str] = None):
     return data
 
 
+def get_tag_value(tag_val):
+    """Extract tag value, handling both string and list formats from API."""
+    if isinstance(tag_val, list):
+        return tag_val[0] if tag_val else ""
+    return tag_val or ""
+
+
 def parse_freqs(value) -> str:
     """Parse frequencies/channels list and return mode with * if variable."""
     if not value:
@@ -153,6 +160,8 @@ def main():
 
         # Construct row with API data
         # Note: Mapping keys to match existing CSV columns
+        tags = ds.get("tags", {}) or {}
+
         row = {
             "dataset": ds_id,
             "n_records": ds.get("total_files", 0) or 0,
@@ -165,9 +174,10 @@ def main():
             "size_bytes": ds.get("size_bytes") or 0,
             "source": ds.get("source", ""),
             "DatasetID": ds_id,  # Seems redundant but present in CSV
-            "Type Subject": ds.get("study_domain", ""),
-            "modality of exp": ", ".join(ds.get("modalities", []) or []),
-            "type of exp": ds.get("study_design", ""),
+            # Tags from API (handles both string and list formats)
+            "Type Subject": get_tag_value(tags.get("pathology")),
+            "modality of exp": get_tag_value(tags.get("modality")),
+            "type of exp": get_tag_value(tags.get("type")),
             "record_modality": ", ".join(ds.get("recording_modality", []) or [])
             if isinstance(ds.get("recording_modality"), list)
             else ds.get("recording_modality", ""),

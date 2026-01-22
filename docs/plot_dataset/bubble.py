@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 import argparse
+import json
 from pathlib import Path
+from typing import Any
 
 import numpy as np
 import pandas as pd
@@ -30,42 +32,80 @@ except ImportError:  # pragma: no cover - fallback for direct script execution
 __all__ = ["generate_dataset_bubble"]
 
 
-def _to_numeric_median_list(val) -> float | None:
-    # Handle literal collections first
+def _to_numeric_median_list(val: Any) -> float | None:
+    """Compute median from nchans/sfreq data, handling API aggregation format.
+
+    Supports:
+    - API aggregation: [{"val": 64, "count": 10}, ...]
+    - Simple lists: [64, 128, 256]
+    - JSON strings of the above
+    - Comma/space-separated strings: "64, 128, 256"
+
+    Returns:
+        Median value as float, or None if no valid data.
+
+    """
+    # Parse JSON string if needed
+    if isinstance(val, str):
+        val = val.strip()
+        if not val:
+            return None
+        try:
+            val = json.loads(val)
+        except (json.JSONDecodeError, TypeError):
+            pass  # Fall through to string parsing below
+
+    # Handle API aggregation format: [{"val": 64, "count": 10}, ...]
+    if isinstance(val, list) and val and isinstance(val[0], dict) and "val" in val[0]:
+        vals: list[float] = []
+        weights: list[int] = []
+        for item in val:
+            v = item.get("val")
+            if v is not None:
+                try:
+                    vals.append(float(v))
+                    weights.append(item.get("count", 1))
+                except (ValueError, TypeError):
+                    continue  # Skip non-numeric values
+        if not vals:
+            return None
+        # Use np.repeat for memory-efficient weighted median
+        return float(np.median(np.repeat(vals, weights)))
+
+    # Handle literal collections (list, array, Series)
     if isinstance(val, (list, np.ndarray, pd.Series)):
         if len(val) == 0:
             return None
         try:
             return float(np.nanmedian(val))
-        except Exception:
-            pass
+        except (ValueError, TypeError):
+            pass  # Non-numeric collection, try other methods
 
     # Handle scalar NaNs safely
     try:
         if pd.isna(val):
             return None
     except (ValueError, TypeError):
-        # Fallback if val is array-like but not caught by isinstance
         if np.asarray(pd.isna(val)).any():
             return None
 
     try:
         return float(val)
-    except Exception:
-        pass
+    except (ValueError, TypeError, OverflowError):
+        pass  # Not directly convertible to float
 
+    # Fall back to string parsing for simple comma/space-separated lists
     s = str(val).strip().strip("[]")
     if not s:
         return None
 
     try:
-        # Handle both comma-separated and space-separated values (from numpy str)
         sep = "," if "," in s else None
         nums = [float(x) for x in s.split(sep) if str(x).strip()]
         if not nums:
             return None
         return float(np.median(nums))
-    except Exception:
+    except (ValueError, TypeError):
         return None
 
 

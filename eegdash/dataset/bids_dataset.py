@@ -462,7 +462,7 @@ class EEGBIDSDataset:
             return direct_attrs[attribute]
 
         # For JSON-based attributes, read the modality-specific JSON file
-        # (eeg.json for EEG, meg.json for MEG, ieeg.json for iEEG)
+        # (eeg.json for EEG, meg.json for MEG, ieeg.json for iEEG, nirs.json for NIRS)
         modality = bids_path.datatype or "eeg"
         json_filename = f"{modality}.json"
         modality_json = self._get_json_with_inheritance(data_filepath, json_filename)
@@ -472,7 +472,8 @@ class EEGBIDSDataset:
             "duration": modality_json.get("RecordingDuration"),
             "nchans": modality_json.get("EEGChannelCount")
             or modality_json.get("MEGChannelCount")
-            or modality_json.get("iEEGChannelCount"),
+            or modality_json.get("iEEGChannelCount")
+            or modality_json.get("NIRSChannelCount"),
         }
 
         if attribute == "ntimes":

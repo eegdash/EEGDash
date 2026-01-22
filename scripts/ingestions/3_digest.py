@@ -643,7 +643,12 @@ def extract_record(
             for base_name in base_names_to_try:
                 if sampling_frequency and nchans:
                     break
-                for sidecar_suffix in ["_meg.json", "_eeg.json", "_ieeg.json"]:
+                for sidecar_suffix in [
+                    "_meg.json",
+                    "_eeg.json",
+                    "_ieeg.json",
+                    "_nirs.json",
+                ]:
                     sidecar_path = search_dir / f"{base_name}{sidecar_suffix}"
                     if sidecar_path.exists():
                         try:
@@ -673,6 +678,8 @@ def extract_record(
                                     "iEEGChannelCount",
                                     "SEEGChannelCount",
                                     "ECOGChannelCount",
+                                    "NIRSChannelCount",
+                                    "ACCELChannelCount",
                                 ]
                                 total_channels = sum(
                                     sidecar_data.get(field, 0) or 0

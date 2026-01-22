@@ -62,23 +62,6 @@ def fetch_datasets_from_api(
     return all_datasets
 
 
-def fetch_global_record_stats(database: str, dataset_ids: set[str] = None):
-    """Fetch nchans and sfreq aggregated stats for all datasets."""
-    print("Fetching global record statistics (aggregated endpoint)...")
-    url = f"{API_BASE_URL}/{database}/datasets/stats/records"
-
-    try:
-        with urllib.request.urlopen(url, timeout=120) as response:
-            resp_json = json.loads(response.read().decode("utf-8"))
-    except Exception as e:
-        print(f"Error fetching global stats: {e}")
-        return {}
-
-    data = resp_json.get("data", {})
-    print(f"Fetched stats for {len(data)} datasets")
-    return data
-
-
 def get_tag_value(tag_val):
     """Extract tag value, handling both string and list formats from API."""
     if isinstance(tag_val, list):
@@ -146,7 +129,6 @@ def main():
 
     # Fetch data
     api_datasets = fetch_datasets_from_api()
-    global_stats = fetch_global_record_stats(DEFAULT_DATABASE)
 
     new_rows = []
     for ds in api_datasets:
@@ -154,13 +136,9 @@ def main():
         if not ds_id:
             continue
 
-        # Get nchans/sfreq from dataset directly (preferred) or fallback to global_stats
-        nchans_list = ds.get("nchans_counts") or global_stats.get(ds_id, {}).get(
-            "nchans_counts", []
-        )
-        sfreq_list = ds.get("sfreq_counts") or global_stats.get(ds_id, {}).get(
-            "sfreq_counts", []
-        )
+        # Get nchans/sfreq directly from dataset
+        nchans_list = ds.get("nchans_counts") or []
+        sfreq_list = ds.get("sfreq_counts") or []
 
         # Construct row with API data
         # Note: Mapping keys to match existing CSV columns

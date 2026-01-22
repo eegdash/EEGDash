@@ -415,6 +415,7 @@ class Dataset(TypedDict, total=False):
     name: str
     source: str
     readme: str | None
+    ingestion_fingerprint: str | None
 
     # Recording info
     recording_modality: list[str]

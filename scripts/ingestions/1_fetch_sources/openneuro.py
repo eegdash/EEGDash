@@ -423,22 +423,25 @@ def fetch_datasets_with_details(
     dataset_ids: list[str] | None = None,
 ) -> list[dict]:
     """Fetch all OpenNeuro datasets with full metadata."""
-    # First, collect all dataset IDs
-    print("Phase 1: Discovering datasets...")
-    dataset_modalities = {}
-    for did, modality in fetch_dataset_ids(page_size=page_size, timeout=timeout):
-        # Filter specific IDs if requested
-        if dataset_ids and did not in dataset_ids:
-            continue
+    # If specific dataset IDs are provided, skip discovery and fetch directly
+    if dataset_ids:
+        print(f"Fetching {len(dataset_ids)} specified datasets directly...")
+        found_ids = dataset_ids
+        # Use "eeg" as default modality, will be overwritten by actual metadata
+        dataset_modalities = {did: "eeg" for did in dataset_ids}
+    else:
+        # First, collect all dataset IDs via discovery
+        print("Phase 1: Discovering datasets...")
+        dataset_modalities = {}
+        for did, modality in fetch_dataset_ids(page_size=page_size, timeout=timeout):
+            # Track modality (prefer more specific: ieeg > eeg > meg)
+            if did not in dataset_modalities:
+                dataset_modalities[did] = modality
 
-        # Track modality (prefer more specific: ieeg > eeg > meg)
-        if did not in dataset_modalities:
-            dataset_modalities[did] = modality
-
-    found_ids = list(dataset_modalities.keys())
-    if limit:
-        found_ids = found_ids[:limit]
-    print(f"\nFound {len(found_ids)} unique datasets (limit: {limit})")
+        found_ids = list(dataset_modalities.keys())
+        if limit:
+            found_ids = found_ids[:limit]
+        print(f"\nFound {len(found_ids)} unique datasets (limit: {limit})")
 
     # Then fetch full details in batches
     print(f"\nPhase 2: Fetching full metadata (batch size: {batch_size})...")

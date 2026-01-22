@@ -61,3 +61,5 @@ tests/.testeegdash/
 tests/data/
 */*/test_cache/*
 test_cache/*
+CLAUDE.md
+.claude/

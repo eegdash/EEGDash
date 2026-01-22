@@ -5,7 +5,9 @@
 eegdash.dataset.DS007006
 ========================
 
-task-ivan_events.json (OpenNeuro ``ds007006``). Access recordings and metadata through EEGDash.
+VR-Compassion Cultivation Training (OpenNeuro ``ds007006``). Access recordings and metadata through EEGDash.
+
+**Citation:** Ying Wu, Enrique Carrillosulub, Leon Lange, Chloe Tanega, Nicole Wells, Erik Virre, Cassandra Vieten (2025). *VR-Compassion Cultivation Training*. `10.18112/openneuro.ds007006.v1.0.0 <https://doi.org/10.18112/openneuro.ds007006.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ task-ivan_events.json (OpenNeuro ``ds007006``). Access recordings and metadata t
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: —`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS007006``
    * - Title
-     - task-ivan_events.json
+     - VR-Compassion Cultivation Training
    * - Year
      - 2025
    * - Authors
@@ -44,11 +46,73 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds007006,
-        title = {task-ivan_events.json},
+        title = {VR-Compassion Cultivation Training},
         author = {Ying Wu and Enrique Carrillosulub and Leon Lange and Chloe Tanega and Nicole Wells and Erik Virre and Cassandra Vieten},
         doi = {10.18112/openneuro.ds007006.v1.0.0},
         url = {https://doi.org/10.18112/openneuro.ds007006.v1.0.0},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS007006&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS007006%0A-%20%2A%2ATitle%3A%2A%2A%20VR-Compassion%20Cultivation%20Training%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+VR-CCT Dataset
+Compassion Island was a social world implemented in
+AltspaceVR by tecchnology collaborators Origami Air.
+It was specifically created for the study of VR-based
+augmentation of compassion cultivation training (CCT).
+It featured three main settings – a meditation hall,
+a garden courtyard with a large willow tree, and a
+clinic. During experimental sessions, participants
+interacted with two characters in these spaces,
+represented as avatars – namely, a guide, who helped
+
+.. dropdown:: View full README
+   :class-container: sd-shadow-sm
+
+   VR-CCT Dataset
+   Compassion Island was a social world implemented in
+   AltspaceVR by tecchnology collaborators Origami Air.
+   It was specifically created for the study of VR-based
+   augmentation of compassion cultivation training (CCT).
+   It featured three main settings – a meditation hall,
+   a garden courtyard with a large willow tree, and a
+   clinic. During experimental sessions, participants
+   interacted with two characters in these spaces,
+   represented as avatars – namely, a guide, who helped
+   the volunteer navigate from setting to setting and
+   offered other assistance as needed, and Ivan, who was
+   an agitated patient in the clinic. Both characters
+   were animated by live actors in separate locations.
+   Participants were able to converse freely with these
+   characters whenever they were co-present with either
+   character in the same space. All sessions began in the
+   meditation hall, which featured a pulsating orb
+   designed to help participants regulate their breathing
+   during an audio-recorded guided meditation. Next,
+   participants were ushered outside to the garden, where
+   they were invited to contemplate a tree with a glowing
+   core while listening to an audio-recorded compassion
+   meditation and performing visualization exercises that
+   centered on universal compassion for all beings.
+   Lastly, participants were directed into a virtual
+   clinic to converse with Ivan, an agitated patient
+   waiting inside the clinic, where participants would
+   have the opportunity to practice exercising the
+   feeling of universal compassion from the garden
+   meditation.
+
 
 Highlights
 ----------
@@ -70,12 +134,12 @@ Highlights
       - Sampling rate (Hz): 256.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 5
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: Healthy
+      - Modality: Multisensory
+      - Type: Affect
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

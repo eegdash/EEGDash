@@ -5,7 +5,9 @@
 eegdash.dataset.DS004106
 ========================
 
-participants.tsv (OpenNeuro ``ds004106``). Access recordings and metadata through EEGDash.
+BCIT Advanced Guard Duty (OpenNeuro ``ds004106``). Access recordings and metadata through EEGDash.
+
+**Citation:** Jonathan Touryan (data and curation), Brent Lance (data), Scott Kerick (data), Anthony Ries (data), Kaleb McDowell(data), Tony Johnson (curation), Kay Robbins (curation) (2022). *BCIT Advanced Guard Duty*. `10.18112/openneuro.ds004106.v1.0.0 <https://doi.org/10.18112/openneuro.ds004106.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ participants.tsv (OpenNeuro ``ds004106``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 0.0`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS004106``
    * - Title
-     - participants.tsv
+     - BCIT Advanced Guard Duty
    * - Year
      - 2022
    * - Authors
@@ -44,11 +46,129 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds004106,
-        title = {participants.tsv},
+        title = {BCIT Advanced Guard Duty},
         author = {Jonathan Touryan (data and curation) and Brent Lance (data) and Scott Kerick (data) and Anthony Ries (data) and Kaleb McDowell(data) and Tony Johnson (curation) and Kay Robbins (curation)},
         doi = {10.18112/openneuro.ds004106.v1.0.0},
         url = {https://doi.org/10.18112/openneuro.ds004106.v1.0.0},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS004106&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS004106%0A-%20%2A%2ATitle%3A%2A%2A%20BCIT%20Advanced%20Guard%20Duty%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+
+**Introduction**
+
+**Overview:** The Advanced Guard Duty study was designed to measure sustained vigilance in realistic settings by having subjects verify information on replica ID badges. The task was performed in conjunction with two other tasks a calibration driving task and a baseline driving task. The data collected for the two driving tasks is not included in this dataset. Another study (Basic Guard Duty) not included in this collection had a similar set-up but a different experimental design and a different subject pool. In the Basic Guard Duty study the rate of ID presentation varied among tasks. In the Advanced Guard Duty study both the rate of ID presentation and the criteria for verification varied among blocks. Further information is available on request from `cancta.net <https://cancta.net>`__.
+
+**Methods**
+
+**Subjects:** volunteers from the local community recruited through advertisements.
+**Apparatus:**  Driving simulator with steering wheel and brake / foot pedals (Real Time Technologies; Dearborn, MI);
+Video Refresh Rate (VRR) = 900 Hz; Vehicle data log file Sampling Rate (SR) = 100 Hz);
+
+.. dropdown:: View full README
+   :class-container: sd-shadow-sm
+
+   
+   **Introduction**
+   
+   **Overview:** The Advanced Guard Duty study was designed to measure sustained vigilance in realistic settings by having subjects verify information on replica ID badges. The task was performed in conjunction with two other tasks a calibration driving task and a baseline driving task. The data collected for the two driving tasks is not included in this dataset. Another study (Basic Guard Duty) not included in this collection had a similar set-up but a different experimental design and a different subject pool. In the Basic Guard Duty study the rate of ID presentation varied among tasks. In the Advanced Guard Duty study both the rate of ID presentation and the criteria for verification varied among blocks. Further information is available on request from `cancta.net <https://cancta.net>`__.
+   
+   **Methods**
+   
+   **Subjects:** volunteers from the local community recruited through advertisements.
+   **Apparatus:**  Driving simulator with steering wheel and brake / foot pedals (Real Time Technologies; Dearborn, MI);
+   Video Refresh Rate (VRR) = 900 Hz; Vehicle data log file Sampling Rate (SR) = 100 Hz);
+   EEG (BioSemi 256 (+8) channel systems with 4 eye and 2 mastoid channels recorded; SR=1024 Hz);
+   Eye Tracking (Sensomotoric Instruments (SMI); REDEYE250).
+   **Initial setup:** Upon arrival to the lab, subjects were given an introduction to the primary study
+   for which they were recruited and provided informed consent and provided demographics information.
+   This was followed by a practice session, to acclimate the subject to the driving simulator.
+   The driving practice task lasted 10-15 min, until asymptotic performance in steering and speed
+   control was demonstrated and lack of motion sickness was reported. Subjects were then outfitted
+   and prepped for eye tracking and EEG acquisition.
+   **Task organization:** Subjects always began recording sessions by performing a Calibration Driving task,
+   which was a 15-minute drive where the subject controlled only the steering (and speed was controlled by the simulator).
+   Following this, subjects would perform the Baseline Driving task and the Guard Duty task,
+   with counter-balancing used across subjects as to which of them came first.
+   This dataset only contains the Guard Duty task.
+   The Baseline Driving run was 60 minutes of driving, performed in 6 blocks of 10 minutes each,
+   with subjects responsible for speed and steering control. The Calibration and Baseline driving
+   tasks were conducted on the same simulated long, straight road in a visually sparse environment.
+   The subject was instructed to stay within the boundaries of the right-most lane, and to drive
+   at the posted speed limits.
+   The vehicle was periodically subject to lateral perturbing forces, which could be applied to either
+   side of the vehicle, pushing the vehicle out of the center of the lane; and the subject was instructed
+    to execute corrective steering actions to return the vehicle to the center of the lane.
+   **Guard duty task details:** The guard duty task entailed a serial presentation of replica identification (ID) cards
+   (750 x 450 pixels) paired with a reference image (300 x 400 pixels).
+   The replica ID cards had eight components or fields in addition to a common background.
+   These components were: photo, name, date of birth (DOB), date of issue, date of expiration, area access,
+   ID number, bar code and watermark. The reference images consisted of color photographs of faces.
+   Both the ID photo and reference image were chosen from the Multi-PIE database
+   (Gross, Matthews, Cohn, Kanade, & Baker, 2010). This database consists of color photographs
+   (forward facing head shots) of individuals taken at different points in time.
+   Therefore, while the ID photo and reference image were of the same individual,
+   the images were not identical (e.g., different hair style, different clothes, different lighting).
+   The task was divided into ten blocks of five minutes each.
+   At the beginning of each block, participants were instructed that they were guarding a restricted area
+   that required a particular letter designation on the ID card for access (e.g., area C access required).
+   Participants were asked to determine if the individual in the image, paired with the corresponding ID card,
+   should have access to their restricted area. Some of the ID cards were valid and some were not
+   (e.g., expiration date passed, incorrect access area, or photos did not match).
+   Participants were instructed to press either an *allow* or *deny* button for each image-ID pairing.
+   The two-alternative forced-choice response was self-paced with a maximum time limit of 20 s.
+   If the participants chose to deny access, they were subsequently asked to provide a reason.
+   Reasons for denied access were selected from a numerical list of five options:
+   1:incorrect access, 2:expired ID, 3:suspicious DOB, 4:face mismatch, 5:no watermark.
+   If the participant did not respond within the allotted time, the computer forced a deny decision.
+   The restricted area (area A-E) assigned at the beginning of each block was randomly chosen without
+   replacement such that all participants completed two blocks guarding each of the five areas.
+   To maintain consistency across participants, expiration dates were automatically generated at
+   the beginning of the experiment to have a symmetrical distribution around the current date.
+   This distribution was such that the majority of IDs had expiration dates temporally close
+   to the current date (i.e., in the near future or recent past).
+   In each block, the image-ID pairings were presented at one of six different stochastic queuing rates,
+   ranging from 1 to 25 per minute (1, 2.5, 10, 15, 20, and 25 per minute).
+   The queuing rate varied within each block according to a predefined profile.
+   The rate profile had randomly permuted epochs of each queuing rate.
+   Each epoch lasted 30 s with approximately twice as many low rate epochs (1 and 2.5 image-IDs per minute) as high.
+   The rate profiles were shifted for each participant (Latin square design) so that each rate profile
+   was assigned to every block for at least two participants. The current rate was indicated through
+   a processing queue, on the extreme right-hand side of the display, notifying each participant how
+   many IDs are waiting to be checked. For slow rates, most participants were able to process all IDs
+   in their queue and had periods where they were waiting for the next ID (i.e., blank screen).
+   For fast rates, most participants were not able to processes IDs as quickly as they were added to the queue,
+   increasing the size of the processing queue. IDs in the queue persisted until they were processed by the
+   participant or the block ended.
+   At the beginning of the experiment, participants were instructed to correctly process each image-ID while
+   keeping the queue as short as possible. The stochastic queuing rate was used to increase task realism,
+   incorporating periods of high and low task demand, the dynamic rate itself was not explicitly considered
+   an independent factor in the present study.
+   All blocks contained the same ratio of valid and invalid image-ID pairings (82% valid, 18% invalid).
+   The majority of invalid IDs were due to incorrect access (6%) and expiration (6%) whereas the rest were
+   invalid for the other reasons: suspicious DOB (2%), face mismatch (2%), no watermark (2%).
+   This second group of invalid IDs served as catch trials to verify that participants were examining all fields of the ID.
+   **Independent variables:** ID presentation rate and verification criteria (varied by block).
+   **Dependent variables:** ID disposition accuracy and processing times, Task-Induced Fatigue Scale (TIFS),
+   Karolinska Sleepiness Scale (KSS), Visual Analog Scale of Fatigue (VAS-F).
+   Note: questionnaire data is available upon request from `cancta.net <https://cancta.net>`__.
+   **Additional data acquired:** Participant Enrollment Questionnaire, Subject Questionnaire for Current Session,
+   Simulator Sickness Questionnaire.
+   **Experimental Location:** Science Applications International Corporation, Louisville, CO.
+
 
 Highlights
 ----------
@@ -67,15 +187,15 @@ Highlights
       :class-card: sd-border-1
 
       - Channels: 262
-      - Sampling rate (Hz): —
+      - Sampling rate (Hz): 1024.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 1
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: Healthy
+      - Modality: Visual
+      - Type: Attention
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

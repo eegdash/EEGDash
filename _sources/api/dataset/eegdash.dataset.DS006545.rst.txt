@@ -5,15 +5,17 @@
 eegdash.dataset.DS006545
 ========================
 
-ds006545 (OpenNeuro ``ds006545``). Access recordings and metadata through EEGDash.
+Reliability-Dubois2024 (OpenNeuro ``ds006545``). Access recordings and metadata through EEGDash.
+
+**Citation:** Kernel (2025). *Reliability-Dubois2024*. `10.18112/openneuro.ds006545.v1.0.0 <https://doi.org/10.18112/openneuro.ds006545.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: fnirs` :bdg-info:`Tasks: 4` :bdg-secondary:`Subjects: 50` :bdg-secondary:`Recordings: 838`
+:bdg-primary:`Modality: fnirs` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 50` :bdg-secondary:`Recordings: 838`
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: —` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: —`
 
 Dataset Information
 -------------------
@@ -25,17 +27,47 @@ Dataset Information
    * - Dataset ID
      - ``DS006545``
    * - Title
-     - ds006545
+     - Reliability-Dubois2024
    * - Year
-     - —
+     - 2025
    * - Authors
-     - Unknown
+     - Kernel
    * - License
-     - —
+     - CC0
    * - Citation / DOI
-     - Unknown
+     - `doi:10.18112/openneuro.ds006545.v1.0.0 <https://doi.org/10.18112/openneuro.ds006545.v1.0.0>`__
    * - Source links
      - `OpenNeuro <https://openneuro.org/datasets/ds006545>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006545>`__ | `Source URL <https://openneuro.org/datasets/ds006545/versions/1.0.0>`__
+
+.. dropdown:: Copy-paste BibTeX
+   :class-container: sd-shadow-sm
+   :class-title: sd-bg-light
+
+   .. code-block:: bibtex
+
+      @dataset{ds006545,
+        title = {Reliability-Dubois2024},
+        author = {Kernel},
+        doi = {10.18112/openneuro.ds006545.v1.0.0},
+        url = {https://doi.org/10.18112/openneuro.ds006545.v1.0.0},
+      }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS006545&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS006545%0A-%20%2A%2ATitle%3A%2A%2A%20Reliability-Dubois2024%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+No README content is available for this dataset.
 
 Highlights
 ----------
@@ -48,7 +80,7 @@ Highlights
 
       - Subjects: 50
       - Recordings: 838
-      - Tasks: 4
+      - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
@@ -57,12 +89,12 @@ Highlights
       - Sampling rate (Hz): —
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 4
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: —
+      - Modality: —
+      - Type: —
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
@@ -74,8 +106,8 @@ Highlights
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: —
-      - DOI: —
+      - License: CC0
+      - DOI: doi:10.18112/openneuro.ds006545.v1.0.0
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

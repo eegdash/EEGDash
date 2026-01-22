@@ -5,7 +5,9 @@
 eegdash.dataset.DS006036
 ========================
 
-task-photomark_events.json (OpenNeuro ``ds006036``). Access recordings and metadata through EEGDash.
+A complementary dataset of open-eyes EEG recordings in a photo-stimulation setting from: Alzheimer's disease, Frontotemporal dementia and Healthy subjects (OpenNeuro ``ds006036``). Access recordings and metadata through EEGDash.
+
+**Citation:** Aimilia Ntetska, Andreas Miltiadous, Alexandros T. Tzallas, Katerina D. Tzimourta, Theodora Afrantou, Panagiotis Ioannidis, Dimitrios G. Tsalikakis, Nikolaos Grigoriadis, Pantelis Angelidis, Konstantinos Sakkas, Emmanouil D. Oikonomou, Nikolaos Giannakeas, Markos G. Tsipouras (2025). *A complementary dataset of open-eyes EEG recordings in a photo-stimulation setting from: Alzheimer's disease, Frontotemporal dementia and Healthy subjects*. `10.18112/openneuro.ds006036.v1.0.5 <https://doi.org/10.18112/openneuro.ds006036.v1.0.5>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ task-photomark_events.json (OpenNeuro ``ds006036``). Access recordings and metad
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: —`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS006036``
    * - Title
-     - task-photomark_events.json
+     - A complementary dataset of open-eyes EEG recordings in a photo-stimulation setting from: Alzheimer's disease, Frontotemporal dementia and Healthy subjects
    * - Year
      - 2025
    * - Authors
@@ -44,11 +46,33 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds006036,
-        title = {task-photomark_events.json},
+        title = {A complementary dataset of open-eyes EEG recordings in a photo-stimulation setting from: Alzheimer's disease, Frontotemporal dementia and Healthy subjects},
         author = {Aimilia Ntetska and Andreas Miltiadous and Alexandros T. Tzallas and Katerina D. Tzimourta and Theodora Afrantou and Panagiotis Ioannidis and Dimitrios G. Tsalikakis and Nikolaos Grigoriadis and Pantelis Angelidis and Konstantinos Sakkas and Emmanouil D. Oikonomou and Nikolaos Giannakeas and Markos G. Tsipouras},
         doi = {10.18112/openneuro.ds006036.v1.0.5},
         url = {https://doi.org/10.18112/openneuro.ds006036.v1.0.5},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS006036&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS006036%0A-%20%2A%2ATitle%3A%2A%2A%20A%20complementary%20dataset%20of%20open-eyes%20EEG%20recordings%20in%20a%20photo-stimulation%20setting%20from%3A%20Alzheimer%27s%20disease%2C%20Frontotemporal%20dementia%20and%20Healthy%20subjects%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+This dataset provides complementary material to the previously published dataset named “A dataset of EEG recordings from: Alzheimer's disease, Frontotemporal dementia and Healthy subjects” with doi:10.18112/openneuro.ds004504.v1.0.8.
+It is consisted of eyes-open EEG recordings in multiple photic stimulation settings, according to the clinical protocol of the 2nd department of Neurology, AHEPA University of Thessaloniki, Greece. The participant numbers match the respective participant numbers of the aforementioned dataset. In the clinical protocol, the 1st datasets recordings came first, followed by the recordings of this dataset. The dataset is designed to complement a previously published dataset in which the same cohort underwent EEG recordings with their eyes closed. During the recordings, participants were seated with their eyes open while being exposed to photic stimulation. The stimulation was administered at incremental frequencies, beginning at 5 Hz, progressing to 10 Hz, 15 Hz, and in some cases, extending up to 30 Hz, with increments of 5 Hz at each level.
+This study compared cognitive function in 36 individuals with Alzheimer's disease (AD), 23 with Frontotemporal Dementia (FTD), and 29 healthy controls (CN). Cognitive function was measured using the Mini-Mental State Examination (MMSE), where lower scores indicate greater cognitive impairment. The AD group had an average MMSE score of 17.75 (standard deviation of 4.5), the FTD group averaged 22.17 (standard deviation of 8.22), and the CN group scored 30. The average age was 66.4 (standard deviation of 7.9) for the AD group, 63.6 (standard deviation of 8.2) for the FTD group, and 67.9 (standard deviation of 5.4) for the CN group. The median disease duration was 25 months, with an interquartile range of 24 to 28.5 months. Notably, the AD group had no reported dementia-related comorbidities.
+Recordings: Recordings were aquired from the 2nd Department of Neurology of AHEPA General Hospital of Thessaloniki by an experienced team of neurologists. For recording, a Nihon Kohden EEG 2100 clinical device was used, with 19 scalp electrodes (Fp1, Fp2, F7, F3, Fz, F4, F8, T3, C3, Cz, C4, T4, T5, P3, Pz, P4, T6, O1, and O2) according to the 10-20 international system and 2 additional ectrodes (A1 and A2) placed on the mastoids for impendance check, according to the manual of the device. Each recording was performed according to the clinical protocol with participants being in a sitting position having their eyes closed. Before the initialization of each recording, the skin impedance value was ensured to be below 5k?. The sampling rate was 500 Hz with 10uV/mm resolution. The recording montages were anterior-posterior bipolar and referential montage using Cz as the common reference. The referential montage was included in this dataset. The recordings were received under the range of the following parameters of the amplifier: Sensitivity: 10uV/mm, time constant: 0.3s, and high frequency filter at 70 Hz.
+Each recording lasted approximately 4.86 minutes for AD group (min=1.30 minutes , max= 8.77 minutes), 4.42 minutes for FTD group (min=1.25 minutes, max=10.05 minutes) and 6.43 minutes for CN group (min=3.17 minutes, max= 9.17 minutes). In total, 174.94 minutes of AD, 101.56 minutes of FTD and 186.50 minutes of CN recordings were collected and are included in the dataset.
+Preprocessing: The EEG recordings were exported in .eeg format and are transformed to BIDS accepted .set format for the inclusion in the dataset. Automatic annotations of the Nihon Kohden EEG device marking artifacts (muscle activity, blinking, swallowing) have not been included for language compatibility purposes (If this is an issue, please use the preprocessed dataset in Folder: derivatives). The unprocessed EEG recordings are included in folders named: sub-0XX. Folders named sub-0XX in the subfolder derivatives contain the preprocessed and denoised EEG recordings. The preprocessing pipeline of the EEG signals is as follows. First, a Butterworth band-pass filter 0.5-45 Hz was applied and the signals were re-referenced to A1-A2. Then, the Artifact Subspace Reconstruction routine (ASR) which is an EEG artifact correction method included in the EEGLab Matlab software was applied to the signals, removing bad data periods which exceeded the max acceptable 0.5 second window standard deviation of 15, which is considered a conservative window. Next, the Independent Component Analysis (ICA) method (RunICA algorithm) was performed, transforming the 19 EEG signals to 19 ICA components. ICA components that were classified as “eye artifacts” or “jaw artifacts” by the automatic classification routine “ICLabel” in the EEGLAB platform were automatically rejected. It should be noted that, even though the recording was performed in a resting state, eyes-closed condition, eye artifacts of eye movement were still found at some EEG recordings.
 
 Highlights
 ----------
@@ -70,12 +94,12 @@ Highlights
       - Sampling rate (Hz): 500.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 1
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: Dementia
+      - Modality: Visual
+      - Type: Clinical/Intervention
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

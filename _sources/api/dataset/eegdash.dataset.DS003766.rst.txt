@@ -7,13 +7,15 @@ eegdash.dataset.DS003766
 
 A resource for assessing dynamic binary choices in the adult brain using EEG and mouse-tracking (OpenNeuro ``ds003766``). Access recordings and metadata through EEGDash.
 
+**Citation:** Kun Chen, Ruien Wang, Jiamin Huang, Fei Gao, Zhen Yuan, Yanyan Qi, Haiyan Wu (2022). *A resource for assessing dynamic binary choices in the adult brain using EEG and mouse-tracking*. `10.18112/openneuro.ds003766.v2.0.3 <https://doi.org/10.18112/openneuro.ds003766.v2.0.3>`__
+
 .. rst-class:: sd-badges
 
 :bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 4` :bdg-secondary:`Subjects: 31` :bdg-secondary:`Recordings: 124`
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 1.0`
 
 Dataset Information
 -------------------
@@ -27,7 +29,7 @@ Dataset Information
    * - Title
      - A resource for assessing dynamic binary choices in the adult brain using EEG and mouse-tracking
    * - Year
-     - 2021
+     - 2022
    * - Authors
      - Kun Chen, Ruien Wang, Jiamin Huang, Fei Gao, Zhen Yuan, Yanyan Qi, Haiyan Wu
    * - License
@@ -50,6 +52,50 @@ Dataset Information
         url = {https://doi.org/10.18112/openneuro.ds003766.v2.0.3},
       }
 
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS003766&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS003766%0A-%20%2A%2ATitle%3A%2A%2A%20A%20resource%20for%20assessing%20dynamic%20binary%20choices%20in%20the%20adult%20brain%20using%20EEG%20and%20mouse-tracking%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+
+**A resource for assessing dynamic binary choices in the adult brain using EEG and mouse-tracking**
+
+
+**Description**
+
+This dataset was collected in 2020, which combines high-density Electroencephalography (HD-EEG, 128 channels) and mouse-tracking intended as a resource for examining the dynamic decision process of semantics and preference choices in the human brain. The dataset includes high-density resting-state and task-related (food preference choices and semantic judgments) EEG acquired from 31 individuals (ages: 18-33).
+
+**EEG acquisition**
+
+The EEG data were acquired using a 128-channel cap based on the standard 10/20 System with Electrical Geodesics Inc (EGI, Eugene, Oregon) system. During recording, sampling rate was 1000Hz, and the E129 (Cz) electrode was used as reference. Electrode impedances were kept below 50kohm for each electrode during the experiment.
+
+**Main files**
+
+**`sub-*`**: EEG (`.set`) and behavior data with BIDS format.
+**`sourcedata/rawdata`**: Raw `.mff` EGI data and behavior data with subject information desensitization.
+**`sourcedata/psychopy`**: Stimuli and PsychoPy scripts for presentation.
+**`derivatives/eeglab-preproc`**: Preprocessed continuous EEG data with EEGLAB (Easy to set different epoch time windows for further analysis).
+
+**Others**
+
+Please refer to the `corresponding paper <https://doi.org/10.1038/s41597-022-01538-5>`__ and `GitHub code <https://github.com/andlab-um/MT-EEG-dataset>`__ to get more details.
+
+**References**
+
+Chen, K., Wang, R., Huang, J., Gao, F., Yuan, Z., Qi, Y., & Wu, H. (2022). A resource for assessing dynamic binary choices in the adult brain using EEG and mouse-tracking. Scientific Data, 9(1), 416. https://doi.org/10.1038/s41597-022-01538-5
+Appelhoff, S., Sanderson, M., Brooks, T., Vliet, M., Quentin, R., Holdgraf, C., Chaumon, M., Mikulan, E., Tavabi, K., Höchenberger, R., Welke, D., Brunner, C., Rockhill, A., Larson, E., Gramfort, A. and Jas, M. (2019). MNE-BIDS: Organizing electrophysiological data into the BIDS format and facilitating their analysis. Journal of Open Source Software 4: (1896). https://doi.org/10.21105/joss.01896
+Pernet, C. R., Appelhoff, S., Gorgolewski, K. J., Flandin, G., Phillips, C., Delorme, A., Oostenveld, R. (2019). EEG-BIDS, an extension to the brain imaging data structure for electroencephalography. Scientific Data, 6, 103. https://doi.org/10.1038/s41597-019-0104-8
+
 Highlights
 ----------
 
@@ -70,17 +116,17 @@ Highlights
       - Sampling rate (Hz): 1000.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 4
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: —
+      - Modality: —
+      - Type: —
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 71.3 GB
+      - Size on disk: 114.1 MB
       - File count: 124
       - Format: BIDS
 

@@ -5,7 +5,9 @@
 eegdash.dataset.DS004022
 ========================
 
-participants.tsv (OpenNeuro ``ds004022``). Access recordings and metadata through EEGDash.
+Multimodal EEG and fNIRS Biosignal Acquisition during Motor Imagery Tasks in Patients with Orthopedic Impairment (OpenNeuro ``ds004022``). Access recordings and metadata through EEGDash.
+
+**Citation:** Seho Lee, Hee Ra Jung, In-Nea Wang, Min-Kyung Jung, Hakseung Kim, Dong-Joo Kim (2022). *Multimodal EEG and fNIRS Biosignal Acquisition during Motor Imagery Tasks in Patients with Orthopedic Impairment*. `10.18112/openneuro.ds004022.v1.0.0 <https://doi.org/10.18112/openneuro.ds004022.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ participants.tsv (OpenNeuro ``ds004022``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 1.0`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS004022``
    * - Title
-     - participants.tsv
+     - Multimodal EEG and fNIRS Biosignal Acquisition during Motor Imagery Tasks in Patients with Orthopedic Impairment
    * - Year
      - 2022
    * - Authors
@@ -44,11 +46,28 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds004022,
-        title = {participants.tsv},
+        title = {Multimodal EEG and fNIRS Biosignal Acquisition during Motor Imagery Tasks in Patients with Orthopedic Impairment},
         author = {Seho Lee and Hee Ra Jung and In-Nea Wang and Min-Kyung Jung and Hakseung Kim and Dong-Joo Kim},
         doi = {10.18112/openneuro.ds004022.v1.0.0},
         url = {https://doi.org/10.18112/openneuro.ds004022.v1.0.0},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS004022&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS004022%0A-%20%2A%2ATitle%3A%2A%2A%20Multimodal%20EEG%20and%20fNIRS%20Biosignal%20Acquisition%20during%20Motor%20Imagery%20Tasks%20in%20Patients%20with%20Orthopedic%20Impairment%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+This dataset consists of raw 18-channel EEG and functional near infrareds(fNIRS) from 7 human paticipants with orthopedic Impairment during motor imagery(MI).  The participants performed a series of MI-related trials across three sessions. These sessions comprised 40 trials, of which four different MI tasks were presented in random order (e.g., Reach → Twist → Lift → Reach → Grasp → Grasp → Twist → Reach → Lift → Reach). Each trial began with 3 s of fixation cross. The monitor then displayed a 4 s visual cue, followed by 3 s of letters indicating the ready state with a gray screen to eliminate the afterimage. The participants were then instructed to perform the imaginary movement for 5 s in the given order.
 
 Highlights
 ----------
@@ -70,17 +89,17 @@ Highlights
       - Sampling rate (Hz): 500.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 1
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: —
+      - Modality: —
+      - Type: —
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 616.6 MB
+      - Size on disk: 130.5 KB
       - File count: 21
       - Format: BIDS
 

@@ -5,7 +5,9 @@
 eegdash.dataset.DS004330
 ========================
 
-participants.tsv (OpenNeuro ``ds004330``). Access recordings and metadata through EEGDash.
+The spatiotemporal neural dynamics of object recognition for natural images and line drawings (MEG) (OpenNeuro ``ds004330``). Access recordings and metadata through EEGDash.
+
+**Citation:** Johannes J.D. Singer, Radoslaw M. Cichy, Martin N. Hebart (2022). *The spatiotemporal neural dynamics of object recognition for natural images and line drawings (MEG)*. `10.18112/openneuro.ds004330.v1.0.0 <https://doi.org/10.18112/openneuro.ds004330.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ participants.tsv (OpenNeuro ``ds004330``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 1.0`
 
 Dataset Information
 -------------------
@@ -25,9 +27,9 @@ Dataset Information
    * - Dataset ID
      - ``DS004330``
    * - Title
-     - participants.tsv
+     - The spatiotemporal neural dynamics of object recognition for natural images and line drawings (MEG)
    * - Year
-     - 20
+     - 2022
    * - Authors
      - Johannes J.D. Singer, Radoslaw M. Cichy, Martin N. Hebart
    * - License
@@ -44,11 +46,32 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds004330,
-        title = {participants.tsv},
+        title = {The spatiotemporal neural dynamics of object recognition for natural images and line drawings (MEG)},
         author = {Johannes J.D. Singer and Radoslaw M. Cichy and Martin N. Hebart},
         doi = {10.18112/openneuro.ds004330.v1.0.0},
         url = {https://doi.org/10.18112/openneuro.ds004330.v1.0.0},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS004330&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS004330%0A-%20%2A%2ATitle%3A%2A%2A%20The%20spatiotemporal%20neural%20dynamics%20of%20object%20recognition%20for%20natural%20images%20and%20line%20drawings%20%28MEG%29%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+This dataset contains the raw MEG data accompanying the paper "The spatiotemporal neural dynamics of object recognition for natural images and line drawings" (Link to preprint: https://biorxiv.org/cgi/content/short/2022.08.12.503484v1). Please cite the above paper if you use this data.
+The dataset includes:
+MEG data for 9 runs for each subjects. Events files that contain the onsets, durations and trial types for each trial in the experiment (excluding catch trials).
+For a full description of the paradigm and the employed procedures please see the manuscript.
+Results for the first-level analyses for this data can be found on OSF (https://osf.io/vsc6y/). Code for the analysis of the data can be found on Github (https://github.com/Singerjohannes/object_drawing_dynamics/).
 
 Highlights
 ----------
@@ -66,21 +89,21 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 306
+      - Channels: 310 (270), 306 (270)
       - Sampling rate (Hz): 1000.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 1
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: Healthy
+      - Modality: Visual
+      - Type: Perception
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 8.8 MB
+      - Size on disk: 153.7 GB
       - File count: 270
       - Format: BIDS
 

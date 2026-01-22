@@ -5,7 +5,9 @@
 eegdash.dataset.DS005241
 ========================
 
-participants.tsv (OpenNeuro ``ds005241``). Access recordings and metadata through EEGDash.
+NeuroMorph: A High-Temporal Resolution MEG Dataset for Morpheme-Based Linguistic Analysis (OpenNeuro ``ds005241``). Access recordings and metadata through EEGDash.
+
+**Citation:** Amilleah Rodriguez, Dan Zhao, Kyra Wilson, Ritika Saboo, Sergey V Samsonau, Alec Marantz (2024). *NeuroMorph: A High-Temporal Resolution MEG Dataset for Morpheme-Based Linguistic Analysis*. `10.18112/openneuro.ds005241.v1.1.0 <https://doi.org/10.18112/openneuro.ds005241.v1.1.0>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ participants.tsv (OpenNeuro ``ds005241``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 0.0`
 
 Dataset Information
 -------------------
@@ -25,9 +27,9 @@ Dataset Information
    * - Dataset ID
      - ``DS005241``
    * - Title
-     - participants.tsv
+     - NeuroMorph: A High-Temporal Resolution MEG Dataset for Morpheme-Based Linguistic Analysis
    * - Year
-     - 2019
+     - 2024
    * - Authors
      - Amilleah Rodriguez, Dan Zhao, Kyra Wilson, Ritika Saboo, Sergey V Samsonau, Alec Marantz
    * - License
@@ -44,11 +46,35 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds005241,
-        title = {participants.tsv},
+        title = {NeuroMorph: A High-Temporal Resolution MEG Dataset for Morpheme-Based Linguistic Analysis},
         author = {Amilleah Rodriguez and Dan Zhao and Kyra Wilson and Ritika Saboo and Sergey V Samsonau and Alec Marantz},
         doi = {10.18112/openneuro.ds005241.v1.1.0},
         url = {https://doi.org/10.18112/openneuro.ds005241.v1.1.0},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS005241&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS005241%0A-%20%2A%2ATitle%3A%2A%2A%20NeuroMorph%3A%20A%20High-Temporal%20Resolution%20MEG%20Dataset%20for%20Morpheme-Based%20Linguistic%20Analysis%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+KIT/Yokogawa MEG system with 208 magnetometer channels
+24 subjects amounting to over 17 hours of data
+Supplementary code can be found `here <github.com/amilleah/neuromorph>`__
+
+**References**
+
+Appelhoff, S., Sanderson, M., Brooks, T., Vliet, M., Quentin, R., Holdgraf, C., Chaumon, M., Mikulan, E., Tavabi, K., Höchenberger, R., Welke, D., Brunner, C., Rockhill, A., Larson, E., Gramfort, A. and Jas, M. (2019). MNE-BIDS: Organizing electrophysiological data into the BIDS format and facilitating their analysis. Journal of Open Source Software 4: (1896).https://doi.org/10.21105/joss.01896
+Niso, G., Gorgolewski, K. J., Bock, E., Brooks, T. L., Flandin, G., Gramfort, A., Henson, R. N., Jas, M., Litvak, V., Moreau, J., Oostenveld, R., Schoffelen, J., Tadel, F., Wexler, J., Baillet, S. (2018). MEG-BIDS, the brain imaging data structure extended to magnetoencephalography. Scientific Data, 5, 180110.https://doi.org/10.1038/sdata.2018.110
 
 Highlights
 ----------
@@ -66,21 +92,21 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 256 (180), 207 (54)
+      - Channels: 256 (207), 207 (27)
       - Sampling rate (Hz): 1000.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 2
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: Healthy
+      - Modality: —
+      - Type: —
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 5.3 MB
+      - Size on disk: 140.5 GB
       - File count: 117
       - Format: BIDS
 

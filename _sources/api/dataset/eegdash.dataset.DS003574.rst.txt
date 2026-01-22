@@ -5,7 +5,9 @@
 eegdash.dataset.DS003574
 ========================
 
-task-game_run-2_events.json (OpenNeuro ``ds003574``). Access recordings and metadata through EEGDash.
+Reward biases spontaneous neural reactivation during sleep (OpenNeuro ``ds003574``). Access recordings and metadata through EEGDash.
+
+**Citation:** Virginie Sterpenich, Mojca KM van Schie, Maximilien Catsiyannis, Avinash Ramyead, Stephen Perrig, Hee-Deok Yang, Dimitri Van De Ville, Sophie Schwartz (2021). *Reward biases spontaneous neural reactivation during sleep*. `10.18112/openneuro.ds003574.v1.0.2 <https://doi.org/10.18112/openneuro.ds003574.v1.0.2>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ task-game_run-2_events.json (OpenNeuro ``ds003574``). Access recordings and meta
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 1.0`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS003574``
    * - Title
-     - task-game_run-2_events.json
+     - Reward biases spontaneous neural reactivation during sleep
    * - Year
      - 2021
    * - Authors
@@ -44,11 +46,34 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds003574,
-        title = {task-game_run-2_events.json},
+        title = {Reward biases spontaneous neural reactivation during sleep},
         author = {Virginie Sterpenich and Mojca KM van Schie and Maximilien Catsiyannis and Avinash Ramyead and Stephen Perrig and Hee-Deok Yang and Dimitri Van De Ville and Sophie Schwartz},
         doi = {10.18112/openneuro.ds003574.v1.0.2},
         url = {https://doi.org/10.18112/openneuro.ds003574.v1.0.2},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS003574&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS003574%0A-%20%2A%2ATitle%3A%2A%2A%20Reward%20biases%20spontaneous%20neural%20reactivation%20during%20sleep%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+The data included 18 participants that played at 2 different games during wakefulness in the 3T MRI: the FACE and the MAZE game, intermixed with periods of REST and period of preparation of each game (game session). The tasks were manipulated and at the end of the game session, one game was won (Reward game) and the second was lost (No Reward game), randomly assigned for each participant. Next, during the sleep session, 64 electrodes were placed on the head of the participants, before they slept in the MRI with EEG for 1-2 hours (sleep session). Participants can be separated according to the won game (face or maze) and according sleep depth (whether they reached N3 sleep in the MRI or only N2 sleep). A decoding classifier was trained on the data from the game session at wake and applied to the MRI data acquired during sleep (sleep session). Finally, a memory test was performed the next day on the 2 tasks (face and maze).
+For any question related to the methods, please see the manuscript or contact Virginie Sterpenich (Virginie.Sterpenich@unige.ch)
+Files includes are
+1) 2 EPI sessions for the tasks
+2) 1 EPI session during resting including wake and sleep (sleep session)
+3) 1 EEG file corresponding to the sleep session (including wake and sleep in the MRI)
+4) 1 T1 anatomical image
 
 Highlights
 ----------
@@ -66,16 +91,16 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 64
+      - Channels: 64 (18), 69 (18)
       - Sampling rate (Hz): 500.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 1
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: —
+      - Modality: —
+      - Type: —
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

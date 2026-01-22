@@ -5,7 +5,9 @@
 eegdash.dataset.DS003969
 ========================
 
-participants.tsv (OpenNeuro ``ds003969``). Access recordings and metadata through EEGDash.
+Meditation vs thinking task (OpenNeuro ``ds003969``). Access recordings and metadata through EEGDash.
+
+**Citation:** Arnaud Delorme, Claire Braboszcz (2021). *Meditation vs thinking task*. `10.18112/openneuro.ds003969.v1.0.0 <https://doi.org/10.18112/openneuro.ds003969.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ participants.tsv (OpenNeuro ``ds003969``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 7.0`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS003969``
    * - Title
-     - participants.tsv
+     - Meditation vs thinking task
    * - Year
      - 2021
    * - Authors
@@ -44,11 +46,30 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds003969,
-        title = {participants.tsv},
+        title = {Meditation vs thinking task},
         author = {Arnaud Delorme and Claire Braboszcz},
         doi = {10.18112/openneuro.ds003969.v1.0.0},
         url = {https://doi.org/10.18112/openneuro.ds003969.v1.0.0},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS003969&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS003969%0A-%20%2A%2ATitle%3A%2A%2A%20Meditation%20vs%20thinking%20task%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+Data collection took place at the Meditation Research Institute (MRI) in Rishikesh, India, under the supervision of Arnaud Delorme, Ph.D. The project was approved by the local MRI Indian ethical committee and the ethical committee of the University of California San Diego (IRB project # 090731).
+Participants sat either on a blanket on the floor or on a chair for both experimental periods depending on their personal preference. Participants were asked to keep their eyes closed, and all lighting in the room was turned off during data collection. An intercom allowed communication between the experimental and the recording room.
+Participants performed four blocks, 2 meditation blocks interspaced by two thining blocks (in which they are instructed to think actively). Half of the participants start with a meditation block, and half of them start with a thinking block. The first meditation block is a breath counting meditation for all participants. The second block is a tradition-specific meditation - except for the control group, for which it is a breath counting meditation.
 
 Highlights
 ----------
@@ -66,16 +87,16 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 64
-      - Sampling rate (Hz): 2048.0 (12), 1024.0 (772)
+      - Channels: 64 (392), 79 (294), 72 (98)
+      - Sampling rate (Hz): 1024.0 (772), 2048.0 (12)
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 4
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: —
+      - Modality: —
+      - Type: —
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

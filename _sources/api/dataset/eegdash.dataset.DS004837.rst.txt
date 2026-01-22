@@ -5,7 +5,9 @@
 eegdash.dataset.DS004837
 ========================
 
-manifest.json (OpenNeuro ``ds004837``). Access recordings and metadata through EEGDash.
+Magnetoencephalographic (MEG) Pitch and Duration Mismatch Negativity (MMN) in First-Episode Psychosis (OpenNeuro ``ds004837``). Access recordings and metadata through EEGDash.
+
+**Citation:** Fran López-Caballero, Mark Curtis, Brian Coffman, Dean Salisbury (2023). *Magnetoencephalographic (MEG) Pitch and Duration Mismatch Negativity (MMN) in First-Episode Psychosis*. `10.18112/openneuro.ds004837.v1.0.2 <https://doi.org/10.18112/openneuro.ds004837.v1.0.2>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ manifest.json (OpenNeuro ``ds004837``). Access recordings and metadata through E
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 0.0`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS004837``
    * - Title
-     - manifest.json
+     - Magnetoencephalographic (MEG) Pitch and Duration Mismatch Negativity (MMN) in First-Episode Psychosis
    * - Year
      - 2023
    * - Authors
@@ -44,11 +46,42 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds004837,
-        title = {manifest.json},
+        title = {Magnetoencephalographic (MEG) Pitch and Duration Mismatch Negativity (MMN) in First-Episode Psychosis},
         author = {Fran López-Caballero and Mark Curtis and Brian Coffman and Dean Salisbury},
         doi = {10.18112/openneuro.ds004837.v1.0.2},
         url = {https://doi.org/10.18112/openneuro.ds004837.v1.0.2},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS004837&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS004837%0A-%20%2A%2ATitle%3A%2A%2A%20Magnetoencephalographic%20%28MEG%29%20Pitch%20and%20Duration%20Mismatch%20Negativity%20%28MMN%29%20in%20First-Episode%20Psychosis%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+Project Title: Pittsburgh Early Psychosis Program (PEPP): Mismatch Negativity (MMN) in First-Episode Psychosis
+Expected experimentation period:
+Start date: 12/01/2017
+End date: 09/15/2021
+Project Description:
+Oddball paradigm with standards, pitch deviants and duration deviants. Extended description at: https://doi.org/10.1111/ejn.16107
+Participant categories:
+Healthy controls (HC), First-episode Schizophrenia (FESZ), First-episode Affective Psychosis (FEAFF)
+Further information about clinical, neuropsychological, demographic and medication data can be found in derivatives/participants.csv
+Events:
+1: standard
+2: pitch deviant
+3: duration deviant
+Funding:
+National Institutes of Health (R01 MH108568 and MH113533)
 
 Highlights
 ----------
@@ -67,15 +100,15 @@ Highlights
       :class-card: sd-border-1
 
       - Channels: —
-      - Sampling rate (Hz): 1000.0 (16), 3000.0 (196)
+      - Sampling rate (Hz): 3000.0 (196), 1000.0 (16)
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 1
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: Schizophrenia/Psychosis
+      - Modality: Auditory
+      - Type: Perception
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

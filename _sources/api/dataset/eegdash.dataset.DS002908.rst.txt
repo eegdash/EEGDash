@@ -7,13 +7,15 @@ eegdash.dataset.DS002908
 
 Human MEG recordings during sequential conflict task (OpenNeuro ``ds002908``). Access recordings and metadata through EEGDash.
 
-.. rst-class:: sd-badges
-
-:bdg-primary:`Modality: meg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 14` :bdg-secondary:`Recordings: 539`
+**Citation:** Rafal Bogacz, Vladimir Litvak (2020). *Human MEG recordings during sequential conflict task*. `10.18112/openneuro.ds002908.v1.0.0 <https://doi.org/10.18112/openneuro.ds002908.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-primary:`Modality: meg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 13` :bdg-secondary:`Recordings: 53`
+
+.. rst-class:: sd-badges
+
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 1.0`
 
 Dataset Information
 -------------------
@@ -27,7 +29,7 @@ Dataset Information
    * - Title
      - Human MEG recordings during sequential conflict task
    * - Year
-     - —
+     - 2020
    * - Authors
      - Rafal Bogacz, Vladimir Litvak
    * - License
@@ -35,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `10.18112/openneuro.ds002908.v1.0.0 <https://doi.org/10.18112/openneuro.ds002908.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds002908>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds002908>`__ | `Source URL <https://openneuro.org/datasets/ds002908/versions/1.0.0>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds002908>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds002908>`__ | `Source URL <https://openneuro.org/datasets/ds002908>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -50,6 +52,23 @@ Dataset Information
         url = {https://doi.org/10.18112/openneuro.ds002908.v1.0.0},
       }
 
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS002908&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS002908%0A-%20%2A%2ATitle%3A%2A%2A%20Human%20MEG%20recordings%20during%20sequential%20conflict%20task%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+No README content is available for this dataset.
+
 Highlights
 ----------
 
@@ -59,29 +78,29 @@ Highlights
    .. grid-item-card:: Subjects & recordings
       :class-card: sd-border-1
 
-      - Subjects: 14
-      - Recordings: 539
+      - Subjects: 13
+      - Recordings: 53
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: —
-      - Sampling rate (Hz): —
+      - Channels: 270
+      - Sampling rate (Hz): 2400.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 1
-      - Experiment type: —
-      - Subject type: Decision Making
+      - Pathology: —
+      - Modality: —
+      - Type: —
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: —
-      - File count: 539
+      - Size on disk: 59.8 GB
+      - File count: 53
       - Format: BIDS
 
    .. grid-item-card:: License & citation

@@ -5,7 +5,9 @@
 eegdash.dataset.DS006367
 ========================
 
-participants.tsv (OpenNeuro ``ds006367``). Access recordings and metadata through EEGDash.
+Memory Reactivation Levels Remain Unaffected by Anticipated Interference (OpenNeuro ``ds006367``). Access recordings and metadata through EEGDash.
+
+**Citation:** xx (2025). *Memory Reactivation Levels Remain Unaffected by Anticipated Interference*. `10.18112/openneuro.ds006367.v1.0.1 <https://doi.org/10.18112/openneuro.ds006367.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ participants.tsv (OpenNeuro ``ds006367``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: —`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS006367``
    * - Title
-     - participants.tsv
+     - Memory Reactivation Levels Remain Unaffected by Anticipated Interference
    * - Year
      - 2025
    * - Authors
@@ -44,11 +46,41 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds006367,
-        title = {participants.tsv},
+        title = {Memory Reactivation Levels Remain Unaffected by Anticipated Interference},
         author = {xx},
         doi = {10.18112/openneuro.ds006367.v1.0.1},
         url = {https://doi.org/10.18112/openneuro.ds006367.v1.0.1},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS006367&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS006367%0A-%20%2A%2ATitle%3A%2A%2A%20Memory%20Reactivation%20Levels%20Remain%20Unaffected%20by%20Anticipated%20Interference%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+In this memory interference task, each trial began
+with a space key press, followed by a fixation dot
+for 1000–1500 ms. Then, two lateral objects appeared:
+a cued target (learned) and an irrelevant novel one.
+Participants memorized the cued object.
+After a 1400 ms delay, interference objects appeared
+briefly on half the blocks; otherwise, only fixation.
+A probe then showed two objects vertically aligned,
+and participants selected the target using arrow keys.
+Feedback followed the response, showing the correct
+object with color-coded text for 1000 ms.
+The preprocessing steps to reach this dataset is explained
+in the following preprint and the mentioned OSF repository
+xx (Experiment 1)
 
 Highlights
 ----------
@@ -66,16 +98,16 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 28
+      - Channels: 28 (52), 30 (52)
       - Sampling rate (Hz): 1000.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 1
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: Healthy
+      - Modality: Visual
+      - Type: Memory
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

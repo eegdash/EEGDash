@@ -7,13 +7,15 @@ eegdash.dataset.DS005279
 
 Picture-Word Interference Dataset (OpenNeuro ``ds005279``). Access recordings and metadata through EEGDash.
 
-.. rst-class:: sd-badges
-
-:bdg-primary:`Modality: meg` :bdg-info:`Tasks: 54` :bdg-secondary:`Subjects: 31` :bdg-secondary:`Recordings: 1632`
+**Citation:** Hsi T. Wei, Farhan B. Faisal, Tamara Beck, Claire Shao, Jed A. Meltzer (2024). *Picture-Word Interference Dataset*. `10.18112/openneuro.ds005279.v1.0.3 <https://doi.org/10.18112/openneuro.ds005279.v1.0.3>`__
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-primary:`Modality: meg` :bdg-info:`Tasks: —` :bdg-secondary:`Subjects: 30` :bdg-secondary:`Recordings: 90`
+
+.. rst-class:: sd-badges
+
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 0.0`
 
 Dataset Information
 -------------------
@@ -27,7 +29,7 @@ Dataset Information
    * - Title
      - Picture-Word Interference Dataset
    * - Year
-     - —
+     - 2024
    * - Authors
      - Hsi T. Wei, Farhan B. Faisal, Tamara Beck, Claire Shao, Jed A. Meltzer
    * - License
@@ -35,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds005279.v1.0.3 <https://doi.org/10.18112/openneuro.ds005279.v1.0.3>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds005279>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005279>`__ | `Source URL <https://openneuro.org/datasets/ds005279/versions/1.0.3>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds005279>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005279>`__ | `Source URL <https://openneuro.org/datasets/ds005279>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -50,6 +52,26 @@ Dataset Information
         url = {https://doi.org/10.18112/openneuro.ds005279.v1.0.3},
       }
 
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS005279&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS005279%0A-%20%2A%2ATitle%3A%2A%2A%20Picture-Word%20Interference%20Dataset%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+This study was conducted at the Rotman Research Institute at Baycrest Hospital in Toronto, Canada.
+This dataset contains 30 healthy young adults' MEG (CTF), sMRI, and behavioural data on a picture-word interference (PWI) task. Subjects were shown images of objects one by one and were instructed to retrieve the name of the pictures covertly and judge whether the name ends in a target sound given at the beginning of each task block, by pressing the yes or no buttons with their right hand. Whenever they see an image, they will often also hear a distractor word played through their earphone. The picture and word could be phonologically related, semantically related, or unrelated.
+There were 3 runs of the PWI task for each participant. Each run contained 120 trials, containing an equal number of trials for each picture-word condition. Behaviourally, the reaction time and accuracy of their button-pressing response were recorded. Meanwhile, the MEG data was epoched to the picture onset and response onset for event-related analyses. Each subject obtained their own structural MRI for MEG source localization.
+Corresponding analysis code can be found under the code folder, with the "analysis walkthrough" documenting more detailed explanation of the analysis.
+
 Highlights
 ----------
 
@@ -59,29 +81,29 @@ Highlights
    .. grid-item-card:: Subjects & recordings
       :class-card: sd-border-1
 
-      - Subjects: 31
-      - Recordings: 1632
-      - Tasks: 54
+      - Subjects: 30
+      - Recordings: 90
+      - Tasks: —
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
       - Channels: —
-      - Sampling rate (Hz): —
+      - Sampling rate (Hz): 1200.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 54
-      - Experiment type: —
-      - Subject type: Neurolingusitics
+      - Pathology: Healthy
+      - Modality: Multisensory
+      - Type: Other
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: —
-      - File count: 1632
+      - Size on disk: 58.9 GB
+      - File count: 90
       - Format: BIDS
 
    .. grid-item-card:: License & citation

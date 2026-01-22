@@ -7,13 +7,15 @@ eegdash.dataset.DS006366
 
 Mouse Sleep Staging Validation dataset (MSSV) (OpenNeuro ``ds006366``). Access recordings and metadata through EEGDash.
 
+**Citation:** Laura Rose, Alexander Neergaard Zahid, Javier García Ciudad, Christine Egebjerg, Louise Piilgaard, Frederikke Lynge Sørensen, Mie Andersen, Tessa Radovanovic, Anastasia Tsopanidou, Maiken Nedergaard, Sébastien Arthaud, Renato Maciel, Christelle Peyron, Chiara Berteotti, Viviana Lo Martire, Alessandro Silvani, Giovanna Zoccoli, Micaela Borsa, Antoine Adamantidis, Morten Mørup, Birgitte Rahbek Kornum (2025). *Mouse Sleep Staging Validation dataset (MSSV)*. `10.18112/openneuro.ds006366.v1.0.1 <https://doi.org/10.18112/openneuro.ds006366.v1.0.1>`__
+
 .. rst-class:: sd-badges
 
 :bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 92` :bdg-secondary:`Recordings: 148`
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: —`
 
 Dataset Information
 -------------------
@@ -50,6 +52,47 @@ Dataset Information
         url = {https://doi.org/10.18112/openneuro.ds006366.v1.0.1},
       }
 
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS006366&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS006366%0A-%20%2A%2ATitle%3A%2A%2A%20Mouse%20Sleep%20Staging%20Validation%20dataset%20%28MSSV%29%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+
+**Mouse Sleep Staging Validation dataset (MSSV)**
+
+This dataset contains EEG recordings with sleep scores from 92 healthy mice. The recordings and sleep scores were collected from five different labs:
+- Department of Biomedical and Neuromotor Sciences, Università di Bologna, Italy.
+- Center for Translational Neuroscience, University of Copenhagen, Denmark.
+- Department of Neuroscience, University of Copenhagen, Denmark.
+- Zentrum für Experimentelle Neurologie, Department of Neurology, Inselspital University Hospital Bern, Bern, Switzerland.
+- Lyon Neuroscience Research Center, Lyon, France.
+
+**Overview**
+
+-   It contains EEG data from healthy mice in both dark and light phases.
+-   All recordings contain at least one EEG and one EMG channel. The number of EEG channels available varies between labs (see labs.tsv).
+-   The dataset is formatted according to the Brain Imaging Data Structure. See the 'dataset_description.json' file for the specific BIDS version used. The recordings are stored in .EDF format.
+-   This dataset has been used and is fully described in https://doi.org/10.1093/sleepadvances/zpaf025.
+
+**Methods**
+
+-   There are 92 healthy mice from 5 different labs. Each mouse is scored by a single sleep expert. See participants.tsv to see what lab each mouse belongs to.
+-   All recordings have been downsampled to 128Hz and have SI units (volts). The epoch length is 4 seconds.
+
+**Contact**
+
+For questions regarding this dataset, contact Birgitte Rahbek Kornum, kornum@sund.ku.dk
+
 Highlights
 ----------
 
@@ -66,16 +109,16 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 2 (86), 3 (142), 5 (68)
+      - Channels: 3 (142), 2 (86), 5 (68)
       - Sampling rate (Hz): —
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 1
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: Healthy
+      - Modality: Sleep
+      - Type: Sleep
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

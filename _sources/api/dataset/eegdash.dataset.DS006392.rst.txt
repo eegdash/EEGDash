@@ -7,13 +7,15 @@ eegdash.dataset.DS006392
 
 HED schema library for SCORE annotations example (OpenNeuro ``ds006392``). Access recordings and metadata through EEGDash.
 
+**Citation:** Tal Pal Attia, Kay Robbins, Dora Hermes (2025). *HED schema library for SCORE annotations example*. `10.18112/openneuro.ds006392.v1.0.1 <https://doi.org/10.18112/openneuro.ds006392.v1.0.1>`__
+
 .. rst-class:: sd-badges
 
 :bdg-primary:`Modality: ieeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 2` :bdg-secondary:`Recordings: 595`
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: —`
 
 Dataset Information
 -------------------
@@ -27,7 +29,7 @@ Dataset Information
    * - Title
      - HED schema library for SCORE annotations example
    * - Year
-     - 20
+     - 2025
    * - Authors
      - Tal Pal Attia, Kay Robbins, Dora Hermes
    * - License
@@ -50,6 +52,51 @@ Dataset Information
         url = {https://doi.org/10.18112/openneuro.ds006392.v1.0.1},
       }
 
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS006392&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS006392%0A-%20%2A%2ATitle%3A%2A%2A%20HED%20schema%20library%20for%20SCORE%20annotations%20example%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+
+**BIDS example with HED-SCORE schema library annotations**
+
+
+The HED schema library for the Standardized Computer-based Organized Reporting of EEG (SCORE) can be used to add annotations for BIDS datasets. The annotations are machine readable and validated with the BIDS and HED validators. 
+
+This example is related to the following preprint:
+Dora Hermes, Tal Pal Attia, Sándor Beniczky, Jorge Bosch-Bayard, Arnaud Delorme, Brian Nils Lundstrom, Christine Rogers, Stefan Rampp, Seyed Yahya Shirazi, Dung Truong, Pedro Valdes-Sosa, Greg Worrell, Scott Makeig, Kay Robbins. Hierarchical Event Descriptor library schema for EEG data annotation. arXiv preprint arXiv:2310.15173. 2024 Oct 27.
+
+
+**General information**
+
+This BIDS example dataset includes iEEG data from one subject that were measured during clinical photic stimulation. Intracranial EEG data were collected at Mayo Clinic Rochester, MN under IRB#: 15-006530.  
+
+
+**Events**
+
+The events are annotated according to the HED-SCORE schema library. Data are annotated by adding a column for annotations in the _events.tsv. The levels and annotations in this column are defined in the _events.json sidecar as HED tags. 
+
+
+**More information**
+
+HED: https://www.hedtags.org/
+HED schema library for SCORE: https://github.com/hed-standard/hed-schema-library 
+
+
+**Contact**
+
+Dora Hermes: hermes.dora@mayo.edu
+
 Highlights
 ----------
 
@@ -70,12 +117,12 @@ Highlights
       - Sampling rate (Hz): —
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 1
-      - Experiment type: —
-      - Subject type: vision
+      - Pathology: —
+      - Modality: Visual
+      - Type: Clinical/Intervention
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

@@ -5,7 +5,9 @@
 eegdash.dataset.DS006940
 ========================
 
-manifest.json (OpenNeuro ``ds006940``). Access recordings and metadata through EEGDash.
+Dataset: EEG-Controlled Exoskeleton for Walking and Standing - A Longitudinal Study of Healthy Individuals (OpenNeuro ``ds006940``). Access recordings and metadata through EEGDash.
+
+**Citation:** Shantanu Sarkar, Kevin Nathan, Jose L. Contreras-Vidal (2025). *Dataset: EEG-Controlled Exoskeleton for Walking and Standing - A Longitudinal Study of Healthy Individuals*. `10.18112/openneuro.ds006940.v1.0.0 <https://doi.org/10.18112/openneuro.ds006940.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ manifest.json (OpenNeuro ``ds006940``). Access recordings and metadata through E
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: —`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS006940``
    * - Title
-     - manifest.json
+     - Dataset: EEG-Controlled Exoskeleton for Walking and Standing - A Longitudinal Study of Healthy Individuals
    * - Year
      - 2025
    * - Authors
@@ -44,11 +46,77 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds006940,
-        title = {manifest.json},
+        title = {Dataset: EEG-Controlled Exoskeleton for Walking and Standing - A Longitudinal Study of Healthy Individuals},
         author = {Shantanu Sarkar and Kevin Nathan and Jose L. Contreras-Vidal},
         doi = {10.18112/openneuro.ds006940.v1.0.0},
         url = {https://doi.org/10.18112/openneuro.ds006940.v1.0.0},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS006940&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS006940%0A-%20%2A%2ATitle%3A%2A%2A%20Dataset%3A%20EEG-Controlled%20Exoskeleton%20for%20Walking%20and%20Standing%20-%20A%20Longitudinal%20Study%20of%20Healthy%20Individuals%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+EEG-Controlled Exoskeleton for Walking and Standing
+A Longitudinal Motor Imagery Study in Healthy Adults
+Dataset Overview
+This dataset contains multimodal recordings from a brain–machine interface (BMI) training study involving seven healthy adult participants (ages 20–30, Mean = 24.3, SD = 3.8). The study focused on open-loop and closed-loop control of a lower-limb exoskeleton (Rex Bionics) using EEG and inertial sensor data. Each participant completed nine sessions over several weeks, structured into training and trial phases.
+Experimental Design
+* Participants: 7 healthy adults (4 male, 3 female)
+* Sessions: 9 per participant
+* Training Phase: Motor imagery calibration
+* Trial Phase: Closed-loop BMI control (walk/stop)
+* Conditions: Walk / Stop (motor imagery)
+
+.. dropdown:: View full README
+   :class-container: sd-shadow-sm
+
+   EEG-Controlled Exoskeleton for Walking and Standing
+   A Longitudinal Motor Imagery Study in Healthy Adults
+   Dataset Overview
+   This dataset contains multimodal recordings from a brain–machine interface (BMI) training study involving seven healthy adult participants (ages 20–30, Mean = 24.3, SD = 3.8). The study focused on open-loop and closed-loop control of a lower-limb exoskeleton (Rex Bionics) using EEG and inertial sensor data. Each participant completed nine sessions over several weeks, structured into training and trial phases.
+   Experimental Design
+   * Participants: 7 healthy adults (4 male, 3 female)
+   * Sessions: 9 per participant
+   * Training Phase: Motor imagery calibration
+   * Trial Phase: Closed-loop BMI control (walk/stop)
+   * Conditions: Walk / Stop (motor imagery)
+   Task Structure and Naming Convention
+   Each session includes multiple motor imagery tasks organized as follows:
+   Training: The training phase is used to calibrate the BMI decoder. Participants perform motor imagery tasks without feedback.
+   TrialXX:
+   The trial phase consists of 12 closed-loop BMI trials per session, labeled trial01 to trial12. During these trials, participants use motor imagery to control the exoskeleton in real time.
+   Block 1: Trials 1–4
+   Block 2: Trials 5–8
+   Block 3: Trials 9–12
+   walk6min / stop6min:
+   After completing the 12 trials, participants perform two extended motor imagery tasks:
+   walk6min – Imagining continuous walking for 6 minutes
+   stop6min – Imagining standing still for 6 minutes
+   Data Modalities
+   * EEG: 60 scalp channels + 4 EOG channels
+   * IMU: 3-axis accelerometer, gyroscope, magnetometer, and quaternion
+   * Sensor Placement: IMUs mounted on participant forehead and exosuit back brace
+   * Decoder Signals/Feedback: Logged control signals and BMI predictions
+   Additional Materials
+   * MIQ-RS: Motor Imagery Questionnaire – Revised Second Version (PDFs in derivatives/MIQ-RS/)
+   * Validation Tables: Data availability, synchronization, and electrode placement (derivatives/validation/)
+   * Raw Data: Provided without filtering or artifact removal
+   BIDS Structure
+   * dataset_description.json: Metadata and provenance
+   * sub-XX/ses-YY/: EEG and IMU recordings per session
+   * derivatives/: MIQ-RS responses and validation spreadsheets
+
 
 Highlights
 ----------
@@ -70,12 +138,12 @@ Highlights
       - Sampling rate (Hz): 100.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 15
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: Healthy
+      - Modality: Motor
+      - Type: Motor
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

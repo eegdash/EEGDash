@@ -5,7 +5,9 @@
 eegdash.dataset.DS005494
 ========================
 
-participants.tsv (OpenNeuro ``ds005494``). Access recordings and metadata through EEGDash.
+Cued Recall of Paired Associates with Open-Loop Stimulation at Encoding or Retrieval (OpenNeuro ``ds005494``). Access recordings and metadata through EEGDash.
+
+**Citation:** Haydn G. Herrema, Michael J. Kahana (2024). *Cued Recall of Paired Associates with Open-Loop Stimulation at Encoding or Retrieval*. `10.18112/openneuro.ds005494.v1.0.1 <https://doi.org/10.18112/openneuro.ds005494.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ participants.tsv (OpenNeuro ``ds005494``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 0.0`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS005494``
    * - Title
-     - participants.tsv
+     - Cued Recall of Paired Associates with Open-Loop Stimulation at Encoding or Retrieval
    * - Year
      - 2024
    * - Authors
@@ -44,11 +46,56 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds005494,
-        title = {participants.tsv},
+        title = {Cued Recall of Paired Associates with Open-Loop Stimulation at Encoding or Retrieval},
         author = {Haydn G. Herrema and Michael J. Kahana},
         doi = {10.18112/openneuro.ds005494.v1.0.1},
         url = {https://doi.org/10.18112/openneuro.ds005494.v1.0.1},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS005494&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS005494%0A-%20%2A%2ATitle%3A%2A%2A%20Cued%20Recall%20of%20Paired%20Associates%20with%20Open-Loop%20Stimulation%20at%20Encoding%20or%20Retrieval%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+
+**Cued Recall of Paired Associates with Open-Loop Stimulation at Encoding or Retrieval**
+
+
+**Description**
+
+This dataset contains behavioral events and intracranial electrophysiological recordings from a paired associates memory task with open-loop stimulation at encoding or retrieval.  The experiment consists of participants studying pairs of visually presented words, completing simple arithmetic problems that function as a distractor, and then completing a cued recall task.  The data was collected at clinical sites across the country as part of a collaboration with the Computational Memory Lab at the University of Pennsylvania.  This dataset is an open-loop stimulation version of the `PAL1 <https://openneuro.org/datasets/ds005059>`__ dataset.
+Each session contains 25 lists of the structure: encoding, distractor, cued recall.  During encooding, 6 pairs of words are presented one pair at a time.  Each pair remains on screen for 4000 ms and is followed by a 1000 ms interstimulus interval.  During the cued recall, one randomly chosen word from each pair is shown, and the participant is asked to vocally recall the other word from the pair.  Participants have 5000 ms for each recall, and then the next cue (i.e., a word from another pair) is shown.  All 6 pairs of words are tested on each list, in random order.
+This study contains open-loop electrical stimulation of the brain during encoding or retrieval.  There is no stimulation during the distractor phase.  Stimulation is delivered to a single electrode at a time, with locations chosen in the hippocampus and entorhinal cortex.  Stimulation parameters are included in the behavioral events tsv files, denoting the anode/cathode labels, amplitude, pulse frequency, pulse width, and pulse count.
+20 of the 25 lists in a session are randomly assigned as stimulation lists, 10 of which contain stimulation at encoding and 10 of which contain stimulation at retrieval.  5 lists contain no stimulation at all, and no lists contains stimulation at both encoding and retrieval.  On the encoding stimulation lists, stimulation occurs on alternating word-pairs, meaning 3 of the 6 word-pairs are presented with stimulation.  Stimulation starts 200 ms prior to the onset of the word-pair and lasts for 4.6 seconds, ending 400 ms after the offset of the word-pair.  On the retrieval stimulation lists, stimulation occurs on alternating cues, meaning 3 of the 6 recall cues have stimulation.  Stimulation starts 200 ms prior to the onset of the recall cue and lasts for 4.6 seconds, ending 400 ms after the offset of the recall cue.  Half of the stimulation lists begin with a stimulation on pair/cue and half begin with a stimulation off pair/cue, but the order of these conditions is random.
+An encoding stimulation list that begins with a stimulation pair would look as follows (with bold indicating stimulation):
+**1A/B** | 2A/B | **3A/B** | 4A/B | **5A/B** | 6A/B
+A retrieval stimulation list that begins with a non-stimulation cue would look as follows (with bold indicating stimulation):
+3A-? | **5B-?** | 2B-? | **6A-?** | 4B-? | **1A-?**
+
+**To Note**
+
+* The iEEG recordings are labeled either "monopolar" or "bipolar."  The monopolar recordings are referenced (typically a mastoid reference), but should always be re-referenced before analysis.  The bipolar recordings are referenced according to a paired scheme indicated by the accompanying bipolar channels tables.
+* Each subject has a unique montage of electrode locations.  MNI and Talairach coordinates are provided when available.
+* Recordings done with the Blackrock system are in units of 250 nV, while recordings done with the Medtronic system are estimated through testing to have units of 0.1 uV.  We have completed the scaling to provide values in V.
+
+**Contact**
+
+For questions or inquiries, please contact sas-kahana-sysadmin@sas.upenn.edu.
+
+**References**
+
+Appelhoff, S., Sanderson, M., Brooks, T., Vliet, M., Quentin, R., Holdgraf, C., Chaumon, M., Mikulan, E., Tavabi, K., Höchenberger, R., Welke, D., Brunner, C., Rockhill, A., Larson, E., Gramfort, A. and Jas, M. (2019). MNE-BIDS: Organizing electrophysiological data into the BIDS format and facilitating their analysis. Journal of Open Source Software 4: (1896). https://doi.org/10.21105/joss.01896
+Holdgraf, C., Appelhoff, S., Bickel, S., Bouchard, K., D'Ambrosio, S., David, O., … Hermes, D. (2019). iEEG-BIDS, extending the Brain Imaging Data Structure specification to human intracranial electrophysiology. Scientific Data, 6, 102. https://doi.org/10.1038/s41597-019-0105-7
 
 Highlights
 ----------
@@ -66,16 +113,16 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 110 (2), 106 (2), 64 (4), 104 (2), 86 (2), 146 (2), 96 (2), 124 (2), 138 (2), 114 (4), 102 (2), 85 (4), 93 (2), 119 (2), 121 (2), 107 (2), 112 (4), 72 (6), 88 (8), 128 (6), 177 (6), 84 (2), 100 (8), 111 (2), 68 (6), 16 (4), 14 (4), 141 (4), 122 (2), 95 (2)
-      - Sampling rate (Hz): 1000.0 (32), 500.0 (70)
+      - Channels: 100 (8), 88 (8), 72 (6), 177 (6), 128 (6), 68 (6), 16 (4), 85 (4), 14 (4), 114 (4), 64 (4), 112 (4), 141 (4), 106 (2), 138 (2), 121 (2), 119 (2), 104 (2), 146 (2), 96 (2), 110 (2), 86 (2), 102 (2), 107 (2), 95 (2), 124 (2), 122 (2), 93 (2), 111 (2), 84 (2)
+      - Sampling rate (Hz): 500.0 (70), 1000.0 (32)
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 1
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: —
+      - Modality: —
+      - Type: —
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

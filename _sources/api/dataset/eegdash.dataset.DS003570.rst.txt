@@ -5,7 +5,9 @@
 eegdash.dataset.DS003570
 ========================
 
-participants.tsv (OpenNeuro ``ds003570``). Access recordings and metadata through EEGDash.
+EEG: Improvisation and Musical Structures (OpenNeuro ``ds003570``). Access recordings and metadata through EEGDash.
+
+**Citation:** Andrew Goldman, Tyreek Jackson, Paul Sajda (2021). *EEG: Improvisation and Musical Structures*. `10.18112/openneuro.ds003570.v1.0.0 <https://doi.org/10.18112/openneuro.ds003570.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ participants.tsv (OpenNeuro ``ds003570``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 1.0`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS003570``
    * - Title
-     - participants.tsv
+     - EEG: Improvisation and Musical Structures
    * - Year
      - 2021
    * - Authors
@@ -44,11 +46,28 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds003570,
-        title = {participants.tsv},
+        title = {EEG: Improvisation and Musical Structures},
         author = {Andrew Goldman and Tyreek Jackson and Paul Sajda},
         doi = {10.18112/openneuro.ds003570.v1.0.0},
         url = {https://doi.org/10.18112/openneuro.ds003570.v1.0.0},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS003570&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS003570%0A-%20%2A%2ATitle%3A%2A%2A%20EEG%3A%20Improvisation%20and%20Musical%20Structures%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+The musicians were instructed to listen to chord progressions, that each consisted of three chords. We refer to one instance of such a progression in the recording as a trial. Every one of the three chords in one trial sounded in sequence, each for 400 ms in piano timbre, after which each trial ended with another 400 ms silence. This resulted in a fixed, total trial length of 1600 ms. The only progressions used in the experiment were ii-IV-I, ii-V-I, ii-IV6-I and ii-V6-I. Each experimental block consisted of 180 trials. For each such block one of the four aforementioned progressions were chosen as "standard", resulting in four types of blocks. These "block types" were used to counterbalance the effect of other features of the individual progressions such as intervallic content that may have been in themselves salient. An experimental block always started with at least eight "standard" trials  for the purpose of  allowing participants to learn what type of progression would be the standard for the current block. There were two types of deviant trials that each occurred at a probability of 7.5% (in total 15%). Every deviant trial was followed by at least three standard trials. Deviant trials only differed from standard trials in terms of the middle chord: (1) Exemplar deviants, where the middle chord was replaced with a chord of identical notes but different inversion. For example, if the middle chord for a standard trial in that experimental block was V then the middle chord for the exemplar deviant in that block would be V6. For (2) function deviants, the middle chord was replaced by a chord from a different functional class. For example, if the middle chord for a standard was again V, then the middle chord for the corresponding function deviant in that block would be IV. Importantly, the key for each trial''s chord progression was picked at random. This meant that musicians needed to examine the second chord of every trial relative to the first and/or third to identify whether the trial was a standard or deviant. The order of standards and deviants within every one of the four types of experimental blocks was generated once only, and was thus identical across subjects within these block types. For the experiment, every one of the block types occurred twice, thus resulting in a total of eight blocks per subject. The order of the eight blocks was shuffled for every subject. In total, there were 1440 trials per subject of which 222 were functional and 218 were exemplar deviants.
 
 Highlights
 ----------
@@ -70,12 +89,12 @@ Highlights
       - Sampling rate (Hz): 2048.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 1
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: —
+      - Modality: —
+      - Type: —
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

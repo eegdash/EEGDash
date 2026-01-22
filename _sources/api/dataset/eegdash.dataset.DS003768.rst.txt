@@ -5,7 +5,9 @@
 eegdash.dataset.DS003768
 ========================
 
-manifest.json (OpenNeuro ``ds003768``). Access recordings and metadata through EEGDash.
+Simultaneous EEG and fMRI signals during sleep from humans (OpenNeuro ``ds003768``). Access recordings and metadata through EEGDash.
+
+**Citation:** Yameng Gu, Feng Han, Lucas E. Sainburg, Margeaux M. Schade, Orfeu M. Buxton, Jeff H. Duyn, Xiao Liu (2021). *Simultaneous EEG and fMRI signals during sleep from humans*. `10.18112/openneuro.ds003768.v1.0.0 <https://doi.org/10.18112/openneuro.ds003768.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ manifest.json (OpenNeuro ``ds003768``). Access recordings and metadata through E
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 21.0`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS003768``
    * - Title
-     - manifest.json
+     - Simultaneous EEG and fMRI signals during sleep from humans
    * - Year
      - 2021
    * - Authors
@@ -44,11 +46,30 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds003768,
-        title = {manifest.json},
+        title = {Simultaneous EEG and fMRI signals during sleep from humans},
         author = {Yameng Gu and Feng Han and Lucas E. Sainburg and Margeaux M. Schade and Orfeu M. Buxton and Jeff H. Duyn and Xiao Liu},
         doi = {10.18112/openneuro.ds003768.v1.0.0},
         url = {https://doi.org/10.18112/openneuro.ds003768.v1.0.0},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS003768&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS003768%0A-%20%2A%2ATitle%3A%2A%2A%20Simultaneous%20EEG%20and%20fMRI%20signals%20during%20sleep%20from%20humans%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+This dataset included 33 healthy participants collected at Penn State with informed consent. Simultaneously collected EEG and BOLD signals for each participant were recorded and organized at each folder. EEG data were collected using a 32 channel MR-compatible EEG system (Brain Products, Munich, Germany). R128 in the EEG signals corresponds to the BOLD fMRI volume trigger.
+Each scanning section consisted of an anatomical session, two 10-min resting-state sessions, and several 15-min sleep sessions. The first resting-state session was conducted before a visual-motor adaptation task (Albouy et al, Journal of Sleep Research, 2013) and the second resting-state session was conducted after a visual-motor adaptation task. The scored sleep stages for these 33 subjects were organized under sourcedata folder. Each TSV file contained the sleep stages for each 30-sec epoch across different sessions for each subject.
+For more information or any questions about this dataset, please see the manuscript on bioRxiv or contact Yameng Gu (ymgu95@gmail.com)
 
 Highlights
 ----------
@@ -70,12 +91,12 @@ Highlights
       - Sampling rate (Hz): —
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 2
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: —
+      - Modality: —
+      - Type: —
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

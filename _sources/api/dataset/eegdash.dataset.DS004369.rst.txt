@@ -5,7 +5,9 @@
 eegdash.dataset.DS004369
 ========================
 
-participants.tsv (OpenNeuro ``ds004369``). Access recordings and metadata through EEGDash.
+Blink-Pause-Relation (Competing Speaker Paradigm) (OpenNeuro ``ds004369``). Access recordings and metadata through EEGDash.
+
+**Citation:** Bjoern Holtze, Marc Rosenkranz, Martin Bleichner, Stefan Debener (2022). *Blink-Pause-Relation (Competing Speaker Paradigm)*. `10.18112/openneuro.ds004369.v1.0.1 <https://doi.org/10.18112/openneuro.ds004369.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ participants.tsv (OpenNeuro ``ds004369``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 1.0`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS004369``
    * - Title
-     - participants.tsv
+     - Blink-Pause-Relation (Competing Speaker Paradigm)
    * - Year
      - 2022
    * - Authors
@@ -44,11 +46,28 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds004369,
-        title = {participants.tsv},
+        title = {Blink-Pause-Relation (Competing Speaker Paradigm)},
         author = {Bjoern Holtze and Marc Rosenkranz and Martin Bleichner and Stefan Debener},
         doi = {10.18112/openneuro.ds004369.v1.0.1},
         url = {https://doi.org/10.18112/openneuro.ds004369.v1.0.1},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS004369&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS004369%0A-%20%2A%2ATitle%3A%2A%2A%20Blink-Pause-Relation%20%28Competing%20Speaker%20Paradigm%29%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+No README content is available for this dataset.
 
 Highlights
 ----------
@@ -66,16 +85,16 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 4
+      - Channels: 7 (41), 4 (41)
       - Sampling rate (Hz): 500.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 1
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: —
+      - Modality: —
+      - Type: —
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

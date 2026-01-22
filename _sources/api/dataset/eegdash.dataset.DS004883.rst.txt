@@ -5,7 +5,9 @@
 eegdash.dataset.DS004883
 ========================
 
-participants.tsv (OpenNeuro ``ds004883``). Access recordings and metadata through EEGDash.
+Registerd Report of ERN During Three Versions of a Flanker Task (OpenNeuro ``ds004883``). Access recordings and metadata through EEGDash.
+
+**Citation:** Peter E. Clayson, Michael J. Larson (2023). *Registerd Report of ERN During Three Versions of a Flanker Task*. `10.18112/openneuro.ds004883.v1.0.0 <https://doi.org/10.18112/openneuro.ds004883.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ participants.tsv (OpenNeuro ``ds004883``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 3.0`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS004883``
    * - Title
-     - participants.tsv
+     - Registerd Report of ERN During Three Versions of a Flanker Task
    * - Year
      - 2023
    * - Authors
@@ -44,11 +46,30 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds004883,
-        title = {participants.tsv},
+        title = {Registerd Report of ERN During Three Versions of a Flanker Task},
         author = {Peter E. Clayson and Michael J. Larson},
         doi = {10.18112/openneuro.ds004883.v1.0.0},
         url = {https://doi.org/10.18112/openneuro.ds004883.v1.0.0},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS004883&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS004883%0A-%20%2A%2ATitle%3A%2A%2A%20Registerd%20Report%20of%20ERN%20During%20Three%20Versions%20of%20a%20Flanker%20Task%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+This study is described at https://osf.io/qt2zh/. Scripts used for data processing are posted there.
+Here is the script from the manuscript that describes these data.
+Error-related negativity is a widely used measure of error monitoring, and many projects are independently moving ERN recorded during a flanker task towards standardization, optimization, and eventual clinical application. However, each project uses a different version of the flanker task and tacitly assumes ERN is functionally equivalent across each version. The routine neglect of a rigorous test of this assumption undermines efforts to integrate ERN findings across tasks, optimize and standardize ERN assessment, and widely apply ERN in clinical trials. The purpose of this registered report was to determine whether ERN shows similar experimental effects (correct vs. error trials) and data quality (intraindividual variability) during three commonly-used versions of a flanker task. ERN was recorded from 172 participants during three versions of a flanker task across two study sites. ERN scores showed numerical differences between tasks, raising questions about the comparability of ERN findings across studies and tasks. Although ERN scores from all three versions of the flanker task yielded high data quality and internal consistency, one version did outperform the other two in terms of the size of experimental effects and the data quality. Exploratory analyses of the error positivity (Pe) provided tentative support for the other two versions of the task over the paradigm that appeared optimal for ERN. The present study provides a roadmap for how to statistically compare psychometric characteristics of ERP scores across paradigms and gives preliminary recommendations for flanker tasks to use for ERN- and Pe-focused studies.
 
 Highlights
 ----------
@@ -66,16 +87,16 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 128
+      - Channels: 128 (516), 129 (516)
       - Sampling rate (Hz): 500.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 3
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: —
+      - Modality: —
+      - Type: —
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

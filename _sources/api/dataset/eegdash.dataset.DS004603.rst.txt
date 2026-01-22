@@ -5,7 +5,9 @@
 eegdash.dataset.DS004603
 ========================
 
-participants.tsv (OpenNeuro ``ds004603``). Access recordings and metadata through EEGDash.
+Visual Attribute-Specific Contextual Trajectory Paradigm (OpenNeuro ``ds004603``). Access recordings and metadata through EEGDash.
+
+**Citation:** Benjamin Lowe (ben.lowe@mq.edu.au), Jonathan Robinson (jonathan.robinson@monash.edu), Naohide Yamamoto (naohide.yamamoto@qut.edu.au), Hinze Hogendoorn (hinze.hogendoorn@qut.edu.au), Patrick Johnston (dr.pat.johnston@icloud.com) (2023). *Visual Attribute-Specific Contextual Trajectory Paradigm*. `10.18112/openneuro.ds004603.v1.1.0 <https://doi.org/10.18112/openneuro.ds004603.v1.1.0>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ participants.tsv (OpenNeuro ``ds004603``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 1.0`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS004603``
    * - Title
-     - participants.tsv
+     - Visual Attribute-Specific Contextual Trajectory Paradigm
    * - Year
      - 2023
    * - Authors
@@ -44,11 +46,35 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds004603,
-        title = {participants.tsv},
+        title = {Visual Attribute-Specific Contextual Trajectory Paradigm},
         author = {Benjamin Lowe (ben.lowe@mq.edu.au) and Jonathan Robinson (jonathan.robinson@monash.edu) and Naohide Yamamoto (naohide.yamamoto@qut.edu.au) and Hinze Hogendoorn (hinze.hogendoorn@qut.edu.au) and Patrick Johnston (dr.pat.johnston@icloud.com)},
         doi = {10.18112/openneuro.ds004603.v1.1.0},
         url = {https://doi.org/10.18112/openneuro.ds004603.v1.1.0},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS004603&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS004603%0A-%20%2A%2ATitle%3A%2A%2A%20Visual%20Attribute-Specific%20Contextual%20Trajectory%20Paradigm%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+These data were recorded from 37 subjects using the following exclusion
+criteria: Normal, or correct to normal, vision; no history of neurological disorder; and less than 35 years of age.
+Subjects completed a novel, visual contextual trajectory paradigm (CTP) wherein
+the onset of a bound stimulus violated an established trajectory in terms of
+its brightness, size, or orientation. No attribute was violated during control
+trials. Full method details can be read within the following published paper: https://doi.org/10.1016/j.cortex.2023.08.004
+Analysis code is available at: https://github.com/benjaminglowe/attribute-specific-prediction-error-analysis-code
+Please email ben.lowe@mq.edu.au if you have any further questions.
 
 Highlights
 ----------
@@ -66,16 +92,16 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 64
+      - Channels: 64 (37), 65 (37)
       - Sampling rate (Hz): 1024.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 1
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: —
+      - Modality: —
+      - Type: —
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

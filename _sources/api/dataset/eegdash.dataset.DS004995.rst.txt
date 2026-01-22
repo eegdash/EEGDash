@@ -5,7 +5,9 @@
 eegdash.dataset.DS004995
 ========================
 
-manifest.json (OpenNeuro ``ds004995``). Access recordings and metadata through EEGDash.
+The Time-Course of Food Representation in the Human Brain (OpenNeuro ``ds004995``). Access recordings and metadata through EEGDash.
+
+**Citation:** Denise Moerel, James Psihoyos, Thomas A. Carlson (2024). *The Time-Course of Food Representation in the Human Brain*. `10.18112/openneuro.ds004995.v1.0.2 <https://doi.org/10.18112/openneuro.ds004995.v1.0.2>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ manifest.json (OpenNeuro ``ds004995``). Access recordings and metadata through E
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 1.0`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS004995``
    * - Title
-     - manifest.json
+     - The Time-Course of Food Representation in the Human Brain
    * - Year
      - 2024
    * - Authors
@@ -44,11 +46,33 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds004995,
-        title = {manifest.json},
+        title = {The Time-Course of Food Representation in the Human Brain},
         author = {Denise Moerel and James Psihoyos and Thomas A. Carlson},
         doi = {10.18112/openneuro.ds004995.v1.0.2},
         url = {https://doi.org/10.18112/openneuro.ds004995.v1.0.2},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS004995&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS004995%0A-%20%2A%2ATitle%3A%2A%2A%20The%20Time-Course%20of%20Food%20Representation%20in%20the%20Human%20Brain%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+The main folder contains the raw EEG data in standard bids format. See references.
+Code and figures: https://doi.org/10.17605/OSF.IO/PWC4K
+Manuscript: https://doi.org/10.1101/2023.06.06.543985
+References:
+Appelhoff, S., Sanderson, M., Brooks, T., Vliet, M., Quentin, R., Holdgraf, C., Chaumon, M., Mikulan, E., Tavabi, K., Höchenberger, R., Welke, D., Brunner, C., Rockhill, A., Larson, E., Gramfort, A. and Jas, M. (2019). MNE-BIDS: Organizing electrophysiological data into the BIDS format and facilitating their analysis. Journal of Open Source Software 4: (1896). https://doi.org/10.21105/joss.01896
+Niso, G., Gorgolewski, K. J., Bock, E., Brooks, T. L., Flandin, G., Gramfort, A., Henson, R. N., Jas, M., Litvak, V., Moreau, J., Oostenveld, R., Schoffelen, J., Tadel, F., Wexler, J., Baillet, S. (2018). MEG-BIDS, the brain imaging data structure extended to magnetoencephalography. Scientific Data, 5, 180110. https://doi.org/10.1038/sdata.2018.110
 
 Highlights
 ----------
@@ -70,12 +94,12 @@ Highlights
       - Sampling rate (Hz): —
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 1
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: —
+      - Modality: —
+      - Type: —
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

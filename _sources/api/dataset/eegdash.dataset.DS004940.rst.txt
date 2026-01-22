@@ -5,7 +5,9 @@
 eegdash.dataset.DS004940
 ========================
 
-task-N400Active_events.json (OpenNeuro ``ds004940``). Access recordings and metadata through EEGDash.
+Neurophysiological measures of covert semantic processing in neurotypical adolescents actively ignoring spoken sentence inputs: A high-density event-related potential (ERP) study. (OpenNeuro ``ds004940``). Access recordings and metadata through EEGDash.
+
+**Citation:** Kathryn Toffolo, Edward G. Freedman, John J. Foxe (2024). *Neurophysiological measures of covert semantic processing in neurotypical adolescents actively ignoring spoken sentence inputs: A high-density event-related potential (ERP) study.*. `10.18112/openneuro.ds004940.v1.0.1 <https://doi.org/10.18112/openneuro.ds004940.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ task-N400Active_events.json (OpenNeuro ``ds004940``). Access recordings and meta
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: —`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS004940``
    * - Title
-     - task-N400Active_events.json
+     - Neurophysiological measures of covert semantic processing in neurotypical adolescents actively ignoring spoken sentence inputs: A high-density event-related potential (ERP) study.
    * - Year
      - 2024
    * - Authors
@@ -44,11 +46,164 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds004940,
-        title = {task-N400Active_events.json},
+        title = {Neurophysiological measures of covert semantic processing in neurotypical adolescents actively ignoring spoken sentence inputs: A high-density event-related potential (ERP) study.},
         author = {Kathryn Toffolo and Edward G. Freedman and John J. Foxe},
         doi = {10.18112/openneuro.ds004940.v1.0.1},
         url = {https://doi.org/10.18112/openneuro.ds004940.v1.0.1},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS004940&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS004940%0A-%20%2A%2ATitle%3A%2A%2A%20Neurophysiological%20measures%20of%20covert%20semantic%20processing%20in%20neurotypical%20adolescents%20actively%20ignoring%20spoken%20sentence%20inputs%3A%20A%20high-density%20event-related%20potential%20%28ERP%29%20study.%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+Citation
+Toffolo, K.K., Freedman, E.G., Foxe, J.J. Neurophysiological measures of covert semantic processing in neurotypical adolescents actively ignoring spoken sentence inputs: A high-density event-related potential (ERP) study. Neuroscience. 560:238-253 (2024). PMID PMC39369943 DOI: 10.1016/j.neuroscience. 2024.10.008
+Project name and executive summary
+	Title: Neurophysiological measures of covert semantic processing in neurotypical adolescents actively ignoring spoken sentence inputs: A high-density event-related potential (ERP) study.
+	Abstract: Language comprehension requires semantic processing of individual words and their context within a sentence. Well-characterized event-related potential (ERP) components (the N400 and late positivity component (LPC/P600)) provide neuromarkers of semantic processing, and are robustly evoked when semantic errors are introduced into sentences. These measures are useful for evaluating semantic processing in clinical populations, but it is not known whether they can be evoked in more severe neurodevelopmental disorders where explicit attention to the sentence inputs cannot be objectively assessed (i.e., when sentences are passively listened to). We evaluated whether N400 and LPC/P600 could be detected in adolescents who were explicitly ignoring sentence inputs. Specifically, it was asked whether explicit attention to spoken inputs was required for semantic processing, or if a degree of automatic processing occurs when the focus of attention is directed elsewhere? High-density ERPs were acquired from twenty-two adolescents (12–17 years), under two experimental conditions: 1. individuals actively determined whether the final word in a sentence was congruent or incongruent with sentence context, or 2. passively listened to background sentences while watching a video. When sentences were ignored, N400 and LPC/P600 were robustly evoked to semantic errors, albeit with reduced amplitudes and protracted/delayed latencies. Statistically distinct topographic distributions during passive versus active paradigms pointed to distinct generator configurations for semantic processing as a function of attention. Covert semantic processing continues in neurotypical adolescents when explicit attention is withdrawn from sentence inputs. As such, this approach could be used to objectively investigate semantic processing in populations with communication deficits.
+	Task Descriptions:
+		Active Paradigm: Individuals were asked to focus on a fixation cross throughout the task. Before the two practice trials (the same for all participants), all instructions were explained both on the screen and through headphones (Sennheiser electronic GmbH & Co. KG, USA). Corrective feedback was only given during practice trials and not experimental trials. During experimental trials, an auditory sentence was played through headphones while a fixation cross was on the screen. This was followed by a two second pause, which was in turn followed by a prompt asking if the sentence ended as expected (the prompt was presented both visually and auditorily). Participants would then respond with a left arrow key press if a sentence ended unexpectedly (incongruent) or a right arrow key press if it ended as expected (congruent). Between a response and the start of the next sentence stimulus was a two second pause. Participants were given optional breaks every 20 or 40 stimuli and could continue with the experiment by pressing the spacebar.
+		Passive Paradigm: Individuals were instructed to simply ignore the auditory sentence stimuli and watch a show of their choice without sound or subtitles. No response was required for this paradigm and between each sentence stimulus was a four second pause. No breaks were given due to the quick task design.
+Contact information regarding analyses
+	First Author: Kathryn Toffolo
+
+.. dropdown:: View full README
+   :class-container: sd-shadow-sm
+
+   Citation
+   Toffolo, K.K., Freedman, E.G., Foxe, J.J. Neurophysiological measures of covert semantic processing in neurotypical adolescents actively ignoring spoken sentence inputs: A high-density event-related potential (ERP) study. Neuroscience. 560:238-253 (2024). PMID PMC39369943 DOI: 10.1016/j.neuroscience. 2024.10.008
+   Project name and executive summary
+   	Title: Neurophysiological measures of covert semantic processing in neurotypical adolescents actively ignoring spoken sentence inputs: A high-density event-related potential (ERP) study.
+   	Abstract: Language comprehension requires semantic processing of individual words and their context within a sentence. Well-characterized event-related potential (ERP) components (the N400 and late positivity component (LPC/P600)) provide neuromarkers of semantic processing, and are robustly evoked when semantic errors are introduced into sentences. These measures are useful for evaluating semantic processing in clinical populations, but it is not known whether they can be evoked in more severe neurodevelopmental disorders where explicit attention to the sentence inputs cannot be objectively assessed (i.e., when sentences are passively listened to). We evaluated whether N400 and LPC/P600 could be detected in adolescents who were explicitly ignoring sentence inputs. Specifically, it was asked whether explicit attention to spoken inputs was required for semantic processing, or if a degree of automatic processing occurs when the focus of attention is directed elsewhere? High-density ERPs were acquired from twenty-two adolescents (12–17 years), under two experimental conditions: 1. individuals actively determined whether the final word in a sentence was congruent or incongruent with sentence context, or 2. passively listened to background sentences while watching a video. When sentences were ignored, N400 and LPC/P600 were robustly evoked to semantic errors, albeit with reduced amplitudes and protracted/delayed latencies. Statistically distinct topographic distributions during passive versus active paradigms pointed to distinct generator configurations for semantic processing as a function of attention. Covert semantic processing continues in neurotypical adolescents when explicit attention is withdrawn from sentence inputs. As such, this approach could be used to objectively investigate semantic processing in populations with communication deficits.
+   	Task Descriptions:
+   		Active Paradigm: Individuals were asked to focus on a fixation cross throughout the task. Before the two practice trials (the same for all participants), all instructions were explained both on the screen and through headphones (Sennheiser electronic GmbH & Co. KG, USA). Corrective feedback was only given during practice trials and not experimental trials. During experimental trials, an auditory sentence was played through headphones while a fixation cross was on the screen. This was followed by a two second pause, which was in turn followed by a prompt asking if the sentence ended as expected (the prompt was presented both visually and auditorily). Participants would then respond with a left arrow key press if a sentence ended unexpectedly (incongruent) or a right arrow key press if it ended as expected (congruent). Between a response and the start of the next sentence stimulus was a two second pause. Participants were given optional breaks every 20 or 40 stimuli and could continue with the experiment by pressing the spacebar.
+   		Passive Paradigm: Individuals were instructed to simply ignore the auditory sentence stimuli and watch a show of their choice without sound or subtitles. No response was required for this paradigm and between each sentence stimulus was a four second pause. No breaks were given due to the quick task design.
+   Contact information regarding analyses
+   	First Author: Kathryn Toffolo
+   		University Email: kathryn_toffolo@urmc.rochester.edu
+   		Unafiliated Email: kattoffolo@gmail.com
+   		ORCID iD: orcid.org/0000-0002-5728-3174
+   		Linkedin: Kathryn Toffolo
+   Sharing/Access Information
+   	Raw file access:
+   		There are many ways to open .bdf files (ex. BESA, fieldtrip via MATLAB, converting .bdf to .edf to use brain vision etc.), but the way our lab accesses/analyzes our data is with EEGLab via MATLAB. Stimulus presentation code is restricted to "Presentation" by Neurobehavioral Systems, Inc. All .tsv and .json files can be read with a standard text editor.
+   	Software used:
+   		JASP (JASP Team [2020], Version 0.12.2) --> Statistical analysis
+   		MATLAB (MathWorks Inc., Natick, MA) --> EEG preprocessing and analysis
+   		EEGLAB (Delorme & Makeig, 2004) --> EEG preprocessing and analysis
+   		FieldTrip toolbox (Oostenveld et al. 2010) --> Topography statistical plots
+   		Presentation® Software (Version 18.0, Neurobehavioral Systems, Inc. Berkeley, CA) --> Presenting stimuli to participants
+   Description of file(s) and Dataset:
+   Stimuli:
+   	Outside of the "stimuli" folder is a file describing the parameters of the stimuli:
+   		"N400PvsA_stimuli_parameters"- (TSV) The stimuli and parameters for this study were derived from the stimuli used in Toffolo et al. 2022. Information about the sentences in this stimulus set can be found at https://doi.org/10.5061/dryad.9ghx3ffkg). Of the 442 sentences offered (sentences with congruent (221) and incongruent endings (221)), 404 were used in this study (202 congruent ending sentences and 202 incongruent ending sentences). This file lists the stimuli used and this experiment and the corresponding sentence parameters. The use of this .tsv file was imperative to this study, and as such is described below. The triggers in the raw EEG data recorded when each stimulus began, not the onset of the target word. The "target_onset" column in this file was added to the onset of each trigger in the EEG data. Before this value was added to the stimulus onset times, the "target_onset(s)" was converted to datapoints by multiplying by the sample rate (512). This file can also be used to see what is said in each sentence. The top half of the file are the sentences with congruent endings while the bottom half are the sentences with incongruent sentence endings. The first 3 columns are the order in which a stimulus was played, the stimulus key, and the stimulus file name so that each sentence can be matched to an audio file. Following this are the sentences separated by each word. This file may be useful to N400 investigations that want to have visual presentation of the stimuli in addition to or instead of auditory presentation.
+   		"stim_key"- is the order number of the stimulus representing when in the dataset the stimulus was presented (1st sound, 2nd sound, ... etc.).
+   			"stim_file"- is the audio file name for the presented stimulus.
+   				"1"- is the first word in the stimulus (sentence).
+   				"2"- is the second word in the stimulus (sentence).
+   				"3"- is the third word in the stimulus (sentence).
+   				"4"- is the fourth word in the stimulus (sentence).
+   				"5"- is the fifth word in the stimulus (sentence).
+   				"6"- is the sixth word in the stimulus (sentence).
+   				"7-" is the seventh word in the stimulus (sentence).
+   				"8"- is the eighth word in the stimulus (sentence).
+   			"stim_dur(s)"- is the entire length of each stimulus in seconds.
+   			"target_onset(s)"- is the time from the beginning of the sentence (the raw trigger time in the raw eeg data) to the START of the target/ending word in seconds.
+   			"target_end(s)"- is the time from the beginning of the sentence (where the trigger was placed) to the END of the target/ending word in seconds.
+   			"target_dur(s)"- is the time between the START and the END of the target/ending word in seconds.
+   			"time-quarter_div"- is the division to investigate for an effect of time. The stimuli are broken into 4 groups (1-4) by quarter. Because the stimuli in this file are in the order that they were presented to each participant, this column will be in order from 1-4.
+   			"order-group_div"- is the division to investigate for an effect of order. The stimuli are broken into 4 groups: 1. Is congruent stimuli for the scenario in which the congruent stimulus pair was presented before the incongruent stimulus pair; 2. Is incongruent stimuli for the scenario in which the congruent stimulus pair is presented before the incongruent stimulus pair; 3. Is congruent stimuli for the scenario in which the incongruent stimulus pair was presented before the congruent stimulus pair; 4. Is incongruent stimuli for the scenario in which the incongruent stimulus pair was presented before the congruent stimulus pair.
+   			"cloze-probability%_div"- are the cloze probability (CP) scores for each sentence. To investigate for an effect of CP, these scores were broken into 4 different groups: 1. Sentence pairs with CP greater of equal to 96%; 2. Sentence pairs with greater than or equal to 90% CP and less than 96% CP; 3. Sentence pairs with greater than or equal to 80% CP and less than 90% CP; 4. Sentence pairs with less than 80% CP.
+   			"linguistic-group_div"- is the division to investigate for an effect of linguistic error. The stimuli are broken into 5 groups: 1. Incongruent sentence that contain only semantic ending errors, along with their congruent pair; 2. Incongruent sentences with both semantic errors and a syntactic number error, along with their congruent pair; 3. Incongruent sentences with both semantic errors and syntactic adjective/noun errors, along with their congruent pair; 4. Incongruent sentence stimuli with both semantic errors and syntactic verb/noun ending errors, along with their congruent pair; and 5. Eliminated linguistic division group contained 19 sentence pairs of which the endings could make sense to children, did not match in  syllable number, were hyphenated phrases, or contained cultural references. Final analysis combined groups 2-4 into one larger group of semantic and syntactic error sentence pairs in order to contrast with sentence pairs continaing just semantic errors.
+   			"linguistic-group_reasoning"- are quick explanations/descriptions for why a stimulus was placed in a particular linguistic group.
+   	 Within the "stimuli" folder are the stimuli used in this experiment, all of which was auditory. Stimuli were from a published stimulus set (Toffolo et al. 2022). The stimulus set and more detailed information about the creation of the sentences can be found here: https://doi.org/10.5061/dryad.9ghx3ffkg. Of the 442 stimuli provided in this set, the current study used 404 exemplars (202 congruent and 202 incongruent sentence pairs). These non-prosodic sentences ranged from four to eight words in length, and have associated cloze probability scores (i.e. the likelihood that a given sentence-ending word would be provided by typical observers (Kutas and Hillyard, 1984)), and were designed for use with children 5 years and older.
+   	 Within the "stimuli" folder are also 15 task related sentences. These audio files were recorded from a female speaker, who was instructed to voice the sentences as she would talking to a young adult.
+   	 "(Audio_01)DidThisSentenceEndCorrectly" follows each sentence stimulus and is played so the participant knows it is time to respond. "(Audio_02)DoYouWantToTakeABreak") is played at the onset of each break period.
+   	 "(Audio_03)Congratulations" is played at the end of the task. Audio files with the prefix "(Intro_01)"-"(Intro_05 )" are descrptions of the task, and should be played in order. Audio files with the prefix "(Intro_06)"
+   	 "(Intro_11)" are for the practice example section. This includes audio introducing the practice session "(Intro_06)Practice_Intro", audio for between examples "(Intro_07)Practice_LetsTryAnotherOne", and 4 possible responses depending on how the subject answers: 1. If the subject got the answer correct for the congruent example "(Intro_08)PracticeFeedback_Correct4Congruent"; 2. Correct for the incongruent example "(Intro_09)PracticeFeedback_Correct4Inongruent"; 3. Incorrect for incongruent example "(Intro_10)PracticeFeedback_Incorrect4Incongruent"; and 4. Incorrect for the congruent example "(Intro_11)PracticeFeedback_Incorrect4Congruent". Lastly, is the file that lets the participant know that the task is starting "(Intro_12)Practice_LetsStartTheTask".
+   Dataset: Data for the 22 subjects are provided in EEG BIDS format. Raw unfiltered data are in 22 subject folders (sub-###). Note, in the raw data folders of sub-004, sub-007, sub-012, and sub-019 are 2 BDF files for one of their paradigms (the recording had to be broken up due to the needs of the participant or a technical issue). Filtered EEG data and grand average ERP data of each subject (sub-###) can be found in the "eeg-processed" and "erps" folders respectively of the "derivatives" folder . Additionally, there are files in "ChRej" folder of "derivatives" that contributed to the filtering process. The code used to create these data are provided in the "code" folder.
+   	Outside of the subject folders are several files describing the stimuli, participants, and organization of the data within each subject folder.
+   		"dataset_description"- (JSON) Description of the dataset.
+   		"Participants"- (JSON and TSV) Describes the 22 subjects: ID, gender, age, dominant hand, first language, other known languages, what paradigm they performed on the first visit, and the interim time between the first and second visit.
+   		"task-N400Active_eeg"- (JSON) Information about aquiring the raw eeg data from the Active Paradigm that is within each subjects raw data folder.
+   		"task-N400Passive_eeg"- (JSON) Information about aquiring the raw eeg data from the Passive Paradigm that is within each subjects raw data folder.
+   		"task-N400Active_electrodes"- (TSV) Information about electrode location (same for both paradigms). [NOW LOCATED IN DERIVATIVES SINCE COORDINATES ARE ESTIMATES WITHOUT FIDUCIAL DATA VIA "_coordsystem.json"]
+   		"task-N400Passive_electrodes"- (TSV) Information about electrode location (same for both paradigms). [NOW LOCATED IN DERIVATIVES SINCE COORDINATES ARE ESTIMATES WITHOUT FIDUCIAL DATA VIA "_coordsystem.json"]
+   		"task-N400Active_events"- (JSON) Information about the event file for the Active paradigm that is within each subjects raw data folder.
+   		"task-N400Passive_events"- (JSON) Information about the event file for the Passive paradigm that is within each subjects raw data folder.
+   	"sub-###": Subjects RAW data folder. Within the "eeg" folder of each participants data folder are the unprocessed raw EEG data along with other files. These include:
+   		"sub-###_task-N400Active_eeg"- (BDF) Raw EEG data from the Active Paradigm.
+   		"sub-###_task-N400Passive_eeg"- (BDF) Raw EEG data from the Passive Paradigm.
+   		"sub-###_task-N400Active_events"- (TSV) The event file for the Active Paradigm.
+   		"sub-###_task-N400Passive_events"- (TSV) The event file for the Passive Paradigm.
+   			Event files start with the "onset" and "duration" of the target word within a stimulus (the final word at the end of a sentence). For example, the sentence "I baked a birthday cake/clue", the target congruent words would be "cake" and the target incongruent word would be "clue". The onset and duration of these target words are provided in the first 2 columns respectively. There is also "stim_onset" and "stim_dur" in seconds. "stim_onset" is the onset of the entire stimulus, essentially the trigger time at the beginning of the sentence. "stim_dur" is the duration of the entire stimulus (sentence). "type" includes information about how the stimulus was presented, whether just auditory, both auditory and written on the screen, or if the onset of a trigger was simply the participant responding to the question. "trial_type" is the primary experimental classification. This column tells you whether a stimulus was an introduction, feedback, example stimuli, a break, a right/left arrow key press by the participant, and whether or not the experimental stimulus was congruent (NPC) or incongruent (NPI). Lastly, "stim_file" is the column that provides the name of the stimulus file that was played.
+   		"sub-###_task-N400Active_channels"- (TSV) Information about the finalized channels that were rejected in the Active Paradigm EEG data (both first round and additional channels).
+   		"sub-###_task-N400Passive_channels"- (TSV) Information about the finalized channels that were rejected in the Passive Paradigm EEG data (both first round and additional channels).
+   	"derivatives": If the user decides to use our preprocessed (EEG/ERP) data that utilized functions in EEGLAB (Delorme & Makeig, 2004) for MATLAB (MathWorks Inc., Natick, MA), read the following: Within the derivatives folder there are 3 folders that pertain to the filtered data, "ChRej", "eeg-processed" and "erps".
+   		"ChRej": Within the "ChRej" folder outside of subject folders are .JSON files that describe the organization and filtering of the data within each subjects "ChRej" folder. These include:
+   			"task-N400Active_eeg-filter-NoChRej" - (JSON) Information about how the raw eeg data from the Active Paradigm that is within each subjects ChRej folder was filtered (not including ICA) for the study.
+   			"task-N400Passive_eeg-filter-NoChRej" - (JSON) Information about how the raw eeg data from the Passive Paradigm that is within each subjects ChRej folder was filtered (not including ICA) for the study.
+   			"task-N400Active_erp-GA_filter-NoChRej" - (JSON) Information about how the ERPs data from the Active Paradigm were derived from the filtered EEG data (not including ICA) including epoch windows and trial rejection parameters.
+   			"task-N400Passive_erp-GA_filter-NoChRej" - (JSON) Information about how the ERPs data from he Passive Paradigm were derived from the filtered EEG data (not including ICA) including epoch windows and trial rejection parameters.
+   			"task-N400PvsA_erp-GA_trialrej"- (JSON) Information about the "erp-GA_trialrej" file for both paradigms that is within each subjects ChRej folder.
+   			"sub-###": Subjects ChRej folder. Within each subjects "ChRej" folder are files that were used in the filtering process before the final filtered data was saved to a subjects "eeg-processed" data folder.
+   				These include:
+   				Files from the first round of the manual channel rejection and data rejection process:
+   					"sub-###_task-N400Active_eeg-filter"- (MAT) The filtered (not including ICA) EEG data from the Active Paradigm. Filtering included band pass, first round of manual bad channel rejection, and rejection of sections of data that had artifact/motion.
+   					"sub-###_task-N400Active_ChRej-firstbadchans"- (TSV) A list of numbered channels (numbered 1-128) that were rejected in the first round of manual bad channel selection.
+   					"sub-###_task-N400Active_channels"- (TSV) Info about the first round of channel rejection.
+   					"sub-###_task-N400Active_datarej"- (TSV) What windows of data (in data units) were rejected from the filtered (not including ICA) EEG data for the Active Paradigm due to artifact/movement. Files for the second round of the manual channel rejection process to assure there were no other bad channels:
+   					"sub-###_task-N400Active_erp-GA_filter-NoChRej"- (MAT) ERP data derived from the filtered (not including ICA) EEG data from the Active Paradigm. Filtering included band pass, first round of manual bad channel rejection, and rejection of sections of data that had artifact/motion. Used to generate the topography figures within this folder for additional channel rejection.
+   					"sub-###_task-N400Active_erp-GA_trialrej"- (TSV) Information about how many trials were accepted into grand average ERP analysis of the filtered (not including ICA) EEG data from the Active Paradigm relative to the total trials in each condition.
+   					"sub-###_task-N400Active_semconddiff_4ChRej-addbadchans"- (FIG) A figure of the average amplitude topographic difference between conditions (incongruent-congruent) across the epoch. Used to aid in the manual selection of additional bad channels.
+   					"sub-###_task-N400Active_semcondmean_4ChRej-addbadchans"- (FIG) A figure of the average amplitude topography regardless of condition ((incongruent+congruent)/2) across the epoch. Used to aid in the manual selection of additional bad channels.
+   					"sub-###_task-N400Active_spectra_4ChRej-addbadchans"- (FIG) A figure of the spectrum of all channels across frequencies from the filtered EEG data. Used to aid in the manual selection of additional bad channels.
+   					"sub-###_task-N400Active_ChRej-addbadchans"- (TSV) A list of additional channels (numbered 1-128) that were added to channel rejection process of the raw data for final analysis.
+   				File from the ICA weight transfer method:
+   					"sub-###_task-N400Active_ICAweights"- (MAT) A file that contains 2 variables "Weights" and "Weights2". "Weights" is the weights or likelihoods (derived from running ICA, pop_runica) that each component fit into each category (brain, muscle, eye, heart rate, line noise, channel noise, or other) via EEGLAB's labeling algorithm (pop_iclabel). The size of "weights" is equal to the number of channels included in the component analysis (i.e. not including bad channels as they were interpolated after ICA component rejection). "Weights2" is the the same weight values, but only including components that remained after components were rejected for artifact (i.e. the component data had likelihoods of 0-15% brain, 85-100% muscle artifact, 85-100% eye blink artifact, 85-100% heart rate artifact, 85-100% line noise artifact, 85-100% channel noise artifact, or 85-100% other artifact). This assured that the data that was isolated was primarily brain data.*And then the same corresponding files for the Passive Paradigm
+   		"eeg-processed": Within the "eeg-processed" data folder outside of subject folders are .JSON files that describe the filtering parameters of the data within each subjects "eeg-processed" folder. These include:
+   			"task-N400Active_eeg"- (JSON) Information about aquiring the raw eeg data (in each subjects raw data folder) from the Active Paradigm.
+   			"task-N400Passive_eeg"- (JSON) Information about aquiring the raw eeg data (in each subjects raw data folder) from the Passive Paradigm.
+   			"task-N400Active_eeg-filter"- (JSON) Information about how the raw eeg data (in each subjects raw data folder) from the Active Paradigm was filtered (including ICA).
+   			"task-N400Passive_eeg-filter"- (JSON) Information about how the raw eeg data (in each subjects raw data folder) from the Passive Paradigm was filtered (including ICA).
+   			"sub-###": Subjects processed data folder. Within each subjects "eeg-processed" folder are the raw EEG data converted to .mat and the finalized filtered ICA EEG data used in analysis. These include:
+   				"sub-###_task-N400Active_eeg"- (MAT) Raw EEG data from the Active Paradigm converted to .mat data for EEGLAB.
+   				"sub-###_task-N400Passive_eeg"- (MAT) Raw EEG data from the Passive Paradigm converted to .mat data for EEGLAB.
+   					Each unfiltered MAT file contains 1 file "EEG", which is a struct containing many fields. The most relevant fields would be: "data" which are the amplitudes for 128 channels + 8 unused externals x every data unit (data units=ms*fs/1000) for the continuous data; and "event" which is a 4 column struct that shows when each stimulus was presented. The "type" column of "event" will correspond to what a stimulus was played, whether it was an experimental sentence ('condition 1'), an introductory sound file ('255', '254', or '253'), a response ('244' and '233' [right and left arrow key press respectively]), instructional feedback ('252'), or the congratulations at the end of the experiment ('250'). The "latency" column shows when the start of each stimulus and experimental sentence was played (in data units).
+   				"sub-###_task-N400Active_eeg-filter"- (MAT) The EEG data from the Active Paradigm filtered via the study parameters including ICA componant rejection.
+   				"sub-###_task-N400Passive_eeg-filter"- (MAT) The EEG data from the Passive Paradigm filtered via the study parameters including ICA componant rejection.
+   					Each filtered MAT file contains 2 files "EEG" and "badchans". "badchans" is simply the finalized list of channels (numbered 1-128) that were rejected during filtering. "EEG" is a struct containing many fields. The most relevant fields would be: "data" which are the amplitudes for all 128 channels x every data unit (data units=ms*fs/1000) for the continuous data; and "event" which is a 3 column struct that shows when each stimulus was presented. The "type" column of "event" will correspond to what a stimulus was played, whether it was an experimental sentence (ordered 1-402 relative to the order of a subjects events file), an introductory sound file (2550, 2540, or 2530), a response (2440 and 2330 [right and left arrow key press respectively]), instructional feedback (2520), or the congratulations at the end of the experiment (2500). The "latency" column shows when the stimulus was played (in data units). Here, the data units for the experimental stimuli were shifted to the onset of the last word in the sentence for subsequent analysis.
+   		"erps": Within the "erps" folder outside of subject folders are .JSON files that describe the organization and filtering of the data within each subjects "erps" folder. These include:
+   			"task-N400Active_erp-GA_filter" - (JSON) Information about how the ERP data from the Active Paradigm were derived from the filtered EEG data (including ICA) including epoch windows, trial rejection, and ICA componant parameters.
+   			"task-N400Passive_erp-GA_filter" - (JSON) Information about how the ERP data from the Passive Paradigm were derived from the filtered EEG data (including ICA) including epoch windows,trial rejection, and ICA componant parameters.
+   			"task-N400PvsA_erp-GA_trialrej"- (JSON) Information about the "erp-GA_trialrej" file for both paradigms that is within each subjects ChRej folder.
+   			"sub-###": Subjects ERP Folder. Within each subjects "erps" folder are ERP files derived from the filtered (including ICA) EEG data used for in final analysis (i.e. derived from files within a subjects data folder "sub-###_task-N400Passive_eeg-filter" or "sub-###_task-N400Active_eeg-filter"). These include:
+   				"sub-###_task-N400Active_erpICA-GA"- (MAT) The grand average ERP data derived from the filtered (including ICA) EEG data from the Active paradigm. Each preprocessed MAT file per division contains 3 variables: 1. "fs", which is the sampling rate (i.e. 512); 2. "t" which is the total time of the epoch in datapoints (i.e 615, since our epoch is -200 ms before the stimulus to 1000 ms after the stimulus).To convert ms to data points is ms*fs/1000; and 3. "ERPs", which is the filtered, epoched ERP data. Within the ERPs file, there will be 2 cells, one for each condition. Cell 1 is for the congruent condition and cell 2 is for the incongruent condition. To ensure the proper comparison is being made, look at the field "event" within the ERPs struct. The "type" column of "event" will correspond to the condition (i.e. if "type" contains the number "1000", the struct is for the congruent condition, whereas "2000" is for the incongruent condition).
+   				"sub-###_task-N400Active_erpICA-GA_trialrej"- (TSV) Information about how many trials were accepted into final grand average ERP analysis of the filtered (including ICA) EEG data from the Active Paradigm relative to the total trials in each condition.
+   				"sub-###_task-N400Passive_erpICA-GA"- (MAT) The grand average ERP data derived from the filtered (including ICA) EEG data from Passive paradigm. Each preprocessed MAT file per division contains 3 variables: 1. "fs", which is the sampling rate (i.e. 512); 2. "t" which is the total time of the epoch in datapoints (i.e 615, since our epoch is -200 ms before the stimulus to 1000 ms after the stimulus).To convert ms to data points is ms*fs/1000; and 3. "ERPs", which is the filtered, epoched ERP data. Within the ERPs file, there will be 2 cells, one for each condition. Cell 1 is for the congruent condition and cell 2 is for the incongruent condition. To ensure the proper comparison is being made, look at the field "event" within the ERPs struct. The "type" column of "event" will correspond to the condition (i.e. if "type" contains the number "1000", the struct is for the congruent condition, whereas "2000" is for the incongruent condition).
+   				"sub-###_task-N400Passive_erpICA-GA_trialrej"- (TSV) Information about how many trials were accepted into final grand average ERP analysis of the filtered (including ICA) EEG data from the Passive Paradigm relative to the total trials in each condition.
+   CODE:
+   	Within the "code" folder is the code used to filter the EEG data. If using for your specific data as opposed to this dataset, you will have to add lines for your specific study in each function used for data processing. These sections are denoted by the study name ("studynm") and "task".
+   		First, download Matlab and then EEGLab. Within the "code" folder is the preprocessing code used to make ERPs for each derivative, and the presentation code used for task administration. We recommend researchers using their own code to processes the data. However, we provide rough directions on how to apply sections of this code to your data.
+   		When using this code, adjust all file paths for your code folders and data folders and EEGlab folders (lines 8-27). Next, if using for your own data, as stated above, you will need to add your specific study name to each preprocessing function, the function "variables", and any changes to filter parameters in "filtersettings". I run a lot of studies, so several lines in my functions may not be relevant to you. Running "variables" (line 44 in master), the bdf2mat script will run through all the subjects and output a .mat file within each subject's "eeg" folder. It will then ask what stage of preprocessing you are at. I personally like to do extensive cleaning before using ICA, so I have 2 stages "filter-NoChRej" and "filter". Respond accordingly. It will also ask if any stimulus times need to be adjusted. With this N400 datasets, the stimulus onset time during recording was at the beginning of the sentence. To analyze data I had to shift this start to the onset of the last word via times denoted in the "parameters" file. If your times do not need to be adjusted, a lot of the provided preprocessing functions will need to be modified for your specific needs. However, if using the code for this study, just type 'yes' for both responses.
+   	Note: Each subjects .mat file can be uploaded into Matlab by dragging and dropping, clicking on the file within matlab, or using the function "load". The variable "EEG" will appear in the workspace as a struct. EEG.data contains the time series data per channel. All analysis code uses MATLAB language, thus is restricted to MATLAB. These files can be opened and edited with a standard text editor, but cannot be run without MATLAB.
+   	Moving on to preprocessing, event files are made via "eventfile_PvsA"), and then the data will undergo assisted manual channel and data rejection with "filter_NoChRej_raw". This function uses two methods of channel selection for rejection (one from "Mitch and Jim" and another from a modified version of "EEGLab's" clean channels. Line 149-164 of EEGLab's "clean_channels" was modified (commented out) so that it wouldn't automatically reject channels without your approval). After both these methods run, it suggests what channels you should reject with "clean_channels" being way more rigorous). Then "eegplot" will plot a subject's whole dataset so you can manually view the data and make decisions on what channels are actually bad. The function will then ask you to list what channels you think should be rejected. Once you list the channels in brackets [1,2,3....], it will save these channels in the derivatives folder "ChRej" for the subject as "sub-###_task-TASK_ChRej-firstbadchans.tsv". Eegplot will again plot your subjects full dataset, and you will also need to manually remove sections of data (if any). Once done removing sections, type any string (preferably 'y') for the program to save the rejection windows as "sub-###_task-TASK_datarej.tsv" to the same "ChRej" folder.
+   	After this first round of rejection, "channels_creation" will make a BIDs formatted channel file denoting good and bad channels. Because this isn't your final cleaned data, this will be put into a derivatives folder called "ChRej". The average ERPs for this subject will be made via "preprocdat_GA" and also saved into the "ChRej" derivatives folder, and then you will go through the second/final channel rejection phase "ChRej_selection". Because the channel suggestions and manual rejection are only so good, I also like to plot the spectral density of the data (using EEGLabs "pop_spectopo") at this point and two topography plots: 1. The average difference between the conditions during the entire epoch; and 2. The average signal amplitude of all trials regardless of condition during the entire epoch. This allows you to see if there are any erroneous channels you did not select in the previous step. It will prompt you to add channels in bracket format. If there are no more to add, enter [0].
+   	Once this channel rejection stage of data processing has completed, you can finally move on to final data processing. Either run variables again, or change the variables "process" to 'filter', "decisionICA" to {'ica'}, and list the appropriate "ICAweight_values" ([0 0.15;0.85 1;0.85 1;0.85 1;0.85 1;0.85 1;0.85 1]). Run lines 86-112 of "master" again, then your ICA filtered data will be saved to the derivatives folder "eeg_processed", ERP data to the derivatives folder "erp", and a new finalized channels file to the subject's data folder.
+   	Following final processing with ICA, you can make ERP figures, topography plots, stat analysis etc. via functions on lines 136-147 of master. Again, if you are using this code for your specific data, you will have to add your study to each of the functions listed here.
+   	If you have any questions about data processing please email me, Kathryn_toffolo@urmc.rochester.edu.
+
 
 Highlights
 ----------
@@ -70,12 +225,12 @@ Highlights
       - Sampling rate (Hz): —
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 2
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: Healthy
+      - Modality: Auditory
+      - Type: Attention
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

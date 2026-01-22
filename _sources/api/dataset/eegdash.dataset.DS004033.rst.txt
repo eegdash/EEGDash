@@ -5,7 +5,9 @@
 eegdash.dataset.DS004033
 ========================
 
-participants.tsv (OpenNeuro ``ds004033``). Access recordings and metadata through EEGDash.
+Electrode walking study (OpenNeuro ``ds004033``). Access recordings and metadata through EEGDash.
+
+**Citation:** Joanna Scanlon, Nadine Jacobsen, Marike Maack, Stefan Debener (2022). *Electrode walking study*. `10.18112/openneuro.ds004033.v1.0.0 <https://doi.org/10.18112/openneuro.ds004033.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ participants.tsv (OpenNeuro ``ds004033``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 2.0`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS004033``
    * - Title
-     - participants.tsv
+     - Electrode walking study
    * - Year
      - 2022
    * - Authors
@@ -44,11 +46,43 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds004033,
-        title = {participants.tsv},
+        title = {Electrode walking study},
         author = {Joanna Scanlon and Nadine Jacobsen and Marike Maack and Stefan Debener},
         doi = {10.18112/openneuro.ds004033.v1.0.0},
         url = {https://doi.org/10.18112/openneuro.ds004033.v1.0.0},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS004033&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS004033%0A-%20%2A%2ATitle%3A%2A%2A%20Electrode%20walking%20study%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+The electrode and synchronized walking study: Participants performed 3 tasks outside:
+eyes open/eyes close, standing, walking alone & walking with experimenter oddball task, and 3 walking with experimenter tasks
+Only part of the second task (standing and walking oddball) was used for the first paper.
+Each of 18 participants performed the task using both active (session 1) and passive (session 2) electrodes, in counterbalanced order
+Task 1: Eyes open / Eyes closed; 1. Participant stands facing a wall with eyes open (or closed) for 1 min.
+Then 1 min of eyes closed (or open). This is counterbalanced and repeated. 2X each type. Task 2: Oddball task: Standing / Walking alone /
+Walking together. Participants performed an oddball task in which they listened to the tones through headphones and silently counted the deviant tones.
+The tones were 800 and 1000 Hz, with the standard/target status counterbalanced across participants. During the walking conditions,
+participants walked clockwise around an outdoor (roofed) basketball arena, following pylons. Each block was about 5-6 minutes.
+Blocks were counterbalanced and repeated 2X each. Task 3: Walking together: Natural / Control / Synchronize 3. Participants walked with
+the experimenter for 6 minutes in 3 conditions. The experimenter listened to a metronome while walking, and synchronized their steps with it
+(also true during walking together oddball task). During Natural walking, participant is just asked to walk with the experimenter, with no other
+instruction. In Control, participant is `blinded` using `side-blinders` which block their view of the experimenter. In Synchronize, participants
+try to synchronize their steps with the experimenter. All walking & oddball conditions started with a countdown (this has a specific trigger for oddball conds,
+not for task 3 conds. It plays during the first ~ 12 seconds of the 6 min trial
+- Joanna Scanlon (Feb 2022)
 
 Highlights
 ----------
@@ -66,16 +100,16 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 64
+      - Channels: 67 (36), 64 (36)
       - Sampling rate (Hz): 500.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 2
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: —
+      - Modality: —
+      - Type: —
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

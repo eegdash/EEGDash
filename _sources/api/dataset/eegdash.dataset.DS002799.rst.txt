@@ -7,13 +7,15 @@ eegdash.dataset.DS002799
 
 Human es-fMRI Resource: Concurrent deep-brain stimulation and whole-brain functional MRI (OpenNeuro ``ds002799``). Access recordings and metadata through EEGDash.
 
+**Citation:** Thompson WH\*, Nair R\*, Oya H\*, Esteban O, Shine JM, Petkov CI, Poldrack RA, Howard M, Adolphs R†, \*equally contributing, †corresponding author (2020). *Human es-fMRI Resource: Concurrent deep-brain stimulation and whole-brain functional MRI*. `10.18112/openneuro.ds002799.v1.0.4 <https://doi.org/10.18112/openneuro.ds002799.v1.0.4>`__
+
 .. rst-class:: sd-badges
 
 :bdg-primary:`Modality: ieeg` :bdg-info:`Tasks: 2` :bdg-secondary:`Subjects: 27` :bdg-secondary:`Recordings: 16824`
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 9.0`
 
 Dataset Information
 -------------------
@@ -27,7 +29,7 @@ Dataset Information
    * - Title
      - Human es-fMRI Resource: Concurrent deep-brain stimulation and whole-brain functional MRI
    * - Year
-     - —
+     - 2020
    * - Authors
      - Thompson WH\*, Nair R\*, Oya H\*, Esteban O, Shine JM, Petkov CI, Poldrack RA, Howard M, Adolphs R†, \*equally contributing, †corresponding author
    * - License
@@ -50,6 +52,31 @@ Dataset Information
         url = {https://doi.org/10.18112/openneuro.ds002799.v1.0.4},
       }
 
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS002799&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS002799%0A-%20%2A%2ATitle%3A%2A%2A%20Human%20es-fMRI%20Resource%3A%20Concurrent%20deep-brain%20stimulation%20and%20whole-brain%20functional%20MRI%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+Link to published paper for this data resource: https://rdcu.be/b57kz
+
+This collection contains data from 26 human patients who underwent electrical stimulation during functional magnetic resonance imaging (es-fMRI). The patients had medically refractory epilepsy requiring surgically implanted intracranial electrodes in cortical and subcortical locations. One or multiple contacts on these electrodes were stimulated while simultaneously recording BOLD-fMRI activity in a block design. Multiple runs exist for patients with different stimulation sites. 
+Data is organized in two sessions : Pre-op (pre electrode implantation) and Post-op (post electrode implantation). Raw data is provided in BIDS format and consists of T1s, T2s, resting state scans (pre-op), es-fMRI scans(post-op) , any associated field-maps and stimulation electrode coordinates and stimulation parameters. Pre-processed data (fMRIprep and Freesurfer) is present in the ‘derivatives’ folder.   
+
+Notes:
+1. Subject IDs 339, 369 and 394 do not have stimulation electrode location data available.
+2. Electrodes are in chA-chB format (chA gets leading positive phase of the stimulation). This information is stored in the "channel" file for each stimulation run.
+3. In some cases, two distant sites were stimulated simultaneously as indicated by the electrode listed under the appropriate run IDs within the ieeg folders.
+
 Highlights
 ----------
 
@@ -70,12 +97,12 @@ Highlights
       - Sampling rate (Hz): —
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 2
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: Epilepsy
+      - Modality: Other
+      - Type: Clinical/Intervention
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

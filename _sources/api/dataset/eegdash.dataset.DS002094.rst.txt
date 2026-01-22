@@ -5,7 +5,9 @@
 eegdash.dataset.DS002094
 ========================
 
-participants.tsv (OpenNeuro ``ds002094``). Access recordings and metadata through EEGDash.
+Single-pulse open-loop TMS-EEG dataset (OpenNeuro ``ds002094``). Access recordings and metadata through EEGDash.
+
+**Citation:** Unknown (2019). *Single-pulse open-loop TMS-EEG dataset*. 
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ participants.tsv (OpenNeuro ``ds002094``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 30.0`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS002094``
    * - Title
-     - participants.tsv
+     - Single-pulse open-loop TMS-EEG dataset
    * - Year
      - 2019
    * - Authors
@@ -36,6 +38,23 @@ Dataset Information
      - Unknown
    * - Source links
      - `OpenNeuro <https://openneuro.org/datasets/ds002094>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds002094>`__ | `Source URL <https://openneuro.org/datasets/ds002094>`__
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS002094&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS002094%0A-%20%2A%2ATitle%3A%2A%2A%20Single-pulse%20open-loop%20TMS-EEG%20dataset%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+No README content is available for this dataset.
 
 Highlights
 ----------
@@ -57,12 +76,12 @@ Highlights
       - Sampling rate (Hz): 5000.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 3
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: —
+      - Modality: —
+      - Type: —
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

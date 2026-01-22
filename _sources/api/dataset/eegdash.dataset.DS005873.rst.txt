@@ -5,7 +5,9 @@
 eegdash.dataset.DS005873
 ========================
 
-README (OpenNeuro ``ds005873``). Access recordings and metadata through EEGDash.
+SeizeIT2 (OpenNeuro ``ds005873``). Access recordings and metadata through EEGDash.
+
+**Citation:** Miguel Bhagubai, Christos Chatzichristos, Lauren Swinnen, Jaiver Macea, Jingwei Zhang, Lieven Lagae, Katrien Jansen, Andreas Schulze-Bonhage, Francisco Sales, Benno Mahler, Yvonne Weber, Wim Van Paesschen, Maarten De Vos (2025). *SeizeIT2*. `10.18112/openneuro.ds005873.v1.1.0 <https://doi.org/10.18112/openneuro.ds005873.v1.1.0>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ README (OpenNeuro ``ds005873``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: —`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS005873``
    * - Title
-     - README
+     - SeizeIT2
    * - Year
      - 2025
    * - Authors
@@ -44,11 +46,78 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds005873,
-        title = {README},
+        title = {SeizeIT2},
         author = {Miguel Bhagubai and Christos Chatzichristos and Lauren Swinnen and Jaiver Macea and Jingwei Zhang and Lieven Lagae and Katrien Jansen and Andreas Schulze-Bonhage and Francisco Sales and Benno Mahler and Yvonne Weber and Wim Van Paesschen and Maarten De Vos},
         doi = {10.18112/openneuro.ds005873.v1.1.0},
         url = {https://doi.org/10.18112/openneuro.ds005873.v1.1.0},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS005873&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS005873%0A-%20%2A%2ATitle%3A%2A%2A%20SeizeIT2%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+
+**README**
+
+This dataset is a BIDS compatible version of the SeizeIT2 dataset. It reorganizes the file structure to comply with the BIDS specification. To this effect:
+- Metadata was organized according to BIDS.
+- Data in the edf files contains wearable EEG, ECG, EMG and movement data recorded with the Sensor Dot device.
+- Annotations were formatted as BIDS-score compatible `tsv` files.
+
+**Contact person**
+
+
+.. dropdown:: View full README
+   :class-container: sd-shadow-sm
+
+   
+   **README**
+   
+   This dataset is a BIDS compatible version of the SeizeIT2 dataset. It reorganizes the file structure to comply with the BIDS specification. To this effect:
+   - Metadata was organized according to BIDS.
+   - Data in the edf files contains wearable EEG, ECG, EMG and movement data recorded with the Sensor Dot device.
+   - Annotations were formatted as BIDS-score compatible `tsv` files.
+   
+   **Contact person**
+   
+   The dataset was published by `Miguel Bhagubai <miguel.bhagubai@esat.kuleuven.be>`__ and `Christos Chatzichristos <christos.chatzichristos@kuleuven.be>`__.
+   
+   **Overview**
+   
+   
+   **Project name**
+   
+   SeizeIT2 Dataset
+   
+   **Year that the project ran**
+   
+   2024
+   
+   **Description of the dataset**
+   
+   The SeizeIT2 project (clinicaltrials.gov: NCT04284072), a multicenter, prospective study, was carried out to validate the Sensor Dot device in adult and pediatric patients with epilepsy. Participants were included if they had a history of refractory epilepsy and were admitted to the Epilepsy Monitoring Unit (EMU) for long-term vEEG monitoring as a presurgical evaluation procedure. The exclusion criteria included patients with skin conditions or allergies that prevented the placement of the electrodes and adhesives or had implanted devices, such as neurostimulators or pacemakers. All participants provided written informed consent. The data collection started on January 10, 2020, and ended on June 30, 2022. The study was approved by the UZ Leuven ethics committee (approval ID: S63631, ClinicalTrials.gov, NCT04284072), anonymization and sharing of the data was also approved by the same committee (S67350 - amendment 1).
+   The dataset comprises 125 patients (51 female, 41\%) from 5 different European EMUs: University Hospital Leuven (Belgium), Freiburg University Medical Center (Germany), RWTH University of Aachen (Germany), Karolinska University Hospital (Sweden) and Coimbra University Hospital (Portugal). The University Hospital Leuven was the only center that enrolled pediatric patients. The dataset includes only data from patients with focal epilepsy who experienced one or more seizure episodes during the monitoring period.
+   
+   **Methods**
+   
+   The participants were recorded with the specific center's vEEG monitoring equipment, where the EEG electrodes were placed according to the 10-20 system or the 25-electrode array of the International Federation of Clinical Neurophysiology. The SD device was used to record wearable data simultaneously with the vEEG. The device has a size of 24.5 x 33.5 x 7.73 mm and weighs approximately 6.3 grams. The wearable device measures data at a sampling frequency of 250 Hz and has a battery life of approximately 24 hours. Two recording devices were used: one placed in the patient's upper back using a patch and connected to electrodes attached behind the ear, on the mastoid bone (EEG SD); another placed on the left side of the chest, with two electrodes extended to the lower left rib cage and the fourth intercostal space in the left parasternal position to measure ECG, and two electrodes extended to the left deltoid muscle to measure EMG data (ECG/EMG SD). The module itself contains accelerometers (ACC) and gyroscopes (GYR), which measured movement data at a sampling rate of 25 Hz.
+   The EEG SD electrode placement depended on the patient's medical history and is based on the seizure type and onset. When the seizures were suspected to originate from the left hemisphere, two electrodes were placed on the left side and one on the right side, forming one left same-side channel and one cross-head channel. Analogously, if seizures were suspected to originate from the right hemisphere, the same-side channel was derived from two electrodes placed behind the right ear. The dataset includes patients who were suspected to have generalized seizures (but had focal seizures) as well, and in this case, the cross-head channel was non-existent and replaced by an additional lateral channel by using two electrodes on each ear.
+   
+   **Dataset contents**
+   
+   The complete dataset contains around 11 640 hours of wearable data. Four different modalities were recorded for most participants: bte-EEG, ECG, EMG and movement data. All participants' data within the dataset contain wearable bte-EEG. In 3\% of the dataset, ECG, EMG and movement data were not included due to technical failures or errors in the setup. In total, 886 focal seizures were recorded with the wearable device. The mean duration of the recorded seizures was 58 seconds, ranging between 3 seconds and 16 minutes. The majority of the seizures were focal aware (FA) and focal impaired awareness (FIA), with 317 and 393 occurrences, respectively. From the remaining seizures, 55 were focal-to-bilateral tonic clinic (FBTC), 12 were focal with unclear awareness status, 2 were subclinical focal seizures and 93 had unknown or unreported onset. There was a predominance of seizures with onset on the left hemisphere (44\%). In 12\% of the seizures, the onset was located in the right hemisphere, 1\% had a bilateral onset and in 43\% of the seizures the onset was unclear. Regarding localization, the seizure onsets were distributed over the central, frontal, temporal, occipital, parietal and insula lobes, with a predominance of temporal lobe seizures (30\%). Several seizures recorded could not be paired with a clear onset lobe (26\%).
+
 
 Highlights
 ----------
@@ -70,12 +139,12 @@ Highlights
       - Sampling rate (Hz): 256.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 1
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: Epilepsy
+      - Modality: Other
+      - Type: Clinical/Intervention
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

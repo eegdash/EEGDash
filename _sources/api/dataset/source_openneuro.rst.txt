@@ -500,15 +500,5 @@ Openneuro Datasets
    eegdash.dataset.DS006963
    eegdash.dataset.DS007006
    eegdash.dataset.DS007020
-   eegdash.dataset.DS007028
    eegdash.dataset.DS007081
    eegdash.dataset.DS007095
-   eegdash.dataset.DS007118
-   eegdash.dataset.DS007119
-   eegdash.dataset.DS007120
-   eegdash.dataset.DS007162
-   eegdash.dataset.DS007172
-   eegdash.dataset.DS007175
-   eegdash.dataset.DS007176
-   eegdash.dataset.DS007180
-   eegdash.dataset.DS007181

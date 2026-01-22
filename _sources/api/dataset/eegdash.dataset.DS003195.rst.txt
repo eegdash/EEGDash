@@ -5,7 +5,9 @@
 eegdash.dataset.DS003195
 ========================
 
-participants.tsv (OpenNeuro ``ds003195``). Access recordings and metadata through EEGDash.
+Placebo Neuroepo multisession (OpenNeuro ``ds003195``). Access recordings and metadata through EEGDash.
+
+**Citation:** Maria Luisa Bringas Vega, Lilia Morales Chacon, Ivonne Pedroso Ibanez (2020). *Placebo Neuroepo multisession*. `10.18112/openneuro.ds003195.v1.0.3 <https://doi.org/10.18112/openneuro.ds003195.v1.0.3>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ participants.tsv (OpenNeuro ``ds003195``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 3.0`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS003195``
    * - Title
-     - participants.tsv
+     - Placebo Neuroepo multisession
    * - Year
      - 2020
    * - Authors
@@ -44,11 +46,31 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds003195,
-        title = {participants.tsv},
+        title = {Placebo Neuroepo multisession},
         author = {Maria Luisa Bringas Vega and Lilia Morales Chacon and Ivonne Pedroso Ibanez},
         doi = {10.18112/openneuro.ds003195.v1.0.3},
         url = {https://doi.org/10.18112/openneuro.ds003195.v1.0.3},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS003195&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS003195%0A-%20%2A%2ATitle%3A%2A%2A%20Placebo%20Neuroepo%20multisession%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+The quest for neuroprotection in Parkinson’s disease (PD) has been for new compounds to slow disease progression and stable and non-invasive biomarkers to document their benefits. Neuroepo, a new formulation of EPO with low content of sialic acid reported good results in animal model and tolerance in healthy participants and PD patients.
+In a double-blind randomized placebo (https://clinicaltrials.gov/ number NCT04110678) twenty-five PD patients were assigned randomly to Neuroepo (n=15) or placebo (n=10) groups we reported the tolerance of the drug. We recorded resting-state EEG before and six months after the administration of the drug. The qualitative analysis of the abnormalities of the EEG was evaluated by two experts using a Likert-type scale and a multivariate item response theory (MIRT) approach was employed to stablish the differences between groups in the two times. The quantitative EEG (qEEG) analysis was performed at the sources looking for generators of the neural activity using software VARETA and co-registering the results using the Montreal Neurological Institute Atlas. The statistical analysis between the sources was conducted using a permutation test and later a contrast method using the surfstat software between groups and before vs after condition, with Bonferroni correction for multiple comparisons.
+Here in this repository we placed the raw EEG in BIDS format  (Pernet, C. R. et al. EEG-BIDS, an extension to the brain imaging data structure for electroencephalography. Sci. data 6, 103 (2019). For the use of VARETA the qEEG program you can use (Bosch-Bayard, J. et al. A Quantitative EEG Toolbox for the MNI Neuroinformatics Ecosystem: Normative SPM of EEG Source Spectra. Front. Neuroinform. 14, (2020).)
+The EEG dataset from the different stages of processing can be requested to the authors.
 
 Highlights
 ----------
@@ -70,12 +92,12 @@ Highlights
       - Sampling rate (Hz): 200.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 2
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: —
+      - Modality: —
+      - Type: —
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

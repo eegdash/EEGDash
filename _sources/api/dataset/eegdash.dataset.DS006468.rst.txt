@@ -5,7 +5,9 @@
 eegdash.dataset.DS006468
 ========================
 
-participants.tsv (OpenNeuro ``ds006468``). Access recordings and metadata through EEGDash.
+MEG-SCANS - A comprehensive magnetoencephalography speech dataset with Stories, Chirps And Noisy Sentences. (OpenNeuro ``ds006468``). Access recordings and metadata through EEGDash.
+
+**Citation:** Till Habersetzer, Bernd T. Meyer (2025). *MEG-SCANS - A comprehensive magnetoencephalography speech dataset with Stories, Chirps And Noisy Sentences.*. `10.18112/openneuro.ds006468.v1.1.2 <https://doi.org/10.18112/openneuro.ds006468.v1.1.2>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ participants.tsv (OpenNeuro ``ds006468``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: —`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS006468``
    * - Title
-     - participants.tsv
+     - MEG-SCANS - A comprehensive magnetoencephalography speech dataset with Stories, Chirps And Noisy Sentences.
    * - Year
      - 2025
    * - Authors
@@ -44,11 +46,36 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds006468,
-        title = {participants.tsv},
+        title = {MEG-SCANS - A comprehensive magnetoencephalography speech dataset with Stories, Chirps And Noisy Sentences.},
         author = {Till Habersetzer and Bernd T. Meyer},
         doi = {10.18112/openneuro.ds006468.v1.1.2},
         url = {https://doi.org/10.18112/openneuro.ds006468.v1.1.2},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS006468&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS006468%0A-%20%2A%2ATitle%3A%2A%2A%20MEG-SCANS%20-%20A%20comprehensive%20magnetoencephalography%20speech%20dataset%20with%20Stories%2C%20Chirps%20And%20Noisy%20Sentences.%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+
+**References**
+
+Appelhoff, S., Sanderson, M., Brooks, T., Vliet, M., Quentin, R., Holdgraf, C., Chaumon, M., Mikulan, E., Tavabi, K., Höchenberger, R., Welke, D., Brunner, C., Rockhill, A., Larson, E., Gramfort, A. and Jas, M. (2019). MNE-BIDS: Organizing electrophysiological data into the BIDS format and facilitating their analysis. Journal of Open Source Software 4: (1896).https://doi.org/10.21105/joss.01896
+Niso, G., Gorgolewski, K. J., Bock, E., Brooks, T. L., Flandin, G., Gramfort, A., Henson, R. N., Jas, M., Litvak, V., Moreau, J., Oostenveld, R., Schoffelen, J., Tadel, F., Wexler, J., Baillet, S. (2018). MEG-BIDS, the brain imaging data structure extended to magnetoencephalography. Scientific Data, 5, 180110.https://doi.org/10.1038/sdata.2018.110
+
+**Description**
+
+The MEG-SCANS (Stories, Chirps, And Noisy Sentences) dataset provides raw and MaxFiltered magnetoencephalography (MEG) recordings from 24 German-speaking participants, collected over three months. Each participant engaged in an auditory experiment, listening to approximately one hour of stimuli, including two audiobooks (approx. 20 minutes each), 120 sentences from the Oldenburger Matrix Sentence Test (OLSA) presented at varying speech intelligibility levels (20% to 95%) for Speech Reception Threshold (SRT) assessment, and short up-chirps used for MEG signal quality assessment. For each participant, the dataset comprises raw MEG data, corresponding MaxFiltered data, two empty-room MEG recordings (pre- and post-session), a structural MRI scan of the head, behavioral audiogram and SRT results from hearing screenings, and the corresponding audio stimulus material (audiobooks, envelopes, and chirp stimuli). Auxiliary channels recorded include the left audio channel (MISC001), right audio channel (MISC002), and the instructor's microphone (MISC007), all sampled at 1000 Hz. Organized according to the Brain Imaging Data Structure (BIDS), this dataset offers a robust benchmark for large-scale encoding/decoding analyses of temporally-resolved brain responses to speech. Note that sub-01 served as a pilot so that its data resembles a slightly different experimental design, specifically lacking chirp stimuli and featuring different audiobooks; this variation is accounted for in the provided analysis pipelines. Comprehensive Matlab and Python code are included alongside the entire analysis pipeline [https://doi.org/10.5281/zenodo.17397581] to replicate key data validations, ensuring transparency and reproducibility. The dataset is described in an accompanying data descriptor paper [https://doi.org/10.1038/s41597-025-06397-4].
 
 Highlights
 ----------
@@ -66,16 +93,16 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 32 (10), 306 (320)
+      - Channels: 306 (160), 341 (153), 347 (7), 372 (5), 32 (5)
       - Sampling rate (Hz): 1000.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 4
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: Healthy
+      - Modality: Auditory
+      - Type: Perception
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

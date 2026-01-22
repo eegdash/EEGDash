@@ -5,7 +5,9 @@
 eegdash.dataset.DS005491
 ========================
 
-participants.tsv (OpenNeuro ``ds005491``). Access recordings and metadata through EEGDash.
+Categorized Free Recall with Open-Loop Stimulation at Encoding (OpenNeuro ``ds005491``). Access recordings and metadata through EEGDash.
+
+**Citation:** Haydn G. Herrema, Michael J. Kahana (2024). *Categorized Free Recall with Open-Loop Stimulation at Encoding*. `10.18112/openneuro.ds005491.v1.0.0 <https://doi.org/10.18112/openneuro.ds005491.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ participants.tsv (OpenNeuro ``ds005491``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 0.0`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS005491``
    * - Title
-     - participants.tsv
+     - Categorized Free Recall with Open-Loop Stimulation at Encoding
    * - Year
      - 2024
    * - Authors
@@ -44,11 +46,49 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds005491,
-        title = {participants.tsv},
+        title = {Categorized Free Recall with Open-Loop Stimulation at Encoding},
         author = {Haydn G. Herrema and Michael J. Kahana},
         doi = {10.18112/openneuro.ds005491.v1.0.0},
         url = {https://doi.org/10.18112/openneuro.ds005491.v1.0.0},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS005491&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS005491%0A-%20%2A%2ATitle%3A%2A%2A%20Categorized%20Free%20Recall%20with%20Open-Loop%20Stimulation%20at%20Encoding%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+
+**Categorized Free Recall with Open-Loop Stimulation at Encoding**
+
+
+**Description**
+
+This dataset contains behavioral events and intracranial electrophysiological recordings from a categorized free recall task with open-loop stimulation at encoding.  The experiment consists of participants studying a list of words, presented visually one at a time, completing simple arithmetic problems that function as a distractor, and then freely recalling the words from the just-presented list in any order.  The data was collected at clinical sites across the country as part of a collaboration with the Computational Memory Lab at the University of Pennsylvania.
+The word lists in this paradigm follow a specific semantic construction.  Each word comes from one of 25 semantic categories, and each list of 12 items contains 6 pairs of same-category words from 3 different categories.  This means that each list has 4 words from 3 semantic categories, and in each half of the list there will be 1 pair of words from each category.  For example, if a list contains words from categories A, B, and C, a possible list construction would be:
+**A1 - A2 - B1 - B2 - C1 - C2 - A3 - A4 - C3 - C4 - B3 - B4**
+This study contains open-loop electrical stimulation of the brain during encoding.  There is no stimulation during the distractor or retrieval phases.  Stimulation is delivered to a single electrode at a time, with locations chosen in the hippocampus and entorhinal cortex.  Stimulation parameters are included in the behavioral events tsv files, denoting the anode/cathode labels, amplitude, pulse frequency, pulse width, and pulse count.
+20 of the 25 lists in a session are randomly assigned as stimulation lists.  On these lists, stimulation occurs on alternating two-word blocks, meaning 6 of the 12 words are presented with stimulation.  Stimulation starts 200 ms prior to the onset of the first word in the block and lasts for 4.6 seconds, ending 200-450 ms after the offset of the second word (depending on the inter-stimulus interval).  Half of the stimulation lists begin with a stimulation on pair and half begin with a stumulation off pair, but the order of these conditions is random.  A stimulation list that begins with a stimulation on pair would look as follows (with bold indicating stimulation):
+**1 - 2** | 3 - 4 | **5 - 6** | 7 - 8 | **9 - 10** | 11 - 12
+
+**To Note**
+
+* The iEEG recordings are labeled either "monopolar" or "bipolar."  The monopolar recordings are referenced (typically a mastoid reference), but should always be re-referenced before analysis.  The bipolar recordings are referenced according to a paired scheme indicated by the accompanying bipolar channels tables.
+* Each subject has a unique montage of electrode locations.  MNI and Talairach coordinates are provided when available.
+* Recordings done with the Blackrock system are in units of 250 nV, while recordings done with the Medtronic system are estimated through testing to have units of 0.1 uV.  We have completed the scaling to provide values in V.
+
+**Contact**
+
+For questions or inquiries, please contact sas-kahana-sysadmin@sas.upenn.edu.
 
 Highlights
 ----------
@@ -66,16 +106,16 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 119 (2), 80 (2), 104 (4), 128 (2), 64 (10), 112 (2), 92 (2), 93 (6), 78 (2), 126 (10), 70 (2), 127 (2), 163 (4), 113 (4), 68 (2), 88 (8), 116 (4), 110 (2), 146 (2), 124 (2), 85 (6), 115 (2), 16 (2), 14 (2), 130 (2), 133 (4), 155 (4), 72 (2), 96 (2), 177 (2)
-      - Sampling rate (Hz): 1600.0 (12), 999.0 (8), 1000.0 (4), 500.0 (78)
+      - Channels: 126 (10), 64 (10), 88 (8), 93 (6), 85 (6), 116 (4), 133 (4), 155 (4), 104 (4), 163 (4), 113 (4), 16 (2), 112 (2), 130 (2), 115 (2), 14 (2), 80 (2), 70 (2), 110 (2), 124 (2), 128 (2), 78 (2), 146 (2), 177 (2), 127 (2), 96 (2), 92 (2), 72 (2), 68 (2), 119 (2)
+      - Sampling rate (Hz): 500.0 (78), 1600.0 (12), 999.0 (8), 1000.0 (4)
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 1
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: —
+      - Modality: Visual
+      - Type: Memory
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

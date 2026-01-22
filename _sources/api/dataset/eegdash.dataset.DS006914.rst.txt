@@ -5,7 +5,9 @@
 eegdash.dataset.DS006914
 ========================
 
-participants.tsv (OpenNeuro ``ds006914``). Access recordings and metadata through EEGDash.
+Visual Naming EC (OpenNeuro ``ds006914``). Access recordings and metadata through EEGDash.
+
+**Citation:** Ryuzaburo Kochi, Aya Kanno, Hiroshi Uda, Keisuke Hatano, Masaki Sonoda, Hidenori Endo, Michael Cools, Robert Rothermel, Aimee F. Luat, Eishi Asano (2025). *Visual Naming EC*. `10.18112/openneuro.ds006914.v1.0.3 <https://doi.org/10.18112/openneuro.ds006914.v1.0.3>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ participants.tsv (OpenNeuro ``ds006914``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: —`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS006914``
    * - Title
-     - participants.tsv
+     - Visual Naming EC
    * - Year
      - 2025
    * - Authors
@@ -44,11 +46,33 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds006914,
-        title = {participants.tsv},
+        title = {Visual Naming EC},
         author = {Ryuzaburo Kochi and Aya Kanno and Hiroshi Uda and Keisuke Hatano and Masaki Sonoda and Hidenori Endo and Michael Cools and Robert Rothermel and Aimee F. Luat and Eishi Asano},
         doi = {10.18112/openneuro.ds006914.v1.0.3},
         url = {https://doi.org/10.18112/openneuro.ds006914.v1.0.3},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS006914&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS006914%0A-%20%2A%2ATitle%3A%2A%2A%20Visual%20Naming%20EC%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+This dataset, used in the analysis reported by Kochi et al., (2025), contains intracranial EEG recordings from 110 individuals who performed an visual‑naming task. Electrode coordinates are provided in MNI‑305 space.
+Each EDF file is tagged for the visual naming task with the following event codes:
+401 – stimulus onset
+501 – response onset
+Reference:
+Ryuzaburo Kochi, Aya Kanno, Hiroshi Uda, Keisuke Hatano,  Masaki Sonoda, Hidenori Endo, Michael Cools, Robert Rothermel, Aimee F. Luat, Eishi Asano. Whole-Brain Millisecond-Scale Effective Connectivity Atlases of Speech
 
 Highlights
 ----------
@@ -66,21 +90,21 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 136 (38), 134 (8), 156 (10), 112 (12), 154 (6), 64 (4), 140 (16), 144 (6), 130 (8), 58 (2), 110 (12), 150 (10), 128 (490), 138 (38), 160 (6), 152 (6), 148 (8), 84 (6), 118 (6), 96 (6), 164 (8)
+      - Channels: 128 (490), 138 (38), 136 (38), 140 (16), 110 (12), 112 (12), 150 (10), 156 (10), 148 (8), 130 (8), 134 (8), 164 (8), 154 (6), 144 (6), 118 (6), 152 (6), 160 (6), 84 (6), 96 (6), 64 (4), 58 (2)
       - Sampling rate (Hz): 1000.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 1
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: Epilepsy
+      - Modality: Visual
+      - Type: Other
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 6.0 MB
+      - Size on disk: 17.5 GB
       - File count: 353
       - Format: BIDS
 

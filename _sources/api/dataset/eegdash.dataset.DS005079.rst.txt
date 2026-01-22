@@ -5,7 +5,9 @@
 eegdash.dataset.DS005079
 ========================
 
-participants.tsv (OpenNeuro ``ds005079``). Access recordings and metadata through EEGDash.
+The Effects of Directed Therapeutic Intent on Live and Damaged Cells (OpenNeuro ``ds005079``). Access recordings and metadata through EEGDash.
+
+**Citation:** Lorenzo Cohen, Arnaud Delorme, Peiying Yang, Andrew Cusimano, Sharmistha Chakraborty, Phuong Nguyen, Defeng Deng, Shafaqmuhammad Iqbal, Monica Nelson, Chris Fields (2024). *The Effects of Directed Therapeutic Intent on Live and Damaged Cells*. `10.18112/openneuro.ds005079.v2.0.0 <https://doi.org/10.18112/openneuro.ds005079.v2.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ participants.tsv (OpenNeuro ``ds005079``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 1.0`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS005079``
    * - Title
-     - participants.tsv
+     - The Effects of Directed Therapeutic Intent on Live and Damaged Cells
    * - Year
      - 2024
    * - Authors
@@ -44,11 +46,30 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds005079,
-        title = {participants.tsv},
+        title = {The Effects of Directed Therapeutic Intent on Live and Damaged Cells},
         author = {Lorenzo Cohen and Arnaud Delorme and Peiying Yang and Andrew Cusimano and Sharmistha Chakraborty and Phuong Nguyen and Defeng Deng and Shafaqmuhammad Iqbal and Monica Nelson and Chris Fields},
         doi = {10.18112/openneuro.ds005079.v2.0.0},
         url = {https://doi.org/10.18112/openneuro.ds005079.v2.0.0},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS005079&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS005079%0A-%20%2A%2ATitle%3A%2A%2A%20The%20Effects%20of%20Directed%20Therapeutic%20Intent%20on%20Live%20and%20Damaged%20Cells%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+**Summary**: In this case study, a self-described practitioner of energy medicine (PEM) participated in a study, engaging in multiple (n=60) treatment and control (non-treatment) sessions under double-blind conditions.
+**Protocol:**Data were collected during 40 sessions over 10 days, with ten sessions of about 25 minutes daily. Each session was comprised of one file divided into five segments. First, there was a 2-minute control period where the PEM rested in the absence of cells (BaselinePre) for 2 minutes. Next, the cells (alive or control) were brought in, and the PEM conducted a 5-minute treatment of the cells while remaining still (TreatmentFirst5min). Next, the PEM performed another 5-minute treatment of the cells, but movement was allowed (Treatment 2). During a third treatment period (TreatmentMid5min), the PEM remained still while treating the cells, as in first treatment period (TreatmentLast5min). Finally, the cells were removed from the PEM's vicinity, and physiology data were collected for another 2-minute control period (BaselinePost). The PEM was fully blind to the type of cells presented to him, and cell type presentation to the PEM was randomized. The experimenter presenting the cell to the PEM was also blind to the type of cells. In 40 sessions, live cells were presented to the PEM (CellPresent condition). In 10 sessions, no cells (medium only) were presented to the PEM. In the other ten sessions, dead cells (x-rayed) were presented to the PEM (Control1 and Control2 conditions). In order to have control samples for the cellular outcomes and control for the passage of time and potential effects of the equipment, 40 matching set of cells were treated in a different location by a sham therapist (these are available in the behavioral files (BEH) as control cell measures.
+Data curators: Data acquired at the MD Anderson Cancer Research Center
 
 Highlights
 ----------
@@ -66,16 +87,16 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 64
+      - Channels: 65 (60), 64 (60)
       - Sampling rate (Hz): 500.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 15
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: —
+      - Modality: —
+      - Type: —
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

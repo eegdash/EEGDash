@@ -5,7 +5,9 @@
 eegdash.dataset.DS004279
 ========================
 
-participants.tsv (OpenNeuro ``ds004279``). Access recordings and metadata through EEGDash.
+Large Spanish EEG (OpenNeuro ``ds004279``). Access recordings and metadata through EEGDash.
+
+**Citation:** Carlos Valle Araya, Carolina Mendez-Orellana, Maria Rodriguez-Fernandez (2022). *Large Spanish EEG*. `10.18112/openneuro.ds004279.v1.1.2 <https://doi.org/10.18112/openneuro.ds004279.v1.1.2>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ participants.tsv (OpenNeuro ``ds004279``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 1.0`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS004279``
    * - Title
-     - participants.tsv
+     - Large Spanish EEG
    * - Year
      - 2022
    * - Authors
@@ -44,11 +46,51 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds004279,
-        title = {participants.tsv},
+        title = {Large Spanish EEG},
         author = {Carlos Valle Araya and Carolina Mendez-Orellana and Maria Rodriguez-Fernandez},
         doi = {10.18112/openneuro.ds004279.v1.1.2},
         url = {https://doi.org/10.18112/openneuro.ds004279.v1.1.2},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS004279&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS004279%0A-%20%2A%2ATitle%3A%2A%2A%20Large%20Spanish%20EEG%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+EEG: silent and perceive speech on 30 Spanish sentences
+Large Spanish Speech EEG dataset
+Authors
+<ul>
+  <li>Carlos Valle</li>
+  <li>Carolina Mendez-Orellana</li>
+  <li>María Rodríguez-Fernández</li>
+</ul>
+Resources:
+<ul>
+    <li>Code availaible at: https://github.com/cgvalle/Large_Spanish_EEG</li>
+    <li>Publication: Valle, C., Mendez-Orellana, C., Herff, C., & Rodriguez-Fernandez, M. (2024). Identification of perceived sentences using deep neural networks in EEG. Journal of neural engineering, 21(5), 056044. </li>
+</ul>
+Abstract:
+Decoding speech from brain activity can enable communication for individuals with speech disorders. Deep neural networks have shown great potential for speech decoding applications, but the large data sets required for these models are usually not available for neural recordings of speech impaired subjects. Harnessing data from other participants would thus be ideal to create speech neuroprostheses without the need of patient-specific training data.
+In this study, we recorded 60 sessions from 56 healthy participants using 64 EEG channels and developed a neural network capable of subject-independent classification of perceived sentences. We found that sentence identity can be decoded from subjects without prior training achieving higher accuracy than mixed-subject models.
+The development of subject-independent models eliminates the need to collect data from a target subject, reducing time and data collection costs during deployment. These results open new avenues for creating speech neuroprostheses when subjects cannot provide training data.
+Experiment Design:
+We investigated the neural signals recorded using a 64-channel EEG system during speech perception and silent speech production tasks involving 30 daily use sentences in Spanish. The participants were instructed to listen to a spoken sentence from an audio recording and then silently repeat the sentence without any motor action.
+The experimental design, a modified version of a previous study (Dash, et al), comprises four segments: rest, perception, preparation, and silent speech production. The rest segment lasted five seconds, presenting a fixation cross (+) before the stimulus onset.
+During the perception section, the participants listened to the stimulus. Prior to subject S18, the perception section lasted 4 s, with each sentence being repeated 7 times. From subject S19 onward, the duration of the perception segment was increased to 5 s to match the duration of the silent speech production segment and the number of repetitions per sentence was decreased to 6 in order to maintain the overall length of the experiment. The preparation segment lasted one second and presented a blank screen, serving as a separation marker between the perception and silent speech production tasks. In the silent speech production segment lasting five seconds, subjects were instructed to silently repeat the previously heard stimulus without motor action only once. It is important to note that this study exclusively focuses on the outcomes derived from the speech perception task.
+Trials for each block of the 30 stimuli were presented in a randomized order to prevent anticipation and learning biases.
+Contact:
+Please contact us at this e-mail address if you have any question: cgvalle@uc.cl
 
 Highlights
 ----------
@@ -66,16 +108,16 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 64
+      - Channels: 64 (60), 69 (60)
       - Sampling rate (Hz): 1000.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 1
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: —
+      - Modality: —
+      - Type: —
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

@@ -5,7 +5,9 @@
 eegdash.dataset.DS004011
 ========================
 
-participants.tsv (OpenNeuro ``ds004011``). Access recordings and metadata through EEGDash.
+The nature of neural object representations during dynamic occlusion (OpenNeuro ``ds004011``). Access recordings and metadata through EEGDash.
+
+**Citation:** Lina Teichmann, Denise Moerel, Anina Rich, Chris Baker (2022). *The nature of neural object representations during dynamic occlusion*. `10.18112/openneuro.ds004011.v1.0.3 <https://doi.org/10.18112/openneuro.ds004011.v1.0.3>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ participants.tsv (OpenNeuro ``ds004011``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 1.0`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS004011``
    * - Title
-     - participants.tsv
+     - The nature of neural object representations during dynamic occlusion
    * - Year
      - 2022
    * - Authors
@@ -44,11 +46,53 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds004011,
-        title = {participants.tsv},
+        title = {The nature of neural object representations during dynamic occlusion},
         author = {Lina Teichmann and Denise Moerel and Anina Rich and Chris Baker},
         doi = {10.18112/openneuro.ds004011.v1.0.3},
         url = {https://doi.org/10.18112/openneuro.ds004011.v1.0.3},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS004011&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS004011%0A-%20%2A%2ATitle%3A%2A%2A%20The%20nature%20of%20neural%20object%20representations%20during%20dynamic%20occlusion%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+The main folder contains the raw MEG data for all participants in standard bids format. See references.
+The ‘sourcedata’ folder contains the behavioural data collected during the MEG session as well as the eyetracking data. The data in this folder follows the following trial structure:
+- sourcedata
+	- beh
+		- sub-[participant number]
+			- sub-[participant number]_task-occlusion_run-[run number]_events.csv: contains all the events for each trial in the MEG session, detailing what was shown on the screen.
+			- sub-[participant number]_task-occlusion_run-[run number]_occframes.csv: contains all the stimulus positions for each occlusion trial in the MEG session.
+			- sub-[participant number]_task-occlusion_run-[run number]_disframes.csv: contains all the stimulus positions for each disappearance trial in the MEG session.
+	- eyetracking
+		- sub-[participant number]_Occ.edf: edf file containing the eye positions during the MEG session.
+The ‘derivatives’ folder contains the pre-processed MEG data for each participant. The data in this folder follows the following trial structure:
+- derivatives
+	- preprocessed
+		- cosmo_p[participant number].mat: cosmomvpa formatted file with the pre-processed data, epoched for each trial, containing the following variables:
+			- ds_diss: cosmo data struct containing the disappearance trials epoched relative to stimulus onset (MEG channels)
+			- ds_occ: cosmo data struct containing the disappearance trials epoched relative to stimulus onset (MEG channels)
+			- ds_loc: cosmo data struct containing the unpredictable position stream trials epoched relative to stimulus onset (MEG channels)
+			- ds_eyes_diss: cosmo data struct containing the disappearance trials epoched relative to stimulus onset (eye-x, eye-y, pupil size)
+			- ds_eyes_occ: cosmo data struct containing the disappearance trials epoched relative to stimulus onset (eye-x, eye-y, pupil size)
+			- ds_eyes_loc: cosmo data struct containing the unpredictable position stream trials epoched relative to stimulus onset (eye-x, eye-y, pupil size)
+		-  cosmo_p[participant number]_position_epochs.mat: cosmomvpa formatted file with the pre-processed data, epoched relative to each position change, containing the following variables:
+			- ds_tiny: cell with two entries. First entry contains the disappearance trials epoched relative to position change. Second entry contains the occlusion trials epoched relative to position change. (MEG channels)
+			- ds_tiny_eyes: cell with two entries. First entry contains the disappearance trials epoched relative to position change. Second entry contains the occlusion trials epoched relative to position change. (eye-x, eye-y, pupil size)
+References:
+Appelhoff, S., Sanderson, M., Brooks, T., Vliet, M., Quentin, R., Holdgraf, C., Chaumon, M., Mikulan, E., Tavabi, K., Höchenberger, R., Welke, D., Brunner, C., Rockhill, A., Larson, E., Gramfort, A. and Jas, M. (2019). MNE-BIDS: Organizing electrophysiological data into the BIDS format and facilitating their analysis. Journal of Open Source Software 4: (1896). https://doi.org/10.21105/joss.01896
+Niso, G., Gorgolewski, K. J., Bock, E., Brooks, T. L., Flandin, G., Gramfort, A., Henson, R. N., Jas, M., Litvak, V., Moreau, J., Oostenveld, R., Schoffelen, J., Tadel, F., Wexler, J., Baillet, S. (2018). MEG-BIDS, the brain imaging data structure extended to magnetoencephalography. Scientific Data, 5, 180110. https://doi.org/10.1038/sdata.2018.110
 
 Highlights
 ----------
@@ -66,16 +110,16 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 271
+      - Channels: 271 (132), 309 (132)
       - Sampling rate (Hz): 1200.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 1
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: Healthy
+      - Modality: Visual
+      - Type: Perception
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

@@ -5,7 +5,9 @@
 eegdash.dataset.DS004017
 ========================
 
-participants.tsv (OpenNeuro ``ds004017``). Access recordings and metadata through EEGDash.
+Embodied Learning for Literacy EEG (OpenNeuro ``ds004017``). Access recordings and metadata through EEGDash.
+
+**Citation:** Linn Damsgaard, Marta Topor, Anne-Mette Veber Nielsen, Anne Kær Gejl, Anne Sofie Bøgh Malling, Mark Schram Christensen, Rasmus Ahmt Hansen, Søren Kildahl, Jacob Wienecke (2023). *Embodied Learning for Literacy EEG*. `10.18112/openneuro.ds004017.v1.0.3 <https://doi.org/10.18112/openneuro.ds004017.v1.0.3>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ participants.tsv (OpenNeuro ``ds004017``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 1.0`
 
 Dataset Information
 -------------------
@@ -25,9 +27,9 @@ Dataset Information
    * - Dataset ID
      - ``DS004017``
    * - Title
-     - participants.tsv
+     - Embodied Learning for Literacy EEG
    * - Year
-     - 2022
+     - 2023
    * - Authors
      - Linn Damsgaard, Marta Topor, Anne-Mette Veber Nielsen, Anne Kær Gejl, Anne Sofie Bøgh Malling, Mark Schram Christensen, Rasmus Ahmt Hansen, Søren Kildahl, Jacob Wienecke
    * - License
@@ -44,11 +46,39 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds004017,
-        title = {participants.tsv},
+        title = {Embodied Learning for Literacy EEG},
         author = {Linn Damsgaard and Marta Topor and Anne-Mette Veber Nielsen and Anne Kær Gejl and Anne Sofie Bøgh Malling and Mark Schram Christensen and Rasmus Ahmt Hansen and Søren Kildahl and Jacob Wienecke},
         doi = {10.18112/openneuro.ds004017.v1.0.3},
         url = {https://doi.org/10.18112/openneuro.ds004017.v1.0.3},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS004017&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS004017%0A-%20%2A%2ATitle%3A%2A%2A%20Embodied%20Learning%20for%20Literacy%20EEG%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+There are three files per participant collected for each of the three stages of the procedure.
+Stage 1 (before measurement): A two-alternative forced choice discrimination task including letters "b" and "d"
+Stage 2 (intervention measurement): A simple visual search task including a target letter (either b or d) and three distractor letters chosen at random (p or q).
+Stage 3 (after measurement): A two-alternative forced choice discrimination task including letters "b" and "d"
+Participants were assigned to two groups.
+Participants in the intervention group were: sub-04, sub-05, sub-06, sub-07, sub-09, sub-10, sub-12, sub-14, sub-15, sub-16, sub-21
+Participants in the control group were: sub-01, sub-02, sub-03, sub-08, sub-11, sub-13, sub-17, sub-18, sub-19, sub-20
+Events in all recordings correspond to stimulus presentation. The value of 100 represents letter b stimuli and 200 represents letter d stimuli.
+Events marked with 10 (b) and 20 (d) represent practice trials.
+The detailed description of the tasks and the procedure can be found in this preprint:
+For questions about the tasks and the data please email Jacob Wienecke at wienecke@nexs.ku.dk.
+Marta Topor 17/03/2022
 
 Highlights
 ----------
@@ -66,21 +96,21 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 64
+      - Channels: 65 (63), 64 (63)
       - Sampling rate (Hz): 2048.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: —
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: Healthy
+      - Modality: Visual
+      - Type: Learning
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 20.9 GB
+      - Size on disk: 742.5 KB
       - File count: 63
       - Format: BIDS
 

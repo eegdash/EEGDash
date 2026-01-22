@@ -7,13 +7,15 @@ eegdash.dataset.DS004262
 
 Continuous Feedback Processing (OpenNeuro ``ds004262``). Access recordings and metadata through EEGDash.
 
+**Citation:** Cameron D. Hassall, Yan Yan, Laurence T. Hunt (2022). *Continuous Feedback Processing*. `10.18112/openneuro.ds004262.v1.0.0 <https://doi.org/10.18112/openneuro.ds004262.v1.0.0>`__
+
 .. rst-class:: sd-badges
 
 :bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 21` :bdg-secondary:`Recordings: 21`
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 1.0`
 
 Dataset Information
 -------------------
@@ -50,6 +52,43 @@ Dataset Information
         url = {https://doi.org/10.18112/openneuro.ds004262.v1.0.0},
       }
 
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS004262&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS004262%0A-%20%2A%2ATitle%3A%2A%2A%20Continuous%20Feedback%20Processing%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+
+**Continuous Feedback Processing**
+
+Twenty-one participants learned to predict the final level of an animated rising bar. Following the appearance of a fixation cross, participants used the mouse to indicate their guess (i.e., how high they thought the bar would rise). After a delay, participants watched the bar rise to its final level. Points were awarded based on the distance between their guess and the actual level. Each round was cued by the appearance of a gnome (cover story: the gnomes are playing a strongman game while visiting a fair). Cues varied in the degree to which the outcome was predictable (highly predictable, somewhat predictable, unpredictable).
+Participant 11 was excluded from the analysis due to excessive artifacts.
+Timing
+fixation cross (400-600 ms) -> gnome cue (1500 ms) -> bar outline (until response) -> animation (1 degree per second until complete) -> final outcome (1000 ms)
+Conditions (Gnome Types)
+1: highly predictable - consistently low
+2: highly predictable - consistently high
+3: unpredictable - low or high with equal probability
+4: somewhat predictable - usually (80%) low, sometimes high
+5: somewhat predictable - usually (80%) high, sometimes low
+6: unpredictable - random uniform distribution
+Trigger Modifiers
+Add 0: Fixation cross
+Add 10: Cue (gnome) onset
+Add 20: Bar outline appears
+Add 30: Participant response
+Add 40: Start of animation
+Add 50: End of animation (and start of 1-second delay)
+
 Highlights
 ----------
 
@@ -70,12 +109,12 @@ Highlights
       - Sampling rate (Hz): 1000.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 1
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: —
+      - Modality: —
+      - Type: —
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

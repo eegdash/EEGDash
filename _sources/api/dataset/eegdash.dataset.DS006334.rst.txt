@@ -5,7 +5,9 @@
 eegdash.dataset.DS006334
 ========================
 
-participants.tsv (OpenNeuro ``ds006334``). Access recordings and metadata through EEGDash.
+Neocortical and Hippocampal Theta Oscillations Track Audiovisual Integration and Replay of Speech Memories (OpenNeuro ``ds006334``). Access recordings and metadata through EEGDash.
+
+**Citation:** Biau E, Wang D, Park H, Jensen O, Hanslmayr S (2025). *Neocortical and Hippocampal Theta Oscillations Track Audiovisual Integration and Replay of Speech Memories*. `10.18112/openneuro.ds006334.v1.0.0 <https://doi.org/10.18112/openneuro.ds006334.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ participants.tsv (OpenNeuro ``ds006334``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: —`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS006334``
    * - Title
-     - participants.tsv
+     - Neocortical and Hippocampal Theta Oscillations Track Audiovisual Integration and Replay of Speech Memories
    * - Year
      - 2025
    * - Authors
@@ -44,11 +46,40 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds006334,
-        title = {participants.tsv},
+        title = {Neocortical and Hippocampal Theta Oscillations Track Audiovisual Integration and Replay of Speech Memories},
         author = {Biau E and Wang D and Park H and Jensen O and Hanslmayr S},
         doi = {10.18112/openneuro.ds006334.v1.0.0},
         url = {https://doi.org/10.18112/openneuro.ds006334.v1.0.0},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS006334&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS006334%0A-%20%2A%2ATitle%3A%2A%2A%20Neocortical%20and%20Hippocampal%20Theta%20Oscillations%20Track%20Audiovisual%20Integration%20and%20Replay%20of%20Speech%20Memories%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+General information:
+This repository contains the raw MEG data, T1-weighted anatomical scans, the corresponding behavioural logfiles, as well as the scripts to perform analyses and results reported in the manuscript:
+Biau, E., Wang, D., Park, H., Jensen, O., & Hanslmayr, S. (2025). Neocortical and hippocampal theta oscillations track audiovisual integration and replay of speech memories. Journal of Neuroscience, 45(21).
+Task overview:
+The experimental paradigm consisted of repeated blocks, with each block being composed of three successive tasks: encoding, distractor, and retrieval task.
+1) Encoding: participants were presented with a series of audiovisual speech movies and performed an audiovisual synchrony detection. Each trial started with a brief fixation cross (jittered duration, 1,000–1,500 ms) followed by the presentation of a random synchronous or asynchronous audiovisual speech movie (5 s). After the movie end, participants had to determine whether video and sound were presented in synchrony or asynchrony in the movie, by pressing the index finger (synchronous) or the middle finger (asynchronous) button of the response device as fast and accurate as possible. The next trial started after the participant’s response. After the encoding, the participants did a short distractor task. Each trial started with a brief fixation cross (jittered duration, 1,000–1,500 ms) followed by the presentation of a random number (from 1 to 99) displayed at the center of the screen.
+2) Distractor: Participants were instructed to determine as fast and accurate as possible whether this number was odd or even by pressing the index (odd) or the middle finger (even) button of the response device. Each distractor task contained 20 trials. The purpose of the distractor task was only to clear memory up. After the distractor task, the participants performed the retrieval task to assess their memory. Each trial started with a brief fixation cross (jittered duration, 1,000–1,500 ms) followed by the presentation of a static frame depicting the face of a speaker from a movie attended in the previous encoding.
+3) Retrieval: During this visual cueing (5 s), participants were instructed to recall as accurately as possible every auditory information previously associated with the speaker’s speech during the movie presentation. At the end of the visual cueing, participants were provided the possibility to listen two auditory speech stimuli: one stimulus corresponded to the speaker’s auditory speech from the same movie (i.e., matching). The other auditory stimulus was taken from another random movie with the same speaker gender (i.e., unmatching). Participants chose to listen each stimulus sequentially by pressing the index finger (Speech 1) or the middle finger (Speech 2) button of the response device. The order of displaying was free, but for every trial, participants were allowed to listen to each auditory stimulus only one time to avoid speech restudy. At the end of the second auditory stimulus, participants were instructed to determine as fast and accurate as possible which auditory speech stimulus corresponded to the speaker’s face frame, by pressing the index finger (Speech1) or the middle finger (Speech2) button of the response device. The next retrieval trial started after the participant’s response.
+After the last trial of the retrieval, participants took a short break, before starting a new block (encoding–distractor–retrieval).
+Events and corresponding trigger values in .fif raw MEG data:
+Each participant underwent only one session. Run1to5 are simply the chunks of the continuous MEG recording during the unique session, and were split automatically by the software.
+Audiovisual movie onset [1]; Visual cue onset [2]; Speech 1 onset [4]; Speech 2 onset [8]; Probe response key press [16]; Movie Localiser onset [32] and Sound Localiser onset [64].
+Some data have their associated individual T1w anatomy scans, other do not.
 
 Highlights
 ----------
@@ -66,16 +97,16 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 306
+      - Channels: 306 (128), 331 (74), 332 (54)
       - Sampling rate (Hz): 1000.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 1
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: —
+      - Modality: Multisensory
+      - Type: Memory
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

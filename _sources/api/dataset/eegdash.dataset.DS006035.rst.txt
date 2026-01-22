@@ -5,7 +5,9 @@
 eegdash.dataset.DS006035
 ========================
 
-participants.tsv (OpenNeuro ``ds006035``). Access recordings and metadata through EEGDash.
+somatomotor (OpenNeuro ``ds006035``). Access recordings and metadata through EEGDash.
+
+**Citation:** Fa-Hsuan Lin, Deirdre Foxe von Pechmann, Kaisu Lankinen, Seppo Ahlfors, Bruce Rosen, Jyrki Ahveninen, Matti Hämäläinen, Tommi Raij (2025). *somatomotor*. `10.18112/openneuro.ds006035.v1.0.0 <https://doi.org/10.18112/openneuro.ds006035.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ participants.tsv (OpenNeuro ``ds006035``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: —`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS006035``
    * - Title
-     - participants.tsv
+     - somatomotor
    * - Year
      - 2025
    * - Authors
@@ -44,11 +46,48 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds006035,
-        title = {participants.tsv},
+        title = {somatomotor},
         author = {Fa-Hsuan Lin and Deirdre Foxe von Pechmann and Kaisu Lankinen and Seppo Ahlfors and Bruce Rosen and Jyrki Ahveninen and Matti Hämäläinen and Tommi Raij},
         doi = {10.18112/openneuro.ds006035.v1.0.0},
         url = {https://doi.org/10.18112/openneuro.ds006035.v1.0.0},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS006035&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS006035%0A-%20%2A%2ATitle%3A%2A%2A%20somatomotor%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+Accession: #: ds006035
+Description: Multi-subject, multi-modal (sMRI+MEG+EEG) neuroimaging dataset for median nerve stimulation and motor responses.
+This dataset contains MRI (T1w), MEG, and EEG data for median nerve electrical stimuli delivered at the right wrist.
+The task was to respond by lifting the left hand idex finger as quickly as possible after each right median nerve stimulus.
+
+**meg/**
+
+Three anatomical fiducials were digitized for aligning the MEG with the MRI:
+1. nasion (lowest depression between the eyes);
+2. left pre-auricular point;
+3. right pre-auricular point.
+The following triggers are included in the .fif files and are also used in the “value” column of the meg events .tsv files:
+Trigger     Label                                        Simplified Label
+32             somatosensory stimulus      somatosensory
+16             finger lift response                finger
+If you wish to publish any of these data, please acknowledge the authors.
+
+**BIDS ﻿References**
+
+Appelhoff, S., Sanderson, M., Brooks, T., Vliet, M., Quentin, R., Holdgraf, C., Chaumon, M., Mikulan, E., Tavabi, K., Höchenberger, R., Welke, D., Brunner, C., Rockhill, A., Larson, E., Gramfort, A. and Jas, M. (2019). MNE-BIDS: Organizing electrophysiological data into the BIDS format and facilitating their analysis. Journal of Open Source Software 4: (1896).https://doi.org/10.21105/joss.01896
+Niso, G., Gorgolewski, K. J., Bock, E., Brooks, T. L., Flandin, G., Gramfort, A., Henson, R. N., Jas, M., Litvak, V., Moreau, J., Oostenveld, R., Schoffelen, J., Tadel, F., Wexler, J., Baillet, S. (2018). MEG-BIDS, the brain imaging data structure extended to magnetoencephalography. Scientific Data, 5, 180110.https://doi.org/10.1038/sdata.2018.110
 
 Highlights
 ----------
@@ -66,16 +105,16 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 70
+      - Channels: 70 (15), 388 (12), 387 (3)
       - Sampling rate (Hz): 1004.01611328125
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 1
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: —
+      - Modality: Tactile
+      - Type: Motor
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

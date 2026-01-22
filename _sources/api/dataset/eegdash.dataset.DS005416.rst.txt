@@ -5,7 +5,9 @@
 eegdash.dataset.DS005416
 ========================
 
-participants.tsv (OpenNeuro ``ds005416``). Access recordings and metadata through EEGDash.
+Fatigue Characterization of EEG under Mixed Reality Stereo Vision (OpenNeuro ``ds005416``). Access recordings and metadata through EEGDash.
+
+**Citation:** Yan Wu, Chunguang Tao, Qi Li (2024). *Fatigue Characterization of EEG under Mixed Reality Stereo Vision*. `10.18112/openneuro.ds005416.v1.0.1 <https://doi.org/10.18112/openneuro.ds005416.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ participants.tsv (OpenNeuro ``ds005416``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 0.0`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS005416``
    * - Title
-     - participants.tsv
+     - Fatigue Characterization of EEG under Mixed Reality Stereo Vision
    * - Year
      - 2024
    * - Authors
@@ -44,11 +46,33 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds005416,
-        title = {participants.tsv},
+        title = {Fatigue Characterization of EEG under Mixed Reality Stereo Vision},
         author = {Yan Wu and Chunguang Tao and Qi Li},
         doi = {10.18112/openneuro.ds005416.v1.0.1},
         url = {https://doi.org/10.18112/openneuro.ds005416.v1.0.1},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS005416&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS005416%0A-%20%2A%2ATitle%3A%2A%2A%20Fatigue%20Characterization%20of%20EEG%20under%20Mixed%20Reality%20Stereo%20Vision%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+In this study, we selected 24 electrodes for EEG recording: Fp1, Fp2, AF3, AF4, F7, Fz, F8, FC5, FC6 (frontal), FT7, FT8 (temporal), C3, Cz, C4, CP3, CP4 (central), P3, Pz, P4, PO3, PO4 (parietal), and O1, Oz, O2 (occipital).
+Each participant was required to complete watching 2 resting scenes and 15 movement scenes.
+A rating scene appeared to rate each exercise scene watched.
+Each movement scene consisted of 20 trials of reciprocal periodic movements at a fixed depth and velocity.
+We focused on analyzing EEG data from watching resting scenes.
+Researchers can use this EEG data to do resting-state analysis (corresponding to events '11' and '13') as well as task-state analysis (corresponding to event '12').
 
 Highlights
 ----------
@@ -70,12 +94,12 @@ Highlights
       - Sampling rate (Hz): 1000.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 1
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: Healthy
+      - Modality: Visual
+      - Type: Resting-state
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

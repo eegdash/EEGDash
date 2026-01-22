@@ -5,7 +5,9 @@
 eegdash.dataset.DS004015
 ========================
 
-participants.tsv (OpenNeuro ``ds004015``). Access recordings and metadata through EEGDash.
+Attended speaker paradigm (cEEGrid data) (OpenNeuro ``ds004015``). Access recordings and metadata through EEGDash.
+
+**Citation:** Bjoern Holtze, Marc Rosenkranz, Manuela Jaeger, Stefan Debener, Bojana Mirkovic (2022). *Attended speaker paradigm (cEEGrid data)*. `10.18112/openneuro.ds004015.v1.0.2 <https://doi.org/10.18112/openneuro.ds004015.v1.0.2>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ participants.tsv (OpenNeuro ``ds004015``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 3.0`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS004015``
    * - Title
-     - participants.tsv
+     - Attended speaker paradigm (cEEGrid data)
    * - Year
      - 2022
    * - Authors
@@ -44,11 +46,42 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds004015,
-        title = {participants.tsv},
+        title = {Attended speaker paradigm (cEEGrid data)},
         author = {Bjoern Holtze and Marc Rosenkranz and Manuela Jaeger and Stefan Debener and Bojana Mirkovic},
         doi = {10.18112/openneuro.ds004015.v1.0.2},
         url = {https://doi.org/10.18112/openneuro.ds004015.v1.0.2},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS004015&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS004015%0A-%20%2A%2ATitle%3A%2A%2A%20Attended%20speaker%20paradigm%20%28cEEGrid%20data%29%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+Within this study cEEGrid data from two previous studies were pooled.
+15 participants from Jaeger et al. (2020) and 21 from Holtze et al. (2021) were included.
+Participants performed a two-competing speaker paradigm in both original studies.
+Participants were instructed to either attend to the left or right audio book.
+The paradigm consisted of six (Jaeger et al. 2020) or five (Holtze et al. 2021)
+10-minute blocks of audio book presentation. In Jaeger et al. (2020) both audio
+books were always presented equally loud. In Holtze et al. 2021, a 10-minute block could
+either be presented in the omnidirectional condition (both audio books were presented
+equally loud) or in the beamforming condition (the to-be-attended audio book
+was louder than the to-be-ignored audio book). The first 10-minute block was always
+presented in the omnidirectional condition whereas the conditions were alternated
+for the later four blocks, with one half of the participants starting with the
+omnidirectonal condition and the other half starting with the beamforming condition.
+The article (https://doi.org/10.3389/fnins.2022.869426) contains all methodological details
+- Björn Holtze (February, 2022)
 
 Highlights
 ----------
@@ -70,17 +103,17 @@ Highlights
       - Sampling rate (Hz): 500.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 1
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: —
+      - Modality: —
+      - Type: —
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 6.0 GB
+      - Size on disk: 323.9 KB
       - File count: 36
       - Format: BIDS
 

@@ -5,7 +5,9 @@
 eegdash.dataset.DS005565
 ========================
 
-participants.tsv (OpenNeuro ``ds005565``). Access recordings and metadata through EEGDash.
+Neural associations between fingerspelling, print, and signs: An ERP priming study with deaf readers (OpenNeuro ``ds005565``). Access recordings and metadata through EEGDash.
+
+**Citation:** Brittany Lee, Sofia E. Ortega, Priscilla M. Martinez, Katherine J. Midgley, Phillip J. Holcomb, Karen Emmorey (2024). *Neural associations between fingerspelling, print, and signs: An ERP priming study with deaf readers*. `10.18112/openneuro.ds005565.v1.0.3 <https://doi.org/10.18112/openneuro.ds005565.v1.0.3>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ participants.tsv (OpenNeuro ``ds005565``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 1.0`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS005565``
    * - Title
-     - participants.tsv
+     - Neural associations between fingerspelling, print, and signs: An ERP priming study with deaf readers
    * - Year
      - 2024
    * - Authors
@@ -44,11 +46,32 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds005565,
-        title = {participants.tsv},
+        title = {Neural associations between fingerspelling, print, and signs: An ERP priming study with deaf readers},
         author = {Brittany Lee and Sofia E. Ortega and Priscilla M. Martinez and Katherine J. Midgley and Phillip J. Holcomb and Karen Emmorey},
         doi = {10.18112/openneuro.ds005565.v1.0.3},
         url = {https://doi.org/10.18112/openneuro.ds005565.v1.0.3},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS005565&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS005565%0A-%20%2A%2ATitle%3A%2A%2A%20Neural%20associations%20between%20fingerspelling%2C%20print%2C%20and%20signs%3A%20An%20ERP%20priming%20study%20with%20deaf%20readers%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+Data collection took place at the NeuroCognition Laboratory (NCL) in San Diego, California under the supervision of Dr. Phillip Holcomb. This project followed the San Diego State University’s IRB guidelines.
+Participants sat in a comfortable chair in a darkened sound attenuated room throughout the experiment. They were given a gamepad for button pressing. They were instructed to watch the LCD video monitor that was at a viewing distance of 150cm.
+Participants were presented with 300 prime-target pairs. All targets were four-letter English words. Of the 300 critical trials, 100 had English word primes, 100 had ASL sign primes, and 100 had fingerspelled word primes. Half of the primes in each condition were related to the targets. Related English word primes were identity primes to the English word, related fingerspelled word primes were also identity primes, and related ASL primes were ASL translations of the English word targets. The other half of the primes were unrelated to the targets.
+Participants were instructed to focus on the purple fixation cross that appeared on the screen for 800ms. This fixation cross then turned white for 500ms. Then, one of three prime conditions was presented: an English word, an ASL sign, or a fingerspelled word. English prime words were presented for 300ms. Signed (M = 565ms) and fingerspelled (M = 1173ms) video primes had variable durations. All target stimuli were 4-letter English words presented for 500ms. Related primes were either identity or translations.
+Press any of the 4 buttons on the right of the gamepad whenever you see an animal. It doesn’t matter if the animal is presented as a sign, a word, or fingerspelled. Press for ANY animal. You can blink whenever you see purple. A purple + means you have time for a quick blink. A purple (--) means you can blink as much as you want.
 
 Highlights
 ----------
@@ -70,12 +93,12 @@ Highlights
       - Sampling rate (Hz): 500.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 1
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: Healthy
+      - Modality: Visual
+      - Type: Memory
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

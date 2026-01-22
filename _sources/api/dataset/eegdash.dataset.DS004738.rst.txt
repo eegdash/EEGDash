@@ -5,7 +5,9 @@
 eegdash.dataset.DS004738
 ========================
 
-participants.tsv (OpenNeuro ``ds004738``). Access recordings and metadata through EEGDash.
+sfb_meg_phantom (B04/C01) (OpenNeuro ``ds004738``). Access recordings and metadata through EEGDash.
+
+**Citation:** Bahne H. Bahners, Roxanne Lofredi, Tilmann Sander, Alfons Schnitzler, Andrea A. Kuhn, Esther Florin (2023). *sfb_meg_phantom (B04/C01)*. `10.18112/openneuro.ds004738.v1.0.1 <https://doi.org/10.18112/openneuro.ds004738.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ participants.tsv (OpenNeuro ``ds004738``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 1.0`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS004738``
    * - Title
-     - participants.tsv
+     - sfb_meg_phantom (B04/C01)
    * - Year
      - 2023
    * - Authors
@@ -44,11 +46,32 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds004738,
-        title = {participants.tsv},
+        title = {sfb_meg_phantom (B04/C01)},
         author = {Bahne H. Bahners and Roxanne Lofredi and Tilmann Sander and Alfons Schnitzler and Andrea A. Kuhn and Esther Florin},
         doi = {10.18112/openneuro.ds004738.v1.0.1},
         url = {https://doi.org/10.18112/openneuro.ds004738.v1.0.1},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS004738&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS004738%0A-%20%2A%2ATitle%3A%2A%2A%20sfb_meg_phantom%20%28B04/C01%29%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+This dataset is a part of the data used for the study: 'Bahners B.H., Lofredi R. , Sander T., Schnitzler A., Kuhn A.A., Florin E. Deep brain stimulation device-specific artefacts in MEG recordings. 2023, submitted. doi: tba'
+Please use the latest version of the dataset.
+For detailed information about measurement protocol please refer to doi: tba. Additional information about Neuromag Phantom measurement is provided below.
+Neuromag Phantom Measurement
+Movement onset is recorded with an accelerometer and captured with MISC006-MISC008
 
 Highlights
 ----------
@@ -66,16 +89,16 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 125 (24), 9 (26)
+      - Channels: 9 (13), 323 (13), 160 (12), 125 (12)
       - Sampling rate (Hz): 5000.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 2
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: Other
+      - Modality: Other
+      - Type: Other
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

@@ -5,7 +5,9 @@
 eegdash.dataset.DS003987
 ========================
 
-participants.tsv (OpenNeuro ``ds003987``). Access recordings and metadata through EEGDash.
+EEG: Amphetamine trials 5CCPT and Probabilistic Learning (OpenNeuro ``ds003987``). Access recordings and metadata through EEGDash.
+
+**Citation:** James F Cavanagh, Greg Light, Neal Swerdlow, Jonathan Brigman, Jared Young (2022). *EEG: Amphetamine trials 5CCPT and Probabilistic Learning*. `10.18112/openneuro.ds003987.v1.0.0 <https://doi.org/10.18112/openneuro.ds003987.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ participants.tsv (OpenNeuro ``ds003987``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 1.0`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS003987``
    * - Title
-     - participants.tsv
+     - EEG: Amphetamine trials 5CCPT and Probabilistic Learning
    * - Year
      - 2022
    * - Authors
@@ -44,11 +46,28 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds003987,
-        title = {participants.tsv},
+        title = {EEG: Amphetamine trials 5CCPT and Probabilistic Learning},
         author = {James F Cavanagh and Greg Light and Neal Swerdlow and Jonathan Brigman and Jared Young},
         doi = {10.18112/openneuro.ds003987.v1.0.0},
         url = {https://doi.org/10.18112/openneuro.ds003987.v1.0.0},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS003987&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS003987%0A-%20%2A%2ATitle%3A%2A%2A%20EEG%3A%20Amphetamine%20trials%205CCPT%20and%20Probabilistic%20Learning%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+Two different tasks.   From: "Electrophysiological biomarkers of behavioral dimensions from cross-species paradigms"   Second phase (UH3 phase): Amphetamine trials.    Data for both Bhakta et al. 5CCPT paper (humans only) and Cavanagh et al. PLT paper (humans and mice).      N=23 humans.  3 drug conditions: placebo, 10mg, 20mg.  N=28 mice in code folder.  4 drug condis:  placebo, 0.1, 0.3, 1.0 mg/kg.    EEG Triggers were odd binary recombinations that were re-translated into 0-255 in Matlab.   See .m scripts and Trigger Translator.xls *********** OK!  LISTEN!   The .bdf files were to big to import using this function.  So I imported them in EEGLab, downsampled to 500 Hz, then saved them as .set files.  THEN I ran the import script on these .set files.  So you do not need to re-downsample in STEP1 if you run anything from the code folder.   *********** Data collected circa 2016-2019 in San Diego.  Data analyzed circa 2017-2021 in New Mexico.   - James F Cavanagh 06/16/2021
 
 Highlights
 ----------
@@ -66,16 +85,16 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 64
+      - Channels: 64 (69), 71 (69)
       - Sampling rate (Hz): 500.0930232558139
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 1
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: —
+      - Modality: —
+      - Type: —
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

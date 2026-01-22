@@ -5,7 +5,9 @@
 eegdash.dataset.DS002725
 ========================
 
-participants.tsv (OpenNeuro ``ds002725``). Access recordings and metadata through EEGDash.
+A dataset recording joint EEG-fMRI during affective music listening (OpenNeuro ``ds002725``). Access recordings and metadata through EEGDash.
+
+**Citation:** Ian Daly, Nicoletta Nicolaou, Duncan Williams, Faustina Hwang, Alexis Kirke, Eduardo Miranda, Slawomir J. Nasuto (2020). *A dataset recording joint EEG-fMRI during affective music listening*. `10.18112/openneuro.ds002725.v1.0.0 <https://doi.org/10.18112/openneuro.ds002725.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ participants.tsv (OpenNeuro ``ds002725``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 2.0`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS002725``
    * - Title
-     - participants.tsv
+     - A dataset recording joint EEG-fMRI during affective music listening
    * - Year
      - 2020
    * - Authors
@@ -44,11 +46,35 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds002725,
-        title = {participants.tsv},
+        title = {A dataset recording joint EEG-fMRI during affective music listening},
         author = {Ian Daly and Nicoletta Nicolaou and Duncan Williams and Faustina Hwang and Alexis Kirke and Eduardo Miranda and Slawomir J. Nasuto},
         doi = {10.18112/openneuro.ds002725.v1.0.0},
         url = {https://doi.org/10.18112/openneuro.ds002725.v1.0.0},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS002725&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS002725%0A-%20%2A%2ATitle%3A%2A%2A%20A%20dataset%20recording%20joint%20EEG-fMRI%20during%20affective%20music%20listening%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+Dataset: Joint EEG-fMRI recording during affective music listening.
+This dataset was recorded from 21 healthy adult participants viia a joint EEG-fMRI modality while they
+listened to a set of music stimuli chosen and generated to produce different affective (emotional)
+reponses. Participants self-reported their felt affective states as they listened to the music.
+The full experiment description can be found in our paper (Daly et.al., 2019).
+Data recorded in 2016
+Published in 2019
+[1] Daly, I., Williams, D., Hwang, F., Kirke, A., Miranda, E. R., & Nasuto, S. J. (2019). Electroencephalography reflects the activity of sub-cortical brain regions during approach-withdrawal behaviour while listening to music. Scientific Reports, 9(1), 9415. https://doi.org/10.1038/s41598-019-45105-2
 
 Highlights
 ----------
@@ -66,16 +92,16 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 30
+      - Channels: 30 (105), 46 (105)
       - Sampling rate (Hz): 1000.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 5
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: —
+      - Modality: —
+      - Type: —
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

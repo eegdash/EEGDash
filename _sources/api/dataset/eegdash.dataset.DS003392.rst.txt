@@ -5,7 +5,9 @@
 eegdash.dataset.DS003392
 ========================
 
-participants.tsv (OpenNeuro ``ds003392``). Access recordings and metadata through EEGDash.
+NeuroSpin hMT+ Localizer DATA (MEG & aMRI) (OpenNeuro ``ds003392``). Access recordings and metadata through EEGDash.
+
+**Citation:** Nicolas Zilber, Philippe Ciuciu, Alexandre Gramfort, Leila Azizi, Virginie van Wassenhove (2020). *NeuroSpin hMT+ Localizer DATA (MEG & aMRI)*. `10.18112/openneuro.ds003392.v1.0.4 <https://doi.org/10.18112/openneuro.ds003392.v1.0.4>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ participants.tsv (OpenNeuro ``ds003392``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 0.0`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS003392``
    * - Title
-     - participants.tsv
+     - NeuroSpin hMT+ Localizer DATA (MEG & aMRI)
    * - Year
      - 2020
    * - Authors
@@ -44,11 +46,86 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds003392,
-        title = {participants.tsv},
+        title = {NeuroSpin hMT+ Localizer DATA (MEG & aMRI)},
         author = {Nicolas Zilber and Philippe Ciuciu and Alexandre Gramfort and Leila Azizi and Virginie van Wassenhove},
         doi = {10.18112/openneuro.ds003392.v1.0.4},
         url = {https://doi.org/10.18112/openneuro.ds003392.v1.0.4},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS003392&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS003392%0A-%20%2A%2ATitle%3A%2A%2A%20NeuroSpin%20hMT%2B%20Localizer%20DATA%20%28MEG%20%26%20aMRI%29%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+Dataset description: Magnetoencephalography (MEG) dataset recorded during a hMT+ (human visual motion area) localizer task
+Published in:
+Zilber, N., Ciuciu, P., Gramfort, A., Azizi, L., & Van Wassenhove, V. (2014). Supramodal processing optimizes visual perceptual learning and plasticity. Neuroimage, 93, 32-46.
+Data curation: Sophie Herbst, Alexandre Gramfort
+This MEG dataset was prepared in the Brain Imaging Data Structure (MEG-BIDS, Niso et al. 2018) format using MNE-BIDS (Appelhoff et al. 2019).
+The dataset contains 10 of the 12 participants from the vision-only training group.
+Two participants were removed, one due to problems with the trigger channel, and one due to different settings in the acquisition preventing us from processing the dataset without prior adjustment.
+
+**EXPERIMENT**
+
+
+.. dropdown:: View full README
+   :class-container: sd-shadow-sm
+
+   Dataset description: Magnetoencephalography (MEG) dataset recorded during a hMT+ (human visual motion area) localizer task
+   Published in:
+   Zilber, N., Ciuciu, P., Gramfort, A., Azizi, L., & Van Wassenhove, V. (2014). Supramodal processing optimizes visual perceptual learning and plasticity. Neuroimage, 93, 32-46.
+   Data curation: Sophie Herbst, Alexandre Gramfort
+   This MEG dataset was prepared in the Brain Imaging Data Structure (MEG-BIDS, Niso et al. 2018) format using MNE-BIDS (Appelhoff et al. 2019).
+   The dataset contains 10 of the 12 participants from the vision-only training group.
+   Two participants were removed, one due to problems with the trigger channel, and one due to different settings in the acquisition preventing us from processing the dataset without prior adjustment.
+   
+   **EXPERIMENT**
+   
+   Participants were presented with a cloud of moving dots, always starting with incoherent movement (up or down result in equal display, due to the incoherence).
+   After 500 ms, the movement became coherent in 50% of the trials (95% coherence, up or down) and remained incoherent in the other 50%, lasting for 1000 ms. Participants were instructed to passively view the stimuli for a total of 120 trials.
+   Events:
+   1: coherent / down
+   2: coherent / up
+   3: incoherent / down
+   4: incoherent / up
+   
+   **MEG**
+   
+   Brain magnetic fields were recorded in a MSR using a 306 MEG system (Neuromag Elekta LTD, Helsinki). MEG recordings were sampled at
+   2 kHz and band-pass filtered between 0.03 and 600 Hz.
+   Four head position coils (HPI) measured the head position of participants before each
+   block; three fiducial markers (nasion and pre-auricular points) were
+   used for digitization and anatomicalMRI (aMRI) immediately following
+   MEG acquisition.
+   Electrooculograms (EOG, horizontal and vertical eye
+   movements) and electrocardiogram (ECG) were simultaneously recorded.
+   Prior to the session, 5 min of empty room recordings was acquired
+   for the computation of the noise covariance matrix.
+   Bad MEG channels were marked manually.
+   
+   **MRI**
+   
+   The T1 weighted aMRI was recorded using a 3-T Siemens Trio MRI
+   scanner. Parameters of the sequence were: voxel size: 1.0 × 1.0 ×
+   1.1 mm; acquisition time: 466 s; repetition time TR = 2300 ms; and
+   echo time TE = 2.98 ms
+   
+   **References**
+   
+   Zilber, N., Ciuciu, P., Gramfort, A., Azizi, L., & Van Wassenhove, V. (2014). Supramodal processing optimizes visual perceptual learning and plasticity. Neuroimage, 93, 32-46.
+   Appelhoff, S., Sanderson, M., Brooks, T., Vliet, M., Quentin, R., Holdgraf, C., Chaumon, M., Mikulan, E., Tavabi, K., Höchenberger, R., Welke, D., Brunner, C., Rockhill, A., Larson, E., Gramfort, A. and Jas, M. (2019). MNE-BIDS: Organizing electrophysiological data into the BIDS format and facilitating their analysis. Journal of Open Source Software 4: (1896). https://doi.org/10.21105/joss.01896
+   Niso, G., Gorgolewski, K. J., Bock, E., Brooks, T. L., Flandin, G., Gramfort, A., Henson, R. N., Jas, M., Litvak, V., Moreau, J., Oostenveld, R., Schoffelen, J., Tadel, F., Wexler, J., Baillet, S. (2018). MEG-BIDS, the brain imaging data structure extended to magnetoencephalography. Scientific Data, 5, 180110. http://doi.org/10.1038/sdata.2018.110
+
 
 Highlights
 ----------
@@ -66,16 +143,16 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 306
+      - Channels: 306 (22), 320 (22)
       - Sampling rate (Hz): 2000.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 2
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: Healthy
+      - Modality: Visual
+      - Type: Perception
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

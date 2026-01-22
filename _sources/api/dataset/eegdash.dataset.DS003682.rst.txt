@@ -5,7 +5,9 @@
 eegdash.dataset.DS003682
 ========================
 
-manifest.json (OpenNeuro ``ds003682``). Access recordings and metadata through EEGDash.
+Model-based aversive learning in humans is supported by preferential task state reactivation (OpenNeuro ``ds003682``). Access recordings and metadata through EEGDash.
+
+**Citation:** Toby Wise, Yunzhe Liu, Fatima Chowdhury, Raymond J. Dolan (2021). *Model-based aversive learning in humans is supported by preferential task state reactivation*. `10.18112/openneuro.ds003682.v1.0.0 <https://doi.org/10.18112/openneuro.ds003682.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ manifest.json (OpenNeuro ``ds003682``). Access recordings and metadata through E
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 1.0`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS003682``
    * - Title
-     - manifest.json
+     - Model-based aversive learning in humans is supported by preferential task state reactivation
    * - Year
      - 2021
    * - Authors
@@ -44,11 +46,29 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds003682,
-        title = {manifest.json},
+        title = {Model-based aversive learning in humans is supported by preferential task state reactivation},
         author = {Toby Wise and Yunzhe Liu and Fatima Chowdhury and Raymond J. Dolan},
         doi = {10.18112/openneuro.ds003682.v1.0.0},
         url = {https://doi.org/10.18112/openneuro.ds003682.v1.0.0},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS003682&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS003682%0A-%20%2A%2ATitle%3A%2A%2A%20Model-based%20aversive%20learning%20in%20humans%20is%20supported%20by%20preferential%20task%20state%20reactivation%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+This dataset contains raw and processed MEG data for the paper "Model-based aversive learning in humans is supported by preferential task state reactivation" by Toby Wise, Yunzhe Liu, Fatima Chowdhury & Ray Dolan.
+Raw data is provided as `.fif` files, although it was acquired on a CRF system.
 
 Highlights
 ----------
@@ -66,16 +86,16 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 272
+      - Channels: 414 (336), 272 (336)
       - Sampling rate (Hz): 1200.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 1
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: Healthy
+      - Modality: —
+      - Type: Learning
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

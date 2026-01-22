@@ -7,13 +7,15 @@ eegdash.dataset.DS004973
 
 An fNIRS dataset for driving risk cognition of passengers in highly automated driving scenarios (OpenNeuro ``ds004973``). Access recordings and metadata through EEGDash.
 
+**Citation:** Xiaofei Zhang, Qiaoya Wang, Jun Li, Xiaorong Gao, Bowen Li, Bingbing Nie, Jianqiang Wang, Ziyuan Zhou, Yingkai Yang, Hong Wang (2024). *An fNIRS dataset for driving risk cognition of passengers in highly automated driving scenarios*. `10.18112/openneuro.ds004973.v1.0.1 <https://doi.org/10.18112/openneuro.ds004973.v1.0.1>`__
+
 .. rst-class:: sd-badges
 
 :bdg-primary:`Modality: fnirs` :bdg-info:`Tasks: 12` :bdg-secondary:`Subjects: 21` :bdg-secondary:`Recordings: 1177`
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: —`
 
 Dataset Information
 -------------------
@@ -27,7 +29,7 @@ Dataset Information
    * - Title
      - An fNIRS dataset for driving risk cognition of passengers in highly automated driving scenarios
    * - Year
-     - —
+     - 2024
    * - Authors
      - Xiaofei Zhang, Qiaoya Wang, Jun Li, Xiaorong Gao, Bowen Li, Bingbing Nie, Jianqiang Wang, Ziyuan Zhou, Yingkai Yang, Hong Wang
    * - License
@@ -50,6 +52,37 @@ Dataset Information
         url = {https://doi.org/10.18112/openneuro.ds004973.v1.0.1},
       }
 
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS004973&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS004973%0A-%20%2A%2ATitle%3A%2A%2A%20An%20fNIRS%20dataset%20for%20driving%20risk%20cognition%20of%20passengers%20in%20highly%20automated%20driving%20scenarios%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+The  fNIRS dataset focus on the prefrontal cortex activity in fourteen types of highly automated driving scenarios, which considers age, sex and driving experience factors, and contains the data of an 8-channel fNIRS device and driving scenarios. A total of 20 participants completed this driving simulator experiment，and each participant need to finish 12 tasks. Their ages range from 21 to 46 years old, with 5 females and 15 males. 
+
+ Our objective is to provides the data support for finding the difference of prefrontal cortex activity between low-risk and high-risk episodes by quantifying the risk of driving scenarios. This research may provide a solution to prevent potential hazard and improve SOTIF based on brain-computer interface technology and fNIRS, in the future. 
+
+
+**Notes**
+
+
+- Here a total of 240 tasks which are need to be completed by  20 participants，and the data about 20 tasks is removed because the data are not recorded correctly.
+- We update the results of subjective evaluations about dangerous degree of VTD segment, and they are shown in the file "participants.tsv".
+
+
+**How to cite?**
+
+doi:10.18112/openneuro.ds004973.v1.0.0
+
 Highlights
 ----------
 
@@ -70,12 +103,12 @@ Highlights
       - Sampling rate (Hz): —
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 12
-      - Experiment type: —
-      - Subject type: Highly automated driving  vehicles
+      - Pathology: Healthy
+      - Modality: Visual
+      - Type: Attention
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

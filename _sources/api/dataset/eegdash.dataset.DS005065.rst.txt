@@ -7,13 +7,15 @@ eegdash.dataset.DS005065
 
 Heuristics in risky decision-making relate to preferential representation of information MEG data (OpenNeuro ``ds005065``). Access recordings and metadata through EEGDash.
 
-.. rst-class:: sd-badges
-
-:bdg-primary:`Modality: meg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 22` :bdg-secondary:`Recordings: 3397`
+**Citation:** Evan M. Russek, Rani Moran, Yunzhe Liu, Ray Dolan, Quentin Huys (2024). *Heuristics in risky decision-making relate to preferential representation of information MEG data*. `10.18112/openneuro.ds005065.v1.0.0 <https://doi.org/10.18112/openneuro.ds005065.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-primary:`Modality: meg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 21` :bdg-secondary:`Recordings: 275`
+
+.. rst-class:: sd-badges
+
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 1.0`
 
 Dataset Information
 -------------------
@@ -27,7 +29,7 @@ Dataset Information
    * - Title
      - Heuristics in risky decision-making relate to preferential representation of information MEG data
    * - Year
-     - —
+     - 2024
    * - Authors
      - Evan M. Russek, Rani Moran, Yunzhe Liu, Ray Dolan, Quentin Huys
    * - License
@@ -35,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds005065.v1.0.0 <https://doi.org/10.18112/openneuro.ds005065.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds005065>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005065>`__ | `Source URL <https://openneuro.org/datasets/ds005065/versions/1.0.0>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds005065>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005065>`__ | `Source URL <https://openneuro.org/datasets/ds005065>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -50,6 +52,26 @@ Dataset Information
         url = {https://doi.org/10.18112/openneuro.ds005065.v1.0.0},
       }
 
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS005065&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS005065%0A-%20%2A%2ATitle%3A%2A%2A%20Heuristics%20in%20risky%20decision-making%20relate%20to%20preferential%20representation%20of%20information%20MEG%20data%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+The task consisted of 13 scanner runs (except for subject 1 who completed 5 rather than 3 localizer runs). Runs 1-3 (1-5 for subject 1) are the localizer task. Runs 4-5 are non-analyzed data from the 'probability learning' task. Runs 6-13 (8-15 for subject 1) are the risky decision-making task.
+Event times were recorded with a photodiode, which is accessible as a MEG channel. This has been processed so that event times are listed in derivatives/Event_Info_Tables. Raw times of events in the scan are in column "onset_time". The corresponding index into the unprocessed MEG data is in column "scanner_onset_idx". The onset into the downsampled data is in "onset_idx_ds". In the table, each row corresponds to an event. Block number denotes which scanner run that event belongs to. For the localizer task (denoted in phase column), events are image onsets. "image_type" specifies the role of that image in the task ("CHOICE" or "OUTCOME") and "image_number" denotes which choice or outcome it is (see paper Fig. 1). Finally, "image_name" denotes which image category was shown (e.g. "Hand"). For the task, events correspond to gamble information onset (Info), Probability stimulus presentation ("Choice"), response ("Gamble Response") and outcome onset ("Outcome"). Columns denote which image was shown and what the response was (accept).
+derivatives/Epoched_Data contains epoched preprocessed data for each subject for the localizer task and then around each choice in the main choice task. Both are epoched from from 0-500 ms following the event.
+Code to analyze the data along with additional behavioral data is available at https://github.com/evanrussek/MEG_Heuristics_Risk_Preferential_Information
+
 Highlights
 ----------
 
@@ -59,29 +81,29 @@ Highlights
    .. grid-item-card:: Subjects & recordings
       :class-card: sd-border-1
 
-      - Subjects: 22
-      - Recordings: 3397
+      - Subjects: 21
+      - Recordings: 275
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: —
-      - Sampling rate (Hz): —
+      - Channels: 415 (210), 341 (65)
+      - Sampling rate (Hz): 1200.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 1
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: Healthy
+      - Modality: Visual
+      - Type: Decision-making
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: —
-      - File count: 3397
+      - Size on disk: 425.8 GB
+      - File count: 275
       - Format: BIDS
 
    .. grid-item-card:: License & citation

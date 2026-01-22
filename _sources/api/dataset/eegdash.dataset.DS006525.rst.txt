@@ -5,7 +5,9 @@
 eegdash.dataset.DS006525
 ========================
 
-participants.tsv (OpenNeuro ``ds006525``). Access recordings and metadata through EEGDash.
+Resting EEG (OpenNeuro ``ds006525``). Access recordings and metadata through EEGDash.
+
+**Citation:** Computational Neuroimaging and Neuroengineering Lab ar the University of Oklahoma (2025). *Resting EEG*. `10.18112/openneuro.ds006525.v1.0.0 <https://doi.org/10.18112/openneuro.ds006525.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ participants.tsv (OpenNeuro ``ds006525``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: —`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS006525``
    * - Title
-     - participants.tsv
+     - Resting EEG
    * - Year
      - 2025
    * - Authors
@@ -44,11 +46,34 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds006525,
-        title = {participants.tsv},
+        title = {Resting EEG},
         author = {Computational Neuroimaging and Neuroengineering Lab ar the University of Oklahoma},
         doi = {10.18112/openneuro.ds006525.v1.0.0},
         url = {https://doi.org/10.18112/openneuro.ds006525.v1.0.0},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS006525&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS006525%0A-%20%2A%2ATitle%3A%2A%2A%20Resting%20EEG%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+Introduction: The EEG data was recorded using the 128-channel Amps 300 amplifier (Electrical Geodesics Inc., OR, USA) at a sampling frequency of 1000 Hz.
+The EEG data acquisition was conducted  during the resting.
+Structural MRI data for the same participants were acquired at the University of Oklahoma Health Science Center (OUHSC) MRI facility using a GE MR750 scanner. The scans were obtained with GE’s BRAVO sequence, with a field of view (FOV) of 240 mm and 180 axial slices per slab
+Preprocessing in EEGLAB: After the data acquisition, a band-pass filter (0.5–100 Hz) and a notch filter (58–62 Hz) were applied to remove noise.
+Noisy channels and artifacts (e.g., from eye blinks, muscle movements, or heartbeats) were identified and removed.
+Bad channels were replaced using interpolation, and the data was re-referenced to the average of all electrodes.
+The data was then sampled down to 250 Hz to reduce file size while keeping enough detail. No data segments were removed to ensure the continuity needed for later analysis.
 
 Highlights
 ----------
@@ -66,16 +91,16 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 128
+      - Channels: 128 (60), 129 (8)
       - Sampling rate (Hz): 250.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 1
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: —
+      - Modality: Resting State
+      - Type: Resting-state
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

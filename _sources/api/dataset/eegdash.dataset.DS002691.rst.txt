@@ -5,7 +5,9 @@
 eegdash.dataset.DS002691
 ========================
 
-participants.tsv (OpenNeuro ``ds002691``). Access recordings and metadata through EEGDash.
+Internal attention study (OpenNeuro ``ds002691``). Access recordings and metadata through EEGDash.
+
+**Citation:** Arnaud Delorme, Dean Radin (2021). *Internal attention study*. `10.18112/openneuro.ds002691.v1.1.0 <https://doi.org/10.18112/openneuro.ds002691.v1.1.0>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ participants.tsv (OpenNeuro ``ds002691``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 2.0`
 
 Dataset Information
 -------------------
@@ -25,9 +27,9 @@ Dataset Information
    * - Dataset ID
      - ``DS002691``
    * - Title
-     - participants.tsv
+     - Internal attention study
    * - Year
-     - 2020
+     - 2021
    * - Authors
      - Arnaud Delorme, Dean Radin
    * - License
@@ -44,11 +46,40 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds002691,
-        title = {participants.tsv},
+        title = {Internal attention study},
         author = {Arnaud Delorme and Dean Radin},
         doi = {10.18112/openneuro.ds002691.v1.1.0},
         url = {https://doi.org/10.18112/openneuro.ds002691.v1.1.0},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS002691&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS002691%0A-%20%2A%2ATitle%3A%2A%2A%20Internal%20attention%20study%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+This experiment has 20 subjects. Subjects asked to mentally concentrate on
+a target (see published article for more information) for periods of about
+15 seconds.
+There are 4 verbal instructions given to subject by an automated computer
+program connected to a speakerphone:
+- The instruction is to wait until the experiment starts
+- The instruction is to relax
+- The instruction is to get ready as the trial is about to start
+- The instruction is to mentally concentrate on the target
+All the experiment is performed eye's closed. Relax periods last for about
+9 seconds, are then followed by a period of 6 seconds where the participants
+is asked to "get ready" for the trial, followed by a period of 15 seconds of
+concentration. This sequence is repeated 20 times for each participant.
 
 Highlights
 ----------
@@ -70,17 +101,17 @@ Highlights
       - Sampling rate (Hz): 250.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 1
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: —
+      - Modality: —
+      - Type: —
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 776.7 MB
+      - Size on disk: 1.5 MB
       - File count: 20
       - Format: BIDS
 

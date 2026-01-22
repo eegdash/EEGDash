@@ -5,7 +5,9 @@
 eegdash.dataset.DS005662
 ========================
 
-participants.tsv (OpenNeuro ``ds005662``). Access recordings and metadata through EEGDash.
+A high-quality EEG dataset for studying visual touch perception (OpenNeuro ``ds005662``). Access recordings and metadata through EEGDash.
+
+**Citation:** Sophie Smit, Almudena Ramírez-Haro, Manuel Varlet, Denise Moerel, Genevieve L. Quek, Tijl Grootswagers (2024). *A high-quality EEG dataset for studying visual touch perception*. `10.18112/openneuro.ds005662.v2.0.0 <https://doi.org/10.18112/openneuro.ds005662.v2.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ participants.tsv (OpenNeuro ``ds005662``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: —`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS005662``
    * - Title
-     - participants.tsv
+     - A high-quality EEG dataset for studying visual touch perception
    * - Year
      - 2024
    * - Authors
@@ -44,11 +46,31 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds005662,
-        title = {participants.tsv},
+        title = {A high-quality EEG dataset for studying visual touch perception},
         author = {Sophie Smit and Almudena Ramírez-Haro and Manuel Varlet and Denise Moerel and Genevieve L. Quek and Tijl Grootswagers},
         doi = {10.18112/openneuro.ds005662.v2.0.0},
         url = {https://doi.org/10.18112/openneuro.ds005662.v2.0.0},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS005662&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS005662%0A-%20%2A%2ATitle%3A%2A%2A%20A%20high-quality%20EEG%20dataset%20for%20studying%20visual%20touch%20perception%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+Data collection took place at The MARCS Institute for Brain, Behaviour and Development in Sydney, Australia. The study was approved by the Western Sydney University Ethics Committee.
+We recorded EEG data while participants viewed rapid streams of videos adapted from the Validated Touch-Video Database (Smit & Rich, 2025) depicting touch to a hand. Both the adapted videos used in this project, and original videos and validation data, are available on OSF (https://osf.io/jvkqa/).
+There were 32 sequences in total with a total of 2880 non-target trials (90 unique videos, each presented 8 times) alongside a variable number of target trials (showing touch to an object). Between trials there was an inter-trial-interval of 200ms. The experimental task lasted approximately 55 minutes including breaks. We also recorded questionnaire responses.
+Whole brain 64-channel EEG data were recorded using an Active Two Biosemi system (Biosemi, Inc.) at 2048Hz and 10-20 standard caps. Stimuli were presented using Python and PsychoPy software version 2023.3.1.
 
 Highlights
 ----------
@@ -70,12 +92,12 @@ Highlights
       - Sampling rate (Hz): —
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 1
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: Healthy
+      - Modality: Visual
+      - Type: Perception
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

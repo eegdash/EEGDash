@@ -5,7 +5,9 @@
 eegdash.dataset.DS004577
 ========================
 
-participants.tsv (OpenNeuro ``ds004577``). Access recordings and metadata through EEGDash.
+Dataset containing resting EEG for a sample of 103 normal infants in the first year of life (OpenNeuro ``ds004577``). Access recordings and metadata through EEGDash.
+
+**Citation:** Thalía Harmony (Neurodevelopment Research Unit; Instituto de Neurobiología; Universidad Nacional Autónoma de México), Gloria Otero-Ojeda (Facultad de Medicina; Universidad Autónoma del Estado de México), Eduardo Aubert (Centro de Neurociencias de Cuba), Thalía Fernández (Neurodevelopment Research Unit; Instituto de Neurobiología; Universidad Nacional Autónoma de México), Lourdes Cubero-Rego (Neurodevelopment Research Unit; Instituto de Neurobiología; Universidad Nacional Autónoma de México) (2023). *Dataset containing resting EEG for a sample of 103 normal infants in the first year of life*. `10.18112/openneuro.ds004577.v1.0.1 <https://doi.org/10.18112/openneuro.ds004577.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ participants.tsv (OpenNeuro ``ds004577``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 3.0`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS004577``
    * - Title
-     - participants.tsv
+     - Dataset containing resting EEG for a sample of 103 normal infants in the first year of life
    * - Year
      - 2023
    * - Authors
@@ -44,11 +46,35 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds004577,
-        title = {participants.tsv},
+        title = {Dataset containing resting EEG for a sample of 103 normal infants in the first year of life},
         author = {Thalía Harmony (Neurodevelopment Research Unit; Instituto de Neurobiología; Universidad Nacional Autónoma de México) and Gloria Otero-Ojeda (Facultad de Medicina; Universidad Autónoma del Estado de México) and Eduardo Aubert (Centro de Neurociencias de Cuba) and Thalía Fernández (Neurodevelopment Research Unit; Instituto de Neurobiología; Universidad Nacional Autónoma de México) and Lourdes Cubero-Rego (Neurodevelopment Research Unit; Instituto de Neurobiología; Universidad Nacional Autónoma de México)},
         doi = {10.18112/openneuro.ds004577.v1.0.1},
         url = {https://doi.org/10.18112/openneuro.ds004577.v1.0.1},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS004577&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS004577%0A-%20%2A%2ATitle%3A%2A%2A%20Dataset%20containing%20resting%20EEG%20for%20a%20sample%20of%20103%20normal%20infants%20in%20the%20first%20year%20of%20life%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+May 25th 2023
+Neurodevelopment Research Unit, Instituto de Neurobiología, Universidad Nacional Autónoma de México
+This is a dataset containing resting EEG for a sample of 103 normal infants (41 female and 62 male) in the first year of life.
+81 subjects with 1 EEG recording
+18 subjects with 2 EEG recordings
+3 subjects with 3 EEG recording
+1 subject with 4 EEG recordings
+130 EEG recordings in total distributed in 4 sessions
 
 Highlights
 ----------
@@ -66,16 +92,16 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 21 (2), 19 (212), 24 (46)
+      - Channels: 19 (212), 24 (46), 21 (2)
       - Sampling rate (Hz): 200.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 1
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: —
+      - Modality: —
+      - Type: —
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

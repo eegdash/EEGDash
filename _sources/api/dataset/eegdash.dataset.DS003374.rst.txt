@@ -7,13 +7,15 @@ eegdash.dataset.DS003374
 
 Dataset of neurons and intracranial EEG from human amygdala during aversive dynamic visual stimulation (OpenNeuro ``ds003374``). Access recordings and metadata through EEGDash.
 
+**Citation:** Tommaso Fedele, Ece Boran, Valeri Chirkov, Peter Hilfiker, Thomas Grunwald, Lennart Stieglitz, Hennric Jokeit, Johannes Sarnthein (2020). *Dataset of neurons and intracranial EEG from human amygdala during aversive dynamic visual stimulation*. `10.18112/openneuro.ds003374.v1.1.1 <https://doi.org/10.18112/openneuro.ds003374.v1.1.1>`__
+
 .. rst-class:: sd-badges
 
 :bdg-primary:`Modality: ieeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 9` :bdg-secondary:`Recordings: 18`
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 4.0`
 
 Dataset Information
 -------------------
@@ -50,6 +52,81 @@ Dataset Information
         url = {https://doi.org/10.18112/openneuro.ds003374.v1.1.1},
       }
 
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS003374&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS003374%0A-%20%2A%2ATitle%3A%2A%2A%20Dataset%20of%20neurons%20and%20intracranial%20EEG%20from%20human%20amygdala%20during%20aversive%20dynamic%20visual%20stimulation%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+
+**Dataset of neurons and intracranial EEG from human amygdala during aversive dynamic visual stimulation**
+
+
+**Summary**
+
+We present an electrophysiological dataset collected from the amygdalae of nine subjects attending a visual dynamic stimulation of emotional aversive content. The subjects were patients affected by epilepsy who underwent preoperative invasive monitoring in the mesial temporal lobe. Subjects were presented with dynamic visual sequences of fearful faces (aversive condition), interleaved with sequences of neutral landscapes (neutral condition).
+We provide the recordings of intracranial EEG (iEEG) and metadata related to the task, subjects, sessions and electrodes in the BIDS standard.
+We also provide a more extended version of the dataset that includes neuronal spike times and waveforms in the NIX standard under the folder "bidsignore/data_NIX". This extended dataset is also available in G-Node at https://gin.g-node.org/USZ_NCH/Human_Amygdala_MUA_sEEG_FearVideo/.
+This dataset allows the investigation of amygdalar response to dynamic aversive stimuli at multiple spatial scales, from the macroscopic EEG to the neuronal firing in the human brain.
+
+.. dropdown:: View full README
+   :class-container: sd-shadow-sm
+
+   
+   **Dataset of neurons and intracranial EEG from human amygdala during aversive dynamic visual stimulation**
+   
+   
+   **Summary**
+   
+   We present an electrophysiological dataset collected from the amygdalae of nine subjects attending a visual dynamic stimulation of emotional aversive content. The subjects were patients affected by epilepsy who underwent preoperative invasive monitoring in the mesial temporal lobe. Subjects were presented with dynamic visual sequences of fearful faces (aversive condition), interleaved with sequences of neutral landscapes (neutral condition).
+   We provide the recordings of intracranial EEG (iEEG) and metadata related to the task, subjects, sessions and electrodes in the BIDS standard.
+   We also provide a more extended version of the dataset that includes neuronal spike times and waveforms in the NIX standard under the folder "bidsignore/data_NIX". This extended dataset is also available in G-Node at https://gin.g-node.org/USZ_NCH/Human_Amygdala_MUA_sEEG_FearVideo/.
+   This dataset allows the investigation of amygdalar response to dynamic aversive stimuli at multiple spatial scales, from the macroscopic EEG to the neuronal firing in the human brain.
+   
+   **Repository structure**
+   
+   
+   **Main directory**
+   
+   Contains metadata in the BIDS standard.
+   
+   **Directories sub-****
+   
+   Contains folders for each subject, named sub-<subject number>.
+   
+   **Directory bidsignore**
+   
+   Contains data in the NIX standard, and metadata files. Subject_Characteristics.pdf describes subjects and NIX_File_Structure.pdf describes the structure of the NIX files.
+   
+   **Directory code_MATLAB**
+   
+   Contains MATLAB code for loading the data and generating the publication figures. Main_Load_NIX_Data.m contains code snippets for reading NIX data and task related information. Main_Plot_Figures.m uses the functions Figure_2.m and Figure_3.m to generate figures.
+   Required dependencies to run the script Main_Load_NIX_Data.m:
+   *  `Nix-mx v1.4.1 <https://github.com/G-Node/nix-mx/>`__
+   Required dependencies to run the script Main_Plot_Figures.m:
+   *  `Nix-mx v1.4.1 <https://github.com/G-Node/nix-mx/>`__
+   *  `Gramm <https://github.com/piermorel/gramm/>`__
+   *  `FieldTrip <http://www.fieldtriptoolbox.org/download/>`__
+   
+   **Directory data_NIX**
+   
+   Contains nix files for each session of the task. Each file is named with the format:
+   Data\_Subject\_\<subject number>\_Session\_\<session number>.h5
+   
+   **Support**
+   
+   For questions on the dataset or the task, contact Johannes Sarnthein at `johannes.sarnthein@usz.ch <johannes.sarnthein@usz.ch>`__.
+
+
 Highlights
 ----------
 
@@ -66,16 +143,16 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 2 (16), 4 (20)
+      - Channels: 4 (20), 2 (16)
       - Sampling rate (Hz): 2000.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 1
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: Epilepsy
+      - Modality: Visual
+      - Type: Affect
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

@@ -5,7 +5,9 @@
 eegdash.dataset.DS001785
 ========================
 
-task-thrup_events.json (OpenNeuro ``ds001785``). Access recordings and metadata through EEGDash.
+Evidence accumulation relates to perceptual consciousness and monitoring (OpenNeuro ``ds001785``). Access recordings and metadata through EEGDash.
+
+**Citation:** Michael Pereira, Pierre Mégevand, Mi Xue Tan, Wenwen Chang, Shuo Wang, Ali Rezai, Margitta Seeck, Marco Corniola, Shahan Momjian, Fosco Bernasconi, Olaf Blanke, Nathan Faivre (2019). *Evidence accumulation relates to perceptual consciousness and monitoring*. `10.18112/openneuro.ds001785.v1.1.1 <https://doi.org/10.18112/openneuro.ds001785.v1.1.1>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ task-thrup_events.json (OpenNeuro ``ds001785``). Access recordings and metadata 
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 2.0`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS001785``
    * - Title
-     - task-thrup_events.json
+     - Evidence accumulation relates to perceptual consciousness and monitoring
    * - Year
      - 2019
    * - Authors
@@ -44,11 +46,36 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds001785,
-        title = {task-thrup_events.json},
+        title = {Evidence accumulation relates to perceptual consciousness and monitoring},
         author = {Michael Pereira and Pierre Mégevand and Mi Xue Tan and Wenwen Chang and Shuo Wang and Ali Rezai and Margitta Seeck and Marco Corniola and Shahan Momjian and Fosco Bernasconi and Olaf Blanke and Nathan Faivre},
         doi = {10.18112/openneuro.ds001785.v1.1.1},
         url = {https://doi.org/10.18112/openneuro.ds001785.v1.1.1},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS001785&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS001785%0A-%20%2A%2ATitle%3A%2A%2A%20Evidence%20accumulation%20relates%20to%20perceptual%20consciousness%20and%20monitoring%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+This dataset contains the EEG used in the paper: Evidence accumulation relates to perceptual consciousness and monitoring, 2021, Nature Communications
+Participants:
+Twenty healthy participants (7 woman; age: 25.2, SD = 4.1) participated in this study for a 40 CHF compensation. Subjects gave written informed consent prior to participating and all experimental procedures were approved by the Commission Cantonale d'Ethique de la Recherche de la République et Canton de Genève (2015-00092 15-273).
+One patient with intractable epilepsy. The patient provided informed written consent for the present  study which was approved by the Commission Cantonale d’Ethique de la Recherche de la République et Canton de Genève (2016-01856).
+Stimuli were applied on the lateral palmar side of the right wrist using a MMC3 Haptuator vibrotactile device from TactileLabs Inc. (Montreal, Canada) driven by a 230 Hz sinusoid audio signal lasting 100 ms. Experiments started by a simple estimation of the individual detection threshold. The tactile stimulus was applied with decreasing intensity with steps corresponding to 2% of the initial intensity until the participant reported not feeling it anymore three times in a row. We then repeated the same procedure but with increasing intensity and until the participant reported feeling the vibration three times in a row. The perceptual threshold was estimated to be the average between the two thresholds found using this procedure. This approximation was then used as a seed value for an adaptive staircase during the main experiment.
+Participants sat in front of a computer screen. A white fixation cross appeared in the middle of the screen for 2 s. From the moment the fixation cross turned green, participants were told that a tactile stimulus could be applied at any moment during the next 2 s. During this period, stimulus onset was uniformly distributed in 80% of trials, the 20% remaining trials served as catch trials. In all trials, 1 second after the green cross disappeared, participants were prompted to answer with the keyboard whether they felt the stimulus or not. Following a 500 ms stimulus onset asynchrony, participants were asked to report the confidence in their first order response by moving a slider on a visual analog scale with marks at 0 (certainty that the first-order response was erroneous), 0.5 (unsure about the first-order response) and 1.0 (certainty that the first-order response was correct). Detection and confidence reports were provided with the left (non-stimulated) hand, using different keys. The total experiment included 500 trials divided in 10 blocks and lasted about 2 hours.
+Recordings:
+Electroencephalographic data were acquired from 62 active electrodes (10-20 montage) using a WaveGuard EEG cap and amplifier (ANTNeuro, Hengelo, The Netherlands) and digitized at a sampling rate of 1024 Hz. Horizontal and vertical electrooculography (EOG) was derived using bipolar referenced electrodes placed around participants' eyes. The audio signal driving the vibrotactile actuator was recorded as an extra channel to precisely realign data to stimulus onset.
+For the patient, electrocorticographical data was obtained through a 24 electrode ECoG grid (Ad-Tech Medical) covering the left hemisphere from the premotor cortex to the superior parietal lobule. The electrodes had a 4 mm diameter with 2.3 mm exposed corresponding to an area of 4.15 mm2. The data was amplified and sampled at 2048 Hz (Brain Quick LTM, Micromed, Treviso, Italy).
 
 Highlights
 ----------
@@ -67,15 +94,15 @@ Highlights
       :class-card: sd-border-1
 
       - Channels: 71
-      - Sampling rate (Hz): —
+      - Sampling rate (Hz): 1024.0 (53), 1000.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 3
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: Healthy
+      - Modality: Tactile
+      - Type: Perception
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

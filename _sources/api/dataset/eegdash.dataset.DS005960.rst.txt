@@ -5,7 +5,9 @@
 eegdash.dataset.DS005960
 ========================
 
-participants.tsv (OpenNeuro ``ds005960``). Access recordings and metadata through EEGDash.
+General Info: inst-comp-eeg (OpenNeuro ``ds005960``). Access recordings and metadata through EEGDash.
+
+**Citation:** Pena, P., Palenciano, A.F., González-García, C., Ruz, M. (2025). *General Info: inst-comp-eeg*. `10.18112/openneuro.ds005960.v1.0.0 <https://doi.org/10.18112/openneuro.ds005960.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ participants.tsv (OpenNeuro ``ds005960``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: —`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS005960``
    * - Title
-     - participants.tsv
+     - General Info: inst-comp-eeg
    * - Year
      - 2025
    * - Authors
@@ -44,11 +46,41 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds005960,
-        title = {participants.tsv},
+        title = {General Info: inst-comp-eeg},
         author = {Pena, P. and Palenciano, A.F. and González-García, C. and Ruz, M.},
         doi = {10.18112/openneuro.ds005960.v1.0.0},
         url = {https://doi.org/10.18112/openneuro.ds005960.v1.0.0},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS005960&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS005960%0A-%20%2A%2ATitle%3A%2A%2A%20General%20Info%3A%20inst-comp-eeg%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+The experiment consisted of two tasks: the main instruction-following task and an additional localizer task. The data of each participant was recorded in one session.
+For the main instruction-following task, participants saw four sequential screens -screen display of 200 ms and 800 ms as interscreen interval- that contained the full instruction, after a pretarget interval, they were presented with the target images -two images framed by a colored shape, on display for 200 ms-.
+They had to respond if the instruction was fulfilled or not by the targets.
+The first two screens of the instruction indicated if the participant had to pay attention to both images -integration- or to just one -selection-, and which specific images were set to appear -animate or inanimate images per trial-.
+The third instruction refered to the relevant feature they had to pay attention to, either the color or the shape surrounding the image.
+The last instruction indicated the key to press if the instruction was fulfilled by the target images -either “A” or “L”-.
+Each trial consisted of a novel combination of the instruction components.
+Additional catch trials were added, to ensure that participants were maintaining all information.
+If any of the target images was different from the ones previously instructed, the participant had to indicate it by pressing both “A” and “L” simultaneously.
+The localizer task was a 1-back task. Participants saw one target image per trial, and they had to indicate with a keypress -“A” and “L”- if the image was from the same subcategory as the image from the previous trial.
+Each block of the main instruction-following task consisted of 32 trials, with a total of 16 blocks.
+All the conditions were fully counterbalanced to ensure no statistical dependencies within the blocks.
+Each of the 8 localizer blocks consisted of 40 trials.
+To counterbalance the presentation of the blocks for the whole experiment session, the blocks of the main task were further divided according to the features -blocks of features 1 and blocks of features 2-,and then the sequence of main task and localizer blocks was counterbalanced.
 
 Highlights
 ----------
@@ -66,16 +98,16 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 61
+      - Channels: 61 (41), 63 (41)
       - Sampling rate (Hz): 1000.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 1
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: Healthy
+      - Modality: Visual
+      - Type: Attention
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

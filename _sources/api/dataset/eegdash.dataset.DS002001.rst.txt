@@ -7,13 +7,15 @@ eegdash.dataset.DS002001
 
 Rivalry_Tagging (OpenNeuro ``ds002001``). Access recordings and metadata through EEGDash.
 
-.. rst-class:: sd-badges
-
-:bdg-primary:`Modality: meg` :bdg-info:`Tasks: 2` :bdg-secondary:`Subjects: 12` :bdg-secondary:`Recordings: 1006`
+**Citation:** Janine Mendola, Elizabeth Bock (2019). *Rivalry_Tagging*. `10.18112/openneuro.ds002001.v1.0.0 <https://doi.org/10.18112/openneuro.ds002001.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: PD` :bdg-warning:`Source: openneuro`
+:bdg-primary:`Modality: meg` :bdg-info:`Tasks: 2` :bdg-secondary:`Subjects: 11` :bdg-secondary:`Recordings: 69`
+
+.. rst-class:: sd-badges
+
+:bdg-success:`License: PD` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 3.0`
 
 Dataset Information
 -------------------
@@ -27,7 +29,7 @@ Dataset Information
    * - Title
      - Rivalry_Tagging
    * - Year
-     - —
+     - 2019
    * - Authors
      - Janine Mendola, Elizabeth Bock
    * - License
@@ -35,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `10.18112/openneuro.ds002001.v1.0.0 <https://doi.org/10.18112/openneuro.ds002001.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds002001>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds002001>`__ | `Source URL <https://openneuro.org/datasets/ds002001/versions/1.0.0>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds002001>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds002001>`__ | `Source URL <https://openneuro.org/datasets/ds002001>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -50,6 +52,23 @@ Dataset Information
         url = {https://doi.org/10.18112/openneuro.ds002001.v1.0.0},
       }
 
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS002001&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS002001%0A-%20%2A%2ATitle%3A%2A%2A%20Rivalry_Tagging%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+No README content is available for this dataset.
+
 Highlights
 ----------
 
@@ -59,29 +78,29 @@ Highlights
    .. grid-item-card:: Subjects & recordings
       :class-card: sd-border-1
 
-      - Subjects: 12
-      - Recordings: 1006
+      - Subjects: 11
+      - Recordings: 69
       - Tasks: 2
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
       - Channels: —
-      - Sampling rate (Hz): —
+      - Sampling rate (Hz): 2400.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 2
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: —
+      - Modality: —
+      - Type: —
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: —
-      - File count: 1006
+      - Size on disk: 81.7 GB
+      - File count: 69
       - Format: BIDS
 
    .. grid-item-card:: License & citation

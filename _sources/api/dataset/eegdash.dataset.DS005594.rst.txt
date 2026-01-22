@@ -5,7 +5,9 @@
 eegdash.dataset.DS005594
 ========================
 
-participants.tsv (OpenNeuro ``ds005594``). Access recordings and metadata through EEGDash.
+Alphabetic Decision Task (Arial Light Font) (OpenNeuro ``ds005594``). Access recordings and metadata through EEGDash.
+
+**Citation:** Jack E. Taylor, Rasmus Sinn, Cosimo Iaia, Christian J. Fiebach (2024). *Alphabetic Decision Task (Arial Light Font)*. `10.18112/openneuro.ds005594.v1.0.3 <https://doi.org/10.18112/openneuro.ds005594.v1.0.3>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ participants.tsv (OpenNeuro ``ds005594``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 1.0`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS005594``
    * - Title
-     - participants.tsv
+     - Alphabetic Decision Task (Arial Light Font)
    * - Year
      - 2024
    * - Authors
@@ -44,11 +46,43 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds005594,
-        title = {participants.tsv},
+        title = {Alphabetic Decision Task (Arial Light Font)},
         author = {Jack E. Taylor and Rasmus Sinn and Cosimo Iaia and Christian J. Fiebach},
         doi = {10.18112/openneuro.ds005594.v1.0.3},
         url = {https://doi.org/10.18112/openneuro.ds005594.v1.0.3},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS005594&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS005594%0A-%20%2A%2ATitle%3A%2A%2A%20Alphabetic%20Decision%20Task%20%28Arial%20Light%20Font%29%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+Generated from raw data by MNE-BIDS (Appelhoff et al., 2019) and custom code to join to behavioural data, stimulus information, and metadata.
+
+**Notes on the Data**
+
+For full details on this dataset, see our preprint: Taylor et al. (2024) https://doi.org/10.1101/2024.11.11.622929
+General notes:
+* An issue during recording meant that sub-05 completed the first block without data being saved. The experiment was restarted from the beginning for this participant. This participant was not included in our analyses, but the data are included in this dataset. They are also identified with the `recording_restarted` field in `participants.tsv`.
+* A separate issue during recording meant that EEG data for some trials were lost for `sub-01`, though enough trials were recorded in total to meet our criteria for inclusion in the analysis. The raw data comprised two separate recordings. In this dataset, the two recordings are concatenated end-to-end into one file. The point at which the files are joined is marked with a boundary event. This participant is identified with the `recording_interrupted` field in `participants.tsv`.
+* During the course of the experiment, we identified an issue with the wiring in one splitter box, which meant that voltages from channels FT7 and FC3 were swapped in the raw recorded data. We elected to keep the wiring as it was for the duration of the experiment, and then swapped the data from the two channels in the code that generated this BIDS dataset. This means that this issue has been corrected in this BIDS version of the data.
+* "BAD" periods (MNE term) for key presses and break periods are included in the events files.
+* Recording dates/times have been anonymised by shifting all recordings backwards in time by a constant number of days (same constant for all participants). This obscures information that may be used to identify participants, but preserves time-of-day information, and the relative times elapsed between different recordings.
+
+**References**
+
+Appelhoff, S., Sanderson, M., Brooks, T., Vliet, M., Quentin, R., Holdgraf, C., Chaumon, M., Mikulan, E., Tavabi, K., Höchenberger, R., Welke, D., Brunner, C., Rockhill, A., Larson, E., Gramfort, A. and Jas, M. (2019). MNE-BIDS: Organizing electrophysiological data into the BIDS format and facilitating their analysis. Journal of Open Source Software 4: (1896). https://doi.org/10.21105/joss.01896
+Pernet, C. R., Appelhoff, S., Gorgolewski, K. J., Flandin, G., Phillips, C., Delorme, A., Oostenveld, R. (2019). EEG-BIDS, an extension to the brain imaging data structure for electroencephalography. Scientific Data, 6, 103. https://doi.org/10.1038/s41597-019-0104-8
 
 Highlights
 ----------
@@ -66,16 +100,16 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 64
+      - Channels: 66 (16), 64 (16)
       - Sampling rate (Hz): 1000.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 1
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: —
+      - Modality: —
+      - Type: —
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

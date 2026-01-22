@@ -5,7 +5,9 @@
 eegdash.dataset.DS004993
 ========================
 
-participants.tsv (OpenNeuro ``ds004993``). Access recordings and metadata through EEGDash.
+WIRED ICM Sample Dataset - Workshop on Intracranial Recordings in Humans, Epilepsy, DBS (OpenNeuro ``ds004993``). Access recordings and metadata through EEGDash.
+
+**Citation:** Liberty S. Hamilton, Maansi Desai, Alyssa Field (2024). *WIRED ICM Sample Dataset - Workshop on Intracranial Recordings in Humans, Epilepsy, DBS*. `10.18112/openneuro.ds004993.v1.1.2 <https://doi.org/10.18112/openneuro.ds004993.v1.1.2>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ participants.tsv (OpenNeuro ``ds004993``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 0.0`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS004993``
    * - Title
-     - participants.tsv
+     - WIRED ICM Sample Dataset - Workshop on Intracranial Recordings in Humans, Epilepsy, DBS
    * - Year
      - 2024
    * - Authors
@@ -44,11 +46,57 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds004993,
-        title = {participants.tsv},
+        title = {WIRED ICM Sample Dataset - Workshop on Intracranial Recordings in Humans, Epilepsy, DBS},
         author = {Liberty S. Hamilton and Maansi Desai and Alyssa Field},
         doi = {10.18112/openneuro.ds004993.v1.1.2},
         url = {https://doi.org/10.18112/openneuro.ds004993.v1.1.2},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS004993&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS004993%0A-%20%2A%2ATitle%3A%2A%2A%20WIRED%20ICM%20Sample%20Dataset%20-%20Workshop%20on%20Intracranial%20Recordings%20in%20Humans%2C%20Epilepsy%2C%20DBS%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+
+**WIRED ICM TUTORIAL DATA**
+
+*Contributors:* Liberty S. Hamilton, PhD, Maansi Desai, PhD, Alyssa Field, MEd
+*Email:* liberty.hamilton@austin.utexas.edu
+This is a sample BIDS dataset for the WIRED ICM course in Paris, France in March 2024.
+This contains intracranial recordings collected by the Hamilton Lab at the University of Texas at Austin. These recordings include examples of evoked data during natural listening tasks along with some examples of seizure-related activity and vagus nerve stimulator (VNS) artifact for illustrative purposes. All procedures were approved by the University of Texas at Austin Institutional Review Board.
+*Funding:* Support was provided by the National Institutes of Health National Institute on Deafness and Other Communication Disorders (R01 DC018579, to LSH).
+
+**Tasks:**
+
+1. `movietrailers` - this task involves patients listening to movie clips from various Pixar, Disney, Dreamworks, and other movies. We have published previously using these stimuli in EEG (Desai et al. 2021).
+2. `timit4` and `timit5` - these tasks involve patients listening to subsets of the TIMIT acoustic phonetic corpus (Garofolo et al 1993). The events provided in the dataset mark the onset and offset of each sentence. In `timit4`, each sentence is unique, while in `timit5`, 10 sentences are repeated 10 times. This is the same stimulus set used in Mesgarani et al. 2014, Hamilton et al. 2018, Hamilton et al. 2021, and Desai et. al 2021.
+
+**Notes:**
+
+* The movie trailer data for subject W1 was acquired at the start of a generalized tonic clonic seizure, and the research session was terminated. Large, synchronized spikes can be observed on multiple channels on the right parietal grid throughout the iEEG data.
+* The TIMIT data for subject W2 is an example of fairly clean sentence evoked data.
+* The TIMIT data for subject W3 is a good example of on-and-off VNS artifact. The VNS has a strong artifact at ~20 Hz. Some patients with epilepsy may have these implanted devices to help control their seizures, so you should know how to spot artifact-related activity. Despite these artifacts, the evoked responses to sentences are quite strong.
+* The acquisition number (B3, B8, etc) has to do with the order in which this task was run relative to other tasks in an iEEG session, and can be ignored here.
+
+**References**
+
+* Appelhoff, S., Sanderson, M., Brooks, T., Vliet, M., Quentin, R., Holdgraf, C., Chaumon, M., Mikulan, E., Tavabi, K., Höchenberger, R., Welke, D., Brunner, C., Rockhill, A., Larson, E., Gramfort, A. and Jas, M. (2019). MNE-BIDS: Organizing electrophysiological data into the BIDS format and facilitating their analysis. Journal of Open Source Software 4: (1896). https://doi.org/10.21105/joss.01896
+* Desai, M., Holder, J., Villarreal, C., Clark, N., Hoang, B., & Hamilton, L. S. (2021). Generalizable EEG encoding models with naturalistic audiovisual stimuli. Journal of Neuroscience, 41(43), 8946-8962.
+* Garofolo, J. S., Lamel, L. F., Fisher, W. M., Fiscus, J. G., & Pallett, D. S. (1993). DARPA TIMIT acoustic-phonetic continous speech corpus CD-ROM. NIST speech disc 1-1.1. NASA STI/Recon technical report n, 93, 27403.
+* Hamilton, L. S., Edwards, E., & Chang, E. F. (2018). A spatial map of onset and sustained responses to speech in the human superior temporal gyrus. Current Biology, 28(12), 1860-1871.
+* Hamilton, L. S., Oganian, Y., Hall, J., & Chang, E. F. (2021). Parallel and distributed encoding of speech across human auditory cortex. Cell, 184(18), 4626-4639.
+* Holdgraf, C., Appelhoff, S., Bickel, S., Bouchard, K., D'Ambrosio, S., David, O., … Hermes, D. (2019). iEEG-BIDS, extending the Brain Imaging Data Structure specification to human intracranial electrophysiology. Scientific Data, 6, 102. https://doi.org/10.1038/s41597-019-0105-7
+* Mesgarani, N., Cheung, C., Johnson, K., & Chang, E. F. (2014). Phonetic feature encoding in human superior temporal gyrus. Science, 343(6174), 1006-1010.
 
 Highlights
 ----------
@@ -66,16 +114,16 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 106 (2), 148 (2), 160 (2)
+      - Channels: 160 (2), 106 (2), 148 (2)
       - Sampling rate (Hz): 512.0 (4), 2048.0 (2)
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 3
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: Epilepsy
+      - Modality: Auditory
+      - Type: Perception
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

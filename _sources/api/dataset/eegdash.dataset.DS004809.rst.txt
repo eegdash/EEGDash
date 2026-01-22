@@ -5,7 +5,9 @@
 eegdash.dataset.DS004809
 ========================
 
-participants.tsv (OpenNeuro ``ds004809``). Access recordings and metadata through EEGDash.
+Categorized Free Recall: Delayed Free Recall of Word Lists Organized by Semantic Categories (OpenNeuro ``ds004809``). Access recordings and metadata through EEGDash.
+
+**Citation:** Haydn G. Herrema, Michael J. Kahana (2023). *Categorized Free Recall: Delayed Free Recall of Word Lists Organized by Semantic Categories*. `10.18112/openneuro.ds004809.v2.2.0 <https://doi.org/10.18112/openneuro.ds004809.v2.2.0>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ participants.tsv (OpenNeuro ``ds004809``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 1.0`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS004809``
    * - Title
-     - participants.tsv
+     - Categorized Free Recall: Delayed Free Recall of Word Lists Organized by Semantic Categories
    * - Year
      - 2023
    * - Authors
@@ -44,11 +46,46 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds004809,
-        title = {participants.tsv},
+        title = {Categorized Free Recall: Delayed Free Recall of Word Lists Organized by Semantic Categories},
         author = {Haydn G. Herrema and Michael J. Kahana},
         doi = {10.18112/openneuro.ds004809.v2.2.0},
         url = {https://doi.org/10.18112/openneuro.ds004809.v2.2.0},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS004809&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS004809%0A-%20%2A%2ATitle%3A%2A%2A%20Categorized%20Free%20Recall%3A%20Delayed%20Free%20Recall%20of%20Word%20Lists%20Organized%20by%20Semantic%20Categories%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+
+**Categorized Free Recall: Delayed Free Recall of Word Lists Organized by Semantic Categories**
+
+
+**Description**
+
+This dataset contains behavioral events and intracranial electrophysiological recordings from a categorized free recall task.  The experiment consists of participants studying a list of words, presented visually one at a time, completing simple arithmetic problems that function as a distractor, and then freely recalling the words from the just-presented list in any order.  The data was collected at clinical sites across the country as part of a collaboration with the Computational Memory Lab at the University of Pennsylvania.
+Unique to this paradigm is the semantic construction of the word lists.  Each word comes from one of 25 semantic categories, and each list of 12 items contains 6 pairs of same-category words from 3 different categories.  This means that each list has 4 words from 3 semantic categories, and in each half of the list there will be 1 pair of words from each category.  For example, if a list contains words from categories A, B, and C, a possible list construction would be:
+**A1 - A2 - B1 - B2 - C1 - C2 - A3 - A4 - C3 - C4 - B3 - B4**
+
+**To Note**
+
+* The iEEG recordings are labeled either "monopolar" or "bipolar."  The monopolar recordings are referenced (typically a mastoid reference), but should always be re-referenced before analysis.  The bipolar recordings are referenced according to a paired scheme indicated by the accompanying bipolar channels tables.
+* Each subject has a unique montage of electrode locations.  MNI and Talairach coordinates are provided when available, along with brain region annotations.
+* Recordings were made on multiple different systems, so we have done the scaling to provide all voltage values in V.
+
+**Contact**
+
+For questions or inquiries, please contact sas-kahana-sysadmin@sas.upenn.edu.
 
 Highlights
 ----------
@@ -66,16 +103,16 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 243 (2), 64 (28), 146 (2), 164 (8), 247 (16), 113 (20), 141 (8), 163 (2), 63 (2), 36 (2), 119 (4), 76 (12), 152 (18), 112 (28), 122 (14), 96 (4), 139 (38), 89 (8), 120 (32), 111 (2), 52 (2), 220 (6), 84 (4), 160 (6), 148 (30), 177 (4), 37 (2), 196 (28), 95 (6), 206 (2), 238 (8), 92 (20), 93 (4), 224 (8), 56 (10), 124 (60), 239 (2), 150 (12), 192 (8), 183 (16), 100 (12), 180 (8), 207 (6), 108 (52), 209 (6), 26 (2), 193 (4), 202 (2), 106 (14), 203 (4), 218 (2), 88 (34), 94 (20), 200 (16), 136 (2), 133 (22), 168 (10), 104 (16), 169 (4), 115 (18), 102 (2), 105 (18), 182 (2), 176 (4), 107 (2), 72 (8), 162 (6), 134 (8), 109 (12), 46 (6), 143 (2), 158 (18), 14 (2), 99 (2), 212 (14), 251 (22), 121 (22), 98 (14), 131 (30), 126 (140), 175 (8), 188 (8), 125 (40), 155 (24), 208 (10), 154 (10), 213 (2), 167 (6), 60 (6), 16 (2), 172 (4), 83 (6), 70 (8), 127 (32), 50 (2), 78 (12), 116 (30), 240 (12), 110 (26), 198 (18), 159 (22), 185 (8), 86 (2), 145 (30), 241 (12), 219 (8), 165 (10), 62 (2), 90 (22), 184 (12), 67 (4), 151 (4), 153 (2), 97 (8), 114 (22), 161 (4), 229 (6), 173 (8), 53 (4), 142 (26), 186 (20), 85 (2), 140 (6), 80 (2), 128 (38), 166 (14), 250 (10), 178 (20), 68 (14), 118 (24), 189 (8), 132 (4), 187 (4), 75 (2), 130 (6), 179 (26), 123 (4), 156 (16)
-      - Sampling rate (Hz): 999.0 (16), 500.0 (186), 1000.0 (1532), 499.7071 (4), 1024.0 (8), 1600.0 (20), 1023.999 (12)
+      - Channels: 126 (140), 124 (60), 108 (52), 125 (40), 139 (38), 128 (38), 88 (34), 120 (32), 127 (32), 116 (30), 148 (30), 145 (30), 131 (30), 112 (28), 196 (28), 64 (28), 179 (26), 142 (26), 110 (26), 155 (24), 118 (24), 90 (22), 159 (22), 251 (22), 114 (22), 121 (22), 133 (22), 92 (20), 94 (20), 186 (20), 113 (20), 178 (20), 198 (18), 152 (18), 105 (18), 115 (18), 158 (18), 104 (16), 156 (16), 247 (16), 183 (16), 200 (16), 212 (14), 68 (14), 98 (14), 122 (14), 166 (14), 106 (14), 150 (12), 184 (12), 78 (12), 76 (12), 100 (12), 109 (12), 241 (12), 240 (12), 250 (10), 168 (10), 208 (10), 165 (10), 56 (10), 154 (10), 188 (8), 134 (8), 175 (8), 219 (8), 173 (8), 185 (8), 238 (8), 89 (8), 70 (8), 72 (8), 97 (8), 180 (8), 192 (8), 164 (8), 189 (8), 141 (8), 224 (8), 207 (6), 229 (6), 60 (6), 46 (6), 162 (6), 130 (6), 95 (6), 220 (6), 209 (6), 140 (6), 167 (6), 160 (6), 83 (6), 187 (4), 193 (4), 176 (4), 67 (4), 132 (4), 96 (4), 53 (4), 93 (4), 172 (4), 151 (4), 177 (4), 84 (4), 161 (4), 203 (4), 169 (4), 119 (4), 123 (4), 218 (2), 202 (2), 26 (2), 143 (2), 153 (2), 107 (2), 36 (2), 163 (2), 37 (2), 243 (2), 99 (2), 62 (2), 111 (2), 213 (2), 206 (2), 50 (2), 63 (2), 85 (2), 102 (2), 182 (2), 75 (2), 239 (2), 86 (2), 16 (2), 52 (2), 136 (2), 14 (2), 80 (2), 146 (2)
+      - Sampling rate (Hz): 1000.0 (1532), 500.0 (186), 1600.0 (20), 999.0 (16), 1023.999 (12), 1024.0 (8), 499.7071 (4)
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 1
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: —
+      - Modality: —
+      - Type: —
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

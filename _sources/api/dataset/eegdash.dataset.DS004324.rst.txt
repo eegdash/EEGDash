@@ -5,7 +5,9 @@
 eegdash.dataset.DS004324
 ========================
 
-participants.tsv (OpenNeuro ``ds004324``). Access recordings and metadata through EEGDash.
+ToonFaces (OpenNeuro ``ds004324``). Access recordings and metadata through EEGDash.
+
+**Citation:** Luis Alberto Barradas Chacón, Selina C. Wriessnegger (2022). *ToonFaces*. `10.18112/openneuro.ds004324.v1.0.0 <https://doi.org/10.18112/openneuro.ds004324.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ participants.tsv (OpenNeuro ``ds004324``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 0.0`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS004324``
    * - Title
-     - participants.tsv
+     - ToonFaces
    * - Year
      - 2022
    * - Authors
@@ -44,11 +46,38 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds004324,
-        title = {participants.tsv},
+        title = {ToonFaces},
         author = {Luis Alberto Barradas Chacón and Selina C. Wriessnegger},
         doi = {10.18112/openneuro.ds004324.v1.0.0},
         url = {https://doi.org/10.18112/openneuro.ds004324.v1.0.0},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS004324&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS004324%0A-%20%2A%2ATitle%3A%2A%2A%20ToonFaces%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+
+**Images of stylized faces improve ERP features used for emotion detection**
+
+For their ease of accessibility and low cost, current Brain-Computer Interfaces (BCI) used to detect subjective emotional and affective states rely largely on electroencephalographic (EEG) signals. Numerous datasets are publicly available for any researcher to design models for affect detection from EEG. However, few designs focus on optimally exploiting the nature of the stimulus elicitation to improve accuracy.
+We found that artificially enhanced human faces with exaggerated visual features significantly improve some commonly used neural correlates of emotion as measured by event-related potentials (ERPs). These images elicit an enhanced N170 component, well known in facial recognition encoding. Our findings suggest that the study of emotion elicitation could exploit consistent stimuli transformations to study the characteristics of ERPs related to specific affective stimuli. Furthermore, this specific result might be useful in the context of affective BCI design, where a higher accuracy in affect detection from EEG can improve the experience of a user.
+Participant information has been removed for annonimation reasons.
+
+**References**
+
+Appelhoff, S., Sanderson, M., Brooks, T., Vliet, M., Quentin, R., Holdgraf, C., Chaumon, M., Mikulan, E., Tavabi, K., Höchenberger, R., Welke, D., Brunner, C., Rockhill, A., Larson, E., Gramfort, A. and Jas, M. (2019). MNE-BIDS: Organizing electrophysiological data into the BIDS format and facilitating their analysis. Journal of Open Source Software 4: (1896). https://doi.org/10.21105/joss.01896
+Pernet, C. R., Appelhoff, S., Gorgolewski, K. J., Flandin, G., Phillips, C., Delorme, A., Oostenveld, R. (2019). EEG-BIDS, an extension to the brain imaging data structure for electroencephalography. Scientific Data, 6, 103. https://doi.org/10.1038/s41597-019-0104-8
 
 Highlights
 ----------
@@ -66,16 +95,16 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 28
+      - Channels: 28 (26), 38 (26)
       - Sampling rate (Hz): 500.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 1
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: —
+      - Modality: —
+      - Type: —
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

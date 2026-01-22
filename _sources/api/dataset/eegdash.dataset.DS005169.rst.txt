@@ -5,7 +5,9 @@
 eegdash.dataset.DS005169
 ========================
 
-participants.tsv (OpenNeuro ``ds005169``). Access recordings and metadata through EEGDash.
+Dataset of intracranial EEG during cortical stimulation evoking visual effects (OpenNeuro ``ds005169``). Access recordings and metadata through EEGDash.
+
+**Citation:** Andrei Barborica, Felicia Mihai, Laurentiu Tofan, Irina Oane, Ioana Mindruta (2024). *Dataset of intracranial EEG during cortical stimulation evoking visual effects*. `10.18112/openneuro.ds005169.v1.0.0 <https://doi.org/10.18112/openneuro.ds005169.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ participants.tsv (OpenNeuro ``ds005169``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 0.0`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS005169``
    * - Title
-     - participants.tsv
+     - Dataset of intracranial EEG during cortical stimulation evoking visual effects
    * - Year
      - 2024
    * - Authors
@@ -44,11 +46,47 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds005169,
-        title = {participants.tsv},
+        title = {Dataset of intracranial EEG during cortical stimulation evoking visual effects},
         author = {Andrei Barborica and Felicia Mihai and Laurentiu Tofan and Irina Oane and Ioana Mindruta},
         doi = {10.18112/openneuro.ds005169.v1.0.0},
         url = {https://doi.org/10.18112/openneuro.ds005169.v1.0.0},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS005169&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS005169%0A-%20%2A%2ATitle%3A%2A%2A%20Dataset%20of%20intracranial%20EEG%20during%20cortical%20stimulation%20evoking%20visual%20effects%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+In this dataset we included iEEG recordings of responses to 115 intracranial high frequency stimulations evoking
+visual hallucinations, in 22 patients undergoing stereo-EEG presurgical evaluation for drug-resistant epilepsy.
+The dataset contains 21 seconds of iEEG data around each stimulation, 8 seconds before the start of the stimulation,
+up to 5 seconds of intracranial stimulation and 8 seconds after the end of the stimulation.
+We have used high-frequency bipolar stimulations of different areas of the brain, using alternating polarity
+biphasic pulses having a duration of 1 ms, at 43.2 Hz or 50 Hz, current intensity between 0.25 to 3 mA, for up to 5 s.
+Alternating polarity protocol allows disambiguating neuronal responses time-locked to the stimulation pulses
+from the artefactual components, according to Barborica et al., 2022 (doi: 10.1002/hbm.25749). It is therefore
+possible to identify the brain networks underlying the clinical effects, and to create symptom-related
+activation/connectivity maps.
+The contact pair on which stimulation is applied, the current intensity level and evoked effect are specified
+in the events tsv. The responses are classified in 14 clinical categories: elementary (unstructured
+flashes of light), plus hallucination (presence of light in different forms or colors overlaying the background vision),
+minus hallucination (negative elementary phenomena described as scotoma, quadrantanopia, hemianopia or amaurosis),
+static, dynamic, continuous hallucination, intermittent hallucination, peripheric, central,
+whole visual field, color, non-color, combined visual symptoms, multimodal hallucinations.
+Not all patients in which stimulations evoked visual hallucinations met the inclusion criteria for network analysis
+that requires running the freesurfer pipeline, for instance patients having prior resections, therefore there are subjects
+that do not contain ieeg data. However, they were kept in order to match the number of patients in the companion manuscript.
+Contact: andrei.barborica@fizica.unibuc.ro
 
 Highlights
 ----------
@@ -66,16 +104,16 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 38 (2), 102 (10), 80 (2), 88 (2), 81 (2), 105 (2), 92 (2), 94 (18), 86 (2), 113 (2), 82 (38), 99 (2), 83 (6), 58 (4), 95 (10), 193 (10), 40 (8), 184 (6), 109 (2), 69 (2), 114 (2), 76 (2), 98 (2), 96 (2), 39 (2), 89 (2), 103 (2), 136 (10), 70 (8), 85 (6), 106 (4), 188 (2), 29 (2), 84 (6), 143 (4), 71 (2), 186 (2), 104 (4), 101 (12), 79 (6), 144 (2), 91 (4), 100 (2), 160 (2)
+      - Channels: 82 (38), 94 (18), 101 (12), 193 (10), 102 (10), 95 (10), 136 (10), 40 (8), 70 (8), 84 (6), 79 (6), 184 (6), 85 (6), 83 (6), 91 (4), 104 (4), 58 (4), 143 (4), 106 (4), 103 (2), 89 (2), 188 (2), 86 (2), 114 (2), 81 (2), 38 (2), 109 (2), 76 (2), 98 (2), 69 (2), 186 (2), 160 (2), 29 (2), 92 (2), 99 (2), 105 (2), 39 (2), 144 (2), 100 (2), 80 (2), 96 (2), 88 (2), 71 (2), 113 (2)
       - Sampling rate (Hz): 4096.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 1
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: Epilepsy
+      - Modality: Other
+      - Type: Clinical/Intervention
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

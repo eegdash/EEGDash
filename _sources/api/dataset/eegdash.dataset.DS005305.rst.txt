@@ -5,7 +5,9 @@
 eegdash.dataset.DS005305
 ========================
 
-participants.tsv (OpenNeuro ``ds005305``). Access recordings and metadata through EEGDash.
+EEG Resting-state Microstates Correlates of Executive Functions (OpenNeuro ``ds005305``). Access recordings and metadata through EEGDash.
+
+**Citation:** Chenot Quentin, Hamery Caroline, Truninger Moritz, De Boissezon Xavier, Langer Nicolas, Scannella Sébastien (2024). *EEG Resting-state Microstates Correlates of Executive Functions*. `10.18112/openneuro.ds005305.v1.0.1 <https://doi.org/10.18112/openneuro.ds005305.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ participants.tsv (OpenNeuro ``ds005305``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 0.0`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS005305``
    * - Title
-     - participants.tsv
+     - EEG Resting-state Microstates Correlates of Executive Functions
    * - Year
      - 2024
    * - Authors
@@ -44,11 +46,291 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds005305,
-        title = {participants.tsv},
+        title = {EEG Resting-state Microstates Correlates of Executive Functions},
         author = {Chenot Quentin and Hamery Caroline and Truninger Moritz and De Boissezon Xavier and Langer Nicolas and Scannella Sébastien},
         doi = {10.18112/openneuro.ds005305.v1.0.1},
         url = {https://doi.org/10.18112/openneuro.ds005305.v1.0.1},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS005305&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS005305%0A-%20%2A%2ATitle%3A%2A%2A%20EEG%20Resting-state%20Microstates%20Correlates%20of%20Executive%20Functions%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+
+**README**
+
+Project name:	Project Microstates & Executive Functions (Project_microstates_EFs)
+Years: 		2021-2023
+Contact person: Quentin chenot (quentinchenot@gmail.com)
+
+**Overview**
+
+Summary: This study aimed to specifically explore the relationship between intrinsic brain spatio-temporal dynamics and Executive Functions.
+
+.. dropdown:: View full README
+   :class-container: sd-shadow-sm
+
+   
+   **README**
+   
+   Project name:	Project Microstates & Executive Functions (Project_microstates_EFs)
+   Years: 		2021-2023
+   Contact person: Quentin chenot (quentinchenot@gmail.com)
+   
+   **Overview**
+   
+   Summary: This study aimed to specifically explore the relationship between intrinsic brain spatio-temporal dynamics and Executive Functions.
+   To do so, resting-state EEG microstates were used to assess brain spatio-temporal dynamics in 140 healthy participants, while a comprehensive battery of nine cognitive function tasks was employed to evaluate their executive functions.
+   Correlations were computed between the EEG microstates metrics at rest and the mean score in executive function tasks.
+   
+   **Dataset content**
+   
+   1160 Files, 6.38GB
+   165 - Subjects
+   2 - Session
+   Available Tasks: Resting-State, Antisaccade, Category-Switch, Color-Shape, Dual N-back, Keep-Track, Letter-Memory, Number-Letter, Stop-Signal, Stroop
+   Available Modalities: EEG
+   Independent variables: NA
+   Dependent variables:
+   	DV1: Mean score in the nine executive functions tasks (z-scored)
+   	DV2: resting-state EEG microstates metrics (number of occurrences, mean duration)
+   Control variables:
+   	Age
+   	Gender
+   	Education
+   	Handedness
+   
+   **Methods**
+   
+   
+   **Subjects**
+   
+   165 participants were recruited for this experiment. 140 constitute the final sample.
+   Recrutment procedure: participants were recruited with flyers, mailing-lists and mouth to hear in the Toulouse University campuses.
+   Inclusion criteria: age (18-35 years); affiliation to social insurance; having read the information document about the experiment; signed informed consent form; native French language
+   Exclusion criteria: addiction (alcohol, drugs); major hearing loss; major visual deficit; including hemianopsia and color blindness; neurological or psychiatric pathology; known brain injury, drugs intake targeting the central nervous system; refusal to sign the consent form
+   
+   **Material**
+   
+   Participants performed the experiment in a windowless room at a stable temperature, seated and facing a 24' inches screen. They underwent two sessions:
+   session 1: EEG measures with a 5 min resting-state alternating between eyes closed and eyes open (30 sec each). EEG apparatus: 64 electrodes Biosemi Active-two amplifier (data acquired at 512 Hz)
+   session 2: behavioral measures, with the nine cognitive tasks in the following order: antisaccade, letter-memory, color–shape, number–letter, Stroop, keep track, dual n-back, category switch, stop-signal.
+   
+   **Experimental location and acquisition timeframe**
+   
+   The experiment took place in the Centre de Neuroergonomie at ISAE-SUPAERO (Toulouse, France), from february 2022 to july 2023.
+   
+   **Installation and Setup**
+   
+   The repository contains scripts for preprocessing and analyzing behavioral and EEG data, as well as the project's documentation and results.
+   See code_documentation.pdf in \docs (available in https://osf.io/fm58p/).
+   
+   **Publications**
+   
+   Registered Report stage 1 IPA: EEG resting-state microstates correlates of executive functions (https://osf.io/dwz2r)
+   Registered Report stage 2: Investigating the relationship between Resting-State EEG Microstates and Executive Functions: A Null Finding (https://doi.org/10.1016/j.cortex.2024.05.019)
+   
+   **Authors**
+   
+   Quentin Chenot, Caroline Hamery, Moritz Truninger, Xavier De Boissezon, Nicolas Langer, Sébastien Scannella
+   
+   **CRediT author statement**
+   
+   QC: conceptualization, methodology, software, formal analysis, investigation, data curation, writing – original draft, writing – review & editing, Visualization.
+   CH: methodology, software, validation, formal analysis, data curation, writing – review & editing, visualization.
+   MT: methodology, software, validation, formal analysis, data curation, writing – review & editing, visualization.
+   NL: methodology, software, validation, formal analysis, resources, writing – review & editing.
+   XDB: resources, writing – review & editing, supervision, funding acquisition.
+   SS: conceptualization, methodology, resources, writing – review & editing, supervision, project administration, funding acquisition.
+   
+   **License**
+   
+   This work is licensed under a Creative Commons Attribution 4.0 International License.
+   
+   **Funding**
+   
+   This work is supported by the French National Research Agency (ANR) and the Defense Procurement Agency (DGA), ASTRID program [grant numbers ANR-17-ASTR-0005]
+   
+   **Notes - Participant and sessions timeframe**
+   
+   Participant	Session 1 		Session 2 (DD/MM/YYYY - HH)
+   sub-001		21/02/2022 - 10h	24/02/2022 - 14h
+   sub-002		21/02/2022 - 17h	01/03/2022 - 17h
+   sub-003		22/02/2022 - 8h		28/02/2022 - 11h
+   sub-004		22/02/2022 - 13h	01/03/2022 - 9h
+   sub-005		08/03/2022 - 9h		14/03/2022 - 9h15
+   sub-006		08/03/2022  - 13h	10/03/2022 - 13h30
+   sub-007		08/03/2022 - 15h30	16/03/2022 - 9h
+   sub-008		09/03/2022 - 13h	11/03/2022 - 10h
+   sub-009		09/03/2022 - 17h	17/03/2022 - 10h30
+   sub-010		10/03/2022 - 13h	11/03/2022 - 13h
+   sub-011		10/03/2022 - 19h	17/03/2022 - 18h30
+   sub-012		14/03/2022 - 8h		21/03/2022 - 8h30
+   sub-013		14/03/2022 - 17h	18/03/2022 - 17h
+   sub-014		15/03/2022 - 8h		18/03/2022 - 14h30
+   sub-015		15/03/2022 - 13h	21/03/2022 - 15h30
+   sub-016		16/03/2022 - 8h		23/03/2022 - 8h
+   sub-017		16/03/2022 - 13h	22/03/2022 - 15h00
+   sub-018		16/03/2022 - 15h30	22/03/2022 - 9h
+   sub-019		17/03/2022 - 8h		25/03/2022 - 8h15
+   sub-020		17/03/2022 - 16h30	24/03/2022 - 14h
+   sub-021		18/03/2022 - 9h		22/03/2022 - 13h
+   sub-022		18/03/2022 - 13h	24/03/2022 - 11h30
+   sub-023		18/03/2022 - 16h	22/03/2022 - 17h
+   sub-024		21/03/2022 - 16h	28/03/2022 - 16h
+   sub-025		22/03/2022 - 9h		28/03/2022 - 9h
+   sub-026		22/03/2022 - 13h	25/03/2022 - 15h
+   sub-027		23/03/2022 - 18h	30/03/2022 - 18h
+   sub-028		24/03/2022 - 17h	25/03/2022 - 13h
+   sub-029		25/03/2022 - 13h	31/03/2022 - 17h30
+   sub-030		28/03/2022 - 9h		31/03/2022 - 9h
+   sub-031		29/03/2022 - 17h	31/03/2022 - 13h
+   sub-032		30/03/2022 - 17h	01/04/2022 - 14h
+   sub-033		04/04/2022 - 9h		05/04/2022 - 14h
+   sub-034		04/04/2022 - 13h	05/04/2022 - 10h
+   sub-035		04/04/2022 - 16h	11/04/2022 - 16h
+   sub-036		06/04/2022 - 9h		08/04/2022 - 9h
+   sub-037		07/04/2022 - 15h	08/04/2022 - 13h
+   sub-038		08/04/2022 - 13h	25/04/2022 - 9h
+   sub-039		12/04/2022 - 9h		15/04/2022 - 14h
+   sub-040		14/04/2022 - 9h		25/04/2022 - 17h
+   sub-041		15/04/2022 - 13h	27/04/2022 - 14h
+   sub-042		19/04/2022 - 16h	20/04/2022 - 16h
+   sub-043		20/04/2022 - 9h		21/04/2022 - 9h
+   sub-044		21/04/2022 - 13h	22/04/2022 - 17h
+   sub-045		21/04/2022 - 16h	28/04/2022 - 17h
+   sub-046		22/04/2022 - 16h	27/04/2022 - 17h
+   sub-047		25/04/2022 - 9h		28/04/2022 - 10h
+   sub-048		25/04/2022 - 10h30	04/05/2022 - 14h
+   sub-049		25/04/2022 - 16h	29/04/2022 - 9h
+   sub-050		26/04/2022 - 13h	27/04/2022 - 10h
+   sub-051		27/04/2022 - 9h		03/05/2022 - 14h30
+   sub-052		27/04/2022 - 16h	02/05/2022 - 17h
+   sub-053		28/04/2022 - 13h	13/05/2022 - 14h
+   sub-054		28/04/2022 - 16h	04/05/2022 - 16h
+   sub-055		29/04/2022 - 13h	05/05/2022 - 16h
+   sub-056		29/04/2022 - 17h	03/05/2022 - 17h15
+   sub-057		06/05/2022 - 13h	10/05/2022 - 14h
+   sub-058		09/05/2022 - 14h	16/05/2022 - 16h
+   sub-059		09/05/2022 - 16h	16/05/2022 - 9h30
+   sub-060		10/05/2022 - 9h		11/05/2022 - 15h30
+   sub-061		10/05/2022 - 16h	12/05/2022 - 14h
+   sub-062		11/05/2022 - 16h	17/05/2022 - 16h
+   sub-063		12/05/2022 - 13h	19/05/2022 - 15h
+   sub-064		13/05/2022 - 13h	20/05/2022 - 16h
+   sub-065		17/05/2022 - 9h		18/05/2022 - 16h
+   sub-066		18/05/2022 - 9h		19/05/2022 - 9h
+   sub-067		18/05/2022 - 11h	20/05/2022 - 9h
+   sub-068		19/05/2022 - 13h	25/05/2022 - 10h
+   sub-069		20/05/2022 - 9h		23/05/2022 - 9h00
+   sub-070		24/05/2022 - 9h		31/05/2022 - 9h00
+   sub-071		25/05/2022 - 9h		31/05/2022 - 16h
+   sub-072		31/05/2022 - 13h	01/06/2022 - 13h
+   sub-073		01/05/2022 - 9h30	10/06/2022 - 14h
+   sub-074		08/06/2022 - 13h30	15/06/2022 - 15h30
+   sub-075		10/06/2022 - 13h30	15/06/2022 - 10h
+   sub-076		13/06/2022 - 16h	16/06/2022 - 17h
+   sub-077		13/06/2022 - 18h30	15/06/2022 - 18h30
+   sub-078		15/06/2022 - 13h30	20/06/2022 - 16h
+   sub-079		15/06/2022 - 16h	21/06/2022 - 16h
+   sub-080		16/06/2022 - 16h	22/06/2022 - 17h
+   sub-081		17/06/2022 - 9h30	21/06/2022 - 9h
+   sub-082		17/06/2022 - 13h30	24/06/2022 - 11h
+   sub-083		20/06/2022 - 13h30	23/06/2022 - 9h
+   sub-084		21/06/2022 - 10h30	23/06/2022 - 14h
+   sub-085		21/06/2022 - 16h	27/06/2022 - 16h
+   sub-086		22/06/2022 - 16h	29/06/2022 - 11h30
+   sub-087		23/06/2022 - 9h30	12/07/2022 - 10h
+   sub-088		24/06/2022 - 10h	30/06/2022 - 10h
+   sub-089		24/06/2022 - 16h	27/06/2022 - 18h
+   sub-090		27/06/2022 - 9h30	28/06/2022 - 14h
+   sub-091		27/06/2022 - 16h	04/07/2022 - 10h
+   sub-092		29/06/2022 - 16h	04/07/2022 - 16h
+   sub-093		01/07/2022 - 16h	05/07/2022 - 17h30
+   sub-094		04/07/2022 - 9h30	05/07/2022 - 12h
+   sub-095		08/07/2022 - 16h	13/07/2022 - 17h
+   sub-096		11/07/2022 - 17h	26/07/2022 - 17h
+   sub-097		12/07/2022 - 16h	19/07/2022 - 9h30
+   sub-098		20/07/2022 - 16h	25/07/2022 - 14h
+   sub-099		25/07/2022 - 16h	01/08/2022 - 16h
+   sub-100		26/07/2022 - 10h	01/08/2022 - 10h
+   sub-101		05/09/2022 - 13h30	07/09/2022 - 13h30
+   sub-102		07/09/2022 - 13h30	08/09/2022 - 14h
+   sub-103		26/09/2022 - 13h	27/09/2022 - 9h
+   sub-104		03/10/2022 - 9h30	04/10/2022 - 9h30
+   sub-105		07/10/2022 - 14h	11/10/2022 - 17h30
+   sub-106		07/10/2022 - 16h	No session
+   sub-107		17/10/2022 - 16h30	20/10/2022 - 16h45
+   sub-108		19/10/2022 - 16h	20/10/2022 - 10h
+   sub-109		20/10/2022 - 13h30	21/10/2022 - 15h
+   sub-110		21/10/2022 - 9h30	25/10/2022 - 9h30
+   sub-111		26/10/2022 - 18h30	03/11/2022 - 18h30
+   sub-112		27/10/2022 - 16h	07/11/2022 - 14h
+   sub-113		28/10/2022 - 17h30	02/11/2022 - 9h
+   sub-114		10/11/2022 - 13h30	10/11/2022 - 15h
+   sub-115		24/11/2022 - 13h	01/12/2022 - 13h30
+   sub-116		29/11/2022 - 10h	08/12/2022 - 13h
+   sub-117		02/12/2022 - 15h30	09/12/2022 - 16h30
+   sub-118		05/12/2022 - 13h	20/12/2022 - 14h30
+   sub-119		05/12/2022 - 10h	12/12/2022 - 18h30
+   sub-120		07/12/2022 - 15h30	09/12/2022 - 15h00
+   sub-121		20/12/2022 - 10h	21/12/2022 - 10h
+   sub-122		18/01/2023 - 10h	25/01/2023 - 13h
+   sub-123		18/01/2023 - 13h	19/01/2023 - 14h
+   sub-124		19/01/2023 - 14h	23/01/2023 - 14h
+   sub-125		19/01/2023 - 16h	23/01/2023 - 9h
+   sub-126		20/01/2023 - 16h	01/02/2023 - 15h
+   sub-127		30/01/2023 - 17h	06/02/2023 - 15h30
+   sub-128		31/01/2023 - 15h30	06/02/2023 - 9h
+   sub-129		01/02/2023 - 17h	02/02/2023 - 10h
+   sub-130		03/02/2023 - 15h30	08/02/2023 - 16h
+   sub-131		08/02/2023 - 10h	09/02/2023 - 10h
+   sub-132		08/02/2023 - 15h30	15/02/2023 - 16h30
+   sub-133		14/02/2023 - 17h	20/02/2023 - 10h
+   sub-134		15/03/2023 - 15h30	22/03/2023 - 15h30
+   sub-135		16/03/2023 - 15h00	17/03/2023 - 8h30
+   sub-136		23/03/2023 - 15h30	27/03/2023 - 10h30
+   sub-137		28/03/2023 - 13h30	29/03/2023 - 17h
+   sub-138		29/03/2023 - 17h	03/04/2023 - 17h
+   sub-139		30/03/2023 - 9h		31/03/2023 - 9h
+   sub-140		31/03/2023 - 15h30	05/04/2023 - 8h30
+   sub-141		05/04/2023 - 9h		12/04/2023 - 15h30
+   sub-142		12/04/2023 - 11h	19/04/2023 - 11h
+   sub-143		13/04/2023 - 15h30	19/04/2023 - 9h
+   sub-144		17/04/2023 - 10h	20/04/2023 - 13h30
+   sub-145		19/04/2023 - 13h30	20/04/2023 - 9h
+   sub-146		21/04/2023 - 10h	21/04/2023 - 10h
+   sub-147		21/04/2023 - 17h	04/05/2023 - 14h
+   sub-148		24/04/2023 - 14h	26/04/2023 - 14h
+   sub-149		25/04/2023 - 15h	26/04/2023 - 15h30
+   sub-150		26/04/2023 - 15h	04/05/2023 - 14h
+   sub-151		27/04/2023 - 15h30	02/05/2023 - 14h
+   sub-152		05/05/2023 - 8h		09/05/2023 - 17h
+   sub-153		05/05/2023 - 14h	11/05/2023 - 16h
+   sub-154		11/05/2023 - 17h	15/05/2023 - 17h
+   sub-155		12/05/2023 - 14h	22/05/2023 - 16h30
+   sub-156		12/05/2023 - 17h30	17/05/2023 - 17h30
+   sub-157		23/05/2023 - 10h	26/05/2023 - 14h
+   sub-158		05/06/2023 - 17h	07/06/2023 - 16h15
+   sub-159		06/06/2023 - 11h	07/06/2023 - 10h
+   sub-160		29/06/2023 - 16h30	30/06/2023 - 17h
+   sub-161		06/07/2023 - 15h	10/07/2023 - 15h
+   sub-162		10/07/2023 - 9h30	11/07/2023 - 15h
+   sub-163		11/07/2023 - 10h	No session
+   sub-164		12/07/2023 - 16h30	13/07/2023 - 17h
+   sub-165		17/07/2023 - 16h30	18/07/2023 - 17h
+
 
 Highlights
 ----------
@@ -67,15 +349,15 @@ Highlights
       :class-card: sd-border-1
 
       - Channels: 64
-      - Sampling rate (Hz): 2048.0 (2), 512.0 (328)
+      - Sampling rate (Hz): 512.0 (328), 2048.0 (2)
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 1
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: —
+      - Modality: —
+      - Type: —
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

@@ -5,7 +5,9 @@
 eegdash.dataset.DS003602
 ========================
 
-participants.tsv (OpenNeuro ``ds003602``). Access recordings and metadata through EEGDash.
+Childhood Sexual Abuse and problem drinking in women: Neurobehavioral mechanisms (OpenNeuro ``ds003602``). Access recordings and metadata through EEGDash.
+
+**Citation:** Ozlem Korucuoglu, Andrey P. Anokhin (2021). *Childhood Sexual Abuse and problem drinking in women: Neurobehavioral mechanisms*. `10.18112/openneuro.ds003602.v1.0.0 <https://doi.org/10.18112/openneuro.ds003602.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ participants.tsv (OpenNeuro ``ds003602``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 0.0`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS003602``
    * - Title
-     - participants.tsv
+     - Childhood Sexual Abuse and problem drinking in women: Neurobehavioral mechanisms
    * - Year
      - 2021
    * - Authors
@@ -44,11 +46,28 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds003602,
-        title = {participants.tsv},
+        title = {Childhood Sexual Abuse and problem drinking in women: Neurobehavioral mechanisms},
         author = {Ozlem Korucuoglu and Andrey P. Anokhin},
         doi = {10.18112/openneuro.ds003602.v1.0.0},
         url = {https://doi.org/10.18112/openneuro.ds003602.v1.0.0},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS003602&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS003602%0A-%20%2A%2ATitle%3A%2A%2A%20Childhood%20Sexual%20Abuse%20and%20problem%20drinking%20in%20women%3A%20Neurobehavioral%20mechanisms%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+Data collection took place at the Washington University School of Medicine, St. Louis, under the supervision of Dr. Andrey Anokhin (andrey@wustl.edu). The project was approved by the Washington University Institutional Review Board (IRB project # 201707051). Detailed task description and subject instructions can be found in a seperate PDF file under the folder stimuli. The task sequence file (stim program code) together with the visual stimuli used in the task are also provided in the stimulus folder. Participants were Monozygotic twin pairs, twin pairs have the same FamilyID (provided in participants.tsv)
 
 Highlights
 ----------
@@ -70,12 +89,12 @@ Highlights
       - Sampling rate (Hz): 1000.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 6
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: —
+      - Modality: —
+      - Type: —
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

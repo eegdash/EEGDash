@@ -5,7 +5,9 @@
 eegdash.dataset.DS005420
 ========================
 
-participants.tsv (OpenNeuro ``ds005420``). Access recordings and metadata through EEGDash.
+Resting state EEG with closed eyes and open eyes in females from 60 to 80 years old (OpenNeuro ``ds005420``). Access recordings and metadata through EEGDash.
+
+**Citation:** Miriam de Jesús Sánchez Gama, Luis Alberto Barradas Chacón, Leticia Chacón Gutiérrez, Thalía Fernández Harmony, Carlos Augusto Novo Olivas, José María De La Roca Chiapas (2024). *Resting state EEG with closed eyes and open eyes in females from 60 to 80 years old*. `10.18112/openneuro.ds005420.v1.0.0 <https://doi.org/10.18112/openneuro.ds005420.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ participants.tsv (OpenNeuro ``ds005420``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 0.0`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS005420``
    * - Title
-     - participants.tsv
+     - Resting state EEG with closed eyes and open eyes in females from 60 to 80 years old
    * - Year
      - 2024
    * - Authors
@@ -44,11 +46,32 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds005420,
-        title = {participants.tsv},
+        title = {Resting state EEG with closed eyes and open eyes in females from 60 to 80 years old},
         author = {Miriam de Jesús Sánchez Gama and Luis Alberto Barradas Chacón and Leticia Chacón Gutiérrez and Thalía Fernández Harmony and Carlos Augusto Novo Olivas and José María De La Roca Chiapas},
         doi = {10.18112/openneuro.ds005420.v1.0.0},
         url = {https://doi.org/10.18112/openneuro.ds005420.v1.0.0},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS005420&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS005420%0A-%20%2A%2ATitle%3A%2A%2A%20Resting%20state%20EEG%20with%20closed%20eyes%20and%20open%20eyes%20in%20females%20from%2060%20to%2080%20years%20old%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+
+**References**
+
+Appelhoff, S., Sanderson, M., Brooks, T., Vliet, M., Quentin, R., Holdgraf, C., Chaumon, M., Mikulan, E., Tavabi, K., Höchenberger, R., Welke, D., Brunner, C., Rockhill, A., Larson, E., Gramfort, A. and Jas, M. (2019). MNE-BIDS: Organizing electrophysiological data into the BIDS format and facilitating their analysis. Journal of Open Source Software 4: (1896). https://doi.org/10.21105/joss.01896
+Pernet, C. R., Appelhoff, S., Gorgolewski, K. J., Flandin, G., Phillips, C., Delorme, A., Oostenveld, R. (2019). EEG-BIDS, an extension to the brain imaging data structure for electroencephalography. Scientific Data, 6, 103. https://doi.org/10.1038/s41597-019-0104-8
 
 Highlights
 ----------
@@ -70,12 +93,12 @@ Highlights
       - Sampling rate (Hz): 500.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 2
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: —
+      - Modality: —
+      - Type: —
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

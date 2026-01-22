@@ -5,7 +5,9 @@
 eegdash.dataset.DS005946
 ========================
 
-participants.tsv (OpenNeuro ``ds005946``). Access recordings and metadata through EEGDash.
+ERC_CoG PROMENADE - WP2 - MetaImagery (Metaphor and Mental Imagery) (OpenNeuro ``ds005946``). Access recordings and metadata through EEGDash.
+
+**Citation:** Federico Frau, Paolo Canal, Maddalena Bressler, Chiara Pompei, Valentina Bambini (2025). *ERC_CoG PROMENADE - WP2 - MetaImagery (Metaphor and Mental Imagery)*. `10.18112/openneuro.ds005946.v1.0.1 <https://doi.org/10.18112/openneuro.ds005946.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ participants.tsv (OpenNeuro ``ds005946``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: —`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS005946``
    * - Title
-     - participants.tsv
+     - ERC_CoG PROMENADE - WP2 - MetaImagery (Metaphor and Mental Imagery)
    * - Year
      - 2025
    * - Authors
@@ -44,11 +46,87 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds005946,
-        title = {participants.tsv},
+        title = {ERC_CoG PROMENADE - WP2 - MetaImagery (Metaphor and Mental Imagery)},
         author = {Federico Frau and Paolo Canal and Maddalena Bressler and Chiara Pompei and Valentina Bambini},
         doi = {10.18112/openneuro.ds005946.v1.0.1},
         url = {https://doi.org/10.18112/openneuro.ds005946.v1.0.1},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS005946&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS005946%0A-%20%2A%2ATitle%3A%2A%2A%20ERC_CoG%20PROMENADE%20-%20WP2%20-%20MetaImagery%20%28Metaphor%20and%20Mental%20Imagery%29%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+The following is the README for the “ERC_CoG PROMENADE - WP2 - MetaImagery (Metaphor and Mental Imagery)” dataset
+\===================
+\## License details
+This dataset is proprietary to the University School for Advanced Studies IUSS Pavia, Italy.
+Data and script usage is restricted to academic and non-commercial research upon appropriate attribution. All data provided (behavioral and EEG) are licensed under CC-BY-NC-SA, while code scripts are licensed under CC-BY.
+Data collection was conducted by the research team of the Laboratory of Neurolinguistics and Experimental Pragmatics (NEPLab).
+For inquiries, contact: Dr. Federico Frau (federico.frau@iusspavia.it) and Dr. Paolo Canal (paolo.canal@iusspavia.it).
+\===================
+\## Overview of the dataset
+The dataset was collected within the project “PROcessing MEtaphors: Neurochronometry, Acquisition and DEcay (PROMENADE)”, ERC CONSOLIDATOR GRANT: Grant agreement ID: 101045733 (principal investigator: Prof. Valentina Bambini; email: valentina.bambini@iusspavia.it)
+
+.. dropdown:: View full README
+   :class-container: sd-shadow-sm
+
+   The following is the README for the “ERC_CoG PROMENADE - WP2 - MetaImagery (Metaphor and Mental Imagery)” dataset
+   \===================
+   \## License details
+   This dataset is proprietary to the University School for Advanced Studies IUSS Pavia, Italy.
+   Data and script usage is restricted to academic and non-commercial research upon appropriate attribution. All data provided (behavioral and EEG) are licensed under CC-BY-NC-SA, while code scripts are licensed under CC-BY.
+   Data collection was conducted by the research team of the Laboratory of Neurolinguistics and Experimental Pragmatics (NEPLab).
+   For inquiries, contact: Dr. Federico Frau (federico.frau@iusspavia.it) and Dr. Paolo Canal (paolo.canal@iusspavia.it).
+   \===================
+   \## Overview of the dataset
+   The dataset was collected within the project “PROcessing MEtaphors: Neurochronometry, Acquisition and DEcay (PROMENADE)”, ERC CONSOLIDATOR GRANT: Grant agreement ID: 101045733 (principal investigator: Prof. Valentina Bambini; email: valentina.bambini@iusspavia.it)
+   Data acquisition was conducted in 2023 (acquisition time is provided for each subject in the individual scans.tsv files).
+   \- Description of the contents of the dataset:
+   The dataset includes 238 Files (14.8 GiB) from 39 Subjects acquired in 1 session.
+   EEG data are provided in a long epoch format, from 1.87 seconds before the onset of the target to 3.17 seconds following its presentation (epoch length: 5.04 seconds).
+   Data was high-pass (0.10 Hz) and low-pass filtered (45 Hz) offline with a 4th order IIR Butterworth filter (DC removed), and re-referenced to the average activity of the two mastoids (TP9 and TP10). Independent component analysis (ICA) decomposition was used to identify and remove eye-related activity only.
+   \- Brief overview of the tasks in the experiment:
+   A picture-matching task was used. Target pictures could match (matching condition) or not match (mismatching condition) the information provided in the preceding cue, which could be of four different types producing the four different tasks used in the experiment (Physical, Imagery, Literal, and Metaphorical cues):
+   i) in the Physical, the cue could be the same picture or a different one;
+   ii) in the Imagery, the cue was a single word (an adjective, e.g., “uncombed”) and participants were requested to produce a mental representation of a human referent with the characteristic denoted by the prompted word;
+   iii) in the Literal, participants were cued with a four-word sentence that was a literal description of the target picture (e.g., “some hairstyles are uncombed”);
+   iv) in the Metaphorical, participants were cued with a four-word sentence that was the metaphorical description of the target picture (e.g., “some hairstyles are bushes”).
+   Participants were asked to judge whether the target picture was compatible with the preceding information. Our aim was to test whether the mental representation generated by four types of cues can differently influence the processing of the target picture, with a focus on the potential difference between verbal cues (i.e., literal and metaphorical sentences).
+   \- Independent and dependent variables:
+   Independent variables were Condition (Matching, Mismatching) and Type of cue (Physical, Imagery, Literal, and Metaphorical). These variables were manipulated within subjects. Moreover, a set of variables linked to participants’ vocabulary (i.e., lexical-semantic skills) and mental imagery abilities were assessed via questionnaires and offline behavioral tasks.
+   The EEG amplitude was the main dependent variable. We also coded the accuracy of the response to the task.
+   The mean Accuracy values across conditions and types of cue as well as the scores obtained in vocabulary and mental imagery tasks are available for each subject in the participants.tsv file (all variables are described in the participants.json file).
+   \- Additional control variables:
+   Pictures were selected and adapted to have similar framing and comparable perceptual characteristics, such as relative luminance, contrast, self-similarity, complexity, and symmetry (as measured via “imhistR” R package).
+   \- Subjects:
+   The participants were all right-handed Italian-speaking students from the University of Pavia, Italy. They had different backgrounds and were recruited through leafleting. They were paid €20 for their participation.
+   Exclusion criteria included being: 1) non-native speaker of Italian, 2) bilingual from birth, 3) diagnosed with a learning disability, and 4) left-handedness, as evaluated using the Edinburgh Handedness Inventory (Oldfield, 1971).
+   \===================
+   \## Apparatus and setup
+   \- Apparatus:
+   Brain Vision active ACTICHAMP, 64 electrodes. No shielded room, with subjects seating at a distance of 85 cm from an EIZO V2490 monitor. Responses were collected using a CedrusBox RB-530. No shielded room, with subjects seating at a distance of 85 cm.
+   \- Location and setup:
+   Data were collected in the “spazio EEG” at the Laboratory of Neurolinguistics and Experimental Pragmatics (NepLab) of the University School of Advanced Studies IUSS, located at Palazzo del Broletto, piazza della Vittoria 15, Pavia, Italy.
+   Upon arrival, participants read the information sheet describing the general aims of the study, and how the EEG would be measured, and how their personal data would be kept confidential. After signing the consent form, they moved to the acquisition room where the cap was mounted (roughly 35 minutes for each participant). At the end of the experiment they could wash their hair and go back to the welcome room where they would complete the assessment using questionnaires.
+   \===================
+   \## Task organization
+   \- Paradigm and procedure:
+   The experiment consisted of completing the same task (picture matching) with four different types of cues. We used a block design in which each kind of cue was presented separately and preceded by its own instructions. The order of tasks varied across participants: half of the participants performed the linguistic blocks (Literal and Metaphorical) at the beginning of the experiment and the Imagery as the last one, while the other half started the experiment with the Imagery and performed the linguistic blocks at the end of the experiment. The order of the Literal and Metaphorical blocks was also counterbalanced across participants, so four versions of the experiment were created: i) Literal-Metaphorical-Physical-Imagery, ii) Metaphorical-Literal-Physical-Imagery, iii) Imagery-Physical-Literal-Metaphorical, and iv) Imagery-Physical-Metaphorical-Literal.
+   The order of items was pseudorandomized to counterbalance the presentation order of matching and mismatching stimuli for each item, to ensure that a picture stimulus presented first in the matching condition in one task was then presented first in the mismatching condition in the following task (and vice versa). The pseudorandomized order also ensured that matching and mismatching stimuli associated with the same item were separated by at least 1/4 of the trials (i.e., 21 trials).
+   \- Task details and event coding:
+   The procedure consisted in presenting a cue and a target picture, with different inter-stimulus intervals (700 ms for Physical, Literal, and Metaphorical, and 3000 ms for Imagery). Event codes were sent at the onset of the target picture and during the presentation of the cue. The numerical part of event codes identified each target picture (1 to 42). The same numbers were used to code the match condition, while for the mismatch condition we added 100 to the identifier (therefore 101 to 142). The cue type was coded upon presentation of the cue: 221 for Physical, 222 for Literal, 223 for Metaphorical. Therefore, to identify the individual target picture, cue type, and condition, two triggers were needed in each trial \[the trigger at the cue determines the cue type, while the trigger at the target determines the condition (match < 100; mismatch > 100) and specific item (module 100). A Fieltrip trial function is provided in the parent folder (code/trialFunIMEEG.m), since conditional trigger selection must be carried out to retrieve all information. Data would then be apt for single-trial analysis.
+
 
 Highlights
 ----------
@@ -66,16 +144,16 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 58
+      - Channels: 60 (39), 58 (39)
       - Sampling rate (Hz): 1000.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 1
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: Healthy
+      - Modality: Visual
+      - Type: Perception
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

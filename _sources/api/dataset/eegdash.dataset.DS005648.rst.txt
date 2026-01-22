@@ -5,15 +5,17 @@
 eegdash.dataset.DS005648
 ========================
 
-README (OpenNeuro ``ds005648``). Access recordings and metadata through EEGDash.
+Mapping object space dimensions: new insights from temporal dynamics (OpenNeuro ``ds005648``). Access recordings and metadata through EEGDash.
+
+**Citation:** Alexis Kidder(\*), Genevieve Quek, Tijl Grootswagers (2024). *Mapping object space dimensions: new insights from temporal dynamics*. `10.18112/openneuro.ds005648.v1.0.2 <https://doi.org/10.18112/openneuro.ds005648.v1.0.2>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 1` :bdg-secondary:`Recordings: 1`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 21` :bdg-secondary:`Recordings: 21`
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: —`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS005648``
    * - Title
-     - README
+     - Mapping object space dimensions: new insights from temporal dynamics
    * - Year
      - 2024
    * - Authors
@@ -33,7 +35,7 @@ Dataset Information
    * - License
      - CC0
    * - Citation / DOI
-     - `doi:10.18112/openneuro.ds005648.v1.0.0 <https://doi.org/10.18112/openneuro.ds005648.v1.0.0>`__
+     - `doi:10.18112/openneuro.ds005648.v1.0.2 <https://doi.org/10.18112/openneuro.ds005648.v1.0.2>`__
    * - Source links
      - `OpenNeuro <https://openneuro.org/datasets/ds005648>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005648>`__ | `Source URL <https://openneuro.org/datasets/ds005648>`__
 
@@ -44,11 +46,37 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds005648,
-        title = {README},
+        title = {Mapping object space dimensions: new insights from temporal dynamics},
         author = {Alexis Kidder(*) and Genevieve Quek and Tijl Grootswagers},
-        doi = {10.18112/openneuro.ds005648.v1.0.0},
-        url = {https://doi.org/10.18112/openneuro.ds005648.v1.0.0},
+        doi = {10.18112/openneuro.ds005648.v1.0.2},
+        url = {https://doi.org/10.18112/openneuro.ds005648.v1.0.2},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS005648&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS005648%0A-%20%2A%2ATitle%3A%2A%2A%20Mapping%20object%20space%20dimensions%3A%20new%20insights%20from%20temporal%20dynamics%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+
+**README**
+
+Experiment details for Mapping object space dimensions: new insights from temporal dynamics. The main folder contains the raw MEG data for all participants in standard bids format. See references.
+The “sourcedata” folder contains the trial behavioral data collected during the EEG Session. The data in this folder follows the following trial structure:
+	•	sourcedata
+	⁃	sub-[participant number]_task-targets_events.csv: contains all the events for each trial in the EEG session, detailing what was shown on the screen
+	•	sub-[participant number]:contains BIDS formatted raw EEG data
+	⁃	sub-[participant name]_task-targets_events_short.tsv: information about the channels used and sampling rate for all trials
+	⁃	sub-[participant name]_task-targets_eeg.bdf: EEG raw data
 
 Highlights
 ----------
@@ -59,8 +87,8 @@ Highlights
    .. grid-item-card:: Subjects & recordings
       :class-card: sd-border-1
 
-      - Subjects: 1
-      - Recordings: 1
+      - Subjects: 21
+      - Recordings: 21
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -70,25 +98,25 @@ Highlights
       - Sampling rate (Hz): 2048.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 1
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: Healthy
+      - Modality: Visual
+      - Type: Perception
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 800.0 MB
-      - File count: 1
+      - Size on disk: 15.5 GB
+      - File count: 21
       - Format: BIDS
 
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
       - License: CC0
-      - DOI: doi:10.18112/openneuro.ds005648.v1.0.0
+      - DOI: doi:10.18112/openneuro.ds005648.v1.0.2
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

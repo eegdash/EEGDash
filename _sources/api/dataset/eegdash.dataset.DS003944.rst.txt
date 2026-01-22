@@ -5,7 +5,9 @@
 eegdash.dataset.DS003944
 ========================
 
-participants.tsv (OpenNeuro ``ds003944``). Access recordings and metadata through EEGDash.
+EEG: First Episode Psychosis vs. Control Resting Task 1 (OpenNeuro ``ds003944``). Access recordings and metadata through EEGDash.
+
+**Citation:** Dean Salisbury, Dylan Seebold, Brian Coffman (2021). *EEG: First Episode Psychosis vs. Control Resting Task 1*. `10.18112/openneuro.ds003944.v1.0.1 <https://doi.org/10.18112/openneuro.ds003944.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ participants.tsv (OpenNeuro ``ds003944``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 7.0`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS003944``
    * - Title
-     - participants.tsv
+     - EEG: First Episode Psychosis vs. Control Resting Task 1
    * - Year
      - 2021
    * - Authors
@@ -44,11 +46,43 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds003944,
-        title = {participants.tsv},
+        title = {EEG: First Episode Psychosis vs. Control Resting Task 1},
         author = {Dean Salisbury and Dylan Seebold and Brian Coffman},
         doi = {10.18112/openneuro.ds003944.v1.0.1},
         url = {https://doi.org/10.18112/openneuro.ds003944.v1.0.1},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS003944&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS003944%0A-%20%2A%2ATitle%3A%2A%2A%20EEG%3A%20First%20Episode%20Psychosis%20vs.%20Control%20Resting%20Task%201%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+Resting EEG and MEG data was gathered for two independently collected samples of healthy and First Episode Psychosis (FEP) individuals.
+To obtain resting data, EEG channels were recorded for 5 minutes using an Elekta Neuromag Vectorview system.
+EEG was recorded using a low-impedance 10-10 system 60-channel cap.
+The first collected sample of EEG data is provided here. This sample includes a portion of subjects from the second acquisition (EEG: First Episode Psychosis vs. Control Resting Task 2), since they were collected using the same montage.
+The subjects from Task 2 that have been included here are: sub-2140A, sub-2170A, sub-2174A, sub-2176A, sub-2177A, sub-2184A, sub-2193A, sub-2214A, sub-2217A, sub-2221A.
+The phenotype directory contains clinical assessment results and data divided by type for all subjects. The assessment results were categorized as follows:
+BPRS - Brief Psychiatric Rating Scale,
+SANS - Scale for Assessment of Negative Symptoms,
+SAPS - Scale for Assessment of Positive Symptoms,
+GAFGAS - Global Assessment of Functioning,
+SFS - Social Functioning Scale,
+MATRICS - MATRICS Consensus Cognitive Battery,
+WASI - Wechsler Abbreviated Scale of Intelligence,
+Hollingshead - Hollingshead Four-Factor Index of Socioeconomic Status,
+Medications - Chlorpromazine equivalency of prescribed medication at time of EEG scan.
+Values/scores that were not collected and questions without given responses are denoted by n/a.
 
 Highlights
 ----------
@@ -66,16 +100,16 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 61
-      - Sampling rate (Hz): 3000.00030000003 (2), 1000.0 (162)
+      - Channels: 61 (82), 64 (82)
+      - Sampling rate (Hz): 1000.0 (162), 3000.00030000003 (2)
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 1
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: —
+      - Modality: —
+      - Type: —
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

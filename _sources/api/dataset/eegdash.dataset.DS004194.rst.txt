@@ -5,7 +5,9 @@
 eegdash.dataset.DS004194
 ========================
 
-task-prf_events.json (OpenNeuro ``ds004194``). Access recordings and metadata through EEGDash.
+Visual ECoG dataset (OpenNeuro ``ds004194``). Access recordings and metadata through EEGDash.
+
+**Citation:** Iris Groen, Kenichi Yuasa, Amber Brands, Giovanni Piantoni, Stephanie Montenegro, Adeen Flinker, Sasha Devore, Orrin Devinsky, Werner Doyle, Patricia Dugan, Daniel Friedman, Nick Ramsey, Natalia Petridou, Jonathan Winawer (2022). *Visual ECoG dataset*. `10.18112/openneuro.ds004194.v3.0.0 <https://doi.org/10.18112/openneuro.ds004194.v3.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ task-prf_events.json (OpenNeuro ``ds004194``). Access recordings and metadata th
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 4.0`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS004194``
    * - Title
-     - task-prf_events.json
+     - Visual ECoG dataset
    * - Year
      - 2022
    * - Authors
@@ -44,11 +46,110 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds004194,
-        title = {task-prf_events.json},
+        title = {Visual ECoG dataset},
         author = {Iris Groen and Kenichi Yuasa and Amber Brands and Giovanni Piantoni and Stephanie Montenegro and Adeen Flinker and Sasha Devore and Orrin Devinsky and Werner Doyle and Patricia Dugan and Daniel Friedman and Nick Ramsey and Natalia Petridou and Jonathan Winawer},
         doi = {10.18112/openneuro.ds004194.v3.0.0},
         url = {https://doi.org/10.18112/openneuro.ds004194.v3.0.0},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS004194&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS004194%0A-%20%2A%2ATitle%3A%2A%2A%20Visual%20ECoG%20dataset%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+
+**Details related to access to the data**
+
+- Contact person
+Please contact Iris Groen (i.i.a.groen@uva.nl, https://orcid.org/0000-0002-5536-6128) for more information.
+Please see the following papers for more details on the data collection and preprocessing:
+Groen IIA, Piantoni G, Montenegro S, Flinker A, Devore S, Devinsky O, Doyle W, Dugan P, Friedman D, Ramsey N, Petridou N, Winawer JA (2022) Temporal dynamics of neural responses in human visual cortex. The Journal of Neuroscience 42(40):7562-7580 (https://doi.org/10.1523/JNEUROSCI.1812-21.2022)
+Yuasa K, Groen IIA, Piantoni G, Montenegro S, Flinker A, Devore S, Devinsky O, Doyle W, Dugan P, Friedman D, Ramsey N, Petridou N, Winawer JA. Precise Spatial Tuning of Visually Driven Alpha Oscillations in Human Visual Cortex. eLife12:RP90387 https://doi.org/10.7554/eLife.90387.1
+Brands AM, Devore S, Devinsky O, Doyle W, Flinker A, Friedman D, Dugan P, Winawer JA, Groen IIA (2024). Temporal dynamics of short-term neural adaptation in human visual cortex. https://doi.org/10.1101/2023.09.13.557378
+- Practical information to access the data
+
+.. dropdown:: View full README
+   :class-container: sd-shadow-sm
+
+   
+   **Details related to access to the data**
+   
+   - Contact person
+   Please contact Iris Groen (i.i.a.groen@uva.nl, https://orcid.org/0000-0002-5536-6128) for more information.
+   Please see the following papers for more details on the data collection and preprocessing:
+   Groen IIA, Piantoni G, Montenegro S, Flinker A, Devore S, Devinsky O, Doyle W, Dugan P, Friedman D, Ramsey N, Petridou N, Winawer JA (2022) Temporal dynamics of neural responses in human visual cortex. The Journal of Neuroscience 42(40):7562-7580 (https://doi.org/10.1523/JNEUROSCI.1812-21.2022)
+   Yuasa K, Groen IIA, Piantoni G, Montenegro S, Flinker A, Devore S, Devinsky O, Doyle W, Dugan P, Friedman D, Ramsey N, Petridou N, Winawer JA. Precise Spatial Tuning of Visually Driven Alpha Oscillations in Human Visual Cortex. eLife12:RP90387 https://doi.org/10.7554/eLife.90387.1
+   Brands AM, Devore S, Devinsky O, Doyle W, Flinker A, Friedman D, Dugan P, Winawer JA, Groen IIA (2024). Temporal dynamics of short-term neural adaptation in human visual cortex. https://doi.org/10.1101/2023.09.13.557378
+   - Practical information to access the data
+   Processed data and model fits reported in Groen et al., (2022) are available in derivatives/Groenetal2022TemporalDynamicsECoG as matlab .mat files. Matlab code to load, process and plot these data (including 3D renderings of the participant's surface reconstructions and electrode positions) is available in https://github.com/WinawerLab/ECoG_utils and https://github.com/irisgroen/temporalECoG. These repositories have dependencies on other Matlab toolboxes (e.g., FieldTrip). See instructions on Github for relevant links and guidelines.
+   Processed data and model fits reported in Yuasa et al., (2023) are available in the Github repositories described in the paper.
+   Processed data and model fits reported in Brands et al., (2024) are available in derivatives/Brandsetal2024TemporalAdaptationECoGCategories as python .py files. Python code to process and analyze these data is available in the Github repositories described in the paper.
+   
+   **Overview**
+   
+   - Project name
+   Visual ECoG dataset
+   - Years that the project ran
+   Data were collected between 2017-2020. Exact recording dates have been scrubbed for anonymization purposes.
+   - Brief overview of the tasks in the experiment
+   Participants sub-p01 to sub-p11 viewed grayscale visual pattern stimuli that were varied in temporal or spatial properties. Participans sub-p11 to sub-p14 additionally saw color images of different image classes (faces, bodies, buildings, objects, scenes,  and scrambled) that were varied in temporal properties. See 'Independent Variables' below for more details.
+   In all tasks, participants were instructed to fixate a cross or point in the center of the screen and monitor it for a color change, i.e. to perform a stimulus-orthogonal task (see the task-specific _events.json files, e.g., task-prf_events.json, for further details).
+   - Description of the contents of the dataset
+   The data consists of cortical iEEG recordings in 14 epilepsy patients in response to visual stimulation. Patients were implanted with standard clinical surface (grid) and depth electrodes. Two patients were additionally implanted with a high-density research grid. In addition to the ieeg recordings, pre-implantation MRI T1 scans are provided for the purpose of localizing electrodes. Participants performed a varying number of tasks and runs.
+   - Independent variables
+   The data are divided in 6 different sets of stimulus types or events:
+   1. prf: grayscale, oriented bar stimuli consisting of curved, band-pass filtered lines that were swept across the screen (up to (~16 degree of visual angle) in a fixed order for the purpose of estimating spatial population receptive fields (pRFs).
+   2. spatialpattern: grayscale, centrally presented pattern stimuli (~16 degree of visual angle diameter) consisting of curved, band-pass filtered lines that were systematically varied in level of contrast and density, as well as various oriented grating stimuli.
+   3. temporalpattern: grayscale, centrally presented pattern stimuli (~16 degree of visual angle diameter) consisting of curved, band-pass filtered lines that were systematically varied in temporal duration and interval.
+   4. soc: combination of the spatialpattern and temporalpattern stimuli.
+   5. sixcatloctemporal: color images of six stimulus classes: faces, bodies (hands/feet only), buildings, objects, scenes and scrambled, systematically varied in temporal duration and interval, whereby interval stimuli consisted of direct repeats of the identical image.
+   6. sixcatlocisidiff/sixcatlocdiffisi: color images of six stimulus classes: faces, bodies (hands/feet only), buildings, objects, scenes and scrambled, systematically varied in temporal duration and interval, whereby the first interval stimulus was followed by images from either the same or a different category (but not the identical image).
+   Participant-, task- and run-specific stimuli are provided in the /stimuli folder as matlab .mat files.
+   - Dependent variables
+   The main BIDS folder contains the raw voltage data, split up in individual task runs.
+   The /derivatives/ECoGCAR folder contains common-average-referenced version of the data.
+   The /derivatives/ECoGBroadband folder contains time-varying broadband responses estimated by band-pass filtering the common-average-referenced voltage data and taking the average power envelope.
+   The /derivatives/ECoGPreprocessed folder contains epoched trials used in Brands et al., (2024).
+   The /derivatives/freesurfer folder contains surface reconstructions of each participant's T1, along with retinotopic atlas files.
+   The /derivatives/Groen2022TemporalDynamicsECoG contains preprocessed data and model fits that can be used to reproduce the results reported in Groen et al., (2022).
+   The /derivatives/Brands2024TemporalAdaptationECoG contains preprocessed data and model fits that can be used to reproduce the results reported in Brands et al., (2024).
+   - Quality assessment of the data
+   Data quality and number of trials per subjects varies considerably across patients, for various reasons.
+   First, for each recording session, attempts were made to optimize the environment for running visual experiments; e.g. room illumination was stabilized as much as possible by closing blinds when available, the visual display was calibrated (for most patients), and interference from medical staff or visitors was minimized. However, it was not possible to equate this with great precision across patients and sessions/runs.
+   Second, implantations were determined based on clinical needs and electrode locations therefore vary across participants. The strength and robustness of the neural responses varies greatly with the electrode location (e.g. early vs higher-level visual cortex), as well as with uncontrolled factors such as how well the electrode made contact with the cortex and whether it was primarily situated on grey matter (surface/grid electrodes) or could be located in white matter (some depth electrodes). Electrodes that were marked as containing epileptic activity by clinicians, or that did not have good signal based on visual inspection of the raw data, are marked as 'bad' in the channels.tsv files.
+   Third, patients varied greatly in their cognitive abilities and mental/medical state, which affected their ability to follow task instructions, e.g. to remain alert and fixation. Some patients were able to perform repeated runs of multiple tasks across multiple sessions, while others only managed to do a few runs.
+   All patients included in this dataset have sufficiently good responses in some electrodes/tasks as judged by Groen et al., (2022) and Brands et al., (2024). However, when using this dataset to address further research questions, it is advisable to set stringent requirements on electrode and trial selection. See Groen et al., (2022) and associated code repository for an example preprocessing pipeline that selected for robust visual responses to temporally- and contrast-varying stimuli.
+   
+   **Methods**
+   
+   - Subjects
+   All participants were intractable epilepsy patients who were undergoing ECoG for the purpose of monitoring seizures. Participants were included if their implantation covered parts of visual cortex and if they consented to participate in research.
+   - Apparatus
+   Data were collected in a clinical setting, i.e. at bedside in the patient's hospital room. Information about iEEG recording apparatus is provided the meta data for each patient. Information about the visual stimulation equipment and behavioral response recordings are provided in Groen et al., (2022), Yuasa et al., (2023) and Brands et al., (2024).
+   - Experimental location
+   Data were collected at NYU University Langone Hospital (New York, USA) or at University Medical Center Utrecht (The Netherlands).
+   - Missing data
+   Stimulus files are missing for a few runs of sub-02. These are marked as N/A in the associated event files.
+   
+   **Notes**
+   
+   Further participant-specific notes:
+   - For sub-03 and sub-04 the spatial pattern and temporal pattern stimuli are combined in the soc task runs, for the remaining participants these are split across the spatialpattern and temporalpattern task runs.
+   - The pRF task from sub-04 has different prf parameters (bar duration and gap).
+   - The first two runs of the pRF task from sub-05 are not of good quality (participant repeatedly broke fixation). In addition, the triggers in all pRF runs from sub-05 are not correct due to a stimulus coding problem and will need to be re-interpolated if one wishes to use these data.
+   - Participants sub-10 and sub-11 have high density grids in addition to clinical grids.
+   - Note that all stimuli and stimulus parameters can be found in the participant-specific stimulus *.mat files.
+
 
 Highlights
 ----------
@@ -66,16 +167,16 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 129 (20), 173 (40), 160 (20), 133 (40), 16 (28), 74 (24), 106 (14), 111 (20), 91 (20), 206 (24), 61 (12), 265 (132), 140 (24)
+      - Channels: 265 (132), 173 (40), 133 (40), 74 (24), 206 (24), 140 (24), 91 (20), 111 (20), 129 (20), 160 (20), 16 (14), 106 (14), 124 (14), 61 (12)
       - Sampling rate (Hz): 512.0 (394), 2048.0 (24)
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 7
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: Epilepsy
+      - Modality: Visual
+      - Type: Perception
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

@@ -5,7 +5,9 @@
 eegdash.dataset.DS005688
 ========================
 
-participants.tsv (OpenNeuro ``ds005688``). Access recordings and metadata through EEGDash.
+visStim (OpenNeuro ``ds005688``). Access recordings and metadata through EEGDash.
+
+**Citation:** Henry Tan, Devon Griggs, Lucas Chen, Kahte Culevski, Kat Floerchinger, Alissa Phutirat, Gabe Koh, Nels Schimek, Pierre Mourad (2024). *visStim*. `10.18112/openneuro.ds005688.v1.0.1 <https://doi.org/10.18112/openneuro.ds005688.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ participants.tsv (OpenNeuro ``ds005688``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 0.0`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS005688``
    * - Title
-     - participants.tsv
+     - visStim
    * - Year
      - 2024
    * - Authors
@@ -44,11 +46,93 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds005688,
-        title = {participants.tsv},
+        title = {visStim},
         author = {Henry Tan and Devon Griggs and Lucas Chen and Kahte Culevski and Kat Floerchinger and Alissa Phutirat and Gabe Koh and Nels Schimek and Pierre Mourad},
         doi = {10.18112/openneuro.ds005688.v1.0.1},
         url = {https://doi.org/10.18112/openneuro.ds005688.v1.0.1},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS005688&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS005688%0A-%20%2A%2ATitle%3A%2A%2A%20visStim%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+
+**Dataset description**
+
+This dataset was collected for the study "Diagnostic ultrasound enhances, then reduces, exogenously induced brain activity of mice" by Tan et al. (2024). The research demonstrates how transcranially delivered diagnostic ultrasound (tDUS) modulates the brain's receptivity to external stimuli, using a blinking light stimulus in a mouse model.
+The study findings highlight the potential for diagnostic ultrasound to intentionally modulate brain function, paving the way for possible future clinical and therapeutic applications.
+Please cite the following paper when using this dataset:
+Tan H, Griggs DJ, Chen L, et al. Diagnostic ultrasound enhances, then reduces, exogenously induced brain activity of mice. Frontiers in Neuroscience. 2024. DOI: [in peer review].
+
+**License**
+
+
+.. dropdown:: View full README
+   :class-container: sd-shadow-sm
+
+   
+   **Dataset description**
+   
+   This dataset was collected for the study "Diagnostic ultrasound enhances, then reduces, exogenously induced brain activity of mice" by Tan et al. (2024). The research demonstrates how transcranially delivered diagnostic ultrasound (tDUS) modulates the brain's receptivity to external stimuli, using a blinking light stimulus in a mouse model.
+   The study findings highlight the potential for diagnostic ultrasound to intentionally modulate brain function, paving the way for possible future clinical and therapeutic applications.
+   Please cite the following paper when using this dataset:
+   Tan H, Griggs DJ, Chen L, et al. Diagnostic ultrasound enhances, then reduces, exogenously induced brain activity of mice. Frontiers in Neuroscience. 2024. DOI: [in peer review].
+   
+   **License**
+   
+   This dataset is proprietary to the Department of Neurological Surgery, University of Washington, Seattle, WA, USA.
+   Usage is restricted to academic and non-commercial research. Redistribution, modification, or commercial use is prohibited without prior permission.
+   For inquiries, contact: Pierre D. Mourad (doumitt@uw.edu).
+   
+   **Acknowledgements**
+   
+   We thank the Department of Neurological Surgery, University of Washington, for internal funding.
+   This research was supported by R01 NS119395 and P51 OD010425 (DJG) and the Mary Gates Research Scholarship** (HT).
+   
+   **Dataset Overview**
+   
+   This dataset comprises electrocorticography (ECoG) recordings from three cohorts of C57BL/6 mice exposed to combinations of diagnostic ultrasound (tDUS) and blinking light stimuli. The study investigates how tDUS influences the visual cortex's response to external visual stimulation.
+   Key Features:
+   - Subjects: 20 C57BL/6 mice divided into three experimental cohorts:
+     1. Light-only cohort: Exposed to blinking light only.
+     2. US-only cohort: Exposed to tDUS without light.
+     3. US+Light cohort: Exposed to blinking light combined with tDUS.
+   - Electrode Placement: ECoG electrodes targeted visual and somatosensory cortices.
+   - Recording Conditions: Data recorded at 20 kS/s, filtered (5–55 Hz), and analyzed with MATLAB.
+   
+   **Data Structure**
+   
+   Data Files:
+   - Raw ECoG Data: Continuous brain activity recordings.
+   - Event-Triggered Data: Segment-specific RMS values for blinking light events.
+   - Processed Data: Filtered and normalized brain activity traces.
+   Metadata:
+   - Experimental conditions, cohort allocation, and baseline brain activity.
+   
+   **Methodology**
+   
+   - Stimulation Protocols: Mice were exposed to blinking light stimuli (10 seconds per event) and tDUS delivered through a P21x5-1 scan head (Sonosite MicroMaxx system).
+   - Data Collection: Baseline and event-triggered ECoG signals were recorded using LabChart software.
+   - Analysis: RMS values normalized to baseline activity for comparative statistical analysis.
+   Outcomes
+   Key Findings:
+   1. Enhanced Brain Activity: Simultaneous tDUS and blinking light increased cortical activity compared to light alone.
+   2. Persistent Effects: tDUS effects on brain activity persisted after stimulation ceased.
+   3. No Effect of tDUS Alone: tDUS without light did not activate cortical activity but reduced subsequent activity.
+   References
+   For a complete list of references, please consult the manuscript.
+
 
 Highlights
 ----------
@@ -66,16 +150,16 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 4
+      - Channels: 4 (172), 1 (3)
       - Sampling rate (Hz): 10000.0 (148), 20000.0 (30)
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 5
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: Healthy
+      - Modality: Visual
+      - Type: Clinical/Intervention
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

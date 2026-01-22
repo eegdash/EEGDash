@@ -5,7 +5,9 @@
 eegdash.dataset.DS004917
 ========================
 
-participants.tsv (OpenNeuro ``ds004917``). Access recordings and metadata through EEGDash.
+Probability Decision-making Task with ambiguity (OpenNeuro ``ds004917``). Access recordings and metadata through EEGDash.
+
+**Citation:** Alejandra Figueroa-Vargas, Gabriela Valdebenito-Oyarzo, María Paz Martínez-Molina, Francisco Zamorano, Pablo Billeke (2024). *Probability Decision-making Task with ambiguity*. `10.18112/openneuro.ds004917.v1.0.1 <https://doi.org/10.18112/openneuro.ds004917.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ participants.tsv (OpenNeuro ``ds004917``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 0.0`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS004917``
    * - Title
-     - participants.tsv
+     - Probability Decision-making Task with ambiguity
    * - Year
      - 2024
    * - Authors
@@ -44,11 +46,34 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds004917,
-        title = {participants.tsv},
+        title = {Probability Decision-making Task with ambiguity},
         author = {Alejandra Figueroa-Vargas and Gabriela Valdebenito-Oyarzo and María Paz Martínez-Molina and Francisco Zamorano and Pablo Billeke},
         doi = {10.18112/openneuro.ds004917.v1.0.1},
         url = {https://doi.org/10.18112/openneuro.ds004917.v1.0.1},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS004917&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS004917%0A-%20%2A%2ATitle%3A%2A%2A%20Probability%20Decision-making%20Task%20with%20ambiguity%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+Summary
+This dataset forms part of a study supported by the Social Neuroscience and Neuromodulation Laboratory of Universidad del Desarrollo, Chile.
+The full dataset is described in a submission to Scientific Data.
+Abstract
+In our daily lives, we frequently encounter decisions where the potential outcomes are unclear, leading to a state of heightened uncertainty. The complete or partial lack of knowledge regarding the probability of outcomes is called ambiguity and presents significant challenges for individuals. While recent studies have associated the level of ambiguity in decision-making with neural activity in the parietal cortex, the precise role of this brain region and its interactions with other brain regions during decision-making processes are not well known. Here, we present a comprehensive dataset detailing human decision-making under conditions of risk and ambiguity. This dataset includes data from 53 healthy volunteers aged between 18 and 31 years, consisting of structural magnetic resonance imaging (MRI: T1w, T2w, and DWI) and functional MRI (fMRI) acquired during task performance, as well as concurrent electrophysiological (EEG) recordings during inhibitory transcranial magnetic stimulation (TMS) applied over two parietal regions and the vertex. This dataset offers an opportunity to delve into the neurobiological mechanisms of decision-making in detail, highlighting the role of the parietal cortex.
+Additional Usage Notes
+- All code related to this dataset can be found on GitHub (https://github.com/neurocics/LAN_current) and and the additional data set of study are available in the free and open repository of OSF (https://osf.io/zd3g7/) (DOI: 10.17605/OSF.IO/ZD3G7). This includes sourcedata for the scanner tasks and also stimulus presentation scripts.
 
 Highlights
 ----------
@@ -70,12 +95,12 @@ Highlights
       - Sampling rate (Hz): —
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 1
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: —
+      - Modality: —
+      - Type: —
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

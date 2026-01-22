@@ -5,7 +5,9 @@
 eegdash.dataset.DS004551
 ========================
 
-participants.tsv (OpenNeuro ``ds004551``). Access recordings and metadata through EEGDash.
+iEEG on children during slow wave sleep (OpenNeuro ``ds004551``). Access recordings and metadata through EEGDash.
+
+**Citation:** Kazuki Sakakura, Naoto Kuroda, Masaki Sonoda, Takumi Mitsuhashi, Ethan Firestone, Aimee F. Luat, Neena I. Marupudi, Sandeep Sood, Eishi Asano (2023). *iEEG on children during slow wave sleep*. `10.18112/openneuro.ds004551.v1.0.6 <https://doi.org/10.18112/openneuro.ds004551.v1.0.6>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ participants.tsv (OpenNeuro ``ds004551``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 3.0`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS004551``
    * - Title
-     - participants.tsv
+     - iEEG on children during slow wave sleep
    * - Year
      - 2023
    * - Authors
@@ -44,11 +46,31 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds004551,
-        title = {participants.tsv},
+        title = {iEEG on children during slow wave sleep},
         author = {Kazuki Sakakura and Naoto Kuroda and Masaki Sonoda and Takumi Mitsuhashi and Ethan Firestone and Aimee F. Luat and Neena I. Marupudi and Sandeep Sood and Eishi Asano},
         doi = {10.18112/openneuro.ds004551.v1.0.6},
         url = {https://doi.org/10.18112/openneuro.ds004551.v1.0.6},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS004551&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS004551%0A-%20%2A%2ATitle%3A%2A%2A%20iEEG%20on%20children%20during%20slow%20wave%20sleep%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+This dataset was curated for publication as part of the manuscript in Sakakura et al. (in preparation).
+It contains iEEGs collected from 114 individuals during slow wave sleep.
+The available Matlab code can be found at https://github.com/kaz1126/MI_HFO.
+The iEEG coordinate system employed in this dataset is MNI305.
 
 Highlights
 ----------
@@ -66,16 +88,16 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 102 (4), 122 (4), 110 (4), 128 (164), 120 (2), 106 (2), 112 (10), 116 (2), 118 (6), 124 (4), 138 (6), 96 (2), 58 (2), 148 (4), 136 (2), 130 (4), 104 (4), 146 (2), 84 (2), 108 (4), 126 (2), 142 (4), 144 (4), 134 (4), 132 (2)
+      - Channels: 128 (164), 112 (10), 138 (6), 118 (6), 144 (4), 130 (4), 122 (4), 102 (4), 148 (4), 142 (4), 108 (4), 124 (4), 110 (4), 134 (4), 104 (4), 58 (2), 132 (2), 126 (2), 136 (2), 116 (2), 84 (2), 146 (2), 96 (2), 106 (2), 120 (2)
       - Sampling rate (Hz): 1000.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 1
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: —
+      - Modality: Sleep
+      - Type: Sleep
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

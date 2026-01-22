@@ -5,7 +5,9 @@
 eegdash.dataset.DS003061
 ========================
 
-participants.tsv (OpenNeuro ``ds003061``). Access recordings and metadata through EEGDash.
+EEG data from an auditory oddball task (OpenNeuro ``ds003061``). Access recordings and metadata through EEGDash.
+
+**Citation:** Arnaud Delorme (2020). *EEG data from an auditory oddball task*. `10.18112/openneuro.ds003061.v1.1.0 <https://doi.org/10.18112/openneuro.ds003061.v1.1.0>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ participants.tsv (OpenNeuro ``ds003061``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 4.0`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS003061``
    * - Title
-     - participants.tsv
+     - EEG data from an auditory oddball task
    * - Year
      - 2020
    * - Authors
@@ -44,11 +46,30 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds003061,
-        title = {participants.tsv},
+        title = {EEG data from an auditory oddball task},
         author = {Arnaud Delorme},
         doi = {10.18112/openneuro.ds003061.v1.1.0},
         url = {https://doi.org/10.18112/openneuro.ds003061.v1.1.0},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS003061&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS003061%0A-%20%2A%2ATitle%3A%2A%2A%20EEG%20data%20from%20an%20auditory%20oddball%20task%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+Data collection took place at the Meditation Research Institute (MRI) in Rishikesh, India under the supervision of Arnaud Delorme, PhD. The project was approved by the local MRI Indian ethical committee and the ethical committee of the University of California San Diego (IRB project # 090731).
+Participants sat either on a blanket on the floor or on a chair for both experimental periods depending on their personal preference. They were asked to keep their eyes closed and all lighting in the room was turned off during data collection. An intercom allowed communication between the experimental and the recording room.
+Participants performed three identical sessions of 13 minutes each. 750 stimuli were presented with 70% of them being standard (500 Hz pure tone lasting 60 milliseconds), 15% being oddball (1000 Hz pure tone lasting 60 ms) and 15% being distractors (1000 Hz white noise lasting 60 ms). All sounds took 5 milliseconds to ramp up and 5 milliseconds to ramp down. Sounds were presented at a rate of 1 per second with a random gaussian jitter of standard deviation 25 ms. Participants were instructed to respond to oddball by pressing a key on a keypad that was resting on their lap.
 
 Highlights
 ----------
@@ -66,16 +87,16 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 64
+      - Channels: 64 (39), 79 (39)
       - Sampling rate (Hz): 256.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 1
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: —
+      - Modality: —
+      - Type: —
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

@@ -5,7 +5,9 @@
 eegdash.dataset.DS002885
 ========================
 
-participants.tsv (OpenNeuro ``ds002885``). Access recordings and metadata through EEGDash.
+DBS Phantom Recordings (OpenNeuro ``ds002885``). Access recordings and metadata through EEGDash.
+
+**Citation:** Ahmet Levent Kandemir, Vladimir Litvak, Esther Florin (2020). *DBS Phantom Recordings*. `10.18112/openneuro.ds002885.v1.0.1 <https://doi.org/10.18112/openneuro.ds002885.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ participants.tsv (OpenNeuro ``ds002885``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 1.0`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS002885``
    * - Title
-     - participants.tsv
+     - DBS Phantom Recordings
    * - Year
      - 2020
    * - Authors
@@ -44,11 +46,35 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds002885,
-        title = {participants.tsv},
+        title = {DBS Phantom Recordings},
         author = {Ahmet Levent Kandemir and Vladimir Litvak and Esther Florin},
         doi = {10.18112/openneuro.ds002885.v1.0.1},
         url = {https://doi.org/10.18112/openneuro.ds002885.v1.0.1},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS002885&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS002885%0A-%20%2A%2ATitle%3A%2A%2A%20DBS%20Phantom%20Recordings%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+This dataset is a part of the data used for the study: 'Kandemir, A.L., Litvak, V., Florin, E., 2020. The comparative performance of DBS artefact rejection methods for MEG recordings, NeuroImage, 2020, https://doi.org/10.1016/j.neuroimage.2020.117057.'
+Please use the latest version of the dataset.
+For detailed information about measurement protocol please refer to https://doi.org/10.1016/j.neuroimage.2020.117057. Additional information about CTF Phantom measurement is provided below.
+The customized Matlab code for artefact rejection methods is available at:  https://gitlab.com/lkandemir/dbs-artefact-rejection.
+CTF Phantom Measurement
+Stimulation reference signal is captured with EEG001
+Movement trigger is captured with UPPT001
+Dipole activity is captured with HADC006
 
 Highlights
 ----------
@@ -66,16 +92,16 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 3 (8), 2 (6)
-      - Sampling rate (Hz): 3000.0 (6), 19200.0 (8)
+      - Channels: 3 (4), 306 (4), 314 (3), 2 (3)
+      - Sampling rate (Hz): 19200.0 (8), 3000.0 (6)
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 4
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: Other
+      - Modality: Other
+      - Type: Other
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

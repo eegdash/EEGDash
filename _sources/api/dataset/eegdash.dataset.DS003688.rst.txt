@@ -5,7 +5,9 @@
 eegdash.dataset.DS003688
 ========================
 
-participants.tsv (OpenNeuro ``ds003688``). Access recordings and metadata through EEGDash.
+Open multimodal iEEG-fMRI dataset from naturalistic stimulation with a short audiovisual film (OpenNeuro ``ds003688``). Access recordings and metadata through EEGDash.
+
+**Citation:** Julia Berezutskaya, Mariska J. Vansteensel, Erik J. Aarnoutse, Zachary V. Freudenburg, Giovanni Piantoni, Mariana P. Branco, Nick F. Ramsey (2021). *Open multimodal iEEG-fMRI dataset from naturalistic stimulation with a short audiovisual film*. `10.18112/openneuro.ds003688.v1.0.7 <https://doi.org/10.18112/openneuro.ds003688.v1.0.7>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ participants.tsv (OpenNeuro ``ds003688``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 9.0`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS003688``
    * - Title
-     - participants.tsv
+     - Open multimodal iEEG-fMRI dataset from naturalistic stimulation with a short audiovisual film
    * - Year
      - 2021
    * - Authors
@@ -44,11 +46,32 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds003688,
-        title = {participants.tsv},
+        title = {Open multimodal iEEG-fMRI dataset from naturalistic stimulation with a short audiovisual film},
         author = {Julia Berezutskaya and Mariska J. Vansteensel and Erik J. Aarnoutse and Zachary V. Freudenburg and Giovanni Piantoni and Mariana P. Branco and Nick F. Ramsey},
         doi = {10.18112/openneuro.ds003688.v1.0.7},
         url = {https://doi.org/10.18112/openneuro.ds003688.v1.0.7},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS003688&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS003688%0A-%20%2A%2ATitle%3A%2A%2A%20Open%20multimodal%20iEEG-fMRI%20dataset%20from%20naturalistic%20stimulation%20with%20a%20short%20audiovisual%20film%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+Open iEEG-fMRI dataset from stimulation with a short audiovisual film
+Full description of the data in our dataset paper: https://www.nature.com/articles/s41597-022-01173-0
+Video description of the dataset: https://www.youtube.com/watch?v=C14cWM1CvrE&t=13s
+UMC Utrecht Team
+https://www.nick-ramsey.eu/
 
 Highlights
 ----------
@@ -66,16 +89,16 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 89 (4), 177 (4), 112 (4), 76 (6), 75 (4), 84 (6), 69 (2), 111 (6), 80 (4), 116 (4), 128 (4), 97 (2), 95 (6), 115 (6), 126 (4), 60 (4), 121 (4), 87 (4), 88 (8), 92 (2), 94 (2), 71 (6), 113 (4), 72 (8), 64 (4), 62 (10), 85 (8), 122 (4), 81 (6), 110 (4), 86 (4), 125 (8), 100 (4), 102 (4), 107 (8), 54 (4), 74 (12), 65 (2), 91 (2), 118 (6), 67 (6), 109 (10)
-      - Sampling rate (Hz): 2000.0 (8), 2048.0 (64), 512.0 (142)
+      - Channels: 74 (12), 62 (10), 109 (10), 72 (8), 88 (8), 107 (8), 85 (8), 125 (8), 84 (6), 76 (6), 118 (6), 81 (6), 111 (6), 71 (6), 115 (6), 67 (6), 95 (6), 110 (4), 60 (4), 113 (4), 89 (4), 128 (4), 177 (4), 64 (4), 54 (4), 112 (4), 100 (4), 121 (4), 116 (4), 86 (4), 122 (4), 75 (4), 80 (4), 126 (4), 87 (4), 102 (4), 92 (2), 91 (2), 94 (2), 65 (2), 69 (2), 97 (2)
+      - Sampling rate (Hz): 512.0 (142), 2048.0 (64), 2000.0 (8)
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 2
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: Epilepsy
+      - Modality: Multisensory
+      - Type: Perception
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

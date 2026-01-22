@@ -5,7 +5,9 @@
 eegdash.dataset.DS005628
 ========================
 
-README (OpenNeuro ``ds005628``). Access recordings and metadata through EEGDash.
+Dataset of Visual and Audiovisual Stimuli in Virtual Reality from the Edzna Archaeological Site (OpenNeuro ``ds005628``). Access recordings and metadata through EEGDash.
+
+**Citation:** Juan Pablo Rosado-Aíza, Fernando José Domínguez-Morales, Tania Yareni Pech-Canul, Paola Guadalupe Vázquez-Rodríguez, Gustavo Navas-Reascos, Luz María Alonso-Valerdi, David I. Ibarra Zarate (2024). *Dataset of Visual and Audiovisual Stimuli in Virtual Reality from the Edzna Archaeological Site*. `10.18112/openneuro.ds005628.v1.0.0 <https://doi.org/10.18112/openneuro.ds005628.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ README (OpenNeuro ``ds005628``). Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: —`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS005628``
    * - Title
-     - README
+     - Dataset of Visual and Audiovisual Stimuli in Virtual Reality from the Edzna Archaeological Site
    * - Year
      - 2024
    * - Authors
@@ -44,11 +46,94 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds005628,
-        title = {README},
+        title = {Dataset of Visual and Audiovisual Stimuli in Virtual Reality from the Edzna Archaeological Site},
         author = {Juan Pablo Rosado-Aíza and Fernando José Domínguez-Morales and Tania Yareni Pech-Canul and Paola Guadalupe Vázquez-Rodríguez and Gustavo Navas-Reascos and Luz María Alonso-Valerdi and David I. Ibarra Zarate},
         doi = {10.18112/openneuro.ds005628.v1.0.0},
         url = {https://doi.org/10.18112/openneuro.ds005628.v1.0.0},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS005628&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS005628%0A-%20%2A%2ATitle%3A%2A%2A%20Dataset%20of%20Visual%20and%20Audiovisual%20Stimuli%20in%20Virtual%20Reality%20from%20the%20Edzna%20Archaeological%20Site%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+
+**README**
+
+- Authors
+Juan Pablo Rosado-Aíza, Fernando José Domínguez-Morales, Tania Yareni Pech-Canul, Paola Guadalupe Vázquez-Rodríguez, Gustavo Navas-Reascos, Luz María Alonso-Valerdi, David I. Ibarra Zarate
+- Contact person
+Gustavo Navas-Reascos
+https://orcid.org/0000-0003-0250-765X
+A01681952@tec.mx
+
+
+.. dropdown:: View full README
+   :class-container: sd-shadow-sm
+
+   
+   **README**
+   
+   - Authors
+   Juan Pablo Rosado-Aíza, Fernando José Domínguez-Morales, Tania Yareni Pech-Canul, Paola Guadalupe Vázquez-Rodríguez, Gustavo Navas-Reascos, Luz María Alonso-Valerdi, David I. Ibarra Zarate
+   - Contact person
+   Gustavo Navas-Reascos
+   https://orcid.org/0000-0003-0250-765X
+   A01681952@tec.mx
+   
+   **Overview**
+   
+   - Project name
+   Dataset of Visual and Audiovisual Stimuli in Virtual Reality from the Edzna Archaeological Site
+   - Year that the project ran
+   2024
+   - Brief overview
+   The purpose of this dataset is to analyze user experience in a virtual reality (VR) environment, focusing on a comparative study between visual and audiovisual stimuli based on the archaeological site of Edzna, Mexico. The immersive experience allowed participants to explore the site without needing to physically being there, and the experiment was conducted in a museum setting, offering a unique experience that goes beyond traditional visual-only exhibits. The dataset includes both Electroencephalography (EEG) recordings from eight channels (Fz, C3, Cz, C4, Pz, PO7, Oz, and PO8) and user responses to the User Experience Questionnaire (UEQ), providing necessary data for future studies on how immersive environments affect user perception.
+   The EEG data was collected using a Unicorn Hybrid Black EEG system with a sampling rate of 250 Hz. Participants were exposed to two conditions: a visual-only stimulus and an audiovisual stimulus, both of which represented scenes from the archaeological site in VR. Prior to exposure, a baseline measurement was taken to capture the initial state of the participants. Data collection was conducted in MOSTLA, a digital innovation lab at Tecnologico de Monterrey campus, and the Museum of Contemporary Art in Monterrey.
+   Each EEG recording is shared in .set format and follows the BIDS structure. The recordings include eight channels of brainwave recordings for the baseline, visual, and audiovisual conditions. The signals are presented in both formats: raw and preprocessed. Additionally, an .xlsx file is provided with basic participant metadata, such as age, gender, unique identifier as well as the UEQ responses.
+   Each EEG file contains data segmented into the three phases of the experiment: baseline, visual stimulus, and audiovisual stimulus, allowing researchers to directly compare neural responses across conditions.
+   This dataset offers a comprehensive resource for researchers interested in investigating the effects of immersive VR environments on user engagement, and attention, making it highly applicable and useful.
+   - Description of the contents of the dataset
+   	sub-N  - Raw data
+   	sub-Np - Preprocesed data
+   	Example:
+   	sub-1  - Raw data of subject 1
+       	sub-1p - Preprocesed data of subject 1
+   
+   **Subjects**
+   
+   A total of 51 participants were obtained.
+   
+   **Apparatus**
+   
+   Unicorn Hybrid Black EEG system
+   VR Headset
+   Headphones
+   
+   **Experimental location**
+   
+   MOSTLA place at Tecnologico de Monterrey. It is located at Av. Eugenio Garza Sada 2501 Sur, Tecnologico, 64849 Monterrey, N.L., Mexico.
+   MARCO a contemporary art museum located in Monterrey at Zuazua y Jardón, Centro, 64000 Monterrey, N.L., Mexico.
+   
+   **Notes**
+   
+   All the metadata information, including the UEQ answers could be obtained from the file metadata.xlsx
+   The videos presented to the participants are shown in:
+   Audiovisual video:
+   https://youtu.be/FBWbtSFwVuo
+   Visual video:
+   https://youtu.be/aLzzl0ygBnc
+
 
 Highlights
 ----------
@@ -70,12 +155,12 @@ Highlights
       - Sampling rate (Hz): 250.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 1
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: Healthy
+      - Modality: Multisensory
+      - Type: Attention
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

@@ -5,7 +5,9 @@
 eegdash.dataset.DS004517
 ========================
 
-participants.tsv (OpenNeuro ``ds004517``). Access recordings and metadata through EEGDash.
+EEG recordings for semantic decoding of imagined animals and tools during auditory imagery task (OpenNeuro ``ds004517``). Access recordings and metadata through EEGDash.
+
+**Citation:** Milan Rybář, Riccardo Poli, Ian Daly (2023). *EEG recordings for semantic decoding of imagined animals and tools during auditory imagery task*. `10.18112/openneuro.ds004517.v1.0.2 <https://doi.org/10.18112/openneuro.ds004517.v1.0.2>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ participants.tsv (OpenNeuro ``ds004517``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: —`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS004517``
    * - Title
-     - participants.tsv
+     - EEG recordings for semantic decoding of imagined animals and tools during auditory imagery task
    * - Year
      - 2023
    * - Authors
@@ -44,11 +46,52 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds004517,
-        title = {participants.tsv},
+        title = {EEG recordings for semantic decoding of imagined animals and tools during auditory imagery task},
         author = {Milan Rybář and Riccardo Poli and Ian Daly},
         doi = {10.18112/openneuro.ds004517.v1.0.2},
         url = {https://doi.org/10.18112/openneuro.ds004517.v1.0.2},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS004517&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS004517%0A-%20%2A%2ATitle%3A%2A%2A%20EEG%20recordings%20for%20semantic%20decoding%20of%20imagined%20animals%20and%20tools%20during%20auditory%20imagery%20task%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+
+**Description**
+
+This dataset contains electroencephalography (EEG) signals recorded from 7 participants while performing an auditory imagery task. Participants were asked to imagine the sounds made by an object for 5 seconds.
+
+**EEG**
+
+EEG data were acquired with a BioSemi ActiveTwo system with 64 electrodes positioned according to the international 10-20 system, plus one electrode on each earlobe as references ('EXG1' channel is the left ear electrode and 'EXG2' channel is the right ear electrode).
+Electrooculography (EOG) was also recorded to monitor eye movements. Two electrodes were placed above ('EXG7' channel) and below ('EXG8') the right eye to capture the vertical oculogram, while two more electrodes were placed near the canthus of each eye ('EXG5' by the left eye and 'EXG6' by the right eye) to record the horizontal oculogram.
+Additionally, two electrodes were placed on the left ('EXG3') and right ('EXG4') wrists for additional physiological measurements (e.g., heart rate variability), and respiration was recorded using a belt placed around the waist ('Resp' channel).
+The sampling rate was 2048 Hz.
+
+**Stimulus**
+
+Folder 'stimuli' contains all images of the semantic categories of animals and tools presented to participants.
+
+**Example code**
+
+We have prepared an example script to demonstrate how to load the EEG data into Python using MNE and MNE-BIDS packages. This script is located in the 'code' directory.
+
+**References**
+
+This dataset was analyzed in the following publications:
+[1] Rybář, M., Poli, R. and Daly, I., 2024. Using data from cue presentations results in grossly overestimating semantic BCI performance. Scientific Reports, 14(1), p.28003.
+[2] Rybář, M., 2023. Towards EEG/fNIRS-based semantic brain-computer interfacing (Doctoral dissertation, University of Essex).
 
 Highlights
 ----------
@@ -66,16 +109,16 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 64
+      - Channels: 64 (7), 80 (7)
       - Sampling rate (Hz): 2048.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 1
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: Healthy
+      - Modality: Visual
+      - Type: Other
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

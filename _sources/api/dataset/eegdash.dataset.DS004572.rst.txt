@@ -5,7 +5,9 @@
 eegdash.dataset.DS004572
 ========================
 
-participants.tsv (OpenNeuro ``ds004572``). Access recordings and metadata through EEGDash.
+The effects of sham hypnosis techniques (OpenNeuro ``ds004572``). Access recordings and metadata through EEGDash.
+
+**Citation:** Zoltan Kekecs, Kyra Girán, Vanda Vizkievicz, Anna Lutoskin, Yeganeh Farahzadi (2023). *The effects of sham hypnosis techniques*. `10.18112/openneuro.ds004572.v1.3.1 <https://doi.org/10.18112/openneuro.ds004572.v1.3.1>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ participants.tsv (OpenNeuro ``ds004572``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 2.0`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS004572``
    * - Title
-     - participants.tsv
+     - The effects of sham hypnosis techniques
    * - Year
      - 2023
    * - Authors
@@ -44,11 +46,32 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds004572,
-        title = {participants.tsv},
+        title = {The effects of sham hypnosis techniques},
         author = {Zoltan Kekecs and Kyra Girán and Vanda Vizkievicz and Anna Lutoskin and Yeganeh Farahzadi},
         doi = {10.18112/openneuro.ds004572.v1.3.1},
         url = {https://doi.org/10.18112/openneuro.ds004572.v1.3.1},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS004572&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS004572%0A-%20%2A%2ATitle%3A%2A%2A%20The%20effects%20of%20sham%20hypnosis%20techniques%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+52 participants (39 females) took part in this study and their brain electrophysiological activity were being recorded using 64-channel EasyCap from Brain Products. After mounting the EEG electrode cap, the study protocol started with 5 minutes of closed-eyes rest (Pre-hypnosis Baseline), followed by four experimental conditions (Experimental Blocks), and ended with another 5 minutes of closed-eyes rest (Post-hypnosis Baseline). Throughout the four Experimental Blocks, participants were exposed to either conventional or unconventional (placebo) hypnotic inductions described either as hypnosis or as simple relaxation technique in a 2 x 2 balanced placebo design. In other words, each participant underwent four trials, in which they were exposed to a conventional hypnosis induction presented as “hypnosis”; a conventional hypnosis induction presented as “control”; an unconventional hypnosis induction presented as “hypnosis”; and an unconventional hypnosis induction presented as “control” in a randomized order.
+For detailed information on our data collection methods, refer to the public trial registry on the Open Science Framework: https://doi.org/10.17605/OSF.IO/WVHDA.
+Publications based on this dataset:
+- https://www.nature.com/articles/s41598-024-56633-x
+- https://osf.io/preprints/psyarxiv/k3h5f
 
 Highlights
 ----------
@@ -66,16 +89,16 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 58
+      - Channels: 61 (516), 58 (516)
       - Sampling rate (Hz): 1000.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 10
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: —
+      - Modality: —
+      - Type: —
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

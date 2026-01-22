@@ -5,7 +5,9 @@
 eegdash.dataset.DS000248
 ========================
 
-participants.tsv (OpenNeuro ``ds000248``). Access recordings and metadata through EEGDash.
+MNE-Sample-Data (OpenNeuro ``ds000248``). Access recordings and metadata through EEGDash.
+
+**Citation:** Alexandre Gramfort, Matti S Hämäläinen (2018). *MNE-Sample-Data*. `10.18112/openneuro.ds000248.v1.2.4 <https://doi.org/10.18112/openneuro.ds000248.v1.2.4>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ participants.tsv (OpenNeuro ``ds000248``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 3.0`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS000248``
    * - Title
-     - participants.tsv
+     - MNE-Sample-Data
    * - Year
      - 2018
    * - Authors
@@ -44,11 +46,51 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds000248,
-        title = {participants.tsv},
+        title = {MNE-Sample-Data},
         author = {Alexandre Gramfort and Matti S Hämäläinen},
         doi = {10.18112/openneuro.ds000248.v1.2.4},
         url = {https://doi.org/10.18112/openneuro.ds000248.v1.2.4},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS000248&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS000248%0A-%20%2A%2ATitle%3A%2A%2A%20MNE-Sample-Data%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+
+**MNE-Sample-Data**
+
+The MNE software is accompanied by a sample data set. These data were acquired with the Neuromag Vectorview system at MGH/HMS/MIT Athinoula A. Martinos Center Biomedical Imaging. EEG data from a 60-channel electrode cap was acquired simultaneously with the MEG. The original MRI data set was acquired with a Siemens 1.5 T Sonata scanner using an MPRAGE sequence.
+In the MEG/EEG experiment, checkerboard patterns were presented into the left and right visual field, interspersed by tones to the left or right ear. The interval between the stimuli was 750 ms. Occasionally a smiley face was presented at the center of the visual field. The subject was asked to press a key with the right index finger as soon as possible after the appearance of the face.
+
+**Freesurfer derivatives**
+
+- Calls from the command line:
+  - `recon-all -i sub-01/anat/sub-01_T1w.nii.gz -s sub-01 -all`
+  - `mne make_scalp_surfaces -s sub-01 --overwrite --force`
+  - `mne flash_bem -s sub-01 --overwrite`
+  - `mne watershed_bem -s sub-01 --overwrite`
+
+**References**
+
+A. Gramfort, M. Luessi, E. Larson, D. Engemann, D. Strohmeier, C. Brodbeck, L. Parkkonen, M. Hämäläinen, MNE software for processing MEG and EEG data, NeuroImage, Volume 86, 1 February 2014, Pages 446-460, ISSN 1053-8119
+A. Gramfort, M. Luessi, E. Larson, D. Engemann, D. Strohmeier, C. Brodbeck, R. Goj, M. Jas, T. Brooks, L. Parkkonen, M. Hämäläinen, MEG and EEG data analysis with MNE-Python, Frontiers in Neuroscience, Volume 7, 2013, ISSN 1662-453X"
+Appelhoff, S., Sanderson, M., Brooks, T., Vliet, M., Quentin, R., Holdgraf, C., Chaumon, M., Mikulan, E., Tavabi, K., Höchenberger, R., Welke, D., Brunner, C., Rockhill, A., Larson, E., Gramfort, A. and Jas, M. (2019). MNE-BIDS: Organizing electrophysiological data into the BIDS format and facilitating their analysis. Journal of Open Source Software 4: (1896). https://doi.org/10.21105/joss.01896
+Niso, G., Gorgolewski, K. J., Bock, E., Brooks, T. L., Flandin, G., Gramfort, A., Henson, R. N., Jas, M., Litvak, V., Moreau, J., Oostenveld, R., Schoffelen, J., Tadel, F., Wexler, J., Baillet, S. (2018). MEG-BIDS, the brain imaging data structure extended to magnetoencephalography. Scientific Data, 5, 180110. http://doi.org/10.1038/sdata.2018.110
+
+**References**
+
+Niso, G., Gorgolewski, K. J., Bock, E., Brooks, T. L., Flandin, G., Gramfort, A., Henson, R. N., Jas, M., Litvak, V., Moreau, J., Oostenveld, R., Schoffelen, J., Tadel, F., Wexler, J., Baillet, S. (2018). MEG-BIDS, the brain imaging data structure extended to magnetoencephalography. Scientific Data, 5, 180110. https://doi.org/10.1038/sdata.2018.110
 
 Highlights
 ----------
@@ -66,16 +108,16 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 306 (2), 60 (2)
+      - Channels: 306, 315, 60, 376
       - Sampling rate (Hz): 600.614990234375
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 2
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: Healthy
+      - Modality: Multisensory
+      - Type: Attention
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

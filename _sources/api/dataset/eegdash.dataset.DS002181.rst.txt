@@ -5,7 +5,9 @@
 eegdash.dataset.DS002181
 ========================
 
-participants.tsv (OpenNeuro ``ds002181``). Access recordings and metadata through EEGDash.
+CRYPTO and PROVIDE EEG Baseline Data (OpenNeuro ``ds002181``). Access recordings and metadata through EEGDash.
+
+**Citation:** Wanze Xie, Sarah Jensen, Mark Wade, Swapna Kumar, Alissa Westerlund, Shahria Kakon, Rashidul Haque, William A Petri, Charles A Nelson (2019). *CRYPTO and PROVIDE EEG Baseline Data*. `mockDOI <https://doi.org/mockDOI>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ participants.tsv (OpenNeuro ``ds002181``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 1.0`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS002181``
    * - Title
-     - participants.tsv
+     - CRYPTO and PROVIDE EEG Baseline Data
    * - Year
      - 2019
    * - Authors
@@ -44,11 +46,29 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds002181,
-        title = {participants.tsv},
+        title = {CRYPTO and PROVIDE EEG Baseline Data},
         author = {Wanze Xie and Sarah Jensen and Mark Wade and Swapna Kumar and Alissa Westerlund and Shahria Kakon and Rashidul Haque and William A Petri and Charles A Nelson},
         doi = {mockDOI},
         url = {https://doi.org/mockDOI},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS002181&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS002181%0A-%20%2A%2ATitle%3A%2A%2A%20CRYPTO%20and%20PROVIDE%20EEG%20Baseline%20Data%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+These are the EEG baseline data used in the study on the association between stunting and EEG brain functional connectivity in Bangladeshi children (https://doi.org/10.1101/447722).
+Data with an ID <  2000 were collected for a cohort of  36-month-old toddlers, and those with an ID > 2000 were collected for a cohort of 6-month-old infants.  The children were watching screen savers for 2 minutes.
 
 Highlights
 ----------
@@ -66,16 +86,16 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 124
+      - Channels: 124 (226), 125 (226)
       - Sampling rate (Hz): 500.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 1
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: Development
+      - Modality: Visual
+      - Type: Resting-state
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

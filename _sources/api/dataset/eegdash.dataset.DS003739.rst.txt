@@ -5,7 +5,9 @@
 eegdash.dataset.DS003739
 ========================
 
-participants.tsv (OpenNeuro ``ds003739``). Access recordings and metadata through EEGDash.
+Perturbed beam-walking task (OpenNeuro ``ds003739``). Access recordings and metadata through EEGDash.
+
+**Citation:** Steven Peterson, Daniel Ferris (2021). *Perturbed beam-walking task*. `10.18112/openneuro.ds003739.v1.0.2 <https://doi.org/10.18112/openneuro.ds003739.v1.0.2>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ participants.tsv (OpenNeuro ``ds003739``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 5.0`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS003739``
    * - Title
-     - participants.tsv
+     - Perturbed beam-walking task
    * - Year
      - 2021
    * - Authors
@@ -44,11 +46,31 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds003739,
-        title = {participants.tsv},
+        title = {Perturbed beam-walking task},
         author = {Steven Peterson and Daniel Ferris},
         doi = {10.18112/openneuro.ds003739.v1.0.2},
         url = {https://doi.org/10.18112/openneuro.ds003739.v1.0.2},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS003739&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS003739%0A-%20%2A%2ATitle%3A%2A%2A%20Perturbed%20beam-walking%20task%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+Data was collected at the University of Michigan by Steven Peterson in the lab of Daniel Ferris. This study's protocol was approved by the University of Michigan Institutional Review Board and all participants provided written consent.
+Each data file includes synchronized 128-channel EEG, lower leg EMG, neck EMG, EOG, and motion capture data. Participants performed four 10-minute, same-day sessions where they either stood or walked at 0.22 m/s on a treadmill-mounted balance beam that was 2.5 cm tall and 12.7 cm wide.
+During each session, participants were exposed to sensorimotor perturbations (either virtual-reality-induced visual field rotations or side-to-side waist pulls, lasting 0.5 seconds and 1 second in duration, respectively). Each session involved 150 perturbation events, balanced between rotation/pull directions.
+We have included the indices of all good channels for each participant in EEG.etc.good_chans of each .set file (includes non-EEG channel indices). Criteria for determining good/bad EEG channels can be found in our eNeuro publication. EEG.etc also includes the resulting ICA sphere and weight matrices when run on only the EEG channels, along with the selected good IC's that were retained for our analyses.
 
 Highlights
 ----------
@@ -66,16 +88,16 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 128
+      - Channels: 149 (120), 128 (120)
       - Sampling rate (Hz): 256.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 4
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: —
+      - Modality: —
+      - Type: —
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

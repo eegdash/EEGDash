@@ -5,7 +5,9 @@
 eegdash.dataset.DS004475
 ========================
 
-participants.tsv (OpenNeuro ``ds004475``). Access recordings and metadata through EEGDash.
+Mobile EEG split-belt walking study (OpenNeuro ``ds004475``). Access recordings and metadata through EEGDash.
+
+**Citation:** Noelle A. Jacobsen, Daniel P. Ferris (2023). *Mobile EEG split-belt walking study*. `10.18112/openneuro.ds004475.v1.0.3 <https://doi.org/10.18112/openneuro.ds004475.v1.0.3>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ participants.tsv (OpenNeuro ``ds004475``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 2.0`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS004475``
    * - Title
-     - participants.tsv
+     - Mobile EEG split-belt walking study
    * - Year
      - 2023
    * - Authors
@@ -44,11 +46,28 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds004475,
-        title = {participants.tsv},
+        title = {Mobile EEG split-belt walking study},
         author = {Noelle A. Jacobsen and Daniel P. Ferris},
         doi = {10.18112/openneuro.ds004475.v1.0.3},
         url = {https://doi.org/10.18112/openneuro.ds004475.v1.0.3},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS004475&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS004475%0A-%20%2A%2ATitle%3A%2A%2A%20Mobile%20EEG%20split-belt%20walking%20study%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+This mobile brain body imaging (MoBI) experiment investigates brain activity correlated to gait adaptation during split-belt treadmill walking. 30 participants completed an abrupt and gradual split-belt walking paradigm (2:1 belt speed ratio).
 
 Highlights
 ----------
@@ -66,16 +85,16 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 115 (2), 126 (2), 125 (6), 120 (2), 119 (2), 118 (2), 122 (4), 128 (6), 127 (12), 113 (2), 124 (12), 123 (8)
+      - Channels: 124 (6), 127 (6), 260 (5), 123 (4), 125 (3), 258 (3), 255 (3), 257 (3), 263 (3), 128 (3), 250 (3), 259 (2), 122 (2), 118, 119, 262, 261, 253, 115, 113, 254, 265, 252, 120, 126, 249, 256
       - Sampling rate (Hz): 512.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 1
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: —
+      - Modality: —
+      - Type: —
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

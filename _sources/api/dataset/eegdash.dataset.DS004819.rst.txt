@@ -5,7 +5,9 @@
 eegdash.dataset.DS004819
 ========================
 
-participants.tsv (OpenNeuro ``ds004819``). Access recordings and metadata through EEGDash.
+Flexible, Scalable, High Channel Count Stereo-Electrode for Recording in the Human Brain (OpenNeuro ``ds004819``). Access recordings and metadata through EEGDash.
+
+**Citation:** Keundong Lee, Angelique C. Paulk, Yun Goo Ro, Daniel R. Cleary, Karen J. Tonsfeldt, Yoav Kfir, John Pezaris, Youngbin Tchoe, Jihwan Lee, Andrew M. Bourhis, Ritwik Vatsyayan, Joel R. Martin, Samantha M. Russman, Jimmy C. Yang, Amy Baohan, R. Mark Richardson, Ziv M. Williams, Shelley I. Fried, Hoi Sang U, Ahmed M. Raslan, Sharona Ben-Haim, Eric Halgren, Sydney S. Cash, Shadi. A. Dayeh (2023). *Flexible, Scalable, High Channel Count Stereo-Electrode for Recording in the Human Brain*. `10.18112/openneuro.ds004819.v1.0.0 <https://doi.org/10.18112/openneuro.ds004819.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ participants.tsv (OpenNeuro ``ds004819``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 1.0`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS004819``
    * - Title
-     - participants.tsv
+     - Flexible, Scalable, High Channel Count Stereo-Electrode for Recording in the Human Brain
    * - Year
      - 2023
    * - Authors
@@ -44,11 +46,29 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds004819,
-        title = {participants.tsv},
+        title = {Flexible, Scalable, High Channel Count Stereo-Electrode for Recording in the Human Brain},
         author = {Keundong Lee and Angelique C. Paulk and Yun Goo Ro and Daniel R. Cleary and Karen J. Tonsfeldt and Yoav Kfir and John Pezaris and Youngbin Tchoe and Jihwan Lee and Andrew M. Bourhis and Ritwik Vatsyayan and Joel R. Martin and Samantha M. Russman and Jimmy C. Yang and Amy Baohan and R. Mark Richardson and Ziv M. Williams and Shelley I. Fried and Hoi Sang U and Ahmed M. Raslan and Sharona Ben-Haim and Eric Halgren and Sydney S. Cash and Shadi. A. Dayeh},
         doi = {10.18112/openneuro.ds004819.v1.0.0},
         url = {https://doi.org/10.18112/openneuro.ds004819.v1.0.0},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS004819&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS004819%0A-%20%2A%2ATitle%3A%2A%2A%20Flexible%2C%20Scalable%2C%20High%20Channel%20Count%20Stereo-Electrode%20for%20Recording%20in%20the%20Human%20Brain%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+This project contains the data for the publication Lee et al, "Flexible, Scalable, High Channel Count Stereo-Electrode for Recording in the Human Brain". It contains the raw and preprocessed (epoched) intracranial EEG (iEEG) data files for multiple species to test novel high resolution micro-stereo-electrodes for recording neural activity in the brain. The data set involves the use of direct electrical stimulation to examine effects of stimulation in the brain.
+Data are in the iEEG-BIDS format with binary files and channel maps included in the related derivatives folder.
 
 Highlights
 ----------
@@ -67,15 +87,15 @@ Highlights
       :class-card: sd-border-1
 
       - Channels: 64
-      - Sampling rate (Hz): —
+      - Sampling rate (Hz): 30000.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 1
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: —
+      - Modality: —
+      - Type: —
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

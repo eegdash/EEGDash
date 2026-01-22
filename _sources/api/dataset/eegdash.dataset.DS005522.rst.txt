@@ -5,7 +5,9 @@
 eegdash.dataset.DS005522
 ========================
 
-participants.tsv (OpenNeuro ``ds005522``). Access recordings and metadata through EEGDash.
+Spatial Navigation Memory of Object Locations (OpenNeuro ``ds005522``). Access recordings and metadata through EEGDash.
+
+**Citation:** Haydn G. Herrema, Michael J. Kahana (2024). *Spatial Navigation Memory of Object Locations*. `10.18112/openneuro.ds005522.v1.0.0 <https://doi.org/10.18112/openneuro.ds005522.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ participants.tsv (OpenNeuro ``ds005522``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 0.0`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS005522``
    * - Title
-     - participants.tsv
+     - Spatial Navigation Memory of Object Locations
    * - Year
      - 2024
    * - Authors
@@ -44,11 +46,78 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds005522,
-        title = {participants.tsv},
+        title = {Spatial Navigation Memory of Object Locations},
         author = {Haydn G. Herrema and Michael J. Kahana},
         doi = {10.18112/openneuro.ds005522.v1.0.0},
         url = {https://doi.org/10.18112/openneuro.ds005522.v1.0.0},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS005522&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS005522%0A-%20%2A%2ATitle%3A%2A%2A%20Spatial%20Navigation%20Memory%20of%20Object%20Locations%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+
+**Spatial Navigation Memory of Object Locations**
+
+
+**Description**
+
+This dataset contains behavioral events and intracranial electrophysiological recordings from a spatial navigation memory task.  The experiment consists of participants encoding object locations during a guided navigation learning phase and then recalling the object locations during a self-navigation test phase.  The data was collected at clinical sites across the country as part of a collaboration with the Computational Memory Lab at the University of Pennsylvania.
+Each session contains 50 trials (2 practice and 48 experimental), and each overall "trial" contains 2 learning trials followed by 1 test trial with the same object at the same location.  For learning trial 1, participants are placed at a random location at a given radius from the object.  They are smoothly turned to face the object (1 s), automatically driven to the object location (3 s), and then paused at the object (1 s).  5 seconds later, participants are placed at a new random location and the process repeats for learning trial 2.  On test trials, participants are placed at a random location and orientation, with the object invisible.  They navigate to where they believe the object was located and press a button to record their response.  The environment for all sessions and trials is 64.8 x 36, with coordinates: x = (-32.4, 32.4), y = (-18.0, 18.0).
+The trials are blocked by a counterbalanced scheme, so for every trial there is another trial with reflected object position, starting position, and orientation.  Each block contains 2 trials (i.e., 2 x (2 learning, 1 test)), with object (X, Y) and starting locations (x, y):
+- **(X1, Y1)**
+
+.. dropdown:: View full README
+   :class-container: sd-shadow-sm
+
+   
+   **Spatial Navigation Memory of Object Locations**
+   
+   
+   **Description**
+   
+   This dataset contains behavioral events and intracranial electrophysiological recordings from a spatial navigation memory task.  The experiment consists of participants encoding object locations during a guided navigation learning phase and then recalling the object locations during a self-navigation test phase.  The data was collected at clinical sites across the country as part of a collaboration with the Computational Memory Lab at the University of Pennsylvania.
+   Each session contains 50 trials (2 practice and 48 experimental), and each overall "trial" contains 2 learning trials followed by 1 test trial with the same object at the same location.  For learning trial 1, participants are placed at a random location at a given radius from the object.  They are smoothly turned to face the object (1 s), automatically driven to the object location (3 s), and then paused at the object (1 s).  5 seconds later, participants are placed at a new random location and the process repeats for learning trial 2.  On test trials, participants are placed at a random location and orientation, with the object invisible.  They navigate to where they believe the object was located and press a button to record their response.  The environment for all sessions and trials is 64.8 x 36, with coordinates: x = (-32.4, 32.4), y = (-18.0, 18.0).
+   The trials are blocked by a counterbalanced scheme, so for every trial there is another trial with reflected object position, starting position, and orientation.  Each block contains 2 trials (i.e., 2 x (2 learning, 1 test)), with object (X, Y) and starting locations (x, y):
+   - **(X1, Y1)**
+       - **(x1', y1')**
+       - **(x1'', y1'')**
+       - **(x1''', y1''')**
+   - **(X2, Y2)**
+       - **(x2', y2')**
+       - **(x2'', y2'')**
+       - **(x2''', y2''')**
+   The paired block contains 2 trials in the opposite order with object and starting locations:
+   - **(-X2, -Y2)**
+       - **(-x2', -y2')**
+       - **(-x2'', -y2'')**
+       - **(-x2''', -y2''')**
+   - **(-X1, -Y1)**
+       - **(-x1', -y1')**
+       - **(-x1'', -y1'')**
+       - **(-x1''', -y1''')**
+   
+   **To Note**
+   
+   * The iEEG recordings are labeled either "monopolar" or "bipolar."  The monopolar recordings are referenced (typically a mastoid reference), but should always be re-referenced before analysis.  The bipolar recordings are referenced according to a paired scheme indicated by the accompanying bipolar channels tables.
+   * Each subject has a unique montage of electrode locations.  MNI and Talairach coordinates are provided when available.
+   * Recordings done with the Blackrock system are in units of 250 nV, while recordings done with the Medtronic system are estimated through testing to have units of 0.1 uV.  We have completed the scaling to provide values in V.
+   
+   **Contact**
+   
+   For questions or inquiries, please contact sas-kahana-sysadmin@sas.upenn.edu.
+
 
 Highlights
 ----------
@@ -66,16 +135,16 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 105 (2), 177 (2), 111 (4), 108 (10), 178 (2), 180 (4), 133 (16), 149 (2), 92 (6), 173 (12), 163 (4), 127 (8), 110 (16), 54 (2), 126 (12), 174 (2), 169 (2), 68 (8), 46 (8), 63 (4), 78 (2), 120 (14), 182 (6), 76 (2), 85 (4), 104 (6), 166 (4), 75 (4), 116 (2), 186 (6), 60 (2), 109 (2), 124 (6), 56 (10), 90 (2), 64 (8), 151 (2), 170 (4), 138 (4), 160 (4), 70 (4), 146 (6), 140 (4), 122 (2), 172 (2), 80 (2), 100 (4), 118 (4), 165 (2), 144 (6), 88 (14), 188 (12), 136 (2), 94 (2), 86 (6), 158 (4), 112 (8), 50 (6), 84 (2), 125 (2), 72 (12), 128 (8), 123 (6), 130 (4), 59 (4), 96 (4)
-      - Sampling rate (Hz): 999.0 (26), 500.0 (122), 1600.0 (52), 1999.0 (4), 1000.0 (140), 2000.0 (8)
+      - Channels: 110 (16), 133 (16), 120 (14), 88 (14), 126 (12), 173 (12), 188 (12), 72 (12), 56 (10), 108 (10), 64 (8), 112 (8), 68 (8), 127 (8), 128 (8), 46 (8), 86 (6), 182 (6), 104 (6), 50 (6), 124 (6), 186 (6), 123 (6), 92 (6), 146 (6), 144 (6), 100 (4), 118 (4), 158 (4), 166 (4), 96 (4), 63 (4), 170 (4), 130 (4), 111 (4), 70 (4), 140 (4), 75 (4), 85 (4), 180 (4), 59 (4), 138 (4), 163 (4), 160 (4), 116 (2), 60 (2), 80 (2), 136 (2), 169 (2), 177 (2), 125 (2), 178 (2), 84 (2), 165 (2), 78 (2), 76 (2), 174 (2), 122 (2), 172 (2), 149 (2), 94 (2), 105 (2), 109 (2), 151 (2), 54 (2), 90 (2)
+      - Sampling rate (Hz): 1000.0 (140), 500.0 (122), 1600.0 (52), 999.0 (26), 2000.0 (8), 1999.0 (4)
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 1
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: —
+      - Modality: Visual
+      - Type: Memory
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

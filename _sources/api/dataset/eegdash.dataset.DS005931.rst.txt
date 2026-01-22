@@ -5,7 +5,9 @@
 eegdash.dataset.DS005931
 ========================
 
-participants.tsv (OpenNeuro ``ds005931``). Access recordings and metadata through EEGDash.
+Visuomotor_task (OpenNeuro ``ds005931``). Access recordings and metadata through EEGDash.
+
+**Citation:** Riyo Ueda, Eishi Asano (2025). *Visuomotor_task*. `10.18112/openneuro.ds005931.v1.0.0 <https://doi.org/10.18112/openneuro.ds005931.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ participants.tsv (OpenNeuro ``ds005931``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: —`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS005931``
    * - Title
-     - participants.tsv
+     - Visuomotor_task
    * - Year
      - 2025
    * - Authors
@@ -44,11 +46,36 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds005931,
-        title = {participants.tsv},
+        title = {Visuomotor_task},
         author = {Riyo Ueda and Eishi Asano},
         doi = {10.18112/openneuro.ds005931.v1.0.0},
         url = {https://doi.org/10.18112/openneuro.ds005931.v1.0.0},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS005931&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS005931%0A-%20%2A%2ATitle%3A%2A%2A%20Visuomotor_task%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+Dataset of intracranial EEG from human epilepsy patients performing a visuomotor task
+Description:
+We present an electrophysiological dataset recorded from ten subjects during a visuomotor task. Subjects were epilepsy patients undergoing intracranial monitoring for localization of epileptic seizures. Subjects completed five sessions of Speed Match - a visuomotor on the Lumosity platform (https://www.lumosity.com/; Lumos Labs, Inc, San Francisco, CA) - during interictal EEG recording.
+Repository structure:
+Main directory (interictal EEG from children during gameplay): Contains interictal EEG files of each participant in the study. Folders are explained below.
+Subfolders:
+sub-/: Contains folders for each subject, named sub-.
+sub-/ses-: Contains folders for visuomotor task.
+sub-/ses-/ieeg/: Contains the raw iEEG data in .edf format for each subject. Each subject performed visuomotor task (ses-task). Each *ieeg.edf file contains continuous iEEG data during the visuomotor task. Details about the channels are given in the corresponding .tsv file. We also provide the information on the timing of the finger tapping on ieeg/edf file by specifying the start and end sample of each trial. (101 is for finger tapping).
 
 Highlights
 ----------
@@ -66,16 +93,16 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 110 (4), 112 (4), 128 (24)
+      - Channels: 128 (24), 110 (4), 112 (4)
       - Sampling rate (Hz): 1000.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 1
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: Epilepsy
+      - Modality: Visual
+      - Type: Motor
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

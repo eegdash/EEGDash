@@ -7,13 +7,15 @@ eegdash.dataset.NM000106
 
 handwriting: Handwriting Recognition from EMG (OpenNeuro ``nm000106``). Access recordings and metadata through EEGDash.
 
+**Citation:** Patrick Kaifosh, Thomas R. Reardon, CTRL-labs at Reality Labs (2025). *handwriting: Handwriting Recognition from EMG*. `10.5281/zenodo.17283865 <https://doi.org/10.5281/zenodo.17283865>`__
+
 .. rst-class:: sd-badges
 
 :bdg-primary:`Modality: emg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 100` :bdg-secondary:`Recordings: 807`
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC-BY-NC 4.0` :bdg-warning:`Source: nemar`
+:bdg-success:`License: CC-BY-NC 4.0` :bdg-warning:`Source: nemar` :bdg-info:`Citations: —`
 
 Dataset Information
 -------------------
@@ -50,6 +52,158 @@ Dataset Information
         url = {https://doi.org/10.5281/zenodo.17283865},
       }
 
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20NM000106&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20NM000106%0A-%20%2A%2ATitle%3A%2A%2A%20handwriting%3A%20Handwriting%20Recognition%20from%20EMG%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+
+**handwriting: Handwriting Recognition from EMG**
+
+
+**Overview**
+
+**Dataset**: handwriting - Imagined handwriting from wrist-based surface electromyography
+**Task**: Air-writing (imagined handwriting without pen)
+**Participants**: 100 subjects
+**Sessions**: ~700 total (~7 per subject)
+
+.. dropdown:: View full README
+   :class-container: sd-shadow-sm
+
+   
+   **handwriting: Handwriting Recognition from EMG**
+   
+   
+   **Overview**
+   
+   **Dataset**: handwriting - Imagined handwriting from wrist-based surface electromyography
+   **Task**: Air-writing (imagined handwriting without pen)
+   **Participants**: 100 subjects
+   **Sessions**: ~700 total (~7 per subject)
+   **Publication**: Kaifosh et al., 2025 - "A generic non-invasive neuromotor interface for human-computer interaction" (Nature)
+   
+   **Purpose**
+   
+   This dataset captures wrist-based sEMG signals during imagined handwriting motions for text entry. Participants "write" prompted text with fingers together (as if holding an invisible pen) without any physical writing surface. Applications include AR/VR text input, mobile computing, and hands-free communication.
+   
+   **Dataset Details**
+   
+   
+   **Participants**
+   
+   - **Sample size**: 100 participants
+   - **Demographics**: Not available (marked as n/a)
+   - **Recording side**: Dominant wrist
+   - **Sessions**: Average 7 per participant
+   
+   **Hardware**
+   
+   - **Device**: sEMG-RD (single wristband)
+   - **Channels**: 16 (EMG0-EMG15)
+   - **Sampling rate**: 2000 Hz
+   - **Reference**: Bipolar differential
+   
+   **Recording Protocol**
+   
+   1. Participant holds fingers together (as if holding pen)
+   2. Prompted text appears on screen
+   3. Participant "writes" the text in air
+   4. Session duration: ~11 minutes
+   5. Prompts per session: 96 phrases
+   
+   **Data Contents**
+   
+   
+   **Files per Session**
+   
+   ```
+   sub-XXX/ses-XXX/emg/
+   ├── sub-XXX_ses-XXX_task-handwriting_emg.edf
+   ├── sub-XXX_ses-XXX_task-handwriting_emg.json
+   ├── sub-XXX_ses-XXX_task-handwriting_channels.tsv
+   ├── sub-XXX_ses-XXX_task-handwriting_events.tsv
+   
+   **└── sub-XXX_ses-XXX_electrodes.tsv**
+   
+   
+   **Events**
+   
+   - **Handwriting prompts**: Text to be written
+     - `prompt_text`: Displayed phrase
+   - **Stage boundaries**: Posture changes (sitting/standing), session phases
+   
+   **Coordinate System**
+   
+   Single coordinate system at root (dominant wrist, percent units, no decimals)
+   
+   **Baseline Performance**
+   
+   
+   **Published Results (Kaifosh et al., 2025)**
+   
+   **Generic Model** (6,527 training participants):
+   - Offline CER: >90% classification accuracy on held-out participants
+   - Online performance: 20.9 words per minute (WPM)
+   - Online CER: Median improvement from ~35% (practice) to ~25% (evaluation)
+   **Personalized Model** (20 min fine-tuning):
+   - 16% improvement over generic model
+   - Better performance for users with higher generic CER
+   - Diminishing returns with more pretraining data
+   **Comparison**:
+   - Open-loop handwriting (no pen): 25.1 WPM
+   - sEMG handwriting: 20.9 WPM (83% of baseline)
+   - Mobile phone keyboard: 36 WPM
+   **Model architecture**: MPF features + Conformer (attention mechanism)
+   
+   **Use Cases**
+   
+   - **Keyboard-free text entry**: AR/VR, mobile devices
+   - **Silent communication**: Private text input in public spaces
+   - **Personalization research**: Few-shot learning, transfer learning
+   - **Sequence modeling**: Character-level prediction with attention
+   
+   **Known Limitations**
+   
+   - Single wrist (dominant hand only)
+   - Handedness not recorded
+   - Learning curve: Users improve with practice/coaching
+   - Lower WPM than physical writing or typing
+   
+   **Citation**
+   
+   ```
+   Kaifosh, P., Reardon, T.R., & CTRL-labs at Reality Labs. (2025).
+   A generic non-invasive neuromotor interface for human-computer interaction.
+   
+   **Nature, 645(8081), 702-711. https://doi.org/10.1038/s41586-025-09255-w**
+   
+   
+   **Data Curator**
+   
+   **Yahya Shirazi**
+   SCCN (Swartz Center for Computational Neuroscience)
+   INC (Institute for Neural Computation)
+   University of California San Diego
+   
+   **Version History**
+   
+   
+   ****v1.0** (2025-10-01): Initial BIDS conversion**
+   
+   **BIDS Version**: 1.11 | **EMG-BIDS**: BEP-042 | **Updated**: Oct 1, 2025
+
+
 Highlights
 ----------
 
@@ -70,12 +224,12 @@ Highlights
       - Sampling rate (Hz): 2000.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 1
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: Healthy
+      - Modality: Visual
+      - Type: Motor
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

@@ -7,13 +7,15 @@ eegdash.dataset.DS006921
 
 High Density Resting State EEG of Phantom Limb Pain and Controls (OpenNeuro ``ds006921``). Access recordings and metadata through EEGDash.
 
+**Citation:** Ramne, M., Damercheli, S., Apelgren, F., Pettersson, I., Lendaro, E. (2025). *High Density Resting State EEG of Phantom Limb Pain and Controls*. `10.18112/openneuro.ds006921.v1.1.0 <https://doi.org/10.18112/openneuro.ds006921.v1.1.0>`__
+
 .. rst-class:: sd-badges
 
 :bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 2` :bdg-secondary:`Subjects: 38` :bdg-secondary:`Recordings: 152`
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: —`
 
 Dataset Information
 -------------------
@@ -33,7 +35,7 @@ Dataset Information
    * - License
      - CC0
    * - Citation / DOI
-     - `doi:10.18112/openneuro.ds006921.v1.0.0 <https://doi.org/10.18112/openneuro.ds006921.v1.0.0>`__
+     - `doi:10.18112/openneuro.ds006921.v1.1.0 <https://doi.org/10.18112/openneuro.ds006921.v1.1.0>`__
    * - Source links
      - `OpenNeuro <https://openneuro.org/datasets/ds006921>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006921>`__ | `Source URL <https://openneuro.org/datasets/ds006921>`__
 
@@ -46,9 +48,39 @@ Dataset Information
       @dataset{ds006921,
         title = {High Density Resting State EEG of Phantom Limb Pain and Controls},
         author = {Ramne, M. and Damercheli, S. and Apelgren, F. and Pettersson, I. and Lendaro, E.},
-        doi = {10.18112/openneuro.ds006921.v1.0.0},
-        url = {https://doi.org/10.18112/openneuro.ds006921.v1.0.0},
+        doi = {10.18112/openneuro.ds006921.v1.1.0},
+        url = {https://doi.org/10.18112/openneuro.ds006921.v1.1.0},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS006921&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS006921%0A-%20%2A%2ATitle%3A%2A%2A%20High%20Density%20Resting%20State%20EEG%20of%20Phantom%20Limb%20Pain%20and%20Controls%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+
+**High Density Resting State EEG of Phantom Limb Pain and Controls**
+
+This dataset comprises resting state high density EEG data (64 or 128 channels) collected from three categories of subjects: amputees with phantom limb pain, amputees without phantom limb pain, and intact, pain free controls. The data has been organised accroding to the BIDS standard for more accesible reuse. Recordings are approximately 7 minutes long with eyes opened or closed, as indicated by task.
+
+**Usage**
+
+For loading and using the data in Matlab we recommend using pop_importbids by EEGLab, example usage here: https://eeglab.org/tutorials/11_Scripting/Analyzing_EEG_BIDS_data_in_EEGLAB.html
+For a complete pipeline for resting state EEG preprocessing and feature extraction in Matlab we recommend DISCOVER-EEG:
+Cristina Gil. (2024). crisglav/discover-eeg: 2.0.0 (2.0.0). Zenodo. https://doi.org/10.5281/zenodo.10797803
+
+**License**
+
+CC0
 
 Highlights
 ----------
@@ -66,16 +98,16 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 122 (248), 63 (56)
+      - Channels: 128 (124), 122 (124), 63 (28), 64 (28)
       - Sampling rate (Hz): 2400.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 2
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: Other
+      - Modality: Resting State
+      - Type: Clinical/Intervention
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
@@ -88,7 +120,7 @@ Highlights
       :class-card: sd-border-1
 
       - License: CC0
-      - DOI: doi:10.18112/openneuro.ds006921.v1.0.0
+      - DOI: doi:10.18112/openneuro.ds006921.v1.1.0
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

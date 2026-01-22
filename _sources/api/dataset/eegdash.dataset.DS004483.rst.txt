@@ -5,7 +5,9 @@
 eegdash.dataset.DS004483
 ========================
 
-participants.tsv (OpenNeuro ``ds004483``). Access recordings and metadata through EEGDash.
+ABSeqMEG (OpenNeuro ``ds004483``). Access recordings and metadata through EEGDash.
+
+**Citation:** Samuel Planton\*, Fosca Al Roumi\*, Liping Wang, Stanislas Dehaene (2023). *ABSeqMEG*. `10.18112/openneuro.ds004483.v1.0.0 <https://doi.org/10.18112/openneuro.ds004483.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ participants.tsv (OpenNeuro ``ds004483``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 2.0`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS004483``
    * - Title
-     - participants.tsv
+     - ABSeqMEG
    * - Year
      - 2023
    * - Authors
@@ -44,11 +46,29 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds004483,
-        title = {participants.tsv},
+        title = {ABSeqMEG},
         author = {Samuel Planton* and Fosca Al Roumi* and Liping Wang and Stanislas Dehaene},
         doi = {10.18112/openneuro.ds004483.v1.0.0},
         url = {https://doi.org/10.18112/openneuro.ds004483.v1.0.0},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS004483&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS004483%0A-%20%2A%2ATitle%3A%2A%2A%20ABSeqMEG%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+This dataset contains the MEG data from the article entitled Compression of binary sound sequences in human working memory https://www.biorxiv.org/content/10.1101/2022.10.15.512361v1
+According to the language of thought hypothesis, regular sequences are compressed in human working memory using recursive loops akin to a mental program that predicts future items. We tested this theory by probing working memory for 16-item sequences made of two sounds. We recorded brain activity with functional MRI and magneto-encephalography (MEG) while participants listened to a hierarchy of sequences of variable complexity, whose minimal description required transition probabilities, chunking, or nested structures. Occasional deviant sounds probed the participants’ knowledge of the sequence. We predicted that task difficulty and brain activity would be proportional to minimal description length (MDL) in our formal language. Furthermore, activity should increase with MDL for learned sequences, and decrease with MDL for deviants. These predictions were upheld in both fMRI and MEG, indicating that sequence predictions are highly dependent on sequence structure and become weaker and delayed as complexity increases. The proposed language recruited bilateral superior temporal, precentral, anterior intraparietal and cerebellar cortices. These regions overlapped extensively with a localizer for mathematical calculation, and much less with spoken or written language processing. We propose that these areas collectively encode regular sequences as repetitions with variations and their recursive composition into nested structures.
 
 Highlights
 ----------
@@ -66,16 +86,16 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 60
+      - Channels: 396 (263), 60 (263)
       - Sampling rate (Hz): 250.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 1
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: Healthy
+      - Modality: Auditory
+      - Type: Memory
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

@@ -5,7 +5,9 @@
 eegdash.dataset.DS005398
 ========================
 
-participants.tsv (OpenNeuro ``ds005398``). Access recordings and metadata through EEGDash.
+Open iEEG Dataset (OpenNeuro ``ds005398``). Access recordings and metadata through EEGDash.
+
+**Citation:** Yipeng Zhang, Atsuro Daida, Lawrence Liu, Naoto Kuroda, Yuanyi Ding, Shingo Oana, Tonmoy Monsoor, Chenda Duan, Shaun A. Hussain, Joe X Qiao, Noriko Salamon, Aria Fallah, Myung Shin Sim, Raman Sankar, Richard J. Staba, Jerome Engel Jr., Eishi Asano, Vwani Roychowdhury, Hiroki Nariai (2024). *Open iEEG Dataset*. `10.18112/openneuro.ds005398.v1.0.1 <https://doi.org/10.18112/openneuro.ds005398.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ participants.tsv (OpenNeuro ``ds005398``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 1.0`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS005398``
    * - Title
-     - participants.tsv
+     - Open iEEG Dataset
    * - Year
      - 2024
    * - Authors
@@ -44,11 +46,36 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds005398,
-        title = {participants.tsv},
+        title = {Open iEEG Dataset},
         author = {Yipeng Zhang and Atsuro Daida and Lawrence Liu and Naoto Kuroda and Yuanyi Ding and Shingo Oana and Tonmoy Monsoor and Chenda Duan and Shaun A. Hussain and Joe X Qiao and Noriko Salamon and Aria Fallah and Myung Shin Sim and Raman Sankar and Richard J. Staba and Jerome Engel Jr. and Eishi Asano and Vwani Roychowdhury and Hiroki Nariai},
         doi = {10.18112/openneuro.ds005398.v1.0.1},
         url = {https://doi.org/10.18112/openneuro.ds005398.v1.0.1},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS005398&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS005398%0A-%20%2A%2ATitle%3A%2A%2A%20Open%20iEEG%20Dataset%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+This dataset was utilized for the publication of the manuscript by Zhang et al. (in preparation). A subset of the data has been employed in [1] and [2].
+Summary:
+This data set comprises the de-identified subjects with interictal iEEG recordings with sleep from University of California Los Angels Mattel Children’s Hospital, and Children’s Hospital of Michigan, Detroit.
+Subject-wise information is contained in each folder, including iEEGs collected from 185 subjects during sleep. The channel name and valuables, such as the anatomical label and the resection status, are attached to each folder. The outcome and background information of all the subjects are summarized in ‘paticipant.tsv’ located in the parental directory.
+Derivatives
+The processed data for HFO detection and classification are shown in the derivatives/folder. The HFO analysis contains detection from two methods: RMS and MNI detectors.
+Ref
+[1] Zhang Y, Lu Q, Monsoor T, et al. Refining epileptogenic high-frequency oscillations using deep learning: a reverse engineering approach. Brain Commun. 2022;4(1):fcab267. doi:10.1093/braincomms/fcab267
+[2] Kuroda N, Sonoda M, Miyakoshi M, et al. Objective interictal electrophysiology biomarkers optimize prediction of epilepsy surgery outcome. Brain Commun. 2021;3(2):fcab042. doi:10.1093/braincomms/fcab042
 
 Highlights
 ----------
@@ -66,16 +93,16 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 34 (2), 108 (16), 68 (2), 106 (10), 133 (2), 81 (2), 32 (2), 80 (2), 56 (2), 118 (12), 127 (2), 138 (8), 150 (4), 94 (4), 69 (2), 111 (2), 74 (4), 73 (4), 70 (4), 98 (4), 114 (6), 100 (8), 126 (4), 72 (2), 67 (2), 60 (2), 86 (4), 77 (4), 84 (2), 99 (2), 63 (2), 76 (4), 62 (2), 164 (2), 40 (2), 101 (2), 130 (6), 112 (40), 136 (2), 45 (2), 33 (2), 79 (4), 109 (2), 122 (6), 104 (16), 120 (8), 124 (10), 132 (8), 83 (2), 44 (2), 58 (4), 140 (4), 128 (60), 110 (6), 95 (2), 64 (8), 93 (2), 96 (4), 149 (2), 144 (4), 92 (2), 156 (2), 102 (10), 116 (6), 107 (4)
-      - Sampling rate (Hz): 200.0 (2), 1000.0 (270), 2000.0 (98)
+      - Channels: 128 (60), 112 (40), 104 (16), 108 (16), 118 (12), 106 (10), 124 (10), 102 (10), 100 (8), 138 (8), 64 (8), 120 (8), 132 (8), 116 (6), 110 (6), 130 (6), 114 (6), 122 (6), 144 (4), 76 (4), 126 (4), 77 (4), 150 (4), 107 (4), 70 (4), 96 (4), 140 (4), 79 (4), 73 (4), 94 (4), 86 (4), 98 (4), 58 (4), 74 (4), 164 (2), 111 (2), 72 (2), 83 (2), 95 (2), 67 (2), 68 (2), 156 (2), 34 (2), 109 (2), 84 (2), 56 (2), 92 (2), 81 (2), 127 (2), 133 (2), 69 (2), 33 (2), 93 (2), 101 (2), 63 (2), 99 (2), 32 (2), 136 (2), 60 (2), 149 (2), 80 (2), 45 (2), 40 (2), 44 (2), 62 (2)
+      - Sampling rate (Hz): 1000.0 (270), 2000.0 (98), 200.0 (2)
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 1
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: Epilepsy
+      - Modality: Sleep
+      - Type: Clinical/Intervention
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

@@ -5,7 +5,9 @@
 eegdash.dataset.DS005007
 ========================
 
-participants.tsv (OpenNeuro ``ds005007``). Access recordings and metadata through EEGDash.
+Auditory naming task with questions that begin or end with a wh-interrogative (OpenNeuro ``ds005007``). Access recordings and metadata through EEGDash.
+
+**Citation:** Yu Kitazawa, Eishi Asano (2024). *Auditory naming task with questions that begin or end with a wh-interrogative*. `10.18112/openneuro.ds005007.v1.0.0 <https://doi.org/10.18112/openneuro.ds005007.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ participants.tsv (OpenNeuro ``ds005007``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 0.0`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS005007``
    * - Title
-     - participants.tsv
+     - Auditory naming task with questions that begin or end with a wh-interrogative
    * - Year
      - 2024
    * - Authors
@@ -44,11 +46,28 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds005007,
-        title = {participants.tsv},
+        title = {Auditory naming task with questions that begin or end with a wh-interrogative},
         author = {Yu Kitazawa and Eishi Asano},
         doi = {10.18112/openneuro.ds005007.v1.0.0},
         url = {https://doi.org/10.18112/openneuro.ds005007.v1.0.0},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS005007&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS005007%0A-%20%2A%2ATitle%3A%2A%2A%20Auditory%20naming%20task%20with%20questions%20that%20begin%20or%20end%20with%20a%20wh-interrogative%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+No README content is available for this dataset.
 
 Highlights
 ----------
@@ -66,16 +85,16 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 86 (4), 102 (2), 100 (6), 88 (2), 122 (2), 58 (4), 114 (2), 137 (2), 91 (2), 66 (4), 78 (4), 154 (2), 124 (2), 184 (2), 72 (2), 155 (2), 138 (2), 129 (2), 48 (2), 94 (2), 116 (4), 128 (2), 51 (2), 82 (4), 142 (2), 68 (2), 163 (2), 127 (2), 120 (2), 74 (4), 156 (4), 140 (2)
+      - Channels: 100 (6), 82 (4), 116 (4), 66 (4), 86 (4), 58 (4), 156 (4), 78 (4), 74 (4), 88 (2), 184 (2), 129 (2), 114 (2), 48 (2), 163 (2), 120 (2), 137 (2), 51 (2), 124 (2), 102 (2), 91 (2), 72 (2), 142 (2), 138 (2), 154 (2), 128 (2), 140 (2), 94 (2), 68 (2), 155 (2), 127 (2), 122 (2)
       - Sampling rate (Hz): 1000.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 1
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: —
+      - Modality: —
+      - Type: —
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

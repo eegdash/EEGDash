@@ -5,7 +5,9 @@
 eegdash.dataset.DS004998
 ========================
 
-participants.tsv (OpenNeuro ``ds004998``). Access recordings and metadata through EEGDash.
+Exploring the electrophysiology of Parkinson's disease - magnetoencephalography combined with deep brain recordings from the subthalamic nucleus. (OpenNeuro ``ds004998``). Access recordings and metadata through EEGDash.
+
+**Citation:** Fayed Rassoulou, Alexandra Steina, Christian J. Hartmann, Jan Vesper, Markus Butz, Alfons Schnitzler, Jan Hirschmann (2024). *Exploring the electrophysiology of Parkinson's disease - magnetoencephalography combined with deep brain recordings from the subthalamic nucleus.*. `10.18112/openneuro.ds004998.v1.2.2 <https://doi.org/10.18112/openneuro.ds004998.v1.2.2>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ participants.tsv (OpenNeuro ``ds004998``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 1.0`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS004998``
    * - Title
-     - participants.tsv
+     - Exploring the electrophysiology of Parkinson's disease - magnetoencephalography combined with deep brain recordings from the subthalamic nucleus.
    * - Year
      - 2024
    * - Authors
@@ -44,11 +46,36 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds004998,
-        title = {participants.tsv},
+        title = {Exploring the electrophysiology of Parkinson's disease - magnetoencephalography combined with deep brain recordings from the subthalamic nucleus.},
         author = {Fayed Rassoulou and Alexandra Steina and Christian J. Hartmann and Jan Vesper and Markus Butz and Alfons Schnitzler and Jan Hirschmann},
         doi = {10.18112/openneuro.ds004998.v1.2.2},
         url = {https://doi.org/10.18112/openneuro.ds004998.v1.2.2},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS004998&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS004998%0A-%20%2A%2ATitle%3A%2A%2A%20Exploring%20the%20electrophysiology%20of%20Parkinson%27s%20disease%20-%20magnetoencephalography%20combined%20with%20deep%20brain%20recordings%20from%20the%20subthalamic%20nucleus.%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+This dataset contains data from externalized DBS patients undergoing simultaneous MEG - STN LFP recordings with (MedOn) and without (MedOn) dopaminergic medication. It has two movement conditions: 1) 5 min of rest followed by static forearm extension (hold) and 2) 5 min of rest followed by self-paced fist-clenching (move). The movement parts contain pauses. Some patients were recorded in resting-state only (rest). The project aimed to understand the neurophysiology of basal ganglia-cortex loops and its modulation by movement and medication.
+Code for quickly start is available here:
+https://github.com/Fayed-Rsl/RHM_preprocessing
+
+**References**
+
+Rassoulou, F., Steina, A., Hartmann, C. J., Vesper, J., Butz, M., Schnitzler, A., & Hirschmann, J. (2024). Exploring the electrophysiology of Parkinson's disease with magnetoencephalography and deep brain recordings. Scientific data, 11(1), 889. https://doi.org/10.1038/s41597-024-03768-1
+Appelhoff, S., Sanderson, M., Brooks, T., Vliet, M., Quentin, R., Holdgraf, C., Chaumon, M., Mikulan, E., Tavabi, K., Höchenberger, R., Welke, D., Brunner, C., Rockhill, A., Larson, E., Gramfort, A. and Jas, M. (2019). MNE-BIDS: Organizing electrophysiological data into the BIDS format and facilitating their analysis. Journal of Open Source Software 4: (1896). https://doi.org/10.21105/joss.01896
+Niso, G., Gorgolewski, K. J., Bock, E., Brooks, T. L., Flandin, G., Gramfort, A., Henson, R. N., Jas, M., Litvak, V., Moreau, J., Oostenveld, R., Schoffelen, J., Tadel, F., Wexler, J., Baillet, S. (2018). MEG-BIDS, the brain imaging data structure extended to magnetoencephalography. Scientific Data, 5, 180110. https://doi.org/10.1038/sdata.2018.110
 
 Highlights
 ----------
@@ -66,16 +93,16 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 18 (4), 4 (2), 323 (92), 16 (4), 324 (8), 333 (8), 8 (160), 347 (4), 326 (8)
+      - Channels: 323 (168), 8 (80), 324 (10), 333 (10), 326 (10), 347 (6), 16 (2), 18 (2), 4, 319
       - Sampling rate (Hz): 2000.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 6
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: Parkinson's
+      - Modality: Motor
+      - Type: Motor
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

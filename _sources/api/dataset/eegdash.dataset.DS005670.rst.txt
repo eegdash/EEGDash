@@ -5,7 +5,9 @@
 eegdash.dataset.DS005670
 ========================
 
-participants.tsv (OpenNeuro ``ds005670``). Access recordings and metadata through EEGDash.
+SEEG Resting State Recording (OpenNeuro ``ds005670``). Access recordings and metadata through EEGDash.
+
+**Citation:** Prof. Pengfei Xu (2024). *SEEG Resting State Recording*. `10.18112/openneuro.ds005670.v1.0.0 <https://doi.org/10.18112/openneuro.ds005670.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ participants.tsv (OpenNeuro ``ds005670``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 0.0`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS005670``
    * - Title
-     - participants.tsv
+     - SEEG Resting State Recording
    * - Year
      - 2024
    * - Authors
@@ -44,11 +46,40 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds005670,
-        title = {participants.tsv},
+        title = {SEEG Resting State Recording},
         author = {Prof. Pengfei Xu},
         doi = {10.18112/openneuro.ds005670.v1.0.0},
         url = {https://doi.org/10.18112/openneuro.ds005670.v1.0.0},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS005670&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS005670%0A-%20%2A%2ATitle%3A%2A%2A%20SEEG%20Resting%20State%20Recording%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+
+**Dataset description**
+
+This SEEG raw dataset includes resting state recordings for two patients with epilepsy.
+The depth electrodes used in this dataset are Sinovation SDE-08 medical-grade stainless steel electrodes, with the following specifications:
+    Diameter: 0.8 mm
+    Contact length: 2 mm
+    Insulator length: 1.5 mm
+    Distance between the center of two contacts: 3.5 mm
+
+**Between 8 and 16 contacts on each electrode**
+
+For questions, please contact Pengfei Xu (pxu@bnu.edu.cn).
 
 Highlights
 ----------
@@ -66,16 +97,16 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 186
+      - Channels: 186 (2), 238
       - Sampling rate (Hz): 2000.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 1
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: Epilepsy
+      - Modality: Resting State
+      - Type: Resting-state
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

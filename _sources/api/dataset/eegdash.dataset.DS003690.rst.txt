@@ -5,7 +5,9 @@
 eegdash.dataset.DS003690
 ========================
 
-participants.tsv (OpenNeuro ``ds003690``). Access recordings and metadata through EEGDash.
+EEG, ECG and pupil data from young and older adults: rest and auditory cued reaction time tasks (OpenNeuro ``ds003690``). Access recordings and metadata through EEGDash.
+
+**Citation:** Maria J. Ribeiro, Miguel Castelo-Branco (2021). *EEG, ECG and pupil data from young and older adults: rest and auditory cued reaction time tasks*. `10.18112/openneuro.ds003690.v1.0.0 <https://doi.org/10.18112/openneuro.ds003690.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ participants.tsv (OpenNeuro ``ds003690``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 5.0`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS003690``
    * - Title
-     - participants.tsv
+     - EEG, ECG and pupil data from young and older adults: rest and auditory cued reaction time tasks
    * - Year
      - 2021
    * - Authors
@@ -44,11 +46,37 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds003690,
-        title = {participants.tsv},
+        title = {EEG, ECG and pupil data from young and older adults: rest and auditory cued reaction time tasks},
         author = {Maria J. Ribeiro and Miguel Castelo-Branco},
         doi = {10.18112/openneuro.ds003690.v1.0.0},
         url = {https://doi.org/10.18112/openneuro.ds003690.v1.0.0},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS003690&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS003690%0A-%20%2A%2ATitle%3A%2A%2A%20EEG%2C%20ECG%20and%20pupil%20data%20from%20young%20and%20older%20adults%3A%20rest%20and%20auditory%20cued%20reaction%20time%20tasks%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+Age-related differences in EEG, ECG and pupilography during auditory cued reaction time tasks
+In this study, we acquired the electroencephalogram (EEG), pupilogram and electrocardiogram (ECG) while a group of young (N = 36) and a group of older (N = 39) adults were engaged in auditory cued reaction time tasks (active tasks) or passively listening to the auditory stimulus used as temporal cue, presented with the same frequency as in the active tasks (passive task - 4 minutes acquired at the beginning of the session).
+The active tasks were a cued simple reaction time task and a cued go/no-go task. In the active tasks, 16% of the trials were cue only trials (the cue was presented but no target followed).
+The order of the active tasks was counterbalanced across participants and were acquired in two runs of 8 minutes per task. In each task, we acquired 120 trials. In the simple reaction time task, 100 trials were cue-target trials and 20 trials were cue-only. In the go/no-go task, 80 trials were cue-go trials, 20 were cue-no-go trials, and 20 trials were cue-only trials.
+Participants were fixating a grey computer screen with a lighter grey fixation cross at the center. The auditory stimuli were single-frequency signals (pure tones) with duration 250 ms, with the following frequencies: cue 1500 Hz; go stimulus 1700 Hz; no-go stimulus 1300 Hz; and error feedback signal 1000 Hz.
+The sounds were played at around 67 dB(A) from a hi-fi speakers system. All stimuli were suprathreshold.
+EEG signal was recorded using a 64-channel Neuroscan system with scalp electrodes placed according to the International 10-20 electrode placement standard, with reference between the electrodes CPz and Cz and ground between FPz and Fz. Acquisition rate was 500 Hz. Vertical and horizontal electrooculograms were recorded to monitor eye movements and blinks. Bipolar electrocardiogram (ECG) electrodes were placed on the chest. During data acquisition, the participants head was stabilized with a chin and forehead rest. Consequently, the electrodes on the forehead, FP1, FPz, and FP2, displayed signal fluctuation artifacts due to the pressure on the forehead rest. These were excluded from the recordings.
+Electrode positions were measured using a 3D-digitizer Fastrak (Polhemus, VT, USA) and imported into the EEGLAB files.
+Pupil data was acquired with iView X Hi-Speed 1250 system from SMI with a sampling rate of 240 Hz. Pupil data was imported into the EEG dataset with the EYE-EEG EEGLAB plugin.
+Synchronized EEG, ECG and pupil data are included in separate channels in the EEGLAB .set files.
 
 Highlights
 ----------
@@ -66,21 +94,21 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 61
+      - Channels: 61 (375), 66 (365), 64 (10)
       - Sampling rate (Hz): 500.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 3
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: —
+      - Modality: —
+      - Type: —
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 21.5 GB
+      - Size on disk: 4.9 MB
       - File count: 375
       - Format: BIDS
 

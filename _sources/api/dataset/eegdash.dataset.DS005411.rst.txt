@@ -5,7 +5,9 @@
 eegdash.dataset.DS005411
 ========================
 
-participants.tsv (OpenNeuro ``ds005411``). Access recordings and metadata through EEGDash.
+Free Recall of Word Lists with Repeated Items (OpenNeuro ``ds005411``). Access recordings and metadata through EEGDash.
+
+**Citation:** Haydn G. Herrema, Michael J. Kahana (2024). *Free Recall of Word Lists with Repeated Items*. `10.18112/openneuro.ds005411.v1.0.0 <https://doi.org/10.18112/openneuro.ds005411.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ participants.tsv (OpenNeuro ``ds005411``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 0.0`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS005411``
    * - Title
-     - participants.tsv
+     - Free Recall of Word Lists with Repeated Items
    * - Year
      - 2024
    * - Authors
@@ -44,11 +46,46 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds005411,
-        title = {participants.tsv},
+        title = {Free Recall of Word Lists with Repeated Items},
         author = {Haydn G. Herrema and Michael J. Kahana},
         doi = {10.18112/openneuro.ds005411.v1.0.0},
         url = {https://doi.org/10.18112/openneuro.ds005411.v1.0.0},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS005411&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS005411%0A-%20%2A%2ATitle%3A%2A%2A%20Free%20Recall%20of%20Word%20Lists%20with%20Repeated%20Items%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+
+**Free Recall of Word Lists with Repeated Items**
+
+
+**Description**
+
+This dataset contains behavioral events and intracranial electrophysiological recordings from a repated item free recall task.  The experiment consists of participants studying a list of words, presented visually one at a time, and then freely recalling the words from the just-presented list in any order. On each list, there is a 7-second delay period between the encoding and recall phases.  The data were collected at clinical sites across the country as part of a collaboration with the Computational Memory Lab at the University of Pennsylvania.
+The main manipulation in this paradigm is the repetition of items in the studied list. In total, each list contains 27 encoding events, but only 12 unique words: 3 are presented one time, 3 are presented two times, and 6 are presented three times.
+
+**To Note**
+
+* The duration of the encoding events (i.e., length of word presentation) varies among sessions.  For some sessions, the words remained on screen from 750 ms, while in other sessions presentation lasted for 1600 ms. The `duration` column of the events tsv files contains this information.
+* The iEEG recordings are labeled either "monopolar" or "bipolar."  The monopolar recordings are referenced (typically a mastoid reference), but should always be re-referenced before analysis.  The bipolar recordings are referenced according to a paired scheme indicated by the accompanying bipolar channels tables.
+* Each subject has a unique montage of electrode locations.  MNI and Talairach coordinates are provided when available.
+* Recordings done with the Blackrock system are in units of 250 nV, while recordings done with the Medtronic system are estimated through testing to have units of 0.1 uV.  We have completed the scaling to provide values in V.
+
+**Contact**
+
+For questions or inquiries, please contact sas-kahana-sysadmin@sas.upenn.edu.
 
 Highlights
 ----------
@@ -66,16 +103,16 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 44 (4), 121 (6), 105 (6), 123 (2), 184 (4), 116 (12), 181 (4), 55 (4), 134 (8), 115 (8), 187 (4), 155 (8), 133 (6), 84 (4), 195 (4), 186 (4), 141 (6), 109 (18), 200 (8), 168 (14), 126 (12), 159 (2), 215 (2), 167 (8), 154 (2), 182 (10), 232 (2), 132 (6), 106 (10), 142 (2), 110 (12), 158 (2), 166 (4), 169 (8), 127 (6), 94 (4), 176 (2), 210 (2), 98 (2), 111 (2), 118 (20), 192 (8), 153 (14), 202 (2), 101 (2), 96 (4), 122 (12), 140 (4), 165 (2), 236 (2), 239 (2), 218 (2), 230 (2), 152 (8), 129 (2), 104 (2), 128 (2), 173 (4), 211 (8), 119 (2), 120 (24), 138 (2), 108 (8), 107 (2), 213 (4), 160 (4), 99 (4)
-      - Sampling rate (Hz): 1024.0 (8), 1000.0 (300), 2048.0 (42), 512.0 (16), 2000.0 (20)
+      - Channels: 120 (24), 118 (20), 109 (18), 168 (14), 153 (14), 110 (12), 126 (12), 116 (12), 122 (12), 106 (10), 182 (10), 152 (8), 155 (8), 134 (8), 167 (8), 108 (8), 200 (8), 211 (8), 169 (8), 192 (8), 115 (8), 121 (6), 141 (6), 127 (6), 105 (6), 132 (6), 133 (6), 184 (4), 84 (4), 140 (4), 195 (4), 94 (4), 96 (4), 160 (4), 181 (4), 173 (4), 99 (4), 187 (4), 213 (4), 186 (4), 55 (4), 44 (4), 166 (4), 215 (2), 129 (2), 119 (2), 142 (2), 104 (2), 239 (2), 218 (2), 165 (2), 176 (2), 232 (2), 101 (2), 128 (2), 210 (2), 202 (2), 158 (2), 123 (2), 236 (2), 159 (2), 111 (2), 138 (2), 107 (2), 230 (2), 98 (2), 154 (2)
+      - Sampling rate (Hz): 1000.0 (300), 2048.0 (42), 2000.0 (20), 512.0 (16), 1024.0 (8)
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 1
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: Epilepsy
+      - Modality: Visual
+      - Type: Memory
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

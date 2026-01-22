@@ -5,7 +5,9 @@
 eegdash.dataset.DS005293
 ========================
 
-task-95ByBP_events.json (OpenNeuro ``ds005293``). Access recordings and metadata through EEGDash.
+95 By BP (OpenNeuro ``ds005293``). Access recordings and metadata through EEGDash.
+
+**Citation:** Zhao Xiangyue, Zhou Jingyao, Zhang Libo, Duan Haoqing, Wei Shiyu, Bi Yanzhi, Hu Li (2024). *95 By BP*. `10.18112/openneuro.ds005293.v1.0.0 <https://doi.org/10.18112/openneuro.ds005293.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ task-95ByBP_events.json (OpenNeuro ``ds005293``). Access recordings and metadata
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: —`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS005293``
    * - Title
-     - task-95ByBP_events.json
+     - 95 By BP
    * - Year
      - 2024
    * - Authors
@@ -44,11 +46,33 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds005293,
-        title = {task-95ByBP_events.json},
+        title = {95 By BP},
         author = {Zhao Xiangyue and Zhou Jingyao and Zhang Libo and Duan Haoqing and Wei Shiyu and Bi Yanzhi and Hu Li},
         doi = {10.18112/openneuro.ds005293.v1.0.0},
         url = {https://doi.org/10.18112/openneuro.ds005293.v1.0.0},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS005293&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS005293%0A-%20%2A%2ATitle%3A%2A%2A%2095%20By%20BP%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+1.Study introduction:
+In this experiment, the intensity of laser stimulation varied individually based on participants’pain thresholds. Prior to the formal commencement of the experiment, participants underwent a series of stimuli of increasing intensity, incrementally rising from low to high in 0.25J steps until reaching the maximum tolerable intensity for each individual. Participants were instructed to verbally report the perceived pain intensity of each laser stimulation using a numerical rating scale (NRS) ranging from 0 (no sensation) to 10 (the maximum tolerable level of pain), with 4 indicating the pain perception threshold akin to a pricking sensation. In this study, each participant received four levels of stimulation intensity, corresponding to ratings of 2, 4, 6, and 8 on the NRS (E1: 2.0 ± 0.2 J; E2: 2.7 ± 0.3 J; E3: 3.4 ± 0.3 J; E4: 4.1 ± 0.4 J).
+2.Participant task information(description of the experiment):
+Participants received laser stimulation and subsequently provided pain intensity ratings one by one.
+3.Participant instructions(as exact as possible):
+The participants were instructed to relax and sit comfortably on a chair, focusing their attention on the sensation of laser stimulation. The experimental environment was quiet, with a constant room temperature, and no unrelated individuals were present. Both the participants and the experimenter wore protective goggles. The experimental design employed a two-factor repeated measures within-subject design, with 4 levels of stimulation intensity crossed with 2 levels of stimulation location (left hand dorsum and right hand dorsum), resulting in a total of 8 conditions (stimulation locations: left hand dorsum and right hand dorsum). There were 10 trials for each condition, totaling 80 trials. Participants received pain stimulation and provided ratings for each trial individually.
 
 Highlights
 ----------
@@ -66,16 +90,16 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 63
+      - Channels: 63 (570), 60 (570)
       - Sampling rate (Hz): 1000.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 1
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: Healthy
+      - Modality: Tactile
+      - Type: Perception
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

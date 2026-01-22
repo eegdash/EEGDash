@@ -5,7 +5,9 @@
 eegdash.dataset.DS006890
 ========================
 
-participants.tsv (OpenNeuro ``ds006890``). Access recordings and metadata through EEGDash.
+Longitudinal Multitask Wireless ECoG Data from Two Fully Implanted Macaca fuscata (OpenNeuro ``ds006890``). Access recordings and metadata through EEGDash.
+
+**Citation:** Huixiang Yang, Ryohei Fukuma, Tomoyuki Namima, Kotaro Okuda, Asaya Nishi, Takamitsu Iwata, Abdi Reza, Kota S Sasaki, Taro Kaiju, Gurlal Gill, Haruhiko Kishima, Shinji Nishimoto, Takufumi Yanagisawa (2025). *Longitudinal Multitask Wireless ECoG Data from Two Fully Implanted Macaca fuscata*. `10.18112/openneuro.ds006890.v1.0.0 <https://doi.org/10.18112/openneuro.ds006890.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ participants.tsv (OpenNeuro ``ds006890``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: —`
 
 Dataset Information
 -------------------
@@ -25,9 +27,9 @@ Dataset Information
    * - Dataset ID
      - ``DS006890``
    * - Title
-     - participants.tsv
+     - Longitudinal Multitask Wireless ECoG Data from Two Fully Implanted Macaca fuscata
    * - Year
-     - —
+     - 2025
    * - Authors
      - Huixiang Yang, Ryohei Fukuma, Tomoyuki Namima, Kotaro Okuda, Asaya Nishi, Takamitsu Iwata, Abdi Reza, Kota S Sasaki, Taro Kaiju, Gurlal Gill, Haruhiko Kishima, Shinji Nishimoto, Takufumi Yanagisawa
    * - License
@@ -44,11 +46,91 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds006890,
-        title = {participants.tsv},
+        title = {Longitudinal Multitask Wireless ECoG Data from Two Fully Implanted Macaca fuscata},
         author = {Huixiang Yang and Ryohei Fukuma and Tomoyuki Namima and Kotaro Okuda and Asaya Nishi and Takamitsu Iwata and Abdi Reza and Kota S Sasaki and Taro Kaiju and Gurlal Gill and Haruhiko Kishima and Shinji Nishimoto and Takufumi Yanagisawa},
         doi = {10.18112/openneuro.ds006890.v1.0.0},
         url = {https://doi.org/10.18112/openneuro.ds006890.v1.0.0},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS006890&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS006890%0A-%20%2A%2ATitle%3A%2A%2A%20Longitudinal%20Multitask%20Wireless%20ECoG%20Data%20from%20Two%20Fully%20Implanted%20Macaca%20fuscata%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+Longitudinal Multitask Wireless ECoG Data from Two Fully Implanted Macaca fuscata — README
+
+**Overview**
+
+This repository contains a wireless subdural ECoG (iEEG) dataset from *Macaca fuscata* monkeys,
+organized in compliance with the iEEG-BIDS specification.
+Recordings were acquired several times each week using a wireless, inductively powered implant. The data were curated and organized in BIDS format to facilitate reproducible research in neuroscience.
+Keywords: wireless subdural ECoG, iEEG, Macaca fuscata, BIDS-compliant dataset,
+longitudinal recordings, task-based neurophysiology
+
+
+.. dropdown:: View full README
+   :class-container: sd-shadow-sm
+
+   Longitudinal Multitask Wireless ECoG Data from Two Fully Implanted Macaca fuscata — README
+   
+   **Overview**
+   
+   This repository contains a wireless subdural ECoG (iEEG) dataset from *Macaca fuscata* monkeys,
+   organized in compliance with the iEEG-BIDS specification.
+   Recordings were acquired several times each week using a wireless, inductively powered implant. The data were curated and organized in BIDS format to facilitate reproducible research in neuroscience.
+   Keywords: wireless subdural ECoG, iEEG, Macaca fuscata, BIDS-compliant dataset,
+   longitudinal recordings, task-based neurophysiology
+   
+   **BIDS Organization**
+   
+   - dataset_description.json
+   - participants.tsv, participants.json
+   - README.md, CHANGES.md
+   - sub-<id>/ses-<index>/ieeg/ (with *_ieeg.edf, *_ieeg.json, *_channels.tsv, *_events.tsv, *_scans.tsv, *_electrodes.tsv, *_electrodes.json, *_coordsystem.json)
+   
+   **Tasks**
+   
+   Tasks include rest, pressing, reaching, listening, sep.
+   Only curated and validated tasks are exported.
+   
+   **Signals and Channels**
+   
+   - Uniform sampling rate per file.
+   - channels.tsv lists physiological (ECoG), trigger (TRIGGER) and auxiliary channels (MISC).
+   
+   **Usage**
+   
+   This dataset can be loaded with BIDS-compatible toolboxes such as MNE-Python, FieldTrip, or EEGLAB.
+   Inspect *_events.tsv for task timing and *_channels.tsv for channel information.
+   
+   **Participants**
+   
+   Each subject corresponds to an individual monkey (e.g., sub-monkeyb, sub-monkeyc).
+   
+   **Ethics**
+   
+   All animal procedures complied with Japanese laws and institutional regulations, including the Science Council of Japan Guidelines for Proper Conduct of Animal Experiments and national standards on pain relief and euthanasia, and were approved by the Animal Experiment Committee — The University of Osaka (approval FBS-25-002).
+   
+   **License and Citation**
+   
+   License: CC BY 4.0
+   Citation: [Authors], “[Dataset Title],” [Repository/DOI], [Year].
+   
+   **Contact**
+   
+   Maintainer: Huixiang Yang, The University of Osaka, yanghuixiang@bci.med.osaka-u.ac.jp
+   For issues, please use the repository issue tracker.
+
 
 Highlights
 ----------
@@ -66,21 +148,21 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 66 (798), 50 (942)
+      - Channels: 50 (942), 66 (798)
       - Sampling rate (Hz): 1000.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 5
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: Healthy
+      - Modality: Multisensory
+      - Type: Motor
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 10.2 MB
+      - Size on disk: 41.2 GB
       - File count: 870
       - Format: BIDS
 

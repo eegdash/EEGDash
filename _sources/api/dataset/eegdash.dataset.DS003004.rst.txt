@@ -5,7 +5,9 @@
 eegdash.dataset.DS003004
 ========================
 
-participants.tsv (OpenNeuro ``ds003004``). Access recordings and metadata through EEGDash.
+Imagined Emotion Study (OpenNeuro ``ds003004``). Access recordings and metadata through EEGDash.
+
+**Citation:** Julie Onton, Scott Makeig (2020). *Imagined Emotion Study*. `10.18112/openneuro.ds003004.v1.1.1 <https://doi.org/10.18112/openneuro.ds003004.v1.1.1>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ participants.tsv (OpenNeuro ``ds003004``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 7.0`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS003004``
    * - Title
-     - participants.tsv
+     - Imagined Emotion Study
    * - Year
      - 2020
    * - Authors
@@ -44,11 +46,32 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds003004,
-        title = {participants.tsv},
+        title = {Imagined Emotion Study},
         author = {Julie Onton and Scott Makeig},
         doi = {10.18112/openneuro.ds003004.v1.1.1},
         url = {https://doi.org/10.18112/openneuro.ds003004.v1.1.1},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS003004&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS003004%0A-%20%2A%2ATitle%3A%2A%2A%20Imagined%20Emotion%20Study%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+**PARADIGM:** The study uses the method of guided imagery to induce resting, eyes-closed participants using voice-guided imagination to enter distinct 15 emotion states during acquisition of high-density EEG data.
+During the study, participants listen to 15 voice recordings that each suggest imagining a scenario in which they have experienced -- or would experience the named target emotion. Some target emotions have positive valence (e.g., joy, happiness), others negative valence (e.g., sadness, anger). Before and between the 15 emotion imagination periods, participants hear relaxation suggestions ('Now return to a neutral state by ...').
+**PROCEDURE:** When the participant first begins to feel the target emotion, they are asked to indicate this by pressing a handheld button. Participants are asked to continue feeling the emotion as long as possible.  To intensify and lengthen the periods of experienced emotion, participants are asked to interoceptively perceive and attend relevant somatosensory sensations. When the target feeling wanes (typically after 1 and 5 minutes), participants push the button again to leave the emotion imagination period and cue the relaxation instructions.
+**DATA HANDLING:** The raw data have been preprocessed to fix confusing event codes and to remove excessively noisy channels. In addition, a 1-Hz high pass filter  was applied to ready the data for ICA decomposition. Note: Unfortunately, the unfiltered data are no longer available.
+**NOTE:** Sub22 was a repeat subject, hence was removed from the dataset.
 
 Highlights
 ----------
@@ -66,16 +89,16 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 232 (2), 208 (2), 180 (2), 207 (2), 211 (2), 224 (6), 189 (2), 196 (2), 226 (2), 222 (2), 209 (2), 215 (2), 218 (2), 220 (2), 206 (2), 231 (2), 219 (6), 227 (2), 212 (4), 221 (4), 214 (4), 229 (2), 201 (2), 223 (2), 213 (2), 134 (2), 235 (2)
+      - Channels: 224 (6), 219 (6), 214 (4), 221 (4), 212 (4), 227 (2), 196 (2), 223 (2), 180 (2), 213 (2), 206 (2), 207 (2), 226 (2), 231 (2), 222 (2), 232 (2), 220 (2), 229 (2), 189 (2), 208 (2), 211 (2), 201 (2), 235 (2), 215 (2), 218 (2), 209 (2), 134 (2)
       - Sampling rate (Hz): 256.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 1
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: —
+      - Modality: —
+      - Type: —
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

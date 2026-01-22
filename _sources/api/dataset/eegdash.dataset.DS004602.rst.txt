@@ -5,7 +5,9 @@
 eegdash.dataset.DS004602
 ========================
 
-participants.tsv (OpenNeuro ``ds004602``). Access recordings and metadata through EEGDash.
+Registered Replication Report of ERN/Pe Psychometrics (OpenNeuro ``ds004602``). Access recordings and metadata through EEGDash.
+
+**Citation:** Peter E Clayson, Michael J Larson (2023). *Registered Replication Report of ERN/Pe Psychometrics*. `10.18112/openneuro.ds004602.v1.0.1 <https://doi.org/10.18112/openneuro.ds004602.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ participants.tsv (OpenNeuro ``ds004602``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 5.0`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS004602``
    * - Title
-     - participants.tsv
+     - Registered Replication Report of ERN/Pe Psychometrics
    * - Year
      - 2023
    * - Authors
@@ -44,11 +46,30 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds004602,
-        title = {participants.tsv},
+        title = {Registered Replication Report of ERN/Pe Psychometrics},
         author = {Peter E Clayson and Michael J Larson},
         doi = {10.18112/openneuro.ds004602.v1.0.1},
         url = {https://doi.org/10.18112/openneuro.ds004602.v1.0.1},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS004602&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS004602%0A-%20%2A%2ATitle%3A%2A%2A%20Registered%20Replication%20Report%20of%20ERN/Pe%20Psychometrics%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+This dataset supports a registered replication report that is described at https://osf.io/8cbua/. Scripts used for data processing are posted there.
+Abstract
+Intact cognitive control is critical for goal-directed behavior and is widely studied in healthy and clinical populations using the error-related negativity (ERN). A common assumption in such studies is that ERNs recorded during different experimental paradigms reflect the same construct or functionally equivalent processes and that ERN is functionally distinct from other error-monitoring event-related potentials (ERPs; error positivity [Pe]), other neurophysiological indices of cognitive control (N2), and even other indices unrelated to cognitive control (visual N1). The present registered report represents a replication-plus-extension study of the psychometric validity of cognitive control ERPs (Riesel et al., 2013, Biological Psychology) and evaluated the convergent and divergent validity of ERN, Pe, N2, and visual N1 recorded during three paradigms (flanker, Stroop, Go/no-go). Data from 182 participants were collected from two study sites, and ERP psychometric reliability and validity were evaluated. Findings supported convergent and divergent validity of ERN, Pe, and delta-Pe (error minus correct)—these ERPs correlated more with themselves across tasks than with other ERPs measured during the same task. Convergent validity of delta-ERN was not replicated, despite high internal consistency. ERN was strongly correlated with N2 at levels similar or higher than those in support of convergent validity for other ERPs, and the present study failed to provide evidence of divergent validity for ERN and Pe from N2 or the theoretically unrelated N1. Present findings underscore the importance of considering the psychometric validity of ERPs as it provides a foundation for interpreting and comparing ERPs across different tasks and studies.
 
 Highlights
 ----------
@@ -66,21 +87,21 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 128
+      - Channels: 129 (546), 128 (546)
       - Sampling rate (Hz): 500.0 (1002), 250.0 (90)
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 3
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: —
+      - Modality: —
+      - Type: —
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 73.9 GB
+      - Size on disk: 26.7 MB
       - File count: 546
       - Format: BIDS
 

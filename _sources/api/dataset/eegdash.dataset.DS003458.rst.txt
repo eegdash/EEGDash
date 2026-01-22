@@ -5,7 +5,9 @@
 eegdash.dataset.DS003458
 ========================
 
-participants.tsv (OpenNeuro ``ds003458``). Access recordings and metadata through EEGDash.
+EEG: Three armed bandit gambling task (OpenNeuro ``ds003458``). Access recordings and metadata through EEGDash.
+
+**Citation:** James F Cavanagh jcavanagh@unm.edu (2021). *EEG: Three armed bandit gambling task*. `10.18112/openneuro.ds003458.v1.1.0 <https://doi.org/10.18112/openneuro.ds003458.v1.1.0>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ participants.tsv (OpenNeuro ``ds003458``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 0.0`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS003458``
    * - Title
-     - participants.tsv
+     - EEG: Three armed bandit gambling task
    * - Year
      - 2021
    * - Authors
@@ -44,11 +46,33 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds003458,
-        title = {participants.tsv},
+        title = {EEG: Three armed bandit gambling task},
         author = {James F Cavanagh jcavanagh@unm.edu},
         doi = {10.18112/openneuro.ds003458.v1.1.0},
         url = {https://doi.org/10.18112/openneuro.ds003458.v1.1.0},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS003458&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS003458%0A-%20%2A%2ATitle%3A%2A%2A%20EEG%3A%20Three%20armed%20bandit%20gambling%20task%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+Healthy control college students.  23 subjects completed the 3-armed bandit task with oscillating probabilities.    For example, the 'blue' stim would slowly move from 20% reinforcing to 90% then back to 20 over many trials.  The other 'red' and 'green' stims would move similarly, but in different phase.  See Fig 1 of the paper.  This makes the task great for investigating reward processing & reward prediction error in the service of novel task set generation.
+Task included in Matlab programming language.
+Data collected in 2014 in the Cognitive Rhythms and Computation Lab, University of New Mexico.
+I also collected Corrugator EMG (may be labeled EKG) and Skin Conductance on most people.  But quality was dubious so I never did much with it.  Check .xls sheet under code folder.
+Some pre-processing scripts are included in code folder as well.
+- James F Cavanagh 01/04/2021
 
 Highlights
 ----------
@@ -66,16 +90,16 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 64
+      - Channels: 64 (27), 66 (19)
       - Sampling rate (Hz): 500.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 1
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: —
+      - Modality: —
+      - Type: —
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

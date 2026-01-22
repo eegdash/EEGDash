@@ -5,7 +5,9 @@
 eegdash.dataset.DS005692
 ========================
 
-participants.tsv (OpenNeuro ``ds005692``). Access recordings and metadata through EEGDash.
+SpinalExpect_NonInvasive (OpenNeuro ``ds005692``). Access recordings and metadata through EEGDash.
+
+**Citation:** Max-Philipp Stenner, Cindy Marquez Nossa, Tino Zaehle, Elena Azanon, Hans-Jochen Heinze, Matthias Deliano, Lars Buentjen (2024). *SpinalExpect_NonInvasive*. `10.18112/openneuro.ds005692.v1.0.0 <https://doi.org/10.18112/openneuro.ds005692.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ participants.tsv (OpenNeuro ``ds005692``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 0.0`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS005692``
    * - Title
-     - participants.tsv
+     - SpinalExpect_NonInvasive
    * - Year
      - 2024
    * - Authors
@@ -44,11 +46,35 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds005692,
-        title = {participants.tsv},
+        title = {SpinalExpect_NonInvasive},
         author = {Max-Philipp Stenner and Cindy Marquez Nossa and Tino Zaehle and Elena Azanon and Hans-Jochen Heinze and Matthias Deliano and Lars Buentjen},
         doi = {10.18112/openneuro.ds005692.v1.0.0},
         url = {https://doi.org/10.18112/openneuro.ds005692.v1.0.0},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS005692&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS005692%0A-%20%2A%2ATitle%3A%2A%2A%20SpinalExpect_NonInvasive%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+Contact person:
+Max-Philipp Stenner, email: max-philipp.stenner@med.ovgu.de or max-philipp.stenner@lin-magdeburg.de, ORCID: 0000-0002-3694-1887
+Brief overview of the tasks in the experiment:
+The goal was to reveal whether temporal expectation influences initial sensory processing in the human spinal cord. In each trial, subjects (n=30, healthy, young) received at least one electric median nerve stimulation on the left wrist. Their task was to silently count in how many (rare) trials in each block (~5 min) there were two median nerve stimuli in rapid succession (80 ms ISI), and to report that number at the end of each block. In each trial, the median nerve stimulation was preceded by an auditory cue. In alternating blocks, the time interval between the auditory cue and the (first) median nerve stimulation was either fixed at 1100 ms, or varied randomly (uniform distribution) between 100 and 2100 ms. Each subject (except for sub-24) completed two days of testing. Whether a session began with a constant-interval block or variable-interval block was counterbalanced across subjects.
+Montage:
+Adapted from/extended beyond Chander, B. S., Deliano, M., Azañón, E., Büntjen, L., & Stenner, M. P. (2022). Non-invasive recording of high-frequency signals from the human spinal cord. NeuroImage, 253, 119050, as follows. Electrodes were placed in three rings around the neck. "Sr" in the channel names stands for "spinal ring". There was a caudal, middle, and cranial ring of electrodes. The middle ring was connecting a point above the spinous process of the sixth cervical vertebra (SrC6), and a point above the thyroid cartilage ("SrF"). Between these two electrodes, the remaining six electrodes for the middle ring were evenly spaced around the neck. "L" in channel names means left, "R" means right, "B" means "back", "F" means front, and "M" means middle. For the caudal and cranial rings, electrodes were placed approximately 2 cm below ("_b") and 2 cm above ("_a") the corresponding electrodes of the middle ring, respectively.
+Events:
+There are three events of interest. "S1" is a keypress of the experimenter, to advance the task upon breaks. "S1" can therefore be used to identify the start of each new block. "S70" corresponds to the auditory cue. "S130" corresponds to median nerve stimulation. "S99" is a "placeholder" that corresponds to no stimulus at all. The placeholder was used to enable "double stimuli", i.e., a rapid succession of two median nerve stimulations with an ISI of 80 ms. Most trials follow a sequence of "S70" - "S130" - "S99". Deviant trials have "S70" - "S130" - "S130".
 
 Highlights
 ----------
@@ -70,12 +96,12 @@ Highlights
       - Sampling rate (Hz): 5000.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 1
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: Healthy
+      - Modality: Multisensory
+      - Type: Attention
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

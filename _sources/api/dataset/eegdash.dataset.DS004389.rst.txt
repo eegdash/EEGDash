@@ -5,7 +5,9 @@
 eegdash.dataset.DS004389
 ========================
 
-participants.tsv (OpenNeuro ``ds004389``). Access recordings and metadata through EEGDash.
+Somatosensory evoked potentials in the human spinal cord to mixed and sensory nerve stimulation (OpenNeuro ``ds004389``). Access recordings and metadata through EEGDash.
+
+**Citation:** Birgit Nierula, Tilman Stephani, Merve Kaptan, André Moruaux, Burkhard Maess, Gabriel Curio, Vadim V. Nikulin, Falk Eippert (2024). *Somatosensory evoked potentials in the human spinal cord to mixed and sensory nerve stimulation*. `10.18112/openneuro.ds004389.v1.0.0 <https://doi.org/10.18112/openneuro.ds004389.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ participants.tsv (OpenNeuro ``ds004389``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 2.0`
 
 Dataset Information
 -------------------
@@ -25,9 +27,9 @@ Dataset Information
    * - Dataset ID
      - ``DS004389``
    * - Title
-     - participants.tsv
+     - Somatosensory evoked potentials in the human spinal cord to mixed and sensory nerve stimulation
    * - Year
-     - 2023
+     - 2024
    * - Authors
      - Birgit Nierula, Tilman Stephani, Merve Kaptan, André Moruaux, Burkhard Maess, Gabriel Curio, Vadim V. Nikulin, Falk Eippert
    * - License
@@ -44,11 +46,46 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds004389,
-        title = {participants.tsv},
+        title = {Somatosensory evoked potentials in the human spinal cord to mixed and sensory nerve stimulation},
         author = {Birgit Nierula and Tilman Stephani and Merve Kaptan and André Moruaux and Burkhard Maess and Gabriel Curio and Vadim V. Nikulin and Falk Eippert},
         doi = {10.18112/openneuro.ds004389.v1.0.0},
         url = {https://doi.org/10.18112/openneuro.ds004389.v1.0.0},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS004389&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS004389%0A-%20%2A%2ATitle%3A%2A%2A%20Somatosensory%20evoked%20potentials%20in%20the%20human%20spinal%20cord%20to%20mixed%20and%20sensory%20nerve%20stimulation%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+
+**Description**
+
+This is a data set consisting of simultaneous electroencephalography (EEG), electrospinography (ESG), electroneurography (ENG), and electromyography (EMG) recordings from 26 participants. There were nine different recording conditions: i) resting state with eyes open, ii) mixed median nerve stimulation (arm nerve), iii) mixed tibial nerve stimulation (leg nerve), iv) sensory nerve stimulation of the index finger, v) sensory nerve stimulation of the middle finger, vi) simultaneous senory nerve stimulation of the index and middle finger, vii) sensory nerve stimulation to the first toe, viii) sensory nerve stimulation to the second toe, ix) simultaneous senory nerve stimulation to the first and second toe. For each participant, there is i) the simultaneous EEG-ESG-ENG-EMG-recording which also includes electrocardiographic and respiratory signals, ii) ESG electrode positions. For a detailed description please see the following article: XXX. This study was pre-registered on OSF: https://osf.io/mjdha.
+
+**Citing this dataset**
+
+Should you make use of this data set in any publication, please cite the following article: XXXX
+
+**License**
+
+This data set is made available under the Creative Commons CC0 license. For more information, see https://creativecommons.org/share-your-work/public-domain/cc0/
+
+**Data set**
+
+This data set is organized according to the Brain Imaging Data Structure specification. For more information on this data specification, see https://bids-specification.readthedocs.io/en/stable/
+Each participant's data are in one subdirectory (e.g., 'sub-001'), which contains the raw data in eeglab format.
+Please note that the EEG channel Fz was referenced to i) the EEG reference (right mastoid, RM, channel name: Fz) and ii) the ESG reference (6th thoracic vertebra, TH6, channel name: Fz-TH6).
+Should you have any questions about this data set, please contact nierula@cbs.mpg.de or eippert@cbs.mpg.de.
 
 Highlights
 ----------
@@ -66,21 +103,21 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 42
+      - Channels: 42 (260), 90 (260)
       - Sampling rate (Hz): 10000.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 4
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: Healthy
+      - Modality: Tactile
+      - Type: Perception
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 376.5 GB
+      - Size on disk: 32.1 MB
       - File count: 260
       - Format: BIDS
 

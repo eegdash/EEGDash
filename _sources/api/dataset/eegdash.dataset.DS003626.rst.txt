@@ -5,7 +5,9 @@
 eegdash.dataset.DS003626
 ========================
 
-manifest.json (OpenNeuro ``ds003626``). Access recordings and metadata through EEGDash.
+Inner Speech (OpenNeuro ``ds003626``). Access recordings and metadata through EEGDash.
+
+**Citation:** Nicolas Nieto, Victoria Peterson, Hugo Rufiner, Juan Kamienkowski, Ruben Spies (2021). *Inner Speech*. `10.18112/openneuro.ds003626.v2.0.0 <https://doi.org/10.18112/openneuro.ds003626.v2.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ manifest.json (OpenNeuro ``ds003626``). Access recordings and metadata through E
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 6.0`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS003626``
    * - Title
-     - manifest.json
+     - Inner Speech
    * - Year
      - 2021
    * - Authors
@@ -44,11 +46,38 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds003626,
-        title = {manifest.json},
+        title = {Inner Speech},
         author = {Nicolas Nieto and Victoria Peterson and Hugo Rufiner and Juan Kamienkowski and Ruben Spies},
         doi = {10.18112/openneuro.ds003626.v2.0.0},
         url = {https://doi.org/10.18112/openneuro.ds003626.v2.0.0},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS003626&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS003626%0A-%20%2A%2ATitle%3A%2A%2A%20Inner%20Speech%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+Inner Speech Dataset.
+Author: Nicolas Nieto
+Code available at https://github.com/N-Nieto/Inner_Speech_Dataset
+Prepreint available at https://www.biorxiv.org/content/10.1101/2021.04.19.440473v1
+Abstract:
+Surface electroencephalography is a standard and noninvasive way to measure electrical brain activity. Recent advances in artificial intelligence led to significant improvements in the automatic detection of brain patterns, allowing increasingly faster, more reliable and accessible Brain-Computer Interfaces.
+Different paradigms have been used to enable the human-machine interaction and the last few years have broad a mark increase in the interest for interpreting and characterizing the "inner voice" phenomenon. This paradigm, called inner speech, raises the possibility of executing an order just by thinking about it, allowing a “natural” way of controlling external devices. Unfortunately, the lack of publicly available electroencephalography datasets, restricts the development of new techniques for inner speech recognition. A ten-subjects dataset acquired under this and two others related paradigms, obtain with an acquisition systems of 136 channels, is presented. The main purpose of this work is to provide the scientific community with an open-access multiclass electroencephalography database of inner speech commands that could be used for better understanding of the related brain mechanisms.
+Conditions = Inner Speech, Pronounced Speech, Visualized Condition
+Classes = "Arriba/Up", "Abajo/Down", "Derecha/Right", "Izquierda/Left"
+Total Trials = 5640
+Please contact us at this e-mail address if you have any doubts: nnieto@sinc.unl.edu.ar
 
 Highlights
 ----------
@@ -70,17 +99,17 @@ Highlights
       - Sampling rate (Hz): —
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 1
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: —
+      - Modality: —
+      - Type: —
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 18.3 GB
+      - Size on disk: 109.0 KB
       - File count: 30
       - Format: BIDS
 

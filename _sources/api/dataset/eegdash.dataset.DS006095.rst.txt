@@ -5,7 +5,9 @@
 eegdash.dataset.DS006095
 ========================
 
-participants.tsv (OpenNeuro ``ds006095``). Access recordings and metadata through EEGDash.
+Mind in Motion Older Adults Walking Over Uneven Terrain (OpenNeuro ``ds006095``). Access recordings and metadata through EEGDash.
+
+**Citation:** Chang Liu, Erika M. Pliner, Jacob S. Salminen, Ryan Downey, Jungyun Hwang, Akraprava Roy, Ryland Swearinger, Natalie Richer, Chris J. Hass, David J. Clark, Todd M. Manini, Yenisel Cruz-Almeida, Rachael D. Seidler, Daniel P. Ferris (2025). *Mind in Motion Older Adults Walking Over Uneven Terrain*. `10.18112/openneuro.ds006095.v1.0.0 <https://doi.org/10.18112/openneuro.ds006095.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ participants.tsv (OpenNeuro ``ds006095``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: —`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS006095``
    * - Title
-     - participants.tsv
+     - Mind in Motion Older Adults Walking Over Uneven Terrain
    * - Year
      - 2025
    * - Authors
@@ -44,11 +46,28 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds006095,
-        title = {participants.tsv},
+        title = {Mind in Motion Older Adults Walking Over Uneven Terrain},
         author = {Chang Liu and Erika M. Pliner and Jacob S. Salminen and Ryan Downey and Jungyun Hwang and Akraprava Roy and Ryland Swearinger and Natalie Richer and Chris J. Hass and David J. Clark and Todd M. Manini and Yenisel Cruz-Almeida and Rachael D. Seidler and Daniel P. Ferris},
         doi = {10.18112/openneuro.ds006095.v1.0.0},
         url = {https://doi.org/10.18112/openneuro.ds006095.v1.0.0},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS006095&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS006095%0A-%20%2A%2ATitle%3A%2A%2A%20Mind%20in%20Motion%20Older%20Adults%20Walking%20Over%20Uneven%20Terrain%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+Our dataset contains high-density, dual-layer electroencephalography (EEG), neck electromyography (EMG), inertial measurement unit (IMU) acceleration, ground reaction force from all participants walking over uneven terrain and at different speeds. Participants completed two trials for each condition for three minutes and a seated rest trial for three minutes. Please refer to our publication for more detail. Digitized electrode locations (txt) are included in each subject folder.
 
 Highlights
 ----------
@@ -66,16 +85,16 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 310 (230), 284 (2106), 336 (28)
+      - Channels: 284 (2106), 310 (230), 336 (28)
       - Sampling rate (Hz): 500.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 9
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: Healthy
+      - Modality: Motor
+      - Type: Motor
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

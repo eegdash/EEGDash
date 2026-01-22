@@ -7,13 +7,15 @@ eegdash.dataset.DS004381
 
 Intraoperative EEG dataset during medianus-tibialis stimulation with 8 different rates (OpenNeuro ``ds004381``). Access recordings and metadata through EEGDash.
 
+**Citation:** Giorgio Selmin, Vasileios Dimakopoulos, Niklaus Krayenbühl, Luca Regli, Johannes Sarnthein (2022). *Intraoperative EEG dataset during medianus-tibialis stimulation with 8 different rates*. `10.18112/openneuro.ds004381.v1.0.2 <https://doi.org/10.18112/openneuro.ds004381.v1.0.2>`__
+
 .. rst-class:: sd-badges
 
 :bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 18` :bdg-secondary:`Recordings: 437`
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 2.0`
 
 Dataset Information
 -------------------
@@ -50,6 +52,82 @@ Dataset Information
         url = {https://doi.org/10.18112/openneuro.ds004381.v1.0.2},
       }
 
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS004381&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS004381%0A-%20%2A%2ATitle%3A%2A%2A%20Intraoperative%20EEG%20dataset%20during%20medianus-tibialis%20stimulation%20with%208%20different%20rates%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+
+**Intraoperative EEG dataset during medianus-tibialis stimulation with 8 different rates**
+
+This dataset was obtained from the publication [1] wherein we varyied the stimulus repetition rate and recorded medianus and tibial nerve SEP.
+We randomly sampled a number of sweeps corresponding to recording durations up to 20 s and calculated the signal-to-noise ratio (SNR).
+There are 14 adults subjects and 4 children subjects with continuous EEG data split in sessions (tibial left/right, medianus left/right) and runs (1 run for each stimulation rate).
+We also provide processed data (derivatives) for all the sessions.
+In total there are 34 medianus SEP and 32 tibial SEP sessions.
+
+**Repository structure**
+
+.. dropdown:: View full README
+   :class-container: sd-shadow-sm
+
+   
+   **Intraoperative EEG dataset during medianus-tibialis stimulation with 8 different rates**
+   
+   This dataset was obtained from the publication [1] wherein we varyied the stimulus repetition rate and recorded medianus and tibial nerve SEP.
+   We randomly sampled a number of sweeps corresponding to recording durations up to 20 s and calculated the signal-to-noise ratio (SNR).
+   There are 14 adults subjects and 4 children subjects with continuous EEG data split in sessions (tibial left/right, medianus left/right) and runs (1 run for each stimulation rate).
+   We also provide processed data (derivatives) for all the sessions.
+   In total there are 34 medianus SEP and 32 tibial SEP sessions.
+   
+   **Repository structure**
+   
+   
+   **Main directory (SEP rate/)**
+   
+   Contains metadata files in the BIDS standard about the participants and the study. Folders are explained below.
+   
+   **Subfolders**
+   
+   * SEP rate/sub-**/
+   Contains folders for each subject, named sub-<subject number> and session information.
+   * SEP rate/sub-**/ses-01/eeg
+   Contains the raw eeg data in .edf format for each subject.
+   Each *eeg.edf file contains EEG data from one stimulation rate (see scans.tsv column stimRate).
+   Details about the channels are given in the corresponding .tsv file.
+   * SEP rate/derivatives
+   Contains folders for each subject,named sub-<subject number> and session information that include processed data
+   * SEP rate/derivatives/sub-**/ses-01/eeg/
+   Contains processed data for each subject.
+   
+   **Note from the paper**
+   
+   "The offline data processing used the continuous EEG that was recorded in parallel to the SEP recordings.
+   Data analysis was performed with custom scripts in Matlab (www.mathworks.com). To detect the SEP stimulation artefact,
+   we first filtered the EEG (high pass cutoff = 200 Hz) and performed local peak detection (minimum peak prominence between peaks = 30 ms,
+   minimum peak width = 4 ms, samples = 0.2 ms). We used the times of the detected stimulus artifact as triggers to define sweeps with
+   post-stimulus recording sweep length 50 ms for medianus SEP and 100 ms for tibial SEP. We resampled the data to sampling rate 1200 Hz before
+   further processing. We classified sweeps with amplitude > 10 ÂµV as artefact-ridden and excluded them from further analysis."
+   
+   **BIDS Conversion**
+   
+   bids-starter-kid and custom Matlab scripts were used to convert the dataset into BIDS format.
+   
+   **References**
+   
+   [1] Dimakopoulos V, Selmin G, Regli L, Sarnthein J, Optimization of signal-to-noise ratio in short-duration SEP recordings by variation of stimulation rate, Clinical Neurophysiology, 2023, ISSN 1388-2457, https://doi.org/10.1016/j.clinph.2023.03.008.
+
+
 Highlights
 ----------
 
@@ -66,16 +144,16 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 8 (94), 4 (666), 5 (52), 10 (10), 7 (52)
+      - Channels: 4 (666), 8 (94), 7 (52), 5 (52), 10 (10)
       - Sampling rate (Hz): 20000.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 1
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: —
+      - Modality: —
+      - Type: —
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

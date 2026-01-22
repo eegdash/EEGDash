@@ -5,7 +5,9 @@
 eegdash.dataset.DS003702
 ========================
 
-participants.tsv (OpenNeuro ``ds003702``). Access recordings and metadata through EEGDash.
+Social Memory cuing (OpenNeuro ``ds003702``). Access recordings and metadata through EEGDash.
+
+**Citation:** Samantha Gregory, Hongfang Wang, Klaus Kessler (2021). *Social Memory cuing*. `10.18112/openneuro.ds003702.v1.0.1 <https://doi.org/10.18112/openneuro.ds003702.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ participants.tsv (OpenNeuro ``ds003702``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 3.0`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS003702``
    * - Title
-     - participants.tsv
+     - Social Memory cuing
    * - Year
      - 2021
    * - Authors
@@ -44,11 +46,123 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds003702,
-        title = {participants.tsv},
+        title = {Social Memory cuing},
         author = {Samantha Gregory and Hongfang Wang and Klaus Kessler},
         doi = {10.18112/openneuro.ds003702.v1.0.1},
         url = {https://doi.org/10.18112/openneuro.ds003702.v1.0.1},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS003702&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS003702%0A-%20%2A%2ATitle%3A%2A%2A%20Social%20Memory%20cuing%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+EEG Raw and processed data for a memory task presented in virtual reality,
+The full task is on OSF: https://osf.io/s9xmu/files
+Derviatives:
+Behavioral data from the task in derivatives
+Processed data is in the derivatives
+Code
+Event codes are listed in the code file
+Trial function, preprocessing, data cleaning and analysis are also in the code file.
+Task:
+Wearing a head mounted display to display the task in virtual reality participants completed a visual working memory task
+
+.. dropdown:: View full README
+   :class-container: sd-shadow-sm
+
+   EEG Raw and processed data for a memory task presented in virtual reality,
+   The full task is on OSF: https://osf.io/s9xmu/files
+   Derviatives:
+   Behavioral data from the task in derivatives
+   Processed data is in the derivatives
+   Code
+   Event codes are listed in the code file
+   Trial function, preprocessing, data cleaning and analysis are also in the code file.
+   Task:
+   Wearing a head mounted display to display the task in virtual reality participants completed a visual working memory task
+   In the task they had to remember the status of and details about presented objects.
+   A person or a stick cued the items such that it could look left or right and items could appear on the left or right. Sometimes the cue was valid
+   (i.e. pointed where objects appeared) and sometimes it was invalid (pointed away from where objects appeared)
+   The objects were always a bowl, a cup, a plate and a teapot. Each could have a different status that needed to be remembered
+   praticipants were probed on memory for item location and then item status
+   Preprint  to be added
+   Event codes within the data set are as follows. Trial function is included in code folder.
+   For the avatar cue
+   s3021 Character shown - i.e. moment the avatar appears
+   s3022 Objects shown - i.e. moment that the memory targets appear
+   s3023 Maintenance interal - i.e. moment the memory objects leave the screen and the blank maintenance interval occurs
+   s3024 Probe object shown - i.e. moment that participantis presented with location probe
+   s3025 Resp 1 made - i.e. moment that the participants have responded to the location probe
+   s3026 Q2 shown - i.e. moment that participants are asked a question about the status of the objects
+   s3027 Resp 2 made - i.e. moment that the participants have responded to the status probe
+   For the stick cue
+   s3041 Stick shown - i.e. moment the stick appears
+   s3042 Objects shown - i.e. moment that the memory targets appear
+   s3043 Maintenance interal - i.e. moment the memory objects leave the screen and the blank maintenance interval occurs
+   s3044 Probe object shown - i.e. moment that participantis presented with location probe
+   s3045 Resp 1 made - i.e. moment that the participants have responded to the location probe
+   s3046 Q2 shown - i.e. moment that participants are asked a question about the status of the objects
+   s3047 Resp 2 made - i.e. moment that the participants have responded to the status probe
+   Trial info EEG processed data
+   1: Main condition (MainCon)
+   	1 = Stick Congruent
+   	2 = Stick Incongruenct
+   	3 = Avatar Congruent
+   	4 = Avatar Incongruent
+   2: Cue condition left or right (MConCueLR)
+   	1 = Stick Congruent Cue shifts left
+   	2 = Stick Congruent Cue shifts right
+   	3 = Stick Incongruent Cue shifts left
+   	4 = Stick Incongruent Cue shifts right
+   	5 = Avatar Congruent Cue shifts left
+   	6 = Avatar Congruent Cue shifts right
+   	7 = Avatar Incongruent Cue shifts left
+   	8 = Avatar Incongruent Cue shifts right
+   3: Condition from experiment build (con)
+   	1 = Congruent, cueshift L, items Left, same location
+   	2 = Congruent, cueshift L, items Left, dif location
+   	3 = Congruent, cueshift R, items Right, same location
+   	4 = Congruent, cueshift R, items Right, dif location
+   	5 = Incongruent, cueshift L, items Right, same location
+   	6 = Incongruent, cueshift L, items Right, dif location
+   	7 = Incongruent, cueshift R, items Left, same location
+   	8 = Incongruent, cueshift R, items Left, dif location
+   4: Validity
+   	1 = valid (congruent)
+   	2= invalid (incongruent)
+   5: Location
+   	1 = Same (i.e. probe at same location as when initially presented)
+   	2 = Different (i.e. probe at different location as when initially presented)
+   6 Cue
+   	1 = Stick cue
+   	2 = Avatar cue
+   7 Left or Right cue (LorR) specific to  the cue shift
+   	1 = Left Stick
+   	2 = Right Stick
+   	3 = Left Avatar
+   	4 = Right Avatar
+   8 Start: Sample time for start of the trial
+   9 Cue: Sample time for cue onset
+   10 Targets: Sample time for target onset
+   11 Maintenance: Sample time for start of mainanance interval
+   12 Location probe: Sample time for location probe being shown
+   13 Location response time: Sample time for response to location probe being made
+   14 Status question: Sample time for status question being asked
+   15 Status response time: Sample time for response to status question being made
+   16 Accuracy for the location question
+   17 Accuracy for the status question
+
 
 Highlights
 ----------
@@ -66,16 +180,16 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 61
+      - Channels: 59 (47), 61 (47)
       - Sampling rate (Hz): 500.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 1
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: —
+      - Modality: —
+      - Type: —
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

@@ -5,7 +5,9 @@
 eegdash.dataset.DS007020
 ========================
 
-participants.tsv (OpenNeuro ``ds007020``). Access recordings and metadata through EEGDash.
+EEG Mortality Dataset in Parkinson's Disease (OpenNeuro ``ds007020``). Access recordings and metadata through EEGDash.
+
+**Citation:** Simin Jamshidi, Arturo Espinoza, Soura Dasgupta, Nandakumar Narayanan (2025). *EEG Mortality Dataset in Parkinson's Disease*. `10.18112/openneuro.ds007020.v1.0.0 <https://doi.org/10.18112/openneuro.ds007020.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ participants.tsv (OpenNeuro ``ds007020``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: —`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS007020``
    * - Title
-     - participants.tsv
+     - EEG Mortality Dataset in Parkinson's Disease
    * - Year
      - 2025
    * - Authors
@@ -44,11 +46,73 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds007020,
-        title = {participants.tsv},
+        title = {EEG Mortality Dataset in Parkinson's Disease},
         author = {Simin Jamshidi and Arturo Espinoza and Soura Dasgupta and Nandakumar Narayanan},
         doi = {10.18112/openneuro.ds007020.v1.0.0},
         url = {https://doi.org/10.18112/openneuro.ds007020.v1.0.0},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS007020&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS007020%0A-%20%2A%2ATitle%3A%2A%2A%20EEG%20Mortality%20Dataset%20in%20Parkinson%27s%20Disease%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+This dataset contains de-identified resting-state EEG recordings from individuals with Parkinson’s disease (PD) and age-matched healthy control subjects. All EEG data were recorded using standard clinical EEG systems at Neurology Clinic.
+Dataset Purpose:
+This dataset was originally used to evaluate whether resting-state EEG can help distinguish subjects who were later deceased from those who remained living (mortality classification). Only de-identified EEG data and mortality labels are included.
+Participant Information:
+- Participants are labeled as either "living" or "deceased" in participants.tsv
+- No other demographic or clinical information (age, cognition, UPDRS, disease duration, etc.) is included per data-sharing guidelines.
+- All participant IDs are anonymized following BIDS convention (e.g., sub-PD1301).
+EEG Acquisition Details:
+- Recording type: Resting-state EEG (eyes open)
+- Device: Clinical BrainVision EEG system
+
+.. dropdown:: View full README
+   :class-container: sd-shadow-sm
+
+   This dataset contains de-identified resting-state EEG recordings from individuals with Parkinson’s disease (PD) and age-matched healthy control subjects. All EEG data were recorded using standard clinical EEG systems at Neurology Clinic.
+   Dataset Purpose:
+   This dataset was originally used to evaluate whether resting-state EEG can help distinguish subjects who were later deceased from those who remained living (mortality classification). Only de-identified EEG data and mortality labels are included.
+   Participant Information:
+   - Participants are labeled as either "living" or "deceased" in participants.tsv
+   - No other demographic or clinical information (age, cognition, UPDRS, disease duration, etc.) is included per data-sharing guidelines.
+   - All participant IDs are anonymized following BIDS convention (e.g., sub-PD1301).
+   EEG Acquisition Details:
+   - Recording type: Resting-state EEG (eyes open)
+   - Device: Clinical BrainVision EEG system
+   - File formats: .vhdr, .eeg, .vmrk
+   - Sampling rate: 500 Hz
+   - Montage: Standard 10–20 international system
+   - Recording condition: “task-rest” (no task)
+   Data Organization:
+   Data are structured following the BIDS (Brain Imaging Data Structure) EEG standard:
+       sub-<ID>/
+           ses-01/
+               eeg/
+                   sub-<ID>_ses-01_task-rest_eeg.vhdr
+                   sub-<ID>_ses-01_task-rest_eeg.eeg
+                   sub-<ID>_ses-01_task-rest_eeg.vmrk
+   Mortality Label Format:
+   - Living subjects: survival_status = "living"
+   - Deceased subjects: survival_status = "deceased"
+   Ethics & Privacy:
+   All subjects provided consent for EEG recording at the University of Iowa Hospitals and Clinics. The publicly shared version here is fully de-identified and contains no clinical or personal health information other than mortality classification.
+   Suggested Use:
+   This dataset can be used to explore EEG biomarkers of mortality risk, EEG signal characteristics in PD, or to build machine learning models for classification.
+   Questions or requests:
+   Please contact nandakumar-narayanan@uiowa.edu.
+
 
 Highlights
 ----------
@@ -66,16 +130,16 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 63
+      - Channels: 63 (170), 64 (18)
       - Sampling rate (Hz): 500.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 1
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: Parkinson's
+      - Modality: Resting State
+      - Type: Clinical/Intervention
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

@@ -5,7 +5,9 @@
 eegdash.dataset.DS003633
 ========================
 
-participants.tsv (OpenNeuro ``ds003633``). Access recordings and metadata through EEGDash.
+ForrestGump-MEG (OpenNeuro ``ds003633``). Access recordings and metadata through EEGDash.
+
+**Citation:** Xingyu Liu, Yuxuan Dai, Hailun Xie, Zonglei Zhen (2021). *ForrestGump-MEG*. `10.18112/openneuro.ds003633.v1.0.3 <https://doi.org/10.18112/openneuro.ds003633.v1.0.3>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ participants.tsv (OpenNeuro ``ds003633``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 1.0`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS003633``
    * - Title
-     - participants.tsv
+     - ForrestGump-MEG
    * - Year
      - 2021
    * - Authors
@@ -44,11 +46,96 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds003633,
-        title = {participants.tsv},
+        title = {ForrestGump-MEG},
         author = {Xingyu Liu and Yuxuan Dai and Hailun Xie and Zonglei Zhen},
         doi = {10.18112/openneuro.ds003633.v1.0.3},
         url = {https://doi.org/10.18112/openneuro.ds003633.v1.0.3},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS003633&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS003633%0A-%20%2A%2ATitle%3A%2A%2A%20ForrestGump-MEG%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+**ForrestGump-MEG: A audio-visual movie watching MEG dataset**
+For details please refer to our paper on https://www.biorxiv.org/content/10.1101/2021.06.04.446837v1.
+This dataset contains MEG data recorded from 11 subjects while watching the 2h long Chinese-dubbed audio-visual movie 'Forrest Gump'. The data were acquired with a 275-channel CTF MEG. Auxiliary data (T1w) as well as derivation data such as preprocessed data and MEG-MRI co-registration are also included.
+**Pre-process procedure description**
+The T1w images stored as NIFTI files were minimally-preprocessed using the anatomical preprocessing pipeline from fMRIPrep with default settings.
+MEG data were pre-processed using MNE following a three-step procedure: 1. bad channels were detected and removed. 2. a high-pass filter of 1 Hz was applied to remove possible slow drifts from the continuous MEG data. 3. artifacts removal was performed with ICA.
+**Stimulus material**
+The audio-visual stimulus materials were from the Chinese-dubbed 'Forrest Gump' DVD released in 2013 (ISBN: 978-7-7991-3934-0), which cannot be publicly released due to copyright restrictions. The stimulus materials are available upon reasonable request and on condition of a research-only data use agreement (correspondence with Xingyu Liu, liuxingyu987@foxmail.com).
+**Dataset content overview**
+the data were organized following the MEG-BIDS using MNE-BIDS toolbox.
+
+.. dropdown:: View full README
+   :class-container: sd-shadow-sm
+
+   **ForrestGump-MEG: A audio-visual movie watching MEG dataset**
+   For details please refer to our paper on https://www.biorxiv.org/content/10.1101/2021.06.04.446837v1.
+   This dataset contains MEG data recorded from 11 subjects while watching the 2h long Chinese-dubbed audio-visual movie 'Forrest Gump'. The data were acquired with a 275-channel CTF MEG. Auxiliary data (T1w) as well as derivation data such as preprocessed data and MEG-MRI co-registration are also included.
+   **Pre-process procedure description**
+   The T1w images stored as NIFTI files were minimally-preprocessed using the anatomical preprocessing pipeline from fMRIPrep with default settings.
+   MEG data were pre-processed using MNE following a three-step procedure: 1. bad channels were detected and removed. 2. a high-pass filter of 1 Hz was applied to remove possible slow drifts from the continuous MEG data. 3. artifacts removal was performed with ICA.
+   **Stimulus material**
+   The audio-visual stimulus materials were from the Chinese-dubbed 'Forrest Gump' DVD released in 2013 (ISBN: 978-7-7991-3934-0), which cannot be publicly released due to copyright restrictions. The stimulus materials are available upon reasonable request and on condition of a research-only data use agreement (correspondence with Xingyu Liu, liuxingyu987@foxmail.com).
+   **Dataset content overview**
+   the data were organized following the MEG-BIDS using MNE-BIDS toolbox.
+   *the pre-processed MEG data*
+   The preprocessed MEG recordings including the preprocessed MEG data, the event files, the ICA decomposition and label files and the MEG-MRI coordinate transformation file are hosted here.
+   	|---./derivatives/preproc_meg-mne_mri-fmriprep/sub-xx/ses-movie/meg/
+   		|---sub-xx_ses-movie_coordsystem.json
+   		|---sub-xx_ses-movie_task-movie_run-xx_channels.tsv
+   		|---sub-xx_ses-movie_task-movie_run-xx_decomposition.tsv
+   		|---sub-xx_ses-movie_task-movie_run-xx_events.tsv
+   		|---sub-xx_ses-movie_task-movie_run-xx_ica.fif.gz
+   		|---sub-xx_ses-movie_task-movie_run-xx_meg.fif
+   		|---sub-xx_ses-movie_task-movie_run-xx_meg.json
+   		|---...
+   		|---sub-xx_ses-movie_task-movie_trans.fif
+   *the pre-processed MRI data*
+   The preprocessed MRI volume, reconstructed surface, and other associations including transformation files are hosted here
+   	|---./derivatives/preproc_meg-mne_mri-fmriprep/sub-xx/ses-movie/anat/
+   		|---sub-xx_ses-movie_desc-preproc_T1w.nii.gz
+   		|---sub-xx_ses-movie_hemi-L_inflated.surf.gii
+   		|---sub-xx_ses-movie_hemi-L_midthickness.surf.gii
+   		|---sub-xx_ses-movie_hemi-L_pial.surf.gii
+   		|---sub-xx_ses-movie_hemi-L_smoothwm.surf.gii
+   		|---sub-xx_ses-movie_hemi-R_inflated.surf.gii
+   		|---sub-xx_ses-movie_hemi-R_midthickness.surf.gii
+   		|---sub-xx_ses-movie_hemi-R_pial.surf.gii
+   		|---sub-xx_ses-movie_hemi-R_smoothwm.surf.gii
+   		|---sub-xx_ses-movie_space-MNI152NLin2009cAsym_desc-preproc_T1w.nii.gz
+   		|---sub-xx_ses-movie_space-MNI152NLin6Asym_desc-preproc_T1w.nii.gz
+   		|---...
+   the FreeSurfer surface data, the high-resolution head surface and the MRI-fiducials are provided here
+   	|---./derivatives/preproc_meg-mne_mri-fmriprep/sourcedata/
+   		|---freesurfer
+   		    |---sub-xx
+   		    |---...
+   *the raw data*
+   	|---./sub-xx/ses-movie/
+   		|---meg/
+   		|	|---sub-xx_ses-movie_coordsystem.json
+   		|	|---sub-xx_ses-movie_task-movie_run-xx_channels.tsv
+   		|	|---sub-xx_ses-movie_task-movie_run-xx_events.tsv
+   		|	|---sub-xx_ses-movie_task-movie_run-xx_meg.ds
+   		|	|---sub-xx_ses-movie_task-movie_run-xx_meg.json
+   		|	|---...
+   		|---anat/
+   			|---sub-xx_ses-movie_T1w.json
+   			|---sub-xx_ses-movie_T1w.nii.gz
+
 
 Highlights
 ----------
@@ -66,16 +153,16 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 272
-      - Sampling rate (Hz): 1200.0 (14), 600.0 (178)
+      - Channels: 272 (96), 409 (89), 378 (7)
+      - Sampling rate (Hz): 600.0 (178), 1200.0 (14)
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 2
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: Healthy
+      - Modality: Multisensory
+      - Type: Perception
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

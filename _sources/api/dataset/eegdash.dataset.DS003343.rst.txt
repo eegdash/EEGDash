@@ -5,7 +5,9 @@
 eegdash.dataset.DS003343
 ========================
 
-participants.tsv (OpenNeuro ``ds003343``). Access recordings and metadata through EEGDash.
+Disentangling the percepts of illusory movement and sensory stimulation during tendon vibration in the EEG (OpenNeuro ``ds003343``). Access recordings and metadata through EEGDash.
+
+**Citation:** Christoph Schneider, Renaud Marquis, Jane Johr, Marina Da Silva Lopes, Philippe Ryvlin, Andrea Serino, Marzia De Lucia, Karin Diserens (2021). *Disentangling the percepts of illusory movement and sensory stimulation during tendon vibration in the EEG*. `10.18112/openneuro.ds003343.v2.0.1 <https://doi.org/10.18112/openneuro.ds003343.v2.0.1>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ participants.tsv (OpenNeuro ``ds003343``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 1.0`
 
 Dataset Information
 -------------------
@@ -25,9 +27,9 @@ Dataset Information
    * - Dataset ID
      - ``DS003343``
    * - Title
-     - participants.tsv
+     - Disentangling the percepts of illusory movement and sensory stimulation during tendon vibration in the EEG
    * - Year
-     - 2020
+     - 2021
    * - Authors
      - Christoph Schneider, Renaud Marquis, Jane Johr, Marina Da Silva Lopes, Philippe Ryvlin, Andrea Serino, Marzia De Lucia, Karin Diserens
    * - License
@@ -44,11 +46,38 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds003343,
-        title = {participants.tsv},
+        title = {Disentangling the percepts of illusory movement and sensory stimulation during tendon vibration in the EEG},
         author = {Christoph Schneider and Renaud Marquis and Jane Johr and Marina Da Silva Lopes and Philippe Ryvlin and Andrea Serino and Marzia De Lucia and Karin Diserens},
         doi = {10.18112/openneuro.ds003343.v2.0.1},
         url = {https://doi.org/10.18112/openneuro.ds003343.v2.0.1},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS003343&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS003343%0A-%20%2A%2ATitle%3A%2A%2A%20Disentangling%20the%20percepts%20of%20illusory%20movement%20and%20sensory%20stimulation%20during%20tendon%20vibration%20in%20the%20EEG%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+This dataset contains the EEG data used for the study: "Disentangling the percepts of illusory movement and sensory stimulation during tendon vibration in the EEG" (Schneider, C., Marquis, R., Jöhr, J., Da Lopes Silva, M., Ryvlin, P., Serino, A., De Lucia, M., Diserens, K. Unpublished [fill according to following pattern: Journal (Year). https://doi.org/....])
+Participants:
+Twenty healthy participants (twelve female, eight male), age 24.6 ± 3.2 years, all right-handed. All subjects participated voluntarily and consented in writing to the experiment. The study was covered by the ethical protocol No. 142/09 from the Commission cantonale d'éthique de la recherche sur l'être humain (CER -VD) and in agreement with the Declaration of Helsinki.
+Experimental setup:
+The subjects sat comfortably in a chair facing towards their right side so to not see the stimulated left arm, which could have hampered the illusion of movement created during the tendon vibration. While their right arm rested comfortably in the lap, the left arm was supported by a movable forearm rest which allowed two degrees of freedom in the horizontal plane. The reason for this was that proprioceptive feedback of the arm touching an immobile object can prevent the motor illusion from forming.
+Subjects wore an EEG cap with built-in wireless amplifier (g.tec Nautilus, g.tec medical engineering, Graz, Austria) with 16 electrodes covering the sensorimotor cortex in the international 10-10 system at positions (Fz, FC3, FC2, FCz, FC2, FC4, C3, C1, Cz, C2, C4, CP3, CP1, CPz, CP2, CP4). The signals were recorded at 500Hz with a hardware-implemented bandpass filter between 0.1 and 100 Hz and sent to a computer in the same room. The reference electrode was placed on the right earlobe.
+Tendon vibration was achieved with electromechanical wireless vibrators set into a soft, elastic brace on the left elbow joint (Vibramoov, Techno Concept, Manosque, France). The left arm was chosen since it was demonstrated that illusions start faster and are more vivid in the non-dominant extremity. One vibrator was sitting against the distal biceps tendon and the other against the distal triceps tendon on the same arm. Time information about the beginning of each stimulation was sent via a cable link to the computer and stored with the EEG data.
+Study protocol:
+EEG was recorded continuously while delivering stimulation sequences consisting of two different vibration types. The first elicited an illusion of elbow extension and was produced by vibrating the distal biceps tendon at 90Hz and the distal triceps tendon at 50Hz. The second produced only a vibration sensation without any movement illusion and consisted of stimulating both tendons at 70Hz. So, the average frequency of stimulation delivered to the agonist-antagonist pair was the same between conditions, but one condition was designed to induce a clear illusion and the other no illusion at all (control).
+Each stimulation lasted three seconds and consisted of one second of linear frequency ramp-up, one second of a stable frequency interval and one second of linear frequency ramp-down. The linear ramps started and ended 10 Hz below the target frequency for each stimulation type. The amplitude of the vibration was 2-3 mm. These parameters were based on Romaiguère et al. (2003) and the perception of illusory movement across all subjects was ensured in a pre-screening procedure. This setting was kept constant throughout the whole recording session.
+Each subject underwent three blocks of 72 vibrations (36 illusion, 36 control), arranged randomly and different for each block. The same stimulus sequences were employed for each participant. Inter stimulus intervals varied between one and three seconds and were randomized within and between blocks in order to minimize stimulus onset anticipation.
 
 Highlights
 ----------
@@ -66,21 +95,21 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 16
+      - Channels: 16 (59), 20 (59)
       - Sampling rate (Hz): 500.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 1
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: —
+      - Modality: —
+      - Type: —
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 663.4 MB
+      - Size on disk: 564.7 KB
       - File count: 59
       - Format: BIDS
 

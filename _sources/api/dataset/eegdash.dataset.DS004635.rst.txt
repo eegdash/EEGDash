@@ -5,7 +5,9 @@
 eegdash.dataset.DS004635
 ========================
 
-participants.tsv (OpenNeuro ``ds004635``). Access recordings and metadata through EEGDash.
+Gaffrey Lab Infant Microstates Reliability (OpenNeuro ``ds004635``). Access recordings and metadata through EEGDash.
+
+**Citation:** Armen Bagdasarov, Michael S. Gaffrey (2023). *Gaffrey Lab Infant Microstates Reliability*. `10.18112/openneuro.ds004635.v3.1.0 <https://doi.org/10.18112/openneuro.ds004635.v3.1.0>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ participants.tsv (OpenNeuro ``ds004635``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 2.0`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS004635``
    * - Title
-     - participants.tsv
+     - Gaffrey Lab Infant Microstates Reliability
    * - Year
      - 2023
    * - Authors
@@ -44,11 +46,28 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds004635,
-        title = {participants.tsv},
+        title = {Gaffrey Lab Infant Microstates Reliability},
         author = {Armen Bagdasarov and Michael S. Gaffrey},
         doi = {10.18112/openneuro.ds004635.v3.1.0},
         url = {https://doi.org/10.18112/openneuro.ds004635.v3.1.0},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS004635&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS004635%0A-%20%2A%2ATitle%3A%2A%2A%20Gaffrey%20Lab%20Infant%20Microstates%20Reliability%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+Participants were 48, 5-10-month-old infants (27 male). All research was approved by the Duke University Health System Institutional Review Board and carried out in accordance with the Declaration of Helsinki. Caregivers provided informed consent, and compensation was provided for their participation. Infants sat on their caregiver’s lap and watched up to 15 minutes of relaxing videos with sound (i.e., 10, 90-second videos separated by breaks during which caregivers could play with their infant). Before each video started, an attention grabber (i.e., three-second video of a noisy rattle) directed the infant’s attention to the screen. Videos were presented with E-Prime software (Psychological Software Tools, Pittsburgh, PA). Caregivers were instructed to silently sit still during videos. If infants shifted their attention away from the screen, caregivers were permitted to re-direct their attention only by pointing to the screen. EEG was recorded at 1000 Hertz (Hz) and referenced to the vertex (channel Cz) using a 128-channel HydroCel Geodesic Sensor Net (Electrical Geodesics, Eugene, OR). Impedances were maintained below 50 kilohms throughout the EEG session. For more information, visit: https://github.com/gaffreylab/EEG-Microstate-Analysis-Tutorial/wiki
 
 Highlights
 ----------
@@ -70,12 +89,12 @@ Highlights
       - Sampling rate (Hz): 1000.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 1
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: —
+      - Modality: —
+      - Type: —
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

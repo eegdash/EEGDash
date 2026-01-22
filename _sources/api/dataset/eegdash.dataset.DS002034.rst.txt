@@ -5,7 +5,9 @@
 eegdash.dataset.DS002034
 ========================
 
-participants.tsv (OpenNeuro ``ds002034``). Access recordings and metadata through EEGDash.
+Real-time EEG feedback on alpha power lateralization leads to behavioral improvements in a covert attention task (OpenNeuro ``ds002034``). Access recordings and metadata through EEGDash.
+
+**Citation:** Christoph Schneider, Michael Pereira, Luca Tonin, Jose del R. Millan (2019). *Real-time EEG feedback on alpha power lateralization leads to behavioral improvements in a covert attention task*. `10.18112/openneuro.ds002034.v1.0.3 <https://doi.org/10.18112/openneuro.ds002034.v1.0.3>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ participants.tsv (OpenNeuro ``ds002034``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 7.0`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS002034``
    * - Title
-     - participants.tsv
+     - Real-time EEG feedback on alpha power lateralization leads to behavioral improvements in a covert attention task
    * - Year
      - 2019
    * - Authors
@@ -44,11 +46,35 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds002034,
-        title = {participants.tsv},
+        title = {Real-time EEG feedback on alpha power lateralization leads to behavioral improvements in a covert attention task},
         author = {Christoph Schneider and Michael Pereira and Luca Tonin and Jose del R. Millan},
         doi = {10.18112/openneuro.ds002034.v1.0.3},
         url = {https://doi.org/10.18112/openneuro.ds002034.v1.0.3},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS002034&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS002034%0A-%20%2A%2ATitle%3A%2A%2A%20Real-time%20EEG%20feedback%20on%20alpha%20power%20lateralization%20leads%20to%20behavioral%20improvements%20in%20a%20covert%20attention%20task%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+This dataset contains the EEG recordings used in the paper: "Real-time EEG Feedback on Alpha Power Lateralization Leads to Behavioral Improvements in a Covert Attention Task" (Schneider, C., Pereira, M., Tonin, L. et al. Brain Topogr (2019). https://doi.org/10.1007/s10548-019-00725-9)
+Participants:
+Fourteen healthy subjects (seven female, seven male), age 23±1.52 years, with normal or corrected to normal vision took part in the study. All gave informed written consent and received course credits for their participation. The study was covered by the ethical protocol No PB_2017-00295 of the ethics commissions of the cantons of Vaud and Geneva, Switzerland and complied with the standards of the Declaration of Helsinki.
+Experimental paradigm:
+Each trial started with the presentation of a gray central fixation point at 0.5° visual angle and subjects were instructed to neither move nor blink until the trial was over. After 1 to 2 s (random duration), a cue—corresponding to the task to perform—was presented for 100 ms: half a circle (line width 0.1°, radius 2°) to the left or to the right indicated the side to attend to, a full circle around the fixation point indicated a central fixation trial (no covert attention shift). This was followed by the sustained attention phase—1 to 5 s—where subjects were instructed to covertly attend to the target placeholder indicated by the cue. Target placeholders were circles with an inscribed cross (line width 0.2°, radius 2°, centered at 12° extremity from the center point and at a downward angle of 30° from the horizontal midline; Fig. 1b). The target placeholder at the non-cued side is also called a distractor. To be consistent with the real-time feedback runs where color represented the decoded α-LI (see below), the color of both target placeholders varied randomly between isoluminant red and green (L*a*b color space (CIELAB), L and b constant, a varied between − 80 and 80). A trial ended when the inscribed cross disappeared in the to-attend target (valid cue) or on the opposite side (invalid cue). Subjects were instructed to react to the trial end as fast as possible with a button press using the right index finger. The inter-trial interval was 2–3 s long. In online runs, the min. and max. duration of the sustained attention period was between 2 and 20 s and inter-trial intervals ranged from 4-5 seconds.
+Recordings:
+The EEG was recorded with an active 64 channel HIamp EEG amplifier (g.tec, Schiedlberg, Austria) at 512Hz and referenced to the linked ears. The electrodes were positioned according to the international 10-10 system with the ground electrode on FCz. For more details please refer to the paper.
+The study involved recordings (sessions) on three different days. One recording session lasted approximately 90 min, including the technical setup. Time on task was less than 40 min per session, with breaks after each run (every 9–10 min). On the first recording day subjects practiced for one run to familiarize with the task. Then they performed four offline runs (no feedback, 80 trials each) to calibrate their individual decoder for the real-time feedback (Fig. 1a, "Offline Paradigm"). On day two and three the α-power lateralization index (α-LI) feedback was administered in a single-blinded crossover design. Subjects were randomly assigned to either receive real or sham α-LI feedback on day two and then switched the other feedback group on day three ("Real-time feedback paradigm" and "Sham feedback"). Therefore, both days had the same run structure: they started and ended with one offline run (80 trials each, including catch trials), while the real-time feedback was given during two middle runs (40 long trials each).
 
 Highlights
 ----------
@@ -66,21 +92,21 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 64
+      - Channels: 64 (167), 81 (167)
       - Sampling rate (Hz): 512.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 4
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: —
+      - Modality: —
+      - Type: —
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 10.1 GB
+      - Size on disk: 3.2 MB
       - File count: 167
       - Format: BIDS
 

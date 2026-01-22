@@ -5,7 +5,9 @@
 eegdash.dataset.DS005530
 ========================
 
-Disarming emotional memories using Targeted Memory Reactivation during Rapid Eye Movement sleep (OpenNeuro ``ds005530``). Access recordings and metadata through EEGDash.
+Depotentiation of emotional reactivity using TMR during REM sleep (OpenNeuro ``ds005530``). Access recordings and metadata through EEGDash.
+
+**Citation:** Viviana Greco, Tamas A. Foldes, Neil A. Harrison, Kevin Murphy, Marta Wawrzuta, Mahmoud E. A. Abdellahi, Penelope A. Lewis (2024). *Depotentiation of emotional reactivity using TMR during REM sleep*. `10.18112/openneuro.ds005530.v1.0.9 <https://doi.org/10.18112/openneuro.ds005530.v1.0.9>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ Disarming emotional memories using Targeted Memory Reactivation during Rapid Eye
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 0.0`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS005530``
    * - Title
-     - Disarming emotional memories using Targeted Memory Reactivation during Rapid Eye Movement sleep
+     - Depotentiation of emotional reactivity using TMR during REM sleep
    * - Year
      - 2024
    * - Authors
@@ -44,11 +46,87 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds005530,
-        title = {Disarming emotional memories using Targeted Memory Reactivation during Rapid Eye Movement sleep},
+        title = {Depotentiation of emotional reactivity using TMR during REM sleep},
         author = {Viviana Greco and Tamas A. Foldes and Neil A. Harrison and Kevin Murphy and Marta Wawrzuta and Mahmoud E. A. Abdellahi and Penelope A. Lewis},
         doi = {10.18112/openneuro.ds005530.v1.0.9},
         url = {https://doi.org/10.18112/openneuro.ds005530.v1.0.9},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS005530&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS005530%0A-%20%2A%2ATitle%3A%2A%2A%20Depotentiation%20of%20emotional%20reactivity%20using%20TMR%20during%20REM%20sleep%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+
+**Disarming emotional memories using Targeted Memory Reactivation during Rapid Eye Movement sleep**
+
+This dataset contains fMRI and EEG data from a study investigating the effects of Targeted Memory Reactivation (TMR) during REM sleep on emotional reactivity. As well as behavioural data and ECG collected during behavioural tasks.
+
+**Study Design**
+
+Participants rated the arousal of 48 affective images paired with semantically matching sounds. Heart rate deceleration was used as a measure of their autonomic arousal. Half of these sounds were cued during REM in the subsequent overnight sleep cycle. Participants rated the images in an MRI scanner with pulse oximetry 48 hours after encoding, and they completed an online follow up two weeks later.
+
+**Sessions**
+
+.. dropdown:: View full README
+   :class-container: sd-shadow-sm
+
+   
+   **Disarming emotional memories using Targeted Memory Reactivation during Rapid Eye Movement sleep**
+   
+   This dataset contains fMRI and EEG data from a study investigating the effects of Targeted Memory Reactivation (TMR) during REM sleep on emotional reactivity. As well as behavioural data and ECG collected during behavioural tasks.
+   
+   **Study Design**
+   
+   Participants rated the arousal of 48 affective images paired with semantically matching sounds. Heart rate deceleration was used as a measure of their autonomic arousal. Half of these sounds were cued during REM in the subsequent overnight sleep cycle. Participants rated the images in an MRI scanner with pulse oximetry 48 hours after encoding, and they completed an online follow up two weeks later.
+   
+   **Sessions**
+   
+   1. Baseline: Initial arousal ratings as well as overnight sleep with TMR
+   2. Session 48-H: fMRI scanning, pulse oximetry and arousal ratings (48 hours after baseline)
+   3. Session 2-Wk: Online follow-up (2 weeks after baseline)
+   
+   **Data Acquisition**
+   
+   - **fMRI**: Acquired using a Siemens Magnetom Prisma 3T scanner with a 32-channel head coil
+   - **Heart Rate**: Recorded using BrainVision BrainAmp ExG with ExG AUX box and multitrodes during the behavioural session and pulse oximetry during the fMRI session3
+   - **Polysomnography**: Recorded using ten electrodes including 6 EEG channels (F3, F4, C3, C4, O1 and O2), 2 EMG channels and 2 EOG channels. All channels were live referenced to the average of left and right mastoids.
+   
+   **Dataset Contents**
+   
+   This initial upload contains:
+   - T1-weighted structural images
+   - Functional MRI data from Session 48-H
+   - B0 field maps
+   - Behavioural data from all sessions
+   
+   **Preprocessing**
+   
+   fMRI data were preprocessed using fMRIPrep 20.2.7. Details of the preprocessing pipeline can be found in the methods section of the associated publication.
+   T1-weighted structural scans were defaced using pydeface version 2.0.2 to ensure participant anonymity.
+   Within the behavioral data, the baseline ratings were centered within each participant. This was achieved by subtracting each participant's mean baseline rating from the item-specific ratings they gave to the stimuli.
+   
+   **Additional Information**
+   
+   For more detailed information about the study design, methods, and results, please refer to the associated publication (citation to be added upon publication).
+   This dataset was initially converted to BIDS format using ezBIDS (https://brainlife.io/ezbids).
+   
+   **Contact**
+   
+   For questions about the MRI dataset, please contact:
+   Dr Tamas Foldes
+   foldesta@cardiff.ac.uk
+
 
 Highlights
 ----------
@@ -70,12 +148,12 @@ Highlights
       - Sampling rate (Hz): 500.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 1
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: Healthy
+      - Modality: Multisensory
+      - Type: Sleep
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

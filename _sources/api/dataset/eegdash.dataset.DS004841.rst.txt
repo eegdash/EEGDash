@@ -5,7 +5,9 @@
 eegdash.dataset.DS004841
 ========================
 
-participants.tsv (OpenNeuro ``ds004841``). Access recordings and metadata through EEGDash.
+TX14 (OpenNeuro ``ds004841``). Access recordings and metadata through EEGDash.
+
+**Citation:** Gabriella Larkin, James A. Davis, Victor Paul, Marcel Cannon, Chris Manteuffel, Ben Brewster, Tony Johnson, Mike Dunkel, Stephen Gordon, Kevin King (2023). *TX14*. `10.18112/openneuro.ds004841.v1.0.1 <https://doi.org/10.18112/openneuro.ds004841.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ participants.tsv (OpenNeuro ``ds004841``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 0.0`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS004841``
    * - Title
-     - participants.tsv
+     - TX14
    * - Year
      - 2023
    * - Authors
@@ -44,11 +46,29 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds004841,
-        title = {participants.tsv},
+        title = {TX14},
         author = {Gabriella Larkin and James A. Davis and Victor Paul and Marcel Cannon and Chris Manteuffel and Ben Brewster and Tony Johnson and Mike Dunkel and Stephen Gordon and Kevin King},
         doi = {10.18112/openneuro.ds004841.v1.0.1},
         url = {https://doi.org/10.18112/openneuro.ds004841.v1.0.1},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS004841&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS004841%0A-%20%2A%2ATitle%3A%2A%2A%20TX14%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+TX14 dataset: Perform a local situational awareness task while maintaining supervisory control of a semi-autonomous vehicle.
+This Army’s transition to a leaner, more agile and rapidly-deployable force requires the advent of autonomous technologies and systems, and more reliance on computers and machines. This move from traditional warfare to FCS represents a shift in the human role, as well. Technological advancement has made it so that the role of the user has been transformed from active controller to system monitor and manager, intervening only in the case of a problem. As such, the soldier’s dependency on robotics technologies, tele-operations, indirect driving and autonomy is expected to increase significantly. Additionally, although semi-autonomous driving technologies have proven beneficial in aggregate measures of local area awareness (i.e., target/threat detection) and vehicle control, it is important to understand the situational trade-offs between local area awareness and vehicle control, as situational trade-offs provide the basis for developing dynamic task allocation within Crewstations.
 
 Highlights
 ----------
@@ -66,21 +86,21 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 64
+      - Channels: 64 (147), 70 (147)
       - Sampling rate (Hz): 256.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 1
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: —
+      - Modality: —
+      - Type: —
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 7.3 GB
+      - Size on disk: 3.1 MB
       - File count: 147
       - Format: BIDS
 

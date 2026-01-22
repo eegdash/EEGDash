@@ -5,7 +5,9 @@
 eegdash.dataset.DS004816
 ========================
 
-task-rsvp_events.json (OpenNeuro ``ds004816``). Access recordings and metadata through EEGDash.
+EEG-attention-rsvp-exp1 (OpenNeuro ``ds004816``). Access recordings and metadata through EEGDash.
+
+**Citation:** Grootswagers, Tijl, Robinson, Amanda, Shatek, Sofia, Carlson, Thomas (2023). *EEG-attention-rsvp-exp1*. `10.18112/openneuro.ds004816.v1.0.0 <https://doi.org/10.18112/openneuro.ds004816.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ task-rsvp_events.json (OpenNeuro ``ds004816``). Access recordings and metadata t
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 0.0`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS004816``
    * - Title
-     - task-rsvp_events.json
+     - EEG-attention-rsvp-exp1
    * - Year
      - 2023
    * - Authors
@@ -44,11 +46,30 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds004816,
-        title = {task-rsvp_events.json},
+        title = {EEG-attention-rsvp-exp1},
         author = {Grootswagers, Tijl and Robinson, Amanda and Shatek, Sofia and Carlson, Thomas},
         doi = {10.18112/openneuro.ds004816.v1.0.0},
         url = {https://doi.org/10.18112/openneuro.ds004816.v1.0.0},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS004816&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS004816%0A-%20%2A%2ATitle%3A%2A%2A%20EEG-attention-rsvp-exp1%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+EEG data for Grootswagers et al 2021 experiment 1 (small letters on big objects)
+Grootswagers T., Robinson A.K., Shatek S.M., Carlson T.A. (2021). The neural dynamics underlying prioritisation of task-relevant information. Neurons, Behaviour, Data Analysis, and Theory, 5(1) https://doi.org/10.51628/001c.19129
+See also https://osf.io/7zhwp/ and https://openneuro.org/datasets/ds004817
 
 Highlights
 ----------
@@ -66,16 +87,16 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: —
-      - Sampling rate (Hz): —
+      - Channels: 63
+      - Sampling rate (Hz): 1000.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 1
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: —
+      - Modality: —
+      - Type: —
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

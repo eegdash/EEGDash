@@ -5,7 +5,9 @@
 eegdash.dataset.DS004196
 ========================
 
-participants.tsv (OpenNeuro ``ds004196``). Access recordings and metadata through EEGDash.
+Bimodal dataset on Inner speech (OpenNeuro ``ds004196``). Access recordings and metadata through EEGDash.
+
+**Citation:** Foteini Liwicki, Vibha Gupta, Rajkumar Saini, Kanjar De, Nosheen Abid, Sumit Rakesh, Scott Wellington, Holly Wilson, Marcus Liwicki, Johan Eriksson (2022). *Bimodal dataset on Inner speech*. `10.18112/openneuro.ds004196.v2.0.2 <https://doi.org/10.18112/openneuro.ds004196.v2.0.2>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ participants.tsv (OpenNeuro ``ds004196``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 1.0`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS004196``
    * - Title
-     - participants.tsv
+     - Bimodal dataset on Inner speech
    * - Year
      - 2022
    * - Authors
@@ -44,11 +46,40 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds004196,
-        title = {participants.tsv},
+        title = {Bimodal dataset on Inner speech},
         author = {Foteini Liwicki and Vibha Gupta and Rajkumar Saini and Kanjar De and Nosheen Abid and Sumit Rakesh and Scott Wellington and Holly Wilson and Marcus Liwicki and Johan Eriksson},
         doi = {10.18112/openneuro.ds004196.v2.0.2},
         url = {https://doi.org/10.18112/openneuro.ds004196.v2.0.2},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS004196&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS004196%0A-%20%2A%2ATitle%3A%2A%2A%20Bimodal%20dataset%20on%20Inner%20speech%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+Bimodal dataset on Inner Speech
+Code available: https://github.com/LTU-Machine-Learning/Inner_Speech_EEG_FMRI
+Publication available: https://www.nature.com/articles/s41597-023-02286-w
+Abstract:
+The recognition of inner speech, which could give a `voice' to patients that have no ability to speak or move, is a challenge for brain-computer interfaces (BCIs). A shortcoming of the available datasets is that they do not combine modalities to increase the performance of inner speech recognition. Multimodal datasets of brain data enable the fusion of neuroimaging modalities with complimentary properties, such as the high spatial resolution of functional magnetic resonance imaging (fMRI) and the temporal resolution of electroencephalography (EEG), and therefore are promising for decoding inner speech. This paper presents the first publicly available bimodal dataset containing EEG and fMRI data acquired nonsimultaneously during inner-speech production.  Data were obtained from four healthy, right-handed participants during an inner-speech task with words in either a social or numerical category. Each of the 8-word stimuli were assessed with 40 trials, resulting in 320 trials in each modality for each participant.
+The aim of this work is to provide a publicly available bimodal dataset on inner speech, contributing towards speech prostheses.
+Short Dataset description:
+The dataset consists of 1280 trials in each modality (EEG, FMRI).
+The stimuli contain 8 words,  selected from 2 different categories (social, numeric):
+Social: child, daughter, father, wife
+Numeric: four, three, ten, six
+There are 4 subjects in total: sub-01, sub-02, sub-03, sub-05. Initially, there were 5 participants, however, sub-04 data was rejected due to high fluctuations. Details of valid data are available in the file participants.tsv.
+For questions please contact: foteini.liwicki@ltu.se
 
 Highlights
 ----------
@@ -70,12 +101,12 @@ Highlights
       - Sampling rate (Hz): 512.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 1
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: —
+      - Modality: —
+      - Type: —
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

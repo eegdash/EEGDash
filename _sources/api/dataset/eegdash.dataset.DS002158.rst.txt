@@ -5,7 +5,9 @@
 eegdash.dataset.DS002158
 ========================
 
-task-main_events.json (OpenNeuro ``ds002158``). Access recordings and metadata through EEGDash.
+Disentangling the origins of confidence in speeded perceptual judgments through multimodal imaging (OpenNeuro ``ds002158``). Access recordings and metadata through EEGDash.
+
+**Citation:** Michael Pereira, Nathan Faivre, Inaki Iturrate, Marco Wirthlin, Luana Serafini, Stephanie Martin, Arnaud Desvachez, Olaf Blanke, Dimitri Van de Ville, Jose del R. Millan (2019). *Disentangling the origins of confidence in speeded perceptual judgments through multimodal imaging*. `10.18112/openneuro.ds002158.v1.0.2 <https://doi.org/10.18112/openneuro.ds002158.v1.0.2>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ task-main_events.json (OpenNeuro ``ds002158``). Access recordings and metadata t
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 1.0`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS002158``
    * - Title
-     - task-main_events.json
+     - Disentangling the origins of confidence in speeded perceptual judgments through multimodal imaging
    * - Year
      - 2019
    * - Authors
@@ -44,11 +46,39 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds002158,
-        title = {task-main_events.json},
+        title = {Disentangling the origins of confidence in speeded perceptual judgments through multimodal imaging},
         author = {Michael Pereira and Nathan Faivre and Inaki Iturrate and Marco Wirthlin and Luana Serafini and Stephanie Martin and Arnaud Desvachez and Olaf Blanke and Dimitri Van de Ville and Jose del R. Millan},
         doi = {10.18112/openneuro.ds002158.v1.0.2},
         url = {https://doi.org/10.18112/openneuro.ds002158.v1.0.2},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS002158&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS002158%0A-%20%2A%2ATitle%3A%2A%2A%20Disentangling%20the%20origins%20of%20confidence%20in%20speeded%20perceptual%20judgments%20through%20multimodal%20imaging%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+This dataset contains the data in
+Pereira, M., Faivre, N., Iturrate, I., Wirthlin, M., Serafini, L., Martin, S., Desvachez, A., Blanke, O., Van De Ville, D., Millan, JdR. (2020). Disentangling the origins of confidence in speeded perceptual judgments through multimodal imaging. Proceedings of the National Academy of Science, 117 (15) pp. 8382-8390
+https://doi.org/10.1073/pnas.1918335117
+Preprint: https://www.biorxiv.org/content/10.1101/496877v1
+ABSTRACT
+The human capacity to compute the likelihood that a decision is correct—known as metacognition—has proven difficult to study in isolation as it usually cooccurs with decision making. Here, we isolated postdecisional from decisional contributions to metacognition by analyzing neural correlates of confidence with multimodal imaging. Healthy volunteers reported their confidence in the accuracy of decisions they made or decisions they observed. We found better metacognitive performance for committed vs. observed decisions, indicating that committing to a decision may improve confidence. Relying on concurrent electroencephalography and hemodynamic recordings, we found a common correlate of confidence following committed and observed decisions in the inferior frontal gyrus and a dissociation in the anterior prefrontal cortex and anterior insula. We discuss these results in light of decisional and postdecisional accounts of confidence and propose a computational model of confidence in which metacognitive performance naturally improves when evidence accumulation is constrained upon committing a decision.
+preregistration: https://osf.io/a5qmv/
+The dataset contains raw fMRI scans, raw EEG in BrainVision format as well as anatomical scans (T1) and field mapping. We also included preprocessed EEG and fMRI data in derivatives/eegprep and derivatives/fmriprep.
+EEG PREPROCESSING
+MR-gradient artifacts were removed using sliding window average template subtraction. TP10 electrode on the right mastoid was used to detect heartbeats for ballistocardiogram artifact (BCG) removal using a semi-automatic procedure in BrainVision Analyzer 2. Data were then filtered using a Butterworth, 4th order zero-phase (two-pass) bandpass filter between 1 and 10 Hz, epoched [-0.2, 0.6 s] around the response onset (i.e. the button press in the active condition or the appearance of the virtual hand for in observation condition), re-referenced to a common average, and input to independent component analysis (ICA) to remove residual BCG and ocular artifacts. In order to ensure numerical stability when estimating the independent components, we retained 99% of the variance from the electrode space, leading to an average of 19 (SD = 6) components estimated for each participant and condition. Independent components (ICs) were then fitted with a dipolar source localization method (66). ICs whose dipole lied outside the brain, or resembled muscular or ocular artifacts were eliminated. A total of 8 (SD = 3) components were finally kept. All preprocessing steps were performed using EEGLAB and in-house scripts under Matlab (The MathWorks, Inc., Natick, Massachusetts, United States).
+FMRI PREPROCESSING
+We modeled the BOLD signal using a general linear model (GLM) with two separate regressors (stick functions at stimulus onset) for the active and observation condition as well as their spatial and temporal derivatives. We then parametrically modulated the regressors with three behavioral variables: the confidence ratings, the response times, and the numerosity difference between the two arrays of dots (i.e., perceptual evidence). Empirical cross-correlation between regressors confirmed limited collinearity for the active (resp. observation) condition (max(abs(R)) = 0.26 ± 0.02 resp., max(abs(R)) = 0.25 ± 0.02). Bad trials as defined in the behavioral analysis section were modeled by two separate regressors (one for active and one for observation) and their spatial and temporal derivatives. We added six realignments parameters as regressors of no interest. All second-level (group-level) results are reported at a significance-level of p < 0.05 using cluster-extent family-wise error (FWE) correction with a voxel-height threshold of p < 0.001. We used the anatomical automatic labelling (AAL) atlas for brain parcellation (Tzourio-Mazoyer et al., 2002).
 
 Highlights
 ----------
@@ -70,12 +100,12 @@ Highlights
       - Sampling rate (Hz): —
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 1
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: —
+      - Modality: —
+      - Type: —
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

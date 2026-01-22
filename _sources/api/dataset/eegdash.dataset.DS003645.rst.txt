@@ -5,7 +5,9 @@
 eegdash.dataset.DS003645
 ========================
 
-participants.tsv (OpenNeuro ``ds003645``). Access recordings and metadata through EEGDash.
+Face processing MEEG dataset with HED annotation (OpenNeuro ``ds003645``). Access recordings and metadata through EEGDash.
+
+**Citation:** Daniel G. Wakeman, Richard N Henson, Dung Truong (curation), Kay Robbins (curation), Scott Makeig (curation), Arno Delorme (curation) (2021). *Face processing MEEG dataset with HED annotation*. `10.18112/openneuro.ds003645.v2.0.2 <https://doi.org/10.18112/openneuro.ds003645.v2.0.2>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ participants.tsv (OpenNeuro ``ds003645``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 3.0`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS003645``
    * - Title
-     - participants.tsv
+     - Face processing MEEG dataset with HED annotation
    * - Year
      - 2021
    * - Authors
@@ -44,11 +46,47 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds003645,
-        title = {participants.tsv},
+        title = {Face processing MEEG dataset with HED annotation},
         author = {Daniel G. Wakeman and Richard N Henson and Dung Truong (curation) and Kay Robbins (curation) and Scott Makeig (curation) and Arno Delorme (curation)},
         doi = {10.18112/openneuro.ds003645.v2.0.2},
         url = {https://doi.org/10.18112/openneuro.ds003645.v2.0.2},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS003645&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS003645%0A-%20%2A%2ATitle%3A%2A%2A%20Face%20processing%20MEEG%20dataset%20with%20HED%20annotation%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+**Introduction:**
+This dataset consists of the MEEG (sMRI+MEG+EEG) portion of the multi-subject, multi-modal face processing dataset (ds000117). This dataset was originally acquired and shared by Daniel Wakeman and Richard Henson (https://pubmed.ncbi.nlm.nih.gov/25977808/). The MEG and EEG data were simultaneously recorded; the sMRI scans were preserved to support M/EEG source localization. Following event log augmentation, reorganization, and HED (v8.0.0) annotation, the EEG data have been repackaged in EEGLAB format.
+**Overview of the experiment:**
+Eighteen participants completed two recording sessions spaced three months apart – one session recorded fMRI  and the other simultaneously recorded MEG and EEG data. During each session, participants performed the same simple perceptual task, responding to presented photographs of famous, unfamiliar, and scrambled faces by pressing one of two keyboard keys to indicate a subjective yes or no decision as to the relative spatial symmetry of the viewed face. Famous faces were feature-matched to unfamiliar faces; half the faces were female. The two sessions (MEEG, fMRI) had different organizations of event timing and presentation because of technological requirements of the respective imaging modalities. Each individual face was presented twice during the session. For half of the presented faces, the second presentation followed immediately after the first. For the other half, the second presentation was delayed by 5-15 face presentations.
+**Preprocessing:**
+The EEG preprocessing, which was performed using the `wh_extracteeg_BIDS.m` located in the code directory, includes the following steps:
+* Ignore MRI data except for sMRI.
+* Extract  EEG channels out of the MEG/EEG fif data
+* Add fiducials
+* Rename EOG and EKG channels
+* Extract events from event channel
+* Add button press events!
+* Remove spurious event types 5, 6, 7, 13, 14, 15, 17, 18 and 19
+* Remove spurious event types 24 for subject 3 run 4
+* Correct event latencies (events have a shift of 34 ms)
+* Add HED (v8.0.0) event annotations -- see Robbins et al. (2021)
+* Remove event fields `urevent` and `duration`
+* Save as EEGLAB .set format
+**Data curators:**
+Dung Truong, Ramon Martinez, Scott Makeig, Arnaud Delorme (UCSD, La Jolla, CA, USA), Kay Robbins (UTSA, San Antonio, TX, USA)
 
 Highlights
 ----------
@@ -66,16 +104,16 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: —
-      - Sampling rate (Hz): —
+      - Channels: 404 (120), 394 (96)
+      - Sampling rate (Hz): 1100.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 2
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: Healthy
+      - Modality: Visual
+      - Type: Perception
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

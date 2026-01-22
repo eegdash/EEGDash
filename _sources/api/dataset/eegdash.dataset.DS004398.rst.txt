@@ -5,15 +5,17 @@
 eegdash.dataset.DS004398
 ========================
 
-ds004398 (OpenNeuro ``ds004398``). Access recordings and metadata through EEGDash.
+planmemreplay (OpenNeuro ``ds004398``). Access recordings and metadata through EEGDash.
+
+**Citation:** G. Elliott Wimmer, Yunzhe Liu, Daniel C. McNamee, Raymond J. Dolan (2023). *planmemreplay*. `10.18112/openneuro.ds004398.v1.0.0 <https://doi.org/10.18112/openneuro.ds004398.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: meg` :bdg-info:`Tasks: 7` :bdg-secondary:`Subjects: 2` :bdg-secondary:`Recordings: 20`
+:bdg-primary:`Modality: meg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 1` :bdg-secondary:`Recordings: 1`
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: —` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 1.0`
 
 Dataset Information
 -------------------
@@ -25,17 +27,50 @@ Dataset Information
    * - Dataset ID
      - ``DS004398``
    * - Title
-     - ds004398
+     - planmemreplay
    * - Year
-     - —
+     - 2023
    * - Authors
-     - Unknown
+     - G. Elliott Wimmer, Yunzhe Liu, Daniel C. McNamee, Raymond J. Dolan
    * - License
-     - —
+     - CC0
    * - Citation / DOI
-     - Unknown
+     - `doi:10.18112/openneuro.ds004398.v1.0.0 <https://doi.org/10.18112/openneuro.ds004398.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004398>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004398>`__ | `Source URL <https://openneuro.org/datasets/ds004398/versions/1.0.0>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004398>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004398>`__ | `Source URL <https://openneuro.org/datasets/ds004398>`__
+
+.. dropdown:: Copy-paste BibTeX
+   :class-container: sd-shadow-sm
+   :class-title: sd-bg-light
+
+   .. code-block:: bibtex
+
+      @dataset{ds004398,
+        title = {planmemreplay},
+        author = {G. Elliott Wimmer and Yunzhe Liu and Daniel C. McNamee and Raymond J. Dolan},
+        doi = {10.18112/openneuro.ds004398.v1.0.0},
+        url = {https://doi.org/10.18112/openneuro.ds004398.v1.0.0},
+      }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS004398&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS004398%0A-%20%2A%2ATitle%3A%2A%2A%20planmemreplay%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+The MEG files contain a channel with triggers necessary for event marking and timing. Separate event files with onsets are provided in the participant directories for completeness only; the MEG triggers should be used for actual onsets in analysis. The delay between the trigger and the visual onset of an on-screen event sent by the projector is approximately 20 ms, as estimated using a photodiode.
+Localizer phase triggers: [Info to be added]
+Struct and Rew phase triggers: [Info to be added]
+Post triggers:  [Info to be added]
 
 Highlights
 ----------
@@ -46,36 +81,36 @@ Highlights
    .. grid-item-card:: Subjects & recordings
       :class-card: sd-border-1
 
-      - Subjects: 2
-      - Recordings: 20
-      - Tasks: 7
+      - Subjects: 1
+      - Recordings: 1
+      - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: —
-      - Sampling rate (Hz): —
+      - Channels: 272
+      - Sampling rate (Hz): 600.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 7
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: —
+      - Modality: —
+      - Type: —
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: —
-      - File count: 20
+      - Size on disk: 1.3 GB
+      - File count: 1
       - Format: BIDS
 
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: —
-      - DOI: —
+      - License: CC0
+      - DOI: doi:10.18112/openneuro.ds004398.v1.0.0
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

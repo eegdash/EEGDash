@@ -7,13 +7,15 @@ eegdash.dataset.DS004264
 
 Steer the Ship (OpenNeuro ``ds004264``). Access recordings and metadata through EEGDash.
 
+**Citation:** Cameron D. Hassall, Yan Yan, Laurence T. Hunt (2022). *Steer the Ship*. `10.18112/openneuro.ds004264.v1.1.0 <https://doi.org/10.18112/openneuro.ds004264.v1.1.0>`__
+
 .. rst-class:: sd-badges
 
 :bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 21` :bdg-secondary:`Recordings: 21`
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 0.0`
 
 Dataset Information
 -------------------
@@ -50,6 +52,44 @@ Dataset Information
         url = {https://doi.org/10.18112/openneuro.ds004264.v1.1.0},
       }
 
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS004264&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS004264%0A-%20%2A%2ATitle%3A%2A%2A%20Steer%20the%20Ship%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+
+**Steer the Ship**
+
+Twenty-one participants learned to control the trajectory of a ship, represented by centrally presented rotating arrow. Prior to each round participants were cued about the degree of controller and environmental noise ("wind") they would experience. During the round, participants pressed the 'f' and 'j' keys to apply angular force in either a clockwise or counterclockwise direction. The goal of the task was to keep the ship closely oriented towards a target. Points were accumulated depending on the mean distance to target. The ship would crash if it strayed too far from the target (and the round would end). Each round lasted up to 1 minute. The underlying physics were based on the pole-and-cart problem (i.e., unstable).
+There were four noise conditions:
+1: No noise
+2: Environmental noise only (ship occasionally moved on its own)
+3: Controller noise only (amount of force varied)
+4: Environmental and controller noise
+Participant 12 should be excluded from event-locked analyses due to bad triggers (trigger cable was partially disconnected).
+Also note that the RT for the first button press in each round is not recorded (but is recorded in the participantActions column).
+Trigger Modifiers (added to condition numbers)
+Add 0: Condition cue
+Add 10: Start of round
+Add 20: Left button press
+Add 30: Right button press
+Add 40: Left button press (computer)
+Add 50: Right button press (computer)
+Add 60: Crash
+Add 70: Success (reached 1 minute of play)
+Add 80: Points displayed
+﻿
+
 Highlights
 ----------
 
@@ -70,12 +110,12 @@ Highlights
       - Sampling rate (Hz): 1000.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 1
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: —
+      - Modality: —
+      - Type: —
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

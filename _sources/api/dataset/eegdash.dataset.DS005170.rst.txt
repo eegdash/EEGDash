@@ -5,7 +5,9 @@
 eegdash.dataset.DS005170
 ========================
 
-Chisco Dataset (OpenNeuro ``ds005170``). Access recordings and metadata through EEGDash.
+Chisco (OpenNeuro ``ds005170``). Access recordings and metadata through EEGDash.
+
+**Citation:** Zihan Zhang, Yi Zhao, Yu Bao, Xiao Ding (2024). *Chisco*. `10.18112/openneuro.ds005170.v1.1.2 <https://doi.org/10.18112/openneuro.ds005170.v1.1.2>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ Chisco Dataset (OpenNeuro ``ds005170``). Access recordings and metadata through 
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 1.0`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS005170``
    * - Title
-     - Chisco Dataset
+     - Chisco
    * - Year
      - 2024
    * - Authors
@@ -44,11 +46,128 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds005170,
-        title = {Chisco Dataset},
+        title = {Chisco},
         author = {Zihan Zhang and Yi Zhao and Yu Bao and Xiao Ding},
         doi = {10.18112/openneuro.ds005170.v1.1.2},
         url = {https://doi.org/10.18112/openneuro.ds005170.v1.1.2},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS005170&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS005170%0A-%20%2A%2ATitle%3A%2A%2A%20Chisco%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+
+**Chisco Dataset**
+
+This dataset is a Chinese imagined speech dataset with five participants, identified as sub-01 to sub-05. The dataset includes raw data and preprocessed data in both fif and pkl formats. Information also can be found in https://github.com/zhangzihan-is-good/Chisco
+
+**Supplementary Information**
+
+The initial dataset release encompassed data from three participants (sub-01 to sub-03) as detailed in related Chisco publications. Subsequently, data from two additional subjects (sub-04 and sub-05) were incorporated. During the interval between the original dataset release and the addition of the new data, the BIDS protocol underwent updates. To preserve the integrity of the data processing code presented in our publications, the supplementary data continue to adhere to the previous version of the BIDS protocol. Consequently, the BIDS validator on our website may report errors; however, these do not compromise the usability of the dataset.
+Future releases will include data from sub-06 and sub-07, who participated under a new experimental paradigm. These will be published as part of a new dataset, Chisco 2.0. We invite you to stay tuned for further updates.
+
+
+.. dropdown:: View full README
+   :class-container: sd-shadow-sm
+
+   
+   **Chisco Dataset**
+   
+   This dataset is a Chinese imagined speech dataset with five participants, identified as sub-01 to sub-05. The dataset includes raw data and preprocessed data in both fif and pkl formats. Information also can be found in https://github.com/zhangzihan-is-good/Chisco
+   
+   **Supplementary Information**
+   
+   The initial dataset release encompassed data from three participants (sub-01 to sub-03) as detailed in related Chisco publications. Subsequently, data from two additional subjects (sub-04 and sub-05) were incorporated. During the interval between the original dataset release and the addition of the new data, the BIDS protocol underwent updates. To preserve the integrity of the data processing code presented in our publications, the supplementary data continue to adhere to the previous version of the BIDS protocol. Consequently, the BIDS validator on our website may report errors; however, these do not compromise the usability of the dataset.
+   Future releases will include data from sub-06 and sub-07, who participated under a new experimental paradigm. These will be published as part of a new dataset, Chisco 2.0. We invite you to stay tuned for further updates.
+   
+   **Dataset Structure**
+   
+   
+   **Root Directory**
+   
+   - `dataset_description.json`
+   - `participants.tsv`
+   - `README`
+   - `derivatives/`
+   - `sub-01/` to `sub-05/`
+   - `textdataset/`
+   - `json/`
+   
+   **Raw Data**
+   
+   The root directory contains folders `sub-01` to `sub-05` with raw data. Each participant's folder contains 5-6 session folders, corresponding to data collected over 5-6 days.
+   
+   **Preprocessed Data**
+   
+   Preprocessed data is stored in the `derivatives` folder in both fif and pkl formats.
+   
+   **Text Data**
+   
+   The `textdataset` folder and `json` folder contain text data used to stimulate the participants.
+   
+   **File Structure**
+   
+   ```
+   /Chisco
+       /sub-01
+           /ses-01
+               /eeg
+                   sub-01_ses-01_task-imagine_eeg.edf
+           ...
+       /sub-02
+           ...
+       /sub-03
+           ...
+       /derivatives
+           /fif
+               /sub-01
+                   ...
+               /sub-02
+                   ...
+               /sub-03
+                   ...
+           /pkl
+               /sub-01
+                   ...
+               /sub-02
+                   ...
+               /sub-03
+                   ...
+       /textdataset
+           ...
+       /json
+           ...
+       dataset_description.json
+       README
+   
+   **participants.tsv**
+   
+   
+   **License**
+   
+   This dataset is licensed under the CC0 license. You are free to use the dataset for non-commercial purposes, but the original author needs to be properly indicated.
+   
+   **Citation**
+   
+   If you use this dataset in your research, please cite the following link:
+   https://github.com/zhangzihan-is-good/Chisco
+   
+   **Contact Information**
+   
+   For any questions, please contact the dataset authors.
+   Thank you for using the Chisco!
+
 
 Highlights
 ----------
@@ -70,17 +189,17 @@ Highlights
       - Sampling rate (Hz): —
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 1
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: —
+      - Modality: —
+      - Type: —
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 90.7 GB
+      - Size on disk: 860.9 KB
       - File count: 225
       - Format: BIDS
 

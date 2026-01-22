@@ -7,13 +7,15 @@ eegdash.dataset.DS006253
 
 MetaRDK (OpenNeuro ``ds006253``). Access recordings and metadata through EEGDash.
 
+**Citation:** Dorian Goueytes, Francois Stockart, Alexis Robin, Lucien Gyger, Martin Rouy, Dominique Hoffmann, Lorella Minotti, Philippe Kahane, Michael Pereira, Nathan Faivre (2025). *MetaRDK*. `10.18112/openneuro.ds006253.v1.0.3 <https://doi.org/10.18112/openneuro.ds006253.v1.0.3>`__
+
 .. rst-class:: sd-badges
 
 :bdg-primary:`Modality: ieeg` :bdg-info:`Tasks: 4` :bdg-secondary:`Subjects: 23` :bdg-secondary:`Recordings: 201`
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: —`
 
 Dataset Information
 -------------------
@@ -27,7 +29,7 @@ Dataset Information
    * - Title
      - MetaRDK
    * - Year
-     - —
+     - 2025
    * - Authors
      - Dorian Goueytes, Francois Stockart, Alexis Robin, Lucien Gyger, Martin Rouy, Dominique Hoffmann, Lorella Minotti, Philippe Kahane, Michael Pereira, Nathan Faivre
    * - License
@@ -50,6 +52,102 @@ Dataset Information
         url = {https://doi.org/10.18112/openneuro.ds006253.v1.0.3},
       }
 
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS006253&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS006253%0A-%20%2A%2ATitle%3A%2A%2A%20MetaRDK%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+
+**Evidence accumulation in the pre-supplementary motor area and insula drives confidence and changes of mind**
+
+
+Goueytes, D., Gigyer, L., Rouy, M., Hoffmann, D., Minotti, L., Kahane, P., Pereira, M., and Faivre, N. Evidence accumulation in the pre-supplementary motor area and insula drives confidence and changes of mind.
+
+
+**Overview**
+
+
+
+.. dropdown:: View full README
+   :class-container: sd-shadow-sm
+
+   
+   **Evidence accumulation in the pre-supplementary motor area and insula drives confidence and changes of mind**
+   
+   
+   Goueytes, D., Gigyer, L., Rouy, M., Hoffmann, D., Minotti, L., Kahane, P., Pereira, M., and Faivre, N. Evidence accumulation in the pre-supplementary motor area and insula drives confidence and changes of mind.
+   
+   
+   **Overview**
+   
+   
+   
+   **Overview of the task**
+   
+   
+   MetaRDK is a project aiming to understand the neural correlates of decision making and decision making-related metacognition. Epileptic patient with pharmacology intractable epilepsy performed a perceptual decision making task associated with a confidence judgement task.
+   The patients had to decide within a window of 6s if a a cloud of dot displayed at the center of the screen was moving right or left, and provide their answer by moving a computer mouse and clicking on the corresponding right/left target. The difficulty of the task was titrated for all patients at 70% correct using an adaptive staircase.
+   After each answer patients were prompted to evaluate how confidence they felt in their decision on a scale from 0 to 100 (0 : Sure to be wrong, 50 : answered at random, 100 : Sure to be right
+   
+   All scripts for the task, data processing and analysis are available here  : doi: 10.17605/OSF.IO/2KT97
+   
+   
+   **Description of the contents of the dataset**
+   
+   
+   This dataset contains the high-gamma content (average power modulation in five non-overlapping frequency bands between 70 and 150Hz) of the patient while they performed the task. The data are segmented, and each segment contain high-gamma activity from trial onset (clicking on the start button) to trial offset (following the confidence judgement response), sampled at 512Hz.
+   All information regarding the behavior of the patients (stimulus onset, response time, confidence judgements) are available in the derivative/beh directory as a separated .csv table for each patient.
+   
+   The data provided were screened in order to remove trials and iEEG channels with high epilepsy-related artifact.
+   
+   
+   **Methods**
+   
+   
+   
+   **Subjects**
+   
+   
+   All participants were patients with pharmacologically intractable epilepsy.
+   
+   
+   
+   **Apparatus**
+   
+   
+   Recordings were performed at the bedside of the patients using a micromed recording system. The implantation schema was decided by the medical team solely based on the medical status of the patients.
+   
+   
+   **Initial setup**
+   
+   
+   The patient sat reclined in their hospital bed, with a laptop and a mouse in front of them. The task was explained to them, and they were instructed to sample the stimuli as long as required within 6s to form their decision. The confidence judgement scale was explained, and they were explicitly instructed to use the whole confidence scale.
+   
+   
+   **Task organization**
+   
+   
+   -   The patients first perform a short initial staircase session to titrate difficulty at 70% (the staircase procedure was maintained during the task
+   -   The staircase was followed by the main task, corresponding to the data shared in this dataset.
+   
+   
+   **Task details**
+   
+   
+   
+   Each trial was initiated by clicking on a ‘start’ button at the bottom of the screen. This click corresponds to the trial onset. After a fixed delay, the stimulus was presented (stimonset). The decision was recorded as soon as the participants started to move the mouse (decision time), and the response was recorded upon clicking on the target button (response/R1). The confidence scale was then displayed after a fixed delay (VAS onset), and the click on the confidence scale was also recorded (R2). After a 500 ms delay, the trial ended (trial offset). For each trial, we also recorded outcome (correct), the presence of change of mind (ch_mind) and their timing (rt_chmind), as well as the coherence of the stimulus (stim_int) and the max velocity of the computer mouse (vmax). The identity and timing of all this elements is available in the derivates/beh directory
+
+
 Highlights
 ----------
 
@@ -70,12 +168,12 @@ Highlights
       - Sampling rate (Hz): —
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 4
-      - Experiment type: —
-      - Subject type: Decision-Making, Metacognition
+      - Pathology: Epilepsy
+      - Modality: Visual
+      - Type: Decision-making
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

@@ -5,7 +5,9 @@
 eegdash.dataset.DS004107
 ========================
 
-participants.tsv (OpenNeuro ``ds004107``). Access recordings and metadata through EEGDash.
+MIND DATA (OpenNeuro ``ds004107``). Access recordings and metadata through EEGDash.
+
+**Citation:** M.P. Weisend, F.M. Hanlon, R. Montano, S.P. Ahlfors, A.C. Leuthold, D. Pantazis, J.C. Mosher, A.P. Georgopoulos, M.S. Hamalainen, C.J. Aine (2022). *MIND DATA*. `10.18112/openneuro.ds004107.v1.0.0 <https://doi.org/10.18112/openneuro.ds004107.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ participants.tsv (OpenNeuro ``ds004107``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 1.0`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS004107``
    * - Title
-     - participants.tsv
+     - MIND DATA
    * - Year
      - 2022
    * - Authors
@@ -44,11 +46,33 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds004107,
-        title = {participants.tsv},
+        title = {MIND DATA},
         author = {M.P. Weisend and F.M. Hanlon and R. Montano and S.P. Ahlfors and A.C. Leuthold and D. Pantazis and J.C. Mosher and A.P. Georgopoulos and M.S. Hamalainen and C.J. Aine},
         doi = {10.18112/openneuro.ds004107.v1.0.0},
         url = {https://doi.org/10.18112/openneuro.ds004107.v1.0.0},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS004107&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS004107%0A-%20%2A%2ATitle%3A%2A%2A%20MIND%20DATA%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+This data was part of the study of:
+M.P. Weisend, F.M. Hanlon, R. Montaño, S.P. Ahlfors, A.C. Leuthold, D. Pantazis, J.C. Mosher, A.P. Georgopoulos, M.S. Hämäläinen, C.J. Aine,, V. (2007). Paving the way for cross-site pooling of magnetoencephalography (MEG) data. International Congress Series, Volume 1300, Pages 615-618,.
+It was converted to BIDS with MNE-BIDS:
+Appelhoff, S., Sanderson, M., Brooks, T., Vliet, M., Quentin, R., Holdgraf, C., Chaumon, M., Mikulan, E., Tavabi, K., Höchenberger, R., Welke, D., Brunner, C., Rockhill, A., Larson, E., Gramfort, A. and Jas, M. (2019). MNE-BIDS: Organizing electrophysiological data into the BIDS format and facilitating their analysis. Journal of Open Source Software 4: (1896). https://doi.org/10.21105/joss.01896
+Following the MEG-BIDS format:
+Niso, G., Gorgolewski, K. J., Bock, E., Brooks, T. L., Flandin, G., Gramfort, A., Henson, R. N., Jas, M., Litvak, V., Moreau, J., Oostenveld, R., Schoffelen, J., Tadel, F., Wexler, J., Baillet, S. (2018). MEG-BIDS, the brain imaging data structure extended to magnetoencephalography. Scientific Data, 5, 180110. https://doi.org/10.1038/sdata.2018.110
 
 Highlights
 ----------
@@ -66,16 +90,16 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 306
-      - Sampling rate (Hz): 1250.0 (64), 1792.8858642578125 (114)
+      - Channels: 306 (89), 318 (84), 317 (5)
+      - Sampling rate (Hz): 1792.8858642578125 (114), 1250.0 (64)
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 6
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: —
+      - Modality: —
+      - Type: —
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

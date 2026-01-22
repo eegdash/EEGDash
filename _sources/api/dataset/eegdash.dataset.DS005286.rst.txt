@@ -5,7 +5,9 @@
 eegdash.dataset.DS005286
 ========================
 
-participants.tsv (OpenNeuro ``ds005286``). Access recordings and metadata through EEGDash.
+30 By ANT (OpenNeuro ``ds005286``). Access recordings and metadata through EEGDash.
+
+**Citation:** Zhao Xiangyue, Zhou Jingyao, Zhang Libo, Duan Haoqing, Wei Shiyu, Bi Yanzhi, Hu Li (2024). *30 By ANT*. `10.18112/openneuro.ds005286.v1.0.0 <https://doi.org/10.18112/openneuro.ds005286.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ participants.tsv (OpenNeuro ``ds005286``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: —`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS005286``
    * - Title
-     - participants.tsv
+     - 30 By ANT
    * - Year
      - 2024
    * - Authors
@@ -44,11 +46,37 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds005286,
-        title = {participants.tsv},
+        title = {30 By ANT},
         author = {Zhao Xiangyue and Zhou Jingyao and Zhang Libo and Duan Haoqing and Wei Shiyu and Bi Yanzhi and Hu Li},
         doi = {10.18112/openneuro.ds005286.v1.0.0},
         url = {https://doi.org/10.18112/openneuro.ds005286.v1.0.0},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS005286&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS005286%0A-%20%2A%2ATitle%3A%2A%2A%2030%20By%20ANT%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+1.Study introduction:
+In this experiment, participants were initially exposed to a series of laser stimulations of varying intensities. Researchers identified the energy intensity corresponding to an average rating of 7 from the participants. Subsequently, each participant underwent 30 laser stimulis and provided verbal pain ratings one by one. The pain ratings were on a scale where 0 indicated no sensation at all, 4 indicated the onset of pain, 6 represented moderate pain, 8 indicated severe pain, and 10 denoted unbearable pain.
+2.Participant task information(description of the experiment):
+Participants underwent laser stimulation and subsequently verbally rated the intensity of pain.
+3.Participant instructions(as exact as possible):
+Participants were instructed to focus on the laser stimulation, keep their eyes open, and fix their gaze on the crosshairs displayed on the screen. After each laser stimulation, there is a five-second pause. Participants then rated the intensity of the pain. Subsequent trials began at random 5 seconds after the score was provided.
+4.References and links:
+None
+5.Comment:
+All laser markers are delayed by 100ms
 
 Highlights
 ----------
@@ -66,16 +94,16 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 33 (2), 56 (2), 32 (56)
+      - Channels: 32 (58), 56, 33
       - Sampling rate (Hz): 1000.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 1
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: Healthy
+      - Modality: Tactile
+      - Type: Perception
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

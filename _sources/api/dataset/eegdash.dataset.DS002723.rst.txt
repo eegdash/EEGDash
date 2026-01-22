@@ -5,7 +5,9 @@
 eegdash.dataset.DS002723
 ========================
 
-participants.tsv (OpenNeuro ``ds002723``). Access recordings and metadata through EEGDash.
+A dataset recorded during development of an affective brain-computer music interface: testing session (OpenNeuro ``ds002723``). Access recordings and metadata through EEGDash.
+
+**Citation:** Ian Daly, Nicoletta Nicolaou, Duncan Williams, Faustina Hwang, Alexis Kirke, Eduardo Miranda, Slawomir J. Nasuto (2020). *A dataset recorded during development of an affective brain-computer music interface: testing session*. `10.18112/openneuro.ds002723.v1.1.0 <https://doi.org/10.18112/openneuro.ds002723.v1.1.0>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ participants.tsv (OpenNeuro ``ds002723``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 1.0`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS002723``
    * - Title
-     - participants.tsv
+     - A dataset recorded during development of an affective brain-computer music interface: testing session
    * - Year
      - 2020
    * - Authors
@@ -44,11 +46,92 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds002723,
-        title = {participants.tsv},
+        title = {A dataset recorded during development of an affective brain-computer music interface: testing session},
         author = {Ian Daly and Nicoletta Nicolaou and Duncan Williams and Faustina Hwang and Alexis Kirke and Eduardo Miranda and Slawomir J. Nasuto},
         doi = {10.18112/openneuro.ds002723.v1.1.0},
         url = {https://doi.org/10.18112/openneuro.ds002723.v1.1.0},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS002723&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS002723%0A-%20%2A%2ATitle%3A%2A%2A%20A%20dataset%20recorded%20during%20development%20of%20an%20affective%20brain-computer%20music%20interface%3A%20testing%20session%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+
+**0. Sections**
+
+1. Project
+2. Dataset
+3. Terms of Use
+4. Contents
+5. Method and Processing
+
+**1. PROJECT**
+
+.. dropdown:: View full README
+   :class-container: sd-shadow-sm
+
+   
+   **0. Sections**
+   
+   1. Project
+   2. Dataset
+   3. Terms of Use
+   4. Contents
+   5. Method and Processing
+   
+   **1. PROJECT**
+   
+   Title: Brain-Computer Music Interface for Monitoring and Inducing Affective States (BCMI-MIdAS)
+   Dates: 2012-2017
+   Funding organisation: Engineering and Physical Sciences Research Council (EPSRC)
+   Grant no.: EP/J003077/1
+   
+   **2. DATASET**
+   
+   EEG data from an affective Music Brain-Computer: online real-time control.
+   Description: This dataset accompanies the publication by Daly et al. (2018) and has been analysed in Daly et al. (2016) (please see Section 5 for full references). The purpose of the research activity in which the data were collected was to investigate the performance of a real-time and online brain-computer interface that identified the user’s emotional state and modified music on-the-fly in order to induce a target emotional state. For this purpose, participants listened to 60 s music clips targeting different affective states, as defined by valence and arousal. The music clips were generated using a synthetic music generator. The dataset contains the EEG data from 8 healthy adult participants during real-time control of the system while listening to the music clips, together with the reported affective state (valence and arousal values).
+   This dataset is connected to 2 additional datasets:
+   1.	EEG data from an affective Music Brain-Computer Interface: system calibration. doi:
+   2.	EEG data from an affective Music Brain-Computer: offline training data to induce target emotional states. doi:
+   Please note that the number of participants varies between datasets; however, participant codes are the same across all three datasets.
+   Publication Year: 2018
+   Creators: Nicoletta Nicolaou, Ian Daly.
+   Contributors: Isil Poyraz Bilgin, James Weaver, Asad Malik, Alexis Kirke, Duncan Williams.
+   Principal Investigator: Slawomir Nasuto (EP/J003077/1).
+   Co-Investigator: Eduardo Miranda (EP/J002135/1).
+   Organisation: University of Reading
+   Rights-holders: University of Reading
+   Source: The synthetic generator used to generate the music clips was presented in Williams et al., “Affective Calibration of Musical Feature Sets in an Emotionally Intelligent Music Composition System”, ACM Trans. Appl. Percept. 14, 3, Article 17 (May 2017), 13 pages. DOI: https://doi.org/10.1145/3059005.
+   
+   **3. TERMS OF USE**
+   
+   Copyright University of Reading, 2018. This dataset is licensed by the rights-holder(s) under a Creative Commons Attribution 4.0 International Licence: https://creativecommons.org/licenses/by/4.0/.
+   
+   **4. CONTENTS**
+   
+   The dataset comprises data from 8 subjects. The sampling rate is 1 kHz and the music listening task corresponding to a music clip is 60 s long (clip duration). During the first 20 s, the music clip places the listener in emotional state A, while for the remaining 40 s the music clip targets the affective trajectory from emotional state B to C.
+   Within a 60s music listening epoch there are two target affective states. In the first 20s the music is generated to target one affective state (target A), for the next 20s the BCMI attempts to (a) work out what affective state the participant is actually in, and (b) generate music to move them from this affective state to the next targetted affective state (target B), which is targetted for the last 20s of the 60s music listening epoch.
+   
+   **5. METHOD and PROCESSING**
+   
+   This information is available in the following publications:
+   [1] Daly, I., Nicolaou, N., Williams, D., Hwang, F., Kirke, A., Miranda, E., Nasuto, S.J., “Neural and physiological data from participants listening to affective music”, Scientific Data, 2018.
+   [2] Daly, I., Williams, D., Hwang, F., Kirke, A., Malik, A., Weaver, J., Miranda, E. R., Nasuto, S. J., “Affective Brain-Computer Music Interfacing”, Journal of Neural Engineering, 13:4, July 2016. http://dx.doi.org/10.1088/1741-2560/13/4/046022
+   If you use this dataset in your study please cite these references, as well as the following reference:
+   [3] Williams, D., Kirke, A., Miranda, E.R., Daly, I., Hwang, F., Weaver, J., Nasuto, S.J., “Affective Calibration of Musical Feature Sets in an Emotionally Intelligent Music Composition System”, ACM Trans. Appl. Percept. 14, 3, Article 17 (May 2017), 13 pages. DOI: https://doi.org/10.1145/3059005
+   Thank you for your interest in our work.
+
 
 Highlights
 ----------
@@ -66,21 +149,21 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 32
+      - Channels: 32 (44), 37 (44)
       - Sampling rate (Hz): 1000.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 6
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: —
+      - Modality: —
+      - Type: —
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 2.6 GB
+      - Size on disk: 180.3 KB
       - File count: 44
       - Format: BIDS
 

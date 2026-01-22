@@ -7,13 +7,15 @@ eegdash.dataset.DS003775
 
 SRM Resting-state EEG (OpenNeuro ``ds003775``). Access recordings and metadata through EEGDash.
 
+**Citation:** Christoffer Hatlestad-Hall, Trine Waage Rygvold, Stein Andersson (2021). *SRM Resting-state EEG*. `10.18112/openneuro.ds003775.v1.2.1 <https://doi.org/10.18112/openneuro.ds003775.v1.2.1>`__
+
 .. rst-class:: sd-badges
 
 :bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 111` :bdg-secondary:`Recordings: 153`
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 8.0`
 
 Dataset Information
 -------------------
@@ -50,6 +52,117 @@ Dataset Information
         url = {https://doi.org/10.18112/openneuro.ds003775.v1.2.1},
       }
 
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS003775&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS003775%0A-%20%2A%2ATitle%3A%2A%2A%20SRM%20Resting-state%20EEG%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+
+**SRM Resting-state EEG**
+
+
+**Introduction**
+
+This EEG dataset contains resting-state EEG extracted from the experimental
+paradigm used in the *Stimulus-Selective Response Modulation* (SRM) project at
+the Dept. of Psychology, University of Oslo, Norway.
+The data is recorded with a BioSemi ActiveTwo system, using 64 electrodes
+
+.. dropdown:: View full README
+   :class-container: sd-shadow-sm
+
+   
+   **SRM Resting-state EEG**
+   
+   
+   **Introduction**
+   
+   This EEG dataset contains resting-state EEG extracted from the experimental
+   paradigm used in the *Stimulus-Selective Response Modulation* (SRM) project at
+   the Dept. of Psychology, University of Oslo, Norway.
+   The data is recorded with a BioSemi ActiveTwo system, using 64 electrodes
+   following the positional scheme of the extended 10-20 system (10-10).
+   Each datafile comprises four minutes of uninterrupted EEG acquired while the
+   subjects were resting with their eyes closed. The dataset includes EEG from
+   111 healthy control subjects (the "t1" session), of which a number underwent
+   an additional EEG recording at a later date (the "t2" session). Thus, some
+   subjects have one associated EEG file, whereas others have two.
+   
+   **Disclaimer**
+   
+   The dataset is provided "as is". Hereunder, the authors take no responsibility
+   with regard to data quality. The user is solely responsible for ascertaining
+   that the data used for publications or in other contexts fulfil the required
+   quality criteria.
+   
+   **The data**
+   
+   
+   **Raw data files**
+   
+   The raw EEG data signals are rereferenced to the average reference. Other than
+   that, no operations have been performed on the data. The files contain no
+   events; the whole continuous segment is resting-state data. The data signals
+   are unfiltered (recorded in Europe, the line noise frequency is 50 Hz). The
+   time points for the subject's EEG recording(s), are listed in the *_scans.tsv
+   file (particularly interesting for the subjects with two recordings).
+   Please note that the quality of the raw data has **not** been carefully
+   assessed. While most data files are of high quality, a few might be of poorer
+   quality. The data files are provided "as is", and it is the user's
+   esponsibility to ascertain the quality of the individual data file.
+   
+   **/derivatives/cleaned_data**
+   
+   For convenience, a cleaned dataset is provided. The files in this derived
+   dataset have been preprocessed with a basic, fully automated pipeline (see
+   /code/s2_preprocess.m for details) directory for details. The derived files are
+   stored as EEGLAB .set files in a directory structure identical to that of the
+   raw files. Please note that the *\*_channels.tsv* files associated with the
+   derived files have been updated with status information about each channel
+   ("good" or "bad"). The "bad" channels are – for the sake of consistency –
+   interpolated, and thus still present in the data. It might be advisable to
+   remove these channels in some analyses, as they (per definition) do not provide
+   anything to the EEG data. The cleaned data signals are referenced to the
+   average reference (including the interpolated channels).
+   Please mind the automatic nature of the employed pipeline. It might not perform
+   optimally on all data files (*e.g.* over-/underestimating proportion of bad
+   channels). For publications, we recommend implementing a more sensitive
+   cleaning pipeline.
+   
+   **Demographic and cognitive test data**
+   
+   The *participants.tsv* file in the root folder contains the variables age,
+   sex, and a range of cognitive test scores. See the sidecar participants.json
+   for more information on the behavioural measures. Please note that these
+   measures were collected in connection with the "t1" session recording.
+   
+   **How to cite**
+   
+   All use of this dataset in a publication context requires the following paper
+   to be cited:
+   Hatlestad-Hall, C., Rygvold, T. W., & Andersson, S. (2022). BIDS-structured
+   resting-state electroencephalography (EEG) data extracted from an experimental
+   paradigm. Data in Brief, 45, 108647. https://doi.org/10.1016/j.dib.2022.108647
+   
+   **Contact**
+   
+   Questions regarding the EEG data may be addressed to
+   Christoffer Hatlestad-Hall (chr.hh@pm.me).
+   Question regarding the project in general may be addressed to
+   Stein Andersson (stein.andersson@psykologi.uio.no) or
+   Trine W. Rygvold (t.w.rygvold@psykologi.uio.no).
+
+
 Highlights
 ----------
 
@@ -70,12 +183,12 @@ Highlights
       - Sampling rate (Hz): 1024.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 1
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: Healthy
+      - Modality: Resting State
+      - Type: Resting-state
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

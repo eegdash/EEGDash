@@ -5,7 +5,9 @@
 eegdash.dataset.DS006269
 ========================
 
-participants.tsv (OpenNeuro ``ds006269``). Access recordings and metadata through EEGDash.
+Tethered EEG Recordings in Syngap1 rats (OpenNeuro ``ds006269``). Access recordings and metadata through EEGDash.
+
+**Citation:** Lucy Pritchard, Ingrid Buller-Peralta, Sally M Till, Peter C Kind, Alfredo Gonzalez-Sulser (2025). *Tethered EEG Recordings in Syngap1 rats*. `10.18112/openneuro.ds006269.v1.0.0 <https://doi.org/10.18112/openneuro.ds006269.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ participants.tsv (OpenNeuro ``ds006269``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: —`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS006269``
    * - Title
-     - participants.tsv
+     - Tethered EEG Recordings in Syngap1 rats
    * - Year
      - 2025
    * - Authors
@@ -44,11 +46,28 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds006269,
-        title = {participants.tsv},
+        title = {Tethered EEG Recordings in Syngap1 rats},
         author = {Lucy Pritchard and Ingrid Buller-Peralta and Sally M Till and Peter C Kind and Alfredo Gonzalez-Sulser},
         doi = {10.18112/openneuro.ds006269.v1.0.0},
         url = {https://doi.org/10.18112/openneuro.ds006269.v1.0.0},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS006269&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS006269%0A-%20%2A%2ATitle%3A%2A%2A%20Tethered%20EEG%20Recordings%20in%20Syngap1%20rats%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+This dataset consists of 6-hour long EEG recordings in wildtype (WT) and rats Syngap+/Δ−GAP (HET) rats (male, 12-16 weeks old) starting at zeitgeber time (ZT) 3 to 9 (under a 12 light hr:12 dark hr schedule with lights on at 07:00 am). Associated with each rat is two 6-hour recording files, expect for those which only underwent one recording session (S7020, , S7025, S7030, S7031, S7032, 39, S7040, S7041). Recordings were acquired with an OpenEphys acquisition system (OpenEphys, Portugal) and head-mounted 32-channel EEG array probe (H32-EEG—NeuroNexus, USA) with accelerometers (NeuroNexus, USA), at a sampling rate of 1 kHz. For more detailed methods, please see our associated publication doi: 10.1016/j.celrep.2024.114733.
 
 Highlights
 ----------
@@ -70,12 +89,12 @@ Highlights
       - Sampling rate (Hz): 1000.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 2
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: Other
+      - Modality: Resting State
+      - Type: Resting-state
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

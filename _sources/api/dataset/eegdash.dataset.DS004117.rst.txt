@@ -5,7 +5,9 @@
 eegdash.dataset.DS004117
 ========================
 
-participants.tsv (OpenNeuro ``ds004117``). Access recordings and metadata through EEGDash.
+Sternberg Working Memory (OpenNeuro ``ds004117``). Access recordings and metadata through EEGDash.
+
+**Citation:** Julie Onton (data), Scott Makeig (data and curation), Arnaud Delorme (data and curation), Dung Truong (curation), Kay Robbins (curation) (2022). *Sternberg Working Memory*. `10.18112/openneuro.ds004117.v1.0.1 <https://doi.org/10.18112/openneuro.ds004117.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ participants.tsv (OpenNeuro ``ds004117``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 2.0`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS004117``
    * - Title
-     - participants.tsv
+     - Sternberg Working Memory
    * - Year
      - 2022
    * - Authors
@@ -44,11 +46,112 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds004117,
-        title = {participants.tsv},
+        title = {Sternberg Working Memory},
         author = {Julie Onton (data) and Scott Makeig (data and curation) and Arnaud Delorme (data and curation) and Dung Truong (curation) and Kay Robbins (curation)},
         doi = {10.18112/openneuro.ds004117.v1.0.1},
         url = {https://doi.org/10.18112/openneuro.ds004117.v1.0.1},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS004117&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS004117%0A-%20%2A%2ATitle%3A%2A%2A%20Sternberg%20Working%20Memory%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+
+**Modified Sternberg Working Memory Experiment**
+
+**Project name:** EEG and working memory
+**Years the project ran:** 2004-05
+**Brief overview of experiment task:** The purpose of this Modified Sternberg task study was to
+explore source-resolved EEG brain dynamics associated with selectively committing a series of letters to memory,
+then after a brief maintenance period responding by button press either yes or no to the question of whether
+a presented query letter had been in the just-presented set of to-be-memorized letters.
+The task is a modified version of the classic Sternberg working memory task, with two added features:
+
+.. dropdown:: View full README
+   :class-container: sd-shadow-sm
+
+   
+   **Modified Sternberg Working Memory Experiment**
+   
+   **Project name:** EEG and working memory
+   **Years the project ran:** 2004-05
+   **Brief overview of experiment task:** The purpose of this Modified Sternberg task study was to
+   explore source-resolved EEG brain dynamics associated with selectively committing a series of letters to memory,
+   then after a brief maintenance period responding by button press either yes or no to the question of whether
+   a presented query letter had been in the just-presented set of to-be-memorized letters.
+   The task is a modified version of the classic Sternberg working memory task, with two added features:
+   (1) interspersing the sequence of presented (black) letters to be memorized with (green) letters to be ignored,
+   and (2) delivering auditory feedback on each trial as to the correctness of the participant response
+   (beep = correct, buzz = incorrect).
+   **Data collection:** Scalp EEG data were collected from 71 scalp electrode channels,
+   each referred to a right mastoid electrode, at a sampling rate of 250 Hz/channel within an
+   analog passband of 0.1 to 100 Hz.
+   **Contact person:   Julie Onton <julieonton@gmail.com>, ORCID#:0000-0002-5602-3557.
+   **Access information:**  Contributed to OpenNeuro.org and NEMAR.org in BIDS format
+   following annotation using HED 8.0.0 in April, 2022.
+   **Independent variables:** Letter category (to_memorize, to_ignore);
+   numbers of presented letters to_memorize/to_ignore (3/5, 5/3, 7/1);
+   probe letter category (in/not in the presented set). Note, only letters to be memorized appear as in set probe letters.
+   **Dependent variables:**  EEG; button press response latency;  participant response (correct/incorrect).
+   **Participant pool:** The dataset includes data collected from 23 healthy young adult subjects
+   (7 male, 6 female, 11 unidentified) between the ages of 19 and 40 years of age.
+   **Apparatus:** A Neurobehavioral Systems, Inc. EEG system running under Window98 acquired the data.
+   The experiment control program was Presentation (Neurobehavioral Systems, Inc.).
+   **Initial setup:** EEG data were collected from 71 channels (69 scalp and two periocular electrodes,
+   all referred to right mastoid) with an analog pass band of 0.01 to 100 Hz (SA Instrumentation, San Diego).
+   Input impedances were brought under 5 kOhms by careful scalp preparation.
+   Data for subjects 1-12 was acquired at a sampling rate of 250Hz. The data for subject 14 was acquired at
+   1000 Hz and the data for subjects 15-24 was a acquired using a 500 Hz sampling rate.
+   **Task organization:**  Data was organized into runs of 25 trials each followed by a rest.
+   Each block was a separate run in the BIDS dataset.
+   **Task details:** Each trial consisted of the following sequence of events:
+   **[Trial initiation]**. After a self-selected, variable delay,
+   the subject initiated the next trial by pressing either response button,
+   triggering the reappearance of the fixation cross.
+   **[Letter sequence presentation]**. In these experiments, following a 5s presentation of a central
+   fixation cross cue, a series of 8 visual letters (~2 deg of visual angle) were presented at
+   screen center for 1.2s followed by a 0.2s ISI:
+   - Either 3, 5, or 7 of these were colored black.
+   - The participant was to memorize as letters in this set.
+   - The other 5, 3, or 1 letters in the sequence were colored green and participants were to ignore these.
+   - The letters were drawn without substitution from the English alphabet (omitting only A, E, I, O, and U).
+   - The presentation order of black and green letters was pseudo-random.
+   **[Memory maintenance]**. In place of a ninth letter, a dash appeared on the screen to signal the
+   beginning of a Memory Maintenance period lasting between 2 to 4 s.
+   During this period subjects were to silently rehearse the identities of the memorized letters.
+   **[Memory probe]**. A (red) probe letter then appeared, prompting the subject to respond by
+   pressing one of two buttons (with the thumb or index finger of their dominant hand)
+   to indicate whether or not the probe letter had been in the trial?s to-be-memorized letter set.
+   **[Response feedback]**. An auditory feedback signal (a confirmatory beep or cautionary buzz),
+   then presented beginning at 400 ms after the button press, informed the subject whether their
+   response was correct or incorrect. Note: responses in the task were largely correct.
+   **[Session time structure]**. Each task session comprised of 3 or 4 task blocks of 25 trials each
+   separated into individual run files.
+   **Experiment location**:  Swartz Center for Neural Computation (SCCN), University of California San Diego, La Jolla CA (USA).
+   **Note 1**: Results presented in Onton, J., Delorme, A. and Makeig, S., 2005.
+   Frontal midline EEG dynamics during working memory. Neuroimage, 27(2), pp.341-356.
+   **Note 2**: This paradigm is one of 20 event-related EEG task paradigms selected for replication by the EEGManyLabs project.
+   For details, see https://psyarxiv.com/528nr/. Contact: Yuri Pavlov <pavlovug@gmail.com>.
+   **Note 3**: Participant 5 did not have feedback events in the trials.
+   **Note 4**: The code subdirectory has several auxilliary files that were produced during
+   the curation process. The curation was done using a series of Jupyter notebooks
+   that are available as run in the code/curation_notebooks subdirectory.
+   During the running of these curation notebooks information about the status was logged
+   using the HEDLogger. The output of the logging process is in code/curation_logs.
+   Updated versions of the curation notebooks can be found at:
+   https://github.com/hed-standard/hed-examples/tree/main/hedcode/jupyter_notebooks/dataset_specific_processing/sternberg
+
 
 Highlights
 ----------
@@ -66,21 +169,21 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 69
-      - Sampling rate (Hz): 500.059 (22), 500.0 (48), 1000.0 (6), 250.0 (94)
+      - Channels: 71 (85), 69 (85)
+      - Sampling rate (Hz): 250.0 (94), 500.0 (48), 500.059 (22), 1000.0 (6)
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 1
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: —
+      - Modality: —
+      - Type: —
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 5.8 GB
+      - Size on disk: 3.0 MB
       - File count: 85
       - Format: BIDS
 

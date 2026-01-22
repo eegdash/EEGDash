@@ -5,7 +5,9 @@
 eegdash.dataset.DS006801
 ========================
 
-participants.tsv (OpenNeuro ``ds006801``). Access recordings and metadata through EEGDash.
+Resting-state EEG before and after different study methods (OpenNeuro ``ds006801``). Access recordings and metadata through EEGDash.
+
+**Citation:** Paloma Victoria de Sales Alves, Antonio Simeão Sobrinho Neto, Carla Alexandra da Silva Moita Minervino (2025). *Resting-state EEG before and after different study methods*. `10.18112/openneuro.ds006801.v1.0.0 <https://doi.org/10.18112/openneuro.ds006801.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ participants.tsv (OpenNeuro ``ds006801``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: —`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS006801``
    * - Title
-     - participants.tsv
+     - Resting-state EEG before and after different study methods
    * - Year
      - 2025
    * - Authors
@@ -44,11 +46,32 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds006801,
-        title = {participants.tsv},
+        title = {Resting-state EEG before and after different study methods},
         author = {Paloma Victoria de Sales Alves and Antonio Simeão Sobrinho Neto and Carla Alexandra da Silva Moita Minervino},
         doi = {10.18112/openneuro.ds006801.v1.0.0},
         url = {https://doi.org/10.18112/openneuro.ds006801.v1.0.0},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS006801&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS006801%0A-%20%2A%2ATitle%3A%2A%2A%20Resting-state%20EEG%20before%20and%20after%20different%20study%20methods%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+The RECAP-EEG: Retrieval with Feedback and Cognitive Adaptation EEG Dataset provides an open-access collection of human electroencephalography (EEG) recordings aimed at investigating the neural correlates of learning processes in educational contexts. The study involved 21 neurotypical undergraduate students (mean age = 23.10 years, SD = 3.92) and was conducted at the Federal University of Paraíba (UFPB), Brazil. Participants were randomly assigned to one of three experimental groups through an automated Python v3.12.7 script that ensured continuous balance among groups. In the active learning group, participants completed a review session using the NeuroShow platform, which consisted of 10 retrieval-practice questions with immediate feedback after each response. In the passive learning group, participants performed a review session based on their own notes taken during the lecture. In the control group, participants watched the same lecture but did not perform any review activity.
+Before data collection, all participants received detailed written instructions recommending that they avoid consuming caffeine or alcohol for at least 12 hours before the session, maintain a good night’s sleep, and have a proper breakfast on the morning of the experiment. Sessions were scheduled to start at 9:00 a.m., with a maximum delay tolerance of 15 minutes. Upon arrival at the laboratory, participants were briefed about the procedures specific to their group and were given the opportunity to ask questions before the experiment began. The first EEG recording (pre-intervention) was then performed, followed by the respective study condition for each group (active, passive, or control), and finally the second EEG recording (post-intervention).
+EEG signals were recorded using a 32-channel ActiChamp system (Brain Products GmbH, Germany) with active silver/silver chloride (Ag/AgCl) electrodes positioned according to the international 10–20 system. Electrode impedance was kept below 15 kΩ, with the ground at Fpz. Signals were sampled at 500 Hz, filtered between 0.5 and 50 Hz, and recorded at two time points: before and immediately after the study session. Each session lasted approximately nine minutes, comprising four blocks: two eyes-open blocks (2 minutes and 15 seconds each) and two eyes-closed blocks (2 minutes and 15 seconds each). The raw EEG data are organized in compliance with the BIDS (Brain Imaging Data Structure) standard and include .vhdr, .eeg, and .vmrk files, as well as the required metadata and descriptive files. Signal quality was ensured through impedance control and power spectral density (PSD) analysis, which confirmed the integrity and consistency of the recordings.
+The RECAP-EEG dataset may contribute to research in cognitive neuroscience and learning, particularly studies on retrieval practice with feedback, attentional modulation, and functional reorganization associated with active learning. It also supports interdisciplinary investigations in educational neuroscience, cognitive training, and neural modeling of learning and memory processes.
+The study was approved by the Research Ethics Committee of the Health Sciences Center at the Federal University of Paraíba (CCS/UFPB) under CAAE number 84958824.1.0000.5188 and approval number 7.400.264. All participants provided written informed consent prior to participation. The data are released under the Creative Commons Attribution 4.0 International License (CC BY 4.0), which permits unrestricted use, distribution, and reproduction provided that proper credit is given to the original authors.
 
 Highlights
 ----------
@@ -70,12 +93,12 @@ Highlights
       - Sampling rate (Hz): 500.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 1
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: Healthy
+      - Modality: Resting State
+      - Type: Learning
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

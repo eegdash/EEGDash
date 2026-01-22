@@ -5,7 +5,9 @@
 eegdash.dataset.DS005346
 ========================
 
-participants.tsv (OpenNeuro ``ds005346``). Access recordings and metadata through EEGDash.
+Naturalistic fMRI and MEG recordings during viewing of a reality TV show (OpenNeuro ``ds005346``). Access recordings and metadata through EEGDash.
+
+**Citation:** Jixing Li, Yike Wang, Chengcheng Wang, Zhengwu Ma (2024). *Naturalistic fMRI and MEG recordings during viewing of a reality TV show*. `10.18112/openneuro.ds005346.v1.0.5 <https://doi.org/10.18112/openneuro.ds005346.v1.0.5>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ participants.tsv (OpenNeuro ``ds005346``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: —`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS005346``
    * - Title
-     - participants.tsv
+     - Naturalistic fMRI and MEG recordings during viewing of a reality TV show
    * - Year
      - 2024
    * - Authors
@@ -44,11 +46,52 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds005346,
-        title = {participants.tsv},
+        title = {Naturalistic fMRI and MEG recordings during viewing of a reality TV show},
         author = {Jixing Li and Yike Wang and Chengcheng Wang and Zhengwu Ma},
         doi = {10.18112/openneuro.ds005346.v1.0.5},
         url = {https://doi.org/10.18112/openneuro.ds005346.v1.0.5},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS005346&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS005346%0A-%20%2A%2ATitle%3A%2A%2A%20Naturalistic%20fMRI%20and%20MEG%20recordings%20during%20viewing%20of%20a%20reality%20TV%20show%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+
+**Participants**
+
+Thirty participants (17 females, mean age=23.17±2.31 years) were recruited for the fMRI experiment at Shanghai International Studies University, Shanghai, China. An additional thirty participants (16 females, mean age=22.67±1.99 years) were recruited from the West China Hospital of Sichuan University, Chengdu, China for MEG experiment. All participants were right-handed, had normal or corrected-to-normal vision, and reported no history of neurological disorders. Before the experiment, all participants provided written informed consent and were compensated for their participation.
+Data from 6 participants in the MEG experiment exhibited distinct PSD patterns that diverged from the other 24 participants (10 females, mean age=22.75±1.94 years; see figure below), we excluded their data from the ISC and regression analysis for MEG data. However, all datasets remain available in the OpenNeuro repository for other researchers’ use.
+!`Power Spectrum Analysis <https://raw.githubusercontent.com/compneurolinglab/baba/main/psd.png>`__
+
+**Experiment Procedure**
+
+The experimental procedures for both fMRI and MEG experiments were identical. Participants watched the video while inside the scanner. The video was presented via a mirror attached to the head coil in the fMRI and MEG. Audio was delivered through MRI-compatible headphones (Sinorad, Shenzhen, China) during the fMRI experiment and MEG-compatible insert earphones (ComfortBuds 24, Sinorad, Shenzhen, China) during the MEG experiment. Following the video, participants were visually presented with 5 multiple-choice questions on the screen to assess their comprehension and ensure engagement with the stimuli. Participants responded using a button press, with a maximum response time of 10 seconds per question. If no response was recorded within this time, the experiment proceeded to the next question automatically. After the quiz, participants were instructed to close their eyes for 15 minutes without an explicit task. This period allowed for the recording of neural activity, capturing spontaneous mental replay of the video stimulus. The entire experimental procedure lasted approximately 45 minutes per participant.
+The fMRI experiment was approved by the Ethics Committee of Shanghai Key Laboratory of Brain-Machine Intelligence for Information Behavior (No. 2024BC028), and the MEG experiment was approved by the West China Hospital of Sichuan University Biomedical Research Ethics Committee (No. 2024[657]).
+
+**Stimuli**
+
+The video stimulus was extracted from the first episode of the Chinese reality TV show “Where Are We Going, Dad? (Season 1)” (openly available at https://www.youtube.com/watch?v=ZgRdRHmYuN8), which originally aired in 2013. The show features unscripted interactions between fathers and their child as they travel to a rural village and engage in daily activities. The selected excerpt has a total duration of 25 minutes and 19 seconds. The original video had a resolution of 640×368 pixels with a frame rate of 15 frames per second. It was presented in full-color (RGB) format, without embedded subtitles or captions.
+
+**Acquisition**
+
+The fMRI data was collected in a 3.0 T Siemens Prisma MRI scanner at Shanghai International Studies University, Shanghai. Anatomical scans were obtained using a Magnetization Prepared RApid Gradient-Echo (MP-RAGE) ANDI iPAT2 pulse sequence with T1-weighted contrast (192 single-shot interleaved sagittal slices with A/P phase encoding direction; voxel size=1×1×1 mm; FOV=256 mm; TR=2300 ms; TE=2.98 ms; TI=900 ms; flip angle=9°; acquisition time=6 min; GRAPPA in-plane acceleration factor=2). Functional scans were acquired using T2-weighted echo planar imaging (63 interleaved axial slices with A/P phase encoding direction, voxel size=2.5×2.5×2.5 mm; FOV=220 mm; TR=2000ms; TE=30 ms; acceleration factor=3; flip angle=60°).
+MEG data were recorded at West China Hospital of Sichuan University in Chengdu, China, using a 64-channel optically pumped magnetometer (OPM) MEG system (Quanmag, Beijing, China). The system consists of 64 single-axis OPM sensors (radial direction, fixed helmet) with a 1000 Hz sampling rate, <20 fT/√Hz sensitivity, and >100 Hz bandwidth. Each sensor (16 × 19 × 66 mm³) contains a 4 × 4 × 4 mm³ rubidium vapor cell and an integrated laser. The sensitive volume is located ~6 mm from the sensor’s outer surface. Sensors were mounted on a rigid, adult-sized helmet providing full-brain coverage. The system was housed in a six-layer magnetically shielded cylinder (1.5 mm permalloy, 10 mm aluminum), with residual magnetic field ≤1 nT and typical system noise of 20–30 fT/√Hz. Participants lay on a scanning bed inserted into the cylinder, wearing air-conduction headphones during the auditory task. Sensor positions were fixed by the helmet geometry, without additional digitization. OPM-MEG is a new type of MEG instrumentation that offers several advantages over conventional MEG systems. These include higher signal sensitivity, improved spatial resolution, and more uniform scalp coverage. Additionally, OPM-MEG allows for greater participant comfort and compliance, supports free movement during scanning, and features lower system complexity, making it a promising tool for more flexible and accessible neuroimaging. The MEG Data were sampled at 1,000 Hz and bandpass-filtered online between 0 and 500 Hz. To facilitate source localization, T1-weighted MRI scans were acquired from the participants using a 3.0 T Siemens TrioTim MRI scanner at West China Hospital of Sichuan University (176 single-shot interleaved sagittal slices with A/P phase encoding direction; voxel size=1×1×1 mm; FOV=256 mm; TR=1900 ms; TE=2.3 ms; TI=900 ms; flip angle=9°; acquisition time=7 min). All participants provided written informed consent outlining the experimental procedures and the data sharing plan prior to participation. They were compensated for their time and contribution.
+
+**Preprocessing**
+
+All Digital Imaging and Communications in Medicine (DICOM) files of the raw fMRI data were first converted into the Brain Imaging Data Structure (BIDS) format using dcm2bids (v3.1.1) and subsequently transformed into Neuroimaging Informatics Technology Initiative (NIfTI) format via dcm2niix (v1.0.20220505). Facial features were removed from anatomical images using PyDeface (v2.0.2). Preprocessing was carried out with fMRIPrep (v20.2.0), following standard neuroimaging pipelines. For anatomical images, T1-weighted scans underwent bias field correction, skull stripping, and tissue segmentation into gray matter (GM), white matter (WM), and cerebrospinal fluid (CSF). These images were then spatially normalized to the Montreal Neurological Institute (MNI) space using the MNI152NLin2009cAsym:res-2 template, ensuring consistent alignment across participants. Functional MRI preprocessing included skull stripping, motion correction, slice-timing correction, and co-registration to the T1-weighted anatomical reference. For each BOLD run, head-motion parameters with respect to the BOLD reference (transformation matrices, and six corresponding rotation and translation parameters) are estimated before any spatiotemporal filtering using ‘mcflirt’ (FSL 5.0.9) and slice timing correction was applied using 3dTshift (AFNI 20160207). Co-registration to the anatomical image was done with flirt using boundary-based registration (6 degrees of freedom). No susceptibility distortion correction was applied. Confound regressors included motion parameters (and their derivatives/quadratics), framewise displacement (FD), DVARS, global signals, and t/aCompCor components computed from white matter and CSF after high-pass filtering (128s cutoff). Volumes exceeding FD>0.5 mm or standardized DVARS>1.5 were flagged as motion outliers. All transforms were applied in a single interpolation step using antsApplyTransforms with Lanczos interpolation. We further performed spatial smoothing on the preprocessed fMRI data (post-fMRIPrep) using an isotropic Gaussian kernel with an 8 mm FWHM. However, the versions uploaded to OpenNeuro remain unsmoothed so that researchers can choose whether to apply smoothing.
+MEG data preprocessing was conducted using MNE-Python (v1.8.0). We first applied a bandpass filter (1–38 Hz) to remove low-frequency drifts and high-frequency noise. We then identified bad channels through visual inspection and cross-validated using PyPREP (v0.4.3), these bad channels were interpolated to maintain data integrity. To mitigate physiological artifacts, we performed independent component analysis (ICA) and removed components corresponding to heartbeat and eye movements. The data were then segmented into three task-related epochs corresponding to the video watching, question answering, and post-task replay conditions. Because our paradigm uses naturalistic video viewing rather than discrete event trials, there is no true pre‐stimulus baseline period for noise covariance estimation. Instead, we computed the noise covariance from the mean over each full epoch. T1-weighted MRI data were converted to NIfTI format and processed with FreeSurfer (v7.3.2) to reconstruct cortical surfaces and generate boundary element model (BEM) surfaces using a single-layer conductivity of 0.3 S/m. MEG-MRI coregistration was performed with fiducial points and refined via MNE-Python’s graphical interface. A source space (resolution=5 mm) was generated using a fourth-order icosahedral mesh, and a BEM solution was computed to model head conductivity. A forward model was then created based on anatomical MRI and digitized head shape. Noise covariance matrices were estimated from raw MEG recordings, and inverse operators were constructed using minimum norm estimation (SNR=3). Source reconstruction employed dynamic statistical parametric mapping (dSPM) for noise-normalized estimates. Task-related epochs (video watching, question answering, post-task replay) were used to compute source estimates, which were morphed onto the FreeSurfer average brain template for group-level comparisons.
 
 Highlights
 ----------
@@ -70,12 +113,12 @@ Highlights
       - Sampling rate (Hz): 1000.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 3
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: Healthy
+      - Modality: Multisensory
+      - Type: Memory
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

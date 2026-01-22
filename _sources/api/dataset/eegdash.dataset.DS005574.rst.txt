@@ -5,7 +5,9 @@
 eegdash.dataset.DS005574
 ========================
 
-participants.tsv (OpenNeuro ``ds005574``). Access recordings and metadata through EEGDash.
+The "Podcast" ECoG dataset (OpenNeuro ``ds005574``). Access recordings and metadata through EEGDash.
+
+**Citation:** Zaid Zada, Samuel A. Nastase, Bobbi Aubrey, Itamar Jalon, Ariel Goldstein, Sebastian Michelmann, Haocheng Wang, Liat Hasenfratz, Werner Doyle, Daniel Friedman, Patricia Dugan, Lucia Melloni, Sasha Devore, Orrin Devinsky, Adeen Flinker, Uri Hasson (2024). *The "Podcast" ECoG dataset*. `10.18112/openneuro.ds005574.v1.0.2 <https://doi.org/10.18112/openneuro.ds005574.v1.0.2>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ participants.tsv (OpenNeuro ``ds005574``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: —`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS005574``
    * - Title
-     - participants.tsv
+     - The "Podcast" ECoG dataset
    * - Year
      - 2024
    * - Authors
@@ -44,11 +46,29 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds005574,
-        title = {participants.tsv},
+        title = {The "Podcast" ECoG dataset},
         author = {Zaid Zada and Samuel A. Nastase and Bobbi Aubrey and Itamar Jalon and Ariel Goldstein and Sebastian Michelmann and Haocheng Wang and Liat Hasenfratz and Werner Doyle and Daniel Friedman and Patricia Dugan and Lucia Melloni and Sasha Devore and Orrin Devinsky and Adeen Flinker and Uri Hasson},
         doi = {10.18112/openneuro.ds005574.v1.0.2},
         url = {https://doi.org/10.18112/openneuro.ds005574.v1.0.2},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS005574&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS005574%0A-%20%2A%2ATitle%3A%2A%2A%20The%20%22Podcast%22%20ECoG%20dataset%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+The "Podcast" ECoG dataset for modeling neural activity during natural story listening.
+We introduce the “Podcast” electrocorticography (ECoG) dataset for modeling neural activity supporting natural narrative comprehension. This dataset combines the exceptional spatiotemporal resolution of human intracranial electrophysiology with a naturalistic experimental paradigm for language comprehension. In addition to the raw data, we provide a minimally preprocessed version in the high-gamma spectral band to showcase a simple pipeline and to make it easier to use. Furthermore, we include the auditory stimuli, an aligned word-level transcript, and linguistic features ranging from low-level acoustic properties to large language model (LLM) embeddings. We also include tutorials replicating previous findings and serve as a pedagogical resource and a springboard for new research. The dataset comprises 9 participants with 1,330 electrodes, including grid, depth, and strip electrodes. The participants listened to a 30-minute story with over 5,000 words. By using a natural story with high-fidelity, invasive neural recordings, this dataset offers a unique opportunity to investigate language comprehension.
 
 Highlights
 ----------
@@ -66,16 +86,16 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 91 (2), 174 (2), 114 (2), 138 (2), 124 (2), 264 (2), 167 (2), 205 (2), 178 (2)
+      - Channels: 205 (2), 91 (2), 167 (2), 124 (2), 264 (2), 138 (2), 114 (2), 174 (2), 178 (2)
       - Sampling rate (Hz): 512.0 (16), 2048.0 (2)
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 1
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: —
+      - Modality: Auditory
+      - Type: Other
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

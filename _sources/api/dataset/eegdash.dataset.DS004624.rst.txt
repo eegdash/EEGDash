@@ -7,13 +7,15 @@ eegdash.dataset.DS004624
 
 Intracranial recordings using BCI2000 and the CorTec BrainInterchange (OpenNeuro ``ds004624``). Access recordings and metadata through EEGDash.
 
+**Citation:** F. Mivalt, F. Lampert, M.A. van den Boom, P. Brunner, J. Kim, Andrea Duque-lopez, M. Krakorova, V. Kremen, D. Hermes, G.A. Worrell, K. J. Miller (2023). *Intracranial recordings using BCI2000 and the CorTec BrainInterchange*. `10.18112/openneuro.ds004624.v2.0.0 <https://doi.org/10.18112/openneuro.ds004624.v2.0.0>`__
+
 .. rst-class:: sd-badges
 
 :bdg-primary:`Modality: ieeg` :bdg-info:`Tasks: 32` :bdg-secondary:`Subjects: 4` :bdg-secondary:`Recordings: 66425`
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 0.0`
 
 Dataset Information
 -------------------
@@ -27,7 +29,7 @@ Dataset Information
    * - Title
      - Intracranial recordings using BCI2000 and the CorTec BrainInterchange
    * - Year
-     - —
+     - 2023
    * - Authors
      - F. Mivalt, F. Lampert, M.A. van den Boom, P. Brunner, J. Kim, Andrea Duque-lopez, M. Krakorova, V. Kremen, D. Hermes, G.A. Worrell, K. J. Miller
    * - License
@@ -50,6 +52,30 @@ Dataset Information
         url = {https://doi.org/10.18112/openneuro.ds004624.v2.0.0},
       }
 
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS004624&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS004624%0A-%20%2A%2ATitle%3A%2A%2A%20Intracranial%20recordings%20using%20BCI2000%20and%20the%20CorTec%20BrainInterchange%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+An Ecosystem of Technology and Protocols for Adaptive Neuromodulation Research in Humans
+
+This study aims to develop an ecosystem for the purpose of neurmodulation using the Cortec BCI device and BCI2000 software.
+
+Contact: For questions regarding this dataset, please contact
+mivalt.filip@mayo.edu or Miller.Kai@mayo.edu
+
+Funding: NIH U01NS128612
+
 Highlights
 ----------
 
@@ -70,12 +96,12 @@ Highlights
       - Sampling rate (Hz): —
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 32
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: —
+      - Modality: —
+      - Type: Clinical/Intervention
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

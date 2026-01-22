@@ -7,13 +7,15 @@ eegdash.dataset.DS006902
 
 Profound neuronal differences during Exercise-Induced Hypoalgesia between athletes and non-athletes revealed by functional near-infrared spectroscopy (OpenNeuro ``ds006902``). Access recordings and metadata through EEGDash.
 
+**Citation:** Maria Geisler, Marco Herbsleb, Feliberto de la Cruz, Sabrina von Au, Andy Schumann, Ilona Croy, Karl-Jürgen Bär (2025). *Profound neuronal differences during Exercise-Induced Hypoalgesia between athletes and non-athletes revealed by functional near-infrared spectroscopy*. `10.18112/openneuro.ds006902.v1.1.1 <https://doi.org/10.18112/openneuro.ds006902.v1.1.1>`__
+
 .. rst-class:: sd-badges
 
 :bdg-primary:`Modality: fnirs` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 43` :bdg-secondary:`Recordings: 259`
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: —`
 
 Dataset Information
 -------------------
@@ -27,7 +29,7 @@ Dataset Information
    * - Title
      - Profound neuronal differences during Exercise-Induced Hypoalgesia between athletes and non-athletes revealed by functional near-infrared spectroscopy
    * - Year
-     - —
+     - 2025
    * - Authors
      - Maria Geisler, Marco Herbsleb, Feliberto de la Cruz, Sabrina von Au, Andy Schumann, Ilona Croy, Karl-Jürgen Bär
    * - License
@@ -50,6 +52,28 @@ Dataset Information
         url = {https://doi.org/10.18112/openneuro.ds006902.v1.1.1},
       }
 
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS006902&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS006902%0A-%20%2A%2ATitle%3A%2A%2A%20Profound%20neuronal%20differences%20during%20Exercise-Induced%20Hypoalgesia%20between%20athletes%20and%20non-athletes%20revealed%20by%20functional%20near-infrared%20spectroscopy%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+Regular physical activity is an important treatment constituent for chronic pain. To unravel the neuronal influence of exercise on pain, we investigated the neuronal changes during exercise-induced hypoalgesia in endurance athletes and controls. 
+Twenty-two athletes (mean age: 33.3 ± 10.8 years) and twenty non-athletes (mean age: 28.9 ± 9.0 years) underwent High-Intensity Interval Training (HIIT) and pressure pain tests, while brain oxygenation was monitored using functional near-infrared spectroscopy to cover key regions of pain processing: the prefrontal cortex (PFC), sensory motor cortices, and posterior parietal cortex (PPC).
+During HIIT, both groups exhibited a steady increase in PFC oxyhemoglobin, with athletes showing a greater increase in the PPC area than non-athletes. As expected, athletes showed a significant reduction in pain perception after HIIT, whereas non-athletes did not. In line, athletes showed a significant decrease in oxyhemoglobin levels in all brain areas post-HIIT, while non-athletes only showed a decrease in sensory motor areas. Interestingly, in athletes, pain reduction correlated with the decrease in PFC oxyhemoglobin during painful stimulation, whereas no significant correlation was observed in non-athletes. 
+The pronounced HIIT-induced increase in oxyhemoglobin in athletes may elevate baseline neural activity to a level where additional activation is limited, potentially reducing the salience of pain-related signals. This athlete-specific response may result from endurance training adaptations, such as enhanced microvascularization and oxygen delivery, promoting greater neural efficiency during high-intensity exercise. These findings highlight HIIT's potential as a targeted pain management strategy for athletes and the need for tailored approaches in non-athletes.
+
+dataset: sub01-sub27 are athletes; sub29-sub53 are non-athletes
+
 Highlights
 ----------
 
@@ -70,12 +94,12 @@ Highlights
       - Sampling rate (Hz): —
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 1
-      - Experiment type: —
-      - Subject type: pain, exercise
+      - Pathology: Healthy
+      - Modality: Motor
+      - Type: Perception
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

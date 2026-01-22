@@ -5,7 +5,9 @@
 eegdash.dataset.DS005114
 ========================
 
-participants.tsv (OpenNeuro ``ds005114``). Access recordings and metadata through EEGDash.
+EEG: DPX Cog Ctl Task in Acute Mild TBI (OpenNeuro ``ds005114``). Access recordings and metadata through EEGDash.
+
+**Citation:** James F Cavanagh (2024). *EEG: DPX Cog Ctl Task in Acute Mild TBI*. `10.18112/openneuro.ds005114.v1.0.0 <https://doi.org/10.18112/openneuro.ds005114.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ participants.tsv (OpenNeuro ``ds005114``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 0.0`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS005114``
    * - Title
-     - participants.tsv
+     - EEG: DPX Cog Ctl Task in Acute Mild TBI
    * - Year
      - 2024
    * - Authors
@@ -44,11 +46,28 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds005114,
-        title = {participants.tsv},
+        title = {EEG: DPX Cog Ctl Task in Acute Mild TBI},
         author = {James F Cavanagh},
         doi = {10.18112/openneuro.ds005114.v1.0.0},
         url = {https://doi.org/10.18112/openneuro.ds005114.v1.0.0},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS005114&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS005114%0A-%20%2A%2ATitle%3A%2A%2A%20EEG%3A%20DPX%20Cog%20Ctl%20Task%20in%20Acute%20Mild%20TBI%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+Dot Probe Continuous Performance Task in control & sub-acute mild TBI.   Published here: https://pubmed.ncbi.nlm.nih.gov/31368085/    For CTL and sub-acute mTBI: Session 1 was from 3 to 14 days post-injury and was the only session with MRI. MRI will be uploaded later (bug issues on upload).  Session 2 was ~2 months (1.5 to 3) and Session 3 was ~4 months (3 to 5) following Session 1.   There was A LOT of subject attrition over timepoints.   Same samples as reported here: https://psycnet.apa.org/record/2020-66677-001   https://pubmed.ncbi.nlm.nih.gov/31344589/  10.1016/j.neuropsychologia.2019.107125   Task included in Matlab programming language.   Data collected 2016-2018 in the Center for Brain Recovery and Repair at the UNM Health Sciences Center.  Check the .xls sheet under code folder for *LOTS* more meta data.   Analysis scripts are included.  - James F Cavanagh 04/29/2024
 
 Highlights
 ----------
@@ -66,21 +85,21 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 64
+      - Channels: 64 (229), 65 (217)
       - Sampling rate (Hz): 500.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 1
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: —
+      - Modality: —
+      - Type: —
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 55.9 GB
+      - Size on disk: 14.7 MB
       - File count: 223
       - Format: BIDS
 

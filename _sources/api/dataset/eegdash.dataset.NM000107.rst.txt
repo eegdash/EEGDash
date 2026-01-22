@@ -5,7 +5,9 @@
 eegdash.dataset.NM000107
 ========================
 
-Wrist Movement Control from EMG (OpenNeuro ``nm000107``). Access recordings and metadata through EEGDash.
+wrist: Wrist Movement Control from EMG (OpenNeuro ``nm000107``). Access recordings and metadata through EEGDash.
+
+**Citation:** Patrick Kaifosh, Thomas R. Reardon, CTRL-labs at Reality Labs (2025). *wrist: Wrist Movement Control from EMG*. `10.5281/zenodo.17282507 <https://doi.org/10.5281/zenodo.17282507>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ Wrist Movement Control from EMG (OpenNeuro ``nm000107``). Access recordings and 
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC-BY-NC 4.0` :bdg-warning:`Source: nemar`
+:bdg-success:`License: CC-BY-NC 4.0` :bdg-warning:`Source: nemar` :bdg-info:`Citations: —`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``NM000107``
    * - Title
-     - Wrist Movement Control from EMG
+     - wrist: Wrist Movement Control from EMG
    * - Year
      - 2025
    * - Authors
@@ -44,11 +46,175 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{nm000107,
-        title = {Wrist Movement Control from EMG},
+        title = {wrist: Wrist Movement Control from EMG},
         author = {Patrick Kaifosh and Thomas R. Reardon and CTRL-labs at Reality Labs},
         doi = {10.5281/zenodo.17282507},
         url = {https://doi.org/10.5281/zenodo.17282507},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20NM000107&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20NM000107%0A-%20%2A%2ATitle%3A%2A%2A%20wrist%3A%20Wrist%20Movement%20Control%20from%20EMG%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+
+**wrist: Wrist Movement Control from EMG**
+
+
+**Overview**
+
+**Dataset**: wrist - Wrist posture and movement from wrist-based surface electromyography
+**Task**: 1D continuous cursor control via wrist flexion/extension
+**Participants**: 100 subjects
+**Sessions**: 100 total (1 per subject)
+
+.. dropdown:: View full README
+   :class-container: sd-shadow-sm
+
+   
+   **wrist: Wrist Movement Control from EMG**
+   
+   
+   **Overview**
+   
+   **Dataset**: wrist - Wrist posture and movement from wrist-based surface electromyography
+   **Task**: 1D continuous cursor control via wrist flexion/extension
+   **Participants**: 100 subjects
+   **Sessions**: 100 total (1 per subject)
+   **Publication**: Kaifosh et al., 2025 - "A generic non-invasive neuromotor interface for human-computer interaction" (Nature)
+   
+   **Purpose**
+   
+   This dataset captures wrist-based sEMG signals during wrist movements for continuous cursor control. Motion capture provides ground-truth wrist angles. The goal is to enable gesture-free control through wrist posture alone, demonstrating sEMG's ability to decode motor intent before visible movement occurs.
+   
+   **Dataset Details**
+   
+   
+   **Participants**
+   
+   - **Sample size**: 100 participants
+   - **Demographics**: Not available (marked as n/a)
+   - **Recording side**: Dominant wrist
+   - **Sessions**: 1 per participant
+   
+   **Hardware**
+   
+   - **Device**: sEMG-RD (single wristband)
+   - **Channels**: 16 (EMG0-EMG15)
+   - **Sampling rate**: 2000 Hz
+   - **Reference**: Bipolar differential
+   - **Ground truth**: Motion capture wrist angles
+   
+   **Recording Protocol**
+   
+   1. Participant wears sEMG-RD on dominant wrist
+   2. Motion capture tracks wrist angles in real-time
+   3. Participant controls horizontal cursor position with wrist flexion/extension
+   4. Target acquisition task: Navigate to targets and hold for 500ms
+   
+   **Data Contents**
+   
+   
+   **Files per Session**
+   
+   ```
+   sub-XXX/ses-XXX/emg/
+   ├── sub-XXX_ses-XXX_task-wrist_emg.edf
+   ├── sub-XXX_ses-XXX_task-wrist_emg.json
+   ├── sub-XXX_ses-XXX_task-wrist_channels.tsv
+   ├── sub-XXX_ses-XXX_task-wrist_events.tsv
+   
+   **└── sub-XXX_ses-XXX_electrodes.tsv**
+   
+   
+   **Events**
+   
+   - **Stage boundaries**: Task phases and movement trials
+   
+   **Coordinate System**
+   
+   Single coordinate system at root (dominant wrist, percent units, no decimals)
+   
+   **Signal Processing**
+   
+   **Note**: This dataset has significant data quality issues:
+   - Duplicate timestamps found in many sessions (up to 88% duplicates)
+   - Irregular sampling requiring resampling (up to 916% deviation)
+   - Post-processing: Duplicate removal followed by resampling to regular 2000 Hz
+   
+   **Baseline Performance**
+   
+   
+   **Published Results (Kaifosh et al., 2025)**
+   
+   **Offline Evaluation**:
+   - Wrist angle velocity error: <13°/s
+   - Error decreases with more training participants
+   **Closed-loop Performance** (n=17 naive test users):
+   - **Target acquisition time**: Median 1.51s (sEMG decoder)
+   - **Dial-in time**: Time to re-acquire after premature exit
+   - **Learning effects**: Improvement from practice to evaluation blocks
+   **Comparison**:
+   - Motion capture ground truth: 0.96s
+   - MacBook trackpad: 0.68s
+   - sEMG decoder: 1.51s (2.2× slower than trackpad)
+   **Model architecture**: MPF features + LSTM
+   
+   **Key Findings**
+   
+   - **Predictive signals**: sEMG precedes movement by tens of milliseconds
+   - **Generic models work**: Out-of-the-box cross-user generalization
+   - **Continuous control**: Demonstrates feasibility of gesture-free interfaces
+   - **Room for improvement**: Performance gap vs traditional inputs
+   
+   **Use Cases**
+   
+   - **Continuous control**: Cursor/pointer movement
+   - **AR/VR navigation**: Hands-free interface
+   - **Low-effort control**: Minimal visible movement required
+   - **Predictive decoding**: Intent detection before motion completion
+   
+   **Known Limitations**
+   
+   - Single degree of freedom (1D control only)
+   - Single wrist (dominant hand)
+   - Duplicate timestamps (data quality issue)
+   - Performance below traditional inputs
+   - Extension to 2D control not demonstrated
+   
+   **Citation**
+   
+   ```
+   Kaifosh, P., Reardon, T.R., & CTRL-labs at Reality Labs. (2025).
+   A generic non-invasive neuromotor interface for human-computer interaction.
+   
+   **Nature, 645(8081), 702-711. https://doi.org/10.1038/s41586-025-09255-w**
+   
+   
+   **Data Curator**
+   
+   **Yahya Shirazi**
+   SCCN (Swartz Center for Computational Neuroscience)
+   INC (Institute for Neural Computation)
+   University of California San Diego
+   
+   **Version History**
+   
+   
+   ****v1.0** (2025-10-01): Initial BIDS conversion**
+   
+   **BIDS Version**: 1.11 | **EMG-BIDS**: BEP-042 | **Updated**: Oct 1, 2025
+
 
 Highlights
 ----------
@@ -70,12 +236,12 @@ Highlights
       - Sampling rate (Hz): 2000.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 1
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: Healthy
+      - Modality: Visual
+      - Type: Motor
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

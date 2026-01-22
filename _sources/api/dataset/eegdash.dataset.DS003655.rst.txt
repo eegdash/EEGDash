@@ -5,7 +5,9 @@
 eegdash.dataset.DS003655
 ========================
 
-participants.tsv (OpenNeuro ``ds003655``). Access recordings and metadata through EEGDash.
+VerbalWorkingMemory (OpenNeuro ``ds003655``). Access recordings and metadata through EEGDash.
+
+**Citation:** Yuri G. Pavlov (2021). *VerbalWorkingMemory*. `10.18112/openneuro.ds003655.v1.0.0 <https://doi.org/10.18112/openneuro.ds003655.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ participants.tsv (OpenNeuro ``ds003655``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 4.0`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS003655``
    * - Title
-     - participants.tsv
+     - VerbalWorkingMemory
    * - Year
      - 2021
    * - Authors
@@ -44,11 +46,28 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds003655,
-        title = {participants.tsv},
+        title = {VerbalWorkingMemory},
         author = {Yuri G. Pavlov},
         doi = {10.18112/openneuro.ds003655.v1.0.0},
         url = {https://doi.org/10.18112/openneuro.ds003655.v1.0.0},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS003655&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS003655%0A-%20%2A%2ATitle%3A%2A%2A%20VerbalWorkingMemory%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+EEG in a modified Sternberg working memory paradigm with two types of task: with mental manipulations (alphabetization) and simple retention (TASK) and 3 levels of load: 5, 6, or 7 letter to memorize (LOAD)
 
 Highlights
 ----------
@@ -66,16 +85,16 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 19
+      - Channels: 21 (156), 19 (156)
       - Sampling rate (Hz): 500.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 1
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: —
+      - Modality: —
+      - Type: —
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

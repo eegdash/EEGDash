@@ -5,7 +5,9 @@
 eegdash.dataset.DS002722
 ========================
 
-participants.tsv (OpenNeuro ``ds002722``). Access recordings and metadata through EEGDash.
+A dataset recorded during development of an affective brain-computer music interface: calibration session (OpenNeuro ``ds002722``). Access recordings and metadata through EEGDash.
+
+**Citation:** Ian Daly, Nicoletta Nicolaou, Duncan Williams, Faustina Hwang, Alexis Kirke, Eduardo Miranda, Slawomir J. Nasuto (2020). *A dataset recorded during development of an affective brain-computer music interface: calibration session*. `10.18112/openneuro.ds002722.v1.0.1 <https://doi.org/10.18112/openneuro.ds002722.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ participants.tsv (OpenNeuro ``ds002722``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 2.0`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS002722``
    * - Title
-     - participants.tsv
+     - A dataset recorded during development of an affective brain-computer music interface: calibration session
    * - Year
      - 2020
    * - Authors
@@ -44,11 +46,28 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds002722,
-        title = {participants.tsv},
+        title = {A dataset recorded during development of an affective brain-computer music interface: calibration session},
         author = {Ian Daly and Nicoletta Nicolaou and Duncan Williams and Faustina Hwang and Alexis Kirke and Eduardo Miranda and Slawomir J. Nasuto},
         doi = {10.18112/openneuro.ds002722.v1.0.1},
         url = {https://doi.org/10.18112/openneuro.ds002722.v1.0.1},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS002722&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS002722%0A-%20%2A%2ATitle%3A%2A%2A%20A%20dataset%20recorded%20during%20development%20of%20an%20affective%20brain-computer%20music%20interface%3A%20calibration%20session%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+No README content is available for this dataset.
 
 Highlights
 ----------
@@ -66,21 +85,21 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 32
+      - Channels: 37 (94), 32 (94)
       - Sampling rate (Hz): 1000.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 5
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: —
+      - Modality: —
+      - Type: —
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 6.1 GB
+      - Size on disk: 745.2 KB
       - File count: 94
       - Format: BIDS
 

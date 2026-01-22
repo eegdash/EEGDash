@@ -5,7 +5,9 @@
 eegdash.dataset.DS003876
 ========================
 
-participants.tsv (OpenNeuro ``ds003876``). Access recordings and metadata through EEGDash.
+Epilepsy-iEEG-Interictal-Multicenter-Dataset (OpenNeuro ``ds003876``). Access recordings and metadata through EEGDash.
+
+**Citation:** Gunnarsdottir, Kristin, Li, Adam, Smith, Rachel, Kang, Joon, Korzeniewska, Anna, Crone, Nathan, Rouse, Adam, Cheng, Jennifer, Kinsman, Michael, Landazuri, Patrick, Uysal, Utku, Ulloa, Carol, Cameron, Nathaniel, Cajigas, Iahn, Jagid, Jonathan, Kanner, Andres, Elarjani, Turki, Bicchi, Manuel, Inati, Sara, Zaghloul, Kareem, Boerwinkle, Varina, Wyckoff, Sarah, Barot, Niravkumar, Gonzalez-Martinez, Jorge, Sarma, Sridevi (2021). *Epilepsy-iEEG-Interictal-Multicenter-Dataset*. `10.18112/openneuro.ds003876.v1.0.2 <https://doi.org/10.18112/openneuro.ds003876.v1.0.2>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ participants.tsv (OpenNeuro ``ds003876``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 3.0`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS003876``
    * - Title
-     - participants.tsv
+     - Epilepsy-iEEG-Interictal-Multicenter-Dataset
    * - Year
      - 2021
    * - Authors
@@ -44,11 +46,76 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds003876,
-        title = {participants.tsv},
+        title = {Epilepsy-iEEG-Interictal-Multicenter-Dataset},
         author = {Gunnarsdottir, Kristin and Li, Adam and Smith, Rachel and Kang, Joon and Korzeniewska, Anna and Crone, Nathan and Rouse, Adam and Cheng, Jennifer and Kinsman, Michael and Landazuri, Patrick and Uysal, Utku and Ulloa, Carol and Cameron, Nathaniel and Cajigas, Iahn and Jagid, Jonathan and Kanner, Andres and Elarjani, Turki and Bicchi, Manuel and Inati, Sara and Zaghloul, Kareem and Boerwinkle, Varina and Wyckoff, Sarah and Barot, Niravkumar and Gonzalez-Martinez, Jorge and Sarma, Sridevi},
         doi = {10.18112/openneuro.ds003876.v1.0.2},
         url = {https://doi.org/10.18112/openneuro.ds003876.v1.0.2},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS003876&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS003876%0A-%20%2A%2ATitle%3A%2A%2A%20Epilepsy-iEEG-Interictal-Multicenter-Dataset%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+
+**Epilepsy Interictal Dataset**
+
+This dataset was updated and prepared for release as part of a manuscript by Bernabei & Li et al. (in preparation). A subset of the data has been featured in [1] and [2].
+
+**Summary**
+
+This dataset comprises of de-identified subjects with interictal iEEG recordings possibly with sleep or awake state annotated. The subjects come from the following centers:
+- National Institute of Health (NIH)
+- Johns Hopkins Hospital (JHH)
+
+.. dropdown:: View full README
+   :class-container: sd-shadow-sm
+
+   
+   **Epilepsy Interictal Dataset**
+   
+   This dataset was updated and prepared for release as part of a manuscript by Bernabei & Li et al. (in preparation). A subset of the data has been featured in [1] and [2].
+   
+   **Summary**
+   
+   This dataset comprises of de-identified subjects with interictal iEEG recordings possibly with sleep or awake state annotated. The subjects come from the following centers:
+   - National Institute of Health (NIH)
+   - Johns Hopkins Hospital (JHH)
+   - University of Miami Florida Jackson Memorial Hospital (UMF)
+   In the actual study, there is also data from Kansas University Medical Center (KUMC), University of Pittsburgh Medical Center and Cleveland Clinic, whose data is not shared due to restrictions imposed by the centers there.
+   Some subjects, namely with the ``rns`` prefix in their subject ID were treated with RNS rather then surgical resection/ablation.
+   
+   **Derivatives**
+   
+   The processed data corresponding to the ``source-sink`` analysis and ``hfo`` comparisons are shown in the ``derivatives/`` folder. The HFO analysis consists of two folders, one is an RMS detector and the other is a Hilbert detector. See the paper for details.
+   
+   **Ties to Other Datasets**
+   
+   NIH ``pt1, pt2, pt3``, JHH ``jh103, jh105`` subjects are also datasets in ``https://openneuro.org/datasets/ds003029``, where the ictal snapshots are stored. These correspond to the following:
+   - pt1: pt01
+   - pt2: pt2
+   - pt3: pt3
+   - jh103: jh103
+   - jh105: jh105
+   Moreover, the cclinic subjects are used in that study, but not open-access due to data sharing limitations at Cleveland Clinic. Those ictal datasets were analyzed in https://www.nature.com/articles/s41593-021-00901-w.
+   
+   **References**
+   
+   [1] Li, A., Huynh, C., Fitzgerald, Z. et al. Neural fragility as an EEG marker of the seizure onset zone. Nat Neurosci 24, 1465â1474 (2021). https://doi.org/10.1038/s41593-021-00901-w
+   [2] Kristin M. Gunnarsdottir, Adam Li, Rachel J. Smith, Joon-Yi Kang, Nathan E. Crone, Anna Korzeniewska, Adam Rouse, Nathaniel Cameron, Iahn Cajigas, Sara Inati, Kareem A. Zaghloul, Varina L. Boerwinkle, Sarah Wyckoff, Nirav Barot, Jorge Gonzalez-Martinez, Sridevi V. Sarma. Source-sink connectivity: a novel resting-state EEG marker of the epileptogenic zone. bioRxiv 2021.10.15.464594; doi: https://doi.org/10.1101/2021.10.15.464594
+   [3] Appelhoff, S., Sanderson, M., Brooks, T., Vliet, M., Quentin, R., Holdgraf, C., Chaumon, M., Mikulan, E., Tavabi, K., HÃ¶chenberger, R., Welke, D., Brunner, C., Rockhill, A., Larson, E., Gramfort, A. and Jas, M. (2019). MNE-BIDS: Organizing electrophysiological data into the BIDS format and facilitating their analysis. Journal of Open Source Software 4: (1896). https://doi.org/10.21105/joss.01896
+   [4] Holdgraf, C., Appelhoff, S., Bickel, S., Bouchard, K., D'Ambrosio, S., David, O., â¦ Hermes, D. (2019). iEEG-BIDS, extending the Brain Imaging Data Structure specification to human intracranial electrophysiology. Scientific Data, 6, 102. https://doi.org/10.1038/s41597-019-0105-7
+
 
 Highlights
 ----------
@@ -66,16 +133,16 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 170 (2), 46 (2), 134 (2), 129 (16), 121 (2), 47 (4), 101 (4), 168 (2), 111 (4), 118 (2), 107 (2), 86 (8), 95 (2), 186 (2), 190 (2), 114 (2), 135 (8), 193 (2), 125 (2), 110 (4), 128 (20), 147 (2), 182 (2), 98 (8), 146 (2)
-      - Sampling rate (Hz): 1024.5997950800408 (4), 512.0 (2), 500.0 (4), 1024.0 (10), 999.9999999999999 (8), 2000.0 (14), 499.7071044492829 (4), 1000.0 (50), 999.4121105232217 (12)
+      - Channels: 128 (20), 129 (16), 98 (8), 86 (8), 135 (8), 47 (4), 110 (4), 101 (4), 111 (4), 147 (2), 190 (2), 193 (2), 134 (2), 125 (2), 186 (2), 46 (2), 107 (2), 121 (2), 95 (2), 146 (2), 168 (2), 170 (2), 114 (2), 118 (2), 182 (2)
+      - Sampling rate (Hz): 1000.0 (50), 2000.0 (14), 999.4121105232217 (12), 1024.0 (10), 999.9999999999999 (8), 1024.5997950800408 (4), 499.7071044492829 (4), 500.0 (4), 512.0 (2)
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 3
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: Epilepsy
+      - Modality: Resting State
+      - Type: Clinical/Intervention
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

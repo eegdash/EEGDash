@@ -5,7 +5,9 @@
 eegdash.dataset.DS007095
 ========================
 
-participants.tsv (OpenNeuro ``ds007095``). Access recordings and metadata through EEGDash.
+RNS_Epilepsy-iBIDS (OpenNeuro ``ds007095``). Access recordings and metadata through EEGDash.
+
+**Citation:** Chen Feng, Haoqi Ni, Zhoule Zhu, Hongjie Jiang, Zhe Zheng, Wenjie Ming, Shuang Wang, Kedi Xu, Junming Zhu (2025). *RNS_Epilepsy-iBIDS*. `10.18112/openneuro.ds007095.v1.0.0 <https://doi.org/10.18112/openneuro.ds007095.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ participants.tsv (OpenNeuro ``ds007095``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: —`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS007095``
    * - Title
-     - participants.tsv
+     - RNS_Epilepsy-iBIDS
    * - Year
      - 2025
    * - Authors
@@ -44,11 +46,32 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds007095,
-        title = {participants.tsv},
+        title = {RNS_Epilepsy-iBIDS},
         author = {Chen Feng and Haoqi Ni and Zhoule Zhu and Hongjie Jiang and Zhe Zheng and Wenjie Ming and Shuang Wang and Kedi Xu and Junming Zhu},
         doi = {10.18112/openneuro.ds007095.v1.0.0},
         url = {https://doi.org/10.18112/openneuro.ds007095.v1.0.0},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS007095&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS007095%0A-%20%2A%2ATitle%3A%2A%2A%20RNS_Epilepsy-iBIDS%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+Dataset of long-term iEEG invasively recorded in epilepsy patients implanted with responsive neurostimulation system  (RNS)
+We provided a long-term intracranial electroencephalography (iEEG) dataset of 8 epilepsy patients implanted with responsive neurostimulation (RNS) devices. The dataset was constituted by iEEG data recorded from bilateral epileptic lesion areas.
+Each recording contains 90 seconds of dual-channel iEEG around each stimulation, 60 seconds before the start of the stimulation, and about 30 seconds after the end of the stimulation. The stimulation markers are contained in the events.tsv files, including the onset and duration for each stimulus. The ieeg.json files contain the electrical stimulation parameters for the current session, which were set by the neurosurgeon during each regular clinical follow-up of epilepsy patients.
+The iEEG data were saved in EDF format, stored as the Brain Imaging Data Structure (BIDS), and published on the OpenNeuro. The criterion for including patients in this dataset is to intracranially record the seizure events for more than six months. For each subject, one week is considered as a session, which includes all seizures within a day with high frequency seizure onset during that week.
+The dataset can be used to evaluate the alterations of seizure onset pattern during the development of epilepsy, as well as the changes in iEEG characteristics after the electrical stimulation. We have technically validated the dataset through specific signal analysis, such as power spectral analysis, calculation of envelop length, and calculation of phase locking value.
 
 Highlights
 ----------
@@ -70,12 +93,12 @@ Highlights
       - Sampling rate (Hz): 200.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 1
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: Epilepsy
+      - Modality: Other
+      - Type: Clinical/Intervention
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

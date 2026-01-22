@@ -1,6 +1,0 @@
-User-agent: *
-Allow: /
-
-# Point crawlers to the generated sitemap
-Sitemap: https://sccn.github.io/eegdash/sitemap.xml
-

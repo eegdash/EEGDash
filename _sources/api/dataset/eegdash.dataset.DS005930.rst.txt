@@ -7,13 +7,15 @@ eegdash.dataset.DS005930
 
 BallSqueezingHD_Gao2023 (OpenNeuro ``ds005930``). Access recordings and metadata through EEGDash.
 
+**Citation:** Yuanyuan Gao, De'Ja Rogers, Alexander von Lühmann, Antonio Ortega-Martinez, David A. Boas, Meryem A. Yücel (2025). *BallSqueezingHD_Gao2023*. `10.18112/openneuro.ds005930.v1.0.1 <https://doi.org/10.18112/openneuro.ds005930.v1.0.1>`__
+
 .. rst-class:: sd-badges
 
 :bdg-primary:`Modality: fnirs` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 13` :bdg-secondary:`Recordings: 233`
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: —`
 
 Dataset Information
 -------------------
@@ -27,7 +29,7 @@ Dataset Information
    * - Title
      - BallSqueezingHD_Gao2023
    * - Year
-     - —
+     - 2025
    * - Authors
      - Yuanyuan Gao, De'Ja Rogers, Alexander von Lühmann, Antonio Ortega-Martinez, David A. Boas, Meryem A. Yücel
    * - License
@@ -50,6 +52,23 @@ Dataset Information
         url = {https://doi.org/10.18112/openneuro.ds005930.v1.0.1},
       }
 
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS005930&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS005930%0A-%20%2A%2ATitle%3A%2A%2A%20BallSqueezingHD_Gao2023%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+No README content is available for this dataset.
+
 Highlights
 ----------
 
@@ -70,12 +89,12 @@ Highlights
       - Sampling rate (Hz): —
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 1
-      - Experiment type: —
-      - Subject type: Motor
+      - Pathology: —
+      - Modality: —
+      - Type: —
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

@@ -5,7 +5,9 @@
 eegdash.dataset.DS003751
 ========================
 
-participants.tsv (OpenNeuro ``ds003751``). Access recordings and metadata through EEGDash.
+Dataset on Emotion with Naturalistic Stimuli (DENS) (OpenNeuro ``ds003751``). Access recordings and metadata through EEGDash.
+
+**Citation:** Sudhakar Mishra, Md. Asif, Uma Shanker Tiwary, Narayanan Srinivasan (2021). *Dataset on Emotion with Naturalistic Stimuli (DENS)*. `10.18112/openneuro.ds003751.v1.0.2 <https://doi.org/10.18112/openneuro.ds003751.v1.0.2>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ participants.tsv (OpenNeuro ``ds003751``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 7.0`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS003751``
    * - Title
-     - participants.tsv
+     - Dataset on Emotion with Naturalistic Stimuli (DENS)
    * - Year
      - 2021
    * - Authors
@@ -44,11 +46,50 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds003751,
-        title = {participants.tsv},
+        title = {Dataset on Emotion with Naturalistic Stimuli (DENS)},
         author = {Sudhakar Mishra and Md. Asif and Uma Shanker Tiwary and Narayanan Srinivasan},
         doi = {10.18112/openneuro.ds003751.v1.0.2},
         url = {https://doi.org/10.18112/openneuro.ds003751.v1.0.2},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS003751&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS003751%0A-%20%2A%2ATitle%3A%2A%2A%20Dataset%20on%20Emotion%20with%20Naturalistic%20Stimuli%20%28DENS%29%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+
+**Overview**
+
+This is the "Emotion" dataset. The Dataset is recorded with naturalistic paradigm
+In brief, it contains EEG, ECG and EMG data for 40 subjects emotionally stimulated using naturalistic emotion stimuli. The stimuli are multimedia videos providing context to understand the situated conceptualization of emotions.
+For details, see the `Details about the experiment` section.
+
+**Citing this dataset**
+
+Please cite as follows:
+For more information, see the `dataset_description.json` file.
+
+**License**
+
+This eeg_emotion dataset is made available under the Open Database
+License: See the LICENSE file. A human readable information can be found at:
+https://opendatacommons.org/licenses/odbl/summary/
+Any rights in individual contents of the database are licensed under the
+Database Contents License: http://opendatacommons.org/licenses/dbcl/1.0/
+
+**Dataset Description**
+
+Dataset\_description file described the metadata for the dataset. Participants related details are described in participants.json and participants.tsv files. Each subject directory contains two directories- beh and eeg. A tsv file inside beh folder having entries about the feedbacks given by subject on self-assessment scales-valence, arousal, dominance, liking, familiarity, relevance and emotion category. In addition, it contains the information about the time-stamp of mouse click and other details. The eeg folder inside subject directory contains the raw eeg data in .set \& .fdt format along with the information about task events in \_task-emotion\_events.tsv file. The stimuli directory contains stimuli which were used during the experiment. In addition, feedback excel sheet participant\_details.xlsx filled by participants is also added. The code directory contains the python code for data collection, python code for data validation and matlab file for pre-processing the raw data.
 
 Highlights
 ----------
@@ -66,21 +107,21 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: —
-      - Sampling rate (Hz): —
+      - Channels: 131
+      - Sampling rate (Hz): 250.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 1
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: —
+      - Modality: —
+      - Type: —
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 4.7 GB
+      - Size on disk: 613.8 KB
       - File count: 38
       - Format: BIDS
 

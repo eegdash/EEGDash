@@ -7,13 +7,15 @@ eegdash.dataset.DS002550
 
 Differential brain mechanisms of selection and maintenance of information during working memory (MEG data) (OpenNeuro ``ds002550``). Access recordings and metadata through EEGDash.
 
-.. rst-class:: sd-badges
-
-:bdg-primary:`Modality: meg` :bdg-info:`Tasks: 2` :bdg-secondary:`Subjects: 23` :bdg-secondary:`Recordings: 12754`
+**Citation:** Romain Quentin, Jean-Remi King, Etienne Sallard, Nathan Fishman, Ryan Thompson, Ethan Buch, Leonardo Cohen (2020). *Differential brain mechanisms of selection and maintenance of information during working memory (MEG data)*. `10.18112/openneuro.ds002550.v1.0.1 <https://doi.org/10.18112/openneuro.ds002550.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-primary:`Modality: meg` :bdg-info:`Tasks: 2` :bdg-secondary:`Subjects: 22` :bdg-secondary:`Recordings: 377`
+
+.. rst-class:: sd-badges
+
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 0.0`
 
 Dataset Information
 -------------------
@@ -27,7 +29,7 @@ Dataset Information
    * - Title
      - Differential brain mechanisms of selection and maintenance of information during working memory (MEG data)
    * - Year
-     - 20
+     - 2020
    * - Authors
      - Romain Quentin, Jean-Remi King, Etienne Sallard, Nathan Fishman, Ryan Thompson, Ethan Buch, Leonardo Cohen
    * - License
@@ -35,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `10.18112/openneuro.ds002550.v1.0.1 <https://doi.org/10.18112/openneuro.ds002550.v1.0.1>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds002550>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds002550>`__ | `Source URL <https://openneuro.org/datasets/ds002550/versions/1.0.1>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds002550>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds002550>`__ | `Source URL <https://openneuro.org/datasets/ds002550>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -50,6 +52,108 @@ Dataset Information
         url = {https://doi.org/10.18112/openneuro.ds002550.v1.0.1},
       }
 
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS002550&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS002550%0A-%20%2A%2ATitle%3A%2A%2A%20Differential%20brain%20mechanisms%20of%20selection%20and%20maintenance%20of%20information%20during%20working%20memory%20%28MEG%20data%29%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+OpenNeuro curator note: This dataset was previously accessible at ds001750. The dataset was reuploaded due to privacy considerations.
+
+**Data folder corresponding to [this manuscript](https://www.biorxiv.org/content/early/2018/03/16/283234)**
+
+
+**Differential brain mechanisms of selection and maintenance of information during working memory**
+
+Note: One participant didn't sign a sharing data agreement so data of 22 participants are available here (vs. 23 in the manuscript). Results and conclusion are not different with only 22 participants.
+Participant folder are organized as:
+- ##### 'ses-mri/anat':
+
+.. dropdown:: View full README
+   :class-container: sd-shadow-sm
+
+   OpenNeuro curator note: This dataset was previously accessible at ds001750. The dataset was reuploaded due to privacy considerations.
+   
+   **Data folder corresponding to [this manuscript](https://www.biorxiv.org/content/early/2018/03/16/283234)**
+   
+   
+   **Differential brain mechanisms of selection and maintenance of information during working memory**
+   
+   Note: One participant didn't sign a sharing data agreement so data of 22 participants are available here (vs. 23 in the manuscript). Results and conclusion are not different with only 22 participants.
+   Participant folder are organized as:
+   - ##### 'ses-mri/anat':
+   contains T1 MRI of the participant
+   - ##### ses-01:
+   contains MEG data in BIDS format, behavioral data and HPI position in surface RAS MRI coordinates for session 1
+   - ##### ses-02:
+   contains MEG data in BIDS format, behavioral data and HPI position in surface RAS MRI coordinates for session 2
+   
+   **Description of non-MEG files:**
+   
+   - ##### behavioral task scripts:
+   Matlab (psychtoolbox 3) script for Working Memory (WorkMem) and one-back control task (LocaCue)
+   - ##### hpi_mri_surf.txt:
+   Contains the X, Y Z coordinates of the nasion, left and right HPI (head position indicator) in surface MRI coordinates. Names of the electrode are NEC (nasion), LEC (left) and REC (right). Others coordinates are for co-registration during the session (not useful here). These HPI coordinates have been acquired from the neuronavigation system brainsight (https://www.rogue-research.com/tms/brainsight-tms/)
+   - ##### WorkMem+subNumber+date.csv:
+   
+   **Contains behavioral results:**
+   
+   - NbTrial: trial number
+   - FixNbTrial: trial number with good eye fixation
+   - isFixed: whether the participant fixed the central dot during the trial (1:correct fixation, 0:broke fixation)
+   - GaborLeft: left gabor (25 possible, 5 spatial frequency* 5 orientations)
+   - GaborRight: right gabor (25 possible, 5 spatial frequency* 5 orientations)
+   - Cue: cue (4 possible, 1: left dotted, 2: left solid, 3: right dotted, 4: left solid)
+   - Change: whether the cued stimulus attribute is different from the corresponding probe attribute (1: different, 0: same)
+   - sfLeft: spatial frequency of the left gabor (5 possible)
+   - orientLeft: line orientation of the left gabor (5 possible)
+   - phaseLeft: phase of the left gabor (5 possible)
+   - sfRight: spatial frequency of the right gabor (5 possible)
+   - orientRight: line orientation of the right gabor (5 possible)
+   - phaseRight: phase of the right gabor (5 possible)
+   - randomSF: probe spatial frequency if change=1
+   - randomOrient: line orientation if change=1
+   - phaseResp: phase of the probe
+   - Response: response of the participant (1: different, 0: similar)
+   - isCorrect: correctness of the response (1: correct, 0: uncorrect)
+   - reactionTime: reaction time from probe onset to participant response
+   - TrialTime: total trial duration
+   - runningTime: running time
+   - fixcrossTime: duration of the fixation dot presentation before stimulus onset (should be between 0.350 and 0.450 s)
+   - gaborTime: duration of stimulus presentation (should be 0.1 s)
+   - precueTime: duration between stimulus offset and cue onset (should be between 0.75 and 0.85 s)
+   - cueTime: duration of the cue presentation (should be 0.1 s)
+   - postcueTime: duration between cue offset and probe onset (should be between 1.45 and 1.55 s)
+   - feedbackTime: duration of the feedback (green or red dot, should be 0.1 s)
+   - triggGabor: trigger sent to MEG acquisition at the stimulus onset
+   - triggCue: trigger sent to MEG acquisition at the cue onset
+   - triggProbe: trigger sent to MEG acquisition at the probe onset
+   - ##### locacue+subNumber+date.csv:
+   - NbTrial: trial number
+   - FixNbTrial: trial number with good eye fixation
+   - isFixed: whether the participant fixed the central dot during the trial (1:correct fixation, 0:broke fixation)
+   - same: whether 2 consecutive lines are similar (1: similar, 0: different)
+   - Cue: cue (4 possible, 1: left dotted, 2: left solid, 3: right dotted, 4: left solid)
+   - Side: side of the cue (1: right, 0: left)
+   - Press: whether the participant press the button (1: press, 0: no press)
+   - isCorrect: correctness of the response (1: correct, 0: uncorrect)
+   - ReactionTime: reaction time when a button is pressed
+   - TrialTime: total trial duration
+   - runningTime: running time
+   - fixcrossTime: duration of the fixation dot
+   - cueTime: duration of the cue presentation (should be 0.1 s)
+   - postcueTime: duration between the cue offset and the beginning of the next trial (should be 1.2 s)
+
+
 Highlights
 ----------
 
@@ -59,29 +163,29 @@ Highlights
    .. grid-item-card:: Subjects & recordings
       :class-card: sd-border-1
 
-      - Subjects: 23
-      - Recordings: 12754
+      - Subjects: 22
+      - Recordings: 377
       - Tasks: 2
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: —
-      - Sampling rate (Hz): —
+      - Channels: 308 (367), 307 (8), 304 (2)
+      - Sampling rate (Hz): 1200.0 (374), 12000.0 (3)
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 2
-      - Experiment type: —
-      - Subject type: Working memory
+      - Pathology: Healthy
+      - Modality: Visual
+      - Type: Memory
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: —
-      - File count: 12754
+      - Size on disk: 167.5 GB
+      - File count: 377
       - Format: BIDS
 
    .. grid-item-card:: License & citation

@@ -5,7 +5,9 @@
 eegdash.dataset.DS004770
 ========================
 
-participants.tsv (OpenNeuro ``ds004770``). Access recordings and metadata through EEGDash.
+iEEG on children during gameplay (OpenNeuro ``ds004770``). Access recordings and metadata through EEGDash.
+
+**Citation:** Riyo Ueda, Kazuki Sakakura, Takumi Mitsuhashi, Masaki Sonoda, Ethan Firestone, Naoto Kuroda, Yu Kitazawa, Hiroshi Uda, Aimee F. Luat, Elizabeth L. Johnson, Noa Ofen, Eishi Asano (2023). *iEEG on children during gameplay*. `10.18112/openneuro.ds004770.v1.0.0 <https://doi.org/10.18112/openneuro.ds004770.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ participants.tsv (OpenNeuro ``ds004770``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 2.0`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS004770``
    * - Title
-     - participants.tsv
+     - iEEG on children during gameplay
    * - Year
      - 2023
    * - Authors
@@ -44,11 +46,37 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds004770,
-        title = {participants.tsv},
+        title = {iEEG on children during gameplay},
         author = {Riyo Ueda and Kazuki Sakakura and Takumi Mitsuhashi and Masaki Sonoda and Ethan Firestone and Naoto Kuroda and Yu Kitazawa and Hiroshi Uda and Aimee F. Luat and Elizabeth L. Johnson and Noa Ofen and Eishi Asano},
         doi = {10.18112/openneuro.ds004770.v1.0.0},
         url = {https://doi.org/10.18112/openneuro.ds004770.v1.0.0},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS004770&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS004770%0A-%20%2A%2ATitle%3A%2A%2A%20iEEG%20on%20children%20during%20gameplay%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+Dataset of intracranial EEG from human epilepsy patients performing a visuospatial working memory task
+Description:
+We present an electrophysiological dataset recorded from ten subjects during a visuospatial working memory task. Subjects were epilepsy patients undergoing intracranial monitoring for localization of epileptic seizures. Subjects completed 60 trials (five sessions) of Memory Matrix - a visuospatial working memory game on the Lumosity platform (https://www.lumosity.com/; Lumos Labs, Inc, San Francisco, CA) - during interictal iEEG recording.
+Repository structure:
+Main directory (iEEG from children during gameplay)
+Contains iEEG files of each participant in the study. Folders are explained below.
+Subfolders:
+1. sub-/: Contains folders for each subject, named sub- and session information.
+2. sub-/ses-: Contains folders for base and task.
+3. sub-/ses-/ieeg/: Contains the raw iEEG data in .edf format for each subject. Each subject performed 60 working memory trials (ses-task). Each *ieeg.edf file contains continuous iEEG data during the working memory task. Details about the channels are given in the corresponding .tsv file. We also provide the information on the timing of the stimulus onset and finger tapping on ieeg/edf file by specifying the start and end sample of each trial. (101 is for task display, 401 is for finger tapping to the successful grid, and 501 is for finger tapping to the failed grid). Each subject also had baseline periods (ses-base). To establish baseline, we selected 60 non-overlapping 2,000-ms time windows during periods of spontaneous, resting, eye-open wakefulness immediately preceding the game sessions.
 
 Highlights
 ----------
@@ -66,16 +94,16 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 110 (4), 113 (4), 112 (4), 128 (28), 105 (4)
+      - Channels: 128 (28), 113 (4), 110 (4), 112 (4), 105 (4)
       - Sampling rate (Hz): 1000.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 1
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: Epilepsy
+      - Modality: Visual
+      - Type: Memory
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

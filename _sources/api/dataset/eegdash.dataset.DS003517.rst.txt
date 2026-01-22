@@ -5,7 +5,9 @@
 eegdash.dataset.DS003517
 ========================
 
-participants.tsv (OpenNeuro ``ds003517``). Access recordings and metadata through EEGDash.
+EEG: Continuous gameplay of an 8-bit style video game (OpenNeuro ``ds003517``). Access recordings and metadata through EEGDash.
+
+**Citation:** James F Cavanagh, Joel Castellanos (2021). *EEG: Continuous gameplay of an 8-bit style video game*. `10.18112/openneuro.ds003517.v1.1.0 <https://doi.org/10.18112/openneuro.ds003517.v1.1.0>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ participants.tsv (OpenNeuro ``ds003517``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 5.0`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS003517``
    * - Title
-     - participants.tsv
+     - EEG: Continuous gameplay of an 8-bit style video game
    * - Year
      - 2021
    * - Authors
@@ -44,11 +46,28 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds003517,
-        title = {participants.tsv},
+        title = {EEG: Continuous gameplay of an 8-bit style video game},
         author = {James F Cavanagh and Joel Castellanos},
         doi = {10.18112/openneuro.ds003517.v1.1.0},
         url = {https://doi.org/10.18112/openneuro.ds003517.v1.1.0},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS003517&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS003517%0A-%20%2A%2ATitle%3A%2A%2A%20EEG%3A%20Continuous%20gameplay%20of%20an%208-bit%20style%20video%20game%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+EEG during during continuous gameplay of an 8-bit style video game.  EEG published here: 10.1016/j.neuroimage.2016.02.075.   N=17 participants.  in addition to the video game, participants first completed a 2-stim visual oddball and a 2-doors gambling task.  Tasks included in Java programming language.    Its pretty fun...    Each task sends triggers to the EEG file, and also outputs continuous data in a .csv log file. For the Escape from Asteroid Axon video game this has a wealth of movement, player position and action, antagonist position, loot box, etc info.   Data collected circa 2015 in Cognitive Rhythms and Computation Lab at University of New Mexico.  Some analytic scripts are inlcuded, but I cant verify that these were what I used in the final analysis.  Some (ExAAx_Log.m) are clearly pilot analyses.  Your best bet would be to play the game and record some triggers and examine how those line up with the .csv log, etc.   - James F Cavanagh 02/10/2021
 
 Highlights
 ----------
@@ -66,16 +85,16 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 64
+      - Channels: 64 (34), 65 (34)
       - Sampling rate (Hz): 500.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 1
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: —
+      - Modality: —
+      - Type: —
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

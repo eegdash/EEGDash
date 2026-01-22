@@ -5,7 +5,9 @@
 eegdash.dataset.DS005448
 ========================
 
-participants.tsv (OpenNeuro ``ds005448``). Access recordings and metadata through EEGDash.
+STReEF (OpenNeuro ``ds005448``). Access recordings and metadata through EEGDash.
+
+**Citation:** Jelsma S.B., Zijlmans M., Heijink I.B., Hoefnagels F.W.A., Raemakers M, Bourez-Swart M.D., Otte W.M, van Blooijs D., van Klink N.E.C. (2024). *STReEF*. `10.18112/openneuro.ds005448.v1.0.0 <https://doi.org/10.18112/openneuro.ds005448.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ participants.tsv (OpenNeuro ``ds005448``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: —`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS005448``
    * - Title
-     - participants.tsv
+     - STReEF
    * - Year
      - 2024
    * - Authors
@@ -44,11 +46,43 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds005448,
-        title = {participants.tsv},
+        title = {STReEF},
         author = {Jelsma S.B. and Zijlmans M. and Heijink I.B. and Hoefnagels F.W.A. and Raemakers M and Bourez-Swart M.D. and Otte W.M and van Blooijs D. and van Klink N.E.C.},
         doi = {10.18112/openneuro.ds005448.v1.0.0},
         url = {https://doi.org/10.18112/openneuro.ds005448.v1.0.0},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS005448&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS005448%0A-%20%2A%2ATitle%3A%2A%2A%20STReEF%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+Dataset description
+This dataset is part of a bigger dataset of intracranial EEG (iEEG)  called RESPect (Registry for Epilepsy Surgery Patients), a dataset recorded at the University Medical Center of Utrecht, the Netherlands.
+This dataset consists of 13 patients with long-term recordings (5 patients recorded with electrocorticography and 8 patients recorded with stereo-encephalography. For a detailed description see Jelsma S.B. et al 2024, Structural and effective brain connectivity in focal epilepsy.
+This data is organized according to the Brain Imaging Data Structure specification: A community-driven specification for organizing neurophysiology data along with its metadata. For more information on this data specification, see https://bids-specification.readthedocs.io/en/stable/
+Each patient has their own folder (e.g., `sub-STREEF01`) which contains the iEEG recordings of that patient, as well as the metadata to understand the raw data and event timing.
+In long-term recordings, data that are recorded within one monitoring period are logically grouped in the same BIDS session and stored across runs indicating the day and time point of recording in the monitoring period. We use the optional run key-value pair to specify the day and the start time of the recording (e.g. run-021315, day 2 after implantation, which is day 1 of the monitoring period, at 13:15).
+The task key-value pair in long-term iEEG recordings describes the patient´s state during the recording of this file. A specific task called “SPESclin“ is defined when the clinical SPES protocol has been performed.
+License
+This dataset is made available under the Public Domain Dedication and License CC v1.0, whose full text can be found at
+https://creativecommons.org/publicdomain/zero/1.0/. We hope that all users will follow the ODC Attribution/Share-Alike Community Norms (http://www.opendatacommons.org/norms/odc-by-sa/). In particular, while not legally required, we hope that all users of the data will acknowledge by citing:
+1. Demuru M, van Blooijs D, Zweiphenning W, Hermes D, Leijten F, Zijlmans M, on behalf of the RESPect group. “A practical workflow for organizing clinical intraoperative and long-term iEEG data in BIDS“, published in NeuroInformatics in 2022
+2. Jelsma S.B. et al 2024, Structural and effective brain connectivity in focal epilepsy
+in any publications.
+Code available at: https://github.com/UMCU-EpiLAB/umcuEpi_CCEP_DTI.
+Acknowledgements
+We thank the SEIN-UMCU RESPect database group (C.J.J. van Asch, L. van de Berg, S. Blok, M.D. Bourez, K.P.J. Braun, J.W. Dankbaar, C.H. Ferrier, T.A. Gebbink, P.H. Gosselaar, R. van Griethuysen, M.G.G. Hobbelink, F.W.A. Hoefnagels, N.E.C. van Klink, M.A. van ‘t Klooster, G.A.P. deKort, M.H.M. Mantione, A. Muhlebner, J.M. Ophorst, P.C. van Rijen, S.M.A. van der Salm, E.V. Schaft, M.M.J. van Schooneveld, H. Smeding, D. Sun, A. Velders, M.J.E. van Zandvoort, G.J.M. Zijlmans, E. Zuidhoek and J. Zwemmer) for their contributions and help in collecting the data.
 
 Highlights
 ----------
@@ -66,16 +100,16 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 109 (4), 95 (2), 133 (28), 161 (2)
+      - Channels: 133 (28), 109 (4), 161 (2), 95 (2)
       - Sampling rate (Hz): 2048.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 1
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: Epilepsy
+      - Modality: Other
+      - Type: Clinical/Intervention
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

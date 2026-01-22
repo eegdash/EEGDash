@@ -5,7 +5,9 @@
 eegdash.dataset.DS005586
 ========================
 
-participants.tsv (OpenNeuro ``ds005586``). Access recordings and metadata through EEGDash.
+Electroencephalographic responses to the number of objects in partially occluded and uncovered scenes (OpenNeuro ``ds005586``). Access recordings and metadata through EEGDash.
+
+**Citation:** Cemre Baykan, Alexander C. Schütz (2024). *Electroencephalographic responses to the number of objects in partially occluded and uncovered scenes*. `10.18112/openneuro.ds005586.v2.0.0 <https://doi.org/10.18112/openneuro.ds005586.v2.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ participants.tsv (OpenNeuro ``ds005586``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 1.0`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS005586``
    * - Title
-     - participants.tsv
+     - Electroencephalographic responses to the number of objects in partially occluded and uncovered scenes
    * - Year
      - 2024
    * - Authors
@@ -44,11 +46,33 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds005586,
-        title = {participants.tsv},
+        title = {Electroencephalographic responses to the number of objects in partially occluded and uncovered scenes},
         author = {Cemre Baykan and Alexander C. Schütz},
         doi = {10.18112/openneuro.ds005586.v2.0.0},
         url = {https://doi.org/10.18112/openneuro.ds005586.v2.0.0},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS005586&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS005586%0A-%20%2A%2ATitle%3A%2A%2A%20Electroencephalographic%20responses%20to%20the%20number%20of%20objects%20in%20partially%20occluded%20and%20uncovered%20scenes%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+**Passing Viewing Task**
+23 participants took part in this study in return for a monetary incentive at University of Marburg.
+Participants performed a passive viewing task in a dimly lit room. The visual scene consisted of a game board, game pieces and a mesh as an occluder.
+Each trial started with a fixation cross presentation for one second plus the duration of the drift correction procedure. The game board and occluder were presented for two seconds, while game pieces only appeared in the last one second of this presentation. Following the “partially occluded scene”, the occluder disappeared to uncover the hidden parts of the game board along with the visible game pieces leading to the “uncovered scene” phase. The uncovered scene was presented for one second.
+The experiment consisted of eight blocks of 80 trials each. There were two conditions of initially visible game pieces: 4 or 32 pieces, each with 8 uncovered conditions: 0, 1, 2, 4, 28, 30, 31 or 32 uncovered game pieces. All 16 conditions were repeated 40 times during the experiment, summing up to 640 trials in total.
+Participants 9, 10 and 15 were excluded from the analyses due to excessive head movements and equipment malfunction.
 
 Highlights
 ----------
@@ -66,16 +90,16 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 60
+      - Channels: 63 (23), 60 (23)
       - Sampling rate (Hz): 1000.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 1
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: Healthy
+      - Modality: Visual
+      - Type: Perception
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

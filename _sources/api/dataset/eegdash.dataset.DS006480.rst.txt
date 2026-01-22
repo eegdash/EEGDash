@@ -7,13 +7,15 @@ eegdash.dataset.DS006480
 
 Young Adult Resting State and Auditory Oddball Task EEG Data (OpenNeuro ``ds006480``). Access recordings and metadata through EEGDash.
 
+**Citation:** Andy Jeesu Kim, Mara Mather, Santiago Morales, Joshua Senior (2025). *Young Adult Resting State and Auditory Oddball Task EEG Data*. `10.18112/openneuro.ds006480.v1.0.1 <https://doi.org/10.18112/openneuro.ds006480.v1.0.1>`__
+
 .. rst-class:: sd-badges
 
 :bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 68` :bdg-secondary:`Recordings: 68`
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: —`
 
 Dataset Information
 -------------------
@@ -50,6 +52,90 @@ Dataset Information
         url = {https://doi.org/10.18112/openneuro.ds006480.v1.0.1},
       }
 
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS006480&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS006480%0A-%20%2A%2ATitle%3A%2A%2A%20Young%20Adult%20Resting%20State%20and%20Auditory%20Oddball%20Task%20EEG%20Data%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+
+**Young Adult Resting State and Auditory Oddball Task EEG Data**
+
+
+**What is included**
+
+- This dataset includes resting state and auditory oddball task EEG data for two conditions: control and arousal (under threat of unpredictable shock).
+
+**Event labels**
+
+
+.. dropdown:: View full README
+   :class-container: sd-shadow-sm
+
+   
+   **Young Adult Resting State and Auditory Oddball Task EEG Data**
+   
+   
+   **What is included**
+   
+   - This dataset includes resting state and auditory oddball task EEG data for two conditions: control and arousal (under threat of unpredictable shock).
+   
+   **Event labels**
+   
+   100 - 5 minutes eyes open resting, control condition, begin
+   101 - 5 minutes eyes open resting, control condition, end
+   102 - 5 minutes eyes closed resting, control condition, begin
+   103 - 5 minutes eyes closed resting, control condition, end
+   104 - passive auditory oddball task, control condition, run begin
+   105 - passive auditory oddball task, control condition, trial start
+   106 - passive auditory oddball task, control condition, standard tone
+   107 - passive auditory oddball task, control condition, target tone
+   108 - passive auditory oddball task, control condition, distractor tone
+   109 - passive auditory oddball task, control condition, trial end
+   110 - passive auditory oddball task, control condition, run end
+   111 - active auditory oddball task, control condition, run begin
+   112 - active auditory oddball task, control condition, trial start
+   113 - active auditory oddball task, control condition, standard tone
+   114 - active auditory oddball task, control condition, target tone
+   115 - active auditory oddball task, control condition, distractor tone
+   116 - active auditory oddball task, control condition, start of response period
+   117 - active auditory oddball task, control condition, manual button response recorded
+   118 - active auditory oddball task, control condition, run end
+   119 - 5 minutes eyes open resting, shock condition, begin
+   120 - 5 minutes eyes open resting, shock condition, end
+   121 - 5 minutes eyes closed resting, shock condition, begin
+   122 - 5 minutes eyes closed resting, shock condition, end
+   123 - passive auditory oddball task, shock condition, run begin
+   124 - passive auditory oddball task, shock condition, trial start
+   125 - passive auditory oddball task, shock condition, standard tone
+   126 - passive auditory oddball task, shock condition, target tone
+   127 - passive auditory oddball task, shock condition, distractor tone
+   128 - passive auditory oddball task, shock condition, trial end
+   129 - passive auditory oddball task, shock condition, run end
+   130 - active auditory oddball task, shock condition, run begin
+   131 - active auditory oddball task, shock condition, trial start
+   132 - active auditory oddball task, shock condition, standard tone
+   133 - active auditory oddball task, shock condition, target tone
+   134 - active auditory oddball task, shock condition, distractor tone
+   135 - active auditory oddball task, shock condition, start of response period
+   136 - active auditory oddball task, shock condition, manual button response recorded
+   137 - active auditory oddball task, shock condition, run end
+   
+   **Citations**
+   
+   Nashiro, K., Yoo, H. J., Cho, C., Kim, A. J., Nasseri, P., Min, J., ... & Mather, M. (2024). Heart rate and breathing effects on attention and memory (HeartBEAM): Study protocol for a randomized controlled trial in older adults. Trials, 25(1), 190.
+   Kim, A. J., Morales, S., Senior, J., & Mather, M. (2025). Electroencephalography, pupillometry, and behavioral evidence for locus coeruleus-noradrenaline system related tonic hyperactivity in older adults. Preprint: doi.org/10.1101/2025.10.02.680040
+
+
 Highlights
 ----------
 
@@ -70,12 +156,12 @@ Highlights
       - Sampling rate (Hz): 1000.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 1
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: Healthy
+      - Modality: Auditory
+      - Type: Attention
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

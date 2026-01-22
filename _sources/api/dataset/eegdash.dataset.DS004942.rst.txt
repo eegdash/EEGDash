@@ -5,7 +5,9 @@
 eegdash.dataset.DS004942
 ========================
 
-participants.tsv (OpenNeuro ``ds004942``). Access recordings and metadata through EEGDash.
+SpatialMemory (OpenNeuro ``ds004942``). Access recordings and metadata through EEGDash.
+
+**Citation:** Paul Kieffaber, Makenna McGill (2024). *SpatialMemory*. `10.18112/openneuro.ds004942.v1.0.0 <https://doi.org/10.18112/openneuro.ds004942.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ participants.tsv (OpenNeuro ``ds004942``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 1.0`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS004942``
    * - Title
-     - participants.tsv
+     - SpatialMemory
    * - Year
      - 2024
    * - Authors
@@ -44,11 +46,28 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds004942,
-        title = {participants.tsv},
+        title = {SpatialMemory},
         author = {Paul Kieffaber and Makenna McGill},
         doi = {10.18112/openneuro.ds004942.v1.0.0},
         url = {https://doi.org/10.18112/openneuro.ds004942.v1.0.0},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS004942&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS004942%0A-%20%2A%2ATitle%3A%2A%2A%20SpatialMemory%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+Visuo-spatial working memory (VSWM) for sequences is thought to be crucial for daily behaviors. Decades of research indicate that oscillations in the gamma and theta bands play important functional roles in the support of visuo-spatial working memory, but the vast majority of that research emphasizes measures of neural activity during memory retention. The primary aims of the present study were (1) to determine whether oscillatory dynamics in the Theta and Gamma ranges would reflect item-level sequence encoding during a computerized spatial span task, (2) to determine whether item-level sequence recall is also related to these neural oscillations, and (3) to determine the nature of potential changes to these processes in healthy cognitive aging. Results indicate that VSWM sequence encoding is related to later (~700 ms) gamma band oscillatory dynamics and may be preserved in healthy older adults; high gamma power over midline frontal and posterior sites increased monotonically as items were added to the spatial sequence in both age groups. Item-level oscillatory dynamics during the recall of VSWM sequences were related only to theta-gamma phase amplitude coupling (PAC), which increased monotonically with serial position in both age groups. Results suggest that, despite a general decrease in frontal theta power during VSWM sequence recall in older adults, gamma band dynamics during encoding and theta-gamma PAC during retrieval play unique roles in VSWM and that the processes they reflect may be spared in healthy aging.
 
 Highlights
 ----------
@@ -70,12 +89,12 @@ Highlights
       - Sampling rate (Hz): 1000.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 1
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: —
+      - Modality: —
+      - Type: —
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

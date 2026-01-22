@@ -5,7 +5,9 @@
 eegdash.dataset.DS003774
 ========================
 
-manifest.json (OpenNeuro ``ds003774``). Access recordings and metadata through EEGDash.
+Music Listening- Genre EEG dataset (MUSIN-G) (OpenNeuro ``ds003774``). Access recordings and metadata through EEGDash.
+
+**Citation:** Krishna Prasad Miyapuram, Pankaj Pandey, Nashra Ahmad, Bharatesh R Shiraguppi, Esha Sharma, Prashant Lawhatre, Dhananjay Sonawane, Derek Lomas (2021). *Music Listening- Genre EEG dataset (MUSIN-G)*. `10.18112/openneuro.ds003774.v1.0.0 <https://doi.org/10.18112/openneuro.ds003774.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ manifest.json (OpenNeuro ``ds003774``). Access recordings and metadata through E
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 8.0`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS003774``
    * - Title
-     - manifest.json
+     - Music Listening- Genre EEG dataset (MUSIN-G)
    * - Year
      - 2021
    * - Authors
@@ -44,11 +46,29 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds003774,
-        title = {manifest.json},
+        title = {Music Listening- Genre EEG dataset (MUSIN-G)},
         author = {Krishna Prasad Miyapuram and Pankaj Pandey and Nashra Ahmad and Bharatesh R Shiraguppi and Esha Sharma and Prashant Lawhatre and Dhananjay Sonawane and Derek Lomas},
         doi = {10.18112/openneuro.ds003774.v1.0.0},
         url = {https://doi.org/10.18112/openneuro.ds003774.v1.0.0},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS003774&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS003774%0A-%20%2A%2ATitle%3A%2A%2A%20Music%20Listening-%20Genre%20EEG%20dataset%20%28MUSIN-G%29%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+The dataset contains Electroencephalography (EEG) responses from 20 Indian participants, on 12 songs of different genres (from Indian Classical to Goth Rock). Each session indicates a song by its number.
+For the experiment,  the participants were indicated to close their eyes indicated by a single beep, and the song was presented to them on speakers. After listening to each song, a double beep was presented, asking them to open their eyes and rate their familiarity and enjoyment to the song.  The responses were taken on a scale of 1 to 5, where 1 meant most familiar or most enjoyable, and 5 meant least familiar or least enjoyable.
 
 Highlights
 ----------
@@ -67,20 +87,20 @@ Highlights
       :class-card: sd-border-1
 
       - Channels: 129
-      - Sampling rate (Hz): 250.0 (216), 1000.0 (264)
+      - Sampling rate (Hz): 1000.0 (264), 250.0 (216)
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 1
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: Healthy
+      - Modality: Auditory
+      - Type: Affect
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 10.1 GB
+      - Size on disk: 4.2 MB
       - File count: 240
       - Format: BIDS
 

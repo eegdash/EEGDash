@@ -5,7 +5,9 @@
 eegdash.dataset.DS004080
 ========================
 
-Dataset description (OpenNeuro ``ds004080``). Access recordings and metadata through EEGDash.
+CCEP ECoG dataset across age 4-51 (OpenNeuro ``ds004080``). Access recordings and metadata through EEGDash.
+
+**Citation:** D. van Blooijs, M.A. van den Boom, J.F. van der Aar, G.J.M. Huiskamp, G. Castegnaro, M. Demuru, W.J.E.M. Zweiphenning, P. van Eijsden, K. J. Miller, F.S.S. Leijten, D. Hermes (2022). *CCEP ECoG dataset across age 4-51*. `10.18112/openneuro.ds004080.v1.2.4 <https://doi.org/10.18112/openneuro.ds004080.v1.2.4>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ Dataset description (OpenNeuro ``ds004080``). Access recordings and metadata thr
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 2.0`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS004080``
    * - Title
-     - Dataset description
+     - CCEP ECoG dataset across age 4-51
    * - Year
      - 2022
    * - Authors
@@ -44,11 +46,85 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds004080,
-        title = {Dataset description},
+        title = {CCEP ECoG dataset across age 4-51},
         author = {D. van Blooijs and M.A. van den Boom and J.F. van der Aar and G.J.M. Huiskamp and G. Castegnaro and M. Demuru and W.J.E.M. Zweiphenning and P. van Eijsden and K. J. Miller and F.S.S. Leijten and D. Hermes},
         doi = {10.18112/openneuro.ds004080.v1.2.4},
         url = {https://doi.org/10.18112/openneuro.ds004080.v1.2.4},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS004080&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS004080%0A-%20%2A%2ATitle%3A%2A%2A%20CCEP%20ECoG%20dataset%20across%20age%204-51%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+
+**Dataset description**
+
+This dataset consists of 74 patients age 4-51 years old where Cortico-Cortical Evoked Potentials (CCEPs) were measured with Electro-CorticoGraphy (ECoG) during single pulse electrical stimulation. For a detailed description see:
+- Developmental trajectory of transmission speed in the human brain. D. van Blooijs¹, M.A. van den Boom¹, J.F. van der Aar, G.J.M. Huiskamp, G. Castegnaro, M. Demuru, W.J.E.M. Zweiphenning, P. van Eijsden, K. J. Miller, F.S.S. Leijten, D. Hermes, Nature Neuroscience, 2023, https://doi.org/10.1038/s41593-023-01272-0
+  ¹ these authors contributed equally.
+This dataset is part of the RESPect (Registry for Epilepsy Surgery Patients) database, a dataset recorded at the University Medical Center of Utrecht, the Netherlands. The study was approved by the Medical Ethical Committee from the UMC Utrecht.
+
+**Contact**
+
+
+.. dropdown:: View full README
+   :class-container: sd-shadow-sm
+
+   
+   **Dataset description**
+   
+   This dataset consists of 74 patients age 4-51 years old where Cortico-Cortical Evoked Potentials (CCEPs) were measured with Electro-CorticoGraphy (ECoG) during single pulse electrical stimulation. For a detailed description see:
+   - Developmental trajectory of transmission speed in the human brain. D. van Blooijs¹, M.A. van den Boom¹, J.F. van der Aar, G.J.M. Huiskamp, G. Castegnaro, M. Demuru, W.J.E.M. Zweiphenning, P. van Eijsden, K. J. Miller, F.S.S. Leijten, D. Hermes, Nature Neuroscience, 2023, https://doi.org/10.1038/s41593-023-01272-0
+     ¹ these authors contributed equally.
+   This dataset is part of the RESPect (Registry for Epilepsy Surgery Patients) database, a dataset recorded at the University Medical Center of Utrecht, the Netherlands. The study was approved by the Medical Ethical Committee from the UMC Utrecht.
+   
+   **Contact**
+   
+   - Dorien van Blooijs: D.vanBlooijs@umcutrecht.nl
+   - Frans Leijten: F.S.S.leijten@umcutrecht.nl
+   - Dora Hermes: hermes.dora@mayo.edu
+   
+   **Data organization**
+   
+   This data is organized according to the Brain Imaging Data Structure specification. A community-driven specification for organizing neurophysiology data along with its metadata. For more information on this data specification, see https://bids-specification.readthedocs.io/en/stable/
+   Each patient has their own folder (e.g., `sub-ccepAgeUMCU01` to `sub-ccepAgeUMCU74`) which contains the iEEG recordings data for that patient, as well as the metadata needed to understand the raw data and event timing.
+   Data are logically grouped in the same BIDS session and stored across runs that indicating the day and time point of recording during the monitoring period.
+   If extra electrodes were added/removed during this period, the session was divided into different sessions (e.g. ses-1a and ses-1b).
+   We use the optional run key-value pair to specify the day and the start time of the recording (e.g. run-021315, day 2 after implantation, which is day 1 of the monitoring period, at 13:15).
+   The task key-value pair in long-term iEEG recordings describes the patient's state during the recording of this file. The task label is “SPESclin“ since these files contain data collected during clinical single pulse electrical stimulation (SPES).
+   Electrode positions include Destrieux atlas labels that were estimated by running Freesurfer on the individual subject MRI scan and taking the most common surface label within a sphere around the electrode. All shared electrode positions were then converted to MNI152 space using the Freesurfer surface based non-linear transformation. We note that this surface based transformation distorts the dimensions of the grids, but maintains the gyral anatomy.
+   
+   **License**
+   
+   This dataset is made available under the Public Domain Dedication and License CC v1.0, whose full text can be found at
+   https://creativecommons.org/publicdomain/zero/1.0/.
+   We hope that all users will follow the ODC Attribution/Share-Alike Community Norms (http://www.opendatacommons.org/norms/odc-by-sa/);
+   in particular, while not legally required, we hope that all users of the data will acknowledge by citing the following in any publication:
+   Developmental trajectory of transmission speed in the human brain, D. van Blooijs, M.A. van den Boom, J.F. van der Aar, G.J.M. Huiskamp, G. Castegnaro, M. Demuru, W.J.E.M. Zweiphenning, P. van Eijsden, K. J. Miller, F.S.S. Leijten, D. Hermes, Nature Neuroscience, 2023, https://doi.org/10.1038/s41593-023-01272-0
+   
+   **Code**
+   
+   Code to analyses these data is available at: https://github.com/MultimodalNeuroimagingLab/mnl_ccepAge
+   
+   **Acknowledgements**
+   
+   We thank the SEIN-UMCU RESPect database group (C.J.J. van Asch, L. van de Berg, S. Blok, M.D. Bourez, K.P.J. Braun, J.W. Dankbaar, C.H. Ferrier, T.A. Gebbink, P.H. Gosselaar, R. van Griethuysen, M.G.G. Hobbelink, F.W.A. Hoefnagels, N.E.C. van Klink, M.A. van ‘t Klooster, G.A.P. deKort, M.H.M. Mantione, A. Muhlebner, J.M. Ophorst, P.C. van Rijen, S.M.A. van der Salm, E.V. Schaft, M.M.J. van Schooneveld, H. Smeding, D. Sun, A. Velders, M.J.E. van Zandvoort, G.J.M. Zijlmans, E. Zuidhoek and J. Zwemmer) for their contributions and help in collecting the data, and G. Ojeda Valencia for proofreading the manuscript.
+   
+   **Funding**
+   
+   Research reported in this publication was supported by the National Institute of Mental Health of the National Institutes of Health under Award Number R01MH122258 (DH, FSSL, the content is solely the responsibility of the authors and does not necessarily represent the official views of the National Institutes of Health), the EpilepsieNL under Award Number NEF17-07 (DvB) and the UMC Utrecht Alexandre Suerman MD/PhD Stipendium 2015 (WZ).
+
 
 Highlights
 ----------
@@ -66,16 +142,16 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 93 (2), 68 (36), 64 (4), 94 (2), 133 (140), 130 (26), 96 (8), 98 (8), 131 (8)
+      - Channels: 133 (140), 68 (36), 130 (26), 96 (8), 131 (8), 98 (8), 64 (4), 93 (2), 94 (2)
       - Sampling rate (Hz): 2048.0 (224), 512.0 (10)
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 1
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: Epilepsy
+      - Modality: Other
+      - Type: Clinical/Intervention
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

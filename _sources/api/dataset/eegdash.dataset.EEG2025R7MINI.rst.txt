@@ -7,13 +7,15 @@ eegdash.dataset.EEG2025R7MINI
 
 Healthy Brain Network (HBN) EEG - Release 7 (BDF Converted) (OpenNeuro ``eeg2025r7mini``). Access recordings and metadata through EEGDash.
 
+**Citation:** Seyed Yahya Shirazi, Alexandre Franco, Maurício Scopel Hoffmann, Nathalia B. Esper, Dung Truong, Arnaud Delorme, Michael Milham, Scott Makeig (2024). *Healthy Brain Network (HBN) EEG - Release 7 (BDF Converted)*. `10.18112/openneuro.ds005511.v1.0.1 <https://doi.org/10.18112/openneuro.ds005511.v1.0.1>`__
+
 .. rst-class:: sd-badges
 
 :bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 10` :bdg-secondary:`Subjects: 20` :bdg-secondary:`Recordings: 239`
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC-BY-SA 4.0` :bdg-warning:`Source: nemar`
+:bdg-success:`License: CC-BY-SA 4.0` :bdg-warning:`Source: nemar` :bdg-info:`Citations: —`
 
 Dataset Information
 -------------------
@@ -27,7 +29,7 @@ Dataset Information
    * - Title
      - Healthy Brain Network (HBN) EEG - Release 7 (BDF Converted)
    * - Year
-     - 20
+     - 2024
    * - Authors
      - Seyed Yahya Shirazi, Alexandre Franco, Maurício Scopel Hoffmann, Nathalia B. Esper, Dung Truong, Arnaud Delorme, Michael Milham, Scott Makeig
    * - License
@@ -50,6 +52,148 @@ Dataset Information
         url = {https://doi.org/10.18112/openneuro.ds005511.v1.0.1},
       }
 
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20EEG2025R7MINI&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20EEG2025R7MINI%0A-%20%2A%2ATitle%3A%2A%2A%20Healthy%20Brain%20Network%20%28HBN%29%20EEG%20-%20Release%207%20%28BDF%20Converted%29%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+
+**The HBN-EEG Dataset**
+
+This is **Release 7** of HBN-EEG, the EEG and (soon-released) Eye-Tracking Section of the Child Mind Network Healthy Brain Network (HBN) Project, curated into the Brain Imaging Data Structure (BIDS) format. This dataset is part of a larger initiative to advance the understanding of child and adolescent mental health through collecting and analyzing neuroimaging, behavioral, and genetic data (Alexander et al., Sci Data 2017).
+
+**Data Description**
+
+This dataset comprises electroencephalogram (EEG) data and behavioral responses collected during EEG experiments from >3000 participants (5-21 yo) involved in the HBN project. The data has been released in 11 separate Releases, each containing data from a different set of participants.
+
+**Tasks**
+
+.. dropdown:: View full README
+   :class-container: sd-shadow-sm
+
+   
+   **The HBN-EEG Dataset**
+   
+   This is **Release 7** of HBN-EEG, the EEG and (soon-released) Eye-Tracking Section of the Child Mind Network Healthy Brain Network (HBN) Project, curated into the Brain Imaging Data Structure (BIDS) format. This dataset is part of a larger initiative to advance the understanding of child and adolescent mental health through collecting and analyzing neuroimaging, behavioral, and genetic data (Alexander et al., Sci Data 2017).
+   
+   **Data Description**
+   
+   This dataset comprises electroencephalogram (EEG) data and behavioral responses collected during EEG experiments from >3000 participants (5-21 yo) involved in the HBN project. The data has been released in 11 separate Releases, each containing data from a different set of participants.
+   
+   **Tasks**
+   
+   The HBN-EEG dataset includes EEG recordings from participants performing six distinct tasks, which are categorized into passive and active tasks based on the presence of user input and interaction in the experiment.
+   
+   **Passive Tasks**
+   
+   1. **Resting State**: Participants rested with their heads on a chin rest, following instructions to open or close their eyes and fixate on a central cross.
+   2. **Surround Suppression**: Participants viewed flashing peripheral disks with contrasting backgrounds, while event markers and conditions were recorded.
+   3. **Movie Watching**: Participants watched four short movies with different themes, with event markers recording the start and stop times of presentations.
+   
+   **Active Tasks**
+   
+   4. **Contrast Change Detection**: Participants identified flickering disks with dominant contrast changes and received feedback based on their responses.
+   5. **Sequence Learning**: Participants memorized and repeated sequences of flashed circles on the screen, designed for different age groups.
+   6. **Symbol Search**: Participants performed a computerized symbol search task, identifying target symbols from rows of search symbols.
+   
+   **Contents**
+   
+   * **EEG Data:** High-resolution EEG recordings capture a wide range of neural activity during various tasks.
+   * **Behavioral Responses:** Participant responses during EEG tasks, including reaction times and accuracy. This data was originally recorded within the behavior directory of the HBN data. The data is now included with the EEG data within the `events.tsv` files.
+   
+   **Special Features**
+   
+   * **Hierarchical Event Descriptors (HED):** Events, including the original EEG events and the included behavioral events, have clear explanations, including proper HED annotation suitable for systematic meta and mega analysis of the data.
+   * **P-Factor, Attention, Internalization and Externalization:** Derived from the CBCL questionnaire, these factors provide valuable insights into the psychopathology of the participants, adding a rich layer of interpretation to the EEG and behavioral data.
+   * **Data quality and availability:** We performed minimal quality control to ensure that the data was not corrupted, each task had its necessary events, and was ready for preprocessing. The results of this quality control are available in the `participants.tsv` file.
+   * **Future Releases:** We are committed to enhancing this dataset with additional, valuable features in its next stages, including:
+     * **Personalized EEG Electrode Locations:** To offer more detailed insights into individual neural activity patterns.
+     * **Personalized Lead Field Matrix:** Enabling better understanding and interpretation of EEG data.
+     * **Eye-Tracking Data:** Providing a window into the visual attention and processing mechanisms during EEG experiments.
+   
+   **Other HBN-EEG Datasets**
+   
+   For access all releases of the HBN-EEG dataset, follow this `link on NEMAR.org <https://nemar.org/dataexplorer/local?search=HBN-EEG>`__. The links to the individual releases are below:
+   
+   ****Release 1** | [DS005505](https://nemar.org/dataexplorer/detail?dataset_id=ds005505)**
+   
+   - **S3 URI:** `s3://fcp-indi/data/Projects/HBN/BIDS_EEG/cmi_bids_R1`
+   - **Total subjects:** 136
+   
+   ****Release 2** | [DS005506](https://nemar.org/dataexplorer/detail?dataset_id=ds005506)**
+   
+   - **S3 URI:** `s3://fcp-indi/data/Projects/HBN/BIDS_EEG/cmi_bids_R2`
+   - **Total subjects:** 152
+   
+   ****Release 3** | [DS005507](https://nemar.org/dataexplorer/detail?dataset_id=ds005507)**
+   
+   - **S3 URI:** `s3://fcp-indi/data/Projects/HBN/BIDS_EEG/cmi_bids_R3`
+   - **Total subjects:** 183
+   
+   ****Release 4** | [DS005508](https://nemar.org/dataexplorer/detail?dataset_id=ds005508)**
+   
+   - **S3 URI:** `s3://fcp-indi/data/Projects/HBN/BIDS_EEG/cmi_bids_R4`
+   - **Total subjects:** 324
+   
+   ****Release 5** | [DS005509](https://nemar.org/dataexplorer/detail?dataset_id=ds005509)**
+   
+   - **S3 URI:** `s3://fcp-indi/data/Projects/HBN/BIDS_EEG/cmi_bids_R5`
+   - **Total subjects:** 330
+   
+   ****Release 6** | [DS05510](https://nemar.org/dataexplorer/detail?dataset_id=ds005510)**
+   
+   - **S3 URI:** `s3://fcp-indi/data/Projects/HBN/BIDS_EEG/cmi_bids_R6`
+   - **Total subjects:** 134
+   
+   ****Release 7** | [DS005511](https://nemar.org/dataexplorer/detail?dataset_id=ds005511)**
+   
+   - **S3 URI:** `s3://fcp-indi/data/Projects/HBN/BIDS_EEG/cmi_bids_R7`
+   - **Total subjects:** 381
+   
+   ****Release 8** | [DS005512](https://nemar.org/dataexplorer/detail?dataset_id=ds005512)**
+   
+   - **S3 URI:** `s3://fcp-indi/data/Projects/HBN/BIDS_EEG/cmi_bids_R8`
+   - **Total subjects:** 257
+   
+   ****Release 9** | [DS005514](https://nemar.org/dataexplorer/detail?dataset_id=ds005514)**
+   
+   - **S3 URI:** `s3://fcp-indi/data/Projects/HBN/BIDS_EEG/cmi_bids_R9`
+   - **Total subjects:** 295
+   
+   ****Release 10** | [DS005515](https://nemar.org/dataexplorer/detail?dataset_id=ds005515)**
+   
+   - **S3 URI:** `s3://fcp-indi/data/Projects/HBN/BIDS_EEG/cmi_bids_R10`
+   - **Total subjects:** 533
+   
+   ****Release 11** | [DS005516](https://nemar.org/dataexplorer/detail?dataset_id=ds005516)**
+   
+   - **S3 URI:** `s3://fcp-indi/data/Projects/HBN/BIDS_EEG/cmi_bids_R11`
+   - **Total subjects:** 430
+   
+   ****Release NC** | *--NOT FOR COMMERCIAL USE-- This dataset is intended for research purposes only under the CC-BY-NC-SA-4.0 License and is not currently hosted on OpenNeuro/NEMAR. Any commercial use is prohibited.***
+   
+   - **S3 URI:** `s3://fcp-indi/data/Projects/HBN/BIDS_EEG/cmi_bids_NC`
+   - **Total subjects:** 458
+   
+   **Copyright and License**
+   
+   The HBN-EEG dataset is licensed under the Creative Commons Attribution 4.0 International License (CC BY SA 4.0), except for the Not-for-Commercial-Use dataset. Please cite the dataset paper (https://doi.org/10.1101/2024.10.03.615261) as well as the original HBN publication (https://dx.doi.org/10.1038/sdata.2017.181).
+   
+   **Acknowledgments**
+   
+   We would like to express our gratitude to all participants and their families, whose contributions have made this project possible. We also thank our dedicated team of researchers and clinicians for their efforts in collecting, processing, and curating this data.
+
+
 Highlights
 ----------
 
@@ -70,12 +214,12 @@ Highlights
       - Sampling rate (Hz): 100.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 10
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: Development
+      - Modality: Visual
+      - Type: Clinical/Intervention
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

@@ -5,7 +5,9 @@
 eegdash.dataset.DS004563
 ========================
 
-participants.tsv (OpenNeuro ``ds004563``). Access recordings and metadata through EEGDash.
+Vicarious touch: overlapping neural patterns between seeing and feeling touch (OpenNeuro ``ds004563``). Access recordings and metadata through EEGDash.
+
+**Citation:** Sophie Smit, Denise Moerel, Regine Zopf, Anina N Rich (2023). *Vicarious touch: overlapping neural patterns between seeing and feeling touch*. `10.18112/openneuro.ds004563.v1.0.1 <https://doi.org/10.18112/openneuro.ds004563.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ participants.tsv (OpenNeuro ``ds004563``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 1.0`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS004563``
    * - Title
-     - participants.tsv
+     - Vicarious touch: overlapping neural patterns between seeing and feeling touch
    * - Year
      - 2023
    * - Authors
@@ -44,11 +46,32 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds004563,
-        title = {participants.tsv},
+        title = {Vicarious touch: overlapping neural patterns between seeing and feeling touch},
         author = {Sophie Smit and Denise Moerel and Regine Zopf and Anina N Rich},
         doi = {10.18112/openneuro.ds004563.v1.0.1},
         url = {https://doi.org/10.18112/openneuro.ds004563.v1.0.1},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS004563&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS004563%0A-%20%2A%2ATitle%3A%2A%2A%20Vicarious%20touch%3A%20overlapping%20neural%20patterns%20between%20seeing%20and%20feeling%20touch%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+Data collection took place at Macquarie University in Sydney Australia. The study was approved by the Macquarie University Ethics Committee.
+We used time-resolved multivariate pattern analysis on whole-brain EEG data from people with and without vicarious touch experiences to test whether seen touch evokes overlapping neural representations with the first-hand experience of touch. Participants felt touch to the fingers (tactile trials) or watched carefully matched videos of touch to another person’s fingers (visual trials).
+There were 12 runs in total, divided into four blocks of 36 trials (with alternating sets of nine tactile and nine visual trials) resulting in a total of 1728 trials (864 tactile and 864 visual). There were an additional 240 target trials (20 per run), which were excluded from analysis.
+Between trials there was an inter-trial-interval of 800ms. Each run lasted approximately 7-8 minutes with short breaks between blocks and runs.
+Whole brain 64-channel EEG data were recorded using an Active Two Biosemi system (Biosemi, Inc.) at 2048Hz and 10-20 standard caps. Stimuli were presented using MATLAB (MathWorks) and Psychtoolbox (Brainard and Vision). The experiment presentation script, all analysis code, and stimuli are made available (see code and stimuli folder). The data is made available both in raw form (see each participant's file) and after processing (see derivatives).
 
 Highlights
 ----------
@@ -70,17 +93,17 @@ Highlights
       - Sampling rate (Hz): 2048.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 1
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: Other
+      - Modality: Multisensory
+      - Type: Perception
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 100.9 GB
+      - Size on disk: 4.1 MB
       - File count: 119
       - Format: BIDS
 

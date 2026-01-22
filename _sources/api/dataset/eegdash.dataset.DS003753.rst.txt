@@ -5,7 +5,9 @@
 eegdash.dataset.DS003753
 ========================
 
-participants.tsv (OpenNeuro ``ds003753``). Access recordings and metadata through EEGDash.
+EEG: Probabilistic Learning with Affective Feedback: Exp #2 (OpenNeuro ``ds003753``). Access recordings and metadata through EEGDash.
+
+**Citation:** Darin R. Brown, Trevor Jackson, James F Cavanagh (2021). *EEG: Probabilistic Learning with Affective Feedback: Exp #2*. `10.18112/openneuro.ds003753.v1.1.0 <https://doi.org/10.18112/openneuro.ds003753.v1.1.0>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ participants.tsv (OpenNeuro ``ds003753``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 0.0`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS003753``
    * - Title
-     - participants.tsv
+     - EEG: Probabilistic Learning with Affective Feedback: Exp #2
    * - Year
      - 2021
    * - Authors
@@ -44,11 +46,28 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds003753,
-        title = {participants.tsv},
+        title = {EEG: Probabilistic Learning with Affective Feedback: Exp #2},
         author = {Darin R. Brown and Trevor Jackson and James F Cavanagh},
         doi = {10.18112/openneuro.ds003753.v1.1.0},
         url = {https://doi.org/10.18112/openneuro.ds003753.v1.1.0},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS003753&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS003753%0A-%20%2A%2ATitle%3A%2A%2A%20EEG%3A%20Probabilistic%20Learning%20with%20Affective%20Feedback%3A%20Exp%20%232%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+RL task in N=25 college age participants.  Data collected circa 2019 in the CRCL at UNM.  The paper [Brown, D.R., Jackson, T.J. & Cavanagh, J.F.  The Reward Positivity is sensitive to affective liking]  Should be coming out in Cognitive, Affective, & Behavioral Neuroscience.  THIS IS EXPERIMENT #2.  Your best bet for understanding this task  would be to read that paper first.   Note we have since made minor adjustments to the task which really enhance the ability to resolve the RewP.  I also have  analytic scripts for it.  If you are interetsted in running this task, contact me for the new version. - James F Cavanagh 07/02/2021
 
 Highlights
 ----------
@@ -66,16 +85,16 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 64
+      - Channels: 64 (25), 66 (25)
       - Sampling rate (Hz): 500.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 1
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: —
+      - Modality: —
+      - Type: —
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

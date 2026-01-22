@@ -5,7 +5,9 @@
 eegdash.dataset.DS001810
 ========================
 
-task-attentionalblink_events.json (OpenNeuro ``ds001810``). Access recordings and metadata through EEGDash.
+EEG study of the attentional blink; before, during, and after transcranial Direct Current Stimulation (tDCS) (OpenNeuro ``ds001810``). Access recordings and metadata through EEGDash.
+
+**Citation:** Leon C. Reteig, Lionel A. Newman, K. Richard Ridderinkhof, Heleen A. Slagter (2019). *EEG study of the attentional blink; before, during, and after transcranial Direct Current Stimulation (tDCS)*. `10.18112/openneuro.ds001810.v1.1.0 <https://doi.org/10.18112/openneuro.ds001810.v1.1.0>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ task-attentionalblink_events.json (OpenNeuro ``ds001810``). Access recordings an
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 6.0`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS001810``
    * - Title
-     - task-attentionalblink_events.json
+     - EEG study of the attentional blink; before, during, and after transcranial Direct Current Stimulation (tDCS)
    * - Year
      - 2019
    * - Authors
@@ -44,11 +46,101 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds001810,
-        title = {task-attentionalblink_events.json},
+        title = {EEG study of the attentional blink; before, during, and after transcranial Direct Current Stimulation (tDCS)},
         author = {Leon C. Reteig and Lionel A. Newman and K. Richard Ridderinkhof and Heleen A. Slagter},
         doi = {10.18112/openneuro.ds001810.v1.1.0},
         url = {https://doi.org/10.18112/openneuro.ds001810.v1.1.0},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS001810&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS001810%0A-%20%2A%2ATitle%3A%2A%2A%20EEG%20study%20of%20the%20attentional%20blink%3B%20before%2C%20during%2C%20and%20after%20transcranial%20Direct%20Current%20Stimulation%20%28tDCS%29%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+
+**Overview**
+
+AB_tDCS-EEG: EEG data from participants who performed an attentional blink (AB) task before, during and after transcranial Direct Current Stimulation (tDCS). They visited the lab twice (complete data for 40 participants; some did only one session); on each visit they received either anodal or cathodal tDCS.
+
+**Sessions**
+
+Both lab visits were about one week apart. During each visit, three EEG files were recorded, each about 20 minutes long: before applying tDCS ("pre"), during tDCS ("tDCS"), and after tDCS ("post"). The order of the visits (anodal vs. cathodal) differs across participants.
+Each block for each visit is considered a session here (you could also argue this dataset should have 2 "sessions" [visits] with 3 "runs" [blocks], but given there was a manipulation between the runs, it seemed better to count everything as a session). So each sub*-folder with complete data has 6 sessions:
+1. anodalpost (data from anodal visit, after tDCS)
+
+.. dropdown:: View full README
+   :class-container: sd-shadow-sm
+
+   
+   **Overview**
+   
+   AB_tDCS-EEG: EEG data from participants who performed an attentional blink (AB) task before, during and after transcranial Direct Current Stimulation (tDCS). They visited the lab twice (complete data for 40 participants; some did only one session); on each visit they received either anodal or cathodal tDCS.
+   
+   **Sessions**
+   
+   Both lab visits were about one week apart. During each visit, three EEG files were recorded, each about 20 minutes long: before applying tDCS ("pre"), during tDCS ("tDCS"), and after tDCS ("post"). The order of the visits (anodal vs. cathodal) differs across participants.
+   Each block for each visit is considered a session here (you could also argue this dataset should have 2 "sessions" [visits] with 3 "runs" [blocks], but given there was a manipulation between the runs, it seemed better to count everything as a session). So each sub*-folder with complete data has 6 sessions:
+   1. anodalpost (data from anodal visit, after tDCS)
+   2. anodalpre (data from anodal visit, before tDCS)
+   3. anodaltDCS (data from anodal visit, during tDCS)
+   4. cathodalpost (data from cathodal visit, after tDCS)
+   5. cathodalpre (data from cathodal visit, before tDCS)
+   6. cathodaltDCS (data from cathodal visit, during tDCS)
+   See the _sessions.tsv and _sessions.json files in each sub*-folder for details.
+   
+   **Concurrent tDCS-EEG**
+   
+   Recording EEG during tDCS introduces some problems, most importantly blocked channels and artifacts.
+   
+   **Blocked channels**
+   
+   The rubber tDCS electrodes were affixed to the scalp using conductive paste. Because they sat under the EEG headcap, the electrodes blocked a few of the slots, meaning these channels could not be plugged in. The channels affected vary from subject to subject (and even slightly from visit to visit). They are marked with "status" = "bad" in each session's _channels.tsv file.
+   The tDCS montage was the following:
+   1. 7x5 mm electrode centered over F3 (long side parallel to midline; connector at posterior end)
+   2. 7x5 mm electrode centered on right forehead (approximately Fp2) (short side parallel to midline, connector at lateral end)
+   Anodal or cathodal tDCS is defined according to the electrode over F3, i.e. "anodal tDCS" means this was the anode (with the cathode over Fp2); "cathodal tDCS" means this was the cathode (with the anode over Fp2).
+   
+   **tDCS artifacts**
+   
+   tDCS was applied at an intensity of 1 mA for 20m (with a 1-minute ramp-up period before, and a 1-minute ramp-down period after). This often caused channels close to the tDCS electrodes to drift outside of the amplifier range, or become very noisy otherwise. This occurred mostly in the block during tDCS obviously, but sometimes channels take a while to "recover", so they can still be affected during the post-block.
+   The signal on channels further away from the electrodes normally looks fine (one exception is at the exact moment the ramp-down ends, which causes a huge artifact across all channels). However, though most of the artifacts should be gone after DC correction, this does not mean that the channels are completely artifact-free. Compared to the EEG signal, the tDCS artifact is massive, and can cause further problems by nonlinearly interacting with other physiological signals, such as heart-rate and respiration. However, assuming these artifacts do not vary systematically across conditions and time, comparing event-related responses across conditions should be less of a problem. See [1,2] for more information.
+   
+   **Triggers**
+   
+   The event codes (see _events.json and each session's _events.tsv file) are all in the 61000 range. This differs from the original values sent out (see below for a list of those). The transformation happens when reading the .*bdf sourcedata files, e.g. with both EEGLAB and fieldtrip. Because the data were converted to the BIDS-compliant BrainVision format using fieldtrip, the trigger codes are now all >61000.
+   The problem comes from that the event codes were sent in 8-bit, but are read in 16 bits. Since bits 13-16 on the trigger channel are always open, the event codes are shifted by 1111000000000000 in binary, which is 61440.
+   The original trigger codes were:
+   "10": "onset of pre-stream fixation cross (duration: 1500 ms)",
+   "23": "onset of letter stream; lag 3 trial (duration: 1375 ms)",
+   "28": "onset of letter stream; lag 8 trial (duration: 1375 ms)",
+   "31": "onset of T1 (first target, in red, duration: 91.66 ms)",
+   "32": "onset of T2 (second target, in green duration: 91.66 ms)",
+   "40": "onset of post-stream fixation cross (duration: 1000 ms)",
+   "50": "onset of T1 question ('Which letter was red?')",
+   "60": "onset of T2 question ('Which letter was green?'); T1 question answered incorrectly",
+   "61": "onset of T2 question ('Which letter was green?'); T1 question answered correctly",
+   "70": "onset of post-response fixation cross (duration: 250 ms); T2 question answered incorrectly",
+   "71": "onset of post-response fixation cross (duration: 250 ms); T2 question answered correctly",
+   "254": "trigger to start EEG recording (occurs at start of block after a break)"
+   When reading in the data, 61440 will likely be added to each of them.
+   
+   **Exceptions**
+   
+   Was unable to create BrainVision format data for sub-07/cathodal-post; fieldtrip crashed on the .bdf file in sourcedata:
+   > Error in read_biosemi_bdf>readLowLevel (line 274)
+   >   buf = read_24bit(filename, offset, numwords);
+   The .bdf seems to be read fine by EEGLAB, so still included it in case this can be solved.
+
 
 Highlights
 ----------
@@ -66,16 +158,16 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 64
+      - Channels: 73 (263), 64 (263)
       - Sampling rate (Hz): 512.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 1
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: —
+      - Modality: —
+      - Type: —
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

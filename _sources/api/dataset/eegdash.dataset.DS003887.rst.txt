@@ -5,7 +5,9 @@
 eegdash.dataset.DS003887
 ========================
 
-participants.tsv (OpenNeuro ``ds003887``). Access recordings and metadata through EEGDash.
+Capacity for movement is an organisational principle in object representations: EEG data from Experiment 2 (OpenNeuro ``ds003887``). Access recordings and metadata through EEGDash.
+
+**Citation:** Shatek, Sophia M., Robinson, Amanda K., Grootswagers, Tijl, Carlson, Thomas A. (2021). *Capacity for movement is an organisational principle in object representations: EEG data from Experiment 2*. `10.18112/openneuro.ds003887.v1.2.2 <https://doi.org/10.18112/openneuro.ds003887.v1.2.2>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ participants.tsv (OpenNeuro ``ds003887``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 3.0`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS003887``
    * - Title
-     - participants.tsv
+     - Capacity for movement is an organisational principle in object representations: EEG data from Experiment 2
    * - Year
      - 2021
    * - Authors
@@ -44,11 +46,56 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds003887,
-        title = {participants.tsv},
+        title = {Capacity for movement is an organisational principle in object representations: EEG data from Experiment 2},
         author = {Shatek, Sophia M. and Robinson, Amanda K. and Grootswagers, Tijl and Carlson, Thomas A.},
         doi = {10.18112/openneuro.ds003887.v1.2.2},
         url = {https://doi.org/10.18112/openneuro.ds003887.v1.2.2},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS003887&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS003887%0A-%20%2A%2ATitle%3A%2A%2A%20Capacity%20for%20movement%20is%20an%20organisational%20principle%20in%20object%20representations%3A%20EEG%20data%20from%20Experiment%202%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+
+**Overview**
+
+This data is from the paper "Capacity for movement is a major organisational principle in object representations". This is the data of Experiment 3 (EEG: movement). Access the preprint here: https://psyarxiv.com/3x2qh/
+Abstract:
+The ability to perceive moving objects is crucial for threat identification and survival. Recent neuroimaging evidence has shown that goal-directed movement is an important element of object processing in the brain. However, prior work has primarily used moving stimuli that are also animate, making it difficult to disentangle the effect of movement from aliveness or animacy in representational categorisation. In the current study, we investigated the relationship between how the brain processes movement and aliveness by including stimuli that are alive but still (e.g., plants), and stimuli that are not alive but move (e.g., waves). We examined electroencephalographic (EEG) data recorded while participants viewed static images of moving or non-moving objects that were either natural or artificial. Participants classified the images according to aliveness, or according to capacity for movement. Movement explained significant variance in the neural data over and above that of aliveness, showing that capacity for movement is an important dimension in the representation of visual objects in humans.
+In this experiment, participants completed two tasks - classification and passive viewing. In the classification task, participants classified single images that appeared on the screen as "can move" or "still". This task was time-pressured, and trials timed out after 1 second. In the passive viewing task, participants viewed rapid (RSVP) streams of images, and pressed a button to indicate when the fixation cross changed colour.
+Contents of the dataset:
+ - Raw EEG data is available in individual subject folders (BrainVision raw formats .eeg, .vmrk, .vhdr). Pre-processed EEG data is available in the derivatives folders in EEGlab (.set, .fdt) and cosmoMVPA dataset (.mat) format. This experiment has 24 subjects.
+ - Scripts for data analysis and running the experiment are available in the code folder. Note that all code runs on both EEG experiments together, so you must download both this and the movement experiment data in order to replicate analyses.
+ - Stimuli are also available (400 CC0 images)
+ - Results of decoding analyses are available in the derivatives folder.
+Further notes:
+Note that the code is designed to run analyses for data and its partner data (experiments 2 and 3 of the paper). Copies in both folders are identical. Scripts need to be run in a particular order (detailed at the top of each script)
+Further explanations of the code:
+1. Run pre-processing of EEG (analyse_EEG_preprocessing.m), and behavioural data (analyse_behavioural_EEG.m)
+2. Ensure that the MTurk data has been run (analyse_behavioural_MTurk.m), from the Experiment 1 folder.
+3. Run RSA (analyse_rsa.m; reliant on behavioural data and pre-processed EEG data), and run decoding (analyse_decoding.m; reliant on pre-processed EEG data)
+4. Run GLMs (analyse_glms.m; reliant on RSA, behavioural)
+To only look at the results, the results for each of these analyses is saved in the derivatives already, so there is no need to run any of them again.
+Each file named plot_X.m will create a graph as in the paper. Each is reliant on saved data from the above analyses, which are saved in the derivatives folder.
+
+**Citing this dataset**
+
+If using this data, please cite the associated paper:
+
+**Contact**
+
+Contact Sophia Shatek (sophia.shatek@sydney.edu.au) for additional information. ORCID: 0000-0002-7787-1379
 
 Highlights
 ----------
@@ -66,16 +113,16 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: —
-      - Sampling rate (Hz): —
+      - Channels: 128
+      - Sampling rate (Hz): 1000.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 1
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: —
+      - Modality: —
+      - Type: —
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

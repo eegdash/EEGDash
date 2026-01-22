@@ -5,7 +5,9 @@
 eegdash.dataset.DS003710
 ========================
 
-participants.tsv (OpenNeuro ``ds003710``). Access recordings and metadata through EEGDash.
+APPLESEED Example Dataset (OpenNeuro ``ds003710``). Access recordings and metadata through EEGDash.
+
+**Citation:** Cabell L. Williams, Meghan H. Puglia (2022). *APPLESEED Example Dataset*. `10.18112/openneuro.ds003710.v1.0.2 <https://doi.org/10.18112/openneuro.ds003710.v1.0.2>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ participants.tsv (OpenNeuro ``ds003710``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 1.0`
 
 Dataset Information
 -------------------
@@ -25,9 +27,9 @@ Dataset Information
    * - Dataset ID
      - ``DS003710``
    * - Title
-     - participants.tsv
+     - APPLESEED Example Dataset
    * - Year
-     - 2021
+     - 2022
    * - Authors
      - Cabell L. Williams, Meghan H. Puglia
    * - License
@@ -44,11 +46,32 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds003710,
-        title = {participants.tsv},
+        title = {APPLESEED Example Dataset},
         author = {Cabell L. Williams and Meghan H. Puglia},
         doi = {10.18112/openneuro.ds003710.v1.0.2},
         url = {https://doi.org/10.18112/openneuro.ds003710.v1.0.2},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS003710&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS003710%0A-%20%2A%2ATitle%3A%2A%2A%20APPLESEED%20Example%20Dataset%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+The APPLESEED Example Dataset
+This dataset consists of longitudinal EEG recordings from 13 infants at 4, 8, and 12 months of age. Test-retest reliability was assessed at 4 months of age via two appointments (session 1 & 2) that occurred within 1 week of each other. Session 3 data was recorded at 8 months of age and session 4 data was recorded at 12 months of age. Two participants did not return for longitudinal testing at sessions 3 & 4. Therefore, the complete dataset consists of 48 recording sessions, with reliability and longitudinal data (sessions 1-4) for 11 infants (6 F), and reliability data only (sessions 1 & 2) for an additional 2 infants. A channel location file and bin file for analysis are included in the "code" directory.
+This dataset was used to develop and validate the Automated Preprocessing Pipe-Line for the Estimation of Scale-wise Entropy from EEG Data (APPLESEED) and is provided as an example dataset to accompany Puglia, M.H., Slobin, J.S., & Williams, C.L., 2022. The Automated Preprocessing Pipe-Line for the Estimation of Scale-wise Entropy from EEG Data (APPLESEED): Development and validation for use in pediatric populations. Developmental Cognitive Neuroscience, 101163.
+APPLESEED code is available to download from https://github.com/mhpuglia/APPLESEED.
+This dataset is part of a larger, ongoing longitudinal study initially described in Puglia, M.H., Krol, K.M., Missana, M., Williams, C.L., Lillard, T.S., Morris, J.P., Connelly, J.J. and Grossmann, T.,  2020. Epigenetic tuning of brain signal entropy in emergent human social behavior. BMC medicine, 18(1), pp.1-24. https://doi.org/10.1186/s12916-020-01683-x.
 
 Highlights
 ----------
@@ -70,17 +93,17 @@ Highlights
       - Sampling rate (Hz): 5000.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 1
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: —
+      - Modality: —
+      - Type: —
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 10.2 GB
+      - Size on disk: 621.5 KB
       - File count: 48
       - Format: BIDS
 

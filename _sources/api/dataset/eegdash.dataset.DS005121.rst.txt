@@ -5,7 +5,9 @@
 eegdash.dataset.DS005121
 ========================
 
-participants.tsv (OpenNeuro ``ds005121``). Access recordings and metadata through EEGDash.
+Siefert2024 (OpenNeuro ``ds005121``). Access recordings and metadata through EEGDash.
+
+**Citation:** Elizabeth M. Siefert, Sindhuja Uppuluri, Jianing Mu, Marlie C. Tandoc, James W. Antony, Anna C. Schapiro (2024). *Siefert2024*. `10.18112/openneuro.ds005121.v1.0.2 <https://doi.org/10.18112/openneuro.ds005121.v1.0.2>`__
 
 .. rst-class:: sd-badges
 
@@ -13,7 +15,7 @@ participants.tsv (OpenNeuro ``ds005121``). Access recordings and metadata throug
 
 .. rst-class:: sd-badges
 
-:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro`
+:bdg-success:`License: CC0` :bdg-warning:`Source: openneuro` :bdg-info:`Citations: 1.0`
 
 Dataset Information
 -------------------
@@ -25,7 +27,7 @@ Dataset Information
    * - Dataset ID
      - ``DS005121``
    * - Title
-     - participants.tsv
+     - Siefert2024
    * - Year
      - 2024
    * - Authors
@@ -44,11 +46,42 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds005121,
-        title = {participants.tsv},
+        title = {Siefert2024},
         author = {Elizabeth M. Siefert and Sindhuja Uppuluri and Jianing Mu and Marlie C. Tandoc and James W. Antony and Anna C. Schapiro},
         doi = {10.18112/openneuro.ds005121.v1.0.2},
         url = {https://doi.org/10.18112/openneuro.ds005121.v1.0.2},
       }
+
+.. admonition:: Found an issue with this dataset?
+   :class: tip
+
+   If you encounter any problems with this dataset (missing files, incorrect metadata,
+   loading errors, etc.), please let us know!
+
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS005121&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS005121%0A-%20%2A%2ATitle%3A%2A%2A%20Siefert2024%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+      :color: primary
+      :outline:
+
+      Report an Issue on GitHub
+
+Description
+-----------
+
+Overview:
+This is the "Siefert2024" dataset. It is the sleep EEG data from Siefert et al., 2024 (https://doi.org/10.1523/JNEUROSCI.0022-24.2024). In brief, it contains sleep EEG data from 34 participants while Targeted Memory Reactivation was administered.
+Please cite the following paper:
+E.M. Siefert, S. Uppuluri, J. Mu., M.C. Tandoc, J.W. Antony, A.C. Schapiro (2024). Memory reactivation during sleep does not act holistically on object memory. Journal of Neuroscience, 10.1523/JNEUROSCI.0022-24.2024
+The dataset is formatted according to the Brain Imaging Data Structure (BIDS). Data organization was performed using FieldTrip data2bids function.
+Additional details:
+Events.tsv files contain information about the different cueing events.
+- item_value is the sound index number used by the TMR system. This number corresponds to the literal code name of the satellite (i.e., "nivex" or "sorex"). Here, 33 indicates no sound was played but a SO was tagged.
+- SatNum is the corresponding satellite number. This number is the same satellite number that is used in the behavioral data.
+    - 0 indicates no sound was played.
+    - Satellites 1-5 are the studied satellites from the blocked category.
+    - Satellites 6-10 are the studied satellites from the interleaved category.
+    - Satellites 11-15 are the studied satellites from the uncued category.
+System crashed and had to be restarted for participants 6, 7, 15, 17, 21, resulting in two EEG files for these participants.
+Please contact Liz Siefert (sieferte@pennmedicine.upenn.edu) with any additional questions.
 
 Highlights
 ----------
@@ -66,16 +99,16 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 58
+      - Channels: 58 (39), 65 (39)
       - Sampling rate (Hz): 512.0
       - Duration (hours): 0.0
 
-   .. grid-item-card:: Tasks & conditions
+   .. grid-item-card:: Tags
       :class-card: sd-border-1
 
-      - Tasks: 1
-      - Experiment type: —
-      - Subject type: —
+      - Pathology: —
+      - Modality: —
+      - Type: —
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

@@ -216,7 +216,7 @@ def main():
     )
     parser.add_argument("--cloned-dir", type=Path, default=Path("data/cloned"))
     parser.add_argument(
-        "--output", type=Path, default=Path("scripts/metadata_curation.csv")
+        "--output", type=Path, default=Path("docs/_build/metadata_curation.csv")
     )
     args = parser.parse_args()
 

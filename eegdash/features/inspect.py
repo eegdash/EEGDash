@@ -16,6 +16,32 @@ __all__ = [
 ]
 
 
+def _is_feature(x) -> bool:
+    """Check if x is a feature (has feature_kind attribute)."""
+    return hasattr(_get_underlying_func(x), "feature_kind")
+
+
+def _is_feature_extractor(x) -> bool:
+    """Check if x is a feature extractor (has parent_extractor_type)."""
+    y = _get_underlying_func(x)
+    return callable(y) and hasattr(y, "parent_extractor_type")
+
+
+def _is_feature_preprocessor(x) -> bool:
+    """Check if x is a preprocessor (has parent_extractor_type but no feature_kind)."""
+    y = _get_underlying_func(x)
+    return (
+        callable(y)
+        and not hasattr(y, "feature_kind")
+        and hasattr(y, "parent_extractor_type")
+    )
+
+
+def _is_feature_kind(x) -> bool:
+    """Check if x is a feature kind class (subclass of MultivariateFeature)."""
+    return inspect.isclass(x) and issubclass(x, extractors.MultivariateFeature)
+
+
 def get_feature_predecessors(feature_or_extractor: Callable | None) -> list:
     """Get the dependency hierarchy for a feature or feature extractor.
 
@@ -87,11 +113,7 @@ def get_all_features() -> list[tuple[str, Callable]]:
         A list of (name, function) tuples for all discovered features.
 
     """
-
-    def isfeature(x):
-        return hasattr(_get_underlying_func(x), "feature_kind")
-
-    return inspect.getmembers(feature_bank, isfeature)
+    return inspect.getmembers(feature_bank, _is_feature)
 
 
 def get_all_feature_extractors() -> list[tuple[str, Callable]]:
@@ -109,12 +131,7 @@ def get_all_feature_extractors() -> list[tuple[str, Callable]]:
         extractors.
 
     """
-
-    def isfeatureextractor(x):
-        y = _get_underlying_func(x)
-        return callable(y) and hasattr(y, "parent_extractor_type")
-
-    return inspect.getmembers(feature_bank, isfeatureextractor)
+    return inspect.getmembers(feature_bank, _is_feature_extractor)
 
 
 def get_all_feature_preprocessors() -> list[tuple[str, Callable]]:
@@ -128,16 +145,7 @@ def get_all_feature_preprocessors() -> list[tuple[str, Callable]]:
         A list of (name, function) tuples for all discovered feature preprocessors.
 
     """
-
-    def isfeatureextractor(x):
-        y = _get_underlying_func(x)
-        return (
-            callable(y)
-            and not hasattr(y, "feature_kind")
-            and hasattr(y, "parent_extractor_type")
-        )
-
-    return inspect.getmembers(feature_bank, isfeatureextractor)
+    return inspect.getmembers(feature_bank, _is_feature_preprocessor)
 
 
 def get_all_feature_kinds() -> list[tuple[str, type[extractors.MultivariateFeature]]]:
@@ -152,8 +160,4 @@ def get_all_feature_kinds() -> list[tuple[str, type[extractors.MultivariateFeatu
         A list of (name, class) tuples for all discovered feature kinds.
 
     """
-
-    def isfeaturekind(x):
-        return inspect.isclass(x) and issubclass(x, extractors.MultivariateFeature)
-
-    return inspect.getmembers(extractors, isfeaturekind)
+    return inspect.getmembers(extractors, _is_feature_kind)

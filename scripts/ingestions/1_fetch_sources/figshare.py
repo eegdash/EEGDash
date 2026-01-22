@@ -47,7 +47,7 @@ setup_paths()
 # Third-party
 from dotenv import load_dotenv
 
-from eegdash.records import create_dataset
+from eegdash.schemas import create_dataset
 
 # Load API key from .env.figshare
 _env_path = PROJECT_ROOT / ".env.figshare"

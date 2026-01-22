@@ -1,4 +1,5 @@
 import json
+import math
 import os
 import urllib.request
 from collections import Counter
@@ -20,8 +21,6 @@ def human_readable_size(size_bytes):
     i = int(os.fstat(0).st_size).bit_length() // 10 if size_bytes > 0 else 0
     # The above line is wrong for generic size conversion, let's use a standard one
     # Re-implementing based on prepare_summary_tables.py logic or standard logic
-    import math
-
     if size_bytes == 0:
         return "0 B"
     i = int(math.floor(math.log(size_bytes, 1024)))

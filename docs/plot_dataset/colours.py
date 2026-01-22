@@ -1,5 +1,26 @@
 """Helpers for Sankey diagram generation."""
 
+
+def _create_color_map_with_aliases(base_map: dict) -> dict:
+    """Create color map with automatic case aliases (lower, upper, title).
+
+    This avoids manual duplication like:
+        "Epilepsy": "#fdba74",
+        "epilepsy": "#fdba74",
+
+    Instead, define the canonical form once and aliases are auto-generated.
+    """
+    result = {}
+    for key, color in base_map.items():
+        result[key] = color  # Original
+        result[key.lower()] = color  # lowercase
+        result[key.upper()] = color  # UPPERCASE
+        title = key.title()
+        if title != key and title != key.lower() and title != key.upper():
+            result[title] = color  # Title Case
+    return result
+
+
 # Color mappings consistent with prepare_summary_tables.py and custom.css
 PATHOLOGY_COLOR_MAP = {
     "Healthy": "#22c55e",  # green
@@ -19,6 +40,15 @@ MODALITY_COLOR_MAP = {
     "Sleep": "#7c3aed",
     "Other": "#14b8a6",
     "Unknown": "#94a3b8",
+    "EEG": "#3b82f6",  # blue-500
+    "iEEG": "#1d4ed8",  # blue-700
+    "MEG": "#a855f7",  # purple-500
+    "fNIRS": "#ef4444",  # red-500
+    "EMG": "#f97316",  # orange-500
+    "fMRI": "#06b6d4",  # cyan-500
+    "MRI": "#0891b2",  # cyan-600
+    "ECG": "#be123c",  # rose-700
+    "Behavior": "#84cc16",  # lime-500
 }
 
 MODALITY_EMOJI = {
@@ -32,21 +62,46 @@ MODALITY_EMOJI = {
     "Rest": "🧘",
     "Other": "🧭",
     "Unknown": "❔",
+    "EEG": "🧠",
+    "iEEG": "⚡",
+    "MEG": "🧲",
+    "fNIRS": "💡",
+    "EMG": "💪",
+    "fMRI": "🧠",
+    "MRI": "📷",
+    "ECG": "❤️",
+    "Behavior": "📝",
 }
 
-PATHOLOGY_PASTEL_OVERRIDES = {
-    "Healthy": "#bbf7d0",
-    "Unknown": "#d0d7df",
-    "Dementia": "#fcd4d4",
-    "Schizophrenia": "#f9d0e7",
-    "Psychosis": "#f9d0e7",
-    "Epilepsy": "#f9d7c4",
-    "Parkinson's": "#f8c8c8",
-    "TBI": "#f9cabd",
-    "Surgery": "#f7d9b8",
-    "Other": "#f8cbdc",
-    "Clinical": "#f8d0d0",
+# Base pathology colors - case aliases are auto-generated
+_BASE_PATHOLOGY_COLORS = {
+    # Healthy / Control
+    "Healthy": "#86efac",  # green-300
+    # Unknown / Unspecified
+    "Unknown": "#cbd5e1",  # slate-300
+    "Unspecified Clinical": "#fda4af",  # rose-300 - more visible clinical indicator
+    # Neurological conditions - warm colors
+    "Epilepsy": "#fdba74",  # orange-300
+    "Parkinson's": "#f9a8d4",  # pink-300
+    "Alzheimer": "#c4b5fd",  # violet-300
+    "Dementia": "#ddd6fe",  # violet-200
+    "TBI": "#fca5a5",  # red-300
+    # Psychiatric conditions - cool colors
+    "Schizophrenia": "#7dd3fc",  # sky-300
+    "Psychosis": "#67e8f9",  # cyan-300
+    "Depression": "#a5b4fc",  # indigo-300
+    "ADHD": "#fcd34d",  # amber-300
+    # Other clinical
+    "Surgery": "#fed7aa",  # orange-200
+    "Clinical": "#fecaca",  # red-200
+    "Other": "#e5e7eb",  # gray-200
 }
+
+# Create the full map with case aliases (lower, upper, title)
+PATHOLOGY_PASTEL_OVERRIDES = _create_color_map_with_aliases(_BASE_PATHOLOGY_COLORS)
+
+# Special aliases not covered by case transformations
+PATHOLOGY_PASTEL_OVERRIDES["parkinson"] = PATHOLOGY_PASTEL_OVERRIDES["Parkinson's"]
 
 
 TYPE_COLOR_MAP = {
@@ -84,8 +139,18 @@ CANONICAL_MAP = {
         "rest": "Resting State",
         "resting state": "Resting State",
         "resting-state": "Resting State",
+        "resting_state": "Resting State",
         "sleep": "Sleep",
         "other": "Other",
+        "eeg": "EEG",
+        "ieeg": "iEEG",
+        "meg": "MEG",
+        "fnirs": "fNIRS",
+        "emg": "EMG",
+        "fmri": "fMRI",
+        "mri": "MRI",
+        "ecg": "ECG",
+        "behavior": "Behavior",
     },
     "type of exp": {
         "perception": "Perception",
@@ -102,8 +167,10 @@ CANONICAL_MAP = {
 }
 
 # Map column names to their color maps
+# Use PATHOLOGY_PASTEL_OVERRIDES for Type Subject to have consistent colors
+# for specific conditions (epilepsy, schizophrenia, etc.) across all plots
 COLUMN_COLOR_MAPS = {
-    "Type Subject": PATHOLOGY_COLOR_MAP,
+    "Type Subject": PATHOLOGY_PASTEL_OVERRIDES,
     "modality of exp": MODALITY_COLOR_MAP,
     "type of exp": TYPE_COLOR_MAP,
 }

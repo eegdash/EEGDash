@@ -1,8 +1,10 @@
+import os
 from pathlib import Path
 from typing import Any
 
 from docstring_inheritance import NumpyDocstringInheritanceInitMeta
 from joblib import Parallel, delayed
+from mne_bids.config import reader
 from rich.console import Console
 from rich.panel import Panel
 from rich.text import Text
@@ -28,6 +30,9 @@ from ..schemas import validate_record
 from .base import EEGDashRaw
 from .bids_dataset import EEGBIDSDataset
 from .registry import register_openneuro_datasets
+
+# Valid extensions for EEG data files (from MNE-BIDS reader configuration)
+_VALID_DATA_EXTENSIONS = frozenset(reader.keys())
 
 
 class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitMeta):
@@ -351,7 +356,25 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
         super().__init__(datasets, lazy=True)
 
     def _normalize_records(self, records: list[dict[str, Any]]) -> list[dict[str, Any]]:
-        """Apply dataset-level record normalization before building datasets."""
+        """Apply dataset-level record normalization before building datasets.
+
+        This method performs several normalizations:
+        1. Filters out records with invalid extensions (e.g., .json, .tsv sidecar files)
+        2. Updates storage backend/base if s3_bucket is specified
+        3. Deduplicates records if _dedupe_records is enabled
+        """
+        # Filter out records that are not valid EEG data files
+        # (e.g., filter out .json, .tsv sidecar files that may be in the database)
+        filtered_records = []
+        for record in records:
+            ext = record.get("extension", "")
+            # Check if extension is valid for EEG data (case-insensitive)
+            if ext and ext.lower() not in {e.lower() for e in _VALID_DATA_EXTENSIONS}:
+                continue
+            filtered_records.append(record)
+
+        records = filtered_records
+
         if self.s3_bucket:
             for record in records:
                 storage = record.setdefault("storage", {})
@@ -405,16 +428,16 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
                 targets.append(ds)
 
         if not targets:
+            self._download_dataset_files()
             return
 
         if n_jobs == 1:
             for ds in targets:
                 ds._download_required_files()
-            return
-
-        Parallel(n_jobs=n_jobs, prefer="threads")(
-            delayed(EEGDashRaw._download_required_files)(ds) for ds in targets
-        )
+        else:
+            Parallel(n_jobs=n_jobs, prefer="threads")(
+                delayed(EEGDashRaw._download_required_files)(ds) for ds in targets
+            )
 
         # Download global dataset files (participants.tsv, etc.)
         self._download_dataset_files()
@@ -793,11 +816,16 @@ class EEGChallengeDataset(EEGDashDataset):
         )
 
 
+_from_api = os.getenv("EEGDASH_DATASET_REGISTRY_FROM_API", "").lower() in {
+    "1",
+    "true",
+    "yes",
+}
 registered_classes = register_openneuro_datasets(
     summary_file=Path(__file__).with_name("dataset_summary.csv"),
     base_class=EEGDashDataset,
     namespace=globals(),
-    from_api=True,
+    from_api=_from_api,
 )
 
 

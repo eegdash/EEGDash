@@ -19,17 +19,37 @@ Usage:
 import argparse
 import json
 import os
+import re
 import sys
+import urllib.error
+import urllib.request
 from concurrent.futures import ProcessPoolExecutor, as_completed
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+import numpy as np
 import pandas as pd
+from _constants import (
+    CTF_INTERNAL_EXTENSIONS,
+    MEF3_INTERNAL_DIRS,
+    MEF3_INTERNAL_EXTENSIONS,
+    MODALITY_CANONICAL_MAP,
+    MODALITY_DETECTION_TARGETS,
+    NEURO_MODALITIES,
+)
 from _fingerprint import fingerprint_from_files, fingerprint_from_manifest
+from _mef3_parser import parse_mef3_metadata
+from _snirf_parser import parse_snirf_metadata
+from _vhdr_parser import parse_vhdr_metadata
 from tqdm import tqdm
 
+from eegdash.dataset.bids_dataset import EEGBIDSDataset
 from eegdash.schemas import Storage, create_dataset, create_record
+
+# Avoid numba cache issues on CI by setting cache dir before MNE-BIDS import
+os.environ.setdefault("NUMBA_CACHE_DIR", str(Path(".cache") / "numba"))
+from mne_bids.config import ALLOWED_DATATYPE_EXTENSIONS  # noqa: E402
 
 # Storage configuration per source
 # Each source has a backend type and base URL pattern
@@ -155,9 +175,8 @@ def extract_dataset_metadata(
         Dataset schema compliant metadata
 
     """
-    bids_root = Path(bids_dataset.bidsdir)
     metadata = metadata or {}
-
+    bids_root = Path(bids_dataset.bidsdir)
     # Read dataset_description.json
     description = {}
     desc_path = bids_root / "dataset_description.json"
@@ -329,6 +348,13 @@ def extract_dataset_metadata(
     senior_author = metadata.get("senior_author")
     contact_info = metadata.get("contact_info")
 
+    # Extract new metadata fields
+    is_clinical = metadata.get("is_clinical")
+    clinical_purpose = metadata.get("clinical_purpose")
+    paradigm_modality = metadata.get("paradigm_modality")
+    cognitive_domain = metadata.get("cognitive_domain")
+    is_10_20_system = metadata.get("is_10_20_system")
+
     if not dataset_modified_at:
         # Try to get from manifest timestamps dict if present
         ts = metadata.get("timestamps", {})
@@ -399,18 +425,20 @@ def extract_dataset_metadata(
             if not item.is_file():
                 continue
 
-            name = item.name
+            item_name = item.name
             if (
-                name in found_files
-                or name.lower() in ignored_files
-                or name.startswith(".")
+                item_name in found_files
+                or item_name.lower() in ignored_files
+                or item_name.startswith(".")
             ):
                 continue
 
             # Include typical BIDS metadata extensions
-            if name.lower().endswith((".json", ".tsv", ".txt", ".md", ".yaml", ".yml")):
-                dep_keys.append(name)
-                found_files.add(name)
+            if item_name.lower().endswith(
+                (".json", ".tsv", ".txt", ".md", ".yaml", ".yml")
+            ):
+                dep_keys.append(item_name)
+                found_files.add(item_name)
 
         # Deduplicate keys and sort
         dep_keys = sorted(list(set(dep_keys)))
@@ -454,6 +482,12 @@ def extract_dataset_metadata(
         senior_author=senior_author,
         contact_info=contact_info,
         storage=storage_info,
+        # New fields
+        is_clinical=is_clinical,
+        clinical_purpose=clinical_purpose,
+        paradigm_modality=paradigm_modality,
+        cognitive_domain=cognitive_domain,
+        is_10_20_system=is_10_20_system,
     )
 
     return dict(dataset)
@@ -528,9 +562,159 @@ def extract_record(
     except Exception:
         pass
 
-    # Fallback for nchans if not in sidecar but we have channel names
-    if not nchans and ch_names:
+    # Prefer channel_labels count over sidecar nchans
+    # channels.tsv is the authoritative source for channel information
+    # Sidecar JSON may only have partial counts (e.g., only EEGChannelCount)
+    if ch_names:
         nchans = len(ch_names)
+    elif not nchans:
+        # Fallback: no channels.tsv and no sidecar nchans
+        nchans = None
+
+    # ===========================================================
+    # FALLBACK: Read from BIDS sidecar files directly
+    # This handles MEG/iEEG datasets where primary extraction fails
+    # BIDS uses inheritance - sidecars can be in parent directories
+    # and may not include run/acquisition entities
+    # ===========================================================
+    bids_file_path = Path(bids_file)
+
+    # Try to find and read the modality-specific JSON sidecar (e.g., _meg.json, _eeg.json)
+    bids_root = Path(bids_dataset.bidsdir)
+    if not sampling_frequency or not nchans:
+        base_names_to_try, dirs_to_try = _build_bids_search_paths(
+            bids_file_path, bids_root
+        )
+
+        # Try modality-specific sidecars
+        for search_dir in dirs_to_try:
+            if sampling_frequency and nchans:
+                break
+            for base_name in base_names_to_try:
+                if sampling_frequency and nchans:
+                    break
+                for sidecar_suffix in ["_meg.json", "_eeg.json", "_ieeg.json"]:
+                    sidecar_path = search_dir / f"{base_name}{sidecar_suffix}"
+                    if sidecar_path.exists():
+                        try:
+                            with open(sidecar_path) as f:
+                                sidecar_data = json.load(f)
+
+                            # Extract SamplingFrequency
+                            if (
+                                not sampling_frequency
+                                and "SamplingFrequency" in sidecar_data
+                            ):
+                                sampling_frequency = float(
+                                    sidecar_data["SamplingFrequency"]
+                                )
+
+                            # Extract channel count from various BIDS fields
+                            if not nchans:
+                                # Sum all channel type counts if available
+                                channel_count_fields = [
+                                    "MEGChannelCount",
+                                    "EEGChannelCount",
+                                    "EOGChannelCount",
+                                    "ECGChannelCount",
+                                    "EMGChannelCount",
+                                    "MiscChannelCount",
+                                    "TriggerChannelCount",
+                                    "iEEGChannelCount",
+                                    "SEEGChannelCount",
+                                    "ECOGChannelCount",
+                                ]
+                                total_channels = sum(
+                                    sidecar_data.get(field, 0) or 0
+                                    for field in channel_count_fields
+                                )
+                                if total_channels > 0:
+                                    nchans = total_channels
+                            break  # Found a valid sidecar in this dir
+                        except Exception:
+                            pass
+
+    # Try to read from channels.tsv if still missing
+    if not sampling_frequency or not nchans:
+        base_names_to_try, dirs_to_try = _build_bids_search_paths(
+            bids_file_path, bids_root
+        )
+
+        for search_dir in dirs_to_try:
+            if sampling_frequency and nchans:
+                break
+            for base_name in base_names_to_try:
+                if sampling_frequency and nchans:
+                    break
+                channels_path = search_dir / f"{base_name}_channels.tsv"
+                if channels_path.exists():
+                    try:
+                        channels_df = pd.read_csv(
+                            channels_path,
+                            sep="\t",
+                            dtype="string",
+                            keep_default_na=False,
+                        )
+
+                        # Get nchans from row count
+                        if not nchans:
+                            nchans = len(channels_df)
+
+                        # Get sampling_frequency from the first valid row
+                        if not sampling_frequency:
+                            for col in ["sampling_frequency", "SamplingFrequency"]:
+                                if col in channels_df.columns:
+                                    for val in channels_df[col]:
+                                        try:
+                                            sfreq_val = float(val)
+                                            if sfreq_val > 0:
+                                                sampling_frequency = sfreq_val
+                                                break
+                                        except (ValueError, TypeError):
+                                            pass
+                                    if sampling_frequency:
+                                        break
+                        break  # Found a valid channels file
+                    except Exception:
+                        pass
+
+    # ===========================================================
+    # FALLBACK 3: Parse data files directly when sidecars missing
+    # ===========================================================
+    ext = bids_file_path.suffix.lower()
+
+    # VHDR (BrainVision) fallback
+    if (not sampling_frequency or not nchans or not ch_names) and ext == ".vhdr":
+        vhdr_metadata = parse_vhdr_metadata(bids_file_path)
+        if vhdr_metadata:
+            if not sampling_frequency:
+                sampling_frequency = vhdr_metadata.get("sampling_frequency")
+            if not nchans:
+                nchans = vhdr_metadata.get("nchans")
+            if not ch_names:
+                ch_names = vhdr_metadata.get("ch_names")
+
+    # SNIRF (fNIRS) fallback
+    if (not sampling_frequency or not nchans) and ext == ".snirf":
+        snirf_metadata = parse_snirf_metadata(bids_file_path)
+        if snirf_metadata:
+            if not sampling_frequency:
+                sampling_frequency = snirf_metadata.get("sampling_frequency")
+            if not nchans:
+                nchans = snirf_metadata.get("nchans")
+            if not ch_names:
+                ch_names = snirf_metadata.get("ch_names")
+
+    # MEF3 (.mefd directory) fallback
+    if (not sampling_frequency or not nchans) and ext == ".mefd":
+        mef3_metadata = parse_mef3_metadata(bids_file_path)
+        if mef3_metadata:
+            if not sampling_frequency:
+                sampling_frequency = mef3_metadata.get("sampling_frequency")
+            if not nchans:
+                nchans = mef3_metadata.get("nchans")
+            if not ch_names:
+                ch_names = mef3_metadata.get("ch_names")
 
     # Find dependency files (channels.tsv, events.tsv, etc.) for storage manifest
     dep_keys = []
@@ -539,20 +723,48 @@ def extract_record(
     base_name = bids_file_path.stem.rsplit("_", 1)[0]
 
     # BIDS sidecar files
-    for dep_suffix in [
-        "_channels.tsv",
-        "_events.tsv",
-        "_electrodes.tsv",
-        "_coordsystem.json",
-        "_eeg.json",
+    # Check both the file's directory and the subject root directory (for inheritance)
+    search_dirs = [parent_dir]
+
+    # Try to find subject root
+    # Assumption: path is usually sub-XX/ses-YY/mod/ or sub-XX/mod/
+    # We want sub-XX/
+    parts = bids_file_path.parts
+    for i, part in enumerate(parts):
+        if part.startswith("sub-"):
+            # Subject root relative to where we are? No, relative to system.
+            # bids_file_path is absolute if passed from get_files()? No, let's check.
+            # get_files() returns absolute paths usually in MNE-BIDS context or from Path.rglob
+            # let's assume bids_file_path is absolute.
+
+            # Actually, extract_record receives `bids_file` as str. eegdash/dataset/dataset.py calls it with file path.
+            # let's use relative components logic safely.
+            pass
+
+    # Simplified approach: Look in parent, and if 'eeg'/'meg' etc is parent, look one up.
+    if parent_dir.name in NEURO_MODALITIES or parent_dir.name in [
+        "eeg",
+        "meg",
+        "ieeg",
+        "beh",
     ]:
-        dep_file = parent_dir / f"{base_name}{dep_suffix}"
-        if dep_file.exists() or dep_file.is_symlink():
-            try:
-                dep_relpath = dep_file.relative_to(bids_dataset.bidsdir)
-                dep_keys.append(str(dep_relpath))
-            except ValueError:
-                pass
+        search_dirs.append(parent_dir.parent)
+
+    for search_dir in search_dirs:
+        for dep_suffix in [
+            "_channels.tsv",
+            "_events.tsv",
+            "_electrodes.tsv",
+            "_coordsystem.json",
+            "_eeg.json",
+        ]:
+            dep_file = search_dir / f"{base_name}{dep_suffix}"
+            if dep_file.exists() or dep_file.is_symlink():
+                try:
+                    dep_relpath = dep_file.relative_to(bids_dataset.bidsdir)
+                    dep_keys.append(str(dep_relpath))
+                except ValueError:
+                    pass
 
     # Format-specific companion files (e.g., .fdt for EEGLAB .set files)
     ext = bids_file_path.suffix.lower()
@@ -639,8 +851,6 @@ def parse_bids_entities_from_path(filepath: str) -> dict[str, Any]:
         Extracted BIDS entities (subject, session, task, run, modality, etc.)
 
     """
-    import re
-
     entities = {}
     filename = Path(filepath).name
     filepath_lower = filepath.lower()
@@ -757,42 +967,79 @@ def parse_bids_entities_from_path(filepath: str) -> dict[str, Any]:
     return entities
 
 
-# Semantic mapping to canonical BIDS modalities
-MODALITY_CANONICAL_MAP = {
-    "nirs": "fnirs",
-    "fnirs": "fnirs",
-    "spike": "ieeg",
-    "lfp": "ieeg",
-    "mea": "ieeg",
-}
+def _build_bids_search_paths(
+    bids_file_path: Path, bids_root: Path
+) -> tuple[list[str], list[Path]]:
+    """Build base names and directories for BIDS inheritance sidecar search.
 
-# Supported canonical neurophysiology modalities
-NEURO_MODALITIES = ("eeg", "meg", "ieeg", "emg", "fnirs")
+    BIDS uses inheritance - sidecars can be in parent directories and may not
+    include run/acquisition entities. This function generates the various base
+    name variants and directories to search when looking for sidecars.
 
-# Modalities we care about detecting (including aliases/variants)
-MODALITY_DETECTION_TARGETS = (
-    "eeg",
-    "meg",
-    "ieeg",
-    "emg",
-    "nirs",
-    "fnirs",
-    "spike",
-    "lfp",
-    "mea",
-)
+    Parameters
+    ----------
+    bids_file_path : Path
+        Path to the BIDS data file
+    bids_root : Path
+        Root directory of the BIDS dataset
 
-# CTF MEG uses .ds directories containing multiple files
-# We should only match the .ds directory path, not files inside
-CTF_INTERNAL_EXTENSIONS = {
-    ".meg4",
-    ".res4",
-    ".hc",
-    ".infods",
-    ".acq",
-    ".hist",
-    ".newds",
-}
+    Returns
+    -------
+    tuple[list[str], list[Path]]
+        A tuple of (base_names_to_try, dirs_to_try) where:
+        - base_names_to_try: List of base name variants to search for
+        - dirs_to_try: List of directories from file's parent up to BIDS root
+
+    """
+    # Parse entities from the file name
+    # e.g., "sub-13_ses-meg_task-facerecognition_run-05_meg.fif"
+    stem = bids_file_path.stem  # "sub-13_ses-meg_task-facerecognition_run-05_meg"
+    parts = stem.split("_")
+
+    # Build different base name variants for BIDS inheritance
+    # Full base: sub-13_ses-meg_task-facerecognition_run-05
+    # Without run: sub-13_ses-meg_task-facerecognition
+    # Without run and acq: sub-13_ses-meg_task-facerecognition
+    base_names_to_try: list[str] = []
+
+    # Get base without the modality suffix (last part)
+    full_base = "_".join(parts[:-1]) if len(parts) > 1 else stem
+
+    # Add full base first
+    base_names_to_try.append(full_base)
+
+    # Try without run-XX
+    if "_run-" in full_base:
+        without_run = "_".join(p for p in parts[:-1] if not p.startswith("run-"))
+        base_names_to_try.append(without_run)
+
+    # Try without acquisition too
+    if "_acq-" in full_base:
+        without_acq_run = "_".join(
+            p
+            for p in parts[:-1]
+            if not p.startswith("run-") and not p.startswith("acq-")
+        )
+        base_names_to_try.append(without_acq_run)
+
+    # Build task-only base name for BIDS inheritance
+    # e.g., task-MIpost from sub-xp108_task-MIpost_eeg
+    task_part = next((p for p in parts if p.startswith("task-")), None)
+    if task_part and task_part not in base_names_to_try:
+        base_names_to_try.append(task_part)
+
+    # Directories to search - walk up to BIDS root for proper inheritance
+    # BIDS inheritance: sidecars can be at any level from root to file's directory
+    parent_dir = bids_file_path.parent
+    dirs_to_try: list[Path] = [parent_dir]
+    current = parent_dir
+    while current != bids_root and current.parent != current:
+        current = current.parent
+        dirs_to_try.append(current)
+        if current == bids_root:
+            break
+
+    return base_names_to_try, dirs_to_try
 
 
 def normalize_modality(modality: str | None) -> str | None:
@@ -809,15 +1056,10 @@ NEURO_DATA_EXTENSIONS: set[str] | None = None
 
 
 def _load_neuro_data_extensions() -> set[str]:
-    """Lazily load neurophysiology data extensions from MNE-BIDS."""
+    """Load neurophysiology data extensions from MNE-BIDS (cached)."""
     global NEURO_DATA_EXTENSIONS
     if NEURO_DATA_EXTENSIONS is not None:
         return NEURO_DATA_EXTENSIONS
-
-    # Avoid numba cache issues on CI/help by setting cache dir before import.
-    os.environ.setdefault("NUMBA_CACHE_DIR", str(Path(".cache") / "numba"))
-
-    from mne_bids.config import ALLOWED_DATATYPE_EXTENSIONS
 
     extensions: set[str] = set()
     for modality, exts in ALLOWED_DATATYPE_EXTENSIONS.items():
@@ -826,8 +1068,6 @@ def _load_neuro_data_extensions() -> set[str]:
 
     NEURO_DATA_EXTENSIONS = extensions
     return extensions
-
-    return False
 
 
 def is_neuro_data_file(filepath: str) -> bool:
@@ -850,6 +1090,21 @@ def is_neuro_data_file(filepath: str) -> bool:
     """
     filepath_lower = filepath.lower()
 
+    # Skip BIDS sidecar/metadata files - these are never data files
+    # even when located in modality folders
+    sidecar_extensions = {
+        ".json",
+        ".tsv",
+        ".txt",
+        ".md",
+        ".html",
+        ".pdf",
+        ".csv",
+    }
+    for ext in sidecar_extensions:
+        if filepath_lower.endswith(ext):
+            return False
+
     # Skip files inside CTF .ds directories (we want the .ds directory itself)
     # e.g., skip "sub-01_meg.ds/sub-01_meg.meg4" but keep "sub-01_meg.ds"
     if ".ds/" in filepath_lower:
@@ -858,6 +1113,25 @@ def is_neuro_data_file(filepath: str) -> bool:
     # Also skip CTF internal files by extension
     for ext in CTF_INTERNAL_EXTENSIONS:
         if filepath_lower.endswith(ext):
+            return False
+
+    # Skip files inside MEF3 .mefd directories (we want the .mefd directory itself)
+    # e.g., skip "sub-01_ieeg.mefd/LTG9.timd/LTG9-000000.segd/LTG9-000000.tdat"
+    # but keep "sub-01_ieeg.mefd"
+    if ".mefd/" in filepath_lower:
+        return False
+
+    # Also skip MEF3 internal files by extension
+    for ext in MEF3_INTERNAL_EXTENSIONS:
+        if filepath_lower.endswith(ext):
+            return False
+
+    # Skip MEF3 internal directories that may appear in archive listings
+    for internal_dir in MEF3_INTERNAL_DIRS:
+        if (
+            filepath_lower.endswith(internal_dir)
+            or f"{internal_dir}/" in filepath_lower
+        ):
             return False
 
     # Check for modality indicators (makes detection more robust for non-BIDS)
@@ -1070,9 +1344,6 @@ def digest_from_manifest(
 
     # Fallback: Try to fetch metadata files if counts/tasks are missing
     if subjects_count == 0 or not tasks:
-        import urllib.error
-        import urllib.request
-
         # Look for key metadata files in the file list
         desc_url = None
         participants_url = None
@@ -1279,8 +1550,6 @@ def digest_from_manifest(
             continue  # Skip to next file (we've processed the ZIP contents)
 
         # Handle ZIP files without extracted contents
-        import re
-
         if filepath.lower().endswith(".zip"):
             # Pattern 1: Subject ZIP files like sub-01.zip
             subject_match = re.match(
@@ -1563,8 +1832,6 @@ def digest_dataset(
         Summary of digestion results
 
     """
-    from eegdash.dataset.bids_dataset import EEGBIDSDataset
-
     dataset_dir = input_dir / dataset_id
     dataset_output_dir = output_dir / dataset_id
 
@@ -1579,13 +1846,14 @@ def digest_dataset(
     manifest_path = dataset_dir / "manifest.json"
     has_manifest = manifest_path.exists()
 
-    # Check if there are actual EEG files or symlinks (git-annex uses broken symlinks)
+    # Check if there are actual EEG/MEG files or symlinks (git-annex uses broken symlinks)
     # We accept both real files and symlinks for metadata extraction
+    # Include .ds directories for CTF MEG format
     has_actual_files = any(
         f.suffix in [".set", ".edf", ".bdf", ".vhdr", ".fif", ".cnt"]
         for f in dataset_dir.rglob("*")
         if f.is_file() or f.is_symlink()  # Include symlinks for git-annex
-    )
+    ) or any(f.suffix == ".ds" and f.is_dir() for f in dataset_dir.rglob("*.ds"))
 
     # For API-only sources, use manifest-based digestion
     if has_manifest and not has_actual_files:
@@ -1722,8 +1990,6 @@ def digest_dataset(
 
 def _json_serializer(obj):
     """Handle non-serializable objects."""
-    import numpy as np
-
     if isinstance(obj, (np.integer, np.floating)):
         return obj.item()
     elif isinstance(obj, np.ndarray):

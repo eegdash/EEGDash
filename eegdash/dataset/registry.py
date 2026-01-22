@@ -1,11 +1,65 @@
 from __future__ import annotations
 
 import json
+import os
+import urllib.error
 import urllib.request
 from pathlib import Path
 from typing import Any, Dict
 
 import pandas as pd
+
+from ..paths import get_default_cache_dir
+
+
+def _human_readable_size(num_bytes: int | float | None) -> str:
+    """Convert bytes to human-readable string."""
+    if num_bytes is None or num_bytes == 0:
+        return "Unknown"
+    for unit in ("B", "KB", "MB", "GB", "TB"):
+        if abs(num_bytes) < 1024.0:
+            return f"{num_bytes:.1f} {unit}"
+        num_bytes /= 1024.0
+    return f"{num_bytes:.1f} PB"
+
+
+def _make_dataset_init(_dataset: str, base_class: type):
+    """Create an __init__ method for a dynamically generated dataset class.
+
+    Parameters
+    ----------
+    _dataset : str
+        The dataset identifier to bind to the class.
+    base_class : type
+        The base class whose __init__ will be called.
+
+    Returns
+    -------
+    callable
+        An __init__ method that sets up the dataset query.
+
+    """
+
+    def __init__(
+        self,
+        cache_dir: str,
+        query: dict | None = None,
+        s3_bucket: str | None = None,
+        **kwargs,
+    ):
+        q = {"dataset": _dataset}
+        if query:
+            q.update(query)
+        # call base_class.__init__ directly
+        base_class.__init__(
+            self,
+            query=q,
+            cache_dir=cache_dir,
+            s3_bucket=s3_bucket,
+            **kwargs,
+        )
+
+    return __init__
 
 
 def register_openneuro_datasets(
@@ -48,7 +102,7 @@ def register_openneuro_datasets(
 
     """
     if base_class is None:
-        from ..api import EEGDashDataset as base_class  # lazy import
+        from ..api import EEGDashDataset as base_class  # noqa: PLC0415 (lazy import)
 
     namespace = namespace if namespace is not None else globals()
     module_name = namespace.get("__name__", __name__)
@@ -74,31 +128,7 @@ def register_openneuro_datasets(
             continue
 
         class_name = dataset_id.upper()
-
-        # avoid zero-arg super() here
-        def make_init(_dataset: str):
-            def __init__(
-                self,
-                cache_dir: str,
-                query: dict | None = None,
-                s3_bucket: str | None = None,
-                **kwargs,
-            ):
-                q = {"dataset": _dataset}
-                if query:
-                    q.update(query)
-                # call base_class.__init__ directly
-                base_class.__init__(
-                    self,
-                    query=q,
-                    cache_dir=cache_dir,
-                    s3_bucket=s3_bucket,
-                    **kwargs,
-                )
-
-            return __init__
-
-        init = make_init(dataset_id)
+        init = _make_dataset_init(dataset_id, base_class)
 
         # Generate rich docstring with dataset metadata
         doc = _generate_rich_docstring(dataset_id, row_series, base_class)
@@ -127,6 +157,20 @@ def register_openneuro_datasets(
     return registered
 
 
+def _clean_optional(value: object) -> str:
+    """Clean optional value, returning empty string for null-like values."""
+    text = str(value).strip() if value is not None else ""
+    if not text or text.lower() in {"nan", "none", "null"}:
+        return ""
+    return text
+
+
+def _clean_or_unknown(value: object) -> str:
+    """Clean value, returning 'Unknown' for null-like values."""
+    cleaned = _clean_optional(value)
+    return cleaned if cleaned else "Unknown"
+
+
 def _generate_rich_docstring(
     dataset_id: str, row_series: pd.Series, base_class: type
 ) -> str:
@@ -149,17 +193,6 @@ def _generate_rich_docstring(
         A formatted docstring.
 
     """
-
-    def _clean_optional(value: object) -> str:
-        text = str(value).strip() if value is not None else ""
-        if not text or text.lower() in {"nan", "none", "null"}:
-            return ""
-        return text
-
-    def _clean_or_unknown(value: object) -> str:
-        cleaned = _clean_optional(value)
-        return cleaned if cleaned else "Unknown"
-
     n_subjects = _clean_or_unknown(row_series.get("n_subjects"))
     n_records = _clean_or_unknown(row_series.get("n_records"))
     n_tasks = _clean_or_unknown(row_series.get("n_tasks"))
@@ -169,6 +202,13 @@ def _generate_rich_docstring(
         modality = _clean_optional(row_series.get("modality of exp"))
     exp_type = _clean_optional(row_series.get("type of exp"))
     subject_type = _clean_optional(row_series.get("Type Subject"))
+
+    # Citation count from NEMAR
+    citation_count = row_series.get("nemar_citation_count")
+    if citation_count is not None and not pd.isna(citation_count):
+        citation_count = int(citation_count)
+    else:
+        citation_count = None
 
     summary_bits: list[str] = []
     if modality:
@@ -182,10 +222,19 @@ def _generate_rich_docstring(
     if summary_bits:
         summary_line = f"{summary_line} {'; '.join(summary_bits)}."
     summary_lines = [summary_line]
-    if any(value != "Unknown" for value in (n_subjects, n_records, n_tasks)):
-        summary_lines.append(
-            f"Subjects: {n_subjects}; recordings: {n_records}; tasks: {n_tasks}."
-        )
+
+    # Build the subjects/recordings/tasks line with optional citation badge
+    stats_parts = []
+    if n_subjects != "Unknown":
+        stats_parts.append(f"Subjects: {n_subjects}")
+    if n_records != "Unknown":
+        stats_parts.append(f"recordings: {n_records}")
+    if n_tasks != "Unknown":
+        stats_parts.append(f"tasks: {n_tasks}")
+
+    if stats_parts:
+        stats_line = "; ".join(stats_parts) + "."
+        summary_lines.append(stats_line)
 
     doi_raw = (
         row_series.get("dataset_doi")
@@ -205,6 +254,8 @@ def _generate_rich_docstring(
     ]
     if doi_clean:
         references_lines.append(f"DOI: https://doi.org/{doi_clean}")
+    if citation_count is not None:
+        references_lines.append(f"NEMAR citation count: {citation_count}")
 
     docstring = f"""{chr(10).join(summary_lines)}
 
@@ -295,11 +346,12 @@ EXCLUDED_DATASETS = {
 def fetch_datasets_from_api(
     api_url: str = "https://data.eegdash.org/api", database: str = "eegdash"
 ) -> pd.DataFrame:
-    """Fetch dataset summaries from API and return as DataFrame matching CSV structure."""
-    import os
+    """Fetch dataset summaries from API and return as DataFrame matching CSV structure.
 
-    from ..paths import get_default_cache_dir
-
+    Note: This function makes a single API call to /datasets/summary.
+    Stats (nchans_counts, sfreq_counts) are already embedded in dataset documents
+    via the compute-stats endpoint, so no separate stats call is needed.
+    """
     cache_dir = get_default_cache_dir()
     cache_file = cache_dir / "dataset_summary.csv"
 
@@ -312,7 +364,7 @@ def fetch_datasets_from_api(
 
     limit = int(os.environ.get("EEGDASH_DOC_LIMIT", 1000))
 
-    # 1. Fetch Datasets Summary
+    # Single API call - stats are already embedded in dataset documents
     url = f"{api_url}/{database}/datasets/summary?limit={limit}"
     data: dict[str, Any] = {}
     try:
@@ -326,19 +378,6 @@ def fetch_datasets_from_api(
 
     datasets = data.get("data", [])
 
-    # 2. Fetch Global Stats (nchans, sfreq)
-    # We collect IDs to optimize the query if needed, but the endpoint might just return all.
-    # The stats endpoint is /datasets/stats/records
-    stats_url = f"{api_url}/{database}/datasets/stats/records"
-    global_stats: dict[str, Any] = {}
-    try:
-        with urllib.request.urlopen(stats_url, timeout=60) as response:
-            resp_json = json.loads(response.read().decode("utf-8"))
-            global_stats = resp_json.get("data", {})
-    except Exception:
-        # Proceed without stats if this fails
-        pass
-
     rows = []
     for ds in datasets:
         ds_id = ds.get("dataset_id", "").strip()
@@ -349,37 +388,73 @@ def fetch_datasets_from_api(
         ):
             continue
 
-        meta = ds.get("metadata", {})
-        ds_stats = global_stats.get(ds_id, {})
-        nchans_list = ds_stats.get("nchans_counts", [])
-        sfreq_list = ds_stats.get("sfreq_counts", [])
+        # Stats are embedded in dataset documents (populated by compute-stats endpoint)
+        nchans_list = ds.get("nchans_counts") or []
+        sfreq_list = ds.get("sfreq_counts") or []
+
+        # Extract demographics
+        demographics = ds.get("demographics", {}) or {}
+        recording_modality = ds.get("recording_modality", []) or []
+        if isinstance(recording_modality, str):
+            recording_modality = [recording_modality]
+
+        # Extract tags (new structure) or fallback to clinical/paradigm (legacy)
+        tags = ds.get("tags", {}) or {}
+        clinical = ds.get("clinical", {}) or {}
+        paradigm = ds.get("paradigm", {}) or {}
+
+        # Use tags.pathology if available, otherwise fallback to clinical info
+        pathology_list = tags.get("pathology", [])
+        if pathology_list and isinstance(pathology_list, list):
+            type_subject = ", ".join(pathology_list)
+        elif clinical.get("is_clinical"):
+            type_subject = clinical.get("purpose") or "Unspecified Clinical"
+        elif clinical.get("is_clinical") is False:
+            type_subject = "Healthy"
+        else:
+            type_subject = ""
+
+        # Use tags.modality if available, otherwise fallback to paradigm.modality
+        modality_list = tags.get("modality", [])
+        if modality_list and isinstance(modality_list, list):
+            paradigm_modality = ", ".join(modality_list)
+        else:
+            paradigm_modality = paradigm.get("modality") or ""
+
+        # Use tags.type if available, otherwise fallback to paradigm.cognitive_domain
+        type_list = tags.get("type", [])
+        if type_list and isinstance(type_list, list):
+            cognitive_domain = ", ".join(type_list)
+        else:
+            cognitive_domain = paradigm.get("cognitive_domain") or ""
 
         # Map API fields to expected CSV columns
-        # Note: We serialize lists to JSON strings for CSV compatibility if they are complex
-        # But simple representation (string) works if downstream parsers handle it.
-        # registry.py readers (pd.read_csv) will see them as strings.
-        # prepare_summary_tables.py handles complex parsing.
-
         row = {
             "dataset": ds_id,
-            "n_subjects": meta.get("subject_count", 0),
-            "n_records": ds.get("record_count", 0),
-            "n_tasks": len(meta.get("tasks", [])),
-            "modality of exp": ", ".join(meta.get("recording_modalities", []) or []),
-            "type of exp": meta.get("type", "Unknown"),
-            "Type Subject": meta.get("pathology", "Unknown"),
-            "duration_hours_total": round(meta.get("duration_hours_total", 0) or 0, 2),
-            "size": ds.get("size_human", "Unknown"),
-            "size_bytes": ds.get("size_bytes", 0),
-            "source": ds.get("source", "unknown"),
+            "n_subjects": demographics.get("subjects_count", 0) or 0,
+            "n_records": ds.get("total_files", 0) or 0,
+            "n_tasks": len(ds.get("tasks", []) or []),
+            # IMPORTANT: Keep these columns separate!
+            # "modality of exp" = experimental/paradigm modality (visual, auditory, motor, etc.)
+            # "record_modality" = BIDS recording modality (EEG, MEG, iEEG, etc.)
+            "modality of exp": paradigm_modality,  # DO NOT mix with recording_modality
+            "type of exp": cognitive_domain,  # cognitive domain only
+            "Type Subject": type_subject,
+            "duration_hours_total": 0.0,  # Not available in summary endpoint
+            "size_bytes": ds.get("size_bytes") or 0,
+            "size": ds.get("size_human") or _human_readable_size(ds.get("size_bytes")),
+            "source": ds.get("source") or "unknown",
             # Extended fields for docs/summary tables
-            "dataset_title": ds.get("name", ""),
-            "record_modality": ds.get("recording_modality", ""),
+            # Use computed_title if available (populated by compute-stats endpoint)
+            "dataset_title": ds.get("computed_title") or ds.get("name", ""),
+            "record_modality": ", ".join(recording_modality),
             # We enforce JSON string for list/dict structures to survive CSV roundtrip reliably
             "nchans_set": json.dumps(nchans_list),
             "sampling_freqs": json.dumps(sfreq_list),
             "license": ds.get("license", ""),
             "doi": ds.get("dataset_doi", ""),
+            # Citation metrics from NEMAR
+            "nemar_citation_count": ds.get("nemar_citation_count"),
         }
         rows.append(row)
 
@@ -397,8 +472,6 @@ def fetch_datasets_from_api(
 
 def _fetch_datasets_from_api(api_url: str, database: str) -> pd.DataFrame:
     """Fetch dataset summaries from API and return as DataFrame matching CSV structure."""
-    import os
-
     limit = int(os.environ.get("EEGDASH_DOC_LIMIT", 1000))
     url = f"{api_url}/{database}/datasets/summary?limit={limit}"
     try:
@@ -421,21 +494,184 @@ def _fetch_datasets_from_api(api_url: str, database: str) -> pd.DataFrame:
         ):
             continue
 
-        meta = ds.get("metadata", {})
+        # Extract demographics
+        demographics = ds.get("demographics", {}) or {}
+        recording_modality = ds.get("recording_modality", []) or []
+        if isinstance(recording_modality, str):
+            recording_modality = [recording_modality]
+
+        # Extract tags (new structure) or fallback to clinical/paradigm (legacy)
+        tags = ds.get("tags", {}) or {}
+        clinical = ds.get("clinical", {}) or {}
+        paradigm = ds.get("paradigm", {}) or {}
+
+        # Use tags.pathology if available, otherwise fallback to clinical info
+        pathology_list = tags.get("pathology", [])
+        if pathology_list and isinstance(pathology_list, list):
+            type_subject = ", ".join(pathology_list)
+        elif clinical.get("is_clinical"):
+            type_subject = clinical.get("purpose") or "Unspecified Clinical"
+        elif clinical.get("is_clinical") is False:
+            type_subject = "Healthy"
+        else:
+            type_subject = ""
+
+        # Use tags.modality if available, otherwise fallback to paradigm.modality
+        modality_list = tags.get("modality", [])
+        if modality_list and isinstance(modality_list, list):
+            paradigm_modality = ", ".join(modality_list)
+        else:
+            paradigm_modality = paradigm.get("modality") or ""
+
+        # Use tags.type if available, otherwise fallback to paradigm.cognitive_domain
+        type_list = tags.get("type", [])
+        if type_list and isinstance(type_list, list):
+            cognitive_domain = ", ".join(type_list)
+        else:
+            cognitive_domain = paradigm.get("cognitive_domain") or ""
+
         # Map API fields to expected CSV columns
         row = {
-            "dataset": ds.get("dataset_id"),
-            "n_subjects": meta.get("subject_count", 0),
-            "n_records": ds.get("record_count", 0),
-            "n_tasks": len(meta.get("tasks", [])),
-            "modality of exp": ", ".join(meta.get("recording_modalities", []) or []),
-            "type of exp": meta.get("type", "Unknown"),
-            "Type Subject": meta.get("pathology", "Unknown"),
-            "duration_hours_total": round(meta.get("duration_hours_total", 0) or 0, 2),
-            "size": ds.get("size_human", "Unknown"),
+            "dataset": ds_id,
+            "n_subjects": demographics.get("subjects_count", 0) or 0,
+            "n_records": ds.get("total_files", 0) or 0,
+            "n_tasks": len(ds.get("tasks", []) or []),
+            # IMPORTANT: Keep these columns separate!
+            # "modality of exp" = experimental/paradigm modality (visual, auditory, motor, etc.)
+            # "record_modality" = BIDS recording modality (EEG, MEG, iEEG, etc.)
+            "modality of exp": paradigm_modality,  # DO NOT mix with recording_modality
+            "type of exp": cognitive_domain,  # cognitive domain only
+            "Type Subject": type_subject,
+            "duration_hours_total": 0.0,
+            "size": ds.get("size_human") or _human_readable_size(ds.get("size_bytes")),
+            "record_modality": ", ".join(recording_modality),
+            # Use computed_title if available (populated by compute-stats endpoint)
+            "dataset_title": ds.get("computed_title") or ds.get("name", ""),
+            "license": ds.get("license", ""),
+            "doi": ds.get("dataset_doi", ""),
             # internal/extra fields
-            "source": ds.get("source", "unknown"),
+            "source": ds.get("source") or "unknown",
+            # Citation metrics from NEMAR
+            "nemar_citation_count": ds.get("nemar_citation_count"),
         }
         rows.append(row)
 
     return pd.DataFrame(rows)
+
+
+def fetch_chart_data_from_api(
+    api_url: str = "https://data.eegdash.org/api",
+    database: str = "eegdash",
+    limit: int = 1000,
+) -> tuple[pd.DataFrame, dict[str, Any]]:
+    """Fetch pre-aggregated chart data from API.
+
+    This uses the optimized /datasets/chart-data endpoint which returns
+    only chart-relevant fields and pre-computed aggregations.
+
+    Falls back to /datasets/summary if chart-data endpoint is unavailable.
+
+    Parameters
+    ----------
+    api_url : str
+        Base API URL
+    database : str
+        Database name
+    limit : int
+        Maximum datasets to fetch
+
+    Returns
+    -------
+    tuple[pd.DataFrame, dict]
+        DataFrame with dataset records and dict with pre-computed aggregations
+
+    """
+    url = f"{api_url}/{database}/datasets/chart-data?limit={limit}"
+
+    try:
+        with urllib.request.urlopen(url, timeout=30) as response:
+            data = json.loads(response.read().decode("utf-8"))
+    except urllib.error.HTTPError as e:
+        if e.code == 404:
+            # Endpoint not deployed yet, fallback to summary endpoint
+            print("  chart-data endpoint not available, falling back to summary...")
+            df = fetch_datasets_from_api(api_url, database)
+            return df, {}
+        print(f"Failed to fetch chart data: {e}")
+        return pd.DataFrame(), {}
+    except Exception as e:
+        print(f"Failed to fetch chart data: {e}")
+        return pd.DataFrame(), {}
+
+    if not data.get("success"):
+        return pd.DataFrame(), {}
+
+    datasets = data.get("datasets", [])
+    aggregations = data.get("aggregations", {})
+
+    rows = []
+    for ds in datasets:
+        ds_id = ds.get("dataset_id", "").strip()
+        if ds_id.upper() in EXCLUDED_DATASETS:
+            continue
+        # Skip EEG2025* datasets (HBN competition datasets - special handling)
+        if ds_id.startswith("EEG2025"):
+            continue
+
+        # Extract nested fields
+        demographics = ds.get("demographics") or {}
+        tags = ds.get("tags") or {}
+        clinical = ds.get("clinical") or {}
+        paradigm = ds.get("paradigm") or {}
+        timestamps = ds.get("timestamps") or {}
+
+        recording_modality = ds.get("recording_modality") or []
+        if isinstance(recording_modality, str):
+            recording_modality = [recording_modality]
+
+        # Map tags to chart columns
+        pathology_list = tags.get("pathology") or []
+        type_subject = ", ".join(pathology_list) if pathology_list else ""
+        if not type_subject and clinical.get("is_clinical"):
+            type_subject = clinical.get("purpose") or "Clinical"
+        elif not type_subject and clinical.get("is_clinical") is False:
+            type_subject = "Healthy"
+        elif not type_subject:
+            type_subject = "Unknown"
+
+        modality_list = tags.get("modality") or []
+        modality_of_exp = (
+            ", ".join(modality_list) if modality_list else paradigm.get("modality", "")
+        )
+
+        type_list = tags.get("type") or []
+        type_of_exp = (
+            ", ".join(type_list) if type_list else paradigm.get("cognitive_domain", "")
+        )
+
+        row = {
+            "dataset": ds_id,
+            "dataset_title": ds.get("computed_title") or ds.get("name", ""),
+            "n_subjects": demographics.get("subjects_count") or 0,
+            "n_records": ds.get("total_files") or 0,
+            "n_tasks": len(ds.get("tasks") or []),
+            "record_modality": ", ".join(recording_modality),
+            "recording_modality": ", ".join(recording_modality),
+            "modality of exp": modality_of_exp,
+            "type of exp": type_of_exp,
+            "Type Subject": type_subject,
+            "size_bytes": ds.get("size_bytes") or 0,
+            "size": ds.get("size_human") or _human_readable_size(ds.get("size_bytes")),
+            "source": ds.get("source") or "unknown",
+            "license": ds.get("license", ""),
+            "doi": ds.get("dataset_doi", ""),
+            "nchans_set": json.dumps(ds.get("nchans_counts") or []),
+            "sampling_freqs": json.dumps(ds.get("sfreq_counts") or []),
+            "dataset_created_at": timestamps.get("dataset_created_at", ""),
+            "nemar_citation_count": ds.get("nemar_citation_count"),
+            # Treemap requires this field; None triggers fallback to records
+            "duration_hours_total": None,
+        }
+        rows.append(row)
+
+    return pd.DataFrame(rows), aggregations

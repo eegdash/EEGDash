@@ -27,7 +27,7 @@ from _serialize import save_datasets_deterministically, setup_paths
 
 setup_paths()
 from eegdash.local_bids import discover_local_bids_records
-from eegdash.records import create_dataset
+from eegdash.schemas import create_dataset
 
 
 def parse_participants_tsv(participants_file: Path) -> dict:

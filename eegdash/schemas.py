@@ -88,7 +88,6 @@ __all__ = [
     "Entities",
     "Demographics",
     "Clinical",
-    "Paradigm",
     "ExternalLinks",
     "RepositoryStats",
     "Timestamps",
@@ -162,7 +161,6 @@ class DatasetModel(BaseModel):
         min_length=1, description="Recording modalities present in the dataset"
     )
     ingestion_fingerprint: str | None = None
-    senior_author: str | None = None
     senior_author: str | None = None
     contact_info: list[str] | None = None
     timestamps: dict[str, Any] | None = None
@@ -254,8 +252,36 @@ class Demographics(TypedDict, total=False):
     handedness_distribution: dict[str, int] | None
 
 
+class Tags(TypedDict, total=False):
+    """Classification tags for the dataset.
+
+    Each tag category can contain multiple values as a list of strings.
+
+    Attributes
+    ----------
+    pathology : list[str] | None
+        Health/clinical conditions (e.g., ["Healthy"], ["Epilepsy", "Drug-resistant"]).
+        Use "Healthy" for neurotypical/control subjects.
+    modality : list[str] | None
+        Sensory or stimulus modalities (e.g., ["Visual"], ["Auditory", "Tactile"]).
+        Includes "Resting State" for resting-state paradigms.
+    type : list[str] | None
+        Experimental paradigm types (e.g., ["Perception"], ["Memory"], ["BCI"]).
+        Describes the cognitive domain or task category.
+
+    """
+
+    pathology: list[str] | None
+    modality: list[str] | None
+    type: list[str] | None
+
+
+# Legacy aliases for backwards compatibility
 class Clinical(TypedDict, total=False):
     """Clinical classification metadata (dataset-level).
+
+    .. deprecated::
+        Use the ``tags`` field with ``pathology`` key instead.
 
     Attributes
     ----------
@@ -268,25 +294,6 @@ class Clinical(TypedDict, total=False):
 
     is_clinical: bool
     purpose: str | None
-
-
-class Paradigm(TypedDict, total=False):
-    """Experimental paradigm classification (dataset-level).
-
-    Attributes
-    ----------
-    modality : str | None
-        The sensory or experimental modality (e.g., "visual", "auditory", "resting_state").
-    cognitive_domain : str | None
-        The cognitive domain investigated (e.g., "memory", "language", "emotion").
-    is_10_20_system : bool | None
-        True if electrodes are positioned according to the standard 10-20 system.
-
-    """
-
-    modality: str | None
-    cognitive_domain: str | None
-    is_10_20_system: bool | None
 
 
 class ExternalLinks(TypedDict, total=False):
@@ -383,10 +390,10 @@ class Dataset(TypedDict, total=False):
         Count of contributing labs.
     demographics : Demographics
         Summary of subject demographics.
+    tags : Tags
+        Classification tags (pathology, modality, type).
     clinical : Clinical
-        Clinical classification details.
-    paradigm : Paradigm
-        Experimental paradigm details.
+        Clinical classification details (deprecated, use tags instead).
     external_links : ExternalLinks
         Links to external resources.
     repository_stats : RepositoryStats | None
@@ -397,6 +404,8 @@ class Dataset(TypedDict, total=False):
         Contact emails or names.
     timestamps : Timestamps
         Timestamps for data processing and creation.
+    nemar_citation_count : int | None
+        Number of papers citing this dataset (from NEMAR citations repository).
 
     """
 
@@ -405,6 +414,7 @@ class Dataset(TypedDict, total=False):
     name: str
     source: str
     readme: str | None
+    ingestion_fingerprint: str | None
 
     # Recording info
     recording_modality: list[str]
@@ -439,9 +449,11 @@ class Dataset(TypedDict, total=False):
     # Demographics
     demographics: Demographics
 
-    # Classification
+    # Classification (new)
+    tags: Tags
+
+    # Classification (legacy - deprecated, use tags instead)
     clinical: Clinical
-    paradigm: Paradigm
 
     # External resources
     external_links: ExternalLinks
@@ -456,6 +468,11 @@ class Dataset(TypedDict, total=False):
 
     # Storage for global files (e.g., participants.tsv)
     storage: Storage | None
+
+    # Citation metrics
+    nemar_citation_count: (
+        int | None
+    )  # Number of papers citing this dataset (from NEMAR)
 
 
 def create_dataset(
@@ -490,13 +507,13 @@ def create_dataset(
     handedness_distribution: dict[str, int] | None = None,
     # Multi-site studies
     contributing_labs: list[str] | None = None,
-    # Clinical classification
+    # Tags classification (new)
+    tags_pathology: list[str] | None = None,
+    tags_modality: list[str] | None = None,
+    tags_type: list[str] | None = None,
+    # Clinical classification (legacy - use tags instead)
     is_clinical: bool | None = None,
     clinical_purpose: str | None = None,
-    # Paradigm classification
-    paradigm_modality: str | None = None,
-    cognitive_domain: str | None = None,
-    is_10_20_system: bool | None = None,
     # External links
     source_url: str | None = None,
     osf_url: str | None = None,
@@ -581,7 +598,7 @@ def create_dataset(
     clinical_purpose : str, optional
         Clinical purpose (e.g., "epilepsy", "depression").
     paradigm_modality : str, optional
-        Experimental modality (e.g., "visual", "auditory", "resting_state").
+        Experimental modality (e.g., "visual", "auditory", "text", "multisensory", "resting_state").
     cognitive_domain : str, optional
         Cognitive domain (e.g., "attention", "memory", "motor").
     is_10_20_system : bool, optional
@@ -666,23 +683,19 @@ def create_dataset(
         storage=storage,
     )
 
-    # Add clinical if any field provided
+    # Add tags if any field provided (new structure)
+    if tags_pathology or tags_modality or tags_type:
+        dataset["tags"] = Tags(
+            pathology=tags_pathology,
+            modality=tags_modality,
+            type=tags_type,
+        )
+
+    # Add clinical if any field provided (legacy - deprecated, use tags instead)
     if is_clinical is not None or clinical_purpose is not None:
         dataset["clinical"] = Clinical(
             is_clinical=is_clinical if is_clinical is not None else False,
             purpose=clinical_purpose,
-        )
-
-    # Add paradigm if any field provided
-    if (
-        paradigm_modality is not None
-        or cognitive_domain is not None
-        or is_10_20_system is not None
-    ):
-        dataset["paradigm"] = Paradigm(
-            modality=paradigm_modality,
-            cognitive_domain=cognitive_domain,
-            is_10_20_system=is_10_20_system,
         )
 
     # Add external links if any provided
@@ -943,15 +956,23 @@ def create_record(
 
 
 def validate_record(record: dict[str, Any]) -> list[str]:
-    """Validate a record has required fields. Returns list of errors."""
+    """Validate a record has required fields. Returns list of errors.
+
+    Notes
+    -----
+    - `bids_relpath` is the canonical unique identifier for records
+    - `bidspath` is a computed field (dataset + "/" + bids_relpath) and not strictly required
+    - `storage.raw_key` always equals `bids_relpath` when created via `create_record`
+
+    """
     errors: list[str] = []
 
     if not record.get("dataset"):
         errors.append("missing: dataset")
     if not record.get("bids_relpath"):
         errors.append("missing: bids_relpath")
-    if not record.get("bidspath"):
-        errors.append("missing: bidspath")
+    # Note: bidspath is optional - it's computed from (dataset + "/" + bids_relpath)
+    # and maintained for backwards compatibility
 
     storage = record.get("storage")
     if not storage:

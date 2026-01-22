@@ -114,6 +114,23 @@ class EEGDashAPIClient:
         resp.raise_for_status()
         return resp.json().get("data")
 
+    def find_datasets(
+        self, query: dict[str, Any] | None = None, limit: int = 1000
+    ) -> list[dict[str, Any]]:
+        """Find datasets matching query."""
+        params: dict[str, Any] = {"limit": limit}
+        if query:
+            params["filter"] = json.dumps(query)
+
+        resp = self._session.get(
+            f"{self.api_url}/api/{self.database}/datasets", params=params, timeout=60
+        )
+        resp.raise_for_status()
+        data = resp.json()
+        if isinstance(data, dict):
+            return data.get("data", [])
+        return data
+
     def count_documents(self, query: dict[str, Any] | None = None, **kwargs) -> int:
         """Count documents matching query."""
         params = {"filter": json.dumps(query)} if query else {}
@@ -166,6 +183,48 @@ class EEGDashAPIClient:
         resp.raise_for_status()
         data = resp.json()
         return data.get("matched_count", 0), data.get("modified_count", 0)
+
+    def update_dataset(self, dataset_id: str, update: dict[str, Any]) -> int:
+        """Update dataset metadata (requires auth).
+
+        Parameters
+        ----------
+        dataset_id : str
+            The dataset identifier.
+        update : dict
+            Fields to update (will be wrapped in $set automatically).
+
+        Returns
+        -------
+        int
+            Modified count (1 or 0).
+
+        """
+        resp = self._session.patch(
+            f"{self.api_url}/admin/{self.database}/datasets/{dataset_id}",
+            json={"update": update},
+            timeout=30,
+        )
+        resp.raise_for_status()
+        data = resp.json()
+        return data.get("modified_count", 0)
+
+    def upsert_many(self, records: list[dict[str, Any]]) -> dict[str, int]:
+        """Upsert multiple records (requires auth).
+
+        New endpoint that uses bulk upsert based on dataset+bidspath.
+        """
+        resp = self._session.post(
+            f"{self.api_url}/admin/{self.database}/records/upsert",
+            json=records,
+            timeout=60,
+        )
+        resp.raise_for_status()
+        data = resp.json()
+        return {
+            "inserted_count": data.get("inserted_count", 0),
+            "updated_count": data.get("updated_count", 0),
+        }
 
 
 def get_client(

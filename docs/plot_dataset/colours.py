@@ -1,5 +1,26 @@
 """Helpers for Sankey diagram generation."""
 
+
+def _create_color_map_with_aliases(base_map: dict) -> dict:
+    """Create color map with automatic case aliases (lower, upper, title).
+
+    This avoids manual duplication like:
+        "Epilepsy": "#fdba74",
+        "epilepsy": "#fdba74",
+
+    Instead, define the canonical form once and aliases are auto-generated.
+    """
+    result = {}
+    for key, color in base_map.items():
+        result[key] = color  # Original
+        result[key.lower()] = color  # lowercase
+        result[key.upper()] = color  # UPPERCASE
+        title = key.title()
+        if title != key and title != key.lower() and title != key.upper():
+            result[title] = color  # Title Case
+    return result
+
+
 # Color mappings consistent with prepare_summary_tables.py and custom.css
 PATHOLOGY_COLOR_MAP = {
     "Healthy": "#22c55e",  # green
@@ -52,44 +73,35 @@ MODALITY_EMOJI = {
     "Behavior": "📝",
 }
 
-PATHOLOGY_PASTEL_OVERRIDES = {
+# Base pathology colors - case aliases are auto-generated
+_BASE_PATHOLOGY_COLORS = {
     # Healthy / Control
     "Healthy": "#86efac",  # green-300
-    "healthy": "#86efac",
     # Unknown / Unspecified
     "Unknown": "#cbd5e1",  # slate-300
-    "unknown": "#cbd5e1",
     "Unspecified Clinical": "#fda4af",  # rose-300 - more visible clinical indicator
-    "unspecified clinical": "#fda4af",
     # Neurological conditions - warm colors
     "Epilepsy": "#fdba74",  # orange-300
-    "epilepsy": "#fdba74",
     "Parkinson's": "#f9a8d4",  # pink-300
-    "parkinson's": "#f9a8d4",
-    "parkinson": "#f9a8d4",
     "Alzheimer": "#c4b5fd",  # violet-300
-    "alzheimer": "#c4b5fd",
     "Dementia": "#ddd6fe",  # violet-200
-    "dementia": "#ddd6fe",
     "TBI": "#fca5a5",  # red-300
-    "tbi": "#fca5a5",
     # Psychiatric conditions - cool colors
     "Schizophrenia": "#7dd3fc",  # sky-300
-    "schizophrenia": "#7dd3fc",
     "Psychosis": "#67e8f9",  # cyan-300
-    "psychosis": "#67e8f9",
     "Depression": "#a5b4fc",  # indigo-300
-    "depression": "#a5b4fc",
     "ADHD": "#fcd34d",  # amber-300
-    "adhd": "#fcd34d",
     # Other clinical
     "Surgery": "#fed7aa",  # orange-200
-    "surgery": "#fed7aa",
     "Clinical": "#fecaca",  # red-200
-    "clinical": "#fecaca",
     "Other": "#e5e7eb",  # gray-200
-    "other": "#e5e7eb",
 }
+
+# Create the full map with case aliases (lower, upper, title)
+PATHOLOGY_PASTEL_OVERRIDES = _create_color_map_with_aliases(_BASE_PATHOLOGY_COLORS)
+
+# Special aliases not covered by case transformations
+PATHOLOGY_PASTEL_OVERRIDES["parkinson"] = PATHOLOGY_PASTEL_OVERRIDES["Parkinson's"]
 
 
 TYPE_COLOR_MAP = {

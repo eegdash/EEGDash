@@ -4,6 +4,7 @@ import importlib
 import inspect
 import json
 import os
+import re
 import shutil
 import sys
 from collections import Counter, defaultdict
@@ -1014,13 +1015,15 @@ def _format_hero_section(context: Mapping[str, object]) -> str:
     return f"{tagline}\n\n{citation_block}\n\n{badges_line_1}\n\n{badges_line_2}"
 
 
-def _format_highlights_section(context: Mapping[str, object]) -> str:
-    def _stat_line(label: str, value: object, suffix: str = "") -> str:
-        text = _value_or_unknown(_clean_value(value))
-        if text != "Unknown" and suffix:
-            text = f"{text}{suffix}"
-        return f"{label}: {text}"
+def _stat_line(label: str, value: object, suffix: str = "") -> str:
+    """Format a statistic line with label and value."""
+    text = _value_or_unknown(_clean_value(value))
+    if text != "Unknown" and suffix:
+        text = f"{text}{suffix}"
+    return f"{label}: {text}"
 
+
+def _format_highlights_section(context: Mapping[str, object]) -> str:
     openneuro_url = str(context.get("openneuro_url", ""))
     nemar_url = str(context.get("nemar_url", ""))
     dataset_id = str(context.get("dataset_id", ""))
@@ -1192,14 +1195,21 @@ def _format_bibtex_dropdown(dataset_id: str, context: Mapping[str, object]) -> s
     return "\n".join(dropdown_lines)
 
 
+def _is_decorative_line(s: str) -> bool:
+    """Check if line is purely decorative (em-dashes, dashes, equals, etc.)."""
+    s = s.strip()
+    if len(s) < 3:
+        return False
+    # Check for lines made of repeated chars: —, -, =, _, *, #
+    return bool(re.match(r"^[—\-=_*#~]+$", s)) and len(set(s)) <= 2
+
+
 def _convert_readme_to_rst(text: str) -> str:
     """Convert README content to RST (headers become bold, not section headers).
 
     Handles markdown (#) headers, RST-style underline headers, and decorative
     box-style headers (em-dash lines) to avoid messing up the document structure.
     """
-    import re
-
     # Remove BOM if present
     text = text.lstrip("\ufeff")
 
@@ -1207,24 +1217,16 @@ def _convert_readme_to_rst(text: str) -> str:
     result = []
     i = 0
 
-    def is_decorative_line(s: str) -> bool:
-        """Check if line is purely decorative (em-dashes, dashes, equals, etc.)."""
-        s = s.strip()
-        if len(s) < 3:
-            return False
-        # Check for lines made of repeated chars: —, -, =, _, *, #
-        return bool(re.match(r"^[—\-=_*#~]+$", s)) and len(set(s)) <= 2
-
     while i < len(lines):
         line = lines[i]
 
         # Skip purely decorative lines (em-dashes, repeated dashes, etc.)
-        if is_decorative_line(line):
+        if _is_decorative_line(line):
             # Check if this is a box-style header: decorative -> TITLE -> decorative
             if i + 2 < len(lines):
                 potential_title = lines[i + 1].strip()
                 next_decorative = lines[i + 2]
-                if potential_title and is_decorative_line(next_decorative):
+                if potential_title and _is_decorative_line(next_decorative):
                     # This is a box-style header
                     result.append("")
                     result.append(f"**{potential_title}**")

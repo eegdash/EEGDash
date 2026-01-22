@@ -23,6 +23,17 @@ except ImportError:  # pragma: no cover - fallback for direct script execution
 __all__ = ["generate_modality_ridgeline"]
 
 
+def _convert_arrays(obj):
+    """Recursively convert numpy arrays to lists for JSON serialization."""
+    if isinstance(obj, np.ndarray):
+        return obj.tolist()
+    elif isinstance(obj, dict):
+        return {k: _convert_arrays(v) for k, v in obj.items()}
+    elif isinstance(obj, (list, tuple)):
+        return [_convert_arrays(item) for item in obj]
+    return obj
+
+
 def _build_ridgeline_traces(
     data: pd.DataFrame,
     modality_column: str,
@@ -366,18 +377,8 @@ def generate_modality_ridgeline(
     # Convert figure to dict and ensure arrays are lists (not binary encoded)
     fig_dict = fig.to_dict()
 
-    def convert_arrays(obj):
-        """Recursively convert numpy arrays to lists for JSON serialization."""
-        if isinstance(obj, np.ndarray):
-            return obj.tolist()
-        elif isinstance(obj, dict):
-            return {k: convert_arrays(v) for k, v in obj.items()}
-        elif isinstance(obj, (list, tuple)):
-            return [convert_arrays(item) for item in obj]
-        return obj
-
-    fig_data = convert_arrays(fig_dict.get("data", []))
-    fig_layout = convert_arrays(fig_dict.get("layout", {}))
+    fig_data = _convert_arrays(fig_dict.get("data", []))
+    fig_layout = _convert_arrays(fig_dict.get("layout", {}))
 
     data_json = json.dumps(fig_data)
     layout_json = json.dumps(fig_layout)

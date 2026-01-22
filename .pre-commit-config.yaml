@@ -53,3 +53,12 @@ repos:
     hooks:
     -   id: blacken-docs
         exclude: ^.github|CONTRIBUTING.md|README.md|docs/|examples/|notebooks/|scripts/|tests/
+-   repo: local
+    hooks:
+    -   id: no-nested-functions
+        name: Check for nested function definitions
+        entry: python scripts/check_nested_functions.py
+        language: python
+        types: [python]
+        files: ^(eegdash|docs|scripts)/
+        exclude: (\.ipynb$|docs/source/generated/|docs/_build/)

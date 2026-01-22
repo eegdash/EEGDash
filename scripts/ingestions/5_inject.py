@@ -37,6 +37,7 @@ import json
 import math
 import os
 import sys
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
 from _fingerprint import fingerprint_from_records
@@ -93,6 +94,40 @@ EXCLUDED_DATASETS = {
 
 # Default API configuration
 DEFAULT_API_URL = "https://data.eegdash.org"
+
+
+def _sanitize_for_json(obj):
+    """Sanitize object for JSON serialization, handling NaN/Inf floats."""
+    if isinstance(obj, float):
+        if math.isnan(obj) or math.isinf(obj):
+            return None
+        return obj
+    elif isinstance(obj, dict):
+        return {k: _sanitize_for_json(v) for k, v in obj.items()}
+    elif isinstance(obj, list):
+        return [_sanitize_for_json(i) for i in obj]
+    return obj
+
+
+def _inject_records_batch(batch_idx: int, batch: list, url: str, session) -> dict:
+    """Worker function for parallel records injection."""
+    try:
+        result, _ = request_json(
+            "post",
+            url,
+            json_body=_sanitize_for_json(batch),
+            timeout=60,
+            raise_for_status=True,
+            raise_for_request=True,
+            client=session,
+        )
+        return {
+            "inserted": (result or {}).get("inserted_count", 0),
+            "updated": (result or {}).get("updated_count", 0),
+            "error": None,
+        }
+    except (RequestError, HTTPStatusError) as e:
+        return {"inserted": 0, "updated": 0, "error": f"Batch {batch_idx}: {e}"}
 
 
 def fetch_existing_dataset(
@@ -265,24 +300,13 @@ def inject_datasets(
     inserted_count = 0
     errors = []
 
-    def sanitize_for_json(obj):
-        if isinstance(obj, float):
-            if math.isnan(obj) or math.isinf(obj):
-                return None
-            return obj
-        elif isinstance(obj, dict):
-            return {k: sanitize_for_json(v) for k, v in obj.items()}
-        elif isinstance(obj, list):
-            return [sanitize_for_json(i) for i in obj]
-        return obj
-
     for i in range(0, len(datasets), batch_size):
         batch = datasets[i : i + batch_size]
         try:
             result, _response = request_json(
                 "post",
                 url,
-                json_body=sanitize_for_json(batch),
+                json_body=_sanitize_for_json(batch),
                 timeout=60,
                 raise_for_status=True,
                 raise_for_request=True,
@@ -322,41 +346,6 @@ def inject_records(
     updated_count = 0
     errors = []
 
-    # Batch insert records
-    import math
-
-    def sanitize_for_json(obj):
-        if isinstance(obj, float):
-            if math.isnan(obj) or math.isinf(obj):
-                return None
-            return obj
-        elif isinstance(obj, dict):
-            return {k: sanitize_for_json(v) for k, v in obj.items()}
-        elif isinstance(obj, list):
-            return [sanitize_for_json(i) for i in obj]
-        return obj
-
-    from concurrent.futures import ThreadPoolExecutor, as_completed
-
-    def inject_batch(batch_idx, batch):
-        try:
-            result, _ = request_json(
-                "post",
-                url,
-                json_body=sanitize_for_json(batch),
-                timeout=60,
-                raise_for_status=True,
-                raise_for_request=True,
-                client=session,
-            )
-            return {
-                "inserted": (result or {}).get("inserted_count", 0),
-                "updated": (result or {}).get("updated_count", 0),
-                "error": None,
-            }
-        except (RequestError, HTTPStatusError) as e:
-            return {"inserted": 0, "updated": 0, "error": f"Batch {batch_idx}: {e}"}
-
     # Prepare batches
     batches = []
     for i in range(0, len(records), batch_size):
@@ -365,7 +354,8 @@ def inject_records(
     # Parallel execution
     with ThreadPoolExecutor(max_workers=4) as executor:
         futures = {
-            executor.submit(inject_batch, idx, batch): idx for idx, batch in batches
+            executor.submit(_inject_records_batch, idx, batch, url, session): idx
+            for idx, batch in batches
         }
         for future in tqdm(
             as_completed(futures), total=len(batches), desc="Injecting batches"

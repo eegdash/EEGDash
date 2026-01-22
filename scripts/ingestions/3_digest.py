@@ -30,6 +30,14 @@ from typing import Any
 
 import numpy as np
 import pandas as pd
+from _constants import (
+    CTF_INTERNAL_EXTENSIONS,
+    MEF3_INTERNAL_DIRS,
+    MEF3_INTERNAL_EXTENSIONS,
+    MODALITY_CANONICAL_MAP,
+    MODALITY_DETECTION_TARGETS,
+    NEURO_MODALITIES,
+)
 from _fingerprint import fingerprint_from_files, fingerprint_from_manifest
 from _mef3_parser import parse_mef3_metadata
 from _snirf_parser import parse_snirf_metadata
@@ -572,55 +580,11 @@ def extract_record(
     bids_file_path = Path(bids_file)
 
     # Try to find and read the modality-specific JSON sidecar (e.g., _meg.json, _eeg.json)
+    bids_root = Path(bids_dataset.bidsdir)
     if not sampling_frequency or not nchans:
-        # Parse entities from the file name
-        # e.g., "sub-13_ses-meg_task-facerecognition_run-05_meg.fif"
-        stem = bids_file_path.stem  # "sub-13_ses-meg_task-facerecognition_run-05_meg"
-        parts = stem.split("_")
-
-        # Build different base name variants for BIDS inheritance
-        # Full base: sub-13_ses-meg_task-facerecognition_run-05
-        # Without run: sub-13_ses-meg_task-facerecognition
-        # Without run and acq: sub-13_ses-meg_task-facerecognition
-        base_names_to_try = []
-
-        # Get base without the modality suffix (last part)
-        full_base = "_".join(parts[:-1]) if len(parts) > 1 else stem
-
-        # Add full base first
-        base_names_to_try.append(full_base)
-
-        # Try without run-XX
-        if "_run-" in full_base:
-            without_run = "_".join(p for p in parts[:-1] if not p.startswith("run-"))
-            base_names_to_try.append(without_run)
-
-        # Try without acquisition too
-        if "_acq-" in full_base:
-            without_acq_run = "_".join(
-                p
-                for p in parts[:-1]
-                if not p.startswith("run-") and not p.startswith("acq-")
-            )
-            base_names_to_try.append(without_acq_run)
-
-        # Build task-only base name for BIDS inheritance
-        # e.g., task-MIpost from sub-xp108_task-MIpost_eeg
-        task_part = next((p for p in parts if p.startswith("task-")), None)
-        if task_part and task_part not in base_names_to_try:
-            base_names_to_try.append(task_part)
-
-        # Directories to search - walk up to BIDS root for proper inheritance
-        # BIDS inheritance: sidecars can be at any level from root to file's directory
-        parent_dir = bids_file_path.parent
-        dirs_to_try = [parent_dir]
-        bids_root = Path(bids_dataset.bidsdir)
-        current = parent_dir
-        while current != bids_root and current.parent != current:
-            current = current.parent
-            dirs_to_try.append(current)
-            if current == bids_root:
-                break
+        base_names_to_try, dirs_to_try = _build_bids_search_paths(
+            bids_file_path, bids_root
+        )
 
         # Try modality-specific sidecars
         for search_dir in dirs_to_try:
@@ -672,30 +636,9 @@ def extract_record(
 
     # Try to read from channels.tsv if still missing
     if not sampling_frequency or not nchans:
-        stem = bids_file_path.stem
-        parts = stem.split("_")
-        full_base = "_".join(parts[:-1]) if len(parts) > 1 else stem
-
-        base_names_to_try = [full_base]
-        if "_run-" in full_base:
-            without_run = "_".join(p for p in parts[:-1] if not p.startswith("run-"))
-            base_names_to_try.append(without_run)
-
-        # Add task-only base name for BIDS inheritance
-        task_part = next((p for p in parts if p.startswith("task-")), None)
-        if task_part and task_part not in base_names_to_try:
-            base_names_to_try.append(task_part)
-
-        # Walk up to BIDS root for proper inheritance
-        parent_dir = bids_file_path.parent
-        dirs_to_try = [parent_dir]
-        bids_root = Path(bids_dataset.bidsdir)
-        current = parent_dir
-        while current != bids_root and current.parent != current:
-            current = current.parent
-            dirs_to_try.append(current)
-            if current == bids_root:
-                break
+        base_names_to_try, dirs_to_try = _build_bids_search_paths(
+            bids_file_path, bids_root
+        )
 
         for search_dir in dirs_to_try:
             if sampling_frequency and nchans:
@@ -1024,53 +967,79 @@ def parse_bids_entities_from_path(filepath: str) -> dict[str, Any]:
     return entities
 
 
-# Semantic mapping to canonical BIDS modalities
-MODALITY_CANONICAL_MAP = {
-    "nirs": "fnirs",
-    "fnirs": "fnirs",
-    "spike": "ieeg",
-    "lfp": "ieeg",
-    "mea": "ieeg",
-}
+def _build_bids_search_paths(
+    bids_file_path: Path, bids_root: Path
+) -> tuple[list[str], list[Path]]:
+    """Build base names and directories for BIDS inheritance sidecar search.
 
-# Supported canonical neurophysiology modalities
-NEURO_MODALITIES = ("eeg", "meg", "ieeg", "emg", "fnirs")
+    BIDS uses inheritance - sidecars can be in parent directories and may not
+    include run/acquisition entities. This function generates the various base
+    name variants and directories to search when looking for sidecars.
 
-# Modalities we care about detecting (including aliases/variants)
-MODALITY_DETECTION_TARGETS = (
-    "eeg",
-    "meg",
-    "ieeg",
-    "emg",
-    "nirs",
-    "fnirs",
-    "spike",
-    "lfp",
-    "mea",
-)
+    Parameters
+    ----------
+    bids_file_path : Path
+        Path to the BIDS data file
+    bids_root : Path
+        Root directory of the BIDS dataset
 
-# CTF MEG uses .ds directories containing multiple files
-# We should only match the .ds directory path, not files inside
-CTF_INTERNAL_EXTENSIONS = {
-    ".meg4",
-    ".res4",
-    ".hc",
-    ".infods",
-    ".acq",
-    ".hist",
-    ".newds",
-}
+    Returns
+    -------
+    tuple[list[str], list[Path]]
+        A tuple of (base_names_to_try, dirs_to_try) where:
+        - base_names_to_try: List of base name variants to search for
+        - dirs_to_try: List of directories from file's parent up to BIDS root
 
-# MEF3 (Multiscale Electrophysiology Format) uses .mefd directories
-# Internal files should be skipped - only the .mefd directory is the data file
-MEF3_INTERNAL_EXTENSIONS = {
-    ".tmet",  # Time series metadata
-    ".tidx",  # Time index
-    ".tdat",  # Time series data
-}
+    """
+    # Parse entities from the file name
+    # e.g., "sub-13_ses-meg_task-facerecognition_run-05_meg.fif"
+    stem = bids_file_path.stem  # "sub-13_ses-meg_task-facerecognition_run-05_meg"
+    parts = stem.split("_")
 
-# MEF3 internal directory patterns (inside .mefd)
-MEF3_INTERNAL_DIRS = {".timd", ".segd"}
+    # Build different base name variants for BIDS inheritance
+    # Full base: sub-13_ses-meg_task-facerecognition_run-05
+    # Without run: sub-13_ses-meg_task-facerecognition
+    # Without run and acq: sub-13_ses-meg_task-facerecognition
+    base_names_to_try: list[str] = []
+
+    # Get base without the modality suffix (last part)
+    full_base = "_".join(parts[:-1]) if len(parts) > 1 else stem
+
+    # Add full base first
+    base_names_to_try.append(full_base)
+
+    # Try without run-XX
+    if "_run-" in full_base:
+        without_run = "_".join(p for p in parts[:-1] if not p.startswith("run-"))
+        base_names_to_try.append(without_run)
+
+    # Try without acquisition too
+    if "_acq-" in full_base:
+        without_acq_run = "_".join(
+            p
+            for p in parts[:-1]
+            if not p.startswith("run-") and not p.startswith("acq-")
+        )
+        base_names_to_try.append(without_acq_run)
+
+    # Build task-only base name for BIDS inheritance
+    # e.g., task-MIpost from sub-xp108_task-MIpost_eeg
+    task_part = next((p for p in parts if p.startswith("task-")), None)
+    if task_part and task_part not in base_names_to_try:
+        base_names_to_try.append(task_part)
+
+    # Directories to search - walk up to BIDS root for proper inheritance
+    # BIDS inheritance: sidecars can be at any level from root to file's directory
+    parent_dir = bids_file_path.parent
+    dirs_to_try: list[Path] = [parent_dir]
+    current = parent_dir
+    while current != bids_root and current.parent != current:
+        current = current.parent
+        dirs_to_try.append(current)
+        if current == bids_root:
+            break
+
+    return base_names_to_try, dirs_to_try
 
 
 def normalize_modality(modality: str | None) -> str | None:

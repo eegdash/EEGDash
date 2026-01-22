@@ -18,6 +18,7 @@ try:  # Allow import both as a package and as a script
         PATHOLOGY_PASTEL_OVERRIDES,
         hex_to_rgba,
     )
+    from .utils import build_and_export_html
 except ImportError:  # pragma: no cover - fallback for direct script execution
     from colours import (  # type: ignore
         CANONICAL_MAP,
@@ -27,6 +28,7 @@ except ImportError:  # pragma: no cover - fallback for direct script execution
         PATHOLOGY_PASTEL_OVERRIDES,
         hex_to_rgba,
     )
+    from utils import build_and_export_html  # type: ignore
 
 __all__ = ["generate_dataset_treemap"]
 
@@ -563,30 +565,9 @@ def generate_dataset_treemap(
         autosize=True,
     )
 
-    out_path = Path(out_html)
-    out_path.parent.mkdir(parents=True, exist_ok=True)
-
-    html_content = fig.to_html(
-        full_html=False,
-        include_plotlyjs=False,
-        config={"responsive": True, "displaylogo": False},
+    return build_and_export_html(
+        fig,
+        out_html,
         div_id="dataset-treemap-plot",
+        height=880,
     )
-
-    styled_html = f"""
-<style>
-#dataset-treemap-plot {{
-    width: 100% !important;
-    height: 880px !important;
-    min-height: 880px;
-    margin: 0 auto;
-}}
-#dataset-treemap-plot .plotly-graph-div {{
-    width: 100% !important;
-    height: 100% !important;
-}}
-</style>
-{html_content}
-"""
-    out_path.write_text(styled_html, encoding="utf-8")
-    return out_path

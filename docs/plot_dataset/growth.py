@@ -8,41 +8,18 @@ import plotly.graph_objects as go
 
 try:
     from .colours import MODALITY_COLOR_MAP
-except ImportError:
-    from colours import MODALITY_COLOR_MAP
-
-
-def _normalize_modality(val):
-    """Normalize modality string to standard format."""
-    if not isinstance(val, str):
-        return "Unknown"
-    val_lower = val.lower()
-
-    # Consistent mapping with main dashboard
-    if "ieeg" in val_lower or "intracranial" in val_lower:
-        return "iEEG"
-    if "meg" in val_lower:
-        return "MEG"
-    if "fnirs" in val_lower:
-        return "fNIRS"
-    if "emg" in val_lower:
-        return "EMG"
-    if "fmri" in val_lower or "functional magnetic resonance" in val_lower:
-        return "fMRI"
-    if "mri" in val_lower:
-        return "MRI"
-    if "eeg" in val_lower:
-        return "EEG"
-    if "ecg" in val_lower:
-        return "ECG"
-    if "behavior" in val_lower:
-        return "Behavior"
-
-    # Cleanup
-    cleaned = (
-        val.replace("['", "").replace("']", "").replace('["', "").replace('"]', "")
+    from .utils import (
+        build_and_export_html,
+        detect_modality_column,
+        normalize_modality_string,
     )
-    return cleaned.title() if cleaned else "Unknown"
+except ImportError:
+    from colours import MODALITY_COLOR_MAP  # type: ignore
+    from utils import (  # type: ignore
+        build_and_export_html,
+        detect_modality_column,
+        normalize_modality_string,
+    )
 
 
 def generate_dataset_growth(df: pd.DataFrame, out_html: str | Path) -> Path:
@@ -78,20 +55,10 @@ def generate_dataset_growth(df: pd.DataFrame, out_html: str | Path) -> Path:
     else:
         df["n_subjects_clean"] = 0
 
-    mod_col = None
-    for candidate in [
-        "recording_modality",
-        "record_modality",
-        "experimental_modality",
-        "modality of exp",
-        "modality",
-    ]:
-        if candidate in df.columns:
-            mod_col = candidate
-            break
+    mod_col = detect_modality_column(df)
 
     if mod_col:
-        df["Modality"] = df[mod_col].apply(_normalize_modality)
+        df["Modality"] = df[mod_col].apply(normalize_modality_string)
     else:
         df["Modality"] = "Unknown"
 
@@ -232,30 +199,9 @@ def generate_dataset_growth(df: pd.DataFrame, out_html: str | Path) -> Path:
         autosize=True,
     )
 
-    out_path = Path(out_html)
-    out_path.parent.mkdir(parents=True, exist_ok=True)
-
-    html_content = fig.to_html(
-        full_html=False,
-        include_plotlyjs=False,
-        config={"responsive": True, "displaylogo": False},
+    return build_and_export_html(
+        fig,
+        out_html,
         div_id="dataset-growth-plot",
+        height=550,
     )
-
-    styled_html = f"""
-<style>
-#dataset-growth-plot {{
-    width: 100% !important;
-    height: 550px !important;
-    min-height: 550px;
-    margin: 0 auto;
-}}
-#dataset-growth-plot .plotly-graph-div {{
-    width: 100% !important;
-    height: 100% !important;
-}}
-</style>
-{html_content}
-"""
-    out_path.write_text(styled_html, encoding="utf-8")
-    return out_path

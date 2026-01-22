@@ -11,6 +11,8 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any
 
+from _parser_utils import validate_file_path
+
 
 def parse_snirf_metadata(snirf_path: Path | str) -> dict[str, Any] | None:
     """Parse metadata from SNIRF file using MNE.
@@ -35,16 +37,8 @@ def parse_snirf_metadata(snirf_path: Path | str) -> dict[str, Any] | None:
     """
     snirf_path = Path(snirf_path)
 
-    # Check if file exists and is readable
-    if not snirf_path.exists():
-        return None
-
-    # Handle broken symlinks (git-annex)
-    try:
-        resolved = snirf_path.resolve()
-        if not resolved.exists():
-            return None
-    except (OSError, RuntimeError):
+    # Validate file path (handles broken symlinks from git-annex)
+    if not validate_file_path(snirf_path):
         return None
 
     try:

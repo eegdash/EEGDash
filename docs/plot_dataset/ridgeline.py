@@ -12,10 +12,16 @@ from scipy.stats import gaussian_kde
 
 try:  # Allow execution as a script or module
     from .colours import MODALITY_COLOR_MAP, hex_to_rgba
-    from .utils import get_dataset_url, primary_modality, primary_recording_modality
+    from .utils import (
+        build_and_export_html,
+        get_dataset_url,
+        primary_modality,
+        primary_recording_modality,
+    )
 except ImportError:  # pragma: no cover - fallback for direct script execution
     from colours import MODALITY_COLOR_MAP, hex_to_rgba  # type: ignore
     from utils import (  # type: ignore
+        build_and_export_html,
         get_dataset_url,
         primary_modality,
         primary_recording_modality,
@@ -385,7 +391,7 @@ def generate_modality_ridgeline(
     layout_json = json.dumps(fig_layout)
     config_json = json.dumps(plot_config)
 
-    styled_html = f"""
+    extra_style = f"""
 <style>
 #dataset-kde-modalities {{
     width: 100% !important;
@@ -408,8 +414,12 @@ def generate_modality_ridgeline(
     color: #6b7280;
 }}
 </style>
-<div class="kde-loading" id="kde-loading">Loading participant distribution...</div>
-<div id="dataset-kde-modalities" class="plotly-graph-div"></div>
+"""
+
+    pre_html = '<div class="kde-loading" id="kde-loading">Loading participant distribution...</div>\n'
+    plot_div = '<div id="dataset-kde-modalities" class="plotly-graph-div"></div>'
+
+    extra_html = f"""
 <script>
 (function() {{
   const TARGET_ID = 'dataset-kde-modalities';
@@ -466,10 +476,17 @@ def generate_modality_ridgeline(
 </script>
 """
 
-    out_path = Path(out_html)
-    out_path.parent.mkdir(parents=True, exist_ok=True)
-    out_path.write_text(styled_html, encoding="utf-8")
-    return out_path
+    return build_and_export_html(
+        fig=None,
+        out_path=out_html,
+        div_id="dataset-kde-modalities",
+        height=kde_height,
+        extra_style=extra_style,
+        pre_html=pre_html,
+        extra_html=extra_html,
+        include_default_style=False,
+        html_content=plot_div,
+    )
 
 
 def _read_dataset(path: Path) -> pd.DataFrame:

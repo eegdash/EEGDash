@@ -12,6 +12,8 @@ import struct
 from pathlib import Path
 from typing import Any
 
+from _parser_utils import validate_file_path
+
 
 def parse_mef3_metadata(mefd_path: Path | str) -> dict[str, Any] | None:
     """Parse metadata from MEF3 directory.
@@ -135,16 +137,8 @@ def _extract_sfreq_from_timd(timd_dir: Path) -> float | None:
 
     tmet_file = tmet_files[0]
 
-    # Check if file exists and is readable
-    if not tmet_file.exists():
-        return None
-
-    # Handle broken symlinks
-    try:
-        resolved = tmet_file.resolve()
-        if not resolved.exists():
-            return None
-    except (OSError, RuntimeError):
+    # Validate file path (handles broken symlinks from git-annex)
+    if not validate_file_path(tmet_file):
         return None
 
     # Parse MEF3 metadata file

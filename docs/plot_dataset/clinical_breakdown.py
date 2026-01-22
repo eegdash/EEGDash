@@ -7,42 +7,18 @@ import plotly.graph_objects as go
 
 try:
     from .colours import PATHOLOGY_PASTEL_OVERRIDES
-except ImportError:
-    from colours import PATHOLOGY_PASTEL_OVERRIDES
-
-
-def _normalize_modality(mod):
-    if not isinstance(mod, str) or pd.isna(mod):
-        return "Unknown"
-    l = mod.lower().strip()
-    if l in ("nan", "none", ""):
-        return "Unknown"
-
-    # Priority checks - consistent with growth.py
-    if "ieeg" in l or "intracranial" in l:
-        return "iEEG"
-    if "meg" in l:
-        return "MEG"
-    if "fnirs" in l:
-        return "fNIRS"
-    if "emg" in l:
-        return "EMG"
-    if "fmri" in l:
-        return "fMRI"
-    if "mri" in l:
-        return "MRI"
-    if "eeg" in l:
-        return "EEG"
-    if "ecg" in l:
-        return "ECG"
-    if "behavior" in l:
-        return "Behavior"
-
-    # Fallback: clean up the string
-    cleaned = (
-        mod.replace("['", "").replace("']", "").replace('["', "").replace('"]', "")
+    from .utils import (
+        build_and_export_html,
+        detect_modality_column,
+        normalize_modality_string,
     )
-    return cleaned.title() if cleaned else "Unknown"
+except ImportError:
+    from colours import PATHOLOGY_PASTEL_OVERRIDES  # type: ignore
+    from utils import (  # type: ignore
+        build_and_export_html,
+        detect_modality_column,
+        normalize_modality_string,
+    )
 
 
 def generate_clinical_stacked_bar(df: pd.DataFrame, out_html: str | Path) -> Path:
@@ -57,20 +33,21 @@ def generate_clinical_stacked_bar(df: pd.DataFrame, out_html: str | Path) -> Pat
     else:
         df["n_subjects_clean"] = 0
 
-    # Ensure columns exist (handling dataframe variations)
-    # ... Same logic as before ...
-    if "experimental_modality" in df.columns:
-        df["modality"] = df["experimental_modality"]
-    elif "recording_modality" in df.columns:
-        df["modality"] = df["recording_modality"].apply(
-            lambda x: str(x) if x else "Other"
-        )
-    elif "record_modality" in df.columns:
-        df["modality"] = df["record_modality"]
-    elif "record modality" in df.columns:
-        df["modality"] = df["record modality"]
-    elif "modality of exp" in df.columns:
-        df["modality"] = df["modality of exp"]
+    # Ensure modality column exists (handling dataframe variations)
+    # Clinical breakdown uses a slightly different order, prioritizing experimental_modality
+    mod_col = detect_modality_column(
+        df,
+        candidates=(
+            "experimental_modality",
+            "recording_modality",
+            "record_modality",
+            "record modality",
+            "modality of exp",
+            "modality",
+        ),
+    )
+    if mod_col:
+        df["modality"] = df[mod_col].apply(lambda x: str(x) if x else "Other")
 
     if "population_type" not in df.columns:
         if "Type Subject" in df.columns:
@@ -95,7 +72,7 @@ def generate_clinical_stacked_bar(df: pd.DataFrame, out_html: str | Path) -> Pat
     )
 
     # Normalize modality and filter out invalid values
-    df["Modality"] = df["modality"].apply(_normalize_modality)
+    df["Modality"] = df["modality"].apply(normalize_modality_string)
     df = df[df["Modality"] != "Unknown"]  # Remove rows with unknown modality
 
     # Group by Modality and Population
@@ -223,30 +200,9 @@ def generate_clinical_stacked_bar(df: pd.DataFrame, out_html: str | Path) -> Pat
         autosize=True,
     )
 
-    out_path = Path(out_html)
-    out_path.parent.mkdir(parents=True, exist_ok=True)
-
-    html_content = fig.to_html(
-        full_html=False,
-        include_plotlyjs=False,
-        config={"responsive": True, "displaylogo": False},
+    return build_and_export_html(
+        fig,
+        out_html,
         div_id="dataset-clinical-plot",
+        height=650,
     )
-
-    styled_html = f"""
-<style>
-#dataset-clinical-plot {{
-    width: 100% !important;
-    height: 650px !important;
-    min-height: 650px;
-    margin: 0 auto;
-}}
-#dataset-clinical-plot .plotly-graph-div {{
-    width: 100% !important;
-    height: 100% !important;
-}}
-</style>
-{html_content}
-"""
-    out_path.write_text(styled_html, encoding="utf-8")
-    return out_path

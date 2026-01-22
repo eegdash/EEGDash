@@ -12,6 +12,8 @@ import re
 from pathlib import Path
 from typing import Any
 
+from _parser_utils import read_with_encoding_fallback, validate_file_path
+
 
 def parse_vhdr_metadata(vhdr_path: Path | str) -> dict[str, Any] | None:
     r"""Parse metadata from BrainVision VHDR header file.
@@ -47,28 +49,12 @@ def parse_vhdr_metadata(vhdr_path: Path | str) -> dict[str, Any] | None:
     """
     vhdr_path = Path(vhdr_path)
 
-    # Check if file exists and is readable
-    # For git-annex broken symlinks, resolve() will point to non-existent target
-    if not vhdr_path.exists():
-        return None
-
-    # Handle broken symlinks (git-annex)
-    try:
-        resolved = vhdr_path.resolve()
-        if not resolved.exists():
-            return None
-    except (OSError, RuntimeError):
+    # Validate file path (handles broken symlinks from git-annex)
+    if not validate_file_path(vhdr_path):
         return None
 
     # Read file content with encoding fallback
-    content = None
-    for encoding in ("utf-8", "latin-1", "cp1252"):
-        try:
-            content = vhdr_path.read_text(encoding=encoding)
-            break
-        except (UnicodeDecodeError, OSError):
-            continue
-
+    content = read_with_encoding_fallback(vhdr_path)
     if content is None:
         return None
 

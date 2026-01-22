@@ -11,10 +11,14 @@ except ImportError:  # pragma: no cover - fallback for direct script execution
     from colours import CANONICAL_MAP, MODALITY_COLOR_MAP  # type: ignore
 
 __all__ = [
+    "build_and_export_html",
+    "detect_modality_column",
     "get_dataset_url",
     "human_readable_size",
+    "normalize_modality_string",
     "primary_modality",
     "primary_recording_modality",
+    "read_dataset_csv",
     "safe_int",
 ]
 
@@ -153,3 +157,201 @@ def ensure_directory(path: str | Path) -> Path:
     dest = Path(path)
     dest.mkdir(parents=True, exist_ok=True)
     return dest
+
+
+def build_and_export_html(
+    fig,
+    out_path: str | Path,
+    div_id: str,
+    height: int = 550,
+    extra_style: str = "",
+    pre_html: str = "",
+    extra_html: str = "",
+    config: dict | None = None,
+    include_default_style: bool = True,
+    html_content: str | None = None,
+) -> Path:
+    """Build styled HTML from a Plotly figure and write it to *out_path*.
+
+    This consolidates the common HTML wrapping and export logic used
+    across all chart generation files.
+
+    Parameters
+    ----------
+    fig : plotly.graph_objects.Figure or None
+        The Plotly figure to export. Can be None if *html_content* is provided.
+    out_path : str | Path
+        Destination file path for the exported HTML.
+    div_id : str
+        The HTML ``id`` attribute for the plot container div.
+    height : int, optional
+        Desired chart height in pixels (default 550).
+    extra_style : str, optional
+        Additional CSS rules to include inside the ``<style>`` block.
+    pre_html : str, optional
+        HTML content to insert before the plot container (e.g., loading divs).
+    extra_html : str, optional
+        Additional HTML/JS to append after the plot container.
+    config : dict, optional
+        Plotly config options. Defaults to responsive mode with no logo.
+    include_default_style : bool, optional
+        Whether to include the default CSS styling block. Set to False for
+        charts with completely custom HTML structure (default True).
+    html_content : str, optional
+        Pre-generated HTML content for the plot. If provided, *fig* is ignored
+        and this content is used directly (useful for custom rendering).
+
+    Returns
+    -------
+    Path
+        The path to the written HTML file.
+
+    """
+    if html_content is None:
+        if config is None:
+            config = {"responsive": True, "displaylogo": False}
+        html_content = fig.to_html(
+            full_html=False,
+            include_plotlyjs=False,
+            config=config,
+            div_id=div_id,
+        )
+
+    if include_default_style:
+        styled_html = f"""
+<style>
+#{div_id} {{
+    width: 100% !important;
+    height: {height}px !important;
+    min-height: {height}px;
+    margin: 0 auto;
+}}
+#{div_id} .plotly-graph-div {{
+    width: 100% !important;
+    height: 100% !important;
+}}
+{extra_style}
+</style>
+{pre_html}{html_content}
+{extra_html}
+"""
+    else:
+        # Custom HTML structure without default styling
+        styled_html = f"{extra_style}{pre_html}{html_content}{extra_html}"
+
+    dest = Path(out_path)
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    dest.write_text(styled_html, encoding="utf-8")
+    return dest
+
+
+def normalize_modality_string(val: Any) -> str:
+    """Normalize modality string to standard format.
+
+    Handles various input formats and maps them to canonical modality names
+    like EEG, iEEG, MEG, fNIRS, EMG, fMRI, MRI, ECG, Behavior.
+
+    Parameters
+    ----------
+    val : Any
+        The raw modality value (typically a string from a DataFrame column).
+
+    Returns
+    -------
+    str
+        The normalized modality string, or "Unknown" if not recognized.
+
+    """
+    if not isinstance(val, str) or pd.isna(val):
+        return "Unknown"
+
+    lowered = val.lower().strip()
+    if lowered in ("nan", "none", ""):
+        return "Unknown"
+
+    # Priority checks - order matters (e.g., ieeg before eeg)
+    if "ieeg" in lowered or "intracranial" in lowered:
+        return "iEEG"
+    if "meg" in lowered:
+        return "MEG"
+    if "fnirs" in lowered:
+        return "fNIRS"
+    if "emg" in lowered:
+        return "EMG"
+    if "fmri" in lowered or "functional magnetic resonance" in lowered:
+        return "fMRI"
+    if "mri" in lowered:
+        return "MRI"
+    if "eeg" in lowered:
+        return "EEG"
+    if "ecg" in lowered:
+        return "ECG"
+    if "behavior" in lowered:
+        return "Behavior"
+
+    # Fallback: clean up the string (remove list brackets) and title-case
+    cleaned = (
+        val.replace("['", "").replace("']", "").replace('["', "").replace('"]', "")
+    )
+    return cleaned.title() if cleaned else "Unknown"
+
+
+# Default candidates for modality column detection
+_DEFAULT_MODALITY_CANDIDATES = (
+    "recording_modality",
+    "record_modality",
+    "experimental_modality",
+    "modality of exp",
+    "modality",
+    "record modality",
+)
+
+
+def detect_modality_column(
+    df: pd.DataFrame,
+    candidates: tuple[str, ...] | list[str] | None = None,
+) -> str | None:
+    """Detect the modality column from a DataFrame.
+
+    Searches through a list of candidate column names and returns
+    the first one found in the DataFrame.
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        The DataFrame to search for a modality column.
+    candidates : tuple[str, ...] | list[str] | None, optional
+        Ordered list of candidate column names to check. If None, uses
+        the default candidates: recording_modality, record_modality,
+        experimental_modality, modality of exp, modality, record modality.
+
+    Returns
+    -------
+    str | None
+        The name of the first matching column, or None if no match is found.
+
+    """
+    if candidates is None:
+        candidates = _DEFAULT_MODALITY_CANDIDATES
+
+    for candidate in candidates:
+        if candidate in df.columns:
+            return candidate
+    return None
+
+
+def read_dataset_csv(path: str | Path) -> pd.DataFrame:
+    """Read a dataset summary CSV file into a DataFrame.
+
+    Parameters
+    ----------
+    path : str | Path
+        Path to the CSV file.
+
+    Returns
+    -------
+    pd.DataFrame
+        The loaded DataFrame.
+
+    """
+    return pd.read_csv(path, index_col=False, header=0, skipinitialspace=True)

@@ -12,6 +12,39 @@ except ImportError:
     from colours import MODALITY_COLOR_MAP
 
 
+def _normalize_modality(val):
+    """Normalize modality string to standard format."""
+    if not isinstance(val, str):
+        return "Unknown"
+    val_lower = val.lower()
+
+    # Consistent mapping with main dashboard
+    if "ieeg" in val_lower or "intracranial" in val_lower:
+        return "iEEG"
+    if "meg" in val_lower:
+        return "MEG"
+    if "fnirs" in val_lower:
+        return "fNIRS"
+    if "emg" in val_lower:
+        return "EMG"
+    if "fmri" in val_lower or "functional magnetic resonance" in val_lower:
+        return "fMRI"
+    if "mri" in val_lower:
+        return "MRI"
+    if "eeg" in val_lower:
+        return "EEG"
+    if "ecg" in val_lower:
+        return "ECG"
+    if "behavior" in val_lower:
+        return "Behavior"
+
+    # Cleanup
+    cleaned = (
+        val.replace("['", "").replace("']", "").replace('["', "").replace('"]', "")
+    )
+    return cleaned.title() if cleaned else "Unknown"
+
+
 def generate_dataset_growth(df: pd.DataFrame, out_html: str | Path) -> Path:
     """Generate cumulative growth plot."""
     df = df.copy()
@@ -45,38 +78,6 @@ def generate_dataset_growth(df: pd.DataFrame, out_html: str | Path) -> Path:
     else:
         df["n_subjects_clean"] = 0
 
-    # Normalize Modality
-    def normalize_mod(val):
-        if not isinstance(val, str):
-            return "Unknown"
-        val_lower = val.lower()
-
-        # Consistent mapping with main dashboard
-        if "ieeg" in val_lower or "intracranial" in val_lower:
-            return "iEEG"
-        if "meg" in val_lower:
-            return "MEG"
-        if "fnirs" in val_lower:
-            return "fNIRS"
-        if "emg" in val_lower:
-            return "EMG"
-        if "fmri" in val_lower or "functional magnetic resonance" in val_lower:
-            return "fMRI"
-        if "mri" in val_lower:
-            return "MRI"
-        if "eeg" in val_lower:
-            return "EEG"
-        if "ecg" in val_lower:
-            return "ECG"
-        if "behavior" in val_lower:
-            return "Behavior"
-
-        # Cleanup
-        cleaned = (
-            val.replace("['", "").replace("']", "").replace('["', "").replace('"]', "")
-        )
-        return cleaned.title() if cleaned else "Unknown"
-
     mod_col = None
     for candidate in [
         "recording_modality",
@@ -90,7 +91,7 @@ def generate_dataset_growth(df: pd.DataFrame, out_html: str | Path) -> Path:
             break
 
     if mod_col:
-        df["Modality"] = df[mod_col].apply(normalize_mod)
+        df["Modality"] = df[mod_col].apply(_normalize_modality)
     else:
         df["Modality"] = "Unknown"
 

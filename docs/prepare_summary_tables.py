@@ -253,20 +253,31 @@ def save_summary_stats(df_raw: pd.DataFrame) -> None:
 # =============================================================================
 
 
+def _normalise_tag(token: str, canonical: dict) -> str:
+    """Normalize a tag token using a canonical mapping.
+
+    Args:
+        token: The tag token to normalize.
+        canonical: A dict mapping lowercase strings to canonical forms.
+
+    Returns:
+        The normalized tag string, or None if the token is unknown.
+    """
+    text = " ".join(token.replace("_", " ").split())
+    lowered = text.lower()
+    if lowered in _UNKNOWN_TOKENS:
+        return None
+    if lowered in canonical:
+        return canonical[lowered]
+    return text
+
+
 def _tag_normalizer(kind: str):
     """Create a normalizer function for a specific tag kind."""
+    from functools import partial
+
     canonical = {k.lower(): v for k, v in DATASET_CANONICAL_MAP.get(kind, {}).items()}
-
-    def _normalise(token: str) -> str:
-        text = " ".join(token.replace("_", " ").split())
-        lowered = text.lower()
-        if lowered in _UNKNOWN_TOKENS:
-            return None
-        if lowered in canonical:
-            return canonical[lowered]
-        return text
-
-    return _normalise
+    return partial(_normalise_tag, canonical=canonical)
 
 
 def parse_freqs(value) -> str:
@@ -349,6 +360,15 @@ def wrap_dataset_name(name: str) -> str:
     return f'<a href="{url}">{name.upper()}</a>'
 
 
+def _strip_unknown(value: object) -> object:
+    """Strip unknown/empty values, returning empty string."""
+    if value is None or (isinstance(value, float) and pd.isna(value)):
+        return ""
+    if isinstance(value, str) and value.strip().lower() in _UNKNOWN_TOKENS:
+        return ""
+    return value
+
+
 def prepare_table(df: pd.DataFrame) -> pd.DataFrame:
     """Prepare DataFrame for HTML table rendering."""
     # Filter excluded datasets
@@ -376,13 +396,6 @@ def prepare_table(df: pd.DataFrame) -> pd.DataFrame:
     ]:
         if col not in df.columns:
             df[col] = default
-
-    def _strip_unknown(value: object) -> object:
-        if value is None or (isinstance(value, float) and pd.isna(value)):
-            return ""
-        if isinstance(value, str) and value.strip().lower() in _UNKNOWN_TOKENS:
-            return ""
-        return value
 
     df = df[
         [

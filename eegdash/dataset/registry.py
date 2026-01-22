@@ -20,6 +20,45 @@ def _human_readable_size(num_bytes: int | float | None) -> str:
     return f"{num_bytes:.1f} PB"
 
 
+def _make_dataset_init(_dataset: str, base_class: type):
+    """Create an __init__ method for a dynamically generated dataset class.
+
+    Parameters
+    ----------
+    _dataset : str
+        The dataset identifier to bind to the class.
+    base_class : type
+        The base class whose __init__ will be called.
+
+    Returns
+    -------
+    callable
+        An __init__ method that sets up the dataset query.
+
+    """
+
+    def __init__(
+        self,
+        cache_dir: str,
+        query: dict | None = None,
+        s3_bucket: str | None = None,
+        **kwargs,
+    ):
+        q = {"dataset": _dataset}
+        if query:
+            q.update(query)
+        # call base_class.__init__ directly
+        base_class.__init__(
+            self,
+            query=q,
+            cache_dir=cache_dir,
+            s3_bucket=s3_bucket,
+            **kwargs,
+        )
+
+    return __init__
+
+
 def register_openneuro_datasets(
     summary_file: str | Path | None = None,
     *,
@@ -86,31 +125,7 @@ def register_openneuro_datasets(
             continue
 
         class_name = dataset_id.upper()
-
-        # avoid zero-arg super() here
-        def make_init(_dataset: str):
-            def __init__(
-                self,
-                cache_dir: str,
-                query: dict | None = None,
-                s3_bucket: str | None = None,
-                **kwargs,
-            ):
-                q = {"dataset": _dataset}
-                if query:
-                    q.update(query)
-                # call base_class.__init__ directly
-                base_class.__init__(
-                    self,
-                    query=q,
-                    cache_dir=cache_dir,
-                    s3_bucket=s3_bucket,
-                    **kwargs,
-                )
-
-            return __init__
-
-        init = make_init(dataset_id)
+        init = _make_dataset_init(dataset_id, base_class)
 
         # Generate rich docstring with dataset metadata
         doc = _generate_rich_docstring(dataset_id, row_series, base_class)
@@ -139,6 +154,20 @@ def register_openneuro_datasets(
     return registered
 
 
+def _clean_optional(value: object) -> str:
+    """Clean optional value, returning empty string for null-like values."""
+    text = str(value).strip() if value is not None else ""
+    if not text or text.lower() in {"nan", "none", "null"}:
+        return ""
+    return text
+
+
+def _clean_or_unknown(value: object) -> str:
+    """Clean value, returning 'Unknown' for null-like values."""
+    cleaned = _clean_optional(value)
+    return cleaned if cleaned else "Unknown"
+
+
 def _generate_rich_docstring(
     dataset_id: str, row_series: pd.Series, base_class: type
 ) -> str:
@@ -161,17 +190,6 @@ def _generate_rich_docstring(
         A formatted docstring.
 
     """
-
-    def _clean_optional(value: object) -> str:
-        text = str(value).strip() if value is not None else ""
-        if not text or text.lower() in {"nan", "none", "null"}:
-            return ""
-        return text
-
-    def _clean_or_unknown(value: object) -> str:
-        cleaned = _clean_optional(value)
-        return cleaned if cleaned else "Unknown"
-
     n_subjects = _clean_or_unknown(row_series.get("n_subjects"))
     n_records = _clean_or_unknown(row_series.get("n_records"))
     n_tasks = _clean_or_unknown(row_series.get("n_tasks"))

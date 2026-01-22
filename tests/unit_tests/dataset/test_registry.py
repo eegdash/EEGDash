@@ -1,4 +1,3 @@
-import importlib.util
 from pathlib import Path
 
 
@@ -23,12 +22,7 @@ def test_human_readable_size():
 
 
 def test_register_openneuro_datasets(tmp_path: Path):
-    module_path = (
-        Path(__file__).resolve().parents[3] / "eegdash" / "dataset" / "registry.py"
-    )
-    spec = importlib.util.spec_from_file_location("registry", module_path)
-    registry = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(registry)
+    from eegdash.dataset.registry import register_openneuro_datasets
 
     summary = tmp_path / "dataset_summary.csv"
     summary.write_text(
@@ -41,7 +35,7 @@ def test_register_openneuro_datasets(tmp_path: Path):
         )
     )
     namespace = {}
-    registered = registry.register_openneuro_datasets(
+    registered = register_openneuro_datasets(
         summary, namespace=namespace, base_class=DummyBase
     )
 
@@ -167,7 +161,7 @@ def test_api_returns_not_success():
 
     with (
         patch("urllib.request.urlopen") as mock_urlopen,
-        patch("eegdash.paths.get_default_cache_dir") as mock_cache_dir,
+        patch("eegdash.dataset.registry.get_default_cache_dir") as mock_cache_dir,
     ):
         # Ensure cache file does not exist
         mock_cache_dir.return_value = MagicMock()
@@ -181,10 +175,6 @@ def test_api_returns_not_success():
 
         result = fetch_datasets_from_api("https://api.test.com", "testdb")
         assert result.empty
-
-    pass
-
-    pass
 
 
 def test_registry_docstring_generation():
@@ -201,18 +191,18 @@ def test_registry_docstring_generation():
             "n_records": 10,
             "n_tasks": "rest",
             "dataset_doi": "doi:10.1000/1",
-            "record_modality": None,  # Should check alternative
-            "modality of exp": "eeg",
+            "record_modality": "eeg",  # Recording modality (BIDS data type)
+            "modality of exp": "visual",  # Experimental modality
             "type of exp": "task",
             "Type Subject": "patient",
         }
     )
 
     doc = _generate_rich_docstring("ds003", row, EEGDashDataset)
-    assert (
-        "Subjects: Unknown" in doc or "Subjects:" in doc
-    )  # Depending on implementation details
-    assert "Modality: ``eeg``" in doc or "Modality: eeg" in doc
+    # When n_subjects is None, "Subjects:" is skipped (not shown as "Unknown")
+    assert "Subjects:" not in doc  # Gracefully handled by omitting
+    assert "recordings: 10" in doc  # But n_records is shown
+    assert "Modality: ``eeg``" in doc
     assert "https://doi.org/10.1000/1" in doc
 
 
@@ -309,8 +299,11 @@ def test_fetch_datasets_from_api_field_mappings():
                 "total_files": 283,
                 "tasks": ["rest", "noise"],
                 "recording_modality": ["meg"],
-                "study_design": "observational",
-                "study_domain": "healthy",
+                "tags": {
+                    "modality": ["visual"],  # → modality of exp
+                    "type": ["observational"],  # → type of exp
+                    "pathology": ["healthy"],  # → Type Subject
+                },
                 "size_bytes": 1024 * 1024 * 100,  # 100 MB
                 "source": "openneuro",
                 "license": "CC0",
@@ -323,7 +316,7 @@ def test_fetch_datasets_from_api_field_mappings():
 
     with (
         patch("urllib.request.urlopen") as mock_urlopen,
-        patch("eegdash.paths.get_default_cache_dir") as mock_cache_dir,
+        patch("eegdash.dataset.registry.get_default_cache_dir") as mock_cache_dir,
     ):
         mock_cache_dir.return_value = MagicMock()
         mock_cache_dir.return_value.__truediv__.return_value.exists.return_value = False
@@ -345,9 +338,12 @@ def test_fetch_datasets_from_api_field_mappings():
         assert row["n_subjects"] == 7
         assert row["n_records"] == 283
         assert row["n_tasks"] == 2
-        assert row["modality of exp"] == "meg"
-        assert row["type of exp"] == "observational"
-        assert row["Type Subject"] == "healthy"
+        assert (
+            row["modality of exp"] == "visual"
+        )  # Experimental modality from tags.modality
+        assert row["record_modality"] == "meg"  # Recording modality (BIDS data type)
+        assert row["type of exp"] == "observational"  # From tags.type
+        assert row["Type Subject"] == "healthy"  # From tags.pathology
         assert "MB" in row["size"]
         assert row["license"] == "CC0"
         assert row["doi"] == "doi:10.1234/test"
@@ -370,8 +366,11 @@ def test_internal_fetch_datasets_from_api_field_mappings():
                 "total_files": 104,
                 "tasks": ["facerecognition", "rest"],
                 "recording_modality": ["meg", "eeg"],
-                "study_design": "experimental",
-                "study_domain": "cognitive",
+                "tags": {
+                    "modality": ["auditory", "visual"],  # → modality of exp
+                    "type": ["experimental"],  # → type of exp
+                    "pathology": ["cognitive"],  # → Type Subject
+                },
                 "size_bytes": 94108833435,
                 "source": "openneuro",
                 "license": "CC0",
@@ -395,9 +394,10 @@ def test_internal_fetch_datasets_from_api_field_mappings():
         assert row["n_subjects"] == 17
         assert row["n_records"] == 104
         assert row["n_tasks"] == 2
-        assert "meg" in row["modality of exp"]
-        assert row["type of exp"] == "experimental"
-        assert row["Type Subject"] == "cognitive"
+        assert "auditory" in row["modality of exp"]  # From tags.modality
+        assert "meg" in row["record_modality"]  # Recording modality (BIDS data type)
+        assert row["type of exp"] == "experimental"  # From tags.type
+        assert row["Type Subject"] == "cognitive"  # From tags.pathology
         assert "GB" in row["size"]
         assert row["license"] == "CC0"
         assert row["doi"] == "doi:10.18112/openneuro.ds000117.v1.1.0"
@@ -436,7 +436,8 @@ def test_fetch_api_handles_missing_demographics():
         row = df.iloc[0]
         assert row["n_subjects"] == 0  # Default when demographics missing
         assert row["n_records"] == 50
-        assert row["modality of exp"] == "eeg"  # String converted properly
+        assert row["modality of exp"] == ""  # Empty when no tags.modality
+        assert row["record_modality"] == "eeg"  # Recording modality from string
 
 
 def test_fetch_api_error():

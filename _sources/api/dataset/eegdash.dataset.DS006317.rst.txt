@@ -90,7 +90,7 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 127 (64), 124 (64)
+      - Channels: 124 (64), 127 (64)
       - Sampling rate (Hz): 1000.0
       - Duration (hours): 0.0
 

@@ -7,7 +7,7 @@ eegdash.dataset.DS005752
 
 The NIMH Healthy Research Volunteer Dataset (OpenNeuro ``ds005752``). Access recordings and metadata through EEGDash.
 
-**Citation:** Allison C. Nugent, Adam G Thomas, Margaret Mahoney, Alison Gibbons, Jarrod Smith, Antoinette Charles, Jacob S Shaw, Jeffrey D Stout, Anna M Namyst, Arshitha Basavaraj, Eric Earl, Dustin Moraczewski, Emily Guinee, Michael Liu, Travis Riddle, Joseph Snow, Shruti Japee, Morgan Andrews, Adriana Pavletic, Stephen Sinclair, Vinai Roopchansingh, Peter A Bandettini, Joyce Chung (2024). *The NIMH Healthy Research Volunteer Dataset*. `10.18112/openneuro.ds005752.v2.1.0 <https://doi.org/10.18112/openneuro.ds005752.v2.1.0>`__
+**Citation:** Allison C. Nugent, Adam G Thomas, Margaret Mahoney, Alison Gibbons, Jarrod Smith, Antoinette Charles, Jacob S Shaw, Jeffrey D Stout, Anna M Namyst, Arshitha Basavaraj, Eric Earl, Dustin Moraczewski, Emily Guinee, Michael Liu, Travis Riddle, Joseph Snow, Shruti Japee, Morgan Andrews, Adriana Pavletic, Stephen Sinclair, Vinai Roopchansingh, Peter A Bandettini, Joyce Chung (20). *The NIMH Healthy Research Volunteer Dataset*. `10.18112/openneuro.ds005752.v2.1.0 <https://doi.org/10.18112/openneuro.ds005752.v2.1.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - The NIMH Healthy Research Volunteer Dataset
    * - Year
-     - 2024
+     - 20
    * - Authors
      - Allison C. Nugent, Adam G Thomas, Margaret Mahoney, Alison Gibbons, Jarrod Smith, Antoinette Charles, Jacob S Shaw, Jeffrey D Stout, Anna M Namyst, Arshitha Basavaraj, Eric Earl, Dustin Moraczewski, Emily Guinee, Michael Liu, Travis Riddle, Joseph Snow, Shruti Japee, Morgan Andrews, Adriana Pavletic, Stephen Sinclair, Vinai Roopchansingh, Peter A Bandettini, Joyce Chung
    * - License
@@ -281,7 +281,7 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 305 (240), 306 (183), 304 (123), 302 (117), 303 (110), 301 (71), 382 (59), 300 (57), 378 (20), 377 (16), 379 (16), 380 (15), 381 (15), 299 (3), 388, 387
+      - Channels: 305 (240), 306 (183), 304 (123), 302 (117), 303 (110), 301 (71), 382 (59), 300 (57), 378 (20), 379 (16), 377 (16), 381 (15), 380 (15), 299 (3), 387, 388
       - Sampling rate (Hz): 1200.0 (926), 4800.0 (121)
       - Duration (hours): 0.0
 
@@ -295,7 +295,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 662.7 GB
+      - Size on disk: 666.5 GB
       - File count: 1055
       - Format: BIDS
 

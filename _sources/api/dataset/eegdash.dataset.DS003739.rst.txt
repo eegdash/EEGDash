@@ -7,7 +7,7 @@ eegdash.dataset.DS003739
 
 Perturbed beam-walking task (OpenNeuro ``ds003739``). Access recordings and metadata through EEGDash.
 
-**Citation:** Steven Peterson, Daniel Ferris (2021). *Perturbed beam-walking task*. `10.18112/openneuro.ds003739.v1.0.2 <https://doi.org/10.18112/openneuro.ds003739.v1.0.2>`__
+**Citation:** Steven Peterson, Daniel Ferris (—). *Perturbed beam-walking task*. `10.18112/openneuro.ds003739.v1.0.2 <https://doi.org/10.18112/openneuro.ds003739.v1.0.2>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Perturbed beam-walking task
    * - Year
-     - 2021
+     - —
    * - Authors
      - Steven Peterson, Daniel Ferris
    * - License
@@ -88,7 +88,7 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 149 (120), 128 (120)
+      - Channels: 128 (120), 149 (120)
       - Sampling rate (Hz): 256.0
       - Duration (hours): 0.0
 

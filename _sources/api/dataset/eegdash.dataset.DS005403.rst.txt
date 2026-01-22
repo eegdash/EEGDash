@@ -7,7 +7,7 @@ eegdash.dataset.DS005403
 
 Delayed Auditory Feedback EEG/EGG (OpenNeuro ``ds005403``). Access recordings and metadata through EEGDash.
 
-**Citation:** Veillette, J., Rosen, J., Margoliash, D., Nusbaum, H. (2024). *Delayed Auditory Feedback EEG/EGG*. `10.18112/openneuro.ds005403.v1.0.1 <https://doi.org/10.18112/openneuro.ds005403.v1.0.1>`__
+**Citation:** Veillette, J., Rosen, J., Margoliash, D., Nusbaum, H. (2019). *Delayed Auditory Feedback EEG/EGG*. `10.18112/openneuro.ds005403.v1.0.1 <https://doi.org/10.18112/openneuro.ds005403.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Delayed Auditory Feedback EEG/EGG
    * - Year
-     - 2024
+     - 2019
    * - Authors
      - Veillette, J., Rosen, J., Margoliash, D., Nusbaum, H.
    * - License
@@ -95,7 +95,7 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 66 (32), 62 (32)
+      - Channels: 62 (32), 66 (32)
       - Sampling rate (Hz): 10000.0
       - Duration (hours): 0.0
 
@@ -109,7 +109,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 118.5 GB
+      - Size on disk: 135.7 GB
       - File count: 32
       - Format: BIDS
 

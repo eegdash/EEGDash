@@ -7,7 +7,7 @@ eegdash.dataset.DS006035
 
 somatomotor (OpenNeuro ``ds006035``). Access recordings and metadata through EEGDash.
 
-**Citation:** Fa-Hsuan Lin, Deirdre Foxe von Pechmann, Kaisu Lankinen, Seppo Ahlfors, Bruce Rosen, Jyrki Ahveninen, Matti Hämäläinen, Tommi Raij (2025). *somatomotor*. `10.18112/openneuro.ds006035.v1.0.0 <https://doi.org/10.18112/openneuro.ds006035.v1.0.0>`__
+**Citation:** Fa-Hsuan Lin, Deirdre Foxe von Pechmann, Kaisu Lankinen, Seppo Ahlfors, Bruce Rosen, Jyrki Ahveninen, Matti Hämäläinen, Tommi Raij (2019). *somatomotor*. `10.18112/openneuro.ds006035.v1.0.0 <https://doi.org/10.18112/openneuro.ds006035.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - somatomotor
    * - Year
-     - 2025
+     - 2019
    * - Authors
      - Fa-Hsuan Lin, Deirdre Foxe von Pechmann, Kaisu Lankinen, Seppo Ahlfors, Bruce Rosen, Jyrki Ahveninen, Matti Hämäläinen, Tommi Raij
    * - License

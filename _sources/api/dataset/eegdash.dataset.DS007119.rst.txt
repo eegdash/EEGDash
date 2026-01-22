@@ -7,7 +7,7 @@ eegdash.dataset.DS007119
 
 iEEG_comprehensive_HFA_model_part3 (OpenNeuro ``ds007119``). Access recordings and metadata through EEGDash.
 
-**Citation:** Keisuke Hatano, Naoto Kuroda, Hiroshi Uda, Kazuki Sakakura, Michael J. Cools, Aimee F. Luat, Shin-Ichiro Osawa, Hitoshi Nemoto, Kazushi Ukishiro, Hidenori Endo, Nobukazu Nakasato, Yutaro Takayama, Keiya Iijima, Masaki Iwasaki, Eishi Asano (2025). *iEEG_comprehensive_HFA_model_part3*. `10.18112/openneuro.ds007119.v1.0.0 <https://doi.org/10.18112/openneuro.ds007119.v1.0.0>`__
+**Citation:** Keisuke Hatano, Naoto Kuroda, Hiroshi Uda, Kazuki Sakakura, Michael J. Cools, Aimee F. Luat, Shin-Ichiro Osawa, Hitoshi Nemoto, Kazushi Ukishiro, Hidenori Endo, Nobukazu Nakasato, Yutaro Takayama, Keiya Iijima, Masaki Iwasaki, Eishi Asano (—). *iEEG_comprehensive_HFA_model_part3*. `10.18112/openneuro.ds007119.v1.0.0 <https://doi.org/10.18112/openneuro.ds007119.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - iEEG_comprehensive_HFA_model_part3
    * - Year
-     - 2025
+     - —
    * - Authors
      - Keisuke Hatano, Naoto Kuroda, Hiroshi Uda, Kazuki Sakakura, Michael J. Cools, Aimee F. Luat, Shin-Ichiro Osawa, Hitoshi Nemoto, Kazushi Ukishiro, Hidenori Endo, Nobukazu Nakasato, Yutaro Takayama, Keiya Iijima, Masaki Iwasaki, Eishi Asano
    * - License
@@ -91,7 +91,7 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 128 (12), 124 (5), 120 (4), 102 (4), 94 (4), 78 (4), 58 (4), 86 (4), 134 (4), 100 (3), 110 (3), 118 (3), 72 (2), 84 (2), 34 (2), 140 (2), 96 (2), 130 (2), 132 (2), 112 (2), 136 (2), 74 (2), 108 (2), 148 (2), 64 (2), 138, 142, 180, 135, 146, 48, 88, 54, 44, 144, 104, 46, 38, 152, 82, 28, 126, 122, 90, 76, 70, 73, 114, 116, 6, 52
+      - Channels: 128 (12), 124 (5), 134 (4), 58 (4), 86 (4), 94 (4), 78 (4), 102 (4), 120 (4), 118 (3), 110 (3), 100 (3), 74 (2), 108 (2), 64 (2), 148 (2), 132 (2), 96 (2), 130 (2), 112 (2), 136 (2), 140 (2), 72 (2), 34 (2), 84 (2), 70, 76, 90, 114, 73, 116, 6, 52, 126, 122, 104, 44, 144, 38, 46, 82, 152, 28, 142, 138, 135, 180, 146, 88, 54, 48
       - Sampling rate (Hz): 1000.0
       - Duration (hours): 0.0
 

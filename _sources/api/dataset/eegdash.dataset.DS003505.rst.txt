@@ -7,7 +7,7 @@ eegdash.dataset.DS003505
 
 VEPCON: Source imaging of high-density visual evoked potentials with multi-scale brain parcellations and connectomes (OpenNeuro ``ds003505``). Access recordings and metadata through EEGDash.
 
-**Citation:** David Pascucci, Sebastien Tourbier, Joan Rue-Queralt, Margherita Carboni, Patric Hagmann, Gijs Plomp (2021). *VEPCON: Source imaging of high-density visual evoked potentials with multi-scale brain parcellations and connectomes*. `10.18112/openneuro.ds003505.v1.1.1 <https://doi.org/10.18112/openneuro.ds003505.v1.1.1>`__
+**Citation:** David Pascucci, Sebastien Tourbier, Joan Rue-Queralt, Margherita Carboni, Patric Hagmann, Gijs Plomp (—). *VEPCON: Source imaging of high-density visual evoked potentials with multi-scale brain parcellations and connectomes*. `10.18112/openneuro.ds003505.v1.1.1 <https://doi.org/10.18112/openneuro.ds003505.v1.1.1>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - VEPCON: Source imaging of high-density visual evoked potentials with multi-scale brain parcellations and connectomes
    * - Year
-     - 2021
+     - —
    * - Authors
      - David Pascucci, Sebastien Tourbier, Joan Rue-Queralt, Margherita Carboni, Patric Hagmann, Gijs Plomp
    * - License
@@ -109,7 +109,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 29.0 GB
+      - Size on disk: 58.2 GB
       - File count: 37
       - Format: BIDS
 

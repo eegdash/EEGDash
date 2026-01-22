@@ -7,7 +7,7 @@ eegdash.dataset.DS005691
 
 SpinalExpect_Invasive (OpenNeuro ``ds005691``). Access recordings and metadata through EEGDash.
 
-**Citation:** Max-Philipp Stenner, Cindy Marquez Nossa, Tino Zaehle, Elena Azanon, Hans-Jochen Heinze, Matthias Deliano, Lars Buentjen (2024). *SpinalExpect_Invasive*. `10.18112/openneuro.ds005691.v1.0.0 <https://doi.org/10.18112/openneuro.ds005691.v1.0.0>`__
+**Citation:** Max-Philipp Stenner, Cindy Marquez Nossa, Tino Zaehle, Elena Azanon, Hans-Jochen Heinze, Matthias Deliano, Lars Buentjen (—). *SpinalExpect_Invasive*. `10.18112/openneuro.ds005691.v1.0.0 <https://doi.org/10.18112/openneuro.ds005691.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - SpinalExpect_Invasive
    * - Year
-     - 2024
+     - —
    * - Authors
      - Max-Philipp Stenner, Cindy Marquez Nossa, Tino Zaehle, Elena Azanon, Hans-Jochen Heinze, Matthias Deliano, Lars Buentjen
    * - License
@@ -106,7 +106,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 723.0 MB
+      - Size on disk: 723.2 MB
       - File count: 8
       - Format: BIDS
 

@@ -7,7 +7,7 @@ eegdash.dataset.DS006735
 
 Chimeric music reveals an interaction of pitch and time in electrophysiological signatures of music encoding (OpenNeuro ``ds006735``). Access recordings and metadata through EEGDash.
 
-**Citation:** Tong Shan, Edmund C. Lalor, Ross K. Maddox (2025). *Chimeric music reveals an interaction of pitch and time in electrophysiological signatures of music encoding*. `10.18112/openneuro.ds006735.v1.0.4 <https://doi.org/10.18112/openneuro.ds006735.v1.0.4>`__
+**Citation:** Tong Shan, Edmund C. Lalor, Ross K. Maddox (2024). *Chimeric music reveals an interaction of pitch and time in electrophysiological signatures of music encoding*. `10.18112/openneuro.ds006735.v1.0.4 <https://doi.org/10.18112/openneuro.ds006735.v1.0.4>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Chimeric music reveals an interaction of pitch and time in electrophysiological signatures of music encoding
    * - Year
-     - 2025
+     - 2024
    * - Authors
      - Tong Shan, Edmund C. Lalor, Ross K. Maddox
    * - License
@@ -147,7 +147,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 175.9 GB
+      - Size on disk: 192.9 GB
       - File count: 27
       - Format: BIDS
 

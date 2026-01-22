@@ -7,7 +7,7 @@ eegdash.dataset.DS004595
 
 EEG: RL Task (3-Armed Bandit) with alcohol cues in hazardous drinkers and ctls (OpenNeuro ``ds004595``). Access recordings and metadata through EEGDash.
 
-**Citation:** Ethan Campbell, James F Cavanagh (2023). *EEG: RL Task (3-Armed Bandit) with alcohol cues in hazardous drinkers and ctls*. `10.18112/openneuro.ds004595.v1.0.0 <https://doi.org/10.18112/openneuro.ds004595.v1.0.0>`__
+**Citation:** Ethan Campbell, James F Cavanagh (20). *EEG: RL Task (3-Armed Bandit) with alcohol cues in hazardous drinkers and ctls*. `10.18112/openneuro.ds004595.v1.0.0 <https://doi.org/10.18112/openneuro.ds004595.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - EEG: RL Task (3-Armed Bandit) with alcohol cues in hazardous drinkers and ctls
    * - Year
-     - 2023
+     - 20
    * - Authors
      - Ethan Campbell, James F Cavanagh
    * - License
@@ -85,7 +85,7 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 66 (53), 64 (53)
+      - Channels: 64 (53), 66 (53)
       - Sampling rate (Hz): 500.0
       - Duration (hours): 0.0
 
@@ -99,7 +99,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 7.8 GB
+      - Size on disk: 7.9 GB
       - File count: 53
       - Format: BIDS
 

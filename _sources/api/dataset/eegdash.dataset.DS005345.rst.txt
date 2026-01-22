@@ -7,7 +7,7 @@ eegdash.dataset.DS005345
 
 Le Petit Prince (LPP) Multi-talker: Naturalistic 7T fMRI and EEG Dataset (OpenNeuro ``ds005345``). Access recordings and metadata through EEGDash.
 
-**Citation:** Zhengwu Ma, Nan Wang, Jixing Li (2024). *Le Petit Prince (LPP) Multi-talker: Naturalistic 7T fMRI and EEG Dataset*. `10.18112/openneuro.ds005345.v1.0.1 <https://doi.org/10.18112/openneuro.ds005345.v1.0.1>`__
+**Citation:** Zhengwu Ma, Nan Wang, Jixing Li (20). *Le Petit Prince (LPP) Multi-talker: Naturalistic 7T fMRI and EEG Dataset*. `10.18112/openneuro.ds005345.v1.0.1 <https://doi.org/10.18112/openneuro.ds005345.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Le Petit Prince (LPP) Multi-talker: Naturalistic 7T fMRI and EEG Dataset
    * - Year
-     - 2024
+     - 20
    * - Authors
      - Zhengwu Ma, Nan Wang, Jixing Li
    * - License
@@ -155,7 +155,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 162.5 GB
+      - Size on disk: 405.1 GB
       - File count: 26
       - Format: BIDS
 

@@ -7,7 +7,7 @@ eegdash.dataset.DS003343
 
 Disentangling the percepts of illusory movement and sensory stimulation during tendon vibration in the EEG (OpenNeuro ``ds003343``). Access recordings and metadata through EEGDash.
 
-**Citation:** Christoph Schneider, Renaud Marquis, Jane Johr, Marina Da Silva Lopes, Philippe Ryvlin, Andrea Serino, Marzia De Lucia, Karin Diserens (2021). *Disentangling the percepts of illusory movement and sensory stimulation during tendon vibration in the EEG*. `10.18112/openneuro.ds003343.v2.0.1 <https://doi.org/10.18112/openneuro.ds003343.v2.0.1>`__
+**Citation:** Christoph Schneider, Renaud Marquis, Jane Johr, Marina Da Silva Lopes, Philippe Ryvlin, Andrea Serino, Marzia De Lucia, Karin Diserens (2003). *Disentangling the percepts of illusory movement and sensory stimulation during tendon vibration in the EEG*. `10.18112/openneuro.ds003343.v2.0.1 <https://doi.org/10.18112/openneuro.ds003343.v2.0.1>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Disentangling the percepts of illusory movement and sensory stimulation during tendon vibration in the EEG
    * - Year
-     - 2021
+     - 2003
    * - Authors
      - Christoph Schneider, Renaud Marquis, Jane Johr, Marina Da Silva Lopes, Philippe Ryvlin, Andrea Serino, Marzia De Lucia, Karin Diserens
    * - License
@@ -109,7 +109,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 564.7 KB
+      - Size on disk: 663.7 MB
       - File count: 59
       - Format: BIDS
 

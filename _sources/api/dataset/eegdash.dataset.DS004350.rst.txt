@@ -7,7 +7,7 @@ eegdash.dataset.DS004350
 
 Executive Functionning Study for Assessing the Effect of Neurofeedback (OpenNeuro ``ds004350``). Access recordings and metadata through EEGDash.
 
-**Citation:** Arnaud Delorme, Tracy Brandmeyer (2022). *Executive Functionning Study for Assessing the Effect of Neurofeedback*. `10.18112/openneuro.ds004350.v2.0.0 <https://doi.org/10.18112/openneuro.ds004350.v2.0.0>`__
+**Citation:** Arnaud Delorme, Tracy Brandmeyer (20). *Executive Functionning Study for Assessing the Effect of Neurofeedback*. `10.18112/openneuro.ds004350.v2.0.0 <https://doi.org/10.18112/openneuro.ds004350.v2.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Executive Functionning Study for Assessing the Effect of Neurofeedback
    * - Year
-     - 2022
+     - 20
    * - Authors
      - Arnaud Delorme, Tracy Brandmeyer
    * - License
@@ -113,7 +113,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 9.4 GB
+      - Size on disk: 26.8 GB
       - File count: 240
       - Format: BIDS
 

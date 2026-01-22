@@ -7,7 +7,7 @@ eegdash.dataset.DS005692
 
 SpinalExpect_NonInvasive (OpenNeuro ``ds005692``). Access recordings and metadata through EEGDash.
 
-**Citation:** Max-Philipp Stenner, Cindy Marquez Nossa, Tino Zaehle, Elena Azanon, Hans-Jochen Heinze, Matthias Deliano, Lars Buentjen (2024). *SpinalExpect_NonInvasive*. `10.18112/openneuro.ds005692.v1.0.0 <https://doi.org/10.18112/openneuro.ds005692.v1.0.0>`__
+**Citation:** Max-Philipp Stenner, Cindy Marquez Nossa, Tino Zaehle, Elena Azanon, Hans-Jochen Heinze, Matthias Deliano, Lars Buentjen (2022). *SpinalExpect_NonInvasive*. `10.18112/openneuro.ds005692.v1.0.0 <https://doi.org/10.18112/openneuro.ds005692.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - SpinalExpect_NonInvasive
    * - Year
-     - 2024
+     - 2022
    * - Authors
      - Max-Philipp Stenner, Cindy Marquez Nossa, Tino Zaehle, Elena Azanon, Hans-Jochen Heinze, Matthias Deliano, Lars Buentjen
    * - License

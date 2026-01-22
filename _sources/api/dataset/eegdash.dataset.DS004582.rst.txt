@@ -7,7 +7,7 @@ eegdash.dataset.DS004582
 
 FakeFaceEmo_data (OpenNeuro ``ds004582``). Access recordings and metadata through EEGDash.
 
-**Citation:** Makowski, Dominique, Te, An-Shu, Kirk, Stephanie, Ngoi, Zi Liang (2023). *FakeFaceEmo_data*. `10.18112/openneuro.ds004582.v1.0.0 <https://doi.org/10.18112/openneuro.ds004582.v1.0.0>`__
+**Citation:** Makowski, Dominique, Te, An-Shu, Kirk, Stephanie, Ngoi, Zi Liang (2019). *FakeFaceEmo_data*. `10.18112/openneuro.ds004582.v1.0.0 <https://doi.org/10.18112/openneuro.ds004582.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - FakeFaceEmo_data
    * - Year
-     - 2023
+     - 2019
    * - Authors
      - Makowski, Dominique, Te, An-Shu, Kirk, Stephanie, Ngoi, Zi Liang
    * - License

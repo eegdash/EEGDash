@@ -7,7 +7,7 @@ eegdash.dataset.DS003944
 
 EEG: First Episode Psychosis vs. Control Resting Task 1 (OpenNeuro ``ds003944``). Access recordings and metadata through EEGDash.
 
-**Citation:** Dean Salisbury, Dylan Seebold, Brian Coffman (2021). *EEG: First Episode Psychosis vs. Control Resting Task 1*. `10.18112/openneuro.ds003944.v1.0.1 <https://doi.org/10.18112/openneuro.ds003944.v1.0.1>`__
+**Citation:** Dean Salisbury, Dylan Seebold, Brian Coffman (—). *EEG: First Episode Psychosis vs. Control Resting Task 1*. `10.18112/openneuro.ds003944.v1.0.1 <https://doi.org/10.18112/openneuro.ds003944.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - EEG: First Episode Psychosis vs. Control Resting Task 1
    * - Year
-     - 2021
+     - —
    * - Authors
      - Dean Salisbury, Dylan Seebold, Brian Coffman
    * - License

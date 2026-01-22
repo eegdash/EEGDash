@@ -7,7 +7,7 @@ eegdash.dataset.DS003638
 
 EEG: Electrophysiological biomarkers of behavioral dimensions from cross-species paradigms (OpenNeuro ``ds003638``). Access recordings and metadata through EEGDash.
 
-**Citation:** James F Cavanagh, Greg Light, Neal Swerdlow, Jonathan Brigman, Jared Young (2021). *EEG: Electrophysiological biomarkers of behavioral dimensions from cross-species paradigms*. `10.18112/openneuro.ds003638.v1.0.0 <https://doi.org/10.18112/openneuro.ds003638.v1.0.0>`__
+**Citation:** James F Cavanagh, Greg Light, Neal Swerdlow, Jonathan Brigman, Jared Young (20). *EEG: Electrophysiological biomarkers of behavioral dimensions from cross-species paradigms*. `10.18112/openneuro.ds003638.v1.0.0 <https://doi.org/10.18112/openneuro.ds003638.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - EEG: Electrophysiological biomarkers of behavioral dimensions from cross-species paradigms
    * - Year
-     - 2021
+     - 20
    * - Authors
      - James F Cavanagh, Greg Light, Neal Swerdlow, Jonathan Brigman, Jared Young
    * - License
@@ -85,7 +85,7 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 64 (57), 72 (57)
+      - Channels: 72 (57), 64 (57)
       - Sampling rate (Hz): 512.0
       - Duration (hours): 0.0
 
@@ -99,7 +99,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 15.3 GB
+      - Size on disk: 16.3 GB
       - File count: 57
       - Format: BIDS
 

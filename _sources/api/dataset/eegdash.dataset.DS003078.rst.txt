@@ -7,7 +7,7 @@ eegdash.dataset.DS003078
 
 PROBE iEEG (OpenNeuro ``ds003078``). Access recordings and metadata through EEGDash.
 
-**Citation:** Philippe DOMENECH, Sylvain RHEIMS, Etienne KOECHLIN (2020). *PROBE iEEG*. `10.18112/openneuro.ds003078.v1.0.0 <https://doi.org/10.18112/openneuro.ds003078.v1.0.0>`__
+**Citation:** Philippe DOMENECH, Sylvain RHEIMS, Etienne KOECHLIN (—). *PROBE iEEG*. `10.18112/openneuro.ds003078.v1.0.0 <https://doi.org/10.18112/openneuro.ds003078.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - PROBE iEEG
    * - Year
-     - 2020
+     - —
    * - Authors
      - Philippe DOMENECH, Sylvain RHEIMS, Etienne KOECHLIN
    * - License

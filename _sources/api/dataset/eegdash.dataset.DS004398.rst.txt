@@ -7,7 +7,7 @@ eegdash.dataset.DS004398
 
 planmemreplay (OpenNeuro ``ds004398``). Access recordings and metadata through EEGDash.
 
-**Citation:** G. Elliott Wimmer, Yunzhe Liu, Daniel C. McNamee, Raymond J. Dolan (2023). *planmemreplay*. `10.18112/openneuro.ds004398.v1.0.0 <https://doi.org/10.18112/openneuro.ds004398.v1.0.0>`__
+**Citation:** G. Elliott Wimmer, Yunzhe Liu, Daniel C. McNamee, Raymond J. Dolan (—). *planmemreplay*. `10.18112/openneuro.ds004398.v1.0.0 <https://doi.org/10.18112/openneuro.ds004398.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - planmemreplay
    * - Year
-     - 2023
+     - —
    * - Authors
      - G. Elliott Wimmer, Yunzhe Liu, Daniel C. McNamee, Raymond J. Dolan
    * - License

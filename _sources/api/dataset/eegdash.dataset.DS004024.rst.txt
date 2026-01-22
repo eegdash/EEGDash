@@ -7,7 +7,7 @@ eegdash.dataset.DS004024
 
 TMS-EEG-MRI-fMRI-DWI data on paired associative stimulation and connectivity (Shirley Ryan AbilityLab, Chicago, IL) (OpenNeuro ``ds004024``). Access recordings and metadata through EEGDash.
 
-**Citation:** Julio Cesar Hernandez Pavon, Nils Schneider Garces, John Patrick Begnoche, Lee Miller, Tommi Raij (2022). *TMS-EEG-MRI-fMRI-DWI data on paired associative stimulation and connectivity (Shirley Ryan AbilityLab, Chicago, IL)*. `10.18112/openneuro.ds004024.v1.0.1 <https://doi.org/10.18112/openneuro.ds004024.v1.0.1>`__
+**Citation:** Julio Cesar Hernandez Pavon, Nils Schneider Garces, John Patrick Begnoche, Lee Miller, Tommi Raij (2019). *TMS-EEG-MRI-fMRI-DWI data on paired associative stimulation and connectivity (Shirley Ryan AbilityLab, Chicago, IL)*. `10.18112/openneuro.ds004024.v1.0.1 <https://doi.org/10.18112/openneuro.ds004024.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - TMS-EEG-MRI-fMRI-DWI data on paired associative stimulation and connectivity (Shirley Ryan AbilityLab, Chicago, IL)
    * - Year
-     - 2022
+     - 2019
    * - Authors
      - Julio Cesar Hernandez Pavon, Nils Schneider Garces, John Patrick Begnoche, Lee Miller, Tommi Raij
    * - License
@@ -89,7 +89,7 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 69 (497), 64 (497)
+      - Channels: 64 (497), 69 (497)
       - Sampling rate (Hz): 20000.0
       - Duration (hours): 0.0
 

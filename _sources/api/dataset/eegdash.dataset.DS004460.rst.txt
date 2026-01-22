@@ -7,7 +7,7 @@ eegdash.dataset.DS004460
 
 EEG and motion capture data set for a full-body/joystick rotation task (OpenNeuro ``ds004460``). Access recordings and metadata through EEGDash.
 
-**Citation:** Gramann, K., Hohlefeld, F.U., Gehrke, L., Klug, M (2023). *EEG and motion capture data set for a full-body/joystick rotation task*. `10.18112/openneuro.ds004460.v1.1.0 <https://doi.org/10.18112/openneuro.ds004460.v1.1.0>`__
+**Citation:** Gramann, K., Hohlefeld, F.U., Gehrke, L., Klug, M (2021). *EEG and motion capture data set for a full-body/joystick rotation task*. `10.18112/openneuro.ds004460.v1.1.0 <https://doi.org/10.18112/openneuro.ds004460.v1.1.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - EEG and motion capture data set for a full-body/joystick rotation task
    * - Year
-     - 2023
+     - 2021
    * - Authors
      - Gramann, K., Hohlefeld, F.U., Gehrke, L., Klug, M
    * - License
@@ -241,7 +241,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 59.1 GB
+      - Size on disk: 61.4 GB
       - File count: 40
       - Format: BIDS
 

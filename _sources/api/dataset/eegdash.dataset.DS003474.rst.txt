@@ -7,7 +7,7 @@ eegdash.dataset.DS003474
 
 EEG: Probabilistic Selection and Depression (OpenNeuro ``ds003474``). Access recordings and metadata through EEGDash.
 
-**Citation:** James F Cavanagh jcavanagh@unm.edu (2021). *EEG: Probabilistic Selection and Depression*. `10.18112/openneuro.ds003474.v1.1.0 <https://doi.org/10.18112/openneuro.ds003474.v1.1.0>`__
+**Citation:** James F Cavanagh jcavanagh@unm.edu (20). *EEG: Probabilistic Selection and Depression*. `10.18112/openneuro.ds003474.v1.1.0 <https://doi.org/10.18112/openneuro.ds003474.v1.1.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - EEG: Probabilistic Selection and Depression
    * - Year
-     - 2021
+     - 20
    * - Authors
      - James F Cavanagh jcavanagh@unm.edu
    * - License

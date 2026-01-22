@@ -7,7 +7,7 @@ eegdash.dataset.DS007006
 
 VR-Compassion Cultivation Training (OpenNeuro ``ds007006``). Access recordings and metadata through EEGDash.
 
-**Citation:** Ying Wu, Enrique Carrillosulub, Leon Lange, Chloe Tanega, Nicole Wells, Erik Virre, Cassandra Vieten (2025). *VR-Compassion Cultivation Training*. `10.18112/openneuro.ds007006.v1.0.0 <https://doi.org/10.18112/openneuro.ds007006.v1.0.0>`__
+**Citation:** Ying Wu, Enrique Carrillosulub, Leon Lange, Chloe Tanega, Nicole Wells, Erik Virre, Cassandra Vieten (—). *VR-Compassion Cultivation Training*. `10.18112/openneuro.ds007006.v1.0.0 <https://doi.org/10.18112/openneuro.ds007006.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - VR-Compassion Cultivation Training
    * - Year
-     - 2025
+     - —
    * - Authors
      - Ying Wu, Enrique Carrillosulub, Leon Lange, Chloe Tanega, Nicole Wells, Erik Virre, Cassandra Vieten
    * - License
@@ -144,7 +144,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 918.7 MB
+      - Size on disk: 918.9 MB
       - File count: 50
       - Format: BIDS
 

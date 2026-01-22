@@ -7,7 +7,7 @@ eegdash.dataset.DS004661
 
 ANDI (OpenNeuro ``ds004661``). Access recordings and metadata through EEGDash.
 
-**Citation:** Tony Johnson, Stephen Gordon, Jon Touryan, Kevin King (2023). *ANDI*. `10.18112/openneuro.ds004661.v1.1.0 <https://doi.org/10.18112/openneuro.ds004661.v1.1.0>`__
+**Citation:** Tony Johnson, Stephen Gordon, Jon Touryan, Kevin King (20). *ANDI*. `10.18112/openneuro.ds004661.v1.1.0 <https://doi.org/10.18112/openneuro.ds004661.v1.1.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - ANDI
    * - Year
-     - 2023
+     - 20
    * - Authors
      - Tony Johnson, Stephen Gordon, Jon Touryan, Kevin King
    * - License

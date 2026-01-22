@@ -7,7 +7,7 @@ eegdash.dataset.DS003844
 
 Dataset Clinical Epilepsy iEEG to BIDS -RESPect_intraoperative_iEEG (OpenNeuro ``ds003844``). Access recordings and metadata through EEGDash.
 
-**Citation:** Zweiphenning W., Demuru M., van Blooijs D., Leijten F, Zijlmans M. (2021). *Dataset Clinical Epilepsy iEEG to BIDS -RESPect_intraoperative_iEEG*. `10.18112/openneuro.ds003844.v1.0.1 <https://doi.org/10.18112/openneuro.ds003844.v1.0.1>`__
+**Citation:** Zweiphenning W., Demuru M., van Blooijs D., Leijten F, Zijlmans M. (—). *Dataset Clinical Epilepsy iEEG to BIDS -RESPect_intraoperative_iEEG*. `10.18112/openneuro.ds003844.v1.0.1 <https://doi.org/10.18112/openneuro.ds003844.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Dataset Clinical Epilepsy iEEG to BIDS -RESPect_intraoperative_iEEG
    * - Year
-     - 2021
+     - —
    * - Authors
      - Zweiphenning W., Demuru M., van Blooijs D., Leijten F, Zijlmans M.
    * - License

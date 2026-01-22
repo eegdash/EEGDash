@@ -7,7 +7,7 @@ eegdash.dataset.DS003688
 
 Open multimodal iEEG-fMRI dataset from naturalistic stimulation with a short audiovisual film (OpenNeuro ``ds003688``). Access recordings and metadata through EEGDash.
 
-**Citation:** Julia Berezutskaya, Mariska J. Vansteensel, Erik J. Aarnoutse, Zachary V. Freudenburg, Giovanni Piantoni, Mariana P. Branco, Nick F. Ramsey (2021). *Open multimodal iEEG-fMRI dataset from naturalistic stimulation with a short audiovisual film*. `10.18112/openneuro.ds003688.v1.0.7 <https://doi.org/10.18112/openneuro.ds003688.v1.0.7>`__
+**Citation:** Julia Berezutskaya, Mariska J. Vansteensel, Erik J. Aarnoutse, Zachary V. Freudenburg, Giovanni Piantoni, Mariana P. Branco, Nick F. Ramsey (—). *Open multimodal iEEG-fMRI dataset from naturalistic stimulation with a short audiovisual film*. `10.18112/openneuro.ds003688.v1.0.7 <https://doi.org/10.18112/openneuro.ds003688.v1.0.7>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Open multimodal iEEG-fMRI dataset from naturalistic stimulation with a short audiovisual film
    * - Year
-     - 2021
+     - —
    * - Authors
      - Julia Berezutskaya, Mariska J. Vansteensel, Erik J. Aarnoutse, Zachary V. Freudenburg, Giovanni Piantoni, Mariana P. Branco, Nick F. Ramsey
    * - License
@@ -89,7 +89,7 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 74 (12), 109 (10), 62 (10), 88 (8), 72 (8), 125 (8), 107 (8), 85 (8), 81 (6), 111 (6), 84 (6), 76 (6), 118 (6), 115 (6), 67 (6), 95 (6), 71 (6), 64 (4), 177 (4), 54 (4), 60 (4), 110 (4), 89 (4), 113 (4), 128 (4), 80 (4), 126 (4), 102 (4), 87 (4), 112 (4), 100 (4), 122 (4), 86 (4), 116 (4), 121 (4), 75 (4), 94 (2), 91 (2), 92 (2), 97 (2), 65 (2), 69 (2)
+      - Channels: 74 (12), 62 (10), 109 (10), 107 (8), 85 (8), 125 (8), 72 (8), 88 (8), 71 (6), 115 (6), 67 (6), 95 (6), 84 (6), 76 (6), 118 (6), 81 (6), 111 (6), 112 (4), 100 (4), 121 (4), 116 (4), 122 (4), 86 (4), 75 (4), 80 (4), 126 (4), 87 (4), 102 (4), 60 (4), 110 (4), 113 (4), 89 (4), 128 (4), 64 (4), 177 (4), 54 (4), 65 (2), 69 (2), 97 (2), 92 (2), 91 (2), 94 (2)
       - Sampling rate (Hz): 512.0 (142), 2048.0 (64), 2000.0 (8)
       - Duration (hours): 0.0
 
@@ -103,7 +103,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 15.2 GB
+      - Size on disk: 15.3 GB
       - File count: 107
       - Format: BIDS
 

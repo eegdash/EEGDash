@@ -7,7 +7,7 @@ eegdash.dataset.DS005815
 
 A Human EEG Dataset for Multisensory Perception and Mental Imagery (OpenNeuro ``ds005815``). Access recordings and metadata through EEGDash.
 
-**Citation:** Yan-Han Chang, Hsi-An Chen, Min-Jiun Tsai, Chun-Lung Tseng, Ching-Huei Lo, Kuan-Chih Huang, Chun-Shu Wei (2025). *A Human EEG Dataset for Multisensory Perception and Mental Imagery*. `10.18112/openneuro.ds005815.v2.0.1 <https://doi.org/10.18112/openneuro.ds005815.v2.0.1>`__
+**Citation:** Yan-Han Chang, Hsi-An Chen, Min-Jiun Tsai, Chun-Lung Tseng, Ching-Huei Lo, Kuan-Chih Huang, Chun-Shu Wei (—). *A Human EEG Dataset for Multisensory Perception and Mental Imagery*. `10.18112/openneuro.ds005815.v2.0.1 <https://doi.org/10.18112/openneuro.ds005815.v2.0.1>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - A Human EEG Dataset for Multisensory Perception and Mental Imagery
    * - Year
-     - 2025
+     - —
    * - Authors
      - Yan-Han Chang, Hsi-An Chen, Min-Jiun Tsai, Chun-Lung Tseng, Ching-Huei Lo, Kuan-Chih Huang, Chun-Shu Wei
    * - License
@@ -99,7 +99,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 7.6 GB
+      - Size on disk: 9.9 GB
       - File count: 103
       - Format: BIDS
 

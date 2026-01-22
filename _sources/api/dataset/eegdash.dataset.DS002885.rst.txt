@@ -7,7 +7,7 @@ eegdash.dataset.DS002885
 
 DBS Phantom Recordings (OpenNeuro ``ds002885``). Access recordings and metadata through EEGDash.
 
-**Citation:** Ahmet Levent Kandemir, Vladimir Litvak, Esther Florin (2020). *DBS Phantom Recordings*. `10.18112/openneuro.ds002885.v1.0.1 <https://doi.org/10.18112/openneuro.ds002885.v1.0.1>`__
+**Citation:** Ahmet Levent Kandemir, Vladimir Litvak, Esther Florin (20). *DBS Phantom Recordings*. `10.18112/openneuro.ds002885.v1.0.1 <https://doi.org/10.18112/openneuro.ds002885.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - DBS Phantom Recordings
    * - Year
-     - 2020
+     - 20
    * - Authors
      - Ahmet Levent Kandemir, Vladimir Litvak, Esther Florin
    * - License
@@ -92,7 +92,7 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 3 (4), 306 (4), 314 (3), 2 (3)
+      - Channels: 306 (4), 3 (4), 2 (3), 314 (3)
       - Sampling rate (Hz): 19200.0 (8), 3000.0 (6)
       - Duration (hours): 0.0
 

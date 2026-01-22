@@ -7,7 +7,7 @@ eegdash.dataset.DS002725
 
 A dataset recording joint EEG-fMRI during affective music listening (OpenNeuro ``ds002725``). Access recordings and metadata through EEGDash.
 
-**Citation:** Ian Daly, Nicoletta Nicolaou, Duncan Williams, Faustina Hwang, Alexis Kirke, Eduardo Miranda, Slawomir J. Nasuto (2020). *A dataset recording joint EEG-fMRI during affective music listening*. `10.18112/openneuro.ds002725.v1.0.0 <https://doi.org/10.18112/openneuro.ds002725.v1.0.0>`__
+**Citation:** Ian Daly, Nicoletta Nicolaou, Duncan Williams, Faustina Hwang, Alexis Kirke, Eduardo Miranda, Slawomir J. Nasuto (2019). *A dataset recording joint EEG-fMRI during affective music listening*. `10.18112/openneuro.ds002725.v1.0.0 <https://doi.org/10.18112/openneuro.ds002725.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - A dataset recording joint EEG-fMRI during affective music listening
    * - Year
-     - 2020
+     - 2019
    * - Authors
      - Ian Daly, Nicoletta Nicolaou, Duncan Williams, Faustina Hwang, Alexis Kirke, Eduardo Miranda, Slawomir J. Nasuto
    * - License
@@ -92,7 +92,7 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 46 (105), 30 (105)
+      - Channels: 30 (105), 46 (105)
       - Sampling rate (Hz): 1000.0
       - Duration (hours): 0.0
 

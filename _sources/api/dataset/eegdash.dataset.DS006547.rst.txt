@@ -7,7 +7,7 @@ eegdash.dataset.DS006547
 
 Visual EEG Study (BrainVision → BIDS) (OpenNeuro ``ds006547``). Access recordings and metadata through EEGDash.
 
-**Citation:** Sanaz Ghaffari, Arian Yavari, Sara Bonyadian, Arsalan Ghofrani, Russell Butler (2025). *Visual EEG Study (BrainVision → BIDS)*. `10.18112/openneuro.ds006547.v1.0.0 <https://doi.org/10.18112/openneuro.ds006547.v1.0.0>`__
+**Citation:** Sanaz Ghaffari, Arian Yavari, Sara Bonyadian, Arsalan Ghofrani, Russell Butler (—). *Visual EEG Study (BrainVision → BIDS)*. `10.18112/openneuro.ds006547.v1.0.0 <https://doi.org/10.18112/openneuro.ds006547.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Visual EEG Study (BrainVision → BIDS)
    * - Year
-     - 2025
+     - —
    * - Authors
      - Sanaz Ghaffari, Arian Yavari, Sara Bonyadian, Arsalan Ghofrani, Russell Butler
    * - License

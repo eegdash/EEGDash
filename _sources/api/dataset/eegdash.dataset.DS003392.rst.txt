@@ -7,7 +7,7 @@ eegdash.dataset.DS003392
 
 NeuroSpin hMT+ Localizer DATA (MEG & aMRI) (OpenNeuro ``ds003392``). Access recordings and metadata through EEGDash.
 
-**Citation:** Nicolas Zilber, Philippe Ciuciu, Alexandre Gramfort, Leila Azizi, Virginie van Wassenhove (2020). *NeuroSpin hMT+ Localizer DATA (MEG & aMRI)*. `10.18112/openneuro.ds003392.v1.0.4 <https://doi.org/10.18112/openneuro.ds003392.v1.0.4>`__
+**Citation:** Nicolas Zilber, Philippe Ciuciu, Alexandre Gramfort, Leila Azizi, Virginie van Wassenhove (2014). *NeuroSpin hMT+ Localizer DATA (MEG & aMRI)*. `10.18112/openneuro.ds003392.v1.0.4 <https://doi.org/10.18112/openneuro.ds003392.v1.0.4>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - NeuroSpin hMT+ Localizer DATA (MEG & aMRI)
    * - Year
-     - 2020
+     - 2014
    * - Authors
      - Nicolas Zilber, Philippe Ciuciu, Alexandre Gramfort, Leila Azizi, Virginie van Wassenhove
    * - License
@@ -143,7 +143,7 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 320 (22), 306 (22)
+      - Channels: 306 (22), 320 (22)
       - Sampling rate (Hz): 2000.0
       - Duration (hours): 0.0
 

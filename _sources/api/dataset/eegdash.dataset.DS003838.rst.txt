@@ -7,7 +7,7 @@ eegdash.dataset.DS003838
 
 EEG, pupillometry, ECG and photoplethysmography, and behavioral data in the digit span task and rest (OpenNeuro ``ds003838``). Access recordings and metadata through EEGDash.
 
-**Citation:** Yuri G. Pavlov, Dauren Kasanov, Alexandra I. Kosachenko, Alexander I. Kotyusov (2021). *EEG, pupillometry, ECG and photoplethysmography, and behavioral data in the digit span task and rest*. `10.18112/openneuro.ds003838.v1.0.6 <https://doi.org/10.18112/openneuro.ds003838.v1.0.6>`__
+**Citation:** Yuri G. Pavlov, Dauren Kasanov, Alexandra I. Kosachenko, Alexander I. Kotyusov (—). *EEG, pupillometry, ECG and photoplethysmography, and behavioral data in the digit span task and rest*. `10.18112/openneuro.ds003838.v1.0.6 <https://doi.org/10.18112/openneuro.ds003838.v1.0.6>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - EEG, pupillometry, ECG and photoplethysmography, and behavioral data in the digit span task and rest
    * - Year
-     - 2021
+     - —
    * - Authors
      - Yuri G. Pavlov, Dauren Kasanov, Alexandra I. Kosachenko, Alexander I. Kotyusov
    * - License
@@ -108,7 +108,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 100.2 GB
+      - Size on disk: 253.3 GB
       - File count: 130
       - Format: BIDS
 

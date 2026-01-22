@@ -7,7 +7,7 @@ eegdash.dataset.DS006945
 
 Structural MRI and fMRI of Participants Performing Kinesthetic Motor Imagery of Walking vs. Standing While Viewing a First‑Person Exoskeleton Video Stimulus (11 Stop‑Walk‑Stop Cycles) (OpenNeuro ``ds006945``). Access recordings and metadata through EEGDash.
 
-**Citation:** Shantanu Sarkar, Kevin Nathan, Jose L. Contreras-Vidal (2025). *Structural MRI and fMRI of Participants Performing Kinesthetic Motor Imagery of Walking vs. Standing While Viewing a First‑Person Exoskeleton Video Stimulus (11 Stop‑Walk‑Stop Cycles)*. `10.18112/openneuro.ds006945.v1.0.0 <https://doi.org/10.18112/openneuro.ds006945.v1.0.0>`__
+**Citation:** Shantanu Sarkar, Kevin Nathan, Jose L. Contreras-Vidal (—). *Structural MRI and fMRI of Participants Performing Kinesthetic Motor Imagery of Walking vs. Standing While Viewing a First‑Person Exoskeleton Video Stimulus (11 Stop‑Walk‑Stop Cycles)*. `10.18112/openneuro.ds006945.v1.0.0 <https://doi.org/10.18112/openneuro.ds006945.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Structural MRI and fMRI of Participants Performing Kinesthetic Motor Imagery of Walking vs. Standing While Viewing a First‑Person Exoskeleton Video Stimulus (11 Stop‑Walk‑Stop Cycles)
    * - Year
-     - 2025
+     - —
    * - Authors
      - Shantanu Sarkar, Kevin Nathan, Jose L. Contreras-Vidal
    * - License
@@ -206,7 +206,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 5.4 GB
+      - Size on disk: 5.7 GB
       - File count: 14
       - Format: BIDS
 

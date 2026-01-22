@@ -7,7 +7,7 @@ eegdash.dataset.DS005289
 
 39 By BP (OpenNeuro ``ds005289``). Access recordings and metadata through EEGDash.
 
-**Citation:** Zhao Xiangyue, Zhou Jingyao, Zhang Libo, Duan Haoqing, Wei Shiyu, Bi Yanzhi, Hu Li (2024). *39 By BP*. `10.18112/openneuro.ds005289.v1.0.0 <https://doi.org/10.18112/openneuro.ds005289.v1.0.0>`__
+**Citation:** Zhao Xiangyue, Zhou Jingyao, Zhang Libo, Duan Haoqing, Wei Shiyu, Bi Yanzhi, Hu Li (—). *39 By BP*. `10.18112/openneuro.ds005289.v1.0.0 <https://doi.org/10.18112/openneuro.ds005289.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - 39 By BP
    * - Year
-     - 2024
+     - —
    * - Authors
      - Zhao Xiangyue, Zhou Jingyao, Zhang Libo, Duan Haoqing, Wei Shiyu, Bi Yanzhi, Hu Li
    * - License
@@ -99,7 +99,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 7.1 GB
+      - Size on disk: 22.1 GB
       - File count: 195
       - Format: BIDS
 

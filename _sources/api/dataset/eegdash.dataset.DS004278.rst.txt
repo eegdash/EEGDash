@@ -7,7 +7,7 @@ eegdash.dataset.DS004278
 
 Sustained Neural Representations of Personally Familiar People and Places During Cued Recall (OpenNeuro ``ds004278``). Access recordings and metadata through EEGDash.
 
-**Citation:** Alexis Kidder(\*), Anna Corriveau(\*), Lina Teichmann, Susan Wardle, Chris Baker, [(\*) = equal contribution] (2022). *Sustained Neural Representations of Personally Familiar People and Places During Cued Recall*. `10.18112/openneuro.ds004278.v1.0.1 <https://doi.org/10.18112/openneuro.ds004278.v1.0.1>`__
+**Citation:** Alexis Kidder(\*), Anna Corriveau(\*), Lina Teichmann, Susan Wardle, Chris Baker, [(\*) = equal contribution] (2019). *Sustained Neural Representations of Personally Familiar People and Places During Cued Recall*. `10.18112/openneuro.ds004278.v1.0.1 <https://doi.org/10.18112/openneuro.ds004278.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Sustained Neural Representations of Personally Familiar People and Places During Cued Recall
    * - Year
-     - 2022
+     - 2019
    * - Authors
      - Alexis Kidder(\*), Anna Corriveau(\*), Lina Teichmann, Susan Wardle, Chris Baker, [(\*) = equal contribution]
    * - License

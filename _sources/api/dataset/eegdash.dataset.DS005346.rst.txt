@@ -7,7 +7,7 @@ eegdash.dataset.DS005346
 
 Naturalistic fMRI and MEG recordings during viewing of a reality TV show (OpenNeuro ``ds005346``). Access recordings and metadata through EEGDash.
 
-**Citation:** Jixing Li, Yike Wang, Chengcheng Wang, Zhengwu Ma (2024). *Naturalistic fMRI and MEG recordings during viewing of a reality TV show*. `10.18112/openneuro.ds005346.v1.0.5 <https://doi.org/10.18112/openneuro.ds005346.v1.0.5>`__
+**Citation:** Jixing Li, Yike Wang, Chengcheng Wang, Zhengwu Ma (20). *Naturalistic fMRI and MEG recordings during viewing of a reality TV show*. `10.18112/openneuro.ds005346.v1.0.5 <https://doi.org/10.18112/openneuro.ds005346.v1.0.5>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Naturalistic fMRI and MEG recordings during viewing of a reality TV show
    * - Year
-     - 2024
+     - 20
    * - Authors
      - Jixing Li, Yike Wang, Chengcheng Wang, Zhengwu Ma
    * - License
@@ -123,7 +123,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 38.9 GB
+      - Size on disk: 112.2 GB
       - File count: 90
       - Format: BIDS
 

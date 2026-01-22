@@ -7,7 +7,7 @@ eegdash.dataset.DS005095
 
 STERNBERG DIFFICULT (OpenNeuro ``ds005095``). Access recordings and metadata through EEGDash.
 
-**Citation:** Natalia Zhozhikashvili, Maria Protopova, Tatiana Shkurenko, Marie Arsalidou, Ilya Zakharov, Boris Kotchoubey, Sergey Malykh, Yuri Pavlov (2024). *STERNBERG DIFFICULT*. `10.18112/openneuro.ds005095.v1.0.1 <https://doi.org/10.18112/openneuro.ds005095.v1.0.1>`__
+**Citation:** Natalia Zhozhikashvili, Maria Protopova, Tatiana Shkurenko, Marie Arsalidou, Ilya Zakharov, Boris Kotchoubey, Sergey Malykh, Yuri Pavlov (19). *STERNBERG DIFFICULT*. `10.18112/openneuro.ds005095.v1.0.1 <https://doi.org/10.18112/openneuro.ds005095.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - STERNBERG DIFFICULT
    * - Year
-     - 2024
+     - 19
    * - Authors
      - Natalia Zhozhikashvili, Maria Protopova, Tatiana Shkurenko, Marie Arsalidou, Ilya Zakharov, Boris Kotchoubey, Sergey Malykh, Yuri Pavlov
    * - License

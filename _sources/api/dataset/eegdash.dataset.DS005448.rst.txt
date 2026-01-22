@@ -7,7 +7,7 @@ eegdash.dataset.DS005448
 
 STReEF (OpenNeuro ``ds005448``). Access recordings and metadata through EEGDash.
 
-**Citation:** Jelsma S.B., Zijlmans M., Heijink I.B., Hoefnagels F.W.A., Raemakers M, Bourez-Swart M.D., Otte W.M, van Blooijs D., van Klink N.E.C. (2024). *STReEF*. `10.18112/openneuro.ds005448.v1.0.0 <https://doi.org/10.18112/openneuro.ds005448.v1.0.0>`__
+**Citation:** Jelsma S.B., Zijlmans M., Heijink I.B., Hoefnagels F.W.A., Raemakers M, Bourez-Swart M.D., Otte W.M, van Blooijs D., van Klink N.E.C. (20). *STReEF*. `10.18112/openneuro.ds005448.v1.0.0 <https://doi.org/10.18112/openneuro.ds005448.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - STReEF
    * - Year
-     - 2024
+     - 20
    * - Authors
      - Jelsma S.B., Zijlmans M., Heijink I.B., Hoefnagels F.W.A., Raemakers M, Bourez-Swart M.D., Otte W.M, van Blooijs D., van Klink N.E.C.
    * - License
@@ -100,7 +100,7 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 133 (28), 109 (4), 161 (2), 95 (2)
+      - Channels: 133 (28), 109 (4), 95 (2), 161 (2)
       - Sampling rate (Hz): 2048.0
       - Duration (hours): 0.0
 

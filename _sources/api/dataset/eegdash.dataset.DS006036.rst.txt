@@ -7,7 +7,7 @@ eegdash.dataset.DS006036
 
 A complementary dataset of open-eyes EEG recordings in a photo-stimulation setting from: Alzheimer's disease, Frontotemporal dementia and Healthy subjects (OpenNeuro ``ds006036``). Access recordings and metadata through EEGDash.
 
-**Citation:** Aimilia Ntetska, Andreas Miltiadous, Alexandros T. Tzallas, Katerina D. Tzimourta, Theodora Afrantou, Panagiotis Ioannidis, Dimitrios G. Tsalikakis, Nikolaos Grigoriadis, Pantelis Angelidis, Konstantinos Sakkas, Emmanouil D. Oikonomou, Nikolaos Giannakeas, Markos G. Tsipouras (2025). *A complementary dataset of open-eyes EEG recordings in a photo-stimulation setting from: Alzheimer's disease, Frontotemporal dementia and Healthy subjects*. `10.18112/openneuro.ds006036.v1.0.5 <https://doi.org/10.18112/openneuro.ds006036.v1.0.5>`__
+**Citation:** Aimilia Ntetska, Andreas Miltiadous, Alexandros T. Tzallas, Katerina D. Tzimourta, Theodora Afrantou, Panagiotis Ioannidis, Dimitrios G. Tsalikakis, Nikolaos Grigoriadis, Pantelis Angelidis, Konstantinos Sakkas, Emmanouil D. Oikonomou, Nikolaos Giannakeas, Markos G. Tsipouras (—). *A complementary dataset of open-eyes EEG recordings in a photo-stimulation setting from: Alzheimer's disease, Frontotemporal dementia and Healthy subjects*. `10.18112/openneuro.ds006036.v1.0.5 <https://doi.org/10.18112/openneuro.ds006036.v1.0.5>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - A complementary dataset of open-eyes EEG recordings in a photo-stimulation setting from: Alzheimer's disease, Frontotemporal dementia and Healthy subjects
    * - Year
-     - 2025
+     - —
    * - Authors
      - Aimilia Ntetska, Andreas Miltiadous, Alexandros T. Tzallas, Katerina D. Tzimourta, Theodora Afrantou, Panagiotis Ioannidis, Dimitrios G. Tsalikakis, Nikolaos Grigoriadis, Pantelis Angelidis, Konstantinos Sakkas, Emmanouil D. Oikonomou, Nikolaos Giannakeas, Markos G. Tsipouras
    * - License
@@ -104,7 +104,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 1.0 GB
+      - Size on disk: 2.1 GB
       - File count: 88
       - Format: BIDS
 

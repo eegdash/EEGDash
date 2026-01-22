@@ -7,7 +7,7 @@ eegdash.dataset.DS005286
 
 30 By ANT (OpenNeuro ``ds005286``). Access recordings and metadata through EEGDash.
 
-**Citation:** Zhao Xiangyue, Zhou Jingyao, Zhang Libo, Duan Haoqing, Wei Shiyu, Bi Yanzhi, Hu Li (2024). *30 By ANT*. `10.18112/openneuro.ds005286.v1.0.0 <https://doi.org/10.18112/openneuro.ds005286.v1.0.0>`__
+**Citation:** Zhao Xiangyue, Zhou Jingyao, Zhang Libo, Duan Haoqing, Wei Shiyu, Bi Yanzhi, Hu Li (—). *30 By ANT*. `10.18112/openneuro.ds005286.v1.0.0 <https://doi.org/10.18112/openneuro.ds005286.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - 30 By ANT
    * - Year
-     - 2024
+     - —
    * - Authors
      - Zhao Xiangyue, Zhou Jingyao, Zhang Libo, Duan Haoqing, Wei Shiyu, Bi Yanzhi, Hu Li
    * - License
@@ -94,7 +94,7 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 32 (58), 56, 33
+      - Channels: 32 (58), 33, 56
       - Sampling rate (Hz): 1000.0
       - Duration (hours): 0.0
 
@@ -108,7 +108,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 9.4 GB
+      - Size on disk: 19.4 GB
       - File count: 30
       - Format: BIDS
 

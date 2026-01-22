@@ -7,7 +7,7 @@ eegdash.dataset.DS004018
 
 EEG recordings for 200 object images presented in RSVP sequences at 5Hz or 20Hz (OpenNeuro ``ds004018``). Access recordings and metadata through EEGDash.
 
-**Citation:** Grootswagers, T., Robinson, A.K., Carlson, T.A. (2022). *EEG recordings for 200 object images presented in RSVP sequences at 5Hz or 20Hz*. `10.18112/openneuro.ds004018.v2.0.0 <https://doi.org/10.18112/openneuro.ds004018.v2.0.0>`__
+**Citation:** Grootswagers, T., Robinson, A.K., Carlson, T.A. (2019). *EEG recordings for 200 object images presented in RSVP sequences at 5Hz or 20Hz*. `10.18112/openneuro.ds004018.v2.0.0 <https://doi.org/10.18112/openneuro.ds004018.v2.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - EEG recordings for 200 object images presented in RSVP sequences at 5Hz or 20Hz
    * - Year
-     - 2022
+     - 2019
    * - Authors
      - Grootswagers, T., Robinson, A.K., Carlson, T.A.
    * - License

@@ -7,7 +7,7 @@ eegdash.dataset.DS005279
 
 Picture-Word Interference Dataset (OpenNeuro ``ds005279``). Access recordings and metadata through EEGDash.
 
-**Citation:** Hsi T. Wei, Farhan B. Faisal, Tamara Beck, Claire Shao, Jed A. Meltzer (2024). *Picture-Word Interference Dataset*. `10.18112/openneuro.ds005279.v1.0.3 <https://doi.org/10.18112/openneuro.ds005279.v1.0.3>`__
+**Citation:** Hsi T. Wei, Farhan B. Faisal, Tamara Beck, Claire Shao, Jed A. Meltzer (—). *Picture-Word Interference Dataset*. `10.18112/openneuro.ds005279.v1.0.3 <https://doi.org/10.18112/openneuro.ds005279.v1.0.3>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Picture-Word Interference Dataset
    * - Year
-     - 2024
+     - —
    * - Authors
      - Hsi T. Wei, Farhan B. Faisal, Tamara Beck, Claire Shao, Jed A. Meltzer
    * - License

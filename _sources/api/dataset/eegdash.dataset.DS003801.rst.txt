@@ -7,7 +7,7 @@ eegdash.dataset.DS003801
 
 Neural Tracking to go (OpenNeuro ``ds003801``). Access recordings and metadata through EEGDash.
 
-**Citation:** Lisa Straetmans, Bjoern Holtze, Stefan Debener, Manuela Jaeger, Bojana Mirkovic (2021). *Neural Tracking to go*. `10.18112/openneuro.ds003801.v1.0.0 <https://doi.org/10.18112/openneuro.ds003801.v1.0.0>`__
+**Citation:** Lisa Straetmans, Bjoern Holtze, Stefan Debener, Manuela Jaeger, Bojana Mirkovic (20). *Neural Tracking to go*. `10.18112/openneuro.ds003801.v1.0.0 <https://doi.org/10.18112/openneuro.ds003801.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Neural Tracking to go
    * - Year
-     - 2021
+     - 20
    * - Authors
      - Lisa Straetmans, Bjoern Holtze, Stefan Debener, Manuela Jaeger, Bojana Mirkovic
    * - License
@@ -102,7 +102,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 216.5 KB
+      - Size on disk: 1.1 GB
       - File count: 20
       - Format: BIDS
 

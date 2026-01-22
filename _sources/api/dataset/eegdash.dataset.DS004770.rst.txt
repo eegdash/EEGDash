@@ -7,7 +7,7 @@ eegdash.dataset.DS004770
 
 iEEG on children during gameplay (OpenNeuro ``ds004770``). Access recordings and metadata through EEGDash.
 
-**Citation:** Riyo Ueda, Kazuki Sakakura, Takumi Mitsuhashi, Masaki Sonoda, Ethan Firestone, Naoto Kuroda, Yu Kitazawa, Hiroshi Uda, Aimee F. Luat, Elizabeth L. Johnson, Noa Ofen, Eishi Asano (2023). *iEEG on children during gameplay*. `10.18112/openneuro.ds004770.v1.0.0 <https://doi.org/10.18112/openneuro.ds004770.v1.0.0>`__
+**Citation:** Riyo Ueda, Kazuki Sakakura, Takumi Mitsuhashi, Masaki Sonoda, Ethan Firestone, Naoto Kuroda, Yu Kitazawa, Hiroshi Uda, Aimee F. Luat, Elizabeth L. Johnson, Noa Ofen, Eishi Asano (—). *iEEG on children during gameplay*. `10.18112/openneuro.ds004770.v1.0.0 <https://doi.org/10.18112/openneuro.ds004770.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - iEEG on children during gameplay
    * - Year
-     - 2023
+     - —
    * - Authors
      - Riyo Ueda, Kazuki Sakakura, Takumi Mitsuhashi, Masaki Sonoda, Ethan Firestone, Naoto Kuroda, Yu Kitazawa, Hiroshi Uda, Aimee F. Luat, Elizabeth L. Johnson, Noa Ofen, Eishi Asano
    * - License
@@ -94,7 +94,7 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 128 (28), 112 (4), 113 (4), 110 (4), 105 (4)
+      - Channels: 128 (28), 105 (4), 113 (4), 110 (4), 112 (4)
       - Sampling rate (Hz): 1000.0
       - Duration (hours): 0.0
 

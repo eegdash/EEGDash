@@ -7,7 +7,7 @@ eegdash.dataset.DS003498
 
 interictal iEEG during slow-wave sleep with HFO markings (OpenNeuro ``ds003498``). Access recordings and metadata through EEGDash.
 
-**Citation:** Fedele T, Krayenbühl N, Hilfiker P, Adam Li, Sarnthein J. (2021). *interictal iEEG during slow-wave sleep with HFO markings*. `10.18112/openneuro.ds003498.v1.0.1 <https://doi.org/10.18112/openneuro.ds003498.v1.0.1>`__
+**Citation:** Fedele T, Krayenbühl N, Hilfiker P, Adam Li, Sarnthein J. (2019). *interictal iEEG during slow-wave sleep with HFO markings*. `10.18112/openneuro.ds003498.v1.0.1 <https://doi.org/10.18112/openneuro.ds003498.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - interictal iEEG during slow-wave sleep with HFO markings
    * - Year
-     - 2021
+     - 2019
    * - Authors
      - Fedele T, Krayenbühl N, Hilfiker P, Adam Li, Sarnthein J.
    * - License
@@ -136,7 +136,7 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 64 (292), 40 (146), 42 (86), 74 (70), 16 (58), 50 (56), 48 (26), 52 (26), 30 (10)
+      - Channels: 64 (292), 40 (146), 42 (86), 74 (70), 16 (58), 50 (56), 52 (26), 48 (26), 30 (10)
       - Sampling rate (Hz): 2000.0
       - Duration (hours): 0.0
 
@@ -150,7 +150,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 44.7 GB
+      - Size on disk: 44.8 GB
       - File count: 385
       - Format: BIDS
 

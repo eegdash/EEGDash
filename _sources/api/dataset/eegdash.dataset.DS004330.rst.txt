@@ -7,7 +7,7 @@ eegdash.dataset.DS004330
 
 The spatiotemporal neural dynamics of object recognition for natural images and line drawings (MEG) (OpenNeuro ``ds004330``). Access recordings and metadata through EEGDash.
 
-**Citation:** Johannes J.D. Singer, Radoslaw M. Cichy, Martin N. Hebart (2022). *The spatiotemporal neural dynamics of object recognition for natural images and line drawings (MEG)*. `10.18112/openneuro.ds004330.v1.0.0 <https://doi.org/10.18112/openneuro.ds004330.v1.0.0>`__
+**Citation:** Johannes J.D. Singer, Radoslaw M. Cichy, Martin N. Hebart (20). *The spatiotemporal neural dynamics of object recognition for natural images and line drawings (MEG)*. `10.18112/openneuro.ds004330.v1.0.0 <https://doi.org/10.18112/openneuro.ds004330.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - The spatiotemporal neural dynamics of object recognition for natural images and line drawings (MEG)
    * - Year
-     - 2022
+     - 20
    * - Authors
      - Johannes J.D. Singer, Radoslaw M. Cichy, Martin N. Hebart
    * - License

@@ -7,7 +7,7 @@ eegdash.dataset.DS004774
 
 Automatic Evoked Response Detection (ER-Detect) dataset (OpenNeuro ``ds004774``). Access recordings and metadata through EEGDash.
 
-**Citation:** M.A. van den Boom, N.M. Gregg, G.O. Valencia, B.N. Lundstrom, K.J. Miller, D. van Blooijs, G.J.M. Huiskamp, F.S.S. Leijten, G.A. Worrell, D. Hermes (2023). *Automatic Evoked Response Detection (ER-Detect) dataset*. `10.18112/openneuro.ds004774.v1.0.0 <https://doi.org/10.18112/openneuro.ds004774.v1.0.0>`__
+**Citation:** M.A. van den Boom, N.M. Gregg, G.O. Valencia, B.N. Lundstrom, K.J. Miller, D. van Blooijs, G.J.M. Huiskamp, F.S.S. Leijten, G.A. Worrell, D. Hermes (—). *Automatic Evoked Response Detection (ER-Detect) dataset*. `10.18112/openneuro.ds004774.v1.0.0 <https://doi.org/10.18112/openneuro.ds004774.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Automatic Evoked Response Detection (ER-Detect) dataset
    * - Year
-     - 2023
+     - —
    * - Authors
      - M.A. van den Boom, N.M. Gregg, G.O. Valencia, B.N. Lundstrom, K.J. Miller, D. van Blooijs, G.J.M. Huiskamp, F.S.S. Leijten, G.A. Worrell, D. Hermes
    * - License
@@ -99,7 +99,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 24.8 GB
+      - Size on disk: 30.2 GB
       - File count: 9
       - Format: BIDS
 

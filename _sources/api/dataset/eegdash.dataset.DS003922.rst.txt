@@ -7,7 +7,7 @@ eegdash.dataset.DS003922
 
 Multisensory Correlation Detector (OpenNeuro ``ds003922``). Access recordings and metadata through EEGDash.
 
-**Citation:** Pesnot Lerousseau, J., Parise, C., Ernst, MO., van Wassenhove, V. (2021). *Multisensory Correlation Detector*. `10.18112/openneuro.ds003922.v1.0.1 <https://doi.org/10.18112/openneuro.ds003922.v1.0.1>`__
+**Citation:** Pesnot Lerousseau, J., Parise, C., Ernst, MO., van Wassenhove, V. (2022). *Multisensory Correlation Detector*. `10.18112/openneuro.ds003922.v1.0.1 <https://doi.org/10.18112/openneuro.ds003922.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Multisensory Correlation Detector
    * - Year
-     - 2021
+     - 2022
    * - Authors
      - Pesnot Lerousseau, J., Parise, C., Ernst, MO., van Wassenhove, V.
    * - License

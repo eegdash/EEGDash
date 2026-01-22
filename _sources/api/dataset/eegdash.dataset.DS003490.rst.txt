@@ -7,7 +7,7 @@ eegdash.dataset.DS003490
 
 EEG: 3-Stim Auditory Oddball and Rest in Parkinson's (OpenNeuro ``ds003490``). Access recordings and metadata through EEGDash.
 
-**Citation:** James F Cavanagh jcavanagh@unm.edu (2021). *EEG: 3-Stim Auditory Oddball and Rest in Parkinson's*. `10.18112/openneuro.ds003490.v1.1.0 <https://doi.org/10.18112/openneuro.ds003490.v1.1.0>`__
+**Citation:** James F Cavanagh jcavanagh@unm.edu (20). *EEG: 3-Stim Auditory Oddball and Rest in Parkinson's*. `10.18112/openneuro.ds003490.v1.1.0 <https://doi.org/10.18112/openneuro.ds003490.v1.1.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - EEG: 3-Stim Auditory Oddball and Rest in Parkinson's
    * - Year
-     - 2021
+     - 20
    * - Authors
      - James F Cavanagh jcavanagh@unm.edu
    * - License
@@ -85,7 +85,7 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 64 (75), 67 (75)
+      - Channels: 67 (75), 64 (75)
       - Sampling rate (Hz): 500.0
       - Duration (hours): 0.0
 

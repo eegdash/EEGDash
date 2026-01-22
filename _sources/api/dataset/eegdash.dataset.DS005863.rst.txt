@@ -7,7 +7,7 @@ eegdash.dataset.DS005863
 
 Cognitive Electrophysiology in Socioeconomic Context in Adulthood (OpenNeuro ``ds005863``). Access recordings and metadata through EEGDash.
 
-**Citation:** Elif Isbell, Amanda N. Peters, Dylan M. Richardson, Nancy E. R. De León (2025). *Cognitive Electrophysiology in Socioeconomic Context in Adulthood*. `10.18112/openneuro.ds005863.v2.0.0 <https://doi.org/10.18112/openneuro.ds005863.v2.0.0>`__
+**Citation:** Elif Isbell, Amanda N. Peters, Dylan M. Richardson, Nancy E. R. De León (2024). *Cognitive Electrophysiology in Socioeconomic Context in Adulthood*. `10.18112/openneuro.ds005863.v2.0.0 <https://doi.org/10.18112/openneuro.ds005863.v2.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Cognitive Electrophysiology in Socioeconomic Context in Adulthood
    * - Year
-     - 2025
+     - 2024
    * - Authors
      - Elif Isbell, Amanda N. Peters, Dylan M. Richardson, Nancy E. R. De León
    * - License

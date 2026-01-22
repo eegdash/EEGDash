@@ -7,7 +7,7 @@ eegdash.dataset.DS004917
 
 Probability Decision-making Task with ambiguity (OpenNeuro ``ds004917``). Access recordings and metadata through EEGDash.
 
-**Citation:** Alejandra Figueroa-Vargas, Gabriela Valdebenito-Oyarzo, María Paz Martínez-Molina, Francisco Zamorano, Pablo Billeke (2024). *Probability Decision-making Task with ambiguity*. `10.18112/openneuro.ds004917.v1.0.1 <https://doi.org/10.18112/openneuro.ds004917.v1.0.1>`__
+**Citation:** Alejandra Figueroa-Vargas, Gabriela Valdebenito-Oyarzo, María Paz Martínez-Molina, Francisco Zamorano, Pablo Billeke (—). *Probability Decision-making Task with ambiguity*. `10.18112/openneuro.ds004917.v1.0.1 <https://doi.org/10.18112/openneuro.ds004917.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Probability Decision-making Task with ambiguity
    * - Year
-     - 2024
+     - —
    * - Authors
      - Alejandra Figueroa-Vargas, Gabriela Valdebenito-Oyarzo, María Paz Martínez-Molina, Francisco Zamorano, Pablo Billeke
    * - License
@@ -92,7 +92,7 @@ Highlights
       :class-card: sd-border-1
 
       - Channels: 66
-      - Sampling rate (Hz): —
+      - Sampling rate (Hz): 5000.0
       - Duration (hours): 0.0
 
    .. grid-item-card:: Tags

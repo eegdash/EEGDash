@@ -7,11 +7,11 @@ eegdash.dataset.DS005964
 
 FRESH Audio Dataset (OpenNeuro ``ds005964``). Access recordings and metadata through EEGDash.
 
-**Citation:** Robert Luke, Maureen Shader, David McAlpine (2025). *FRESH Audio Dataset*. `10.18112/openneuro.ds005964.v1.0.0 <https://doi.org/10.18112/openneuro.ds005964.v1.0.0>`__
+**Citation:** Robert Luke, Maureen Shader, David McAlpine (2019). *FRESH Audio Dataset*. `10.18112/openneuro.ds005964.v1.0.0 <https://doi.org/10.18112/openneuro.ds005964.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: fnirs` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 18` :bdg-secondary:`Recordings: 139`
+:bdg-primary:`Modality: fnirs` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 17` :bdg-secondary:`Recordings: 17`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - FRESH Audio Dataset
    * - Year
-     - 2025
+     - 2019
    * - Authors
      - Robert Luke, Maureen Shader, David McAlpine
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds005964.v1.0.0 <https://doi.org/10.18112/openneuro.ds005964.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds005964>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005964>`__ | `Source URL <https://openneuro.org/datasets/ds005964/versions/1.0.0>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds005964>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005964>`__ | `Source URL <https://openneuro.org/datasets/ds005964>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -71,7 +71,6 @@ Description
 **References**
 
 Appelhoff, S., Sanderson, M., Brooks, T., Vliet, M., Quentin, R., Holdgraf, C., Chaumon, M., Mikulan, E., Tavabi, K., Höchenberger, R., Welke, D., Brunner, C., Rockhill, A., Larson, E., Gramfort, A. and Jas, M. (2019). MNE-BIDS: Organizing electrophysiological data into the BIDS format and facilitating their analysis. Journal of Open Source Software 4: (1896). https://doi.org/10.21105/joss.01896
-
 In preperation
 
 Highlights
@@ -83,15 +82,15 @@ Highlights
    .. grid-item-card:: Subjects & recordings
       :class-card: sd-border-1
 
-      - Subjects: 18
-      - Recordings: 139
+      - Subjects: 17
+      - Recordings: 17
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: —
-      - Sampling rate (Hz): —
+      - Channels: 66
+      - Sampling rate (Hz): 5.208333333333333
       - Duration (hours): 0.0
 
    .. grid-item-card:: Tags
@@ -104,8 +103,8 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: —
-      - File count: 139
+      - Size on disk: 65.6 MB
+      - File count: 17
       - Format: BIDS
 
    .. grid-item-card:: License & citation

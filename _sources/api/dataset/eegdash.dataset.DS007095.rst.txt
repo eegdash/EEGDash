@@ -7,7 +7,7 @@ eegdash.dataset.DS007095
 
 RNS_Epilepsy-iBIDS (OpenNeuro ``ds007095``). Access recordings and metadata through EEGDash.
 
-**Citation:** Chen Feng, Haoqi Ni, Zhoule Zhu, Hongjie Jiang, Zhe Zheng, Wenjie Ming, Shuang Wang, Kedi Xu, Junming Zhu (2025). *RNS_Epilepsy-iBIDS*. `10.18112/openneuro.ds007095.v1.0.0 <https://doi.org/10.18112/openneuro.ds007095.v1.0.0>`__
+**Citation:** Chen Feng, Haoqi Ni, Zhoule Zhu, Hongjie Jiang, Zhe Zheng, Wenjie Ming, Shuang Wang, Kedi Xu, Junming Zhu (—). *RNS_Epilepsy-iBIDS*. `10.18112/openneuro.ds007095.v1.0.0 <https://doi.org/10.18112/openneuro.ds007095.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - RNS_Epilepsy-iBIDS
    * - Year
-     - 2025
+     - —
    * - Authors
      - Chen Feng, Haoqi Ni, Zhoule Zhu, Hongjie Jiang, Zhe Zheng, Wenjie Ming, Shuang Wang, Kedi Xu, Junming Zhu
    * - License
@@ -103,7 +103,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 497.8 MB
+      - Size on disk: 505.5 MB
       - File count: 6019
       - Format: BIDS
 

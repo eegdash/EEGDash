@@ -7,7 +7,7 @@ eegdash.dataset.DS005131
 
 Evoked responses to elevated sounds (OpenNeuro ``ds005131``). Access recordings and metadata through EEGDash.
 
-**Citation:** Ole Bialas, Marc Schoewiesner (2024). *Evoked responses to elevated sounds*. `10.18112/openneuro.ds005131.v1.0.1 <https://doi.org/10.18112/openneuro.ds005131.v1.0.1>`__
+**Citation:** Ole Bialas, Marc Schoewiesner (—). *Evoked responses to elevated sounds*. `10.18112/openneuro.ds005131.v1.0.1 <https://doi.org/10.18112/openneuro.ds005131.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Evoked responses to elevated sounds
    * - Year
-     - 2024
+     - —
    * - Authors
      - Ole Bialas, Marc Schoewiesner
    * - License

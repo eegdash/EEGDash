@@ -7,7 +7,7 @@ eegdash.dataset.DS004120
 
 BCIT Baseline Driving (OpenNeuro ``ds004120``). Access recordings and metadata through EEGDash.
 
-**Citation:** Jonathan Touryan (data and curation), Greg Apker (data), Brent Lance (data), Scott Kerick (data), Anthony Ries (data), Kaleb McDowell (data), Tony Johnson (curation), Kay Robbins (curation) (2022). *BCIT Baseline Driving*. `10.18112/openneuro.ds004120.v1.0.0 <https://doi.org/10.18112/openneuro.ds004120.v1.0.0>`__
+**Citation:** Jonathan Touryan (data and curation), Greg Apker (data), Brent Lance (data), Scott Kerick (data), Anthony Ries (data), Kaleb McDowell (data), Tony Johnson (curation), Kay Robbins (curation) (19). *BCIT Baseline Driving*. `10.18112/openneuro.ds004120.v1.0.0 <https://doi.org/10.18112/openneuro.ds004120.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - BCIT Baseline Driving
    * - Year
-     - 2022
+     - 19
    * - Authors
      - Jonathan Touryan (data and curation), Greg Apker (data), Brent Lance (data), Scott Kerick (data), Anthony Ries (data), Kaleb McDowell (data), Tony Johnson (curation), Kay Robbins (curation)
    * - License
@@ -169,7 +169,7 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 256 (81), 266 (81), 74 (50), 64 (50)
+      - Channels: 266 (81), 256 (81), 64 (50), 74 (50)
       - Sampling rate (Hz): 1024.0 (218), 2048.0 (44)
       - Duration (hours): 0.0
 
@@ -183,7 +183,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 9.0 MB
+      - Size on disk: 302.5 GB
       - File count: 131
       - Format: BIDS
 

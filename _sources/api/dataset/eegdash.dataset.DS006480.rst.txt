@@ -7,7 +7,7 @@ eegdash.dataset.DS006480
 
 Young Adult Resting State and Auditory Oddball Task EEG Data (OpenNeuro ``ds006480``). Access recordings and metadata through EEGDash.
 
-**Citation:** Andy Jeesu Kim, Mara Mather, Santiago Morales, Joshua Senior (2025). *Young Adult Resting State and Auditory Oddball Task EEG Data*. `10.18112/openneuro.ds006480.v1.0.1 <https://doi.org/10.18112/openneuro.ds006480.v1.0.1>`__
+**Citation:** Andy Jeesu Kim, Mara Mather, Santiago Morales, Joshua Senior (2024). *Young Adult Resting State and Auditory Oddball Task EEG Data*. `10.18112/openneuro.ds006480.v1.0.1 <https://doi.org/10.18112/openneuro.ds006480.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Young Adult Resting State and Auditory Oddball Task EEG Data
    * - Year
-     - 2025
+     - 2024
    * - Authors
      - Andy Jeesu Kim, Mara Mather, Santiago Morales, Joshua Senior
    * - License

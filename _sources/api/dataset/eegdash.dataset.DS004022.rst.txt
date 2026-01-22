@@ -7,7 +7,7 @@ eegdash.dataset.DS004022
 
 Multimodal EEG and fNIRS Biosignal Acquisition during Motor Imagery Tasks in Patients with Orthopedic Impairment (OpenNeuro ``ds004022``). Access recordings and metadata through EEGDash.
 
-**Citation:** Seho Lee, Hee Ra Jung, In-Nea Wang, Min-Kyung Jung, Hakseung Kim, Dong-Joo Kim (2022). *Multimodal EEG and fNIRS Biosignal Acquisition during Motor Imagery Tasks in Patients with Orthopedic Impairment*. `10.18112/openneuro.ds004022.v1.0.0 <https://doi.org/10.18112/openneuro.ds004022.v1.0.0>`__
+**Citation:** Seho Lee, Hee Ra Jung, In-Nea Wang, Min-Kyung Jung, Hakseung Kim, Dong-Joo Kim (—). *Multimodal EEG and fNIRS Biosignal Acquisition during Motor Imagery Tasks in Patients with Orthopedic Impairment*. `10.18112/openneuro.ds004022.v1.0.0 <https://doi.org/10.18112/openneuro.ds004022.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Multimodal EEG and fNIRS Biosignal Acquisition during Motor Imagery Tasks in Patients with Orthopedic Impairment
    * - Year
-     - 2022
+     - —
    * - Authors
      - Seho Lee, Hee Ra Jung, In-Nea Wang, Min-Kyung Jung, Hakseung Kim, Dong-Joo Kim
    * - License
@@ -99,7 +99,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 130.5 KB
+      - Size on disk: 635.0 MB
       - File count: 21
       - Format: BIDS
 

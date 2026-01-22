@@ -7,7 +7,7 @@ eegdash.dataset.DS004262
 
 Continuous Feedback Processing (OpenNeuro ``ds004262``). Access recordings and metadata through EEGDash.
 
-**Citation:** Cameron D. Hassall, Yan Yan, Laurence T. Hunt (2022). *Continuous Feedback Processing*. `10.18112/openneuro.ds004262.v1.0.0 <https://doi.org/10.18112/openneuro.ds004262.v1.0.0>`__
+**Citation:** Cameron D. Hassall, Yan Yan, Laurence T. Hunt (—). *Continuous Feedback Processing*. `10.18112/openneuro.ds004262.v1.0.0 <https://doi.org/10.18112/openneuro.ds004262.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Continuous Feedback Processing
    * - Year
-     - 2022
+     - —
    * - Authors
      - Cameron D. Hassall, Yan Yan, Laurence T. Hunt
    * - License

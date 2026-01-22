@@ -7,7 +7,7 @@ eegdash.dataset.DS006923
 
 Dataset of Electroencephalograms of Juvenile Offenders (OpenNeuro ``ds006923``). Access recordings and metadata through EEGDash.
 
-**Citation:** Aura Polo, Elmer León, Mariana Pino-Melgarejo, Julie Viloria-Porto (2025). *Dataset of Electroencephalograms of Juvenile Offenders*. `10.18112/openneuro.ds006923.v1.0.0 <https://doi.org/10.18112/openneuro.ds006923.v1.0.0>`__
+**Citation:** Aura Polo, Elmer León, Mariana Pino-Melgarejo, Julie Viloria-Porto (20). *Dataset of Electroencephalograms of Juvenile Offenders*. `10.18112/openneuro.ds006923.v1.0.0 <https://doi.org/10.18112/openneuro.ds006923.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Dataset of Electroencephalograms of Juvenile Offenders
    * - Year
-     - 2025
+     - 20
    * - Authors
      - Aura Polo, Elmer León, Mariana Pino-Melgarejo, Julie Viloria-Porto
    * - License

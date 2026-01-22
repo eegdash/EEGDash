@@ -7,7 +7,7 @@ eegdash.dataset.DS004117
 
 Sternberg Working Memory (OpenNeuro ``ds004117``). Access recordings and metadata through EEGDash.
 
-**Citation:** Julie Onton (data), Scott Makeig (data and curation), Arnaud Delorme (data and curation), Dung Truong (curation), Kay Robbins (curation) (2022). *Sternberg Working Memory*. `10.18112/openneuro.ds004117.v1.0.1 <https://doi.org/10.18112/openneuro.ds004117.v1.0.1>`__
+**Citation:** Julie Onton (data), Scott Makeig (data and curation), Arnaud Delorme (data and curation), Dung Truong (curation), Kay Robbins (curation) (20). *Sternberg Working Memory*. `10.18112/openneuro.ds004117.v1.0.1 <https://doi.org/10.18112/openneuro.ds004117.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Sternberg Working Memory
    * - Year
-     - 2022
+     - 20
    * - Authors
      - Julie Onton (data), Scott Makeig (data and curation), Arnaud Delorme (data and curation), Dung Truong (curation), Kay Robbins (curation)
    * - License
@@ -169,7 +169,7 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 71 (85), 69 (85)
+      - Channels: 69 (85), 71 (85)
       - Sampling rate (Hz): 250.0 (94), 500.0 (48), 500.059 (22), 1000.0 (6)
       - Duration (hours): 0.0
 
@@ -183,7 +183,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 3.0 MB
+      - Size on disk: 5.8 GB
       - File count: 85
       - Format: BIDS
 

@@ -7,7 +7,7 @@ eegdash.dataset.DS002550
 
 Differential brain mechanisms of selection and maintenance of information during working memory (MEG data) (OpenNeuro ``ds002550``). Access recordings and metadata through EEGDash.
 
-**Citation:** Romain Quentin, Jean-Remi King, Etienne Sallard, Nathan Fishman, Ryan Thompson, Ethan Buch, Leonardo Cohen (2020). *Differential brain mechanisms of selection and maintenance of information during working memory (MEG data)*. `10.18112/openneuro.ds002550.v1.0.1 <https://doi.org/10.18112/openneuro.ds002550.v1.0.1>`__
+**Citation:** Romain Quentin, Jean-Remi King, Etienne Sallard, Nathan Fishman, Ryan Thompson, Ethan Buch, Leonardo Cohen (20). *Differential brain mechanisms of selection and maintenance of information during working memory (MEG data)*. `10.18112/openneuro.ds002550.v1.0.1 <https://doi.org/10.18112/openneuro.ds002550.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Differential brain mechanisms of selection and maintenance of information during working memory (MEG data)
    * - Year
-     - 2020
+     - 20
    * - Authors
      - Romain Quentin, Jean-Remi King, Etienne Sallard, Nathan Fishman, Ryan Thompson, Ethan Buch, Leonardo Cohen
    * - License

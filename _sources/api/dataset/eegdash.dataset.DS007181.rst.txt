@@ -7,7 +7,7 @@ eegdash.dataset.DS007181
 
 Structural MRI, Resting-state fMRI, and PSG/EEG Dataset of Zoster-associated Neuralgia (OpenNeuro ``ds007181``). Access recordings and metadata through EEGDash.
 
-**Citation:** Li Li, Qi Han, Haolei Bai, Xiaolong Zhang, Yong Liu, Chao He (2026). *Structural MRI, Resting-state fMRI, and PSG/EEG Dataset of Zoster-associated Neuralgia*. `10.18112/openneuro.ds007181.v1.0.1 <https://doi.org/10.18112/openneuro.ds007181.v1.0.1>`__
+**Citation:** Li Li, Qi Han, Haolei Bai, Xiaolong Zhang, Yong Liu, Chao He (—). *Structural MRI, Resting-state fMRI, and PSG/EEG Dataset of Zoster-associated Neuralgia*. `10.18112/openneuro.ds007181.v1.0.1 <https://doi.org/10.18112/openneuro.ds007181.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Structural MRI, Resting-state fMRI, and PSG/EEG Dataset of Zoster-associated Neuralgia
    * - Year
-     - 2026
+     - —
    * - Authors
      - Li Li, Qi Han, Haolei Bai, Xiaolong Zhang, Yong Liu, Chao He
    * - License

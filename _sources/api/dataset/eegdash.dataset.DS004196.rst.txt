@@ -7,7 +7,7 @@ eegdash.dataset.DS004196
 
 Bimodal dataset on Inner speech (OpenNeuro ``ds004196``). Access recordings and metadata through EEGDash.
 
-**Citation:** Foteini Liwicki, Vibha Gupta, Rajkumar Saini, Kanjar De, Nosheen Abid, Sumit Rakesh, Scott Wellington, Holly Wilson, Marcus Liwicki, Johan Eriksson (2022). *Bimodal dataset on Inner speech*. `10.18112/openneuro.ds004196.v2.0.2 <https://doi.org/10.18112/openneuro.ds004196.v2.0.2>`__
+**Citation:** Foteini Liwicki, Vibha Gupta, Rajkumar Saini, Kanjar De, Nosheen Abid, Sumit Rakesh, Scott Wellington, Holly Wilson, Marcus Liwicki, Johan Eriksson (—). *Bimodal dataset on Inner speech*. `10.18112/openneuro.ds004196.v2.0.2 <https://doi.org/10.18112/openneuro.ds004196.v2.0.2>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Bimodal dataset on Inner speech
    * - Year
-     - 2022
+     - —
    * - Authors
      - Foteini Liwicki, Vibha Gupta, Rajkumar Saini, Kanjar De, Nosheen Abid, Sumit Rakesh, Scott Wellington, Holly Wilson, Marcus Liwicki, Johan Eriksson
    * - License

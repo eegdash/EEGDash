@@ -7,7 +7,7 @@ eegdash.dataset.DS002761
 
 memoryreplay (OpenNeuro ``ds002761``). Access recordings and metadata through EEGDash.
 
-**Citation:** G. Elliott Wimmer, Yunzhe Liu, Neža Vehar, Timothy E.J. Behrens, Raymond J. Dolan (2020). *memoryreplay*. `10.18112/openneuro.ds002761.v1.1.2 <https://doi.org/10.18112/openneuro.ds002761.v1.1.2>`__
+**Citation:** G. Elliott Wimmer, Yunzhe Liu, Neža Vehar, Timothy E.J. Behrens, Raymond J. Dolan (20). *memoryreplay*. `10.18112/openneuro.ds002761.v1.1.2 <https://doi.org/10.18112/openneuro.ds002761.v1.1.2>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - memoryreplay
    * - Year
-     - 2020
+     - 20
    * - Authors
      - G. Elliott Wimmer, Yunzhe Liu, Neža Vehar, Timothy E.J. Behrens, Raymond J. Dolan
    * - License
@@ -103,7 +103,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 1.7 MB
+      - Size on disk: 204.1 GB
       - File count: 249
       - Format: BIDS
 

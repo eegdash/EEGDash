@@ -7,7 +7,7 @@ eegdash.dataset.DS002721
 
 An EEG dataset recorded during affective music listening (OpenNeuro ``ds002721``). Access recordings and metadata through EEGDash.
 
-**Citation:** Ian Daly, Nicoletta Nicolaou, Duncan Williams, Faustina Hwang, Alexis Kirke, Eduardo Miranda, Slawomir J. Nasuto (2020). *An EEG dataset recorded during affective music listening*. `10.18112/openneuro.ds002721.v1.0.2 <https://doi.org/10.18112/openneuro.ds002721.v1.0.2>`__
+**Citation:** Ian Daly, Nicoletta Nicolaou, Duncan Williams, Faustina Hwang, Alexis Kirke, Eduardo Miranda, Slawomir J. Nasuto (2018). *An EEG dataset recorded during affective music listening*. `10.18112/openneuro.ds002721.v1.0.2 <https://doi.org/10.18112/openneuro.ds002721.v1.0.2>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - An EEG dataset recorded during affective music listening
    * - Year
-     - 2020
+     - 2018
    * - Authors
      - Ian Daly, Nicoletta Nicolaou, Duncan Williams, Faustina Hwang, Alexis Kirke, Eduardo Miranda, Slawomir J. Nasuto
    * - License

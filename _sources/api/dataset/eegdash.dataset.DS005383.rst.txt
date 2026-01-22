@@ -7,7 +7,7 @@ eegdash.dataset.DS005383
 
 TMNRED, A Chinese Language EEG Dataset for Fuzzy Semantic Target Identification in Natural Reading Environments (OpenNeuro ``ds005383``). Access recordings and metadata through EEGDash.
 
-**Citation:** Yanru Bai, Qi Tang, Ran Zhao, Hongxing Liu, Mingkun Guo, Shuming Zhang, Minghan Guo, Junjie Wang, Changjian Wang, Mu Xing, Guangjian Ni, Dong Ming (2024). *TMNRED, A Chinese Language EEG Dataset for Fuzzy Semantic Target Identification in Natural Reading Environments*. `10.18112/openneuro.ds005383.v1.0.0 <https://doi.org/10.18112/openneuro.ds005383.v1.0.0>`__
+**Citation:** Yanru Bai, Qi Tang, Ran Zhao, Hongxing Liu, Mingkun Guo, Shuming Zhang, Minghan Guo, Junjie Wang, Changjian Wang, Mu Xing, Guangjian Ni, Dong Ming (—). *TMNRED, A Chinese Language EEG Dataset for Fuzzy Semantic Target Identification in Natural Reading Environments*. `10.18112/openneuro.ds005383.v1.0.0 <https://doi.org/10.18112/openneuro.ds005383.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - TMNRED, A Chinese Language EEG Dataset for Fuzzy Semantic Target Identification in Natural Reading Environments
    * - Year
-     - 2024
+     - —
    * - Authors
      - Yanru Bai, Qi Tang, Ran Zhao, Hongxing Liu, Mingkun Guo, Shuming Zhang, Minghan Guo, Junjie Wang, Changjian Wang, Mu Xing, Guangjian Ni, Dong Ming
    * - License
@@ -142,7 +142,7 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 31 (240), 30 (240)
+      - Channels: 30 (240), 31 (240)
       - Sampling rate (Hz): 200.0
       - Duration (hours): 0.0
 
@@ -156,7 +156,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 358.2 MB
+      - Size on disk: 17.4 GB
       - File count: 240
       - Format: BIDS
 

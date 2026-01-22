@@ -7,7 +7,7 @@ eegdash.dataset.DS004603
 
 Visual Attribute-Specific Contextual Trajectory Paradigm (OpenNeuro ``ds004603``). Access recordings and metadata through EEGDash.
 
-**Citation:** Benjamin Lowe (ben.lowe@mq.edu.au), Jonathan Robinson (jonathan.robinson@monash.edu), Naohide Yamamoto (naohide.yamamoto@qut.edu.au), Hinze Hogendoorn (hinze.hogendoorn@qut.edu.au), Patrick Johnston (dr.pat.johnston@icloud.com) (2023). *Visual Attribute-Specific Contextual Trajectory Paradigm*. `10.18112/openneuro.ds004603.v1.1.0 <https://doi.org/10.18112/openneuro.ds004603.v1.1.0>`__
+**Citation:** Benjamin Lowe (ben.lowe@mq.edu.au), Jonathan Robinson (jonathan.robinson@monash.edu), Naohide Yamamoto (naohide.yamamoto@qut.edu.au), Hinze Hogendoorn (hinze.hogendoorn@qut.edu.au), Patrick Johnston (dr.pat.johnston@icloud.com) (20). *Visual Attribute-Specific Contextual Trajectory Paradigm*. `10.18112/openneuro.ds004603.v1.1.0 <https://doi.org/10.18112/openneuro.ds004603.v1.1.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Visual Attribute-Specific Contextual Trajectory Paradigm
    * - Year
-     - 2023
+     - 20
    * - Authors
      - Benjamin Lowe (ben.lowe@mq.edu.au), Jonathan Robinson (jonathan.robinson@monash.edu), Naohide Yamamoto (naohide.yamamoto@qut.edu.au), Hinze Hogendoorn (hinze.hogendoorn@qut.edu.au), Patrick Johnston (dr.pat.johnston@icloud.com)
    * - License
@@ -106,7 +106,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 27.4 GB
+      - Size on disk: 39.1 GB
       - File count: 37
       - Format: BIDS
 

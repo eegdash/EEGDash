@@ -7,7 +7,7 @@ eegdash.dataset.DS004477
 
 PES - Pandemic Emergency Scenario (OpenNeuro ``ds004477``). Access recordings and metadata through EEGDash.
 
-**Citation:** Tasos Papastylianou, Rodrigo Ramele, Luca Citi, Caterina Cinel, Riccardo Poli (2023). *PES - Pandemic Emergency Scenario*. `10.18112/openneuro.ds004477.v1.0.2 <https://doi.org/10.18112/openneuro.ds004477.v1.0.2>`__
+**Citation:** Tasos Papastylianou, Rodrigo Ramele, Luca Citi, Caterina Cinel, Riccardo Poli (20). *PES - Pandemic Emergency Scenario*. `10.18112/openneuro.ds004477.v1.0.2 <https://doi.org/10.18112/openneuro.ds004477.v1.0.2>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - PES - Pandemic Emergency Scenario
    * - Year
-     - 2023
+     - 20
    * - Authors
      - Tasos Papastylianou, Rodrigo Ramele, Luca Citi, Caterina Cinel, Riccardo Poli
    * - License
@@ -94,7 +94,7 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 80 (9), 79 (9)
+      - Channels: 79 (9), 80 (9)
       - Sampling rate (Hz): 2048.0
       - Duration (hours): 0.0
 

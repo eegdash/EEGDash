@@ -7,7 +7,7 @@ eegdash.dataset.DS004587
 
 IllusionGameEEG_data (OpenNeuro ``ds004587``). Access recordings and metadata through EEGDash.
 
-**Citation:** Makowski, Dominique, Te, An-Shu, Jiayi, Zhang, Kirk, Stephanie, Ngoi, Zi Liang (2023). *IllusionGameEEG_data*. `10.18112/openneuro.ds004587.v1.0.0 <https://doi.org/10.18112/openneuro.ds004587.v1.0.0>`__
+**Citation:** Makowski, Dominique, Te, An-Shu, Jiayi, Zhang, Kirk, Stephanie, Ngoi, Zi Liang (2014). *IllusionGameEEG_data*. `10.18112/openneuro.ds004587.v1.0.0 <https://doi.org/10.18112/openneuro.ds004587.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - IllusionGameEEG_data
    * - Year
-     - 2023
+     - 2014
    * - Authors
      - Makowski, Dominique, Te, An-Shu, Jiayi, Zhang, Kirk, Stephanie, Ngoi, Zi Liang
    * - License
@@ -136,7 +136,7 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 59 (114), 64 (114)
+      - Channels: 64 (114), 59 (114)
       - Sampling rate (Hz): 10000.0
       - Duration (hours): 0.0
 

@@ -7,7 +7,7 @@ eegdash.dataset.DS003516
 
 EEG: Attended Speaker Paradigm (Own Name in Ignored Stream) (OpenNeuro ``ds003516``). Access recordings and metadata through EEGDash.
 
-**Citation:** Bjoern Holtze, Manuela Jaeger, Stefan Debener, Kamil Adiloglu, Bojana Mirkovic (2021). *EEG: Attended Speaker Paradigm (Own Name in Ignored Stream)*. `10.18112/openneuro.ds003516.v1.1.1 <https://doi.org/10.18112/openneuro.ds003516.v1.1.1>`__
+**Citation:** Bjoern Holtze, Manuela Jaeger, Stefan Debener, Kamil Adiloglu, Bojana Mirkovic (20). *EEG: Attended Speaker Paradigm (Own Name in Ignored Stream)*. `10.18112/openneuro.ds003516.v1.1.1 <https://doi.org/10.18112/openneuro.ds003516.v1.1.1>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - EEG: Attended Speaker Paradigm (Own Name in Ignored Stream)
    * - Year
-     - 2021
+     - 20
    * - Authors
      - Bjoern Holtze, Manuela Jaeger, Stefan Debener, Kamil Adiloglu, Bojana Mirkovic
    * - License
@@ -86,7 +86,7 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 49 (25), 47 (25)
+      - Channels: 47 (25), 49 (25)
       - Sampling rate (Hz): 500.0
       - Duration (hours): 0.0
 
@@ -100,7 +100,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 7.6 GB
+      - Size on disk: 13.5 GB
       - File count: 25
       - Format: BIDS
 

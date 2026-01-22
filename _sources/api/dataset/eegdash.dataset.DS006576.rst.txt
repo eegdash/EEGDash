@@ -7,7 +7,7 @@ eegdash.dataset.DS006576
 
 The role of REM sleep in neural differentiation of memories in the hippocampus (OpenNeuro ``ds006576``). Access recordings and metadata through EEGDash.
 
-**Citation:** Elizabeth A. McDevitt, Ghootae Kim, Nicholas B. Turk-Browne, Kenneth A. Norman (2025). *The role of REM sleep in neural differentiation of memories in the hippocampus*. `10.18112/openneuro.ds006576.v1.0.2 <https://doi.org/10.18112/openneuro.ds006576.v1.0.2>`__
+**Citation:** Elizabeth A. McDevitt, Ghootae Kim, Nicholas B. Turk-Browne, Kenneth A. Norman (2026). *The role of REM sleep in neural differentiation of memories in the hippocampus*. `10.18112/openneuro.ds006576.v1.0.2 <https://doi.org/10.18112/openneuro.ds006576.v1.0.2>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - The role of REM sleep in neural differentiation of memories in the hippocampus
    * - Year
-     - 2025
+     - 2026
    * - Authors
      - Elizabeth A. McDevitt, Ghootae Kim, Nicholas B. Turk-Browne, Kenneth A. Norman
    * - License

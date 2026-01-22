@@ -7,7 +7,7 @@ eegdash.dataset.DS005087
 
 rapid-hemifield-object-eeg (OpenNeuro ``ds005087``). Access recordings and metadata through EEGDash.
 
-**Citation:** Amanda K Robinson, Tijl Grootswagers, Sophia M Shatek, Marlene Behrmann, Thomas A Carlson (2024). *rapid-hemifield-object-eeg*. `10.18112/openneuro.ds005087.v1.0.1 <https://doi.org/10.18112/openneuro.ds005087.v1.0.1>`__
+**Citation:** Amanda K Robinson, Tijl Grootswagers, Sophia M Shatek, Marlene Behrmann, Thomas A Carlson (2025). *rapid-hemifield-object-eeg*. `10.18112/openneuro.ds005087.v1.0.1 <https://doi.org/10.18112/openneuro.ds005087.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - rapid-hemifield-object-eeg
    * - Year
-     - 2024
+     - 2025
    * - Authors
      - Amanda K Robinson, Tijl Grootswagers, Sophia M Shatek, Marlene Behrmann, Thomas A Carlson
    * - License
@@ -100,7 +100,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 12.2 GB
+      - Size on disk: 58.8 GB
       - File count: 60
       - Format: BIDS
 

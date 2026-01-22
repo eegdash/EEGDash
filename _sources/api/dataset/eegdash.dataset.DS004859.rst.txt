@@ -7,7 +7,7 @@ eegdash.dataset.DS004859
 
 iEEG on children during Stroop task (OpenNeuro ``ds004859``). Access recordings and metadata through EEGDash.
 
-**Citation:** Kazuki Sakakura, Eishi Asano (2023). *iEEG on children during Stroop task*. `10.18112/openneuro.ds004859.v1.0.0 <https://doi.org/10.18112/openneuro.ds004859.v1.0.0>`__
+**Citation:** Kazuki Sakakura, Eishi Asano (—). *iEEG on children during Stroop task*. `10.18112/openneuro.ds004859.v1.0.0 <https://doi.org/10.18112/openneuro.ds004859.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - iEEG on children during Stroop task
    * - Year
-     - 2023
+     - —
    * - Authors
      - Kazuki Sakakura, Eishi Asano
    * - License

@@ -7,7 +7,7 @@ eegdash.dataset.DS002723
 
 A dataset recorded during development of an affective brain-computer music interface: testing session (OpenNeuro ``ds002723``). Access recordings and metadata through EEGDash.
 
-**Citation:** Ian Daly, Nicoletta Nicolaou, Duncan Williams, Faustina Hwang, Alexis Kirke, Eduardo Miranda, Slawomir J. Nasuto (2020). *A dataset recorded during development of an affective brain-computer music interface: testing session*. `10.18112/openneuro.ds002723.v1.1.0 <https://doi.org/10.18112/openneuro.ds002723.v1.1.0>`__
+**Citation:** Ian Daly, Nicoletta Nicolaou, Duncan Williams, Faustina Hwang, Alexis Kirke, Eduardo Miranda, Slawomir J. Nasuto (2018). *A dataset recorded during development of an affective brain-computer music interface: testing session*. `10.18112/openneuro.ds002723.v1.1.0 <https://doi.org/10.18112/openneuro.ds002723.v1.1.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - A dataset recorded during development of an affective brain-computer music interface: testing session
    * - Year
-     - 2020
+     - 2018
    * - Authors
      - Ian Daly, Nicoletta Nicolaou, Duncan Williams, Faustina Hwang, Alexis Kirke, Eduardo Miranda, Slawomir J. Nasuto
    * - License
@@ -149,7 +149,7 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 32 (44), 37 (44)
+      - Channels: 37 (44), 32 (44)
       - Sampling rate (Hz): 1000.0
       - Duration (hours): 0.0
 
@@ -163,7 +163,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 180.3 KB
+      - Size on disk: 2.6 GB
       - File count: 44
       - Format: BIDS
 

@@ -7,7 +7,7 @@ eegdash.dataset.DS005385
 
 Resting-state EEG data before and after cognitive activity across the adult lifespan and a 5-year follow-up (OpenNeuro ``ds005385``). Access recordings and metadata through EEGDash.
 
-**Citation:** Edmund Wascher, Daniel Schneider, Patrick D. Gajewski, Stephan Getzmann (2024). *Resting-state EEG data before and after cognitive activity across the adult lifespan and a 5-year follow-up*. `10.18112/openneuro.ds005385.v1.0.3 <https://doi.org/10.18112/openneuro.ds005385.v1.0.3>`__
+**Citation:** Edmund Wascher, Daniel Schneider, Patrick D. Gajewski, Stephan Getzmann (20). *Resting-state EEG data before and after cognitive activity across the adult lifespan and a 5-year follow-up*. `10.18112/openneuro.ds005385.v1.0.3 <https://doi.org/10.18112/openneuro.ds005385.v1.0.3>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Resting-state EEG data before and after cognitive activity across the adult lifespan and a 5-year follow-up
    * - Year
-     - 2024
+     - 20
    * - Authors
      - Edmund Wascher, Daniel Schneider, Patrick D. Gajewski, Stephan Getzmann
    * - License

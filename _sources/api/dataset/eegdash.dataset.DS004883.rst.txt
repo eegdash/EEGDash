@@ -7,7 +7,7 @@ eegdash.dataset.DS004883
 
 Registerd Report of ERN During Three Versions of a Flanker Task (OpenNeuro ``ds004883``). Access recordings and metadata through EEGDash.
 
-**Citation:** Peter E. Clayson, Michael J. Larson (2023). *Registerd Report of ERN During Three Versions of a Flanker Task*. `10.18112/openneuro.ds004883.v1.0.0 <https://doi.org/10.18112/openneuro.ds004883.v1.0.0>`__
+**Citation:** Peter E. Clayson, Michael J. Larson (—). *Registerd Report of ERN During Three Versions of a Flanker Task*. `10.18112/openneuro.ds004883.v1.0.0 <https://doi.org/10.18112/openneuro.ds004883.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Registerd Report of ERN During Three Versions of a Flanker Task
    * - Year
-     - 2023
+     - —
    * - Authors
      - Peter E. Clayson, Michael J. Larson
    * - License
@@ -87,7 +87,7 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 128 (516), 129 (516)
+      - Channels: 129 (516), 128 (516)
       - Sampling rate (Hz): 500.0
       - Duration (hours): 0.0
 

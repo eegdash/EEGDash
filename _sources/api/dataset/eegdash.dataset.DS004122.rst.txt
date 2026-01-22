@@ -7,7 +7,7 @@ eegdash.dataset.DS004122
 
 BCIT Speed Control (OpenNeuro ``ds004122``). Access recordings and metadata through EEGDash.
 
-**Citation:** Jonathan Touryan (data and curation), Greg Apker (data), Brent Lance (data), Scott Kerick (data), Anthony Ries (data), Justin Brooks (data), Kaleb McDowell (data), Tony Johnson (curation), Kay Robbins (curation) (2022). *BCIT Speed Control*. `10.18112/openneuro.ds004122.v1.0.0 <https://doi.org/10.18112/openneuro.ds004122.v1.0.0>`__
+**Citation:** Jonathan Touryan (data and curation), Greg Apker (data), Brent Lance (data), Scott Kerick (data), Anthony Ries (data), Justin Brooks (data), Kaleb McDowell (data), Tony Johnson (curation), Kay Robbins (curation) (20). *BCIT Speed Control*. `10.18112/openneuro.ds004122.v1.0.0 <https://doi.org/10.18112/openneuro.ds004122.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - BCIT Speed Control
    * - Year
-     - 2022
+     - 20
    * - Authors
      - Jonathan Touryan (data and curation), Greg Apker (data), Brent Lance (data), Scott Kerick (data), Anthony Ries (data), Justin Brooks (data), Kaleb McDowell (data), Tony Johnson (curation), Kay Robbins (curation)
    * - License

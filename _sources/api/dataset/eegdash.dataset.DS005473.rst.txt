@@ -7,7 +7,7 @@ eegdash.dataset.DS005473
 
 29 By BP (OpenNeuro ``ds005473``). Access recordings and metadata through EEGDash.
 
-**Citation:** Zhao Xiangyue, Zhou Jingyao, Zhang Libo, Duan Haoqing, Wei Shiyu, Bi Yanzhi, Hu Li (2024). *29 By BP*. `10.18112/openneuro.ds005473.v1.0.0 <https://doi.org/10.18112/openneuro.ds005473.v1.0.0>`__
+**Citation:** Zhao Xiangyue, Zhou Jingyao, Zhang Libo, Duan Haoqing, Wei Shiyu, Bi Yanzhi, Hu Li (—). *29 By BP*. `10.18112/openneuro.ds005473.v1.0.0 <https://doi.org/10.18112/openneuro.ds005473.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - 29 By BP
    * - Year
-     - 2024
+     - —
    * - Authors
      - Zhao Xiangyue, Zhou Jingyao, Zhang Libo, Duan Haoqing, Wei Shiyu, Bi Yanzhi, Hu Li
    * - License
@@ -85,7 +85,7 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 63 (58), 64 (58)
+      - Channels: 64 (58), 63 (58)
       - Sampling rate (Hz): 1000.0
       - Duration (hours): 0.0
 
@@ -99,7 +99,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 6.2 GB
+      - Size on disk: 24.0 GB
       - File count: 58
       - Format: BIDS
 

@@ -7,7 +7,7 @@ eegdash.dataset.DS003190
 
 Assesment of the visual stimuli properties in P300 paradigm (OpenNeuro ``ds003190``). Access recordings and metadata through EEGDash.
 
-**Citation:** Omar Mendoza-Montoya, Javier M. Antelis (2020). *Assesment of the visual stimuli properties in P300 paradigm*. `10.18112/openneuro.ds003190.v1.0.1 <https://doi.org/10.18112/openneuro.ds003190.v1.0.1>`__
+**Citation:** Omar Mendoza-Montoya, Javier M. Antelis (—). *Assesment of the visual stimuli properties in P300 paradigm*. `10.18112/openneuro.ds003190.v1.0.1 <https://doi.org/10.18112/openneuro.ds003190.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Assesment of the visual stimuli properties in P300 paradigm
    * - Year
-     - 2020
+     - —
    * - Authors
      - Omar Mendoza-Montoya, Javier M. Antelis
    * - License
@@ -112,7 +112,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 1.0 GB
+      - Size on disk: 1.3 GB
       - File count: 384
       - Format: BIDS
 

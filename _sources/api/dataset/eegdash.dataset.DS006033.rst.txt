@@ -7,7 +7,7 @@ eegdash.dataset.DS006033
 
 Synchronous EEG and fMRI dataset on inner speech (OpenNeuro ``ds006033``). Access recordings and metadata through EEGDash.
 
-**Citation:** Foteini Simistira Liwicki (2025). *Synchronous EEG and fMRI dataset on inner speech*. `10.18112/openneuro.ds006033.v1.0.1 <https://doi.org/10.18112/openneuro.ds006033.v1.0.1>`__
+**Citation:** Foteini Simistira Liwicki (—). *Synchronous EEG and fMRI dataset on inner speech*. `10.18112/openneuro.ds006033.v1.0.1 <https://doi.org/10.18112/openneuro.ds006033.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Synchronous EEG and fMRI dataset on inner speech
    * - Year
-     - 2025
+     - —
    * - Authors
      - Foteini Simistira Liwicki
    * - License

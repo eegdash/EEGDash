@@ -7,7 +7,7 @@ eegdash.dataset.DS005170
 
 Chisco (OpenNeuro ``ds005170``). Access recordings and metadata through EEGDash.
 
-**Citation:** Zihan Zhang, Yi Zhao, Yu Bao, Xiao Ding (2024). *Chisco*. `10.18112/openneuro.ds005170.v1.1.2 <https://doi.org/10.18112/openneuro.ds005170.v1.1.2>`__
+**Citation:** Zihan Zhang, Yi Zhao, Yu Bao, Xiao Ding (—). *Chisco*. `10.18112/openneuro.ds005170.v1.1.2 <https://doi.org/10.18112/openneuro.ds005170.v1.1.2>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Chisco
    * - Year
-     - 2024
+     - —
    * - Authors
      - Zihan Zhang, Yi Zhao, Yu Bao, Xiao Ding
    * - License
@@ -199,7 +199,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 860.9 KB
+      - Size on disk: 261.8 GB
       - File count: 225
       - Format: BIDS
 

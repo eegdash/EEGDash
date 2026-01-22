@@ -7,7 +7,7 @@ eegdash.dataset.DS004942
 
 SpatialMemory (OpenNeuro ``ds004942``). Access recordings and metadata through EEGDash.
 
-**Citation:** Paul Kieffaber, Makenna McGill (2024). *SpatialMemory*. `10.18112/openneuro.ds004942.v1.0.0 <https://doi.org/10.18112/openneuro.ds004942.v1.0.0>`__
+**Citation:** Paul Kieffaber, Makenna McGill (—). *SpatialMemory*. `10.18112/openneuro.ds004942.v1.0.0 <https://doi.org/10.18112/openneuro.ds004942.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - SpatialMemory
    * - Year
-     - 2024
+     - —
    * - Authors
      - Paul Kieffaber, Makenna McGill
    * - License

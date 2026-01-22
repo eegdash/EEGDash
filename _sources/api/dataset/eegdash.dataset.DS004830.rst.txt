@@ -7,11 +7,11 @@ eegdash.dataset.DS004830
 
 Spatial Attention Decoding using fNIRS During Complex Scene Analysis (OpenNeuro ``ds004830``). Access recordings and metadata through EEGDash.
 
-**Citation:** Matthew Ning, Sudan Duwadi, Meryem A. Yucel, Alexander Von Luhmann, David A. Boas, Kamal Sen (2023). *Spatial Attention Decoding using fNIRS During Complex Scene Analysis*. `10.18112/openneuro.ds004830.v1.0.1 <https://doi.org/10.18112/openneuro.ds004830.v1.0.1>`__
+**Citation:** Matthew Ning, Sudan Duwadi, Meryem A. Yucel, Alexander Von Luhmann, David A. Boas, Kamal Sen (20). *Spatial Attention Decoding using fNIRS During Complex Scene Analysis*. `10.18112/openneuro.ds004830.v1.0.1 <https://doi.org/10.18112/openneuro.ds004830.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: fnirs` :bdg-info:`Tasks: 5` :bdg-secondary:`Subjects: 13` :bdg-secondary:`Recordings: 226`
+:bdg-primary:`Modality: fnirs` :bdg-info:`Tasks: 5` :bdg-secondary:`Subjects: 12` :bdg-secondary:`Recordings: 19`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Spatial Attention Decoding using fNIRS During Complex Scene Analysis
    * - Year
-     - 2023
+     - 20
    * - Authors
      - Matthew Ning, Sudan Duwadi, Meryem A. Yucel, Alexander Von Luhmann, David A. Boas, Kamal Sen
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds004830.v1.0.1 <https://doi.org/10.18112/openneuro.ds004830.v1.0.1>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004830>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004830>`__ | `Source URL <https://openneuro.org/datasets/ds004830/versions/1.0.1>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004830>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004830>`__ | `Source URL <https://openneuro.org/datasets/ds004830>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -68,7 +68,6 @@ Description
 -----------
 
 This dataset comes with published paper which can be found in https://www.frontiersin.org/journals/human-neuroscience/articles/10.3389/fnhum.2024.1329086/full
-
 Please cite the paper if you use this dataset for your publication.
 
 Highlights
@@ -80,15 +79,15 @@ Highlights
    .. grid-item-card:: Subjects & recordings
       :class-card: sd-border-1
 
-      - Subjects: 13
-      - Recordings: 226
+      - Subjects: 12
+      - Recordings: 19
       - Tasks: 5
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: —
-      - Sampling rate (Hz): —
+      - Channels: 72 (16), 84 (3)
+      - Sampling rate (Hz): 50.0 (18), 50.00000000000001
       - Duration (hours): 0.0
 
    .. grid-item-card:: Tags
@@ -101,8 +100,8 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: —
-      - File count: 226
+      - Size on disk: 2.2 GB
+      - File count: 19
       - Format: BIDS
 
    .. grid-item-card:: License & citation

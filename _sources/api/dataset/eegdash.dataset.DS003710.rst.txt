@@ -7,7 +7,7 @@ eegdash.dataset.DS003710
 
 APPLESEED Example Dataset (OpenNeuro ``ds003710``). Access recordings and metadata through EEGDash.
 
-**Citation:** Cabell L. Williams, Meghan H. Puglia (2022). *APPLESEED Example Dataset*. `10.18112/openneuro.ds003710.v1.0.2 <https://doi.org/10.18112/openneuro.ds003710.v1.0.2>`__
+**Citation:** Cabell L. Williams, Meghan H. Puglia (20). *APPLESEED Example Dataset*. `10.18112/openneuro.ds003710.v1.0.2 <https://doi.org/10.18112/openneuro.ds003710.v1.0.2>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - APPLESEED Example Dataset
    * - Year
-     - 2022
+     - 20
    * - Authors
      - Cabell L. Williams, Meghan H. Puglia
    * - License
@@ -103,7 +103,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 621.5 KB
+      - Size on disk: 10.2 GB
       - File count: 48
       - Format: BIDS
 

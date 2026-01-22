@@ -7,7 +7,7 @@ eegdash.dataset.DS004771
 
 EEG/ERP data from a Python Reading Task (OpenNeuro ``ds004771``). Access recordings and metadata through EEGDash.
 
-**Citation:** Chu-Hsuan Kuo, Chantel S. Prat (2023). *EEG/ERP data from a Python Reading Task*. `10.18112/openneuro.ds004771.v1.0.0 <https://doi.org/10.18112/openneuro.ds004771.v1.0.0>`__
+**Citation:** Chu-Hsuan Kuo, Chantel S. Prat (—). *EEG/ERP data from a Python Reading Task*. `10.18112/openneuro.ds004771.v1.0.0 <https://doi.org/10.18112/openneuro.ds004771.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - EEG/ERP data from a Python Reading Task
    * - Year
-     - 2023
+     - —
    * - Authors
      - Chu-Hsuan Kuo, Chantel S. Prat
    * - License

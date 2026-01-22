@@ -7,7 +7,7 @@ eegdash.dataset.DS004703
 
 sEEG Passive listening to natural speech (OpenNeuro ``ds004703``). Access recordings and metadata through EEGDash.
 
-**Citation:** Anna Mai, Stephanie Ries, Sharona Ben-Haim, Jerry Shih, Timothy Gentner (2023). *sEEG Passive listening to natural speech*. `10.18112/openneuro.ds004703.v1.1.0 <https://doi.org/10.18112/openneuro.ds004703.v1.1.0>`__
+**Citation:** Anna Mai, Stephanie Ries, Sharona Ben-Haim, Jerry Shih, Timothy Gentner (20). *sEEG Passive listening to natural speech*. `10.18112/openneuro.ds004703.v1.1.0 <https://doi.org/10.18112/openneuro.ds004703.v1.1.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - sEEG Passive listening to natural speech
    * - Year
-     - 2023
+     - 20
    * - Authors
      - Anna Mai, Stephanie Ries, Sharona Ben-Haim, Jerry Shih, Timothy Gentner
    * - License
@@ -99,7 +99,7 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 148 (8), 277 (4), 279 (4), 276 (4), 280 (2)
+      - Channels: 148 (8), 276 (4), 279 (4), 277 (4), 280 (2)
       - Sampling rate (Hz): 1024.0 (14), 512.0 (8)
       - Duration (hours): 0.0
 
@@ -113,7 +113,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 12.4 GB
+      - Size on disk: 13.2 GB
       - File count: 11
       - Format: BIDS
 

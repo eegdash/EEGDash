@@ -7,7 +7,7 @@ eegdash.dataset.DS004855
 
 FT (OpenNeuro ``ds004855``). Access recordings and metadata through EEGDash.
 
-**Citation:** Tony Johnson, Stephen Gordon, Jon Touryan, Kevin King (2023). *FT*. `10.18112/openneuro.ds004855.v1.0.0 <https://doi.org/10.18112/openneuro.ds004855.v1.0.0>`__
+**Citation:** Tony Johnson, Stephen Gordon, Jon Touryan, Kevin King (—). *FT*. `10.18112/openneuro.ds004855.v1.0.0 <https://doi.org/10.18112/openneuro.ds004855.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - FT
    * - Year
-     - 2023
+     - —
    * - Authors
      - Tony Johnson, Stephen Gordon, Jon Touryan, Kevin King
    * - License
@@ -100,7 +100,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 79.2 MB
+      - Size on disk: 79.3 MB
       - File count: 1
       - Format: BIDS
 

@@ -7,7 +7,7 @@ eegdash.dataset.DS004660
 
 TNO (OpenNeuro ``ds004660``). Access recordings and metadata through EEGDash.
 
-**Citation:** Tony Johnson, Stephen Gordon, Jon Touryan, Kevin King (2023). *TNO*. `10.18112/openneuro.ds004660.v1.0.2 <https://doi.org/10.18112/openneuro.ds004660.v1.0.2>`__
+**Citation:** Tony Johnson, Stephen Gordon, Jon Touryan, Kevin King (—). *TNO*. `10.18112/openneuro.ds004660.v1.0.2 <https://doi.org/10.18112/openneuro.ds004660.v1.0.2>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - TNO
    * - Year
-     - 2023
+     - —
    * - Authors
      - Tony Johnson, Stephen Gordon, Jon Touryan, Kevin King
    * - License
@@ -85,7 +85,7 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 32 (42), 38 (42)
+      - Channels: 38 (42), 32 (42)
       - Sampling rate (Hz): 512.0 (82), 2048.0 (2)
       - Duration (hours): 0.0
 

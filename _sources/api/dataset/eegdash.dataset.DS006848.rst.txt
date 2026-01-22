@@ -7,7 +7,7 @@ eegdash.dataset.DS006848
 
 AlphaDirection1: EEG, ECG, PPG in the resting state and working memory for sequentially and simultaneously presented digits (OpenNeuro ``ds006848``). Access recordings and metadata through EEGDash.
 
-**Citation:** Alexandra I. Kosachenko, Danil I. Syttykov, Dmitry A. Tarasov, Alexander I. Kotyusov, Yuri G. Pavlov (2025). *AlphaDirection1: EEG, ECG, PPG in the resting state and working memory for sequentially and simultaneously presented digits*. `10.18112/openneuro.ds006848.v1.0.0 <https://doi.org/10.18112/openneuro.ds006848.v1.0.0>`__
+**Citation:** Alexandra I. Kosachenko, Danil I. Syttykov, Dmitry A. Tarasov, Alexander I. Kotyusov, Yuri G. Pavlov (20). *AlphaDirection1: EEG, ECG, PPG in the resting state and working memory for sequentially and simultaneously presented digits*. `10.18112/openneuro.ds006848.v1.0.0 <https://doi.org/10.18112/openneuro.ds006848.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - AlphaDirection1: EEG, ECG, PPG in the resting state and working memory for sequentially and simultaneously presented digits
    * - Year
-     - 2025
+     - 20
    * - Authors
      - Alexandra I. Kosachenko, Danil I. Syttykov, Dmitry A. Tarasov, Alexander I. Kotyusov, Yuri G. Pavlov
    * - License
@@ -109,7 +109,7 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 63 (52), 65 (52)
+      - Channels: 65 (52), 63 (52)
       - Sampling rate (Hz): 1000.0
       - Duration (hours): 0.0
 

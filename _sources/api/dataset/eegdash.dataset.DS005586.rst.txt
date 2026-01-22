@@ -7,7 +7,7 @@ eegdash.dataset.DS005586
 
 Electroencephalographic responses to the number of objects in partially occluded and uncovered scenes (OpenNeuro ``ds005586``). Access recordings and metadata through EEGDash.
 
-**Citation:** Cemre Baykan, Alexander C. Schütz (2024). *Electroencephalographic responses to the number of objects in partially occluded and uncovered scenes*. `10.18112/openneuro.ds005586.v2.0.0 <https://doi.org/10.18112/openneuro.ds005586.v2.0.0>`__
+**Citation:** Cemre Baykan, Alexander C. Schütz (—). *Electroencephalographic responses to the number of objects in partially occluded and uncovered scenes*. `10.18112/openneuro.ds005586.v2.0.0 <https://doi.org/10.18112/openneuro.ds005586.v2.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Electroencephalographic responses to the number of objects in partially occluded and uncovered scenes
    * - Year
-     - 2024
+     - —
    * - Authors
      - Cemre Baykan, Alexander C. Schütz
    * - License
@@ -104,7 +104,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 28.3 GB
+      - Size on disk: 28.7 GB
       - File count: 23
       - Format: BIDS
 

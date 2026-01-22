@@ -7,7 +7,7 @@ eegdash.dataset.DS005857
 
 ltpDelayRepFRReadOnly (OpenNeuro ``ds005857``). Access recordings and metadata through EEGDash.
 
-**Citation:** [Adam Broitman], [Michael Kahana] (2025). *ltpDelayRepFRReadOnly*. `10.18112/openneuro.ds005857.v1.0.0 <https://doi.org/10.18112/openneuro.ds005857.v1.0.0>`__
+**Citation:** [Adam Broitman], [Michael Kahana] (2019). *ltpDelayRepFRReadOnly*. `10.18112/openneuro.ds005857.v1.0.0 <https://doi.org/10.18112/openneuro.ds005857.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - ltpDelayRepFRReadOnly
    * - Year
-     - 2025
+     - 2019
    * - Authors
      - [Adam Broitman], [Michael Kahana]
    * - License

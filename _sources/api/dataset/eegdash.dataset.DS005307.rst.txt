@@ -7,7 +7,7 @@ eegdash.dataset.DS005307
 
 Laser-evoked potentials in the human spinal cord and cortex (OpenNeuro ``ds005307``). Access recordings and metadata through EEGDash.
 
-**Citation:** Birgit Nierula, Tilman Stephani, Emma Bailey, Merve Kaptan, Lisa-Marie Pohle, Ulrike Horn, Andre Mouraux, Burkhard Maess, Arno Villringer, Gabriel Curio, Vadim Nikulin, Falk Eippert (2024). *Laser-evoked potentials in the human spinal cord and cortex*. `10.18112/openneuro.ds005307.v1.0.1 <https://doi.org/10.18112/openneuro.ds005307.v1.0.1>`__
+**Citation:** Birgit Nierula, Tilman Stephani, Emma Bailey, Merve Kaptan, Lisa-Marie Pohle, Ulrike Horn, Andre Mouraux, Burkhard Maess, Arno Villringer, Gabriel Curio, Vadim Nikulin, Falk Eippert (2019). *Laser-evoked potentials in the human spinal cord and cortex*. `10.18112/openneuro.ds005307.v1.0.1 <https://doi.org/10.18112/openneuro.ds005307.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Laser-evoked potentials in the human spinal cord and cortex
    * - Year
-     - 2024
+     - 2019
    * - Authors
      - Birgit Nierula, Tilman Stephani, Emma Bailey, Merve Kaptan, Lisa-Marie Pohle, Ulrike Horn, Andre Mouraux, Burkhard Maess, Arno Villringer, Gabriel Curio, Vadim Nikulin, Falk Eippert
    * - License
@@ -89,7 +89,7 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 72 (50), 77 (50), 104 (23), 109 (18), 110 (5)
+      - Channels: 77 (50), 72 (50), 104 (23), 109 (18), 110 (5)
       - Sampling rate (Hz): 10000.0
       - Duration (hours): 0.0
 
@@ -103,7 +103,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 18.1 GB
+      - Size on disk: 18.6 GB
       - File count: 73
       - Format: BIDS
 

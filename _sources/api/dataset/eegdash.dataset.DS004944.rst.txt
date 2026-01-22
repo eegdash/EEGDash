@@ -7,7 +7,7 @@ eegdash.dataset.DS004944
 
 Dataset of BCI2000-compatible intraoperative ECoG with neuromorphic encoding (OpenNeuro ``ds004944``). Access recordings and metadata through EEGDash.
 
-**Citation:** Filippo Costa, Niklaus Krayenbühl, Georgia Ramantani, Ece Boran, Kristina König, Johannes Sarnthein (2024). *Dataset of BCI2000-compatible intraoperative ECoG with neuromorphic encoding*. `10.18112/openneuro.ds004944.v1.1.0 <https://doi.org/10.18112/openneuro.ds004944.v1.1.0>`__
+**Citation:** Filippo Costa, Niklaus Krayenbühl, Georgia Ramantani, Ece Boran, Kristina König, Johannes Sarnthein (20). *Dataset of BCI2000-compatible intraoperative ECoG with neuromorphic encoding*. `10.18112/openneuro.ds004944.v1.1.0 <https://doi.org/10.18112/openneuro.ds004944.v1.1.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Dataset of BCI2000-compatible intraoperative ECoG with neuromorphic encoding
    * - Year
-     - 2024
+     - 20
    * - Authors
      - Filippo Costa, Niklaus Krayenbühl, Georgia Ramantani, Ece Boran, Kristina König, Johannes Sarnthein
    * - License
@@ -179,7 +179,7 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 3 (20), 5 (12), 6 (12), 4 (10), 23 (6), 19 (4), 20 (4), 27 (2), 2 (2), 17 (2), 11 (2), 21 (2), 10 (2), 22 (2), 25 (2), 28 (2), 15 (2)
+      - Channels: 3 (20), 6 (12), 5 (12), 4 (10), 23 (6), 20 (4), 19 (4), 28 (2), 15 (2), 10 (2), 22 (2), 25 (2), 21 (2), 11 (2), 17 (2), 2 (2), 27 (2)
       - Sampling rate (Hz): 2000.0
       - Duration (hours): 0.0
 
@@ -193,7 +193,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 451.1 MB
+      - Size on disk: 2.6 GB
       - File count: 44
       - Format: BIDS
 

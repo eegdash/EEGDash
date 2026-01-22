@@ -7,7 +7,7 @@ eegdash.dataset.DS007172
 
 EEG-Asymmetries Dataset (OpenNeuro ``ds007172``). Access recordings and metadata through EEGDash.
 
-**Citation:** Petunia Reinke, Lisa Deneke, Sebastian Ocklenburg (2026). *EEG-Asymmetries Dataset*. `10.18112/openneuro.ds007172.v1.0.0 <https://doi.org/10.18112/openneuro.ds007172.v1.0.0>`__
+**Citation:** Petunia Reinke, Lisa Deneke, Sebastian Ocklenburg (2019). *EEG-Asymmetries Dataset*. `10.18112/openneuro.ds007172.v1.0.0 <https://doi.org/10.18112/openneuro.ds007172.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - EEG-Asymmetries Dataset
    * - Year
-     - 2026
+     - 2019
    * - Authors
      - Petunia Reinke, Lisa Deneke, Sebastian Ocklenburg
    * - License

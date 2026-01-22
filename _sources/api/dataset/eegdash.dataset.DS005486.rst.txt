@@ -7,7 +7,7 @@ eegdash.dataset.DS005486
 
 PREDICT (OpenNeuro ``ds005486``). Access recordings and metadata through EEGDash.
 
-**Citation:** Nahian S. Chowdhury, Chuan Bi, Andrew J. Furman, Alan KI Chiang, Patrick Skippen, Emily Si, Samantha K Millard, Sarah M. Margerison, Darrah Spies, Michael L. Keaser, Joyce T. Da Silva, Shuo Chen, Siobhan M. Schabrun, David A. Seminowicz (2024). *PREDICT*. `10.18112/openneuro.ds005486.v1.0.1 <https://doi.org/10.18112/openneuro.ds005486.v1.0.1>`__
+**Citation:** Nahian S. Chowdhury, Chuan Bi, Andrew J. Furman, Alan KI Chiang, Patrick Skippen, Emily Si, Samantha K Millard, Sarah M. Margerison, Darrah Spies, Michael L. Keaser, Joyce T. Da Silva, Shuo Chen, Siobhan M. Schabrun, David A. Seminowicz (—). *PREDICT*. `10.18112/openneuro.ds005486.v1.0.1 <https://doi.org/10.18112/openneuro.ds005486.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - PREDICT
    * - Year
-     - 2024
+     - —
    * - Authors
      - Nahian S. Chowdhury, Chuan Bi, Andrew J. Furman, Alan KI Chiang, Patrick Skippen, Emily Si, Samantha K Millard, Sarah M. Margerison, Darrah Spies, Michael L. Keaser, Joyce T. Da Silva, Shuo Chen, Siobhan M. Schabrun, David A. Seminowicz
    * - License
@@ -85,7 +85,7 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: —
+      - Channels: 66
       - Sampling rate (Hz): 5000.0 (798), 25000.0 (92)
       - Duration (hours): 0.0
 

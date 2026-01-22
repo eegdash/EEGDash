@@ -7,7 +7,7 @@ eegdash.dataset.DS006468
 
 MEG-SCANS - A comprehensive magnetoencephalography speech dataset with Stories, Chirps And Noisy Sentences. (OpenNeuro ``ds006468``). Access recordings and metadata through EEGDash.
 
-**Citation:** Till Habersetzer, Bernd T. Meyer (2025). *MEG-SCANS - A comprehensive magnetoencephalography speech dataset with Stories, Chirps And Noisy Sentences.*. `10.18112/openneuro.ds006468.v1.1.2 <https://doi.org/10.18112/openneuro.ds006468.v1.1.2>`__
+**Citation:** Till Habersetzer, Bernd T. Meyer (2019). *MEG-SCANS - A comprehensive magnetoencephalography speech dataset with Stories, Chirps And Noisy Sentences.*. `10.18112/openneuro.ds006468.v1.1.2 <https://doi.org/10.18112/openneuro.ds006468.v1.1.2>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - MEG-SCANS - A comprehensive magnetoencephalography speech dataset with Stories, Chirps And Noisy Sentences.
    * - Year
-     - 2025
+     - 2019
    * - Authors
      - Till Habersetzer, Bernd T. Meyer
    * - License
@@ -93,7 +93,7 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 306 (160), 341 (153), 347 (7), 372 (5), 32 (5)
+      - Channels: 306 (160), 341 (153), 347 (7), 32 (5), 372 (5)
       - Sampling rate (Hz): 1000.0
       - Duration (hours): 0.0
 
@@ -107,7 +107,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 101.2 GB
+      - Size on disk: 204.2 GB
       - File count: 189
       - Format: BIDS
 

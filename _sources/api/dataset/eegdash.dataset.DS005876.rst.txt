@@ -7,7 +7,7 @@ eegdash.dataset.DS005876
 
 Song Familiarity (OpenNeuro ``ds005876``). Access recordings and metadata through EEGDash.
 
-**Citation:** Jared R. Girard, Aaron M. Bishop, Cameron D. Hassall (2025). *Song Familiarity*. `10.18112/openneuro.ds005876.v1.0.1 <https://doi.org/10.18112/openneuro.ds005876.v1.0.1>`__
+**Citation:** Jared R. Girard, Aaron M. Bishop, Cameron D. Hassall (2009). *Song Familiarity*. `10.18112/openneuro.ds005876.v1.0.1 <https://doi.org/10.18112/openneuro.ds005876.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Song Familiarity
    * - Year
-     - 2025
+     - 2009
    * - Authors
      - Jared R. Girard, Aaron M. Bishop, Cameron D. Hassall
    * - License
@@ -104,7 +104,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 7.1 GB
+      - Size on disk: 7.6 GB
       - File count: 29
       - Format: BIDS
 

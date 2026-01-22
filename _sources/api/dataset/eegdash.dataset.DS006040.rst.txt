@@ -7,7 +7,7 @@ eegdash.dataset.DS006040
 
 Sustained Attention Task (gradCPT) Dataset using simultaneous EEG-fMRI and DTI (OpenNeuro ``ds006040``). Access recordings and metadata through EEGDash.
 
-**Citation:** Younghwa Cha, Yeji Lee, Eunhee Ji, SoHyun Han, Sunhyun Min, Hyoungkyu Kim, Minseo Cho, Haesung Lee, Youngjai Park, Joon-Young Moon (2025). *Sustained Attention Task (gradCPT) Dataset using simultaneous EEG-fMRI and DTI*. `10.18112/openneuro.ds006040.v1.0.1 <https://doi.org/10.18112/openneuro.ds006040.v1.0.1>`__
+**Citation:** Younghwa Cha, Yeji Lee, Eunhee Ji, SoHyun Han, Sunhyun Min, Hyoungkyu Kim, Minseo Cho, Haesung Lee, Youngjai Park, Joon-Young Moon (—). *Sustained Attention Task (gradCPT) Dataset using simultaneous EEG-fMRI and DTI*. `10.18112/openneuro.ds006040.v1.0.1 <https://doi.org/10.18112/openneuro.ds006040.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Sustained Attention Task (gradCPT) Dataset using simultaneous EEG-fMRI and DTI
    * - Year
-     - 2025
+     - —
    * - Authors
      - Younghwa Cha, Yeji Lee, Eunhee Ji, SoHyun Han, Sunhyun Min, Hyoungkyu Kim, Minseo Cho, Haesung Lee, Youngjai Park, Joon-Young Moon
    * - License
@@ -100,7 +100,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 172.5 GB
+      - Size on disk: 680.3 GB
       - File count: 392
       - Format: BIDS
 

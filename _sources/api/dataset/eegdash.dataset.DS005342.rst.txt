@@ -7,7 +7,7 @@ eegdash.dataset.DS005342
 
 EEG data offline and online during motor imagery for standing and sitting (OpenNeuro ``ds005342``). Access recordings and metadata through EEGDash.
 
-**Citation:** Nayid Triana-Guzman, Alvaro D Orjuela-Cañon, Andres L Jutinico, Omar Mendoza-Montoya, Javier M Antelis (2024). *EEG data offline and online during motor imagery for standing and sitting*. `10.18112/openneuro.ds005342.v1.0.3 <https://doi.org/10.18112/openneuro.ds005342.v1.0.3>`__
+**Citation:** Nayid Triana-Guzman, Alvaro D Orjuela-Cañon, Andres L Jutinico, Omar Mendoza-Montoya, Javier M Antelis (—). *EEG data offline and online during motor imagery for standing and sitting*. `10.18112/openneuro.ds005342.v1.0.3 <https://doi.org/10.18112/openneuro.ds005342.v1.0.3>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - EEG data offline and online during motor imagery for standing and sitting
    * - Year
-     - 2024
+     - —
    * - Authors
      - Nayid Triana-Guzman, Alvaro D Orjuela-Cañon, Andres L Jutinico, Omar Mendoza-Montoya, Javier M Antelis
    * - License

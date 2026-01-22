@@ -7,7 +7,7 @@ eegdash.dataset.DS003670
 
 Dataset of Concurrent EEG, ECG, and Behavior with Multiple Doses of transcranial Electrical Stimulation - BIDS (OpenNeuro ``ds003670``). Access recordings and metadata through EEGDash.
 
-**Citation:** Nigel Gebodh, Zeinab Esmaeilpour, Abhishek Datta, Marom Bikson (2021). *Dataset of Concurrent EEG, ECG, and Behavior with Multiple Doses of transcranial Electrical Stimulation - BIDS*. `10.18112/openneuro.ds003670.v1.1.0 <https://doi.org/10.18112/openneuro.ds003670.v1.1.0>`__
+**Citation:** Nigel Gebodh, Zeinab Esmaeilpour, Abhishek Datta, Marom Bikson (20). *Dataset of Concurrent EEG, ECG, and Behavior with Multiple Doses of transcranial Electrical Stimulation - BIDS*. `10.18112/openneuro.ds003670.v1.1.0 <https://doi.org/10.18112/openneuro.ds003670.v1.1.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Dataset of Concurrent EEG, ECG, and Behavior with Multiple Doses of transcranial Electrical Stimulation - BIDS
    * - Year
-     - 2021
+     - 20
    * - Authors
      - Nigel Gebodh, Zeinab Esmaeilpour, Abhishek Datta, Marom Bikson
    * - License
@@ -102,7 +102,7 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 35 (62), 32 (62)
+      - Channels: 32 (62), 35 (62)
       - Sampling rate (Hz): 2000.0
       - Duration (hours): 0.0
 
@@ -116,7 +116,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 726.5 KB
+      - Size on disk: 97.5 GB
       - File count: 62
       - Format: BIDS
 

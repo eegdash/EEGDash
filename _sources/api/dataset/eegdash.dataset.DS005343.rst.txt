@@ -7,7 +7,7 @@ eegdash.dataset.DS005343
 
 Gaffrey Lab Infant Microstates and Attention (OpenNeuro ``ds005343``). Access recordings and metadata through EEGDash.
 
-**Citation:** Armen Bagdasarov, Michael S. Gaffrey (2024). *Gaffrey Lab Infant Microstates and Attention*. `10.18112/openneuro.ds005343.v1.0.0 <https://doi.org/10.18112/openneuro.ds005343.v1.0.0>`__
+**Citation:** Armen Bagdasarov, Michael S. Gaffrey (—). *Gaffrey Lab Infant Microstates and Attention*. `10.18112/openneuro.ds005343.v1.0.0 <https://doi.org/10.18112/openneuro.ds005343.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Gaffrey Lab Infant Microstates and Attention
    * - Year
-     - 2024
+     - —
    * - Authors
      - Armen Bagdasarov, Michael S. Gaffrey
    * - License
@@ -99,7 +99,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 22.7 GB
+      - Size on disk: 26.5 GB
       - File count: 43
       - Format: BIDS
 

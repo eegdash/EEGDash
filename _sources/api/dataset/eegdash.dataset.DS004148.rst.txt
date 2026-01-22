@@ -7,7 +7,7 @@ eegdash.dataset.DS004148
 
 A test-retest resting and cognitive state EEG dataset (OpenNeuro ``ds004148``). Access recordings and metadata through EEGDash.
 
-**Citation:** Yulin Wang, Wei Duan, Lihong Ding, Debo Dong, Xu Lei (2022). *A test-retest resting and cognitive state EEG dataset*. `10.18112/openneuro.ds004148.v1.0.0 <https://doi.org/10.18112/openneuro.ds004148.v1.0.0>`__
+**Citation:** Yulin Wang, Wei Duan, Lihong Ding, Debo Dong, Xu Lei (20). *A test-retest resting and cognitive state EEG dataset*. `10.18112/openneuro.ds004148.v1.0.0 <https://doi.org/10.18112/openneuro.ds004148.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - A test-retest resting and cognitive state EEG dataset
    * - Year
-     - 2022
+     - 20
    * - Authors
      - Yulin Wang, Wei Duan, Lihong Ding, Debo Dong, Xu Lei
    * - License
@@ -123,7 +123,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 30.7 GB
+      - Size on disk: 93.2 GB
       - File count: 900
       - Format: BIDS
 

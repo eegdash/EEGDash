@@ -7,7 +7,7 @@ eegdash.dataset.DS005811
 
 NOD-EEG (OpenNeuro ``ds005811``). Access recordings and metadata through EEGDash.
 
-**Citation:** Guohao Zhang, Ming Zhou, Shaohua Tang, Shuyi Zhen, Zheng Li, Zonglei Zhen (2025). *NOD-EEG*. `10.18112/openneuro.ds005811.v1.0.8 <https://doi.org/10.18112/openneuro.ds005811.v1.0.8>`__
+**Citation:** Guohao Zhang, Ming Zhou, Shaohua Tang, Shuyi Zhen, Zheng Li, Zonglei Zhen (—). *NOD-EEG*. `10.18112/openneuro.ds005811.v1.0.8 <https://doi.org/10.18112/openneuro.ds005811.v1.0.8>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - NOD-EEG
    * - Year
-     - 2025
+     - —
    * - Authors
      - Guohao Zhang, Ming Zhou, Shaohua Tang, Shuyi Zhen, Zheng Li, Zonglei Zhen
    * - License
@@ -147,7 +147,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 14.1 GB
+      - Size on disk: 24.2 GB
       - File count: 448
       - Format: BIDS
 

@@ -7,7 +7,7 @@ eegdash.dataset.DS003885
 
 Capacity for movement is an organisational principle in object representations: EEG data from Experiment 1 (OpenNeuro ``ds003885``). Access recordings and metadata through EEGDash.
 
-**Citation:** Shatek, Sophia M., Robinson, Amanda K., Grootswagers, Tijl, Carlson, Thomas A. (2021). *Capacity for movement is an organisational principle in object representations: EEG data from Experiment 1*. `10.18112/openneuro.ds003885.v1.0.7 <https://doi.org/10.18112/openneuro.ds003885.v1.0.7>`__
+**Citation:** Shatek, Sophia M., Robinson, Amanda K., Grootswagers, Tijl, Carlson, Thomas A. (—). *Capacity for movement is an organisational principle in object representations: EEG data from Experiment 1*. `10.18112/openneuro.ds003885.v1.0.7 <https://doi.org/10.18112/openneuro.ds003885.v1.0.7>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Capacity for movement is an organisational principle in object representations: EEG data from Experiment 1
    * - Year
-     - 2021
+     - —
    * - Authors
      - Shatek, Sophia M., Robinson, Amanda K., Grootswagers, Tijl, Carlson, Thomas A.
    * - License
@@ -144,7 +144,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 46.1 GB
+      - Size on disk: 82.2 GB
       - File count: 24
       - Format: BIDS
 

@@ -7,7 +7,7 @@ eegdash.dataset.DS005509
 
 Healthy Brain Network (HBN) EEG - Release 5 (OpenNeuro ``ds005509``). Access recordings and metadata through EEGDash.
 
-**Citation:** Seyed Yahya Shirazi, Alexandre Franco, Maurício Scopel Hoffmann, Nathalia B. Esper, Dung Truong, Arnaud Delorme, Michael Milham, Scott Makeig (2024). *Healthy Brain Network (HBN) EEG - Release 5*. `10.18112/openneuro.ds005509.v1.0.1 <https://doi.org/10.18112/openneuro.ds005509.v1.0.1>`__
+**Citation:** Seyed Yahya Shirazi, Alexandre Franco, Maurício Scopel Hoffmann, Nathalia B. Esper, Dung Truong, Arnaud Delorme, Michael Milham, Scott Makeig (20). *Healthy Brain Network (HBN) EEG - Release 5*. `10.18112/openneuro.ds005509.v1.0.1 <https://doi.org/10.18112/openneuro.ds005509.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Healthy Brain Network (HBN) EEG - Release 5
    * - Year
-     - 2024
+     - 20
    * - Authors
      - Seyed Yahya Shirazi, Alexandre Franco, Maurício Scopel Hoffmann, Nathalia B. Esper, Dung Truong, Arnaud Delorme, Michael Milham, Scott Makeig
    * - License

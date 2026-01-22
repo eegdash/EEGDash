@@ -7,7 +7,7 @@ eegdash.dataset.DS002001
 
 Rivalry_Tagging (OpenNeuro ``ds002001``). Access recordings and metadata through EEGDash.
 
-**Citation:** Janine Mendola, Elizabeth Bock (2019). *Rivalry_Tagging*. `10.18112/openneuro.ds002001.v1.0.0 <https://doi.org/10.18112/openneuro.ds002001.v1.0.0>`__
+**Citation:** Janine Mendola, Elizabeth Bock (—). *Rivalry_Tagging*. `10.18112/openneuro.ds002001.v1.0.0 <https://doi.org/10.18112/openneuro.ds002001.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Rivalry_Tagging
    * - Year
-     - 2019
+     - —
    * - Authors
      - Janine Mendola, Elizabeth Bock
    * - License

@@ -7,7 +7,7 @@ eegdash.dataset.DS004152
 
 Drum Trainer (OpenNeuro ``ds004152``). Access recordings and metadata through EEGDash.
 
-**Citation:** Cameron D. Hassall, Yan Yan, Laurence T. Hunt (2022). *Drum Trainer*. `10.18112/openneuro.ds004152.v1.1.2 <https://doi.org/10.18112/openneuro.ds004152.v1.1.2>`__
+**Citation:** Cameron D. Hassall, Yan Yan, Laurence T. Hunt (—). *Drum Trainer*. `10.18112/openneuro.ds004152.v1.1.2 <https://doi.org/10.18112/openneuro.ds004152.v1.1.2>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Drum Trainer
    * - Year
-     - 2022
+     - —
    * - Authors
      - Cameron D. Hassall, Yan Yan, Laurence T. Hunt
    * - License

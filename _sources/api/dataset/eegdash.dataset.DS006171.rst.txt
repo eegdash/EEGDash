@@ -7,7 +7,7 @@ eegdash.dataset.DS006171
 
 EEG data during three near-threshold visual detection tasks: a no-cue task, a noninformative cue task (50% validity), and an informative cue task (100% validity) (OpenNeuro ``ds006171``). Access recordings and metadata through EEGDash.
 
-**Citation:** María Melcón, Enrique Stern, Lydia Arana, Almudena Capilla (2025). *EEG data during three near-threshold visual detection tasks: a no-cue task, a noninformative cue task (50% validity), and an informative cue task (100% validity)*. `10.18112/openneuro.ds006171.v1.0.0 <https://doi.org/10.18112/openneuro.ds006171.v1.0.0>`__
+**Citation:** María Melcón, Enrique Stern, Lydia Arana, Almudena Capilla (—). *EEG data during three near-threshold visual detection tasks: a no-cue task, a noninformative cue task (50% validity), and an informative cue task (100% validity)*. `10.18112/openneuro.ds006171.v1.0.0 <https://doi.org/10.18112/openneuro.ds006171.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - EEG data during three near-threshold visual detection tasks: a no-cue task, a noninformative cue task (50% validity), and an informative cue task (100% validity)
    * - Year
-     - 2025
+     - —
    * - Authors
      - María Melcón, Enrique Stern, Lydia Arana, Almudena Capilla
    * - License
@@ -85,7 +85,7 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 128 (104), 144 (104)
+      - Channels: 144 (104), 128 (104)
       - Sampling rate (Hz): 1024.0
       - Duration (hours): 0.0
 

@@ -7,7 +7,7 @@ eegdash.dataset.DS004718
 
 Le Petit Prince Hong Kong: Naturalistic fMRI and EEG dataset from older Cantonese speakers (OpenNeuro ``ds004718``). Access recordings and metadata through EEGDash.
 
-**Citation:** Mohammad Momenian, Zhengwu Ma, Shuyi Wu, Chengcheng Wang, Jixing Li (2023). *Le Petit Prince Hong Kong: Naturalistic fMRI and EEG dataset from older Cantonese speakers*. `10.18112/openneuro.ds004718.v1.1.2 <https://doi.org/10.18112/openneuro.ds004718.v1.1.2>`__
+**Citation:** Mohammad Momenian, Zhengwu Ma, Shuyi Wu, Chengcheng Wang, Jixing Li (20). *Le Petit Prince Hong Kong: Naturalistic fMRI and EEG dataset from older Cantonese speakers*. `10.18112/openneuro.ds004718.v1.1.2 <https://doi.org/10.18112/openneuro.ds004718.v1.1.2>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Le Petit Prince Hong Kong: Naturalistic fMRI and EEG dataset from older Cantonese speakers
    * - Year
-     - 2023
+     - 20
    * - Authors
      - Mohammad Momenian, Zhengwu Ma, Shuyi Wu, Chengcheng Wang, Jixing Li
    * - License
@@ -268,7 +268,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 37.0 GB
+      - Size on disk: 109.0 GB
       - File count: 51
       - Format: BIDS
 

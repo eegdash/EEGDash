@@ -7,7 +7,7 @@ eegdash.dataset.DS005028
 
 Comparing P300 Flashing paradigms in online typing with language models (OpenNeuro ``ds005028``). Access recordings and metadata through EEGDash.
 
-**Citation:** Nand Chandravadia, Shrita Pendekanti, Dustin Roberts, Robert Tran, Saarang Panchavati, Corey Arnold, Nader Pouratian, William Speier (2024). *Comparing P300 Flashing paradigms in online typing with language models*. `10.18112/openneuro.ds005028.v1.0.0 <https://doi.org/10.18112/openneuro.ds005028.v1.0.0>`__
+**Citation:** Nand Chandravadia, Shrita Pendekanti, Dustin Roberts, Robert Tran, Saarang Panchavati, Corey Arnold, Nader Pouratian, William Speier (20). *Comparing P300 Flashing paradigms in online typing with language models*. `10.18112/openneuro.ds005028.v1.0.0 <https://doi.org/10.18112/openneuro.ds005028.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Comparing P300 Flashing paradigms in online typing with language models
    * - Year
-     - 2024
+     - 20
    * - Authors
      - Nand Chandravadia, Shrita Pendekanti, Dustin Roberts, Robert Tran, Saarang Panchavati, Corey Arnold, Nader Pouratian, William Speier
    * - License
@@ -102,7 +102,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 422.1 MB
+      - Size on disk: 1.5 GB
       - File count: 105
       - Format: BIDS
 

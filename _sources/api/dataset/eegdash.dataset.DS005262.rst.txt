@@ -7,7 +7,7 @@ eegdash.dataset.DS005262
 
 ArEEG: Arabic Inner Speech EEG dataset (OpenNeuro ``ds005262``). Access recordings and metadata through EEGDash.
 
-**Citation:** Donia Metwalli, Eslam Ahmed, Antony Emil, Yousef A. Radwan, Mariam Barakat, Anas Ahmed, Amro Omar, Sahar Selim (2024). *ArEEG: Arabic Inner Speech EEG dataset*. `10.18112/openneuro.ds005262.v1.0.1 <https://doi.org/10.18112/openneuro.ds005262.v1.0.1>`__
+**Citation:** Donia Metwalli, Eslam Ahmed, Antony Emil, Yousef A. Radwan, Mariam Barakat, Anas Ahmed, Amro Omar, Sahar Selim (—). *ArEEG: Arabic Inner Speech EEG dataset*. `10.18112/openneuro.ds005262.v1.0.1 <https://doi.org/10.18112/openneuro.ds005262.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - ArEEG: Arabic Inner Speech EEG dataset
    * - Year
-     - 2024
+     - —
    * - Authors
      - Donia Metwalli, Eslam Ahmed, Antony Emil, Yousef A. Radwan, Mariam Barakat, Anas Ahmed, Amro Omar, Sahar Selim
    * - License
@@ -89,8 +89,8 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: —
-      - Sampling rate (Hz): —
+      - Channels: 8
+      - Sampling rate (Hz): 250.0
       - Duration (hours): 0.0
 
    .. grid-item-card:: Tags
@@ -103,7 +103,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 688.8 MB
+      - Size on disk: 689.0 MB
       - File count: 186
       - Format: BIDS
 

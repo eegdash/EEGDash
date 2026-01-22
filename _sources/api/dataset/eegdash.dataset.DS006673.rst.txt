@@ -7,11 +7,11 @@ eegdash.dataset.DS006673
 
 ball_squeeze_Carlton_2025 (OpenNeuro ``ds006673``). Access recordings and metadata through EEGDash.
 
-**Citation:** Laura B. Carlton, Miray Altinkaynak, Shannon Kelley, Bernhard Zimmerman, Sreekanth Kura, Eike Middell, Alexander von Luhmann, Meryem A. Yucel, David A. Boas (2025). *ball_squeeze_Carlton_2025*. `10.18112/openneuro.ds006673.v1.0.2 <https://doi.org/10.18112/openneuro.ds006673.v1.0.2>`__
+**Citation:** Laura B. Carlton, Miray Altinkaynak, Shannon Kelley, Bernhard Zimmerman, Sreekanth Kura, Eike Middell, Alexander von Luhmann, Meryem A. Yucel, David A. Boas (—). *ball_squeeze_Carlton_2025*. `10.18112/openneuro.ds006673.v1.0.2 <https://doi.org/10.18112/openneuro.ds006673.v1.0.2>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: fnirs` :bdg-info:`Tasks: 2` :bdg-secondary:`Subjects: 18` :bdg-secondary:`Recordings: 1556`
+:bdg-primary:`Modality: fnirs` :bdg-info:`Tasks: 2` :bdg-secondary:`Subjects: 17` :bdg-secondary:`Recordings: 67`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - ball_squeeze_Carlton_2025
    * - Year
-     - 2025
+     - —
    * - Authors
      - Laura B. Carlton, Miray Altinkaynak, Shannon Kelley, Bernhard Zimmerman, Sreekanth Kura, Eike Middell, Alexander von Luhmann, Meryem A. Yucel, David A. Boas
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds006673.v1.0.2 <https://doi.org/10.18112/openneuro.ds006673.v1.0.2>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds006673>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006673>`__ | `Source URL <https://openneuro.org/datasets/ds006673/versions/1.0.2>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds006673>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006673>`__ | `Source URL <https://openneuro.org/datasets/ds006673>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -78,14 +78,14 @@ Highlights
    .. grid-item-card:: Subjects & recordings
       :class-card: sd-border-1
 
-      - Subjects: 18
-      - Recordings: 1556
+      - Subjects: 17
+      - Recordings: 67
       - Tasks: 2
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: —
+      - Channels: 2440 (52), 1134 (15)
       - Sampling rate (Hz): —
       - Duration (hours): 0.0
 
@@ -99,8 +99,8 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: —
-      - File count: 1556
+      - Size on disk: 20.7 GB
+      - File count: 67
       - Format: BIDS
 
    .. grid-item-card:: License & citation

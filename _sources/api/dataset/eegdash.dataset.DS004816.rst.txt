@@ -7,7 +7,7 @@ eegdash.dataset.DS004816
 
 EEG-attention-rsvp-exp1 (OpenNeuro ``ds004816``). Access recordings and metadata through EEGDash.
 
-**Citation:** Grootswagers, Tijl, Robinson, Amanda, Shatek, Sofia, Carlson, Thomas (2023). *EEG-attention-rsvp-exp1*. `10.18112/openneuro.ds004816.v1.0.0 <https://doi.org/10.18112/openneuro.ds004816.v1.0.0>`__
+**Citation:** Grootswagers, Tijl, Robinson, Amanda, Shatek, Sofia, Carlson, Thomas (2021). *EEG-attention-rsvp-exp1*. `10.18112/openneuro.ds004816.v1.0.0 <https://doi.org/10.18112/openneuro.ds004816.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - EEG-attention-rsvp-exp1
    * - Year
-     - 2023
+     - 2021
    * - Authors
      - Grootswagers, Tijl, Robinson, Amanda, Shatek, Sofia, Carlson, Thomas
    * - License
@@ -101,7 +101,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 9.1 GB
+      - Size on disk: 23.3 GB
       - File count: 20
       - Format: BIDS
 

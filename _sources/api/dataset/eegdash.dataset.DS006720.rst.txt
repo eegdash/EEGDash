@@ -7,7 +7,7 @@ eegdash.dataset.DS006720
 
 Alpha power indexes working memory load for durations (OpenNeuro ``ds006720``). Access recordings and metadata through EEGDash.
 
-**Citation:** Sophie K. Herbst [1], Izem Mangione [1], Charbel-Raphaël Segerie [2], Richard Höchenberger [2], Tadeusz Kononowicz [1, 3, 4], Alexandre Gramfort [2], Virginie van Wassenhove [1], [1] Cognitive Neuroimaging Unit, INSERM, CEA, Université Paris-Saclay, NeuroSpin, 91191 Gif/Yvette, France [2] Inria, CEA, Université Paris-Saclay, Palaiseau, France [3] Institute of Psychology, The Polish Academy of Sciences, ul. Jaracza 1, 00-378 Warsaw, Poland [4] Institut NeuroPSI - UMR9197 CNRS Université Paris-Saclay (2025). *Alpha power indexes working memory load for durations*. `10.18112/openneuro.ds006720.v1.0.0 <https://doi.org/10.18112/openneuro.ds006720.v1.0.0>`__
+**Citation:** Sophie K. Herbst [1], Izem Mangione [1], Charbel-Raphaël Segerie [2], Richard Höchenberger [2], Tadeusz Kononowicz [1, 3, 4], Alexandre Gramfort [2], Virginie van Wassenhove [1], [1] Cognitive Neuroimaging Unit, INSERM, CEA, Université Paris-Saclay, NeuroSpin, 91191 Gif/Yvette, France [2] Inria, CEA, Université Paris-Saclay, Palaiseau, France [3] Institute of Psychology, The Polish Academy of Sciences, ul. Jaracza 1, 00-378 Warsaw, Poland [4] Institut NeuroPSI - UMR9197 CNRS Université Paris-Saclay (2019). *Alpha power indexes working memory load for durations*. `10.18112/openneuro.ds006720.v1.0.0 <https://doi.org/10.18112/openneuro.ds006720.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Alpha power indexes working memory load for durations
    * - Year
-     - 2025
+     - 2019
    * - Authors
      - Sophie K. Herbst [1], Izem Mangione [1], Charbel-Raphaël Segerie [2], Richard Höchenberger [2], Tadeusz Kononowicz [1, 3, 4], Alexandre Gramfort [2], Virginie van Wassenhove [1], [1] Cognitive Neuroimaging Unit, INSERM, CEA, Université Paris-Saclay, NeuroSpin, 91191 Gif/Yvette, France [2] Inria, CEA, Université Paris-Saclay, Palaiseau, France [3] Institute of Psychology, The Polish Academy of Sciences, ul. Jaracza 1, 00-378 Warsaw, Poland [4] Institut NeuroPSI - UMR9197 CNRS Université Paris-Saclay
    * - License
@@ -94,7 +94,7 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 306 (222), 328 (209), 321 (11), 340 (2), 390, 61
+      - Channels: 306 (222), 328 (209), 321 (11), 340 (2), 61, 390
       - Sampling rate (Hz): 1000.0 (444), 2000.0 (2)
       - Duration (hours): 0.0
 

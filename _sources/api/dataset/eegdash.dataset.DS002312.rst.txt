@@ -7,7 +7,7 @@ eegdash.dataset.DS002312
 
 OcularLDT (OpenNeuro ``ds002312``). Access recordings and metadata through EEGDash.
 
-**Citation:** Teon L Brooks, Laura Gwilliams, Alexandre Gramfort, Alec Marantz (2019). *OcularLDT*. `10.18112/openneuro.ds002312.v1.0.0 <https://doi.org/10.18112/openneuro.ds002312.v1.0.0>`__
+**Citation:** Teon L Brooks, Laura Gwilliams, Alexandre Gramfort, Alec Marantz (—). *OcularLDT*. `10.18112/openneuro.ds002312.v1.0.0 <https://doi.org/10.18112/openneuro.ds002312.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - OcularLDT
    * - Year
-     - 2019
+     - —
    * - Authors
      - Teon L Brooks, Laura Gwilliams, Alexandre Gramfort, Alec Marantz
    * - License
@@ -99,7 +99,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 34.1 GB
+      - Size on disk: 35.0 GB
       - File count: 23
       - Format: BIDS
 

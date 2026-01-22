@@ -7,7 +7,7 @@ eegdash.dataset.DS006817
 
 Visual Attribute-Specific Contextual Trajectory Paradigm 2.0 (OpenNeuro ``ds006817``). Access recordings and metadata through EEGDash.
 
-**Citation:** Benjamin Lowe (ben.lowe@mq.edu.au), Naohide Yamamoto (naohide.yamamoto@qut.edu.au), Jonathan Robinson (jonathan.robinson@monash.edu), Patrick Johnston (dr.pat.johnston@icloud.com) (2025). *Visual Attribute-Specific Contextual Trajectory Paradigm 2.0*. `10.18112/openneuro.ds006817.v1.0.0 <https://doi.org/10.18112/openneuro.ds006817.v1.0.0>`__
+**Citation:** Benjamin Lowe (ben.lowe@mq.edu.au), Naohide Yamamoto (naohide.yamamoto@qut.edu.au), Jonathan Robinson (jonathan.robinson@monash.edu), Patrick Johnston (dr.pat.johnston@icloud.com) (20). *Visual Attribute-Specific Contextual Trajectory Paradigm 2.0*. `10.18112/openneuro.ds006817.v1.0.0 <https://doi.org/10.18112/openneuro.ds006817.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Visual Attribute-Specific Contextual Trajectory Paradigm 2.0
    * - Year
-     - 2025
+     - 20
    * - Authors
      - Benjamin Lowe (ben.lowe@mq.edu.au), Naohide Yamamoto (naohide.yamamoto@qut.edu.au), Jonathan Robinson (jonathan.robinson@monash.edu), Patrick Johnston (dr.pat.johnston@icloud.com)
    * - License
@@ -86,8 +86,8 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: —
-      - Sampling rate (Hz): —
+      - Channels: 65
+      - Sampling rate (Hz): 1024.0
       - Duration (hours): 0.0
 
    .. grid-item-card:: Tags
@@ -100,7 +100,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 9.7 GB
+      - Size on disk: 11.4 GB
       - File count: 34
       - Format: BIDS
 

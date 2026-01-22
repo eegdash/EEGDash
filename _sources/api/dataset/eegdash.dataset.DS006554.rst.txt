@@ -7,7 +7,7 @@ eegdash.dataset.DS006554
 
 Social Observation EEG raw data (OpenNeuro ``ds006554``). Access recordings and metadata through EEGDash.
 
-**Citation:** Yaner Su (2025). *Social Observation EEG raw data*. `10.18112/openneuro.ds006554.v1.0.0 <https://doi.org/10.18112/openneuro.ds006554.v1.0.0>`__
+**Citation:** Yaner Su (—). *Social Observation EEG raw data*. `10.18112/openneuro.ds006554.v1.0.0 <https://doi.org/10.18112/openneuro.ds006554.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Social Observation EEG raw data
    * - Year
-     - 2025
+     - —
    * - Authors
      - Yaner Su
    * - License
@@ -184,7 +184,7 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 64 (47), 62 (47)
+      - Channels: 62 (47), 64 (47)
       - Sampling rate (Hz): 500.0
       - Duration (hours): 0.0
 

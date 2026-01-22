@@ -7,7 +7,7 @@ eegdash.dataset.DS000117
 
 Multisubject, multimodal face processing (OpenNeuro ``ds000117``). Access recordings and metadata through EEGDash.
 
-**Citation:** Wakeman, DG, Henson, RN (2018). *Multisubject, multimodal face processing*. `10.18112/openneuro.ds000117.v1.1.0 <https://doi.org/10.18112/openneuro.ds000117.v1.1.0>`__
+**Citation:** Wakeman, DG, Henson, RN (2015). *Multisubject, multimodal face processing*. `10.18112/openneuro.ds000117.v1.1.0 <https://doi.org/10.18112/openneuro.ds000117.v1.1.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Multisubject, multimodal face processing
    * - Year
-     - 2018
+     - 2015
    * - Authors
      - Wakeman, DG, Henson, RN
    * - License
@@ -205,7 +205,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 87.6 GB
+      - Size on disk: 169.4 GB
       - File count: 104
       - Format: BIDS
 

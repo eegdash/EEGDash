@@ -7,7 +7,7 @@ eegdash.dataset.DS002814
 
 A Multimodal Neuroimaging Dataset to Study Spatiotemporal Dynamics of Visual Processing in Humans (OpenNeuro ``ds002814``). Access recordings and metadata through EEGDash.
 
-**Citation:** Fatemeh Ebrahiminia, Morteza Mahdiani, Seyed-Mahdi Khaligh-Razavi (2020). *A Multimodal Neuroimaging Dataset to Study Spatiotemporal Dynamics of Visual Processing in Humans*. `10.18112/openneuro.ds002814.v1.3.0 <https://doi.org/10.18112/openneuro.ds002814.v1.3.0>`__
+**Citation:** Fatemeh Ebrahiminia, Morteza Mahdiani, Seyed-Mahdi Khaligh-Razavi (—). *A Multimodal Neuroimaging Dataset to Study Spatiotemporal Dynamics of Visual Processing in Humans*. `10.18112/openneuro.ds002814.v1.3.0 <https://doi.org/10.18112/openneuro.ds002814.v1.3.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - A Multimodal Neuroimaging Dataset to Study Spatiotemporal Dynamics of Visual Processing in Humans
    * - Year
-     - 2020
+     - —
    * - Authors
      - Fatemeh Ebrahiminia, Morteza Mahdiani, Seyed-Mahdi Khaligh-Razavi
    * - License
@@ -99,7 +99,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 27.7 GB
+      - Size on disk: 48.6 GB
       - File count: 168
       - Format: BIDS
 

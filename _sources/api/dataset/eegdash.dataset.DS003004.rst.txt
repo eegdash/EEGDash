@@ -7,7 +7,7 @@ eegdash.dataset.DS003004
 
 Imagined Emotion Study (OpenNeuro ``ds003004``). Access recordings and metadata through EEGDash.
 
-**Citation:** Julie Onton, Scott Makeig (2020). *Imagined Emotion Study*. `10.18112/openneuro.ds003004.v1.1.1 <https://doi.org/10.18112/openneuro.ds003004.v1.1.1>`__
+**Citation:** Julie Onton, Scott Makeig (—). *Imagined Emotion Study*. `10.18112/openneuro.ds003004.v1.1.1 <https://doi.org/10.18112/openneuro.ds003004.v1.1.1>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Imagined Emotion Study
    * - Year
-     - 2020
+     - —
    * - Authors
      - Julie Onton, Scott Makeig
    * - License
@@ -89,7 +89,7 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 224 (6), 219 (6), 221 (4), 212 (4), 214 (4), 206 (2), 207 (2), 231 (2), 226 (2), 227 (2), 180 (2), 196 (2), 223 (2), 213 (2), 189 (2), 208 (2), 229 (2), 235 (2), 215 (2), 201 (2), 211 (2), 209 (2), 218 (2), 134 (2), 222 (2), 220 (2), 232 (2)
+      - Channels: 219 (6), 224 (6), 214 (4), 221 (4), 212 (4), 222 (2), 232 (2), 220 (2), 229 (2), 189 (2), 208 (2), 211 (2), 201 (2), 235 (2), 215 (2), 218 (2), 209 (2), 134 (2), 227 (2), 196 (2), 223 (2), 180 (2), 213 (2), 206 (2), 207 (2), 226 (2), 231 (2)
       - Sampling rate (Hz): 256.0
       - Duration (hours): 0.0
 

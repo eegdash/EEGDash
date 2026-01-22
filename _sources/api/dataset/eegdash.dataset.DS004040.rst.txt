@@ -7,7 +7,7 @@ eegdash.dataset.DS004040
 
 Trance channeling EEG study (OpenNeuro ``ds004040``). Access recordings and metadata through EEGDash.
 
-**Citation:** Cedric Cannard, Arnaud Delorme, Helane Wahbeh (2022). *Trance channeling EEG study*. `10.18112/openneuro.ds004040.v1.0.0 <https://doi.org/10.18112/openneuro.ds004040.v1.0.0>`__
+**Citation:** Cedric Cannard, Arnaud Delorme, Helane Wahbeh (—). *Trance channeling EEG study*. `10.18112/openneuro.ds004040.v1.0.0 <https://doi.org/10.18112/openneuro.ds004040.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Trance channeling EEG study
    * - Year
-     - 2022
+     - —
    * - Authors
      - Cedric Cannard, Arnaud Delorme, Helane Wahbeh
    * - License

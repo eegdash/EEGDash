@@ -7,7 +7,7 @@ eegdash.dataset.DS007081
 
 Passive but accessible: Studied information is not actively stored in working memory, yet attended regardless of anticipated load (OpenNeuro ``ds007081``). Access recordings and metadata through EEGDash.
 
-**Citation:** Yakup Yılmaz, Nursena Ataseven Özdemir, Wouter Kruijne, Elkan Akyürek, Eren Günseli (2025). *Passive but accessible: Studied information is not actively stored in working memory, yet attended regardless of anticipated load*. `10.18112/openneuro.ds007081.v1.0.0 <https://doi.org/10.18112/openneuro.ds007081.v1.0.0>`__
+**Citation:** Yakup Yılmaz, Nursena Ataseven Özdemir, Wouter Kruijne, Elkan Akyürek, Eren Günseli (—). *Passive but accessible: Studied information is not actively stored in working memory, yet attended regardless of anticipated load*. `10.18112/openneuro.ds007081.v1.0.0 <https://doi.org/10.18112/openneuro.ds007081.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Passive but accessible: Studied information is not actively stored in working memory, yet attended regardless of anticipated load
    * - Year
-     - 2025
+     - —
    * - Authors
      - Yakup Yılmaz, Nursena Ataseven Özdemir, Wouter Kruijne, Elkan Akyürek, Eren Günseli
    * - License

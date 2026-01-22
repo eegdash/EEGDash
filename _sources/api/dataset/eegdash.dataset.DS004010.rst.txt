@@ -7,7 +7,7 @@ eegdash.dataset.DS004010
 
 MAVIS (OpenNeuro ``ds004010``). Access recordings and metadata through EEGDash.
 
-**Citation:** Leonhard Waschke, Thomas Donoghue, Lorenz Fiedler, Sydney Smith, Douglas Garrett, Bradley Voytek, Jonas Obleser (2022). *MAVIS*. `10.18112/openneuro.ds004010.v1.0.0 <https://doi.org/10.18112/openneuro.ds004010.v1.0.0>`__
+**Citation:** Leonhard Waschke, Thomas Donoghue, Lorenz Fiedler, Sydney Smith, Douglas Garrett, Bradley Voytek, Jonas Obleser (—). *MAVIS*. `10.18112/openneuro.ds004010.v1.0.0 <https://doi.org/10.18112/openneuro.ds004010.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - MAVIS
    * - Year
-     - 2022
+     - —
    * - Authors
      - Leonhard Waschke, Thomas Donoghue, Lorenz Fiedler, Sydney Smith, Douglas Garrett, Bradley Voytek, Jonas Obleser
    * - License

@@ -7,7 +7,7 @@ eegdash.dataset.DS003846
 
 Prediction Error (OpenNeuro ``ds003846``). Access recordings and metadata through EEGDash.
 
-**Citation:** Lukas Gehrke, Sezen Akman, Albert Chen, Pedro Lopes, Klaus Gramann (2024). *Prediction Error*. `10.18112/openneuro.ds003846.v2.0.2 <https://doi.org/10.18112/openneuro.ds003846.v2.0.2>`__
+**Citation:** Lukas Gehrke, Sezen Akman, Albert Chen, Pedro Lopes, Klaus Gramann (19). *Prediction Error*. `10.18112/openneuro.ds003846.v2.0.2 <https://doi.org/10.18112/openneuro.ds003846.v2.0.2>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Prediction Error
    * - Year
-     - 2024
+     - 19
    * - Authors
      - Lukas Gehrke, Sezen Akman, Albert Chen, Pedro Lopes, Klaus Gramann
    * - License
@@ -184,7 +184,7 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 64 (50), 63 (50)
+      - Channels: 63 (50), 64 (50)
       - Sampling rate (Hz): 500.0
       - Duration (hours): 0.0
 
@@ -198,7 +198,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 8.6 MB
+      - Size on disk: 11.4 GB
       - File count: 50
       - Format: BIDS
 

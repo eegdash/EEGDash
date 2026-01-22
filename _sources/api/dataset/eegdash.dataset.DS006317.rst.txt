@@ -7,7 +7,7 @@ eegdash.dataset.DS006317
 
 Chisco-2.0 (OpenNeuro ``ds006317``). Access recordings and metadata through EEGDash.
 
-**Citation:** Zihan Zhang, Yu Bao, Tianyi Jiang, Xiao Ding, Xia Liang, Juntong Du, Yi Zhao, Kai Xiong, Bing Qin, Ting Liu (2025). *Chisco-2.0*. `10.18112/openneuro.ds006317.v1.1.0 <https://doi.org/10.18112/openneuro.ds006317.v1.1.0>`__
+**Citation:** Zihan Zhang, Yu Bao, Tianyi Jiang, Xiao Ding, Xia Liang, Juntong Du, Yi Zhao, Kai Xiong, Bing Qin, Ting Liu (2019). *Chisco-2.0*. `10.18112/openneuro.ds006317.v1.1.0 <https://doi.org/10.18112/openneuro.ds006317.v1.1.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Chisco-2.0
    * - Year
-     - 2025
+     - 2019
    * - Authors
      - Zihan Zhang, Yu Bao, Tianyi Jiang, Xiao Ding, Xia Liang, Juntong Du, Yi Zhao, Kai Xiong, Bing Qin, Ting Liu
    * - License
@@ -90,7 +90,7 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 124 (64), 127 (64)
+      - Channels: 127 (64), 124 (64)
       - Sampling rate (Hz): 1000.0
       - Duration (hours): 0.0
 

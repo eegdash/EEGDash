@@ -7,7 +7,7 @@ eegdash.dataset.DS004738
 
 sfb_meg_phantom (B04/C01) (OpenNeuro ``ds004738``). Access recordings and metadata through EEGDash.
 
-**Citation:** Bahne H. Bahners, Roxanne Lofredi, Tilmann Sander, Alfons Schnitzler, Andrea A. Kuhn, Esther Florin (2023). *sfb_meg_phantom (B04/C01)*. `10.18112/openneuro.ds004738.v1.0.1 <https://doi.org/10.18112/openneuro.ds004738.v1.0.1>`__
+**Citation:** Bahne H. Bahners, Roxanne Lofredi, Tilmann Sander, Alfons Schnitzler, Andrea A. Kuhn, Esther Florin (20). *sfb_meg_phantom (B04/C01)*. `10.18112/openneuro.ds004738.v1.0.1 <https://doi.org/10.18112/openneuro.ds004738.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - sfb_meg_phantom (B04/C01)
    * - Year
-     - 2023
+     - 20
    * - Authors
      - Bahne H. Bahners, Roxanne Lofredi, Tilmann Sander, Alfons Schnitzler, Andrea A. Kuhn, Esther Florin
    * - License
@@ -89,7 +89,7 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 323 (13), 9 (13), 125 (12), 160 (12)
+      - Channels: 9 (13), 323 (13), 160 (12), 125 (12)
       - Sampling rate (Hz): 5000.0
       - Duration (hours): 0.0
 

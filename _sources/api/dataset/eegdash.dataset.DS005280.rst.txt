@@ -7,7 +7,7 @@ eegdash.dataset.DS005280
 
 223 By BP (OpenNeuro ``ds005280``). Access recordings and metadata through EEGDash.
 
-**Citation:** Zhao Xiangyue, Zhou Jingyao, Zhang Libo, Duan Haoqing, Wei Shiyu, Bi Yanzhi, Hu Li (2024). *223 By BP*. `10.18112/openneuro.ds005280.v1.0.0 <https://doi.org/10.18112/openneuro.ds005280.v1.0.0>`__
+**Citation:** Zhao Xiangyue, Zhou Jingyao, Zhang Libo, Duan Haoqing, Wei Shiyu, Bi Yanzhi, Hu Li (—). *223 By BP*. `10.18112/openneuro.ds005280.v1.0.0 <https://doi.org/10.18112/openneuro.ds005280.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - 223 By BP
    * - Year
-     - 2024
+     - —
    * - Authors
      - Zhao Xiangyue, Zhou Jingyao, Zhang Libo, Duan Haoqing, Wei Shiyu, Bi Yanzhi, Hu Li
    * - License
@@ -104,7 +104,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 42.4 GB
+      - Size on disk: 137.6 GB
       - File count: 669
       - Format: BIDS
 

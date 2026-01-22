@@ -7,7 +7,7 @@ eegdash.dataset.DS004295
 
 Reward gain and punishment avoidance reversal learning (OpenNeuro ``ds004295``). Access recordings and metadata through EEGDash.
 
-**Citation:** Christopher Stolz, Alan Pickering, Erik M. Mueller (2022). *Reward gain and punishment avoidance reversal learning*. `10.18112/openneuro.ds004295.v1.0.0 <https://doi.org/10.18112/openneuro.ds004295.v1.0.0>`__
+**Citation:** Christopher Stolz, Alan Pickering, Erik M. Mueller (—). *Reward gain and punishment avoidance reversal learning*. `10.18112/openneuro.ds004295.v1.0.0 <https://doi.org/10.18112/openneuro.ds004295.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Reward gain and punishment avoidance reversal learning
    * - Year
-     - 2022
+     - —
    * - Authors
      - Christopher Stolz, Alan Pickering, Erik M. Mueller
    * - License

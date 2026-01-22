@@ -7,7 +7,7 @@ eegdash.dataset.DS006446
 
 Cueing the future to reduce temporal discounting (OpenNeuro ``ds006446``). Access recordings and metadata through EEGDash.
 
-**Citation:** Isaac Kinley, Sue Becker (2025). *Cueing the future to reduce temporal discounting*. `10.18112/openneuro.ds006446.v1.0.0 <https://doi.org/10.18112/openneuro.ds006446.v1.0.0>`__
+**Citation:** Isaac Kinley, Sue Becker (2019). *Cueing the future to reduce temporal discounting*. `10.18112/openneuro.ds006446.v1.0.0 <https://doi.org/10.18112/openneuro.ds006446.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Cueing the future to reduce temporal discounting
    * - Year
-     - 2025
+     - 2019
    * - Authors
      - Isaac Kinley, Sue Becker
    * - License
@@ -90,7 +90,7 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 65 (29), 64 (29)
+      - Channels: 64 (29), 65 (29)
       - Sampling rate (Hz): 2048.0
       - Duration (hours): 0.0
 

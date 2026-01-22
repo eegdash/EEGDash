@@ -7,7 +7,7 @@ eegdash.dataset.DS002908
 
 Human MEG recordings during sequential conflict task (OpenNeuro ``ds002908``). Access recordings and metadata through EEGDash.
 
-**Citation:** Rafal Bogacz, Vladimir Litvak (2020). *Human MEG recordings during sequential conflict task*. `10.18112/openneuro.ds002908.v1.0.0 <https://doi.org/10.18112/openneuro.ds002908.v1.0.0>`__
+**Citation:** Rafal Bogacz, Vladimir Litvak (—). *Human MEG recordings during sequential conflict task*. `10.18112/openneuro.ds002908.v1.0.0 <https://doi.org/10.18112/openneuro.ds002908.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Human MEG recordings during sequential conflict task
    * - Year
-     - 2020
+     - —
    * - Authors
      - Rafal Bogacz, Vladimir Litvak
    * - License
@@ -99,7 +99,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 59.8 GB
+      - Size on disk: 58.3 GB
       - File count: 53
       - Format: BIDS
 

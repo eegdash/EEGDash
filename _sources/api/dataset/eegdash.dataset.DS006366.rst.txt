@@ -7,7 +7,7 @@ eegdash.dataset.DS006366
 
 Mouse Sleep Staging Validation dataset (MSSV) (OpenNeuro ``ds006366``). Access recordings and metadata through EEGDash.
 
-**Citation:** Laura Rose, Alexander Neergaard Zahid, Javier García Ciudad, Christine Egebjerg, Louise Piilgaard, Frederikke Lynge Sørensen, Mie Andersen, Tessa Radovanovic, Anastasia Tsopanidou, Maiken Nedergaard, Sébastien Arthaud, Renato Maciel, Christelle Peyron, Chiara Berteotti, Viviana Lo Martire, Alessandro Silvani, Giovanna Zoccoli, Micaela Borsa, Antoine Adamantidis, Morten Mørup, Birgitte Rahbek Kornum (2025). *Mouse Sleep Staging Validation dataset (MSSV)*. `10.18112/openneuro.ds006366.v1.0.1 <https://doi.org/10.18112/openneuro.ds006366.v1.0.1>`__
+**Citation:** Laura Rose, Alexander Neergaard Zahid, Javier García Ciudad, Christine Egebjerg, Louise Piilgaard, Frederikke Lynge Sørensen, Mie Andersen, Tessa Radovanovic, Anastasia Tsopanidou, Maiken Nedergaard, Sébastien Arthaud, Renato Maciel, Christelle Peyron, Chiara Berteotti, Viviana Lo Martire, Alessandro Silvani, Giovanna Zoccoli, Micaela Borsa, Antoine Adamantidis, Morten Mørup, Birgitte Rahbek Kornum (—). *Mouse Sleep Staging Validation dataset (MSSV)*. `10.18112/openneuro.ds006366.v1.0.1 <https://doi.org/10.18112/openneuro.ds006366.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Mouse Sleep Staging Validation dataset (MSSV)
    * - Year
-     - 2025
+     - —
    * - Authors
      - Laura Rose, Alexander Neergaard Zahid, Javier García Ciudad, Christine Egebjerg, Louise Piilgaard, Frederikke Lynge Sørensen, Mie Andersen, Tessa Radovanovic, Anastasia Tsopanidou, Maiken Nedergaard, Sébastien Arthaud, Renato Maciel, Christelle Peyron, Chiara Berteotti, Viviana Lo Martire, Alessandro Silvani, Giovanna Zoccoli, Micaela Borsa, Antoine Adamantidis, Morten Mørup, Birgitte Rahbek Kornum
    * - License
@@ -110,7 +110,7 @@ Highlights
       :class-card: sd-border-1
 
       - Channels: 3 (142), 2 (86), 5 (68)
-      - Sampling rate (Hz): —
+      - Sampling rate (Hz): 128.0
       - Duration (hours): 0.0
 
    .. grid-item-card:: Tags

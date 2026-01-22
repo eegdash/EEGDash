@@ -7,7 +7,7 @@ eegdash.dataset.DS003518
 
 EEG: Simon Conflict w/ Reinforcement + Cabergoline Challenge (OpenNeuro ``ds003518``). Access recordings and metadata through EEGDash.
 
-**Citation:** James F Cavanagh, Michael J Frank (2021). *EEG: Simon Conflict w/ Reinforcement + Cabergoline Challenge*. `10.18112/openneuro.ds003518.v1.1.0 <https://doi.org/10.18112/openneuro.ds003518.v1.1.0>`__
+**Citation:** James F Cavanagh, Michael J Frank (20). *EEG: Simon Conflict w/ Reinforcement + Cabergoline Challenge*. `10.18112/openneuro.ds003518.v1.1.0 <https://doi.org/10.18112/openneuro.ds003518.v1.1.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - EEG: Simon Conflict w/ Reinforcement + Cabergoline Challenge
    * - Year
-     - 2021
+     - 20
    * - Authors
      - James F Cavanagh, Michael J Frank
    * - License

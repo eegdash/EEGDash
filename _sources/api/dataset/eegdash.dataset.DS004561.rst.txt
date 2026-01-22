@@ -7,7 +7,7 @@ eegdash.dataset.DS004561
 
 Illusion of Agency over Electrically-Actuated Movements (OpenNeuro ``ds004561``). Access recordings and metadata through EEGDash.
 
-**Citation:** John Veillette, Pedro Lopes, Howard Nusbaum (2023). *Illusion of Agency over Electrically-Actuated Movements*. `10.18112/openneuro.ds004561.v1.0.0 <https://doi.org/10.18112/openneuro.ds004561.v1.0.0>`__
+**Citation:** John Veillette, Pedro Lopes, Howard Nusbaum (2019). *Illusion of Agency over Electrically-Actuated Movements*. `10.18112/openneuro.ds004561.v1.0.0 <https://doi.org/10.18112/openneuro.ds004561.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Illusion of Agency over Electrically-Actuated Movements
    * - Year
-     - 2023
+     - 2019
    * - Authors
      - John Veillette, Pedro Lopes, Howard Nusbaum
    * - License
@@ -89,7 +89,7 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 64 (23), 62 (23)
+      - Channels: 62 (23), 64 (23)
       - Sampling rate (Hz): 10000.0
       - Duration (hours): 0.0
 
@@ -103,7 +103,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 1.1 MB
+      - Size on disk: 98.0 GB
       - File count: 23
       - Format: BIDS
 

@@ -7,7 +7,7 @@ eegdash.dataset.DS003774
 
 Music Listening- Genre EEG dataset (MUSIN-G) (OpenNeuro ``ds003774``). Access recordings and metadata through EEGDash.
 
-**Citation:** Krishna Prasad Miyapuram, Pankaj Pandey, Nashra Ahmad, Bharatesh R Shiraguppi, Esha Sharma, Prashant Lawhatre, Dhananjay Sonawane, Derek Lomas (2021). *Music Listening- Genre EEG dataset (MUSIN-G)*. `10.18112/openneuro.ds003774.v1.0.0 <https://doi.org/10.18112/openneuro.ds003774.v1.0.0>`__
+**Citation:** Krishna Prasad Miyapuram, Pankaj Pandey, Nashra Ahmad, Bharatesh R Shiraguppi, Esha Sharma, Prashant Lawhatre, Dhananjay Sonawane, Derek Lomas (—). *Music Listening- Genre EEG dataset (MUSIN-G)*. `10.18112/openneuro.ds003774.v1.0.0 <https://doi.org/10.18112/openneuro.ds003774.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Music Listening- Genre EEG dataset (MUSIN-G)
    * - Year
-     - 2021
+     - —
    * - Authors
      - Krishna Prasad Miyapuram, Pankaj Pandey, Nashra Ahmad, Bharatesh R Shiraguppi, Esha Sharma, Prashant Lawhatre, Dhananjay Sonawane, Derek Lomas
    * - License
@@ -100,7 +100,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 4.2 MB
+      - Size on disk: 10.1 GB
       - File count: 240
       - Format: BIDS
 

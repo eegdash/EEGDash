@@ -7,7 +7,7 @@ eegdash.dataset.DS005034
 
 The effect of theta tACS on working memory (OpenNeuro ``ds005034``). Access recordings and metadata through EEGDash.
 
-**Citation:** Yuri G. Pavlov, Dauren Kasanov (2024). *The effect of theta tACS on working memory*. `10.18112/openneuro.ds005034.v1.0.1 <https://doi.org/10.18112/openneuro.ds005034.v1.0.1>`__
+**Citation:** Yuri G. Pavlov, Dauren Kasanov (—). *The effect of theta tACS on working memory*. `10.18112/openneuro.ds005034.v1.0.1 <https://doi.org/10.18112/openneuro.ds005034.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - The effect of theta tACS on working memory
    * - Year
-     - 2024
+     - —
    * - Authors
      - Yuri G. Pavlov, Dauren Kasanov
    * - License

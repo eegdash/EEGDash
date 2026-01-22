@@ -7,7 +7,7 @@ eegdash.dataset.DS004256
 
 Encoding of Sound Source Elevation in Human Cortex (OpenNeuro ``ds004256``). Access recordings and metadata through EEGDash.
 
-**Citation:** Ole Bialas, Marc Schoenwiesner, Burkhard Maess (2022). *Encoding of Sound Source Elevation in Human Cortex*. `10.18112/openneuro.ds004256.v1.0.5 <https://doi.org/10.18112/openneuro.ds004256.v1.0.5>`__
+**Citation:** Ole Bialas, Marc Schoenwiesner, Burkhard Maess (—). *Encoding of Sound Source Elevation in Human Cortex*. `10.18112/openneuro.ds004256.v1.0.5 <https://doi.org/10.18112/openneuro.ds004256.v1.0.5>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Encoding of Sound Source Elevation in Human Cortex
    * - Year
-     - 2022
+     - —
    * - Authors
      - Ole Bialas, Marc Schoenwiesner, Burkhard Maess
    * - License

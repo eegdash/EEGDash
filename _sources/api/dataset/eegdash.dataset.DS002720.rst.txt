@@ -7,7 +7,7 @@ eegdash.dataset.DS002720
 
 A dataset recorded during development of a tempo-based brain-computer music interface (OpenNeuro ``ds002720``). Access recordings and metadata through EEGDash.
 
-**Citation:** Ian Daly, Nicoletta Nicolaou, Duncan Williams, Faustina Hwang, Alexis Kirke, Eduardo Miranda, Slawomir J. Nasuto (2020). *A dataset recorded during development of a tempo-based brain-computer music interface*. `10.18112/openneuro.ds002720.v1.0.1 <https://doi.org/10.18112/openneuro.ds002720.v1.0.1>`__
+**Citation:** Ian Daly, Nicoletta Nicolaou, Duncan Williams, Faustina Hwang, Alexis Kirke, Eduardo Miranda, Slawomir J. Nasuto (—). *A dataset recorded during development of a tempo-based brain-computer music interface*. `10.18112/openneuro.ds002720.v1.0.1 <https://doi.org/10.18112/openneuro.ds002720.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - A dataset recorded during development of a tempo-based brain-computer music interface
    * - Year
-     - 2020
+     - —
    * - Authors
      - Ian Daly, Nicoletta Nicolaou, Duncan Williams, Faustina Hwang, Alexis Kirke, Eduardo Miranda, Slawomir J. Nasuto
    * - License

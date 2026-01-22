@@ -7,7 +7,7 @@ eegdash.dataset.DS004515
 
 EEG: Alcohol imagery reinforcement learning task with light and heavy drinker participants (OpenNeuro ``ds004515``). Access recordings and metadata through EEGDash.
 
-**Citation:** Garima Singh, James F Cavanagh (2023). *EEG: Alcohol imagery reinforcement learning task with light and heavy drinker participants*. `10.18112/openneuro.ds004515.v1.0.0 <https://doi.org/10.18112/openneuro.ds004515.v1.0.0>`__
+**Citation:** Garima Singh, James F Cavanagh (20). *EEG: Alcohol imagery reinforcement learning task with light and heavy drinker participants*. `10.18112/openneuro.ds004515.v1.0.0 <https://doi.org/10.18112/openneuro.ds004515.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - EEG: Alcohol imagery reinforcement learning task with light and heavy drinker participants
    * - Year
-     - 2023
+     - 20
    * - Authors
      - Garima Singh, James F Cavanagh
    * - License
@@ -85,7 +85,7 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 64 (54), 66 (54)
+      - Channels: 66 (54), 64 (54)
       - Sampling rate (Hz): 500.0
       - Duration (hours): 0.0
 

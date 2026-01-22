@@ -7,7 +7,7 @@ eegdash.dataset.DS004860
 
 Investigating the cognitive conflict triggered by moral judgment of accidental harm : an event-related potentials study (OpenNeuro ``ds004860``). Access recordings and metadata through EEGDash.
 
-**Citation:** Flora Schwartz, Radouane El-Yagoubi, Julie Cayron, Pierre-Vincent Paubel, Bastien Tremoliere (2023). *Investigating the cognitive conflict triggered by moral judgment of accidental harm : an event-related potentials study*. `10.18112/openneuro.ds004860.v1.0.0 <https://doi.org/10.18112/openneuro.ds004860.v1.0.0>`__
+**Citation:** Flora Schwartz, Radouane El-Yagoubi, Julie Cayron, Pierre-Vincent Paubel, Bastien Tremoliere (—). *Investigating the cognitive conflict triggered by moral judgment of accidental harm : an event-related potentials study*. `10.18112/openneuro.ds004860.v1.0.0 <https://doi.org/10.18112/openneuro.ds004860.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Investigating the cognitive conflict triggered by moral judgment of accidental harm : an event-related potentials study
    * - Year
-     - 2023
+     - —
    * - Authors
      - Flora Schwartz, Radouane El-Yagoubi, Julie Cayron, Pierre-Vincent Paubel, Bastien Tremoliere
    * - License

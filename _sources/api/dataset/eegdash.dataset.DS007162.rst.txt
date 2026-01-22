@@ -7,7 +7,7 @@ eegdash.dataset.DS007162
 
 Adaptive recruitment of cortex-wide recurrence for visual object recognition (EEG) (OpenNeuro ``ds007162``). Access recordings and metadata through EEGDash.
 
-**Citation:** [Unspecified1], [Unspecified2] (2026). *Adaptive recruitment of cortex-wide recurrence for visual object recognition (EEG)*. `10.18112/openneuro.ds007162.v1.0.0 <https://doi.org/10.18112/openneuro.ds007162.v1.0.0>`__
+**Citation:** [Unspecified1], [Unspecified2] (20). *Adaptive recruitment of cortex-wide recurrence for visual object recognition (EEG)*. `10.18112/openneuro.ds007162.v1.0.0 <https://doi.org/10.18112/openneuro.ds007162.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Adaptive recruitment of cortex-wide recurrence for visual object recognition (EEG)
    * - Year
-     - 2026
+     - 20
    * - Authors
      - [Unspecified1], [Unspecified2]
    * - License
@@ -121,7 +121,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 60.9 GB
+      - Size on disk: 61.2 GB
       - File count: 69
       - Format: BIDS
 

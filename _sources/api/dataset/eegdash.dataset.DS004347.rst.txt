@@ -7,7 +7,7 @@ eegdash.dataset.DS004347
 
 Symmetry perception and affective responses: a combined EEG/EMG study (OpenNeuro ``ds004347``). Access recordings and metadata through EEGDash.
 
-**Citation:** Makin, A. D. J, Wilton, M. M, Pecchinenda, A., Bertamini, M. (2022). *Symmetry perception and affective responses: a combined EEG/EMG study*. `10.18112/openneuro.ds004347.v1.0.0 <https://doi.org/10.18112/openneuro.ds004347.v1.0.0>`__
+**Citation:** Makin, A. D. J, Wilton, M. M, Pecchinenda, A., Bertamini, M. (—). *Symmetry perception and affective responses: a combined EEG/EMG study*. `10.18112/openneuro.ds004347.v1.0.0 <https://doi.org/10.18112/openneuro.ds004347.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Symmetry perception and affective responses: a combined EEG/EMG study
    * - Year
-     - 2022
+     - —
    * - Authors
      - Makin, A. D. J, Wilton, M. M, Pecchinenda, A., Bertamini, M.
    * - License
@@ -86,7 +86,7 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 64 (24), 72 (24)
+      - Channels: 72 (24), 64 (24)
       - Sampling rate (Hz): 512.0
       - Duration (hours): 0.0
 
@@ -100,7 +100,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 2.4 GB
+      - Size on disk: 2.7 GB
       - File count: 24
       - Format: BIDS
 

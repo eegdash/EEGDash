@@ -7,7 +7,7 @@ eegdash.dataset.DS006648
 
 Poetry Assessment EEG Dataset 1 (OpenNeuro ``ds006648``). Access recordings and metadata through EEGDash.
 
-**Citation:** Soma Chaudhuri, Joydeep Bhattacharya (2025). *Poetry Assessment EEG Dataset 1*. `10.18112/openneuro.ds006648.v1.0.0 <https://doi.org/10.18112/openneuro.ds006648.v1.0.0>`__
+**Citation:** Soma Chaudhuri, Joydeep Bhattacharya (—). *Poetry Assessment EEG Dataset 1*. `10.18112/openneuro.ds006648.v1.0.0 <https://doi.org/10.18112/openneuro.ds006648.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Poetry Assessment EEG Dataset 1
    * - Year
-     - 2025
+     - —
    * - Authors
      - Soma Chaudhuri, Joydeep Bhattacharya
    * - License

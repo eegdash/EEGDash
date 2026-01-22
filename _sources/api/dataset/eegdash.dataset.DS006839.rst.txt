@@ -7,7 +7,7 @@ eegdash.dataset.DS006839
 
 EEG recordings during sham neurofeedback in virtual reality (OpenNeuro ``ds006839``). Access recordings and metadata through EEGDash.
 
-**Citation:** C. Brigitte Aguilar Gonzales, Collaborators from the Experimental and Computational Neuroscience Group (2025). *EEG recordings during sham neurofeedback in virtual reality*. `10.18112/openneuro.ds006839.v1.0.0 <https://doi.org/10.18112/openneuro.ds006839.v1.0.0>`__
+**Citation:** C. Brigitte Aguilar Gonzales, Collaborators from the Experimental and Computational Neuroscience Group (2019). *EEG recordings during sham neurofeedback in virtual reality*. `10.18112/openneuro.ds006839.v1.0.0 <https://doi.org/10.18112/openneuro.ds006839.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - EEG recordings during sham neurofeedback in virtual reality
    * - Year
-     - 2025
+     - 2019
    * - Authors
      - C. Brigitte Aguilar Gonzales, Collaborators from the Experimental and Computational Neuroscience Group
    * - License

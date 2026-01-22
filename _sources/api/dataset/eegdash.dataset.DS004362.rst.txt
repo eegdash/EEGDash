@@ -7,7 +7,7 @@ eegdash.dataset.DS004362
 
 EEG Motor Movement/Imagery Dataset (OpenNeuro ``ds004362``). Access recordings and metadata through EEGDash.
 
-**Citation:** Gerwin Schalk, Dennis J McFarland, Thilo Hinterberger, Niels Birbaumer, Jonathan R Wolpaw (2022). *EEG Motor Movement/Imagery Dataset*. `10.18112/openneuro.ds004362.v1.0.0 <https://doi.org/10.18112/openneuro.ds004362.v1.0.0>`__
+**Citation:** Gerwin Schalk, Dennis J McFarland, Thilo Hinterberger, Niels Birbaumer, Jonathan R Wolpaw (—). *EEG Motor Movement/Imagery Dataset*. `10.18112/openneuro.ds004362.v1.0.0 <https://doi.org/10.18112/openneuro.ds004362.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - EEG Motor Movement/Imagery Dataset
    * - Year
-     - 2022
+     - —
    * - Authors
      - Gerwin Schalk, Dennis J McFarland, Thilo Hinterberger, Niels Birbaumer, Jonathan R Wolpaw
    * - License
@@ -153,7 +153,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 9.4 MB
+      - Size on disk: 11.1 GB
       - File count: 1526
       - Format: BIDS
 

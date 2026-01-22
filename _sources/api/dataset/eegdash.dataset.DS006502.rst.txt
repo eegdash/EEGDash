@@ -7,7 +7,7 @@ eegdash.dataset.DS006502
 
 Skill learning and consolidation in healthy humans (OpenNeuro ``ds006502``). Access recordings and metadata through EEGDash.
 
-**Citation:** Bönstrup, M, Buch, ER, Cohen, LG (2025). *Skill learning and consolidation in healthy humans*. `10.18112/openneuro.ds006502.v1.0.0 <https://doi.org/10.18112/openneuro.ds006502.v1.0.0>`__
+**Citation:** Bönstrup, M, Buch, ER, Cohen, LG (—). *Skill learning and consolidation in healthy humans*. `10.18112/openneuro.ds006502.v1.0.0 <https://doi.org/10.18112/openneuro.ds006502.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Skill learning and consolidation in healthy humans
    * - Year
-     - 2025
+     - —
    * - Authors
      - Bönstrup, M, Buch, ER, Cohen, LG
    * - License

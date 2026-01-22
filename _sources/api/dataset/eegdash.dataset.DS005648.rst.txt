@@ -7,7 +7,7 @@ eegdash.dataset.DS005648
 
 Mapping object space dimensions: new insights from temporal dynamics (OpenNeuro ``ds005648``). Access recordings and metadata through EEGDash.
 
-**Citation:** Alexis Kidder(\*), Genevieve Quek, Tijl Grootswagers (2024). *Mapping object space dimensions: new insights from temporal dynamics*. `10.18112/openneuro.ds005648.v1.0.2 <https://doi.org/10.18112/openneuro.ds005648.v1.0.2>`__
+**Citation:** Alexis Kidder(\*), Genevieve Quek, Tijl Grootswagers (—). *Mapping object space dimensions: new insights from temporal dynamics*. `10.18112/openneuro.ds005648.v1.0.2 <https://doi.org/10.18112/openneuro.ds005648.v1.0.2>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Mapping object space dimensions: new insights from temporal dynamics
    * - Year
-     - 2024
+     - —
    * - Authors
      - Alexis Kidder(\*), Genevieve Quek, Tijl Grootswagers
    * - License
@@ -108,7 +108,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 15.5 GB
+      - Size on disk: 19.7 GB
       - File count: 21
       - Format: BIDS
 

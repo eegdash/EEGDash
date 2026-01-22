@@ -7,7 +7,7 @@ eegdash.dataset.DS004517
 
 EEG recordings for semantic decoding of imagined animals and tools during auditory imagery task (OpenNeuro ``ds004517``). Access recordings and metadata through EEGDash.
 
-**Citation:** Milan Rybář, Riccardo Poli, Ian Daly (2023). *EEG recordings for semantic decoding of imagined animals and tools during auditory imagery task*. `10.18112/openneuro.ds004517.v1.0.2 <https://doi.org/10.18112/openneuro.ds004517.v1.0.2>`__
+**Citation:** Milan Rybář, Riccardo Poli, Ian Daly (20). *EEG recordings for semantic decoding of imagined animals and tools during auditory imagery task*. `10.18112/openneuro.ds004517.v1.0.2 <https://doi.org/10.18112/openneuro.ds004517.v1.0.2>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - EEG recordings for semantic decoding of imagined animals and tools during auditory imagery task
    * - Year
-     - 2023
+     - 20
    * - Authors
      - Milan Rybář, Riccardo Poli, Ian Daly
    * - License
@@ -109,7 +109,7 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 64 (7), 80 (7)
+      - Channels: 80 (7), 64 (7)
       - Sampling rate (Hz): 2048.0
       - Duration (hours): 0.0
 

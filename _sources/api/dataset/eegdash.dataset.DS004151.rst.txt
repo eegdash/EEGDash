@@ -7,7 +7,7 @@ eegdash.dataset.DS004151
 
 Effect of obesity on inhibitory control in preadolescents during stop-signal task. An event-related potentials study (OpenNeuro ``ds004151``). Access recordings and metadata through EEGDash.
 
-**Citation:** Graciela C. Alatorre-Cruz, Heather Downs, Darcy Hagood, Seth T. Sorensen, D. Keith Williams, Linda Larson-Prior (2022). *Effect of obesity on inhibitory control in preadolescents during stop-signal task. An event-related potentials study*. `10.18112/openneuro.ds004151.v1.0.0 <https://doi.org/10.18112/openneuro.ds004151.v1.0.0>`__
+**Citation:** Graciela C. Alatorre-Cruz, Heather Downs, Darcy Hagood, Seth T. Sorensen, D. Keith Williams, Linda Larson-Prior (20). *Effect of obesity on inhibitory control in preadolescents during stop-signal task. An event-related potentials study*. `10.18112/openneuro.ds004151.v1.0.0 <https://doi.org/10.18112/openneuro.ds004151.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Effect of obesity on inhibitory control in preadolescents during stop-signal task. An event-related potentials study
    * - Year
-     - 2022
+     - 20
    * - Authors
      - Graciela C. Alatorre-Cruz, Heather Downs, Darcy Hagood, Seth T. Sorensen, D. Keith Williams, Linda Larson-Prior
    * - License

@@ -7,7 +7,7 @@ eegdash.dataset.DS006367
 
 Memory Reactivation Levels Remain Unaffected by Anticipated Interference (OpenNeuro ``ds006367``). Access recordings and metadata through EEGDash.
 
-**Citation:** xx (2025). *Memory Reactivation Levels Remain Unaffected by Anticipated Interference*. `10.18112/openneuro.ds006367.v1.0.1 <https://doi.org/10.18112/openneuro.ds006367.v1.0.1>`__
+**Citation:** xx (—). *Memory Reactivation Levels Remain Unaffected by Anticipated Interference*. `10.18112/openneuro.ds006367.v1.0.1 <https://doi.org/10.18112/openneuro.ds006367.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Memory Reactivation Levels Remain Unaffected by Anticipated Interference
    * - Year
-     - 2025
+     - —
    * - Authors
      - xx
    * - License

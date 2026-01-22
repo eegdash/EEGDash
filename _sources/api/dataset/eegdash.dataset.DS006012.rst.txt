@@ -7,7 +7,7 @@ eegdash.dataset.DS006012
 
 A geometric shape regularity effect in the human brain: MEG dataset (OpenNeuro ``ds006012``). Access recordings and metadata through EEGDash.
 
-**Citation:** Mathias Sablé-Meyer, Lucas Benjamin, Cassandra Potier Watkins, Chenxi He, Maxence Pajot, Théo Morfoisse, Fosca Al Roumi, Stanislas Dehaene (2025). *A geometric shape regularity effect in the human brain: MEG dataset*. `10.18112/openneuro.ds006012.v1.0.1 <https://doi.org/10.18112/openneuro.ds006012.v1.0.1>`__
+**Citation:** Mathias Sablé-Meyer, Lucas Benjamin, Cassandra Potier Watkins, Chenxi He, Maxence Pajot, Théo Morfoisse, Fosca Al Roumi, Stanislas Dehaene (20). *A geometric shape regularity effect in the human brain: MEG dataset*. `10.18112/openneuro.ds006012.v1.0.1 <https://doi.org/10.18112/openneuro.ds006012.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - A geometric shape regularity effect in the human brain: MEG dataset
    * - Year
-     - 2025
+     - 20
    * - Authors
      - Mathias Sablé-Meyer, Lucas Benjamin, Cassandra Potier Watkins, Chenxi He, Maxence Pajot, Théo Morfoisse, Fosca Al Roumi, Stanislas Dehaene
    * - License

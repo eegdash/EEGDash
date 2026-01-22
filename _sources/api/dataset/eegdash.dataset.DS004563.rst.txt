@@ -7,7 +7,7 @@ eegdash.dataset.DS004563
 
 Vicarious touch: overlapping neural patterns between seeing and feeling touch (OpenNeuro ``ds004563``). Access recordings and metadata through EEGDash.
 
-**Citation:** Sophie Smit, Denise Moerel, Regine Zopf, Anina N Rich (2023). *Vicarious touch: overlapping neural patterns between seeing and feeling touch*. `10.18112/openneuro.ds004563.v1.0.1 <https://doi.org/10.18112/openneuro.ds004563.v1.0.1>`__
+**Citation:** Sophie Smit, Denise Moerel, Regine Zopf, Anina N Rich (—). *Vicarious touch: overlapping neural patterns between seeing and feeling touch*. `10.18112/openneuro.ds004563.v1.0.1 <https://doi.org/10.18112/openneuro.ds004563.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Vicarious touch: overlapping neural patterns between seeing and feeling touch
    * - Year
-     - 2023
+     - —
    * - Authors
      - Sophie Smit, Denise Moerel, Regine Zopf, Anina N Rich
    * - License
@@ -103,7 +103,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 4.1 MB
+      - Size on disk: 172.5 GB
       - File count: 119
       - Format: BIDS
 

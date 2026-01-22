@@ -7,7 +7,7 @@ eegdash.dataset.DS005946
 
 ERC_CoG PROMENADE - WP2 - MetaImagery (Metaphor and Mental Imagery) (OpenNeuro ``ds005946``). Access recordings and metadata through EEGDash.
 
-**Citation:** Federico Frau, Paolo Canal, Maddalena Bressler, Chiara Pompei, Valentina Bambini (2025). *ERC_CoG PROMENADE - WP2 - MetaImagery (Metaphor and Mental Imagery)*. `10.18112/openneuro.ds005946.v1.0.1 <https://doi.org/10.18112/openneuro.ds005946.v1.0.1>`__
+**Citation:** Federico Frau, Paolo Canal, Maddalena Bressler, Chiara Pompei, Valentina Bambini (20). *ERC_CoG PROMENADE - WP2 - MetaImagery (Metaphor and Mental Imagery)*. `10.18112/openneuro.ds005946.v1.0.1 <https://doi.org/10.18112/openneuro.ds005946.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - ERC_CoG PROMENADE - WP2 - MetaImagery (Metaphor and Mental Imagery)
    * - Year
-     - 2025
+     - 20
    * - Authors
      - Federico Frau, Paolo Canal, Maddalena Bressler, Chiara Pompei, Valentina Bambini
    * - License

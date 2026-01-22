@@ -7,7 +7,7 @@ eegdash.dataset.DS007262
 
 Cognitive Workload 8-level arithmetic (OpenNeuro ``ds007262``). Access recordings and metadata through EEGDash.
 
-**Citation:** Matthew Barras, Liam Booth (2026). *Cognitive Workload 8-level arithmetic*. `10.18112/openneuro.ds007262.v1.0.2 <https://doi.org/10.18112/openneuro.ds007262.v1.0.2>`__
+**Citation:** Matthew Barras, Liam Booth (2019). *Cognitive Workload 8-level arithmetic*. `10.18112/openneuro.ds007262.v1.0.2 <https://doi.org/10.18112/openneuro.ds007262.v1.0.2>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Cognitive Workload 8-level arithmetic
    * - Year
-     - 2026
+     - 2019
    * - Authors
      - Matthew Barras, Liam Booth
    * - License
@@ -149,7 +149,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 378.9 MB
+      - Size on disk: 1.9 GB
       - File count: 18
       - Format: BIDS
 

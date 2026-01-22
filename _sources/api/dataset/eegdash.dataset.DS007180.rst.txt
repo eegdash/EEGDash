@@ -7,7 +7,7 @@ eegdash.dataset.DS007180
 
 Exo-EEG Experiment (OpenNeuro ``ds007180``). Access recordings and metadata through EEGDash.
 
-**Citation:** Águeda Fuentes-Guerra, Elisa Martín Arévalo, Freek van Ede, Carlos González-García (2026). *Exo-EEG Experiment*. `10.18112/openneuro.ds007180.v1.0.0 <https://doi.org/10.18112/openneuro.ds007180.v1.0.0>`__
+**Citation:** Águeda Fuentes-Guerra, Elisa Martín Arévalo, Freek van Ede, Carlos González-García (—). *Exo-EEG Experiment*. `10.18112/openneuro.ds007180.v1.0.0 <https://doi.org/10.18112/openneuro.ds007180.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Exo-EEG Experiment
    * - Year
-     - 2026
+     - —
    * - Authors
      - Águeda Fuentes-Guerra, Elisa Martín Arévalo, Freek van Ede, Carlos González-García
    * - License

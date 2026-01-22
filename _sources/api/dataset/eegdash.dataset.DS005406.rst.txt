@@ -7,7 +7,7 @@ eegdash.dataset.DS005406
 
 EEG frequency tagging reveals the integration of dissimilar observed actions (OpenNeuro ``ds005406``). Access recordings and metadata through EEGDash.
 
-**Citation:** Silvia Formica, Anna Chaiken, Jan R. Wiersema, Emiel Cracco (2024). *EEG frequency tagging reveals the integration of dissimilar observed actions*. `10.18112/openneuro.ds005406.v1.0.0 <https://doi.org/10.18112/openneuro.ds005406.v1.0.0>`__
+**Citation:** Silvia Formica, Anna Chaiken, Jan R. Wiersema, Emiel Cracco (2019). *EEG frequency tagging reveals the integration of dissimilar observed actions*. `10.18112/openneuro.ds005406.v1.0.0 <https://doi.org/10.18112/openneuro.ds005406.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - EEG frequency tagging reveals the integration of dissimilar observed actions
    * - Year
-     - 2024
+     - 2019
    * - Authors
      - Silvia Formica, Anna Chaiken, Jan R. Wiersema, Emiel Cracco
    * - License

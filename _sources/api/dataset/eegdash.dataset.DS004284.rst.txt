@@ -7,7 +7,7 @@ eegdash.dataset.DS004284
 
 eeg-neuroforecasting (OpenNeuro ``ds004284``). Access recordings and metadata through EEGDash.
 
-**Citation:** Veillette, J., Heald, S., Wittenbrink, B., Nusbaum, H. (2022). *eeg-neuroforecasting*. `10.18112/openneuro.ds004284.v1.0.0 <https://doi.org/10.18112/openneuro.ds004284.v1.0.0>`__
+**Citation:** Veillette, J., Heald, S., Wittenbrink, B., Nusbaum, H. (2019). *eeg-neuroforecasting*. `10.18112/openneuro.ds004284.v1.0.0 <https://doi.org/10.18112/openneuro.ds004284.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - eeg-neuroforecasting
    * - Year
-     - 2022
+     - 2019
    * - Authors
      - Veillette, J., Heald, S., Wittenbrink, B., Nusbaum, H.
    * - License
@@ -103,7 +103,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 16.4 GB
+      - Size on disk: 16.5 GB
       - File count: 18
       - Format: BIDS
 

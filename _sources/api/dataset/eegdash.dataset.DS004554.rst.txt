@@ -7,7 +7,7 @@ eegdash.dataset.DS004554
 
 Forced Picture Naming Task (OpenNeuro ``ds004554``). Access recordings and metadata through EEGDash.
 
-**Citation:** V. Volpert, B. Xu, A. Tchechmedjiev, S. Harispe, A. Aksenov, Q. Mesnildrey and A. Beuter (2023). *Forced Picture Naming Task*. `10.18112/openneuro.ds004554.v1.0.4 <https://doi.org/10.18112/openneuro.ds004554.v1.0.4>`__
+**Citation:** V. Volpert, B. Xu, A. Tchechmedjiev, S. Harispe, A. Aksenov, Q. Mesnildrey and A. Beuter (—). *Forced Picture Naming Task*. `10.18112/openneuro.ds004554.v1.0.4 <https://doi.org/10.18112/openneuro.ds004554.v1.0.4>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Forced Picture Naming Task
    * - Year
-     - 2023
+     - —
    * - Authors
      - V. Volpert, B. Xu, A. Tchechmedjiev, S. Harispe, A. Aksenov, Q. Mesnildrey and A. Beuter
    * - License
@@ -102,7 +102,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 350.6 KB
+      - Size on disk: 8.8 GB
       - File count: 16
       - Format: BIDS
 

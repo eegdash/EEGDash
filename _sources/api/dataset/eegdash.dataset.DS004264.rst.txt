@@ -7,7 +7,7 @@ eegdash.dataset.DS004264
 
 Steer the Ship (OpenNeuro ``ds004264``). Access recordings and metadata through EEGDash.
 
-**Citation:** Cameron D. Hassall, Yan Yan, Laurence T. Hunt (2022). *Steer the Ship*. `10.18112/openneuro.ds004264.v1.1.0 <https://doi.org/10.18112/openneuro.ds004264.v1.1.0>`__
+**Citation:** Cameron D. Hassall, Yan Yan, Laurence T. Hunt (—). *Steer the Ship*. `10.18112/openneuro.ds004264.v1.1.0 <https://doi.org/10.18112/openneuro.ds004264.v1.1.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Steer the Ship
    * - Year
-     - 2022
+     - —
    * - Authors
      - Cameron D. Hassall, Yan Yan, Laurence T. Hunt
    * - License

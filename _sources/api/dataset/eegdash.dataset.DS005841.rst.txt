@@ -7,7 +7,7 @@ eegdash.dataset.DS005841
 
 EEG Experiment measuring ERPs in VR (OpenNeuro ``ds005841``). Access recordings and metadata through EEGDash.
 
-**Citation:** Elena Karakashevska, Alexis Makin, Michael Batterley (2025). *EEG Experiment measuring ERPs in VR*. `10.18112/openneuro.ds005841.v1.0.0 <https://doi.org/10.18112/openneuro.ds005841.v1.0.0>`__
+**Citation:** Elena Karakashevska, Alexis Makin, Michael Batterley (—). *EEG Experiment measuring ERPs in VR*. `10.18112/openneuro.ds005841.v1.0.0 <https://doi.org/10.18112/openneuro.ds005841.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - EEG Experiment measuring ERPs in VR
    * - Year
-     - 2025
+     - —
    * - Authors
      - Elena Karakashevska, Alexis Makin, Michael Batterley
    * - License

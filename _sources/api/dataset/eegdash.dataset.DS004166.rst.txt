@@ -7,7 +7,7 @@ eegdash.dataset.DS004166
 
 Effects of Forward and Backward Span Trainings on Working Memory: Evidence from a Randomized, Controlled Trial (OpenNeuro ``ds004166``). Access recordings and metadata through EEGDash.
 
-**Citation:** Yang Li (data and curation), Wenjin Fu (data), Qiumei Zhang (data), Xiongying Chen (data), Xiaohong Li (data), Boqi Du (data), Xiaoxiang Deng (data), Feng Ji (curation), Qi Dong (curation), Feng Ji (curation), Susanne M. Jaeggi (curation), Chuansheng Chen (curation), Jun Li (data and curation) (2022). *Effects of Forward and Backward Span Trainings on Working Memory: Evidence from a Randomized, Controlled Trial*. `10.18112/openneuro.ds004166.v1.0.0 <https://doi.org/10.18112/openneuro.ds004166.v1.0.0>`__
+**Citation:** Yang Li (data and curation), Wenjin Fu (data), Qiumei Zhang (data), Xiongying Chen (data), Xiaohong Li (data), Boqi Du (data), Xiaoxiang Deng (data), Feng Ji (curation), Qi Dong (curation), Feng Ji (curation), Susanne M. Jaeggi (curation), Chuansheng Chen (curation), Jun Li (data and curation) (—). *Effects of Forward and Backward Span Trainings on Working Memory: Evidence from a Randomized, Controlled Trial*. `10.18112/openneuro.ds004166.v1.0.0 <https://doi.org/10.18112/openneuro.ds004166.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Effects of Forward and Backward Span Trainings on Working Memory: Evidence from a Randomized, Controlled Trial
    * - Year
-     - 2022
+     - —
    * - Authors
      - Yang Li (data and curation), Wenjin Fu (data), Qiumei Zhang (data), Xiongying Chen (data), Xiaohong Li (data), Boqi Du (data), Xiaoxiang Deng (data), Feng Ji (curation), Qi Dong (curation), Feng Ji (curation), Susanne M. Jaeggi (curation), Chuansheng Chen (curation), Jun Li (data and curation)
    * - License
@@ -127,7 +127,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 259.7 KB
+      - Size on disk: 77.4 GB
       - File count: 213
       - Format: BIDS
 

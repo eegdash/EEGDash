@@ -7,7 +7,7 @@ eegdash.dataset.DS006940
 
 Dataset: EEG-Controlled Exoskeleton for Walking and Standing - A Longitudinal Study of Healthy Individuals (OpenNeuro ``ds006940``). Access recordings and metadata through EEGDash.
 
-**Citation:** Shantanu Sarkar, Kevin Nathan, Jose L. Contreras-Vidal (2025). *Dataset: EEG-Controlled Exoskeleton for Walking and Standing - A Longitudinal Study of Healthy Individuals*. `10.18112/openneuro.ds006940.v1.0.0 <https://doi.org/10.18112/openneuro.ds006940.v1.0.0>`__
+**Citation:** Shantanu Sarkar, Kevin Nathan, Jose L. Contreras-Vidal (—). *Dataset: EEG-Controlled Exoskeleton for Walking and Standing - A Longitudinal Study of Healthy Individuals*. `10.18112/openneuro.ds006940.v1.0.0 <https://doi.org/10.18112/openneuro.ds006940.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Dataset: EEG-Controlled Exoskeleton for Walking and Standing - A Longitudinal Study of Healthy Individuals
    * - Year
-     - 2025
+     - —
    * - Authors
      - Shantanu Sarkar, Kevin Nathan, Jose L. Contreras-Vidal
    * - License
@@ -148,7 +148,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 3.6 GB
+      - Size on disk: 3.8 GB
       - File count: 935
       - Format: BIDS
 

@@ -7,7 +7,7 @@ eegdash.dataset.DS005810
 
 NOD-MEG (OpenNeuro ``ds005810``). Access recordings and metadata through EEGDash.
 
-**Citation:** Guohao Zhang, Ming Zhou, Shaohua Tang, Shuyi Zhen, Zheng Li, Zonglei Zhen (2025). *NOD-MEG*. `10.18112/openneuro.ds005810.v1.0.6 <https://doi.org/10.18112/openneuro.ds005810.v1.0.6>`__
+**Citation:** Guohao Zhang, Ming Zhou, Shaohua Tang, Shuyi Zhen, Zheng Li, Zonglei Zhen (—). *NOD-MEG*. `10.18112/openneuro.ds005810.v1.0.6 <https://doi.org/10.18112/openneuro.ds005810.v1.0.6>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - NOD-MEG
    * - Year
-     - 2025
+     - —
    * - Authors
      - Guohao Zhang, Ming Zhou, Shaohua Tang, Shuyi Zhen, Zheng Li, Zonglei Zhen
    * - License
@@ -147,7 +147,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 149.5 GB
+      - Size on disk: 186.0 GB
       - File count: 286
       - Format: BIDS
 

@@ -7,7 +7,7 @@ eegdash.dataset.DS006126
 
 TDCS Modulation of Visual Cortex in Motor Imagery (OpenNeuro ``ds006126``). Access recordings and metadata through EEGDash.
 
-**Citation:** Anthony Mensah, Gleb Perevoznyuk, Artyom Batov, Aleksandra S. Pleskovskaya (2025). *TDCS Modulation of Visual Cortex in Motor Imagery*. `10.18112/openneuro.ds006126.v1.0.0 <https://doi.org/10.18112/openneuro.ds006126.v1.0.0>`__
+**Citation:** Anthony Mensah, Gleb Perevoznyuk, Artyom Batov, Aleksandra S. Pleskovskaya (2019). *TDCS Modulation of Visual Cortex in Motor Imagery*. `10.18112/openneuro.ds006126.v1.0.0 <https://doi.org/10.18112/openneuro.ds006126.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - TDCS Modulation of Visual Cortex in Motor Imagery
    * - Year
-     - 2025
+     - 2019
    * - Authors
      - Anthony Mensah, Gleb Perevoznyuk, Artyom Batov, Aleksandra S. Pleskovskaya
    * - License

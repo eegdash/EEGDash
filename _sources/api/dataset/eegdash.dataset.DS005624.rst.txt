@@ -7,7 +7,7 @@ eegdash.dataset.DS005624
 
 Color Change Detection Task (OpenNeuro ``ds005624``). Access recordings and metadata through EEGDash.
 
-**Citation:** [Unspecified] (2024). *Color Change Detection Task*. `10.18112/openneuro.ds005624.v1.0.0 <https://doi.org/10.18112/openneuro.ds005624.v1.0.0>`__
+**Citation:** [Unspecified] (2019). *Color Change Detection Task*. `10.18112/openneuro.ds005624.v1.0.0 <https://doi.org/10.18112/openneuro.ds005624.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Color Change Detection Task
    * - Year
-     - 2024
+     - 2019
    * - Authors
      - [Unspecified]
    * - License
@@ -89,7 +89,7 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 74 (8), 172 (6), 223 (6), 115 (4), 111 (4), 152 (4), 100 (4), 151 (4), 95 (4), 162 (4), 128 (2), 123 (2), 118 (2), 127 (2), 166 (2), 205 (2), 101 (2), 228 (2), 173 (2), 189 (2), 191 (2)
+      - Channels: 74 (8), 172 (6), 223 (6), 162 (4), 95 (4), 100 (4), 151 (4), 115 (4), 152 (4), 111 (4), 101 (2), 173 (2), 228 (2), 191 (2), 189 (2), 205 (2), 166 (2), 123 (2), 128 (2), 127 (2), 118 (2)
       - Sampling rate (Hz): 512.0 (52), 1024.0 (18)
       - Duration (hours): 0.0
 

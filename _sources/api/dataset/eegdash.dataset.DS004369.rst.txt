@@ -7,7 +7,7 @@ eegdash.dataset.DS004369
 
 Blink-Pause-Relation (Competing Speaker Paradigm) (OpenNeuro ``ds004369``). Access recordings and metadata through EEGDash.
 
-**Citation:** Bjoern Holtze, Marc Rosenkranz, Martin Bleichner, Stefan Debener (2022). *Blink-Pause-Relation (Competing Speaker Paradigm)*. `10.18112/openneuro.ds004369.v1.0.1 <https://doi.org/10.18112/openneuro.ds004369.v1.0.1>`__
+**Citation:** Bjoern Holtze, Marc Rosenkranz, Martin Bleichner, Stefan Debener (—). *Blink-Pause-Relation (Competing Speaker Paradigm)*. `10.18112/openneuro.ds004369.v1.0.1 <https://doi.org/10.18112/openneuro.ds004369.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Blink-Pause-Relation (Competing Speaker Paradigm)
    * - Year
-     - 2022
+     - —
    * - Authors
      - Bjoern Holtze, Marc Rosenkranz, Martin Bleichner, Stefan Debener
    * - License
@@ -99,7 +99,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 2.0 GB
+      - Size on disk: 8.0 GB
       - File count: 41
       - Format: BIDS
 

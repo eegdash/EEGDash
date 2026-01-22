@@ -7,7 +7,7 @@ eegdash.dataset.DS003690
 
 EEG, ECG and pupil data from young and older adults: rest and auditory cued reaction time tasks (OpenNeuro ``ds003690``). Access recordings and metadata through EEGDash.
 
-**Citation:** Maria J. Ribeiro, Miguel Castelo-Branco (2021). *EEG, ECG and pupil data from young and older adults: rest and auditory cued reaction time tasks*. `10.18112/openneuro.ds003690.v1.0.0 <https://doi.org/10.18112/openneuro.ds003690.v1.0.0>`__
+**Citation:** Maria J. Ribeiro, Miguel Castelo-Branco (—). *EEG, ECG and pupil data from young and older adults: rest and auditory cued reaction time tasks*. `10.18112/openneuro.ds003690.v1.0.0 <https://doi.org/10.18112/openneuro.ds003690.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - EEG, ECG and pupil data from young and older adults: rest and auditory cued reaction time tasks
    * - Year
-     - 2021
+     - —
    * - Authors
      - Maria J. Ribeiro, Miguel Castelo-Branco
    * - License
@@ -108,7 +108,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 4.9 MB
+      - Size on disk: 21.5 GB
       - File count: 375
       - Format: BIDS
 

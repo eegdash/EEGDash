@@ -7,7 +7,7 @@ eegdash.dataset.DS004368
 
 Meta-rdk: Preprocessed EEG data (OpenNeuro ``ds004368``). Access recordings and metadata through EEGDash.
 
-**Citation:** Martin Rouy, Matthieu Roger, Dorian Goueytes, Michael Pereira, Paul Roux, Nathan Faivre (2022). *Meta-rdk: Preprocessed EEG data*. `10.18112/openneuro.ds004368.v1.0.2 <https://doi.org/10.18112/openneuro.ds004368.v1.0.2>`__
+**Citation:** Martin Rouy, Matthieu Roger, Dorian Goueytes, Michael Pereira, Paul Roux, Nathan Faivre (—). *Meta-rdk: Preprocessed EEG data*. `10.18112/openneuro.ds004368.v1.0.2 <https://doi.org/10.18112/openneuro.ds004368.v1.0.2>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Meta-rdk: Preprocessed EEG data
    * - Year
-     - 2022
+     - —
    * - Authors
      - Martin Rouy, Matthieu Roger, Dorian Goueytes, Michael Pereira, Paul Roux, Nathan Faivre
    * - License
@@ -100,7 +100,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 997.1 MB
+      - Size on disk: 997.6 MB
       - File count: 40
       - Format: BIDS
 

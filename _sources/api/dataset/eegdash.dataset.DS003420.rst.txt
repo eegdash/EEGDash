@@ -7,7 +7,7 @@ eegdash.dataset.DS003420
 
 HD-EEGtask(Dataset 1) (OpenNeuro ``ds003420``). Access recordings and metadata through EEGDash.
 
-**Citation:** Ahmad Mheich, Olivier Dufor, Sahar Yassine, Aya Kabbara, Arnaud Biraben, Fabrice Wendling, Mahmoud Hassan (2020). *HD-EEGtask(Dataset 1)*. `10.18112/openneuro.ds003420.v1.0.2 <https://doi.org/10.18112/openneuro.ds003420.v1.0.2>`__
+**Citation:** Ahmad Mheich, Olivier Dufor, Sahar Yassine, Aya Kabbara, Arnaud Biraben, Fabrice Wendling, Mahmoud Hassan (20). *HD-EEGtask(Dataset 1)*. `10.18112/openneuro.ds003420.v1.0.2 <https://doi.org/10.18112/openneuro.ds003420.v1.0.2>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - HD-EEGtask(Dataset 1)
    * - Year
-     - 2020
+     - 20
    * - Authors
      - Ahmad Mheich, Olivier Dufor, Sahar Yassine, Aya Kabbara, Arnaud Biraben, Fabrice Wendling, Mahmoud Hassan
    * - License
@@ -150,7 +150,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 2.1 MB
+      - Size on disk: 90.4 GB
       - File count: 92
       - Format: BIDS
 

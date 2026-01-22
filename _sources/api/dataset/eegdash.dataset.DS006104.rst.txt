@@ -7,7 +7,7 @@ eegdash.dataset.DS006104
 
 EEG dataset for speech decoding (OpenNeuro ``ds006104``). Access recordings and metadata through EEGDash.
 
-**Citation:** João Pedro Carvalho Moreira, Vinícius Rezende Carvalho, Eduardo Mazoni Andrade Marçal Mendes, Ariah Fallah, Terrence J. Sejnowski, Claudia Lainscsek, Lindy Comstock (2025). *EEG dataset for speech decoding*. `10.18112/openneuro.ds006104.v1.0.1 <https://doi.org/10.18112/openneuro.ds006104.v1.0.1>`__
+**Citation:** João Pedro Carvalho Moreira, Vinícius Rezende Carvalho, Eduardo Mazoni Andrade Marçal Mendes, Ariah Fallah, Terrence J. Sejnowski, Claudia Lainscsek, Lindy Comstock (20). *EEG dataset for speech decoding*. `10.18112/openneuro.ds006104.v1.0.1 <https://doi.org/10.18112/openneuro.ds006104.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - EEG dataset for speech decoding
    * - Year
-     - 2025
+     - 20
    * - Authors
      - João Pedro Carvalho Moreira, Vinícius Rezende Carvalho, Eduardo Mazoni Andrade Marçal Mendes, Ariah Fallah, Terrence J. Sejnowski, Claudia Lainscsek, Lindy Comstock
    * - License
@@ -158,7 +158,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 43.0 GB
+      - Size on disk: 83.8 GB
       - File count: 56
       - Format: BIDS
 

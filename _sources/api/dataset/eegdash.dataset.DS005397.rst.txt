@@ -7,7 +7,7 @@ eegdash.dataset.DS005397
 
 Affordances of stairs (OpenNeuro ``ds005397``). Access recordings and metadata through EEGDash.
 
-**Citation:** Christopher Hilton, Lilian Befort, Ronja Brinkmann, Matthias Ballestrem, Joerg Fingerhut, Klaus Gramann (2024). *Affordances of stairs*. `10.18112/openneuro.ds005397.v1.0.4 <https://doi.org/10.18112/openneuro.ds005397.v1.0.4>`__
+**Citation:** Christopher Hilton, Lilian Befort, Ronja Brinkmann, Matthias Ballestrem, Joerg Fingerhut, Klaus Gramann (20). *Affordances of stairs*. `10.18112/openneuro.ds005397.v1.0.4 <https://doi.org/10.18112/openneuro.ds005397.v1.0.4>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Affordances of stairs
    * - Year
-     - 2024
+     - 20
    * - Authors
      - Christopher Hilton, Lilian Befort, Ronja Brinkmann, Matthias Ballestrem, Joerg Fingerhut, Klaus Gramann
    * - License
@@ -102,7 +102,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 12.0 GB
+      - Size on disk: 12.1 GB
       - File count: 26
       - Format: BIDS
 

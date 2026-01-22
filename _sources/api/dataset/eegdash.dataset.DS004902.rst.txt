@@ -7,7 +7,7 @@ eegdash.dataset.DS004902
 
 A Resting-state EEG Dataset for Sleep Deprivation (OpenNeuro ``ds004902``). Access recordings and metadata through EEGDash.
 
-**Citation:** Chuqin Xiang, Xinrui Fan, Duo Bai, Ke Lv, Xu Lei (2023). *A Resting-state EEG Dataset for Sleep Deprivation*. `10.18112/openneuro.ds004902.v1.0.8 <https://doi.org/10.18112/openneuro.ds004902.v1.0.8>`__
+**Citation:** Chuqin Xiang, Xinrui Fan, Duo Bai, Ke Lv, Xu Lei (2024). *A Resting-state EEG Dataset for Sleep Deprivation*. `10.18112/openneuro.ds004902.v1.0.8 <https://doi.org/10.18112/openneuro.ds004902.v1.0.8>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - A Resting-state EEG Dataset for Sleep Deprivation
    * - Year
-     - 2023
+     - 2024
    * - Authors
      - Chuqin Xiang, Xinrui Fan, Duo Bai, Ke Lv, Xu Lei
    * - License

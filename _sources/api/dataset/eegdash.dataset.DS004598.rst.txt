@@ -7,7 +7,7 @@ eegdash.dataset.DS004598
 
 LFP during linear track in 6-month old TgF344-AD rats (OpenNeuro ``ds004598``). Access recordings and metadata through EEGDash.
 
-**Citation:** Moradi Faraz, van den Berg Monica, Mirjebreili Morteza, Kosten Lauren, Verhoye Marleen, Amiri Mahmood, Keliris A. Georgios (2023). *LFP during linear track in 6-month old TgF344-AD rats*. `10.18112/openneuro.ds004598.v1.0.0 <https://doi.org/10.18112/openneuro.ds004598.v1.0.0>`__
+**Citation:** Moradi Faraz, van den Berg Monica, Mirjebreili Morteza, Kosten Lauren, Verhoye Marleen, Amiri Mahmood, Keliris A. Georgios (—). *LFP during linear track in 6-month old TgF344-AD rats*. `10.18112/openneuro.ds004598.v1.0.0 <https://doi.org/10.18112/openneuro.ds004598.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - LFP during linear track in 6-month old TgF344-AD rats
    * - Year
-     - 2023
+     - —
    * - Authors
      - Moradi Faraz, van den Berg Monica, Mirjebreili Morteza, Kosten Lauren, Verhoye Marleen, Amiri Mahmood, Keliris A. Georgios
    * - License
@@ -99,7 +99,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 9.9 GB
+      - Size on disk: 26.7 GB
       - File count: 20
       - Format: BIDS
 

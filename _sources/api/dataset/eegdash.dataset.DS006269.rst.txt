@@ -7,7 +7,7 @@ eegdash.dataset.DS006269
 
 Tethered EEG Recordings in Syngap1 rats (OpenNeuro ``ds006269``). Access recordings and metadata through EEGDash.
 
-**Citation:** Lucy Pritchard, Ingrid Buller-Peralta, Sally M Till, Peter C Kind, Alfredo Gonzalez-Sulser (2025). *Tethered EEG Recordings in Syngap1 rats*. `10.18112/openneuro.ds006269.v1.0.0 <https://doi.org/10.18112/openneuro.ds006269.v1.0.0>`__
+**Citation:** Lucy Pritchard, Ingrid Buller-Peralta, Sally M Till, Peter C Kind, Alfredo Gonzalez-Sulser (20). *Tethered EEG Recordings in Syngap1 rats*. `10.18112/openneuro.ds006269.v1.0.0 <https://doi.org/10.18112/openneuro.ds006269.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Tethered EEG Recordings in Syngap1 rats
    * - Year
-     - 2025
+     - 20
    * - Authors
      - Lucy Pritchard, Ingrid Buller-Peralta, Sally M Till, Peter C Kind, Alfredo Gonzalez-Sulser
    * - License

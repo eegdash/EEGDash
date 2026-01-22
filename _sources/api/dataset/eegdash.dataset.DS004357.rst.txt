@@ -7,7 +7,7 @@ eegdash.dataset.DS004357
 
 Features-EEG (OpenNeuro ``ds004357``). Access recordings and metadata through EEGDash.
 
-**Citation:** Grootswagers, Tijl, Robinson, Amanda, Shatek, Sofia, Carlson, Thomas (2022). *Features-EEG*. `10.18112/openneuro.ds004357.v1.0.1 <https://doi.org/10.18112/openneuro.ds004357.v1.0.1>`__
+**Citation:** Grootswagers, Tijl, Robinson, Amanda, Shatek, Sofia, Carlson, Thomas (2024). *Features-EEG*. `10.18112/openneuro.ds004357.v1.0.1 <https://doi.org/10.18112/openneuro.ds004357.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Features-EEG
    * - Year
-     - 2022
+     - 2024
    * - Authors
      - Grootswagers, Tijl, Robinson, Amanda, Shatek, Sofia, Carlson, Thomas
    * - License
@@ -103,7 +103,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 19.3 GB
+      - Size on disk: 69.6 GB
       - File count: 16
       - Format: BIDS
 

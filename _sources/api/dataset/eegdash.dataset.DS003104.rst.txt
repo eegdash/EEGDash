@@ -7,7 +7,7 @@ eegdash.dataset.DS003104
 
 MNE-somato-data-bids dataset (anonymized) (OpenNeuro ``ds003104``). Access recordings and metadata through EEGDash.
 
-**Citation:** Lauri Parkkonen, Stefan Appelhoff, Alexandre Gramfort, Mainak Jas, Richard Höchenberger (2020). *MNE-somato-data-bids dataset (anonymized)*. `10.18112/openneuro.ds003104.v1.0.0 <https://doi.org/10.18112/openneuro.ds003104.v1.0.0>`__
+**Citation:** Lauri Parkkonen, Stefan Appelhoff, Alexandre Gramfort, Mainak Jas, Richard Höchenberger (—). *MNE-somato-data-bids dataset (anonymized)*. `10.18112/openneuro.ds003104.v1.0.0 <https://doi.org/10.18112/openneuro.ds003104.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - MNE-somato-data-bids dataset (anonymized)
    * - Year
-     - 2020
+     - —
    * - Authors
      - Lauri Parkkonen, Stefan Appelhoff, Alexandre Gramfort, Mainak Jas, Richard Höchenberger
    * - License
@@ -128,7 +128,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 333.7 MB
+      - Size on disk: 726.2 MB
       - File count: 1
       - Format: BIDS
 

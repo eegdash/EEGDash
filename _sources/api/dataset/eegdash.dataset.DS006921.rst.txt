@@ -7,7 +7,7 @@ eegdash.dataset.DS006921
 
 High Density Resting State EEG of Phantom Limb Pain and Controls (OpenNeuro ``ds006921``). Access recordings and metadata through EEGDash.
 
-**Citation:** Ramne, M., Damercheli, S., Apelgren, F., Pettersson, I., Lendaro, E. (2025). *High Density Resting State EEG of Phantom Limb Pain and Controls*. `10.18112/openneuro.ds006921.v1.1.0 <https://doi.org/10.18112/openneuro.ds006921.v1.1.0>`__
+**Citation:** Ramne, M., Damercheli, S., Apelgren, F., Pettersson, I., Lendaro, E. (2024). *High Density Resting State EEG of Phantom Limb Pain and Controls*. `10.18112/openneuro.ds006921.v1.1.0 <https://doi.org/10.18112/openneuro.ds006921.v1.1.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - High Density Resting State EEG of Phantom Limb Pain and Controls
    * - Year
-     - 2025
+     - 2024
    * - Authors
      - Ramne, M., Damercheli, S., Apelgren, F., Pettersson, I., Lendaro, E.
    * - License
@@ -98,7 +98,7 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 128 (124), 122 (124), 63 (28), 64 (28)
+      - Channels: 122 (124), 128 (124), 64 (28), 63 (28)
       - Sampling rate (Hz): 2400.0
       - Duration (hours): 0.0
 

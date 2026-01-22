@@ -7,7 +7,7 @@ eegdash.dataset.DS004511
 
 Deception_data (OpenNeuro ``ds004511``). Access recordings and metadata through EEGDash.
 
-**Citation:** Makowski, Dominique, Pham, Tam, Lau, Zen Juen (2023). *Deception_data*. `10.18112/openneuro.ds004511.v1.0.2 <https://doi.org/10.18112/openneuro.ds004511.v1.0.2>`__
+**Citation:** Makowski, Dominique, Pham, Tam, Lau, Zen Juen (20). *Deception_data*. `10.18112/openneuro.ds004511.v1.0.2 <https://doi.org/10.18112/openneuro.ds004511.v1.0.2>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Deception_data
    * - Year
-     - 2023
+     - 20
    * - Authors
      - Makowski, Dominique, Pham, Tam, Lau, Zen Juen
    * - License

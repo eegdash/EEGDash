@@ -7,7 +7,7 @@ eegdash.dataset.DS006465
 
 3M-CPSEED：An EEG-based Dataset for Chinese Pinyin Production in Overt, Silent-intended, and Imagined Speech (OpenNeuro ``ds006465``). Access recordings and metadata through EEGDash.
 
-**Citation:** Xinyu Ma, Jiang Yi, Ning Jiang (2025). *3M-CPSEED：An EEG-based Dataset for Chinese Pinyin Production in Overt, Silent-intended, and Imagined Speech*. `10.18112/openneuro.ds006465.v2.0.0 <https://doi.org/10.18112/openneuro.ds006465.v2.0.0>`__
+**Citation:** Xinyu Ma, Jiang Yi, Ning Jiang (—). *3M-CPSEED：An EEG-based Dataset for Chinese Pinyin Production in Overt, Silent-intended, and Imagined Speech*. `10.18112/openneuro.ds006465.v2.0.0 <https://doi.org/10.18112/openneuro.ds006465.v2.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - 3M-CPSEED：An EEG-based Dataset for Chinese Pinyin Production in Overt, Silent-intended, and Imagined Speech
    * - Year
-     - 2025
+     - —
    * - Authors
      - Xinyu Ma, Jiang Yi, Ning Jiang
    * - License
@@ -116,7 +116,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 8.2 GB
+      - Size on disk: 15.9 GB
       - File count: 80
       - Format: BIDS
 

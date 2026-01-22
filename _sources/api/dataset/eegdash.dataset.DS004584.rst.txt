@@ -7,7 +7,7 @@ eegdash.dataset.DS004584
 
 Rest eyes open (OpenNeuro ``ds004584``). Access recordings and metadata through EEGDash.
 
-**Citation:** Arun Singh arun.singh@usd.edu, Rachel Cole rachel-cole@uiowa.edu, Arturo Espinoza arturo-espinoza@uiowa.edu, Jim Cavanagh jcavanagh@unm.edu, Nandakumar Narayanan nandakumar-narayanan@uiowa.edu (2023). *Rest eyes open*. `10.18112/openneuro.ds004584.v1.0.0 <https://doi.org/10.18112/openneuro.ds004584.v1.0.0>`__
+**Citation:** Arun Singh arun.singh@usd.edu, Rachel Cole rachel-cole@uiowa.edu, Arturo Espinoza arturo-espinoza@uiowa.edu, Jim Cavanagh jcavanagh@unm.edu, Nandakumar Narayanan nandakumar-narayanan@uiowa.edu (—). *Rest eyes open*. `10.18112/openneuro.ds004584.v1.0.0 <https://doi.org/10.18112/openneuro.ds004584.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Rest eyes open
    * - Year
-     - 2023
+     - —
    * - Authors
      - Arun Singh arun.singh@usd.edu, Rachel Cole rachel-cole@uiowa.edu, Arturo Espinoza arturo-espinoza@uiowa.edu, Jim Cavanagh jcavanagh@unm.edu, Nandakumar Narayanan nandakumar-narayanan@uiowa.edu
    * - License

@@ -7,7 +7,7 @@ eegdash.dataset.DS003620
 
 Runabout: A mobile EEG study of auditory oddball processing in laboratory and real-world conditions (OpenNeuro ``ds003620``). Access recordings and metadata through EEGDash.
 
-**Citation:** Magnus Liebherr, Andrew W. Corcoran, Phillip M. Alday, Scott Coussens, Valeria Bellan, Caitlin A. Howlett, Maarten A. Immink, Mark Kohler, Matthias Schlesewsky, Ina Bornkessel-Schlesewsky (2021). *Runabout: A mobile EEG study of auditory oddball processing in laboratory and real-world conditions*. `10.18112/openneuro.ds003620.v1.1.1 <https://doi.org/10.18112/openneuro.ds003620.v1.1.1>`__
+**Citation:** Magnus Liebherr, Andrew W. Corcoran, Phillip M. Alday, Scott Coussens, Valeria Bellan, Caitlin A. Howlett, Maarten A. Immink, Mark Kohler, Matthias Schlesewsky, Ina Bornkessel-Schlesewsky (20). *Runabout: A mobile EEG study of auditory oddball processing in laboratory and real-world conditions*. `10.18112/openneuro.ds003620.v1.1.1 <https://doi.org/10.18112/openneuro.ds003620.v1.1.1>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Runabout: A mobile EEG study of auditory oddball processing in laboratory and real-world conditions
    * - Year
-     - 2021
+     - 20
    * - Authors
      - Magnus Liebherr, Andrew W. Corcoran, Phillip M. Alday, Scott Coussens, Valeria Bellan, Caitlin A. Howlett, Maarten A. Immink, Mark Kohler, Matthias Schlesewsky, Ina Bornkessel-Schlesewsky
    * - License
@@ -283,7 +283,7 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 32
+      - Channels: 32 (110), 35 (45)
       - Sampling rate (Hz): 500.0
       - Duration (hours): 0.0
 
@@ -297,7 +297,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 478.1 MB
+      - Size on disk: 89.4 GB
       - File count: 100
       - Format: BIDS
 

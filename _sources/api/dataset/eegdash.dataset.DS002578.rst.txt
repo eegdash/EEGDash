@@ -7,7 +7,7 @@ eegdash.dataset.DS002578
 
 Visual Oddball Task (256 channels) (OpenNeuro ``ds002578``). Access recordings and metadata through EEGDash.
 
-**Citation:** Arnaud Delorme, Scott Makeig (2020). *Visual Oddball Task (256 channels)*. `10.18112/openneuro.ds002578.v1.1.0 <https://doi.org/10.18112/openneuro.ds002578.v1.1.0>`__
+**Citation:** Arnaud Delorme, Scott Makeig (20). *Visual Oddball Task (256 channels)*. `10.18112/openneuro.ds002578.v1.1.0 <https://doi.org/10.18112/openneuro.ds002578.v1.1.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Visual Oddball Task (256 channels)
    * - Year
-     - 2020
+     - 20
    * - Authors
      - Arnaud Delorme, Scott Makeig
    * - License

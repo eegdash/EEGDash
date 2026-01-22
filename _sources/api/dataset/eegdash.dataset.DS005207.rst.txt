@@ -7,7 +7,7 @@ eegdash.dataset.DS005207
 
 Surrey cEEGrid sleep data set (OpenNeuro ``ds005207``). Access recordings and metadata through EEGDash.
 
-**Citation:** Kaare B. Mikkelsen, James K Ebajemito, Maria A Bonmati-Carrion, Nayantara Santhi, Victoria L Revell, Giuseppe Atzori, Laura Birch, Ciro Della Monica, Stefan Debener, Derk-Jan Dijk, Annette Sterr, Maarten De Vos (2024). *Surrey cEEGrid sleep data set*. `10.18112/openneuro.ds005207.v1.0.0 <https://doi.org/10.18112/openneuro.ds005207.v1.0.0>`__
+**Citation:** Kaare B. Mikkelsen, James K Ebajemito, Maria A Bonmati-Carrion, Nayantara Santhi, Victoria L Revell, Giuseppe Atzori, Laura Birch, Ciro Della Monica, Stefan Debener, Derk-Jan Dijk, Annette Sterr, Maarten De Vos (20). *Surrey cEEGrid sleep data set*. `10.18112/openneuro.ds005207.v1.0.0 <https://doi.org/10.18112/openneuro.ds005207.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Surrey cEEGrid sleep data set
    * - Year
-     - 2024
+     - 20
    * - Authors
      - Kaare B. Mikkelsen, James K Ebajemito, Maria A Bonmati-Carrion, Nayantara Santhi, Victoria L Revell, Giuseppe Atzori, Laura Birch, Ciro Della Monica, Stefan Debener, Derk-Jan Dijk, Annette Sterr, Maarten De Vos
    * - License
@@ -100,7 +100,7 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 13 (8), 18 (8), 10 (8), 6 (7), 24 (6), 14 (6), 11 (5), 20 (5), 15 (5), 16 (5), 27 (4), 12 (3), 21 (3), 17 (2), 23 (2), 22
+      - Channels: 18 (8), 10 (8), 13 (8), 6 (7), 24 (6), 14 (6), 16 (5), 15 (5), 20 (5), 11 (5), 27 (4), 21 (3), 12 (3), 23 (2), 17 (2), 22
       - Sampling rate (Hz): 128.0 (40), 250.0 (38)
       - Duration (hours): 0.0
 
@@ -114,7 +114,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 28.5 GB
+      - Size on disk: 69.1 GB
       - File count: 39
       - Format: BIDS
 

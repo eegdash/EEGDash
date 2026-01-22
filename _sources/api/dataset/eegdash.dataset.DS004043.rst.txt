@@ -7,7 +7,7 @@ eegdash.dataset.DS004043
 
 The time-course of feature-based attention effects dissociated from temporal expectation and target-related processes (OpenNeuro ``ds004043``). Access recordings and metadata through EEGDash.
 
-**Citation:** Moerel, Denise, Grootswagers, Tijl, Robinson, Amanda, Shatek, Sophia, Woolgar, Alexandra, Carlson, Thomas, Rich, Anina (2022). *The time-course of feature-based attention effects dissociated from temporal expectation and target-related processes*. `10.18112/openneuro.ds004043.v1.1.0 <https://doi.org/10.18112/openneuro.ds004043.v1.1.0>`__
+**Citation:** Moerel, Denise, Grootswagers, Tijl, Robinson, Amanda, Shatek, Sophia, Woolgar, Alexandra, Carlson, Thomas, Rich, Anina (2021). *The time-course of feature-based attention effects dissociated from temporal expectation and target-related processes*. `10.18112/openneuro.ds004043.v1.1.0 <https://doi.org/10.18112/openneuro.ds004043.v1.1.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - The time-course of feature-based attention effects dissociated from temporal expectation and target-related processes
    * - Year
-     - 2022
+     - 2021
    * - Authors
      - Moerel, Denise, Grootswagers, Tijl, Robinson, Amanda, Shatek, Sophia, Woolgar, Alexandra, Carlson, Thomas, Rich, Anina
    * - License
@@ -104,7 +104,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 15.4 GB
+      - Size on disk: 30.5 GB
       - File count: 20
       - Format: BIDS
 

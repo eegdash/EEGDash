@@ -7,7 +7,7 @@ eegdash.dataset.DS004952
 
 ChineseEEG: A Chinese Linguistic Corpora EEG Dataset for Semantic Alignment and Neural Decoding (OpenNeuro ``ds004952``). Access recordings and metadata through EEGDash.
 
-**Citation:** Xinyu Mou, Cuilin He, Liwei Tan, Junjie Yu, Huadong Liang, Jianyu Zhang, Tian Yan, Yu-Fang Yang, Ting Xu, Qing Wang, Miao Cao, Zijiao Chen, Chuan-Peng Hu, Xindi Wang, Quanying Liu, Haiyan Wu (2024). *ChineseEEG: A Chinese Linguistic Corpora EEG Dataset for Semantic Alignment and Neural Decoding*. `10.18112/openneuro.ds004952.v1.2.2 <https://doi.org/10.18112/openneuro.ds004952.v1.2.2>`__
+**Citation:** Xinyu Mou, Cuilin He, Liwei Tan, Junjie Yu, Huadong Liang, Jianyu Zhang, Tian Yan, Yu-Fang Yang, Ting Xu, Qing Wang, Miao Cao, Zijiao Chen, Chuan-Peng Hu, Xindi Wang, Quanying Liu, Haiyan Wu (2019). *ChineseEEG: A Chinese Linguistic Corpora EEG Dataset for Semantic Alignment and Neural Decoding*. `10.18112/openneuro.ds004952.v1.2.2 <https://doi.org/10.18112/openneuro.ds004952.v1.2.2>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - ChineseEEG: A Chinese Linguistic Corpora EEG Dataset for Semantic Alignment and Neural Decoding
    * - Year
-     - 2024
+     - 2019
    * - Authors
      - Xinyu Mou, Cuilin He, Liwei Tan, Junjie Yu, Huadong Liang, Jianyu Zhang, Tian Yan, Yu-Fang Yang, Ting Xu, Qing Wang, Miao Cao, Zijiao Chen, Chuan-Peng Hu, Xindi Wang, Quanying Liu, Haiyan Wu
    * - License
@@ -233,7 +233,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 207.1 GB
+      - Size on disk: 696.7 GB
       - File count: 245
       - Format: BIDS
 

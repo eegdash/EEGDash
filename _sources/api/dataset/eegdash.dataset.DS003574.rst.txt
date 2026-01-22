@@ -7,7 +7,7 @@ eegdash.dataset.DS003574
 
 Reward biases spontaneous neural reactivation during sleep (OpenNeuro ``ds003574``). Access recordings and metadata through EEGDash.
 
-**Citation:** Virginie Sterpenich, Mojca KM van Schie, Maximilien Catsiyannis, Avinash Ramyead, Stephen Perrig, Hee-Deok Yang, Dimitri Van De Ville, Sophie Schwartz (2021). *Reward biases spontaneous neural reactivation during sleep*. `10.18112/openneuro.ds003574.v1.0.2 <https://doi.org/10.18112/openneuro.ds003574.v1.0.2>`__
+**Citation:** Virginie Sterpenich, Mojca KM van Schie, Maximilien Catsiyannis, Avinash Ramyead, Stephen Perrig, Hee-Deok Yang, Dimitri Van De Ville, Sophie Schwartz (—). *Reward biases spontaneous neural reactivation during sleep*. `10.18112/openneuro.ds003574.v1.0.2 <https://doi.org/10.18112/openneuro.ds003574.v1.0.2>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Reward biases spontaneous neural reactivation during sleep
    * - Year
-     - 2021
+     - —
    * - Authors
      - Virginie Sterpenich, Mojca KM van Schie, Maximilien Catsiyannis, Avinash Ramyead, Stephen Perrig, Hee-Deok Yang, Dimitri Van De Ville, Sophie Schwartz
    * - License
@@ -91,7 +91,7 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 69 (18), 64 (18)
+      - Channels: 64 (18), 69 (18)
       - Sampling rate (Hz): 500.0
       - Duration (hours): 0.0
 

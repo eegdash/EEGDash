@@ -7,7 +7,7 @@ eegdash.dataset.DS004279
 
 Large Spanish EEG (OpenNeuro ``ds004279``). Access recordings and metadata through EEGDash.
 
-**Citation:** Carlos Valle Araya, Carolina Mendez-Orellana, Maria Rodriguez-Fernandez (2022). *Large Spanish EEG*. `10.18112/openneuro.ds004279.v1.1.2 <https://doi.org/10.18112/openneuro.ds004279.v1.1.2>`__
+**Citation:** Carlos Valle Araya, Carolina Mendez-Orellana, Maria Rodriguez-Fernandez (2024). *Large Spanish EEG*. `10.18112/openneuro.ds004279.v1.1.2 <https://doi.org/10.18112/openneuro.ds004279.v1.1.2>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Large Spanish EEG
    * - Year
-     - 2022
+     - 2024
    * - Authors
      - Carlos Valle Araya, Carolina Mendez-Orellana, Maria Rodriguez-Fernandez
    * - License
@@ -108,7 +108,7 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 69 (60), 64 (60)
+      - Channels: 64 (60), 69 (60)
       - Sampling rate (Hz): 1000.0
       - Duration (hours): 0.0
 

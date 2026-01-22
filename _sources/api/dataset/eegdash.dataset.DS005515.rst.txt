@@ -7,7 +7,7 @@ eegdash.dataset.DS005515
 
 Healthy Brain Network (HBN) EEG - Release 10 (OpenNeuro ``ds005515``). Access recordings and metadata through EEGDash.
 
-**Citation:** Seyed Yahya Shirazi, Alexandre Franco, Maurício Scopel Hoffmann, Nathalia B. Esper, Dung Truong, Arnaud Delorme, Michael Milham, Scott Makeig (2024). *Healthy Brain Network (HBN) EEG - Release 10*. `10.18112/openneuro.ds005515.v1.0.1 <https://doi.org/10.18112/openneuro.ds005515.v1.0.1>`__
+**Citation:** Seyed Yahya Shirazi, Alexandre Franco, Maurício Scopel Hoffmann, Nathalia B. Esper, Dung Truong, Arnaud Delorme, Michael Milham, Scott Makeig (20). *Healthy Brain Network (HBN) EEG - Release 10*. `10.18112/openneuro.ds005515.v1.0.1 <https://doi.org/10.18112/openneuro.ds005515.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Healthy Brain Network (HBN) EEG - Release 10
    * - Year
-     - 2024
+     - 20
    * - Authors
      - Seyed Yahya Shirazi, Alexandre Franco, Maurício Scopel Hoffmann, Nathalia B. Esper, Dung Truong, Arnaud Delorme, Michael Milham, Scott Makeig
    * - License
@@ -224,7 +224,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 160.5 GB
+      - Size on disk: 160.6 GB
       - File count: 2516
       - Format: BIDS
 

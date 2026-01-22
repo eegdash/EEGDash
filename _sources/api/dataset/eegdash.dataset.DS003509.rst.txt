@@ -7,7 +7,7 @@ eegdash.dataset.DS003509
 
 EEG: Simon Conflict in Parkinson's (OpenNeuro ``ds003509``). Access recordings and metadata through EEGDash.
 
-**Citation:** James F Cavanagh, Arun Singh, Kumar Narayanan (2021). *EEG: Simon Conflict in Parkinson's*. `10.18112/openneuro.ds003509.v1.1.0 <https://doi.org/10.18112/openneuro.ds003509.v1.1.0>`__
+**Citation:** James F Cavanagh, Arun Singh, Kumar Narayanan (20). *EEG: Simon Conflict in Parkinson's*. `10.18112/openneuro.ds003509.v1.1.0 <https://doi.org/10.18112/openneuro.ds003509.v1.1.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - EEG: Simon Conflict in Parkinson's
    * - Year
-     - 2021
+     - 20
    * - Authors
      - James F Cavanagh, Arun Singh, Kumar Narayanan
    * - License
@@ -85,7 +85,7 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 67 (84), 64 (84)
+      - Channels: 64 (84), 67 (84)
       - Sampling rate (Hz): 500.0
       - Duration (hours): 0.0
 
@@ -99,7 +99,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 8.2 MB
+      - Size on disk: 22.3 GB
       - File count: 84
       - Format: BIDS
 

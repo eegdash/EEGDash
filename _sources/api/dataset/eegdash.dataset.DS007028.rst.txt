@@ -7,7 +7,7 @@ eegdash.dataset.DS007028
 
 Auditory Cortex Macaque Monkey DISC Data (OpenNeuro ``ds007028``). Access recordings and metadata through EEGDash.
 
-**Citation:** Yoshinao Kajikawa, Charles Schroeder (2025). *Auditory Cortex Macaque Monkey DISC Data*. `10.18112/openneuro.ds007028.v1.0.0 <https://doi.org/10.18112/openneuro.ds007028.v1.0.0>`__
+**Citation:** Yoshinao Kajikawa, Charles Schroeder (—). *Auditory Cortex Macaque Monkey DISC Data*. `10.18112/openneuro.ds007028.v1.0.0 <https://doi.org/10.18112/openneuro.ds007028.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Auditory Cortex Macaque Monkey DISC Data
    * - Year
-     - 2025
+     - —
    * - Authors
      - Yoshinao Kajikawa, Charles Schroeder
    * - License

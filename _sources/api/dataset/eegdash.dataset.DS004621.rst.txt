@@ -7,7 +7,7 @@ eegdash.dataset.DS004621
 
 The Nencki-Symfonia EEG/ERP dataset (OpenNeuro ``ds004621``). Access recordings and metadata through EEGDash.
 
-**Citation:** Dzianok Patrycja, Antonova Ingrida, Wojciechowski Jakub, Dreszer Joanna, Kublik Ewa (2023). *The Nencki-Symfonia EEG/ERP dataset*. `10.18112/openneuro.ds004621.v1.0.4 <https://doi.org/10.18112/openneuro.ds004621.v1.0.4>`__
+**Citation:** Dzianok Patrycja, Antonova Ingrida, Wojciechowski Jakub, Dreszer Joanna, Kublik Ewa (20). *The Nencki-Symfonia EEG/ERP dataset*. `10.18112/openneuro.ds004621.v1.0.4 <https://doi.org/10.18112/openneuro.ds004621.v1.0.4>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - The Nencki-Symfonia EEG/ERP dataset
    * - Year
-     - 2023
+     - 20
    * - Authors
      - Dzianok Patrycja, Antonova Ingrida, Wojciechowski Jakub, Dreszer Joanna, Kublik Ewa
    * - License
@@ -96,7 +96,7 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: —
+      - Channels: 127
       - Sampling rate (Hz): 1000.0
       - Duration (hours): 0.0
 

@@ -7,7 +7,7 @@ eegdash.dataset.DS004348
 
 Ear-EEG Sleep Monitoring 2017 (EESM17) (OpenNeuro ``ds004348``). Access recordings and metadata through EEGDash.
 
-**Citation:** Kaare B. Mikkelsen, David B. Villadsen, Laura Birch, Marit Otto, Preben Kidmose (2024). *Ear-EEG Sleep Monitoring 2017 (EESM17)*. `10.18112/openneuro.ds004348.v1.0.5 <https://doi.org/10.18112/openneuro.ds004348.v1.0.5>`__
+**Citation:** Kaare B. Mikkelsen, David B. Villadsen, Laura Birch, Marit Otto, Preben Kidmose (20). *Ear-EEG Sleep Monitoring 2017 (EESM17)*. `10.18112/openneuro.ds004348.v1.0.5 <https://doi.org/10.18112/openneuro.ds004348.v1.0.5>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Ear-EEG Sleep Monitoring 2017 (EESM17)
    * - Year
-     - 2024
+     - 20
    * - Authors
      - Kaare B. Mikkelsen, David B. Villadsen, Laura Birch, Marit Otto, Preben Kidmose
    * - License
@@ -117,7 +117,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 528.9 KB
+      - Size on disk: 12.3 GB
       - File count: 18
       - Format: BIDS
 

@@ -7,7 +7,7 @@ eegdash.dataset.DS004252
 
 Rotation-tolerant representations elucidate the time course of high-level object processing (OpenNeuro ``ds004252``). Access recordings and metadata through EEGDash.
 
-**Citation:** Denise Moerel, Tijl Grootswagers, Amanda K. Robinson, Patrick Engeler, Alex O. Holcombe, Thomas A. Carlson (2022). *Rotation-tolerant representations elucidate the time course of high-level object processing*. `10.18112/openneuro.ds004252.v1.0.2 <https://doi.org/10.18112/openneuro.ds004252.v1.0.2>`__
+**Citation:** Denise Moerel, Tijl Grootswagers, Amanda K. Robinson, Patrick Engeler, Alex O. Holcombe, Thomas A. Carlson (20). *Rotation-tolerant representations elucidate the time course of high-level object processing*. `10.18112/openneuro.ds004252.v1.0.2 <https://doi.org/10.18112/openneuro.ds004252.v1.0.2>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Rotation-tolerant representations elucidate the time course of high-level object processing
    * - Year
-     - 2022
+     - 20
    * - Authors
      - Denise Moerel, Tijl Grootswagers, Amanda K. Robinson, Patrick Engeler, Alex O. Holcombe, Thomas A. Carlson
    * - License
@@ -90,8 +90,8 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: —
-      - Sampling rate (Hz): —
+      - Channels: 127
+      - Sampling rate (Hz): 1000.0
       - Duration (hours): 0.0
 
    .. grid-item-card:: Tags
@@ -104,7 +104,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 1.3 GB
+      - Size on disk: 4.3 GB
       - File count: 1
       - Format: BIDS
 

@@ -7,7 +7,7 @@ eegdash.dataset.DS004843
 
 T16 (OpenNeuro ``ds004843``). Access recordings and metadata through EEGDash.
 
-**Citation:** Tony Johnson, Stephen Gordon, Jon Touryan, Kevin King (2023). *T16*. `10.18112/openneuro.ds004843.v1.0.0 <https://doi.org/10.18112/openneuro.ds004843.v1.0.0>`__
+**Citation:** Tony Johnson, Stephen Gordon, Jon Touryan, Kevin King (—). *T16*. `10.18112/openneuro.ds004843.v1.0.0 <https://doi.org/10.18112/openneuro.ds004843.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - T16
    * - Year
-     - 2023
+     - —
    * - Authors
      - Tony Johnson, Stephen Gordon, Jon Touryan, Kevin King
    * - License
@@ -99,7 +99,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 11.1 MB
+      - Size on disk: 7.7 GB
       - File count: 92
       - Format: BIDS
 

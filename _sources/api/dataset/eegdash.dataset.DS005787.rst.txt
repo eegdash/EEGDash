@@ -7,7 +7,7 @@ eegdash.dataset.DS005787
 
 NOD-EEG (OpenNeuro ``ds005787``). Access recordings and metadata through EEGDash.
 
-**Citation:** Guohao Zhang, Yaoze Liu, Zonglei Zhen (2025). *NOD-EEG*. `10.18112/openneuro.ds005787.v1.0.0 <https://doi.org/10.18112/openneuro.ds005787.v1.0.0>`__
+**Citation:** Guohao Zhang, Yaoze Liu, Zonglei Zhen (2019). *NOD-EEG*. `10.18112/openneuro.ds005787.v1.0.0 <https://doi.org/10.18112/openneuro.ds005787.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - NOD-EEG
    * - Year
-     - 2025
+     - 2019
    * - Authors
      - Guohao Zhang, Yaoze Liu, Zonglei Zhen
    * - License
@@ -103,7 +103,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 14.1 GB
+      - Size on disk: 27.1 GB
       - File count: 448
       - Format: BIDS
 

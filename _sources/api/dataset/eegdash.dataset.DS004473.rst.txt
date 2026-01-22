@@ -7,7 +7,7 @@ eegdash.dataset.DS004473
 
 sEEG Forced Two-Choice Task (OpenNeuro ``ds004473``). Access recordings and metadata through EEGDash.
 
-**Citation:** Alexander P. Rockhill, Alessandra Mantovani, Brittany Stedelin, Admed M. Raslan, Nicole C. Swann (2023). *sEEG Forced Two-Choice Task*. `10.18112/openneuro.ds004473.v1.0.1 <https://doi.org/10.18112/openneuro.ds004473.v1.0.1>`__
+**Citation:** Alexander P. Rockhill, Alessandra Mantovani, Brittany Stedelin, Admed M. Raslan, Nicole C. Swann (2022). *sEEG Forced Two-Choice Task*. `10.18112/openneuro.ds004473.v1.0.1 <https://doi.org/10.18112/openneuro.ds004473.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - sEEG Forced Two-Choice Task
    * - Year
-     - 2023
+     - 2022
    * - Authors
      - Alexander P. Rockhill, Alessandra Mantovani, Brittany Stedelin, Admed M. Raslan, Nicole C. Swann
    * - License
@@ -105,7 +105,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 6.3 GB
+      - Size on disk: 14.5 GB
       - File count: 8
       - Format: BIDS
 

@@ -7,7 +7,7 @@ eegdash.dataset.DS003519
 
 EEG: Visual Working Memory + Cabergoline Challenge (OpenNeuro ``ds003519``). Access recordings and metadata through EEGDash.
 
-**Citation:** James F Cavanagh, Michael J Frank, James Broadway (2021). *EEG: Visual Working Memory + Cabergoline Challenge*. `10.18112/openneuro.ds003519.v1.1.0 <https://doi.org/10.18112/openneuro.ds003519.v1.1.0>`__
+**Citation:** James F Cavanagh, Michael J Frank, James Broadway (20). *EEG: Visual Working Memory + Cabergoline Challenge*. `10.18112/openneuro.ds003519.v1.1.0 <https://doi.org/10.18112/openneuro.ds003519.v1.1.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - EEG: Visual Working Memory + Cabergoline Challenge
    * - Year
-     - 2021
+     - 20
    * - Authors
      - James F Cavanagh, Michael J Frank, James Broadway
    * - License

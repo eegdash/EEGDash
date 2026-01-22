@@ -7,7 +7,7 @@ eegdash.dataset.DS005545
 
 Auditory naming (OpenNeuro ``ds005545``). Access recordings and metadata through EEGDash.
 
-**Citation:** Aya Kanno, Ryuzaburo Kochi, Kazuki Sakakura, Yu Kitazawa, Hiroshi Uda, Riyo Ueda, Masaki Sonoda, Min-Hee Lee, Jeong-Won Jeong, Aimee F. Luat, Eishi Asano (2024). *Auditory naming*. `10.18112/openneuro.ds005545.v1.0.3 <https://doi.org/10.18112/openneuro.ds005545.v1.0.3>`__
+**Citation:** Aya Kanno, Ryuzaburo Kochi, Kazuki Sakakura, Yu Kitazawa, Hiroshi Uda, Riyo Ueda, Masaki Sonoda, Min-Hee Lee, Jeong-Won Jeong, Aimee F. Luat, Eishi Asano (2025). *Auditory naming*. `10.18112/openneuro.ds005545.v1.0.3 <https://doi.org/10.18112/openneuro.ds005545.v1.0.3>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Auditory naming
    * - Year
-     - 2024
+     - 2025
    * - Authors
      - Aya Kanno, Ryuzaburo Kochi, Kazuki Sakakura, Yu Kitazawa, Hiroshi Uda, Riyo Ueda, Masaki Sonoda, Min-Hee Lee, Jeong-Won Jeong, Aimee F. Luat, Eishi Asano
    * - License
@@ -91,7 +91,7 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 128 (474), 138 (28), 136 (22), 134 (22), 140 (16), 110 (12), 112 (12), 142 (10), 150 (10), 156 (10), 144 (8), 148 (8), 164 (8), 132 (8), 116 (6), 84 (6), 96 (6), 118 (6)
+      - Channels: 128 (474), 138 (28), 134 (22), 136 (22), 140 (16), 112 (12), 110 (12), 156 (10), 150 (10), 142 (10), 132 (8), 164 (8), 148 (8), 144 (8), 118 (6), 96 (6), 84 (6), 116 (6)
       - Sampling rate (Hz): 1000.0
       - Duration (hours): 0.0
 

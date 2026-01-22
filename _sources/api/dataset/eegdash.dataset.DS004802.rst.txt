@@ -7,7 +7,7 @@ eegdash.dataset.DS004802
 
 Pilot data for Loneliness in the Brain: Distinguishing Between Hypersensitivity and Hyperalertness (OpenNeuro ``ds004802``). Access recordings and metadata through EEGDash.
 
-**Citation:** Joe Bathelt, Marte Otten (2023). *Pilot data for Loneliness in the Brain: Distinguishing Between Hypersensitivity and Hyperalertness*. `10.18112/openneuro.ds004802.v1.0.0 <https://doi.org/10.18112/openneuro.ds004802.v1.0.0>`__
+**Citation:** Joe Bathelt, Marte Otten (—). *Pilot data for Loneliness in the Brain: Distinguishing Between Hypersensitivity and Hyperalertness*. `10.18112/openneuro.ds004802.v1.0.0 <https://doi.org/10.18112/openneuro.ds004802.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Pilot data for Loneliness in the Brain: Distinguishing Between Hypersensitivity and Hyperalertness
    * - Year
-     - 2023
+     - —
    * - Authors
      - Joe Bathelt, Marte Otten
    * - License
@@ -99,7 +99,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 10.1 GB
+      - Size on disk: 29.3 GB
       - File count: 79
       - Format: BIDS
 

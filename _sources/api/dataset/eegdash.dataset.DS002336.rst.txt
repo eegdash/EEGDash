@@ -227,7 +227,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 16.8 GB
+      - Size on disk: 18.0 GB
       - File count: 54
       - Format: BIDS
 

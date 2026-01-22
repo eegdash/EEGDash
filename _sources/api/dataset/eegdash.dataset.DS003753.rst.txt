@@ -7,7 +7,7 @@ eegdash.dataset.DS003753
 
 EEG: Probabilistic Learning with Affective Feedback: Exp #2 (OpenNeuro ``ds003753``). Access recordings and metadata through EEGDash.
 
-**Citation:** Darin R. Brown, Trevor Jackson, James F Cavanagh (2021). *EEG: Probabilistic Learning with Affective Feedback: Exp #2*. `10.18112/openneuro.ds003753.v1.1.0 <https://doi.org/10.18112/openneuro.ds003753.v1.1.0>`__
+**Citation:** Darin R. Brown, Trevor Jackson, James F Cavanagh (20). *EEG: Probabilistic Learning with Affective Feedback: Exp #2*. `10.18112/openneuro.ds003753.v1.1.0 <https://doi.org/10.18112/openneuro.ds003753.v1.1.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - EEG: Probabilistic Learning with Affective Feedback: Exp #2
    * - Year
-     - 2021
+     - 20
    * - Authors
      - Darin R. Brown, Trevor Jackson, James F Cavanagh
    * - License
@@ -85,7 +85,7 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 64 (25), 66 (25)
+      - Channels: 66 (25), 64 (25)
       - Sampling rate (Hz): 500.0
       - Duration (hours): 0.0
 

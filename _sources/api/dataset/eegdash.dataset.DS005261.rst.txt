@@ -7,7 +7,7 @@ eegdash.dataset.DS005261
 
 Gloups_MEG (OpenNeuro ``ds005261``). Access recordings and metadata through EEGDash.
 
-**Citation:** Snezana Todorovic, Elin Runnqvist, Valerie Chanoine, Jean-Michel Badier (2024). *Gloups_MEG*. `10.18112/openneuro.ds005261.v3.0.0 <https://doi.org/10.18112/openneuro.ds005261.v3.0.0>`__
+**Citation:** Snezana Todorovic, Elin Runnqvist, Valerie Chanoine, Jean-Michel Badier (2019). *Gloups_MEG*. `10.18112/openneuro.ds005261.v3.0.0 <https://doi.org/10.18112/openneuro.ds005261.v3.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Gloups_MEG
    * - Year
-     - 2024
+     - 2019
    * - Authors
      - Snezana Todorovic, Elin Runnqvist, Valerie Chanoine, Jean-Michel Badier
    * - License
@@ -111,7 +111,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 137.2 GB
+      - Size on disk: 225.0 GB
       - File count: 128
       - Format: BIDS
 

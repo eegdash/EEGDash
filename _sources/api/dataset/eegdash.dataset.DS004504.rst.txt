@@ -7,7 +7,7 @@ eegdash.dataset.DS004504
 
 A dataset of EEG recordings from: Alzheimer's disease, Frontotemporal dementia and Healthy subjects (OpenNeuro ``ds004504``). Access recordings and metadata through EEGDash.
 
-**Citation:** Andreas Miltiadous, Katerina D. Tzimourta, Theodora Afrantou, Panagiotis Ioannidis, Nikolaos Grigoriadis, Dimitrios G. Tsalikakis, Pantelis Angelidis, Markos G. Tsipouras, Evripidis Glavas, Nikolaos Giannakeas, Alexandros T. Tzallas (2023). *A dataset of EEG recordings from: Alzheimer's disease, Frontotemporal dementia and Healthy subjects*. `10.18112/openneuro.ds004504.v1.0.8 <https://doi.org/10.18112/openneuro.ds004504.v1.0.8>`__
+**Citation:** Andreas Miltiadous, Katerina D. Tzimourta, Theodora Afrantou, Panagiotis Ioannidis, Nikolaos Grigoriadis, Dimitrios G. Tsalikakis, Pantelis Angelidis, Markos G. Tsipouras, Evripidis Glavas, Nikolaos Giannakeas, Alexandros T. Tzallas (—). *A dataset of EEG recordings from: Alzheimer's disease, Frontotemporal dementia and Healthy subjects*. `10.18112/openneuro.ds004504.v1.0.8 <https://doi.org/10.18112/openneuro.ds004504.v1.0.8>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - A dataset of EEG recordings from: Alzheimer's disease, Frontotemporal dementia and Healthy subjects
    * - Year
-     - 2023
+     - —
    * - Authors
      - Andreas Miltiadous, Katerina D. Tzimourta, Theodora Afrantou, Panagiotis Ioannidis, Nikolaos Grigoriadis, Dimitrios G. Tsalikakis, Pantelis Angelidis, Markos G. Tsipouras, Evripidis Glavas, Nikolaos Giannakeas, Alexandros T. Tzallas
    * - License
@@ -122,7 +122,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 291.0 KB
+      - Size on disk: 5.4 GB
       - File count: 88
       - Format: BIDS
 

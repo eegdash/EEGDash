@@ -7,7 +7,7 @@ eegdash.dataset.DS005178
 
 Ear-EEG Sleep Monitoring 2023 (EESM23) (OpenNeuro ``ds005178``). Access recordings and metadata through EEGDash.
 
-**Citation:** Yousef Rezaei Tabar, Kaare Mikkelsen, Laura Birch, Nelly Shenton, Simon L Kappel, Astrid R Bertelsen, Reza Nikbakht, Hans O Toft, Chris H Henriksen, Martin C Hemmsen, Mike L Rank, Marit Otto, Preben Kidmose (2025). *Ear-EEG Sleep Monitoring 2023 (EESM23)*. `10.18112/openneuro.ds005178.v1.0.0 <https://doi.org/10.18112/openneuro.ds005178.v1.0.0>`__
+**Citation:** Yousef Rezaei Tabar, Kaare Mikkelsen, Laura Birch, Nelly Shenton, Simon L Kappel, Astrid R Bertelsen, Reza Nikbakht, Hans O Toft, Chris H Henriksen, Martin C Hemmsen, Mike L Rank, Marit Otto, Preben Kidmose (20). *Ear-EEG Sleep Monitoring 2023 (EESM23)*. `10.18112/openneuro.ds005178.v1.0.0 <https://doi.org/10.18112/openneuro.ds005178.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Ear-EEG Sleep Monitoring 2023 (EESM23)
    * - Year
-     - 2025
+     - 20
    * - Authors
      - Yousef Rezaei Tabar, Kaare Mikkelsen, Laura Birch, Nelly Shenton, Simon L Kappel, Astrid R Bertelsen, Reza Nikbakht, Hans O Toft, Chris H Henriksen, Martin C Hemmsen, Mike L Rank, Marit Otto, Preben Kidmose
    * - License
@@ -116,7 +116,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 1.3 MB
+      - Size on disk: 88.6 GB
       - File count: 140
       - Format: BIDS
 

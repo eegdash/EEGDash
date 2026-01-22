@@ -7,7 +7,7 @@ eegdash.dataset.DS004577
 
 Dataset containing resting EEG for a sample of 103 normal infants in the first year of life (OpenNeuro ``ds004577``). Access recordings and metadata through EEGDash.
 
-**Citation:** Thalía Harmony (Neurodevelopment Research Unit; Instituto de Neurobiología; Universidad Nacional Autónoma de México), Gloria Otero-Ojeda (Facultad de Medicina; Universidad Autónoma del Estado de México), Eduardo Aubert (Centro de Neurociencias de Cuba), Thalía Fernández (Neurodevelopment Research Unit; Instituto de Neurobiología; Universidad Nacional Autónoma de México), Lourdes Cubero-Rego (Neurodevelopment Research Unit; Instituto de Neurobiología; Universidad Nacional Autónoma de México) (2023). *Dataset containing resting EEG for a sample of 103 normal infants in the first year of life*. `10.18112/openneuro.ds004577.v1.0.1 <https://doi.org/10.18112/openneuro.ds004577.v1.0.1>`__
+**Citation:** Thalía Harmony (Neurodevelopment Research Unit; Instituto de Neurobiología; Universidad Nacional Autónoma de México), Gloria Otero-Ojeda (Facultad de Medicina; Universidad Autónoma del Estado de México), Eduardo Aubert (Centro de Neurociencias de Cuba), Thalía Fernández (Neurodevelopment Research Unit; Instituto de Neurobiología; Universidad Nacional Autónoma de México), Lourdes Cubero-Rego (Neurodevelopment Research Unit; Instituto de Neurobiología; Universidad Nacional Autónoma de México) (20). *Dataset containing resting EEG for a sample of 103 normal infants in the first year of life*. `10.18112/openneuro.ds004577.v1.0.1 <https://doi.org/10.18112/openneuro.ds004577.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Dataset containing resting EEG for a sample of 103 normal infants in the first year of life
    * - Year
-     - 2023
+     - 20
    * - Authors
      - Thalía Harmony (Neurodevelopment Research Unit; Instituto de Neurobiología; Universidad Nacional Autónoma de México), Gloria Otero-Ojeda (Facultad de Medicina; Universidad Autónoma del Estado de México), Eduardo Aubert (Centro de Neurociencias de Cuba), Thalía Fernández (Neurodevelopment Research Unit; Instituto de Neurobiología; Universidad Nacional Autónoma de México), Lourdes Cubero-Rego (Neurodevelopment Research Unit; Instituto de Neurobiología; Universidad Nacional Autónoma de México)
    * - License
@@ -106,7 +106,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 652.7 MB
+      - Size on disk: 653.3 MB
       - File count: 130
       - Format: BIDS
 

@@ -7,7 +7,7 @@ eegdash.dataset.DS004000
 
 Fribourg Ultimatum Game in Schizophrenia Study (OpenNeuro ``ds004000``). Access recordings and metadata through EEGDash.
 
-**Citation:** Anna Padée, Pascal Missonnier, Anne Prévot, Grégoire Favre, Isabelle Gothuey, Marco Merlo, Jonas Richiardi (2022). *Fribourg Ultimatum Game in Schizophrenia Study*. `10.18112/openneuro.ds004000.v1.0.0 <https://doi.org/10.18112/openneuro.ds004000.v1.0.0>`__
+**Citation:** Anna Padée, Pascal Missonnier, Anne Prévot, Grégoire Favre, Isabelle Gothuey, Marco Merlo, Jonas Richiardi (—). *Fribourg Ultimatum Game in Schizophrenia Study*. `10.18112/openneuro.ds004000.v1.0.0 <https://doi.org/10.18112/openneuro.ds004000.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Fribourg Ultimatum Game in Schizophrenia Study
    * - Year
-     - 2022
+     - —
    * - Authors
      - Anna Padée, Pascal Missonnier, Anne Prévot, Grégoire Favre, Isabelle Gothuey, Marco Merlo, Jonas Richiardi
    * - License

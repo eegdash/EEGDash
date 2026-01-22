@@ -7,7 +7,7 @@ eegdash.dataset.DS004229
 
 amnoise (OpenNeuro ``ds004229``). Access recordings and metadata through EEGDash.
 
-**Citation:** Maria Mittag, Eric Larson, Maggie Clarke, Samu Taulu, Patricia K. Kuhl (2022). *amnoise*. `10.18112/openneuro.ds004229.v1.0.3 <https://doi.org/10.18112/openneuro.ds004229.v1.0.3>`__
+**Citation:** Maria Mittag, Eric Larson, Maggie Clarke, Samu Taulu, Patricia K. Kuhl (2021). *amnoise*. `10.18112/openneuro.ds004229.v1.0.3 <https://doi.org/10.18112/openneuro.ds004229.v1.0.3>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - amnoise
    * - Year
-     - 2022
+     - 2021
    * - Authors
      - Maria Mittag, Eric Larson, Maggie Clarke, Samu Taulu, Patricia K. Kuhl
    * - License

@@ -7,7 +7,7 @@ eegdash.dataset.DS004324
 
 ToonFaces (OpenNeuro ``ds004324``). Access recordings and metadata through EEGDash.
 
-**Citation:** Luis Alberto Barradas Chacón, Selina C. Wriessnegger (2022). *ToonFaces*. `10.18112/openneuro.ds004324.v1.0.0 <https://doi.org/10.18112/openneuro.ds004324.v1.0.0>`__
+**Citation:** Luis Alberto Barradas Chacón, Selina C. Wriessnegger (2019). *ToonFaces*. `10.18112/openneuro.ds004324.v1.0.0 <https://doi.org/10.18112/openneuro.ds004324.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - ToonFaces
    * - Year
-     - 2022
+     - 2019
    * - Authors
      - Luis Alberto Barradas Chacón, Selina C. Wriessnegger
    * - License
@@ -95,7 +95,7 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 38 (26), 28 (26)
+      - Channels: 28 (26), 38 (26)
       - Sampling rate (Hz): 500.0
       - Duration (hours): 0.0
 

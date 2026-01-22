@@ -7,7 +7,7 @@ eegdash.dataset.DS007118
 
 iEEG_comprehensive_HFA_model_part1 (OpenNeuro ``ds007118``). Access recordings and metadata through EEGDash.
 
-**Citation:** Keisuke Hatano, Naoto Kuroda, Hiroshi Uda, Kazuki Sakakura, Michael J. Cools, Aimee F. Luat, Shin-Ichiro Osawa, Hitoshi Nemoto, Kazushi Ukishiro, Hidenori Endo, Nobukazu Nakasato, Yutaro Takayama, Keiya Iijima, Masaki Iwasaki, Eishi Asano (2025). *iEEG_comprehensive_HFA_model_part1*. `10.18112/openneuro.ds007118.v1.0.0 <https://doi.org/10.18112/openneuro.ds007118.v1.0.0>`__
+**Citation:** Keisuke Hatano, Naoto Kuroda, Hiroshi Uda, Kazuki Sakakura, Michael J. Cools, Aimee F. Luat, Shin-Ichiro Osawa, Hitoshi Nemoto, Kazushi Ukishiro, Hidenori Endo, Nobukazu Nakasato, Yutaro Takayama, Keiya Iijima, Masaki Iwasaki, Eishi Asano (—). *iEEG_comprehensive_HFA_model_part1*. `10.18112/openneuro.ds007118.v1.0.0 <https://doi.org/10.18112/openneuro.ds007118.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - iEEG_comprehensive_HFA_model_part1
    * - Year
-     - 2025
+     - —
    * - Authors
      - Keisuke Hatano, Naoto Kuroda, Hiroshi Uda, Kazuki Sakakura, Michael J. Cools, Aimee F. Luat, Shin-Ichiro Osawa, Hitoshi Nemoto, Kazushi Ukishiro, Hidenori Endo, Nobukazu Nakasato, Yutaro Takayama, Keiya Iijima, Masaki Iwasaki, Eishi Asano
    * - License
@@ -91,7 +91,7 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 128 (21), 112 (17), 124 (6), 102 (5), 120 (4), 108 (4), 138 (3), 118 (3), 68 (3), 116 (3), 144 (2), 106 (2), 64 (2), 132, 36, 94, 58, 114, 122, 74
+      - Channels: 128 (21), 112 (17), 124 (6), 102 (5), 108 (4), 120 (4), 116 (3), 68 (3), 118 (3), 138 (3), 64 (2), 144 (2), 106 (2), 74, 114, 122, 58, 132, 36, 94
       - Sampling rate (Hz): 1000.0
       - Duration (hours): 0.0
 

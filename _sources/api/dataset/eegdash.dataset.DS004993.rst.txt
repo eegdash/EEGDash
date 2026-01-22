@@ -7,7 +7,7 @@ eegdash.dataset.DS004993
 
 WIRED ICM Sample Dataset - Workshop on Intracranial Recordings in Humans, Epilepsy, DBS (OpenNeuro ``ds004993``). Access recordings and metadata through EEGDash.
 
-**Citation:** Liberty S. Hamilton, Maansi Desai, Alyssa Field (2024). *WIRED ICM Sample Dataset - Workshop on Intracranial Recordings in Humans, Epilepsy, DBS*. `10.18112/openneuro.ds004993.v1.1.2 <https://doi.org/10.18112/openneuro.ds004993.v1.1.2>`__
+**Citation:** Liberty S. Hamilton, Maansi Desai, Alyssa Field (2019). *WIRED ICM Sample Dataset - Workshop on Intracranial Recordings in Humans, Epilepsy, DBS*. `10.18112/openneuro.ds004993.v1.1.2 <https://doi.org/10.18112/openneuro.ds004993.v1.1.2>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - WIRED ICM Sample Dataset - Workshop on Intracranial Recordings in Humans, Epilepsy, DBS
    * - Year
-     - 2024
+     - 2019
    * - Authors
      - Liberty S. Hamilton, Maansi Desai, Alyssa Field
    * - License
@@ -114,7 +114,7 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 160 (2), 106 (2), 148 (2)
+      - Channels: 148 (2), 160 (2), 106 (2)
       - Sampling rate (Hz): 512.0 (4), 2048.0 (2)
       - Duration (hours): 0.0
 
@@ -128,7 +128,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 305.1 MB
+      - Size on disk: 347.9 MB
       - File count: 3
       - Format: BIDS
 

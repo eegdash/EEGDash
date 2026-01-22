@@ -7,7 +7,7 @@ eegdash.dataset.DS004067
 
 Moral conviction and metacognitive ability shape multiple stages of information processing (OpenNeuro ``ds004067``). Access recordings and metadata through EEGDash.
 
-**Citation:** Yoder, Keith J, Decety, Jean (2022). *Moral conviction and metacognitive ability shape multiple stages of information processing*. `10.18112/openneuro.ds004067.v1.0.1 <https://doi.org/10.18112/openneuro.ds004067.v1.0.1>`__
+**Citation:** Yoder, Keith J, Decety, Jean (—). *Moral conviction and metacognitive ability shape multiple stages of information processing*. `10.18112/openneuro.ds004067.v1.0.1 <https://doi.org/10.18112/openneuro.ds004067.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Moral conviction and metacognitive ability shape multiple stages of information processing
    * - Year
-     - 2022
+     - —
    * - Authors
      - Yoder, Keith J, Decety, Jean
    * - License

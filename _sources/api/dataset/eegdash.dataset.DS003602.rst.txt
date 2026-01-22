@@ -7,7 +7,7 @@ eegdash.dataset.DS003602
 
 Childhood Sexual Abuse and problem drinking in women: Neurobehavioral mechanisms (OpenNeuro ``ds003602``). Access recordings and metadata through EEGDash.
 
-**Citation:** Ozlem Korucuoglu, Andrey P. Anokhin (2021). *Childhood Sexual Abuse and problem drinking in women: Neurobehavioral mechanisms*. `10.18112/openneuro.ds003602.v1.0.0 <https://doi.org/10.18112/openneuro.ds003602.v1.0.0>`__
+**Citation:** Ozlem Korucuoglu, Andrey P. Anokhin (—). *Childhood Sexual Abuse and problem drinking in women: Neurobehavioral mechanisms*. `10.18112/openneuro.ds003602.v1.0.0 <https://doi.org/10.18112/openneuro.ds003602.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Childhood Sexual Abuse and problem drinking in women: Neurobehavioral mechanisms
    * - Year
-     - 2021
+     - —
    * - Authors
      - Ozlem Korucuoglu, Andrey P. Anokhin
    * - License

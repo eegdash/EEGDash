@@ -7,7 +7,7 @@ eegdash.dataset.DS005642
 
 illusory-face-eeg (OpenNeuro ``ds005642``). Access recordings and metadata through EEGDash.
 
-**Citation:** Amanda K Robinson, Greta Stuart, Sophia M Shatek, Adrian Herbert, Jessica Taubert (2024). *illusory-face-eeg*. `10.18112/openneuro.ds005642.v1.0.1 <https://doi.org/10.18112/openneuro.ds005642.v1.0.1>`__
+**Citation:** Amanda K Robinson, Greta Stuart, Sophia M Shatek, Adrian Herbert, Jessica Taubert (2025). *illusory-face-eeg*. `10.18112/openneuro.ds005642.v1.0.1 <https://doi.org/10.18112/openneuro.ds005642.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - illusory-face-eeg
    * - Year
-     - 2024
+     - 2025
    * - Authors
      - Amanda K Robinson, Greta Stuart, Sophia M Shatek, Adrian Herbert, Jessica Taubert
    * - License
@@ -93,8 +93,8 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: —
-      - Sampling rate (Hz): —
+      - Channels: 68
+      - Sampling rate (Hz): 1024.0
       - Duration (hours): 0.0
 
    .. grid-item-card:: Tags
@@ -107,7 +107,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 13.8 GB
+      - Size on disk: 32.0 GB
       - File count: 21
       - Format: BIDS
 

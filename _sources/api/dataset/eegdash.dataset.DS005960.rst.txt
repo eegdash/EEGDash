@@ -7,7 +7,7 @@ eegdash.dataset.DS005960
 
 General Info: inst-comp-eeg (OpenNeuro ``ds005960``). Access recordings and metadata through EEGDash.
 
-**Citation:** Pena, P., Palenciano, A.F., González-García, C., Ruz, M. (2025). *General Info: inst-comp-eeg*. `10.18112/openneuro.ds005960.v1.0.0 <https://doi.org/10.18112/openneuro.ds005960.v1.0.0>`__
+**Citation:** Pena, P., Palenciano, A.F., González-García, C., Ruz, M. (—). *General Info: inst-comp-eeg*. `10.18112/openneuro.ds005960.v1.0.0 <https://doi.org/10.18112/openneuro.ds005960.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - General Info: inst-comp-eeg
    * - Year
-     - 2025
+     - —
    * - Authors
      - Pena, P., Palenciano, A.F., González-García, C., Ruz, M.
    * - License
@@ -98,7 +98,7 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 61 (41), 63 (41)
+      - Channels: 63 (41), 61 (41)
       - Sampling rate (Hz): 1000.0
       - Duration (hours): 0.0
 

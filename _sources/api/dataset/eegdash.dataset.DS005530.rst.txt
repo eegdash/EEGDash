@@ -7,7 +7,7 @@ eegdash.dataset.DS005530
 
 Depotentiation of emotional reactivity using TMR during REM sleep (OpenNeuro ``ds005530``). Access recordings and metadata through EEGDash.
 
-**Citation:** Viviana Greco, Tamas A. Foldes, Neil A. Harrison, Kevin Murphy, Marta Wawrzuta, Mahmoud E. A. Abdellahi, Penelope A. Lewis (2024). *Depotentiation of emotional reactivity using TMR during REM sleep*. `10.18112/openneuro.ds005530.v1.0.9 <https://doi.org/10.18112/openneuro.ds005530.v1.0.9>`__
+**Citation:** Viviana Greco, Tamas A. Foldes, Neil A. Harrison, Kevin Murphy, Marta Wawrzuta, Mahmoud E. A. Abdellahi, Penelope A. Lewis (—). *Depotentiation of emotional reactivity using TMR during REM sleep*. `10.18112/openneuro.ds005530.v1.0.9 <https://doi.org/10.18112/openneuro.ds005530.v1.0.9>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Depotentiation of emotional reactivity using TMR during REM sleep
    * - Year
-     - 2024
+     - —
    * - Authors
      - Viviana Greco, Tamas A. Foldes, Neil A. Harrison, Kevin Murphy, Marta Wawrzuta, Mahmoud E. A. Abdellahi, Penelope A. Lewis
    * - License

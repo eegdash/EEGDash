@@ -7,7 +7,7 @@ eegdash.dataset.DS004306
 
 EEG Semantic Imagination and Perception Dataset (OpenNeuro ``ds004306``). Access recordings and metadata through EEGDash.
 
-**Citation:** Holly Wilson, Mohammad Golbabaee, Michael Proulx, Eamonn O'Neill (2022). *EEG Semantic Imagination and Perception Dataset*. `10.18112/openneuro.ds004306.v1.0.2 <https://doi.org/10.18112/openneuro.ds004306.v1.0.2>`__
+**Citation:** Holly Wilson, Mohammad Golbabaee, Michael Proulx, Eamonn O'Neill (—). *EEG Semantic Imagination and Perception Dataset*. `10.18112/openneuro.ds004306.v1.0.2 <https://doi.org/10.18112/openneuro.ds004306.v1.0.2>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - EEG Semantic Imagination and Perception Dataset
    * - Year
-     - 2022
+     - —
    * - Authors
      - Holly Wilson, Mohammad Golbabaee, Michael Proulx, Eamonn O'Neill
    * - License
@@ -97,7 +97,7 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 128 (15), 124 (15)
+      - Channels: 124 (15), 128 (15)
       - Sampling rate (Hz): 1024.0
       - Duration (hours): 0.0
 
@@ -111,7 +111,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 654.9 MB
+      - Size on disk: 79.1 GB
       - File count: 15
       - Format: BIDS
 

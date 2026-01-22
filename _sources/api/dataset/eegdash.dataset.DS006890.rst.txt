@@ -7,7 +7,7 @@ eegdash.dataset.DS006890
 
 Longitudinal Multitask Wireless ECoG Data from Two Fully Implanted Macaca fuscata (OpenNeuro ``ds006890``). Access recordings and metadata through EEGDash.
 
-**Citation:** Huixiang Yang, Ryohei Fukuma, Tomoyuki Namima, Kotaro Okuda, Asaya Nishi, Takamitsu Iwata, Abdi Reza, Kota S Sasaki, Taro Kaiju, Gurlal Gill, Haruhiko Kishima, Shinji Nishimoto, Takufumi Yanagisawa (2025). *Longitudinal Multitask Wireless ECoG Data from Two Fully Implanted Macaca fuscata*. `10.18112/openneuro.ds006890.v1.0.0 <https://doi.org/10.18112/openneuro.ds006890.v1.0.0>`__
+**Citation:** Huixiang Yang, Ryohei Fukuma, Tomoyuki Namima, Kotaro Okuda, Asaya Nishi, Takamitsu Iwata, Abdi Reza, Kota S Sasaki, Taro Kaiju, Gurlal Gill, Haruhiko Kishima, Shinji Nishimoto, Takufumi Yanagisawa (—). *Longitudinal Multitask Wireless ECoG Data from Two Fully Implanted Macaca fuscata*. `10.18112/openneuro.ds006890.v1.0.0 <https://doi.org/10.18112/openneuro.ds006890.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Longitudinal Multitask Wireless ECoG Data from Two Fully Implanted Macaca fuscata
    * - Year
-     - 2025
+     - —
    * - Authors
      - Huixiang Yang, Ryohei Fukuma, Tomoyuki Namima, Kotaro Okuda, Asaya Nishi, Takamitsu Iwata, Abdi Reza, Kota S Sasaki, Taro Kaiju, Gurlal Gill, Haruhiko Kishima, Shinji Nishimoto, Takufumi Yanagisawa
    * - License

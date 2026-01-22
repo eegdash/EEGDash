@@ -7,7 +7,7 @@ eegdash.dataset.DS007176
 
 Longitudinal EEG Test-Retest Reliability in Healthy Individuals (OpenNeuro ``ds007176``). Access recordings and metadata through EEGDash.
 
-**Citation:** Verónica Henao Isaza, Valeria Cadavid Castro, Luisa María Zapata Saldarriaga, Yorguin-Jose Mantilla-Ramos, Jazmín Ximena Suarez Revelo, Carlos Andrés Tobón Quintero, John Fredy Ochoa Gómez (2026). *Longitudinal EEG Test-Retest Reliability in Healthy Individuals*. `10.18112/openneuro.ds007176.v1.0.1 <https://doi.org/10.18112/openneuro.ds007176.v1.0.1>`__
+**Citation:** Verónica Henao Isaza, Valeria Cadavid Castro, Luisa María Zapata Saldarriaga, Yorguin-Jose Mantilla-Ramos, Jazmín Ximena Suarez Revelo, Carlos Andrés Tobón Quintero, John Fredy Ochoa Gómez (20). *Longitudinal EEG Test-Retest Reliability in Healthy Individuals*. `10.18112/openneuro.ds007176.v1.0.1 <https://doi.org/10.18112/openneuro.ds007176.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Longitudinal EEG Test-Retest Reliability in Healthy Individuals
    * - Year
-     - 2026
+     - 20
    * - Authors
      - Verónica Henao Isaza, Valeria Cadavid Castro, Luisa María Zapata Saldarriaga, Yorguin-Jose Mantilla-Ramos, Jazmín Ximena Suarez Revelo, Carlos Andrés Tobón Quintero, John Fredy Ochoa Gómez
    * - License

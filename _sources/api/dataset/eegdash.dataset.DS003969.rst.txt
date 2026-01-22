@@ -7,7 +7,7 @@ eegdash.dataset.DS003969
 
 Meditation vs thinking task (OpenNeuro ``ds003969``). Access recordings and metadata through EEGDash.
 
-**Citation:** Arnaud Delorme, Claire Braboszcz (2021). *Meditation vs thinking task*. `10.18112/openneuro.ds003969.v1.0.0 <https://doi.org/10.18112/openneuro.ds003969.v1.0.0>`__
+**Citation:** Arnaud Delorme, Claire Braboszcz (—). *Meditation vs thinking task*. `10.18112/openneuro.ds003969.v1.0.0 <https://doi.org/10.18112/openneuro.ds003969.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Meditation vs thinking task
    * - Year
-     - 2021
+     - —
    * - Authors
      - Arnaud Delorme, Claire Braboszcz
    * - License

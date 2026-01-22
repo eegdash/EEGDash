@@ -7,11 +7,11 @@ eegdash.dataset.DS005776
 
 Electrical_Thermal_FingerTapping_2015 (OpenNeuro ``ds005776``). Access recordings and metadata through EEGDash.
 
-**Citation:** Yücel, Meryem, Selb, Juliette, Aasted, Christopher, Petkov, Mihayl, Borsook, David, Boas, David, Becerra, Lino (2025). *Electrical_Thermal_FingerTapping_2015*. `10.18112/openneuro.ds005776.v1.0.1 <https://doi.org/10.18112/openneuro.ds005776.v1.0.1>`__
+**Citation:** Yücel, Meryem, Selb, Juliette, Aasted, Christopher, Petkov, Mihayl, Borsook, David, Boas, David, Becerra, Lino (—). *Electrical_Thermal_FingerTapping_2015*. `10.18112/openneuro.ds005776.v1.0.1 <https://doi.org/10.18112/openneuro.ds005776.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: fnirs` :bdg-info:`Tasks: 5` :bdg-secondary:`Subjects: 12` :bdg-secondary:`Recordings: 293`
+:bdg-primary:`Modality: fnirs` :bdg-info:`Tasks: 5` :bdg-secondary:`Subjects: 11` :bdg-secondary:`Recordings: 46`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Electrical_Thermal_FingerTapping_2015
    * - Year
-     - 2025
+     - —
    * - Authors
      - Yücel, Meryem, Selb, Juliette, Aasted, Christopher, Petkov, Mihayl, Borsook, David, Boas, David, Becerra, Lino
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds005776.v1.0.1 <https://doi.org/10.18112/openneuro.ds005776.v1.0.1>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds005776>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005776>`__ | `Source URL <https://openneuro.org/datasets/ds005776/versions/1.0.1>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds005776>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005776>`__ | `Source URL <https://openneuro.org/datasets/ds005776>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -78,15 +78,15 @@ Highlights
    .. grid-item-card:: Subjects & recordings
       :class-card: sd-border-1
 
-      - Subjects: 12
-      - Recordings: 293
+      - Subjects: 11
+      - Recordings: 46
       - Tasks: 5
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: —
-      - Sampling rate (Hz): —
+      - Channels: 102
+      - Sampling rate (Hz): 50.0
       - Duration (hours): 0.0
 
    .. grid-item-card:: Tags
@@ -99,8 +99,8 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: —
-      - File count: 293
+      - Size on disk: 1.2 GB
+      - File count: 46
       - Format: BIDS
 
    .. grid-item-card:: License & citation

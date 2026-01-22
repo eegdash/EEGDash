@@ -7,7 +7,7 @@ eegdash.dataset.DS005291
 
 65 By ANT (OpenNeuro ``ds005291``). Access recordings and metadata through EEGDash.
 
-**Citation:** Zhao Xiangyue, Zhou Jingyao, Zhang Libo, Duan Haoqing, Wei Shiyu, Bi Yanzhi, Hu Li (2024). *65 By ANT*. `10.18112/openneuro.ds005291.v1.0.0 <https://doi.org/10.18112/openneuro.ds005291.v1.0.0>`__
+**Citation:** Zhao Xiangyue, Zhou Jingyao, Zhang Libo, Duan Haoqing, Wei Shiyu, Bi Yanzhi, Hu Li (—). *65 By ANT*. `10.18112/openneuro.ds005291.v1.0.0 <https://doi.org/10.18112/openneuro.ds005291.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - 65 By ANT
    * - Year
-     - 2024
+     - —
    * - Authors
      - Zhao Xiangyue, Zhou Jingyao, Zhang Libo, Duan Haoqing, Wei Shiyu, Bi Yanzhi, Hu Li
    * - License
@@ -108,7 +108,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 20.5 GB
+      - Size on disk: 42.9 GB
       - File count: 65
       - Format: BIDS
 

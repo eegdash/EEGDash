@@ -7,7 +7,7 @@ eegdash.dataset.DS005620
 
 A repeated awakening study exploring the capacity of complexity measures to capture dreaming during propofol sedation (OpenNeuro ``ds005620``). Access recordings and metadata through EEGDash.
 
-**Citation:** Imad J. Bajwa1, Andre S. Nilsen1, René Skukies1,3, Arnfinn Aamodt1, Gernot Ernst2, Johan F. Storm1, Bjørn E. Juel1,2 (2024). *A repeated awakening study exploring the capacity of complexity measures to capture dreaming during propofol sedation*. `10.18112/openneuro.ds005620.v1.0.0 <https://doi.org/10.18112/openneuro.ds005620.v1.0.0>`__
+**Citation:** Imad J. Bajwa1, Andre S. Nilsen1, René Skukies1,3, Arnfinn Aamodt1, Gernot Ernst2, Johan F. Storm1, Bjørn E. Juel1,2 (2019). *A repeated awakening study exploring the capacity of complexity measures to capture dreaming during propofol sedation*. `10.18112/openneuro.ds005620.v1.0.0 <https://doi.org/10.18112/openneuro.ds005620.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - A repeated awakening study exploring the capacity of complexity measures to capture dreaming during propofol sedation
    * - Year
-     - 2024
+     - 2019
    * - Authors
      - Imad J. Bajwa1, Andre S. Nilsen1, René Skukies1,3, Arnfinn Aamodt1, Gernot Ernst2, Johan F. Storm1, Bjørn E. Juel1,2
    * - License

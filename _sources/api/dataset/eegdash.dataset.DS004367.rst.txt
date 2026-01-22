@@ -7,7 +7,7 @@ eegdash.dataset.DS004367
 
 Meta-rdk: Raw EEG data (OpenNeuro ``ds004367``). Access recordings and metadata through EEGDash.
 
-**Citation:** Martin Rouy, Matthieu Roger, Dorian Goueytes, Michael Pereira, Paul Roux, Nathan Faivre (2022). *Meta-rdk: Raw EEG data*. `10.18112/openneuro.ds004367.v1.0.2 <https://doi.org/10.18112/openneuro.ds004367.v1.0.2>`__
+**Citation:** Martin Rouy, Matthieu Roger, Dorian Goueytes, Michael Pereira, Paul Roux, Nathan Faivre (—). *Meta-rdk: Raw EEG data*. `10.18112/openneuro.ds004367.v1.0.2 <https://doi.org/10.18112/openneuro.ds004367.v1.0.2>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Meta-rdk: Raw EEG data
    * - Year
-     - 2022
+     - —
    * - Authors
      - Martin Rouy, Matthieu Roger, Dorian Goueytes, Michael Pereira, Paul Roux, Nathan Faivre
    * - License

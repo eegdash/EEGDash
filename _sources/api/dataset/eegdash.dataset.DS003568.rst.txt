@@ -7,7 +7,7 @@ eegdash.dataset.DS003568
 
 Mood induction in MDD and healthy adolescents (OpenNeuro ``ds003568``). Access recordings and metadata through EEGDash.
 
-**Citation:** Lucrezia Liuzzi, Katharine Chang, Hanna Keren, Charles Zheng, Dipta Saha, Dylan Nielson, Argyris Stringaris (2021). *Mood induction in MDD and healthy adolescents*. `10.18112/openneuro.ds003568.v1.0.2 <https://doi.org/10.18112/openneuro.ds003568.v1.0.2>`__
+**Citation:** Lucrezia Liuzzi, Katharine Chang, Hanna Keren, Charles Zheng, Dipta Saha, Dylan Nielson, Argyris Stringaris (20). *Mood induction in MDD and healthy adolescents*. `10.18112/openneuro.ds003568.v1.0.2 <https://doi.org/10.18112/openneuro.ds003568.v1.0.2>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Mood induction in MDD and healthy adolescents
    * - Year
-     - 2021
+     - 20
    * - Authors
      - Lucrezia Liuzzi, Katharine Chang, Hanna Keren, Charles Zheng, Dipta Saha, Dylan Nielson, Argyris Stringaris
    * - License
@@ -90,7 +90,7 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 340 (48), 339 (29), 335 (11), 336 (6), 343 (5), 342 (5), 312 (3), 338 (3), 309 (3), 305 (2), 313, 310, 348
+      - Channels: 340 (48), 339 (29), 335 (11), 336 (6), 342 (5), 343 (5), 338 (3), 309 (3), 312 (3), 305 (2), 348, 313, 310
       - Sampling rate (Hz): 1200.0
       - Duration (hours): 0.0
 

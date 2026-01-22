@@ -7,7 +7,7 @@ eegdash.dataset.DS005628
 
 Dataset of Visual and Audiovisual Stimuli in Virtual Reality from the Edzna Archaeological Site (OpenNeuro ``ds005628``). Access recordings and metadata through EEGDash.
 
-**Citation:** Juan Pablo Rosado-Aíza, Fernando José Domínguez-Morales, Tania Yareni Pech-Canul, Paola Guadalupe Vázquez-Rodríguez, Gustavo Navas-Reascos, Luz María Alonso-Valerdi, David I. Ibarra Zarate (2024). *Dataset of Visual and Audiovisual Stimuli in Virtual Reality from the Edzna Archaeological Site*. `10.18112/openneuro.ds005628.v1.0.0 <https://doi.org/10.18112/openneuro.ds005628.v1.0.0>`__
+**Citation:** Juan Pablo Rosado-Aíza, Fernando José Domínguez-Morales, Tania Yareni Pech-Canul, Paola Guadalupe Vázquez-Rodríguez, Gustavo Navas-Reascos, Luz María Alonso-Valerdi, David I. Ibarra Zarate (20). *Dataset of Visual and Audiovisual Stimuli in Virtual Reality from the Edzna Archaeological Site*. `10.18112/openneuro.ds005628.v1.0.0 <https://doi.org/10.18112/openneuro.ds005628.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Dataset of Visual and Audiovisual Stimuli in Virtual Reality from the Edzna Archaeological Site
    * - Year
-     - 2024
+     - 20
    * - Authors
      - Juan Pablo Rosado-Aíza, Fernando José Domínguez-Morales, Tania Yareni Pech-Canul, Paola Guadalupe Vázquez-Rodríguez, Gustavo Navas-Reascos, Luz María Alonso-Valerdi, David I. Ibarra Zarate
    * - License
@@ -165,7 +165,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 633.7 MB
+      - Size on disk: 634.1 MB
       - File count: 306
       - Format: BIDS
 

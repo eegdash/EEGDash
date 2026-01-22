@@ -7,7 +7,7 @@ eegdash.dataset.DS004602
 
 Registered Replication Report of ERN/Pe Psychometrics (OpenNeuro ``ds004602``). Access recordings and metadata through EEGDash.
 
-**Citation:** Peter E Clayson, Michael J Larson (2023). *Registered Replication Report of ERN/Pe Psychometrics*. `10.18112/openneuro.ds004602.v1.0.1 <https://doi.org/10.18112/openneuro.ds004602.v1.0.1>`__
+**Citation:** Peter E Clayson, Michael J Larson (20). *Registered Replication Report of ERN/Pe Psychometrics*. `10.18112/openneuro.ds004602.v1.0.1 <https://doi.org/10.18112/openneuro.ds004602.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Registered Replication Report of ERN/Pe Psychometrics
    * - Year
-     - 2023
+     - 20
    * - Authors
      - Peter E Clayson, Michael J Larson
    * - License
@@ -101,7 +101,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 26.7 MB
+      - Size on disk: 73.9 GB
       - File count: 546
       - Format: BIDS
 

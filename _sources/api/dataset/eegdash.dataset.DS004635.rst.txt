@@ -7,7 +7,7 @@ eegdash.dataset.DS004635
 
 Gaffrey Lab Infant Microstates Reliability (OpenNeuro ``ds004635``). Access recordings and metadata through EEGDash.
 
-**Citation:** Armen Bagdasarov, Michael S. Gaffrey (2023). *Gaffrey Lab Infant Microstates Reliability*. `10.18112/openneuro.ds004635.v3.1.0 <https://doi.org/10.18112/openneuro.ds004635.v3.1.0>`__
+**Citation:** Armen Bagdasarov, Michael S. Gaffrey (—). *Gaffrey Lab Infant Microstates Reliability*. `10.18112/openneuro.ds004635.v3.1.0 <https://doi.org/10.18112/openneuro.ds004635.v3.1.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Gaffrey Lab Infant Microstates Reliability
    * - Year
-     - 2023
+     - —
    * - Authors
      - Armen Bagdasarov, Michael S. Gaffrey
    * - License
@@ -99,7 +99,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 26.1 GB
+      - Size on disk: 30.6 GB
       - File count: 48
       - Format: BIDS
 

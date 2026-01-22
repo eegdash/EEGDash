@@ -7,7 +7,7 @@ eegdash.dataset.DS004075
 
 what_are_we_talking_about (OpenNeuro ``ds004075``). Access recordings and metadata through EEGDash.
 
-**Citation:** Adam Boncz, Brigitta Toth, István Winkler (2022). *what_are_we_talking_about*. `10.18112/openneuro.ds004075.v1.0.0 <https://doi.org/10.18112/openneuro.ds004075.v1.0.0>`__
+**Citation:** Adam Boncz, Brigitta Toth, István Winkler (—). *what_are_we_talking_about*. `10.18112/openneuro.ds004075.v1.0.0 <https://doi.org/10.18112/openneuro.ds004075.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - what_are_we_talking_about
    * - Year
-     - 2022
+     - —
    * - Authors
      - Adam Boncz, Brigitta Toth, István Winkler
    * - License
@@ -85,7 +85,7 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: —
+      - Channels: 64
       - Sampling rate (Hz): 1000.0
       - Duration (hours): 0.0
 

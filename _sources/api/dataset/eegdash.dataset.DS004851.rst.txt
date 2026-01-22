@@ -7,7 +7,7 @@ eegdash.dataset.DS004851
 
 HID (OpenNeuro ``ds004851``). Access recordings and metadata through EEGDash.
 
-**Citation:** Tony Johnson, Stephen Gordon, Jon Touryan, Kevin King (2023). *HID*. `10.18112/openneuro.ds004851.v2.1.0 <https://doi.org/10.18112/openneuro.ds004851.v2.1.0>`__
+**Citation:** Tony Johnson, Stephen Gordon, Jon Touryan, Kevin King (—). *HID*. `10.18112/openneuro.ds004851.v2.1.0 <https://doi.org/10.18112/openneuro.ds004851.v2.1.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - HID
    * - Year
-     - 2023
+     - —
    * - Authors
      - Tony Johnson, Stephen Gordon, Jon Touryan, Kevin King
    * - License
@@ -99,7 +99,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 55.9 GB
+      - Size on disk: 56.6 GB
       - File count: 66
       - Format: BIDS
 

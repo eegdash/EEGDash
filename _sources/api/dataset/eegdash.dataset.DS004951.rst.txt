@@ -7,7 +7,7 @@ eegdash.dataset.DS004951
 
 Braille letters - EEG (OpenNeuro ``ds004951``). Access recordings and metadata through EEGDash.
 
-**Citation:** Marleen Haupt, Monika Graumann, Santani Teng, Carina Kaltenbach, Radoslaw M. Cichy (2024). *Braille letters - EEG*. `10.18112/openneuro.ds004951.v1.0.0 <https://doi.org/10.18112/openneuro.ds004951.v1.0.0>`__
+**Citation:** Marleen Haupt, Monika Graumann, Santani Teng, Carina Kaltenbach, Radoslaw M. Cichy (2019). *Braille letters - EEG*. `10.18112/openneuro.ds004951.v1.0.0 <https://doi.org/10.18112/openneuro.ds004951.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Braille letters - EEG
    * - Year
-     - 2024
+     - 2019
    * - Authors
      - Marleen Haupt, Monika Graumann, Santani Teng, Carina Kaltenbach, Radoslaw M. Cichy
    * - License

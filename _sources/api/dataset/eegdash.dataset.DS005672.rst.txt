@@ -7,7 +7,7 @@ eegdash.dataset.DS005672
 
 PerceiveImagine (OpenNeuro ``ds005672``). Access recordings and metadata through EEGDash.
 
-**Citation:** Li Zhiyuan, Zhao Jiaxin (2024). *PerceiveImagine*. `10.18112/openneuro.ds005672.v1.0.0 <https://doi.org/10.18112/openneuro.ds005672.v1.0.0>`__
+**Citation:** Li Zhiyuan, Zhao Jiaxin (—). *PerceiveImagine*. `10.18112/openneuro.ds005672.v1.0.0 <https://doi.org/10.18112/openneuro.ds005672.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - PerceiveImagine
    * - Year
-     - 2024
+     - —
    * - Authors
      - Li Zhiyuan, Zhao Jiaxin
    * - License
@@ -85,7 +85,7 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 66 (2), 69 (2), 65, 64
+      - Channels: 66 (2), 69 (2), 64, 65
       - Sampling rate (Hz): 1000.0
       - Duration (hours): 0.0
 

@@ -7,7 +7,7 @@ eegdash.dataset.DS006801
 
 Resting-state EEG before and after different study methods (OpenNeuro ``ds006801``). Access recordings and metadata through EEGDash.
 
-**Citation:** Paloma Victoria de Sales Alves, Antonio Simeão Sobrinho Neto, Carla Alexandra da Silva Moita Minervino (2025). *Resting-state EEG before and after different study methods*. `10.18112/openneuro.ds006801.v1.0.0 <https://doi.org/10.18112/openneuro.ds006801.v1.0.0>`__
+**Citation:** Paloma Victoria de Sales Alves, Antonio Simeão Sobrinho Neto, Carla Alexandra da Silva Moita Minervino (—). *Resting-state EEG before and after different study methods*. `10.18112/openneuro.ds006801.v1.0.0 <https://doi.org/10.18112/openneuro.ds006801.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Resting-state EEG before and after different study methods
    * - Year
-     - 2025
+     - —
    * - Authors
      - Paloma Victoria de Sales Alves, Antonio Simeão Sobrinho Neto, Carla Alexandra da Silva Moita Minervino
    * - License

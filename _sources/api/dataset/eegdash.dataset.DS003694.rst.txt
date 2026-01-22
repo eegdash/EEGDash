@@ -7,7 +7,7 @@ eegdash.dataset.DS003694
 
 MEGMEM (OpenNeuro ``ds003694``). Access recordings and metadata through EEGDash.
 
-**Citation:** Benjamin J. Griffiths, María Carmen Martín-Buro, Bernhard Staresina, Simon Hanslmayr (2021). *MEGMEM*. `10.18112/openneuro.ds003694.v1.0.0 <https://doi.org/10.18112/openneuro.ds003694.v1.0.0>`__
+**Citation:** Benjamin J. Griffiths, María Carmen Martín-Buro, Bernhard Staresina, Simon Hanslmayr (—). *MEGMEM*. `10.18112/openneuro.ds003694.v1.0.0 <https://doi.org/10.18112/openneuro.ds003694.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - MEGMEM
    * - Year
-     - 2021
+     - —
    * - Authors
      - Benjamin J. Griffiths, María Carmen Martín-Buro, Bernhard Staresina, Simon Hanslmayr
    * - License

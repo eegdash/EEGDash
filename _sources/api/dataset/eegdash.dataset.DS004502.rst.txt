@@ -7,7 +7,7 @@ eegdash.dataset.DS004502
 
 Anticipatory differences between Attention and Expectation (OpenNeuro ``ds004502``). Access recordings and metadata through EEGDash.
 
-**Citation:** Jose M. G. Penalver, David Lopez-Garcia, Blanca Aguado-Lopez, Carlos Gonzalez-Garcia, Maria Ruz (2023). *Anticipatory differences between Attention and Expectation*. `10.18112/openneuro.ds004502.v1.0.1 <https://doi.org/10.18112/openneuro.ds004502.v1.0.1>`__
+**Citation:** Jose M. G. Penalver, David Lopez-Garcia, Blanca Aguado-Lopez, Carlos Gonzalez-Garcia, Maria Ruz (—). *Anticipatory differences between Attention and Expectation*. `10.18112/openneuro.ds004502.v1.0.1 <https://doi.org/10.18112/openneuro.ds004502.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Anticipatory differences between Attention and Expectation
    * - Year
-     - 2023
+     - —
    * - Authors
      - Jose M. G. Penalver, David Lopez-Garcia, Blanca Aguado-Lopez, Carlos Gonzalez-Garcia, Maria Ruz
    * - License

@@ -7,7 +7,7 @@ eegdash.dataset.DS005795
 
 MULTI-CLARID (Multimodal Category Learning and Resting-state Imaging Data) (OpenNeuro ``ds005795``). Access recordings and metadata through EEGDash.
 
-**Citation:** Jörg Stadler, Torsten Stöter, Nicole Angenstein, Andreas Fügner, Marcel Lommerzheim, Artur Mathysiak, Anke Michalsky, Gabriele Schöps, Johann van der Meer, Susann Wolff, André Brechmann (2025). *MULTI-CLARID (Multimodal Category Learning and Resting-state Imaging Data)*. `10.18112/openneuro.ds005795.v1.0.0 <https://doi.org/10.18112/openneuro.ds005795.v1.0.0>`__
+**Citation:** Jörg Stadler, Torsten Stöter, Nicole Angenstein, Andreas Fügner, Marcel Lommerzheim, Artur Mathysiak, Anke Michalsky, Gabriele Schöps, Johann van der Meer, Susann Wolff, André Brechmann (20). *MULTI-CLARID (Multimodal Category Learning and Resting-state Imaging Data)*. `10.18112/openneuro.ds005795.v1.0.0 <https://doi.org/10.18112/openneuro.ds005795.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - MULTI-CLARID (Multimodal Category Learning and Resting-state Imaging Data)
    * - Year
-     - 2025
+     - 20
    * - Authors
      - Jörg Stadler, Torsten Stöter, Nicole Angenstein, Andreas Fügner, Marcel Lommerzheim, Artur Mathysiak, Anke Michalsky, Gabriele Schöps, Johann van der Meer, Susann Wolff, André Brechmann
    * - License

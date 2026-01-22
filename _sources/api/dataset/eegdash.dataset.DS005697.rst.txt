@@ -7,7 +7,7 @@ eegdash.dataset.DS005697
 
 PerceiveImagine (OpenNeuro ``ds005697``). Access recordings and metadata through EEGDash.
 
-**Citation:** Weilong Li, Hua Fan (2024). *PerceiveImagine*. `10.18112/openneuro.ds005697.v1.0.2 <https://doi.org/10.18112/openneuro.ds005697.v1.0.2>`__
+**Citation:** Weilong Li, Hua Fan (—). *PerceiveImagine*. `10.18112/openneuro.ds005697.v1.0.2 <https://doi.org/10.18112/openneuro.ds005697.v1.0.2>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - PerceiveImagine
    * - Year
-     - 2024
+     - —
    * - Authors
      - Weilong Li, Hua Fan
    * - License
@@ -93,7 +93,7 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 65 (46), 64 (44), 66 (6), 69 (6)
+      - Channels: 65 (46), 64 (44), 69 (6), 66 (6)
       - Sampling rate (Hz): 1000.0
       - Duration (hours): 0.0
 

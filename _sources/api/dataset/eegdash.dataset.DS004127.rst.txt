@@ -7,7 +7,7 @@ eegdash.dataset.DS004127
 
 Somatosensory Cortex Rat DISC Data (OpenNeuro ``ds004127``). Access recordings and metadata through EEGDash.
 
-**Citation:** Amada Abrego, Wasif Khan, John P Seymour (2022). *Somatosensory Cortex Rat DISC Data*. `10.18112/openneuro.ds004127.v3.0.0 <https://doi.org/10.18112/openneuro.ds004127.v3.0.0>`__
+**Citation:** Amada Abrego, Wasif Khan, John P Seymour (20). *Somatosensory Cortex Rat DISC Data*. `10.18112/openneuro.ds004127.v3.0.0 <https://doi.org/10.18112/openneuro.ds004127.v3.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Somatosensory Cortex Rat DISC Data
    * - Year
-     - 2022
+     - 20
    * - Authors
      - Amada Abrego, Wasif Khan, John P Seymour
    * - License
@@ -98,8 +98,8 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: —
-      - Sampling rate (Hz): —
+      - Channels: 128 (28), 112 (9), 104 (9), 102 (9), 110 (9), 105 (6), 106 (2), 111
+      - Sampling rate (Hz): 20000.0
       - Duration (hours): 0.0
 
    .. grid-item-card:: Tags

@@ -7,7 +7,7 @@ eegdash.dataset.DS002893
 
 Auditory-Visual Shift Study (OpenNeuro ``ds002893``). Access recordings and metadata through EEGDash.
 
-**Citation:** Marissa Westerfield (data, curation), Scott Makeig (data, curation), Dung Truong (curation), Kay Robbins (curation), Arno Delorme (curation) (2020). *Auditory-Visual Shift Study*. `10.18112/openneuro.ds002893.v2.0.0 <https://doi.org/10.18112/openneuro.ds002893.v2.0.0>`__
+**Citation:** Marissa Westerfield (data, curation), Scott Makeig (data, curation), Dung Truong (curation), Kay Robbins (curation), Arno Delorme (curation) (20). *Auditory-Visual Shift Study*. `10.18112/openneuro.ds002893.v2.0.0 <https://doi.org/10.18112/openneuro.ds002893.v2.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Auditory-Visual Shift Study
    * - Year
-     - 2020
+     - 20
    * - Authors
      - Marissa Westerfield (data, curation), Scott Makeig (data, curation), Dung Truong (curation), Kay Robbins (curation), Arno Delorme (curation)
    * - License
@@ -148,7 +148,7 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 33 (52), 36 (52)
+      - Channels: 36 (52), 33 (52)
       - Sampling rate (Hz): 250.0 (84), 250.0293378038558 (20)
       - Duration (hours): 0.0
 

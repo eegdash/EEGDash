@@ -7,7 +7,7 @@ eegdash.dataset.DS004080
 
 CCEP ECoG dataset across age 4-51 (OpenNeuro ``ds004080``). Access recordings and metadata through EEGDash.
 
-**Citation:** D. van Blooijs, M.A. van den Boom, J.F. van der Aar, G.J.M. Huiskamp, G. Castegnaro, M. Demuru, W.J.E.M. Zweiphenning, P. van Eijsden, K. J. Miller, F.S.S. Leijten, D. Hermes (2022). *CCEP ECoG dataset across age 4-51*. `10.18112/openneuro.ds004080.v1.2.4 <https://doi.org/10.18112/openneuro.ds004080.v1.2.4>`__
+**Citation:** D. van Blooijs, M.A. van den Boom, J.F. van der Aar, G.J.M. Huiskamp, G. Castegnaro, M. Demuru, W.J.E.M. Zweiphenning, P. van Eijsden, K. J. Miller, F.S.S. Leijten, D. Hermes (20). *CCEP ECoG dataset across age 4-51*. `10.18112/openneuro.ds004080.v1.2.4 <https://doi.org/10.18112/openneuro.ds004080.v1.2.4>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - CCEP ECoG dataset across age 4-51
    * - Year
-     - 2022
+     - 20
    * - Authors
      - D. van Blooijs, M.A. van den Boom, J.F. van der Aar, G.J.M. Huiskamp, G. Castegnaro, M. Demuru, W.J.E.M. Zweiphenning, P. van Eijsden, K. J. Miller, F.S.S. Leijten, D. Hermes
    * - License
@@ -142,7 +142,7 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 133 (140), 68 (36), 130 (26), 131 (8), 96 (8), 98 (8), 64 (4), 93 (2), 94 (2)
+      - Channels: 133 (140), 68 (36), 130 (26), 98 (8), 96 (8), 131 (8), 64 (4), 94 (2), 93 (2)
       - Sampling rate (Hz): 2048.0 (224), 512.0 (10)
       - Duration (hours): 0.0
 
@@ -156,7 +156,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 269.1 GB
+      - Size on disk: 269.4 GB
       - File count: 117
       - Format: BIDS
 

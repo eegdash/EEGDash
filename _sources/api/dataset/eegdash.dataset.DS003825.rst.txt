@@ -7,7 +7,7 @@ eegdash.dataset.DS003825
 
 Human electroencephalography recordings from 50 subjects for 22,248 images from 1,854 object concepts (OpenNeuro ``ds003825``). Access recordings and metadata through EEGDash.
 
-**Citation:** Grootswagers, Tijl, Zhou, Ivy, Robinson, Amanda, Hebart, Martin, Carlson, Thomas (2021). *Human electroencephalography recordings from 50 subjects for 22,248 images from 1,854 object concepts*. `10.18112/openneuro.ds003825.v1.1.0 <https://doi.org/10.18112/openneuro.ds003825.v1.1.0>`__
+**Citation:** Grootswagers, Tijl, Zhou, Ivy, Robinson, Amanda, Hebart, Martin, Carlson, Thomas (—). *Human electroencephalography recordings from 50 subjects for 22,248 images from 1,854 object concepts*. `10.18112/openneuro.ds003825.v1.1.0 <https://doi.org/10.18112/openneuro.ds003825.v1.1.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Human electroencephalography recordings from 50 subjects for 22,248 images from 1,854 object concepts
    * - Year
-     - 2021
+     - —
    * - Authors
      - Grootswagers, Tijl, Zhou, Ivy, Robinson, Amanda, Hebart, Martin, Carlson, Thomas
    * - License
@@ -102,7 +102,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 41.2 GB
+      - Size on disk: 55.4 GB
       - File count: 50
       - Format: BIDS
 

@@ -7,7 +7,7 @@ eegdash.dataset.DS006563
 
 Dimension-based attention modulates early visual processing (OpenNeuro ``ds006563``). Access recordings and metadata through EEGDash.
 
-**Citation:** Klaus Gramann, Thomas Töllner, Hermann J. Müller (2025). *Dimension-based attention modulates early visual processing*. `10.18112/openneuro.ds006563.v1.0.0 <https://doi.org/10.18112/openneuro.ds006563.v1.0.0>`__
+**Citation:** Klaus Gramann, Thomas Töllner, Hermann J. Müller (2010). *Dimension-based attention modulates early visual processing*. `10.18112/openneuro.ds006563.v1.0.0 <https://doi.org/10.18112/openneuro.ds006563.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Dimension-based attention modulates early visual processing
    * - Year
-     - 2025
+     - 2010
    * - Authors
      - Klaus Gramann, Thomas Töllner, Hermann J. Müller
    * - License
@@ -108,7 +108,7 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 63 (12), 64 (12)
+      - Channels: 64 (12), 63 (12)
       - Sampling rate (Hz): 500.0
       - Duration (hours): 0.0
 

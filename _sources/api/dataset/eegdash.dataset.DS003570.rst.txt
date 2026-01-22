@@ -7,7 +7,7 @@ eegdash.dataset.DS003570
 
 EEG: Improvisation and Musical Structures (OpenNeuro ``ds003570``). Access recordings and metadata through EEGDash.
 
-**Citation:** Andrew Goldman, Tyreek Jackson, Paul Sajda (2021). *EEG: Improvisation and Musical Structures*. `10.18112/openneuro.ds003570.v1.0.0 <https://doi.org/10.18112/openneuro.ds003570.v1.0.0>`__
+**Citation:** Andrew Goldman, Tyreek Jackson, Paul Sajda (—). *EEG: Improvisation and Musical Structures*. `10.18112/openneuro.ds003570.v1.0.0 <https://doi.org/10.18112/openneuro.ds003570.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - EEG: Improvisation and Musical Structures
    * - Year
-     - 2021
+     - —
    * - Authors
      - Andrew Goldman, Tyreek Jackson, Paul Sajda
    * - License
@@ -99,7 +99,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 47.6 GB
+      - Size on disk: 36.1 GB
       - File count: 40
       - Format: BIDS
 

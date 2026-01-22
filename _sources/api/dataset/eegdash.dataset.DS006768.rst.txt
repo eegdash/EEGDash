@@ -7,7 +7,7 @@ eegdash.dataset.DS006768
 
 Multiple Object Monitoring (EEG) (OpenNeuro ``ds006768``). Access recordings and metadata through EEGDash.
 
-**Citation:** Benjamin G. Lowe, Alexandra Woolgar, Sophie Smit, Anina N. Rich (2025). *Multiple Object Monitoring (EEG)*. `10.18112/openneuro.ds006768.v1.1.0 <https://doi.org/10.18112/openneuro.ds006768.v1.1.0>`__
+**Citation:** Benjamin G. Lowe, Alexandra Woolgar, Sophie Smit, Anina N. Rich (20). *Multiple Object Monitoring (EEG)*. `10.18112/openneuro.ds006768.v1.1.0 <https://doi.org/10.18112/openneuro.ds006768.v1.1.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Multiple Object Monitoring (EEG)
    * - Year
-     - 2025
+     - 20
    * - Authors
      - Benjamin G. Lowe, Alexandra Woolgar, Sophie Smit, Anina N. Rich
    * - License
@@ -86,8 +86,8 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: —
-      - Sampling rate (Hz): —
+      - Channels: 64
+      - Sampling rate (Hz): 1000.0
       - Duration (hours): 0.0
 
    .. grid-item-card:: Tags
@@ -100,7 +100,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 6.5 GB
+      - Size on disk: 11.1 GB
       - File count: 210
       - Format: BIDS
 

@@ -7,7 +7,7 @@ eegdash.dataset.DS006850
 
 Urban Appraisal: Physiological Recording during Rating of Different Urban Environments (OpenNeuro ``ds006850``). Access recordings and metadata through EEGDash.
 
-**Citation:** Carolina Zaehme, Isabelle Sander, Klaus Gramann (2025). *Urban Appraisal: Physiological Recording during Rating of Different Urban Environments*. `10.18112/openneuro.ds006850.v1.0.0 <https://doi.org/10.18112/openneuro.ds006850.v1.0.0>`__
+**Citation:** Carolina Zaehme, Isabelle Sander, Klaus Gramann (20). *Urban Appraisal: Physiological Recording during Rating of Different Urban Environments*. `10.18112/openneuro.ds006850.v1.0.0 <https://doi.org/10.18112/openneuro.ds006850.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Urban Appraisal: Physiological Recording during Rating of Different Urban Environments
    * - Year
-     - 2025
+     - 20
    * - Authors
      - Carolina Zaehme, Isabelle Sander, Klaus Gramann
    * - License

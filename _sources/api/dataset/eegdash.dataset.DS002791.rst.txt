@@ -7,7 +7,7 @@ eegdash.dataset.DS002791
 
 DataSet1 (OpenNeuro ``ds002791``). Access recordings and metadata through EEGDash.
 
-**Citation:** Ahmad Mheich, Olivier Dufor, Sahar Yassine, Aya Kabbara, Fabrice Wendling, Mahmoud Hassan (2020). *DataSet1*. `10.18112/openneuro.ds002791.v1.0.0 <https://doi.org/10.18112/openneuro.ds002791.v1.0.0>`__
+**Citation:** Ahmad Mheich, Olivier Dufor, Sahar Yassine, Aya Kabbara, Fabrice Wendling, Mahmoud Hassan (—). *DataSet1*. `10.18112/openneuro.ds002791.v1.0.0 <https://doi.org/10.18112/openneuro.ds002791.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - DataSet1
    * - Year
-     - 2020
+     - —
    * - Authors
      - Ahmad Mheich, Olivier Dufor, Sahar Yassine, Aya Kabbara, Fabrice Wendling, Mahmoud Hassan
    * - License
@@ -99,7 +99,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 2.0 MB
+      - Size on disk: 47.1 GB
       - File count: 92
       - Format: BIDS
 

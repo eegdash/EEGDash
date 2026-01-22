@@ -7,7 +7,7 @@ eegdash.dataset.DS005953
 
 iEEG_visual (OpenNeuro ``ds005953``). Access recordings and metadata through EEGDash.
 
-**Citation:** Jonathan Winawer, Dora Hermes (2025). *iEEG_visual*. `10.18112/openneuro.ds005953.v1.0.0 <https://doi.org/10.18112/openneuro.ds005953.v1.0.0>`__
+**Citation:** Jonathan Winawer, Dora Hermes (2015). *iEEG_visual*. `10.18112/openneuro.ds005953.v1.0.0 <https://doi.org/10.18112/openneuro.ds005953.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - iEEG_visual
    * - Year
-     - 2025
+     - 2015
    * - Authors
      - Jonathan Winawer, Dora Hermes
    * - License
@@ -149,7 +149,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 577.3 MB
+      - Size on disk: 637.5 MB
       - File count: 3
       - Format: BIDS
 

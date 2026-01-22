@@ -7,7 +7,7 @@ eegdash.dataset.DS004475
 
 Mobile EEG split-belt walking study (OpenNeuro ``ds004475``). Access recordings and metadata through EEGDash.
 
-**Citation:** Noelle A. Jacobsen, Daniel P. Ferris (2023). *Mobile EEG split-belt walking study*. `10.18112/openneuro.ds004475.v1.0.3 <https://doi.org/10.18112/openneuro.ds004475.v1.0.3>`__
+**Citation:** Noelle A. Jacobsen, Daniel P. Ferris (—). *Mobile EEG split-belt walking study*. `10.18112/openneuro.ds004475.v1.0.3 <https://doi.org/10.18112/openneuro.ds004475.v1.0.3>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Mobile EEG split-belt walking study
    * - Year
-     - 2023
+     - —
    * - Authors
      - Noelle A. Jacobsen, Daniel P. Ferris
    * - License
@@ -85,7 +85,7 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 124 (6), 127 (6), 260 (5), 123 (4), 257 (3), 255 (3), 125 (3), 258 (3), 250 (3), 263 (3), 128 (3), 122 (2), 259 (2), 261, 253, 115, 262, 119, 118, 126, 256, 249, 254, 113, 265, 120, 252
+      - Channels: 127 (6), 124 (6), 260 (5), 123 (4), 263 (3), 128 (3), 250 (3), 125 (3), 258 (3), 257 (3), 255 (3), 259 (2), 122 (2), 113, 254, 265, 252, 120, 126, 249, 256, 118, 119, 262, 261, 253, 115
       - Sampling rate (Hz): 512.0
       - Duration (hours): 0.0
 
@@ -99,7 +99,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 48.5 GB
+      - Size on disk: 113.3 GB
       - File count: 30
       - Format: BIDS
 

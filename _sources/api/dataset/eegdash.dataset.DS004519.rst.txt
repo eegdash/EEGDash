@@ -7,7 +7,7 @@ eegdash.dataset.DS004519
 
 Internal selective attention is delayed by competition between endogenous and exogenous factors (OpenNeuro ``ds004519``). Access recordings and metadata through EEGDash.
 
-**Citation:** Edward Ester, Asal Nouri (2023). *Internal selective attention is delayed by competition between endogenous and exogenous factors*. `10.18112/openneuro.ds004519.v1.0.1 <https://doi.org/10.18112/openneuro.ds004519.v1.0.1>`__
+**Citation:** Edward Ester, Asal Nouri (20). *Internal selective attention is delayed by competition between endogenous and exogenous factors*. `10.18112/openneuro.ds004519.v1.0.1 <https://doi.org/10.18112/openneuro.ds004519.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Internal selective attention is delayed by competition between endogenous and exogenous factors
    * - Year
-     - 2023
+     - 20
    * - Authors
      - Edward Ester, Asal Nouri
    * - License

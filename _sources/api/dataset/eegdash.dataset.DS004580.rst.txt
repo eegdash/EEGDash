@@ -7,7 +7,7 @@ eegdash.dataset.DS004580
 
 Simon-conflict Task. (OpenNeuro ``ds004580``). Access recordings and metadata through EEGDash.
 
-**Citation:** Arun Singh arun.singh@usd.edu, Rachel Cole rachel-cole@uiowa.edu, Arturo Espinoza arturo-espinoza@uiowa.edu, Jan R Wessel jan-wessel@uiowa.edu, Jim Cavanagh jcavanagh@unm.edu, Nandakumar Narayanan nandakumar-narayanan@uiowa.edu (2023). *Simon-conflict Task.*. `10.18112/openneuro.ds004580.v1.0.0 <https://doi.org/10.18112/openneuro.ds004580.v1.0.0>`__
+**Citation:** Arun Singh arun.singh@usd.edu, Rachel Cole rachel-cole@uiowa.edu, Arturo Espinoza arturo-espinoza@uiowa.edu, Jan R Wessel jan-wessel@uiowa.edu, Jim Cavanagh jcavanagh@unm.edu, Nandakumar Narayanan nandakumar-narayanan@uiowa.edu (—). *Simon-conflict Task.*. `10.18112/openneuro.ds004580.v1.0.0 <https://doi.org/10.18112/openneuro.ds004580.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Simon-conflict Task.
    * - Year
-     - 2023
+     - —
    * - Authors
      - Arun Singh arun.singh@usd.edu, Rachel Cole rachel-cole@uiowa.edu, Arturo Espinoza arturo-espinoza@uiowa.edu, Jan R Wessel jan-wessel@uiowa.edu, Jim Cavanagh jcavanagh@unm.edu, Nandakumar Narayanan nandakumar-narayanan@uiowa.edu
    * - License

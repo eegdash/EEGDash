@@ -7,7 +7,7 @@ eegdash.dataset.DS005571
 
 Expectation of Conflict Stimuli (OpenNeuro ``ds005571``). Access recordings and metadata through EEGDash.
 
-**Citation:** María Paz Martínez-Molina, Alejandra Figueroa-Vargas, Francisco Zamorano, Pablo Billeke (2024). *Expectation of Conflict Stimuli*. `10.18112/openneuro.ds005571.v1.0.1 <https://doi.org/10.18112/openneuro.ds005571.v1.0.1>`__
+**Citation:** María Paz Martínez-Molina, Alejandra Figueroa-Vargas, Francisco Zamorano, Pablo Billeke (—). *Expectation of Conflict Stimuli*. `10.18112/openneuro.ds005571.v1.0.1 <https://doi.org/10.18112/openneuro.ds005571.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Expectation of Conflict Stimuli
    * - Year
-     - 2024
+     - —
    * - Authors
      - María Paz Martínez-Molina, Alejandra Figueroa-Vargas, Francisco Zamorano, Pablo Billeke
    * - License

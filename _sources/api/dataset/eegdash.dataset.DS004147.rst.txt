@@ -7,7 +7,7 @@ eegdash.dataset.DS004147
 
 Average Task Value (OpenNeuro ``ds004147``). Access recordings and metadata through EEGDash.
 
-**Citation:** Cameron D. Hassall, Laurence T. Hunt, Clay B. Holroyd (2022). *Average Task Value*. `10.18112/openneuro.ds004147.v1.0.2 <https://doi.org/10.18112/openneuro.ds004147.v1.0.2>`__
+**Citation:** Cameron D. Hassall, Laurence T. Hunt, Clay B. Holroyd (20). *Average Task Value*. `10.18112/openneuro.ds004147.v1.0.2 <https://doi.org/10.18112/openneuro.ds004147.v1.0.2>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Average Task Value
    * - Year
-     - 2022
+     - 20
    * - Authors
      - Cameron D. Hassall, Laurence T. Hunt, Clay B. Holroyd
    * - License

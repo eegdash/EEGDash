@@ -7,7 +7,7 @@ eegdash.dataset.DS004212
 
 THINGS-MEG (OpenNeuro ``ds004212``). Access recordings and metadata through EEGDash.
 
-**Citation:** Martin N. Hebart, Oliver Contier, Lina Teichmann, Adam H. Rockter, Charles Zheng, Alexis Kidder, Anna Corriveau, Maryam Vaziri-Pashkam, Chris I. Baker (2022). *THINGS-MEG*. `10.18112/openneuro.ds004212.v3.0.0 <https://doi.org/10.18112/openneuro.ds004212.v3.0.0>`__
+**Citation:** Martin N. Hebart, Oliver Contier, Lina Teichmann, Adam H. Rockter, Charles Zheng, Alexis Kidder, Anna Corriveau, Maryam Vaziri-Pashkam, Chris I. Baker (20). *THINGS-MEG*. `10.18112/openneuro.ds004212.v3.0.0 <https://doi.org/10.18112/openneuro.ds004212.v3.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - THINGS-MEG
    * - Year
-     - 2022
+     - 20
    * - Authors
      - Martin N. Hebart, Oliver Contier, Lina Teichmann, Adam H. Rockter, Charles Zheng, Alexis Kidder, Anna Corriveau, Maryam Vaziri-Pashkam, Chris I. Baker
    * - License
@@ -118,7 +118,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 237.7 GB
+      - Size on disk: 1.1 TB
       - File count: 500
       - Format: BIDS
 

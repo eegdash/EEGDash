@@ -7,7 +7,7 @@ eegdash.dataset.DS004381
 
 Intraoperative EEG dataset during medianus-tibialis stimulation with 8 different rates (OpenNeuro ``ds004381``). Access recordings and metadata through EEGDash.
 
-**Citation:** Giorgio Selmin, Vasileios Dimakopoulos, Niklaus Krayenbühl, Luca Regli, Johannes Sarnthein (2022). *Intraoperative EEG dataset during medianus-tibialis stimulation with 8 different rates*. `10.18112/openneuro.ds004381.v1.0.2 <https://doi.org/10.18112/openneuro.ds004381.v1.0.2>`__
+**Citation:** Giorgio Selmin, Vasileios Dimakopoulos, Niklaus Krayenbühl, Luca Regli, Johannes Sarnthein (20). *Intraoperative EEG dataset during medianus-tibialis stimulation with 8 different rates*. `10.18112/openneuro.ds004381.v1.0.2 <https://doi.org/10.18112/openneuro.ds004381.v1.0.2>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Intraoperative EEG dataset during medianus-tibialis stimulation with 8 different rates
    * - Year
-     - 2022
+     - 20
    * - Authors
      - Giorgio Selmin, Vasileios Dimakopoulos, Niklaus Krayenbühl, Luca Regli, Johannes Sarnthein
    * - License
@@ -144,7 +144,7 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 4 (666), 8 (94), 5 (52), 7 (52), 10 (10)
+      - Channels: 4 (666), 8 (94), 7 (52), 5 (52), 10 (10)
       - Sampling rate (Hz): 20000.0
       - Duration (hours): 0.0
 
@@ -158,7 +158,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 7.7 GB
+      - Size on disk: 12.4 GB
       - File count: 437
       - Format: BIDS
 

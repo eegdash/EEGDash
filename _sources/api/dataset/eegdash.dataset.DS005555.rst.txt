@@ -7,7 +7,7 @@ eegdash.dataset.DS005555
 
 The Bitbrain Open Access Sleep (BOAS) dataset (OpenNeuro ``ds005555``). Access recordings and metadata through EEGDash.
 
-**Citation:** Eduardo López-Larraz, María Sierra-Torralba, Sergio Clemente, Galit Fierro, David Oriol, Javier Minguez, Luis Montesano, Jens G. Klinzing (2024). *The Bitbrain Open Access Sleep (BOAS) dataset*. `10.18112/openneuro.ds005555.v1.1.1 <https://doi.org/10.18112/openneuro.ds005555.v1.1.1>`__
+**Citation:** Eduardo López-Larraz, María Sierra-Torralba, Sergio Clemente, Galit Fierro, David Oriol, Javier Minguez, Luis Montesano, Jens G. Klinzing (2015). *The Bitbrain Open Access Sleep (BOAS) dataset*. `10.18112/openneuro.ds005555.v1.1.1 <https://doi.org/10.18112/openneuro.ds005555.v1.1.1>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - The Bitbrain Open Access Sleep (BOAS) dataset
    * - Year
-     - 2024
+     - 2015
    * - Authors
      - Eduardo López-Larraz, María Sierra-Torralba, Sergio Clemente, Galit Fierro, David Oriol, Javier Minguez, Luis Montesano, Jens G. Klinzing
    * - License
@@ -168,7 +168,7 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 2 (144), 11 (106), 9 (98), 8 (73), 14 (25), 16 (19), 13 (19), 3 (18), 15 (5), 12 (5)
+      - Channels: 2 (144), 11 (106), 9 (98), 8 (73), 14 (25), 13 (19), 16 (19), 3 (18), 12 (5), 15 (5)
       - Sampling rate (Hz): 256.0
       - Duration (hours): 0.0
 

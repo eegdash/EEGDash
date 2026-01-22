@@ -7,7 +7,7 @@ eegdash.dataset.DS004995
 
 The Time-Course of Food Representation in the Human Brain (OpenNeuro ``ds004995``). Access recordings and metadata through EEGDash.
 
-**Citation:** Denise Moerel, James Psihoyos, Thomas A. Carlson (2024). *The Time-Course of Food Representation in the Human Brain*. `10.18112/openneuro.ds004995.v1.0.2 <https://doi.org/10.18112/openneuro.ds004995.v1.0.2>`__
+**Citation:** Denise Moerel, James Psihoyos, Thomas A. Carlson (2019). *The Time-Course of Food Representation in the Human Brain*. `10.18112/openneuro.ds004995.v1.0.2 <https://doi.org/10.18112/openneuro.ds004995.v1.0.2>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - The Time-Course of Food Representation in the Human Brain
    * - Year
-     - 2024
+     - 2019
    * - Authors
      - Denise Moerel, James Psihoyos, Thomas A. Carlson
    * - License
@@ -90,8 +90,8 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: —
-      - Sampling rate (Hz): —
+      - Channels: 127
+      - Sampling rate (Hz): 1000.0
       - Duration (hours): 0.0
 
    .. grid-item-card:: Tags

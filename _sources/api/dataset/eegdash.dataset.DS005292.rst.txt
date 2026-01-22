@@ -7,7 +7,7 @@ eegdash.dataset.DS005292
 
 142 by Biosemi (OpenNeuro ``ds005292``). Access recordings and metadata through EEGDash.
 
-**Citation:** Zhao Xiangyue, Zhou Jingyao, Zhang Libo, Duan Haoqing, Wei Shiyu, Bi Yanzhi, Hu Li (2024). *142 by Biosemi*. `10.18112/openneuro.ds005292.v1.0.0 <https://doi.org/10.18112/openneuro.ds005292.v1.0.0>`__
+**Citation:** Zhao Xiangyue, Zhou Jingyao, Zhang Libo, Duan Haoqing, Wei Shiyu, Bi Yanzhi, Hu Li (—). *142 by Biosemi*. `10.18112/openneuro.ds005292.v1.0.0 <https://doi.org/10.18112/openneuro.ds005292.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - 142 by Biosemi
    * - Year
-     - 2024
+     - —
    * - Authors
      - Zhao Xiangyue, Zhou Jingyao, Zhang Libo, Duan Haoqing, Wei Shiyu, Bi Yanzhi, Hu Li
    * - License
@@ -104,7 +104,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 50.9 GB
+      - Size on disk: 116.0 GB
       - File count: 426
       - Format: BIDS
 

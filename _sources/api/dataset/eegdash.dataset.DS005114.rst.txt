@@ -7,7 +7,7 @@ eegdash.dataset.DS005114
 
 EEG: DPX Cog Ctl Task in Acute Mild TBI (OpenNeuro ``ds005114``). Access recordings and metadata through EEGDash.
 
-**Citation:** James F Cavanagh (2024). *EEG: DPX Cog Ctl Task in Acute Mild TBI*. `10.18112/openneuro.ds005114.v1.0.0 <https://doi.org/10.18112/openneuro.ds005114.v1.0.0>`__
+**Citation:** James F Cavanagh (20). *EEG: DPX Cog Ctl Task in Acute Mild TBI*. `10.18112/openneuro.ds005114.v1.0.0 <https://doi.org/10.18112/openneuro.ds005114.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - EEG: DPX Cog Ctl Task in Acute Mild TBI
    * - Year
-     - 2024
+     - 20
    * - Authors
      - James F Cavanagh
    * - License
@@ -99,7 +99,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 14.7 MB
+      - Size on disk: 56.5 GB
       - File count: 223
       - Format: BIDS
 

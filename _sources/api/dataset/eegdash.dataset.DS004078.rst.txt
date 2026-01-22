@@ -7,7 +7,7 @@ eegdash.dataset.DS004078
 
 A synchronized multimodal neuroimaging dataset to study brain language processing (OpenNeuro ``ds004078``). Access recordings and metadata through EEGDash.
 
-**Citation:** Shaonan Wang, Xiaohan Zhang, Jiajun Zhang, Chengqing Zong (2022). *A synchronized multimodal neuroimaging dataset to study brain language processing*. `10.18112/openneuro.ds004078.v1.0.4 <https://doi.org/10.18112/openneuro.ds004078.v1.0.4>`__
+**Citation:** Shaonan Wang, Xiaohan Zhang, Jiajun Zhang, Chengqing Zong (—). *A synchronized multimodal neuroimaging dataset to study brain language processing*. `10.18112/openneuro.ds004078.v1.0.4 <https://doi.org/10.18112/openneuro.ds004078.v1.0.4>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - A synchronized multimodal neuroimaging dataset to study brain language processing
    * - Year
-     - 2022
+     - —
    * - Authors
      - Shaonan Wang, Xiaohan Zhang, Jiajun Zhang, Chengqing Zong
    * - License
@@ -137,7 +137,7 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 306 (720), 328 (720)
+      - Channels: 328 (720), 306 (720)
       - Sampling rate (Hz): 1000.0
       - Duration (hours): 0.0
 
@@ -151,7 +151,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 631.1 GB
+      - Size on disk: 1.4 TB
       - File count: 720
       - Format: BIDS
 

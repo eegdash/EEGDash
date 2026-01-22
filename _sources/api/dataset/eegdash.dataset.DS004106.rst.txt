@@ -7,7 +7,7 @@ eegdash.dataset.DS004106
 
 BCIT Advanced Guard Duty (OpenNeuro ``ds004106``). Access recordings and metadata through EEGDash.
 
-**Citation:** Jonathan Touryan (data and curation), Brent Lance (data), Scott Kerick (data), Anthony Ries (data), Kaleb McDowell(data), Tony Johnson (curation), Kay Robbins (curation) (2022). *BCIT Advanced Guard Duty*. `10.18112/openneuro.ds004106.v1.0.0 <https://doi.org/10.18112/openneuro.ds004106.v1.0.0>`__
+**Citation:** Jonathan Touryan (data and curation), Brent Lance (data), Scott Kerick (data), Anthony Ries (data), Kaleb McDowell(data), Tony Johnson (curation), Kay Robbins (curation) (20). *BCIT Advanced Guard Duty*. `10.18112/openneuro.ds004106.v1.0.0 <https://doi.org/10.18112/openneuro.ds004106.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - BCIT Advanced Guard Duty
    * - Year
-     - 2022
+     - 20
    * - Authors
      - Jonathan Touryan (data and curation), Brent Lance (data), Scott Kerick (data), Anthony Ries (data), Kaleb McDowell(data), Tony Johnson (curation), Kay Robbins (curation)
    * - License

@@ -7,7 +7,7 @@ eegdash.dataset.DS004588
 
 Neuma (OpenNeuro ``ds004588``). Access recordings and metadata through EEGDash.
 
-**Citation:** Kostas Georgiadis, Fotis P. Kalaganis, Kyriakos Riskos, Eleytheria Matta, Vangelis P. Oikonomou, Yfantidou Ioanna, Dimitris Chantziaras, Kyriakos Pantouvakis, Spiros Nikolopoulos, Nikos A. Laskaris, Ioannis Kompatsiaris (2023). *Neuma*. `10.18112/openneuro.ds004588.v1.2.0 <https://doi.org/10.18112/openneuro.ds004588.v1.2.0>`__
+**Citation:** Kostas Georgiadis, Fotis P. Kalaganis, Kyriakos Riskos, Eleytheria Matta, Vangelis P. Oikonomou, Yfantidou Ioanna, Dimitris Chantziaras, Kyriakos Pantouvakis, Spiros Nikolopoulos, Nikos A. Laskaris, Ioannis Kompatsiaris (—). *Neuma*. `10.18112/openneuro.ds004588.v1.2.0 <https://doi.org/10.18112/openneuro.ds004588.v1.2.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Neuma
    * - Year
-     - 2023
+     - —
    * - Authors
      - Kostas Georgiadis, Fotis P. Kalaganis, Kyriakos Riskos, Eleytheria Matta, Vangelis P. Oikonomou, Yfantidou Ioanna, Dimitris Chantziaras, Kyriakos Pantouvakis, Spiros Nikolopoulos, Nikos A. Laskaris, Ioannis Kompatsiaris
    * - License
@@ -100,7 +100,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 534.1 MB
+      - Size on disk: 602.0 MB
       - File count: 42
       - Format: BIDS
 

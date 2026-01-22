@@ -7,7 +7,7 @@ eegdash.dataset.DS005670
 
 SEEG Resting State Recording (OpenNeuro ``ds005670``). Access recordings and metadata through EEGDash.
 
-**Citation:** Prof. Pengfei Xu (2024). *SEEG Resting State Recording*. `10.18112/openneuro.ds005670.v1.0.0 <https://doi.org/10.18112/openneuro.ds005670.v1.0.0>`__
+**Citation:** Prof. Pengfei Xu (—). *SEEG Resting State Recording*. `10.18112/openneuro.ds005670.v1.0.0 <https://doi.org/10.18112/openneuro.ds005670.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - SEEG Resting State Recording
    * - Year
-     - 2024
+     - —
    * - Authors
      - Prof. Pengfei Xu
    * - License

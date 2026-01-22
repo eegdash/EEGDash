@@ -7,7 +7,7 @@ eegdash.dataset.DS005107
 
 FACE-DEC (OpenNeuro ``ds005107``). Access recordings and metadata through EEGDash.
 
-**Citation:** Wei Xu, et al. (2024). *FACE-DEC*. `10.18112/openneuro.ds005107.v2.0.0 <https://doi.org/10.18112/openneuro.ds005107.v2.0.0>`__
+**Citation:** Wei Xu, et al. (—). *FACE-DEC*. `10.18112/openneuro.ds005107.v2.0.0 <https://doi.org/10.18112/openneuro.ds005107.v2.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - FACE-DEC
    * - Year
-     - 2024
+     - —
    * - Authors
      - Wei Xu, et al.
    * - License
@@ -92,7 +92,7 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 64 (350), 65 (350)
+      - Channels: 65 (350), 64 (350)
       - Sampling rate (Hz): 1000.0
       - Duration (hours): 0.0
 

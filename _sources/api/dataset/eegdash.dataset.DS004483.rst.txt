@@ -7,7 +7,7 @@ eegdash.dataset.DS004483
 
 ABSeqMEG (OpenNeuro ``ds004483``). Access recordings and metadata through EEGDash.
 
-**Citation:** Samuel Planton\*, Fosca Al Roumi\*, Liping Wang, Stanislas Dehaene (2023). *ABSeqMEG*. `10.18112/openneuro.ds004483.v1.0.0 <https://doi.org/10.18112/openneuro.ds004483.v1.0.0>`__
+**Citation:** Samuel Planton\*, Fosca Al Roumi\*, Liping Wang, Stanislas Dehaene (20). *ABSeqMEG*. `10.18112/openneuro.ds004483.v1.0.0 <https://doi.org/10.18112/openneuro.ds004483.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - ABSeqMEG
    * - Year
-     - 2023
+     - 20
    * - Authors
      - Samuel Planton\*, Fosca Al Roumi\*, Liping Wang, Stanislas Dehaene
    * - License
@@ -86,7 +86,7 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 60 (263), 396 (263)
+      - Channels: 396 (263), 60 (263)
       - Sampling rate (Hz): 250.0
       - Duration (hours): 0.0
 

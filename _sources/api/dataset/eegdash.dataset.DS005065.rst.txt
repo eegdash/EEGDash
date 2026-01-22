@@ -7,7 +7,7 @@ eegdash.dataset.DS005065
 
 Heuristics in risky decision-making relate to preferential representation of information MEG data (OpenNeuro ``ds005065``). Access recordings and metadata through EEGDash.
 
-**Citation:** Evan M. Russek, Rani Moran, Yunzhe Liu, Ray Dolan, Quentin Huys (2024). *Heuristics in risky decision-making relate to preferential representation of information MEG data*. `10.18112/openneuro.ds005065.v1.0.0 <https://doi.org/10.18112/openneuro.ds005065.v1.0.0>`__
+**Citation:** Evan M. Russek, Rani Moran, Yunzhe Liu, Ray Dolan, Quentin Huys (—). *Heuristics in risky decision-making relate to preferential representation of information MEG data*. `10.18112/openneuro.ds005065.v1.0.0 <https://doi.org/10.18112/openneuro.ds005065.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Heuristics in risky decision-making relate to preferential representation of information MEG data
    * - Year
-     - 2024
+     - —
    * - Authors
      - Evan M. Russek, Rani Moran, Yunzhe Liu, Ray Dolan, Quentin Huys
    * - License
@@ -102,7 +102,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 425.8 GB
+      - Size on disk: 430.7 GB
       - File count: 275
       - Format: BIDS
 

@@ -7,7 +7,7 @@ eegdash.dataset.DS005558
 
 Categorized Free Recall with Closed-Loop Stimulation at Encoding (Encoding Classifier) (OpenNeuro ``ds005558``). Access recordings and metadata through EEGDash.
 
-**Citation:** Haydn G. Herrema, Michael J. Kahana (2024). *Categorized Free Recall with Closed-Loop Stimulation at Encoding (Encoding Classifier)*. `10.18112/openneuro.ds005558.v1.0.0 <https://doi.org/10.18112/openneuro.ds005558.v1.0.0>`__
+**Citation:** Haydn G. Herrema, Michael J. Kahana (—). *Categorized Free Recall with Closed-Loop Stimulation at Encoding (Encoding Classifier)*. `10.18112/openneuro.ds005558.v1.0.0 <https://doi.org/10.18112/openneuro.ds005558.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Categorized Free Recall with Closed-Loop Stimulation at Encoding (Encoding Classifier)
    * - Year
-     - 2024
+     - —
    * - Authors
      - Haydn G. Herrema, Michael J. Kahana
    * - License
@@ -114,7 +114,7 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 126 (6), 68 (4), 156 (4), 128 (4), 124 (4), 113 (4), 114 (4), 78 (4), 56 (2), 90 (2), 64 (2), 110 (2), 122 (2)
+      - Channels: 126 (6), 78 (4), 114 (4), 113 (4), 128 (4), 124 (4), 156 (4), 68 (4), 122 (2), 64 (2), 110 (2), 56 (2), 90 (2)
       - Sampling rate (Hz): 1000.0
       - Duration (hours): 0.0
 

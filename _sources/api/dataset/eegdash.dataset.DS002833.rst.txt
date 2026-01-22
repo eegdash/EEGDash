@@ -7,7 +7,7 @@ eegdash.dataset.DS002833
 
 DataSet2 (OpenNeuro ``ds002833``). Access recordings and metadata through EEGDash.
 
-**Citation:** Ahmad Mheich, Olivier Dufor, Sahar Yassine, Aya Kabbara, Fabrice Wendling, Mahmoud Hassan (2020). *DataSet2*. `10.18112/openneuro.ds002833.v1.0.0 <https://doi.org/10.18112/openneuro.ds002833.v1.0.0>`__
+**Citation:** Ahmad Mheich, Olivier Dufor, Sahar Yassine, Aya Kabbara, Fabrice Wendling, Mahmoud Hassan (—). *DataSet2*. `10.18112/openneuro.ds002833.v1.0.0 <https://doi.org/10.18112/openneuro.ds002833.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - DataSet2
    * - Year
-     - 2020
+     - —
    * - Authors
      - Ahmad Mheich, Olivier Dufor, Sahar Yassine, Aya Kabbara, Fabrice Wendling, Mahmoud Hassan
    * - License

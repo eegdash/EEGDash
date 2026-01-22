@@ -7,7 +7,7 @@ eegdash.dataset.DS005169
 
 Dataset of intracranial EEG during cortical stimulation evoking visual effects (OpenNeuro ``ds005169``). Access recordings and metadata through EEGDash.
 
-**Citation:** Andrei Barborica, Felicia Mihai, Laurentiu Tofan, Irina Oane, Ioana Mindruta (2024). *Dataset of intracranial EEG during cortical stimulation evoking visual effects*. `10.18112/openneuro.ds005169.v1.0.0 <https://doi.org/10.18112/openneuro.ds005169.v1.0.0>`__
+**Citation:** Andrei Barborica, Felicia Mihai, Laurentiu Tofan, Irina Oane, Ioana Mindruta (20). *Dataset of intracranial EEG during cortical stimulation evoking visual effects*. `10.18112/openneuro.ds005169.v1.0.0 <https://doi.org/10.18112/openneuro.ds005169.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Dataset of intracranial EEG during cortical stimulation evoking visual effects
    * - Year
-     - 2024
+     - 20
    * - Authors
      - Andrei Barborica, Felicia Mihai, Laurentiu Tofan, Irina Oane, Ioana Mindruta
    * - License
@@ -104,7 +104,7 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 82 (38), 94 (18), 101 (12), 193 (10), 95 (10), 136 (10), 102 (10), 40 (8), 70 (8), 84 (6), 79 (6), 85 (6), 184 (6), 83 (6), 104 (4), 58 (4), 91 (4), 143 (4), 106 (4), 76 (2), 38 (2), 109 (2), 98 (2), 29 (2), 160 (2), 186 (2), 69 (2), 89 (2), 103 (2), 86 (2), 188 (2), 81 (2), 114 (2), 96 (2), 88 (2), 113 (2), 71 (2), 92 (2), 99 (2), 105 (2), 80 (2), 100 (2), 39 (2), 144 (2)
+      - Channels: 82 (38), 94 (18), 101 (12), 102 (10), 95 (10), 136 (10), 193 (10), 70 (8), 40 (8), 184 (6), 85 (6), 83 (6), 84 (6), 79 (6), 143 (4), 106 (4), 91 (4), 104 (4), 58 (4), 92 (2), 99 (2), 105 (2), 39 (2), 144 (2), 80 (2), 100 (2), 96 (2), 88 (2), 71 (2), 113 (2), 103 (2), 89 (2), 86 (2), 188 (2), 114 (2), 81 (2), 38 (2), 109 (2), 76 (2), 98 (2), 69 (2), 186 (2), 29 (2), 160 (2)
       - Sampling rate (Hz): 4096.0
       - Duration (hours): 0.0
 

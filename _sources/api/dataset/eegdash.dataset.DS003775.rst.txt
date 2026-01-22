@@ -7,7 +7,7 @@ eegdash.dataset.DS003775
 
 SRM Resting-state EEG (OpenNeuro ``ds003775``). Access recordings and metadata through EEGDash.
 
-**Citation:** Christoffer Hatlestad-Hall, Trine Waage Rygvold, Stein Andersson (2021). *SRM Resting-state EEG*. `10.18112/openneuro.ds003775.v1.2.1 <https://doi.org/10.18112/openneuro.ds003775.v1.2.1>`__
+**Citation:** Christoffer Hatlestad-Hall, Trine Waage Rygvold, Stein Andersson (2022). *SRM Resting-state EEG*. `10.18112/openneuro.ds003775.v1.2.1 <https://doi.org/10.18112/openneuro.ds003775.v1.2.1>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - SRM Resting-state EEG
    * - Year
-     - 2021
+     - 2022
    * - Authors
      - Christoffer Hatlestad-Hall, Trine Waage Rygvold, Stein Andersson
    * - License
@@ -193,7 +193,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 4.5 GB
+      - Size on disk: 20.7 GB
       - File count: 153
       - Format: BIDS
 

@@ -7,7 +7,7 @@ eegdash.dataset.DS003682
 
 Model-based aversive learning in humans is supported by preferential task state reactivation (OpenNeuro ``ds003682``). Access recordings and metadata through EEGDash.
 
-**Citation:** Toby Wise, Yunzhe Liu, Fatima Chowdhury, Raymond J. Dolan (2021). *Model-based aversive learning in humans is supported by preferential task state reactivation*. `10.18112/openneuro.ds003682.v1.0.0 <https://doi.org/10.18112/openneuro.ds003682.v1.0.0>`__
+**Citation:** Toby Wise, Yunzhe Liu, Fatima Chowdhury, Raymond J. Dolan (—). *Model-based aversive learning in humans is supported by preferential task state reactivation*. `10.18112/openneuro.ds003682.v1.0.0 <https://doi.org/10.18112/openneuro.ds003682.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Model-based aversive learning in humans is supported by preferential task state reactivation
    * - Year
-     - 2021
+     - —
    * - Authors
      - Toby Wise, Yunzhe Liu, Fatima Chowdhury, Raymond J. Dolan
    * - License
@@ -86,7 +86,7 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 414 (336), 272 (336)
+      - Channels: 272 (336), 414 (336)
       - Sampling rate (Hz): 1200.0
       - Duration (hours): 0.0
 
@@ -100,7 +100,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 211.6 GB
+      - Size on disk: 302.0 GB
       - File count: 336
       - Format: BIDS
 

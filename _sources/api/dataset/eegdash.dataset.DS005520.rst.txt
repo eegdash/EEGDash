@@ -7,7 +7,7 @@ eegdash.dataset.DS005520
 
 Research data supporting 'EEG recording during playing MOBA game' (OpenNeuro ``ds005520``). Access recordings and metadata through EEGDash.
 
-**Citation:** Hong-Zhi Li, Jia-Jia Yang, Zhen Lv, Li-Yang Wan, Wo Wang, Da-Qi Li, Dong-Dong Zhou, Li Kuang (2024). *Research data supporting 'EEG recording during playing MOBA game'*. `10.18112/openneuro.ds005520.v1.0.1 <https://doi.org/10.18112/openneuro.ds005520.v1.0.1>`__
+**Citation:** Hong-Zhi Li, Jia-Jia Yang, Zhen Lv, Li-Yang Wan, Wo Wang, Da-Qi Li, Dong-Dong Zhou, Li Kuang (20). *Research data supporting 'EEG recording during playing MOBA game'*. `10.18112/openneuro.ds005520.v1.0.1 <https://doi.org/10.18112/openneuro.ds005520.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Research data supporting 'EEG recording during playing MOBA game'
    * - Year
-     - 2024
+     - 20
    * - Authors
      - Hong-Zhi Li, Jia-Jia Yang, Zhen Lv, Li-Yang Wan, Wo Wang, Da-Qi Li, Dong-Dong Zhou, Li Kuang
    * - License
@@ -127,7 +127,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 43.9 GB
+      - Size on disk: 276.0 GB
       - File count: 69
       - Format: BIDS
 

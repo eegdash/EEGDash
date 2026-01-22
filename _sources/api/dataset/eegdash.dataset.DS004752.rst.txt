@@ -7,7 +7,7 @@ eegdash.dataset.DS004752
 
 Dataset of intracranial EEG, scalp EEG and beamforming sources from epilepsy patients performing a verbal working memory task (OpenNeuro ``ds004752``). Access recordings and metadata through EEGDash.
 
-**Citation:** Vasileios Dimakopoulos, Lennart Stieglitz, Lukas Imbach, Johannes Sarnthein (2023). *Dataset of intracranial EEG, scalp EEG and beamforming sources from epilepsy patients performing a verbal working memory task*. `10.18112/openneuro.ds004752.v1.0.1 <https://doi.org/10.18112/openneuro.ds004752.v1.0.1>`__
+**Citation:** Vasileios Dimakopoulos, Lennart Stieglitz, Lukas Imbach, Johannes Sarnthein (20). *Dataset of intracranial EEG, scalp EEG and beamforming sources from epilepsy patients performing a verbal working memory task*. `10.18112/openneuro.ds004752.v1.0.1 <https://doi.org/10.18112/openneuro.ds004752.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Dataset of intracranial EEG, scalp EEG and beamforming sources from epilepsy patients performing a verbal working memory task
    * - Year
-     - 2023
+     - 20
    * - Authors
      - Vasileios Dimakopoulos, Lennart Stieglitz, Lukas Imbach, Johannes Sarnthein
    * - License
@@ -130,7 +130,7 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 64 (68), 8 (32), 20 (30), 21 (28), 19 (20), 10 (14), 36 (12), 23 (12), 46 (12), 68 (12), 48 (8), 62 (8), 40 (6), 32 (6), 80 (4)
+      - Channels: 64 (68), 8 (32), 20 (30), 21 (28), 19 (20), 10 (14), 68 (12), 46 (12), 23 (12), 36 (12), 62 (8), 48 (8), 40 (6), 32 (6), 80 (4)
       - Sampling rate (Hz): 2000.0 (80), 4000.0 (80), 200.0 (72), 4096.0 (40)
       - Duration (hours): 0.0
 
@@ -144,7 +144,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 10.2 GB
+      - Size on disk: 11.9 GB
       - File count: 136
       - Format: BIDS
 

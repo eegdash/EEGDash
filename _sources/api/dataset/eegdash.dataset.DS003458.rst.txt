@@ -7,7 +7,7 @@ eegdash.dataset.DS003458
 
 EEG: Three armed bandit gambling task (OpenNeuro ``ds003458``). Access recordings and metadata through EEGDash.
 
-**Citation:** James F Cavanagh jcavanagh@unm.edu (2021). *EEG: Three armed bandit gambling task*. `10.18112/openneuro.ds003458.v1.1.0 <https://doi.org/10.18112/openneuro.ds003458.v1.1.0>`__
+**Citation:** James F Cavanagh jcavanagh@unm.edu (20). *EEG: Three armed bandit gambling task*. `10.18112/openneuro.ds003458.v1.1.0 <https://doi.org/10.18112/openneuro.ds003458.v1.1.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - EEG: Three armed bandit gambling task
    * - Year
-     - 2021
+     - 20
    * - Authors
      - James F Cavanagh jcavanagh@unm.edu
    * - License

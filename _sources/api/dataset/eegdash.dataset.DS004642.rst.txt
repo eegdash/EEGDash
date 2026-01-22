@@ -7,7 +7,7 @@ eegdash.dataset.DS004642
 
 Intraoperative recordings of medianus stimulation with low and high impedance ECoG (OpenNeuro ``ds004642``). Access recordings and metadata through EEGDash.
 
-**Citation:** Vasileios Dimakopoulos, Marian Neidert, Johannes Sarnthein (2023). *Intraoperative recordings of medianus stimulation with low and high impedance ECoG*. `10.18112/openneuro.ds004642.v1.0.1 <https://doi.org/10.18112/openneuro.ds004642.v1.0.1>`__
+**Citation:** Vasileios Dimakopoulos, Marian Neidert, Johannes Sarnthein (20). *Intraoperative recordings of medianus stimulation with low and high impedance ECoG*. `10.18112/openneuro.ds004642.v1.0.1 <https://doi.org/10.18112/openneuro.ds004642.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Intraoperative recordings of medianus stimulation with low and high impedance ECoG
    * - Year
-     - 2023
+     - 20
    * - Authors
      - Vasileios Dimakopoulos, Marian Neidert, Johannes Sarnthein
    * - License
@@ -132,7 +132,7 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 8 (14), 9 (2), 1 (2), 2, 10
+      - Channels: 8 (14), 9 (2), 1 (2), 10, 2
       - Sampling rate (Hz): 20000.0
       - Duration (hours): 0.0
 

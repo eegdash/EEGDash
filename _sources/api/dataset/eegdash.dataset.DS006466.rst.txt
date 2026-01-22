@@ -7,7 +7,7 @@ eegdash.dataset.DS006466
 
 HeartBEAM: Older Adult Resting State and Auditory Oddball Task EEG Data (OpenNeuro ``ds006466``). Access recordings and metadata through EEGDash.
 
-**Citation:** Andy Jeesu Kim, Santiago Morales, Joshua Senior, Mara Mather (2025). *HeartBEAM: Older Adult Resting State and Auditory Oddball Task EEG Data*. `10.18112/openneuro.ds006466.v1.0.1 <https://doi.org/10.18112/openneuro.ds006466.v1.0.1>`__
+**Citation:** Andy Jeesu Kim, Santiago Morales, Joshua Senior, Mara Mather (2024). *HeartBEAM: Older Adult Resting State and Auditory Oddball Task EEG Data*. `10.18112/openneuro.ds006466.v1.0.1 <https://doi.org/10.18112/openneuro.ds006466.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - HeartBEAM: Older Adult Resting State and Auditory Oddball Task EEG Data
    * - Year
-     - 2025
+     - 2024
    * - Authors
      - Andy Jeesu Kim, Santiago Morales, Joshua Senior, Mara Mather
    * - License
@@ -152,8 +152,8 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: —
-      - Sampling rate (Hz): —
+      - Channels: 65
+      - Sampling rate (Hz): 1000.0
       - Duration (hours): 0.0
 
    .. grid-item-card:: Tags

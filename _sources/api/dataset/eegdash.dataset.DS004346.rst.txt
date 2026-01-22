@@ -90,7 +90,7 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 343 (2), 306 (2)
+      - Channels: 306 (2), 343 (2)
       - Sampling rate (Hz): 1000.0
       - Duration (hours): 0.0
 
@@ -104,7 +104,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 3.6 GB
+      - Size on disk: 16.8 GB
       - File count: 3
       - Format: BIDS
 

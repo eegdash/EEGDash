@@ -7,7 +7,7 @@ eegdash.dataset.DS006593
 
 cBCI Matrix Multimodal Dataset (OpenNeuro ``ds006593``). Access recordings and metadata through EEGDash.
 
-**Citation:** Basak Celik, Tab Memmott, Matthew Lawhead, Srikar Ananthoju, Deniz Erdogmus (2025). *cBCI Matrix Multimodal Dataset*. `10.18112/openneuro.ds006593.v1.0.0 <https://doi.org/10.18112/openneuro.ds006593.v1.0.0>`__
+**Citation:** Basak Celik, Tab Memmott, Matthew Lawhead, Srikar Ananthoju, Deniz Erdogmus (20). *cBCI Matrix Multimodal Dataset*. `10.18112/openneuro.ds006593.v1.0.0 <https://doi.org/10.18112/openneuro.ds006593.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - cBCI Matrix Multimodal Dataset
    * - Year
-     - 2025
+     - 20
    * - Authors
      - Basak Celik, Tab Memmott, Matthew Lawhead, Srikar Ananthoju, Deniz Erdogmus
    * - License
@@ -122,7 +122,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 441.9 MB
+      - Size on disk: 616.8 MB
       - File count: 21
       - Format: BIDS
 

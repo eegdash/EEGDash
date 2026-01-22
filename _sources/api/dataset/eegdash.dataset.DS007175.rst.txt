@@ -7,7 +7,7 @@ eegdash.dataset.DS007175
 
 FFR-active-listening (OpenNeuro ``ds007175``). Access recordings and metadata through EEGDash.
 
-**Citation:** [Unspecified] (2026). *FFR-active-listening*. `10.18112/openneuro.ds007175.v1.0.1 <https://doi.org/10.18112/openneuro.ds007175.v1.0.1>`__
+**Citation:** [Unspecified] (—). *FFR-active-listening*. `10.18112/openneuro.ds007175.v1.0.1 <https://doi.org/10.18112/openneuro.ds007175.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - FFR-active-listening
    * - Year
-     - 2026
+     - —
    * - Authors
      - [Unspecified]
    * - License
@@ -99,7 +99,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 200.4 GB
+      - Size on disk: 221.5 GB
       - File count: 41
       - Format: BIDS
 

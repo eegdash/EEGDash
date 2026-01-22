@@ -7,7 +7,7 @@ eegdash.dataset.DS004842
 
 TX15 (OpenNeuro ``ds004842``). Access recordings and metadata through EEGDash.
 
-**Citation:** Gabriella Larkin, James A. Davis, Victor Paul, Marcel Cannon, Chris Manteuffel, Ben Brewster, Tony Johnson, Mike Dunkel, Stephen Gordon, Kevin King (2023). *TX15*. `10.18112/openneuro.ds004842.v1.0.0 <https://doi.org/10.18112/openneuro.ds004842.v1.0.0>`__
+**Citation:** Gabriella Larkin, James A. Davis, Victor Paul, Marcel Cannon, Chris Manteuffel, Ben Brewster, Tony Johnson, Mike Dunkel, Stephen Gordon, Kevin King (—). *TX15*. `10.18112/openneuro.ds004842.v1.0.0 <https://doi.org/10.18112/openneuro.ds004842.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - TX15
    * - Year
-     - 2023
+     - —
    * - Authors
      - Gabriella Larkin, James A. Davis, Victor Paul, Marcel Cannon, Chris Manteuffel, Ben Brewster, Tony Johnson, Mike Dunkel, Stephen Gordon, Kevin King
    * - License

@@ -7,7 +7,7 @@ eegdash.dataset.DS004784
 
 Phantom EEG Dataset with Motion, Muscle, and Eye Artifacts and Example Scripts (OpenNeuro ``ds004784``). Access recordings and metadata through EEGDash.
 
-**Citation:** Ryan J. Downey, Daniel P. Ferris (2023). *Phantom EEG Dataset with Motion, Muscle, and Eye Artifacts and Example Scripts*. `10.18112/openneuro.ds004784.v1.0.4 <https://doi.org/10.18112/openneuro.ds004784.v1.0.4>`__
+**Citation:** Ryan J. Downey, Daniel P. Ferris (20). *Phantom EEG Dataset with Motion, Muscle, and Eye Artifacts and Example Scripts*. `10.18112/openneuro.ds004784.v1.0.4 <https://doi.org/10.18112/openneuro.ds004784.v1.0.4>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Phantom EEG Dataset with Motion, Muscle, and Eye Artifacts and Example Scripts
    * - Year
-     - 2023
+     - 20
    * - Authors
      - Ryan J. Downey, Daniel P. Ferris
    * - License
@@ -98,7 +98,7 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 264 (6), 128 (6)
+      - Channels: 128 (6), 264 (6)
       - Sampling rate (Hz): 512.0
       - Duration (hours): 0.0
 
@@ -112,7 +112,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 1.0 GB
+      - Size on disk: 10.8 GB
       - File count: 6
       - Format: BIDS
 

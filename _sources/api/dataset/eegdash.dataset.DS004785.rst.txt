@@ -7,7 +7,7 @@ eegdash.dataset.DS004785
 
 EEG data for paper titled - Precise cortical contributions to feedback sensorimotor control during reactive balance (OpenNeuro ``ds004785``). Access recordings and metadata through EEGDash.
 
-**Citation:** Scott Boebinger, Aiden Payne, Giovanni Martino, Kennedy Kerr, Jasmine Mirdamadi, J. Lucas McKay, Michael Borich, Lena Ting (2023). *EEG data for paper titled - Precise cortical contributions to feedback sensorimotor control during reactive balance*. `10.18112/openneuro.ds004785.v1.0.1 <https://doi.org/10.18112/openneuro.ds004785.v1.0.1>`__
+**Citation:** Scott Boebinger, Aiden Payne, Giovanni Martino, Kennedy Kerr, Jasmine Mirdamadi, J. Lucas McKay, Michael Borich, Lena Ting (—). *EEG data for paper titled - Precise cortical contributions to feedback sensorimotor control during reactive balance*. `10.18112/openneuro.ds004785.v1.0.1 <https://doi.org/10.18112/openneuro.ds004785.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - EEG data for paper titled - Precise cortical contributions to feedback sensorimotor control during reactive balance
    * - Year
-     - 2023
+     - —
    * - Authors
      - Scott Boebinger, Aiden Payne, Giovanni Martino, Kennedy Kerr, Jasmine Mirdamadi, J. Lucas McKay, Michael Borich, Lena Ting
    * - License

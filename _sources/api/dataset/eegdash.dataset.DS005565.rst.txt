@@ -7,7 +7,7 @@ eegdash.dataset.DS005565
 
 Neural associations between fingerspelling, print, and signs: An ERP priming study with deaf readers (OpenNeuro ``ds005565``). Access recordings and metadata through EEGDash.
 
-**Citation:** Brittany Lee, Sofia E. Ortega, Priscilla M. Martinez, Katherine J. Midgley, Phillip J. Holcomb, Karen Emmorey (2024). *Neural associations between fingerspelling, print, and signs: An ERP priming study with deaf readers*. `10.18112/openneuro.ds005565.v1.0.3 <https://doi.org/10.18112/openneuro.ds005565.v1.0.3>`__
+**Citation:** Brittany Lee, Sofia E. Ortega, Priscilla M. Martinez, Katherine J. Midgley, Phillip J. Holcomb, Karen Emmorey (—). *Neural associations between fingerspelling, print, and signs: An ERP priming study with deaf readers*. `10.18112/openneuro.ds005565.v1.0.3 <https://doi.org/10.18112/openneuro.ds005565.v1.0.3>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Neural associations between fingerspelling, print, and signs: An ERP priming study with deaf readers
    * - Year
-     - 2024
+     - —
    * - Authors
      - Brittany Lee, Sofia E. Ortega, Priscilla M. Martinez, Katherine J. Midgley, Phillip J. Holcomb, Karen Emmorey
    * - License

@@ -7,7 +7,7 @@ eegdash.dataset.DS004012
 
 BRAR_NQ (OpenNeuro ``ds004012``). Access recordings and metadata through EEGDash.
 
-**Citation:** Nur Syairah Ab Rani, Nurfaizatul Aisyah Ab Aziz, Mohammed Farouq Reza, Muzaimi Mustapha (2022). *BRAR_NQ*. `10.18112/openneuro.ds004012.v1.0.0 <https://doi.org/10.18112/openneuro.ds004012.v1.0.0>`__
+**Citation:** Nur Syairah Ab Rani, Nurfaizatul Aisyah Ab Aziz, Mohammed Farouq Reza, Muzaimi Mustapha (2019). *BRAR_NQ*. `10.18112/openneuro.ds004012.v1.0.0 <https://doi.org/10.18112/openneuro.ds004012.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - BRAR_NQ
    * - Year
-     - 2022
+     - 2019
    * - Authors
      - Nur Syairah Ab Rani, Nurfaizatul Aisyah Ab Aziz, Mohammed Farouq Reza, Muzaimi Mustapha
    * - License
@@ -89,7 +89,7 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 383 (294), 61 (294)
+      - Channels: 61 (294), 383 (294)
       - Sampling rate (Hz): 1000.0
       - Duration (hours): 0.0
 

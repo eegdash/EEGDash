@@ -7,7 +7,7 @@ eegdash.dataset.DS003805
 
 Multisensory Gamma Entrainment (OpenNeuro ``ds003805``). Access recordings and metadata through EEGDash.
 
-**Citation:** Mojtaba Lahijanian, Mohammad Javad Sedghizadeh, Hamid Aghajan (2021). *Multisensory Gamma Entrainment*. `10.18112/openneuro.ds003805.v1.0.0 <https://doi.org/10.18112/openneuro.ds003805.v1.0.0>`__
+**Citation:** Mojtaba Lahijanian, Mohammad Javad Sedghizadeh, Hamid Aghajan (—). *Multisensory Gamma Entrainment*. `10.18112/openneuro.ds003805.v1.0.0 <https://doi.org/10.18112/openneuro.ds003805.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Multisensory Gamma Entrainment
    * - Year
-     - 2021
+     - —
    * - Authors
      - Mojtaba Lahijanian, Mohammad Javad Sedghizadeh, Hamid Aghajan
    * - License
@@ -109,7 +109,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 8.8 MB
+      - Size on disk: 17.0 MB
       - File count: 1
       - Format: BIDS
 

@@ -7,7 +7,7 @@ eegdash.dataset.DS003194
 
 Neuroepo multisession (OpenNeuro ``ds003194``). Access recordings and metadata through EEGDash.
 
-**Citation:** Maria Luisa Bringas Vega, Lilia Morales Chacon, Ivonne Pedroso Ibanez (2020). *Neuroepo multisession*. `10.18112/openneuro.ds003194.v1.0.3 <https://doi.org/10.18112/openneuro.ds003194.v1.0.3>`__
+**Citation:** Maria Luisa Bringas Vega, Lilia Morales Chacon, Ivonne Pedroso Ibanez (2019). *Neuroepo multisession*. `10.18112/openneuro.ds003194.v1.0.3 <https://doi.org/10.18112/openneuro.ds003194.v1.0.3>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Neuroepo multisession
    * - Year
-     - 2020
+     - 2019
    * - Authors
      - Maria Luisa Bringas Vega, Lilia Morales Chacon, Ivonne Pedroso Ibanez
    * - License
@@ -102,7 +102,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 189.1 MB
+      - Size on disk: 189.3 MB
       - File count: 29
       - Format: BIDS
 

@@ -7,7 +7,7 @@ eegdash.dataset.DS003800
 
 Auditory Gamma Entrainment (OpenNeuro ``ds003800``). Access recordings and metadata through EEGDash.
 
-**Citation:** Mojtaba Lahijanian, Mohammad Javad Sedghizadeh, Hamid Aghajan, Zahra Vahabi (2021). *Auditory Gamma Entrainment*. `10.18112/openneuro.ds003800.v1.0.0 <https://doi.org/10.18112/openneuro.ds003800.v1.0.0>`__
+**Citation:** Mojtaba Lahijanian, Mohammad Javad Sedghizadeh, Hamid Aghajan, Zahra Vahabi (—). *Auditory Gamma Entrainment*. `10.18112/openneuro.ds003800.v1.0.0 <https://doi.org/10.18112/openneuro.ds003800.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Auditory Gamma Entrainment
    * - Year
-     - 2021
+     - —
    * - Authors
      - Mojtaba Lahijanian, Mohammad Javad Sedghizadeh, Hamid Aghajan, Zahra Vahabi
    * - License
@@ -110,7 +110,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 189.3 MB
+      - Size on disk: 363.8 MB
       - File count: 24
       - Format: BIDS
 

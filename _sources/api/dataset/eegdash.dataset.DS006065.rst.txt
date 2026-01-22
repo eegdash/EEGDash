@@ -7,7 +7,7 @@ eegdash.dataset.DS006065
 
 TSS_iEEG (OpenNeuro ``ds006065``). Access recordings and metadata through EEGDash.
 
-**Citation:** James Kragel, Joel Voss (2025). *TSS_iEEG*. `10.18112/openneuro.ds006065.v1.0.0 <https://doi.org/10.18112/openneuro.ds006065.v1.0.0>`__
+**Citation:** James Kragel, Joel Voss (20). *TSS_iEEG*. `10.18112/openneuro.ds006065.v1.0.0 <https://doi.org/10.18112/openneuro.ds006065.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - TSS_iEEG
    * - Year
-     - 2025
+     - 20
    * - Authors
      - James Kragel, Joel Voss
    * - License
@@ -144,7 +144,7 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 168 (30), 175 (20), 82 (10), 68 (10), 43 (10), 181 (10)
+      - Channels: 168 (30), 175 (20), 43 (10), 181 (10), 82 (10), 68 (10)
       - Sampling rate (Hz): 500.0
       - Duration (hours): 0.0
 

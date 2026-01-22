@@ -7,7 +7,7 @@ eegdash.dataset.DS003626
 
 Inner Speech (OpenNeuro ``ds003626``). Access recordings and metadata through EEGDash.
 
-**Citation:** Nicolas Nieto, Victoria Peterson, Hugo Rufiner, Juan Kamienkowski, Ruben Spies (2021). *Inner Speech*. `10.18112/openneuro.ds003626.v2.0.0 <https://doi.org/10.18112/openneuro.ds003626.v2.0.0>`__
+**Citation:** Nicolas Nieto, Victoria Peterson, Hugo Rufiner, Juan Kamienkowski, Ruben Spies (20). *Inner Speech*. `10.18112/openneuro.ds003626.v2.0.0 <https://doi.org/10.18112/openneuro.ds003626.v2.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Inner Speech
    * - Year
-     - 2021
+     - 20
    * - Authors
      - Nicolas Nieto, Victoria Peterson, Hugo Rufiner, Juan Kamienkowski, Ruben Spies
    * - License
@@ -109,7 +109,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 109.0 KB
+      - Size on disk: 24.6 GB
       - File count: 30
       - Format: BIDS
 

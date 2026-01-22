@@ -7,7 +7,7 @@ eegdash.dataset.DS000247
 
 MEG-BIDS OMEGA RestingState_sample (OpenNeuro ``ds000247``). Access recordings and metadata through EEGDash.
 
-**Citation:** Guiomar Niso, Jeremy Moreau, Elizabeth Bock, Francois Tadel, Sylvain Baillet (2018). *MEG-BIDS OMEGA RestingState_sample*. `10.18112/openneuro.ds000247.v1.0.2 <https://doi.org/10.18112/openneuro.ds000247.v1.0.2>`__
+**Citation:** Guiomar Niso, Jeremy Moreau, Elizabeth Bock, Francois Tadel, Sylvain Baillet (2016). *MEG-BIDS OMEGA RestingState_sample*. `10.18112/openneuro.ds000247.v1.0.2 <https://doi.org/10.18112/openneuro.ds000247.v1.0.2>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - MEG-BIDS OMEGA RestingState_sample
    * - Year
-     - 2018
+     - 2016
    * - Authors
      - Guiomar Niso, Jeremy Moreau, Elizabeth Bock, Francois Tadel, Sylvain Baillet
    * - License
@@ -152,7 +152,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 10.3 GB
+      - Size on disk: 10.5 GB
       - File count: 10
       - Format: BIDS
 

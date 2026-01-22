@@ -7,7 +7,7 @@ eegdash.dataset.DS004389
 
 Somatosensory evoked potentials in the human spinal cord to mixed and sensory nerve stimulation (OpenNeuro ``ds004389``). Access recordings and metadata through EEGDash.
 
-**Citation:** Birgit Nierula, Tilman Stephani, Merve Kaptan, André Moruaux, Burkhard Maess, Gabriel Curio, Vadim V. Nikulin, Falk Eippert (2024). *Somatosensory evoked potentials in the human spinal cord to mixed and sensory nerve stimulation*. `10.18112/openneuro.ds004389.v1.0.0 <https://doi.org/10.18112/openneuro.ds004389.v1.0.0>`__
+**Citation:** Birgit Nierula, Tilman Stephani, Merve Kaptan, André Moruaux, Burkhard Maess, Gabriel Curio, Vadim V. Nikulin, Falk Eippert (—). *Somatosensory evoked potentials in the human spinal cord to mixed and sensory nerve stimulation*. `10.18112/openneuro.ds004389.v1.0.0 <https://doi.org/10.18112/openneuro.ds004389.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Somatosensory evoked potentials in the human spinal cord to mixed and sensory nerve stimulation
    * - Year
-     - 2024
+     - —
    * - Authors
      - Birgit Nierula, Tilman Stephani, Merve Kaptan, André Moruaux, Burkhard Maess, Gabriel Curio, Vadim V. Nikulin, Falk Eippert
    * - License
@@ -103,7 +103,7 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 42 (260), 90 (260)
+      - Channels: 90 (260), 42 (260)
       - Sampling rate (Hz): 10000.0
       - Duration (hours): 0.0
 
@@ -117,7 +117,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 32.1 MB
+      - Size on disk: 376.5 GB
       - File count: 260
       - Format: BIDS
 

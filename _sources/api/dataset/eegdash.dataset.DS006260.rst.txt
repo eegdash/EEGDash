@@ -7,7 +7,7 @@ eegdash.dataset.DS006260
 
 Dataset of psychophysiological data from children with learning difficulties who strengthen reading and math skills through assistive technology (OpenNeuro ``ds006260``). Access recordings and metadata through EEGDash.
 
-**Citation:** César E. Corona-González, Claudia Rebeca De Stefano-Ramos, Juan Pablo Rosado-Aíza, David I. Ibarra-Zarate, Fabiola R. Gómez-Velázquez, Luz María Alonso-Valerdi (2025). *Dataset of psychophysiological data from children with learning difficulties who strengthen reading and math skills through assistive technology*. `10.18112/openneuro.ds006260.v1.0.1 <https://doi.org/10.18112/openneuro.ds006260.v1.0.1>`__
+**Citation:** César E. Corona-González, Claudia Rebeca De Stefano-Ramos, Juan Pablo Rosado-Aíza, David I. Ibarra-Zarate, Fabiola R. Gómez-Velázquez, Luz María Alonso-Valerdi (20). *Dataset of psychophysiological data from children with learning difficulties who strengthen reading and math skills through assistive technology*. `10.18112/openneuro.ds006260.v1.0.1 <https://doi.org/10.18112/openneuro.ds006260.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Dataset of psychophysiological data from children with learning difficulties who strengthen reading and math skills through assistive technology
    * - Year
-     - 2025
+     - 20
    * - Authors
      - César E. Corona-González, Claudia Rebeca De Stefano-Ramos, Juan Pablo Rosado-Aíza, David I. Ibarra-Zarate, Fabiola R. Gómez-Velázquez, Luz María Alonso-Valerdi
    * - License
@@ -279,7 +279,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 2.7 GB
+      - Size on disk: 2.8 GB
       - File count: 366
       - Format: BIDS
 

@@ -7,7 +7,7 @@ eegdash.dataset.DS000246
 
 MEG-BIDS Brainstorm data sample (OpenNeuro ``ds000246``). Access recordings and metadata through EEGDash.
 
-**Citation:** Elizabeth Bock, Peter Donhauser, Francois Tadel, Guiomar Niso, Sylvain Baillet (2018). *MEG-BIDS Brainstorm data sample*. `10.18112/openneuro.ds000246.v1.0.1 <https://doi.org/10.18112/openneuro.ds000246.v1.0.1>`__
+**Citation:** Elizabeth Bock, Peter Donhauser, Francois Tadel, Guiomar Niso, Sylvain Baillet (20). *MEG-BIDS Brainstorm data sample*. `10.18112/openneuro.ds000246.v1.0.1 <https://doi.org/10.18112/openneuro.ds000246.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - MEG-BIDS Brainstorm data sample
    * - Year
-     - 2018
+     - 20
    * - Authors
      - Elizabeth Bock, Peter Donhauser, Francois Tadel, Guiomar Niso, Sylvain Baillet
    * - License

@@ -7,7 +7,7 @@ eegdash.dataset.DS004105
 
 BCIT Auditory Cueing (OpenNeuro ``ds004105``). Access recordings and metadata through EEGDash.
 
-**Citation:** Javier Garcia (data), Justin Brooks (data), Scott Kerick (data), Tony Johnson (data and curation), Tim Mullen (data), Jean Vettel (data), Jonathan Touryan (curation), Kay Robbins (curation) (2022). *BCIT Auditory Cueing*. `10.18112/openneuro.ds004105.v1.0.0 <https://doi.org/10.18112/openneuro.ds004105.v1.0.0>`__
+**Citation:** Javier Garcia (data), Justin Brooks (data), Scott Kerick (data), Tony Johnson (data and curation), Tim Mullen (data), Jean Vettel (data), Jonathan Touryan (curation), Kay Robbins (curation) (20). *BCIT Auditory Cueing*. `10.18112/openneuro.ds004105.v1.0.0 <https://doi.org/10.18112/openneuro.ds004105.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - BCIT Auditory Cueing
    * - Year
-     - 2022
+     - 20
    * - Authors
      - Javier Garcia (data), Justin Brooks (data), Scott Kerick (data), Tony Johnson (data and curation), Tim Mullen (data), Jean Vettel (data), Jonathan Touryan (curation), Kay Robbins (curation)
    * - License

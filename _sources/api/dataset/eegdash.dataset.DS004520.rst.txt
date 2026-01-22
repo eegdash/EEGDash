@@ -7,7 +7,7 @@ eegdash.dataset.DS004520
 
 Changes in behavioral priority influence the accessibility of working memory content - Experiment 2 (OpenNeuro ``ds004520``). Access recordings and metadata through EEGDash.
 
-**Citation:** Edward Ester, Paige Pytel (2023). *Changes in behavioral priority influence the accessibility of working memory content - Experiment 2*. `10.18112/openneuro.ds004520.v1.0.1 <https://doi.org/10.18112/openneuro.ds004520.v1.0.1>`__
+**Citation:** Edward Ester, Paige Pytel (—). *Changes in behavioral priority influence the accessibility of working memory content - Experiment 2*. `10.18112/openneuro.ds004520.v1.0.1 <https://doi.org/10.18112/openneuro.ds004520.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Changes in behavioral priority influence the accessibility of working memory content - Experiment 2
    * - Year
-     - 2023
+     - —
    * - Authors
      - Edward Ester, Paige Pytel
    * - License

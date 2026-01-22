@@ -7,7 +7,7 @@ eegdash.dataset.DS006142
 
 Essex EEG Movie Memory dataset (OpenNeuro ``ds006142``). Access recordings and metadata through EEGDash.
 
-**Citation:** Ana Matran-Fernandez, Sebastian Halder (2025). *Essex EEG Movie Memory dataset*. `10.18112/openneuro.ds006142.v1.0.2 <https://doi.org/10.18112/openneuro.ds006142.v1.0.2>`__
+**Citation:** Ana Matran-Fernandez, Sebastian Halder (2019). *Essex EEG Movie Memory dataset*. `10.18112/openneuro.ds006142.v1.0.2 <https://doi.org/10.18112/openneuro.ds006142.v1.0.2>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Essex EEG Movie Memory dataset
    * - Year
-     - 2025
+     - 2019
    * - Authors
      - Ana Matran-Fernandez, Sebastian Halder
    * - License

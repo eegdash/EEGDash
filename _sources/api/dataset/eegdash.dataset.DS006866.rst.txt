@@ -7,7 +7,7 @@ eegdash.dataset.DS006866
 
 Discrepancy between self-report and neurophysiological markers of socio-affective responses in lonely individuals (OpenNeuro ``ds006866``). Access recordings and metadata through EEGDash.
 
-**Citation:** Szymon Mąka, Marta Chrustowicz, Łukasz Okruszek (2025). *Discrepancy between self-report and neurophysiological markers of socio-affective responses in lonely individuals*. `10.18112/openneuro.ds006866.v1.0.0 <https://doi.org/10.18112/openneuro.ds006866.v1.0.0>`__
+**Citation:** Szymon Mąka, Marta Chrustowicz, Łukasz Okruszek (20). *Discrepancy between self-report and neurophysiological markers of socio-affective responses in lonely individuals*. `10.18112/openneuro.ds006866.v1.0.0 <https://doi.org/10.18112/openneuro.ds006866.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Discrepancy between self-report and neurophysiological markers of socio-affective responses in lonely individuals
    * - Year
-     - 2025
+     - 20
    * - Authors
      - Szymon Mąka, Marta Chrustowicz, Łukasz Okruszek
    * - License
@@ -181,7 +181,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 116.2 GB
+      - Size on disk: 118.3 GB
       - File count: 148
       - Format: BIDS
 

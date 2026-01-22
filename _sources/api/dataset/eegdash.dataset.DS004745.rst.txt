@@ -7,7 +7,7 @@ eegdash.dataset.DS004745
 
 8-Channel SSVEP EEG Dataset with Artifact Trials (OpenNeuro ``ds004745``). Access recordings and metadata through EEGDash.
 
-**Citation:** Velu Prabhakar Kumaravel, Victor Kartsch, Simone Benatti, Giorgio Vallortigara, Elisabetta Farella, Marco Buiatti (2023). *8-Channel SSVEP EEG Dataset with Artifact Trials*. `10.18112/openneuro.ds004745.v1.0.1 <https://doi.org/10.18112/openneuro.ds004745.v1.0.1>`__
+**Citation:** Velu Prabhakar Kumaravel, Victor Kartsch, Simone Benatti, Giorgio Vallortigara, Elisabetta Farella, Marco Buiatti (20). *8-Channel SSVEP EEG Dataset with Artifact Trials*. `10.18112/openneuro.ds004745.v1.0.1 <https://doi.org/10.18112/openneuro.ds004745.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - 8-Channel SSVEP EEG Dataset with Artifact Trials
    * - Year
-     - 2023
+     - 20
    * - Authors
      - Velu Prabhakar Kumaravel, Victor Kartsch, Simone Benatti, Giorgio Vallortigara, Elisabetta Farella, Marco Buiatti
    * - License

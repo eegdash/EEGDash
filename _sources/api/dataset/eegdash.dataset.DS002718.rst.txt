@@ -7,7 +7,7 @@ eegdash.dataset.DS002718
 
 Face processing EEG dataset for EEGLAB (OpenNeuro ``ds002718``). Access recordings and metadata through EEGDash.
 
-**Citation:** Daniel G. Wakeman, Richard N Henson (2020). *Face processing EEG dataset for EEGLAB*. `10.18112/openneuro.ds002718.v1.1.0 <https://doi.org/10.18112/openneuro.ds002718.v1.1.0>`__
+**Citation:** Daniel G. Wakeman, Richard N Henson (—). *Face processing EEG dataset for EEGLAB*. `10.18112/openneuro.ds002718.v1.1.0 <https://doi.org/10.18112/openneuro.ds002718.v1.1.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Face processing EEG dataset for EEGLAB
    * - Year
-     - 2020
+     - —
    * - Authors
      - Daniel G. Wakeman, Richard N Henson
    * - License

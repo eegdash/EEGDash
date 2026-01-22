@@ -7,7 +7,7 @@ eegdash.dataset.DS003082
 
 Auditory Cortex Mapping Dataset (OpenNeuro ``ds003082``). Access recordings and metadata through EEGDash.
 
-**Citation:** Jonathan Cote, Etienne de Villers-Sidani (2020). *Auditory Cortex Mapping Dataset*. `10.18112/openneuro.ds003082.v1.0.0 <https://doi.org/10.18112/openneuro.ds003082.v1.0.0>`__
+**Citation:** Jonathan Cote, Etienne de Villers-Sidani (20). *Auditory Cortex Mapping Dataset*. `10.18112/openneuro.ds003082.v1.0.0 <https://doi.org/10.18112/openneuro.ds003082.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Auditory Cortex Mapping Dataset
    * - Year
-     - 2020
+     - 20
    * - Authors
      - Jonathan Cote, Etienne de Villers-Sidani
    * - License
@@ -178,7 +178,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 13.2 GB
+      - Size on disk: 15.5 GB
       - File count: 3
       - Format: BIDS
 

@@ -7,7 +7,7 @@ eegdash.dataset.DS002712
 
 Numbers and Letters (OpenNeuro ``ds002712``). Access recordings and metadata through EEGDash.
 
-**Citation:** Sara Aurtenetxe, Nicola Molinaro, Doug Davidson, Manuel Carreiras (2020). *Numbers and Letters*. `10.18112/openneuro.ds002712.v1.0.1 <https://doi.org/10.18112/openneuro.ds002712.v1.0.1>`__
+**Citation:** Sara Aurtenetxe, Nicola Molinaro, Doug Davidson, Manuel Carreiras (—). *Numbers and Letters*. `10.18112/openneuro.ds002712.v1.0.1 <https://doi.org/10.18112/openneuro.ds002712.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Numbers and Letters
    * - Year
-     - 2020
+     - —
    * - Authors
      - Sara Aurtenetxe, Nicola Molinaro, Doug Davidson, Manuel Carreiras
    * - License
@@ -97,7 +97,7 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 306 (79), 312 (79), 361 (2), 52 (2), 314, 5
+      - Channels: 306 (79), 312 (79), 361 (2), 52 (2), 5, 314
       - Sampling rate (Hz): 1000.0
       - Duration (hours): 0.0
 
@@ -111,7 +111,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 101.8 GB
+      - Size on disk: 309.9 GB
       - File count: 82
       - Format: BIDS
 

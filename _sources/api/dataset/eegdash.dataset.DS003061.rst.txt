@@ -7,7 +7,7 @@ eegdash.dataset.DS003061
 
 EEG data from an auditory oddball task (OpenNeuro ``ds003061``). Access recordings and metadata through EEGDash.
 
-**Citation:** Arnaud Delorme (2020). *EEG data from an auditory oddball task*. `10.18112/openneuro.ds003061.v1.1.0 <https://doi.org/10.18112/openneuro.ds003061.v1.1.0>`__
+**Citation:** Arnaud Delorme (—). *EEG data from an auditory oddball task*. `10.18112/openneuro.ds003061.v1.1.0 <https://doi.org/10.18112/openneuro.ds003061.v1.1.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - EEG data from an auditory oddball task
    * - Year
-     - 2020
+     - —
    * - Authors
      - Arnaud Delorme
    * - License
@@ -87,7 +87,7 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 79 (39), 64 (39)
+      - Channels: 64 (39), 79 (39)
       - Sampling rate (Hz): 256.0
       - Duration (hours): 0.0
 

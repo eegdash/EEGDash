@@ -7,7 +7,7 @@ eegdash.dataset.DS004015
 
 Attended speaker paradigm (cEEGrid data) (OpenNeuro ``ds004015``). Access recordings and metadata through EEGDash.
 
-**Citation:** Bjoern Holtze, Marc Rosenkranz, Manuela Jaeger, Stefan Debener, Bojana Mirkovic (2022). *Attended speaker paradigm (cEEGrid data)*. `10.18112/openneuro.ds004015.v1.0.2 <https://doi.org/10.18112/openneuro.ds004015.v1.0.2>`__
+**Citation:** Bjoern Holtze, Marc Rosenkranz, Manuela Jaeger, Stefan Debener, Bojana Mirkovic (2020). *Attended speaker paradigm (cEEGrid data)*. `10.18112/openneuro.ds004015.v1.0.2 <https://doi.org/10.18112/openneuro.ds004015.v1.0.2>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Attended speaker paradigm (cEEGrid data)
    * - Year
-     - 2022
+     - 2020
    * - Authors
      - Bjoern Holtze, Marc Rosenkranz, Manuela Jaeger, Stefan Debener, Bojana Mirkovic
    * - License
@@ -113,7 +113,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 323.9 KB
+      - Size on disk: 6.0 GB
       - File count: 36
       - Format: BIDS
 

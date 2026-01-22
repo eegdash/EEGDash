@@ -7,7 +7,7 @@ eegdash.dataset.DS004657
 
 Driving with Autonomous Aids (OpenNeuro ``ds004657``). Access recordings and metadata through EEGDash.
 
-**Citation:** Jason Metcalfe, Amar Marathe, Tony Johnson, Stephen Gordon, Jon Touryan, Kevin King (2023). *Driving with Autonomous Aids*. `10.18112/openneuro.ds004657.v1.0.3 <https://doi.org/10.18112/openneuro.ds004657.v1.0.3>`__
+**Citation:** Jason Metcalfe, Amar Marathe, Tony Johnson, Stephen Gordon, Jon Touryan, Kevin King (—). *Driving with Autonomous Aids*. `10.18112/openneuro.ds004657.v1.0.3 <https://doi.org/10.18112/openneuro.ds004657.v1.0.3>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Driving with Autonomous Aids
    * - Year
-     - 2023
+     - —
    * - Authors
      - Jason Metcalfe, Amar Marathe, Tony Johnson, Stephen Gordon, Jon Touryan, Kevin King
    * - License
@@ -97,7 +97,7 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 74 (119), 64 (119)
+      - Channels: 64 (119), 74 (119)
       - Sampling rate (Hz): 1024.0 (222), 8192.0 (16)
       - Duration (hours): 0.0
 

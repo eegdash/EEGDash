@@ -7,7 +7,7 @@ eegdash.dataset.DS003374
 
 Dataset of neurons and intracranial EEG from human amygdala during aversive dynamic visual stimulation (OpenNeuro ``ds003374``). Access recordings and metadata through EEGDash.
 
-**Citation:** Tommaso Fedele, Ece Boran, Valeri Chirkov, Peter Hilfiker, Thomas Grunwald, Lennart Stieglitz, Hennric Jokeit, Johannes Sarnthein (2020). *Dataset of neurons and intracranial EEG from human amygdala during aversive dynamic visual stimulation*. `10.18112/openneuro.ds003374.v1.1.1 <https://doi.org/10.18112/openneuro.ds003374.v1.1.1>`__
+**Citation:** Tommaso Fedele, Ece Boran, Valeri Chirkov, Peter Hilfiker, Thomas Grunwald, Lennart Stieglitz, Hennric Jokeit, Johannes Sarnthein (—). *Dataset of neurons and intracranial EEG from human amygdala during aversive dynamic visual stimulation*. `10.18112/openneuro.ds003374.v1.1.1 <https://doi.org/10.18112/openneuro.ds003374.v1.1.1>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Dataset of neurons and intracranial EEG from human amygdala during aversive dynamic visual stimulation
    * - Year
-     - 2020
+     - —
    * - Authors
      - Tommaso Fedele, Ece Boran, Valeri Chirkov, Peter Hilfiker, Thomas Grunwald, Lennart Stieglitz, Hennric Jokeit, Johannes Sarnthein
    * - License
@@ -157,7 +157,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 167.3 MB
+      - Size on disk: 297.1 MB
       - File count: 18
       - Format: BIDS
 

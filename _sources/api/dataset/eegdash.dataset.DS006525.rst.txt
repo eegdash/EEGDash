@@ -7,7 +7,7 @@ eegdash.dataset.DS006525
 
 Resting EEG (OpenNeuro ``ds006525``). Access recordings and metadata through EEGDash.
 
-**Citation:** Computational Neuroimaging and Neuroengineering Lab ar the University of Oklahoma (2025). *Resting EEG*. `10.18112/openneuro.ds006525.v1.0.0 <https://doi.org/10.18112/openneuro.ds006525.v1.0.0>`__
+**Citation:** Computational Neuroimaging and Neuroengineering Lab ar the University of Oklahoma (—). *Resting EEG*. `10.18112/openneuro.ds006525.v1.0.0 <https://doi.org/10.18112/openneuro.ds006525.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Resting EEG
    * - Year
-     - 2025
+     - —
    * - Authors
      - Computational Neuroimaging and Neuroengineering Lab ar the University of Oklahoma
    * - License

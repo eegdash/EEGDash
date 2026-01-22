@@ -7,7 +7,7 @@ eegdash.dataset.DS004505
 
 Real World Table Tennis (OpenNeuro ``ds004505``). Access recordings and metadata through EEGDash.
 
-**Citation:** Amanda Studnicki, Daniel P. Ferris (2023). *Real World Table Tennis*. `10.18112/openneuro.ds004505.v1.0.4 <https://doi.org/10.18112/openneuro.ds004505.v1.0.4>`__
+**Citation:** Amanda Studnicki, Daniel P. Ferris (—). *Real World Table Tennis*. `10.18112/openneuro.ds004505.v1.0.4 <https://doi.org/10.18112/openneuro.ds004505.v1.0.4>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Real World Table Tennis
    * - Year
-     - 2023
+     - —
    * - Authors
      - Amanda Studnicki, Daniel P. Ferris
    * - License
@@ -87,7 +87,7 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 120 (25), 313 (13), 270 (4), 312 (2), 299 (2), 303, 326, 340, 327
+      - Channels: 120 (25), 313 (13), 270 (4), 299 (2), 312 (2), 340, 326, 327, 303
       - Sampling rate (Hz): 250.0
       - Duration (hours): 0.0
 
@@ -101,7 +101,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 34.6 GB
+      - Size on disk: 522.6 GB
       - File count: 25
       - Format: BIDS
 

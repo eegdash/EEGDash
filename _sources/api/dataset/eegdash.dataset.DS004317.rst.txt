@@ -7,7 +7,7 @@ eegdash.dataset.DS004317
 
 Mood Manipulation and PST, Experiment 2 (OpenNeuro ``ds004317``). Access recordings and metadata through EEGDash.
 
-**Citation:** James F Cavanagh, Trevor C J Jackson (2022). *Mood Manipulation and PST, Experiment 2*. `10.18112/openneuro.ds004317.v1.0.3 <https://doi.org/10.18112/openneuro.ds004317.v1.0.3>`__
+**Citation:** James F Cavanagh, Trevor C J Jackson (20). *Mood Manipulation and PST, Experiment 2*. `10.18112/openneuro.ds004317.v1.0.3 <https://doi.org/10.18112/openneuro.ds004317.v1.0.3>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Mood Manipulation and PST, Experiment 2
    * - Year
-     - 2022
+     - 20
    * - Authors
      - James F Cavanagh, Trevor C J Jackson
    * - License
@@ -85,7 +85,7 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 66 (50), 60 (50)
+      - Channels: 60 (50), 66 (50)
       - Sampling rate (Hz): 500.0
       - Duration (hours): 0.0
 

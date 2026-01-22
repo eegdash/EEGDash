@@ -7,7 +7,7 @@ eegdash.dataset.DS005540
 
 EmoEEG-MC: A Multi-Context Emotional EEG Dataset for Cross-Context Emotion Decoding (OpenNeuro ``ds005540``). Access recordings and metadata through EEGDash.
 
-**Citation:** Xin XU, Xinke SHEN, Xuyang CHEN, Qingzhu ZHANG, Sitian WANG, Yihan LI, Zongsheng LI, Dan ZHANG, Mingming ZHANG, Quanying LIU (2024). *EmoEEG-MC: A Multi-Context Emotional EEG Dataset for Cross-Context Emotion Decoding*. `10.18112/openneuro.ds005540.v1.0.7 <https://doi.org/10.18112/openneuro.ds005540.v1.0.7>`__
+**Citation:** Xin XU, Xinke SHEN, Xuyang CHEN, Qingzhu ZHANG, Sitian WANG, Yihan LI, Zongsheng LI, Dan ZHANG, Mingming ZHANG, Quanying LIU (20). *EmoEEG-MC: A Multi-Context Emotional EEG Dataset for Cross-Context Emotion Decoding*. `10.18112/openneuro.ds005540.v1.0.7 <https://doi.org/10.18112/openneuro.ds005540.v1.0.7>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - EmoEEG-MC: A Multi-Context Emotional EEG Dataset for Cross-Context Emotion Decoding
    * - Year
-     - 2024
+     - 20
    * - Authors
      - Xin XU, Xinke SHEN, Xuyang CHEN, Qingzhu ZHANG, Sitian WANG, Yihan LI, Zongsheng LI, Dan ZHANG, Mingming ZHANG, Quanying LIU
    * - License
@@ -430,7 +430,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 47.3 GB
+      - Size on disk: 70.4 GB
       - File count: 103
       - Format: BIDS
 

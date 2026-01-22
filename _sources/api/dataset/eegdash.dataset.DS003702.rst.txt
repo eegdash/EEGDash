@@ -7,7 +7,7 @@ eegdash.dataset.DS003702
 
 Social Memory cuing (OpenNeuro ``ds003702``). Access recordings and metadata through EEGDash.
 
-**Citation:** Samantha Gregory, Hongfang Wang, Klaus Kessler (2021). *Social Memory cuing*. `10.18112/openneuro.ds003702.v1.0.1 <https://doi.org/10.18112/openneuro.ds003702.v1.0.1>`__
+**Citation:** Samantha Gregory, Hongfang Wang, Klaus Kessler (—). *Social Memory cuing*. `10.18112/openneuro.ds003702.v1.0.1 <https://doi.org/10.18112/openneuro.ds003702.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Social Memory cuing
    * - Year
-     - 2021
+     - —
    * - Authors
      - Samantha Gregory, Hongfang Wang, Klaus Kessler
    * - License
@@ -180,7 +180,7 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 61 (47), 59 (47)
+      - Channels: 59 (47), 61 (47)
       - Sampling rate (Hz): 500.0
       - Duration (hours): 0.0
 
@@ -194,7 +194,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 17.5 GB
+      - Size on disk: 60.9 GB
       - File count: 47
       - Format: BIDS
 

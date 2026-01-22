@@ -7,7 +7,7 @@ eegdash.dataset.DS006437
 
 LIGHT Hypnotherapy (OpenNeuro ``ds006437``). Access recordings and metadata through EEGDash.
 
-**Citation:** anonymous (2025). *LIGHT Hypnotherapy*. `10.18112/openneuro.ds006437.v1.1.0 <https://doi.org/10.18112/openneuro.ds006437.v1.1.0>`__
+**Citation:** anonymous (—). *LIGHT Hypnotherapy*. `10.18112/openneuro.ds006437.v1.1.0 <https://doi.org/10.18112/openneuro.ds006437.v1.1.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - LIGHT Hypnotherapy
    * - Year
-     - 2025
+     - —
    * - Authors
      - anonymous
    * - License

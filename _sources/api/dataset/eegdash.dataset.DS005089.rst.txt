@@ -7,7 +7,7 @@ eegdash.dataset.DS005089
 
 Proactive selective attention across competition contexts (OpenNeuro ``ds005089``). Access recordings and metadata through EEGDash.
 
-**Citation:** Blanca Aguado-Lopez, Ana F. Palenciano, Jose M. G. Penalver, Paloma Diaz-Gutierrez, David Lopez-Garcia, Chiara Avancini, Luis F. Ciria, Maria Ruz (2024). *Proactive selective attention across competition contexts*. `10.18112/openneuro.ds005089.v1.0.1 <https://doi.org/10.18112/openneuro.ds005089.v1.0.1>`__
+**Citation:** Blanca Aguado-Lopez, Ana F. Palenciano, Jose M. G. Penalver, Paloma Diaz-Gutierrez, David Lopez-Garcia, Chiara Avancini, Luis F. Ciria, Maria Ruz (—). *Proactive selective attention across competition contexts*. `10.18112/openneuro.ds005089.v1.0.1 <https://doi.org/10.18112/openneuro.ds005089.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Proactive selective attention across competition contexts
    * - Year
-     - 2024
+     - —
    * - Authors
      - Blanca Aguado-Lopez, Ana F. Palenciano, Jose M. G. Penalver, Paloma Diaz-Gutierrez, David Lopez-Garcia, Chiara Avancini, Luis F. Ciria, Maria Ruz
    * - License
@@ -99,7 +99,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 10.7 MB
+      - Size on disk: 68.0 GB
       - File count: 36
       - Format: BIDS
 

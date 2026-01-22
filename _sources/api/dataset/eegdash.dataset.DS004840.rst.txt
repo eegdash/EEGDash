@@ -7,7 +7,7 @@ eegdash.dataset.DS004840
 
 Dataset of electrophysiological signals (EEG, ECG, EMG) during Music therapy with adult burn patients in the Intensive Care Unit. (OpenNeuro ``ds004840``). Access recordings and metadata through EEGDash.
 
-**Citation:** Jose Cordoba-Silva, Rafael Maya, Mario Valderrama, Luis Felipe Giraldo, William Betancourt-Zapata, Andrés Salgado-Vascob, Juliana Marín-Sánchez, Viviana Gómez-Ortega, Mark Ettenberger (2023). *Dataset of electrophysiological signals (EEG, ECG, EMG) during Music therapy with adult burn patients in the Intensive Care Unit.*. `10.18112/openneuro.ds004840.v1.0.1 <https://doi.org/10.18112/openneuro.ds004840.v1.0.1>`__
+**Citation:** Jose Cordoba-Silva, Rafael Maya, Mario Valderrama, Luis Felipe Giraldo, William Betancourt-Zapata, Andrés Salgado-Vascob, Juliana Marín-Sánchez, Viviana Gómez-Ortega, Mark Ettenberger (20). *Dataset of electrophysiological signals (EEG, ECG, EMG) during Music therapy with adult burn patients in the Intensive Care Unit.*. `10.18112/openneuro.ds004840.v1.0.1 <https://doi.org/10.18112/openneuro.ds004840.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Dataset of electrophysiological signals (EEG, ECG, EMG) during Music therapy with adult burn patients in the Intensive Care Unit.
    * - Year
-     - 2023
+     - 20
    * - Authors
      - Jose Cordoba-Silva, Rafael Maya, Mario Valderrama, Luis Felipe Giraldo, William Betancourt-Zapata, Andrés Salgado-Vascob, Juliana Marín-Sánchez, Viviana Gómez-Ortega, Mark Ettenberger
    * - License
@@ -165,7 +165,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 599.5 MB
+      - Size on disk: 1.7 GB
       - File count: 51
       - Format: BIDS
 

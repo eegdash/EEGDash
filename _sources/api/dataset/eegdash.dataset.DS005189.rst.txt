@@ -7,7 +7,7 @@ eegdash.dataset.DS005189
 
 Search Superiority Recollection Familiarity (OpenNeuro ``ds005189``). Access recordings and metadata through EEGDash.
 
-**Citation:** Jason Helbing, Dejan Draschkow, Melissa L.-H. Võ (2024). *Search Superiority Recollection Familiarity*. `10.18112/openneuro.ds005189.v1.0.1 <https://doi.org/10.18112/openneuro.ds005189.v1.0.1>`__
+**Citation:** Jason Helbing, Dejan Draschkow, Melissa L.-H. Võ (—). *Search Superiority Recollection Familiarity*. `10.18112/openneuro.ds005189.v1.0.1 <https://doi.org/10.18112/openneuro.ds005189.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Search Superiority Recollection Familiarity
    * - Year
-     - 2024
+     - —
    * - Authors
      - Jason Helbing, Dejan Draschkow, Melissa L.-H. Võ
    * - License
@@ -103,7 +103,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 16.1 GB
+      - Size on disk: 17.0 GB
       - File count: 30
       - Format: BIDS
 

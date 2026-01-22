@@ -7,7 +7,7 @@ eegdash.dataset.DS004408
 
 EEG responses to continuous naturalistic speech (OpenNeuro ``ds004408``). Access recordings and metadata through EEGDash.
 
-**Citation:** Giovanni M Di Liberto, Michael P Broderick, Ole Bialas, Edmund C Lalor (2023). *EEG responses to continuous naturalistic speech*. `10.18112/openneuro.ds004408.v1.0.8 <https://doi.org/10.18112/openneuro.ds004408.v1.0.8>`__
+**Citation:** Giovanni M Di Liberto, Michael P Broderick, Ole Bialas, Edmund C Lalor (2015). *EEG responses to continuous naturalistic speech*. `10.18112/openneuro.ds004408.v1.0.8 <https://doi.org/10.18112/openneuro.ds004408.v1.0.8>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - EEG responses to continuous naturalistic speech
    * - Year
-     - 2023
+     - 2015
    * - Authors
      - Giovanni M Di Liberto, Michael P Broderick, Ole Bialas, Edmund C Lalor
    * - License
@@ -103,7 +103,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 3.0 MB
+      - Size on disk: 18.7 GB
       - File count: 380
       - Format: BIDS
 

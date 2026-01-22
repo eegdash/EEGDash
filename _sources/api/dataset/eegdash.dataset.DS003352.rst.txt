@@ -7,7 +7,7 @@ eegdash.dataset.DS003352
 
 1 - Light Pink Spiral (OpenNeuro ``ds003352``). Access recordings and metadata through EEGDash.
 
-**Citation:** Katherine Hermann, Isabelle Rosenthal, Shridhar R. Singh, Dimitrios Pantazis, Bevil R. Conway (2020). *1 - Light Pink Spiral*. `10.18112/openneuro.ds003352.v1.0.0 <https://doi.org/10.18112/openneuro.ds003352.v1.0.0>`__
+**Citation:** Katherine Hermann, Isabelle Rosenthal, Shridhar R. Singh, Dimitrios Pantazis, Bevil R. Conway (—). *1 - Light Pink Spiral*. `10.18112/openneuro.ds003352.v1.0.0 <https://doi.org/10.18112/openneuro.ds003352.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - 1 - Light Pink Spiral
    * - Year
-     - 2020
+     - —
    * - Authors
      - Katherine Hermann, Isabelle Rosenthal, Shridhar R. Singh, Dimitrios Pantazis, Bevil R. Conway
    * - License
@@ -95,7 +95,7 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 306 (138), 323 (138)
+      - Channels: 323 (138), 306 (138)
       - Sampling rate (Hz): 1000.0
       - Duration (hours): 0.0
 

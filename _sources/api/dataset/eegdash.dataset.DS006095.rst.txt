@@ -7,7 +7,7 @@ eegdash.dataset.DS006095
 
 Mind in Motion Older Adults Walking Over Uneven Terrain (OpenNeuro ``ds006095``). Access recordings and metadata through EEGDash.
 
-**Citation:** Chang Liu, Erika M. Pliner, Jacob S. Salminen, Ryan Downey, Jungyun Hwang, Akraprava Roy, Ryland Swearinger, Natalie Richer, Chris J. Hass, David J. Clark, Todd M. Manini, Yenisel Cruz-Almeida, Rachael D. Seidler, Daniel P. Ferris (2025). *Mind in Motion Older Adults Walking Over Uneven Terrain*. `10.18112/openneuro.ds006095.v1.0.0 <https://doi.org/10.18112/openneuro.ds006095.v1.0.0>`__
+**Citation:** Chang Liu, Erika M. Pliner, Jacob S. Salminen, Ryan Downey, Jungyun Hwang, Akraprava Roy, Ryland Swearinger, Natalie Richer, Chris J. Hass, David J. Clark, Todd M. Manini, Yenisel Cruz-Almeida, Rachael D. Seidler, Daniel P. Ferris (—). *Mind in Motion Older Adults Walking Over Uneven Terrain*. `10.18112/openneuro.ds006095.v1.0.0 <https://doi.org/10.18112/openneuro.ds006095.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Mind in Motion Older Adults Walking Over Uneven Terrain
    * - Year
-     - 2025
+     - —
    * - Authors
      - Chang Liu, Erika M. Pliner, Jacob S. Salminen, Ryan Downey, Jungyun Hwang, Akraprava Roy, Ryland Swearinger, Natalie Richer, Chris J. Hass, David J. Clark, Todd M. Manini, Yenisel Cruz-Almeida, Rachael D. Seidler, Daniel P. Ferris
    * - License

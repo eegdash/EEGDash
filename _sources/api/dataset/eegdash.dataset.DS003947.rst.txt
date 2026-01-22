@@ -7,7 +7,7 @@ eegdash.dataset.DS003947
 
 EEG: First Episode Psychosis vs. Control Resting Task 2 (OpenNeuro ``ds003947``). Access recordings and metadata through EEGDash.
 
-**Citation:** Dean Salisbury, Dylan Seebold, Brian Coffman (2021). *EEG: First Episode Psychosis vs. Control Resting Task 2*. `10.18112/openneuro.ds003947.v1.0.1 <https://doi.org/10.18112/openneuro.ds003947.v1.0.1>`__
+**Citation:** Dean Salisbury, Dylan Seebold, Brian Coffman (—). *EEG: First Episode Psychosis vs. Control Resting Task 2*. `10.18112/openneuro.ds003947.v1.0.1 <https://doi.org/10.18112/openneuro.ds003947.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - EEG: First Episode Psychosis vs. Control Resting Task 2
    * - Year
-     - 2021
+     - —
    * - Authors
      - Dean Salisbury, Dylan Seebold, Brian Coffman
    * - License
@@ -100,7 +100,7 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: 61 (61), 64 (61)
+      - Channels: 64 (61), 61 (61)
       - Sampling rate (Hz): 3000.00030000003 (108), 1000.0 (14)
       - Duration (hours): 0.0
 

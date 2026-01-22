@@ -7,7 +7,7 @@ eegdash.dataset.DS005106
 
 200 Objects Infants EEG (OpenNeuro ``ds005106``). Access recordings and metadata through EEGDash.
 
-**Citation:** Tijl Grootswagers, Genevieve Quek, Zhen Zeng, Manuel Varlet (2024). *200 Objects Infants EEG*. `10.18112/openneuro.ds005106.v1.5.0 <https://doi.org/10.18112/openneuro.ds005106.v1.5.0>`__
+**Citation:** Tijl Grootswagers, Genevieve Quek, Zhen Zeng, Manuel Varlet (20). *200 Objects Infants EEG*. `10.18112/openneuro.ds005106.v1.5.0 <https://doi.org/10.18112/openneuro.ds005106.v1.5.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - 200 Objects Infants EEG
    * - Year
-     - 2024
+     - 20
    * - Authors
      - Tijl Grootswagers, Genevieve Quek, Zhen Zeng, Manuel Varlet
    * - License
@@ -97,8 +97,8 @@ Highlights
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
 
-      - Channels: —
-      - Sampling rate (Hz): —
+      - Channels: 33
+      - Sampling rate (Hz): 500.0
       - Duration (hours): 0.0
 
    .. grid-item-card:: Tags
@@ -111,7 +111,7 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 3.2 MB
+      - Size on disk: 12.6 GB
       - File count: 42
       - Format: BIDS
 

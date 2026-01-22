@@ -12,7 +12,7 @@ import re
 from pathlib import Path
 from typing import Any
 
-from _parser_utils import read_with_encoding_fallback, validate_file_path
+from _parser_utils import is_broken_symlink, read_with_encoding_fallback
 
 
 def parse_vhdr_metadata(vhdr_path: Path | str) -> dict[str, Any] | None:
@@ -46,14 +46,17 @@ def parse_vhdr_metadata(vhdr_path: Path | str) -> dict[str, Any] | None:
 
     Channel names may contain escaped commas (\\1 -> ,).
 
+    For broken git-annex symlinks in OpenNeuro datasets, this function
+    will automatically fetch the file content from S3.
+
     """
     vhdr_path = Path(vhdr_path)
 
-    # Validate file path (handles broken symlinks from git-annex)
-    if not validate_file_path(vhdr_path):
+    # Check if file exists (either directly or as a broken symlink that we can fetch from S3)
+    if not vhdr_path.exists() and not is_broken_symlink(vhdr_path):
         return None
 
-    # Read file content with encoding fallback
+    # Read file content with encoding fallback (includes S3 fallback for git-annex)
     content = read_with_encoding_fallback(vhdr_path)
     if content is None:
         return None

@@ -154,9 +154,13 @@ def main():
         if not ds_id:
             continue
 
-        ds_stats = global_stats.get(ds_id, {})
-        nchans_list = ds_stats.get("nchans_counts", [])
-        sfreq_list = ds_stats.get("sfreq_counts", [])
+        # Get nchans/sfreq from dataset directly (preferred) or fallback to global_stats
+        nchans_list = ds.get("nchans_counts") or global_stats.get(ds_id, {}).get(
+            "nchans_counts", []
+        )
+        sfreq_list = ds.get("sfreq_counts") or global_stats.get(ds_id, {}).get(
+            "sfreq_counts", []
+        )
 
         # Construct row with API data
         # Note: Mapping keys to match existing CSV columns

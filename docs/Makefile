@@ -48,7 +48,7 @@ clean:
 	@echo "Removing other generated directories..."
 	@rm -rf "$(SOURCEDIR)/generated"
 	@rm -rf "$(SOURCEDIR)/gen_modules"
-	@echo "Removing build directory..."
+	@echo "Removing build directory (including CSV cache)..."
 	@rm -rf "$(BUILDDIR)" build
 	@echo "Clean completed."
 

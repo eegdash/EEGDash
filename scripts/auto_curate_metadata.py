@@ -121,7 +121,7 @@ def main():
         "--targets-file", type=Path, default=Path("consolidated/openneuro_targets.json")
     )
     parser.add_argument(
-        "--curation-file", type=Path, default=Path("scripts/metadata_curation.csv")
+        "--curation-file", type=Path, default=Path("docs/_build/metadata_curation.csv")
     )
     args = parser.parse_args()
 

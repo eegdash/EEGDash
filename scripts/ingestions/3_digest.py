@@ -147,6 +147,62 @@ def detect_source(dataset_dir: Path) -> str:
     return "openneuro"
 
 
+def _parse_edf_with_mne(edf_path: Path) -> dict[str, Any] | None:
+    """Parse metadata from EDF/BDF file using MNE.
+
+    Parameters
+    ----------
+    edf_path : Path
+        Path to the EDF or BDF file.
+
+    Returns
+    -------
+    dict[str, Any] | None
+        Dictionary with sampling_frequency, nchans, ch_names,
+        or None if parsing fails.
+
+    """
+    # Check if file exists and is readable (not a broken git-annex symlink)
+    if not edf_path.exists():
+        return None
+    try:
+        resolved = edf_path.resolve()
+        if not resolved.exists():
+            return None
+    except (OSError, RuntimeError):
+        return None
+
+    try:
+        import mne
+
+        # Read with preload=False to avoid loading data into memory
+        # verbose=False to suppress MNE's logging
+        raw = mne.io.read_raw_edf(str(edf_path), preload=False, verbose=False)
+        try:
+            result: dict[str, Any] = {}
+
+            # Extract sampling frequency
+            sfreq = raw.info.get("sfreq")
+            if sfreq:
+                result["sampling_frequency"] = float(sfreq)
+
+            # Extract channel info
+            ch_names = raw.info.get("ch_names")
+            if ch_names:
+                result["ch_names"] = list(ch_names)
+                result["nchans"] = len(ch_names)
+
+            return result if result else None
+        finally:
+            try:
+                raw.close()
+            except Exception:
+                pass
+
+    except Exception:
+        return None
+
+
 def extract_dataset_metadata(
     bids_dataset,
     dataset_id: str,
@@ -709,6 +765,17 @@ def extract_record(
                 nchans = mef3_metadata.get("nchans")
             if not ch_names:
                 ch_names = mef3_metadata.get("ch_names")
+
+    # EDF/BDF fallback using MNE
+    if (not sampling_frequency or not nchans) and ext in (".edf", ".bdf"):
+        edf_metadata = _parse_edf_with_mne(bids_file_path)
+        if edf_metadata:
+            if not sampling_frequency:
+                sampling_frequency = edf_metadata.get("sampling_frequency")
+            if not nchans:
+                nchans = edf_metadata.get("nchans")
+            if not ch_names:
+                ch_names = edf_metadata.get("ch_names")
 
     # Find dependency files (channels.tsv, events.tsv, etc.) for storage manifest
     dep_keys = []

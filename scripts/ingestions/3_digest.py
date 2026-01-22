@@ -124,6 +124,38 @@ def get_storage_backend(source: str) -> str:
     return config["backend"]
 
 
+def get_file_size(path: Path) -> int:
+    """Get file size, including for git-annex symlinks.
+
+    Git-annex encodes the file size in the key name:
+    - MD5E-s{size}--{hash}.ext
+    - SHA256E-s{size}--{hash}.ext
+
+    Parameters
+    ----------
+    path : Path
+        Path to the file or symlink.
+
+    Returns
+    -------
+    int
+        File size in bytes, or 0 if size cannot be determined.
+
+    """
+    if path.is_file():
+        return path.stat().st_size
+    elif path.is_symlink():
+        # Git-annex encodes size in the key: MD5E-s{size}-- or SHA256E-s{size}--
+        try:
+            target = str(path.readlink())
+            match = re.search(r"-s(\d+)--", target)
+            if match:
+                return int(match.group(1))
+        except (OSError, ValueError):
+            pass
+    return 0
+
+
 def detect_source(dataset_dir: Path) -> str:
     """Detect source from manifest.json or dataset structure."""
     manifest_path = dataset_dir / "manifest.json"
@@ -415,10 +447,14 @@ def extract_dataset_metadata(
             dataset_modified_at = ts.get("dataset_modified_at")
             dataset_created_at = ts.get("dataset_created_at") or dataset_created_at
 
-    # Extract size_bytes
+    # Extract size_bytes (includes git-annex symlink sizes)
     size_bytes = metadata.get("size_bytes")
     if size_bytes is None and bids_root.exists():
-        size_bytes = sum(f.stat().st_size for f in bids_root.rglob("*") if f.is_file())
+        size_bytes = sum(
+            get_file_size(f)
+            for f in bids_root.rglob("*")
+            if f.is_file() or f.is_symlink()
+        )
 
     # Build Storage info for global files
     storage_info: Storage | None = None

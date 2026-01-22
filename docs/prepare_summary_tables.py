@@ -1,3 +1,4 @@
+import concurrent.futures
 import glob
 import json
 import os
@@ -10,6 +11,7 @@ from datetime import datetime
 from pathlib import Path
 from shutil import copyfile as _copyfile
 from tqdm import tqdm
+from typing import Callable, Any
 
 
 def copyfile(src, dst):
@@ -57,6 +59,137 @@ DOCS_DIR = Path(__file__).resolve().parent
 STATIC_DATASET_DIR = DOCS_DIR / "source" / "_static" / "dataset_generated"
 # Build output directory - files here are served directly without Sphinx copy step
 BUILD_STATIC_DIR = DOCS_DIR / "_build" / "html" / "_static" / "dataset_generated"
+
+# Number of workers for parallel chart generation
+MAX_CHART_WORKERS = 6
+
+
+def _generate_chart_task(
+    name: str,
+    generator: Callable,
+    df: pd.DataFrame,
+    output_path: Path,
+    **kwargs,
+) -> tuple[str, Path | None, str | None]:
+    """Generate a single chart - worker function for parallel execution.
+
+    Returns:
+        tuple of (chart_name, output_path or None, error_message or None)
+    """
+    try:
+        output = generator(df.copy(), output_path, **kwargs)
+        return (name, output, None)
+    except Exception as exc:
+        return (name, None, str(exc))
+
+
+def generate_charts_parallel(
+    df_raw: pd.DataFrame,
+    target_dir: Path,
+    x_var: str = "subjects",
+) -> list[tuple[str, Path | None, str | None]]:
+    """Generate all charts in parallel using ThreadPoolExecutor.
+
+    Parameters
+    ----------
+    df_raw : pd.DataFrame
+        The raw dataset DataFrame
+    target_dir : Path
+        Output directory for charts
+    x_var : str
+        X-axis variable for bubble chart (default: "subjects")
+
+    Returns
+    -------
+    list of tuples
+        Each tuple contains (chart_name, output_path, error_message)
+    """
+    # Prepare bubble chart DataFrame
+    df_bubble = df_raw.copy()
+    if "subjects" not in df_bubble.columns and "n_subjects" in df_bubble.columns:
+        df_bubble["subjects"] = df_bubble["n_subjects"]
+    if "records" not in df_bubble.columns and "n_records" in df_bubble.columns:
+        df_bubble["records"] = df_bubble["n_records"]
+
+    # Define chart generation tasks
+    # Each task is (name, generator_func, dataframe, output_path, kwargs)
+    tasks = [
+        (
+            "Bubble",
+            generate_dataset_bubble,
+            df_bubble,
+            target_dir / "dataset_bubble.html",
+            {"x_var": x_var},
+        ),
+        (
+            "Sankey",
+            generate_dataset_sankey,
+            df_raw,
+            target_dir / "dataset_sankey.html",
+            {},
+        ),
+        (
+            "Treemap",
+            generate_dataset_treemap,
+            df_raw,
+            target_dir / "dataset_treemap.html",
+            {},
+        ),
+        (
+            "Growth",
+            generate_dataset_growth,
+            df_raw,
+            target_dir / "dataset_growth.html",
+            {},
+        ),
+        (
+            "Clinical",
+            generate_clinical_stacked_bar,
+            df_raw,
+            target_dir / "dataset_clinical.html",
+            {},
+        ),
+        (
+            "Ridgeline",
+            generate_modality_ridgeline,
+            df_raw,
+            target_dir / "dataset_ridgeline.html",
+            {},
+        ),
+    ]
+
+    results = []
+
+    with concurrent.futures.ThreadPoolExecutor(
+        max_workers=MAX_CHART_WORKERS
+    ) as executor:
+        # Submit all tasks
+        futures = {
+            executor.submit(_generate_chart_task, name, gen, df, path, **kwargs): name
+            for name, gen, df, path, kwargs in tasks
+        }
+
+        # Collect results as they complete
+        for future in concurrent.futures.as_completed(futures):
+            chart_name = futures[future]
+            try:
+                result = future.result()
+                results.append(result)
+            except Exception as exc:
+                results.append((chart_name, None, str(exc)))
+
+    return results
+
+
+def process_chart_results(results: list[tuple[str, Path | None, str | None]]) -> None:
+    """Process and report chart generation results, copy successful outputs to static."""
+    for name, output_path, error in results:
+        if error:
+            print(f"[dataset {name}] Skipped due to error: {error}")
+        elif output_path:
+            copy_to_static(output_path)
+            print(f"Generated: {output_path.name}")
+
 
 # API Configuration
 API_BASE_URL = "https://data.eegdash.org/api"
@@ -784,25 +917,36 @@ def _needs_csv_fallback(df_raw: pd.DataFrame) -> bool:
 
 
 def main_from_api(target_dir: str, database: str = DEFAULT_DATABASE, limit: int = 1000):
-    """Generate summary tables from API data."""
-    # Local import to avoid circular dependencies (depending on how this script is run)
+    """Generate summary tables from API data.
+
+    Uses the optimized /datasets/chart-data endpoint which returns
+    pre-aggregated data specifically for chart generation.
+    """
+    # Local import to avoid circular dependencies
     try:
-        from eegdash.dataset.registry import fetch_datasets_from_api
+        from eegdash.dataset.registry import fetch_chart_data_from_api
     except ImportError:
-        # Fallback if eegdash is not installed in editable mode but typically it is for docs
         import sys
 
         sys.path.insert(0, str(Path(__file__).parents[1]))
-        from eegdash.dataset.registry import fetch_datasets_from_api
+        from eegdash.dataset.registry import fetch_chart_data_from_api
 
     target_dir = Path(target_dir)
     target_dir.mkdir(parents=True, exist_ok=True)
     STATIC_DATASET_DIR.mkdir(parents=True, exist_ok=True)
     BUILD_STATIC_DIR.mkdir(parents=True, exist_ok=True)
 
-    print(f"Fetching data from API (database: {database})...")
-    # Using registry's cached fetcher
-    df_raw = fetch_datasets_from_api(API_BASE_URL, database)
+    print(f"Fetching chart data from API (database: {database})...")
+    # Use optimized chart-data endpoint (single call, pre-aggregated)
+    df_raw, aggregations = fetch_chart_data_from_api(
+        API_BASE_URL, database, limit=limit
+    )
+
+    if aggregations:
+        print(
+            f"  Pre-computed aggregations: {len(aggregations.get('modality_counts', {}))} modalities, "
+            f"{len(aggregations.get('source_counts', {}))} sources"
+        )
 
     # Always try to load local summary to enrich API data (better modality tags)
     fallback_df = _load_local_dataset_summary()
@@ -883,57 +1027,13 @@ def main_from_api(target_dir: str, database: str = DEFAULT_DATABASE, limit: int 
         print("No datasets fetched from API or local CSV!")
         return
 
-    # Generate bubble chart
-    try:
-        bubble_path = target_dir / "dataset_bubble.html"
-        # generate_dataset_bubble handles column transformation internally
-        df_bubble = df_raw.copy()
-        bubble_output = generate_dataset_bubble(
-            df_bubble, bubble_path, x_var="subjects"
-        )
-        copy_to_static(bubble_output)
-        print(f"Generated: {bubble_output.name}")
-    except Exception as exc:
-        print(f"[dataset Bubble] Skipped due to error: {exc}")
+    # Generate all charts in parallel
+    print("Generating charts in parallel...")
+    chart_results = generate_charts_parallel(df_raw, target_dir, x_var="subjects")
+    process_chart_results(chart_results)
 
     # Save summary stats for documentation cards
     save_summary_stats(df_raw)
-
-    # Generate Sankey diagram
-    try:
-        sankey_path = target_dir / "dataset_sankey.html"
-        sankey_output = generate_dataset_sankey(df_raw, sankey_path)
-        copy_to_static(sankey_output)
-        print(f"Generated: {sankey_output.name}")
-    except Exception as exc:
-        print(f"[dataset Sankey] Skipped due to error: {exc}")
-
-    # Generate Treemap
-    try:
-        treemap_path = target_dir / "dataset_treemap.html"
-        treemap_output = generate_dataset_treemap(df_raw, treemap_path)
-        copy_to_static(treemap_output)
-        print(f"Generated: {treemap_output.name}")
-    except Exception as exc:
-        print(f"[dataset Treemap] Skipped due to error: {exc}")
-
-    # Generate Dataset Growth Plot
-    try:
-        growth_path = target_dir / "dataset_growth.html"
-        growth_output = generate_dataset_growth(df_raw, growth_path)
-        copy_to_static(growth_output)
-        print(f"Generated: {growth_output.name}")
-    except Exception as exc:
-        print(f"[dataset Growth] Skipped due to error: {exc}")
-
-    # Generate Clinical Stacked Bar
-    try:
-        clinical_path = target_dir / "dataset_clinical.html"
-        clinical_output = generate_clinical_stacked_bar(df_raw, clinical_path)
-        copy_to_static(clinical_output)
-        print(f"Generated: {clinical_output.name}")
-    except Exception as exc:
-        print(f"[dataset Clinical] Skipped due to error: {exc}")
 
     # Prepare and generate HTML table
     df = prepare_table(df_raw)
@@ -1117,62 +1217,13 @@ def main_from_json(source_dir: str, target_dir: str):
         print("No valid datasets found!")
         return
 
-    # Generate visualizations (Bubble, Sankey, Treemap, KDE)
-    # Reusing fetch_datasets logic...
-
-    # Bubble (Dataset Landscape)
-    try:
-        bubble_path = target_dir / "dataset_bubble.html"
-        df_bubble = df_raw.copy()
-        # Ensure required columns exist for bubble chart
-        if "subjects" not in df_bubble.columns and "n_subjects" in df_bubble.columns:
-            df_bubble["subjects"] = df_bubble["n_subjects"]
-        if "records" not in df_bubble.columns and "n_records" in df_bubble.columns:
-            df_bubble["records"] = df_bubble["n_records"]
-        bubble_output = generate_dataset_bubble(df_bubble, bubble_path, x_var="records")
-        copy_to_static(bubble_output)
-        print(f"Generated: {bubble_output.name}")
-    except Exception as exc:
-        print(f"[dataset Bubble] Skipped due to error: {exc}")
+    # Generate all charts in parallel
+    print("Generating charts in parallel...")
+    chart_results = generate_charts_parallel(df_raw, target_dir, x_var="records")
+    process_chart_results(chart_results)
 
     # Summary Stats
     save_summary_stats(df_raw)
-
-    # Sankey
-    try:
-        sankey_path = target_dir / "dataset_sankey.html"
-        sankey_output = generate_dataset_sankey(df_raw, sankey_path)
-        copy_to_static(sankey_output)
-        print(f"Generated: {sankey_output.name}")
-    except Exception as exc:
-        print(f"[dataset Sankey] Skipped due to error: {exc}")
-
-    # Treemap
-    try:
-        treemap_path = target_dir / "dataset_treemap.html"
-        treemap_output = generate_dataset_treemap(df_raw, treemap_path)
-        copy_to_static(treemap_output)
-        print(f"Generated: {treemap_output.name}")
-    except Exception as exc:
-        print(f"[dataset Treemap] Skipped due to error: {exc}")
-
-    # Growth Chart
-    try:
-        growth_path = target_dir / "dataset_growth.html"
-        growth_output = generate_dataset_growth(df_raw, growth_path)
-        copy_to_static(growth_output)
-        print(f"Generated: {growth_output.name}")
-    except Exception as exc:
-        print(f"[dataset Growth] Skipped due to error: {exc}")
-
-    # Clinical Stacked Bar
-    try:
-        clinical_path = target_dir / "dataset_clinical.html"
-        clinical_output = generate_clinical_stacked_bar(df_raw, clinical_path)
-        copy_to_static(clinical_output)
-        print(f"Generated: {clinical_output.name}")
-    except Exception as exc:
-        print(f"[dataset Clinical] Skipped due to error: {exc}")
 
     # Table Generation
     df = prepare_table(df_raw)
@@ -1282,12 +1333,6 @@ if __name__ == "__main__":
         type=str,
         default=DEFAULT_DATABASE,
         help=f"Database to fetch from API (default: {DEFAULT_DATABASE})",
-    )
-    parser.add_argument(
-        "--from-api",
-        action="store_true",
-        default=True,
-        help="Fetch data from API (default)",
     )
     parser.add_argument(
         "--from-csv",

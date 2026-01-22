@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import urllib.error
 import urllib.request
 from pathlib import Path
 from typing import Any, Dict
@@ -324,7 +325,12 @@ EXCLUDED_DATASETS = {
 def fetch_datasets_from_api(
     api_url: str = "https://data.eegdash.org/api", database: str = "eegdash"
 ) -> pd.DataFrame:
-    """Fetch dataset summaries from API and return as DataFrame matching CSV structure."""
+    """Fetch dataset summaries from API and return as DataFrame matching CSV structure.
+
+    Note: This function makes a single API call to /datasets/summary.
+    Stats (nchans_counts, sfreq_counts) are already embedded in dataset documents
+    via the compute-stats endpoint, so no separate stats call is needed.
+    """
     import os
 
     from ..paths import get_default_cache_dir
@@ -341,7 +347,7 @@ def fetch_datasets_from_api(
 
     limit = int(os.environ.get("EEGDASH_DOC_LIMIT", 1000))
 
-    # 1. Fetch Datasets Summary
+    # Single API call - stats are already embedded in dataset documents
     url = f"{api_url}/{database}/datasets/summary?limit={limit}"
     data: dict[str, Any] = {}
     try:
@@ -355,19 +361,6 @@ def fetch_datasets_from_api(
 
     datasets = data.get("data", [])
 
-    # 2. Fetch Global Stats (nchans, sfreq)
-    # We collect IDs to optimize the query if needed, but the endpoint might just return all.
-    # The stats endpoint is /datasets/stats/records
-    stats_url = f"{api_url}/{database}/datasets/stats/records"
-    global_stats: dict[str, Any] = {}
-    try:
-        with urllib.request.urlopen(stats_url, timeout=60) as response:
-            resp_json = json.loads(response.read().decode("utf-8"))
-            global_stats = resp_json.get("data", {})
-    except Exception:
-        # Proceed without stats if this fails
-        pass
-
     rows = []
     for ds in datasets:
         ds_id = ds.get("dataset_id", "").strip()
@@ -378,14 +371,9 @@ def fetch_datasets_from_api(
         ):
             continue
 
-        # Use computed stats from datasets collection (populated by compute-stats endpoint)
-        # Fallback to global_stats for backwards compatibility
-        nchans_list = ds.get("nchans_counts") or global_stats.get(ds_id, {}).get(
-            "nchans_counts", []
-        )
-        sfreq_list = ds.get("sfreq_counts") or global_stats.get(ds_id, {}).get(
-            "sfreq_counts", []
-        )
+        # Stats are embedded in dataset documents (populated by compute-stats endpoint)
+        nchans_list = ds.get("nchans_counts") or []
+        sfreq_list = ds.get("sfreq_counts") or []
 
         # Extract demographics
         demographics = ds.get("demographics", {}) or {}
@@ -554,3 +542,116 @@ def _fetch_datasets_from_api(api_url: str, database: str) -> pd.DataFrame:
         rows.append(row)
 
     return pd.DataFrame(rows)
+
+
+def fetch_chart_data_from_api(
+    api_url: str = "https://data.eegdash.org/api",
+    database: str = "eegdash",
+    limit: int = 1000,
+) -> tuple[pd.DataFrame, dict[str, Any]]:
+    """Fetch pre-aggregated chart data from API.
+
+    This uses the optimized /datasets/chart-data endpoint which returns
+    only chart-relevant fields and pre-computed aggregations.
+
+    Falls back to /datasets/summary if chart-data endpoint is unavailable.
+
+    Parameters
+    ----------
+    api_url : str
+        Base API URL
+    database : str
+        Database name
+    limit : int
+        Maximum datasets to fetch
+
+    Returns
+    -------
+    tuple[pd.DataFrame, dict]
+        DataFrame with dataset records and dict with pre-computed aggregations
+
+    """
+    url = f"{api_url}/{database}/datasets/chart-data?limit={limit}"
+
+    try:
+        with urllib.request.urlopen(url, timeout=30) as response:
+            data = json.loads(response.read().decode("utf-8"))
+    except urllib.error.HTTPError as e:
+        if e.code == 404:
+            # Endpoint not deployed yet, fallback to summary endpoint
+            print("  chart-data endpoint not available, falling back to summary...")
+            df = fetch_datasets_from_api(api_url, database)
+            return df, {}
+        print(f"Failed to fetch chart data: {e}")
+        return pd.DataFrame(), {}
+    except Exception as e:
+        print(f"Failed to fetch chart data: {e}")
+        return pd.DataFrame(), {}
+
+    if not data.get("success"):
+        return pd.DataFrame(), {}
+
+    datasets = data.get("datasets", [])
+    aggregations = data.get("aggregations", {})
+
+    rows = []
+    for ds in datasets:
+        ds_id = ds.get("dataset_id", "").strip()
+        if ds_id.upper() in EXCLUDED_DATASETS:
+            continue
+
+        # Extract nested fields
+        demographics = ds.get("demographics") or {}
+        tags = ds.get("tags") or {}
+        clinical = ds.get("clinical") or {}
+        paradigm = ds.get("paradigm") or {}
+        timestamps = ds.get("timestamps") or {}
+
+        recording_modality = ds.get("recording_modality") or []
+        if isinstance(recording_modality, str):
+            recording_modality = [recording_modality]
+
+        # Map tags to chart columns
+        pathology_list = tags.get("pathology") or []
+        type_subject = ", ".join(pathology_list) if pathology_list else ""
+        if not type_subject and clinical.get("is_clinical"):
+            type_subject = clinical.get("purpose") or "Clinical"
+        elif not type_subject and clinical.get("is_clinical") is False:
+            type_subject = "Healthy"
+
+        modality_list = tags.get("modality") or []
+        modality_of_exp = (
+            ", ".join(modality_list) if modality_list else paradigm.get("modality", "")
+        )
+
+        type_list = tags.get("type") or []
+        type_of_exp = (
+            ", ".join(type_list) if type_list else paradigm.get("cognitive_domain", "")
+        )
+
+        row = {
+            "dataset": ds_id,
+            "dataset_title": ds.get("computed_title") or ds.get("name", ""),
+            "n_subjects": demographics.get("subjects_count") or 0,
+            "n_records": ds.get("total_files") or 0,
+            "n_tasks": len(ds.get("tasks") or []),
+            "record_modality": ", ".join(recording_modality),
+            "recording_modality": ", ".join(recording_modality),
+            "modality of exp": modality_of_exp,
+            "type of exp": type_of_exp,
+            "Type Subject": type_subject,
+            "size_bytes": ds.get("size_bytes") or 0,
+            "size": ds.get("size_human") or _human_readable_size(ds.get("size_bytes")),
+            "source": ds.get("source") or "unknown",
+            "license": ds.get("license", ""),
+            "doi": ds.get("dataset_doi", ""),
+            "nchans_set": json.dumps(ds.get("nchans_counts") or []),
+            "sampling_freqs": json.dumps(ds.get("sfreq_counts") or []),
+            "dataset_created_at": timestamps.get("dataset_created_at", ""),
+            "nemar_citation_count": ds.get("nemar_citation_count"),
+            # Treemap requires this field; None triggers fallback to records
+            "duration_hours_total": None,
+        }
+        rows.append(row)
+
+    return pd.DataFrame(rows), aggregations

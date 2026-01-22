@@ -559,6 +559,13 @@ def _fetch_datasets_from_api(api_url: str, database: str) -> pd.DataFrame:
     return pd.DataFrame(rows)
 
 
+def _normalize_tag_value(val):
+    """Normalize tag value, handling both string and list formats from API."""
+    if isinstance(val, list):
+        return ", ".join(val) if val else ""
+    return val or ""
+
+
 def fetch_chart_data_from_api(
     api_url: str = "https://data.eegdash.org/api",
     database: str = "eegdash",
@@ -630,8 +637,7 @@ def fetch_chart_data_from_api(
             recording_modality = [recording_modality]
 
         # Map tags to chart columns
-        pathology_list = tags.get("pathology") or []
-        type_subject = ", ".join(pathology_list) if pathology_list else ""
+        type_subject = _normalize_tag_value(tags.get("pathology"))
         if not type_subject and clinical.get("is_clinical"):
             type_subject = clinical.get("purpose") or "Clinical"
         elif not type_subject and clinical.get("is_clinical") is False:
@@ -639,15 +645,13 @@ def fetch_chart_data_from_api(
         elif not type_subject:
             type_subject = "Unknown"
 
-        modality_list = tags.get("modality") or []
-        modality_of_exp = (
-            ", ".join(modality_list) if modality_list else paradigm.get("modality", "")
-        )
+        modality_of_exp = _normalize_tag_value(tags.get("modality"))
+        if not modality_of_exp:
+            modality_of_exp = paradigm.get("modality", "")
 
-        type_list = tags.get("type") or []
-        type_of_exp = (
-            ", ".join(type_list) if type_list else paradigm.get("cognitive_domain", "")
-        )
+        type_of_exp = _normalize_tag_value(tags.get("type"))
+        if not type_of_exp:
+            type_of_exp = paradigm.get("cognitive_domain", "")
 
         row = {
             "dataset": ds_id,

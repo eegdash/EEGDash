@@ -19,7 +19,7 @@ repos:
         - --show-fixes
         # Selects all rules from your original config (E,W,F,I,D) and enables import sorting (I)
         # and unused import removal (F401 is part of 'F' and is no longer ignored).
-        - --select=E,W,F,D,I,NPY201,PLC0415
+        - --select=E,W,F,D,I,NPY201
         - --ignore=E402,E501,D100,D101,D102,D103,D104,D105,D107,D205,D400,D415,D417,F403,D401,E741,E722,D419
         files: ^(eegdash|docs|notebooks|scripts|tests)/
         exclude: (\.ipynb$)

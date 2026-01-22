@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 from typing import Any
 
@@ -427,16 +428,16 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
                 targets.append(ds)
 
         if not targets:
+            self._download_dataset_files()
             return
 
         if n_jobs == 1:
             for ds in targets:
                 ds._download_required_files()
-            return
-
-        Parallel(n_jobs=n_jobs, prefer="threads")(
-            delayed(EEGDashRaw._download_required_files)(ds) for ds in targets
-        )
+        else:
+            Parallel(n_jobs=n_jobs, prefer="threads")(
+                delayed(EEGDashRaw._download_required_files)(ds) for ds in targets
+            )
 
         # Download global dataset files (participants.tsv, etc.)
         self._download_dataset_files()
@@ -815,11 +816,16 @@ class EEGChallengeDataset(EEGDashDataset):
         )
 
 
+_from_api = os.getenv("EEGDASH_DATASET_REGISTRY_FROM_API", "").lower() in {
+    "1",
+    "true",
+    "yes",
+}
 registered_classes = register_openneuro_datasets(
     summary_file=Path(__file__).with_name("dataset_summary.csv"),
     base_class=EEGDashDataset,
     namespace=globals(),
-    from_api=True,
+    from_api=_from_api,
 )
 
 

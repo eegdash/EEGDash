@@ -1293,6 +1293,7 @@ def test_download_all_with_missing_deps(tmp_path):
 
         ds.download_all(n_jobs=1)
         mock_raw._download_required_files.assert_called_once()
+        assert ds._download_dataset_files.called
 
 
 def test_download_all_parallel_execution(tmp_path):

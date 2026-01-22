@@ -94,8 +94,8 @@ def _safe_duration_seconds(rec: Dict[str, Any]) -> float | None:
     nt = rec.get("ntimes")
     if isinstance(nt, (int, float)):
         if isinstance(sf, (int, float)) and sf:
-            return float(nt) / float(sf) if nt > 24 * 3600 else float(nt)
-        return float(nt)
+            return float(nt) / float(sf)
+        return None
     return None
 
 

@@ -162,7 +162,6 @@ class DatasetModel(BaseModel):
     )
     ingestion_fingerprint: str | None = None
     senior_author: str | None = None
-    senior_author: str | None = None
     contact_info: list[str] | None = None
     timestamps: dict[str, Any] | None = None
     storage: StorageModel | None = None

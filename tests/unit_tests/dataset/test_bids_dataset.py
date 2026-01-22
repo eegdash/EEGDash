@@ -52,7 +52,7 @@ def test_eegbidsdataset_init(mock_bids_dir):
 def test_eegbidsdataset_init_mismatch(tmp_path):
     root = tmp_path / "dsY"
     root.mkdir()
-    with pytest.raises(AssertionError, match="does not correspond to dataset"):
+    with pytest.raises(ValueError, match="does not correspond to dataset"):
         EEGBIDSDataset(data_dir=root, dataset="dsX")
 
 
@@ -69,6 +69,7 @@ def test_file_attributes(mock_bids_dir):
     assert ds.get_bids_file_attribute("sfreq", fpath) == 100
     # Allow some tolerance due to float/duration encoding
     assert ds.get_bids_file_attribute("duration", fpath) == pytest.approx(10.0, abs=0.1)
+    assert ds.get_bids_file_attribute("ntimes", fpath) == pytest.approx(1000, abs=1)
 
 
 def test_num_times(mock_bids_dir):
@@ -120,7 +121,7 @@ def test_bids_dataset_gaps(tmp_path):
     file_path = ds_path / "some_file.set"
     file_path.touch()
 
-    # Mock file discovery to avoid AssertionError
+    # Mock file discovery to avoid init mismatch errors
     with patch(
         "eegdash.dataset.bids_dataset._find_bids_files", return_value=[str(file_path)]
     ):
@@ -312,7 +313,7 @@ def test_bids_dataset_init_checks(tmp_path):
 
     d = tmp_path / "wrong_name"
     d.mkdir()
-    with pytest.raises(AssertionError):
+    with pytest.raises(ValueError):
         EEGBIDSDataset(data_dir=str(d), dataset="dsXYZ")
 
 
@@ -645,8 +646,8 @@ def test_bids_dataset_init_errors():
 
     with pytest.raises(ValueError, match="data_dir must be specified"):
         EEGBIDSDataset(data_dir=None)
-    with pytest.raises(AssertionError):
-        # Assertions for directory name mismatch
+    with pytest.raises(ValueError):
+        # Directory name mismatch
         EEGBIDSDataset(data_dir="/tmp", dataset="mismatch")
 
 

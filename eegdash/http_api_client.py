@@ -126,7 +126,10 @@ class EEGDashAPIClient:
             f"{self.api_url}/api/{self.database}/datasets", params=params, timeout=60
         )
         resp.raise_for_status()
-        return resp.json()
+        data = resp.json()
+        if isinstance(data, dict):
+            return data.get("data", [])
+        return data
 
     def count_documents(self, query: dict[str, Any] | None = None, **kwargs) -> int:
         """Count documents matching query."""

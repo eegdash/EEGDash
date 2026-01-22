@@ -21,20 +21,20 @@ def test_len_with_ntimes_and_sfreq():
 
 
 def test_len_without_raw_with_ntimes_sfreq():
-    """Test length calculation from ntimes*sfreq when raw not loaded."""
+    """Test length calculation from ntimes when raw not loaded."""
     from eegdash.dataset.base import EEGDashRaw
 
     recording = EEGDashRaw.__new__(EEGDashRaw)
     recording._raw = None
     recording.record = {"ntimes": 10, "sampling_frequency": 100}
 
-    # Line 180: should return int(ntimes * sfreq) = 10 * 100 = 1000
+    # Should return int(ntimes) = 10
     length = len(recording)
-    assert length == 1000
+    assert length == 10
 
 
 def test_eegdashraw_len_with_sfreq_ntimes(tmp_path):
-    """Test __len__ returns ntimes*sfreq when raw not loaded (line 180)."""
+    """Test __len__ returns ntimes when raw not loaded."""
     from eegdash.dataset.base import EEGDashRaw
 
     # Create proper BIDS directory structure
@@ -61,7 +61,7 @@ def test_eegdashraw_len_with_sfreq_ntimes(tmp_path):
         "suffix": "eeg",
         "datatype": "eeg",
         "extension": ".set",
-        "ntimes": 10.5,  # seconds
+        "ntimes": 2688,  # samples
         "sfreq": 256,  # Hz
         "sampling_frequency": 256,
         "entities_mne": {"subject": "01", "task": "rest"},
@@ -70,8 +70,8 @@ def test_eegdashraw_len_with_sfreq_ntimes(tmp_path):
 
     raw_obj = EEGDashRaw(record=record, cache_dir=tmp_path)
 
-    # Should return int(ntimes * sfreq) = int(10.5 * 256) = 2688
-    assert len(raw_obj) == int(10.5 * 256)
+    # Should return int(ntimes) = 2688
+    assert len(raw_obj) == 2688
 
 
 def test_base_ensure_raw_failure(tmp_path):
@@ -119,7 +119,7 @@ def test_base_len_from_metadata(tmp_path):
     }
     with patch("eegdash.dataset.base.validate_record", return_value=[]):
         ds = EEGDashRaw(record, str(tmp_path))
-        assert len(ds) == 1000
+        assert len(ds) == 100
 
 
 @patch("eegdash.dataset.base.validate_record")

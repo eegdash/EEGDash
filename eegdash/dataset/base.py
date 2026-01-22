@@ -171,22 +171,18 @@ class EEGDashRaw(RawDataset):
         """Return the number of samples in the dataset."""
         if self._raw is None:
             ntimes = self.record.get("ntimes")
-            sfreq = self.record.get("sampling_frequency")
-            if ntimes is None or sfreq is None:
-                try:
-                    self._ensure_raw()
-                except Exception as e:
-                    # If we can't load the raw data (corrupted file, etc.),
-                    # return 0 to mark this dataset as invalid
-                    logger.warning(
-                        f"Could not load raw data for {self.bidspath}, "
-                        f"marking as invalid (length=0). Error: {e}"
-                    )
-                    return 0
-            else:
-                # FIXME: this is a bit strange and should definitely not change as a side effect
-                #  of accessing the data (which it will, since ntimes is the actual length but rounded down)
-                return int(ntimes * sfreq)
+            if ntimes is not None:
+                return int(ntimes)
+            try:
+                self._ensure_raw()
+            except Exception as e:
+                # If we can't load the raw data (corrupted file, etc.),
+                # return 0 to mark this dataset as invalid
+                logger.warning(
+                    f"Could not load raw data for {self.bidspath}, "
+                    f"marking as invalid (length=0). Error: {e}"
+                )
+                return 0
         return len(self._raw)
 
     @property

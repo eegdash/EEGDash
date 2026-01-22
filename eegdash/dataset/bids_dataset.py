@@ -123,7 +123,7 @@ class EEGBIDSDataset:
         # (e.g., dsXXXXX-bdf, dsXXXXX-bdf-mini) to avoid collisions.
         dir_name = self.bidsdir.name
         if not (dir_name == self.dataset or dir_name.startswith(self.dataset + "-")):
-            raise AssertionError(
+            raise ValueError(
                 f"BIDS directory '{dir_name}' does not correspond to dataset '{self.dataset}'"
             )
 
@@ -475,6 +475,16 @@ class EEGBIDSDataset:
             or modality_json.get("iEEGChannelCount"),
         }
 
+        if attribute == "ntimes":
+            sfreq = json_attrs.get("sfreq")
+            duration = json_attrs.get("duration")
+            if sfreq is None or duration is None:
+                return None
+            try:
+                return int(float(sfreq) * float(duration))
+            except (TypeError, ValueError):
+                return None
+
         return json_attrs.get(attribute)
 
     def channel_labels(self, data_filepath: str) -> list[str]:
@@ -560,7 +570,8 @@ class EEGBIDSDataset:
     def num_times(self, data_filepath: str) -> int:
         """Get the number of time points in the recording.
 
-        Calculated from ``SamplingFrequency`` and ``RecordingDuration`` in eeg.json.
+        Calculated from ``SamplingFrequency`` and ``RecordingDuration`` in the
+        modality-specific JSON sidecar (e.g., ``eeg.json`` or ``meg.json``).
 
         Parameters
         ----------
@@ -573,11 +584,8 @@ class EEGBIDSDataset:
             The approximate number of time points.
 
         """
-        eeg_json_dict = self._get_json_with_inheritance(data_filepath, "eeg.json")
-        return int(
-            eeg_json_dict.get("SamplingFrequency", 0)
-            * eeg_json_dict.get("RecordingDuration", 0)
-        )
+        ntimes = self.get_bids_file_attribute("ntimes", data_filepath)
+        return int(ntimes or 0)
 
     def subject_participant_tsv(self, data_filepath: str) -> dict[str, Any]:
         """Get the participants.tsv record for a subject.

@@ -26,16 +26,9 @@ on:
         required: false
         type: boolean
         default: false
-      install_nemar_cli:
-        description: 'Install NEMAR CLI via Bun (for NEMAR source)'
-        required: false
-        type: boolean
-        default: false
     secrets:
       DATASET_LISTINGS_TOKEN:
         required: true
-      NEMAR_API_KEY:
-        required: false
 
 jobs:
   fetch:
@@ -76,20 +69,10 @@ jobs:
           python -m pip install --upgrade pip
           pip install -e .[digestion]
 
-      - name: Setup Bun
-        if: ${{ inputs.install_nemar_cli }}
-        uses: oven-sh/setup-bun@v2
-
-      - name: Install NEMAR CLI
-        if: ${{ inputs.install_nemar_cli }}
-        run: bun install -g nemar-cli
-
       - name: Create consolidated directory
         run: mkdir -p eegdash-dataset-listings/consolidated
 
       - name: Fetch datasets
-        env:
-          NEMAR_API_KEY: ${{ secrets.NEMAR_API_KEY }}
         run: |
           python eegdash/${{ inputs.script_path }} \
             --output eegdash-dataset-listings/consolidated/${{ inputs.output_file }} \

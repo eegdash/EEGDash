@@ -1,18 +1,12 @@
-"""Fetch NEMAR datasets from NEMAR CLI or GitHub organization with BIDS metadata.
+"""Fetch NEMAR datasets from GitHub organization with BIDS metadata.
 
 NEMAR datasets are hosted on GitHub under the nemardatasets organization.
-This script fetches dataset info via the NEMAR CLI (preferred) or GitHub API
-(fallback), and tries to extract BIDS metadata from dataset_description.json
-and participants.tsv files.
-
-The NEMAR CLI (`nemar-cli`) is installed via Bun and returns full metadata JSON,
-making it the preferred method for fetching dataset information.
+This script fetches repository info and tries to extract BIDS metadata
+from dataset_description.json and participants.tsv files.
 """
 
 import argparse
-import json
 import sys
-import urllib.request
 from collections.abc import Iterator
 from io import StringIO
 from pathlib import Path
@@ -27,62 +21,10 @@ from _github import (
     fetch_repo_file_text,
     iter_org_repos,
 )
-from _nemar import (
-    is_nemar_cli_available,
-    iter_nemar_datasets,
-    map_cli_dataset_to_schema,
-)
 from _serialize import save_datasets_deterministically, setup_paths
 
 setup_paths()
 from eegdash.schemas import Dataset, create_dataset
-
-
-def fetch_date_from_doi(doi: str | None) -> str | None:
-    """Fetch publication date from DOI resolution as fallback.
-
-    When NEMAR CLI/GitHub API doesn't return a created date,
-    we can resolve the DOI to get at least the publication year.
-
-    Parameters
-    ----------
-    doi : str or None
-        The DOI string (e.g., "10.18112/openneuro.ds005505.v1.0.1")
-
-    Returns
-    -------
-    str or None
-        ISO date string (YYYY-MM-DD) or None if resolution fails.
-        Note: DOI often only provides year, so month/day default to 01-01.
-
-    """
-    if not doi:
-        return None
-
-    # Clean DOI - remove "doi:" prefix if present
-    clean_doi = doi.replace("doi:", "").strip()
-    if not clean_doi:
-        return None
-
-    url = f"https://doi.org/{clean_doi}"
-    req = urllib.request.Request(
-        url, headers={"Accept": "application/vnd.citationstyles.csl+json"}
-    )
-
-    try:
-        with urllib.request.urlopen(req, timeout=10) as response:
-            data = json.loads(response.read().decode("utf-8"))
-            issued = data.get("issued", {})
-            date_parts = issued.get("date-parts", [[]])[0]
-            if date_parts:
-                year = date_parts[0]
-                month = date_parts[1] if len(date_parts) > 1 else 1
-                day = date_parts[2] if len(date_parts) > 2 else 1
-                return f"{year:04d}-{month:02d}-{day:02d}"
-    except Exception:
-        pass
-
-    return None
 
 
 def fetch_bids_description(
@@ -148,103 +90,7 @@ def fetch_readme(org: str, repo: str, branch: str, timeout: float = 10.0) -> str
     )
 
 
-def fetch_repositories_via_cli(
-    timeout: float = 120.0,
-    fetch_bids: bool = True,
-    limit: int | None = None,
-) -> Iterator[Dataset]:
-    """Fetch all datasets via NEMAR CLI.
-
-    Args:
-        timeout: Request timeout in seconds
-        fetch_bids: Whether to fetch additional BIDS metadata from repos
-        limit: Maximum number of datasets to fetch
-
-    Yields:
-        Dataset documents
-
-    """
-    total_fetched = 0
-
-    for cli_data in iter_nemar_datasets(timeout=timeout):
-        if limit and total_fetched >= limit:
-            break
-
-        # Map CLI fields to our schema
-        mapped = map_cli_dataset_to_schema(cli_data)
-
-        dataset_id = mapped.get("dataset_id") or ""
-        if not dataset_id:
-            continue
-
-        # Skip non-NEMAR datasets (should start with "nm")
-        if not dataset_id.startswith("nm"):
-            continue
-
-        total_fetched += 1
-
-        # Get fields from CLI mapping
-        name = mapped.get("name") or dataset_id
-        authors = mapped.get("authors") or []
-        license_str = mapped.get("license")
-        bids_version = mapped.get("bids_version")
-        dataset_doi = mapped.get("dataset_doi")
-        subjects_count = mapped.get("subjects_count") or 0
-        source_url = mapped.get("source_url")
-        funding = mapped.get("funding") or []
-        readme = mapped.get("readme")
-        ages = mapped.get("ages") or []
-
-        # Optionally fetch additional BIDS metadata from GitHub
-        # (for fields not available in CLI output)
-        if fetch_bids and (not readme or not ages):
-            participants = fetch_participants_tsv("nemardatasets", dataset_id, "main")
-            if not readme:
-                readme = fetch_readme("nemardatasets", dataset_id, "main")
-            if not ages and participants:
-                ages = extract_ages_from_participants(participants)
-            if not subjects_count and participants:
-                subjects_count = len(participants)
-
-        # Get created date - try CLI first, then DOI resolution as fallback
-        created_at = mapped.get("created_at")
-        if not created_at and dataset_doi:
-            created_at = fetch_date_from_doi(dataset_doi)
-
-        # Create Dataset document
-        yield create_dataset(
-            dataset_id=dataset_id,
-            name=name,
-            source="nemar",
-            readme=readme,
-            recording_modality="eeg",  # NEMAR is EEG-focused
-            experimental_modalities=["eeg"],
-            bids_version=bids_version,
-            license=license_str,
-            authors=authors
-            if isinstance(authors, list)
-            else [authors]
-            if authors
-            else [],
-            funding=funding
-            if isinstance(funding, list)
-            else [funding]
-            if funding
-            else [],
-            dataset_doi=dataset_doi,
-            subjects_count=subjects_count,
-            ages=ages,
-            species="Human",  # NEMAR datasets are human
-            source_url=source_url,
-            dataset_created_at=created_at,
-            dataset_modified_at=mapped.get("updated_at"),
-        )
-
-        if total_fetched % 20 == 0:
-            print(f"  Processed {total_fetched} datasets via CLI...")
-
-
-def fetch_repositories_via_github(
+def fetch_repositories(
     organization: str = "nemardatasets",
     page_size: int = 100,
     timeout: float = 30.0,
@@ -326,11 +172,6 @@ def fetch_repositories_via_github(
             repo.get("html_url") or f"https://github.com/nemardatasets/{repo_name}"
         )
 
-        # Get created date - try repo created_at, then DOI resolution as fallback
-        created_at = repo.get("created_at")
-        if not created_at and dataset_doi:
-            created_at = fetch_date_from_doi(dataset_doi)
-
         # Create Dataset document
         yield create_dataset(
             dataset_id=repo_name,
@@ -356,97 +197,16 @@ def fetch_repositories_via_github(
             ages=ages,
             species="Human",  # NEMAR datasets are human
             source_url=nemar_url,
-            dataset_created_at=created_at,
             dataset_modified_at=repo.get("pushed_at"),
         )
 
         if total_fetched % 20 == 0:
-            print(f"  Processed {total_fetched} repositories via GitHub...")
-
-
-def fetch_repositories(
-    organization: str = "nemardatasets",
-    page_size: int = 100,
-    timeout: float = 30.0,
-    retries: int = 5,
-    fetch_bids: bool = True,
-    limit: int | None = None,
-    use_cli: bool | None = None,
-) -> Iterator[Dataset]:
-    """Fetch all NEMAR datasets using CLI (preferred) or GitHub API (fallback).
-
-    Args:
-        organization: GitHub organization name (for GitHub fallback)
-        page_size: Number of repositories per page (max 100, GitHub only)
-        timeout: Request timeout in seconds
-        retries: Number of retry attempts (GitHub only)
-        fetch_bids: Whether to fetch BIDS metadata from repos
-        limit: Maximum number of datasets to fetch
-        use_cli: Force CLI (True), force GitHub (False), or auto-detect (None)
-
-    Yields:
-        Dataset documents
-
-    """
-    # Determine which method to use
-    if use_cli is None:
-        # Auto-detect: try CLI first if available
-        use_cli = is_nemar_cli_available()
-        if use_cli:
-            print("NEMAR CLI detected, using CLI method...")
-        else:
-            print("NEMAR CLI not available, using GitHub API fallback...")
-    elif use_cli:
-        if not is_nemar_cli_available():
-            print("Warning: --use-cli specified but NEMAR CLI not found in PATH")
-            print("Falling back to GitHub API...")
-            use_cli = False
-        else:
-            print("Using NEMAR CLI method (forced)...")
-    else:
-        print("Using GitHub API method (forced)...")
-
-    if use_cli:
-        # Try CLI method
-        datasets_found = False
-        try:
-            for dataset in fetch_repositories_via_cli(
-                timeout=timeout,
-                fetch_bids=fetch_bids,
-                limit=limit,
-            ):
-                datasets_found = True
-                yield dataset
-        except Exception as e:
-            print(f"CLI method failed: {e}")
-            datasets_found = False
-
-        # If CLI didn't yield any datasets, fall back to GitHub
-        if not datasets_found:
-            print("CLI returned no datasets, falling back to GitHub API...")
-            yield from fetch_repositories_via_github(
-                organization=organization,
-                page_size=page_size,
-                timeout=timeout,
-                retries=retries,
-                fetch_bids=fetch_bids,
-                limit=limit,
-            )
-    else:
-        # Use GitHub API
-        yield from fetch_repositories_via_github(
-            organization=organization,
-            page_size=page_size,
-            timeout=timeout,
-            retries=retries,
-            fetch_bids=fetch_bids,
-            limit=limit,
-        )
+            print(f"  Processed {total_fetched} repositories...")
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="Fetch NEMAR datasets via NEMAR CLI or GitHub API with BIDS metadata."
+        description="Fetch NEMAR datasets from GitHub organization with BIDS metadata."
     )
     parser.add_argument(
         "--organization",
@@ -464,7 +224,7 @@ def main() -> None:
         "--page-size",
         type=int,
         default=100,
-        help="Repositories per page (max 100, default: 100, GitHub only)",
+        help="Repositories per page (max 100, default: 100)",
     )
     parser.add_argument(
         "--timeout",
@@ -476,7 +236,7 @@ def main() -> None:
         "--retries",
         type=int,
         default=5,
-        help="Number of retry attempts (default: 5, GitHub only)",
+        help="Number of retry attempts (default: 5)",
     )
     parser.add_argument(
         "--skip-bids",
@@ -494,29 +254,7 @@ def main() -> None:
         type=int,
         help="Maximum number of datasets to fetch (default: all)",
     )
-
-    # Method selection: CLI vs GitHub
-    method_group = parser.add_mutually_exclusive_group()
-    method_group.add_argument(
-        "--use-cli",
-        action="store_true",
-        help="Force using NEMAR CLI (falls back to GitHub if unavailable)",
-    )
-    method_group.add_argument(
-        "--use-github",
-        action="store_true",
-        help="Force using GitHub API instead of NEMAR CLI",
-    )
-
     args = parser.parse_args()
-
-    # Determine CLI usage
-    use_cli: bool | None = None
-    if args.use_cli:
-        use_cli = True
-    elif args.use_github:
-        use_cli = False
-    # else: None = auto-detect
 
     print(f"Fetching NEMAR datasets from: {args.organization}")
     print(f"Fetching BIDS metadata: {not args.skip_bids}")
@@ -529,7 +267,6 @@ def main() -> None:
             retries=args.retries,
             fetch_bids=not args.skip_bids,
             limit=args.limit,
-            use_cli=use_cli,
         )
     )
 

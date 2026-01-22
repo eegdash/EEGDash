@@ -1,4 +1,4 @@
-# Fetch NEMAR datasets via NEMAR CLI or GitHub API
+# Fetch NEMAR datasets from GitHub organization
 name: "1. Fetch: NEMAR"
 
 on:
@@ -13,8 +13,6 @@ jobs:
       source_name: "NEMAR"
       script_path: "scripts/ingestions/1_fetch_sources/nemar.py"
       output_file: "nemar_datasets.json"
-      script_args: "--organization nemardatasets --skip-bids"
-      install_nemar_cli: true
+      script_args: "--organization nemardatasets"
     secrets:
       DATASET_LISTINGS_TOKEN: ${{ secrets.DATASET_LISTINGS_TOKEN }}
-      NEMAR_API_KEY: ${{ secrets.NEMAR_API_KEY }}

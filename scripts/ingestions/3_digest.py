@@ -593,9 +593,18 @@ def extract_record(
     storage_backend = get_storage_backend(source)
 
     # Extract technical metadata from BIDS sidecars via EEGBIDSDataset
-    sampling_frequency = bids_dataset.get_bids_file_attribute("sfreq", bids_file)
-    nchans = bids_dataset.get_bids_file_attribute("nchans", bids_file)
-    ntimes = bids_dataset.get_bids_file_attribute("ntimes", bids_file)
+    # Wrap in try/except to handle broken git-annex symlinks (FileNotFoundError)
+    sampling_frequency = None
+    nchans = None
+    ntimes = None
+    try:
+        sampling_frequency = bids_dataset.get_bids_file_attribute("sfreq", bids_file)
+        nchans = bids_dataset.get_bids_file_attribute("nchans", bids_file)
+        ntimes = bids_dataset.get_bids_file_attribute("ntimes", bids_file)
+    except (FileNotFoundError, OSError):
+        # BIDS sidecar JSON may be a broken git-annex symlink
+        # Fallback code below will attempt to extract from data files directly
+        pass
 
     # Convert sfreq to float and nchans to int if found
     if sampling_frequency:
@@ -1914,14 +1923,17 @@ def digest_dataset(
     manifest_path = dataset_dir / "manifest.json"
     has_manifest = manifest_path.exists()
 
-    # Check if there are actual EEG/MEG files or symlinks (git-annex uses broken symlinks)
+    # Check if there are actual EEG/MEG/fNIRS/iEEG files or symlinks (git-annex uses broken symlinks)
     # We accept both real files and symlinks for metadata extraction
-    # Include .ds directories for CTF MEG format
+    # Include .ds directories for CTF MEG format and .mefd directories for MEF3
     has_actual_files = any(
-        f.suffix in [".set", ".edf", ".bdf", ".vhdr", ".fif", ".cnt"]
+        f.suffix in [".set", ".edf", ".bdf", ".vhdr", ".fif", ".cnt", ".snirf", ".mefd"]
         for f in dataset_dir.rglob("*")
         if f.is_file() or f.is_symlink()  # Include symlinks for git-annex
-    ) or any(f.suffix == ".ds" and f.is_dir() for f in dataset_dir.rglob("*.ds"))
+    ) or any(
+        (f.suffix == ".ds" and f.is_dir()) or (f.suffix == ".mefd" and f.is_dir())
+        for f in dataset_dir.rglob("*")
+    )
 
     # For API-only sources, use manifest-based digestion
     if has_manifest and not has_actual_files:

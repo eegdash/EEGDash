@@ -7,6 +7,7 @@ This script allows you to curate and update dataset-level metadata fields such a
 
 import argparse
 import csv
+import os
 import sys
 from pathlib import Path
 from typing import Any
@@ -94,7 +95,6 @@ def main():
     args = parser.parse_args()
 
     # check for auth token
-    import os
     # Auth only required for updates, allow read-only export without token if possible (but we use admin api usually?)
     # api.find is public usually, so export might work without token depending on ACLs.
     # But let's require token if we want to be safe or just use public read.

@@ -8,6 +8,9 @@ This module provides unified functions for:
 Uses fsspec for unified filesystem access where possible.
 """
 
+import json
+import os
+import re
 import struct
 import time
 import xml.etree.ElementTree as ET
@@ -529,9 +532,6 @@ def list_scidb_files(
 
 def list_datarn_files(source_url: str) -> list[dict]:
     """List files from data.ru.nl using WebDAV PROPFIND."""
-    import json
-    import re
-
     # Try to get WebDAV URL from page JSON-LD
     webdav_url = None
 
@@ -681,8 +681,6 @@ def build_manifest(
 
 def save_manifest(manifest: dict, output_dir: Path) -> Path:
     """Save manifest to disk."""
-    import json
-
     manifest_dir = output_dir / manifest["dataset_id"]
     manifest_dir.mkdir(parents=True, exist_ok=True)
     manifest_path = manifest_dir / "manifest.json"
@@ -703,8 +701,6 @@ def list_local_bids_files(local_path: str | Path) -> list[dict]:
         List of file dicts with {name, size} for each file
 
     """
-    import os
-
     local_path = Path(local_path)
     if not local_path.exists():
         return []

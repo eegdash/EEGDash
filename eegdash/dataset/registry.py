@@ -1,12 +1,15 @@
 from __future__ import annotations
 
 import json
+import os
 import urllib.error
 import urllib.request
 from pathlib import Path
 from typing import Any, Dict
 
 import pandas as pd
+
+from ..paths import get_default_cache_dir
 
 
 def _human_readable_size(num_bytes: int | float | None) -> str:
@@ -99,7 +102,7 @@ def register_openneuro_datasets(
 
     """
     if base_class is None:
-        from ..api import EEGDashDataset as base_class  # lazy import
+        from ..api import EEGDashDataset as base_class  # noqa: PLC0415 (lazy import)
 
     namespace = namespace if namespace is not None else globals()
     module_name = namespace.get("__name__", __name__)
@@ -349,10 +352,6 @@ def fetch_datasets_from_api(
     Stats (nchans_counts, sfreq_counts) are already embedded in dataset documents
     via the compute-stats endpoint, so no separate stats call is needed.
     """
-    import os
-
-    from ..paths import get_default_cache_dir
-
     cache_dir = get_default_cache_dir()
     cache_file = cache_dir / "dataset_summary.csv"
 
@@ -473,8 +472,6 @@ def fetch_datasets_from_api(
 
 def _fetch_datasets_from_api(api_url: str, database: str) -> pd.DataFrame:
     """Fetch dataset summaries from API and return as DataFrame matching CSV structure."""
-    import os
-
     limit = int(os.environ.get("EEGDASH_DOC_LIMIT", 1000))
     url = f"{api_url}/{database}/datasets/summary?limit={limit}"
     try:

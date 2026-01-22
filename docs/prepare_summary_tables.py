@@ -11,9 +11,11 @@ import json
 import os
 import textwrap
 from argparse import ArgumentParser
+from collections import Counter
+from functools import partial
 from pathlib import Path
 from shutil import copyfile as _copyfile
-from typing import Any, Callable
+from typing import Callable
 
 import pandas as pd
 from plot_dataset import (
@@ -24,6 +26,7 @@ from plot_dataset import (
     generate_dataset_treemap,
     generate_modality_ridgeline,
 )
+from plot_dataset.utils import get_dataset_url as _get_dataset_url
 from plot_dataset.utils import human_readable_size
 from table_tag_utils import _normalize_values, wrap_tags
 
@@ -262,6 +265,7 @@ def _normalise_tag(token: str, canonical: dict) -> str:
 
     Returns:
         The normalized tag string, or None if the token is unknown.
+
     """
     text = " ".join(token.replace("_", " ").split())
     lowered = text.lower()
@@ -274,8 +278,6 @@ def _normalise_tag(token: str, canonical: dict) -> str:
 
 def _tag_normalizer(kind: str):
     """Create a normalizer function for a specific tag kind."""
-    from functools import partial
-
     canonical = {k.lower(): v for k, v in DATASET_CANONICAL_MAP.get(kind, {}).items()}
     return partial(_normalise_tag, canonical=canonical)
 
@@ -291,8 +293,6 @@ def parse_freqs(value) -> str:
             value = json.loads(value)
         except (json.JSONDecodeError, TypeError):
             pass
-
-    from collections import Counter
 
     counts = Counter()
 
@@ -346,9 +346,7 @@ def parse_freqs(value) -> str:
 
 def get_dataset_url(name: str) -> str | None:
     """Get URL for dataset documentation page."""
-    from plot_dataset.utils import get_dataset_url
-
-    return get_dataset_url(name)
+    return _get_dataset_url(name)
 
 
 def wrap_dataset_name(name: str) -> str:
@@ -641,12 +639,12 @@ def _load_local_dataset_summary() -> pd.DataFrame:
 def main_from_api(target_dir: str, database: str = DEFAULT_DATABASE, limit: int = 1000):
     """Generate summary tables and charts from API data."""
     try:
-        from eegdash.dataset.registry import fetch_chart_data_from_api
+        from eegdash.dataset.registry import fetch_chart_data_from_api  # noqa: PLC0415
     except ImportError:
-        import sys
+        import sys  # noqa: PLC0415
 
         sys.path.insert(0, str(Path(__file__).parents[1]))
-        from eegdash.dataset.registry import fetch_chart_data_from_api
+        from eegdash.dataset.registry import fetch_chart_data_from_api  # noqa: PLC0415
 
     target_dir = Path(target_dir)
     target_dir.mkdir(parents=True, exist_ok=True)

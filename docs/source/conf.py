@@ -7,10 +7,12 @@ import os
 import re
 import shutil
 import sys
+import urllib.request
 from collections import Counter, defaultdict
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Iterable, Mapping, Sequence
+from urllib.parse import quote
 
 from sphinx.util import logging
 from sphinx_gallery.sorting import ExplicitOrder, FileNameSortKey
@@ -18,6 +20,9 @@ from sphinx_gallery.sorting import ExplicitOrder, FileNameSortKey
 sys.path.insert(0, os.path.abspath(".."))
 
 import eegdash
+import eegdash.dataset as dataset_module
+from eegdash.dataset import EEGDashDataset
+from eegdash.dataset.registry import fetch_datasets_from_api
 
 # -- Project information -----------------------------------------------------
 
@@ -297,12 +302,6 @@ def _load_dataset_summary_from_api():
         return _DATASET_SUMMARY_CACHE
 
     try:
-        from eegdash.dataset.registry import fetch_datasets_from_api
-    except Exception as exc:
-        LOGGER.info("[dataset-docs] API summary import failed: %s", exc)
-        return None
-
-    try:
         df = fetch_datasets_from_api()
     except Exception as exc:
         LOGGER.info("[dataset-docs] API summary fetch failed: %s", exc)
@@ -484,9 +483,6 @@ def _write_if_changed(path: Path, content: str) -> bool:
 
 def _iter_dataset_classes() -> Sequence[str]:
     """Return the sorted dataset class names exported by ``eegdash.dataset``."""
-    import eegdash.dataset as dataset_module  # local import for clarity
-    from eegdash.dataset import EEGDashDataset
-
     class_names: list[str] = []
     for name in getattr(dataset_module, "__all__", []):
         if name == "EEGChallengeDataset":
@@ -625,8 +621,6 @@ def _format_stat_counts(value: object, default: str = "") -> str:
     # Try to parse as JSON if it looks like a JSON array
     if text.startswith("["):
         try:
-            import json
-
             items = json.loads(text)
             if not items:
                 return default
@@ -700,8 +694,6 @@ def _fetch_dataset_details_from_api(dataset_id: str) -> dict[str, object]:
     """
     if not _should_use_api_summary():
         return {}
-
-    import urllib.request
 
     api_url = "https://data.eegdash.org/api/eegdash"
 
@@ -862,8 +854,6 @@ def _build_dataset_context(
     year = _clean_value(details.get("year"))
     if not year or year == "—":
         # Try to find year in references
-        import re
-
         refs = details.get("references", [])
         if not refs:
             # Try to find in authors/citations in details if references is empty
@@ -1358,8 +1348,6 @@ def _format_see_also_section(dataset_id: str) -> str:
 
 def _format_feedback_section(dataset_id: str, title: str) -> str:
     """Generate a feedback section with a button to report issues on GitHub."""
-    from urllib.parse import quote
-
     dataset_upper = dataset_id.upper()
     issue_title = quote(f"[Dataset] Issue with {dataset_upper}")
     issue_body = quote(

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import argparse
 from pathlib import Path
 
 import numpy as np
@@ -452,8 +453,6 @@ def _read_dataset(path: Path) -> pd.DataFrame:
 
 
 def main() -> None:
-    import argparse
-
     parser = argparse.ArgumentParser(description="Generate the dataset bubble chart.")
     parser.add_argument("source", type=Path, help="Path to dataset summary CSV")
     parser.add_argument(

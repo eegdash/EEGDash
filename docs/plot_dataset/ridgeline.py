@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import argparse
 import json
 from datetime import datetime
 from pathlib import Path
@@ -476,8 +477,6 @@ def _read_dataset(path: Path) -> pd.DataFrame:
 
 
 def main() -> None:
-    import argparse
-
     parser = argparse.ArgumentParser(
         description="Generate the modality ridgeline plot from a dataset summary CSV."
     )

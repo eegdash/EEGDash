@@ -19,12 +19,16 @@ Usage:
 import argparse
 import json
 import os
+import re
 import sys
+import urllib.error
+import urllib.request
 from concurrent.futures import ProcessPoolExecutor, as_completed
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+import numpy as np
 import pandas as pd
 from _fingerprint import fingerprint_from_files, fingerprint_from_manifest
 from _mef3_parser import parse_mef3_metadata
@@ -32,7 +36,12 @@ from _snirf_parser import parse_snirf_metadata
 from _vhdr_parser import parse_vhdr_metadata
 from tqdm import tqdm
 
+from eegdash.dataset.bids_dataset import EEGBIDSDataset
 from eegdash.schemas import Storage, create_dataset, create_record
+
+# Avoid numba cache issues on CI by setting cache dir before MNE-BIDS import
+os.environ.setdefault("NUMBA_CACHE_DIR", str(Path(".cache") / "numba"))
+from mne_bids.config import ALLOWED_DATATYPE_EXTENSIONS  # noqa: E402
 
 # Storage configuration per source
 # Each source has a backend type and base URL pattern
@@ -899,8 +908,6 @@ def parse_bids_entities_from_path(filepath: str) -> dict[str, Any]:
         Extracted BIDS entities (subject, session, task, run, modality, etc.)
 
     """
-    import re
-
     entities = {}
     filename = Path(filepath).name
     filepath_lower = filepath.lower()
@@ -1080,15 +1087,10 @@ NEURO_DATA_EXTENSIONS: set[str] | None = None
 
 
 def _load_neuro_data_extensions() -> set[str]:
-    """Lazily load neurophysiology data extensions from MNE-BIDS."""
+    """Load neurophysiology data extensions from MNE-BIDS (cached)."""
     global NEURO_DATA_EXTENSIONS
     if NEURO_DATA_EXTENSIONS is not None:
         return NEURO_DATA_EXTENSIONS
-
-    # Avoid numba cache issues on CI/help by setting cache dir before import.
-    os.environ.setdefault("NUMBA_CACHE_DIR", str(Path(".cache") / "numba"))
-
-    from mne_bids.config import ALLOWED_DATATYPE_EXTENSIONS
 
     extensions: set[str] = set()
     for modality, exts in ALLOWED_DATATYPE_EXTENSIONS.items():
@@ -1097,8 +1099,6 @@ def _load_neuro_data_extensions() -> set[str]:
 
     NEURO_DATA_EXTENSIONS = extensions
     return extensions
-
-    return False
 
 
 def is_neuro_data_file(filepath: str) -> bool:
@@ -1375,9 +1375,6 @@ def digest_from_manifest(
 
     # Fallback: Try to fetch metadata files if counts/tasks are missing
     if subjects_count == 0 or not tasks:
-        import urllib.error
-        import urllib.request
-
         # Look for key metadata files in the file list
         desc_url = None
         participants_url = None
@@ -1584,8 +1581,6 @@ def digest_from_manifest(
             continue  # Skip to next file (we've processed the ZIP contents)
 
         # Handle ZIP files without extracted contents
-        import re
-
         if filepath.lower().endswith(".zip"):
             # Pattern 1: Subject ZIP files like sub-01.zip
             subject_match = re.match(
@@ -1868,8 +1863,6 @@ def digest_dataset(
         Summary of digestion results
 
     """
-    from eegdash.dataset.bids_dataset import EEGBIDSDataset
-
     dataset_dir = input_dir / dataset_id
     dataset_output_dir = output_dir / dataset_id
 
@@ -2028,8 +2021,6 @@ def digest_dataset(
 
 def _json_serializer(obj):
     """Handle non-serializable objects."""
-    import numpy as np
-
     if isinstance(obj, (np.integer, np.floating)):
         return obj.item()
     elif isinstance(obj, np.ndarray):

@@ -219,10 +219,10 @@ def build_sankey(df: pd.DataFrame, columns: Sequence[str]) -> go.Figure:
 
     fig.update_layout(
         font=dict(size=14),
-        height=900,
+        height=1100,
         width=None,
         autosize=True,
-        margin=dict(t=40, b=40, l=40, r=40),
+        margin=dict(t=50, b=60, l=40, r=40),
         annotations=[
             dict(
                 x=0,

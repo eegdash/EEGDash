@@ -599,6 +599,9 @@ def fetch_chart_data_from_api(
         ds_id = ds.get("dataset_id", "").strip()
         if ds_id.upper() in EXCLUDED_DATASETS:
             continue
+        # Skip EEG2025* datasets (HBN competition datasets - special handling)
+        if ds_id.startswith("EEG2025"):
+            continue
 
         # Extract nested fields
         demographics = ds.get("demographics") or {}
@@ -618,6 +621,8 @@ def fetch_chart_data_from_api(
             type_subject = clinical.get("purpose") or "Clinical"
         elif not type_subject and clinical.get("is_clinical") is False:
             type_subject = "Healthy"
+        elif not type_subject:
+            type_subject = "Unknown"
 
         modality_list = tags.get("modality") or []
         modality_of_exp = (

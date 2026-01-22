@@ -226,8 +226,8 @@ def generate_dataset_growth(df: pd.DataFrame, out_html: str | Path) -> Path:
         template="plotly_white",
         font=dict(size=14),
         legend=dict(x=1.02, y=1),
-        margin=dict(t=100, l=40, r=40, b=40),
-        height=1000,
+        margin=dict(t=100, l=60, r=40, b=80),
+        height=550,
         autosize=True,
     )
 
@@ -245,8 +245,8 @@ def generate_dataset_growth(df: pd.DataFrame, out_html: str | Path) -> Path:
 <style>
 #dataset-growth-plot {{
     width: 100% !important;
-    height: 1000px !important;
-    min-height: 1000px;
+    height: 550px !important;
+    min-height: 550px;
     margin: 0 auto;
 }}
 #dataset-growth-plot .plotly-graph-div {{

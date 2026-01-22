@@ -27,6 +27,9 @@ from typing import Any
 
 import pandas as pd
 from _fingerprint import fingerprint_from_files, fingerprint_from_manifest
+from _mef3_parser import parse_mef3_metadata
+from _snirf_parser import parse_snirf_metadata
+from _vhdr_parser import parse_vhdr_metadata
 from tqdm import tqdm
 
 from eegdash.schemas import Storage, create_dataset, create_record
@@ -723,6 +726,44 @@ def extract_record(
                     except Exception:
                         pass
 
+    # ===========================================================
+    # FALLBACK 3: Parse data files directly when sidecars missing
+    # ===========================================================
+    ext = bids_file_path.suffix.lower()
+
+    # VHDR (BrainVision) fallback
+    if (not sampling_frequency or not nchans or not ch_names) and ext == ".vhdr":
+        vhdr_metadata = parse_vhdr_metadata(bids_file_path)
+        if vhdr_metadata:
+            if not sampling_frequency:
+                sampling_frequency = vhdr_metadata.get("sampling_frequency")
+            if not nchans:
+                nchans = vhdr_metadata.get("nchans")
+            if not ch_names:
+                ch_names = vhdr_metadata.get("ch_names")
+
+    # SNIRF (fNIRS) fallback
+    if (not sampling_frequency or not nchans) and ext == ".snirf":
+        snirf_metadata = parse_snirf_metadata(bids_file_path)
+        if snirf_metadata:
+            if not sampling_frequency:
+                sampling_frequency = snirf_metadata.get("sampling_frequency")
+            if not nchans:
+                nchans = snirf_metadata.get("nchans")
+            if not ch_names:
+                ch_names = snirf_metadata.get("ch_names")
+
+    # MEF3 (.mefd directory) fallback
+    if (not sampling_frequency or not nchans) and ext == ".mefd":
+        mef3_metadata = parse_mef3_metadata(bids_file_path)
+        if mef3_metadata:
+            if not sampling_frequency:
+                sampling_frequency = mef3_metadata.get("sampling_frequency")
+            if not nchans:
+                nchans = mef3_metadata.get("nchans")
+            if not ch_names:
+                ch_names = mef3_metadata.get("ch_names")
+
     # Find dependency files (channels.tsv, events.tsv, etc.) for storage manifest
     dep_keys = []
     bids_file_path = Path(bids_file)
@@ -1013,6 +1054,17 @@ CTF_INTERNAL_EXTENSIONS = {
     ".newds",
 }
 
+# MEF3 (Multiscale Electrophysiology Format) uses .mefd directories
+# Internal files should be skipped - only the .mefd directory is the data file
+MEF3_INTERNAL_EXTENSIONS = {
+    ".tmet",  # Time series metadata
+    ".tidx",  # Time index
+    ".tdat",  # Time series data
+}
+
+# MEF3 internal directory patterns (inside .mefd)
+MEF3_INTERNAL_DIRS = {".timd", ".segd"}
+
 
 def normalize_modality(modality: str | None) -> str | None:
     """Normalize modality to canonical BIDS terms."""
@@ -1069,6 +1121,21 @@ def is_neuro_data_file(filepath: str) -> bool:
     """
     filepath_lower = filepath.lower()
 
+    # Skip BIDS sidecar/metadata files - these are never data files
+    # even when located in modality folders
+    sidecar_extensions = {
+        ".json",
+        ".tsv",
+        ".txt",
+        ".md",
+        ".html",
+        ".pdf",
+        ".csv",
+    }
+    for ext in sidecar_extensions:
+        if filepath_lower.endswith(ext):
+            return False
+
     # Skip files inside CTF .ds directories (we want the .ds directory itself)
     # e.g., skip "sub-01_meg.ds/sub-01_meg.meg4" but keep "sub-01_meg.ds"
     if ".ds/" in filepath_lower:
@@ -1077,6 +1144,25 @@ def is_neuro_data_file(filepath: str) -> bool:
     # Also skip CTF internal files by extension
     for ext in CTF_INTERNAL_EXTENSIONS:
         if filepath_lower.endswith(ext):
+            return False
+
+    # Skip files inside MEF3 .mefd directories (we want the .mefd directory itself)
+    # e.g., skip "sub-01_ieeg.mefd/LTG9.timd/LTG9-000000.segd/LTG9-000000.tdat"
+    # but keep "sub-01_ieeg.mefd"
+    if ".mefd/" in filepath_lower:
+        return False
+
+    # Also skip MEF3 internal files by extension
+    for ext in MEF3_INTERNAL_EXTENSIONS:
+        if filepath_lower.endswith(ext):
+            return False
+
+    # Skip MEF3 internal directories that may appear in archive listings
+    for internal_dir in MEF3_INTERNAL_DIRS:
+        if (
+            filepath_lower.endswith(internal_dir)
+            or f"{internal_dir}/" in filepath_lower
+        ):
             return False
 
     # Check for modality indicators (makes detection more robust for non-BIDS)

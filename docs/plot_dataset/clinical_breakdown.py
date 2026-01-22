@@ -186,7 +186,7 @@ def generate_clinical_stacked_bar(df: pd.DataFrame, out_html: str | Path) -> Pat
         font=dict(size=14),
         yaxis_title="Number of Studies",
         xaxis_title="Electrophysiology Modality",
-        height=1000,
+        height=650,
         updatemenus=[
             dict(
                 type="buttons",
@@ -219,7 +219,7 @@ def generate_clinical_stacked_bar(df: pd.DataFrame, out_html: str | Path) -> Pat
                 yanchor="top",
             ),
         ],
-        margin=dict(t=100, l=40, r=40, b=40),
+        margin=dict(t=100, l=60, r=40, b=80),
         autosize=True,
     )
 
@@ -237,8 +237,8 @@ def generate_clinical_stacked_bar(df: pd.DataFrame, out_html: str | Path) -> Pat
 <style>
 #dataset-clinical-plot {{
     width: 100% !important;
-    height: 1000px !important;
-    min-height: 1000px;
+    height: 650px !important;
+    min-height: 650px;
     margin: 0 auto;
 }}
 #dataset-clinical-plot .plotly-graph-div {{

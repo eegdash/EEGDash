@@ -10,7 +10,9 @@ making it the preferred method for fetching dataset information.
 """
 
 import argparse
+import json
 import sys
+import urllib.request
 from collections.abc import Iterator
 from io import StringIO
 from pathlib import Path
@@ -34,6 +36,53 @@ from _serialize import save_datasets_deterministically, setup_paths
 
 setup_paths()
 from eegdash.schemas import Dataset, create_dataset
+
+
+def fetch_date_from_doi(doi: str | None) -> str | None:
+    """Fetch publication date from DOI resolution as fallback.
+
+    When NEMAR CLI/GitHub API doesn't return a created date,
+    we can resolve the DOI to get at least the publication year.
+
+    Parameters
+    ----------
+    doi : str or None
+        The DOI string (e.g., "10.18112/openneuro.ds005505.v1.0.1")
+
+    Returns
+    -------
+    str or None
+        ISO date string (YYYY-MM-DD) or None if resolution fails.
+        Note: DOI often only provides year, so month/day default to 01-01.
+
+    """
+    if not doi:
+        return None
+
+    # Clean DOI - remove "doi:" prefix if present
+    clean_doi = doi.replace("doi:", "").strip()
+    if not clean_doi:
+        return None
+
+    url = f"https://doi.org/{clean_doi}"
+    req = urllib.request.Request(
+        url, headers={"Accept": "application/vnd.citationstyles.csl+json"}
+    )
+
+    try:
+        with urllib.request.urlopen(req, timeout=10) as response:
+            data = json.loads(response.read().decode("utf-8"))
+            issued = data.get("issued", {})
+            date_parts = issued.get("date-parts", [[]])[0]
+            if date_parts:
+                year = date_parts[0]
+                month = date_parts[1] if len(date_parts) > 1 else 1
+                day = date_parts[2] if len(date_parts) > 2 else 1
+                return f"{year:04d}-{month:02d}-{day:02d}"
+    except Exception:
+        pass
+
+    return None
 
 
 def fetch_bids_description(
@@ -157,6 +206,11 @@ def fetch_repositories_via_cli(
             if not subjects_count and participants:
                 subjects_count = len(participants)
 
+        # Get created date - try CLI first, then DOI resolution as fallback
+        created_at = mapped.get("created_at")
+        if not created_at and dataset_doi:
+            created_at = fetch_date_from_doi(dataset_doi)
+
         # Create Dataset document
         yield create_dataset(
             dataset_id=dataset_id,
@@ -182,7 +236,7 @@ def fetch_repositories_via_cli(
             ages=ages,
             species="Human",  # NEMAR datasets are human
             source_url=source_url,
-            dataset_created_at=mapped.get("created_at"),
+            dataset_created_at=created_at,
             dataset_modified_at=mapped.get("updated_at"),
         )
 
@@ -272,6 +326,11 @@ def fetch_repositories_via_github(
             repo.get("html_url") or f"https://github.com/nemardatasets/{repo_name}"
         )
 
+        # Get created date - try repo created_at, then DOI resolution as fallback
+        created_at = repo.get("created_at")
+        if not created_at and dataset_doi:
+            created_at = fetch_date_from_doi(dataset_doi)
+
         # Create Dataset document
         yield create_dataset(
             dataset_id=repo_name,
@@ -297,6 +356,7 @@ def fetch_repositories_via_github(
             ages=ages,
             species="Human",  # NEMAR datasets are human
             source_url=nemar_url,
+            dataset_created_at=created_at,
             dataset_modified_at=repo.get("pushed_at"),
         )
 

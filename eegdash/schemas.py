@@ -88,7 +88,6 @@ __all__ = [
     "Entities",
     "Demographics",
     "Clinical",
-    "Paradigm",
     "ExternalLinks",
     "RepositoryStats",
     "Timestamps",
@@ -298,28 +297,6 @@ class Clinical(TypedDict, total=False):
     purpose: str | None
 
 
-class Paradigm(TypedDict, total=False):
-    """Experimental paradigm classification (dataset-level).
-
-    .. deprecated::
-        Use the ``tags`` field with ``modality`` and ``type`` keys instead.
-
-    Attributes
-    ----------
-    modality : str | None
-        The sensory or experimental modality (e.g., "visual", "auditory", "text", "multisensory", "resting_state").
-    cognitive_domain : str | None
-        The cognitive domain investigated (e.g., "memory", "language", "emotion").
-    is_10_20_system : bool | None
-        True if electrodes are positioned according to the standard 10-20 system.
-
-    """
-
-    modality: str | None
-    cognitive_domain: str | None
-    is_10_20_system: bool | None
-
-
 class ExternalLinks(TypedDict, total=False):
     """Relevant external hyperlinks for the dataset.
 
@@ -418,8 +395,6 @@ class Dataset(TypedDict, total=False):
         Classification tags (pathology, modality, type).
     clinical : Clinical
         Clinical classification details (deprecated, use tags instead).
-    paradigm : Paradigm
-        Experimental paradigm details (deprecated, use tags instead).
     external_links : ExternalLinks
         Links to external resources.
     repository_stats : RepositoryStats | None
@@ -479,7 +454,6 @@ class Dataset(TypedDict, total=False):
 
     # Classification (legacy - deprecated, use tags instead)
     clinical: Clinical
-    paradigm: Paradigm
 
     # External resources
     external_links: ExternalLinks
@@ -540,10 +514,6 @@ def create_dataset(
     # Clinical classification (legacy - use tags instead)
     is_clinical: bool | None = None,
     clinical_purpose: str | None = None,
-    # Paradigm classification (legacy - use tags instead)
-    paradigm_modality: str | None = None,
-    cognitive_domain: str | None = None,
-    is_10_20_system: bool | None = None,
     # External links
     source_url: str | None = None,
     osf_url: str | None = None,
@@ -726,18 +696,6 @@ def create_dataset(
         dataset["clinical"] = Clinical(
             is_clinical=is_clinical if is_clinical is not None else False,
             purpose=clinical_purpose,
-        )
-
-    # Add paradigm if any field provided (legacy - deprecated, use tags instead)
-    if (
-        paradigm_modality is not None
-        or cognitive_domain is not None
-        or is_10_20_system is not None
-    ):
-        dataset["paradigm"] = Paradigm(
-            modality=paradigm_modality,
-            cognitive_domain=cognitive_domain,
-            is_10_20_system=is_10_20_system,
         )
 
     # Add external links if any provided

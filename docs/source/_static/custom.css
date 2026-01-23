@@ -2118,47 +2118,210 @@ html[data-theme="dark"] #datasets-table tbody tr:hover {
   box-shadow: 0 8px 32px rgba(79, 140, 255, 0.15), 0 0 0 3px rgba(79, 140, 255, 0.1);
 }
 
-/* 7. Colorful Modality Tag Pills */
-.tag[data-tag-value="eeg"] {
-  background: linear-gradient(135deg, #e0f2fe, #bae6fd);
-  border: 1px solid #7dd3fc !important;
-  color: #0369a1;
-}
+/* ==========================================================================
+   AUTO-GENERATED TAG COLORS - matches colours.py
+   Regenerate with: cd docs && python -c 'from plot_dataset.colours import generate_css_tag_styles; print(generate_css_tag_styles())'
+   ========================================================================== */
 
-.tag[data-tag-value="meg"] {
-  background: linear-gradient(135deg, #fae8ff, #f5d0fe);
-  border: 1px solid #e879f9 !important;
-  color: #a21caf;
+/* Recording Modality Tags */
+.tag[data-tag-value="eeg"] {
+  background: linear-gradient(135deg, #e1ecfd, #c4d9fc);
+  border: 1px solid #3b82f6 !important;
+  color: #0032a6;
 }
 
 .tag[data-tag-value="ieeg"] {
-  background: linear-gradient(135deg, #fef3c7, #fde68a);
-  border: 1px solid #fbbf24 !important;
-  color: #b45309;
+  background: linear-gradient(135deg, #ede6fd, #dccefc);
+  border: 1px solid #8b5cf6 !important;
+  color: #3b0ca6;
+}
+
+.tag[data-tag-value="meg"] {
+  background: linear-gradient(135deg, #f1e5fd, #e4ccfc);
+  border: 1px solid #a855f7 !important;
+  color: #5805a7;
 }
 
 .tag[data-tag-value="fnirs"] {
-  background: linear-gradient(135deg, #dcfce7, #bbf7d0);
-  border: 1px solid #4ade80 !important;
-  color: #15803d;
+  background: linear-gradient(135deg, #feeadc, #fdd5b9);
+  border: 1px solid #f97316 !important;
+  color: #a92300;
 }
 
 .tag[data-tag-value="emg"] {
-  background: linear-gradient(135deg, #fee2e2, #fecaca);
-  border: 1px solid #f87171 !important;
-  color: #b91c1c;
+  background: linear-gradient(135deg, #dbf4ec, #b7ead9);
+  border: 1px solid #10b981 !important;
+  color: #006931;
 }
 
+.tag[data-tag-value="fmri"] {
+  background: linear-gradient(135deg, #d9f4f8, #b4e9f2);
+  border: 1px solid #06b6d4 !important;
+  color: #006684;
+}
+
+.tag[data-tag-value="mri"] {
+  background: linear-gradient(135deg, #d9eef3, #b4dee7);
+  border: 1px solid #0891b2 !important;
+  color: #004162;
+}
+
+.tag[data-tag-value="ecg"] {
+  background: linear-gradient(135deg, #fce2e2, #fac6c6);
+  border: 1px solid #ef4444 !important;
+  color: #9f0000;
+}
+
+.tag[data-tag-value="behavior"] {
+  background: linear-gradient(135deg, #ecf7dc, #daefb9);
+  border: 1px solid #84cc16 !important;
+  color: #347c00;
+}
+
+/* Pathology Tags */
+.tag-pathology-healthy {
+  background: linear-gradient(135deg, #ddf6e6, #bcedce);
+  border: 1px solid #22c55e !important;
+  color: #00750e;
+}
+
+.tag-pathology-clinical {
+  background: linear-gradient(135deg, #fce2e2, #fac6c6);
+  border: 1px solid #ef4444 !important;
+  color: #9f0000;
+}
+
+.tag-pathology-generic {
+  background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
+  border: 1px solid #94a3b8 !important;
+  color: #475569;
+}
+
+/* Experimental Modality Tags */
+.tag-modality-visual {
+  background: linear-gradient(135deg, #dee7fc, #bdd0f9);
+  border: 1px solid #2563eb !important;
+  color: #00139b;
+}
+
+.tag-modality-auditory {
+  background: linear-gradient(135deg, #daf1fb, #b6e4f8);
+  border: 1px solid #0ea5e9 !important;
+  color: #005599;
+}
+
+.tag-modality-tactile,
+.tag-modality-somatosensory {
+  background: linear-gradient(135deg, #dbf4f1, #b8e9e4);
+  border: 1px solid #14b8a6 !important;
+  color: #006856;
+}
+
+.tag-modality-multisensory {
+  background: linear-gradient(135deg, #fce3ef, #f9c8e0);
+  border: 1px solid #ec4899 !important;
+  color: #9c0049;
+}
+
+.tag-modality-motor {
+  background: linear-gradient(135deg, #fdf0da, #fce1b5);
+  border: 1px solid #f59e0b !important;
+  color: #a54e00;
+}
+
+.tag-modality-rest,
+.tag-modality-resting-state {
+  background: linear-gradient(135deg, #e7e8fc, #d0d1fa);
+  border: 1px solid #6366f1 !important;
+  color: #1316a1;
+}
+
+.tag-modality-sleep {
+  background: linear-gradient(135deg, #ebe1fc, #d7c3f9);
+  border: 1px solid #7c3aed !important;
+  color: #2c009d;
+}
+
+.tag-modality-generic {
+  background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
+  border: 1px solid #94a3b8 !important;
+  color: #475569;
+}
+
+/* Experiment Type Tags */
+.tag-type-perception {
+  background: linear-gradient(135deg, #e1ecfd, #c4d9fc);
+  border: 1px solid #3b82f6 !important;
+  color: #0032a6;
+}
+
+.tag-type-decision,
+.tag-type-decision-making {
+  background: linear-gradient(135deg, #fbf3d9, #f8e8b4);
+  border: 1px solid #eab308 !important;
+  color: #9a6300;
+}
+
+.tag-type-rest,
+.tag-type-resting-state {
+  background: linear-gradient(135deg, #dcf1e3, #b9e3c8);
+  border: 1px solid #16a34a !important;
+  color: #005300;
+}
+
+.tag-type-sleep {
+  background: linear-gradient(135deg, #ede6fd, #dccefc);
+  border: 1px solid #8b5cf6 !important;
+  color: #3b0ca6;
+}
+
+.tag-type-cognitive {
+  background: linear-gradient(135deg, #e7e8fc, #d0d1fa);
+  border: 1px solid #6366f1 !important;
+  color: #1316a1;
+}
+
+.tag-type-clinical {
+  background: linear-gradient(135deg, #fce2e2, #fac6c6);
+  border: 1px solid #ef4444 !important;
+  color: #9f0000;
+}
+
+.tag-type-generic {
+  background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
+  border: 1px solid #94a3b8 !important;
+  color: #475569;
+}
+
+/* Dark mode overrides for tags */
 html[data-theme="dark"] .tag[data-tag-value="eeg"] {
-  background: rgba(14, 165, 233, 0.2);
-  border-color: rgba(56, 189, 248, 0.5) !important;
-  color: #7dd3fc;
+  background: rgba(59, 130, 246, 0.2);
+  border-color: rgba(59, 130, 246, 0.5) !important;
+  color: #93c5fd;
 }
 
 html[data-theme="dark"] .tag[data-tag-value="meg"] {
-  background: rgba(217, 70, 239, 0.2);
-  border-color: rgba(232, 121, 249, 0.5) !important;
-  color: #f0abfc;
+  background: rgba(168, 85, 247, 0.2);
+  border-color: rgba(168, 85, 247, 0.5) !important;
+  color: #d8b4fe;
+}
+
+html[data-theme="dark"] .tag[data-tag-value="ieeg"] {
+  background: rgba(139, 92, 246, 0.2);
+  border-color: rgba(139, 92, 246, 0.5) !important;
+  color: #c4b5fd;
+}
+
+html[data-theme="dark"] .tag[data-tag-value="fnirs"] {
+  background: rgba(249, 115, 22, 0.2);
+  border-color: rgba(249, 115, 22, 0.5) !important;
+  color: #fdba74;
+}
+
+html[data-theme="dark"] .tag[data-tag-value="emg"] {
+  background: rgba(16, 185, 129, 0.2);
+  border-color: rgba(16, 185, 129, 0.5) !important;
+  color: #6ee7b7;
 }
 
 /* 8. Page Fade-in Animation */

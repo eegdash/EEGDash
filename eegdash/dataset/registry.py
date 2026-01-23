@@ -659,6 +659,7 @@ def fetch_chart_data_from_api(
             "n_subjects": demographics.get("subjects_count") or 0,
             "n_records": ds.get("total_files") or 0,
             "n_tasks": len(ds.get("tasks") or []),
+            "n_sessions": len(ds.get("sessions") or []),
             "record_modality": ", ".join(recording_modality),
             "recording_modality": ", ".join(recording_modality),
             "modality of exp": modality_of_exp,

@@ -389,6 +389,7 @@ def prepare_table(df: pd.DataFrame) -> pd.DataFrame:
         ("n_records", 0),
         ("n_subjects", 0),
         ("n_tasks", 0),
+        ("n_sessions", 0),
         ("nchans_set", ""),
         ("sampling_freqs", ""),
     ]:
@@ -404,6 +405,7 @@ def prepare_table(df: pd.DataFrame) -> pd.DataFrame:
             "n_records",
             "n_subjects",
             "n_tasks",
+            "n_sessions",
             "nchans_set",
             "sampling_freqs",
             "size",
@@ -430,6 +432,7 @@ def prepare_table(df: pd.DataFrame) -> pd.DataFrame:
     # Convert numeric columns
     df["n_subjects"] = df["n_subjects"].astype(int)
     df["n_tasks"] = df["n_tasks"].astype(int)
+    df["n_sessions"] = df["n_sessions"].astype(int)
     df["n_records"] = df["n_records"].astype(int)
     df["sampling_freqs"] = df["sampling_freqs"].apply(parse_freqs)
     df["nchans_set"] = df["nchans_set"].apply(parse_freqs)
@@ -704,8 +707,9 @@ def main_from_api(target_dir: str, database: str = DEFAULT_DATABASE, limit: int 
     df = prepare_table(df_raw)
     df["n_subjects"] = df["n_subjects"].astype(int)
     df["n_tasks"] = df["n_tasks"].astype(int)
+    df["n_sessions"] = df["n_sessions"].astype(int)
     df["n_records"] = df["n_records"].astype(int)
-    int_cols = ["n_subjects", "n_tasks", "n_records"]
+    int_cols = ["n_subjects", "n_tasks", "n_sessions", "n_records"]
     df[int_cols] = df[int_cols].apply(pd.to_numeric, errors="coerce").astype("Int64")
 
     df = df.rename(
@@ -718,6 +722,7 @@ def main_from_api(target_dir: str, database: str = DEFAULT_DATABASE, limit: int 
             "n_records": "# of records",
             "n_subjects": "# of subjects",
             "n_tasks": "# of tasks",
+            "n_sessions": "# of sessions",
             "pathology": "Pathology",
             "modality": "Modality",
             "type": "Type",
@@ -735,6 +740,7 @@ def main_from_api(target_dir: str, database: str = DEFAULT_DATABASE, limit: int 
             "# of records",
             "# of subjects",
             "# of tasks",
+            "# of sessions",
             "# of channels",
             "sampling (Hz)",
             "size",
